@@ -1,0 +1,29 @@
+name: GH pages
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/provision
+
+      - name: Build prod
+        run: yarn build
+
+      - name: Run jest
+        run: yarn test:unit --coverage
+
+      - name: Make badge maker
+        run: npx make-coverage-badge
+
+      - name: Publish test coverage report
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: coverage

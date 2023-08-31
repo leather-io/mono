@@ -1,0 +1,70 @@
+name: Create version
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '**'
+    paths-ignore:
+      - '**/CHANGELOG.md'
+      - '**/package.json'
+      - '**/yarn.lock'
+      - './config/**'
+      - 'README.md'
+
+env:
+  RUNNER_DEBUG: 1
+
+jobs:
+  semantic-release:
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          persist-credentials: false
+
+      - uses: ./.github/actions/provision
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v3.4.2
+        id: semantic
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+            @semantic-release/release-notes-generator
+
+      - name: Create file with release notes
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: echo "${{ steps.semantic.outputs.new_release_notes }}" > release-notes.txt
+
+      - run: cat release-notes.txt
+        if: steps.semantic.outputs.new_release_published == 'true'
+
+      - name: Log details
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo ${{ steps.semantic.outputs.new_release_version }}
+          echo ${{ steps.semantic.outputs.new_release_major_version }}
+          echo ${{ steps.semantic.outputs.new_release_minor_version }}
+          echo ${{ steps.semantic.outputs.new_release_patch_version }}
+
+      - name: Upload release notes
+        uses: actions/upload-artifact@v3
+        if: steps.semantic.outputs.new_release_published == 'true'
+        with:
+          name: release-notes
+          path: release-notes.txt

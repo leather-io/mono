@@ -1,0 +1,17 @@
+export enum OnboardingSelectors {
+  AllowAnalyticsBtn = 'allow-analytics-btn',
+  BackUpSecretKeyBtn = 'back-up-secret-key-btn',
+  DenyAnalyticsBtn = 'deny-analytics-btn',
+  HiroWalletLogoRouteToHome = 'hiro-wallet-logo-route-to-home',
+  NewPasswordInput = 'set-or-enter-password-input',
+  NoAssetsFundAccountLink = 'no-assets-fund-account-link',
+  SecretKey = 'secret-key',
+  SecretKeyInput = 'secret-key-input',
+  SetPasswordBtn = 'set-password-btn',
+  SignInBtn = 'sign-in-btn',
+  SignInLink = 'sign-in-link',
+  SignUpBtn = 'sign-up-btn',
+  StepItemDone = 'step-item-done',
+  StepItemStart = 'step-item-start',
+  StepsList = 'steps-list',
+}
