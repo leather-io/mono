@@ -24,9 +24,14 @@ Ideally we want to:
 - re-use our new panda + radix system as much as possible
 - extract shared library code 
 - allow independant publishing of packages
+- solution must work with panda css
+- storybook for UI lib demos
+- storybook to replace test-app also? 
 
 
-## Further consideration
+## Items for further consideration
 
-- migration from `yarn` to `pnpm`
+- migration from `yarn` to [`pnpm`](https://pnpm.io/)
+- upgrading from `webpack` to [`esbuild`](https://esbuild.github.io/)
+- 
  
