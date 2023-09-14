@@ -28,10 +28,30 @@ Ideally we want to:
 - storybook for UI lib demos
 - storybook to replace test-app also? 
 
+## Basic Leather monorepo architecture
+
+
+```md
+leather-mono
+├─ apps
+│  ├─ extension
+│  ├─ mobile
+│  ├─ desktop
+│  ├─ storybook <-- replaces test-app, place to view UI components with context + tests
+├─ packages
+│  ├─ api <-- leather API / wrapper interface to other libs: here / under apps,
+│  ├─ tsconfig
+│  ├─ lib
+│  ├─ utils <-- shared utils,
+│  ├─ ui <-- using definePreset(), contains the theme base (tokens.colors, semantic tokens, etc)
+│  └─ button <-- consuming the preset, provides a button recipe (in a buttonPreset) + a ShadcnButton component
+│  └─ some-component <-- consuming the preset, provides a component using internal `css` calls, ships a panda.json extract result
+```
+
 
 ## Items for further consideration
 
 - migration from `yarn` to [`pnpm`](https://pnpm.io/)
 - upgrading from `webpack` to [`esbuild`](https://esbuild.github.io/)
-- 
+- Can use Nx + Lerna or just Nx
  
