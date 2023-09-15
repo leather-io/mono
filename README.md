@@ -38,6 +38,8 @@ leather-mono
 │  ├─ mobile
 │  ├─ desktop
 │  ├─ storybook <-- replaces test-app, place to view UI components with context + tests
+│  ├─ website <-- maybe we can get rid of Framer and just host our site ourself, keeping code here?
+├─ docs -> should we host out dev docs here?
 ├─ packages
 │  ├─ api <-- leather API / wrapper interface to other libs: here / under apps,
 │  ├─ tsconfig
@@ -55,4 +57,5 @@ leather-mono
 - upgrading from `webpack` to [`esbuild`](https://esbuild.github.io/)
 - Can use Nx + Lerna or just Nx
 - for HTML Ordinals, do we want to use SSR so we can show them? Maybe we can have a library/package using Next.js just to render those that gets imported?
- 
+- how do we manage our documentation? could we host that here also? 
+- do we still need Framer? It helped us release fast but now we could manage the site as a monorepo app
