@@ -9,7 +9,7 @@
     },
     "targetDefaults":{
         "build": {
-            "inputs": ["{projectRoot}/**/*.md"]
+            "inputs": ["!{projectRoot}/**/*.md"]
         }
     }
 }
