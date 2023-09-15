@@ -33,3 +33,8 @@ We want to exclude some items from the cace that aren't depended on. Nx has a ni
 Behind the scenes Nx creates a graph of how all the packages link together which can be viewed running `npx nx graph` which shows an interactive version of our project graph
 
 In a larger monorepo this is useful to show all the paths between packages and their links
+
+An example of this working to help devs:
+- checkout a new branch
+- make some changes
+- run `npx nx affected:graph` will show you what projects are affected by your change
