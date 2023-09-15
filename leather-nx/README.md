@@ -45,6 +45,19 @@ The `affected` command can also be used when building to help speed things up, f
 
 `npx nx affected:build`
 
-# Paralle
+# Parallel
 
 Builds can be run in parallel using: `npx nx run-many --target=build --all`
+
+# Plugins
+
+An advantage of Nx is that it comes with various plugins which can be used to scaffold out apps and libraries
+
+They can be installed using:
+`pnpm add -Dw @nx/react`
+
+The `w` is passed to specify at the root
+
+Available generator options can then be viewed using `npx nx list @nx/react`
+
+(Tutorial)[https://www.youtube.com/watch?v=OQ-Zc5tcxJE]

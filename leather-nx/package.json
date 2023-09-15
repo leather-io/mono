@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@nx/esbuild": "^16.8.1",
+    "@nx/react": "^16.8.1",
     "nx": "^16.8.1"
   }
 }
