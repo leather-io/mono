@@ -49,7 +49,7 @@ The `affected` command can also be used when building to help speed things up, f
 
 Builds can be run in parallel using: `npx nx run-many --target=build --all`
 
-# Plugins
+# Plugins + generators
 
 An advantage of Nx is that it comes with various plugins which can be used to scaffold out apps and libraries
 
@@ -69,3 +69,10 @@ Plugins can be initialised with `npx nx g @nx/react:init`
 Better yet Nx comes with a Vscode plugin you can use to help generate various things
 (Nx Console)[https://nx.dev/core-features/integrate-with-editors#nx-console-for-vscode]
 
+
+# Writing generators
+
+We can also create our own custom generators to spin out apps/ libs with the configuration we like on demand.
+
+(Use generators)[https://nx.dev/core-features/plugin-features/use-code-generators]
+(Write generators)[https://nx.dev/extending-nx/recipes/local-generators]
