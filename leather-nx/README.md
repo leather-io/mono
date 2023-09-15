@@ -23,3 +23,13 @@ It's possible to add `"targetDefaults"` to the configuration to exclude some fil
 `namedInputs` can be defined to share settings between steps
 
 We can use a `^` to specify for all dependant projects `"^noMarkdown"`
+
+# Nx cache exclusions 
+
+We want to exclude some items from the cace that aren't depended on. Nx has a nice graph feature which gives a visual UI of what depends on what
+
+# Nx graph
+
+Behind the scenes Nx creates a graph of how all the packages link together which can be viewed running `npx nx graph` which shows an interactive version of our project graph
+
+In a larger monorepo this is useful to show all the paths between packages and their links
