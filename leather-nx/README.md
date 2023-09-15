@@ -1,4 +1,4 @@
-# demo NX monorepo
+# demo PNPM monorepo
 
 Using (this tutorial)[https://www.youtube.com/watch?v=ngdoUQBvAjo]
 
@@ -31,3 +31,7 @@ The next step is to consume the UI package in extensions
 `pnpm add ui --filter extension --workspace`
 
 The `--workspace` flag is passed to make sure package exists in workspace, if not `pnpm` will error
+
+# Building packages
+
+Packages can be built from the root using `pnpm run -r build` or passing the parallel flag if desired `pnpm run --parallel -r build`
