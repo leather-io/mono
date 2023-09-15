@@ -6,5 +6,10 @@
                 "cacheableOperations": ["build"] 
             }
         }
+    },
+    "targetDefaults":{
+        "build": {
+            "inputs": ["{projectRoot}/**/*.md"]
+        }
     }
 }

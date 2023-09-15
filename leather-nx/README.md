@@ -16,4 +16,6 @@ Nx is now setup and we can use those commands to run our monorepo apps
 
 # Nx with caching
 
-A main benefit of Nx is build caching 
+A main benefit of Nx is build caching. It's setup by adding `tasksRunnerOptions` in the `nx.json`
+
+It's possible to add `"targetDefaults"` to the configuration to exclude some files. For example we don't want `README.md` updates to invalidate the cache
