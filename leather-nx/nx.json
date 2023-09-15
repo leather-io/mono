@@ -7,9 +7,15 @@
             }
         }
     },
+    "namedInputs": {
+        "noMarkdown":  ["!{projectRoot}/**/*.md"]
+    },
     "targetDefaults":{
         "build": {
-            "inputs": ["!{projectRoot}/**/*.md"]
+            "inputs": ["noMarkdown", "^noMarkdown"]
+        },
+        "test": {
+            "inputs": ["noMarkdown", "^noMarkdown"]
         }
     }
 }
