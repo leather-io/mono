@@ -10,10 +10,5 @@ Tutorial uses remix so I just spun up a create-react-app instead with
 `pnpm create react-app extension --template typescript`
 
 
-fails with this: 
+I gave the react app the name `extension` so it can then be started from mono-repo root with `pnpm --filter extension start`
 
-https://github.com/babel/babel/issues/11211
-
-PETE - get a demo of this done tomorrow!!!!!!!
-
-https://www.youtube.com/watch?v=ngdoUQBvAjo
