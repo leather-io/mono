@@ -38,3 +38,13 @@ An example of this working to help devs:
 - checkout a new branch
 - make some changes
 - run `npx nx affected:graph` will show you what projects are affected by your change
+
+# Affected build
+
+The `affected` command can also be used when building to help speed things up, for example only building packages affected by your change and serving others from the cache
+
+`npx nx affected:build`
+
+# Paralle
+
+Builds can be run in parallel using: `npx nx run-many --target=build --all`
