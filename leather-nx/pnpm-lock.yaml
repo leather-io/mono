@@ -48,6 +48,10 @@ importers:
         version: 2.1.4
 
   packages/ui:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
     devDependencies:
       typescript:
         specifier: ^4.9.5

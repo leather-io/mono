@@ -16,6 +16,11 @@ I gave the react app the name `extension` so it can then be started from mono-re
 
 I initialised the UI package by creating a new folder `packages/ui` then initialising with `pnpm init`
 
-Next I  set it up with TS as a dev dependancy by running this command at the root of the monorepo
+Next I  set it up as a react project with TS as a dev dependancy by running this command at the root of the monorepo
+`pnpm add --filter ui react`
 `pnpm add --filter ui typescript -D`
+
+I then added a tsconfig and updated the `package.json` and setup the project to be built with `pnpm --filter ui build`. 
+
+I added the `tsconfig` here for now but this will move up the hierarchy to be shared between packages
 
