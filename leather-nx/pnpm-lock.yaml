@@ -43,6 +43,9 @@ importers:
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
+      ui:
+        specifier: workspace:^
+        version: link:../../packages/ui
       web-vitals:
         specifier: ^2.1.4
         version: 2.1.4

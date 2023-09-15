@@ -24,3 +24,10 @@ I then added a tsconfig and updated the `package.json` and setup the project to 
 
 I added the `tsconfig` here for now but this will move up the hierarchy to be shared between packages
 
+# Consuming UI in extension
+
+The next step is to consume the UI package in extensions
+
+`pnpm add ui --filter extension --workspace`
+
+The `--workspace` flag is passed to make sure package exists in workspace, if not `pnpm` will error
