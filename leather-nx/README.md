@@ -61,3 +61,11 @@ The `w` is passed to specify at the root
 Available generator options can then be viewed using `npx nx list @nx/react`
 
 (Tutorial)[https://www.youtube.com/watch?v=OQ-Zc5tcxJE]
+
+Plugins can be initialised with `npx nx g @nx/react:init`
+
+# VSCODE Plugin
+
+Better yet Nx comes with a Vscode plugin you can use to help generate various things
+(Nx Console)[https://nx.dev/core-features/integrate-with-editors#nx-console-for-vscode]
+
