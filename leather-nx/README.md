@@ -13,3 +13,7 @@ Pass `-w` to install at root of workspace
 Nx is now setup and we can use those commands to run our monorepo apps
 - `npx nx build ui`
 - `npx nx start extension`
+
+# Nx with caching
+
+A main benefit of Nx is build caching 
