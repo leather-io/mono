@@ -54,4 +54,5 @@ leather-mono
 - migration from `yarn` to [`pnpm`](https://pnpm.io/)
 - upgrading from `webpack` to [`esbuild`](https://esbuild.github.io/)
 - Can use Nx + Lerna or just Nx
+- for HTML Ordinals, do we want to use SSR so we can show them? Maybe we can have a library/package using Next.js just to render those that gets imported?
  
