@@ -5,51 +5,30 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "compiler": "swc",
-        "outputPath": "dist/apps/leather-ext",
-        "index": "apps/leather-ext/src/index.html",
-        "baseHref": "/",
         "main": "apps/leather-ext/src/main.tsx",
+        "outputPath": "dist/apps/leather-ext",
+        "outputFileName": "main.js",
         "tsConfig": "apps/leather-ext/tsconfig.app.json",
-        "assets": [
-          "apps/leather-ext/src/favicon.ico",
-          "apps/leather-ext/src/assets"
-        ],
-        "styles": ["apps/leather-ext/src/styles.css"],
-        "scripts": [],
-        "isolatedConfig": true,
-        "webpackConfig": "apps/leather-ext/webpack.config.js"
+        "assets": [],
+        "platform": "node"
       },
       "configurations": {
         "development": {
-          "extractLicenses": false,
-          "optimization": false,
-          "sourceMap": true,
-          "vendorChunk": true
+          "minify": false
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/leather-ext/src/environments/environment.ts",
-              "with": "apps/leather-ext/src/environments/environment.prod.ts"
-            }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false
+          "minify": true
         }
       }
     },
     "serve": {
-      "executor": "@nx/webpack:dev-server",
+      "executor": "@nx/esbuild:esbuild",
       "defaultConfiguration": "development",
+      "tsConfig": "apps/leather-ext/tsconfig.app.json",
       "options": {
         "buildTarget": "leather-ext:build",
         "hmr": true
