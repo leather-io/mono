@@ -1,5 +1,5 @@
 {
-  "name": "prettier-config",
+  "name": "@leather-wallet/prettier-config",
   "version": "0.0.1",
   "description": "Prettier configuration",
   "main": ".prettierrc.js",
