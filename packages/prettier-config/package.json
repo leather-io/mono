@@ -1,12 +1,13 @@
 {
-  "name": "prettier",
-  "version": "1.0.0",
+  "name": "prettier-config",
+  "version": "0.0.1",
   "description": "Prettier configuration",
-  "main": "index.js",
+  "main": ".prettierrc.js",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/prettier",
   "publishConfig": { "access": "public"},
-  "keywords": [],
+  "keywords": [ "leather", "prettier", "leather wallet"],
   "author": "Leather.io contact@leather.io",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "prettier": "^3.0.3"

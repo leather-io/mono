@@ -23,3 +23,6 @@ module.exports = {
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
 };
+
+
+// PETE - setup @cteic on npm and use that to test run everything
