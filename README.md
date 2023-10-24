@@ -59,3 +59,11 @@ leather-mono
 - for HTML Ordinals, do we want to use SSR so we can show them? Maybe we can have a library/package using Next.js just to render those that gets imported?
 - how do we manage our documentation? could we host that here also? 
 - do we still need Framer? It helped us release fast but now we could manage the site as a monorepo app
+
+
+
+https://medium.com/reactbrasil/reuse-your-eslint-prettier-config-in-a-monorepo-with-lerna-54c1800cacdc
+
+https://github.com/muravjev/monorepo/pull/1/commits/d84f969f97d8caaa448e0ef80dc2f426bd6f9e91
+
+https://www.raulmelo.me/en/blog/replacing-lerna-and-yarn-with-pnpm-workspaces
