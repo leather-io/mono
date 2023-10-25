@@ -1,0 +1,33 @@
+{
+  "name": "@leather-wallet/eslint-config",
+  "version": "0.0.1",
+  "description": "Eslint configuration",
+  "main": ".eslintrc.js",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/eslint-config",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git"
+  },
+  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "leather",
+    "eslint",
+    "leather wallet"
+  ],
+  "author": "Leather.io contact@leather.io",
+  "license": "MIT",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-deprecation": "^2.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  },
+  "devDependencies": {
+    "@leather-wallet/tsconfig-config": "workspace:^"
+  }
+}
