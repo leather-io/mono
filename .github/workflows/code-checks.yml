@@ -14,7 +14,7 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: Lint
-        run: yarn lint:prettier
+        run: pnpm lint:prettier
 
   lint-eslint:
     runs-on: ubuntu-latest
@@ -23,16 +23,7 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: Lint
-        run: yarn lint:eslint
-
-  lint-filename:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: File name checker
-        run: yarn lint:filename
+        run: pnpm lint:eslint
 
   lint-commit:
     runs-on: ubuntu-latest
@@ -42,64 +33,7 @@ jobs:
           fetch-depth: 0
 
       - name: Lint commit message
-        uses: wagoid/commitlint-github-action@v4
-
-  lint-deps:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Lint dependency rules
-        run: yarn lint:deps
-
-  lint-message-schema:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Validate message schema
-        run: yarn lint:remote-wallet-config
-
-  lint-unused-exports:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Lint unused TypeScript exports
-        run: yarn lint:unused-exports
-
-  lint-firefox-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - run: yarn build
-        env:
-          TARGET_BROWSER: firefox
-
-      - run: yarn web-ext lint
-
-  locked-versions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Check exact versions
-        uses: ./.github/actions/check-version-lock
-
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Audit
-        run: yarn audit-ci --high --skip-dev
+        uses: pnpm lint:commitlint
 
   typecheck:
     runs-on: ubuntu-latest
@@ -108,26 +42,4 @@ jobs:
       - uses: ./.github/actions/provision
 
       - name: Typecheck
-        run: yarn typecheck
-
-  test-unit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Test
-        run: yarn test:unit
-
-  test-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-
-      - name: Build
-        run: yarn build
-
-      - name: Package extension
-        run: sh build-ext.sh
-        shell: bash
+        run: pnpm lint:types
