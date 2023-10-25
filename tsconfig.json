@@ -1,0 +1,4 @@
+{
+  "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
+  "include": ["**/*", ".*.ts"]
+}

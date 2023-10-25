@@ -5,7 +5,13 @@
   "scripts": {
     "clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "fresh": "pnpm clean && pnpm i",
-    "nuke": "rm -rf pnpm-lock.yaml && pnpm fresh"
+    "nuke": "rm -rf pnpm-lock.yaml && pnpm fresh",
+    "lint:eslint": "eslint --ignore-path .gitignore .",
+    "lint:eslint:fix": "pnpm lint --fix",
+    "lint:prettier": "prettier --check \"{src,tests}/**/*.{ts,tsx}\" \"*.{js,json}\"",
+    "lint:prettier:fix": "prettier --write \"{src,tests}/**/*.{ts,tsx}\" *.js",
+    "lint:commitlint": "commitlint",
+    "lint:types": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +19,15 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "@leather-wallet/eslint-config": "workspace:^",
     "@leather-wallet/prettier-config": "workspace:^",
+    "@leather-wallet/tsconfig-config": "workspace:^",
     "eslint": "^8.52.0",
     "husky": "^8.0.3",
     "prettier": "^3.0.3",
-    "syncpack": "^11.2.1"
+    "syncpack": "^11.2.1",
+    "typescript": "^5.2.2"
   },
   "packageManager": "pnpm@7.10.0"
 }
