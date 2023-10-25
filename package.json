@@ -8,10 +8,11 @@
     "nuke": "rm -rf pnpm-lock.yaml && pnpm fresh",
     "lint:eslint": "eslint --ignore-path .gitignore .",
     "lint:eslint:fix": "pnpm lint --fix",
-    "lint:prettier": "prettier --check \"{src,tests}/**/*.{ts,tsx}\" \"*.{js,json}\"",
-    "lint:prettier:fix": "prettier --write \"{src,tests}/**/*.{ts,tsx}\" *.js",
+    "lint:prettier": "prettier --check \"*.{ts,tsx}\" \"*.{js,json}\"",
+    "lint:prettier:fix": "prettier --write \"*.{ts,tsx}\" *.js",
     "lint:commitlint": "commitlint",
-    "lint:types": "tsc --noEmit"
+    "lint:types": "tsc --noEmit",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +28,8 @@
     "husky": "^8.0.3",
     "prettier": "^3.0.3",
     "syncpack": "^11.2.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "lint-staged": "^15.0.2"
   },
   "packageManager": "pnpm@7.10.0"
 }
