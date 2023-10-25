@@ -1,4 +1,6 @@
 // needed to import tsconfig in .eslintrc.js
 {
-  "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"]
+  "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
+  "include": ["*"],
+  "exclude": []
 }

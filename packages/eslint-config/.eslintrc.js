@@ -1,5 +1,3 @@
-const avoidWindowOpenMsg = 'Use `openInNewTab` helper';
-
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -34,7 +32,7 @@ module.exports = {
         ignoreReadBeforeAssign: false,
       },
     ],
-    'no-restricted-globals': ['error', { name: 'open', message: avoidWindowOpenMsg }],
+    'no-restricted-globals': ['error', { name: 'open', message: 'Use `openInNewTab` helper' }],
     'no-restricted-properties': [
       'error',
       {
