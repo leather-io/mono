@@ -86,3 +86,8 @@ The purpose of `prettier` is formatting many language formats (`js`, `ts`, `tsx`
 [⬅ Back](../../README.md)
 
 ---
+
+## TODOs
+
+- investigate how to setup `"lint:unused-exports": "ts-unused-exports`
+- either here or in the mono base

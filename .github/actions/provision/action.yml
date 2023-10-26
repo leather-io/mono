@@ -1,0 +1,17 @@
+name: Provision
+description: Set up job with tasks needed to run a code check
+runs:
+  using: 'composite'
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Set up node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+        cache: 'pnpm'
+    - name: install dependencies
+      run: pnpm install
+      shell: bash

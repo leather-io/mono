@@ -1,0 +1,2 @@
+- add package and setup for dependancy cruiser?
+- lint-filename?
