@@ -7,7 +7,6 @@ This package contains `eslint` configuration to be shared across projects.
 ## Contents
 
 - [Setup](#setup)
-- [Automation](#automation)
 - [Usage](#usage)
 - [License](#license)
 
@@ -66,8 +65,6 @@ This package contains `eslint` configuration to be shared across projects.
 
 ## Usage
 
-- **Automatic** validation file with `eslint` on save.
-- **Automatic** validation of staged files with `eslint` on commit.
 - Manual usage from command line:
 
   ```sh
