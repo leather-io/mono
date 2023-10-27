@@ -1,80 +1,35 @@
-# Shared prettier configuration
+# Shared typescript configuration
 
-The purpose of `prettier` is formatting many language formats (`js`, `ts`, `tsx`, `md`, `json`, `yaml`).
-
----
+The purpose of [typescript](https://www.typescriptlang.org/) is to add strong typing to `javascript`.
 
 ## Contents
 
 - [Setup](#setup)
-- [Automation](#automation)
-- [Usage](#usage)
 - [License](#license)
 
 ## Setup
 
-- Monorepo base: Add workspace reference to `@leather-wallet/eslint-config` and its peer dependencies:
+- Install as a dev dependancy in monorepo root:
 
   ```sh
-  pnpm add -w -D @leather-wallet/eslint-config
+  pnpm add -D @leather-wallet/tsconfig-config -w
   ```
 
-- Monorepo package: Add reference to `@leather-wallet/eslint-config`:
+- Install as a dev dependancy in external packages / apps:
 
   ```sh
-  cd package/
-  pnpm add -D @leather-wallet/eslint-config
-
-  pnpm add --filter package -D @leather-wallet/eslint-config
+  pnpm add -D @leather-wallet/tsconfig-config
   ```
 
-- Add prettier configuration file:
-
-  ```js
-  // .prettierrc.js
-
-  module.exports = require('@muravjev/configs-prettier');
-  ```
-
-- Add prettier ignore patterns file:
-
-  ```sh
-  # .prettierignore
-
-  node_modules/
-  pnpm-lock.yaml
-
-  # Custom ignore patterns
-  ...
-  ```
-
-- Add prettier scripts:
+- Add typescript configuration file to your package that extends the base
 
   ```jsonc
-  // package.json
-
-  "scripts": {
-    ...
-    "format": "prettier",
-    "format:check": "pnpm format --check --debug-check",
-    "format:fix": "pnpm format --write"
-    ...
+  // packages/package/tsconfig.json
+  {
+    "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
+    "include": ["**/*", ".*.ts"],
+    "exclude": []
   }
-  ```
-
-## Automation
-
-- Setup [➡ prettier vscode plugin](../../docs/plugins/vscode-prettier.md) to integrate `prettier` with vscode environment.
-
-## Usage
-
-- **Automatic** format file with `prettier` on save.
-- **Automatic** format of staged files with `prettier` on commit.
-- Manual usage from command line:
-
-  ```sh
-  pnpm format:check .
-  pnpm format:fix .
   ```
 
 ## License
@@ -86,8 +41,3 @@ The purpose of `prettier` is formatting many language formats (`js`, `ts`, `tsx`
 [⬅ Back](../../README.md)
 
 ---
-
-## TODOs
-
-- investigate how to setup `"lint:unused-exports": "ts-unused-exports`
-- either here or in the mono base
