@@ -1,8 +1,6 @@
 # Shared eslint configuration
 
-The purpose of `eslint` is linting `javascript` and `typescript` languages (`js`, `ts`, `tsx`).
-
-> This configuration targets **monorepo** packages.
+This package contains `eslint` configuration to be shared across projects.
 
 ---
 
@@ -15,18 +13,25 @@ The purpose of `eslint` is linting `javascript` and `typescript` languages (`js`
 
 ## Setup
 
-- Add workspace reference to `@muravjev/configs-eslint-ts` and its peer dependencies:
+- Install as a dev dependancy in monorepo root:
 
   ```sh
-  pnpm add -w @muravjev/configs-eslint-ts eslint
+  pnpm add -D @leather-wallet/eslint-config -w
+  ```
+
+- Install as a dev dependancy in external packages / apps:
+
+  ```sh
+  pnpm add -D @leather-wallet/eslint-config
   ```
 
 - Add eslint configuration file:
 
-  ```js
-  // .eslintrc.js
-
-  module.exports = require('@muravjev/configs-eslint-ts');
+  ```jsonc
+  // .eslintrc
+  {
+    "extend": ["@leather-wallet/eslint-config"]
+  }
   ```
 
 - Add eslint ignore patterns file:
@@ -36,6 +41,11 @@ The purpose of `eslint` is linting `javascript` and `typescript` languages (`js`
 
   !.*
   node_modules/
+
+  pnpm-lock.yaml
+  .commitlintrc.js
+  .prettierrc.js
+  .eslintrc.js
 
   # Custom ignore patterns
   ...
@@ -48,15 +58,11 @@ The purpose of `eslint` is linting `javascript` and `typescript` languages (`js`
 
   "scripts": {
     ...
-    "lint": "eslint --ext js,cjs,mjs,ts,tsx",
-    "lint:fix": "pnpm lint --fix"
+    "lint:eslint": "eslint --ignore-path .gitignore .",
+    "lint:eslint:fix": "pnpm lint:eslint --fix",
     ...
   }
   ```
-
-## Automation
-
-- Setup [➡ eslint vscode plugin](../../docs/plugins/vscode-eslint.md) to integrate `eslint` with vscode environment.
 
 ## Usage
 
@@ -65,8 +71,8 @@ The purpose of `eslint` is linting `javascript` and `typescript` languages (`js`
 - Manual usage from command line:
 
   ```sh
-  pnpm lint .
-  pnpm lint:fix .
+  pnpm lint:eslint
+  pnpm lint:eslint:fix
   ```
 
 ## License

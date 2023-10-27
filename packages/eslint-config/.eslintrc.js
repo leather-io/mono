@@ -114,10 +114,4 @@ module.exports = {
   //       },
   //     },
   //   ],
-  // https://stackoverflow.com/questions/74413483/eslint-cypress-parsing-error-eslint-was-configured-to-run-on-tsconfigrootd
-  // Romans answer here!
-  // think I need to clean and commit this now
-  // then setup husky
-  // ignoring '.eslint' here to prevent error. This config should be imported and extended elsewhere
-  ignorePatterns: ['.eslintrc.js'],
 };

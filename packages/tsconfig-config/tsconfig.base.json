@@ -39,5 +39,5 @@
   //   "include": ["./src/**/*", "./tests/**/*", "./scripts-ts/**/*", "leather-styles", "theme"],
   //   "exclude": ["test-app"]
   "include": ["*"],
-  "exclude": [".eslintrc.js"]
+  "exclude": [""]
 }

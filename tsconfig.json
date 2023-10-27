@@ -1,5 +1,5 @@
 {
   "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
   "include": ["**/*", ".*.ts"],
-  "exclude": [".lintstagedrc.mjs", ".commitlintrc.js", ".remarkrc.mjs"]
+  "exclude": []
 }
