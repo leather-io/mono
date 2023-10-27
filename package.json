@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
-    "fresh": "pnpm clean && pnpm i",
-    "nuke": "rm -rf pnpm-lock.yaml && pnpm fresh",
+    "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
+    "install:fresh": "pnpm install:clean && pnpm i",
+    "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "lint:eslint": "eslint --ignore-path .gitignore .",
     "lint:eslint:fix": "pnpm lint:eslint --fix",
     "lint:prettier": "prettier --check \"*.{ts,tsx,js,json}\"",
