@@ -1,2 +1,3 @@
 - add package and setup for dependancy cruiser?
-- lint-filename?
+- lint-filename: https://ls-lint.org/?
+- unused-exports: https://www.npmjs.com/package/ts-unused-exports ?
