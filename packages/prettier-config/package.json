@@ -6,7 +6,8 @@
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/prettier-config",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git"
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/prettier-config"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "publishConfig": {

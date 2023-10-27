@@ -6,7 +6,8 @@
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/eslint-config",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git"
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/eslint-config"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "publishConfig": {
