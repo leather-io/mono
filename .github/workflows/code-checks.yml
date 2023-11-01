@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
-      - name: Lint
+      - name: Lint Prettier
         run: pnpm lint:prettier
 
   lint-eslint:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
-      - name: Lint
+      - name: Lint Eslint
         run: pnpm lint:eslint
 
   typecheck:
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
-      - name: Lint
+      - name: Lint Types
         run: pnpm lint:types
 
   lint-commit:
