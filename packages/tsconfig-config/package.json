@@ -1,13 +1,13 @@
 {
-  "name": "@leather-wallet/prettier-config",
+  "name": "@leather-wallet/tsconfig-config",
   "version": "0.0.1",
-  "description": "Shared prettier configuration",
-  "main": ".prettierrc.js",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/prettier-config",
+  "description": "Shared tsconfig configuration",
+  "main": "tsconfig.base.json",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tsconfig-config",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/prettier-config"
+    "directory": "packages/tsconfig-config"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "publishConfig": {
@@ -15,13 +15,12 @@
   },
   "keywords": [
     "leather",
-    "prettier",
+    "tsconfig",
     "leather wallet"
   ],
   "author": "Leather.io contact@leather.io",
   "license": "MIT",
   "dependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
-    "prettier": "^3.0.3"
+    "typescript": "^5.2.2"
   }
 }

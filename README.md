@@ -1,61 +1,44 @@
-# Sample repo for Leather monorepo setup
+# Monorepo Setup
 
-Here we review a few monorepo approaches and how they may fit into our codebase
+The purpose of this configuration is to ensure strict coding standards and facilitate code sharing. The monorepo uses `pnpm workspaces` at its core and provides several shared packages to be found under the `packages` folder.
 
-# Motivation
+### Monorepo setup
 
-As a largely single-product company, with a vision for being a multi-product company, we need a way to share code between our various projects. Consider how, when we begin work on the mobile wallet, much code needs to be refactored out of the Web Extension, into an environment-agnostic home. For use elsewhere, such as a React Native or Electron app.
+- [Architecture](docs/core/ARCHITECTURE.md)
+- [Monorepo](docs/core/MONOREPO.md)
 
-## Requirements
+Coding standards are enforced through the use of
 
-- Well organised monorepo
-- Automated package releases
-    - Publishing to npm
-        - [with NX](https://nx.dev/concepts/more-concepts/buildable-and-publishable-libraries)
-- Enables developers to easily create new packages
-- Easy to work with in local development
-- Easy to set up package-specific CI jobs
-- monorepo vs. one big npm package?
+- `eslint`
+- `prettier`
+- `typescripts`
 
+Shared configuration files for these tools exist in `packages` and the same base configurations are used in the monorepo itself.
 
-Ideally we want to:
-- not change the existing extension too much
-- facilitate sharing of code between platforms - web, native, desktop
-- re-use our new panda + radix system as much as possible
-- extract shared library code 
-- allow independant publishing of packages
-- solution must work with panda css
-- storybook for UI lib demos
-- storybook to replace test-app also? 
+Some other configured tools are:
 
-## Basic Leather monorepo architecture
+- [Husky](docs/tools/HUSKY.md): run code checks and enforce standards locally as a first prevention
+- [LintStaged](docs/tools/LINTSTAGED.md): only run checks on staged files
+- [CommitLint](docs/tools/COMMITLINT.md) enforce [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) standard
 
+### Monorepo packages
 
-```md
-leather-mono
-├─ apps
-│  ├─ extension
-│  ├─ mobile
-│  ├─ desktop
-│  ├─ storybook <-- replaces test-app, place to view UI components with context + tests
-│  ├─ website <-- maybe we can get rid of Framer and just host our site ourself, keeping code here?
-├─ docs -> should we host out dev docs here?
-├─ packages
-│  ├─ api <-- leather API / wrapper interface to other libs: here / under apps,
-│  ├─ tsconfig
-│  ├─ lib
-│  ├─ utils <-- shared utils,
-│  ├─ ui <-- using definePreset(), contains the theme base (tokens.colors, semantic tokens, etc)
-│  └─ button <-- consuming the preset, provides a button recipe (in a buttonPreset) + a ShadcnButton component
-│  └─ some-component <-- consuming the preset, provides a component using internal `css` calls, ships a panda.json extract result
-```
+The current packages are listed below
 
+- [ESLint](packages/eslint-config/README.md)
+- [Prettier](packages/prettier-config/README.md)
+- [TSconfig](packages/tsconfig-config/README.md)
 
-## Items for further consideration
+### Git Actions
 
-- migration from `yarn` to [`pnpm`](https://pnpm.io/)
-- upgrading from `webpack` to [`esbuild`](https://esbuild.github.io/)
-- Can use Nx + Lerna or just Nx
-- for HTML Ordinals, do we want to use SSR so we can show them? Maybe we can have a library/package using Next.js just to render those that gets imported?
-- how do we manage our documentation? could we host that here also? 
-- do we still need Framer? It helped us release fast but now we could manage the site as a monorepo app
+Basic CI actions to run code quality checks have been setup in
+
+- [Code checks](.github/workflows/code-checks.yml)
+
+### Documentation
+
+Documentation has been provided from the outset and can be found in `docs/tools/` along with a [TEMPLATE.md](docs/core/TEMPLATE.md) file
+
+## License
+
+[MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
