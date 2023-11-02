@@ -75,7 +75,7 @@ This package is the prettier configuration for Leather
 
 ## License
 
-[MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
 
 ---
 

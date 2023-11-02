@@ -34,7 +34,7 @@ The purpose of [typescript](https://www.typescriptlang.org/) is to add strong ty
 
 ## License
 
-[MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
 
 ---
 
