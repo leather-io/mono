@@ -1,14 +1,14 @@
 // stacks prettier config
-const defaultConfig =  {
+const defaultConfig = {
   printWidth: 100,
   trailingComma: 'none',
   tabWidth: 2,
   useTabs: false,
   semi: true,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   singleQuote: true,
-  arrowParens: 'avoid'
-}
+  arrowParens: 'avoid',
+};
 
 module.exports = {
   ...defaultConfig,
