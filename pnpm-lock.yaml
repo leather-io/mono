@@ -75,6 +75,9 @@ importers:
       '@react-navigation/native':
         specifier: ^6.0.2
         version: 6.1.9(react-native@0.72.6)(react@18.2.0)
+      '@tanstack/react-query':
+        specifier: ^5.7.2
+        version: 5.8.1(react-dom@18.2.0)(react-native@0.72.6)(react@18.2.0)
       expo:
         specifier: ~49.0.15
         version: 49.0.16(@babel/core@7.23.2)
@@ -120,6 +123,9 @@ importers:
       react-native-web:
         specifier: ~0.19.6
         version: 0.19.9(react-dom@18.2.0)(react@18.2.0)
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -3165,6 +3171,28 @@ packages:
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
     dependencies:
       '@sinonjs/commons': 3.0.0
+
+  /@tanstack/query-core@5.8.1:
+    resolution: {integrity: sha512-Y0enatz2zQXBAsd7XmajlCs+WaitdR7dIFkqz9Xd7HL4KV04JOigWVreYseTmNH7YFSBSC/BJ9uuNp1MAf+GfA==}
+    dev: false
+
+  /@tanstack/react-query@5.8.1(react-dom@18.2.0)(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-YMagxS8iNPOLg0pK6WOjdSDlAvWKOf69udLOwQrBVmkC2SRLNLko7elo5Ro3ptlJkXvTVHidxC/h5KGi5bH1XQ==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 5.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-native: 0.72.6(@babel/core@7.23.2)(@babel/preset-env@7.23.2)(react@18.2.0)
+    dev: false
 
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
