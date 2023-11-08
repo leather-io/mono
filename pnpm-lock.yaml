@@ -20,6 +20,9 @@ importers:
       '@leather-wallet/eslint-config':
         specifier: workspace:^
         version: link:packages/eslint-config
+      '@leather-wallet/mobile-wallet':
+        specifier: workspace:^
+        version: link:packages/mobile-wallet
       '@leather-wallet/prettier-config':
         specifier: workspace:^
         version: link:packages/prettier-config
