@@ -1,5 +1,5 @@
 {
-  "name": "mobile-wallet",
+  "name": "@leather-wallet/mobile-wallet",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -29,7 +29,8 @@
     "react-native-gesture-handler": "~2.12.0",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
