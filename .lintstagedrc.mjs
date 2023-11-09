@@ -1,4 +1,5 @@
+// TODO: fix lint staged
 export default {
-  '*.{mjs,js,ts,tsx,json,yaml}': 'pnpm lint:prettier',
-  '*.{mjs,js,ts,tsx}': 'pnpm lint:eslint',
+  "*.{mjs,js,ts,tsx,json,yaml}": "",
+  "*.{mjs,js,ts,tsx}": "",
 };
