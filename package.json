@@ -3,39 +3,21 @@
   "version": "1.0.0",
   "description": "Leather wallet shared code",
   "scripts": {
-    "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
-    "install:fresh": "pnpm install:clean && pnpm i",
-    "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
-    "lint:eslint": "eslint .",
-    "lint:eslint:fix": "pnpm lint:eslint --fix",
-    "lint:prettier": "prettier --check \"**/*.{ts,tsx,js,jsx,json}\"",
-    "lint:prettier:fix": "prettier --write  \"**/*.{ts,tsx,js,jsx,json}\"",
-    "lint:types": "tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged",
+    "commitlint": "commitlint"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.26.2",
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
-    "@leather-wallet/eslint-config": "workspace:^",
-    "@leather-wallet/mobile-wallet": "workspace:^",
-    "@leather-wallet/prettier-config": "workspace:^",
-    "@leather-wallet/tsconfig-config": "workspace:^",
-    "eslint": "^8.52.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.2",
-    "prettier": "^3.0.3",
-    "syncpack": "^11.2.1",
-    "typescript": "^5.2.2"
+    "lint-staged": "^15.0.2"
   },
   "engines": {
-    "node": ">=20.3.0",
-    "pnpm": ">=7.10.0",
-    "npm": "please-use-pnpm",
-    "yarn": "please-use-pnpm"
+    "node": ">=20.3.0"
   },
   "packageManager": "pnpm@8.7.5"
 }
