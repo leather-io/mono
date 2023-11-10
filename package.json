@@ -4,7 +4,8 @@
   "description": "Leather wallet shared code",
   "scripts": {
     "prepare": "husky install",
-    "lint-projects": "nx run-many -t format lint typecheck --parallel 1",
+    "lint-projects:all": "nx run-many -t format,lint,typecheck --parallel=1",
+    "lint-projects:affected": "npx nx affected -t format,lint,typecheck --parallel=1 --base=dev",
     "commitlint": "commitlint"
   },
   "keywords": [],
