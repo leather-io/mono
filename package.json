@@ -4,20 +4,23 @@
   "description": "Leather wallet shared code",
   "scripts": {
     "prepare": "husky install",
-    "lint-staged": "lint-staged",
+    "lint-projects": "nx run-many -t format lint typecheck --parallel 1",
     "commitlint": "commitlint"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.2"
+    "nx": "^17.1.1"
   },
   "engines": {
-    "node": ">=20.3.0"
-  },
-  "packageManager": "pnpm@8.7.5"
+    "node": ">=20.3.0",
+    "npm": ">=10"
+  }
 }
