@@ -25,16 +25,16 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
     // Common scripts
 
     "scripts": {
-      "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
-      "install:fresh": "pnpm install:clean && pnpm i",
-      "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh"
+      "lint-projects:all": "nx run-many -t format,lint,typecheck --parallel=1",
+      "lint-projects:affected": "npx nx affected -t format,lint,typecheck --parallel=1 --base=dev",
+      "commitlint": "commitlint"
     },
 
     // Specify workspaces
 
     "workspaces": ["packages/*", "apps/*"],
 
-    // Only allow pnpm as package manager
+    // Only allow npm as package manager
 
     "engines": {
       "node": ">=20.3.0",
