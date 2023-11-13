@@ -1,6 +1,6 @@
 # Package configuration
 
-The purpose of this monorepo is to host various **[npm packages ↗](https://docs.npmjs.com/about-packages-and-modules)** to facilitate code sharing and at high standards. At it's core it uses `pnpm workspaces` to manage the monorepo
+The purpose of this monorepo is to host various **[npm packages ↗](https://docs.npmjs.com/about-packages-and-modules)** to facilitate code sharing and at high standards. At it's core it uses `npm workspaces` and `nx` to manage the monorepo.
 
 ## Contents
 
@@ -30,15 +30,18 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
       "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh"
     },
 
+    // Specify workspaces
+
+    "workspaces": ["packages/*", "apps/*"],
+
     // Only allow pnpm as package manager
 
     "engines": {
-      "node": ">=14.16.0",
-      "pnpm": ">=7.10.0",
-      "npm": "please-use-pnpm",
-      "yarn": "please-use-pnpm"
-    },
-    "packageManager": "pnpm@8.7.5"
+      "node": ">=20.3.0",
+      "npm": ">=10",
+      "pnpm": "please-use-npm",
+      "yarn": "please-use-npm"
+    }
   }
   ```
 
@@ -49,15 +52,6 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
 
   engine-strict = true
   auto-install-peers = true
-  ```
-
-- Add pnpm workspace file:
-
-  ```yaml
-  # pnpm-workspace.yaml
-
-  packages:
-    - 'packages/*'
   ```
 
 ## License
