@@ -29,7 +29,7 @@ Checking locally improves developer experience as it provides quick feedback on 
 - Add workspace reference to `@muravjev/configs-commitlint` and its peer dependencies:
 
   ```sh
-  pnpm add -w @commitlint/cli -D
+  npm i --save-dev @commitlint/cli
   ```
 
 - Add commitlint configuration file:
@@ -37,7 +37,7 @@ Checking locally improves developer experience as it provides quick feedback on 
   ```js
   // .commitlintrc.js
 
-  module.exports = require('@commitlint/config-conventional');
+  module.exports = require("@commitlint/config-conventional");
   ```
 
 ## Automation
