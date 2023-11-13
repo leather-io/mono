@@ -12,25 +12,26 @@ This package contains `eslint` configuration to be shared across projects.
 
 ## Setup
 
-- Install as a dev dependancy in monorepo root:
+- Install as a dev dependency in packages / apps:
 
   ```sh
-  pnpm add -D @leather-wallet/eslint-config -w
-  ```
-
-- Install as a dev dependancy in external packages / apps:
-
-  ```sh
-  pnpm add -D @leather-wallet/eslint-config
+  npm i --save-dev @leather-wallet/eslint-config
   ```
 
 - Add eslint configuration file:
 
-  ```jsonc
-  // .eslintrc
-  {
-    "extend": ["@leather-wallet/eslint-config"]
-  }
+  ```js
+  // .eslintrc.js
+  module.exports = {
+    extends: ['@leather-wallet/eslint-config', 'universe/native'],
+
+    // add this if you have typescript in your package / app
+    parserOptions: {
+      project: path.resolve(__dirname, './tsconfig.json'),
+    },
+
+    ...,
+  };
   ```
 
 - Add eslint ignore patterns file:
@@ -41,7 +42,6 @@ This package contains `eslint` configuration to be shared across projects.
   !.*
   node_modules/
 
-  pnpm-lock.yaml
   .commitlintrc.js
   .prettierrc.js
   .eslintrc.js
@@ -57,8 +57,8 @@ This package contains `eslint` configuration to be shared across projects.
 
   "scripts": {
     ...
-    "lint:eslint": "eslint --ignore-path .gitignore .",
-    "lint:eslint:fix": "pnpm lint:eslint --fix",
+    "lint": "eslint . --config .eslintrc.js",
+    "lint:fix": "eslint . --config .eslintrc.js --fix"
     ...
   }
   ```
@@ -68,8 +68,8 @@ This package contains `eslint` configuration to be shared across projects.
 - Manual usage from command line:
 
   ```sh
-  pnpm lint:eslint
-  pnpm lint:eslint:fix
+  npm run lint
+  npm run lint:fix
   ```
 
 ## License

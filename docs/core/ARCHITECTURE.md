@@ -1,6 +1,6 @@
 # Leather monorepo setup
 
-We reviewed a few monorepo approaches and how they may fit into our codebase and decided upon starting with `pnpm workspaces` before then adding `Nx` if needed
+We reviewed a few monorepo approaches and how they may fit into our codebase and decided upon starting with `npm workspaces` and `nx`
 
 # Motivation
 
@@ -42,11 +42,11 @@ leather-mono
 
 ## Items for further consideration
 
-- migration from `yarn` to [`pnpm`](https://pnpm.io/)
 - upgrading from `webpack` to [`esbuild`](https://esbuild.github.io/)
 
 # Useful references
 
+- https://nx.dev/getting-started/intro
 - https://medium.com/reactbrasil/reuse-your-eslint-prettier-config-in-a-monorepo-with-lerna-54c1800cacdc
 - https://github.com/muravjev/configs/
 - https://www.raulmelo.me/en/blog/replacing-lerna-and-yarn-with-pnpm-workspaces

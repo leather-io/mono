@@ -16,16 +16,10 @@ This package is the prettier configuration for Leather
 
 ## Setup
 
-- Install as a dev dependancy in monorepo root:
+- Install as a dev dependency in packages / apps:
 
   ```sh
-  pnpm add -w @leather-wallet/prettier-config -D
-  ```
-
-- Install as a dev dependancy in external packages / apps:
-
-  ```sh
-  pnpm add @leather-wallet/prettier-config -D
+  npm install --save-dev @leather-wallet/prettier-config
   ```
 
 - Add prettier configuration file:
@@ -45,7 +39,6 @@ This package is the prettier configuration for Leather
   # .prettierignore
 
   node_modules/
-  pnpm-lock.yaml
 
   # Custom ignore patterns
   ...
@@ -57,9 +50,7 @@ This package is the prettier configuration for Leather
   // package.json
 
   "scripts": {
-    ...
-    "lint:prettier": "prettier --check \"*.{ts,tsx,js,json}\"",
-    "lint:prettier:fix": "prettier --write \"*.{ts,tsx,js,json}\" *.js",
+    "format": "prettier --write \"*.{js,jsx,ts,tsx}\"",
     ...
   }
   ```
@@ -69,8 +60,7 @@ This package is the prettier configuration for Leather
 - Manual usage from command line:
 
   ```sh
-  pnpm lint:prettier
-  pnpm lint:prettier:fix
+  npm run format
   ```
 
 ## License

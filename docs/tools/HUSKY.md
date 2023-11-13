@@ -18,46 +18,19 @@ It runs on staged files via `lint-staged`. As this is a clean project it is quit
 
 ## Setup
 
-- Add workspace reference to `husky`:
-
-  ```sh
-  pnpm add -w husky -D
-  ```
-
-- Install `husky`:
-
-  ```sh
-  pnpm husky install
-  ```
-
-- Add husky's install script:
-
-  ```jsonc
-  // package.json
-
-  "scripts": {
-    ...
-    "prepare": "husky install"
-    ...
-  }
-  ```
-
 - Add `pre-commit` hook for linting and formatting indexed files using [lint-staged](./lint-staged.md):
 
   ```sh
-  pnpm husky add .husky/pre-commit 'pnpm lint-staged --quiet'
+  npx husky add .husky/pre-commit 'run-command-on-pre-commit'
   ```
 
 - Add `commit-msg` hook for linting of commit message using [commitlint](../../packages/commitlint/README.md):
 
   ```sh
-  pnpm husky add .husky/commit-msg 'pnpm commitlint --edit $1'
+  npx husky add .husky/commit-msg 'run-command-on-commit-msg $1'
   ```
 
-## Usage
-
-- **Automatic** execution [lint-staged](./lint-staged.md) and [commitlint](../../packages/commitlint/README.md) on commit.\
-  In case of any failures, commit will be rejected.
+- For more info visit [husky guide](https://typicode.github.io/husky/guide.html)
 
 ## License
 

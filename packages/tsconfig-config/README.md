@@ -9,16 +9,10 @@ The purpose of [typescript](https://www.typescriptlang.org/) is to add strong ty
 
 ## Setup
 
-- Install as a dev dependancy in monorepo root:
+- Install as a dev dependency in packages / apps:
 
   ```sh
-  pnpm add -D @leather-wallet/tsconfig-config -w
-  ```
-
-- Install as a dev dependancy in external packages / apps:
-
-  ```sh
-  pnpm add -D @leather-wallet/tsconfig-config
+  npm install --save-dev @leather-wallet/tsconfig-config
   ```
 
 - Add typescript configuration file to your package that extends the base
