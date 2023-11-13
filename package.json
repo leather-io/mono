@@ -12,7 +12,8 @@
   "author": "",
   "license": "MIT",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "devDependencies": {
     "@commitlint/cli": "^18.0.0",
