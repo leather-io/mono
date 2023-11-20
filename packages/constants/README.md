@@ -1,1 +1,1 @@
-# @leather-wallet/bitcoin
+# @leather-wallet/constants
