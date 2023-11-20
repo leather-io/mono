@@ -14,22 +14,6 @@ export function deriveRootBtcKeychain(seed: Uint8Array) {
   return HDKey.fromMasterSeed(seed);
 }
 
-// ts-unused-exports:disable-next-line
-export async function deriveBtcPayment(
-  publicKey: Uint8Array | Buffer,
-  defaultNetwork: NetworkModes = 'mainnet'
-) {
-  const pubkey = Buffer.isBuffer(publicKey) ? publicKey : Buffer.from(publicKey);
-  const network = defaultNetwork === 'mainnet' ? undefined : bitcoin.networks.testnet;
-  return bitcoin.payments.p2sh({
-    redeem: bitcoin.payments.p2wpkh({
-      pubkey,
-      network,
-    }),
-    network,
-  });
-}
-
 export function decodeCompressedWifPrivateKey(key: string) {
   // https://en.bitcoinwiki.org/wiki/Wallet_import_format
   // Decode Compressed WIF format private key

@@ -8,7 +8,6 @@ import {
   deriveAddressIndexZeroFromAccount,
   getBitcoinCoinTypeIndexByNetwork,
 } from './bitcoin.utils';
-// import { BitcoinNetworkModes } from '@shared/constants';
 import { DerivationPathDepth } from './derivation-path.utils';
 
 export function getNativeSegwitAccountDerivationPath(
