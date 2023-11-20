@@ -4,7 +4,6 @@ import { sha256 } from '@noble/hashes/sha256';
 import { base58check } from '@scure/base';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeed } from '@scure/bip39';
-import * as bitcoin from 'bitcoinjs-lib';
 
 export async function deriveBtcBip49SeedFromMnemonic(mnemonic: string) {
   return mnemonicToSeed(mnemonic);
