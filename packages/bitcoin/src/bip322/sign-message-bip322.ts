@@ -7,6 +7,7 @@ import { hashBip322Message } from './bip322-utils';
 // Ran into difficiulties with btc-signer vs bitcoinjs-lib
 // Using that library to unblock for now, but we should go
 // back and replace it when possible.
+// Ref PR: https://github.com/leather-wallet/extension/pull/3679
 // ts-unused-exports:disable-next-line
 export function signBip322MessageSimple(script: Uint8Array, message: string) {
   // nVersion = 0
