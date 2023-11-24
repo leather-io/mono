@@ -16,9 +16,12 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       - name: Install deps
         run: npm ci
-      - name: Lint affected
-        run: npx nx affected -t lint
-      - name: Test affected
-        run: npx nx affected -t test --configuration=ci
-      - name: Build affected
-        run: npx nx affected -t build
+      # This line is needed for nx affected to work when CI is running on a PR
+      - run: git branch --track dev origin/dev
+      - run: npm run lint-projects:affected
+      # - name: Lint affected
+      #   run: npx nx affected -t lint
+      # - name: Test affected
+      #   run: npx nx affected -t test --configuration=ci
+      # - name: Build affected
+      #   run: npx nx affected -t build

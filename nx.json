@@ -20,10 +20,6 @@
     },
     "e2e": {
       "cache": true
-    },
-    "@nx/vite:test": {
-      "cache": true,
-      "inputs": ["default", "^default"]
     }
   },
   "generators": {
