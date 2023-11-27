@@ -8,12 +8,11 @@ import {
 import { getCurrentAccountNativeSegwitIndexZeroSigner } from '@leather-wallet/bitcoin/src/native-segwit-account.hooks';
 import { getCurrentAccountTaprootIndexZeroSigner } from '@leather-wallet/bitcoin/src/taproot-account.hooks';
 import { NetworkConfiguration } from '@leather-wallet/constants';
+import { getCurrentStacksAccount } from '@leather-wallet/stacks/src/stacks-account';
+import { StacksAccount } from '@leather-wallet/stacks/src/stacks-account.models';
 import { Versions } from '@scure/bip32';
 import { P2Ret } from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
-
-import { getCurrentStacksAccount } from './utils/stacks/stacks-account';
-import { StacksAccount } from './utils/stacks/stacks-account.models';
 
 interface BitcoinAccountResponse {
   symbol: string;

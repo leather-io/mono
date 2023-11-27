@@ -1,12 +1,12 @@
 {
-  "name": "@leather-wallet/crypto",
+  "name": "@leather-wallet/stacks",
   "version": "0.0.1",
   "description": "Shared bitcoin utilities",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/crypto",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/stacks",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/crypto"
+    "directory": "packages/stacks"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "publishConfig": {
@@ -14,7 +14,7 @@
   },
   "keywords": [
     "leather",
-    "crypto",
+    "stacks",
     "leather wallet"
   ],
   "author": "Leather.io contact@leather.io",
@@ -28,7 +28,6 @@
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "devDependencies": {
-    "@btckit/types": "0.0.19",
     "@leather-wallet/eslint-config": "*",
     "@leather-wallet/prettier-config": "*",
     "@leather-wallet/tsconfig-config": "*",
@@ -40,12 +39,6 @@
   },
   "prettier": "@leather-wallet/prettier-config",
   "dependencies": {
-    "@leather-wallet/bitcoin": "*",
-    "@leather-wallet/constants": "*",
-    "@leather-wallet/stacks": "*",
-    "@scure/bip32": "1.3.2",
-    "@scure/btc-signer": "1.1.0",
-    "@stacks/common": "6.8.1",
-    "react": "^18.2.0"
+    "@stacks/wallet-sdk": "6.9.0"
   }
 }
