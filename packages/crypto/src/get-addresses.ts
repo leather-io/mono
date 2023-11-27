@@ -1,17 +1,17 @@
 import { PaymentTypes } from '@btckit/types';
+import { Signer } from '@leather-wallet/bitcoin/src/bitcoin-signer';
 import {
   BitcoinAccount,
   ecdsaPublicKeyToSchnorr,
   whenPaymentType,
 } from '@leather-wallet/bitcoin/src/bitcoin.utils';
+import { getCurrentAccountNativeSegwitIndexZeroSigner } from '@leather-wallet/bitcoin/src/native-segwit-account.hooks';
+import { getCurrentAccountTaprootIndexZeroSigner } from '@leather-wallet/bitcoin/src/taproot-account.hooks';
 import { NetworkConfiguration } from '@leather-wallet/constants';
 import { Versions } from '@scure/bip32';
 import { P2Ret } from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
-import { Signer } from 'utils/bitcoin/bitcoin-signer';
 
-import { getCurrentAccountNativeSegwitIndexZeroSigner } from './utils/bitcoin/native-segwit-account.hooks';
-import { getCurrentAccountTaprootIndexZeroSigner } from './utils/bitcoin/taproot-account.hooks';
 import { getCurrentStacksAccount } from './utils/stacks/stacks-account';
 import { StacksAccount } from './utils/stacks/stacks-account.models';
 

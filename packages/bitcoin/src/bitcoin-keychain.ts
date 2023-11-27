@@ -5,7 +5,7 @@ import {
 import { NetworkConfiguration } from '@leather-wallet/constants';
 import { Versions } from '@scure/bip32';
 
-import { KeyConfig, whenWalletType } from '../when-wallet-type';
+import { KeyConfig, whenWalletType } from '../../crypto/src/utils/when-wallet-type';
 
 export function getBitcoinExtendedPublicKeyVersions({
   currentNetwork,
