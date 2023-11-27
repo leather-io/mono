@@ -5,9 +5,9 @@ import {
 import { NetworkConfiguration } from '@leather-wallet/constants';
 import { Versions } from '@scure/bip32';
 
-import { KeyConfig, useWalletType } from '../useWalletType';
+import { KeyConfig, whenWalletType } from '../when-wallet-type';
 
-export function useBitcoinExtendedPublicKeyVersions({
+export function getBitcoinExtendedPublicKeyVersions({
   currentNetwork,
   hasLedgerKeys,
   wallet,
@@ -16,7 +16,7 @@ export function useBitcoinExtendedPublicKeyVersions({
   hasLedgerKeys: boolean;
   wallet: KeyConfig | undefined;
 }): Versions | undefined {
-  const { whenWallet } = useWalletType({ hasLedgerKeys, wallet });
+  const { whenWallet } = whenWalletType({ hasLedgerKeys, wallet });
   // Only Ledger in testnet mode do we need to manually declare `Versions`
   return whenWallet({
     software: undefined,

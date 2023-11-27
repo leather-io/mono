@@ -1,59 +1,48 @@
 import { BitcoinAccount } from '@leather-wallet/bitcoin/src/bitcoin.utils';
 import { getTaprootPaymentFromAddressIndex } from '@leather-wallet/bitcoin/src/p2tr-address-gen';
 import { NetworkConfiguration } from '@leather-wallet/constants';
+import { Versions } from '@scure/bip32';
 
-import { KeyConfig } from '../useWalletType';
-import { useBitcoinExtendedPublicKeyVersions } from './bitcoin-keychain';
 import { bitcoinAddressIndexSignerFactory } from './bitcoin-signer';
 
-function useTaprootSigner({
+function getTaprootSigner({
   currentAccountIndex,
   taprootAccount,
   currentNetwork,
-  hasLedgerKeys,
-  wallet,
+  bitcoinExtendedPublicKeyVersions,
 }: {
   currentAccountIndex: number;
   taprootAccount: BitcoinAccount | undefined;
   currentNetwork: NetworkConfiguration;
-  hasLedgerKeys: boolean;
-  wallet: KeyConfig | undefined;
+  bitcoinExtendedPublicKeyVersions: Versions | undefined;
 }) {
-  const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions({
-    currentNetwork,
-    hasLedgerKeys,
-    wallet,
-  });
-
-  if (!taprootAccount) return; // TODO: Revisit this return early
+  if (!taprootAccount) return;
   return bitcoinAddressIndexSignerFactory({
     accountIndex: currentAccountIndex,
     accountKeychain: taprootAccount.keychain,
     paymentFn: getTaprootPaymentFromAddressIndex,
+    // TODO: Can we use taprootAccount.network here?
     network: currentNetwork.chain.bitcoin.bitcoinNetwork,
-    extendedPublicKeyVersions,
+    extendedPublicKeyVersions: bitcoinExtendedPublicKeyVersions,
   });
 }
 
-export function useCurrentAccountTaprootIndexZeroSigner({
+export function getCurrentAccountTaprootIndexZeroSigner({
   currentAccountIndex,
   taprootAccount,
   currentNetwork,
-  hasLedgerKeys,
-  wallet,
+  bitcoinExtendedPublicKeyVersions,
 }: {
   currentAccountIndex: number;
   taprootAccount: BitcoinAccount | undefined;
   currentNetwork: NetworkConfiguration;
-  hasLedgerKeys: boolean;
-  wallet: KeyConfig | undefined;
+  bitcoinExtendedPublicKeyVersions: Versions | undefined;
 }) {
-  const signer = useTaprootSigner({
+  const signer = getTaprootSigner({
     currentAccountIndex,
     taprootAccount,
     currentNetwork,
-    hasLedgerKeys,
-    wallet,
+    bitcoinExtendedPublicKeyVersions,
   });
   if (!signer) throw new Error('No signer');
   return signer(0);

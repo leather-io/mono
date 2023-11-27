@@ -2,7 +2,7 @@ import { TransactionPayload } from '@stacks/connect';
 
 import { StacksAccount } from './stacks-account.models';
 
-export function useTransactionAccountIndex({
+export function getTransactionAccountIndex({
   stacksAccounts,
   transactionPayload,
 }: {
@@ -21,7 +21,7 @@ export function useTransactionAccountIndex({
 //   This contains the state of the current account:
 //   could be the account associated with an in-process transaction request
 //   or the last selected / first account of the user
-export function useCurrentStacksAccount({
+export function getCurrentStacksAccount({
   currentAccountIndex,
   stacksAccounts,
   transactionPayload,
@@ -34,7 +34,7 @@ export function useCurrentStacksAccount({
   hasSwitchedAccounts: boolean;
   signatureIndex: number | undefined;
 }) {
-  const txIndex = useTransactionAccountIndex({ stacksAccounts, transactionPayload });
+  const txIndex = getTransactionAccountIndex({ stacksAccounts, transactionPayload });
 
   // ⚠️ to refactor, we should not just continually add new conditionals here
   const hasSwitched = hasSwitchedAccounts;

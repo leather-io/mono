@@ -1,53 +1,48 @@
 import { BtcAddress } from '@btckit/types';
 import { BitcoinAccount, ecdsaPublicKeyToSchnorr } from '@leather-wallet/bitcoin/src/bitcoin.utils';
 import { NetworkConfiguration } from '@leather-wallet/constants';
+import { Versions } from '@scure/bip32';
 import { bytesToHex } from '@stacks/common';
 import { TransactionPayload } from '@stacks/connect';
 
-import { useCurrentAccountNativeSegwitIndexZeroSigner } from './utils/bitcoin/native-segwit-account.hooks';
-import { useCurrentAccountTaprootIndexZeroSigner } from './utils/bitcoin/taproot-account.hooks';
-import { useCurrentStacksAccount } from './utils/stacks/stacks-account';
+import { getCurrentAccountNativeSegwitIndexZeroSigner } from './utils/bitcoin/native-segwit-account.hooks';
+import { getCurrentAccountTaprootIndexZeroSigner } from './utils/bitcoin/taproot-account.hooks';
+import { getCurrentStacksAccount } from './utils/stacks/stacks-account';
 import { StacksAccount } from './utils/stacks/stacks-account.models';
-import { KeyConfig } from './utils/useWalletType';
 
-export function useGetAddresses({
+export function getAddresses({
   signatureIndex,
   currentAccountIndex,
   currentNetwork,
-  hasLedgerKeys,
   hasSwitchedAccounts,
-  segwitAccount,
+  nativeSegwitAccount,
   stacksAccounts,
   taprootAccount,
   transactionPayload,
-  wallet,
+  bitcoinExtendedPublicKeyVersions,
 }: {
   signatureIndex: number | undefined;
   currentAccountIndex: number;
   currentNetwork: NetworkConfiguration;
-  hasLedgerKeys: boolean;
   hasSwitchedAccounts: boolean;
-  segwitAccount: BitcoinAccount | undefined;
+  nativeSegwitAccount: BitcoinAccount | undefined;
   stacksAccounts: StacksAccount[];
   taprootAccount: BitcoinAccount | undefined;
   transactionPayload: TransactionPayload | null;
-  wallet: KeyConfig | undefined;
+  bitcoinExtendedPublicKeyVersions: Versions | undefined;
 }) {
-  const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroSigner({
+  const nativeSegwitSigner = getCurrentAccountNativeSegwitIndexZeroSigner({
     currentAccountIndex,
-    segwitAccount,
-    currentNetwork,
-    hasLedgerKeys,
-    wallet,
+    nativeSegwitAccount,
+    bitcoinExtendedPublicKeyVersions,
   });
-  const taprootSigner = useCurrentAccountTaprootIndexZeroSigner({
+  const taprootSigner = getCurrentAccountTaprootIndexZeroSigner({
     currentAccountIndex,
     taprootAccount,
     currentNetwork,
-    hasLedgerKeys,
-    wallet,
+    bitcoinExtendedPublicKeyVersions,
   });
-  const stacksAccount = useCurrentStacksAccount({
+  const stacksAccount = getCurrentStacksAccount({
     currentAccountIndex,
     stacksAccounts,
     transactionPayload,

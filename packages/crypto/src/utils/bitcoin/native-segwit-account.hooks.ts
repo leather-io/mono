@@ -1,59 +1,42 @@
 import { BitcoinAccount } from '@leather-wallet/bitcoin/src/bitcoin.utils';
 import { getNativeSegWitPaymentFromAddressIndex } from '@leather-wallet/bitcoin/src/p2wpkh-address-gen';
-import { NetworkConfiguration } from '@leather-wallet/constants';
+import { Versions } from '@scure/bip32';
 
-import { KeyConfig } from '../useWalletType';
-import { useBitcoinExtendedPublicKeyVersions } from './bitcoin-keychain';
 import { bitcoinAddressIndexSignerFactory } from './bitcoin-signer';
 
-function useNativeSegwitSigner({
+function getNativeSegwitSigner({
   currentAccountIndex,
-  segwitAccount,
-  currentNetwork,
-  hasLedgerKeys,
-  wallet,
+  nativeSegwitAccount,
+  bitcoinExtendedPublicKeyVersions,
 }: {
   currentAccountIndex: number;
-  segwitAccount: BitcoinAccount | undefined;
-  currentNetwork: NetworkConfiguration;
-  hasLedgerKeys: boolean;
-  wallet: KeyConfig | undefined;
+  nativeSegwitAccount: BitcoinAccount | undefined;
+  bitcoinExtendedPublicKeyVersions: Versions | undefined;
 }) {
-  const extendedPublicKeyVersions = useBitcoinExtendedPublicKeyVersions({
-    currentNetwork,
-    hasLedgerKeys,
-    wallet,
-  });
-  if (!segwitAccount) return;
+  if (!nativeSegwitAccount) return;
 
   return bitcoinAddressIndexSignerFactory({
     accountIndex: currentAccountIndex,
-    accountKeychain: segwitAccount.keychain,
+    accountKeychain: nativeSegwitAccount.keychain,
     paymentFn: getNativeSegWitPaymentFromAddressIndex,
-    network: segwitAccount.network,
-    extendedPublicKeyVersions,
+    network: nativeSegwitAccount.network,
+    extendedPublicKeyVersions: bitcoinExtendedPublicKeyVersions,
   });
 }
 
-export function useCurrentAccountNativeSegwitIndexZeroSigner({
+export function getCurrentAccountNativeSegwitIndexZeroSigner({
   currentAccountIndex,
-  segwitAccount,
-  currentNetwork,
-  hasLedgerKeys,
-  wallet,
+  nativeSegwitAccount,
+  bitcoinExtendedPublicKeyVersions,
 }: {
   currentAccountIndex: number;
-  segwitAccount: BitcoinAccount | undefined;
-  currentNetwork: NetworkConfiguration;
-  hasLedgerKeys: boolean;
-  wallet: KeyConfig | undefined;
+  nativeSegwitAccount: BitcoinAccount | undefined;
+  bitcoinExtendedPublicKeyVersions: Versions | undefined;
 }) {
-  const signer = useNativeSegwitSigner({
+  const signer = getNativeSegwitSigner({
     currentAccountIndex,
-    segwitAccount,
-    currentNetwork,
-    hasLedgerKeys,
-    wallet,
+    nativeSegwitAccount,
+    bitcoinExtendedPublicKeyVersions,
   });
   if (!signer) throw new Error('No signer');
   return signer(0);

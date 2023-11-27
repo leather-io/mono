@@ -28,7 +28,7 @@ export interface KeyConfig {
   salt: string;
 }
 
-export function useWalletType({
+export function whenWalletType({
   hasLedgerKeys,
   wallet,
 }: {

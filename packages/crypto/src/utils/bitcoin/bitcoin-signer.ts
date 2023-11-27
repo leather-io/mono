@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import {
   BitcoinAccount,
   deriveAddressIndexKeychainFromAccount,
@@ -133,21 +131,18 @@ function createSignersForAllNetworkTypes<T extends CreateSignersForAllNetworkTyp
   };
 }
 
-export function useMakeBitcoinNetworkSignersForPaymentType<T>(
+export function makeBitcoinNetworkSignersForPaymentType<T>(
   mainnetKeychainFn: (index: number) => BitcoinAccount | undefined,
   testnetKeychainFn: (index: number) => BitcoinAccount | undefined,
   paymentFn: (keychain: HDKey, network: BitcoinNetworkModes) => T
 ) {
-  return useCallback(
-    (accountIndex: number) => {
-      const zeroIndex = 0;
+  return (accountIndex: number) => {
+    const zeroIndex = 0;
 
-      return createSignersForAllNetworkTypes({
-        mainnetKeychainFn,
-        testnetKeychainFn,
-        paymentFn,
-      })({ accountIndex, addressIndex: zeroIndex });
-    },
-    [mainnetKeychainFn, paymentFn, testnetKeychainFn]
-  );
+    return createSignersForAllNetworkTypes({
+      mainnetKeychainFn,
+      testnetKeychainFn,
+      paymentFn,
+    })({ accountIndex, addressIndex: zeroIndex });
+  };
 }
