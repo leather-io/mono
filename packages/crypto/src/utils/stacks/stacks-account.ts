@@ -1,20 +1,4 @@
-import { TransactionPayload } from '@stacks/connect';
-
 import { StacksAccount } from './stacks-account.models';
-
-export function getTransactionAccountIndex({
-  stacksAccounts,
-  transactionPayload,
-}: {
-  stacksAccounts: StacksAccount[];
-  transactionPayload: TransactionPayload | null;
-}) {
-  const txAddress = transactionPayload?.stxAddress;
-  if (txAddress && stacksAccounts) {
-    return stacksAccounts.findIndex(account => account.address === txAddress); // selected account
-  }
-  return undefined;
-}
 
 // Comment below from original atom. This pattern encourages view level
 // implementation details to leak into the state structure. Do not do this.
@@ -24,23 +8,18 @@ export function getTransactionAccountIndex({
 export function getCurrentStacksAccount({
   currentAccountIndex,
   stacksAccounts,
-  transactionPayload,
   hasSwitchedAccounts,
-  signatureIndex,
+  stacksIndex,
 }: {
   currentAccountIndex: number;
   stacksAccounts: StacksAccount[];
-  transactionPayload: TransactionPayload | null;
   hasSwitchedAccounts: boolean;
-  signatureIndex: number | undefined;
+  stacksIndex: number | undefined;
 }) {
-  const txIndex = getTransactionAccountIndex({ stacksAccounts, transactionPayload });
-
   // ⚠️ to refactor, we should not just continually add new conditionals here
   const hasSwitched = hasSwitchedAccounts;
 
-  const index = txIndex ?? signatureIndex;
   if (!stacksAccounts) return undefined;
-  if (typeof index === 'number' && !hasSwitched) return stacksAccounts[index];
+  if (typeof stacksIndex === 'number' && !hasSwitched) return stacksAccounts[stacksIndex];
   return stacksAccounts[currentAccountIndex];
 }

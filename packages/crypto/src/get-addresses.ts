@@ -8,7 +8,6 @@ import { NetworkConfiguration } from '@leather-wallet/constants';
 import { Versions } from '@scure/bip32';
 import { P2Ret } from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
-import { TransactionPayload } from '@stacks/connect';
 import { Signer } from 'utils/bitcoin/bitcoin-signer';
 
 import { getCurrentAccountNativeSegwitIndexZeroSigner } from './utils/bitcoin/native-segwit-account.hooks';
@@ -26,22 +25,20 @@ interface BitcoinAccountResponse {
 }
 
 export function getAddresses({
-  signatureIndex,
+  stacksIndex,
   currentAccountIndex,
   currentNetwork,
   hasSwitchedAccounts,
   bitcoinAccounts,
   stacksAccounts,
-  transactionPayload,
   bitcoinExtendedPublicKeyVersions,
 }: {
-  signatureIndex: number | undefined;
+  stacksIndex: number | undefined;
   currentAccountIndex: number;
   currentNetwork: NetworkConfiguration;
   hasSwitchedAccounts: boolean;
   bitcoinAccounts: (BitcoinAccount | undefined)[];
   stacksAccounts: StacksAccount[];
-  transactionPayload: TransactionPayload | null;
   bitcoinExtendedPublicKeyVersions: Versions | undefined;
 }) {
   function mapBitcoinAccountToSigner(bitcoinAccount: BitcoinAccount | undefined) {
@@ -100,11 +97,13 @@ export function getAddresses({
     });
   }
 
-  function filterBitcoinResponses(bitcoinAccountResponse: BitcoinAccountResponse | undefined) {
+  function filterBitcoinResponses(
+    bitcoinAccountResponse: BitcoinAccountResponse | undefined
+  ): bitcoinAccountResponse is BitcoinAccountResponse {
     return bitcoinAccountResponse != null;
   }
 
-  const bitcoinAccountResponses: (BitcoinAccountResponse | undefined)[] = bitcoinAccounts
+  const bitcoinAccountResponses: BitcoinAccountResponse[] = bitcoinAccounts
     .map(mapBitcoinAccountToSigner)
     .map(mapSignerToResponse)
     .filter(filterBitcoinResponses);
@@ -112,9 +111,8 @@ export function getAddresses({
   const stacksAccount = getCurrentStacksAccount({
     currentAccountIndex,
     stacksAccounts,
-    transactionPayload,
     hasSwitchedAccounts,
-    signatureIndex,
+    stacksIndex,
   });
 
   const stacksAddressResponse = {
