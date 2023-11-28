@@ -1,0 +1,21 @@
+{
+  "name": "@leather-wallet/tokens",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@leather-wallet/eslint-config": "*",
+    "@leather-wallet/prettier-config": "*",
+    "@leather-wallet/tsconfig-config": "*",
+    "prettier": "^3.0.3"
+  }
+}
