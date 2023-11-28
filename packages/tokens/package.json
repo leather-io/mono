@@ -1,17 +1,25 @@
 {
   "name": "@leather-wallet/tokens",
   "version": "0.0.1",
-  "main": "./index.js",
-  "types": "./index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./index.mjs",
-      "require": "./index.js"
-    }
+  "description": "Shared design tokens",
+  "main": "src/index.ts",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/tokens"
   },
+  "bugs": "https://github.com/leather-wallet/mono/issues",
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "leather",
+    "tokens",
+    "leather wallet"
+  ],
+  "author": "Leather.io contact@leather.io",
+  "license": "MIT",
   "devDependencies": {
     "@leather-wallet/eslint-config": "*",
     "@leather-wallet/prettier-config": "*",
