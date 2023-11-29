@@ -2,7 +2,8 @@ name: CI
 on:
   push:
     branches:
-      - "**"
+      - '**'
+      - '!dev'
 
 jobs:
   lint-commit:
@@ -24,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: "npm"
+          cache: 'npm'
       - run: npm ci
       - uses: nrwl/nx-set-shas@v3
       # This line is needed for nx affected to work when CI is running on a PR
