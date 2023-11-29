@@ -1,6 +1,4 @@
 export const colors = {
-  // TODO - keep 'current' in extension
-  current: { value: 'currentColor' },
   dark: { value: '#111' },
   black: { value: '#000' },
   white: { value: '#fff' },
