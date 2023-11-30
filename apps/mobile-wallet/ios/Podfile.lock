@@ -1,4 +1,5 @@
 PODS:
+  - Argon2Swift (1.0.4)
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
   - EXApplication (5.3.1):
@@ -468,6 +469,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - Argon2Swift
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../../../node_modules/expo-application/ios`)
@@ -526,6 +528,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Argon2Swift
     - fmt
     - libevent
     - SocketRocket
@@ -640,6 +643,7 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  Argon2Swift: 295b8bde7ba61434f227f5610b8813c42e866f74
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
@@ -656,10 +660,10 @@ SPEC CHECKSUMS:
   FBLazyVector: 748c0ef74f2bf4b36cfcccf37916806940a64c32
   FBReactNativeSpec: 38f7c4bef64a9bafcd5c0dcd23abc13b16e53f6b
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: 8057e75cfc1437b178ac86c8654b24e7fead7f60
+  glog: 791fe035093b84822da7f0870421a25839ca7870
+  hermes-engine: ba3a5bc121290bca7cc902f1616c6f0dfeb47e73
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
+  RCT-Folly: 186619bc27c1f94f2f7c6ef60927516c71005915
   RCTRequired: 28469809442eb4eb5528462705f7d852948c8a74
   RCTTypeSafety: e9c6c409fca2cc584e5b086862d562540cb38d29
   React: 769f469909b18edfe934f0539fffb319c4c61043
@@ -697,6 +701,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: b76f1acfda8212aa16b7e26bcce3983230c82603
 
-PODFILE CHECKSUM: a0ffd5db1515338f6dded713ef573a770df7b337
+PODFILE CHECKSUM: f3404bf44419cdc0f45b5360eb18b089443a8cd1
 
 COCOAPODS: 1.14.2

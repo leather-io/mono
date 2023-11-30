@@ -24,6 +24,9 @@ prepare_react_native_project!
 #   }
 # }
 # ```
+
+pod 'Argon2Swift'
+
 flipper_config = FlipperConfiguration.disabled
 if ENV['NO_FLIPPER'] == '1' then
   # Explicitly disabled through environment variables
