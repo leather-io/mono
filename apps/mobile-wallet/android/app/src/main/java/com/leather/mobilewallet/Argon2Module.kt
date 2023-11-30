@@ -22,7 +22,7 @@ class Argon2Module(reactContext: ReactApplicationContext) :
     // don't want to block the UI thread.
     @ReactMethod
     fun verify(
-        hashResult: String,
+        encodedString: String,
         password: String,
         modeInt: Int,
         promise: Promise
@@ -35,7 +35,7 @@ class Argon2Module(reactContext: ReactApplicationContext) :
 
         promise.resolve(argon2Kt.verify(
             mode,
-            encoded = hashResult,
+            encoded = encodedString,
             password = passwordByteArray,
         ))
     }
@@ -72,6 +72,8 @@ class Argon2Module(reactContext: ReactApplicationContext) :
             hashLengthInBytes
         )
 
-        promise.resolve(hashResult.encodedOutputAsString())
+        val encodedString = hashResult.encodedOutputAsString()
+
+        promise.resolve(encodedString)
     }
 }
