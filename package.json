@@ -18,6 +18,9 @@
   "devDependencies": {
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
+    "@leather-wallet/eslint-config": "workspace:^",
+    "@leather-wallet/prettier-config": "workspace:^",
+    "@leather-wallet/tsconfig-config": "workspace:^",
     "husky": "^8.0.3",
     "nx": "^17.1.1"
   },
