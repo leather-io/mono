@@ -15,15 +15,6 @@ export const keyframes = {
       backgroundPosition: '500px',
     },
   },
-  rotate: {
-    '0%': {
-      transform: 'rotate(0deg)',
-    },
-    '100%': {
-      transform: 'rotate(360deg)',
-    },
-  },
-  // TODO: identical to above, remove
   spin: {
     '0%': {
       transform: 'rotate(0deg)',
@@ -38,6 +29,46 @@ export const keyframes = {
     },
     to: {
       strokeDashoffset: 0,
+    },
+  },
+  slideUpAndFade: {
+    from: {
+      opacity: 0,
+      transform: 'translateY(2px)',
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateY(0)',
+    },
+  },
+  slideRightAndFade: {
+    from: {
+      opacity: 0,
+      transform: 'translateX(-2px)',
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateX(0)',
+    },
+  },
+  slideDownAndFade: {
+    from: {
+      opacity: 0,
+      transform: 'translateY(-2px)',
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateY(0)',
+    },
+  },
+  slideLeftAndFade: {
+    from: {
+      opacity: 0,
+      transform: 'translateX(2px)',
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateX(0)',
     },
   },
 } as const;
