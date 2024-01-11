@@ -16,12 +16,10 @@ export const tokens = {
     xl: { value: '36px' },
   },
   radii: {
-    xs: { value: '8px' },
-    sm: { value: '10px' },
-    md: { value: '12px' },
-    lg: { value: '16px' },
-    xl: { value: '20px' },
-    xxl: { value: '24px' },
+    xs: { value: '2px' },
+    sm: { value: '4px' },
+    md: { value: '8px' },
+    lg: { value: '12px' },
   },
   spacing: {
     // Numbers are padded with 0 to ensure they are sorted correctly in TS
