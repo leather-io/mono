@@ -34,13 +34,13 @@ export const semanticTokens = {
         value: { base: '{colors.lightModeBrown.12}', _dark: '{colors.darkModeBrown.12}' },
       },
       'text-subdued': {
-        value: { base: '{colors.lightModeBrown.8}', _dark: '{colors.darkModeBrown.8}' },
+        value: { base: '{colors.lightModeBrown.9}', _dark: '{colors.darkModeBrown.11}' },
       },
       'action-primary-hover': {
-        value: { base: '{colors.lightModeBrown.10}', _dark: '{colors.darkModeBrown.10}' },
+        value: { base: '{colors.lightModeBrown.11}', _dark: '{colors.darkModeBrown.10}' },
       },
       'action-primary-default': {
-        value: { base: '{colors.lightModeBrown.9}', _dark: '{colors.darkModeBrown.9}' },
+        value: { base: '{colors.lightModeBrown.12}', _dark: '{colors.darkModeBrown.9}' },
       },
       'border-hover': {
         value: { base: '{colors.lightModeBrown.5}', _dark: '{colors.darkModeBrown.8}' },
@@ -55,13 +55,13 @@ export const semanticTokens = {
         value: { base: '{colors.lightModeBrown.4}', _dark: '{colors.darkModeBrown.5}' },
       },
       'component-background-hover': {
-        value: { base: '{colors.lightModeBrown.2}', _dark: '{colors.darkModeBrown.4}' },
+        value: { base: '#9486771A', _dark: '#9486771A' },
       },
       'component-background-default': {
         value: { base: '{colors.lightModeBrown.3}', _dark: '{colors.darkModeBrown.3}' },
       },
       'background-secondary': {
-        value: { base: '{colors.lightModeBrown.2}', _dark: '{colors.darkModeBrown.2}' },
+        value: { base: '{colors.lightModeBrown.3}', _dark: '{colors.darkModeBrown.2}' },
       },
       'background-primary': {
         value: { base: '{colors.lightModeBrown.1}', _dark: '{colors.darkModeBrown.1}' },
