@@ -55,7 +55,7 @@ export const semanticTokens = {
         value: { base: '{colors.lightModeBrown.4}', _dark: '{colors.darkModeBrown.5}' },
       },
       'component-background-hover': {
-        value: { base: '#9486771A', _dark: '#9486771A' },
+        value: { base: 'rgba(148, 134, 119, 0.1)', _dark: 'rgba(148, 134, 119, 0.1)' },
       },
       'component-background-default': {
         value: { base: '{colors.lightModeBrown.3}', _dark: '{colors.darkModeBrown.3}' },
