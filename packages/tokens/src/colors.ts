@@ -50,7 +50,7 @@ export const colors = {
     500: { value: '#165C38' },
     600: { value: '#00753A' },
   },
-  lightModeBrown: {
+  lightModeInk: {
     1: { value: '#FFFFFF' },
     2: { value: '#F7F5F3' },
     3: { value: '#F5F1ED' },
@@ -64,7 +64,7 @@ export const colors = {
     11: { value: '#4A423B' },
     12: { value: '#12100F' },
   },
-  darkModeBrown: {
+  darkModeInk: {
     1: { value: '#12100F' },
     2: { value: '#2C2A24' },
     3: { value: '#4A423B' },
@@ -78,35 +78,11 @@ export const colors = {
     11: { value: '#DED6CD' },
     12: { value: '#F5F1ED' },
   },
-  lightModeInk: {
-    1: { value: '#FFFFFF' },
-    2: { value: '#F9F9F9' },
-    3: { value: '#F1F1F1' },
-    4: { value: '#EBEBEB' },
-    5: { value: '#E4E4E4' },
-    6: { value: '#DDDDDD' },
-    7: { value: '#D4D4D4' },
-    8: { value: '#BBBBBB' },
-    9: { value: '#8D8D8D' },
-    10: { value: '#808080' },
-    11: { value: '#646464' },
-    12: { value: '#12100F' },
-  },
-  darkModeInk: {
-    1: { value: '#12100F' },
-    2: { value: '#1B1B1B' },
-    3: { value: '#282828' },
-    4: { value: '#303030' },
-    5: { value: '#373737' },
-    6: { value: '#3F3F3F' },
-    7: { value: '#4A4A4A' },
-    8: { value: '#606060' },
-    9: { value: '#6E6E6E' },
-    10: { value: '#818181' },
-    11: { value: '#B1B1B1' },
-    12: { value: '#EEEEEE' },
-  },
+
   lightModeStacks: { value: '#5546FF' },
   darkModeStacks: { value: '#7F80FF' },
   overlay: { value: 'rgba(0,0,0,0.4)' },
+  transparentInk: {
+    2: { value: 'rgba(148, 134, 119, 0.1)' },
+  },
 } as const;
