@@ -3,10 +3,8 @@
     "target": "esnext",
     "module": "commonjs",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "jsx": "react-jsx",
     "sourceMap": true,
     "removeComments": true,
-    "noEmit": true,
     "importHelpers": true,
     "downlevelIteration": true,
     "strict": true,
@@ -20,24 +18,10 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    // "baseUrl": "src",
-    // "paths": {
-    //   "@assets/*": ["../public/assets/*"],
-    //   "@shared/*": ["shared/*"],
-    //   "@background/*": ["background/*"],
-    //   "@content-scripts/*": ["content-scripts/*"],
-    //   "@inpage/*": ["inpage/*"],
-    //   "@app/*": ["app/*"],
-    //   "@tests/*": ["../tests/*"],
-    //   "leather-styles/*": ["../leather-styles/*"]
-    // },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
-    // "types": ["vitest/globals", "chrome"]
   },
-  //   "include": ["./src/**/*", "./tests/**/*", "./scripts-ts/**/*", "leather-styles", "theme"],
-  //   "exclude": ["test-app"]
   "include": ["*"],
   "exclude": [""]
 }
