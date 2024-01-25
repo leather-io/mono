@@ -33,7 +33,7 @@ export interface ListenFn {
 
 declare global {
   interface Window {
-    btc?: {
+    LeatherProvider?: {
       /**
        * Request method. Takes a method name, and optional parameters
        * @returns Typed response for corresponding method

@@ -1,5 +1,5 @@
-import { AllowAdditionalProperties } from '../utils';
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { AllowAdditionalProperties } from '../utils';
 
 export type PaymentTypes = 'p2pkh' | 'p2sh' | 'p2wpkh-p2sh' | 'p2wpkh' | 'p2tr';
 
