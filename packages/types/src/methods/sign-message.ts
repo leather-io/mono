@@ -1,5 +1,5 @@
-import { AllowAdditionalProperties } from '../utils';
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { AllowAdditionalProperties } from '../utils';
 import { PaymentTypes } from './get-addresses';
 
 // Implements BIP-322
