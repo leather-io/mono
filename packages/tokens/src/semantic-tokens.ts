@@ -41,7 +41,7 @@ export const semanticTokens = {
         value: { base: '{colors.lightModeInk.4}', _dark: '{colors.darkModeInk.5}' },
       },
       'component-background-hover': {
-        value: { base: '{colors.transparentInk.2}', _dark: 'colors.transparentInk.2' },
+        value: { base: '{colors.transparentInk.2}', _dark: '{colors.transparentInk.2}' },
       },
       'component-background-default': {
         value: { base: '{colors.lightModeInk.3}', _dark: '{colors.darkModeInk.3}' },
