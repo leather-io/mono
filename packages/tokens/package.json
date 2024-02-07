@@ -1,6 +1,6 @@
 {
   "name": "@leather-wallet/tokens",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Shared design tokens",
   "main": "src/index.ts",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
