@@ -67,6 +67,9 @@ export const semanticTokens = {
         value: { base: '{colors.lightModeRed.600}', _dark: '{colors.darkModeRed.600}' },
       },
     },
+    focus: {
+      value: { base: '{colors.lightModeBlue.500}', _dark: '{colors.darkModeBlue.500}' },
+    },
     invert: {
       value: { base: '{colors.darkModeInk.1}', _dark: '{colors.lightModeInk.1}' },
     },
