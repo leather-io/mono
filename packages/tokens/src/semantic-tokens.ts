@@ -1,6 +1,6 @@
 export const semanticTokens = {
   colors: {
-    // Primitive colours defined as semantic tokens to match Radix
+    // Primitive colors defined as semantic tokens to match Radix
     ink: {
       1: { value: { base: '{colors.lightModeInk.1}', _dark: '{colors.darkModeInk.1}' } },
       2: { value: { base: '{colors.lightModeInk.2}', _dark: '{colors.darkModeInk.2}' } },
@@ -56,41 +56,79 @@ export const semanticTokens = {
         value: { base: '{colors.lightModeInk.12}', _dark: '{colors.darkModeInk.12}' },
       },
     },
-    disabled: {
-      value: { base: '{colors.lightModeBlue.100}', _dark: '{colors.darkModeBlue.100}' },
-    },
-    error: {
-      background: {
+    red: {
+      'text-primary': {
+        value: { base: '{colors.darkModeRed.100}', _dark: '{colors.lightModeRed.100}' },
+      },
+      'action-primary-default': {
+        value: { base: '{colors.darkModeRed.600}', _dark: '{colors.lightModeRed.600}' },
+      },
+      border: {
+        value: { base: '{colors.lightModeRed.500}', _dark: '{colors.darkModeRed.600}' },
+      },
+      'background-secondary': {
+        value: { base: '{colors.lightModeRed.300}', _dark: '{colors.darkModeRed.500}' },
+      },
+      'background-primary': {
         value: { base: '{colors.lightModeRed.100}', _dark: '{colors.darkModeRed.100}' },
       },
-      label: {
-        value: { base: '{colors.lightModeRed.600}', _dark: '{colors.darkModeRed.600}' },
+    },
+    blue: {
+      'text-primary': {
+        value: { base: '{colors.darkModeBlue.100}', _dark: '{colors.lightModeBlue.100}' },
+      },
+      'action-primary-default': {
+        value: { base: '{colors.darkModeBlue.600}', _dark: '{colors.lightModeBlue.600}' },
+      },
+      border: {
+        value: { base: '{colors.lightModeBlue.500}', _dark: '{colors.darkModeBlue.600}' },
+      },
+      'background-secondary': {
+        value: { base: '{colors.lightModeBlue.300}', _dark: '{colors.darkModeBlue.500}' },
+      },
+      'background-primary': {
+        value: { base: '{colors.lightModeBlue.100}', _dark: '{colors.darkModeBlue.100}' },
       },
     },
-    focus: {
-      value: { base: '{colors.lightModeBlue.500}', _dark: '{colors.darkModeBlue.500}' },
+    yellow: {
+      'text-primary': {
+        value: { base: '{colors.darkModeYellow.100}', _dark: '{colors.lightModeYellow.100}' },
+      },
+      'action-primary-default': {
+        value: { base: '{colors.darkModeYellow.300}', _dark: '{colors.lightModeYellow.600}' },
+      },
+      border: {
+        value: { base: '{colors.lightModeYellow.500}', _dark: '{colors.darkModeYellow.600}' },
+      },
+      'background-secondary': {
+        value: { base: '{colors.lightModeYellow.300}', _dark: '{colors.darkModeYellow.300}' },
+      },
+      'background-primary': {
+        value: { base: '{colors.lightModeYellow.100}', _dark: '{colors.darkModeYellow.100}' },
+      },
+    },
+    green: {
+      'text-primary': {
+        value: { base: '{colors.darkModeGreen.100}', _dark: '{colors.lightModeGreen.100}' },
+      },
+      'action-primary-default': {
+        value: { base: '{colors.darkModeGreen.600}', _dark: '{colors.lightModeGreen.600}' },
+      },
+      border: {
+        value: { base: '{colors.lightModeGreen.500}', _dark: '{colors.darkModeGreen.600}' },
+      },
+      'background-secondary': {
+        value: { base: '{colors.lightModeGreen.300}', _dark: '{colors.darkModeGreen.300}' },
+      },
+      'background-primary': {
+        value: { base: '{colors.lightModeGreen.100}', _dark: '{colors.darkModeGreen.100}' },
+      },
     },
     invert: {
       value: { base: '{colors.darkModeInk.1}', _dark: '{colors.lightModeInk.1}' },
     },
     stacks: {
       value: { base: '{colors.lightModeStacks}', _dark: '{colors.darkModeStacks}' },
-    },
-    success: {
-      background: {
-        value: { base: '{colors.lightModeGreen.100}', _dark: '{colors.darkModeGreen.100}' },
-      },
-      label: {
-        value: { base: '{colors.lightModeGreen.600}', _dark: '{colors.darkModeGreen.600}' },
-      },
-    },
-    warning: {
-      background: {
-        value: { base: '{colors.lightModeYellow.100}', _dark: '{colors.darkModeYellow.100}' },
-      },
-      label: {
-        value: { base: '{colors.lightModeYellow.600}', _dark: '{colors.darkModeYellow.600}' },
-      },
     },
   },
 } as const;
