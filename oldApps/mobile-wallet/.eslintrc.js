@@ -5,7 +5,7 @@ module.exports = {
   parserOptions: {
     project: path.resolve(__dirname, './tsconfig.json'),
   },
-  ignorePatterns: ['.eslintrc.js', "*.js"],
+  ignorePatterns: ['.eslintrc.js'],
   rules: {
     'import/order': 0,
   },

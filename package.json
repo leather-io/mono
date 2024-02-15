@@ -6,7 +6,8 @@
     "prepare": "husky install",
     "lint-projects:all": "nx run-many -t format,lint,typecheck --parallel=1",
     "lint-projects:affected": "npx nx affected -t format,lint,typecheck --parallel=1 --base=dev",
-    "commitlint": "commitlint"
+    "commitlint": "commitlint",
+    "clean": "git clean -dfX"
   },
   "keywords": [],
   "author": "",
@@ -24,10 +25,160 @@
     "husky": "^8.0.3",
     "nx": "^17.1.1"
   },
-  "engines": {
-    "node": ">=20.3.0",
-    "npm": ">=10",
-    "pnpm": "please-use-npm",
-    "yarn": "please-use-npm"
+  "pnpm": {
+    "neverBuiltDependencies": [
+      "blake2"
+    ],
+    "overrides": {
+      "stellar-base>sodium-native": "^3.2.1",
+      "remove-flow-types-loader>flow-remove-types": "^2",
+      "remove-flow-types-loader>loader-utils": "*"
+    },
+    "packageExtensions": {
+      "eslint-config-next@*": {
+        "dependencies": {
+          "next": "*"
+        }
+      },
+      "@expo/cli@*": {
+        "dependencies": {
+          "metro": "*",
+          "metro-core": "*",
+          "metro-resolver": "*",
+          "glob": "*",
+          "@expo/image-utils": "*",
+          "lodash": "*",
+          "react-native": "*",
+          "react-native-web": "*",
+          "metro-config": "*",
+          "@react-native-community/cli-server-api": "*",
+          "metro-runtime": "*",
+          "@expo/server": "*"
+        }
+      },
+      "babel-preset-expo@*": {
+        "dependencies": {
+          "expo": "*",
+          "debug": "*",
+          "resolve-from": "*",
+          "expo-router": "*"
+        }
+      },
+      "@react-native/dev-middleware@*": {
+        "dependencies": {
+          "ws": "*"
+        }
+      },
+      "@expo/metro-config@*": {
+        "dependencies": {
+          "metro-config": "*",
+          "metro-cache": "*",
+          "metro-cache-key": "*",
+          "expo-asset": "*",
+          "metro": "*",
+          "metro-transform-plugins": "*",
+          "metro-source-map": "*",
+          "metro-transform-worker": "*",
+          "metro-minify-terser": "*",
+          "@react-native/js-polyfills": "*"
+        },
+        "peerDependencies": {
+          "expo-asset": "*"
+        }
+      },
+      "@expo/metro-runtime@*": {
+        "dependencies": {
+          "react-native": "*",
+          "url-parse": "*",
+          "expo-constants": "*",
+          "stacktrace-parser": "*"
+        },
+        "peerDependencies": {
+          "react-native": "*"
+        }
+      },
+      "expo-head@*": {
+        "dependencies": {
+          "url-parse": "*"
+        }
+      },
+      "expo-router@*": {
+        "dependencies": {
+          "react-native": "*",
+          "nanoid": "*",
+          "url-parse": "*",
+          "resolve-from": "*",
+          "debug": "*",
+          "@react-navigation/native-stack": "*",
+          "@react-navigation/core": "*",
+          "@expo/metro-runtime": "*",
+          "expo-constants": "*",
+          "escape-string-regexp": "*"
+        }
+      },
+      "expo-linking@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-web-browser@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-font@*": {
+        "dependencies": {
+          "expo-modules-core": "*",
+          "expo-constants": "*",
+          "@expo/vector-icons": "*"
+        }
+      },
+      "expo-splash-screen@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-constants@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo@*": {
+        "dependencies": {
+          "@expo/metro-config": "*"
+        }
+      },
+      "object-inspect@*": {
+        "dependencies": {
+          "util": "*"
+        }
+      },
+      "@expo/vector-icons": {
+        "dependencies": {
+          "prop-types": "*"
+        }
+      },
+      "expo-asset": {
+        "dependencies": {
+          "expo-modules-core": "*",
+          "@expo/cli": "*"
+        }
+      },
+      "detox@*": {
+        "dependencies": {
+          "react-native": "*"
+        }
+      },
+      "expo-keep-awake@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-file-system": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      }
+    }
   }
 }

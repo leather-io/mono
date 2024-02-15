@@ -1,10 +1,6 @@
 module.exports = function (api) {
-  api.cache(true);
+  api.cache(false);
   return {
-    presets: ['babel-preset-expo'],
-    plugins: [
-      // Required for expo-router
-      'expo-router/babel',
-    ],
+    presets: ["babel-preset-expo"],
   };
 };
