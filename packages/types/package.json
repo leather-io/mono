@@ -1,0 +1,25 @@
+{
+  "name": "@leather-wallet/types",
+  "version": "0.0.20",
+  "description": "Types package for Leather",
+  "scripts": {
+    "build": "tsup src/index.ts && npm run types",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "types": "tsc --declaration --emitDeclarationOnly",
+    "prepublish": "yarn build"
+  },
+  "author": "leather-wallet",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "typings": "dist/types/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.1"
+  }
+}
