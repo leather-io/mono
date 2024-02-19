@@ -1,5 +1,3 @@
-import { colors } from './colors';
-
 export const tokens = {
   animations: {
     spin: {
@@ -12,8 +10,9 @@ export const tokens = {
     xs: { value: '12px' },
     sm: { value: '16px' },
     md: { value: '24px' },
-    lg: { value: '30px' },
+    lg: { value: '32px' },
     xl: { value: '36px' },
+    xxl: { value: '40px' },
   },
   radii: {
     xs: { value: '2px' },
@@ -38,18 +37,17 @@ export const tokens = {
     'space.10': { value: '72px', description: '72px' },
     'space.11': { value: '128px', description: '128px' },
   },
-  colors,
   borders: {
     action: { value: '1px solid {colors.accent.action-primary-default}' },
     active: { value: '2px solid {colors.accent.border-default}' },
     background: { value: '2px solid {colors.accent.background-primary}' },
     dashed: { value: '2px dashed {colors.accent.component-background-default}' },
     default: { value: '1px solid {colors.accent.border-default}' },
-    error: { value: '1px solid {colors.error.label}' },
+    error: { value: '1px solid {colors.red.border}' },
     focus: { value: '2px solid {colors.accent.action-primary-default}' },
     invert: { value: '1px solid {colors.invert}' },
     subdued: { value: '1px solid {colors.accent.text-subdued}' },
-    warning: { value: '1px solid {colors.warning.label}' },
+    warning: { value: '1px solid {colors.yellow.border}' },
   },
   transition: { value: 'all 0.2s cubic-bezier(0.23, 1, 0.32, 1)' },
 } as const;
