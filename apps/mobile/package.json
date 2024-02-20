@@ -8,7 +8,11 @@
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "storybook-generate": "sb-rn-get-stories -js",
+    "storybook": "cross-env STORYBOOK_ENABLED='true' expo start",
+    "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
+    "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
@@ -19,6 +23,7 @@
     "@rnx-kit/metro-resolver-symlinks": "0.1.35",
     "expo": "50.0.6",
     "expo-asset": "9.0.2",
+    "expo-constants": "15.4.5",
     "expo-font": "11.10.2",
     "expo-linking": "6.2.2",
     "expo-router": "3.4.3",
@@ -39,9 +44,16 @@
   "devDependencies": {
     "@babel/core": "7.23.9",
     "@leather-wallet/eslint-config": "workspace:*",
+    "@react-native-async-storage/async-storage": "1.22.0",
+    "@storybook/addon-actions": "7.6.17",
+    "@storybook/addon-ondevice-actions": "7.6.15",
+    "@storybook/addon-ondevice-controls": "7.6.15",
+    "@storybook/react-native": "7.6.15",
     "@types/react": "18.2.43",
     "@types/react-dom": "18.0.11",
     "babel-preset-expo": "10.0.1",
+    "cross-env": "7.0.3",
+    "eslint": "8.53.0",
     "eslint-config-universe": "12.0.0",
     "react-test-renderer": "18.2.0",
     "tslib": "2.6.2",
