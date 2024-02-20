@@ -1,0 +1,37 @@
+{
+  "name": "@leather-wallet/constants",
+  "description": "Shared bitcoin utilities",
+  "version": "0.0.1",
+  "author": "Leather.io contact@leather.io",
+  "scripts": {
+    "format": "prettier . --write",
+    "lint": "eslint . --config .eslintrc.js",
+    "lint:fix": "eslint . --config .eslintrc.js --fix",
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "devDependencies": {
+    "@leather-wallet/eslint-config": "workspace:*",
+    "@leather-wallet/prettier-config": "workspace:*",
+    "@leather-wallet/tsconfig-config": "workspace:*",
+    "eslint": "8.53.0",
+    "prettier": "3.0.3",
+    "typescript": "5.3.3"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/constants",
+  "keywords": [
+    "constants",
+    "leather",
+    "leather wallet"
+  ],
+  "license": "MIT",
+  "prettier": "@leather-wallet/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/constants"
+  }
+}

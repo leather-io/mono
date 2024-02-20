@@ -1,0 +1,26 @@
+{
+  "name": "@leather-wallet/tsconfig-config",
+  "description": "Shared tsconfig configuration",
+  "version": "0.0.1",
+  "author": "Leather.io contact@leather.io",
+  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "dependencies": {
+    "typescript": "5.3.3"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tsconfig-config",
+  "keywords": [
+    "leather",
+    "leather wallet",
+    "tsconfig"
+  ],
+  "license": "MIT",
+  "main": "tsconfig.base.json",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/tsconfig-config"
+  }
+}

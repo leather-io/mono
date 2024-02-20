@@ -1,0 +1,50 @@
+name: Code checks
+
+on:
+  merge_group:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  lint-prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+      - name: Lint Prettier
+        run: pnpm format
+
+  lint-syncpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+      - name: Lint Packages with Syncpack
+        run: pnpm syncpack:format
+
+  lint-eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+      - name: Lint Eslint
+        run: pnpm lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+      - name: Run typecheck recursively in each package
+        run: pnpm typecheck
+
+  lint-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lint commit message
+        uses: wagoid/commitlint-github-action@v4

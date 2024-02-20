@@ -1,0 +1,19 @@
+{
+  "dependencyTypes": ["prod", "dev"],
+  "semverGroups": [
+    {
+      "label": "Use workspace protocol when developing local packages",
+      "dependencies": ["$LOCAL"],
+      "dependencyTypes": ["dev", "prod"],
+      "pinVersion": "workspace:*"
+    },
+    {
+      "label": "use exact version numbers",
+      "packages": ["**"],
+      "dependencyTypes": ["prod", "dev"],
+      "dependencies": ["**"],
+      "range": ""
+    }
+  ],
+  "sortFirst": ["name", "description", "version", "author", "scripts"]
+}
