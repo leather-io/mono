@@ -1,0 +1,190 @@
+{
+  "name": "leather-mono",
+  "description": "Leather wallet shared code",
+  "version": "1.0.0",
+  "author": "",
+  "scripts": {
+    "clean": "git clean -dfX",
+    "format": "pnpm -r format",
+    "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
+    "install:fresh": "pnpm install:clean && pnpm i",
+    "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "prepare": "husky install",
+    "syncpack:format": "syncpack format",
+    "syncpack:lint": "syncpack lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.26.2",
+    "@commitlint/cli": "18.0.0",
+    "@commitlint/config-conventional": "18.0.0",
+    "@leather-wallet/eslint-config": "workspace:*",
+    "@leather-wallet/prettier-config": "workspace:*",
+    "@leather-wallet/tsconfig-config": "workspace:*",
+    "eslint": "8.53.0",
+    "husky": "8.0.3",
+    "lint-staged": "15.0.2",
+    "prettier": "3.0.3",
+    "syncpack": "12.3.0",
+    "typescript": "5.3.3"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=8.15.3",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "packageManager": "pnpm@8.15.3",
+  "pnpm": {
+    "packageExtensions": {
+      "eslint-config-next@*": {
+        "dependencies": {
+          "next": "*"
+        }
+      },
+      "@expo/cli@*": {
+        "dependencies": {
+          "metro": "*",
+          "metro-core": "*",
+          "metro-resolver": "*",
+          "glob": "*",
+          "@expo/image-utils": "*",
+          "lodash": "*",
+          "react-native": "*",
+          "react-native-web": "*",
+          "metro-config": "*",
+          "@react-native-community/cli-server-api": "*",
+          "metro-runtime": "*",
+          "@expo/server": "*"
+        }
+      },
+      "babel-preset-expo@*": {
+        "dependencies": {
+          "expo": "*",
+          "debug": "*",
+          "resolve-from": "*",
+          "expo-router": "*"
+        }
+      },
+      "@react-native/dev-middleware@*": {
+        "dependencies": {
+          "ws": "*"
+        }
+      },
+      "@expo/metro-config@*": {
+        "dependencies": {
+          "metro-config": "*",
+          "metro-cache": "*",
+          "metro-cache-key": "*",
+          "expo-asset": "*",
+          "metro": "*",
+          "metro-transform-plugins": "*",
+          "metro-source-map": "*",
+          "metro-transform-worker": "*",
+          "metro-minify-terser": "*",
+          "@react-native/js-polyfills": "*"
+        },
+        "peerDependencies": {
+          "expo-asset": "*"
+        }
+      },
+      "@expo/metro-runtime@*": {
+        "dependencies": {
+          "react-native": "*",
+          "url-parse": "*",
+          "expo-constants": "*",
+          "stacktrace-parser": "*"
+        },
+        "peerDependencies": {
+          "react-native": "*"
+        }
+      },
+      "expo-head@*": {
+        "dependencies": {
+          "url-parse": "*"
+        }
+      },
+      "expo-router@*": {
+        "dependencies": {
+          "react-native": "*",
+          "nanoid": "*",
+          "url-parse": "*",
+          "resolve-from": "*",
+          "debug": "*",
+          "@react-navigation/native-stack": "*",
+          "@react-navigation/core": "*",
+          "@expo/metro-runtime": "*",
+          "expo-constants": "*",
+          "escape-string-regexp": "*"
+        }
+      },
+      "expo-linking@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-web-browser@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-font@*": {
+        "dependencies": {
+          "expo-modules-core": "*",
+          "expo-constants": "*",
+          "@expo/vector-icons": "*"
+        }
+      },
+      "expo-splash-screen@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-constants@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo@*": {
+        "dependencies": {
+          "@expo/metro-config": "*"
+        }
+      },
+      "object-inspect@*": {
+        "dependencies": {
+          "util": "*"
+        }
+      },
+      "@expo/vector-icons": {
+        "dependencies": {
+          "prop-types": "*"
+        }
+      },
+      "expo-asset": {
+        "dependencies": {
+          "expo-modules-core": "*",
+          "@expo/cli": "*"
+        }
+      },
+      "detox@*": {
+        "dependencies": {
+          "react-native": "*"
+        }
+      },
+      "expo-keep-awake@*": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      },
+      "expo-file-system": {
+        "dependencies": {
+          "expo-modules-core": "*"
+        }
+      }
+    }
+  }
+}

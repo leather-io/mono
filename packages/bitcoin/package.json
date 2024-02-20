@@ -1,0 +1,60 @@
+{
+  "name": "@leather-wallet/bitcoin",
+  "description": "Shared bitcoin utilities",
+  "version": "0.0.1",
+  "author": "Leather.io contact@leather.io",
+  "scripts": {
+    "format": "prettier . --write",
+    "lint": "eslint . --config .eslintrc.js",
+    "lint:fix": "eslint . --config .eslintrc.js --fix",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "dependencies": {
+    "@bitcoinerlab/secp256k1": "1.0.2",
+    "@leather-wallet/constants": "workspace:*",
+    "@leather-wallet/utils": "workspace:*",
+    "@noble/hashes": "1.3.3",
+    "@noble/secp256k1": "2.0.0",
+    "@scure/base": "1.1.3",
+    "@scure/bip32": "1.3.2",
+    "@scure/bip39": "1.2.1",
+    "@scure/btc-signer": "1.1.0",
+    "@stacks/common": "6.8.1",
+    "@stacks/transactions": "6.9.0",
+    "bip32": "4.0.0",
+    "bitcoinjs-lib": "6.1.3",
+    "ecpair": "2.1.0",
+    "varuint-bitcoin": "1.1.2"
+  },
+  "devDependencies": {
+    "@btckit/types": "0.0.19",
+    "@leather-wallet/eslint-config": "workspace:*",
+    "@leather-wallet/prettier-config": "workspace:*",
+    "@leather-wallet/tsconfig-config": "workspace:*",
+    "@vitest/coverage-istanbul": "0.34.6",
+    "eslint": "8.53.0",
+    "prettier": "3.0.3",
+    "tslib": "2.6.2",
+    "typescript": "5.3.3",
+    "vitest": "0.34.6"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/bitcoin",
+  "keywords": [
+    "bitcoin",
+    "leather",
+    "leather wallet"
+  ],
+  "license": "MIT",
+  "prettier": "@leather-wallet/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/bitcoin"
+  }
+}
