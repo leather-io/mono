@@ -11,7 +11,7 @@ import { useColorScheme } from './useColorScheme';
 interface ThemeProps {
   lightColor?: string;
   darkColor?: string;
-};
+}
 
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];

@@ -3,9 +3,12 @@ import { useEffect } from 'react';
 import { useColorScheme } from '@/components/useColorScheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+
+import StorybookUIRoot from '../.storybook';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -17,10 +20,7 @@ export const unstable_settings = {
   initialRouteName: '(tabs)',
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
+function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -33,7 +33,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      void SplashScreen.hideAsync();
     }
   }, [loaded]);
 
@@ -56,3 +56,16 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
+
+let RootApp = null;
+
+const storybookEnabled = Constants?.expoConfig?.extra?.storybookEnabled === 'true';
+if (storybookEnabled) {
+  RootApp = StorybookUIRoot;
+} else {
+  // Prevent the splash screen from auto-hiding before asset loading is complete.
+  void SplashScreen.preventAutoHideAsync();
+  RootApp = RootLayout;
+}
+
+export default RootApp;

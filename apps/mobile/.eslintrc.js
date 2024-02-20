@@ -8,5 +8,6 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js', "*.js"],
   rules: {
     'import/order': 0,
+    'no-void': 0
   },
 };
