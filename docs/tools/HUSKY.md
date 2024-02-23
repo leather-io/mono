@@ -2,7 +2,7 @@
 
 The purpose of the `husky` is to run tasks on certain git actions. Initially it has been setup to run linting tasks on `commit` locally. This helps to ensure high standards and notify developers of failures soon.
 
-It runs on staged files via `lint-staged`. As this is a clean project it is quite fast but as it grows we can consider running husky jobs only on `push`
+It runs on changed files using `pnpm --filter=[$LATEST_HASH]`. As this is a clean project it is quite fast but as it grows we can consider running husky jobs only on `push`
 
 ## Contents
 
@@ -13,7 +13,6 @@ It runs on staged files via `lint-staged`. As this is a clean project it is quit
 
 ## Prerequisites
 
-- [➡ lint-staged](./LINTSTAGED.md) - lint indexed files before commit
 - [➡ commitlint](./COMMITLINT.md) - lint commit messages
 
 ## Setup
@@ -42,12 +41,6 @@ It runs on staged files via `lint-staged`. As this is a clean project it is quit
   }
   ```
 
-- Add `pre-commit` hook for linting and formatting indexed files using [lint-staged](./lint-staged.md):
-
-  ```sh
-  pnpm husky add .husky/pre-commit 'pnpm lint-staged --quiet'
-  ```
-
 - Add `commit-msg` hook for linting of commit message using [commitlint](../../packages/commitlint/README.md):
 
   ```sh
@@ -56,7 +49,7 @@ It runs on staged files via `lint-staged`. As this is a clean project it is quit
 
 ## Usage
 
-- **Automatic** execution [lint-staged](./lint-staged.md) and [commitlint](../../packages/commitlint/README.md) on commit.\
+- **Automatic** execution of formating, linting, typechecking and [commitlint](../../packages/commitlint/README.md) on commit.\
   In case of any failures, commit will be rejected.
 
 ## License
