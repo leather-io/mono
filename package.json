@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "author": "",
   "scripts": {
+    "check:all": "pnpm -r --parallel \"/^format$|^lint$|^typecheck$/\"",
     "clean": "git clean -dfX",
     "format": "pnpm -r format",
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
@@ -25,7 +26,6 @@
     "@leather-wallet/tsconfig-config": "workspace:*",
     "eslint": "8.53.0",
     "husky": "8.0.3",
-    "lint-staged": "15.0.2",
     "prettier": "3.0.3",
     "syncpack": "12.3.0",
     "typescript": "5.3.3"
