@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm lint-staged --quiet
+LATEST_HASH=$(git rev-parse --verify HEAD)
+
+# Run commands only in packages with changed files compared to previous commit and on their dependants in parallel
+pnpm -r --filter="...[$LATEST_HASH]" --parallel "/^format$|^lint$|^typecheck$/"

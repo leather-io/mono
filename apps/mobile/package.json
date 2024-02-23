@@ -8,11 +8,11 @@
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
-    "typecheck": "tsc --noEmit",
-    "storybook-generate": "sb-rn-get-stories -js",
     "storybook": "cross-env STORYBOOK_ENABLED='true' expo start",
+    "storybook-generate": "sb-rn-get-stories -js",
+    "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
-    "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
