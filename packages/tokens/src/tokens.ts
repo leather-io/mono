@@ -1,8 +1,27 @@
+import { colors } from './colors';
+
 export const tokens = {
   animations: {
-    spin: {
-      value: 'spin 1s linear infinite',
-    },
+    spin: { value: 'spin 1s linear infinite' },
+  },
+  borders: {
+    action: { value: '1px solid {colors.ink.action-primary-default}' },
+    active: { value: '2px solid {colors.ink.border-default}' },
+    background: { value: '2px solid {colors.ink.background-primary}' },
+    dashed: { value: '2px dashed {colors.ink.component-background-default}' },
+    default: { value: '1px solid {colors.ink.border-default}' },
+    error: { value: '1px solid {colors.red.border}' },
+    focus: { value: '2px solid {colors.ink.action-primary-default}' },
+    invert: { value: '1px solid {colors.invert}' },
+    subdued: { value: '1px solid {colors.ink.text-subdued}' },
+    warning: { value: '1px solid {colors.yellow.border}' },
+  },
+  colors,
+  radii: {
+    xs: { value: '2px' },
+    sm: { value: '4px' },
+    md: { value: '8px' },
+    lg: { value: '12px' },
   },
   sizes: {
     centeredPageFullWidth: { value: '500px' },
@@ -13,12 +32,6 @@ export const tokens = {
     lg: { value: '32px' },
     xl: { value: '36px' },
     xxl: { value: '40px' },
-  },
-  radii: {
-    xs: { value: '2px' },
-    sm: { value: '4px' },
-    md: { value: '8px' },
-    lg: { value: '12px' },
   },
   spacing: {
     // Numbers are padded with 0 to ensure they are sorted correctly in TS
@@ -36,18 +49,6 @@ export const tokens = {
     'space.09': { value: '64px', description: '64px' },
     'space.10': { value: '72px', description: '72px' },
     'space.11': { value: '128px', description: '128px' },
-  },
-  borders: {
-    action: { value: '1px solid {colors.accent.action-primary-default}' },
-    active: { value: '2px solid {colors.accent.border-default}' },
-    background: { value: '2px solid {colors.accent.background-primary}' },
-    dashed: { value: '2px dashed {colors.accent.component-background-default}' },
-    default: { value: '1px solid {colors.accent.border-default}' },
-    error: { value: '1px solid {colors.red.border}' },
-    focus: { value: '2px solid {colors.accent.action-primary-default}' },
-    invert: { value: '1px solid {colors.invert}' },
-    subdued: { value: '1px solid {colors.accent.text-subdued}' },
-    warning: { value: '1px solid {colors.yellow.border}' },
   },
   transition: { value: 'all 0.2s cubic-bezier(0.23, 1, 0.32, 1)' },
 } as const;
