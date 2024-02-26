@@ -18,19 +18,17 @@ This package is the prettier configuration for Leather
 
 - Install as a dev dependency in packages / apps:
 
-  ```sh
-  npm install --save-dev @leather-wallet/prettier-config
-  ```
+```sh
+pnpm install -D @leather-wallet/prettier-config
+```
 
 - Add prettier configuration file:
 
   ```js
   // .prettierrc.js
-  const defaultConfig = require('@leather-wallet/prettier-config');
+  import defaultConfig from '@leather-wallet/prettier-config';
 
-  module.exports = {
-    ...defaultConfig,
-  };
+  export default { ...defaultConfig };
   ```
 
 - Add prettier ignore patterns file:
