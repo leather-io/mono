@@ -1,6 +1,7 @@
 {
   "name": "@leather-wallet/mobile",
   "version": "3.39.0",
+  "type": "module",
   "scripts": {
     "android": "expo start --android",
     "ios": "expo start --ios",
