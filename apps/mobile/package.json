@@ -5,7 +5,7 @@
   "scripts": {
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "lint": "eslint . --config .eslintrc.js",
+    "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
