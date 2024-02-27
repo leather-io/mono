@@ -3,6 +3,7 @@ import { DefineGetInfoMethod } from './methods/get-info';
 import { DefineSendTransferMethod } from './methods/send-transfer';
 import { DefineSignMessageMethod } from './methods/sign-message';
 import { DefineSignPsbtMethod } from './methods/sign-psbt';
+import { DefineStxSignMessageMethod } from './methods/stx-sign-message';
 import { ValueOf } from './utils';
 
 export * from './rpc';
@@ -15,7 +16,8 @@ export type MethodMap = DefineGetInfoMethod &
   DefineGetAddressesMethod &
   DefineSignPsbtMethod &
   DefineSignMessageMethod &
-  DefineSendTransferMethod;
+  DefineSendTransferMethod &
+  DefineStxSignMessageMethod;
 
 export type RpcRequests = ValueOf<MethodMap>['request'];
 
