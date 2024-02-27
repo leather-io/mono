@@ -1,6 +1,6 @@
 export { breakpoints } from './breakpoints';
-export { colors } from './colors';
+export { colors, baseColors, darkColors } from './colors';
 export { keyframes } from './keyframes';
-export { semanticTokens, baseColors, darkColors } from './semantic-tokens';
+export { semanticTokens } from './semantic-tokens';
 export { textStyles } from './typography';
 export { tokens } from './tokens';
