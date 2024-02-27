@@ -1,14 +1,14 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../packages/tsconfig-config/tsconfig.base",
   "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
     "allowJs": false,
     "checkJs": false,
     "jsx": "react-native",
     "lib": ["es2017", "DOM"],
     "noEmit": true,
-    "target": "esnext",
     "incremental": true,
-    "strict": true,
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
