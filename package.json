@@ -2,7 +2,8 @@
   "name": "leather-mono",
   "description": "Leather wallet shared code",
   "version": "1.0.0",
-  "author": "",
+  "author": "Leather Wallet",
+  "type": "module",
   "scripts": {
     "check:all": "pnpm -r --parallel \"/^format$|^lint$|^typecheck$/\"",
     "clean": "git clean -dfX",
@@ -26,7 +27,7 @@
     "@leather-wallet/tsconfig-config": "workspace:*",
     "eslint": "8.53.0",
     "husky": "8.0.3",
-    "prettier": "3.0.3",
+    "prettier": "3.2.5",
     "syncpack": "12.3.0",
     "typescript": "5.3.3"
   },

@@ -1,4 +1,3 @@
-// stacks prettier config
 const defaultConfig = {
   printWidth: 100,
   tabWidth: 2,
@@ -9,9 +8,9 @@ const defaultConfig = {
   arrowParens: 'avoid',
 };
 
-module.exports = {
+export default {
   ...defaultConfig,
-  plugins: [require.resolve('@trivago/prettier-plugin-sort-imports')],
+  plugins: ['@trivago/prettier-plugin-sort-imports'],
   importOrder: [
     '^react',
     '<THIRD_PARTY_MODULES>',
