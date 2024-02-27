@@ -1,7 +1,7 @@
 import * as btc from '@scure/btc-signer';
 import { hexToBytes } from '@stacks/common';
 
-import { hashBip322Message } from './bip322-utils';
+import { hashBip322Message } from './bip322-utils.js';
 
 // TODO: Complete this fn
 // Ran into difficiulties with btc-signer vs bitcoinjs-lib

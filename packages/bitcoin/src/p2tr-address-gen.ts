@@ -2,13 +2,13 @@ import { BitcoinNetworkModes } from '@leather-wallet/constants';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
+import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network.js';
 import {
   BitcoinAccount,
   ecdsaPublicKeyToSchnorr,
   getBitcoinCoinTypeIndexByNetwork,
-} from './bitcoin.utils';
-import { DerivationPathDepth } from './derivation-path.utils';
+} from './bitcoin.utils.js';
+import { DerivationPathDepth } from './derivation-path.utils.js';
 
 export function getTaprootAccountDerivationPath(
   network: BitcoinNetworkModes,

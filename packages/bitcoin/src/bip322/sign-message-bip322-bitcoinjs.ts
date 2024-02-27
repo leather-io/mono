@@ -2,14 +2,14 @@ import { BitcoinNetworkModes } from '@leather-wallet/constants';
 import { base64 } from '@scure/base';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network';
+import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network.js';
 import {
   bip322TransactionToSignValues,
   ecPairFromPrivateKey,
   encodeMessageWitnessData,
   hashBip322Message,
   tweakSigner,
-} from './bip322-utils';
+} from './bip322-utils.js';
 
 export function createNativeSegwitBitcoinJsSigner(privateKey: Buffer) {
   return ecPairFromPrivateKey(privateKey);
