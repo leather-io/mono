@@ -16,7 +16,7 @@ import {
   makePayToScriptHashKeyHash,
   payToScriptHashTestnetPrefix,
   publicKeyToPayToScriptHashAddress,
-} from './p2wsh-p2sh-address-gen';
+} from './p2wsh-p2sh-address-gen.js';
 
 describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
   const bip32 = BIP32Factory(ecc);
