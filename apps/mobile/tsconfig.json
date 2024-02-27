@@ -16,5 +16,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js"]
+  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js"]
 }
