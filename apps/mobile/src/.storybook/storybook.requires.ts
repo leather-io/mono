@@ -5,7 +5,7 @@ import { start } from '@storybook/react-native';
 
 const normalizedStories = [
   {
-    titlePrefix: '',
+    titlePrefix: 'Components',
     directory: './components',
     files: '**/*.stories.?(ts|tsx|js|jsx)',
     importPathMatcher:
@@ -13,6 +13,19 @@ const normalizedStories = [
     // @ts-ignore
     req: require.context(
       '../components',
+      true,
+      /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
+    ),
+  },
+  {
+    titlePrefix: 'DesignSystem',
+    directory: './design-system',
+    files: '**/*.stories.?(ts|tsx|js|jsx)',
+    importPathMatcher:
+      /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/,
+    // @ts-ignore
+    req: require.context(
+      '../design-system',
       true,
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
     ),
