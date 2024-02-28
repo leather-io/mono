@@ -5,9 +5,9 @@ import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey, Versions } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { BtcSignerNetwork } from './bitcoin.network.js';
-import { DerivationPathDepth } from './derivation-path.utils.js';
-import { getTaprootPayment } from './p2tr-address-gen.js';
+import { BtcSignerNetwork } from './bitcoin.network';
+import { DerivationPathDepth } from './derivation-path.utils';
+import { getTaprootPayment } from './p2tr-address-gen';
 
 export interface BitcoinAccount {
   type: PaymentTypes;

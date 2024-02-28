@@ -3,13 +3,13 @@ import * as btc from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { ecdsaPublicKeyToSchnorr } from '../bitcoin.utils.js';
+import { ecdsaPublicKeyToSchnorr } from '../bitcoin.utils';
 import {
   createNativeSegwitBitcoinJsSigner,
   createTaprootBitcoinJsSigner,
   createToSpendTx,
   signBip322MessageSimple,
-} from './sign-message-bip322-bitcoinjs.js';
+} from './sign-message-bip322-bitcoinjs';
 
 describe(createToSpendTx.name, () => {
   test('bitcoinjs example', () => {
