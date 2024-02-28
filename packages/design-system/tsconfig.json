@@ -5,6 +5,8 @@
     "checkJs": false,
     "jsx": "react-native",
     "lib": ["es2017", "DOM"],
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
     "noEmit": true,
     "target": "esnext",
     "incremental": true,

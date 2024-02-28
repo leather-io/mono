@@ -49,9 +49,9 @@ importers:
       '@expo/vector-icons':
         specifier: 14.0.0
         version: 14.0.0
-      '@leather-wallet/tokens':
+      '@leather-wallet/design-system':
         specifier: workspace:*
-        version: link:../../packages/tokens
+        version: link:../../packages/design-system
       '@react-native/assets-registry':
         specifier: 0.73.1
         version: 0.73.1
@@ -67,9 +67,6 @@ importers:
       '@rnx-kit/metro-resolver-symlinks':
         specifier: 0.1.35
         version: 0.1.35
-      '@shopify/restyle':
-        specifier: 2.4.2
-        version: 2.4.2(react-native@0.73.4)(react@18.2.0)
       expo:
         specifier: 50.0.6
         version: 50.0.6(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(@react-native/babel-preset@0.73.21)(expo-constants@15.4.5)(expo-linking@6.2.2)(expo-status-bar@1.11.1)(react-dom@18.2.0)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react@18.2.0)
@@ -134,24 +131,6 @@ importers:
       '@leather-wallet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@react-native-async-storage/async-storage':
-        specifier: 1.22.0
-        version: 1.22.0(react-native@0.73.4)
-      '@storybook/addon-actions':
-        specifier: 7.6.17
-        version: 7.6.17
-      '@storybook/addon-ondevice-actions':
-        specifier: 7.6.15
-        version: 7.6.15(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
-      '@storybook/addon-ondevice-controls':
-        specifier: 7.6.15
-        version: 7.6.15(@react-native-community/datetimepicker@7.6.2)(@react-native-community/slider@4.5.0)(@types/react-dom@18.0.11)(@types/react@18.2.43)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
-      '@storybook/react':
-        specifier: 7.6.15
-        version: 7.6.15(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
-      '@storybook/react-native':
-        specifier: 7.6.15
-        version: 7.6.15(react-dom@18.2.0)(react-native-safe-area-context@4.8.2)(react-native@0.73.4)(react@18.2.0)(typescript@5.3.3)
       '@types/react':
         specifier: 18.2.43
         version: 18.2.43
@@ -161,9 +140,6 @@ importers:
       babel-preset-expo:
         specifier: 10.0.1
         version: 10.0.1(@babel/core@7.23.9)(expo-constants@15.4.5)(expo-linking@6.2.2)(expo-modules-autolinking@1.10.3)(expo-status-bar@1.11.1)(expo@50.0.6)(react-dom@18.2.0)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react@18.2.0)
-      cross-env:
-        specifier: 7.0.3
-        version: 7.0.3
       eslint:
         specifier: 8.53.0
         version: 8.53.0
@@ -7140,14 +7116,6 @@ packages:
 
   /create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
-    dev: true
-
-  /cross-env@7.0.3:
-    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
-    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
-    hasBin: true
-    dependencies:
-      cross-spawn: 7.0.3
     dev: true
 
   /cross-fetch@3.1.8:

@@ -1,5 +1,5 @@
 import { baseColors } from '@leather-wallet/tokens';
-import { createTheme } from '@shopify/restyle';
+import { ThemeProvider as ThemeProviderRestyle, createTheme } from '@shopify/restyle';
 
 import { textVariants } from './textVariants';
 
@@ -25,3 +25,7 @@ export const theme = createTheme({
 });
 
 export type Theme = typeof theme;
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return <ThemeProviderRestyle theme={theme}>{children}</ThemeProviderRestyle>;
+}
