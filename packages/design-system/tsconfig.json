@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false,
+    "jsx": "react-native",
+    "lib": ["es2017", "DOM"],
+    "noEmit": true,
+    "target": "esnext",
+    "incremental": true,
+    "strict": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js"]
+}

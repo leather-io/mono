@@ -1,0 +1,51 @@
+{
+  "name": "@leather-wallet/design-system",
+  "version": "3.39.0",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "storybook:android": "expo start --android",
+    "storybook:ios": "expo start --ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "14.0.0",
+    "@leather-wallet/tokens": "workspace:*",
+    "@react-native/assets-registry": "0.73.1",
+    "@react-native/metro-config": "0.73.5",
+    "@rnx-kit/metro-config": "1.3.14",
+    "@rnx-kit/metro-resolver-symlinks": "0.1.35",
+    "@shopify/restyle": "2.4.2",
+    "expo": "50.0.6",
+    "expo-asset": "9.0.2",
+    "expo-constants": "15.4.5",
+    "expo-font": "11.10.2",
+    "expo-splash-screen": "0.26.3",
+    "metro-cache": "0.80.5",
+    "metro-config": "0.80.5",
+    "metro-resolver": "0.80.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.73.4"
+  },
+  "devDependencies": {
+    "@babel/core": "7.23.9",
+    "@leather-wallet/eslint-config": "workspace:*",
+    "@react-native-async-storage/async-storage": "1.22.0",
+    "@storybook/addon-actions": "7.6.17",
+    "@storybook/addon-ondevice-actions": "7.6.15",
+    "@storybook/addon-ondevice-controls": "7.6.15",
+    "@storybook/react": "7.6.15",
+    "@storybook/react-native": "7.6.15",
+    "@types/react": "18.2.43",
+    "@types/react-dom": "18.0.11",
+    "babel-preset-expo": "10.0.1",
+    "eslint": "8.53.0",
+    "eslint-config-universe": "12.0.0",
+    "tslib": "2.6.2",
+    "typescript": "5.3.3"
+  },
+  "main": "./index.ts",
+  "private": true
+}
