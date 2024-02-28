@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "es2022",
+    "moduleResolution": "Bundler",
     "lib": ["dom", "dom.iterable", "esnext"],
     "sourceMap": true,
     "removeComments": true,
@@ -16,7 +17,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

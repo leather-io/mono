@@ -4,7 +4,7 @@ import { isString } from '@leather-wallet/utils';
 import { sha256 } from '@noble/hashes/sha256';
 import { hexToBytes, utf8ToBytes } from '@stacks/common';
 import * as bitcoin from 'bitcoinjs-lib';
-import ECPairFactory from 'ecpair';
+import { ECPairFactory } from 'ecpair';
 import { encode } from 'varuint-bitcoin';
 
 import { toXOnly } from '../bitcoin.utils';
