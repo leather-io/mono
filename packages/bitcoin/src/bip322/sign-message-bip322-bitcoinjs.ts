@@ -9,7 +9,7 @@ import {
   encodeMessageWitnessData,
   hashBip322Message,
   tweakSigner,
-} from './bip322-utils.js';
+} from './bip322-utils';
 
 export function createNativeSegwitBitcoinJsSigner(privateKey: Buffer) {
   return ecPairFromPrivateKey(privateKey);

@@ -7,7 +7,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory } from 'ecpair';
 import { encode } from 'varuint-bitcoin';
 
-import { toXOnly } from '../bitcoin.utils.js';
+import { toXOnly } from '../bitcoin.utils';
 
 const bip322MessageTag = 'BIP0322-signed-message';
 
