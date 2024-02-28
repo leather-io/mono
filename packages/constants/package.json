@@ -3,7 +3,6 @@
   "description": "Shared bitcoin utilities",
   "version": "0.0.1",
   "author": "Leather.io contact@leather.io",
-  "type": "module",
   "scripts": {
     "format": "prettier . --write",
     "lint": "eslint .",
@@ -34,5 +33,6 @@
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
     "directory": "packages/constants"
-  }
+  },
+  "type": "module"
 }

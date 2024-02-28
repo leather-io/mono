@@ -3,7 +3,6 @@
   "description": "Leather wallet shared code",
   "version": "1.0.0",
   "author": "Leather Wallet",
-  "type": "module",
   "scripts": {
     "check:all": "pnpm -r --parallel \"/^format$|^lint$|^typecheck$/\"",
     "clean": "git clean -dfX",
@@ -187,5 +186,6 @@
         }
       }
     }
-  }
+  },
+  "type": "module"
 }
