@@ -1,4 +1,4 @@
-import { extractAccountIndexFromPath, extractAddressIndexFromPath } from './bitcoin.utils.js';
+import { extractAccountIndexFromPath, extractAddressIndexFromPath } from './bitcoin.utils';
 
 describe(extractAddressIndexFromPath.name, () => {
   test('should extract the address index from a derivation path', () => {

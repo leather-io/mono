@@ -1,8 +1,8 @@
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 
-import { deriveAddressIndexKeychainFromAccount } from './bitcoin.utils.js';
-import { deriveTaprootAccount, getTaprootPaymentFromAddressIndex } from './p2tr-address-gen.js';
+import { deriveAddressIndexKeychainFromAccount } from './bitcoin.utils';
+import { deriveTaprootAccount, getTaprootPaymentFromAddressIndex } from './p2tr-address-gen';
 
 // TODO: this is a SECRET_KEY from @tests/mocks folder.
 // Temporary until we move @tests/mocks folder to monorepo.

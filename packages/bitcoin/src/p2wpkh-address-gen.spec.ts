@@ -1,4 +1,4 @@
-import { deriveNativeSegWitReceiveAddressIndex } from './p2wpkh-address-gen.js';
+import { deriveNativeSegWitReceiveAddressIndex } from './p2wpkh-address-gen';
 
 describe('Bitcoin bech32 (P2WPKH address derivation', () => {
   describe('from extended public key', () => {

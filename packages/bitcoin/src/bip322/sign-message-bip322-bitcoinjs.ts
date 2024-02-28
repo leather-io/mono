@@ -2,7 +2,7 @@ import { BitcoinNetworkModes } from '@leather-wallet/constants';
 import { base64 } from '@scure/base';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network.js';
+import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network';
 import {
   bip322TransactionToSignValues,
   ecPairFromPrivateKey,

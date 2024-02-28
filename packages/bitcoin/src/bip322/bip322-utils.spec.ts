@@ -1,6 +1,6 @@
 import { hexToBytes, utf8ToBytes } from '@noble/hashes/utils';
 
-import { hashBip322Message } from './bip322-utils.js';
+import { hashBip322Message } from './bip322-utils';
 
 describe('Message hashing', () => {
   test('empty string', () =>

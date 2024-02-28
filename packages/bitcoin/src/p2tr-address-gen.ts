@@ -2,7 +2,7 @@ import { BitcoinNetworkModes } from '@leather-wallet/constants';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network.js';
+import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 import {
   BitcoinAccount,
   ecdsaPublicKeyToSchnorr,
