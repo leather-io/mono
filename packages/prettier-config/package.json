@@ -2,6 +2,7 @@
   "name": "@leather-wallet/prettier-config",
   "description": "Shared prettier configuration",
   "version": "0.0.5",
+  "type": "module",
   "author": "Leather.io contact@leather.io",
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
@@ -23,6 +24,5 @@
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
     "directory": "packages/prettier-config"
-  },
-  "type": "module"
+  }
 }

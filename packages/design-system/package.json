@@ -2,16 +2,16 @@
   "name": "@leather-wallet/design-system",
   "version": "3.39.0",
   "scripts": {
+    "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
+    "prepare": "panda codegen -c ./src/panda.config.ts",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "storybook-docs:web": "storybook dev --docs -c ./src/.storybook-web",
     "storybook:android": "expo start --android",
     "storybook:ios": "expo start --ios",
-    "typecheck": "tsc --noEmit",
     "storybook:web": "storybook dev -p 6006 -c ./src/.storybook-web",
-    "storybook-docs:web": "storybook dev --docs -c ./src/.storybook-web",
-    "build-storybook:web": "storybook build -c ./src/.storybook-web",
-    "prepare": "panda codegen -c ./src/panda.config.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@babel/core": "7.23.9",
     "@leather-wallet/eslint-config": "workspace:*",
+    "@pandacss/dev": "0.26.2",
     "@react-native-async-storage/async-storage": "1.22.0",
     "@storybook/addon-actions": "7.6.17",
     "@storybook/addon-docs": "7.6.15",
@@ -56,7 +57,6 @@
     "@types/react": "18.2.43",
     "@types/react-dom": "18.0.11",
     "babel-preset-expo": "10.0.1",
-    "@pandacss/dev": "0.26.2",
     "eslint": "8.53.0",
     "eslint-config-universe": "12.0.0",
     "storybook": "7.6.15",

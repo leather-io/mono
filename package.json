@@ -2,6 +2,7 @@
   "name": "leather-mono",
   "description": "Leather wallet shared code",
   "version": "1.0.0",
+  "type": "module",
   "author": "Leather Wallet",
   "scripts": {
     "check:all": "pnpm -r --parallel \"/^format$|^lint$|^typecheck$/\"",
@@ -186,6 +187,5 @@
         }
       }
     }
-  },
-  "type": "module"
+  }
 }
