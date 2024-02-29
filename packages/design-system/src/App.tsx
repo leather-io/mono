@@ -1,4 +1,4 @@
-import { useLoadFonts } from '@/hooks/useLoadFonts.native';
+import { useLoadFonts } from '@/hooks/use-load-fonts.native';
 import { theme } from '@/theme-native';
 import { ThemeProvider } from '@shopify/restyle';
 import * as SplashScreen from 'expo-splash-screen';

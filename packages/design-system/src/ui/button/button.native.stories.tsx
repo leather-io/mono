@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Button } from './Button.native';
+import { Button } from './button.native';
 
 const meta = {
   title: 'Button',

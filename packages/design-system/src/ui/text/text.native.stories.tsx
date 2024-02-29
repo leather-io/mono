@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Text } from './Text.native';
+import { Text } from './text.native';
 
 const meta = {
   title: 'Text',
