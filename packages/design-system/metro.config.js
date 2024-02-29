@@ -13,7 +13,6 @@ const MetroSymlinksResolver = require('@rnx-kit/metro-resolver-symlinks');
 
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, '../..');
-console.log({ projectRoot, workspaceRoot });
 const config = getDefaultConfig(projectRoot);
 
 // #1 - Watch all files in the monorepo
@@ -30,7 +29,6 @@ config.resolver.nodeModulesPaths = [
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // TODO: either read tsconfig automatically or figure out another way of resolving tsconfig aliases.
   // If we add more aliases in tsconfig, we need to add those to this if statement.
-  // console.log({ context: context.originModulePath });
   if (moduleName.startsWith('@/')) {
     return context.resolveRequest(context, moduleName, platform);
   }

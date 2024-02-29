@@ -1,9 +1,9 @@
 import { useLoadFonts } from '@/hooks/useLoadFonts';
-import { theme } from '@/theme';
+import { theme } from '@/theme-native';
 import { ThemeProvider } from '@shopify/restyle';
 import * as SplashScreen from 'expo-splash-screen';
 
-import StorybookUIRoot from './.storybook';
+import StorybookUIRoot from './.storybook-native';
 
 function RootLayout() {
   const { fontsLoaded } = useLoadFonts({
