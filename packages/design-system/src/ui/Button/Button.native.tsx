@@ -1,6 +1,7 @@
 import { TouchableOpacity } from 'react-native';
 
-import { Box, Text } from '@/ui/native';
+import { Box } from '@/ui/Box/Box.native';
+import { Text } from '@/ui/Text/Text.native';
 
 type ButtonVariant = 'solid' | 'outline' | 'ghost';
 type ButtonSize = 'medium' | 'small';

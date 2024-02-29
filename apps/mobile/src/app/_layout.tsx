@@ -1,5 +1,4 @@
-import { useLoadFonts } from '@leather-wallet/design-system/src/hooks/useLoadFonts';
-import { ThemeProvider } from '@leather-wallet/design-system/src/theme-native/theme';
+import { ThemeProvider, useLoadFonts } from '@leather-wallet/design-system/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
