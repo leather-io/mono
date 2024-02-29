@@ -1,6 +1,7 @@
 {
   "name": "@leather-wallet/ui",
   "version": "3.39.0",
+  "type": "module",
   "scripts": {
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "lint": "eslint .",
@@ -11,7 +12,7 @@
     "storybook:android": "expo start --android",
     "storybook:ios": "expo start --ios",
     "storybook:web": "storybook dev -p 6006 -c ./src/.storybook-web",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",

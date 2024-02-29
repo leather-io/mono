@@ -51,7 +51,7 @@ importers:
         version: 14.0.0
       '@leather-wallet/ui':
         specifier: workspace:*
-        version: link:../../packages/design-system
+        version: link:../../packages/ui
       '@react-native/assets-registry':
         specifier: 0.73.1
         version: 0.73.1
@@ -256,7 +256,62 @@ importers:
         specifier: 5.3.3
         version: 5.3.3
 
-  packages/design-system:
+  packages/eslint-config:
+    dependencies:
+      '@typescript-eslint/eslint-plugin':
+        specifier: 6.9.0
+        version: 6.9.0(@typescript-eslint/parser@6.9.0)(eslint@8.53.0)(typescript@5.3.3)
+      '@typescript-eslint/parser':
+        specifier: 6.9.0
+        version: 6.9.0(eslint@8.53.0)(typescript@5.3.3)
+      eslint:
+        specifier: 8.53.0
+        version: 8.53.0
+      eslint-plugin-deprecation:
+        specifier: 2.0.0
+        version: 2.0.0(eslint@8.53.0)(typescript@5.3.3)
+    devDependencies:
+      '@leather-wallet/tsconfig-config':
+        specifier: workspace:*
+        version: link:../tsconfig-config
+
+  packages/prettier-config:
+    dependencies:
+      '@trivago/prettier-plugin-sort-imports':
+        specifier: 4.3.0
+        version: 4.3.0(prettier@3.2.5)
+      prettier:
+        specifier: 3.2.5
+        version: 3.2.5
+
+  packages/tokens:
+    devDependencies:
+      '@leather-wallet/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@leather-wallet/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@leather-wallet/tsconfig-config':
+        specifier: workspace:*
+        version: link:../tsconfig-config
+      prettier:
+        specifier: 3.0.3
+        version: 3.0.3
+
+  packages/tsconfig-config:
+    dependencies:
+      typescript:
+        specifier: 5.3.3
+        version: 5.3.3
+
+  packages/types:
+    devDependencies:
+      tsup:
+        specifier: 8.0.1
+        version: 8.0.1(ts-node@10.9.1)(typescript@5.3.3)
+
+  packages/ui:
     dependencies:
       '@expo/vector-icons':
         specifier: 14.0.0
@@ -400,61 +455,6 @@ importers:
       typescript:
         specifier: 5.3.3
         version: 5.3.3
-
-  packages/eslint-config:
-    dependencies:
-      '@typescript-eslint/eslint-plugin':
-        specifier: 6.9.0
-        version: 6.9.0(@typescript-eslint/parser@6.9.0)(eslint@8.53.0)(typescript@5.3.3)
-      '@typescript-eslint/parser':
-        specifier: 6.9.0
-        version: 6.9.0(eslint@8.53.0)(typescript@5.3.3)
-      eslint:
-        specifier: 8.53.0
-        version: 8.53.0
-      eslint-plugin-deprecation:
-        specifier: 2.0.0
-        version: 2.0.0(eslint@8.53.0)(typescript@5.3.3)
-    devDependencies:
-      '@leather-wallet/tsconfig-config':
-        specifier: workspace:*
-        version: link:../tsconfig-config
-
-  packages/prettier-config:
-    dependencies:
-      '@trivago/prettier-plugin-sort-imports':
-        specifier: 4.3.0
-        version: 4.3.0(prettier@3.2.5)
-      prettier:
-        specifier: 3.2.5
-        version: 3.2.5
-
-  packages/tokens:
-    devDependencies:
-      '@leather-wallet/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@leather-wallet/prettier-config':
-        specifier: workspace:*
-        version: link:../prettier-config
-      '@leather-wallet/tsconfig-config':
-        specifier: workspace:*
-        version: link:../tsconfig-config
-      prettier:
-        specifier: 3.0.3
-        version: 3.0.3
-
-  packages/tsconfig-config:
-    dependencies:
-      typescript:
-        specifier: 5.3.3
-        version: 5.3.3
-
-  packages/types:
-    devDependencies:
-      tsup:
-        specifier: 8.0.1
-        version: 8.0.1(ts-node@10.9.1)(typescript@5.3.3)
 
   packages/utils:
     dependencies:
