@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "@leather-wallet/design-system",
-    "slug": "leather-wallet_design-system",
+    "name": "@leather-wallet/ui",
+    "slug": "leather-wallet_ui",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",

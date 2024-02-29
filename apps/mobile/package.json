@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
-    "@leather-wallet/design-system": "workspace:*",
+    "@leather-wallet/ui": "workspace:*",
     "@react-native/assets-registry": "0.73.1",
     "@react-native/metro-config": "0.73.5",
     "@react-navigation/native": "6.0.2",

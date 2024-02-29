@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/design-system",
+  "name": "@leather-wallet/ui",
   "version": "3.39.0",
   "scripts": {
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
