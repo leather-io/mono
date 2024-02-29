@@ -64,6 +64,6 @@
     "tslib": "2.6.2",
     "typescript": "5.3.3"
   },
-  "main": "./index.ts",
+  "main": "./src/index.ts",
   "private": true
 }
