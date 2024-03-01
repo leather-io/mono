@@ -9,7 +9,8 @@
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+    "typecheck": "tsc --noEmit -p ./tsconfig.json",
+    "ts:build": "tsc --build"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",

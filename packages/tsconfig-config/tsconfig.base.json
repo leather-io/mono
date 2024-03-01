@@ -20,8 +20,11 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": ["*"],
-  "exclude": [""]
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
+  }
 }

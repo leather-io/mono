@@ -7,7 +7,7 @@
     "checkJs": false,
     "jsx": "react-native",
     "lib": ["es2017", "DOM"],
-    "noEmit": true,
+    "target": "ES2022",
     "incremental": true,
     "baseUrl": ".",
     "rootDir": ".",
@@ -15,6 +15,11 @@
       "@/*": ["src/*"]
     }
   },
+  "references": [
+    {
+      "path": "../../packages/ui"
+    }
+  ],
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js"]
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist"]
 }

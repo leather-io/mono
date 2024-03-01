@@ -16,7 +16,8 @@
     "prepare": "husky install",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "ts:build": "pnpm -r ts:build"
   },
   "devDependencies": {
     "@changesets/cli": "2.26.2",
