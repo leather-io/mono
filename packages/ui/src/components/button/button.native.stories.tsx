@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from './button.native';
 
-const meta = {
+const meta: Meta<typeof Button> = {
   title: 'Button',
   component: Button,
   decorators: [
@@ -14,7 +14,7 @@ const meta = {
       </View>
     ),
   ],
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 

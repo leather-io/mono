@@ -12,7 +12,8 @@
     "storybook:android": "expo start --android",
     "storybook:ios": "expo start --ios",
     "storybook:web": "storybook dev -p 6006 -c ./src/.storybook-web",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+    "typecheck": "tsc --noEmit --project ./tsconfig.json",
+    "ts:build": "tsc --build"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
@@ -51,6 +52,7 @@
     "@storybook/blocks": "7.6.15",
     "@storybook/manager-api": "7.6.17",
     "@storybook/react": "7.6.15",
+    "@storybook/types": "7.6.15",
     "@storybook/react-native": "7.6.15",
     "@storybook/react-webpack5": "7.6.15",
     "@storybook/test": "7.6.15",

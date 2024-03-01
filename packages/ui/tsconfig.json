@@ -7,7 +7,6 @@
     "checkJs": false,
     "jsx": "react-native",
     "lib": ["es2017", "DOM"],
-    "noEmit": true,
     "incremental": true,
     "baseUrl": ".",
     "rootDir": ".",
@@ -15,6 +14,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js"]
+  "include": ["**/*", "src/.storybook-*/*"],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist"]
 }

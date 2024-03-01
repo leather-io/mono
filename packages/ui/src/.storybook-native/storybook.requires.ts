@@ -6,13 +6,13 @@ import { start } from '@storybook/react-native';
 const normalizedStories = [
   {
     titlePrefix: 'UI',
-    directory: './ui',
+    directory: './components',
     files: '**/*.native.stories.?(ts|tsx|js|jsx)',
     importPathMatcher:
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.native.stories\.(?:ts|tsx|js|jsx)?)$/,
     // @ts-ignore
     req: require.context(
-      '../ui',
+      '../components',
       true,
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.native.stories\.(?:ts|tsx|js|jsx)?)$/
     ),

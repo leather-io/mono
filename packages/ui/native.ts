@@ -1,5 +1,6 @@
-export { Box } from './src/ui/box/box.native';
-export { Text } from './src/ui/text/text.native';
-export { Button } from './src/ui/button/button.native';
+export { Box } from './src/components/box/box.native';
+export { Text } from './src/components/text/text.native';
+export { Button } from './src/components/button/button.native';
 export { useLoadFonts } from './src/hooks/use-load-fonts.native';
-export { theme, Theme, ThemeProvider } from './src/theme-native';
+export { theme, ThemeProvider } from './src/theme-native';
+export type { Theme } from './src/theme-native';

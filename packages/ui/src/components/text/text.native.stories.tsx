@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { Text } from './text.native';
 
-const meta = {
+const meta: Meta<typeof Text> = {
   title: 'Text',
   component: Text,
   decorators: [
@@ -14,7 +14,7 @@ const meta = {
       </View>
     ),
   ],
-} satisfies Meta<typeof Text>;
+};
 
 export default meta;
 

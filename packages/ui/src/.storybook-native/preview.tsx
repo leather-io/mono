@@ -1,7 +1,8 @@
 import { View } from 'react-native';
 
-/** @type{import("@storybook/react").Preview} */
-const preview = {
+import { Preview } from '@storybook/react';
+
+const preview: Preview = {
   parameters: {
     controls: {
       matchers: {
@@ -12,7 +13,7 @@ const preview = {
   },
 
   decorators: [
-    (Story, { parameters }) => (
+    Story => (
       <View
         style={{
           flex: 1,
