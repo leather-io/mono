@@ -10,6 +10,7 @@
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
     "ts:build": "tsc --build",
+    "ts:build:watch": "tsc --build --watch",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {
