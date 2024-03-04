@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "allowJs": false,
+    "checkJs": false,
+    "target": "es2022",
     "module": "es2022",
     "moduleResolution": "Bundler",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "es2022"],
     "sourceMap": true,
     "removeComments": true,
     "importHelpers": true,
