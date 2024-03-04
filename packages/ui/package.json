@@ -13,7 +13,10 @@
     "storybook:ios": "expo start --ios",
     "storybook:web": "storybook dev -p 6006 -c ./src/.storybook-web",
     "typecheck": "tsc --noEmit --project ./tsconfig.json",
-    "ts:build": "tsc --build"
+    "ts:build": "pnpm ts:build:all && pnpm ts:build:web && pnpm ts:build:native",
+    "ts:build:all": "tsc --build ./tsconfig.json",
+    "ts:build:web": "tsc --build ./tsconfig.web.json",
+    "ts:build:native": "tsc --build ./tsconfig.native.json"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",

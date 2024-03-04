@@ -13,8 +13,8 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "outDir": "./dist-all"
+    "outDir": "./dist-native"
   },
-  "include": ["**/*", "src/.storybook-*/*"],
+  "include": ["**/*.native.ts", "**/*.native.tsx", "native.ts", "**/theme-native/**/*"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
 }

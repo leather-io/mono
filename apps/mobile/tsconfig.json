@@ -17,7 +17,7 @@
   },
   "references": [
     {
-      "path": "../../packages/ui"
+      "path": "../../packages/ui/tsconfig.native.json"
     }
   ],
   "include": ["**/*.ts", "**/*.tsx"],

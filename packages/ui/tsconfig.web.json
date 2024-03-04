@@ -13,8 +13,8 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "outDir": "./dist-all"
+    "outDir": "./dist-web"
   },
-  "include": ["**/*", "src/.storybook-*/*"],
+  "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts", "**/theme-web/**/*"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
 }

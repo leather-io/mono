@@ -33,6 +33,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+dist-all/
+dist-web/
+dist-native/
 
 # panda
 leather-styles/
