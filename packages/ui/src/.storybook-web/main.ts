@@ -49,7 +49,7 @@ const config: StorybookConfig = {
       },
     },
   },
-  staticDirs: ['../public'],
+  staticDirs: ['../assets-web'],
   stories: ['../**/*.mdx', '../**/*.web.stories.@(ts|tsx)'],
   swc: () => ({
     jsc: {

@@ -5,7 +5,7 @@ const theme: ThemeVars = create({
   base: 'dark',
   brandTitle: 'Leather Storybook',
   brandUrl: 'https://leather.io',
-  brandImage: 'assets/images/leather.png',
+  brandImage: 'images/leather.png',
   brandTarget: '_self',
 });
 
