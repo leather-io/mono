@@ -1,7 +1,7 @@
 import { baseColors } from '@leather-wallet/tokens';
 import { ThemeProvider as ThemeProviderRestyle, createTheme } from '@shopify/restyle';
 
-import { textVariants } from './textVariants';
+import { textVariants } from './text-variants';
 
 export const theme = createTheme({
   colors: baseColors,
