@@ -74,5 +74,8 @@
     "./web": "./dist-web/web.js"
   },
   "main": "./src/index.ts",
-  "private": true
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  }
 }
