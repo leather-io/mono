@@ -2,6 +2,10 @@
   "name": "@leather-wallet/ui",
   "version": "3.39.0",
   "type": "module",
+  "exports": {
+    "./native": "./dist-native/native.js",
+    "./web": "./dist-web/web.js"
+  },
   "scripts": {
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "lint": "eslint .",
