@@ -1,5 +1,6 @@
-import { ColorToken } from '@/leather-styles/tokens';
 import { defineRecipe } from '@pandacss/dev';
+
+import { ColorToken } from '../../leather-styles/tokens';
 
 function loadingStyles(color: ColorToken) {
   return {

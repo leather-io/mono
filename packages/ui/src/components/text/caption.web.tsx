@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { HTMLStyledProps, styled } from '@/leather-styles/jsx';
+import { HTMLStyledProps, styled } from '../../leather-styles/jsx';
 
 export const Caption = forwardRef<HTMLSpanElement, HTMLStyledProps<'span'>>(
   ({ children, ...props }, ref) => (

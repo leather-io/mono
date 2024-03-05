@@ -5,9 +5,6 @@
     "lib": ["es2017", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "outDir": "./dist-web"
   },
   "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts", "**/theme-web/**/*"],

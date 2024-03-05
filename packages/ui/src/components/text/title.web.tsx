@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { HTMLStyledProps, styled } from '@/leather-styles/jsx';
+import { HTMLStyledProps, styled } from '../../leather-styles/jsx';
 
 export const Title = forwardRef<HTMLSpanElement, HTMLStyledProps<'span'>>(
   ({ children, ...props }, ref) => (
