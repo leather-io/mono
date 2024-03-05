@@ -1,10 +1,10 @@
 const fontMap = {
-  mobile: {
+  extension: {
     firaCode: 'Fira Code',
     diatype: 'Diatype',
     marchePro: 'Marche',
   },
-  extension: {
+  mobile: {
     firaCode: 'Fira Code',
     diatype: 'DiatypeRegular',
     marchePro: 'MarcheSuperPro',
