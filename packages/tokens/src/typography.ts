@@ -1,5 +1,5 @@
 const fontMap = {
-  extension: {
+  web: {
     firaCode: 'Fira Code',
     diatype: 'Diatype',
     marchePro: 'Marche',
@@ -12,7 +12,7 @@ const fontMap = {
 };
 
 // we might want to split up mobile into ios and android in the future.
-type Platform = 'mobile' | 'extension';
+type Platform = 'mobile' | 'web';
 
 function getTextVariants({ platform }: { platform: Platform }) {
   const commonMarcheProStyles = {
@@ -30,7 +30,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
 
   function transformSize<T extends number>(size: T) {
     switch (platform) {
-      case 'extension':
+      case 'web':
         return `${(size / 16).toFixed(4)}rem` as const;
       case 'mobile':
         return size;
@@ -39,7 +39,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
 
   function transformWeight<T extends number>(weight: T) {
     switch (platform) {
-      case 'extension':
+      case 'web':
         return weight;
       case 'mobile':
         return weight.toString();
@@ -166,7 +166,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
 }
 
 export function getExtensionTextVariants() {
-  const textVariants = getTextVariants({ platform: 'extension' });
+  const textVariants = getTextVariants({ platform: 'web' });
 
   return {
     'display.01': {
