@@ -74,8 +74,8 @@
     "typescript": "5.3.3"
   },
   "exports": {
-    "./native": "./dist-native/native.js",
-    "./web": "./dist-web/web.js"
+    ".": "./dist-web/web.js",
+    "./native": "./dist-native/native.js"
   },
   "main": "./src/index.ts",
   "private": true,
