@@ -1,10 +1,10 @@
-import { baseColors } from '@leather-wallet/tokens';
+import { colorThemes } from '@leather-wallet/tokens';
 import { ThemeProvider as ThemeProviderRestyle, createTheme } from '@shopify/restyle';
 
 import { textVariants } from './text-variants';
 
 export const theme = createTheme({
-  colors: baseColors,
+  colors: colorThemes.base,
   spacing: {
     '0': 0,
     '1': 4,

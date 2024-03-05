@@ -1,7 +1,7 @@
-import { Palette, baseColors, darkColors } from './colors';
+import { Palette, colorThemes } from './colors';
 
 function createColorObjForKey<T extends keyof Palette>(key: T) {
-  return { value: { base: baseColors[key], _dark: darkColors[key] } };
+  return { value: { base: colorThemes.base[key], _dark: colorThemes.dark[key] } };
 }
 
 export const semanticTokens = {
