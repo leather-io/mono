@@ -27,6 +27,7 @@
     "incremental": true,
     "composite": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "isolatedModules": true
   }
 }

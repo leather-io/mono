@@ -1,101 +1,246 @@
-const marchePro = 'Marche';
-
-const commonMarcheProStyles = {
-  fontFamily: marchePro,
-  textTransform: 'uppercase',
+const fontMap = {
+  mobile: {
+    firaCode: 'Fira Code',
+    diatype: 'Diatype',
+    marchePro: 'Marche',
+  },
+  extension: {
+    firaCode: 'Fira Code',
+    diatype: 'DiatypeRegular',
+    marchePro: 'MarcheSuperPro',
+  },
 };
 
-const diatype = 'Diatype';
+// we might want to split up mobile into ios and android in the future.
+type Platform = 'mobile' | 'extension';
 
-const commonDiatypeStyles = {
-  fontFamily: diatype,
-};
+function getTextVariants({ platform }: { platform: Platform }) {
+  const commonMarcheProStyles = {
+    fontFamily: fontMap[platform].marchePro,
+    textTransform: 'uppercase',
+  };
 
-const firaCode = 'Fira Code';
+  const commonDiatypeStyles = {
+    fontFamily: fontMap[platform].diatype,
+  };
 
-export const textStyles = {
-  'display.01': {
-    description: 'display.01',
-    value: { ...commonMarcheProStyles, fontSize: '9.375rem', lineHeight: '7.5rem' },
-  },
-  'display.02': {
-    description: 'display.02',
-    value: { ...commonMarcheProStyles, fontSize: '4rem', lineHeight: '3.5rem' },
-  },
+  const commonFiracodeStyles = {
+    fontFamily: fontMap[platform].firaCode,
+  };
 
-  'heading.01': {
-    description: 'heading.01',
-    value: { ...commonDiatypeStyles, fontSize: '3.3125rem', lineHeight: '3.75rem' },
-  },
-  'heading.02': {
-    description: 'heading.02',
-    value: { ...commonMarcheProStyles, fontSize: '2.75rem', lineHeight: '2.75rem' },
-  },
-  'heading.03': {
-    description: 'heading.03',
-    value: { ...commonMarcheProStyles, fontSize: '2rem', lineHeight: '2.1875rem' },
-  },
-  'heading.04': {
-    description: 'heading.04',
-    value: {
-      ...commonDiatypeStyles,
-      fontSize: '1.625rem',
-      lineHeight: '2.25rem',
-      fontWeight: '500',
+  function transformSize<T extends number>(size: T) {
+    switch (platform) {
+      case 'extension':
+        return `${(size / 16).toFixed(4)}rem` as const;
+      case 'mobile':
+        return size;
+    }
+  }
+
+  function transformWeight<T extends number>(weight: T) {
+    switch (platform) {
+      case 'extension':
+        return weight;
+      case 'mobile':
+        return weight.toString();
+    }
+  }
+
+  const display01 = {
+    ...commonMarcheProStyles,
+    fontSize: transformSize(150),
+    lineHeight: transformSize(120),
+  };
+  const display02 = {
+    ...commonMarcheProStyles,
+    fontSize: transformSize(64),
+    lineHeight: transformSize(56),
+  };
+  const heading01 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(53),
+    fontWeight: transformWeight(500),
+    lineHeight: transformSize(60),
+  };
+  const heading02 = {
+    ...commonMarcheProStyles,
+    fontSize: transformSize(44),
+    fontWeight: transformWeight(800),
+    lineHeight: transformSize(44),
+  };
+  const heading03 = {
+    ...commonMarcheProStyles,
+    fontSize: transformSize(32),
+    fontWeight: transformWeight(800),
+    lineHeight: transformSize(35),
+    letterSpacing: 0.64,
+  };
+  const heading04 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(26),
+    fontWeight: transformWeight(500),
+    lineHeight: transformSize(36),
+  };
+  const heading05 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(24),
+    fontWeight: transformWeight(500),
+    lineHeight: transformSize(28),
+  };
+  const label01 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(16),
+    fontWeight: transformWeight(500),
+    lineHeight: transformSize(24),
+    letterSpacing: 0.16,
+  };
+  const label02 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(15),
+    fontWeight: transformWeight(500),
+    lineHeight: transformSize(20),
+  };
+  const label03 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(13),
+    fontWeight: transformWeight(500),
+    lineHeight: transformSize(16),
+  };
+  const body01 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(17),
+    fontWeight: transformWeight(400),
+    lineHeight: transformSize(24),
+  };
+  const body02 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(15),
+    fontWeight: transformWeight(400),
+    lineHeight: transformSize(20),
+  };
+  const caption01 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(15),
+    fontWeight: transformWeight(400),
+    lineHeight: transformSize(20),
+  };
+  const caption02 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(13),
+    fontWeight: transformWeight(400),
+    lineHeight: transformSize(16),
+  };
+
+  const mono01 = {
+    ...commonFiracodeStyles,
+    fontSize: transformSize(17),
+    lineHeight: transformSize(28),
+  };
+  const mono02 = {
+    ...commonFiracodeStyles,
+    fontSize: transformSize(10),
+    lineHeight: transformSize(16),
+  };
+
+  const textVariants = {
+    display01,
+    display02,
+    heading01,
+    heading02,
+    heading03,
+    heading04,
+    heading05,
+    label01,
+    label02,
+    label03,
+    body01,
+    body02,
+    caption01,
+    caption02,
+    mono01,
+    mono02,
+    defaults: body01,
+  };
+
+  return textVariants;
+}
+
+export function getExtensionTextVariants() {
+  const textVariants = getTextVariants({ platform: 'extension' });
+
+  return {
+    'display.01': {
+      description: 'display.01',
+      value: textVariants.display01,
     },
-  },
-  'heading.05': {
-    description: 'heading.05',
-    value: {
-      ...commonDiatypeStyles,
-      fontSize: '1.3125rem',
-      lineHeight: '1.75rem',
-      fontWeight: '500',
+    'display.02': {
+      description: 'display.02',
+      value: textVariants.display02,
     },
-  },
 
-  'label.01': {
-    description: 'label.01',
-    value: {
-      ...commonDiatypeStyles,
-      fontSize: '1.0625rem',
-      lineHeight: '1.5rem',
-      fontWeight: '500',
+    'heading.01': {
+      description: 'heading.01',
+      value: textVariants.heading01,
     },
-  },
-  'label.02': {
-    description: 'label.02',
-    value: { ...commonDiatypeStyles, fontSize: '0.9375rem', lineHeight: '1.25rem' },
-  },
-  'label.03': {
-    description: 'label.03',
-    value: { ...commonDiatypeStyles, fontSize: '0.8125rem', lineHeight: '1rem' },
-  },
+    'heading.02': {
+      description: 'heading.02',
+      value: textVariants.heading02,
+    },
+    'heading.03': {
+      description: 'heading.03',
+      value: textVariants.heading03,
+    },
+    'heading.04': {
+      description: 'heading.04',
+      value: textVariants.heading04,
+    },
+    'heading.05': {
+      description: 'heading.05',
+      value: textVariants.heading05,
+    },
 
-  'body.01': {
-    description: 'body.01',
-    value: { ...commonDiatypeStyles, fontSize: '1.0625rem', lineHeight: '1.5rem' },
-  },
-  'body.02': {
-    description: 'body.02',
-    value: { ...commonDiatypeStyles, fontSize: '0.9375rem', lineHeight: '1.25rem' },
-  },
+    'label.01': {
+      description: 'label.01',
+      value: textVariants.label01,
+    },
+    'label.02': {
+      description: 'label.02',
+      value: textVariants.label02,
+    },
+    'label.03': {
+      description: 'label.03',
+      value: textVariants.label03,
+    },
 
-  'caption.01': {
-    description: 'caption.01',
-    value: { ...commonDiatypeStyles, fontSize: '0.9375rem', lineHeight: '1.25rem' },
-  },
-  'caption.02': {
-    description: 'caption.02',
-    value: { ...commonDiatypeStyles, fontSize: '0.8125rem', lineHeight: '1.25rem' },
-  },
+    'body.01': {
+      description: 'body.01',
+      value: textVariants.body01,
+    },
+    'body.02': {
+      description: 'body.02',
+      value: textVariants.body02,
+    },
 
-  'mono.01': {
-    description: 'mono.01',
-    value: { fontFamily: firaCode, fontSize: '1.0625rem', lineHeight: '1.75rem' },
-  },
-  'mono.02': {
-    description: 'mono.02',
-    value: { fontFamily: firaCode, fontSize: '0.6rem', lineHeight: '1rem' },
-  },
-} as const;
+    'caption.01': {
+      description: 'caption.01',
+      value: textVariants.caption01,
+    },
+    'caption.02': {
+      description: 'caption.02',
+      value: textVariants.caption02,
+    },
+
+    'mono.01': {
+      description: 'mono.01',
+      value: textVariants.mono01,
+    },
+    'mono.02': {
+      description: 'mono.02',
+      value: textVariants.mono02,
+    },
+  } as const;
+}
+
+export function getMobileTextVariants() {
+  return getTextVariants({ platform: 'mobile' });
+}
