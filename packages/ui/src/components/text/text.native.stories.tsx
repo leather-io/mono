@@ -39,7 +39,7 @@ export const TextStory = {
         body01: 'body01',
         body02: 'body02',
         caption01: 'caption01',
-        caption02: 'caption02',
+        code: 'code',
         default: undefined,
       },
     },

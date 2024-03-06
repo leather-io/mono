@@ -83,7 +83,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
   };
   const heading05 = {
     ...commonDiatypeStyles,
-    fontSize: transformSize(24),
+    fontSize: transformSize(21),
     fontWeight: transformWeight(500),
     lineHeight: transformSize(28),
   };
@@ -124,22 +124,12 @@ function getTextVariants({ platform }: { platform: Platform }) {
     fontWeight: transformWeight(400),
     lineHeight: transformSize(20),
   };
-  const caption02 = {
-    ...commonDiatypeStyles,
-    fontSize: transformSize(13),
-    fontWeight: transformWeight(400),
-    lineHeight: transformSize(16),
-  };
 
-  const mono01 = {
+  const code = {
     ...commonFiracodeStyles,
-    fontSize: transformSize(17),
-    lineHeight: transformSize(28),
-  };
-  const mono02 = {
-    ...commonFiracodeStyles,
-    fontSize: transformSize(10),
-    lineHeight: transformSize(16),
+    fontSize: transformSize(15),
+    lineHeight: transformSize(20),
+    fontWeight: transformWeight(450),
   };
 
   const textVariants = {
@@ -156,9 +146,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
     body01,
     body02,
     caption01,
-    caption02,
-    mono01,
-    mono02,
+    code,
     defaults: body01,
   };
 
@@ -225,18 +213,10 @@ export function getExtensionTextVariants() {
       description: 'caption.01',
       value: textVariants.caption01,
     },
-    'caption.02': {
-      description: 'caption.02',
-      value: textVariants.caption02,
-    },
 
-    'mono.01': {
-      description: 'mono.01',
-      value: textVariants.mono01,
-    },
-    'mono.02': {
-      description: 'mono.02',
-      value: textVariants.mono02,
+    code: {
+      description: 'code',
+      value: textVariants.code,
     },
   } as const;
 }

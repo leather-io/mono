@@ -8,7 +8,7 @@ export const Caption = forwardRef<HTMLSpanElement, HTMLStyledProps<'span'>>(
       _disabled={{ color: 'accent.non-interactive' }}
       color="accent.text-subdued"
       ref={ref}
-      textStyle="caption.02"
+      textStyle="caption.01"
       {...props}
     >
       {children}
