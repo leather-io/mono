@@ -1,4 +1,5 @@
 export const colors = {
+  current: { value: 'currentColor' },
   overlay: { value: 'rgba(0,0,0,0.4)' },
 };
 
