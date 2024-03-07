@@ -1,0 +1,4 @@
+package.json
+dist-all/
+dist-web/
+dist-native/

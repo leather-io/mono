@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig-config/tsconfig.base",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "lib": ["es2017", "DOM"],
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "./dist-native"
+  },
+  "include": ["**/*.native.ts", "**/*.native.tsx", "native.ts", "**/theme-native/**/*"],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
+}

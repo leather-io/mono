@@ -1,14 +1,6 @@
-import { useEffect } from 'react';
-
-import { useColorScheme } from '@/components/useColorScheme';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import Constants from 'expo-constants';
-import { useFonts } from 'expo-font';
+import { ThemeProvider, useLoadFonts } from '@leather-wallet/ui/native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-
-import StorybookUIRoot from '../.storybook';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -21,51 +13,30 @@ export const unstable_settings = {
 };
 
 function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
+  const { fontsLoaded } = useLoadFonts({
+    onLoaded() {
+      void SplashScreen.hideAsync();
+    },
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      void SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
+  if (!fontsLoaded) {
     return null;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+    <ThemeProvider>
+      <AppWithNavigation />
     </ThemeProvider>
   );
 }
 
-let RootApp = null;
-
-const storybookEnabled = Constants?.expoConfig?.extra?.storybookEnabled === 'true';
-if (storybookEnabled) {
-  RootApp = StorybookUIRoot;
-} else {
-  // Prevent the splash screen from auto-hiding before asset loading is complete.
-  void SplashScreen.preventAutoHideAsync();
-  RootApp = RootLayout;
+function AppWithNavigation() {
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+    </Stack>
+  );
 }
 
-export default RootApp;
+export default RootLayout;

@@ -9,14 +9,17 @@
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
+    "ts:build": "tsc --build",
+    "ts:build:watch": "tsc --build --watch",
     "storybook": "cross-env STORYBOOK_ENABLED='true' expo start",
     "storybook-generate": "sb-rn-get-stories -js",
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
+    "@leather-wallet/ui": "workspace:*",
     "@react-native/assets-registry": "0.73.1",
     "@react-native/metro-config": "0.73.5",
     "@react-navigation/native": "6.0.2",
@@ -45,20 +48,17 @@
   "devDependencies": {
     "@babel/core": "7.23.9",
     "@leather-wallet/eslint-config": "workspace:*",
-    "@react-native-async-storage/async-storage": "1.22.0",
-    "@storybook/addon-actions": "7.6.17",
-    "@storybook/addon-ondevice-actions": "7.6.15",
-    "@storybook/addon-ondevice-controls": "7.6.15",
-    "@storybook/react-native": "7.6.15",
     "@types/react": "18.2.43",
     "@types/react-dom": "18.0.11",
     "babel-preset-expo": "10.0.1",
-    "cross-env": "7.0.3",
     "eslint": "8.53.0",
     "eslint-config-universe": "12.0.0",
     "react-test-renderer": "18.2.0",
     "tslib": "2.6.2",
     "typescript": "5.3.3"
   },
-  "private": true
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  }
 }

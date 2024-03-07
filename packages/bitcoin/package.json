@@ -2,6 +2,7 @@
   "name": "@leather-wallet/bitcoin",
   "description": "Shared bitcoin utilities",
   "version": "0.0.1",
+  "type": "module",
   "author": "Leather.io contact@leather.io",
   "type": "module",
   "scripts": {
