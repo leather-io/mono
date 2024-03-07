@@ -1,0 +1,27 @@
+{
+  "name": "@leather-wallet/argon2module",
+  "version": "1.0.0",
+  "description": "TBD",
+  "main": "src/index.ts",
+  "homepage": "TBD",
+  "summary": "TBD",
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "test": "expo-module test",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "expo-module-scripts": "^3.4.1"
+  },
+  "peerDependencies": {
+    "expo": "*"
+  },
+  "dependencies": {
+    "expo-modules-core": "1.11.8"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple","android"],
+  "apple": {
+    "modules": ["Argon2Module"]
+  },
+  "android": {
+    "modules": ["leather.wallet.argon2module.Argon2Module"]
+  }
+}
