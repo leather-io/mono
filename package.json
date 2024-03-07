@@ -2,8 +2,8 @@
   "name": "leather-mono",
   "description": "Leather wallet shared code",
   "version": "1.0.0",
-  "author": "Leather Wallet",
   "type": "module",
+  "author": "Leather Wallet",
   "scripts": {
     "check:all": "pnpm -r --parallel \"/^format$|^lint$|^typecheck$/\"",
     "clean": "git clean -dfX",
@@ -16,6 +16,7 @@
     "prepare": "husky install",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
+    "ts:build": "pnpm -r ts:build",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {

@@ -1,11 +1,11 @@
 {
   "name": "@leather-wallet/prettier-config",
+  "description": "Shared prettier configuration",
   "version": "0.0.5",
+  "type": "module",
   "author": "Leather.io contact@leather.io",
   "license": "MIT",
-  "description": "Shared prettier configuration",
   "bugs": "https://github.com/leather-wallet/mono/issues",
-  "type": "module",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/prettier-config",
   "keywords": [
     "leather",
