@@ -2,31 +2,39 @@
   "name": "@leather-wallet/tokens",
   "description": "Shared design tokens",
   "version": "0.0.14",
+  "license": "MIT",
   "author": "Leather.io contact@leather.io",
   "scripts": {
+    "lint": "eslint .",
+    "prepublish": "pnpm ts:build",
+    "ts:build": "tsc",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/tokens"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
-    "prettier": "3.0.3"
+    "prettier": "3.2.5"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "keywords": [
     "leather",
     "leather wallet",
     "tokens"
   ],
-  "license": "MIT",
-  "main": "src/index.ts",
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/tokens"
   }
 }

@@ -2,6 +2,7 @@
   "name": "@leather-wallet/models",
   "description": "Leather models",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
   "scripts": {
@@ -10,6 +11,12 @@
     "lint:fix": "eslint . --fix",
     "ts:build": "tsc --build",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/models"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
@@ -24,23 +31,16 @@
     "@leather-wallet/tsconfig-config": "workspace:*",
     "@types/react": "18.2.43",
     "eslint": "8.53.0",
-    "prettier": "3.0.3",
+    "prettier": "3.2.5",
     "typescript": "5.3.3"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
   "keywords": [
     "leather",
     "leather wallet",
     "models"
   ],
-  "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/models"
   }
 }

@@ -153,7 +153,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
   return textVariants;
 }
 
-export function getExtensionTextVariants() {
+export function getWebTextVariants() {
   const textVariants = getTextVariants({ platform: 'web' });
 
   return {

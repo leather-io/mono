@@ -2,6 +2,7 @@
   "name": "@leather-wallet/types",
   "description": "Types package for Leather",
   "version": "0.0.20",
+  "license": "MIT",
   "author": "leather-wallet",
   "scripts": {
     "build": "tsup src/index.ts && npm run types",
@@ -16,7 +17,6 @@
   "files": [
     "dist"
   ],
-  "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "publishConfig": {

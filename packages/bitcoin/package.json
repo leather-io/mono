@@ -2,9 +2,9 @@
   "name": "@leather-wallet/bitcoin",
   "description": "Shared bitcoin utilities",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
-  "type": "module",
   "scripts": {
     "format": "prettier . --write",
     "lint": "eslint .",
@@ -12,6 +12,12 @@
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/bitcoin",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/bitcoin"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
@@ -38,25 +44,18 @@
     "@leather-wallet/tsconfig-config": "workspace:*",
     "@vitest/coverage-istanbul": "0.34.6",
     "eslint": "8.53.0",
-    "prettier": "3.0.3",
+    "prettier": "3.2.5",
     "tslib": "2.6.2",
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/bitcoin",
   "keywords": [
     "bitcoin",
     "leather",
     "leather wallet"
   ],
-  "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/bitcoin"
   }
 }

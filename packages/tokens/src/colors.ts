@@ -3,7 +3,7 @@ export const colors = {
   overlay: { value: 'rgba(0,0,0,0.4)' },
 };
 
-export type Palette = {
+export interface Palette {
   'ink.text-primary': string;
   'ink.text-subdued': string;
   'ink.action-primary-hover': string;
@@ -44,7 +44,7 @@ export type Palette = {
 
   invert: string;
   stacks: string;
-};
+}
 
 interface Colors {
   base: Palette;
