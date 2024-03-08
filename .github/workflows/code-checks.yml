@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
       - name: Lint Packages with Syncpack
-        run: pnpm syncpack:format
+        run: pnpm syncpack:lint
 
   lint-eslint:
     runs-on: ubuntu-latest

@@ -34,8 +34,11 @@
     "name",
     "description",
     "version",
+    "license",
     "type",
     "author",
-    "scripts"
+    "scripts",
+    "homepage",
+    "repository"
   ]
 }

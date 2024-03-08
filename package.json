@@ -2,6 +2,7 @@
   "name": "leather-mono",
   "description": "Leather wallet shared code",
   "version": "1.0.0",
+  "license": "MIT",
   "type": "module",
   "author": "Leather Wallet",
   "scripts": {
@@ -39,7 +40,6 @@
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "license": "MIT",
   "packageManager": "pnpm@8.15.3",
   "pnpm": {
     "packageExtensions": {
