@@ -4,19 +4,25 @@
   "version": "0.0.1",
   "type": "module",
   "author": "Leather.io contact@leather.io",
-  "type": "module",
   "scripts": {
     "format": "prettier . --write",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/utils"
+    "typecheck": "tsc --noEmit -p ./tsconfig.json",
+    "ts:build": "tsc --build"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
+  "dependencies": {
+    "@leather-wallet/constants": "workspace:*"
+  },
+  "devDependencies": {
+    "@leather-wallet/eslint-config": "workspace:*",
+    "@leather-wallet/prettier-config": "workspace:*",
+    "@leather-wallet/tsconfig-config": "workspace:*",
+    "eslint": "8.53.0",
+    "prettier": "3.0.3",
+    "typescript": "5.3.3"
+  },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/utils",
   "keywords": [
     "leather",
@@ -28,15 +34,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@leather-wallet/constants": "workspace:*"
-  },
-  "devDependencies": {
-    "@leather-wallet/eslint-config": "workspace:*",
-    "@leather-wallet/prettier-config": "workspace:*",
-    "@leather-wallet/tsconfig-config": "workspace:*",
-    "eslint": "8.53.0",
-    "prettier": "3.0.3",
-    "typescript": "5.3.3"
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/utils"
   }
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@leather-wallet/constants",
-  "description": "Shared bitcoin utilities",
+  "name": "@leather-wallet/models",
+  "description": "Leather models",
   "version": "0.0.1",
   "type": "module",
   "author": "Leather.io contact@leather.io",
@@ -13,22 +13,25 @@
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
-    "@leather-wallet/models": "workspace:*",
-    "@stacks/transactions": "6.9.0"
+    "@leather-wallet/constants": "workspace:*",
+    "@leather-wallet/utils": "workspace:*",
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
+    "bignumber.js": "9.1.2"
   },
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
+    "@types/react": "18.2.43",
     "eslint": "8.53.0",
     "prettier": "3.0.3",
     "typescript": "5.3.3"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/constants",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
   "keywords": [
-    "constants",
     "leather",
-    "leather wallet"
+    "leather wallet",
+    "models"
   ],
   "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
@@ -38,6 +41,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/constants"
+    "directory": "packages/models"
   }
 }
