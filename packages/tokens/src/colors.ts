@@ -97,7 +97,7 @@ export const colorThemes = {
   dark: {
     'ink.text-primary': '#F5F1ED',
     'ink.text-subdued': '#CFC8BB',
-    'ink.action-primary-hover': '#716A604D',
+    'ink.action-primary-hover': '#CFC8BB',
     'ink.action-primary-default': '#F5F1ED',
     'ink.border-transparent': '#F5F1ED33',
     'ink.border-default': '#554D44',
