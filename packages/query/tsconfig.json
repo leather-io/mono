@@ -4,6 +4,6 @@
     "jsx": "react-jsx",
     "types": ["vitest/globals"]
   },
-  "include": ["**/*", ".*.ts"],
+  "include": ["**/*", ".*.ts", "config/wallet-config.json"],
   "exclude": []
 }

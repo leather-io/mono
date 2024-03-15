@@ -1,6 +1,6 @@
 {
-  "name": "@leather-wallet/utils",
-  "description": "Shared bitcoin utilities",
+  "name": "@leather-wallet/stacks",
+  "description": "Shared stacks utilities",
   "version": "0.0.1",
   "type": "module",
   "author": "Leather.io contact@leather.io",
@@ -10,18 +10,29 @@
     "lint:fix": "eslint . --fix",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "ts:build": "tsc --build",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
+    "@bitcoinerlab/secp256k1": "1.0.2",
     "@leather-wallet/constants": "workspace:*",
-    "@leather-wallet/models": "workspace:*",
-    "@types/valid-url": "1.0.7",
-    "bignumber.js": "9.1.2",
-    "valid-url": "1.0.9"
+    "@leather-wallet/utils": "workspace:*",
+    "@noble/hashes": "1.3.3",
+    "@noble/secp256k1": "2.0.0",
+    "@scure/base": "1.1.3",
+    "@scure/bip32": "1.3.2",
+    "@scure/bip39": "1.2.1",
+    "@scure/btc-signer": "1.1.0",
+    "@stacks/common": "6.8.1",
+    "@stacks/transactions": "6.9.0",
+    "@stacks/wallet-sdk": "6.12.0",
+    "bip32": "4.0.0",
+    "bitcoinjs-lib": "6.1.3",
+    "ecpair": "2.1.0",
+    "varuint-bitcoin": "1.1.2"
   },
   "devDependencies": {
+    "@btckit/types": "0.0.19",
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
@@ -29,14 +40,15 @@
     "eslint": "8.53.0",
     "jsdom": "22.1.0",
     "prettier": "3.0.3",
+    "tslib": "2.6.2",
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/utils",
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/stacks",
   "keywords": [
     "leather",
     "leather wallet",
-    "utils"
+    "stacks"
   ],
   "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
@@ -46,6 +58,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/utils"
+    "directory": "packages/stacks"
   }
 }

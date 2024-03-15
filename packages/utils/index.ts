@@ -1,10 +1,14 @@
 import type { NetworkModes } from '@leather-wallet/constants';
 import { BigNumber } from 'bignumber.js';
 
-export type { LiteralUnion, ValueOf, Entries } from './src/type-utils';
 export { createCounter } from './src/counter';
+export * from './src/crypto-assets/stacks-crypto-asset.utils';
 export * from './src/math';
 export * from './src/money';
+export * from './src/safe-handle-txid';
+export * from './src/string-utils';
+export * from './src/validate-url';
+export type { LiteralUnion, ValueOf, Entries } from './src/type-utils';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
@@ -107,4 +111,11 @@ export function isFulfilled<T>(p: PromiseSettledResult<T>): p is PromiseFulfille
 
 export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedResult {
   return p.status === 'rejected';
+}
+
+export function pullContractIdFromIdentity(identifier: string) {
+  return identifier.split('::')[0];
+}
+export function formatContractId(address: string, name: string) {
+  return `${address}.${name}`;
 }

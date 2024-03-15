@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "description": "Dictionary describing the application versions for which the messages should be displayed. Use `global` for all versions.",
+  "properties": {
+    "messages": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9]*$": {
+          "type": "array",
+          "description": "ONLY FIRST ITEM WILL SHOW IN WALLET.",
+          "items": {
+            "type": "object",
+            "required": ["id", "purpose", "text", "publishedAt", "dismissible", "chainTarget"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the message. Used by wallet to know "
+              },
+              "purpose": {
+                "type": "string",
+                "enum": ["info", "warning", "error"],
+                "description": "Add additional semantics to the purpose of the message. May be used in UI to indicate style variants"
+              },
+              "title": {
+                "type": "string",
+                "description": "Short headline that introduces the issue at hand"
+              },
+              "text": {
+                "type": "string",
+                "description": "Additional context to explain what the issue concerns"
+              },
+              "img": {
+                "type": "string",
+                "description": "URL or data-uri of an image"
+              },
+              "imgWidth": {
+                "type": "string",
+                "description": "Width of passed image"
+              },
+              "publishedAt": {
+                "type": "string",
+                "description": "Estimate date time at which the message has been published"
+              },
+              "learnMoreUrl": {
+                "type": "string",
+                "description": "URL to additional resources such as blog or forum post"
+              },
+              "learnMoreText": {
+                "type": "string",
+                "default": "Learn more",
+                "description": "Link text"
+              },
+              "chainTarget": {
+                "type": "string",
+                "enum": ["all", "mainnet", "testnet"]
+              },
+              "dismissible": {
+                "type": "boolean",
+                "description": "Whether or not the message can be dismissed by the user"
+              }
+            }
+          }
+        }
+      }
+    },
+    "activeFiatProviders": {
+      "type": "object",
+      "description": "All the active fiat onramp providers that will be displayed in the wallet",
+      "additionalProperties": false,
+      "properties": {
+        "binance": { "$ref": "#/$defs/provider" },
+        "blockchainCom": { "$ref": "#/$defs/provider" },
+        "byBit": { "$ref": "#/$defs/provider" },
+        "coinbase": { "$ref": "#/$defs/provider" },
+        "cryptoCom": { "$ref": "#/$defs/provider" },
+        "gateIo": { "$ref": "#/$defs/provider" },
+        "kuCoin": { "$ref": "#/$defs/provider" },
+        "moonPay": { "$ref": "#/$defs/provider" },
+        "okx": { "$ref": "#/$defs/provider" },
+        "transak": { "$ref": "#/$defs/provider" }
+      }
+    },
+    "bitcoinEnabled": {
+      "type": "boolean",
+      "description": "Determines whether or not the use of bitcoin is enabled in the wallet"
+    },
+    "bitcoinSendEnabled": {
+      "type": "boolean",
+      "description": "Determines whether or not the use of sending bitcoin is enabled in the wallet"
+    },
+    "feeEstimations": {
+      "type": "object",
+      "description": "Stacks fee estimations",
+      "additionalProperties": false,
+      "properties": {
+        "maxValuesEnabled": {
+          "type": "boolean",
+          "description": "Whether or not the maximum values are enabled"
+        },
+        "maxValues": {
+          "type": "array",
+          "description": "Low, middle, and high max values for fee estimations",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "description": "Fee estimation max value"
+          }
+        },
+        "minValuesEnabled": {
+          "type": "boolean",
+          "description": "Whether or not the minimum values are enabled"
+        },
+        "minValues": {
+          "type": "array",
+          "description": "Low, middle, and high min values for fee estimations",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "description": "Fee estimation min value"
+          }
+        }
+      }
+    },
+    "nftMetadataEnabled": {
+      "type": "boolean",
+      "description": "Determines whether or not we display nft metadata in the wallet"
+    },
+    "ordinalsbot": {
+      "type": "object",
+      "description": "Configuration for the ordinalsbot",
+      "additionalProperties": false,
+      "properties": {
+        "integrationEnabled": { "type": "boolean" },
+        "mainnetApiUrl": { "type": "string" },
+        "signetApiUrl": { "type": "string" }
+      }
+    },
+    "recoverUninscribedTaprootUtxosFeatureEnabled": {
+      "type": "boolean",
+      "description": "Determines whether or not the recover uninscribed taproot utxos feature is enabled"
+    }
+  },
+  "$defs": {
+    "provider": {
+      "type": "object",
+      "required": ["name", "enabled"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name of the provider"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable provider to display them in the buy page"
+        }
+      }
+    }
+  }
+}

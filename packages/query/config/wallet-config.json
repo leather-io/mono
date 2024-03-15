@@ -1,0 +1,93 @@
+{
+  "$schema": "./wallet-config.schema.json",
+  "messages": {
+    "global": []
+  },
+  "activeFiatProviders": {
+    "coinbase": {
+      "availableRegions": "global",
+      "enabled": true,
+      "hasFastCheckoutProcess": true,
+      "hasTradingFees": true,
+      "name": "Coinbase"
+    },
+    "moonPay": {
+      "availableRegions": "global",
+      "enabled": true,
+      "hasFastCheckoutProcess": true,
+      "hasTradingFees": true,
+      "name": "MoonPay"
+    },
+    "transak": {
+      "availableRegions": "global",
+      "enabled": true,
+      "hasFastCheckoutProcess": true,
+      "hasTradingFees": true,
+      "name": "Transak"
+    },
+    "binance": {
+      "availableRegions": "global",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "Binance"
+    },
+    "blockchainCom": {
+      "availableRegions": "global",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "Blockchain.com"
+    },
+    "byBit": {
+      "availableRegions": "outside-usa-only",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "ByBit"
+    },
+    "cryptoCom": {
+      "availableRegions": "global",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "Crypto.com"
+    },
+    "gateIo": {
+      "availableRegions": "outside-usa-only",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "Gate.io"
+    },
+    "kuCoin": {
+      "availableRegions": "outside-usa-only",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "KuCoin"
+    },
+    "okx": {
+      "availableRegions": "outside-usa-only",
+      "enabled": true,
+      "hasFastCheckoutProcess": false,
+      "hasTradingFees": true,
+      "name": "OKX"
+    }
+  },
+  "bitcoinEnabled": true,
+  "bitcoinSendEnabled": true,
+  "feeEstimations": {
+    "maxValues": [500000, 750000, 2000000],
+    "maxValuesEnabled": false,
+    "minValues": [2500, 3000, 3500],
+    "minValuesEnabled": true
+  },
+  "nftMetadataEnabled": true,
+  "ordinalsbot": {
+    "integrationEnabled": true,
+    "mainnetApiUrl": "https://api2.ordinalsbot.com",
+    "signetApiUrl": "https://signet.ordinalsbot.com"
+  },
+  "recoverUninscribedTaprootUtxosFeatureEnabled": false
+}

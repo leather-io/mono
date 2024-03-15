@@ -4,7 +4,7 @@ import { isUndefined } from '@leather-wallet/utils';
 import * as btc from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
 
-import { useCurrentNetworkState, useIsLeatherTestingEnv } from '../../leather-query-provider';
+import { useCurrentNetworkState, useLeatherEnv } from '../../leather-query-provider';
 import {
   type BestinslotInscriptionByIdResponse,
   type BestinslotInscriptionsByTxIdResponse,
@@ -80,7 +80,7 @@ export function useCheckInscribedUtxos(blockTxAction?: () => void) {
   // const analytics = useAnalytics();
   const [isLoading, setIsLoading] = useState(false);
   const { isTestnet } = useCurrentNetworkState();
-  const isTestEnv = useIsLeatherTestingEnv();
+  const { isTestEnv } = useLeatherEnv();
 
   const preventTransaction = useCallback(() => {
     if (blockTxAction) return blockTxAction();

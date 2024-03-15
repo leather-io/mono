@@ -6,7 +6,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 
-const LeatherEnvironmentContext = createContext<string | null>(null);
+const LeatherEnvironmentContext = createContext<{
+  GITHUB_ORG: string;
+  GITHUB_REPO: string;
+  BRANCH_NAME: string;
+  WALLET_ENVIRONMENT: string;
+} | null>(null);
 
 export function useLeatherEnv() {
   const leatherEnv = useContext(LeatherEnvironmentContext);
@@ -15,17 +20,12 @@ export function useLeatherEnv() {
     throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
   }
 
-  return leatherEnv;
-}
-
-export function useIsLeatherTestingEnv() {
-  const leatherEnv = useContext(LeatherEnvironmentContext);
-
-  if (!leatherEnv) {
-    throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
-  }
-
-  return leatherEnv === 'testing';
+  return {
+    ...leatherEnv,
+    isTestEnv: leatherEnv.WALLET_ENVIRONMENT === 'testing',
+    isDevEnv: leatherEnv.WALLET_ENVIRONMENT === 'development',
+    isProdEnv: leatherEnv.WALLET_ENVIRONMENT === 'production',
+  };
 }
 
 export function useLeatherNetwork() {
@@ -56,7 +56,12 @@ export function LeatherQueryProvider({
   client: QueryClient;
   network: NetworkConfiguration;
   children: ReactNode;
-  env: string;
+  env: {
+    GITHUB_ORG: string;
+    GITHUB_REPO: string;
+    BRANCH_NAME: string;
+    WALLET_ENVIRONMENT: string;
+  };
 }) {
   return (
     <LeatherNetworkContext.Provider value={network}>
