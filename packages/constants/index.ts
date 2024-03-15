@@ -1,4 +1,4 @@
-import type { Blockchains } from '@leather-wallet/models/src/blockchain.model';
+import type { Blockchains } from '@leather-wallet/models';
 import { ChainID } from '@stacks/transactions';
 
 export const gaiaUrl = 'https://hub.blockstack.org';
@@ -51,7 +51,7 @@ export interface BitcoinChainConfig extends BaseChainConfig {
   bitcoinNetwork: BitcoinNetworkModes;
 }
 
-interface StacksChainConfig extends BaseChainConfig {
+export interface StacksChainConfig extends BaseChainConfig {
   blockchain: 'stacks';
   url: string;
   /** The chainId of the network (or parent network if this is a subnet) */

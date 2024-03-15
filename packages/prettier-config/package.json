@@ -4,14 +4,18 @@
   "version": "0.0.5",
   "type": "module",
   "author": "Leather.io contact@leather.io",
-  "license": "MIT",
   "bugs": "https://github.com/leather-wallet/mono/issues",
+  "dependencies": {
+    "@trivago/prettier-plugin-sort-imports": "4.3.0",
+    "prettier": "3.2.5"
+  },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/prettier-config",
   "keywords": [
     "leather",
     "leather wallet",
     "prettier"
   ],
+  "license": "MIT",
   "main": ".prettierrc.js",
   "publishConfig": {
     "access": "public"
@@ -20,9 +24,5 @@
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
     "directory": "packages/prettier-config"
-  },
-  "dependencies": {
-    "@trivago/prettier-plugin-sort-imports": "4.3.0",
-    "prettier": "3.2.5"
   }
 }

@@ -3,6 +3,7 @@ import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/constants';
 import { defaultWalletKeyId, whenNetwork } from '@leather-wallet/utils';
 import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey, Versions } from '@scure/bip32';
+import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 
 import { BtcSignerNetwork } from './bitcoin.network';
@@ -222,4 +223,9 @@ export function getTaprootAddress({ index, keychain, network }: GetTaprootAddres
   if (!payment.address) throw new Error('Expected address to be defined');
 
   return payment.address;
+}
+
+export function mnemonicToRootNode(secretKey: string) {
+  const seed = mnemonicToSeedSync(secretKey);
+  return HDKey.fromMasterSeed(seed);
 }
