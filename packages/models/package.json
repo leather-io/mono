@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/models",
   "description": "Leather models",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "author": "Leather.io contact@leather.io",
   "scripts": {
