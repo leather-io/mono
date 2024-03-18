@@ -5,6 +5,7 @@ export type { LiteralUnion, ValueOf, Entries } from './src/type-utils';
 export { createCounter } from './src/counter';
 export * from './src/math';
 export * from './src/money';
+export * from './src/truncate-middle';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
@@ -107,4 +108,16 @@ export function isFulfilled<T>(p: PromiseSettledResult<T>): p is PromiseFulfille
 
 export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedResult {
   return p.status === 'rejected';
+}
+
+export function pullContractIdFromIdentity(identifier: string) {
+  return identifier.split('::')[0];
+}
+
+export function formatContractId(address: string, name: string) {
+  return `${address}.${name}`;
+}
+
+export function createNullArrayOfLength(length: number) {
+  return new Array(length).fill(null);
 }
