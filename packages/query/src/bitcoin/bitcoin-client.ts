@@ -2,26 +2,11 @@ import { HIRO_API_BASE_URL_MAINNET } from '@leather-wallet/constants';
 import axios from 'axios';
 
 import type { Paginated } from '../../types/api-types';
+import { UtxoResponseItem } from '../../types/utxo';
 import { useLeatherNetwork } from '../leather-query-provider';
 
 class Configuration {
   constructor(public baseUrl: string) {}
-}
-
-export interface UtxoResponseItem {
-  txid: string;
-  vout: number;
-  status: {
-    confirmed: boolean;
-    block_height: number;
-    block_hash: string;
-    block_time: number;
-  };
-  value: number;
-}
-
-export interface UtxoWithDerivationPath extends UtxoResponseItem {
-  derivationPath: string;
 }
 
 interface BestinslotInscription {
