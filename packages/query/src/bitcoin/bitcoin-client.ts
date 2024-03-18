@@ -5,10 +5,6 @@ import type { Paginated } from '../../types/api-types';
 import { UtxoResponseItem } from '../../types/utxo';
 import { useLeatherNetwork } from '../leather-query-provider';
 
-class Configuration {
-  constructor(public baseUrl: string) {}
-}
-
 interface BestinslotInscription {
   inscription_name: string | null;
   inscription_id: string;
@@ -78,89 +74,87 @@ interface BestinslotBrc20AddressBalanceResponse {
   data: Brc20TokenResponse[];
 }
 
-class BestinslotApi {
-  url = 'https://api.bestinslot.xyz/v3';
-  private defaultOptions = {
+function BestinslotApi() {
+  const url = 'https://api.bestinslot.xyz/v3';
+  const defaultOptions = {
     headers: {
       'x-api-key': `${process.env.BESTINSLOT_API_KEY}`,
     },
   };
-  constructor(public configuration: Configuration) {}
+  return {
+    async getInscriptionsByTransactionId(id: string) {
+      const resp = await axios.get<BestinslotInscriptionsByTxIdResponse>(
+        `${url}/inscription/in_transaction?tx_id=${id}`,
+        {
+          ...defaultOptions,
+        }
+      );
 
-  async getInscriptionsByTransactionId(id: string) {
-    const resp = await axios.get<BestinslotInscriptionsByTxIdResponse>(
-      `${this.url}/inscription/in_transaction?tx_id=${id}`,
-      {
-        ...this.defaultOptions,
-      }
-    );
+      return resp.data;
+    },
 
-    return resp.data;
-  }
+    async getInscriptionById(id: string) {
+      const resp = await axios.get<BestinslotInscriptionByIdResponse>(
+        `${url}/inscription/single_info_id?inscription_id=${id}`,
+        {
+          ...defaultOptions,
+        }
+      );
+      return resp.data;
+    },
 
-  async getInscriptionById(id: string) {
-    const resp = await axios.get<BestinslotInscriptionByIdResponse>(
-      `${this.url}/inscription/single_info_id?inscription_id=${id}`,
-      {
-        ...this.defaultOptions,
-      }
-    );
-    return resp.data;
-  }
+    async getBrc20Balance(address: string) {
+      const resp = await axios.get<BestinslotBrc20AddressBalanceResponse>(
+        `${url}/brc20/wallet_balances?address=${address}`,
+        {
+          ...defaultOptions,
+        }
+      );
+      return resp.data;
+    },
 
-  async getBrc20Balance(address: string) {
-    const resp = await axios.get<BestinslotBrc20AddressBalanceResponse>(
-      `${this.url}/brc20/wallet_balances?address=${address}`,
-      {
-        ...this.defaultOptions,
-      }
-    );
-    return resp.data;
-  }
-
-  async getBrc20TickerData(ticker: string) {
-    const resp = await axios.get<Brc20TickerResponse>(
-      `${this.url}/brc20/ticker_info?ticker=${ticker}`,
-      {
-        ...this.defaultOptions,
-      }
-    );
-    return resp.data;
-  }
+    async getBrc20TickerData(ticker: string) {
+      const resp = await axios.get<Brc20TickerResponse>(
+        `${url}/brc20/ticker_info?ticker=${ticker}`,
+        {
+          ...defaultOptions,
+        }
+      );
+      return resp.data;
+    },
+  };
 }
 
-class HiroApi {
-  url = HIRO_API_BASE_URL_MAINNET;
+function HiroApi() {
+  const url = HIRO_API_BASE_URL_MAINNET;
+  return {
+    async getBrc20Balance(address: string) {
+      const resp = await axios.get<Paginated<Brc20TokenResponse[]>>(
+        `${url}/ordinals/v1/brc-20/balances/${address}`
+      );
+      return resp.data;
+    },
 
-  async getBrc20Balance(address: string) {
-    const resp = await axios.get<Paginated<Brc20TokenResponse[]>>(
-      `${this.url}/ordinals/v1/brc-20/balances/${address}`
-    );
-    return resp.data;
-  }
-
-  async getBrc20TickerData(ticker: string) {
-    const resp = await axios.get<Paginated<Brc20TokenTicker[]>>(
-      `${this.url}/ordinals/v1/brc-20/tokens?ticker=${ticker}`
-    );
-    return resp.data;
-  }
+    async getBrc20TickerData(ticker: string) {
+      const resp = await axios.get<Paginated<Brc20TokenTicker[]>>(
+        `${url}/ordinals/v1/brc-20/tokens?ticker=${ticker}`
+      );
+      return resp.data;
+    },
+  };
 }
 
-class AddressApi {
-  constructor(public configuration: Configuration) {}
-
-  async getTransactionsByAddress(address: string) {
-    const resp = await axios.get(`${this.configuration.baseUrl}/address/${address}/txs`);
-    return resp.data;
-  }
-
-  async getUtxosByAddress(address: string): Promise<UtxoResponseItem[]> {
-    const resp = await axios.get<UtxoResponseItem[]>(
-      `${this.configuration.baseUrl}/address/${address}/utxo`
-    );
-    return resp.data.sort((a, b) => a.vout - b.vout);
-  }
+function AddressApi(basePath: string) {
+  return {
+    async getTransactionsByAddress(address: string) {
+      const resp = await axios.get(`${basePath}/address/${address}/txs`);
+      return resp.data;
+    },
+    async getUtxosByAddress(address: string): Promise<UtxoResponseItem[]> {
+      const resp = await axios.get<UtxoResponseItem[]>(`${basePath}/address/${address}/utxo`);
+      return resp.data.sort((a, b) => a.vout - b.vout);
+    },
+  };
 }
 
 interface FeeEstimateEarnApiResponse {
@@ -193,85 +187,84 @@ export interface FeeResult {
   slow: number;
 }
 
-class FeeEstimatesApi {
-  constructor(public configuration: Configuration) {}
-
-  async getFeeEstimatesFromBlockcypherApi(network: 'main' | 'test3'): Promise<FeeResult> {
-    // https://www.blockcypher.com/dev/bitcoin/#restful-resources
-    const resp = await axios.get<FeeEstimateEarnApiResponse>(
-      `https://api.blockcypher.com/v1/btc/${network}`
-    );
-    const { low_fee_per_kb, medium_fee_per_kb, high_fee_per_kb } = resp.data;
-    // These fees are in satoshis per kb
-    return {
-      slow: low_fee_per_kb / 1000,
-      medium: medium_fee_per_kb / 1000,
-      fast: high_fee_per_kb / 1000,
-    };
-  }
-
-  async getFeeEstimatesFromMempoolSpaceApi(): Promise<FeeResult> {
-    const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(
-      `https://mempool.space/api/v1/fees/recommended`
-    );
-    const { fastestFee, halfHourFee, hourFee } = resp.data;
-    return {
-      slow: hourFee,
-      medium: halfHourFee,
-      fast: fastestFee,
-    };
-  }
+function FeeEstimatesApi() {
+  return {
+    async getFeeEstimatesFromBlockcypherApi(network: 'main' | 'test3'): Promise<FeeResult> {
+      // https://www.blockcypher.com/dev/bitcoin/#restful-resources
+      const resp = await axios.get<FeeEstimateEarnApiResponse>(
+        `https://api.blockcypher.com/v1/btc/${network}`
+      );
+      const { low_fee_per_kb, medium_fee_per_kb, high_fee_per_kb } = resp.data;
+      // These fees are in satoshis per kb
+      return {
+        slow: low_fee_per_kb / 1000,
+        medium: medium_fee_per_kb / 1000,
+        fast: high_fee_per_kb / 1000,
+      };
+    },
+    async getFeeEstimatesFromMempoolSpaceApi(): Promise<FeeResult> {
+      const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(
+        `https://mempool.space/api/v1/fees/recommended`
+      );
+      const { fastestFee, halfHourFee, hourFee } = resp.data;
+      return {
+        slow: hourFee,
+        medium: halfHourFee,
+        fast: fastestFee,
+      };
+    },
+  };
 }
 
-class TransactionsApi {
-  constructor(public configuration: Configuration) {}
+function TransactionsApi(basePath: string) {
+  return {
+    async getBitcoinTransaction(txid: string) {
+      const resp = await axios.get(`${basePath}/tx/${txid}`);
+      return resp.data;
+    },
 
-  async getBitcoinTransaction(txid: string) {
-    const resp = await axios.get(`${this.configuration.baseUrl}/tx/${txid}`);
-    return resp.data;
-  }
+    async getBitcoinTransactionHex(txid: string) {
+      const resp = await axios.get(`${basePath}/tx/${txid}/hex`, {
+        responseType: 'text',
+      });
+      return resp.data;
+    },
 
-  async getBitcoinTransactionHex(txid: string) {
-    const resp = await axios.get(`${this.configuration.baseUrl}/tx/${txid}/hex`, {
-      responseType: 'text',
-    });
-    return resp.data;
-  }
-
-  async broadcastTransaction(tx: string) {
-    // TODO: refactor to use `axios`
-    // https://github.com/leather-wallet/extension/issues/4521
-    // eslint-disable-next-line no-restricted-globals
-    return fetch(`${this.configuration.baseUrl}/tx`, {
-      method: 'POST',
-      body: tx,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-  }
+    async broadcastTransaction(tx: string) {
+      // TODO: refactor to use `axios`
+      // https://github.com/leather-wallet/extension/issues/4521
+      // eslint-disable-next-line no-restricted-globals
+      return fetch(`${basePath}/tx`, {
+        method: 'POST',
+        body: tx,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+    },
+  };
 }
 
-export class BitcoinClient {
-  configuration: Configuration;
-  addressApi: AddressApi;
-  feeEstimatesApi: FeeEstimatesApi;
-  transactionsApi: TransactionsApi;
-  BestinslotApi: BestinslotApi;
-  HiroApi: HiroApi;
+export interface BitcoinClient {
+  addressApi: ReturnType<typeof AddressApi>;
+  feeEstimatesApi: ReturnType<typeof FeeEstimatesApi>;
+  transactionsApi: ReturnType<typeof TransactionsApi>;
+  BestinslotApi: ReturnType<typeof BestinslotApi>;
+  HiroApi: ReturnType<typeof HiroApi>;
+}
 
-  constructor(basePath: string) {
-    this.configuration = new Configuration(basePath);
-    this.addressApi = new AddressApi(this.configuration);
-    this.feeEstimatesApi = new FeeEstimatesApi(this.configuration);
-    this.transactionsApi = new TransactionsApi(this.configuration);
-    this.BestinslotApi = new BestinslotApi(this.configuration);
-    this.HiroApi = new HiroApi();
-  }
+function bitcoinClient(basePath: string): BitcoinClient {
+  return {
+    addressApi: AddressApi(basePath),
+    feeEstimatesApi: FeeEstimatesApi(),
+    transactionsApi: TransactionsApi(basePath),
+    BestinslotApi: BestinslotApi(),
+    HiroApi: HiroApi(),
+  };
 }
 
 export function useBitcoinClient() {
   const network = useLeatherNetwork();
 
-  return new BitcoinClient(network.chain.bitcoin.bitcoinUrl);
+  return bitcoinClient(network.chain.bitcoin.bitcoinUrl);
 }
