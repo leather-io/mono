@@ -5,6 +5,18 @@ import * as btc from '@scure/btc-signer';
 
 export type AllowedSighashTypes = SignatureHash | btc.SignatureHash;
 
+// Pass all sighashTypes through as allowed to btc-signer
+export const allSighashTypes = [
+  btc.SignatureHash.DEFAULT,
+  SignatureHash.ALL,
+  SignatureHash.NONE,
+  SignatureHash.SINGLE,
+  btc.SignatureHash.ANYONECANPAY,
+  SignatureHash.ALL_ANYONECANPAY,
+  SignatureHash.NONE_ANYONECANPAY,
+  SignatureHash.SINGLE_ANYONECANPAY,
+];
+
 export interface Signer<Payment> {
   network: BitcoinNetworkModes;
   payment: Payment;

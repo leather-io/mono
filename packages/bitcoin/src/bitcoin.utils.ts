@@ -1,12 +1,12 @@
 import { PaymentTypes } from '@btckit/types';
 import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/constants';
-import { defaultWalletKeyId, whenNetwork } from '@leather-wallet/utils';
+import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather-wallet/utils';
 import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey, Versions } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 
-import { BtcSignerNetwork } from './bitcoin.network';
+import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 import { DerivationPathDepth } from './derivation-path.utils';
 import { getTaprootPayment } from './p2tr-address-gen';
 
@@ -58,7 +58,7 @@ export function ecdsaPublicKeyToSchnorr(pubKey: Uint8Array) {
 // Basically same as above, to remove
 export const toXOnly = (pubKey: Buffer) => (pubKey.length === 32 ? pubKey : pubKey.subarray(1, 33));
 
-export function decodeBitcoinTx(tx: string) {
+export function decodeBitcoinTx(tx: string): ReturnType<typeof btc.RawTx.decode> {
   return btc.RawTx.decode(hexToBytes(tx));
 }
 
@@ -228,4 +228,42 @@ export function getTaprootAddress({ index, keychain, network }: GetTaprootAddres
 export function mnemonicToRootNode(secretKey: string) {
   const seed = mnemonicToSeedSync(secretKey);
   return HDKey.fromMasterSeed(seed);
+}
+
+export function getBitcoinInputAddress(
+  index: number,
+  input: btc.TransactionInput,
+  bitcoinNetwork: BtcSignerNetwork
+) {
+  if (isDefined(input.witnessUtxo))
+    return getAddressFromOutScript(input.witnessUtxo.script, bitcoinNetwork);
+  if (isDefined(input.nonWitnessUtxo))
+    return getAddressFromOutScript(input.nonWitnessUtxo.outputs[index]?.script, bitcoinNetwork);
+  return '';
+}
+
+export function getPsbtTxInputs(psbtTx: btc.Transaction): btc.TransactionInput[] {
+  const inputsLength = psbtTx.inputsLength;
+  const inputs: btc.TransactionInput[] = [];
+  for (let i = 0; i < inputsLength; i++) inputs.push(psbtTx.getInput(i));
+  return inputs;
+}
+
+export function getPsbtTxOutputs(psbtTx: btc.Transaction) {
+  const outputsLength = psbtTx.outputsLength;
+  const outputs: btc.TransactionOutput[] = [];
+  for (let i = 0; i < outputsLength; i++) outputs.push(psbtTx.getOutput(i));
+  return outputs;
+}
+
+export function getInputPaymentType(
+  index: number,
+  input: btc.TransactionInput,
+  network: BitcoinNetworkModes
+): PaymentTypes {
+  const address = getBitcoinInputAddress(index, input, getBtcSignerLibNetworkConfigByMode(network));
+  if (address === '') throw new Error('Input address cannot be empty');
+  if (address.startsWith('bc1p') || address.startsWith('tb1p')) return 'p2tr';
+  if (address.startsWith('bc1q') || address.startsWith('tb1q')) return 'p2wpkh';
+  throw new Error('Unable to infer payment type from input address');
 }
