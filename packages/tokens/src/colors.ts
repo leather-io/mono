@@ -107,7 +107,7 @@ export const colorThemes = {
     'ink.component-background-default': '#24231E',
     'ink.background-overlay': '#12100F66',
     'ink.background-secondary': '#12100F',
-    'ink.background-primary': '#34312A',
+    'ink.background-primary': '#1B1A17',
 
     'red.text-primary': '#34312A',
     'red.action-primary-default': '#FF2E3C',
