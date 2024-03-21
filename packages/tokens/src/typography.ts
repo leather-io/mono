@@ -127,8 +127,8 @@ function getTextVariants({ platform }: { platform: Platform }) {
 
   const code = {
     ...commonFiracodeStyles,
-    fontSize: transformSize(15),
-    lineHeight: transformSize(20),
+    fontSize: transformSize(13),
+    lineHeight: transformSize(18),
     fontWeight: transformWeight(450),
   };
 
