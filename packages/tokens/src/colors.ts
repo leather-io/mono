@@ -6,11 +6,12 @@ export const colors = {
 export interface Palette {
   'ink.text-primary': string;
   'ink.text-subdued': string;
+  'ink.text-non-interactive': string;
   'ink.action-primary-hover': string;
   'ink.action-primary-default': string;
   'ink.border-transparent': string;
   'ink.border-default': string;
-  'ink.non-interactive': string;
+  'ink.component-background-non-interactive': string;
   'ink.component-background-pressed': string;
   'ink.component-background-hover': string;
   'ink.component-background-default': string;
@@ -55,11 +56,12 @@ export const colorThemes = {
   base: {
     'ink.text-primary': '#12100F',
     'ink.text-subdued': '#948677',
+    'ink.text-non-interactive': '#D8CEC4',
     'ink.action-primary-hover': '#4A423B',
     'ink.action-primary-default': '#12100F',
     'ink.border-transparent': '#12100F1A',
     'ink.border-default': '#EAE5E0',
-    'ink.non-interactive': '#D8CEC4',
+    'ink.component-background-non-interactive': '#F5F1ED',
     'ink.component-background-pressed': '#B1977B33',
     'ink.component-background-hover': '#B1977B1A',
     'ink.component-background-default': '#F5F1ED',
@@ -97,11 +99,12 @@ export const colorThemes = {
   dark: {
     'ink.text-primary': '#F5F1ED',
     'ink.text-subdued': '#CFC8BB',
+    'ink.text-non-interactive': '#716A60',
     'ink.action-primary-hover': '#CFC8BB',
     'ink.action-primary-default': '#F5F1ED',
     'ink.border-transparent': '#F5F1ED33',
     'ink.border-default': '#554D44',
-    'ink.non-interactive': '#716A60',
+    'ink.component-background-non-interactive': '#34312A',
     'ink.component-background-pressed': '#716A6073',
     'ink.component-background-hover': '#716A604D',
     'ink.component-background-default': '#24231E',
