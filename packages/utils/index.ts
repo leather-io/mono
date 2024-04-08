@@ -1,7 +1,5 @@
 import type { NetworkModes } from '@leather-wallet/constants';
 
-export type { LiteralUnion, ValueOf, Entries } from './src/type-utils';
-
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
