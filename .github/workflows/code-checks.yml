@@ -48,3 +48,12 @@ jobs:
 
       - name: Lint commit message
         uses: wagoid/commitlint-github-action@v4
+
+  lint-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint dependency rules
+        run: pnpm ts:build && pnpm lint:deps
