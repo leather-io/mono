@@ -434,8 +434,8 @@ importers:
         specifier: 21.1.3
         version: 21.1.3
       '@types/react':
-        specifier: 18.2.43
-        version: 18.2.43
+        specifier: 18.2.64
+        version: 18.2.64
       '@vitest/coverage-istanbul':
         specifier: 0.34.6
         version: 0.34.6(vitest@0.34.6)
@@ -446,8 +446,8 @@ importers:
         specifier: 22.1.0
         version: 22.1.0
       prettier:
-        specifier: 3.0.3
-        version: 3.0.3
+        specifier: 3.2.5
+        version: 3.2.5
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -8179,14 +8179,6 @@ packages:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
     dependencies:
       '@types/react': 18.2.64
-    dev: true
-
-  /@types/react@18.2.43:
-    resolution: {integrity: sha512-nvOV01ZdBdd/KW6FahSbcNplt2jCJfyWdTos61RYHV+FVv5L/g9AOX1bmbVcWcLFL8+KHQfh1zVIQrud6ihyQA==}
-    dependencies:
-      '@types/prop-types': 15.7.11
-      '@types/scheduler': 0.16.8
-      csstype: 3.1.3
     dev: true
 
   /@types/react@18.2.64:

@@ -8,6 +8,7 @@ export * from './src/money';
 export * from './src/safe-handle-txid';
 export * from './src/string-utils';
 export * from './src/validate-url';
+export * from './src/truncate-middle';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
