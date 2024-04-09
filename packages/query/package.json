@@ -14,6 +14,12 @@
     "ts:build": "tsc --build",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/query",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/query"
+  },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
     "@fungible-systems/zone-file": "2.0.0",
@@ -58,7 +64,6 @@
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/query",
   "keywords": [
     "leather",
     "leather wallet",
@@ -67,10 +72,5 @@
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/query"
   }
 }

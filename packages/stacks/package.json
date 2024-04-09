@@ -2,6 +2,7 @@
   "name": "@leather-wallet/stacks",
   "description": "Shared stacks utilities",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
   "scripts": {
@@ -11,6 +12,12 @@
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/stacks",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/stacks"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
@@ -44,20 +51,13 @@
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/stacks",
   "keywords": [
     "leather",
     "leather wallet",
     "stacks"
   ],
-  "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/stacks"
   }
 }
