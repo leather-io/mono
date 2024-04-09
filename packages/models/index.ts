@@ -11,3 +11,4 @@ export * from './src/market.model';
 export * from './src/money.model';
 export * from './src/transactions/bitcoin-transaction.model';
 export * from './src/transactions/stacks-transaction.model';
+export * from './src/utxo.model';

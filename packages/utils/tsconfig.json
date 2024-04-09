@@ -3,6 +3,7 @@
   "include": ["**/*", ".*.ts"],
   "exclude": [],
   "compilerOptions": {
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "types": ["vitest/globals"]
   }
 }
