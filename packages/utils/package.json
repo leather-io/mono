@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/utils",
   "description": "Shared bitcoin utilities",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
@@ -9,6 +9,8 @@
     "format": "prettier . --write",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
     "ts:build": "tsc --build",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
@@ -20,15 +22,20 @@
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
-    "@leather-wallet/constants": "workspace:*"
+    "@leather-wallet/constants": "workspace:*",
+    "@leather-wallet/models": "workspace:*",
+    "bignumber.js": "9.1.2"
   },
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
+    "@vitest/coverage-istanbul": "0.34.6",
     "eslint": "8.53.0",
+    "jsdom": "22.1.0",
     "prettier": "3.2.5",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "vitest": "0.34.6"
   },
   "keywords": [
     "leather",

@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/models",
   "description": "Leather models",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
@@ -30,7 +30,7 @@
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
-    "@types/react": "18.2.43",
+    "@types/react": "18.2.64",
     "eslint": "8.53.0",
     "prettier": "3.2.5",
     "typescript": "5.3.3"

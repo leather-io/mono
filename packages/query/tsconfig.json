@@ -1,0 +1,9 @@
+{
+  "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"]
+  },
+  "include": ["**/*", ".*.ts"],
+  "exclude": []
+}

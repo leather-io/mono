@@ -1,0 +1,68 @@
+{
+  "name": "@leather-wallet/query",
+  "description": "Leather query",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "author": "Leather.io contact@leather.io",
+  "scripts": {
+    "format": "prettier . --write",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "ts:build": "tsc --build",
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/query",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/query"
+  },
+  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "dependencies": {
+    "@leather-wallet/bitcoin": "workspace:*",
+    "@leather-wallet/constants": "workspace:*",
+    "@leather-wallet/models": "workspace:*",
+    "@leather-wallet/utils": "workspace:*",
+    "@noble/hashes": "1.3.3",
+    "@scure/base": "1.1.3",
+    "@scure/bip32": "1.3.2",
+    "@scure/btc-signer": "1.1.0",
+    "@stacks/common": "6.8.1",
+    "@stacks/rpc-client": "0.8.18",
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
+    "@tanstack/query-sync-storage-persister": "4.35.7",
+    "@tanstack/react-query": "4.35.7",
+    "@tanstack/react-query-devtools": "4.35.7",
+    "@tanstack/react-query-persist-client": "4.35.7",
+    "axios": "1.6.7",
+    "bignumber.js": "9.1.2",
+    "react": "18.2.0",
+    "yup": "1.3.3"
+  },
+  "devDependencies": {
+    "@leather-wallet/eslint-config": "workspace:*",
+    "@leather-wallet/prettier-config": "workspace:*",
+    "@leather-wallet/tsconfig-config": "workspace:*",
+    "@tanstack/eslint-plugin-query": "5.20.1",
+    "@types/jsdom": "21.1.3",
+    "@types/react": "18.2.64",
+    "@vitest/coverage-istanbul": "0.34.6",
+    "eslint": "8.53.0",
+    "jsdom": "22.1.0",
+    "prettier": "3.2.5",
+    "typescript": "5.3.3",
+    "vitest": "0.34.6"
+  },
+  "keywords": [
+    "leather",
+    "leather wallet",
+    "query"
+  ],
+  "prettier": "@leather-wallet/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

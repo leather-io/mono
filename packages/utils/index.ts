@@ -1,4 +1,10 @@
 import type { NetworkModes } from '@leather-wallet/constants';
+import { BigNumber } from 'bignumber.js';
+
+export { createCounter } from './src/counter';
+export * from './src/math';
+export * from './src/money';
+export * from './src/truncate-middle';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
@@ -77,4 +83,40 @@ export function reverseBytes(bytes: Buffer | Uint8Array) {
 
 export function makeNumberRange(num: number) {
   return [...Array(num).keys()];
+}
+
+export function createNumArrayOfRange(fromIndex: number, toIndex: number) {
+  const result = [];
+  for (let i = fromIndex; i <= toIndex; i++) {
+    result.push(i);
+  }
+  return result;
+}
+
+export async function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function sumNumbers(nums: number[]) {
+  return nums.reduce((acc, num) => acc.plus(num), new BigNumber(0));
+}
+
+export function isFulfilled<T>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> {
+  return p.status === 'fulfilled';
+}
+
+export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedResult {
+  return p.status === 'rejected';
+}
+
+export function pullContractIdFromIdentity(identifier: string) {
+  return identifier.split('::')[0];
+}
+
+export function formatContractId(address: string, name: string) {
+  return `${address}.${name}`;
+}
+
+export function createNullArrayOfLength(length: number) {
+  return new Array(length).fill(null);
 }

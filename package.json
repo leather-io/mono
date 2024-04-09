@@ -16,6 +16,7 @@
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:fix": "pnpm -r lint:fix",
     "prepare": "husky install",
+    "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
     "ts:build": "pnpm -r ts:build",

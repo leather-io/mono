@@ -51,7 +51,7 @@ export interface BitcoinChainConfig extends BaseChainConfig {
   bitcoinNetwork: BitcoinNetworkModes;
 }
 
-interface StacksChainConfig extends BaseChainConfig {
+export interface StacksChainConfig extends BaseChainConfig {
   blockchain: 'stacks';
   url: string;
   /** The chainId of the network (or parent network if this is a subnet) */

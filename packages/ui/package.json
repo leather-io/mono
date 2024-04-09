@@ -59,7 +59,7 @@
     "@storybook/react-webpack5": "7.6.15",
     "@storybook/test": "7.6.15",
     "@storybook/theming": "7.6.17",
-    "@types/react": "18.2.43",
+    "@types/react": "18.2.64",
     "@types/react-dom": "18.0.11",
     "babel-preset-expo": "10.0.1",
     "css-loader": "6.10.0",
