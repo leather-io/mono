@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import type { InscriptionResponseItem } from '../../../types/inscription';
-import { UtxoResponseItem, UtxoWithDerivationPath } from '../bitcoin-client';
+import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { useInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
 import { useGetUtxosByAddressQuery } from './utxos-by-address.query';

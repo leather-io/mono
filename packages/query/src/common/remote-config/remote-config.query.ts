@@ -1,5 +1,4 @@
-import { createMoney } from '@leather-wallet/models';
-import { isUndefined } from '@leather-wallet/utils';
+import { createMoney, isUndefined } from '@leather-wallet/utils';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

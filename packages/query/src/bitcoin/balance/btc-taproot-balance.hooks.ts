@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
 
-import { createMoney } from '@leather-wallet/models';
-import { sumNumbers } from '@leather-wallet/utils';
+import { createMoney, sumNumbers } from '@leather-wallet/utils';
 import { HDKey } from '@scure/bip32';
 
+import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { filterUtxosWithInscriptions } from '../address/utxos-by-address.hooks';
 import { useTaprootAccountUtxosQuery } from '../address/utxos-by-address.query';
-import { UtxoWithDerivationPath } from '../bitcoin-client';
 import { useGetInscriptionsInfiniteQuery } from '../ordinals/inscriptions.query';
 
 export function useCurrentTaprootAccountUninscribedUtxos({

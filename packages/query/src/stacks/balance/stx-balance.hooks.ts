@@ -1,4 +1,5 @@
-import { Money, createMoney } from '@leather-wallet/models';
+import { Money } from '@leather-wallet/models';
+import { createMoney } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
 
 import {

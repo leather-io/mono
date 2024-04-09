@@ -6,8 +6,8 @@ import {
   Money,
   StacksFeeEstimate,
   StacksTxFeeEstimation,
-  createMoney,
 } from '@leather-wallet/models';
+import { createMoney } from '@leather-wallet/utils';
 import { bytesToHex } from '@stacks/common';
 import { StacksTransaction, serializePayload } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';

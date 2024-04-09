@@ -2,7 +2,7 @@ import { BTC_DECIMALS } from '@leather-wallet/constants';
 import type { BitcoinCryptoCurrencyAssetBalance, Money } from '@leather-wallet/models';
 import { isEmptyArray } from '@leather-wallet/utils';
 
-import { UtxoResponseItem } from '../bitcoin-client';
+import { UtxoResponseItem } from '../../../types/utxo';
 
 export function createBitcoinCryptoCurrencyAssetTypeWrapper(
   balance: Money

@@ -2,6 +2,7 @@
   "name": "leather-mono",
   "description": "Leather wallet shared code",
   "version": "1.0.0",
+  "license": "MIT",
   "type": "module",
   "author": "Leather Wallet",
   "scripts": {
@@ -12,8 +13,10 @@
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "lint": "pnpm -r lint",
+    "lint:deps": "pnpm dependency-cruiser .",
     "lint:fix": "pnpm -r lint:fix",
     "prepare": "husky install",
+    "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
     "ts:build": "pnpm -r ts:build",
@@ -26,6 +29,7 @@
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
+    "dependency-cruiser": "16.2.4",
     "eslint": "8.53.0",
     "husky": "8.0.3",
     "prettier": "3.2.5",
@@ -39,7 +43,6 @@
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "license": "MIT",
   "packageManager": "pnpm@8.15.3",
   "pnpm": {
     "packageExtensions": {

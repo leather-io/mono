@@ -6,8 +6,8 @@ import {
   Money,
   StacksFeeEstimate,
   StacksTxFeeEstimation,
-  createMoney,
 } from '@leather-wallet/models';
+import { createMoney } from '@leather-wallet/utils';
 import { StacksTransaction } from '@stacks/transactions';
 
 import {

@@ -3,9 +3,8 @@ import { STX_DECIMALS } from '@leather-wallet/constants';
 import {
   StacksCryptoCurrencyAssetBalance,
   StacksFungibleTokenAssetBalance,
-  createMoney,
 } from '@leather-wallet/models';
-import { isTransferableStacksFungibleTokenAsset } from '@leather-wallet/utils';
+import { createMoney, isTransferableStacksFungibleTokenAsset } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
 
 export function createStacksCryptoCurrencyAssetTypeWrapper(

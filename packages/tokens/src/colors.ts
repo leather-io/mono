@@ -3,7 +3,7 @@ export const colors = {
   overlay: { value: 'rgba(0,0,0,0.4)' },
 };
 
-export type Palette = {
+export interface Palette {
   'ink.text-primary': string;
   'ink.text-subdued': string;
   'ink.action-primary-hover': string;
@@ -44,7 +44,7 @@ export type Palette = {
 
   invert: string;
   stacks: string;
-};
+}
 
 interface Colors {
   base: Palette;
@@ -107,7 +107,7 @@ export const colorThemes = {
     'ink.component-background-default': '#24231E',
     'ink.background-overlay': '#12100F66',
     'ink.background-secondary': '#12100F',
-    'ink.background-primary': '#34312A',
+    'ink.background-primary': '#1B1A17',
 
     'red.text-primary': '#34312A',
     'red.action-primary-default': '#FF2E3C',

@@ -2,6 +2,7 @@
   "name": "@leather-wallet/query",
   "description": "Leather query",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
   "scripts": {
@@ -63,7 +64,6 @@
     "leather wallet",
     "query"
   ],
-  "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"

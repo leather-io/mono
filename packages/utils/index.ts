@@ -8,7 +8,6 @@ export * from './src/money';
 export * from './src/safe-handle-txid';
 export * from './src/string-utils';
 export * from './src/validate-url';
-export type { LiteralUnion, ValueOf, Entries } from './src/type-utils';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
@@ -116,6 +115,11 @@ export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedR
 export function pullContractIdFromIdentity(identifier: string) {
   return identifier.split('::')[0];
 }
+
 export function formatContractId(address: string, name: string) {
   return `${address}.${name}`;
+}
+
+export function createNullArrayOfLength(length: number) {
+  return new Array(length).fill(null);
 }

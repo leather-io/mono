@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
-import { createMoney } from '@leather-wallet/models';
-import { increaseValueByOneMicroStx, microStxToStx } from '@leather-wallet/utils';
+import { createMoney, increaseValueByOneMicroStx, microStxToStx } from '@leather-wallet/utils';
 import {
   MempoolTokenTransferTransaction,
   MempoolTransaction,
