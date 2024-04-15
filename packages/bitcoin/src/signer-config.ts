@@ -1,5 +1,5 @@
 import { BitcoinNetworkModes } from '@leather-wallet/constants';
-import { makeNumberRange } from '@leather-wallet/utils';
+import { isUndefined, makeNumberRange } from '@leather-wallet/utils';
 import * as btc from '@scure/btc-signer';
 
 import { getInputPaymentType } from './bitcoin.utils';
@@ -30,6 +30,7 @@ export function getAssumedZeroIndexSigningConfig({
       return indexes.map(inputIndex => {
         const input = tx.getInput(inputIndex);
 
+        if (isUndefined(input.index)) throw new Error('Input must have an index for payment type');
         const paymentType = getInputPaymentType(inputIndex, input, 'mainnet');
         switch (paymentType) {
           case 'p2wpkh':
