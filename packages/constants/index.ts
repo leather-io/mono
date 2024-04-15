@@ -1,4 +1,4 @@
-import type { Blockchains } from '@leather-wallet/models';
+import type { Blockchains } from '@leather-wallet/models/src/blockchain.model';
 import { ChainID } from '@stacks/transactions';
 
 export const gaiaUrl = 'https://hub.blockstack.org';
