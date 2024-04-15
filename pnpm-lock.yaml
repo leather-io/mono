@@ -164,6 +164,9 @@ importers:
       '@bitcoinerlab/secp256k1':
         specifier: 1.0.2
         version: 1.0.2
+      '@btckit/types':
+        specifier: 0.0.19
+        version: 0.0.19
       '@leather-wallet/constants':
         specifier: workspace:*
         version: link:../constants
@@ -216,9 +219,6 @@ importers:
         specifier: 1.1.2
         version: 1.1.2
     devDependencies:
-      '@btckit/types':
-        specifier: 0.0.19
-        version: 0.0.19
       '@leather-wallet/crypto':
         specifier: workspace:*
         version: link:../crypto
@@ -2207,7 +2207,7 @@ packages:
 
   /@btckit/types@0.0.19:
     resolution: {integrity: sha512-APoOfYSg9SRR4CMXL606IDtpgh+ZD3kS/+iY0BkUALD6HvXo2pVw20L5YYIc+HrgMcF6WN0TH7TXdVs+Vu+kww==}
-    dev: true
+    dev: false
 
   /@changesets/apply-release-plan@6.1.4:
     resolution: {integrity: sha512-FMpKF1fRlJyCZVYHr3CbinpZZ+6MwvOtWUuO8uo+svcATEoc1zRDcj23pAurJ2TZ/uVz1wFHH6K3NlACy0PLew==}

@@ -23,6 +23,7 @@
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.0.2",
+    "@btckit/types": "0.0.19",
     "@leather-wallet/constants": "workspace:*",
     "@leather-wallet/models": "workspace:*",
     "@leather-wallet/utils": "workspace:*",
@@ -42,7 +43,6 @@
     "varuint-bitcoin": "1.1.2"
   },
   "devDependencies": {
-    "@btckit/types": "0.0.19",
     "@leather-wallet/crypto": "workspace:*",
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
