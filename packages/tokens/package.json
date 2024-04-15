@@ -4,6 +4,7 @@
   "version": "0.0.15",
   "license": "MIT",
   "author": "Leather.io contact@leather.io",
+  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "prepublish": "pnpm ts:build",
@@ -23,12 +24,7 @@
     "@leather-wallet/tsconfig-config": "workspace:*",
     "prettier": "3.2.5"
   },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
+  "exports": "./dist/index.js",
   "keywords": [
     "leather",
     "leather wallet",

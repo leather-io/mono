@@ -1,4 +1,0 @@
-extends: '@leather-wallet/eslint-config'
-parserOptions:
-  project: ./tsconfig.json
-ignorePatterns: dist
