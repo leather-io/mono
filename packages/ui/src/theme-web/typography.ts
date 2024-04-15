@@ -1,7 +1,7 @@
-import { getExtensionTextVariants } from '@leather-wallet/tokens';
+import { getWebTextVariants } from '@leather-wallet/tokens';
 import { defineTextStyles } from '@pandacss/dev';
 
-const leatherTextStyles = getExtensionTextVariants();
+const leatherTextStyles = getWebTextVariants();
 
 // ts-unused-exports:disable-next-line
 export const textStyles = defineTextStyles({ ...leatherTextStyles });

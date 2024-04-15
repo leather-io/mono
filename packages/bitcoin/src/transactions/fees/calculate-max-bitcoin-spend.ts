@@ -1,5 +1,5 @@
-import { AverageBitcoinFeeRates, UtxoItem, createMoney } from '@leather-wallet/models';
-import { satToBtc } from '@leather-wallet/utils';
+import { AverageBitcoinFeeRates, UtxoItem } from '@leather-wallet/models';
+import { createMoney, satToBtc } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
 
 import { filterUneconomicalUtxos, getSpendableAmount } from '../utils';

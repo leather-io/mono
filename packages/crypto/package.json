@@ -2,6 +2,7 @@
   "name": "@leather-wallet/crypto",
   "description": "Shared crypto utilities",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
   "scripts": {
@@ -12,6 +13,12 @@
     "test:unit": "vitest run",
     "ts:build": "tsc --build",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/crypto",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather-wallet/mono.git",
+    "directory": "packages/crypto"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
@@ -26,25 +33,18 @@
     "@vitest/coverage-istanbul": "0.34.6",
     "eslint": "8.53.0",
     "jsdom": "22.1.0",
-    "prettier": "3.0.3",
+    "prettier": "3.2.5",
     "tslib": "2.6.2",
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/crypto",
   "keywords": [
     "crypto",
     "leather",
     "leather wallet"
   ],
-  "license": "MIT",
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
-    "directory": "packages/crypto"
   }
 }

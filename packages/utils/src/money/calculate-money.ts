@@ -1,9 +1,10 @@
-import { MarketData, Money, NumType, createMoney, formatMarketPair } from '@leather-wallet/models';
+import type { MarketData, Money, NumType } from '@leather-wallet/models';
+import { formatMarketPair } from '@leather-wallet/models';
 import { BigNumber } from 'bignumber.js';
 
 import { isNumber } from '../..';
 import { initBigNumber, sumNumbers } from '../math/helpers';
-import { formatMoney } from './format-money';
+import { createMoney, formatMoney } from './format-money';
 import { isMoney } from './is-money';
 
 export function baseCurrencyAmountInQuote(quantity: Money, { pair, price }: MarketData) {

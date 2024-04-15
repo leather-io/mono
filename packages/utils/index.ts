@@ -1,7 +1,6 @@
 import type { NetworkModes } from '@leather-wallet/constants';
 import { BigNumber } from 'bignumber.js';
 
-export type { LiteralUnion, ValueOf, Entries } from './src/type-utils';
 export { createCounter } from './src/counter';
 export * from './src/math';
 export * from './src/money';

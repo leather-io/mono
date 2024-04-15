@@ -9,12 +9,12 @@
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "start": "expo start",
-    "ts:build": "tsc --build",
-    "ts:build:watch": "tsc --build --watch",
     "storybook": "cross-env STORYBOOK_ENABLED='true' expo start",
     "storybook-generate": "sb-rn-get-stories -js",
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
+    "ts:build": "tsc --build",
+    "ts:build:watch": "tsc --build --watch",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {
@@ -48,7 +48,7 @@
   "devDependencies": {
     "@babel/core": "7.23.9",
     "@leather-wallet/eslint-config": "workspace:*",
-    "@types/react": "18.2.43",
+    "@types/react": "18.2.64",
     "@types/react-dom": "18.0.11",
     "babel-preset-expo": "10.0.1",
     "eslint": "8.53.0",

@@ -11,6 +11,7 @@ export * from './methods/get-info';
 export * from './methods/sign-psbt';
 export * from './methods/get-addresses';
 export * from './methods/send-transfer';
+export * from './utils';
 
 export type MethodMap = DefineGetInfoMethod &
   DefineGetAddressesMethod &

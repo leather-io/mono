@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
-import { createMoney } from '@leather-wallet/models';
-import { sumNumbers } from '@leather-wallet/utils';
+import { createMoney, sumNumbers } from '@leather-wallet/utils';
 import { HDKey } from '@scure/bip32';
 
 import { UtxoWithDerivationPath } from '../../../types/utxo';

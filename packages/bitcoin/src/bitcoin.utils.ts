@@ -1,4 +1,4 @@
-import { PaymentTypes } from '@btckit/types';
+import type { PaymentTypes } from '@btckit/types';
 import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/constants';
 import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather-wallet/utils';
 import { hexToBytes } from '@noble/hashes/utils';

@@ -1,5 +1,5 @@
 import { SignatureHash } from '@btckit/types';
-import { BitcoinNetworkModes } from '@leather-wallet/constants';
+import type { BitcoinNetworkModes } from '@leather-wallet/constants';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 

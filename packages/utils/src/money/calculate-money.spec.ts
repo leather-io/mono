@@ -1,10 +1,4 @@
-import {
-  MarketData,
-  createMarketData,
-  createMarketPair,
-  createMoney,
-  createMoneyFromDecimal,
-} from '@leather-wallet/models';
+import { MarketData, createMarketData, createMarketPair } from '@leather-wallet/models';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -13,6 +7,7 @@ import {
   subtractMoney,
   sumMoney,
 } from './calculate-money';
+import { createMoney, createMoneyFromDecimal } from './format-money';
 
 const tenMicroStx = createMoney(10, 'STX');
 const tenStx = createMoneyFromDecimal(10, 'STX');

@@ -6,13 +6,13 @@ import {
   Money,
   createMarketData,
   createMarketPair,
-  createMoney,
   currencyDecimalsMap,
 } from '@leather-wallet/models';
 import {
   baseCurrencyAmountInQuote,
   calculateMeanAverage,
   convertAmountToFractionalUnit,
+  createMoney,
 } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
 
