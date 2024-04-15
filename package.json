@@ -30,7 +30,7 @@
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
     "dependency-cruiser": "16.2.4",
-    "eslint": "8.53.0",
+    "eslint": "9.0.0",
     "husky": "8.0.3",
     "prettier": "3.2.5",
     "syncpack": "12.3.0",

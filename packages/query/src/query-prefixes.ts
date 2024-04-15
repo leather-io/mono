@@ -12,7 +12,6 @@ export enum QueryPrefixes {
   GetInscriptions = 'get-inscriptions',
   GetNftMetadata = 'get-nft-metadata',
   GetNftHoldings = 'get-nft-holdings',
-
   StampCollection = 'stamp-collection',
   StampsByAddress = 'stamps-by-address',
   GetBrc20Tokens = 'get-brc20-tokens',
