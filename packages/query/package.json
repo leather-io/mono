@@ -65,6 +65,20 @@
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./stacks": {
+      "import": "./dist/stacks/index.js",
+      "require": "./dist/stacks/index.js"
+    },
+    "./bitcoin": {
+      "import": "./dist/bitcoin/index.js",
+      "require": "./dist/bitcoin/index.js"
+    }
+  },
   "keywords": [
     "leather",
     "leather wallet",
