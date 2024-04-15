@@ -3,7 +3,7 @@ import { AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blo
 import { UseQueryOptions, UseQueryResult, useQuery } from '@tanstack/react-query';
 
 import { useCurrentNetworkState } from '../../leather-query-provider';
-import { useHiroApiRateLimiter } from '../rate-limiter';
+import { useHiroApiRateLimiter } from '../hiro-rate-limiter';
 import { useStacksClient } from '../stacks-client';
 
 const queryOptions: UseQueryOptions = {
@@ -23,18 +23,24 @@ export function useGetAccountTransactionsWithTransfersQuery({
   const client = useStacksClient();
   const limiter = useHiroApiRateLimiter();
 
-  async function fetchAccountTxsWithTransfers() {
+  async function fetchAccountTxsWithTransfers(signal?: AbortSignal) {
     if (!stacksAddress) return;
-    await limiter.removeTokens(1);
-    return client.accountsApi.getAccountTransactionsWithTransfers({
-      principal: stacksAddress,
-      limit: DEFAULT_LIST_LIMIT,
-    });
+    return limiter.add(
+      () =>
+        client.accountsApi.getAccountTransactionsWithTransfers({
+          principal: stacksAddress,
+          limit: DEFAULT_LIST_LIMIT,
+        }),
+      {
+        signal,
+        throwOnTimeout: true,
+      }
+    );
   }
 
   return useQuery({
     queryKey: ['account-txs-with-transfers', stacksAddress, chain.stacks.url],
-    queryFn: fetchAccountTxsWithTransfers,
+    queryFn: ({ signal }) => fetchAccountTxsWithTransfers(signal),
     enabled: !!stacksAddress && !!chain.stacks.url,
     ...queryOptions,
   }) as UseQueryResult<AddressTransactionsWithTransfersListResponse, Error>;

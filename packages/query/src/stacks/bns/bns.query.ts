@@ -4,15 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentNetworkState } from '../../leather-query-provider';
 import { AppUseQueryConfig } from '../../query-config';
 import { QueryPrefixes } from '../../query-prefixes';
-import { RateLimiter, useHiroApiRateLimiter } from '../rate-limiter';
+import { useHiroApiRateLimiter } from '../hiro-rate-limiter';
 import { StacksClient, useStacksClient } from '../stacks-client';
 import { fetchNamesForAddress } from './bns.utils';
 
-const staleTime = 15 * 60 * 1000; // 15 min
+const staleTime = 24 * 60 * 60 * 1000; // 24 hours
 
 const bnsQueryOptions = {
-  keepPreviousData: true,
-  cacheTime: staleTime,
+  cacheTime: Infinity,
   staleTime: staleTime,
   refetchOnMount: false,
   refetchInterval: false,
@@ -23,17 +22,17 @@ type BnsNameFetcher = (address: string) => Promise<BnsNamesOwnByAddressResponse>
 
 interface GetBnsNameFetcherFactoryArgs {
   client: StacksClient;
-  limiter: RateLimiter;
   isTestnet: boolean;
+  signal?: AbortSignal;
 }
+
 function getBnsNameFetcherFactory({
   client,
-  limiter,
   isTestnet,
+  signal,
 }: GetBnsNameFetcherFactoryArgs): BnsNameFetcher {
   return async (address: string) => {
-    await limiter.removeTokens(1);
-    return fetchNamesForAddress({ client, address, isTestnet });
+    return fetchNamesForAddress({ client, address, isTestnet, signal });
   };
 }
 
@@ -49,7 +48,13 @@ export function useGetBnsNamesOwnedByAddress<T extends unknown = BnsNameFetcherR
   return useQuery({
     enabled: address !== '',
     queryKey: [QueryPrefixes.BnsNamesByAddress, address],
-    queryFn: () => getBnsNameFetcherFactory({ client, limiter, isTestnet })(address),
+    queryFn: async ({ signal }) => {
+      return limiter.add(() => fetchNamesForAddress({ client, address, isTestnet, signal }), {
+        signal,
+        priority: 2,
+        throwOnTimeout: true,
+      });
+    },
     ...bnsQueryOptions,
     ...options,
   });

@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import PQueue from 'p-queue';
 
 // import { logger } from '@shared/logger';
 import type { Paginated } from '../../../../types/api-types';
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { QueryPrefixes } from '../../../query-prefixes';
-import { RateLimiter, useHiroApiRateLimiter } from '../../rate-limiter';
+import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { StacksClient, useStacksClient } from '../../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
@@ -23,14 +24,19 @@ const queryOptions = { cacheTime: staleTime, staleTime, refetchhOnFocus: false }
 
 type FetchNonFungibleTokenHoldingsResp = Paginated<NonFungibleTokenHoldingListResult[]>;
 
-function fetchNonFungibleTokenHoldings(client: StacksClient, limiter: RateLimiter) {
+function fetchNonFungibleTokenHoldings(client: StacksClient, limiter: PQueue) {
   return async (address: string) => {
     if (!address) return;
-    await limiter.removeTokens(1);
-    return client.nonFungibleTokensApi.getNftHoldings({
-      principal: address,
-      limit: 50,
-    }) as unknown as Promise<FetchNonFungibleTokenHoldingsResp>;
+    return limiter.add(
+      () =>
+        client.nonFungibleTokensApi.getNftHoldings({
+          principal: address,
+          limit: 50,
+        }) as unknown as Promise<FetchNonFungibleTokenHoldingsResp>,
+      {
+        throwOnTimeout: true,
+      }
+    );
   };
 }
 
@@ -38,7 +44,7 @@ function makeNonFungibleTokenHoldingsQuery(
   address: string,
   network: string,
   client: StacksClient,
-  limiter: RateLimiter
+  limiter: PQueue
 ) {
   if (address === '') {
     // logger.warn('No address passed to ' + QueryPrefixes.GetNftHoldings);

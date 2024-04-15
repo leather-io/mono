@@ -2,7 +2,7 @@ import { MempoolTransactionListResponse } from '@stacks/blockchain-api-client';
 import { useQuery } from '@tanstack/react-query';
 
 import { AppUseQueryConfig } from '../../query-config';
-import { useHiroApiRateLimiter } from '../rate-limiter';
+import { useHiroApiRateLimiter } from '../hiro-rate-limiter';
 import { useStacksClient } from '../stacks-client';
 
 export function useAccountMempoolQuery<T extends unknown = MempoolTransactionListResponse>(
@@ -13,8 +13,12 @@ export function useAccountMempoolQuery<T extends unknown = MempoolTransactionLis
   const limiter = useHiroApiRateLimiter();
 
   async function accountMempoolFetcher() {
-    await limiter.removeTokens(1);
-    return client.transactionsApi.getAddressMempoolTransactions({ address, limit: 50 });
+    return limiter.add(
+      () => client.transactionsApi.getAddressMempoolTransactions({ address, limit: 50 }),
+      {
+        throwOnTimeout: true,
+      }
+    );
   }
 
   return useQuery({

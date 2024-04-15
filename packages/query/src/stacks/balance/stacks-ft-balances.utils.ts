@@ -1,6 +1,7 @@
 import { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
 import { STX_DECIMALS } from '@leather-wallet/constants';
 import {
+  Money,
   StacksCryptoCurrencyAssetBalance,
   StacksFungibleTokenAssetBalance,
 } from '@leather-wallet/models';
@@ -25,7 +26,8 @@ export function createStacksCryptoCurrencyAssetTypeWrapper(
 
 export function addQueriedMetadataToInitializedStacksFungibleTokenAssetBalance(
   assetBalance: StacksFungibleTokenAssetBalance,
-  metadata: FtMetadataResponse
+  metadata: FtMetadataResponse,
+  price: Money | null
 ) {
   return {
     ...assetBalance,
@@ -41,6 +43,7 @@ export function addQueriedMetadataToInitializedStacksFungibleTokenAssetBalance(
       hasMemo: isTransferableStacksFungibleTokenAsset(assetBalance.asset),
       imageCanonicalUri: metadata.image_canonical_uri ?? '',
       name: metadata.name ?? '',
+      price,
       symbol: metadata.symbol ?? '',
     },
   };

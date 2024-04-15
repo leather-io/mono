@@ -2,20 +2,26 @@
 import { StacksTxFeeEstimation } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import PQueue from 'p-queue';
 
 import { useCurrentNetworkState } from '../../leather-query-provider';
 import { AppUseQueryConfig } from '../../query-config';
-import { RateLimiter, useHiroApiRateLimiter } from '../rate-limiter';
+import { useHiroApiRateLimiter } from '../hiro-rate-limiter';
 import { defaultApiFeeEstimations } from './fees.utils';
 
-function fetchTransactionFeeEstimation(currentNetwork: any, limiter: RateLimiter) {
+function fetchTransactionFeeEstimation(currentNetwork: any, limiter: PQueue) {
   return async (estimatedLen: number | null, transactionPayload: string) => {
-    await limiter.removeTokens(1);
-    const resp = await axios.post<StacksTxFeeEstimation>(
-      currentNetwork.chain.stacks.url + '/v2/fees/transaction',
+    const resp = await limiter.add(
+      () =>
+        axios.post<StacksTxFeeEstimation>(
+          currentNetwork.chain.stacks.url + '/v2/fees/transaction',
+          {
+            estimated_len: estimatedLen,
+            transaction_payload: transactionPayload,
+          }
+        ),
       {
-        estimated_len: estimatedLen,
-        transaction_payload: transactionPayload,
+        throwOnTimeout: true,
       }
     );
     return resp.data;

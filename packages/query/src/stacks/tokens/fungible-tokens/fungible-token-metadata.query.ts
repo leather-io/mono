@@ -1,7 +1,8 @@
 import { UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
+import PQueue from 'p-queue';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
-import { RateLimiter, useHiroApiRateLimiter } from '../../rate-limiter';
+import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useTokenMetadataClient } from '../../stacks-client';
 import { TokenMetadataClient } from '../../token-metadata-client';
 import { FtAssetResponse } from '../token-metadata.utils';
@@ -19,10 +20,11 @@ const queryOptions = {
   retry: 0,
 } as const;
 
-function fetchFungibleTokenMetadata(client: TokenMetadataClient, limiter: RateLimiter) {
+function fetchFungibleTokenMetadata(client: TokenMetadataClient, limiter: PQueue) {
   return (principal: string) => async () => {
-    await limiter.removeTokens(1);
-    return client.tokensApi.getFtMetadata(principal);
+    return limiter.add(() => client.tokensApi.getFtMetadata(principal), {
+      throwOnTimeout: true,
+    });
   };
 }
 
