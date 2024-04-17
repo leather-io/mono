@@ -1,4 +1,7 @@
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ViewStyle } from 'react-native';
+
+import { ResponsiveValue } from '@shopify/restyle';
+import { Theme } from 'native';
 
 import { Box } from '../box/box.native';
 import { Text } from '../text/text.native';
@@ -11,24 +14,26 @@ export interface ButtonProps {
   size?: ButtonSize;
   onPress: () => unknown;
   label: string;
+  style?: ViewStyle;
 }
 
-function getColors(variant: ButtonVariant) {
+function getColors(
+  variant: ButtonVariant
+): Record<string, ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>> {
   switch (variant) {
     case 'solid':
       return {
-        backgroundColor: 'ink.action-primary-default',
-        textColor: 'ink.background-primary',
+        backgroundColor: 'dark.ink.action-primary-default',
+        textColor: 'dark.ink.background-primary',
       } as const;
     case 'ghost':
       return {
-        textColor: 'ink.text-primary',
+        textColor: 'dark.ink.text-primary',
       } as const;
     case 'outline':
       return {
-        borderColor: 'ink.text-primary',
-        borderWidth: 1,
-        textColor: 'ink.text-primary',
+        borderColor: 'dark.ink.text-primary',
+        textColor: 'dark.ink.text-primary',
       } as const;
   }
 }
@@ -48,19 +53,19 @@ function getSize(size: ButtonSize) {
   }
 }
 
-export const Button = ({ onPress, label, variant, size = 'medium' }: ButtonProps) => {
+export const Button = ({ onPress, label, variant, size = 'medium', style }: ButtonProps) => {
   const colorStyles = getColors(variant);
   const sizeStyles = getSize(size);
 
   return (
-    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row' }}>
+    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', ...style }}>
       <Box
         borderRadius="xs"
         p={sizeStyles.p}
         gap={sizeStyles.gap}
         flexDirection="row"
         backgroundColor={colorStyles.backgroundColor}
-        borderWidth={colorStyles.borderWidth}
+        borderWidth={colorStyles.borderColor ? 1 : undefined}
         borderColor={colorStyles.borderColor}
       >
         <Text color={colorStyles.textColor} variant="label02">

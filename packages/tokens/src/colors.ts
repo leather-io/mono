@@ -47,6 +47,11 @@ export interface Palette {
   stacks: string;
 }
 
+type DarkPalette<T> = { [P in keyof T & string as `dark.${P}`]: T[P] };
+type BasePalette<T> = { [P in keyof T & string as `base.${P}`]: T[P] };
+
+export type AllThemePalette = DarkPalette<Palette> & BasePalette<Palette>;
+
 interface Colors {
   base: Palette;
   dark: Palette;
