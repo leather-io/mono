@@ -72,7 +72,8 @@
           "expo": "*",
           "debug": "*",
           "resolve-from": "*",
-          "expo-router": "*"
+          "expo-router": "*",
+          "react-native-reanimated": "*"
         }
       },
       "@react-native/dev-middleware@*": {

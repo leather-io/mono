@@ -26,13 +26,24 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules', '.pnpm', 'node_modules'),
 ];
 
+config.resolver = {
+  ...config.resolver,
+  assetExts: config.resolver.assetExts.filter(ext => ext !== 'svg'),
+  sourceExts: [...config.resolver.sourceExts, 'svg'],
+  unstable_enablePackageExports: true,
+  unstable_conditionNames: ['require', 'node', 'import'],
+};
+
+const symlinkResolver = MetroSymlinksResolver({
+  experimental_retryResolvingFromDisk: 'force',
+});
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // TODO: either read tsconfig automatically or figure out another way of resolving tsconfig aliases.
   // If we add more aliases in tsconfig, we need to add those to this if statement.
   if (moduleName.startsWith('@/')) {
     return context.resolveRequest(context, moduleName, platform);
   }
-  const symlinkResolver = MetroSymlinksResolver();
   return symlinkResolver(context, moduleName, platform);
 };
 

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "@leather-wallet/mobile",
-    "slug": "leather-wallet_mobile",
+    "slug": "leather-wallet-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -17,7 +17,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.leather.mobilewallet",
       "buildNumber": "1.0.0"
     },
@@ -28,9 +28,15 @@
       },
       "package": "com.leather.mobilewallet"
     },
-    "web": {
-      "favicon": "./src/assets/favicon.png"
+    "plugins": ["expo-font", "expo-router"],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc"
+      }
     },
-    "plugins": ["expo-font"]
+    "owner": "leather-wallet"
   }
 }

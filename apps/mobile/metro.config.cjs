@@ -16,6 +16,19 @@ const workspaceRoot = path.resolve(projectRoot, '../..');
 
 const config = getDefaultConfig(projectRoot);
 
+// add SVG compatibility
+config.transformer = {
+  ...config.transformer,
+  babelTransformerPath: require.resolve('react-native-svg-transformer'),
+};
+config.resolver = {
+  ...config.resolver,
+  assetExts: config.resolver.assetExts.filter(ext => ext !== 'svg'),
+  sourceExts: [...config.resolver.sourceExts, 'svg'],
+  unstable_enablePackageExports: true,
+  unstable_conditionNames: ['require', 'node', 'import'],
+};
+
 // #1 - Watch all files in the monorepo
 config.watchFolders = [workspaceRoot];
 // #2 - Force resolving nested modules to the folders below
@@ -26,6 +39,9 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules', '.pnpm', 'node_modules'),
 ];
+const symlinkResolver = MetroSymlinksResolver({
+  experimental_retryResolvingFromDisk: 'force',
+});
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // TODO: either read tsconfig automatically or figure out another way of resolving tsconfig aliases.
@@ -33,7 +49,6 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName.startsWith('@/')) {
     return context.resolveRequest(context, moduleName, platform);
   }
-  const symlinkResolver = MetroSymlinksResolver();
   return symlinkResolver(context, moduleName, platform);
 };
 
