@@ -13,9 +13,9 @@
     "storybook:ios": "expo start --ios",
     "storybook:web": "storybook dev -p 6006 -c ./src/.storybook-web",
     "ts:build": "pnpm panda && pnpm ts:build:all && pnpm ts:build:web && pnpm ts:build:native",
-    "ts:build:all": "tsc --build ./tsconfig.json",
-    "ts:build:native": "tsc --build ./tsconfig.native.json",
-    "ts:build:web": "tsc --build ./tsconfig.web.json",
+    "ts:build:all": "tsc --build ./tsconfig.json && cp -r src/assets-native ./dist-all/src && cp -r src/assets-web ./dist-all/src",
+    "ts:build:native": "tsc --build ./tsconfig.native.json && cp -r src/assets-native ./dist-native/src",
+    "ts:build:web": "tsc --build ./tsconfig.web.json && cp -r src/assets-web ./dist-web/src",
     "typecheck": "tsc --noEmit --project ./tsconfig.json"
   },
   "dependencies": {
@@ -26,20 +26,21 @@
     "@rnx-kit/metro-config": "1.3.14",
     "@rnx-kit/metro-resolver-symlinks": "0.1.35",
     "@shopify/restyle": "2.4.2",
-    "expo": "50.0.6",
+    "expo": "50.0.15",
     "expo-asset": "9.0.2",
     "expo-constants": "15.4.5",
-    "expo-font": "11.10.2",
-    "expo-splash-screen": "0.26.3",
+    "expo-font": "11.10.3",
+    "expo-splash-screen": "0.26.4",
     "metro-cache": "0.80.5",
     "metro-config": "0.80.5",
     "metro-resolver": "0.80.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.73.4"
+    "react-native": "0.73.6"
   },
   "devDependencies": {
     "@babel/core": "7.23.9",
+    "@babel/runtime": "7.23.2",
     "@leather-wallet/eslint-config": "workspace:*",
     "@pandacss/dev": "0.26.2",
     "@react-native-async-storage/async-storage": "1.22.0",
@@ -77,7 +78,6 @@
     ".": "./dist-web/web.js",
     "./native": "./dist-native/native.js"
   },
-  "main": "./src/index.ts",
   "private": true,
   "publishConfig": {
     "access": "public"

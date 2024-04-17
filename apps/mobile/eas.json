@@ -1,0 +1,34 @@
+{
+  "cli": {
+    "version": ">= 7.8.1"
+  },
+  "build": {
+    "development": {
+      "node": "20.11.0",
+      "pnpm": "8.15.3",
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview-simulator": {
+      "node": "20.11.0",
+      "pnpm": "8.15.3",
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "preview": {
+      "node": "20.11.0",
+      "pnpm": "8.15.3",
+      "distribution": "internal"
+    },
+    "production": {
+      "node": "20.11.0",
+      "pnpm": "8.15.3",
+      "distribution": "store"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
