@@ -9,6 +9,10 @@ packageExtensionsChecksum: b95b01d47773190b8a7b9f89a46ca31e
 importers:
 
   .:
+    dependencies:
+      '@ls-lint/ls-lint':
+        specifier: 2.2.3
+        version: 2.2.3
     devDependencies:
       '@changesets/cli':
         specifier: 2.26.2
@@ -310,10 +314,6 @@ importers:
       eslint-plugin-deprecation:
         specifier: 2.0.0
         version: 2.0.0(eslint@8.53.0)(typescript@5.3.3)
-    devDependencies:
-      '@leather-wallet/tsconfig-config':
-        specifier: workspace:*
-        version: link:../tsconfig-config
 
   packages/models:
     dependencies:
@@ -4235,6 +4235,13 @@ packages:
   /@juggle/resize-observer@3.4.0:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
     dev: true
+
+  /@ls-lint/ls-lint@2.2.3:
+    resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
+    os: [darwin, linux, win32]
+    hasBin: true
+    dev: false
 
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}

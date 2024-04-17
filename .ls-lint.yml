@@ -1,0 +1,13 @@
+ls:
+  .ts: regex:[a-z0-9\-\._]+
+  .tsx: regex:[a-z0-9\-\._]+
+  .js: regex:[a-z0-9\-\._]+
+
+ignore:
+  - .git
+  - dist
+  - apps/mobile/.expo/*
+  - packages/ui/dist-all
+  - node_modules
+  - packages/*/node_modules
+  - storybook-static
