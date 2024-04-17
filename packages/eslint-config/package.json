@@ -17,9 +17,6 @@
     "eslint": "8.53.0",
     "eslint-plugin-deprecation": "2.0.0"
   },
-  "devDependencies": {
-    "@leather-wallet/tsconfig-config": "workspace:*"
-  },
   "keywords": [
     "eslint",
     "leather",
