@@ -4,8 +4,8 @@ import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanima
 
 import CheckmarkCircle from '@/assets/checkmark-circle.svg';
 import XLogo from '@/assets/logo-x.svg';
-import { Button, ButtonState } from '@/components/Button';
-import { InputState, TextInput } from '@/components/TextInput';
+import { Button, ButtonState } from '@/components/button';
+import { InputState, TextInput } from '@/components/text-input';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useFormSubmission } from '@/queries/use-form-submissions';
 import { emailRegexp } from '@/utils/regexp';
