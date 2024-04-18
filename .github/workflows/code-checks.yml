@@ -57,3 +57,12 @@ jobs:
 
       - name: Lint dependency rules
         run: pnpm ts:build && pnpm lint:deps
+
+  lint-filenames:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Lint dependency rules
+        run: pnpm lint:filenames
