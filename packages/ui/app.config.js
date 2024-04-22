@@ -21,7 +21,7 @@ export default ({ config }) => ({
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.leather.mobilewallet',
+    bundleIdentifier: 'io.leather.mobilewallet',
     buildNumber: '1.0.0',
   },
   android: {
@@ -29,7 +29,7 @@ export default ({ config }) => ({
       foregroundImage: './src/assets-native/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    package: 'com.leather.mobilewallet',
+    package: 'io.leather.mobilewallet',
   },
   web: {
     favicon: './src/assets-native/favicon.png',
