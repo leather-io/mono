@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "ts:build": "tsc --build",
+    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/constants",

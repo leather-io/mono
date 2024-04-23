@@ -14,6 +14,14 @@ export const PERSISTENCE_CACHE_TIME = 1000 * 60 * 60 * 12; // 12 hours
 export const BTC_DECIMALS = 8;
 export const STX_DECIMALS = 6;
 
+// Units of `Money` should be declared in their smallest unit. Similar to
+// Rosetta, we model currencies with their respective resolution
+export const currencyDecimalsMap = {
+  BTC: BTC_DECIMALS,
+  STX: STX_DECIMALS,
+  USD: 2,
+} as const;
+
 // https://bitcoin.stackexchange.com/a/41082/139277
 export const BTC_P2WPKH_DUST_AMOUNT = 294;
 

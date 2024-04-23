@@ -1,5 +1,5 @@
+import { currencyDecimalsMap } from '@leather-wallet/constants';
 import type { Currencies, Money, NumType } from '@leather-wallet/models';
-import { currencyDecimalsMap } from '@leather-wallet/models';
 import BigNumber from 'bignumber.js';
 
 import { isBigInt, isUndefined } from '../..';

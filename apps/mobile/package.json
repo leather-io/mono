@@ -15,7 +15,7 @@
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
     "ts:build": "tsc --build",
-    "ts:build:watch": "tsc --build --watch",
+    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {

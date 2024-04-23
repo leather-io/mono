@@ -6,22 +6,24 @@
   "type": "module",
   "author": "Leather Wallet",
   "scripts": {
-    "check:all": "pnpm -r --parallel \"/^format$|^lint$|^typecheck$/\"",
+    "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
-    "format": "pnpm -r format",
+    "dev": "turbo run ts:build:watch",
+    "format": "turbo run format",
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
-    "lint": "pnpm -r lint",
+    "lint": "turbo run lint",
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
-    "lint:fix": "pnpm -r lint:fix",
+    "lint:fix": "turbo run lint:fix",
     "prepare": "husky install",
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
-    "ts:build": "pnpm -r ts:build",
-    "typecheck": "pnpm -r typecheck"
+    "ts:build": "turbo run ts:build",
+    "ts:build:watch": "turbo run ts:build:watch",
+    "typecheck": "turbo run typecheck"
   },
   "dependencies": {
     "@ls-lint/ls-lint": "2.2.3"
@@ -38,6 +40,7 @@
     "husky": "8.0.3",
     "prettier": "3.2.5",
     "syncpack": "12.3.0",
+    "turbo": "1.13.2",
     "typescript": "5.3.3"
   },
   "engines": {
