@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "ts:build": "tsc --build",
+    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
@@ -20,9 +21,7 @@
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
-    "@leather-wallet/constants": "workspace:*",
     "@leather-wallet/types": "workspace:*",
-    "@leather-wallet/utils": "workspace:*",
     "@stacks/stacks-blockchain-api-types": "7.8.2",
     "bignumber.js": "9.1.2"
   },

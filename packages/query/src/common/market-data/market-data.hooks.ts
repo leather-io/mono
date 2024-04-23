@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
 
+import { currencyDecimalsMap } from '@leather-wallet/constants';
 import {
   CryptoCurrencies,
   MarketData,
   Money,
   createMarketData,
   createMarketPair,
-  currencyDecimalsMap,
 } from '@leather-wallet/models';
 import {
   baseCurrencyAmountInQuote,

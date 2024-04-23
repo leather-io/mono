@@ -4,5 +4,4 @@
 LATEST_HASH=$(git rev-parse --verify HEAD)
 
 # Run commands only in packages with changed files compared to previous commit and on their dependants in parallel
-pnpm -r --filter="...[$LATEST_HASH]" "/^ts:build$/"
-pnpm -r --filter="...[$LATEST_HASH]" --parallel "/^format$|^lint$|^typecheck$/"
+pnpm check:all --filter="...[$LATEST_HASH]"

@@ -8,6 +8,7 @@
     "prepublish": "yarn build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts:build": "tsup src/index.ts && npm run types",
+    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json",
     "types": "tsc --declaration --emitDeclarationOnly"
   },

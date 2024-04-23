@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "eslint .",
     "prepublish": "pnpm ts:build",
-    "ts:build": "tsc",
+    "ts:build": "tsc --build",
+    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
