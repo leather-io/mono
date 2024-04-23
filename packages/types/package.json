@@ -1,11 +1,11 @@
 {
   "name": "@leather-wallet/types",
   "description": "Types package for Leather",
-  "version": "0.0.20",
+  "version": "0.1.0",
   "license": "MIT",
   "author": "leather-wallet",
   "scripts": {
-    "prepublish": "yarn build",
+    "prepublish": "pnpm ts:build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts:build": "tsup src/index.ts && npm run types",
     "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
