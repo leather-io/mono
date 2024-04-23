@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/leather-wallet/mono/compare/mobile-v1.1.0...mobile-v1.1.1) (2024-04-23)
+
+
+### Bug Fixes
+
+* try out change in mobile for release please ([f659fb5](https://github.com/leather-wallet/mono/commit/f659fb55fad0be76b108b92eeeb8b04d5074bcd4))
+
 ## [1.1.0](https://github.com/leather-wallet/mono/compare/mobile-v1.0.0...mobile-v1.1.0) (2024-04-23)
 
 
