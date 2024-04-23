@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.2.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.1.1...leather-mono-v1.2.0) (2024-04-23)
+
+
+### Features
+
+* add react native storybook ([256bdec](https://github.com/leather-wallet/mono/commit/256bdec0979721b564a671d2bfedb9d3717da4b4))
+* add turborepo + watch dev mode ([d415d79](https://github.com/leather-wallet/mono/commit/d415d79394488c0cb74765d367b3af8db1d24772))
+* add web and mobile design system with storybook ([0769902](https://github.com/leather-wallet/mono/commit/076990210312448d583905ac78448ff5068c1f1e))
+* bootstrap release-please ([76b995a](https://github.com/leather-wallet/mono/commit/76b995a37ecfda0aa006b90ab21cadc57dae8e80))
+* implement wishlist app ([41a004d](https://github.com/leather-wallet/mono/commit/41a004dac66992de095bf2bfb09ffc2d732cc641))
+* move basic bitcoin queries from extension ([7ce5efe](https://github.com/leather-wallet/mono/commit/7ce5efe5e7383f2245ff3ec90ac429ba898a1410))
+* move basics from extension ([eee8003](https://github.com/leather-wallet/mono/commit/eee80037a7e0eada5b3c013a74882ca88d1a3cd3))
+* reset to pnpm workspaces ([fa7de49](https://github.com/leather-wallet/mono/commit/fa7de49928ee099419db9ff3e91c7dc7b15a4ffa))
+* update icon and bundle identifier ([f1d104a](https://github.com/leather-wallet/mono/commit/f1d104a8ea1b6326483725077ae9179ab8f9a866))
+
+
+### Bug Fixes
+
+* make expo work by making babel and metro files cjs ([0e0982d](https://github.com/leather-wallet/mono/commit/0e0982d4d795a3a099a9c4622f16c822f2ac0ed9))
+* metro config tsconfig paths resolution ([36946fd](https://github.com/leather-wallet/mono/commit/36946fdeaabf9e64246b53d579d56c6c444befe1))
+* more granular non-interactive colors ([d137988](https://github.com/leather-wallet/mono/commit/d137988533a7c6533af2fa4ffad58460aac6e620))
+* precommit hooks. Use pnpm filtering instead of lint-staged ([23df54a](https://github.com/leather-wallet/mono/commit/23df54a5a790c82ba83b9cc5f3e9b4ab8bc1451b))
+* Primary action hover in dark mode ([89185b6](https://github.com/leather-wallet/mono/commit/89185b6211a1ba7146cb31da4decaa540ff23935))
+* rename Button.tsx to button.tsx ([1b7d06f](https://github.com/leather-wallet/mono/commit/1b7d06f1a89590af99d30320d07390f45e72187c))
+* smaller code font-size style ([d781503](https://github.com/leather-wallet/mono/commit/d7815033edf773a7587a72eb432265eb8c592b39))
+* token border colors ([050136a](https://github.com/leather-wallet/mono/commit/050136aa481615cc837962367907259def916272))
+* **tokens:** bundle pkg ([75c05e1](https://github.com/leather-wallet/mono/commit/75c05e1a7ebc4e8fa93254f3cb7e73ba760f76bb))
+* tone down background-secondary ([f57edac](https://github.com/leather-wallet/mono/commit/f57edac4a4600d6af9a19878debb7ab4a6ac3b56))
+* update babel and metro files references ([c40189b](https://github.com/leather-wallet/mono/commit/c40189bc9d2cff1e33a06ce0d04ad3f5c710e68b))
+* use core tsconfig package, not root ([b4238d8](https://github.com/leather-wallet/mono/commit/b4238d8686b4cce7d34af414a36e0e702a20386c))
+
 ## [1.1.1](https://github.com/leather-wallet/mono/compare/leather-mono-v1.1.0...leather-mono-v1.1.1) (2024-04-23)
 
 

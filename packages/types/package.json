@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/types",
   "description": "Types package for Leather",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "author": "leather-wallet",
   "scripts": {
