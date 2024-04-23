@@ -25,6 +25,9 @@ jobs:
           # optional. customize path to .release-please-manifest.json
           manifest-file: ../../.release-please-manifest.json
 
+          # TESTING
+          target-branch: release-please/bootstrap/default
+
   # The logic below handles the npm publication:
   deploy:
     needs: release-please
