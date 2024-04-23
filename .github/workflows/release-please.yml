@@ -13,7 +13,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      release-created: ${{ steps.release.outputs.release-created }}
+      releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - uses: google-github-actions/release-please-action@v4
         id: release
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     # these if statements ensure that a publication only occurs when
     # a new release is created:
-    if: needs.release-please.outputs.release-created
+    if: needs.release-please.outputs.releases_created
     steps:
       - uses: actions/checkout@v4
       - name: Install pnpm
