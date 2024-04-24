@@ -72,7 +72,6 @@ export function TextInput({
         borderColor={borderColor}
         p="4"
         color="base.ink.action-primary-default"
-        height={56}
         {...props}
       />
       {inputState === 'error' ? (

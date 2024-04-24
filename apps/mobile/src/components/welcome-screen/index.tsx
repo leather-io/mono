@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Image, Keyboard, KeyboardAvoidingView, SafeAreaView } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import CheckmarkCircle from '@/assets/checkmark-circle.svg';
 import XLogo from '@/assets/logo-x.svg';
-import { Button, ButtonState } from '@/components/button';
+import { AnimatedButton, Button, ButtonState } from '@/components/button';
 import { InputState, TextInput } from '@/components/text-input';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useFormSubmission } from '@/queries/use-form-submissions';
 import { emailRegexp } from '@/utils/regexp';
-import { Box, Text } from '@leather-wallet/ui/native';
+import { Box, Text, Theme } from '@leather-wallet/ui/native';
+import { useTheme } from '@shopify/restyle';
 import * as Linking from 'expo-linking';
 import LottieView from 'lottie-react-native';
 
@@ -32,6 +33,7 @@ import { Spinner } from './spinner';
 export function WelcomeScreen() {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [email, setEmail] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const {
     mutate: submitForm,
@@ -146,6 +148,18 @@ export function WelcomeScreen() {
     };
   }, []);
 
+  // Show checkmark for 800ms before changing to the next screen state.
+  useEffect(() => {
+    let timeout: number | undefined;
+    if (isSubmitted) {
+      setShowSuccess(true);
+      timeout = setTimeout(() => {
+        setShowSuccess(false);
+      }, 800);
+    }
+    return () => clearTimeout(timeout);
+  }, [isSubmitted]);
+
   const doesEmailPass = emailRegexp.test(email);
   const isButtonDisabled = !doesEmailPass || isLoading;
 
@@ -173,6 +187,35 @@ export function WelcomeScreen() {
     }
     return 'default';
   }
+
+  const theme = useTheme<Theme>();
+  const buttonBackgroundColor = useSharedValue<undefined | string>(undefined);
+
+  const sendButtonStyle = useAnimatedStyle(() => ({
+    backgroundColor: buttonBackgroundColor.value,
+  }));
+  useEffect(() => {
+    // a manual way to set the background color of the animated button,
+    // so that we can change to a success state with animation
+    switch (getButtonState()) {
+      case 'default': {
+        buttonBackgroundColor.value = theme.colors['base.ink.text-primary'];
+        break;
+      }
+      case 'disabled': {
+        buttonBackgroundColor.value = theme.colors['base.ink.background-secondary'];
+        break;
+      }
+      case 'success': {
+        buttonBackgroundColor.value = withTiming(theme.colors['base.green.background-primary']);
+        break;
+      }
+      case 'outline': {
+        buttonBackgroundColor.value = theme.colors['base.ink.background-primary'];
+        break;
+      }
+    }
+  }, [getButtonState]);
 
   const submittedComponent = (
     <Box backgroundColor="base.ink.background-primary" padding="6">
@@ -227,21 +270,28 @@ export function WelcomeScreen() {
         autoComplete="email"
         autoCapitalize="none"
         keyboardType="email-address"
+        inputMode="email"
+        returnKeyType="done"
+        autoCorrect={false}
+        spellCheck={false}
         mb="6"
         placeholder="Email address"
+        // This input is currently flickering and that is a bug introduced in ios 17.
+        // Refer to this issue in RN: https://github.com/facebook/react-native/issues/39411
       />
-      <Button
+      <AnimatedButton
+        style={sendButtonStyle}
         onPress={() => {
           submitForm(email);
         }}
         mb="7"
-        title={isLoading || isSubmitted ? undefined : 'Submit'}
+        title={isLoading || showSuccess ? undefined : 'Submit'}
         buttonState={getButtonState()}
         disabled={isButtonDisabled}
         Icon={
           isLoading ? (
             <Spinner />
-          ) : isSubmitted ? (
+          ) : showSuccess ? (
             <CheckmarkCircle width={20} height={20} />
           ) : undefined
         }
@@ -293,7 +343,7 @@ export function WelcomeScreen() {
       </SafeAreaView>
       <KeyboardAvoidingView behavior="position">
         <Animated.View style={bottomSheetStyle}>
-          {isSubmitted ? submittedComponent : submissionComponent}
+          {isSubmitted && !showSuccess ? submittedComponent : submissionComponent}
         </Animated.View>
       </KeyboardAvoidingView>
     </Box>

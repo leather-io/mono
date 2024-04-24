@@ -1,5 +1,6 @@
-import { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { Text, Theme, TouchableOpacity } from '@leather-wallet/ui/native';
 import {
@@ -46,75 +47,83 @@ function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState,
   }
 }
 
-export function Button({
-  title,
-  buttonState,
-  Icon,
-  ...rest
-}: Props & {
-  title?: string;
-  buttonState: ButtonState;
-  Icon?: ReactNode;
-}) {
-  const props = useRestyle(composedRestyleFunction, rest);
-
-  const bg = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
-    buttonState,
+export const Button = forwardRef(
+  (
     {
-      default: 'base.ink.text-primary',
-      disabled: 'base.ink.background-secondary',
-      success: 'base.green.background-primary',
-      outline: 'base.ink.background-primary',
-    }
-  );
+      title,
+      buttonState,
+      Icon,
+      ...rest
+    }: Props & {
+      title?: string;
+      buttonState: ButtonState;
+      Icon?: ReactNode;
+    },
+    ref
+  ) => {
+    const props = useRestyle(composedRestyleFunction, rest);
 
-  const textColor = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
-    buttonState,
-    {
-      default: 'base.ink.background-primary',
-      disabled: 'base.ink.component-background-non-interactive',
-      success: 'base.green.action-primary-default',
+    const bg = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
+      buttonState,
+      {
+        default: 'base.ink.text-primary',
+        disabled: 'base.ink.background-secondary',
+        success: 'base.green.background-primary',
+        outline: 'base.ink.background-primary',
+      }
+    );
+
+    const textColor = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
+      buttonState,
+      {
+        default: 'base.ink.background-primary',
+        disabled: 'base.ink.text-non-interactive',
+        success: 'base.green.action-primary-default',
+        outline: 'base.ink.action-primary-default',
+      }
+    );
+
+    const borderColor = whenButtonState<
+      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
+    >(buttonState, {
+      default: undefined,
+      disabled: undefined,
+      success: undefined,
       outline: 'base.ink.action-primary-default',
-    }
-  );
+    });
 
-  const borderColor = whenButtonState<
-    ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
-  >(buttonState, {
-    default: undefined,
-    disabled: undefined,
-    success: undefined,
-    outline: 'base.ink.action-primary-default',
-  });
+    const borderWidth = whenButtonState<number | undefined>(buttonState, {
+      default: undefined,
+      disabled: undefined,
+      success: undefined,
+      outline: 1,
+    });
 
-  const borderWidth = whenButtonState<number | undefined>(buttonState, {
-    default: undefined,
-    disabled: undefined,
-    success: undefined,
-    outline: 1,
-  });
+    const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
 
-  const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
+    const hasGap = !!Icon && !!title;
 
-  const hasAGap = !!Icon && !!title;
+    return (
+      <TouchableOpacity
+        ref={ref}
+        bg={bg}
+        p="3"
+        borderRadius="xs"
+        justifyContent="center"
+        alignItems="center"
+        borderColor={borderColor}
+        borderWidth={borderWidth}
+        flexDirection="row"
+        gap={hasGap ? '2' : undefined}
+        {...props}
+      >
+        {Icon}
+        <Text variant={textVariant} color={textColor}>
+          {title}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+);
 
-  return (
-    <TouchableOpacity
-      bg={bg}
-      p="3"
-      borderRadius="xs"
-      justifyContent="center"
-      alignItems="center"
-      borderColor={borderColor}
-      borderWidth={borderWidth}
-      flexDirection="row"
-      gap={hasAGap ? '2' : undefined}
-      {...props}
-    >
-      {Icon}
-      <Text variant={textVariant} color={textColor}>
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-}
+export const AnimatedButton = Animated.createAnimatedComponent(Button);
