@@ -31,6 +31,7 @@ export interface SignPsbtRequestParams {
 }
 
 export interface SignPsbtResponseBody {
+  txid?: string;
   hex: string;
 }
 
