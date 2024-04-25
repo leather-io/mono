@@ -25,7 +25,8 @@ export interface SignPsbtRequestParams {
 }
 
 export interface SignPsbtResponseBody {
-  txid: string;
+  txid?: string;
+  hex: string;
 }
 
 export type SignPsbtRequest = RpcRequest<'signPsbt', SignPsbtRequestParams>;
