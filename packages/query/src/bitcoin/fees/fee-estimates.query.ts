@@ -1,5 +1,4 @@
-// import { BitcoinNetworkModes } from '@shared/constants';
-import { BitcoinNetworkModes } from '@leather-wallet/constants';
+import { BitcoinNetworkModes } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
 
 import { useLeatherNetwork } from '../../leather-query-provider';

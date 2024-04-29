@@ -1,6 +1,6 @@
 {
-  "name": "@leather-wallet/types",
-  "description": "Types package for Leather",
+  "name": "@leather-wallet/rpc",
+  "description": "RPC types package for Leather",
   "version": "0.2.1",
   "license": "MIT",
   "author": "leather-wallet",
@@ -11,6 +11,9 @@
     "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json",
     "types": "tsc --declaration --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@leather-wallet/models": "workspace:*"
   },
   "devDependencies": {
     "tsup": "8.0.1"

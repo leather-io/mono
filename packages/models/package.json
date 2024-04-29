@@ -1,6 +1,6 @@
 {
   "name": "@leather-wallet/models",
-  "description": "Leather models",
+  "description": "Leather models and types",
   "version": "0.3.0",
   "license": "MIT",
   "type": "module",
@@ -21,8 +21,6 @@
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
-    "@leather-wallet/types": "workspace:*",
-    "@stacks/stacks-blockchain-api-types": "7.8.2",
     "bignumber.js": "9.1.2"
   },
   "devDependencies": {

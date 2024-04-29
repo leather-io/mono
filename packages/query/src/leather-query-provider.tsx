@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useMemo } from 'react';
 
-import { NetworkConfiguration, NetworkModes } from '@leather-wallet/constants';
+import { NetworkConfiguration, NetworkModes } from '@leather-wallet/models';
 import { ChainID } from '@stacks/common';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

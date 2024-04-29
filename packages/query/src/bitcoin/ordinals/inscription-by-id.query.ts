@@ -1,4 +1,4 @@
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/constants';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import axios from 'axios';
 
 import { InscriptionResponseItem } from '../../../types/inscription';

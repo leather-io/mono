@@ -227,6 +227,9 @@ importers:
       '@leather-wallet/constants':
         specifier: workspace:*
         version: link:../constants
+      '@leather-wallet/models':
+        specifier: workspace:*
+        version: link:../models
       '@leather-wallet/utils':
         specifier: workspace:*
         version: link:../utils
@@ -300,9 +303,6 @@ importers:
 
   packages/constants:
     dependencies:
-      '@leather-wallet/models':
-        specifier: workspace:*
-        version: link:../models
       '@stacks/transactions':
         specifier: 6.9.0
         version: 6.9.0
@@ -343,12 +343,6 @@ importers:
 
   packages/models:
     dependencies:
-      '@leather-wallet/types':
-        specifier: workspace:*
-        version: link:../types
-      '@stacks/stacks-blockchain-api-types':
-        specifier: 7.8.2
-        version: 7.8.2
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -395,6 +389,9 @@ importers:
       '@leather-wallet/models':
         specifier: workspace:*
         version: link:../models
+      '@leather-wallet/rpc':
+        specifier: workspace:*
+        version: link:../rpc
       '@leather-wallet/utils':
         specifier: workspace:*
         version: link:../utils
@@ -496,6 +493,16 @@ importers:
         specifier: 0.34.6
         version: 0.34.6(jsdom@22.1.0)
 
+  packages/rpc:
+    dependencies:
+      '@leather-wallet/models':
+        specifier: workspace:*
+        version: link:../models
+    devDependencies:
+      tsup:
+        specifier: 8.0.1
+        version: 8.0.1(typescript@5.3.3)
+
   packages/tokens:
     devDependencies:
       '@leather-wallet/eslint-config':
@@ -516,12 +523,6 @@ importers:
       typescript:
         specifier: 5.3.3
         version: 5.3.3
-
-  packages/types:
-    devDependencies:
-      tsup:
-        specifier: 8.0.1
-        version: 8.0.1(typescript@5.3.3)
 
   packages/ui:
     dependencies:
@@ -694,6 +695,9 @@ importers:
       '@leather-wallet/models':
         specifier: workspace:*
         version: link:../models
+      '@leather-wallet/rpc':
+        specifier: workspace:*
+        version: link:../rpc
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2

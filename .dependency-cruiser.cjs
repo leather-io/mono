@@ -2,14 +2,15 @@
 module.exports = {
   forbidden: [
     {
-      name: 'no-deps-for-types',
+      name: 'type-only-deps-for-models',
       severity: 'error',
-      comment: `@leather-wallet/types should not have any dependencies. It should be a standalone package.`,
+      comment: `Models should have type-only imports.`,
       from: {
-        path: '^packages/types',
+        path: '^packages/models',
       },
       to: {
-        path: '^(?!packages/types)',
+        path: '^(?!packages/models)',
+        dependencyTypesNot: ['type-only'],
       },
     },
     {
@@ -35,7 +36,7 @@ module.exports = {
       },
     },
     {
-      name: 'no-imports-for-constant-package',
+      name: 'no-imports-for-constants-package',
       severity: 'error',
       comment: `Constants should not have any imports.`,
       from: {
@@ -43,8 +44,7 @@ module.exports = {
       },
       to: {
         path: '^(?!packages/constants)',
-        // Here only because the import was there before creating this rule, to
-        // remove
+        // TODO: Remove
         pathNot: ['@stacks/transactions'],
         dependencyTypesNot: ['type-only'],
       },
@@ -264,7 +264,7 @@ module.exports = {
     // includeOnly: ['^packages/'],
 
     /* dependency-cruiser will include modules matching against the focus
-       regular expression in its output, as well as their direct neighbours 
+       regular expression in its output, as well as their direct neighbours
        (dependencies and dependents)
     */
     // focus : '',
@@ -274,7 +274,7 @@ module.exports = {
        module systems it knows of. It's the default because it's the safe option
        It might come at a performance penalty, though.
        moduleSystems: ['amd', 'cjs', 'es6', 'tsd']
-      
+
        As in practice only commonjs ('cjs') and ecmascript modules ('es6')
        are widely used, you can limit the moduleSystems to those.
      */
@@ -282,7 +282,7 @@ module.exports = {
     // moduleSystems: ['cjs','es6'],
 
     /* prefix for links in html and svg output (e.g. 'https://github.com/you/yourrepo/blob/develop/'
-       to open it on your online repo or `vscode://file/${process.cwd()}/` to 
+       to open it on your online repo or `vscode://file/${process.cwd()}/` to
        open it in visual studio code),
      */
     // prefix: `vscode://file/${process.cwd()}/`,
@@ -380,8 +380,8 @@ module.exports = {
          A list of alias fields in package.jsons
          See [this specification](https://github.com/defunctzombie/package-browser-field-spec) and
          the [resolve.alias](https://webpack.js.org/configuration/resolve/#resolvealiasfields)
-         documentation in the webpack docs. 
-         
+         documentation in the webpack docs.
+
          Defaults to an empty array (don't use any alias fields).
        */
       // aliasFields: ["browser"],

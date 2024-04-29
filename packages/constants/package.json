@@ -21,7 +21,6 @@
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
-    "@leather-wallet/models": "workspace:*",
     "@stacks/transactions": "6.9.0"
   },
   "devDependencies": {

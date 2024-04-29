@@ -25,6 +25,7 @@
   "dependencies": {
     "@leather-wallet/constants": "workspace:*",
     "@leather-wallet/models": "workspace:*",
+    "@leather-wallet/rpc": "workspace:*",
     "bignumber.js": "9.1.2"
   },
   "devDependencies": {

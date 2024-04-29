@@ -1,5 +1,5 @@
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/constants';
-import { BitcoinTx, Inscription } from '@leather-wallet/models';
+import { BitcoinTx } from '@leather-wallet/models';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import * as btc from '@scure/btc-signer';
 import { bytesToHex } from '@stacks/common';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -7,9 +7,11 @@ import axios from 'axios';
 
 import { Paginated } from '../../../types/api-types';
 import { AppUseQueryConfig } from '../../query-config';
+import { Inscription } from './inscription.query';
 
 type FetchInscriptionResp = Awaited<ReturnType<ReturnType<typeof fetchInscriptionsByParam>>>;
 
+// TODO: Refactor with new models, include with PR #108
 function fetchInscriptionsByParam() {
   return async (param: string) => {
     const res = await axios.get(`${HIRO_INSCRIPTIONS_API_URL}?${param}`);

@@ -1,7 +1,7 @@
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/constants';
-import { Inscription, SupportedInscription, whenInscriptionType } from '@leather-wallet/models';
+import { whenInscriptionMimeType } from '@leather-wallet/models';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 
-import { useGetInscriptionQuery } from './inscription.query';
+import { Inscription, useGetInscriptionQuery } from './inscription.query';
 
 export function createInscriptionInfoUrl(id: string) {
   return `https://ordinals.hiro.so/inscription/${id}`;
@@ -11,9 +11,10 @@ function createIframePreviewUrl(id: string) {
   return `https://ordinals.com/preview/${id}`;
 }
 
+// TODO: Refactor with new models, include with PR #108
 export function convertInscriptionToSupportedInscriptionType(inscription: Inscription) {
   const title = `Inscription ${inscription.number}`;
-  return whenInscriptionType<SupportedInscription>(inscription.content_type, {
+  return whenInscriptionMimeType(inscription.content_type, {
     audio: () => ({
       infoUrl: createInscriptionInfoUrl(inscription.id),
       src: createIframePreviewUrl(inscription.id),

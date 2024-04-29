@@ -1,4 +1,4 @@
-import { BitcoinNetworkModes } from '@leather-wallet/constants';
+import { BitcoinNetworkModes } from '@leather-wallet/models';
 import * as bitcoinJs from 'bitcoinjs-lib';
 
 // See this PR https://github.com/paulmillr/@scure/btc-signer/pull/15

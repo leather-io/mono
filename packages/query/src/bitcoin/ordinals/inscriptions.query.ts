@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { getTaprootAddress } from '@leather-wallet/bitcoin';
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/constants';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { createNumArrayOfRange } from '@leather-wallet/utils';
 import { ensureArray } from '@leather-wallet/utils';
 import { HDKey } from '@scure/bip32';

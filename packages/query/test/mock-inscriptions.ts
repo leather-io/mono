@@ -1,5 +1,6 @@
-import { Inscription } from '@leather-wallet/models';
+import { Inscription } from '../src/bitcoin/ordinals/inscription.query';
 
+// TODO: Refactor with new models, include with PR #108
 export const mockInscription1: Inscription = {
   address: 'bc1pwrmewwprc8k8l2k63x4advg0nx0jk50xzqnee996lm87mcuza7kq6drg2k',
   addressIndex: 0,
