@@ -1,10 +1,15 @@
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/constants';
-import { Inscription } from '@leather-wallet/models';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { InscriptionResponseItem } from '../../../types/inscription';
 import { AppUseQueryConfig } from '../../query-config';
 import { QueryPrefixes } from '../../query-prefixes';
+
+// TODO: Refactor with new models, include with PR #108
+export interface Inscription extends InscriptionResponseItem {
+  addressIndex: number;
+}
 
 const inscriptionQueryOptions = {
   staleTime: Infinity,

@@ -1,4 +1,4 @@
-import { NetworkModes } from '@leather-wallet/constants';
+import { NetworkModes } from '@leather-wallet/models';
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58check } from '@scure/base';

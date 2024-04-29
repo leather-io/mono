@@ -1,3 +1,5 @@
+import { ValueOf } from '@leather-wallet/models';
+
 import { DefineGetAddressesMethod } from './methods/get-addresses';
 import { DefineGetInfoMethod } from './methods/get-info';
 import { DefineSendTransferMethod } from './methods/send-transfer';
@@ -5,14 +7,12 @@ import { DefineSignMessageMethod } from './methods/sign-message';
 import { DefineSignPsbtMethod } from './methods/sign-psbt';
 import { DefineStxSignMessageMethod } from './methods/stx-sign-message';
 import { ExtractSuccessResponse } from './rpc';
-import { ValueOf } from './utils';
 
 export * from './rpc';
 export * from './methods/get-info';
 export * from './methods/sign-psbt';
 export * from './methods/get-addresses';
 export * from './methods/send-transfer';
-export * from './utils';
 
 export type MethodMap = DefineGetInfoMethod &
   DefineGetAddressesMethod &

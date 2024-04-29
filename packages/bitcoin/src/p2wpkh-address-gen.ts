@@ -1,4 +1,4 @@
-import { BitcoinNetworkModes } from '@leather-wallet/constants';
+import { BitcoinNetworkModes } from '@leather-wallet/models';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 

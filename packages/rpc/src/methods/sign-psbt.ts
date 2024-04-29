@@ -1,6 +1,9 @@
+import { DefaultNetworkConfigurations } from '@leather-wallet/models';
+
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
 
 /**
+ * DEFAULT       -- all inputs, all outputs
  * ALL           -- all inputs, all outputs
  * NONE          -- all inputs, no outputs
  * SINGLE        -- all inputs, one output of the same index
@@ -9,6 +12,7 @@ import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
  * SINGLE        -- one inputs, one output of the same index
  */
 export enum SignatureHash {
+  DEFAULT = 0x00,
   ALL = 0x01,
   NONE = 0x02,
   SINGLE = 0x03,
@@ -20,12 +24,14 @@ export enum SignatureHash {
 export interface SignPsbtRequestParams {
   account?: number;
   allowedSighash?: SignatureHash[];
+  broadcast: boolean;
   hex: string;
+  network: DefaultNetworkConfigurations;
   signAtIndex?: number | number[];
 }
 
 export interface SignPsbtResponseBody {
-  txid: string;
+  hex: string;
 }
 
 export type SignPsbtRequest = RpcRequest<'signPsbt', SignPsbtRequestParams>;

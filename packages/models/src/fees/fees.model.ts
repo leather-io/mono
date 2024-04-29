@@ -1,4 +1,4 @@
-import { Blockchains } from '../blockchain.model';
+import { Blockchains } from '../types';
 import { StacksFeeEstimate } from './stacks-fees.model';
 
 export enum FeeTypes {
