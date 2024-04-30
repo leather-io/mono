@@ -4,6 +4,7 @@ import { DefineSendTransferMethod } from './methods/send-transfer';
 import { DefineSignMessageMethod } from './methods/sign-message';
 import { DefineSignPsbtMethod } from './methods/sign-psbt';
 import { DefineStxSignMessageMethod } from './methods/stx-sign-message';
+import { ExtractSuccessResponse } from './rpc';
 import { ValueOf } from './utils';
 
 export * from './rpc';
@@ -27,7 +28,11 @@ export type RpcResponses = ValueOf<MethodMap>['response'];
 export type MethodNames = keyof MethodMap;
 
 export interface RequestFn {
-  <T extends MethodNames>(arg: T, params?: object | string[]): Promise<MethodMap[T]['response']>;
+  <T extends MethodNames>(
+    arg: T,
+    params?: object | string[]
+    // `Promise` throws if unsucessful, so here we extract the successful response
+  ): Promise<ExtractSuccessResponse<MethodMap[T]['response']>>;
 }
 
 export interface ListenFn {
