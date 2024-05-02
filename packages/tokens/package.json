@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": "Leather.io contact@leather.io",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --ignore-path ../../.eslintignore",
     "prepublish": "pnpm ts:build",
     "ts:build": "tsc --build",
     "ts:build:watch": "tsc --build --watch --preserveWatchOutput",

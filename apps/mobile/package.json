@@ -5,10 +5,10 @@
   "scripts": {
     "android": "expo start --android",
     "eas-build-post-install": "cd ../.. && pnpm ts:build",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "ios": "expo start --ios",
-    "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
-    "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint . --ignore-path ../../.eslintignore",
+    "lint:fix": "pnpm lint --fix --ignore-path ../../.eslintignore",
     "start": "expo start",
     "storybook": "cross-env STORYBOOK_ENABLED='true' expo start",
     "storybook-generate": "sb-rn-get-stories -js",
