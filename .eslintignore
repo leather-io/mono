@@ -5,3 +5,8 @@ pnpm-lock.yaml
 .commitlintrc.js
 .prettierrc.js
 .eslintrc.js
+dist/
+dist-native/
+dist-all/
+dist-web/
+.turbo/

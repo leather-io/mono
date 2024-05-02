@@ -10,7 +10,7 @@ const normalizedStories = [
     files: '**/*.native.stories.?(ts|tsx|js|jsx)',
     importPathMatcher:
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.native.stories\.(?:ts|tsx|js|jsx)?)$/,
-    // @ts-ignore
+    // @ts-expect-error: Property 'context' does not exist on type 'NodeRequire'
     req: require.context(
       '../components',
       true,
@@ -19,7 +19,7 @@ const normalizedStories = [
   },
 ];
 
-// @ts-ignore
+// @ts-expect-error: Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 global.STORIES = normalizedStories;
 
 export const view = start({

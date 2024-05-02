@@ -1,3 +1,10 @@
 node_modules/
 pnpm-lock.yaml
 .turbo/
+dist/
+dist-native/
+dist-all/
+dist-web/
+leather-styles/
+package.json
+CHANGELOG.md

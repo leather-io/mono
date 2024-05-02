@@ -6,9 +6,9 @@
   "type": "module",
   "author": "Leather.io contact@leather.io",
   "scripts": {
-    "format": "prettier . --write",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "lint": "eslint . --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "ts:build": "tsc --build",
     "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
