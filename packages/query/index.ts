@@ -23,3 +23,4 @@ export * from './src/bitcoin/stamps/stamps-by-address.query';
 export * from './src/bitcoin/transaction/transaction.query';
 export * from './src/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 export * from './src/bitcoin/transaction/use-check-utxos';
+export * from './src/leather-query-provider';

@@ -1,11 +1,12 @@
 {
   "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
   "include": ["**/*", ".*.ts"],
-  "exclude": [],
+  "exclude": ["./dist/"],
   "compilerOptions": {
     "baseUrl": "src",
     "module": "es2022",
     "moduleResolution": "Bundler",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "outDir": "./dist"
   }
 }

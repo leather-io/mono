@@ -1,4 +1,4 @@
-import type { Money } from '@leather-wallet/models/src/money.model';
+import type { Money } from '@leather-wallet/models';
 import { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
 
 type SelectedKeys =
