@@ -40,7 +40,6 @@
     "@tanstack/react-query-persist-client": "4.35.7",
     "axios": "1.6.7",
     "bignumber.js": "9.1.2",
-    "react": "18.2.0",
     "yup": "1.3.3"
   },
   "devDependencies": {
@@ -57,11 +56,20 @@
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "keywords": [
     "leather",
     "leather wallet",
     "query"
   ],
+  "peerDependencies": {
+    "react": "*"
+  },
   "prettier": "@leather-wallet/prettier-config",
   "publishConfig": {
     "access": "public"

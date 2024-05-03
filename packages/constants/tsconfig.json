@@ -1,5 +1,8 @@
 {
   "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
   "include": ["**/*", ".*.ts"],
-  "exclude": []
+  "exclude": ["./dist/"],
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
 }
