@@ -1,4 +1,4 @@
-# @leather-wallet/queries
+# App API cache (server-side state)
 
 We use `React Query` to fetch APIs and to manage the cache of the responses.
 
@@ -9,15 +9,20 @@ Code practices:
 3. Use selectors to transform the data before usage. Example:
 
 ```jsx
-export const useTodosQuery = select =>
-  useQuery({
+export function useTodosQuery(select) {
+  return useQuery({
     queryKey: ['todos'],
     queryFn: fetchTodos,
     select,
   });
+}
 
-export const useTodosCount = () => useTodosQuery(data => data.length);
-export const useTodo = id => useTodosQuery(data => data.find(todo => todo.id === id));
+export function useTodosCount() {
+  return useTodosQuery(data => data.length);
+}
+export function useTodo(id) {
+  return useTodosQuery(data => data.find(todo => todo.id === id));
+}
 ```
 
 4. Keep api layer separate from the queries (queryFn separate from useQueries). Example:

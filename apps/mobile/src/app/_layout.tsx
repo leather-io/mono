@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StatusBar } from 'react-native';
 
 import { queryClient } from '@/queries/query';
+import { usePersistedStore, useProtectedStore } from '@/state';
 import { Box, ThemeProvider, useLoadFonts } from '@leather-wallet/ui/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
@@ -21,13 +22,16 @@ export const unstable_settings = {
 };
 
 function RootLayout() {
+  const hasProtectedStoreHydrated = useProtectedStore(state => state._hasHydrated);
+  const hasPersistedStoreHydrated = usePersistedStore(state => state._hasHydrated);
+
   const { fontsLoaded } = useLoadFonts({
     onLoaded() {
       void SplashScreen.hideAsync();
     },
   });
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !hasProtectedStoreHydrated || !hasPersistedStoreHydrated) {
     return null;
   }
 

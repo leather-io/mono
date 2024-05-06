@@ -2,7 +2,7 @@
   "extends": "../../packages/tsconfig-config/tsconfig.base",
   "compilerOptions": {
     "jsx": "react-native",
-    "lib": ["es2017", "DOM"],
+    "lib": ["es2022", "DOM"],
     "module": "es2022",
     "moduleResolution": "Bundler",
     "allowJs": false,

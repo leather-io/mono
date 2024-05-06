@@ -6,6 +6,11 @@ settings:
 
 packageExtensionsChecksum: b95b01d47773190b8a7b9f89a46ca31e
 
+patchedDependencies:
+  zustand@4.5.2:
+    hash: g3bvddhn726lqugkadc5hylsxa
+    path: patches/zustand@4.5.2.patch
+
 importers:
 
   .:
@@ -68,6 +73,9 @@ importers:
       '@leather-wallet/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@react-native-async-storage/async-storage':
+        specifier: 1.22.0
+        version: 1.22.0(react-native@0.73.6)
       '@react-native/assets-registry':
         specifier: 0.73.1
         version: 0.73.1
@@ -110,6 +118,9 @@ importers:
       expo-router:
         specifier: 3.4.8
         version: 3.4.8(@babel/core@7.23.9)(@babel/preset-env@7.24.4)(expo-constants@15.4.5)(expo-linking@6.2.2)(expo-modules-autolinking@1.10.3)(expo-status-bar@1.11.1)(expo@50.0.15)(react-dom@18.2.0)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react@18.2.0)
+      expo-secure-store:
+        specifier: 12.8.1
+        version: 12.8.1(expo@50.0.15)
       expo-splash-screen:
         specifier: 0.26.4
         version: 0.26.4(expo-modules-autolinking@1.10.3)(expo@50.0.15)
@@ -122,6 +133,12 @@ importers:
       expo-web-browser:
         specifier: 12.8.2
         version: 12.8.2(expo@50.0.15)
+      immer:
+        specifier: 10.1.1
+        version: 10.1.1
+      lodash.merge:
+        specifier: 4.6.2
+        version: 4.6.2
       lottie-react-native:
         specifier: 6.5.1
         version: 6.5.1(react-native@0.73.6)(react@18.2.0)
@@ -161,6 +178,9 @@ importers:
       react-native-web:
         specifier: 0.19.6
         version: 0.19.6(react-dom@18.2.0)(react@18.2.0)
+      zustand:
+        specifier: 4.5.2
+        version: 4.5.2(patch_hash=g3bvddhn726lqugkadc5hylsxa)(@types/react@18.2.64)(immer@10.1.1)(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: 7.23.9
@@ -171,6 +191,9 @@ importers:
       '@leather-wallet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@types/lodash.merge':
+        specifier: 4.6.9
+        version: 4.6.9
       '@types/react':
         specifier: 18.2.64
         version: 18.2.64
@@ -5174,7 +5197,6 @@ packages:
     dependencies:
       merge-options: 3.0.4
       react-native: 0.73.6(@babel/core@7.23.9)(@babel/preset-env@7.24.4)(react@18.2.0)
-    dev: true
 
   /@react-native-community/cli-clean@12.3.6:
     resolution: {integrity: sha512-gUU29ep8xM0BbnZjwz9MyID74KKwutq9x5iv4BCr2im6nly4UMf1B1D+V225wR7VcDGzbgWjaezsJShLLhC5ig==}
@@ -7905,6 +7927,12 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
+  /@types/lodash.merge@4.6.9:
+    resolution: {integrity: sha512-23sHDPmzd59kUgWyKGiOMO2Qb9YtqRO/x4IhkgNUiPQ1+5MUVqi6bCZeq9nBJ17msjIMbEIO5u+XW4Kz6aGUhQ==}
+    dependencies:
+      '@types/lodash': 4.17.0
+    dev: true
+
   /@types/lodash@4.17.0:
     resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
     dev: true
@@ -7964,7 +7992,6 @@ packages:
 
   /@types/prop-types@15.7.12:
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
-    dev: true
 
   /@types/qs@6.9.14:
     resolution: {integrity: sha512-5khscbd3SwWMhFqylJBLQ0zIu7c1K6Vz0uBIt915BI3zV0q1nfjRQD3RqSBcPaO6PHEF4ov/t9y89fSiyThlPA==}
@@ -7992,7 +8019,6 @@ packages:
       '@types/prop-types': 15.7.12
       '@types/scheduler': 0.23.0
       csstype: 3.1.3
-    dev: true
 
   /@types/resolve@1.20.6:
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
@@ -8000,7 +8026,6 @@ packages:
 
   /@types/scheduler@0.23.0:
     resolution: {integrity: sha512-YIoDCTH3Af6XM5VuwGG/QL/CJqga1Zm3NkU3HZ4ZHK2fRMPYP1VczsTUqtsf43PH/iJNVlPHAo2oWX7BSdB2Hw==}
-    dev: true
 
   /@types/semver@7.5.8:
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -10296,7 +10321,6 @@ packages:
 
   /csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
-    dev: true
 
   /csv-generate@3.4.3:
     resolution: {integrity: sha512-w/T+rqR0vwvHqWs/1ZyMDWtHHSJaN06klRqJXBEpDJaM/+dZkso0OKh1VcuuYvK3XM53KysVNq8Ko/epCK8wOw==}
@@ -11722,6 +11746,14 @@ packages:
       - supports-color
       - utf-8-validate
 
+  /expo-secure-store@12.8.1(expo@50.0.15):
+    resolution: {integrity: sha512-Ju3jmkHby4w7rIzdYAt9kQyQ7HhHJ0qRaiQOInknhOLIltftHjEgF4I1UmzKc7P5RCfGNmVbEH729Pncp/sHXQ==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 50.0.15(@babel/core@7.23.9)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6)(@babel/plugin-proposal-optional-chaining@7.21.0)(@babel/plugin-transform-arrow-functions@7.24.1)(@babel/plugin-transform-shorthand-properties@7.24.1)(@babel/plugin-transform-template-literals@7.24.1)(@babel/preset-env@7.24.4)(@react-native/babel-preset@0.73.21)(expo-constants@15.4.5)(expo-linking@6.2.2)(expo-status-bar@1.11.1)(react-dom@18.2.0)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react-native@0.73.6)(react@18.2.0)
+    dev: false
+
   /expo-splash-screen@0.26.4(expo-modules-autolinking@1.10.3)(expo@50.0.15):
     resolution: {integrity: sha512-2DwofTQ0FFQCsvDysm/msENsbyNsJiAJwK3qK/oXeizECAPqD7bK19J4z9kuEbr7ORPX9MLnTQYKl6kmX3keUg==}
     peerDependencies:
@@ -12862,6 +12894,10 @@ packages:
     dependencies:
       queue: 6.0.2
 
+  /immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
+    dev: false
+
   /import-fresh@2.0.0:
     resolution: {integrity: sha512-eZ5H8rcgYazHbKC3PG4ClHNykCSxtAhxSSEM+2mb+7evD2CKF5V7c0dNum7AdpDh0ZdICwZY9sRSn8f+KH96sg==}
     engines: {node: '>=4'}
@@ -13162,7 +13198,6 @@ packages:
   /is-plain-obj@2.1.0:
     resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
     engines: {node: '>=8'}
-    dev: true
 
   /is-plain-object@2.0.4:
     resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
@@ -14300,7 +14335,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       is-plain-obj: 2.1.0
-    dev: true
 
   /merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -19480,3 +19514,25 @@ packages:
       toposort: 2.0.2
       type-fest: 2.19.0
     dev: false
+
+  /zustand@4.5.2(patch_hash=g3bvddhn726lqugkadc5hylsxa)(@types/react@18.2.64)(immer@10.1.1)(react@18.2.0):
+    resolution: {integrity: sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0.6'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.64
+      immer: 10.1.1
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+    patched: true
