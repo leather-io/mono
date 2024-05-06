@@ -1,0 +1,103 @@
+diff --git a/package.json b/package.json
+index fde7ad3461ba6ac5d4359b0a3b919a206a06804e..f1438a0c4bdc0f908214c870f2b0561fce6d0280 100644
+--- a/package.json
++++ b/package.json
+@@ -21,6 +21,10 @@
+   "exports": {
+     "./package.json": "./package.json",
+     ".": {
++      "require": {
++        "types": "./index.d.ts",
++        "default": "./index.js"
++      },
+       "import": {
+         "types": "./esm/index.d.mts",
+         "default": "./esm/index.mjs"
+@@ -35,6 +39,10 @@
+       }
+     },
+     "./vanilla": {
++      "require": {
++        "types": "./vanilla.d.ts",
++        "default": "./vanilla.js"
++      },
+       "import": {
+         "types": "./esm/vanilla.d.mts",
+         "default": "./esm/vanilla.mjs"
+@@ -49,6 +57,10 @@
+       }
+     },
+     "./middleware": {
++      "require": {
++        "types": "./middleware.d.ts",
++        "default": "./middleware.js"
++      },
+       "import": {
+         "types": "./esm/middleware.d.mts",
+         "default": "./esm/middleware.mjs"
+@@ -63,6 +75,10 @@
+       }
+     },
+     "./middleware/immer": {
++      "require": {
++        "types": "./middleware/immer.d.ts",
++        "default": "./middleware/immer.js"
++      },
+       "import": {
+         "types": "./esm/middleware/immer.d.mts",
+         "default": "./esm/middleware/immer.mjs"
+@@ -77,6 +93,10 @@
+       }
+     },
+     "./shallow": {
++      "require": {
++        "types": "./shallow.d.ts",
++        "default": "./shallow.js"
++      },
+       "import": {
+         "types": "./esm/shallow.d.mts",
+         "default": "./esm/shallow.mjs"
+@@ -91,6 +111,10 @@
+       }
+     },
+     "./vanilla/shallow": {
++      "require": {
++        "types": "./vanilla/shallow.d.ts",
++        "default": "./vanilla/shallow.js"
++      },
+       "import": {
+         "types": "./esm/vanilla/shallow.d.mts",
+         "default": "./esm/vanilla/shallow.mjs"
+@@ -105,6 +129,10 @@
+       }
+     },
+     "./react/shallow": {
++      "require": {
++        "types": "./react/shallow.d.ts",
++        "default": "./react/shallow.js"
++      },
+       "import": {
+         "types": "./esm/react/shallow.d.mts",
+         "default": "./esm/react/shallow.mjs"
+@@ -119,6 +147,10 @@
+       }
+     },
+     "./traditional": {
++      "require": {
++        "types": "./traditional.d.ts",
++        "default": "./traditional.js"
++      },
+       "import": {
+         "types": "./esm/traditional.d.mts",
+         "default": "./esm/traditional.mjs"
+@@ -133,6 +165,10 @@
+       }
+     },
+     "./context": {
++      "require": {
++        "types": "./context.d.ts",
++        "default": "./context.js"
++      },
+       "import": {
+         "types": "./esm/context.d.mts",
+         "default": "./esm/context.mjs"
