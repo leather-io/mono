@@ -1,12 +1,12 @@
 import type { BitcoinTx } from '@leather-wallet/models';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
 
 import { AppUseQueryConfig } from '../../query-config';
 import { useBitcoinClient } from '../bitcoin-client';
 
 const staleTime = 10 * 1000;
 
-const queryOptions = { staleTime, refetchInterval: staleTime };
+const queryOptions = { staleTime, cacheTime: Infinity, refetchInterval: staleTime };
 
 export function useGetBitcoinTransactionsByAddressQuery<T extends unknown = BitcoinTx[]>(
   address: string,
@@ -17,12 +17,11 @@ export function useGetBitcoinTransactionsByAddressQuery<T extends unknown = Bitc
   return useQuery({
     enabled: !!address,
     queryKey: ['btc-txs-by-address', address],
-    queryFn: () => client.addressApi.getTransactionsByAddress(address),
+    queryFn: async ({ signal }) => client.addressApi.getTransactionsByAddress(address, signal),
     ...queryOptions,
     ...options,
   });
 }
-
 export function useGetBitcoinTransactionsByAddressesQuery<T extends unknown = BitcoinTx[]>(
   addresses: string[],
   options?: AppUseQueryConfig<BitcoinTx[], T>
@@ -34,7 +33,8 @@ export function useGetBitcoinTransactionsByAddressesQuery<T extends unknown = Bi
       return {
         enabled: !!address,
         queryKey: ['btc-txs-by-address', address],
-        queryFn: () => client.addressApi.getTransactionsByAddress(address),
+        queryFn: async ({ signal }: QueryFunctionContext<string[], any>) =>
+          client.addressApi.getTransactionsByAddress(address, signal),
         ...queryOptions,
         ...options,
       };

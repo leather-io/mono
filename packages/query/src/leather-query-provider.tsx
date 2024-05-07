@@ -4,28 +4,47 @@ import { NetworkConfiguration, NetworkModes } from '@leather-wallet/constants';
 import { ChainID } from '@stacks/common';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+export interface LeatherEnvironment {
+  env: string;
+  github: {
+    org: string;
+    repo: string;
+    branchName?: string;
+  };
+}
+
 const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 
-const LeatherEnvironmentContext = createContext<string | null>(null);
+const LeatherEnvironmentContext = createContext<LeatherEnvironment | null>(null);
 
-export function useLeatherEnv() {
+export function useLeatherGithub() {
   const leatherEnv = useContext(LeatherEnvironmentContext);
 
   if (!leatherEnv) {
     throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
   }
 
-  return leatherEnv;
+  return leatherEnv.github;
+}
+
+export function useLeatherEnv() {
+  const leatherEnv = useContext(LeatherEnvironmentContext);
+
+  if (!leatherEnv || !leatherEnv.env) {
+    throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
+  }
+
+  return leatherEnv.env;
 }
 
 export function useIsLeatherTestingEnv() {
   const leatherEnv = useContext(LeatherEnvironmentContext);
 
-  if (!leatherEnv) {
+  if (!leatherEnv || !leatherEnv.env) {
     throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
   }
 
-  return leatherEnv === 'testing';
+  return leatherEnv.env === 'testing';
 }
 
 export function useLeatherNetwork() {
@@ -51,16 +70,16 @@ export function LeatherQueryProvider({
   client,
   network,
   children,
-  env,
+  environment,
 }: {
   client: QueryClient;
   network: NetworkConfiguration;
   children: ReactNode;
-  env: string;
+  environment: LeatherEnvironment;
 }) {
   return (
     <LeatherNetworkContext.Provider value={network}>
-      <LeatherEnvironmentContext.Provider value={env}>
+      <LeatherEnvironmentContext.Provider value={environment}>
         <QueryClientProvider client={client}>{children}</QueryClientProvider>
       </LeatherEnvironmentContext.Provider>
     </LeatherNetworkContext.Provider>

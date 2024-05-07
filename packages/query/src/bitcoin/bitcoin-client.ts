@@ -1,9 +1,14 @@
-import { HIRO_API_BASE_URL_MAINNET } from '@leather-wallet/constants';
+import {
+  BESTINSLOT_API_BASE_URL_MAINNET,
+  BESTINSLOT_API_BASE_URL_TESTNET,
+  type BitcoinNetworkModes,
+} from '@leather-wallet/constants';
+import type { BitcoinTx, MarketData, Money } from '@leather-wallet/models';
 import axios from 'axios';
 
-import type { Paginated } from '../../types/api-types';
 import { UtxoResponseItem } from '../../types/utxo';
 import { useLeatherNetwork } from '../leather-query-provider';
+import { getBlockstreamRatelimiter } from './blockstream-rate-limiter';
 
 interface BestinslotInscription {
   inscription_name: string | null;
@@ -26,30 +31,27 @@ interface BestinslotInscription {
   byte_size: number;
 }
 
-export interface BestinslotInscriptionByIdResponse {
+export interface BestinSlotInscriptionByIdResponse {
   data: BestinslotInscription;
   block_height: number;
 }
 
-export interface BestinslotInscriptionsByTxIdResponse {
+export interface BestinSlotInscriptionsByTxIdResponse {
   data: { inscription_id: string }[];
   blockHeight: number;
 }
 
-interface Brc20TokenResponse {
+/* BRC-20 */
+export interface Brc20Balance {
   ticker: string;
   overall_balance: string;
   available_balance: string;
   transferrable_balance: string;
   image_url: string | null;
+  min_listed_unit_price: number | null;
 }
 
-export interface Brc20Token extends Brc20TokenResponse {
-  decimals: number;
-  holderAddress: string;
-}
-
-interface Brc20TokenTicker {
+export interface Brc20TickerInfo {
   id: string;
   number: number;
   block_height: number;
@@ -64,94 +66,233 @@ interface Brc20TokenTicker {
   tx_count: number;
 }
 
-interface Brc20TickerResponse {
-  data: Brc20TokenTicker;
+interface Brc20TickerInfoResponse {
   block_height: number;
+  data: Brc20TickerInfo;
 }
 
-interface BestinslotBrc20AddressBalanceResponse {
+interface Brc20WalletBalancesResponse {
   block_height: number;
-  data: Brc20TokenResponse[];
+  data: Brc20Balance[];
 }
 
-function BestinslotApi() {
-  const url = 'https://api.bestinslot.xyz/v3';
+export interface Brc20Token {
+  balance: Money | null;
+  holderAddress: string;
+  marketData: MarketData | null;
+  tokenData: Brc20Balance & Brc20TickerInfo;
+}
+
+/* RUNES */
+export interface RuneBalance {
+  pkscript: string;
+  rune_id: string;
+  rune_name: string;
+  spaced_rune_name: string;
+  total_balance: string;
+  wallet_addr: string;
+}
+
+interface RunesWalletBalancesResponse {
+  block_height: number;
+  data: RuneBalance[];
+}
+
+export interface RuneTickerInfo {
+  rune_id: string;
+  rune_number: string;
+  rune_name: string;
+  spaced_rune_name: string;
+  symbol: string;
+  decimals: number;
+  per_mint_amount: string;
+  mint_cnt: string;
+  mint_cnt_limit: string;
+  premined_supply: string;
+  total_minted_supply: string;
+  burned_supply: string;
+  circulating_supply: string;
+  mint_progress: number;
+  mint_start_block: number | null;
+  mint_end_block: number | null;
+  genesis_block: number;
+  deploy_ts: string;
+  deploy_txid: string;
+  auto_upgrade: boolean;
+  holder_count: number;
+  event_count: number;
+  mintable: boolean;
+}
+interface RunesTickerInfoResponse {
+  block_height: number;
+  data: RuneTickerInfo;
+}
+
+export interface RuneToken {
+  balance: Money;
+  tokenData: RuneBalance & RuneTickerInfo;
+}
+
+export interface RunesOutputsByAddress {
+  pkscript: string;
+  wallet_addr: string;
+  output: string;
+  rune_ids: string[];
+  balances: number[];
+  rune_names: string[];
+  spaced_rune_names: string[];
+}
+
+interface RunesOutputsByAddressArgs {
+  address: string;
+  network?: BitcoinNetworkModes;
+  sortBy?: 'output';
+  order?: 'asc' | 'desc';
+  offset?: number;
+  count?: number;
+}
+
+interface RunesOutputsByAddressResponse {
+  block_height: number;
+  data: RunesOutputsByAddress[];
+}
+
+function BestinSlotApi() {
+  const url = BESTINSLOT_API_BASE_URL_MAINNET;
+  const testnetUrl = BESTINSLOT_API_BASE_URL_TESTNET;
+
   const defaultOptions = {
     headers: {
       'x-api-key': `${process.env.BESTINSLOT_API_KEY}`,
     },
   };
+
+  async function getInscriptionsByTransactionId(id: string) {
+    const resp = await axios.get<BestinSlotInscriptionsByTxIdResponse>(
+      `${url}/inscription/in_transaction?tx_id=${id}`,
+      {
+        ...defaultOptions,
+      }
+    );
+
+    return resp.data;
+  }
+
+  async function getInscriptionById(id: string) {
+    const resp = await axios.get<BestinSlotInscriptionByIdResponse>(
+      `${url}/inscription/single_info_id?inscription_id=${id}`,
+      {
+        ...defaultOptions,
+      }
+    );
+    return resp.data;
+  }
+
+  /* BRC-20 */
+  async function getBrc20Balances(address: string) {
+    const resp = await axios.get<Brc20WalletBalancesResponse>(
+      `${url}/brc20/wallet_balances?address=${address}`,
+      {
+        ...defaultOptions,
+      }
+    );
+    return resp.data;
+  }
+
+  async function getBrc20TickerInfo(ticker: string) {
+    const resp = await axios.get<Brc20TickerInfoResponse>(
+      `${url}/brc20/ticker_info?ticker=${ticker}`,
+      {
+        ...defaultOptions,
+      }
+    );
+    return resp.data;
+  }
+
+  /* RUNES */
+  async function getRunesWalletBalances(address: string, network: BitcoinNetworkModes) {
+    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+    const resp = await axios.get<RunesWalletBalancesResponse>(
+      `${baseUrl}/runes/wallet_balances?address=${address}`,
+      { ...defaultOptions }
+    );
+    return resp.data.data;
+  }
+
+  async function getRunesTickerInfo(runeName: string, network: BitcoinNetworkModes) {
+    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+    const resp = await axios.get<RunesTickerInfoResponse>(
+      `${baseUrl}/runes/ticker_info?rune_name=${runeName}`,
+      { ...defaultOptions }
+    );
+    return resp.data.data;
+  }
+
+  async function getRunesBatchOutputsInfo(outputs: string[], network: BitcoinNetworkModes) {
+    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+
+    const resp = await axios.post<RunesOutputsByAddressResponse>(
+      `${baseUrl}/runes/batch_output_info`,
+      { queries: outputs },
+      { ...defaultOptions }
+    );
+    return resp.data.data;
+  }
+
+  /**
+   * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-runes-and-bitmap-v3-api-mainnet+testnet/runes#runes-wallet-valid-outputs
+   */
+  async function getRunesOutputsByAddress({
+    address,
+    network = 'mainnet',
+    sortBy = 'output',
+    order = 'asc',
+    offset = 0,
+    count = 100,
+  }: RunesOutputsByAddressArgs) {
+    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+    const queryParams = new URLSearchParams({
+      address,
+      sort_by: sortBy,
+      order,
+      offset: offset.toString(),
+      count: count.toString(),
+    });
+
+    const resp = await axios.get<RunesOutputsByAddressResponse>(
+      `${baseUrl}/runes/wallet_valid_outputs?${queryParams}`,
+      { ...defaultOptions }
+    );
+    return resp.data.data;
+  }
+
   return {
-    async getInscriptionsByTransactionId(id: string) {
-      const resp = await axios.get<BestinslotInscriptionsByTxIdResponse>(
-        `${url}/inscription/in_transaction?tx_id=${id}`,
-        {
-          ...defaultOptions,
-        }
-      );
-
-      return resp.data;
-    },
-
-    async getInscriptionById(id: string) {
-      const resp = await axios.get<BestinslotInscriptionByIdResponse>(
-        `${url}/inscription/single_info_id?inscription_id=${id}`,
-        {
-          ...defaultOptions,
-        }
-      );
-      return resp.data;
-    },
-
-    async getBrc20Balance(address: string) {
-      const resp = await axios.get<BestinslotBrc20AddressBalanceResponse>(
-        `${url}/brc20/wallet_balances?address=${address}`,
-        {
-          ...defaultOptions,
-        }
-      );
-      return resp.data;
-    },
-
-    async getBrc20TickerData(ticker: string) {
-      const resp = await axios.get<Brc20TickerResponse>(
-        `${url}/brc20/ticker_info?ticker=${ticker}`,
-        {
-          ...defaultOptions,
-        }
-      );
-      return resp.data;
-    },
-  };
-}
-
-function HiroApi() {
-  const url = HIRO_API_BASE_URL_MAINNET;
-  return {
-    async getBrc20Balance(address: string) {
-      const resp = await axios.get<Paginated<Brc20TokenResponse[]>>(
-        `${url}/ordinals/v1/brc-20/balances/${address}`
-      );
-      return resp.data;
-    },
-
-    async getBrc20TickerData(ticker: string) {
-      const resp = await axios.get<Paginated<Brc20TokenTicker[]>>(
-        `${url}/ordinals/v1/brc-20/tokens?ticker=${ticker}`
-      );
-      return resp.data;
-    },
+    getInscriptionsByTransactionId,
+    getInscriptionById,
+    getBrc20Balances,
+    getBrc20TickerInfo,
+    getRunesWalletBalances,
+    getRunesTickerInfo,
+    getRunesBatchOutputsInfo,
+    getRunesOutputsByAddress,
   };
 }
 
 function AddressApi(basePath: string) {
+  const rateLimiter = getBlockstreamRatelimiter(basePath);
   return {
-    async getTransactionsByAddress(address: string) {
-      const resp = await axios.get(`${basePath}/address/${address}/txs`);
+    async getTransactionsByAddress(address: string, signal?: AbortSignal) {
+      const resp = await rateLimiter.add(
+        () => axios.get<BitcoinTx[]>(`${basePath}/address/${address}/txs`),
+        { signal, throwOnTimeout: true }
+      );
       return resp.data;
     },
-    async getUtxosByAddress(address: string): Promise<UtxoResponseItem[]> {
-      const resp = await axios.get<UtxoResponseItem[]>(`${basePath}/address/${address}/utxo`);
+    async getUtxosByAddress(address: string, signal?: AbortSignal): Promise<UtxoResponseItem[]> {
+      const resp = await rateLimiter.add(
+        () => axios.get<UtxoResponseItem[]>(`${basePath}/address/${address}/utxo`),
+        { signal, priority: 1, throwOnTimeout: true }
+      );
       return resp.data.sort((a, b) => a.vout - b.vout);
     },
   };
@@ -249,17 +390,15 @@ export interface BitcoinClient {
   addressApi: ReturnType<typeof AddressApi>;
   feeEstimatesApi: ReturnType<typeof FeeEstimatesApi>;
   transactionsApi: ReturnType<typeof TransactionsApi>;
-  BestinslotApi: ReturnType<typeof BestinslotApi>;
-  HiroApi: ReturnType<typeof HiroApi>;
+  BestinSlotApi: ReturnType<typeof BestinSlotApi>;
 }
 
-function bitcoinClient(basePath: string): BitcoinClient {
+export function bitcoinClient(basePath: string): BitcoinClient {
   return {
     addressApi: AddressApi(basePath),
     feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
-    BestinslotApi: BestinslotApi(),
-    HiroApi: HiroApi(),
+    BestinSlotApi: BestinSlotApi(),
   };
 }
 

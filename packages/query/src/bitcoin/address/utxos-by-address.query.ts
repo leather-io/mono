@@ -22,16 +22,17 @@ export function useGetUtxosByAddressQuery<T extends unknown = UtxoResponseItem[]
   options?: AppUseQueryConfig<UtxoResponseItem[], T>
 ) {
   const client = useBitcoinClient();
+
   return useQuery({
     enabled: !!address,
     queryKey: ['btc-utxos-by-address', address],
-    queryFn: () => client.addressApi.getUtxosByAddress(address),
+    queryFn: async ({ signal }) => client.addressApi.getUtxosByAddress(address, signal),
     ...queryOptions,
     ...options,
   });
 }
 
-const stopSearchAfterNumberAddressesWithoutUtxos = 20;
+const stopSearchAfterNumberAddressesWithoutUtxos = 5;
 
 /**
  * Returns all utxos for the user's current taproot account. The search for

@@ -5,7 +5,6 @@ import { createNumArrayOfRange } from '@leather-wallet/utils';
 import { P2TROut } from '@scure/btc-signer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-// import { useAnalytics } from '@app/common/hooks/analytics/use-analytics';
 import { useLeatherNetwork } from '../../../leather-query-provider';
 import { QueryPrefixes } from '../../../query-prefixes';
 import { Brc20Token, useBitcoinClient } from '../../bitcoin-client';
@@ -22,7 +21,6 @@ export function useGetBrc20TokensQuery({
 }) {
   const network = useLeatherNetwork();
   const currentNsBitcoinAddress = nativeSegwitAddress;
-  // const analytics = useAnalytics();
   const client = useBitcoinClient();
 
   if (!createTaprootSigner) throw new Error('No signer');
@@ -53,19 +51,21 @@ export function useGetBrc20TokensQuery({
       }
 
       const brc20TokensPromises = addressesData.map(async address => {
-        const brc20Tokens = await client.HiroApi.getBrc20Balance(address);
+        const brc20Tokens = await client.BestinSlotApi.getBrc20Balances(address);
 
         const tickerPromises = await Promise.all(
-          brc20Tokens.results.map(token => {
-            return client.HiroApi.getBrc20TickerData(token.ticker);
+          brc20Tokens.data.map(token => {
+            return client.BestinSlotApi.getBrc20TickerInfo(token.ticker);
           })
         );
 
-        return brc20Tokens.results.map((token, index) => {
+        // Initialize token with token data
+        return brc20Tokens.data.map((token, index) => {
           return {
-            ...token,
-            decimals: tickerPromises[index].results[0].decimals,
+            balance: null,
             holderAddress: address,
+            marketData: null,
+            tokenData: { ...token, ...tickerPromises[index].data },
           };
         });
       });
@@ -94,7 +94,7 @@ export function useGetBrc20TokensQuery({
     },
     refetchOnMount: false,
     refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -105,17 +105,5 @@ export function useGetBrc20TokensQuery({
     }
   }, [query, query.data]);
 
-  // useEffect(() => {
-  //   const brc20AcrossAddressesCount = query.data?.pages.reduce((acc, page) => {
-  //     return acc + page.brc20Tokens.flatMap(item => item).length;
-  //   }, 0);
-
-  //   // if (!query.hasNextPage && brc20AcrossAddressesCount && brc20AcrossAddressesCount > 0) {
-  //   //   void analytics.identify({
-  //   //     brc20_across_addresses_count: brc20AcrossAddressesCount,
-  //   //   });
-  //   // }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [query.hasNextPage]);
   return query;
 }
