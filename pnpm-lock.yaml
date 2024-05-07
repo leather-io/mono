@@ -302,10 +302,6 @@ importers:
         version: 0.34.6(jsdom@22.1.0)
 
   packages/constants:
-    dependencies:
-      '@stacks/transactions':
-        specifier: 6.9.0
-        version: 6.9.0
     devDependencies:
       '@leather-wallet/eslint-config':
         specifier: workspace:*

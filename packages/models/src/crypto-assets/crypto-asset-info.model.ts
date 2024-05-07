@@ -15,9 +15,7 @@ export interface StxCryptoAssetInfo extends CryptoAssetInfo {
   readonly symbol: 'STX';
 }
 
-/**
- * Bitcoin
- */
+// Bitcoin
 export interface Brc20CryptoAssetInfo extends CryptoAssetInfo {
   readonly name: 'brc-20';
   readonly symbol: string;
@@ -28,7 +26,6 @@ export interface InscriptionCryptoAssetInfo {
   readonly mimeType: InscriptionMimeType;
   readonly name: 'inscription';
   readonly number: number;
-  readonly src: string;
 }
 
 export interface RuneCryptoAssetInfo extends CryptoAssetInfo {
@@ -50,9 +47,7 @@ export interface Src20CryptoAssetInfo extends CryptoAssetInfo {
   readonly symbol: string;
 }
 
-/**
- * Stacks
- */
+// Stacks
 export interface Sip009CryptoAssetInfo {
   readonly contractAddress: string;
   readonly contractName: string;

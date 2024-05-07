@@ -1,34 +1,51 @@
 import { Money } from '../money.model';
 
-/** Balance types:
- * availableBalance: totalBalance after filtering out outboundBalance, protectedBalance, and uneconomicalBalance
- * availableUnlockedBalance; availableBalance minus lockedBalance
- * inboundBalance - balance of pending receipt into account given pending transactions
- * lockedBalance - totalBalance minus total amount locked by contracts
- * outboundBalance - balance of pending delivery from account given pending transactions
- * pendingBalance - totalBalance plus inboundBalance minus outboundBalance
- * protectedBalance - balance of UTXOs with collectibles (if bitcoin)
- * totalBalance - balance as confirmed on chain
- * uneconomicalBalance - balance across UTXOs with need for larger fee than principal by UTXO given standard rate (if bitcoin)
- * unlockedBalance - totalBalance minus lockedBalance
- */
-
 export interface CryptoAssetBalance {
+  /**
+   * totalBalance after filtering out outboundBalance, protectedBalance, and uneconomicalBalance
+   */
   readonly availableBalance: Money;
 }
 
 export interface BtcCryptoAssetBalance extends CryptoAssetBalance {
+  /**
+   * Balance of UTXOs with collectibles
+   */
   readonly protectedBalance: Money;
+  /**
+   * Balance across UTXOs with need for larger fee than principal by UTXO given standard rate
+   */
   readonly uneconomicalBalance: Money;
 }
 
 export interface StxCryptoAssetBalance extends CryptoAssetBalance {
+  /**
+   * availableBalance minus lockedBalance
+   */
   readonly availableUnlockedBalance: Money;
+  /**
+   * Balance of pending receipt into account given pending transactions
+   */
   readonly inboundBalance: Money;
+  /**
+   * totalBalance minus total amount locked by contracts
+   */
   readonly lockedBalance: Money;
+  /**
+   * Balance of pending delivery from account given pending transactions
+   */
   readonly outboundBalance: Money;
+  /**
+   * totalBalance plus inboundBalance minus outboundBalance
+   */
   readonly pendingBalance: Money;
+  /**
+   * Balance as confirmed on chain
+   */
   readonly totalBalance: Money;
+  /**
+   * totalBalance minus lockedBalance
+   */
   readonly unlockedBalance: Money;
 }
 

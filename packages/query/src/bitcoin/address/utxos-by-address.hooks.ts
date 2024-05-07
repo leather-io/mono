@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import type { InscriptionResponseItem } from '../../../types/inscription';
+import type { InscriptionResponse } from '../../../types/inscription';
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../bitcoin-client';
 import { useInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
@@ -9,7 +9,7 @@ import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.h
 import { useGetUtxosByAddressQuery } from './utxos-by-address.query';
 
 export function filterUtxosWithInscriptions(
-  inscriptions: InscriptionResponseItem[],
+  inscriptions: InscriptionResponse[],
   utxos: UtxoWithDerivationPath[] | UtxoResponseItem[]
 ) {
   return utxos.filter(

@@ -1,73 +1,70 @@
 import { whenInscriptionMimeType } from '@leather-wallet/models';
 import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 
-import { Inscription, useGetInscriptionQuery } from './inscription.query';
+import { Inscription, InscriptionResponse } from '../../../types/inscription';
+import { useGetInscriptionQuery } from './inscription.query';
 
-export function createInscriptionInfoUrl(id: string) {
-  return `https://ordinals.hiro.so/inscription/${id}`;
-}
-
-function createIframePreviewUrl(id: string) {
-  return `https://ordinals.com/preview/${id}`;
-}
-
-// TODO: Refactor with new models, include with PR #108
-export function convertInscriptionToSupportedInscriptionType(inscription: Inscription) {
+export function makeInscription(inscription: InscriptionResponse) {
+  const contentSrc = `${HIRO_INSCRIPTIONS_API_URL}/${inscription.id}/content`;
+  const iframeSrc = `https://ordinals.com/preview/${inscription.id}`;
+  const preview = `https://ordinals.hiro.so/inscription/${inscription.id}`;
   const title = `Inscription ${inscription.number}`;
-  return whenInscriptionMimeType(inscription.content_type, {
+
+  const sharedInfo = {
+    id: inscription.id,
+    number: inscription.number,
+    preview,
+    title,
+  };
+
+  return whenInscriptionMimeType<Inscription>(inscription.content_type, {
     audio: () => ({
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      src: createIframePreviewUrl(inscription.id),
-      title,
-      type: 'audio',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'audio',
+      name: 'inscription',
+      src: iframeSrc,
     }),
     html: () => ({
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      src: createIframePreviewUrl(inscription.id),
-      title,
-      type: 'html',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'html',
+      name: 'inscription',
+      src: iframeSrc,
     }),
     image: () => ({
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      src: `${HIRO_INSCRIPTIONS_API_URL}/${inscription.id}/content`,
-      title,
-      type: 'image',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'image',
+      name: 'inscription',
+      src: contentSrc,
     }),
     svg: () => ({
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      src: createIframePreviewUrl(inscription.id),
-      title,
-      type: 'svg',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'svg',
+      name: 'inscription',
+      src: iframeSrc,
     }),
     text: () => ({
-      contentSrc: `${HIRO_INSCRIPTIONS_API_URL}/${inscription.id}/content`,
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      title,
-      type: 'text',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'text',
+      name: 'inscription',
+      src: contentSrc,
     }),
     video: () => ({
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      src: createIframePreviewUrl(inscription.id),
-      title,
-      type: 'video',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'video',
+      name: 'inscription',
+      src: iframeSrc,
     }),
     other: () => ({
-      infoUrl: createInscriptionInfoUrl(inscription.id),
-      title,
-      type: 'other',
-      ...inscription,
+      ...sharedInfo,
+      mimeType: 'other',
+      name: 'inscription',
+      src: '',
     }),
   });
 }
 
 export function useInscription(id: string) {
   return useGetInscriptionQuery(id, {
-    select: resp => convertInscriptionToSupportedInscriptionType(resp),
+    select: resp => makeInscription(resp),
   });
 }
