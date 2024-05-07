@@ -8,7 +8,7 @@ import { HDKey } from '@scure/bip32';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import type { InscriptionResponseItem } from '../../../types/inscription';
+import type { InscriptionResponse } from '../../../types/inscription';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { QueryPrefixes } from '../../query-prefixes';
 
@@ -28,7 +28,7 @@ interface InfiniteQueryPageParam {
 }
 
 interface InscriptionsQueryResponse {
-  results: InscriptionResponseItem[];
+  results: InscriptionResponse[];
   limit: number;
   offset: number;
   total: number;
@@ -132,7 +132,7 @@ export function useGetInscriptionsInfiniteQuery({
         }
       }
 
-      const results = responsesArr.flatMap(response => response.results);
+      const inscriptions = responsesArr.flatMap(response => response.results);
 
       // get offset and total from the last response
       const total = responsesArr[responsesArr.length - 1]?.total;
@@ -141,16 +141,7 @@ export function useGetInscriptionsInfiniteQuery({
         offset,
         total,
         stopNextFetch: addressesWithoutOrdinalsNum >= stopSearchAfterNumberAddressesWithoutOrdinals,
-        inscriptions: results.map(inscription => {
-          let addressIndex = addressesMap[inscription.address];
-          if (inscription.address === nativeSegwitAddress) {
-            addressIndex = 0;
-          }
-          return {
-            addressIndex,
-            ...inscription,
-          };
-        }),
+        inscriptions,
         fromIndex,
         addressesWithoutOrdinalsNum,
         addressesMap,

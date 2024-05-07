@@ -46,7 +46,7 @@ async function checkInscribedUtxosByBestinslot({
   client,
 }: CheckInscribedUtxosByBestinslotArgs): Promise<boolean> {
   /**
-   * @description Get the list of inscriptions moving on a transaction
+   * Get the list of inscriptions moving on a transaction
    * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-bitmap-v3-api-mainnet+testnet/inscriptions
    */
   const inscriptionIdsList = await Promise.all(

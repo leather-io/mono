@@ -1,4 +1,6 @@
-export interface InscriptionResponseItem {
+import { InscriptionCryptoAssetInfo } from '@leather-wallet/models';
+
+export interface InscriptionResponse {
   address: string;
   content_length: number;
   content_type: string;
@@ -23,4 +25,10 @@ export interface InscriptionResponseItem {
   timestamp: number;
   tx_id: string;
   value: string;
+}
+
+export interface Inscription extends InscriptionCryptoAssetInfo {
+  preview: string;
+  src: string;
+  title: string;
 }

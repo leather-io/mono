@@ -3,12 +3,12 @@ import { useCallback } from 'react';
 import { isUndefined } from '@leather-wallet/utils';
 import { HDKey } from '@scure/bip32';
 
-import { InscriptionResponseItem } from '../../../types/inscription';
+import { InscriptionResponse } from '../../../types/inscription';
 import { useGetInscriptionsInfiniteQuery } from './inscriptions.query';
 
 interface FindInscriptionsOnUtxoArgs {
   index: number;
-  inscriptions: InscriptionResponseItem[];
+  inscriptions: InscriptionResponse[];
   txId: string;
 }
 export function findInscriptionsOnUtxo({ index, inscriptions, txId }: FindInscriptionsOnUtxoArgs) {

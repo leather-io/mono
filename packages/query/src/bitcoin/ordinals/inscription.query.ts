@@ -2,14 +2,9 @@ import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { InscriptionResponseItem } from '../../../types/inscription';
+import { InscriptionResponse } from '../../../types/inscription';
 import { AppUseQueryConfig } from '../../query-config';
 import { QueryPrefixes } from '../../query-prefixes';
-
-// TODO: Refactor with new models, include with PR #108
-export interface Inscription extends InscriptionResponseItem {
-  addressIndex: number;
-}
 
 const inscriptionQueryOptions = {
   staleTime: Infinity,
@@ -22,7 +17,7 @@ const inscriptionQueryOptions = {
 function fetchInscription() {
   return async (id: string) => {
     const res = await axios.get(`${HIRO_INSCRIPTIONS_API_URL}/${id}`);
-    return res.data as Inscription;
+    return res.data as InscriptionResponse;
   };
 }
 

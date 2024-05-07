@@ -44,8 +44,6 @@ module.exports = {
       },
       to: {
         path: '^(?!packages/constants)',
-        // TODO: Remove
-        pathNot: ['@stacks/transactions'],
         dependencyTypesNot: ['type-only'],
       },
     },

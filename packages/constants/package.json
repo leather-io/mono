@@ -20,9 +20,6 @@
     "directory": "packages/constants"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
-  "dependencies": {
-    "@stacks/transactions": "6.9.0"
-  },
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
