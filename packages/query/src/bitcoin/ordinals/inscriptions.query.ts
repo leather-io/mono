@@ -9,10 +9,11 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import type { InscriptionResponse } from '../../../types/inscription';
+import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { QueryPrefixes } from '../../query-prefixes';
 
-const stopSearchAfterNumberAddressesWithoutOrdinals = 20;
+const stopSearchAfterNumberAddressesWithoutOrdinals = 5;
 const addressesSimultaneousFetchLimit = 5;
 
 // Hiro API max limit = 60
@@ -25,6 +26,7 @@ interface InfiniteQueryPageParam {
     addressesWithoutOrdinalsNum: number;
     addressesMap: Record<string, number>;
   };
+  signal?: AbortSignal;
 }
 
 interface InscriptionsQueryResponse {
@@ -34,14 +36,31 @@ interface InscriptionsQueryResponse {
   total: number;
 }
 
-async function fetchInscriptions(addresses: string | string[], offset = 0, limit = 60) {
+interface FetchInscriptionsArgs {
+  addresses: string | string[];
+  offset?: number;
+  limit?: number;
+  signal?: AbortSignal;
+}
+
+async function fetchInscriptions({
+  addresses,
+  offset = 0,
+  limit = 60,
+  signal,
+}: FetchInscriptionsArgs) {
   const params = new URLSearchParams();
   ensureArray(addresses).forEach(address => params.append('address', address));
   params.append('limit', limit.toString());
   params.append('offset', offset.toString());
+
   const res = await axios.get<InscriptionsQueryResponse>(
-    `${HIRO_INSCRIPTIONS_API_URL}?${params.toString()}`
+    `${HIRO_INSCRIPTIONS_API_URL}?${params.toString()}`,
+    {
+      signal,
+    }
   );
+
   return res.data;
 }
 
@@ -56,6 +75,7 @@ export function useGetInscriptionsInfiniteQuery({
   taprootKeychain: HDKey | undefined;
 }) {
   const network = useLeatherNetwork();
+  const limiter = useHiroApiRateLimiter();
 
   const getTaprootAddressData = useCallback(
     (fromIndex: number, toIndex: number) => {
@@ -72,12 +92,12 @@ export function useGetInscriptionsInfiniteQuery({
         {}
       );
     },
-    [network.chain.bitcoin.bitcoinNetwork]
+    [taprootKeychain, network.chain.bitcoin.bitcoinNetwork]
   );
 
   const query = useInfiniteQuery({
     queryKey: [QueryPrefixes.GetInscriptions, nativeSegwitAddress, network.id],
-    async queryFn({ pageParam }: InfiniteQueryPageParam) {
+    async queryFn({ pageParam, signal }: InfiniteQueryPageParam) {
       const responsesArr: InscriptionsQueryResponse[] = [];
       let fromIndex = pageParam?.fromIndex ?? 0;
       let addressesWithoutOrdinalsNum = pageParam?.addressesWithoutOrdinalsNum ?? 0;
@@ -99,7 +119,18 @@ export function useGetInscriptionsInfiniteQuery({
         if (fromIndex === 0) {
           addresses.unshift(nativeSegwitAddress);
         }
-        const response = await fetchInscriptions(addresses, offset, inscriptionsLazyLoadLimit);
+        const response = await limiter.add(
+          () =>
+            fetchInscriptions({
+              addresses,
+              offset,
+              limit: inscriptionsLazyLoadLimit,
+            }),
+          {
+            signal,
+            throwOnTimeout: true,
+          }
+        );
 
         responsesArr.push(response);
 
@@ -178,11 +209,20 @@ export function useGetInscriptionsInfiniteQuery({
 
 export function useInscriptionsByAddressQuery(address: string) {
   const network = useLeatherNetwork();
+  const limiter = useHiroApiRateLimiter();
 
   const query = useInfiniteQuery({
-    queryKey: [QueryPrefixes.InscriptionsByAddress, address, network.id],
-    async queryFn({ pageParam = 0 }) {
-      return fetchInscriptions(address, pageParam);
+    queryKey: [QueryPrefixes.InscriptionsByAddress, network.id, address],
+    async queryFn({ pageParam = 0, signal }) {
+      return limiter.add(
+        () =>
+          fetchInscriptions({
+            addresses: address,
+            offset: pageParam,
+            signal,
+          }),
+        { priority: 1, signal, throwOnTimeout: true }
+      );
     },
     getNextPageParam(prevInscriptionsQuery) {
       if (prevInscriptionsQuery.offset >= prevInscriptionsQuery.total) return undefined;
