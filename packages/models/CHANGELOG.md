@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/leather-wallet/mono/compare/models-v0.2.0...models-v0.3.0) (2024-05-07)
+
+
+### Features
+
+* prepare monorepo packages for extension development ([4fb2dbc](https://github.com/leather-wallet/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
+
 ## [0.2.0](https://github.com/leather-wallet/mono/compare/models-v0.1.0...models-v0.2.0) (2024-04-23)
 
 

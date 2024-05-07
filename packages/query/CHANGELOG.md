@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.0](https://github.com/leather-wallet/mono/compare/query-v0.2.0...query-v0.3.0) (2024-05-07)
+
+
+### Features
+
+* mobile store ([7f21492](https://github.com/leather-wallet/mono/commit/7f2149216d3561c9e39036528937f9816b90218a))
+* prepare monorepo packages for extension development ([4fb2dbc](https://github.com/leather-wallet/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
+* tweak bitcoin queries for extension ([dc92174](https://github.com/leather-wallet/mono/commit/dc9217421593ce35d809d5f555f055b716792837))
+
 ## [0.2.0](https://github.com/leather-wallet/mono/compare/query-v0.1.0...query-v0.2.0) (2024-04-23)
 
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/leather-wallet/mono/compare/mobile-v1.2.0...mobile-v1.3.0) (2024-05-07)
+
+
+### Features
+
+* mobile store ([7f21492](https://github.com/leather-wallet/mono/commit/7f2149216d3561c9e39036528937f9816b90218a))
+
+
+### Bug Fixes
+
+* update mobile styles ([8a44bdc](https://github.com/leather-wallet/mono/commit/8a44bdc760de318be6b5f045683292cd33538e01))
+
 ## [1.2.0](https://github.com/leather-wallet/mono/compare/mobile-v1.1.1...mobile-v1.2.0) (2024-04-23)
 
 

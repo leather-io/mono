@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.2.0...leather-mono-v1.3.0) (2024-05-07)
+
+
+### Features
+
+* mobile store ([7f21492](https://github.com/leather-wallet/mono/commit/7f2149216d3561c9e39036528937f9816b90218a))
+* prepare monorepo packages for extension development ([4fb2dbc](https://github.com/leather-wallet/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
+* tweak bitcoin queries for extension ([dc92174](https://github.com/leather-wallet/mono/commit/dc9217421593ce35d809d5f555f055b716792837))
+
+
+### Bug Fixes
+
+* types success bug, closes leather-wallet/extension[#5314](https://github.com/leather-wallet/mono/issues/5314) ([31ef5e4](https://github.com/leather-wallet/mono/commit/31ef5e420830f86c1f85c2bfdd8b8730c09d298c))
+* update mobile styles ([8a44bdc](https://github.com/leather-wallet/mono/commit/8a44bdc760de318be6b5f045683292cd33538e01))
+
 ## [1.2.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.1.1...leather-mono-v1.2.0) (2024-04-23)
 
 

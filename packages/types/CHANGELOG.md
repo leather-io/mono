@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/leather-wallet/mono/compare/types-v0.2.0...types-v0.2.1) (2024-05-07)
+
+
+### Bug Fixes
+
+* types success bug, closes leather-wallet/extension[#5314](https://github.com/leather-wallet/mono/issues/5314) ([31ef5e4](https://github.com/leather-wallet/mono/commit/31ef5e420830f86c1f85c2bfdd8b8730c09d298c))
+
 ## [0.2.0](https://github.com/leather-wallet/mono/compare/types-v0.1.0...types-v0.2.0) (2024-04-23)
 
 
