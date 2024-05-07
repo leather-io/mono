@@ -24,6 +24,12 @@ export function makeInscription(inscription: InscriptionResponse) {
       name: 'inscription',
       src: iframeSrc,
     }),
+    gltf: () => ({
+      ...sharedInfo,
+      mimeType: 'gltf',
+      name: 'inscription',
+      src: iframeSrc,
+    }),
     html: () => ({
       ...sharedInfo,
       mimeType: 'html',

@@ -4,7 +4,16 @@
  * appropriately and securely. Inscriptions of types not ready to be handled by the
  * app should be classified as "other".
  */
-const inscriptionMimeTypes = ['audio', 'html', 'image', 'svg', 'text', 'video', 'other'] as const;
+const inscriptionMimeTypes = [
+  'audio',
+  'gltf',
+  'html',
+  'image',
+  'svg',
+  'text',
+  'video',
+  'other',
+] as const;
 
 export type InscriptionMimeType = (typeof inscriptionMimeTypes)[number];
 
@@ -34,6 +43,10 @@ export function whenInscriptionMimeType<T>(
 
   if (mimeType.startsWith('video/') && branches.video) {
     return branches.video();
+  }
+
+  if (mimeType.startsWith('model/gltf') && branches.gltf) {
+    return branches.gltf();
   }
 
   if (branches.other) return branches.other();
