@@ -50,6 +50,13 @@
       "draft": false,
       "prerelease": false
     },
+    "packages/rpc": {
+      "changelog-path": "CHANGELOG.md",
+      "bump-minor-pre-major": false,
+      "bump-patch-for-minor-pre-major": false,
+      "draft": false,
+      "prerelease": false
+    },
     "packages/query": {
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": false,
@@ -65,13 +72,6 @@
       "prerelease": false
     },
     "packages/tsconfig-config": {
-      "changelog-path": "CHANGELOG.md",
-      "bump-minor-pre-major": false,
-      "bump-patch-for-minor-pre-major": false,
-      "draft": false,
-      "prerelease": false
-    },
-    "packages/types": {
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": false,
       "bump-patch-for-minor-pre-major": false,
