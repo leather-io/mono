@@ -5,7 +5,7 @@ import { delay } from '@leather-wallet/utils';
 import * as btc from '@scure/btc-signer';
 
 import { useBitcoinClient } from '../bitcoin-client';
-import { filterOutIntentionalUtxoSpend, useCheckInscribedUtxos } from './use-check-utxos';
+import { filterOutIntentionalUtxoSpend, useCheckUnspendableUtxos } from './use-check-utxos';
 
 interface BroadcastCallbackArgs {
   tx: string;
@@ -19,9 +19,7 @@ interface BroadcastCallbackArgs {
 export function useBitcoinBroadcastTransaction() {
   const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  // TODO: analytics should be handled on app level
-  // const analytics = useAnalytics();
-  const { checkIfUtxosListIncludesInscribed } = useCheckInscribedUtxos();
+  const { checkIfUtxosListIncludesInscribed } = useCheckUnspendableUtxos();
 
   const broadcastTx = useCallback(
     async ({
@@ -57,10 +55,6 @@ export function useBitcoinBroadcastTransaction() {
         return txid;
       } catch (e) {
         onError?.(e as Error);
-        // void analytics.track('error_broadcasting_transaction', {
-        //   errorName: isError(e) ? e.name : 'unknown',
-        //   errorMsg: isError(e) ? e.message : 'unknown',
-        // });
         return;
       } finally {
         setIsBroadcasting(false);

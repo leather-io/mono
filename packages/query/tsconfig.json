@@ -5,6 +5,6 @@
     "types": ["vitest/globals"],
     "outDir": "./dist"
   },
-  "include": ["**/*", ".*.ts"],
+  "include": ["**/*", ".*.ts", "config/*.json"],
   "exclude": ["./dist/"]
 }

@@ -8,12 +8,9 @@ import {
 import { useGetAllBitcoinFeeEstimatesQuery } from './fee-estimates.query';
 
 export function useAverageBitcoinFeeRates() {
-  // const analytics = useAnalytics();
   return useGetAllBitcoinFeeEstimatesQuery({
-    // onError: err => logger.error('Error getting all apis bitcoin fee estimates', { err }),
     select(feeEstimates) {
       if (feeEstimates.every(isRejected)) {
-        // void analytics.track('error_using_fallback_bitcoin_fees');
         return {
           fastestFee: initBigNumber(15),
           halfHourFee: initBigNumber(10),

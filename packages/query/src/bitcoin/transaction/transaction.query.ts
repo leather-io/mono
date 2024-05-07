@@ -1,6 +1,4 @@
 import { BitcoinTx } from '@leather-wallet/models';
-import * as btc from '@scure/btc-signer';
-import { bytesToHex } from '@stacks/common';
 import { UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 
 import { AppUseQueryConfig } from '../../query-config';
@@ -38,17 +36,14 @@ const queryOptions = {
 } as const;
 
 // ts-unused-exports:disable-next-line
-export function useGetBitcoinTransactionQueries(
-  inputs: btc.TransactionInput[]
-): UseQueryResult<BitcoinTx>[] {
+export function useGetBitcoinTransactionQueries(txids: string[]): UseQueryResult<BitcoinTx>[] {
   const client = useBitcoinClient();
 
   return useQueries({
-    queries: inputs.map(input => {
-      const txId = input.txid ? bytesToHex(input.txid) : '';
+    queries: txids.map(txid => {
       return {
-        queryKey: ['bitcoin-transaction', txId],
-        queryFn: () => fetchBitcoinTransaction(client)(txId),
+        queryKey: ['bitcoin-transaction', txid],
+        queryFn: () => fetchBitcoinTransaction(client)(txid),
         ...queryOptions,
       };
     }),

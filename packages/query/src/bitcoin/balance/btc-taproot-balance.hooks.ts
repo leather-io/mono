@@ -18,11 +18,14 @@ export function useCurrentTaprootAccountUninscribedUtxos({
   nativeSegwitAddress: string;
 }) {
   const { data: utxos = [] } = useTaprootAccountUtxosQuery({
-    taprootKeychain,
+    taprootKeychain: taprootKeychain,
     currentAccountIndex,
   });
 
-  const query = useGetInscriptionsInfiniteQuery({ taprootKeychain, nativeSegwitAddress });
+  const query = useGetInscriptionsInfiniteQuery({
+    taprootKeychain,
+    nativeSegwitAddress,
+  });
 
   return useMemo(() => {
     const inscriptions = query.data?.pages?.flatMap(page => page.inscriptions) ?? [];
