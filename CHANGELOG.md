@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.0...leather-mono-v1.4.1) (2024-05-08)
+
+
+### Bug Fixes
+
+* model enum declaration ([910f98d](https://github.com/leather-wallet/mono/commit/910f98dc9a0ea85be347b5d4595b582b4cb786d1))
+
 ## [1.4.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.3.0...leather-mono-v1.4.0) (2024-05-08)
 
 
