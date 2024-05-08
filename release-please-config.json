@@ -92,5 +92,10 @@
       "draft": false,
       "prerelease": false
     }
-  }
+  },
+  "plugins": [
+    {
+      "type": "node-workspace"
+    }
+  ]
 }
