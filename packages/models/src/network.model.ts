@@ -12,7 +12,7 @@ export const BESTINSLOT_API_BASE_URL_MAINNET = 'https://leatherapi.bestinslot.xy
 export const BESTINSLOT_API_BASE_URL_TESTNET = 'https://leatherapi_testnet.bestinslot.xyz/v3';
 
 // Copied from @stacks/transactions to avoid dependencies
-export declare enum ChainID {
+export enum ChainID {
   Testnet = 2147483648,
   Mainnet = 1,
 }
