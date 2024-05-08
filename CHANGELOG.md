@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.3.0...leather-mono-v1.4.0) (2024-05-08)
+
+
+### Features
+
+* update bitcoin inscription queries ([d4dc8d9](https://github.com/leather-wallet/mono/commit/d4dc8d9ea05b746663a859d59949cf1e42789d50))
+
+
+### Bug Fixes
+
+* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-wallet/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
+* release rpc pkg ([222a79e](https://github.com/leather-wallet/mono/commit/222a79ee20fec6ffc387f5b5989f67562a19d7d2))
+
 ## [1.3.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.2.0...leather-mono-v1.3.0) (2024-05-07)
 
 

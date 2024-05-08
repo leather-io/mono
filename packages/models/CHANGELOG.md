@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/leather-wallet/mono/compare/models-v0.3.0...models-v0.4.0) (2024-05-08)
+
+
+### Features
+
+* update bitcoin inscription queries ([d4dc8d9](https://github.com/leather-wallet/mono/commit/d4dc8d9ea05b746663a859d59949cf1e42789d50))
+
 ## [0.3.0](https://github.com/leather-wallet/mono/compare/models-v0.2.0...models-v0.3.0) (2024-05-07)
 
 
