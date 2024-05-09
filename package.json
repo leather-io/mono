@@ -40,7 +40,7 @@
     "husky": "8.0.3",
     "prettier": "3.2.5",
     "syncpack": "12.3.0",
-    "turbo": "1.13.2",
+    "turbo": "1.13.3",
     "typescript": "5.3.3"
   },
   "engines": {
