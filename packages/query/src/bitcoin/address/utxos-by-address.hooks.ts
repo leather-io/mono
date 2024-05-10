@@ -1,15 +1,17 @@
 import { useCallback } from 'react';
 
-import type { InscriptionResponse } from '../../../types/inscription';
+import { Inscription } from '@leather-wallet/models';
+
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../bitcoin-client';
+import { createInscriptionHiro } from '../ordinals/inscription.utils';
 import { useInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
 import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks';
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
 import { useGetUtxosByAddressQuery } from './utxos-by-address.query';
 
 export function filterUtxosWithInscriptions(
-  inscriptions: InscriptionResponse[],
+  inscriptions: Inscription[],
   utxos: UtxoWithDerivationPath[] | UtxoResponseItem[]
 ) {
   return utxos.filter(
@@ -113,8 +115,8 @@ function useFilterInscriptionsByAddress(address: string) {
 
   const filterOutInscriptions = useCallback(
     (utxos: UtxoResponseItem[]) => {
-      const inscriptions = inscriptionsList?.pages.flatMap(page => page.results) ?? [];
-
+      const inscriptionResponses = inscriptionsList?.pages.flatMap(page => page.results) ?? [];
+      const inscriptions = inscriptionResponses.map(createInscriptionHiro);
       return filterUtxosWithInscriptions(inscriptions, utxos);
     },
     [inscriptionsList?.pages]

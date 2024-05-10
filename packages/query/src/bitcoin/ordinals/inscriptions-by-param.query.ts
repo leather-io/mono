@@ -6,7 +6,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { Paginated } from '../../../types/api-types';
-import { InscriptionResponse } from '../../../types/inscription';
+import { InscriptionResponseHiro } from '../../../types/inscription';
 import { AppUseQueryConfig } from '../../query-config';
 
 type FetchInscriptionResp = Awaited<ReturnType<ReturnType<typeof fetchInscriptionsByParam>>>;
@@ -14,7 +14,7 @@ type FetchInscriptionResp = Awaited<ReturnType<ReturnType<typeof fetchInscriptio
 function fetchInscriptionsByParam() {
   return async (param: string) => {
     const res = await axios.get(`${HIRO_INSCRIPTIONS_API_URL}?${param}`);
-    return res.data as Paginated<InscriptionResponse[]>;
+    return res.data as Paginated<InscriptionResponseHiro[]>;
   };
 }
 
