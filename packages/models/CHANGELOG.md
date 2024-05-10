@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/leather-wallet/mono/compare/models-v0.4.1...models-v0.4.2) (2024-05-10)
+
+
+### Bug Fixes
+
+* update inscription model and update inscription queries ([657f923](https://github.com/leather-wallet/mono/commit/657f9238cb2512f345af732cb5e34dd69e674e9f))
+
 ## [0.4.1](https://github.com/leather-wallet/mono/compare/models-v0.4.0...models-v0.4.1) (2024-05-08)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.1...leather-mono-v1.4.2) (2024-05-10)
+
+
+### Bug Fixes
+
+* too strict stamps schema ([293452e](https://github.com/leather-wallet/mono/commit/293452e9c7d5578f6a2d71279c6163d7ba50ff93))
+* update inscription model and update inscription queries ([657f923](https://github.com/leather-wallet/mono/commit/657f9238cb2512f345af732cb5e34dd69e674e9f))
+
 ## [1.4.1](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.0...leather-mono-v1.4.1) (2024-05-08)
 
 
