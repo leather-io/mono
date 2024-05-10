@@ -1,6 +1,7 @@
-import { InscriptionResponse } from '../types/inscription';
+import { createInscriptionHiro } from '../src/bitcoin/ordinals/inscription.utils';
+import { InscriptionResponseHiro } from '../types/inscription';
 
-export const mockInscription1: InscriptionResponse = {
+export const mockInscriptionResponse1: InscriptionResponseHiro = {
   address: 'bc1pwrmewwprc8k8l2k63x4advg0nx0jk50xzqnee996lm87mcuza7kq6drg2k',
   content_length: 55,
   content_type: 'image/png',
@@ -27,7 +28,9 @@ export const mockInscription1: InscriptionResponse = {
   value: '10000',
 };
 
-export const mockInscription2: InscriptionResponse = {
+export const mockInscription1 = createInscriptionHiro(mockInscriptionResponse1);
+
+export const mockInscriptionResponse2: InscriptionResponseHiro = {
   address: 'bc1pwrmewwprc8k8l2k63x4advg0nx0jk50xzqnee996lm87mcuza7kq6drg2k',
   content_length: 55,
   content_type: 'image/png',
@@ -54,7 +57,9 @@ export const mockInscription2: InscriptionResponse = {
   value: '10000',
 };
 
-export const mockInscriptionsList = [
+export const mockInscription2 = createInscriptionHiro(mockInscriptionResponse2);
+
+export const mockInscriptionResponsesList = [
   {
     address: 'bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq',
     id: 'a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
@@ -82,3 +87,5 @@ export const mockInscriptionsList = [
     value: '546',
   },
 ];
+
+export const mockInscriptionsList = mockInscriptionResponsesList.map(createInscriptionHiro);

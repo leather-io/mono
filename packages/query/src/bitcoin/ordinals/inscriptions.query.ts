@@ -5,10 +5,10 @@ import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { createNumArrayOfRange } from '@leather-wallet/utils';
 import { ensureArray } from '@leather-wallet/utils';
 import { HDKey } from '@scure/bip32';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { UseInfiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import type { InscriptionResponse } from '../../../types/inscription';
+import type { InscriptionResponseHiro } from '../../../types/inscription';
 import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { QueryPrefixes } from '../../query-prefixes';
@@ -30,7 +30,7 @@ interface InfiniteQueryPageParam {
 }
 
 interface InscriptionsQueryResponse {
-  results: InscriptionResponse[];
+  results: InscriptionResponseHiro[];
   limit: number;
   offset: number;
   total: number;
@@ -64,16 +64,30 @@ async function fetchInscriptions({
   return res.data;
 }
 
+export interface GetInscriptionsInfiniteQuery {
+  offset: number;
+  total: number;
+  stopNextFetch: boolean;
+  inscriptions: InscriptionResponseHiro[];
+  fromIndex: number;
+  addressesWithoutOrdinalsNum: number;
+  addressesMap: Record<string, number>;
+}
+
 /**
+ * // TO REFACTOR
  * Returns all inscriptions for the user's current account
  */
-export function useGetInscriptionsInfiniteQuery({
-  taprootKeychain,
-  nativeSegwitAddress,
-}: {
-  nativeSegwitAddress: string;
-  taprootKeychain: HDKey | undefined;
-}) {
+export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscriptionsInfiniteQuery>(
+  {
+    taprootKeychain,
+    nativeSegwitAddress,
+  }: {
+    nativeSegwitAddress: string;
+    taprootKeychain: HDKey | undefined;
+  },
+  options?: UseInfiniteQueryOptions<GetInscriptionsInfiniteQuery, unknown, T>
+) {
   const network = useLeatherNetwork();
   const limiter = useHiroApiRateLimiter();
 
@@ -95,7 +109,7 @@ export function useGetInscriptionsInfiniteQuery({
     [taprootKeychain, network.chain.bitcoin.bitcoinNetwork]
   );
 
-  const query = useInfiniteQuery({
+  const query = useInfiniteQuery<GetInscriptionsInfiniteQuery, unknown, T>({
     queryKey: [QueryPrefixes.GetInscriptions, nativeSegwitAddress, network.id],
     async queryFn({ pageParam, signal }: InfiniteQueryPageParam) {
       const responsesArr: InscriptionsQueryResponse[] = [];
@@ -202,6 +216,7 @@ export function useGetInscriptionsInfiniteQuery({
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: true,
+    ...options,
   });
 
   return query;

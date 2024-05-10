@@ -17,6 +17,8 @@ export * from './src/bitcoin/ordinals/inscription-by-id.query';
 export * from './src/bitcoin/ordinals/inscription-text-content.query';
 export * from './src/bitcoin/ordinals/inscription.hooks';
 export * from './src/bitcoin/ordinals/inscription.query';
+export * from './src/bitcoin/ordinals/inscription.utils';
+export * from './src/bitcoin/ordinals/inscriptions-by-param.hooks';
 export * from './src/bitcoin/ordinals/inscriptions-by-param.query';
 export * from './src/bitcoin/ordinals/inscriptions.hooks';
 export * from './src/bitcoin/ordinals/inscriptions.query';

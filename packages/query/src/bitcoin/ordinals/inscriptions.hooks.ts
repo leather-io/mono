@@ -3,12 +3,13 @@ import { useCallback } from 'react';
 import { isUndefined } from '@leather-wallet/utils';
 import { HDKey } from '@scure/bip32';
 
-import { InscriptionResponse } from '../../../types/inscription';
+import { InscriptionResponseHiro } from '../../../types/inscription';
+import { createInscriptionHiro } from './inscription.utils';
 import { useGetInscriptionsInfiniteQuery } from './inscriptions.query';
 
 interface FindInscriptionsOnUtxoArgs {
   index: number;
-  inscriptions: InscriptionResponse[];
+  inscriptions: InscriptionResponseHiro[];
   txId: string;
 }
 export function findInscriptionsOnUtxo({ index, inscriptions, txId }: FindInscriptionsOnUtxoArgs) {
@@ -39,4 +40,53 @@ export function useNumberOfInscriptionsOnUtxo({
     },
     [inscriptions]
   );
+}
+
+export function useInscriptions({
+  taprootKeychain,
+  nativeSegwitAddress,
+}: {
+  nativeSegwitAddress: string;
+  taprootKeychain: HDKey | undefined;
+}) {
+  return useGetInscriptionsInfiniteQuery(
+    {
+      taprootKeychain,
+      nativeSegwitAddress,
+    },
+    {
+      select(data) {
+        return {
+          ...data,
+          pages: data.pages.map(page => ({
+            ...page,
+            inscriptions: page.inscriptions.map(createInscriptionHiro),
+          })),
+        };
+      },
+    }
+  );
+}
+
+export function useInscriptionsAddressesMap({
+  taprootKeychain,
+  nativeSegwitAddress,
+}: {
+  nativeSegwitAddress: string;
+  taprootKeychain: HDKey | undefined;
+}) {
+  const query = useGetInscriptionsInfiniteQuery({
+    taprootKeychain,
+    nativeSegwitAddress,
+  });
+  if (!query.data) return {};
+  const addressesMapArray = query.data.pages.map(page => page.addressesMap);
+  const addressesMap = addressesMapArray.reduce((acc, addressMap) => {
+    return {
+      ...acc,
+      ...addressMap,
+    };
+  });
+
+  return addressesMap;
 }

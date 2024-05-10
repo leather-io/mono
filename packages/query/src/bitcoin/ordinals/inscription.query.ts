@@ -2,7 +2,7 @@ import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { InscriptionResponse } from '../../../types/inscription';
+import { InscriptionResponseHiro } from '../../../types/inscription';
 import { AppUseQueryConfig } from '../../query-config';
 import { QueryPrefixes } from '../../query-prefixes';
 
@@ -17,7 +17,7 @@ const inscriptionQueryOptions = {
 function fetchInscription() {
   return async (id: string) => {
     const res = await axios.get(`${HIRO_INSCRIPTIONS_API_URL}/${id}`);
-    return res.data as InscriptionResponse;
+    return res.data as InscriptionResponseHiro;
   };
 }
 
