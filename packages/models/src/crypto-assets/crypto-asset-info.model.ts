@@ -49,7 +49,7 @@ export interface Src20CryptoAssetInfo extends CryptoAssetInfo {
 
 // Stacks
 export interface Sip009CryptoAssetInfo {
-  readonly contractAddress: string;
+  readonly contractId: string;
   readonly contractName: string;
   readonly imageCanonicalUri: string;
   readonly name: string;
@@ -57,7 +57,7 @@ export interface Sip009CryptoAssetInfo {
 
 export interface Sip010CryptoAssetInfo extends CryptoAssetInfo {
   readonly canTransfer: boolean;
-  readonly contractAddress: string;
+  readonly contractId: string;
   readonly contractName: string;
   readonly imageCanonicalUri: string;
   readonly name: string;
