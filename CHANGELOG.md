@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.2...leather-mono-v1.4.3) (2024-05-10)
+
+
+### Bug Fixes
+
+* stacks contract id on asset info ([29d2b6b](https://github.com/leather-wallet/mono/commit/29d2b6bbdb3530acb4dbd2ba30c86542acd6e66c))
+
 ## [1.4.2](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.1...leather-mono-v1.4.2) (2024-05-10)
 
 
