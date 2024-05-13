@@ -74,7 +74,7 @@ interface RawInscription {
   id: string;
   number: number;
   output: string;
-  content_type: string;
+  contentType: string;
   txid: string;
   offset: string;
   address: string;
@@ -105,7 +105,7 @@ export function createInscription(inscription: RawInscription): Inscription {
     title,
   };
 
-  return whenInscriptionMimeType<Inscription>(inscription.content_type, {
+  return whenInscriptionMimeType<Inscription>(inscription.contentType, {
     audio: () => ({
       ...sharedInfo,
       mimeType: 'audio',
