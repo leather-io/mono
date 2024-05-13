@@ -4,18 +4,20 @@ import { InscriptionResponseHiro } from '../../../types/inscription';
 
 export function createInscriptionHiro(inscriptionResponse: InscriptionResponseHiro) {
   const {
-    tx_id: txid,
+    content_type: contentType,
+    genesis_block_height: genesisBlockHeight,
     genesis_block_hash: genesisBlockHash,
     genesis_timestamp: genesisTimestamp,
-    genesis_block_height: genesisBlockHeight,
+    tx_id: txid,
     ...rest
   } = inscriptionResponse;
 
   return createInscription({
-    txid,
+    contentType,
     genesisBlockHash,
-    genesisTimestamp,
     genesisBlockHeight,
+    genesisTimestamp,
+    txid,
     ...rest,
   });
 }

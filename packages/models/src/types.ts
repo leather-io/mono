@@ -8,8 +8,8 @@ export type CryptoAssetType =
   | 'brc-20'
   | 'inscription'
   | 'rune'
-  | 'sip-009'
-  | 'sip-010'
+  | 'sip-9'
+  | 'sip-10'
   | 'src-20'
   | 'stamp'
   | 'stx-20';
