@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { z } from 'zod';
+import { ZodError, z } from 'zod';
 
 import { AppUseQueryConfig } from '../../query-config';
 import { QueryPrefixes } from '../../query-prefixes';
@@ -75,7 +75,14 @@ async function fetchStampsByAddress(address: string): Promise<StampsByAddressQue
   const resp = await axios.get<StampsByAddressQueryResponse>(
     `https://stampchain.io/api/v2/balance/${address}`
   );
-  return stampsByAdressSchema.parse(resp.data);
+  try {
+    return stampsByAdressSchema.parse(resp.data);
+  } catch (e) {
+    // TODO: should be analytics
+    // eslint-disable-next-line no-console
+    if (e instanceof ZodError) console.log('schema_fail', e);
+    throw e;
+  }
 }
 
 type FetchStampsByAddressResp = Awaited<ReturnType<typeof fetchStampsByAddress>>;

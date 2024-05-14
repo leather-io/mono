@@ -152,6 +152,7 @@ interface RunesOutputsByAddressArgs {
   order?: 'asc' | 'desc';
   offset?: number;
   count?: number;
+  signal?: AbortSignal;
 }
 
 interface RunesOutputsByAddressResponse {
@@ -251,6 +252,7 @@ function BestinSlotApi() {
     order = 'asc',
     offset = 0,
     count = 100,
+    signal,
   }: RunesOutputsByAddressArgs) {
     const baseUrl = network === 'mainnet' ? url : testnetUrl;
     const queryParams = new URLSearchParams({
@@ -263,7 +265,7 @@ function BestinSlotApi() {
 
     const resp = await axios.get<RunesOutputsByAddressResponse>(
       `${baseUrl}/runes/wallet_valid_outputs?${queryParams}`,
-      { ...defaultOptions }
+      { ...defaultOptions, signal }
     );
     return resp.data.data;
   }
@@ -285,14 +287,14 @@ function AddressApi(basePath: string) {
   return {
     async getTransactionsByAddress(address: string, signal?: AbortSignal) {
       const resp = await rateLimiter.add(
-        () => axios.get<BitcoinTx[]>(`${basePath}/address/${address}/txs`),
+        () => axios.get<BitcoinTx[]>(`${basePath}/address/${address}/txs`, { signal }),
         { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
     async getUtxosByAddress(address: string, signal?: AbortSignal): Promise<UtxoResponseItem[]> {
       const resp = await rateLimiter.add(
-        () => axios.get<UtxoResponseItem[]>(`${basePath}/address/${address}/utxo`),
+        () => axios.get<UtxoResponseItem[]>(`${basePath}/address/${address}/utxo`, { signal }),
         { signal, priority: 1, throwOnTimeout: true }
       );
       return resp.data.sort((a, b) => a.vout - b.vout);
