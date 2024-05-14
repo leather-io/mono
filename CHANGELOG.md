@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.3...leather-mono-v1.4.4) (2024-05-14)
+
+
+### Bug Fixes
+
+* update asset model naming ([9f1c87e](https://github.com/leather-wallet/mono/commit/9f1c87e54d57353b1400ff4565139b8b7cbf001f))
+
 ## [1.4.3](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.2...leather-mono-v1.4.3) (2024-05-10)
 
 

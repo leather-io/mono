@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/leather-wallet/mono/compare/query-v0.4.1...query-v0.4.2) (2024-05-14)
+
+
+### Bug Fixes
+
+* update asset model naming ([9f1c87e](https://github.com/leather-wallet/mono/commit/9f1c87e54d57353b1400ff4565139b8b7cbf001f))
+
 ## [0.4.1](https://github.com/leather-wallet/mono/compare/query-v0.4.0...query-v0.4.1) (2024-05-10)
 
 
