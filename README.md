@@ -39,6 +39,10 @@ Basic CI actions to run code quality checks have been setup in
 
 Documentation has been provided from the outset and can be found in `docs/tools/` along with a [TEMPLATE.md](docs/core/TEMPLATE.md) file
 
+### Development with extension
+
+To be able to develop packages and test those in extension, check out this [guide](docs/extension-development.md)
+
 ## License
 
 [MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
