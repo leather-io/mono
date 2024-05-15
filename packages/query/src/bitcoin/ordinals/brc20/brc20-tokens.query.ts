@@ -7,7 +7,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
 import { QueryPrefixes } from '../../../query-prefixes';
-import { Brc20Token, useBitcoinClient } from '../../bitcoin-client';
+import { useBitcoinClient } from '../../bitcoin-client';
 
 const addressesSimultaneousFetchLimit = 3;
 const stopSearchAfterNumberAddressesWithoutBrc20Tokens = 3;
@@ -59,18 +59,21 @@ export function useGetBrc20TokensQuery({
           })
         );
 
-        // Initialize token with token data
         return brc20Tokens.data.map((token, index) => {
           return {
-            balance: null,
+            balance: token,
             holderAddress: address,
-            marketData: null,
-            tokenData: { ...token, ...tickerPromises[index].data },
+            info: tickerPromises[index].data,
           };
         });
       });
 
-      const brc20Tokens: Brc20Token[][] = await Promise.all(brc20TokensPromises);
+      const brc20Tokens = await Promise.all(brc20TokensPromises).catch(error => {
+        // TODO: add analytics here
+        // eslint-disable-next-line no-console
+        console.log('Error fetching BRC-20 tokens:', error);
+        return [];
+      });
       addressesWithoutTokens += brc20Tokens.filter(tokens => tokens.length === 0).length;
 
       return {
