@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/leather-wallet/mono/compare/query-v0.4.2...query-v0.4.3) (2024-05-15)
+
+
+### Bug Fixes
+
+* apply queries updates from extension ([c71aa0f](https://github.com/leather-wallet/mono/commit/c71aa0fba9768a86bfc014c1765a86277d3bac89))
+
 ## [0.4.2](https://github.com/leather-wallet/mono/compare/query-v0.4.1...query-v0.4.2) (2024-05-14)
 
 
