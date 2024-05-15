@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/leather-wallet/mono/compare/query-v0.4.3...query-v0.4.4) (2024-05-15)
+
+
+### Bug Fixes
+
+* brc20 and utxo updates to query package ([af07ecf](https://github.com/leather-wallet/mono/commit/af07ecfecbe3446c43d31b02dda6faed5b522772))
+
 ## [0.4.3](https://github.com/leather-wallet/mono/compare/query-v0.4.2...query-v0.4.3) (2024-05-15)
 
 
