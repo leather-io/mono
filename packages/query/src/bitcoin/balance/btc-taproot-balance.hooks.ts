@@ -9,6 +9,8 @@ import { useTaprootAccountUtxosQuery } from '../address/utxos-by-address.query';
 import { createInscriptionHiro } from '../ordinals/inscription.utils';
 import { useGetInscriptionsInfiniteQuery } from '../ordinals/inscriptions.query';
 
+const RETRIEVE_UTXO_DUST_AMOUNT = 10000;
+
 export function useCurrentTaprootAccountUninscribedUtxos({
   taprootKeychain,
   currentAccountIndex,
@@ -32,10 +34,12 @@ export function useCurrentTaprootAccountUninscribedUtxos({
     const inscriptionsResponse = query.data?.pages?.flatMap(page => page.inscriptions) ?? [];
 
     const inscriptions = inscriptionsResponse.map(createInscriptionHiro);
-    return filterUtxosWithInscriptions(
-      inscriptions,
-      utxos.filter(utxo => utxo.status.confirmed)
-    ) as UtxoWithDerivationPath[];
+
+    const filteredUtxosList = utxos
+      .filter(utxo => utxo.status.confirmed)
+      .filter(utxo => utxo.value > RETRIEVE_UTXO_DUST_AMOUNT);
+
+    return filterUtxosWithInscriptions(inscriptions, filteredUtxosList) as UtxoWithDerivationPath[];
   }, [query.data?.pages, utxos]);
 }
 
