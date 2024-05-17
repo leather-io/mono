@@ -11,6 +11,8 @@ export const BITCOIN_API_BASE_URL_SIGNET = 'https://mempool.space/signet/api';
 export const BESTINSLOT_API_BASE_URL_MAINNET = 'https://leatherapi.bestinslot.xyz/v3';
 export const BESTINSLOT_API_BASE_URL_TESTNET = 'https://leatherapi_testnet.bestinslot.xyz/v3';
 
+export const BESTINSLOT_API_BASE_URL_TESTNET_DUMMY = 'https://leatherapi_testnet.bestinslot.xyz/v3';
+
 // Copied from @stacks/transactions to avoid dependencies
 export enum ChainID {
   Testnet = 2147483648,
