@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.2](https://github.com/leather-wallet/mono/compare/rpc-v0.3.1...rpc-v0.3.2) (2024-05-17)
+
+
+### Bug Fixes
+
+* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-wallet/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.5.0
+
 ## [0.3.0](https://github.com/leather-wallet/mono/compare/rpc-v0.2.1...rpc-v0.3.0) (2024-05-08)
 
 * refactor: pkg org and asset data models ([a46a82c](https://github.com/leather-wallet/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
