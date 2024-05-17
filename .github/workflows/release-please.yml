@@ -35,26 +35,26 @@ jobs:
     #       # Our target branch should be `dev`
     #       target-branch: dev
 
-  # The logic below handles the npm publication:
-  deploy:
-    needs: release-please
-    runs-on: ubuntu-latest
-    # these if statements ensure that a publication only occurs when
-    # a new release is created:
-    if: needs.release-please.outputs.releases_created
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: '^8.15'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org/'
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm ts:build
-      - run: pnpm -r publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # # The logic below handles the npm publication:
+  # deploy:
+  #   needs: release-please
+  #   runs-on: ubuntu-latest
+  #   # these if statements ensure that a publication only occurs when
+  #   # a new release is created:
+  #   if: needs.release-please.outputs.releases_created
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Install pnpm
+  #       uses: pnpm/action-setup@v3
+  #       with:
+  #         version: '^8.15'
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #         registry-url: 'https://registry.npmjs.org/'
+  #         cache: 'pnpm'
+  #     - run: pnpm install
+  #     - run: pnpm ts:build
+  #     - run: pnpm -r publish --no-git-checks
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
