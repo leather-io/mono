@@ -1,5 +1,12 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.4.2
+    * @leather-wallet/utils bumped to 0.4.1
+
 ## [0.4.0](https://github.com/leather-wallet/mono/compare/bitcoin-v0.3.0...bitcoin-v0.4.0) (2024-05-07)
 
 * refactor: pkg org and asset data models ([a46a82c](https://github.com/leather-wallet/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))

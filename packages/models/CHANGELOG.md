@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/leather-wallet/mono/compare/models-v0.4.1...models-v0.4.2) (2024-05-17)
+
+
+### Bug Fixes
+
+* release dummy ([b1999c2](https://github.com/leather-wallet/mono/commit/b1999c2011b1dccd8fea6ba515c4fb7c6ca66038))
+
 ## [0.4.1](https://github.com/leather-wallet/mono/compare/models-v0.4.0...models-v0.4.1) (2024-05-08)
 
 

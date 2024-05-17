@@ -1,5 +1,12 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.4.2
+    * @leather-wallet/rpc bumped to 0.3.1
+
 ## [0.4.0](https://github.com/leather-wallet/mono/compare/utils-v0.3.0...utils-v0.4.0) (2024-05-07)
 
 
