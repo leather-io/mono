@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/query",
   "description": "Leather query",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
