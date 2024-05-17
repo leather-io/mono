@@ -8,6 +8,14 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.3.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/tokens bumped to 0.4.0
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.4.0
+
 ## [1.2.0](https://github.com/leather-wallet/mono/compare/ui-v1.1.0...ui-v1.2.0) (2024-04-23)
 
 

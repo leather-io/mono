@@ -8,6 +8,14 @@
     * @leather-wallet/prettier-config bumped to 0.3.0
     * @leather-wallet/tsconfig-config bumped to 0.3.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.4.0
+    * @leather-wallet/prettier-config bumped to 0.4.0
+    * @leather-wallet/tsconfig-config bumped to 0.4.0
+
 ## [1.4.9](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.8...leather-mono-v1.4.9) (2024-05-17)
 
 

@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/eslint-config",
   "description": "Shared eslint configuration",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "MIT",
   "author": "Leather.io contact@leather.io",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/eslint-config",
