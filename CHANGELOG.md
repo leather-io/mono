@@ -1,5 +1,13 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.3.0
+    * @leather-wallet/prettier-config bumped to 0.3.0
+    * @leather-wallet/tsconfig-config bumped to 0.3.0
+
 ## [1.4.7](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.6...leather-mono-v1.4.7) (2024-05-17)
 
 
