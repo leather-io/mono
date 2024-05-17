@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - dev
+      - ci/release-please-use-node-workspaces-plugin
 
 permissions:
   contents: write
@@ -15,17 +15,25 @@ jobs:
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
-      - uses: google-github-actions/release-please-action@v4
-        id: release
+      - uses: google-github-actions/release-please-action@v3
         with:
-          # this assumes that you have created a personal access token (PAT)
+          command: manifest
           token: ${{ secrets.LEATHER_BOT }}
-          # optional. customize path to release-please-config.json
-          config-file: release-please-config.json
-          # optional. customize path to .release-please-manifest.json
-          manifest-file: .release-please-manifest.json
-          # Our target branch should be `dev`
-          target-branch: dev
+          default-branch: ci/release-please-use-node-workspaces-plugin
+
+    # TODO: get this back when release-please-action@4 gets an update for pnpm node workspaces.
+    # steps:
+    #   - uses: google-github-actions/release-please-action@v4
+    #     id: release
+    #     with:
+    #       # this assumes that you have created a personal access token (PAT)
+    #       token: ${{ secrets.LEATHER_BOT }}
+    #       # optional. customize path to release-please-config.json
+    #       config-file: release-please-config.json
+    #       # optional. customize path to .release-please-manifest.json
+    #       manifest-file: .release-please-manifest.json
+    #       # Our target branch should be `dev`
+    #       target-branch: dev
 
   # The logic below handles the npm publication:
   deploy:
