@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.7](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.6...leather-mono-v1.4.7) (2024-05-17)
+
+
+### Bug Fixes
+
+* release-please use node workspaces plugin + rollback action to v3 ([3e6bd00](https://github.com/leather-wallet/mono/commit/3e6bd008e4e85a46374ecb1dbefa9a566629fdd1))
+
 ## [1.4.6](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.5...leather-mono-v1.4.6) (2024-05-15)
 
 
