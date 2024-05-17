@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/prettier-config",
   "description": "Shared prettier configuration",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
