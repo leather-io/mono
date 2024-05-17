@@ -16,6 +16,7 @@ jobs:
       releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - uses: google-github-actions/release-please-action@v3
+        id: release
         with:
           command: manifest
           token: ${{ secrets.LEATHER_BOT }}
