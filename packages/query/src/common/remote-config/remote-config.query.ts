@@ -157,3 +157,8 @@ export function useConfigRunesEnabled() {
   const config = useRemoteConfig();
   return get(config, 'runesEnabled', false);
 }
+
+export function useConfigSwapEnabled() {
+  const config = useRemoteConfig();
+  return get(config, 'swapEnabled', false);
+}
