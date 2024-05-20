@@ -1,4 +1,5 @@
-import { useConfigOrdinalsbot, useLeatherNetwork } from '@leather-wallet/query';
+import { useConfigOrdinalsbot } from '../../../common/remote-config/remote-config.query';
+import { useLeatherNetwork } from '../../../leather-query-provider';
 
 // ts-unused-exports:disable-next-line
 export function useBrc20FeatureFlag() {
