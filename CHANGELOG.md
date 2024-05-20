@@ -16,6 +16,15 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [1.4.11](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.10...leather-mono-v1.4.11) (2024-05-20)
+
+
+### Bug Fixes
+
+* bundle packages so that those work in node envs too ([02b6347](https://github.com/leather-wallet/mono/commit/02b63476e4ea4a519718b31bcc1aeb53aae263f0))
+* undefined ordinalsbot config ([4ab0881](https://github.com/leather-wallet/mono/commit/4ab0881afb939f9b8fbaf84a529eaae88ac0d391))
+* update queries with useConfigSwapEnabled ([cf293c3](https://github.com/leather-wallet/mono/commit/cf293c39342f212f90c2e4583d02144cd370b6bd))
+
 ## [1.4.9](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.8...leather-mono-v1.4.9) (2024-05-17)
 
 

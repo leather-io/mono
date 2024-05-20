@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.1](https://github.com/leather-wallet/mono/compare/utils-v0.6.0...utils-v0.6.1) (2024-05-20)
+
+
+### Bug Fixes
+
+* bundle packages so that those work in node envs too ([02b6347](https://github.com/leather-wallet/mono/commit/02b63476e4ea4a519718b31bcc1aeb53aae263f0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/constants bumped to 0.6.1
+    * @leather-wallet/models bumped to 0.6.1
+    * @leather-wallet/rpc bumped to 0.3.5
+
 ## [0.6.0](https://github.com/leather-wallet/mono/compare/utils-v0.5.1...utils-v0.6.0) (2024-05-17)
 
 
