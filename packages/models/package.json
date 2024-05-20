@@ -9,8 +9,8 @@
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
-    "ts:build": "tsc --build",
-    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
+    "ts:build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
+    "ts:build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
@@ -28,8 +28,10 @@
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
     "@types/react": "18.2.64",
+    "concurrently": "8.2.2",
     "eslint": "8.53.0",
     "prettier": "3.2.5",
+    "tsup": "8.0.1",
     "typescript": "5.3.3"
   },
   "exports": {

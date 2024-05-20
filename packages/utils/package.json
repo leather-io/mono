@@ -11,8 +11,8 @@
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "ts:build": "tsc --build",
-    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
+    "ts:build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
+    "ts:build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/utils",
@@ -33,14 +33,17 @@
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
     "@vitest/coverage-istanbul": "0.34.6",
+    "concurrently": "8.2.2",
     "eslint": "8.53.0",
     "jsdom": "22.1.0",
     "prettier": "3.2.5",
+    "tsup": "8.0.1",
     "typescript": "5.3.3",
     "vitest": "0.34.6"
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     }
