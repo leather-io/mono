@@ -47,7 +47,7 @@ interface RemoteConfig {
   bitcoinSendEnabled: boolean;
   feeEstimationsMinMax?: FeeEstimationsConfig;
   nftMetadataEnabled: boolean;
-  ordinalsbot: {
+  ordinalsbot?: {
     integrationEnabled: boolean;
     mainnetApiUrl: string;
     signetApiUrl: string;
@@ -147,9 +147,9 @@ export function useConfigOrdinalsbot() {
   const config = useRemoteConfig();
 
   return {
-    integrationEnabled: config?.ordinalsbot.integrationEnabled ?? true,
-    mainnetApiUrl: config?.ordinalsbot.mainnetApiUrl ?? 'https://api2.ordinalsbot.com',
-    signetApiUrl: config?.ordinalsbot.signetApiUrl ?? 'https://signet.ordinalsbot.com',
+    integrationEnabled: config?.ordinalsbot?.integrationEnabled ?? true,
+    mainnetApiUrl: config?.ordinalsbot?.mainnetApiUrl ?? 'https://api2.ordinalsbot.com',
+    signetApiUrl: config?.ordinalsbot?.signetApiUrl ?? 'https://signet.ordinalsbot.com',
   };
 }
 
