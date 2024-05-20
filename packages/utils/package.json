@@ -1,7 +1,7 @@
 {
   "name": "@leather-wallet/utils",
   "description": "Shared bitcoin utilities",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "type": "module",
   "author": "Leather.io contact@leather.io",
