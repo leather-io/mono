@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/leather-wallet/mono/compare/models-v0.6.1...models-v0.6.2) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract address to sip10 asset info ([28012c7](https://github.com/leather-wallet/mono/commit/28012c761766d455cdb157ece54e3a19e20fb458))
+
 ## [0.6.1](https://github.com/leather-wallet/mono/compare/models-v0.6.0...models-v0.6.1) (2024-05-20)
 
 

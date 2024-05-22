@@ -1,5 +1,14 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.2
+    * @leather-wallet/models bumped to 0.6.2
+    * @leather-wallet/rpc bumped to 0.3.6
+    * @leather-wallet/utils bumped to 0.6.2
+
 ## [0.6.2](https://github.com/leather-wallet/mono/compare/query-v0.6.1...query-v0.6.2) (2024-05-22)
 
 

@@ -6,6 +6,12 @@
   * dependencies
     * @leather-wallet/models bumped to 0.6.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.6.2
+
 ## [0.3.4](https://github.com/leather-wallet/mono/compare/rpc-v0.3.3...rpc-v0.3.4) (2024-05-17)
 
 
