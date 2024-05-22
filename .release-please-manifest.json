@@ -1,15 +1,15 @@
 {
-  ".": "1.4.14",
+  ".": "1.4.15",
   "apps/mobile": "1.3.3",
-  "packages/bitcoin": "0.6.3",
+  "packages/bitcoin": "0.6.4",
   "packages/constants": "0.6.1",
   "packages/eslint-config": "0.4.0",
-  "packages/models": "0.6.3",
+  "packages/models": "0.6.4",
   "packages/prettier-config": "0.4.0",
-  "packages/query": "0.6.4",
+  "packages/query": "0.6.5",
   "packages/tokens": "0.4.0",
   "packages/tsconfig-config": "0.4.0",
-  "packages/rpc": "0.3.7",
+  "packages/rpc": "0.3.8",
   "packages/ui": "1.2.2",
-  "packages/utils": "0.6.3"
+  "packages/utils": "0.6.4"
 }
