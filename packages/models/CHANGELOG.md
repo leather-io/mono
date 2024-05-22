@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/leather-wallet/mono/compare/models-v0.6.2...models-v0.6.3) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract asset name to model ([cef956e](https://github.com/leather-wallet/mono/commit/cef956e7690a915ce702dca7d42823d6d1c69f8e))
+
 ## [0.6.2](https://github.com/leather-wallet/mono/compare/models-v0.6.1...models-v0.6.2) (2024-05-22)
 
 
