@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/leather-wallet/mono/compare/models-v0.6.3...models-v0.6.4) (2024-05-22)
+
+
+### Bug Fixes
+
+* update asset models based on discussion ([2bd453e](https://github.com/leather-wallet/mono/commit/2bd453ece14942d0e00e5f0f09620935390c42c6))
+
 ## [0.6.3](https://github.com/leather-wallet/mono/compare/models-v0.6.2...models-v0.6.3) (2024-05-22)
 
 
