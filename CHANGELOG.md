@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [1.4.13](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.12...leather-mono-v1.4.13) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract address to sip10 asset info ([28012c7](https://github.com/leather-wallet/mono/commit/28012c761766d455cdb157ece54e3a19e20fb458))
+
 ## [1.4.12](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.11...leather-mono-v1.4.12) (2024-05-22)
 
 
