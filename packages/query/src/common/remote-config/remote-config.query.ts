@@ -3,56 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import get from 'lodash.get';
 
+import type { ActiveFiatProvider, HiroMessage, RemoteConfig } from '../../../types/remote-config';
 import { LeatherEnvironment, useLeatherEnv, useLeatherGithub } from '../../leather-query-provider';
-
-export interface HiroMessage {
-  id: string;
-  title: string;
-  text: string;
-  img?: string;
-  imgWidth?: string;
-  purpose: 'error' | 'info' | 'warning';
-  publishedAt: string;
-  dismissible: boolean;
-  chainTarget: 'all' | 'mainnet' | 'testnet';
-  learnMoreUrl?: string;
-  learnMoreText?: string;
-}
-
-export enum AvailableRegions {
-  InsideUsa = 'inside-usa-only',
-  OutsideUsa = 'outside-usa-only',
-  Global = 'global',
-}
-
-export interface ActiveFiatProvider {
-  availableRegions: AvailableRegions;
-  enabled: boolean;
-  hasFastCheckoutProcess: boolean;
-  hasTradingFees: boolean;
-  name: string;
-}
-
-interface FeeEstimationsConfig {
-  maxValues?: number[];
-  maxValuesEnabled?: boolean;
-  minValues?: number[];
-  minValuesEnabled?: boolean;
-}
-
-interface RemoteConfig {
-  messages: any;
-  activeFiatProviders?: Record<string, ActiveFiatProvider>;
-  bitcoinEnabled: boolean;
-  bitcoinSendEnabled: boolean;
-  feeEstimationsMinMax?: FeeEstimationsConfig;
-  nftMetadataEnabled: boolean;
-  ordinalsbot?: {
-    integrationEnabled: boolean;
-    mainnetApiUrl: string;
-    signetApiUrl: string;
-  };
-}
 
 function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github']) {
   const IS_DEV_ENV = env === 'development';
@@ -65,6 +17,9 @@ function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github
   }/config/wallet-config.json`;
 
   return async function fetchLeatherMessagesImpl(): Promise<RemoteConfig> {
+    if (leatherGh.localConfig && (IS_DEV_ENV || IS_TESTING_ENV)) {
+      return leatherGh.localConfig;
+    }
     const resp = await axios.get(githubWalletConfigRawUrl);
     return resp.data;
   };

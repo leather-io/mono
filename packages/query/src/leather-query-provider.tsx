@@ -4,12 +4,15 @@ import { NetworkConfiguration, NetworkModes } from '@leather-wallet/models';
 import { ChainID } from '@stacks/common';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import type { RemoteConfig } from '../types/remote-config';
+
 export interface LeatherEnvironment {
   env: string;
   github: {
     org: string;
     repo: string;
     branchName?: string;
+    localConfig?: RemoteConfig;
   };
 }
 
