@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [1.4.14](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.13...leather-mono-v1.4.14) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract asset name to model ([cef956e](https://github.com/leather-wallet/mono/commit/cef956e7690a915ce702dca7d42823d6d1c69f8e))
+
 ## [1.4.13](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.12...leather-mono-v1.4.13) (2024-05-22)
 
 
