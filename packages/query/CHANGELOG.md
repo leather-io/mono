@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/leather-wallet/mono/compare/query-v0.6.1...query-v0.6.2) (2024-05-22)
+
+
+### Bug Fixes
+
+* use local config when env is set to testing/dev ([e3dc66f](https://github.com/leather-wallet/mono/commit/e3dc66fdda7283b4969392de53a6cdbbb10aad7c))
+
 ## [0.6.1](https://github.com/leather-wallet/mono/compare/query-v0.6.0...query-v0.6.1) (2024-05-20)
 
 

@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [1.4.12](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.11...leather-mono-v1.4.12) (2024-05-22)
+
+
+### Bug Fixes
+
+* use local config when env is set to testing/dev ([e3dc66f](https://github.com/leather-wallet/mono/commit/e3dc66fdda7283b4969392de53a6cdbbb10aad7c))
+
 ## [1.4.11](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.10...leather-mono-v1.4.11) (2024-05-20)
 
 
