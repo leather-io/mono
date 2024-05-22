@@ -50,7 +50,6 @@ export interface Src20CryptoAssetInfo extends BaseCryptoAssetInfo {
 // Stacks
 export interface Sip9CryptoAssetInfo {
   readonly contractId: string;
-  readonly contractName: string;
   readonly imageCanonicalUri: string;
   readonly name: string;
 }
@@ -58,11 +57,8 @@ export interface Sip9CryptoAssetInfo {
 export interface Sip10CryptoAssetInfo extends BaseCryptoAssetInfo {
   readonly canTransfer: boolean;
   readonly contractId: string;
-  readonly contractName: string;
-  readonly contractAddress: string;
-  readonly contractAssetName: string;
   readonly imageCanonicalUri: string;
-  readonly tokenName: string;
+  readonly name: string;
   readonly symbol: string;
 }
 
