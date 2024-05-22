@@ -43,4 +43,5 @@ export * from './types/account';
 export * from './types/api-types';
 export * from './types/contract-types';
 export * from './types/inscription';
+export * from './types/remote-config';
 export * from './types/utxo';
