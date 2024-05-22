@@ -59,6 +59,7 @@ export interface Sip10CryptoAssetInfo extends BaseCryptoAssetInfo {
   readonly canTransfer: boolean;
   readonly contractId: string;
   readonly contractName: string;
+  readonly contractAddress: string;
   readonly imageCanonicalUri: string;
   readonly name: string;
   readonly symbol: string;
