@@ -5,6 +5,7 @@
   "scripts": {
     "assets:native": "mkdir -p dist-native/src && cp -r src/assets-native ./dist-native/src/",
     "assets:web": "mkdir -p dist-web/src && cp -r src/assets-web ./dist-web/src",
+    "build": "tsup", 
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
@@ -77,6 +78,7 @@
     "style-loader": "3.3.4",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "tslib": "2.6.2",
+    "tsup": "8.0.1",
     "typescript": "5.3.3"
   },
   "exports": {

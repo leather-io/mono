@@ -12,5 +12,5 @@ export default meta;
 type Story = StoryObj<typeof Title>;
 
 export const Default: Story = {
-  render: () => <Title>Title</Title>,
+  render: () => <Title />,
 };

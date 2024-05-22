@@ -24,7 +24,8 @@ export default defineConfig({
   strictTokens: false,
 
   outdir: 'src/leather-styles',
-  outExtension: 'js',
+  outExtension: 'mjs',
   minify: true,
   globalCss: dummyGlobalCss,
+  emitPackage: true,
 });
