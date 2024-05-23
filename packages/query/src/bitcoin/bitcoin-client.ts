@@ -130,11 +130,6 @@ interface RunesTickerInfoResponse {
   data: RuneTickerInfo;
 }
 
-export interface RuneToken {
-  balance: Money;
-  tokenData: RuneBalance & RuneTickerInfo;
-}
-
 export interface RunesOutputsByAddress {
   pkscript: string;
   wallet_addr: string;

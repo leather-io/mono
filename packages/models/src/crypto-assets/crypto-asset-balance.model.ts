@@ -53,3 +53,7 @@ export type CryptoAssetBalance =
   | BaseCryptoAssetBalance
   | BtcCryptoAssetBalance
   | StxCryptoAssetBalance;
+
+export function createCryptoAssetBalance(balance: Money): BaseCryptoAssetBalance {
+  return { availableBalance: balance };
+}
