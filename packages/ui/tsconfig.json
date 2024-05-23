@@ -4,11 +4,14 @@
     "composite": true,
     "incremental": true,
     "jsx": "react-native",
-    "lib": ["es2017", "DOM"],
+    "lib": ["esnext", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
-    "outDir": "./dist-all"
+    "outDir": "./dist-all",
+    "paths": {
+      "leather-styles/*": ["leather-styles/*"]
+    }
   },
-  "include": ["**/*", "src/.storybook-*/*"],
+  "include": ["**/*", "src/.storybook-*/*", "src/types/global.d.ts", "leather-styles"],
   "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
 }
