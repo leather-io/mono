@@ -1,8 +1,7 @@
 import { keyframes as leatherKeyframes } from '@leather-wallet/tokens';
 
-import { CssKeyframes } from '../leather-styles/types/system-types';
-
-export const keyframes: CssKeyframes = {
+// TODO investigate if this can be move into tokens?
+export const keyframes = {
   ...leatherKeyframes,
   slideDownAndOut: {
     from: { opacity: 1, transform: 'translateY(0)' },
