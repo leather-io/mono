@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "io.leather.mobilewallet",
-      "buildNumber": "1.0.2"
+      "buildNumber": "1.0.3"
     },
     "android": {
       "adaptiveIcon": {
