@@ -59,7 +59,11 @@ module.exports = {
         // Allow type circular deps to be a little less strict
         dependencyTypes: ['type-only'],
         // Panda has out the box circular dependencies
-        pathNot: 'packages/ui/src/leather-styles/types',
+        pathNot: [
+          'packages/ui/leather-styles/types',
+          'packages/ui/src/leather-styles/types',
+          'packages/panda-preset/leather-styles/types',
+        ],
       },
     },
     {
