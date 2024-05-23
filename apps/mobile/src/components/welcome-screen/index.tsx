@@ -267,7 +267,8 @@ export function WelcomeScreen() {
           setIsInputFocused(false);
         }}
         inputState={getInputState()}
-        autoComplete="email"
+        // TODO: turning this off due to an iOS 17 bumpy input bug
+        autoComplete="off"
         autoCapitalize="none"
         keyboardType="email-address"
         inputMode="email"
