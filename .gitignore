@@ -3,3 +3,5 @@ dist
 build
 tsconfig.tsbuildinfo
 .turbo/
+
+leather-styles
