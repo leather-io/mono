@@ -1,0 +1,20 @@
+{
+  "name": "@leather-wallet/panda-preset",
+  "version": "0.0.1",
+  "description": "Leather styles package",
+  "author": "Leather, LLC",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/preset.js",
+  "scripts": {
+    "build": "tsup",
+    "prepare": "panda codegen"
+  },
+  "devDependencies": {
+    "@leather-wallet/tokens": "workspace:*",
+    "@pandacss/dev": "0.26.2",
+    "tsup": "8.0.1"
+  }
+}
