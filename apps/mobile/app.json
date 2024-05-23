@@ -15,13 +15,11 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "io.leather.mobilewallet",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.1"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,11 +28,7 @@
       },
       "package": "io.leather.mobilewallet"
     },
-    "plugins": [
-      "expo-font",
-      "expo-router",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-font", "expo-router", "expo-secure-store"],
     "extra": {
       "router": {
         "origin": false
