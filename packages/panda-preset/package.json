@@ -12,9 +12,11 @@
     "build": "tsup",
     "prepare": "panda codegen"
   },
+  "dependencies": {
+    "@pandacss/dev": "0.26.2"
+  },
   "devDependencies": {
     "@leather-wallet/tokens": "workspace:*",
-    "@pandacss/dev": "0.26.2",
     "tsup": "8.0.1"
   }
 }
