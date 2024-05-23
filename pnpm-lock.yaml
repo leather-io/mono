@@ -488,13 +488,13 @@ importers:
         version: 4.35.7
       '@tanstack/react-query':
         specifier: 4.35.7
-        version: 4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+        version: 4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@tanstack/react-query-devtools':
         specifier: 4.35.7
-        version: 4.35.7(@tanstack/react-query@4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.35.7(@tanstack/react-query@4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       '@tanstack/react-query-persist-client':
         specifier: 4.35.7
-        version: 4.35.7(@tanstack/react-query@4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))
+        version: 4.35.7(@tanstack/react-query@4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))
       axios:
         specifier: 1.6.7
         version: 1.6.7
@@ -608,6 +608,9 @@ importers:
       '@leather-wallet/tokens':
         specifier: workspace:*
         version: link:../tokens
+      '@leather-wallet/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@radix-ui/react-avatar':
         specifier: 1.0.4
         version: 1.0.4(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -626,6 +629,9 @@ importers:
       '@shopify/restyle':
         specifier: 2.4.2
         version: 2.4.2(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      '@storybook/react':
+        specifier: 7.6.15
+        version: 7.6.15(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
       expo:
         specifier: 51.0.8
         version: 51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
@@ -711,9 +717,6 @@ importers:
       '@storybook/manager-api':
         specifier: 7.6.17
         version: 7.6.17(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@storybook/react':
-        specifier: 7.6.15
-        version: 7.6.15(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
       '@storybook/react-native':
         specifier: 7.6.15
         version: 7.6.15(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
@@ -9313,6 +9316,11 @@ packages:
     peerDependencies:
       react: ^18.2.0
 
+  react-dom@18.3.1:
+    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+    peerDependencies:
+      react: ^18.3.1
+
   react-element-to-jsx-string@15.0.0:
     resolution: {integrity: sha512-UDg4lXB6BzlobN60P8fHWVPX3Kyw8ORrTeBtClmIlGdkOOE+GYQSFvmEU5iLLpwp/6v42DINwNcwOhOLfQ//FQ==}
     peerDependencies:
@@ -16532,19 +16540,19 @@ snapshots:
     dependencies:
       '@tanstack/query-persist-client-core': 4.35.7
 
-  '@tanstack/react-query-devtools@4.35.7(@tanstack/react-query@4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-query-devtools@4.35.7(@tanstack/react-query@4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/match-sorter-utils': 8.15.1
-      '@tanstack/react-query': 4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      '@tanstack/react-query': 4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react-dom: 18.3.1(react@18.2.0)
       superjson: 1.13.3
       use-sync-external-store: 1.2.2(react@18.2.0)
 
-  '@tanstack/react-query-persist-client@4.35.7(@tanstack/react-query@4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))':
+  '@tanstack/react-query-persist-client@4.35.7(@tanstack/react-query@4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))':
     dependencies:
       '@tanstack/query-persist-client-core': 4.35.7
-      '@tanstack/react-query': 4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      '@tanstack/react-query': 4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
 
   '@tanstack/react-query@4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -16555,13 +16563,13 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
 
-  '@tanstack/react-query@4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-query@4.35.7(react-dom@18.3.1(react@18.2.0))(react-native@0.74.1(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/query-core': 4.35.7
       react: 18.2.0
       use-sync-external-store: 1.2.2(react@18.2.0)
     optionalDependencies:
-      react-dom: 18.2.0(react@18.2.0)
+      react-dom: 18.3.1(react@18.2.0)
       react-native: 0.74.1(@types/react@18.2.79)(react@18.2.0)
 
   '@testing-library/dom@9.3.4':
@@ -23041,6 +23049,12 @@ snapshots:
       - supports-color
 
   react-dom@18.2.0(react@18.2.0):
+    dependencies:
+      loose-envify: 1.4.0
+      react: 18.2.0
+      scheduler: 0.23.2
+
+  react-dom@18.3.1(react@18.2.0):
     dependencies:
       loose-envify: 1.4.0
       react: 18.2.0

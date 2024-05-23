@@ -6,6 +6,8 @@ export { createCounter } from './counter';
 export * from './math';
 export * from './money';
 export * from './truncate-middle';
+export { spamFilter } from './spam-filter/spam-filter';
+export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';

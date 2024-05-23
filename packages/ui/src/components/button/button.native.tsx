@@ -53,7 +53,7 @@ function getSize(size: ButtonSize) {
   }
 }
 
-export const Button = ({ onPress, label, variant, size = 'medium', style }: ButtonProps) => {
+export function Button({ onPress, label, variant, size = 'medium', style }: ButtonProps) {
   const colorStyles = getColors(variant);
   const sizeStyles = getSize(size);
 
@@ -74,4 +74,4 @@ export const Button = ({ onPress, label, variant, size = 'medium', style }: Butt
       </Box>
     </TouchableOpacity>
   );
-};
+}
