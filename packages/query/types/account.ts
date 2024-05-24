@@ -1,6 +1,4 @@
-import { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
-
-import type { Money } from '@leather-wallet/models';
+import type { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
 
 type SelectedKeys =
   | 'balance'
@@ -11,6 +9,15 @@ type SelectedKeys =
   | 'locked';
 
 export type AccountBalanceStxKeys = keyof Pick<AddressBalanceResponse['stx'], SelectedKeys>;
+
+export const accountBalanceStxKeys: AccountBalanceStxKeys[] = [
+  'balance',
+  'total_sent',
+  'total_received',
+  'total_fees_sent',
+  'total_miner_rewards_received',
+  'locked',
+];
 
 /**
  * This is a duplicated type from the types lib/generated API client
@@ -46,18 +53,4 @@ export interface AddressBalanceResponse {
     }
   >;
   token_offering_locked?: AddressTokenOfferingLocked;
-}
-
-export interface AccountStxBalanceBigNumber
-  extends Omit<AddressBalanceResponse['stx'], AccountBalanceStxKeys> {
-  balance: Money;
-  total_sent: Money;
-  total_received: Money;
-  total_fees_sent: Money;
-  total_miner_rewards_received: Money;
-  locked: Money;
-}
-
-export interface AccountBalanceResponseBigNumber extends Omit<AddressBalanceResponse, 'stx'> {
-  stx: AccountStxBalanceBigNumber;
 }

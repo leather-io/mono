@@ -1,10 +1,11 @@
-import { BigNumber } from 'bignumber.js';
-
+import { KEBAB_REGEX } from '@leather-wallet/constants';
 import type { NetworkModes } from '@leather-wallet/models';
+import { BigNumber } from 'bignumber.js';
 
 export { createCounter } from './counter';
 export * from './math';
 export * from './money';
+export * from './sort-assets';
 export * from './truncate-middle';
 export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
@@ -112,7 +113,7 @@ export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedR
   return p.status === 'rejected';
 }
 
-export function pullContractIdFromIdentity(identifier: string) {
+export function getPrincipalFromContractId(identifier: string) {
   return identifier.split('::')[0];
 }
 
@@ -122,4 +123,33 @@ export function formatContractId(address: string, name: string) {
 
 export function createNullArrayOfLength(length: number) {
   return new Array(length).fill(null);
+}
+
+export function safelyFormatHexTxid(id: string) {
+  const prefix = '0x';
+  if (id.startsWith(prefix)) return id;
+  return prefix + id;
+}
+
+function kebabCase(str: string) {
+  return str.replace(KEBAB_REGEX, match => '-' + match.toLowerCase());
+}
+
+function getLetters(string: string, offset = 1) {
+  return string.slice(0, offset);
+}
+
+export function getTicker(value: string) {
+  let name = kebabCase(value);
+  if (name.includes('-')) {
+    const words = name.split('-');
+    if (words.length >= 3) {
+      name = `${getLetters(words[0])}${getLetters(words[1])}${getLetters(words[2])}`;
+    } else {
+      name = `${getLetters(words[0])}${getLetters(words[1], 2)}`;
+    }
+  } else if (name.length >= 3) {
+    name = `${getLetters(name, 3)}`;
+  }
+  return name.toUpperCase();
 }
