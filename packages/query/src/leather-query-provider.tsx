@@ -60,6 +60,7 @@ export function useLeatherNetwork() {
 
   return leatherNetwork;
 }
+
 export function useCurrentNetworkState() {
   const currentNetwork = useLeatherNetwork();
 
