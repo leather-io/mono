@@ -27,6 +27,13 @@
     * @leather-wallet/rpc bumped to 0.3.8
     * @leather-wallet/utils bumped to 0.6.4
 
+## [0.6.7](https://github.com/leather-wallet/mono/compare/query-v0.6.6...query-v0.6.7) (2024-05-25)
+
+
+### Bug Fixes
+
+* apply queries changes ([33bb19a](https://github.com/leather-wallet/mono/commit/33bb19ad5b52b95850103a9b6ed36165046a20f8))
+
 ## [0.6.6](https://github.com/leather-wallet/mono/compare/query-v0.6.5...query-v0.6.6) (2024-05-23)
 
 
