@@ -1,7 +1,7 @@
 import { defineRecipe } from '@pandacss/dev';
+import { ColorToken } from 'leather-styles/tokens';
 
-import { ColorToken } from '../../leather-styles/tokens';
-
+//  TODO - remove after discussion on best location for recipes
 function loadingStyles(color: ColorToken) {
   return {
     _loading: {
