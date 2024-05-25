@@ -10,7 +10,7 @@
   "main": "dist/preset.js",
   "scripts": {
     "build": "tsup",
-    "prepare": "panda codegen"
+    "panda": "panda codegen"
   },
   "dependencies": {
     "@pandacss/dev": "0.26.2"

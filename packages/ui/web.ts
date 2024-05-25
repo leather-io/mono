@@ -1,2 +1,2 @@
-export { Caption } from './src/components/text/caption.web';
-export { Title } from './src/components/text/title.web';
+export { Button } from './src/components/button/button.web';
+export { Link } from './src/components/link/link.web';

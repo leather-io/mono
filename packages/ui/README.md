@@ -41,6 +41,13 @@ Running on Android device
 
 - `npm run android` if you want to run it on Android emulator
 
+## Pete Panda
+
+Need to run:
+
+- `pnpm panda` to generate `leather-styles`
+- `pnpm ts:build:web` to then output the component dist
+
 ## License
 
 [MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)

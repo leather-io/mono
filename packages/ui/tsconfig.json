@@ -4,6 +4,11 @@
     "jsx": "react-native",
     "lib": ["es2017", "DOM"],
     "baseUrl": ".",
+    // "paths": {
+    //   "@icons/*": ["icons/*"],
+    //   "@components/*": ["components/*"]
+    //   // "leather-styles/*": ["../leather-styles/*"]
+    // },
     "rootDir": ".",
     "outDir": "./dist-all"
   },

@@ -1,11 +1,5 @@
-import { defineConfig, defineGlobalStyles } from '@pandacss/dev';
+import { defineConfig } from '@pandacss/dev';
 
-import leatherPandaPreset from './src/theme-web/leather-panda-preset';
-
-// Use dummy globalCss without any extension specific
-const dummyGlobalCss = defineGlobalStyles({});
-
-// Used for UI components development in storybook
 export default defineConfig({
   preflight: true,
 
@@ -14,8 +8,8 @@ export default defineConfig({
   exclude: [],
 
   prefix: 'leather',
-
-  presets: [leatherPandaPreset],
+  // this works but should check if I really need: @pandacss/dev then get rid of all `theme-web` stuff out of here
+  presets: ['@leather-wallet/panda-preset'],
 
   studio: { logo: '💼' },
 
@@ -23,8 +17,7 @@ export default defineConfig({
 
   strictTokens: false,
 
-  outdir: 'src/leather-styles',
+  outdir: 'leather-styles',
   outExtension: 'js',
   minify: true,
-  globalCss: dummyGlobalCss,
 });
