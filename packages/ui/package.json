@@ -2,6 +2,7 @@
   "name": "@leather-wallet/ui",
   "version": "1.2.2",
   "type": "module",
+  "main": "dist-web/web.js",
   "scripts": {
     "assets:native": "mkdir -p dist-native/src && cp -r src/assets-native ./dist-native/src/",
     "assets:web": "mkdir -p dist-web/src && cp -r src/assets-web ./dist-web/src",
@@ -85,7 +86,6 @@
     ".": "./dist-web/web.js",
     "./native": "./dist-native/native.js"
   },
-  "private": true,
   "publishConfig": {
     "access": "public"
   }
