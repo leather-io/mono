@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/preset.js",
+  "main": "dist/preset.js", 
   "scripts": {
     "build": "tsup",
     "panda": "panda codegen"

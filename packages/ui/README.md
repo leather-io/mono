@@ -57,3 +57,18 @@ Need to run:
 [⬅ Back](../../README.md)
 
 ---
+
+/\*
+tsup.config
+// "main": "dist/preset.js", // this works but it seems this doesn't get build in the CI properly
+
+// > Don't even need this file or tsup I think
+// made good progress but going in circles with bundling
+
+// panda-preset seems OK as I could publish and install that
+
+// not sure how to handle Button.
+
+// Maybe just try exporting that from preset too to avoid all the weird setup in ui? ??
+
+\*/

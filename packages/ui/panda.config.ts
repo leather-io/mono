@@ -8,7 +8,6 @@ export default defineConfig({
   exclude: [],
 
   prefix: 'leather',
-  // this works but should check if I really need: @pandacss/dev then get rid of all `theme-web` stuff out of here
   presets: ['@leather-wallet/panda-preset'],
 
   studio: { logo: '💼' },
@@ -19,5 +18,6 @@ export default defineConfig({
 
   outdir: 'leather-styles',
   outExtension: 'js',
+  emitPackage: true,
   minify: true,
 });
