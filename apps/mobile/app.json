@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Leather Wallet",
+    "name": "Leather BTC",
     "slug": "leather-wallet-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "io.leather.mobilewallet",
-      "buildNumber": "1.0.4"
+      "buildNumber": "1.0.5"
     },
     "android": {
       "adaptiveIcon": {
