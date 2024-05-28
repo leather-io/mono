@@ -177,10 +177,19 @@
           "prop-types": "*"
         }
       },
-      "expo-asset": {
+      "react-native@*": {
+        "peerDependencies": {
+          "@react-native/assets-registry": "*"
+        }
+      },
+      "expo-asset@*": {
         "dependencies": {
           "expo-modules-core": "*",
           "@expo/cli": "*"
+        },
+        "peerDependencies": {
+          "@react-native/assets-registry": "*",
+          "expo-font": "*"
         }
       },
       "detox@*": {
