@@ -5,8 +5,11 @@
     "lib": ["es2017", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
-    "outDir": "./dist-web"
+    "outDir": "./dist-web",
+    "paths": {
+      "leather-styles/*": ["leather-styles/*"]
+    }
   },
-  "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts", "**/theme-web/**/*"],
+  "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
 }
