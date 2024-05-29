@@ -17,7 +17,7 @@
     "tsup": "8.0.1"
   },
   "exports": {
-    ".": "./dist/preset.cjs"
+    ".": "./dist/preset.js"
   },
   "publishConfig": {
     "access": "public"
