@@ -1,5 +1,56 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.2
+    * @leather-wallet/models bumped to 0.6.2
+    * @leather-wallet/rpc bumped to 0.3.6
+    * @leather-wallet/utils bumped to 0.6.2
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.3
+    * @leather-wallet/models bumped to 0.6.3
+    * @leather-wallet/rpc bumped to 0.3.7
+    * @leather-wallet/utils bumped to 0.6.3
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.4
+    * @leather-wallet/models bumped to 0.6.4
+    * @leather-wallet/rpc bumped to 0.3.8
+    * @leather-wallet/utils bumped to 0.6.4
+
+## [0.6.7](https://github.com/leather-wallet/mono/compare/query-v0.6.6...query-v0.6.7) (2024-05-25)
+
+
+### Bug Fixes
+
+* apply queries changes ([33bb19a](https://github.com/leather-wallet/mono/commit/33bb19ad5b52b95850103a9b6ed36165046a20f8))
+
+## [0.6.6](https://github.com/leather-wallet/mono/compare/query-v0.6.5...query-v0.6.6) (2024-05-23)
+
+
+### Bug Fixes
+
+* apply recent query updates ([892351a](https://github.com/leather-wallet/mono/commit/892351a71a83ec70d5fcc683113f6590fa63fa66))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.5
+    * @leather-wallet/models bumped to 0.6.5
+    * @leather-wallet/rpc bumped to 0.3.9
+    * @leather-wallet/utils bumped to 0.6.5
+
 ## [0.6.2](https://github.com/leather-wallet/mono/compare/query-v0.6.1...query-v0.6.2) (2024-05-22)
 
 

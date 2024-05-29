@@ -16,6 +16,41 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [1.4.17](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.16...leather-mono-v1.4.17) (2024-05-25)
+
+
+### Bug Fixes
+
+* apply queries changes ([33bb19a](https://github.com/leather-wallet/mono/commit/33bb19ad5b52b95850103a9b6ed36165046a20f8))
+
+## [1.4.16](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.15...leather-mono-v1.4.16) (2024-05-23)
+
+
+### Bug Fixes
+
+* apply recent query updates ([892351a](https://github.com/leather-wallet/mono/commit/892351a71a83ec70d5fcc683113f6590fa63fa66))
+
+## [1.4.15](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.14...leather-mono-v1.4.15) (2024-05-22)
+
+
+### Bug Fixes
+
+* update asset models based on discussion ([2bd453e](https://github.com/leather-wallet/mono/commit/2bd453ece14942d0e00e5f0f09620935390c42c6))
+
+## [1.4.14](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.13...leather-mono-v1.4.14) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract asset name to model ([cef956e](https://github.com/leather-wallet/mono/commit/cef956e7690a915ce702dca7d42823d6d1c69f8e))
+
+## [1.4.13](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.12...leather-mono-v1.4.13) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract address to sip10 asset info ([28012c7](https://github.com/leather-wallet/mono/commit/28012c761766d455cdb157ece54e3a19e20fb458))
+
 ## [1.4.12](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.11...leather-mono-v1.4.12) (2024-05-22)
 
 

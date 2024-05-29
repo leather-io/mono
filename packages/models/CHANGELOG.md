@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.6.5](https://github.com/leather-wallet/mono/compare/models-v0.6.4...models-v0.6.5) (2024-05-23)
+
+
+### Bug Fixes
+
+* apply recent query updates ([892351a](https://github.com/leather-wallet/mono/commit/892351a71a83ec70d5fcc683113f6590fa63fa66))
+
+## [0.6.4](https://github.com/leather-wallet/mono/compare/models-v0.6.3...models-v0.6.4) (2024-05-22)
+
+
+### Bug Fixes
+
+* update asset models based on discussion ([2bd453e](https://github.com/leather-wallet/mono/commit/2bd453ece14942d0e00e5f0f09620935390c42c6))
+
+## [0.6.3](https://github.com/leather-wallet/mono/compare/models-v0.6.2...models-v0.6.3) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract asset name to model ([cef956e](https://github.com/leather-wallet/mono/commit/cef956e7690a915ce702dca7d42823d6d1c69f8e))
+
+## [0.6.2](https://github.com/leather-wallet/mono/compare/models-v0.6.1...models-v0.6.2) (2024-05-22)
+
+
+### Bug Fixes
+
+* add contract address to sip10 asset info ([28012c7](https://github.com/leather-wallet/mono/commit/28012c761766d455cdb157ece54e3a19e20fb458))
+
 ## [0.6.1](https://github.com/leather-wallet/mono/compare/models-v0.6.0...models-v0.6.1) (2024-05-20)
 
 

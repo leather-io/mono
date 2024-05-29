@@ -1,7 +1,7 @@
 {
   "name": "leather-mono",
   "description": "Leather wallet shared code",
-  "version": "1.4.12",
+  "version": "1.4.17",
   "license": "MIT",
   "type": "module",
   "author": "Leather Wallet",
@@ -177,10 +177,19 @@
           "prop-types": "*"
         }
       },
-      "expo-asset": {
+      "react-native@*": {
+        "peerDependencies": {
+          "@react-native/assets-registry": "*"
+        }
+      },
+      "expo-asset@*": {
         "dependencies": {
           "expo-modules-core": "*",
           "@expo/cli": "*"
+        },
+        "peerDependencies": {
+          "@react-native/assets-registry": "*",
+          "expo-font": "*"
         }
       },
       "detox@*": {
