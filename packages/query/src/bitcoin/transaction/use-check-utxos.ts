@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { isUndefined } from '@leather-wallet/utils';
-import * as btc from '@scure/btc-signer';
+import { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 
 import { useCurrentNetworkState, useIsLeatherTestingEnv } from '../../leather-query-provider';
@@ -16,14 +16,14 @@ class PreventTransactionError extends Error {
 }
 
 interface FilterOutIntentionalInscriptionsSpendArgs {
-  inputs: btc.TransactionInput[];
+  inputs: TransactionInput[];
   intentionalSpendUtxoIds: string[];
 }
 
 export function filterOutIntentionalUtxoSpend({
   inputs,
   intentionalSpendUtxoIds,
-}: FilterOutIntentionalInscriptionsSpendArgs): btc.TransactionInput[] {
+}: FilterOutIntentionalInscriptionsSpendArgs): TransactionInput[] {
   return inputs.filter(input => {
     if (!input.txid) throw new Error('Transaction ID is missing in the input');
     const inputTxid = bytesToHex(input.txid);
@@ -35,7 +35,7 @@ export function filterOutIntentionalUtxoSpend({
 }
 
 interface CheckInscribedUtxosByBestinslotArgs {
-  inputs: btc.TransactionInput[];
+  inputs: TransactionInput[];
   txids: string[];
   client: BitcoinClient;
 }
@@ -86,7 +86,7 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
   }, [blockTxAction]);
 
   const checkIfUtxosListIncludesInscribed = useCallback(
-    async (inputs: btc.TransactionInput[]) => {
+    async (inputs: TransactionInput[]) => {
       setIsLoading(true);
       const txids = inputs.map(input => {
         if (!input.txid) throw new Error('Transaction ID is missing in the input');

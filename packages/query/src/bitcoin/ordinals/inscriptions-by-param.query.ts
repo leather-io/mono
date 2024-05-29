@@ -1,6 +1,6 @@
 import { BitcoinTx } from '@leather-wallet/models';
 import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
-import * as btc from '@scure/btc-signer';
+import { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -49,7 +49,7 @@ const inscriptionsByOutputQueriesOptions = {
   refetchOnWindowFocus: false,
 } as const;
 
-export function useGetInscriptionsByOutputQueries(inputs: btc.TransactionInput[]) {
+export function useGetInscriptionsByOutputQueries(inputs: TransactionInput[]) {
   return useQueries({
     queries: inputs.map(input => {
       const param = input.txid ? `output=${bytesToHex(input.txid)}:${input.index}` : '';
