@@ -1,6 +1,6 @@
 import { BitcoinTx } from '@leather-wallet/models';
 import { isUndefined } from '@leather-wallet/utils';
-import * as btc from '@scure/btc-signer';
+import { TransactionInput } from '@scure/btc-signer/psbt';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import { createInscriptionHiro } from './inscription.utils';
@@ -19,7 +19,7 @@ export function useInscriptionByOutput(transaction: BitcoinTx) {
   });
 }
 
-export function useInscriptionsByOutputs(inputs: btc.TransactionInput[]) {
+export function useInscriptionsByOutputs(inputs: TransactionInput[]) {
   return useGetInscriptionsByOutputQueries(inputs)
     .map(query => query.data?.results[0])
     .filter(

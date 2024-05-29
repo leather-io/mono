@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { decodeBitcoinTx } from '@leather-wallet/bitcoin';
 import { delay } from '@leather-wallet/utils';
-import * as btc from '@scure/btc-signer';
+import { TransactionInput } from '@scure/btc-signer/psbt';
 
 import { useBitcoinClient } from '../bitcoin-client';
 import { filterOutIntentionalUtxoSpend, useCheckUnspendableUtxos } from './use-check-utxos';
@@ -33,7 +33,7 @@ export function useBitcoinBroadcastTransaction() {
       try {
         if (skipSpendableCheckUtxoIds !== 'all') {
           // Filter out intentional spend inscription txid from the check list
-          const utxos: btc.TransactionInput[] = filterOutIntentionalUtxoSpend({
+          const utxos: TransactionInput[] = filterOutIntentionalUtxoSpend({
             inputs: decodeBitcoinTx(tx).inputs,
             intentionalSpendUtxoIds: skipSpendableCheckUtxoIds,
           });

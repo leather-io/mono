@@ -1,9 +1,10 @@
-import type { SignatureHash } from '@btckit/types';
 import type { BitcoinNetworkModes } from '@leather-wallet/models';
+import { SignatureHash } from '@leather-wallet/rpc';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
+import { SigHash } from '@scure/btc-signer/transaction';
 
-export type AllowedSighashTypes = SignatureHash | btc.SignatureHash;
+export type AllowedSighashTypes = SignatureHash | SigHash;
 
 export interface Signer<Payment> {
   network: BitcoinNetworkModes;
