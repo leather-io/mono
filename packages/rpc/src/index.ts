@@ -39,19 +39,21 @@ export interface ListenFn {
   (method: string, callback: () => void): () => void;
 }
 
+export interface LeatherProvider {
+  /**
+   * Request method. Takes a method name, and optional parameters
+   * @returns Typed response for corresponding method
+   */
+  request: RequestFn;
+  /**
+   * Listen method. Takes an event name to listen for, and a callback function.
+   * @returns An unsubscribe function
+   */
+  listen: ListenFn;
+}
+
 declare global {
   interface Window {
-    LeatherProvider?: {
-      /**
-       * Request method. Takes a method name, and optional parameters
-       * @returns Typed response for corresponding method
-       */
-      request: RequestFn;
-      /**
-       * Listen method. Takes an event name to listen for, and a callback function.
-       * @returns An unsubscribe function
-       */
-      listen: ListenFn;
-    };
+    LeatherProvider?: LeatherProvider;
   }
 }
