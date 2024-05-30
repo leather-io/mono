@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/leather-wallet/mono/compare/tokens-v0.4.0...tokens-v0.5.0) (2024-05-30)
+
+
+### Features
+
+* export as esm, ref leather-wallet/issues[#62](https://github.com/leather-wallet/mono/issues/62) ([6dfab53](https://github.com/leather-wallet/mono/commit/6dfab539b5358d16743d3e0a22358e9540ef9260))
+* panda preset package, ref leather-wallet/issues[#62](https://github.com/leather-wallet/mono/issues/62) ([0161799](https://github.com/leather-wallet/mono/commit/01617991e1e975339324e68916eec9012824c440))
+
 ## [0.4.0](https://github.com/leather-wallet/mono/compare/tokens-v0.3.1...tokens-v0.4.0) (2024-05-17)
 
 

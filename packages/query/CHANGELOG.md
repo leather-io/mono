@@ -27,6 +27,23 @@
     * @leather-wallet/rpc bumped to 0.3.8
     * @leather-wallet/utils bumped to 0.6.4
 
+## [0.6.8](https://github.com/leather-wallet/mono/compare/query-v0.6.7...query-v0.6.8) (2024-05-30)
+
+
+### Bug Fixes
+
+* syncpack ([8dcee26](https://github.com/leather-wallet/mono/commit/8dcee260c8cb7b81028ff8ae70341f88db5d256e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.6
+    * @leather-wallet/models bumped to 0.6.6
+    * @leather-wallet/rpc bumped to 0.3.10
+    * @leather-wallet/utils bumped to 0.6.6
+
 ## [0.6.7](https://github.com/leather-wallet/mono/compare/query-v0.6.6...query-v0.6.7) (2024-05-25)
 
 
