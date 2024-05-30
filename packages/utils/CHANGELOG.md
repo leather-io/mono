@@ -28,6 +28,21 @@
     * @leather-wallet/models bumped to 0.6.5
     * @leather-wallet/rpc bumped to 0.3.9
 
+## [0.6.6](https://github.com/leather-wallet/mono/compare/utils-v0.6.5...utils-v0.6.6) (2024-05-30)
+
+
+### Bug Fixes
+
+* i18nFormatCurrency fn ([8c9c9a5](https://github.com/leather-wallet/mono/commit/8c9c9a5578013e8b22f1f57ae0e1cd51f4ad5c36))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.6.6
+    * @leather-wallet/rpc bumped to 0.3.10
+
 ## [0.6.1](https://github.com/leather-wallet/mono/compare/utils-v0.6.0...utils-v0.6.1) (2024-05-20)
 
 

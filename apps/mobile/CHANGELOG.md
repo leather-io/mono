@@ -26,6 +26,26 @@
   * dependencies
     * @leather-wallet/constants bumped to 0.6.1
 
+## [1.4.0](https://github.com/leather-wallet/mono/compare/mobile-v1.3.3...mobile-v1.4.0) (2024-05-30)
+
+
+### Features
+
+* update expo to v51 ([f39f98d](https://github.com/leather-wallet/mono/commit/f39f98dfb03d6ce56a2ce31385b9bdc8de17915e))
+
+
+### Bug Fixes
+
+* syncpack ([8dcee26](https://github.com/leather-wallet/mono/commit/8dcee260c8cb7b81028ff8ae70341f88db5d256e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/tokens bumped to 0.5.0
+    * @leather-wallet/ui bumped to 1.3.0
+
 ## [1.3.0](https://github.com/leather-wallet/mono/compare/mobile-v1.2.0...mobile-v1.3.0) (2024-05-07)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.6](https://github.com/leather-wallet/mono/compare/models-v0.6.5...models-v0.6.6) (2024-05-30)
+
+
+### Bug Fixes
+
+* syncpack ([8dcee26](https://github.com/leather-wallet/mono/commit/8dcee260c8cb7b81028ff8ae70341f88db5d256e))
+
 ## [0.6.5](https://github.com/leather-wallet/mono/compare/models-v0.6.4...models-v0.6.5) (2024-05-23)
 
 

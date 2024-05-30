@@ -28,6 +28,13 @@
     * @leather-wallet/models bumped to 0.6.5
     * @leather-wallet/utils bumped to 0.6.5
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.6.6
+    * @leather-wallet/utils bumped to 0.6.6
+
 ## [0.6.1](https://github.com/leather-wallet/mono/compare/bitcoin-v0.6.0...bitcoin-v0.6.1) (2024-05-20)
 
 

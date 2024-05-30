@@ -16,6 +16,26 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.4.0
 
+## [1.3.0](https://github.com/leather-wallet/mono/compare/ui-v1.2.2...ui-v1.3.0) (2024-05-30)
+
+
+### Features
+
+* update expo to v51 ([f39f98d](https://github.com/leather-wallet/mono/commit/f39f98dfb03d6ce56a2ce31385b9bdc8de17915e))
+* use panda preset, initial component migration, ref leather-wallet/issues[#63](https://github.com/leather-wallet/mono/issues/63) ([0c33df2](https://github.com/leather-wallet/mono/commit/0c33df2d1c92069e1e85df3e151d621ed68d3019))
+
+
+### Bug Fixes
+
+* syncpack ([8dcee26](https://github.com/leather-wallet/mono/commit/8dcee260c8cb7b81028ff8ae70341f88db5d256e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/tokens bumped to 0.5.0
+
 ## [1.2.0](https://github.com/leather-wallet/mono/compare/ui-v1.1.0...ui-v1.2.0) (2024-04-23)
 
 

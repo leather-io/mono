@@ -16,6 +16,22 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [1.5.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.17...leather-mono-v1.5.0) (2024-05-30)
+
+
+### Features
+
+* export as esm, ref leather-wallet/issues[#62](https://github.com/leather-wallet/mono/issues/62) ([6dfab53](https://github.com/leather-wallet/mono/commit/6dfab539b5358d16743d3e0a22358e9540ef9260))
+* panda preset package, ref leather-wallet/issues[#62](https://github.com/leather-wallet/mono/issues/62) ([0161799](https://github.com/leather-wallet/mono/commit/01617991e1e975339324e68916eec9012824c440))
+* update expo to v51 ([f39f98d](https://github.com/leather-wallet/mono/commit/f39f98dfb03d6ce56a2ce31385b9bdc8de17915e))
+* use panda preset, initial component migration, ref leather-wallet/issues[#63](https://github.com/leather-wallet/mono/issues/63) ([0c33df2](https://github.com/leather-wallet/mono/commit/0c33df2d1c92069e1e85df3e151d621ed68d3019))
+
+
+### Bug Fixes
+
+* i18nFormatCurrency fn ([8c9c9a5](https://github.com/leather-wallet/mono/commit/8c9c9a5578013e8b22f1f57ae0e1cd51f4ad5c36))
+* syncpack ([8dcee26](https://github.com/leather-wallet/mono/commit/8dcee260c8cb7b81028ff8ae70341f88db5d256e))
+
 ## [1.4.17](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.16...leather-mono-v1.4.17) (2024-05-25)
 
 
