@@ -26,12 +26,14 @@
     "@leather-wallet/constants": "workspace:*",
     "@leather-wallet/models": "workspace:*",
     "@leather-wallet/rpc": "workspace:*",
-    "bignumber.js": "9.1.2"
+    "bignumber.js": "9.1.2",
+    "prismjs": "1.29.0"
   },
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
+    "@types/prismjs": "1.26.3",
     "@vitest/coverage-istanbul": "0.34.6",
     "concurrently": "8.2.2",
     "eslint": "8.53.0",

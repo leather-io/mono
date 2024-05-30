@@ -5,6 +5,10 @@ export { createCounter } from './src/counter';
 export * from './src/math';
 export * from './src/money';
 export * from './src/truncate-middle';
+export * from './src/clarity-prism';
+export { spamFilter } from './src/spam-filter/spam-filter';
+export { pxStringToNumber } from './src/px-string-to-number/px-string-to-number';
+export { extractPhraseFromString } from './src/extract-phrase-from-string/extract-phrase-from-string';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';

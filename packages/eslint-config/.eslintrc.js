@@ -17,12 +17,12 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
-    // 'plugin:react/recommended',
-    // 'plugin:react/jsx-runtime',
-    // 'plugin:react-hooks/recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended',
   ],
-  //   ignorePatterns: ['./leather-styles'],
-  plugins: [/*'react', 'react-hooks', */ '@typescript-eslint', 'deprecation'],
+  ignorePatterns: ['./leather-styles'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'deprecation'],
   rules: {
     // This rule helps highlight areas of the code that use deprecated
     // methods, such as implicit use of signed transactions
@@ -73,15 +73,15 @@ module.exports = {
     '@typescript-eslint/array-type': ['error'],
     'no-warning-comments': [0],
 
-    // 'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/rules-of-hooks': 'error',
     // 'react-hooks/exhaustive-deps': ['error'],
 
-    // 'react/function-component-definition': 'error',
-    // 'react/display-name': 'off',
-    // 'react/prop-types': 'off',
-    // 'react/no-unescaped-entities': 'off',
-    // 'react/jsx-uses-react': 'off',
-    // 'react/react-in-jsx-scope': 'off',
+    'react/function-component-definition': 'error',
+    'react/display-name': 'off',
+    'react/prop-types': 'off',
+    'react/no-unescaped-entities': 'off',
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
   //   overrides: [
   //     {

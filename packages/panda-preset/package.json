@@ -2,7 +2,7 @@
   "name": "@leather-wallet/panda-preset",
   "description": "Leather styles package",
   "version": "0.1.0",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "author": "Leather, LLC",
   "scripts": {

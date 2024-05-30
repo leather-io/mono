@@ -1,8 +1,9 @@
 import { TouchableOpacity, ViewStyle } from 'react-native';
 
 import { ResponsiveValue } from '@shopify/restyle';
-import { Theme } from 'native';
 
+// FIXME issues#64: This is a temporary fix to commit as I broke the direct import of the theme
+import { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
 import { Text } from '../text/text.native';
 
@@ -53,7 +54,7 @@ function getSize(size: ButtonSize) {
   }
 }
 
-export const Button = ({ onPress, label, variant, size = 'medium', style }: ButtonProps) => {
+export function Button({ onPress, label, variant, size = 'medium', style }: ButtonProps) {
   const colorStyles = getColors(variant);
   const sizeStyles = getSize(size);
 
@@ -74,4 +75,4 @@ export const Button = ({ onPress, label, variant, size = 'medium', style }: Butt
       </Box>
     </TouchableOpacity>
   );
-};
+}

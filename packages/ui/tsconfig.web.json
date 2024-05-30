@@ -10,6 +10,6 @@
       "leather-styles/*": ["leather-styles/*"]
     }
   },
-  "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts"],
+  "include": ["./src/**/*", "**/*.web.ts", "**/*.web.tsx", "web.ts", "src/.storybook-*/*"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
 }
