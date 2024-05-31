@@ -16,6 +16,12 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.4.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/panda-preset bumped to 0.1.0
+
 ## [1.3.0](https://github.com/leather-wallet/mono/compare/ui-v1.2.2...ui-v1.3.0) (2024-05-30)
 
 
