@@ -39,6 +39,19 @@ export interface ListenFn {
   (method: string, callback: () => void): () => void;
 }
 
+/**
+ * Leather's provider object set on webpage global `window` object. Set this as
+ * a global type object in your project.
+ *
+ * @example
+ * ```
+ * declare global {
+ *   interface Window {
+ *     LeatherProvider?: LeatherProvider;
+ *   }
+ * }
+ * ```
+ */
 export interface LeatherProvider {
   /**
    * Request method. Takes a method name, and optional parameters
@@ -50,10 +63,4 @@ export interface LeatherProvider {
    * @returns An unsubscribe function
    */
   listen: ListenFn;
-}
-
-declare global {
-  interface Window {
-    LeatherProvider?: LeatherProvider;
-  }
 }
