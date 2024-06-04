@@ -4,6 +4,15 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
+    "test": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release",
+        "withoutCredentials": true
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "node": "20.11.0",
       "pnpm": "8.15.3",

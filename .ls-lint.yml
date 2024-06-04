@@ -13,3 +13,6 @@ ignore:
   - packages/*/node_modules
   - apps/*/node_modules
   - storybook-static
+  - apps/mobile/ios
+  - apps/mobile/android
+  - apps/mobile/artifacts
