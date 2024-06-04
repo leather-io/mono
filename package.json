@@ -8,7 +8,7 @@
   "scripts": {
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
-    "dev": "turbo run ts:build:watch",
+    "dev": "turbo run build:watch",
     "format": "turbo run format",
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "install:fresh": "pnpm install:clean && pnpm i",
@@ -21,8 +21,8 @@
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
-    "ts:build": "turbo run ts:build",
-    "ts:build:watch": "turbo run ts:build:watch",
+    "build": "turbo run build",
+    "build:watch": "turbo run build:watch",
     "typecheck": "turbo run typecheck"
   },
   "dependencies": {

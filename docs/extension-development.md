@@ -47,7 +47,7 @@ One method to achieve this is through hard linking. Here is a step-by-step guide
 4. Now that the setup is complete, let's install the packages:
    - In the monorepo:
      1. Run `pnpm i`.
-     2. Run `pnpm ts:build` to build all of the packages.
+     2. Run `pnpm build` to build all of the packages.
      3. Run `pnpm dev` to watch for changes in the repository.
    - In the extension, just run `pnpm i`, and it should install everything else.
 

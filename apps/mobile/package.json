@@ -7,7 +7,7 @@
     "e2e:build:ios-release": "detox build --configuration ios.release --config-path ./.detoxrc.cjs --loglevel debug",
     "e2e:test:ios-release": "detox test --configuration ios.release --config-path ./.detoxrc.cjs --loglevel debug",
     "eas-build-on-success": "./eas-hooks/eas-build-on-success.sh",
-    "eas-build-post-install": "cd ../.. && pnpm ts:build",
+    "eas-build-post-install": "cd ../.. && pnpm build",
     "eas-build-pre-install": "./eas-hooks/eas-build-pre-install.sh",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "ios": "expo run:ios",
@@ -19,8 +19,8 @@
     "storybook-generate": "sb-rn-get-stories -js",
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
-    "ts:build": "tsc --build",
-    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {

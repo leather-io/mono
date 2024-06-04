@@ -17,8 +17,8 @@
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "ts:build": "tsup",
-    "ts:build:watch": "tsup --watch",
+    "build": "tsup",
+    "build:watch": "tsup --watch",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "exports": {

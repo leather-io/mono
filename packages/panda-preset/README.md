@@ -5,7 +5,7 @@ This package contains Leathers panda preset configuration
 ## Development
 
 - `pnpm prepare` to generate panda files
-- `pnpm ts:build` to run `tsup` build
+- `pnpm build` to run `tsup` build
 
 ## License
 

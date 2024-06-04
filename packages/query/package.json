@@ -17,8 +17,8 @@
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "ts:build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
-    "ts:build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
+    "build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
+    "build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "exports": {
