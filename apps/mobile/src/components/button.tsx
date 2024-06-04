@@ -2,7 +2,6 @@ import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { Text, Theme, TouchableOpacity } from '@leather-wallet/ui/native';
 import {
   BaseTheme,
   LayoutProps,
@@ -20,6 +19,8 @@ import {
   useRestyle,
   visible,
 } from '@shopify/restyle';
+
+import { Text, Theme, TouchableOpacity } from '@leather-wallet/ui/native';
 
 const buttonRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 

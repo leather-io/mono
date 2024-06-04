@@ -1,5 +1,6 @@
-import { MarketData, createMarketData, createMarketPair } from '@leather-wallet/models';
 import BigNumber from 'bignumber.js';
+
+import { MarketData, createMarketData, createMarketPair } from '@leather-wallet/models';
 
 import {
   baseCurrencyAmountInQuote,

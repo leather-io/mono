@@ -1,5 +1,6 @@
-import { BITCOIN_API_BASE_URL_TESTNET } from '@leather-wallet/models';
 import PQueue from 'p-queue';
+
+import { BITCOIN_API_BASE_URL_TESTNET } from '@leather-wallet/models';
 
 const blockstreamMainnetApiLimiter = new PQueue({
   interval: 5000,

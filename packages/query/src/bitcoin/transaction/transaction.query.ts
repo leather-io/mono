@@ -1,5 +1,6 @@
-import { BitcoinTx } from '@leather-wallet/models';
 import { UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
+
+import { BitcoinTx } from '@leather-wallet/models';
 
 import { AppUseQueryConfig } from '../../query-config';
 import { BitcoinClient, useBitcoinClient } from '../bitcoin-client';

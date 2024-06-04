@@ -1,6 +1,7 @@
+import { TransactionInput } from '@scure/btc-signer/psbt';
+
 import { BitcoinTx } from '@leather-wallet/models';
 import { isUndefined } from '@leather-wallet/utils';
-import { TransactionInput } from '@scure/btc-signer/psbt';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import { createInscriptionHiro } from './inscription.utils';

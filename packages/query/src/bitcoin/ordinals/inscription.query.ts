@@ -1,6 +1,7 @@
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import { AppUseQueryConfig } from '../../query-config';

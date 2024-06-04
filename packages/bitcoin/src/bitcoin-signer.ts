@@ -1,8 +1,9 @@
-import type { BitcoinNetworkModes } from '@leather-wallet/models';
-import { SignatureHash } from '@leather-wallet/rpc';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { SigHash } from '@scure/btc-signer/transaction';
+
+import type { BitcoinNetworkModes } from '@leather-wallet/models';
+import { SignatureHash } from '@leather-wallet/rpc';
 
 export type AllowedSighashTypes = SignatureHash | SigHash;
 

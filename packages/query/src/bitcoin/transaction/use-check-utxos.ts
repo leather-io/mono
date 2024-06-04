@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 
-import { isUndefined } from '@leather-wallet/utils';
 import { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
+
+import { isUndefined } from '@leather-wallet/utils';
 
 import { useCurrentNetworkState, useIsLeatherTestingEnv } from '../../leather-query-provider';
 import { BitcoinClient, useBitcoinClient } from '../bitcoin-client';

@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
+import BigNumber from 'bignumber.js';
+
 import { currencyDecimalsMap } from '@leather-wallet/constants';
 import {
   CryptoCurrencies,
@@ -14,7 +16,6 @@ import {
   convertAmountToFractionalUnit,
   createMoney,
 } from '@leather-wallet/utils';
-import BigNumber from 'bignumber.js';
 
 import {
   selectBinanceUsdPrice,

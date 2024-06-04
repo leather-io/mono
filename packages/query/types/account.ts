@@ -1,5 +1,6 @@
-import type { Money } from '@leather-wallet/models';
 import { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
+
+import type { Money } from '@leather-wallet/models';
 
 type SelectedKeys =
   | 'balance'

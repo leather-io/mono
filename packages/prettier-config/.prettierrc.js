@@ -14,6 +14,7 @@ export default {
   importOrder: [
     '^react',
     '<THIRD_PARTY_MODULES>',
+    '^@leather-wallet/(.*)$',
     '^@shared/(.*)$',
     '^@(app|content-script|inpage|background)/(.*)$',
     '^[./]',

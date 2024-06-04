@@ -1,12 +1,13 @@
 import { useCallback, useEffect } from 'react';
 
+import { HDKey } from '@scure/bip32';
+import { UseInfiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
 import { getTaprootAddress } from '@leather-wallet/bitcoin';
 import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
 import { createNumArrayOfRange } from '@leather-wallet/utils';
 import { ensureArray } from '@leather-wallet/utils';
-import { HDKey } from '@scure/bip32';
-import { UseInfiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
 import type { InscriptionResponseHiro } from '../../../types/inscription';
 import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';

@@ -1,8 +1,9 @@
-import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather-wallet/crypto';
-import { NetworkModes } from '@leather-wallet/models';
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58check } from '@scure/base';
+
+import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather-wallet/crypto';
+import { NetworkModes } from '@leather-wallet/models';
 
 /**
  * @deprecated

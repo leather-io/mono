@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 
+import { TransactionInput } from '@scure/btc-signer/psbt';
+
 import { decodeBitcoinTx } from '@leather-wallet/bitcoin';
 import { delay } from '@leather-wallet/utils';
-import { TransactionInput } from '@scure/btc-signer/psbt';
 
 import { useBitcoinClient } from '../bitcoin-client';
 import { filterOutIntentionalUtxoSpend, useCheckUnspendableUtxos } from './use-check-utxos';
