@@ -1,31 +1,13 @@
-import { StacksTxFeeEstimation } from '@leather-wallet/models';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import PQueue from 'p-queue';
 
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
-import { useCurrentNetworkState } from '../../leather-query-provider';
 import { AppUseQueryConfig } from '../../query-config';
+import { StacksTxFeeEstimation } from '../hiro-api-types';
+import { StacksClient, useStacksClient } from '../stacks-client';
 import { defaultApiFeeEstimations } from './fees.utils';
 
-function fetchTransactionFeeEstimation(currentNetwork: any, limiter: PQueue) {
-  return async (estimatedLen: number | null, transactionPayload: string) => {
-    const resp = await limiter.add(
-      () =>
-        axios.post<StacksTxFeeEstimation>(
-          currentNetwork.chain.stacks.url + '/v2/fees/transaction',
-          {
-            estimated_len: estimatedLen,
-            transaction_payload: transactionPayload,
-          }
-        ),
-      {
-        priority: 2,
-        throwOnTimeout: true,
-      }
-    );
-    return resp.data;
-  };
+function fetchTransactionFeeEstimation(client: StacksClient) {
+  return async (estimatedLen: number | null, transactionPayload: string) =>
+    client.postFeeTransaction(estimatedLen, transactionPayload);
 }
 
 type FetchTransactionFeeEstimationResp = Awaited<
@@ -39,18 +21,14 @@ export function useGetStacksTransactionFeeEstimationQuery<
   transactionPayload: string,
   options?: AppUseQueryConfig<FetchTransactionFeeEstimationResp, T>
 ) {
-  const currentNetwork = useCurrentNetworkState();
-  const limiter = useHiroApiRateLimiter();
+  const client = useStacksClient();
 
   return useQuery({
     enabled: transactionPayload !== '',
     queryKey: ['stacks-tx-fee-estimation', transactionPayload],
     queryFn: async () => {
       try {
-        return await fetchTransactionFeeEstimation(currentNetwork, limiter)(
-          estimatedLen,
-          transactionPayload
-        );
+        return await fetchTransactionFeeEstimation(client)(estimatedLen, transactionPayload);
       } catch (err) {
         return {
           cost_scalar_change_by_byte: 0,

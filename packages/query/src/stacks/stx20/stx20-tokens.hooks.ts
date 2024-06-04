@@ -1,8 +1,9 @@
-import { type Stx20CryptoAssetInfo, createCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
 
-import type { Stx20Balance } from '../stacks-client';
+import { type Stx20CryptoAssetInfo, createCryptoAssetBalance } from '@leather-wallet/models';
+import { createMoney } from '@leather-wallet/utils';
+
+import type { Stx20Balance } from '../stx20-api-types';
 import { useStx20BalancesQuery } from './stx20-tokens.query';
 
 function createStx20CryptoAssetInfo(stx20Balance: Stx20Balance): Stx20CryptoAssetInfo {

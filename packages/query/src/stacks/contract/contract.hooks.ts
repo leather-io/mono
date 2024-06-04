@@ -1,10 +1,10 @@
 import type { ContractCallPayload, TransactionPayload } from '@stacks/connect';
 import type { ContractInterfaceFunction } from '@stacks/rpc-client';
 
-import { useGetContractInterface } from './contract.query';
+import { useGetContractInterfaceQuery } from './contract.query';
 
 export function useContractInterface(transactionRequest: ContractCallPayload | null) {
-  return useGetContractInterface(transactionRequest).data;
+  return useGetContractInterfaceQuery(transactionRequest).data;
 }
 
 export function useContractFunction(transactionRequest: TransactionPayload | null) {

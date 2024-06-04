@@ -1,5 +1,8 @@
-import type { AddressNonces } from '@stacks/blockchain-api-client/lib/generated';
-import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
+import type {
+  AddressNonces,
+  MempoolTransaction,
+  Transaction,
+} from '@stacks/stacks-blockchain-api-types';
 
 enum NonceTypes {
   apiSuggestedNonce = 'api-suggested-nonce',

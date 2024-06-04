@@ -1,12 +1,9 @@
-import { DEFAULT_LIST_LIMIT } from '@leather-wallet/constants';
-import { AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
-import { UseQueryOptions, UseQueryResult, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useCurrentNetworkState } from '../../leather-query-provider';
-import { useStacksClient } from '../stacks-client';
+import { StacksClient, useStacksClient } from '../stacks-client';
 
-const queryOptions: UseQueryOptions = {
+const queryOptions = {
   staleTime: 60 * 1000,
   refetchInterval: 30_000,
   refetchOnMount: false,
@@ -14,30 +11,18 @@ const queryOptions: UseQueryOptions = {
   refetchOnWindowFocus: true,
 };
 
-export function useGetAccountTransactionsWithTransfersQuery(address: string) {
-  const { chain } = useCurrentNetworkState();
-  const client = useStacksClient();
-  const limiter = useHiroApiRateLimiter();
+function fetchAccountTxsWithTransfers(client: StacksClient, signal?: AbortSignal) {
+  return async (address: string) => client.getAccountTransactionsWithTransfers(address, signal);
+}
 
-  async function fetchAccountTxsWithTransfers(signal?: AbortSignal) {
-    if (!address) return;
-    return limiter.add(
-      () =>
-        client.accountsApi.getAccountTransactionsWithTransfers({
-          principal: address,
-          limit: DEFAULT_LIST_LIMIT,
-        }),
-      {
-        signal,
-        throwOnTimeout: true,
-      }
-    );
-  }
+export function useGetAccountTransactionsWithTransfersQuery(address: string) {
+  const network = useCurrentNetworkState();
+  const client = useStacksClient();
 
   return useQuery({
-    enabled: !!address && !!chain.stacks.url,
-    queryKey: ['account-txs-with-transfers', address, chain.stacks.url],
-    queryFn: ({ signal }) => fetchAccountTxsWithTransfers(signal),
+    enabled: !!address && !!network.chain.stacks.url,
+    queryKey: ['account-txs-with-transfers', address, network.chain.stacks.url],
+    queryFn: ({ signal }) => fetchAccountTxsWithTransfers(client, signal)(address),
     ...queryOptions,
-  }) as UseQueryResult<AddressTransactionsWithTransfersListResponse, Error>;
+  });
 }

@@ -1,12 +1,13 @@
-import type { Money, StxCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney, subtractMoney, sumMoney } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
 
+import type { Money, StxCryptoAssetBalance } from '@leather-wallet/models';
+import { createMoney, subtractMoney, sumMoney } from '@leather-wallet/utils';
+
 import {
-  type AccountBalanceStxKeys,
-  type AddressBalanceResponse,
+  AccountBalanceStxKeys,
+  AddressBalanceResponse,
   accountBalanceStxKeys,
-} from '../../../types/account';
+} from '../hiro-api-types';
 import {
   useMempoolTxsInboundBalance,
   useMempoolTxsOutboundBalance,
@@ -48,7 +49,6 @@ export function useStxCryptoAssetBalance(address: string) {
   });
 }
 
-// useCurrentStxAvailableUnlockedBalance
 export function useStxAvailableUnlockedBalance(address: string) {
   return useStxCryptoAssetBalance(address).data?.unlockedBalance ?? createMoney(0, 'STX');
 }

@@ -1,14 +1,9 @@
 import { useMemo } from 'react';
 
-import {
-  FeeCalculationTypes,
-  Fees,
-  Money,
-  StacksFeeEstimate,
-  StacksTxFeeEstimation,
-} from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
 import { StacksTransaction } from '@stacks/transactions';
+
+import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather-wallet/models';
+import { createMoney } from '@leather-wallet/utils';
 
 import {
   useConfigFeeEstimationsMaxEnabled,
@@ -16,6 +11,7 @@ import {
   useConfigFeeEstimationsMinEnabled,
   useConfigFeeEstimationsMinValues,
 } from '../../common/remote-config/remote-config.query';
+import { StacksTxFeeEstimation } from '../hiro-api-types';
 import { useGetStacksTransactionFeeEstimationQuery } from './fees.query';
 import {
   defaultFeesMaxValuesAsMoney,
@@ -56,7 +52,7 @@ function parseStacksTxFeeEstimationResponse({
   minValues,
   txByteLength,
 }: ParseStacksTxFeeEstimationResponseArgs): Fees {
-  if (!!feeEstimation.error) return defaultStacksFees;
+  if (feeEstimation.error) return defaultStacksFees;
   if (txByteLength && feeEstimationQueryFailedSilently(feeEstimation)) {
     return {
       blockchain: 'stacks',
@@ -72,7 +68,7 @@ function parseStacksTxFeeEstimationResponse({
     };
   });
 
-  if (feeEstimation.estimations && feeEstimation.estimations.length) {
+  if (feeEstimation.estimations?.length) {
     const feeEstimationsWithCappedValues = getFeeEstimationsWithCappedValues(
       stacksFeeEstimates,
       maxValues,

@@ -1,28 +1,16 @@
 import { type ContractCallPayload, TransactionTypes } from '@stacks/connect';
 import { useQuery } from '@tanstack/react-query';
 
-import type { ContractInterfaceResponseWithFunctions } from '../../../types/contract-types';
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useStacksClient } from '../stacks-client';
 
-export function useGetContractInterface(transactionRequest: ContractCallPayload | null) {
-  const { smartContractsApi } = useStacksClient();
-  const limiter = useHiroApiRateLimiter();
+export function useGetContractInterfaceQuery(transactionRequest: ContractCallPayload | null) {
+  const client = useStacksClient();
 
   async function fetchContractInterface() {
     if (!transactionRequest || transactionRequest?.txType !== TransactionTypes.ContractCall) return;
     const contractAddress = transactionRequest.contractAddress;
     const contractName = transactionRequest.contractName;
-    return limiter.add(
-      () =>
-        smartContractsApi.getContractInterface({
-          contractAddress,
-          contractName,
-        }) as unknown as Promise<ContractInterfaceResponseWithFunctions>,
-      {
-        throwOnTimeout: true,
-      }
-    );
+    return client.getContractInterface(contractAddress, contractName);
   }
 
   return useQuery({

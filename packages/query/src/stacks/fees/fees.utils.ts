@@ -1,16 +1,12 @@
-import { DEFAULT_FEE_RATE } from '@leather-wallet/constants';
-import {
-  ApiFeeEstimation,
-  FeeCalculationTypes,
-  Fees,
-  Money,
-  StacksFeeEstimate,
-  StacksTxFeeEstimation,
-} from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
 import { bytesToHex } from '@stacks/common';
 import { StacksTransaction, serializePayload } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
+
+import { DEFAULT_FEE_RATE } from '@leather-wallet/constants';
+import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather-wallet/models';
+import { createMoney } from '@leather-wallet/utils';
+
+import { FeeEstimation, StacksTxFeeEstimation } from '../hiro-api-types';
 
 const defaultFeesMaxValues = [500000, 750000, 2000000];
 const defaultFeesMinValues = [2500, 3000, 3500];
@@ -26,7 +22,7 @@ export const defaultFeesMinValuesAsMoney = [
   createMoney(defaultFeesMinValues[2], 'STX'),
 ];
 
-export const defaultApiFeeEstimations: ApiFeeEstimation[] = [
+export const defaultApiFeeEstimations: FeeEstimation[] = [
   { fee: defaultFeesMinValues[0], fee_rate: 0 },
   { fee: defaultFeesMinValues[1], fee_rate: 0 },
   { fee: defaultFeesMinValues[2], fee_rate: 0 },
@@ -72,9 +68,8 @@ export function getFeeEstimationsWithCappedValues(
       feeEstimation.fee.amount.isLessThan(feeEstimationsMinValues[index].amount)
     ) {
       return { fee: feeEstimationsMinValues[index], feeRate: 0 };
-    } else {
-      return feeEstimation;
     }
+    return feeEstimation;
   });
 }
 
