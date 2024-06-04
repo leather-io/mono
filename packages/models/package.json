@@ -34,7 +34,7 @@
     "@types/react": "18.2.79",
     "concurrently": "8.2.2",
     "eslint": "8.53.0",
-    "prettier": "3.2.5",
+    "prettier": "3.3.0",
     "tsup": "8.1.0",
     "typescript": "5.3.3"
   },

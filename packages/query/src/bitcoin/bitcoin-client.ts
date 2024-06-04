@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import {
   BESTINSLOT_API_BASE_URL_MAINNET,
   BESTINSLOT_API_BASE_URL_TESTNET,
@@ -6,7 +8,6 @@ import {
   MarketData,
   Money,
 } from '@leather-wallet/models';
-import axios from 'axios';
 
 import { UtxoResponseItem } from '../../types/utxo';
 import { useLeatherNetwork } from '../leather-query-provider';

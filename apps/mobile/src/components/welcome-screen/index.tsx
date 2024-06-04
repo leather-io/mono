@@ -9,10 +9,11 @@ import { InputState, TextInput } from '@/components/text-input';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useFormSubmission } from '@/queries/use-form-submissions';
 import { emailRegexp } from '@/utils/regexp';
-import { Box, Text, Theme } from '@leather-wallet/ui/native';
 import { useTheme } from '@shopify/restyle';
 import * as Linking from 'expo-linking';
 import LottieView from 'lottie-react-native';
+
+import { Box, Text, Theme } from '@leather-wallet/ui/native';
 
 import { WelcomeScreenTestIds } from '../../../test-ids';
 import {

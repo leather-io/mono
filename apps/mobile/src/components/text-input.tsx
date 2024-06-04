@@ -1,7 +1,6 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
-import { Box, Text, Theme, TextInput as UITextInput } from '@leather-wallet/ui/native';
 import {
   BaseTheme,
   LayoutProps,
@@ -19,6 +18,8 @@ import {
   useTheme,
   visible,
 } from '@shopify/restyle';
+
+import { Box, Text, Theme, TextInput as UITextInput } from '@leather-wallet/ui/native';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 

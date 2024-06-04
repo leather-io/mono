@@ -1,6 +1,7 @@
-import { BitcoinNetworkModes } from '@leather-wallet/models';
 import { base64 } from '@scure/base';
 import * as bitcoin from 'bitcoinjs-lib';
+
+import { BitcoinNetworkModes } from '@leather-wallet/models';
 
 import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network';
 import {

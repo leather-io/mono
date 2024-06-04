@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
-import { createMoney, isUndefined, sumNumbers } from '@leather-wallet/utils';
 import BigNumber from 'bignumber.js';
+
+import { createMoney, isUndefined, sumNumbers } from '@leather-wallet/utils';
 
 import { useNativeSegwitUtxosByAddress } from '../address/utxos-by-address.hooks';
 import { useRunesEnabled } from '../runes/runes.hooks';

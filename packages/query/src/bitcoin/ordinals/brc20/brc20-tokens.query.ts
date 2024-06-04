@@ -1,9 +1,10 @@
 import { useCallback, useEffect } from 'react';
 
-import type { Signer } from '@leather-wallet/bitcoin';
-import { createNumArrayOfRange } from '@leather-wallet/utils';
 import { P2TROut } from '@scure/btc-signer/payment';
 import { useInfiniteQuery } from '@tanstack/react-query';
+
+import type { Signer } from '@leather-wallet/bitcoin';
+import { createNumArrayOfRange } from '@leather-wallet/utils';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
 import { QueryPrefixes } from '../../../query-prefixes';

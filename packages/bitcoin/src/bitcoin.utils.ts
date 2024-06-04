@@ -1,11 +1,12 @@
-import { DerivationPathDepth, extractAccountIndexFromPath } from '@leather-wallet/crypto';
-import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/models';
-import type { PaymentTypes } from '@leather-wallet/rpc';
-import { defaultWalletKeyId, whenNetwork } from '@leather-wallet/utils';
 import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey, Versions } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
+
+import { DerivationPathDepth, extractAccountIndexFromPath } from '@leather-wallet/crypto';
+import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/models';
+import type { PaymentTypes } from '@leather-wallet/rpc';
+import { defaultWalletKeyId, whenNetwork } from '@leather-wallet/utils';
 
 import { BtcSignerNetwork } from './bitcoin.network';
 import { getTaprootPayment } from './p2tr-address-gen';

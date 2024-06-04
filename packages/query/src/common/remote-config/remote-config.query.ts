@@ -1,7 +1,8 @@
-import { createMoney, isUndefined } from '@leather-wallet/utils';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import get from 'lodash.get';
+
+import { createMoney, isUndefined } from '@leather-wallet/utils';
 
 import type { ActiveFiatProvider, HiroMessage, RemoteConfig } from '../../../types/remote-config';
 import { LeatherEnvironment, useLeatherEnv, useLeatherGithub } from '../../leather-query-provider';

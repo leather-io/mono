@@ -1,5 +1,6 @@
-import type { NetworkModes } from '@leather-wallet/models';
 import { BigNumber } from 'bignumber.js';
+
+import type { NetworkModes } from '@leather-wallet/models';
 
 export { createCounter } from './counter';
 export * from './math';
