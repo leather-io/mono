@@ -1,6 +1,4 @@
-import { defineConfig } from 'vitest/config';
-
-export default defineConfig({
+export const defaultVitestUnitTestingConfig = {
   test: {
     include: 'src/**/*.spec.{ts,tsx}',
     coverage: {
@@ -13,4 +11,4 @@ export default defineConfig({
     deps: { interopDefault: true },
     silent: false,
   },
-});
+} as const;

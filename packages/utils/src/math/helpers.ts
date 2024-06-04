@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { isBigInt } from '../..';
+import { isBigInt } from '..';
 
 export function initBigNumber(num: string | number | BigNumber | bigint) {
   if (BigNumber.isBigNumber(num)) return num;

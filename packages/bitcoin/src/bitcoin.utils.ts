@@ -1,3 +1,4 @@
+import { DerivationPathDepth, extractAccountIndexFromPath } from '@leather-wallet/crypto';
 import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/models';
 import type { PaymentTypes } from '@leather-wallet/rpc';
 import { defaultWalletKeyId, whenNetwork } from '@leather-wallet/utils';
@@ -7,7 +8,6 @@ import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 
 import { BtcSignerNetwork } from './bitcoin.network';
-import { DerivationPathDepth } from './derivation-path.utils';
 import { getTaprootPayment } from './p2tr-address-gen';
 
 export interface BitcoinAccount {
@@ -133,23 +133,6 @@ function inferPaymentTypeFromPath(path: string): PaymentTypes {
 function inferNetworkFromPath(path: string): NetworkModes {
   return path.split('/')[2].startsWith('0') ? 'mainnet' : 'testnet';
 }
-
-function extractSectionFromDerivationPath(depth: DerivationPathDepth) {
-  return (path: string) => {
-    const segments = path.split('/');
-    const accountNum = parseInt(segments[depth].replaceAll("'", ''), 10);
-    if (isNaN(accountNum)) throw new Error(`Cannot parse ${DerivationPathDepth[depth]} from path`);
-    return accountNum;
-  };
-}
-
-export const extractAccountIndexFromPath = extractSectionFromDerivationPath(
-  DerivationPathDepth.Account
-);
-
-export const extractAddressIndexFromPath = extractSectionFromDerivationPath(
-  DerivationPathDepth.AddressIndex
-);
 
 function extractExtendedPublicKeyFromPolicy(policy: string) {
   return policy.split(']')[1];

@@ -29,6 +29,13 @@
       "draft": false,
       "prerelease": false
     },
+    "packages/crypto": {
+      "changelog-path": "CHANGELOG.md",
+      "bump-minor-pre-major": false,
+      "bump-patch-for-minor-pre-major": false,
+      "draft": false,
+      "prerelease": false
+    },
     "packages/eslint-config": {
       "changelog-path": "CHANGELOG.md",
       "bump-minor-pre-major": false,
