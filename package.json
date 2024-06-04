@@ -6,6 +6,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "build": "turbo run build",
+    "build:watch": "turbo run build:watch",
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
     "dev": "turbo run build:watch",
@@ -21,8 +23,6 @@
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
-    "build": "turbo run build",
-    "build:watch": "turbo run build:watch",
     "typecheck": "turbo run typecheck"
   },
   "dependencies": {
@@ -45,7 +45,7 @@
   },
   "engines": {
     "node": ">=20.11.0",
-    "pnpm": ">=8.15.3",
+    "pnpm": ">=9.1.4",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },
