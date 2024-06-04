@@ -2,21 +2,20 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
+      "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
     "build:watch": {},
-    "format": {
-      "dependsOn": ["build"]
-    },
+    "format": {},
     "lint": {
-      "dependsOn": ["build"]
+      "inputs": ["src/**"],
+      "outputs": [],
+      "outputMode": "new-only"
     },
     "lint:fix": {
-      "dependsOn": ["build"]
+      "outputs": []
     },
-    "typecheck": {
-      "dependsOn": ["build"]
-    },
+    "typecheck": {},
     "check:all": {
       "dependsOn": ["build", "lint", "format", "typecheck"]
     },

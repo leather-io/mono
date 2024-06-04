@@ -12,13 +12,13 @@
   },
   "type": "module",
   "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "build": "tsup",
-    "build:watch": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
   "exports": {

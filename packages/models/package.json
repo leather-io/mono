@@ -12,11 +12,11 @@
   },
   "type": "module",
   "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
-    "build": "tsup",
-    "build:watch": "tsup --watch",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "exports": {

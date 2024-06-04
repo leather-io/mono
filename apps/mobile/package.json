@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "android": "expo run:android",
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch --preserveWatchOutput",
     "e2e:build:ios-release": "detox build --configuration ios.release --config-path ./.detoxrc.cjs --loglevel debug",
     "e2e:test:ios-release": "detox test --configuration ios.release --config-path ./.detoxrc.cjs --loglevel debug",
     "eas-build-on-success": "./eas-hooks/eas-build-on-success.sh",
@@ -19,8 +21,6 @@
     "storybook-generate": "sb-rn-get-stories -js",
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
-    "build": "tsc --build",
-    "build:watch": "tsc --build --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {

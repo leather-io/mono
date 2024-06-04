@@ -6,8 +6,8 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen",
-    "build": "tsup"
+    "build": "tsup",
+    "prepare": "panda codegen"
   },
   "exports": {
     ".": "./dist/preset.js"

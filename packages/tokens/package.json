@@ -11,10 +11,10 @@
     "directory": "packages/tokens"
   },
   "scripts": {
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "prepublish": "pnpm build",
     "build": "tsup",
     "build:watch": "tsup --watch",
+    "lint": "eslint . --ignore-path ../../.eslintignore",
+    "prepublish": "pnpm build",
     "typecheck": "tsc --noEmit"
   },
   "exports": {

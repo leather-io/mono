@@ -5,10 +5,10 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
     "prepublish": "build",
     "test:unit": "vitest",
-    "build": "tsup",
-    "build:watch": "tsc --watch",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
