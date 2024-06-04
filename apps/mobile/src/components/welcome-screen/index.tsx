@@ -14,6 +14,7 @@ import { useTheme } from '@shopify/restyle';
 import * as Linking from 'expo-linking';
 import LottieView from 'lottie-react-native';
 
+import { WelcomeScreenTestIds } from '../../../test-ids';
 import {
   BOTTOM_SHEET,
   BTC,
@@ -150,7 +151,7 @@ export function WelcomeScreen() {
 
   // Show checkmark for 800ms before changing to the next screen state.
   useEffect(() => {
-    let timeout: number | undefined;
+    let timeout: ReturnType<typeof setTimeout>;
     if (isSubmitted) {
       setShowSuccess(true);
       timeout = setTimeout(() => {
@@ -230,6 +231,7 @@ export function WelcomeScreen() {
         </Text>
       </Text>
       <Button
+        testID={WelcomeScreenTestIds.OpenXButton}
         onPress={() => Linking.openURL(TWITTER_LINK)}
         title="Follow us"
         buttonState="outline"
@@ -237,6 +239,7 @@ export function WelcomeScreen() {
         mb="3"
       />
       <Button
+        testID={WelcomeScreenTestIds.DoneButton}
         onPress={() => {
           resetForm();
           setEmail('');
@@ -275,6 +278,7 @@ export function WelcomeScreen() {
         autoCorrect={false}
         spellCheck={false}
         mb="6"
+        testID={WelcomeScreenTestIds.EmailInput}
         placeholder="Email address"
         // This input is currently flickering and that is a bug introduced in ios 17.
         // Refer to this issue in RN: https://github.com/facebook/react-native/issues/39411
@@ -288,6 +292,7 @@ export function WelcomeScreen() {
         title={isLoading || showSuccess ? undefined : 'Submit'}
         buttonState={getButtonState()}
         disabled={isButtonDisabled}
+        testID={WelcomeScreenTestIds.SubmitEmailButton}
         Icon={
           isLoading ? (
             <Spinner />

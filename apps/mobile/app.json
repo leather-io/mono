@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "io.leather.mobilewallet",
@@ -30,11 +28,7 @@
       },
       "package": "io.leather.mobilewallet"
     },
-    "plugins": [
-      "expo-font",
-      "expo-router",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-font", "expo-router", "expo-secure-store", "@config-plugins/detox"],
     "extra": {
       "router": {
         "origin": false
