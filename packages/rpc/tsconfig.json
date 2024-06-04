@@ -1,12 +1,7 @@
 {
   "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
+  "include": ["src/**/*"],
   "compilerOptions": {
-    "module": "esnext",
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "outDir": "./dist/types",
-    "rootDir": "./src"
-  },
-  "include": ["src"],
-  "exclude": []
+    "outDir": "./dist"
+  }
 }

@@ -1,6 +1,8 @@
 {
   "extends": "../tsconfig-config/tsconfig.base",
   "compilerOptions": {
+    "composite": true,
+    "incremental": true,
     "jsx": "react-native",
     "lib": ["es2017", "DOM"],
     "baseUrl": ".",

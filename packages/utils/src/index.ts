@@ -1,10 +1,10 @@
 import type { NetworkModes } from '@leather-wallet/models';
 import { BigNumber } from 'bignumber.js';
 
-export { createCounter } from './src/counter';
-export * from './src/math';
-export * from './src/money';
-export * from './src/truncate-middle';
+export { createCounter } from './counter';
+export * from './math';
+export * from './money';
+export * from './truncate-middle';
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';

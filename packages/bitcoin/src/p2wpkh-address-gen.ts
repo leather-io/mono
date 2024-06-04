@@ -1,3 +1,4 @@
+import { DerivationPathDepth } from '@leather-wallet/crypto';
 import { BitcoinNetworkModes } from '@leather-wallet/models';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
@@ -8,7 +9,6 @@ import {
   deriveAddressIndexZeroFromAccount,
   getBitcoinCoinTypeIndexByNetwork,
 } from './bitcoin.utils';
-import { DerivationPathDepth } from './derivation-path.utils';
 
 export function getNativeSegwitAccountDerivationPath(
   network: BitcoinNetworkModes,

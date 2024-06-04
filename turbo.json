@@ -20,7 +20,6 @@
     "check:all": {
       "dependsOn": ["ts:build", "lint", "format", "typecheck"]
     },
-
     "dev": {
       "cache": false,
       "persistent": true

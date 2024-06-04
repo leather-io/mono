@@ -1,17 +1,20 @@
+import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather-wallet/crypto';
 import { NetworkModes } from '@leather-wallet/models';
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58check } from '@scure/base';
-import { HDKey } from '@scure/bip32';
-import { mnemonicToSeed } from '@scure/bip39';
 
-export async function deriveBtcBip49SeedFromMnemonic(mnemonic: string) {
-  return mnemonicToSeed(mnemonic);
-}
+/**
+ * @deprecated
+ * Use `deriveBip39MnemonicFromSeed` from `@leather-wallet/crypto`
+ */
+export const deriveBtcBip49SeedFromMnemonic = deriveBip39MnemonicFromSeed;
 
-export function deriveRootBtcKeychain(seed: Uint8Array) {
-  return HDKey.fromMasterSeed(seed);
-}
+/**
+ * @deprecated
+ * Use `deriveRootBip32Keychain` from `@leather-wallet/crypto`
+ */
+export const deriveRootBtcKeychain = deriveRootBip32Keychain;
 
 export function decodeCompressedWifPrivateKey(key: string) {
   // https://en.bitcoinwiki.org/wiki/Wallet_import_format

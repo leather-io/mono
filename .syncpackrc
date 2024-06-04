@@ -32,13 +32,15 @@
   ],
   "sortFirst": [
     "name",
+    "author",
     "description",
     "version",
     "license",
+    "homepage",
+    "repository",
     "type",
     "author",
     "scripts",
-    "homepage",
-    "repository"
+    "exports"
   ]
 }

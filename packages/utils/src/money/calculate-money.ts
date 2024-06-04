@@ -2,7 +2,7 @@ import type { MarketData, Money, NumType } from '@leather-wallet/models';
 import { formatMarketPair } from '@leather-wallet/models';
 import { BigNumber } from 'bignumber.js';
 
-import { isNumber } from '../..';
+import { isNumber } from '..';
 import { initBigNumber, sumNumbers } from '../math/helpers';
 import { createMoney, formatMoney } from './format-money';
 import { isMoney } from './is-money';

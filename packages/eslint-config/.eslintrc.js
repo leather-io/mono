@@ -21,7 +21,7 @@ module.exports = {
     // 'plugin:react/jsx-runtime',
     // 'plugin:react-hooks/recommended',
   ],
-  //   ignorePatterns: ['./leather-styles'],
+  ignorePatterns: ['./leather-styles', 'tsup.config.ts'],
   plugins: [/*'react', 'react-hooks', */ '@typescript-eslint', 'deprecation'],
   rules: {
     // This rule helps highlight areas of the code that use deprecated

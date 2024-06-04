@@ -17,10 +17,14 @@
     "storybook:web": "storybook dev -p 6006 -c ./src/.storybook-web",
     "ts:build": "pnpm panda && pnpm ts:build:native && pnpm ts:build:web && pnpm ts:build:all",
     "ts:build:all": "pnpm assets:web && pnpm assets:native && tsc --build ./tsconfig.json",
-    "ts:build:native": "pnpm assets:native && tsc --build ./tsconfig.native.json",
+    "ts:build:native": "pnpm assets:native && tsc -p ./tsconfig.native.json",
     "ts:build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm ts:build:native --watch --preserveWatchOutput\"  \"pnpm ts:build:web --watch --preserveWatchOutput\"  \"pnpm ts:build:all --watch --preserveWatchOutput\" ",
-    "ts:build:web": "pnpm assets:web && tsc --build ./tsconfig.web.json",
+    "ts:build:web": "pnpm assets:web && tsc -p ./tsconfig.web.json",
     "typecheck": "tsc --noEmit --project ./tsconfig.json"
+  },
+  "exports": {
+    ".": "./dist-web/web.js",
+    "./native": "./dist-native/native.js"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
@@ -81,11 +85,6 @@
     "tslib": "2.6.2",
     "typescript": "5.3.3"
   },
-  "exports": {
-    ".": "./dist-web/web.js",
-    "./native": "./dist-native/native.js"
-  },
-  "private": true,
   "publishConfig": {
     "access": "public"
   }

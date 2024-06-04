@@ -1,10 +1,10 @@
 {
   "name": "leather-mono",
+  "author": "Leather Wallet",
   "description": "Leather wallet shared code",
   "version": "1.5.0",
   "license": "MIT",
   "type": "module",
-  "author": "Leather Wallet",
   "scripts": {
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
@@ -50,7 +50,7 @@
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@8.15.3",
+  "packageManager": "pnpm@9.1.4",
   "pnpm": {
     "packageExtensions": {
       "eslint-config-next@*": {

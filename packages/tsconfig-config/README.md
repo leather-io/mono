@@ -4,15 +4,17 @@ The purpose of [typescript](https://www.typescriptlang.org/) is to add strong ty
 
 ## Contents
 
-- [Setup](#setup)
-- [License](#license)
+- [Shared typescript configuration](#shared-typescript-configuration)
+  - [Contents](#contents)
+  - [Setup](#setup)
+  - [License](#license)
 
 ## Setup
 
 - Install as a dev dependency in packages / apps:
 
   ```sh
-  npm install --save-dev @leather-wallet/tsconfig-config
+  pnpm add -D @leather-wallet/tsconfig-config
   ```
 
 - Add typescript configuration file to your package that extends the base

@@ -1,23 +1,26 @@
 {
   "name": "@leather-wallet/constants",
+  "author": "Leather.io contact@leather.io",
   "description": "Shared bitcoin utilities",
   "version": "0.6.1",
   "license": "MIT",
-  "type": "module",
-  "author": "Leather.io contact@leather.io",
-  "scripts": {
-    "format": "prettier . --write --ignore-path ../../.prettierignore",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
-    "ts:build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
-    "ts:build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json"
-  },
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/constants",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
     "directory": "packages/constants"
+  },
+  "type": "module",
+  "scripts": {
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "lint": "eslint . --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
+    "ts:build": "tsup ",
+    "ts:build:watch": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./dist/index.js"
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "devDependencies": {
@@ -27,15 +30,8 @@
     "concurrently": "8.2.2",
     "eslint": "8.53.0",
     "prettier": "3.2.5",
-    "tsup": "8.0.1",
+    "tsup": "8.1.0",
     "typescript": "5.3.3"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    }
   },
   "keywords": [
     "constants",

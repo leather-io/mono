@@ -1,9 +1,9 @@
 {
   "name": "@leather-wallet/tsconfig-config",
+  "author": "Leather.io contact@leather.io",
   "description": "Shared tsconfig configuration",
   "version": "0.4.0",
   "license": "MIT",
-  "author": "Leather.io contact@leather.io",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tsconfig-config",
   "repository": {
     "type": "git",

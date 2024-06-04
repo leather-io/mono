@@ -1,29 +1,26 @@
 {
   "name": "@leather-wallet/rpc",
+  "author": "leather-wallet",
   "description": "RPC types package for Leather",
   "version": "0.3.10",
   "license": "MIT",
-  "author": "leather-wallet",
+  "type": "module",
   "scripts": {
     "prepublish": "pnpm ts:build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ts:build": "tsup src/index.ts && npm run types",
-    "ts:build:watch": "tsc --build --watch --preserveWatchOutput",
-    "typecheck": "tsc --noEmit -p ./tsconfig.json",
+    "ts:build": "tsup",
+    "ts:build:watch": "tsup --watch",
+    "typecheck": "tsc --noEmit",
     "types": "tsc --declaration --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": "./dist/index.js"
   },
   "dependencies": {
     "@leather-wallet/models": "workspace:*"
   },
   "devDependencies": {
-    "tsup": "8.0.1"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.js",
-      "require": "./dist/types/index.js"
-    }
+    "tsup": "8.1.0"
   },
   "files": [
     "dist"
