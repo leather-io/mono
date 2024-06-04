@@ -1,8 +1,8 @@
-import { getPrincipalFromContractId } from '@leather-wallet/utils';
 import { hexToCV } from '@stacks/transactions';
 import { type UseQueryResult, useQueries } from '@tanstack/react-query';
 
-import { useHiroApiRateLimiter } from '../../../hiro-rate-limiter';
+import { getPrincipalFromContractId } from '@leather-wallet/utils';
+
 import { QueryPrefixes } from '../../../query-prefixes';
 import { useStacksClient } from '../../stacks-client';
 import type { NftAssetResponse } from '../token-metadata.utils';
@@ -27,7 +27,6 @@ export function useGetNonFungibleTokenMetadataListQuery(
   address: string
 ): UseQueryResult<NftAssetResponse>[] {
   const client = useStacksClient();
-  const limiter = useHiroApiRateLimiter();
   const nftHoldings = useGetNonFungibleTokenHoldingsQuery(address);
 
   return useQueries({
@@ -38,11 +37,7 @@ export function useGetNonFungibleTokenMetadataListQuery(
       return {
         enabled: !!tokenId,
         queryKey: [QueryPrefixes.GetNftMetadata, principal, tokenId],
-        queryFn: async () => {
-          return limiter.add(() => client.tokensApi.getNftMetadata(principal, tokenId), {
-            throwOnTimeout: true,
-          });
-        },
+        queryFn: () => client.getNftMetadata(principal, tokenId),
         retry(_count: number, error: Response) {
           if (statusCodeNotFoundOrNotProcessable(error.status)) return false;
           return true;

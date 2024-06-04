@@ -1,7 +1,5 @@
-import { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types/generated';
 import { useQueries, useQuery } from '@tanstack/react-query';
 
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useStacksClient } from '../stacks-client';
 
 const options = {
@@ -13,15 +11,9 @@ const options = {
 
 export function useTransactionsById(txids: string[]) {
   const client = useStacksClient();
-  const limiter = useHiroApiRateLimiter();
 
   async function transactionByIdFetcher(txId: string) {
-    return limiter.add(
-      () => client.transactionsApi.getTransactionById({ txId }) as unknown as MempoolTransaction,
-      {
-        throwOnTimeout: true,
-      }
-    );
+    return client.getTransactionById(txId);
   }
 
   return useQueries({
@@ -37,17 +29,9 @@ export function useTransactionsById(txids: string[]) {
 
 export function useTransactionById(txid: string) {
   const client = useStacksClient();
-  const limiter = useHiroApiRateLimiter();
+
   async function transactionByIdFetcher(txId: string) {
-    return limiter.add(
-      () =>
-        client.transactionsApi.getTransactionById({ txId }) as unknown as
-          | Transaction
-          | MempoolTransaction,
-      {
-        throwOnTimeout: true,
-      }
-    );
+    return client.getTransactionById(txId);
   }
 
   return useQuery({

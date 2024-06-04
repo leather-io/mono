@@ -1,5 +1,4 @@
 import { parseZoneFile } from '@fungible-systems/zone-file';
-import { isString, isUndefined } from '@leather-wallet/utils';
 import { asciiToBytes, bytesToAscii } from '@stacks/common';
 import { BnsNamesOwnByAddressResponse } from '@stacks/stacks-blockchain-api-types';
 import {
@@ -17,6 +16,8 @@ import {
 } from '@stacks/transactions';
 import { principalToString } from '@stacks/transactions/dist/esm/clarity/types/principalCV';
 
+import { isString, isUndefined } from '@leather-wallet/utils';
+
 import { StacksClient } from '../stacks-client';
 
 const bnsContractConsts = {
@@ -33,18 +34,16 @@ async function fetchBnsxName(
   try {
     const addressCV = standardPrincipalCV(address);
     const addressHex = cvToHex(addressCV);
-    const res = await client.smartContractsApi.callReadOnlyFunction(
-      {
-        ...bnsContractConsts,
-        functionName: 'get-primary-name',
-        tip: 'latest',
-        readOnlyFunctionArgs: {
-          sender: address,
-          arguments: [addressHex],
-        },
+    const res = await client.callReadOnlyFunction({
+      ...bnsContractConsts,
+      functionName: 'get-primary-name',
+      tip: 'latest',
+      readOnlyFunctionArgs: {
+        sender: address,
+        arguments: [addressHex],
       },
-      { signal }
-    );
+      signal,
+    });
     if (!res.okay || !res.result) return null;
     const { result } = res;
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
@@ -79,7 +78,7 @@ async function fetchBnsxOwner(client: StacksClient, fqn: string): Promise<string
     namespace: bufferCV(asciiToBytes(namespace)),
   });
 
-  const res = await client.smartContractsApi.callReadOnlyFunction({
+  const res = await client.callReadOnlyFunction({
     ...bnsContractConsts,
     functionName: 'get-name-properties',
     tip: 'latest',
@@ -118,7 +117,7 @@ export async function fetchNamesForAddress({
   signal,
 }: FetchNamesForAddressArgs): Promise<BnsNamesOwnByAddressResponse> {
   const fetchFromApi = async () => {
-    return client.namesApi.getNamesOwnedByAddress({ address, blockchain: 'stacks' }, { signal });
+    return client.getNamesOwnedByAddress(address, signal);
   };
   if (isTestnet) {
     return fetchFromApi();
@@ -144,7 +143,7 @@ export async function fetchNamesForAddress({
  */
 export async function fetchNameOwner(client: StacksClient, name: string, isTestnet: boolean) {
   const fetchFromApi = async () => {
-    const res = await client.namesApi.getNameInfo({ name });
+    const res = await client.getNameInfo(name);
     if (isUndefined(res.address)) return null;
     if (!isString(res.address) || res.address.length === 0) return null;
     return res.address;
@@ -169,7 +168,7 @@ export async function fetchBtcNameOwner(
   name: string
 ): Promise<string | null> {
   try {
-    const nameResponse = await client.namesApi.getNameInfo({ name });
+    const nameResponse = await client.getNameInfo(name);
     const zonefile = parseZoneFile(nameResponse.zonefile);
     if (!zonefile.txt) return null;
     const btcRecord = zonefile.txt.find(record => record.name === '_btc._addr');

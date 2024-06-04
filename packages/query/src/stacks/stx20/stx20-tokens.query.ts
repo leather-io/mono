@@ -2,8 +2,9 @@ import { ChainID } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentNetworkState } from '../../leather-query-provider';
-import { AppUseQueryConfig } from '../../query-config';
-import { type Stx20Balance, useStacksClient } from '../stacks-client';
+import type { AppUseQueryConfig } from '../../query-config';
+import { useStacksClient } from '../stacks-client';
+import type { Stx20Balance } from '../stx20-api-types';
 
 export function useStx20BalancesQuery<T extends unknown = Stx20Balance[]>(
   address: string,
@@ -15,7 +16,7 @@ export function useStx20BalancesQuery<T extends unknown = Stx20Balance[]>(
   return useQuery({
     enabled: network.chain.stacks.chainId === ChainID.Mainnet,
     queryKey: ['stx20-balances', address],
-    queryFn: () => client.stx20Api.getStx20Balances(address),
+    queryFn: () => client.getStx20Balances(address),
     ...options,
   });
 }

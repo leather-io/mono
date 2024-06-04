@@ -1,4 +1,4 @@
-import { Money } from '@leather-wallet/models';
+import type { Money } from '@leather-wallet/models';
 
 export function sortAssetsByName<T extends { name: string }[]>(assets: T) {
   return assets

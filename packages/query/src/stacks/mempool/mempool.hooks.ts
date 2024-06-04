@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
-import { increaseValueByOneMicroStx, microStxToStx } from '@leather-wallet/utils';
 import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
+
+import { increaseValueByOneMicroStx, isDefined, microStxToStx } from '@leather-wallet/utils';
 
 import { useTransactionsById } from '../transactions/transactions-by-id.query';
 import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';
@@ -33,7 +34,8 @@ export function useStacksPendingTransactions(address: string) {
           }
           return true;
         })
-        .filter(tx => !!tx) as MempoolTransaction[],
+        .filter(tx => !!tx)
+        .filter(isDefined) as MempoolTransaction[],
     };
   }, [txs, query]);
 }

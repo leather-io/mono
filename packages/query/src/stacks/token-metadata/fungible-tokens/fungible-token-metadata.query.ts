@@ -1,12 +1,11 @@
-import { createCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney, getPrincipalFromContractId, getTicker } from '@leather-wallet/utils';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import PQueue from 'p-queue';
 
-import { AddressBalanceResponse } from '../../../../types/account';
-import { useHiroApiRateLimiter } from '../../../hiro-rate-limiter';
+import { createCryptoAssetBalance } from '@leather-wallet/models';
+import { createMoney, getPrincipalFromContractId, getTicker } from '@leather-wallet/utils';
+
 import { useCurrentNetworkState } from '../../../leather-query-provider';
+import { AddressBalanceResponse } from '../../hiro-api-types';
 import { createSip10CryptoAssetInfo } from '../../sip10/sip10-tokens.utils';
 import { type StacksClient, useStacksClient } from '../../stacks-client';
 import { getStacksContractIdStringParts } from '../../temp-utils';
@@ -25,22 +24,19 @@ const queryOptions = {
   retry: 0,
 } as const;
 
-function fetchFungibleTokenMetadata(client: StacksClient, limiter: PQueue) {
+function fetchFungibleTokenMetadata(client: StacksClient) {
   return (principal: string) => async () => {
-    return limiter.add(() => client.tokensApi.getFtMetadata(principal), {
-      throwOnTimeout: true,
-    }) as unknown as FtAssetResponse;
+    return client.getFtMetadata(principal) as unknown as FtAssetResponse;
   };
 }
 
 export function useGetFungibleTokenMetadataQuery(principal: string) {
   const client = useStacksClient();
   const network = useCurrentNetworkState();
-  const limiter = useHiroApiRateLimiter();
 
   return useQuery({
     queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-    queryFn: fetchFungibleTokenMetadata(client, limiter)(principal),
+    queryFn: fetchFungibleTokenMetadata(client)(principal),
     ...queryOptions,
   });
 }
@@ -50,7 +46,6 @@ export function useGetFungibleTokensBalanceMetadataQuery(
 ) {
   const client = useStacksClient();
   const network = useCurrentNetworkState();
-  const limiter = useHiroApiRateLimiter();
 
   return useQueries({
     queries: Object.entries(ftBalances).map(([key, value]) => {
@@ -58,7 +53,7 @@ export function useGetFungibleTokensBalanceMetadataQuery(
       return {
         enabled: !!principal,
         queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: fetchFungibleTokenMetadata(client, limiter)(principal),
+        queryFn: fetchFungibleTokenMetadata(client)(principal),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           const { contractAssetName } = getStacksContractIdStringParts(key);
@@ -80,7 +75,6 @@ export function useGetFungibleTokensBalanceMetadataQuery(
 export function useGetFungibleTokensMetadataQuery(keys: string[]) {
   const client = useStacksClient();
   const network = useCurrentNetworkState();
-  const limiter = useHiroApiRateLimiter();
 
   return useQueries({
     queries: keys.map(key => {
@@ -88,7 +82,7 @@ export function useGetFungibleTokensMetadataQuery(keys: string[]) {
       return {
         enabled: !!principal,
         queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: fetchFungibleTokenMetadata(client, limiter)(principal),
+        queryFn: fetchFungibleTokenMetadata(client)(principal),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           return createSip10CryptoAssetInfo(key, resp);

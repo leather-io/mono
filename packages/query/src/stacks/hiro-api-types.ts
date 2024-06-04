@@ -1,3 +1,5 @@
+import { ContractInterfaceFunction } from '@stacks/rpc-client';
+import { ContractInterfaceResponse } from '@stacks/stacks-blockchain-api-types';
 import type { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
 
 type SelectedKeys =
@@ -53,4 +55,34 @@ export interface AddressBalanceResponse {
     }
   >;
   token_offering_locked?: AddressTokenOfferingLocked;
+}
+
+export type ContractInterfaceResponseWithFunctions = Omit<
+  ContractInterfaceResponse,
+  'functions'
+> & {
+  functions: ContractInterfaceFunction[];
+};
+
+export interface FeeEstimation {
+  fee: number;
+  fee_rate: number;
+}
+
+export interface StacksTxFeeEstimation {
+  cost_scalar_change_by_byte: number;
+  estimated_cost: object;
+  estimated_cost_scalar: number;
+  estimations: FeeEstimation[];
+  error?: string;
+}
+
+export interface NonFungibleTokenHoldingListResult {
+  asset_identifier: string;
+  block_height: number;
+  tx_id: string;
+  value: {
+    hex: string;
+    repr: string;
+  };
 }

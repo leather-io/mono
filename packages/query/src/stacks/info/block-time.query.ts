@@ -7,7 +7,7 @@ export function useGetStackNetworkBlockTimeQuery() {
 
   return useQuery({
     queryKey: ['stacks-block-time'],
-    queryFn: () => client.infoApi.getNetworkBlockTimes(),
+    queryFn: () => client.getNetworkBlockTimes(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
