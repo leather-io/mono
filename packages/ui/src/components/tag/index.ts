@@ -1,2 +1,1 @@
-export { Tag } from './tag.web';
-export { TagWithTooltip } from './tag-with-tooltip.web';
+export { Tag, type TagProps, type TagVariants } from './tag.web';
