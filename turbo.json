@@ -1,24 +1,24 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "ts:build": {
-      "dependsOn": ["^ts:build"]
+    "build": {
+      "dependsOn": ["^build"]
     },
-    "ts:build:watch": {},
+    "build:watch": {},
     "format": {
-      "dependsOn": ["ts:build"]
+      "dependsOn": ["build"]
     },
     "lint": {
-      "dependsOn": ["ts:build"]
+      "dependsOn": ["build"]
     },
     "lint:fix": {
-      "dependsOn": ["ts:build"]
+      "dependsOn": ["build"]
     },
     "typecheck": {
-      "dependsOn": ["ts:build"]
+      "dependsOn": ["build"]
     },
     "check:all": {
-      "dependsOn": ["ts:build", "lint", "format", "typecheck"]
+      "dependsOn": ["build", "lint", "format", "typecheck"]
     },
     "dev": {
       "cache": false,

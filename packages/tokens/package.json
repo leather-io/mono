@@ -12,9 +12,9 @@
   },
   "scripts": {
     "lint": "eslint . --ignore-path ../../.eslintignore",
-    "prepublish": "pnpm ts:build",
-    "ts:build": "tsup",
-    "ts:build:watch": "tsup --watch",
+    "prepublish": "pnpm build",
+    "build": "tsup",
+    "build:watch": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
