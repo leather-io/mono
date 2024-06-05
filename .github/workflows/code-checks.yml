@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
       - name: Lint Prettier
-        run: pnpm format
+        run: pnpm format:check
 
   lint-syncpack:
     runs-on: ubuntu-latest

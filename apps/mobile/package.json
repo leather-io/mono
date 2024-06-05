@@ -12,6 +12,7 @@
     "eas-build-post-install": "cd ../.. && pnpm build",
     "eas-build-pre-install": "./eas-hooks/eas-build-pre-install.sh",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "ios": "expo run:ios",
     "ios:build": "expo run:ios --no-bundler",
     "lint": "eslint . --ignore-path ../../.eslintignore",
