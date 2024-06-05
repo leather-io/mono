@@ -26,7 +26,7 @@ export interface StxSignMessageResponseBody {
   signature: string;
 }
 
-export type StxSignMessageRequest = RpcRequest<'StxSignMessage', StxSignMessageRequestParams>;
+export type StxSignMessageRequest = RpcRequest<'stx_signMessage', StxSignMessageRequestParams>;
 
 export type StxSignMessageResponse = RpcResponse<StxSignMessageResponseBody>;
 
