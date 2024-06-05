@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.1.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.1.0...leather-mono-v2.1.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* missing pnpm prefix ([6feabbc](https://github.com/leather-wallet/mono/commit/6feabbcf0eb6056956ab25e9a3f4cc6cd9573577))
+
 ## [2.1.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.0.0...leather-mono-v2.1.0) (2024-06-05)
 
 
