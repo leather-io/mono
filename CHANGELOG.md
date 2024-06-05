@@ -16,6 +16,32 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.0.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.5.0...leather-mono-v2.0.0) (2024-06-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rpc:** users relying on existing implicit behaviour need to update their code with the latest README.md instructions
+
+### Features
+
+* run expo prebuild, install detox, jest, expo config for detox ([4921410](https://github.com/leather-wallet/mono/commit/4921410ef6f3c350210c5fbdbac3e0fbf85ef51a))
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* react.JSX deprecated ([845efe1](https://github.com/leather-wallet/mono/commit/845efe1cfaf36e83fef5202b2d86aa03dbe0a70a))
+* **rpc:** do not augment global type implicitly ([5ea44b2](https://github.com/leather-wallet/mono/commit/5ea44b2169d4a7a3151059e94a8682e6c14b0e6a))
+* **rpc:** export LeatherProvider ([fb532a2](https://github.com/leather-wallet/mono/commit/fb532a2f0b6f583de24821c97bd0ca52e21dec4a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/prettier-config bumped to 0.4.1
+
 ## [1.5.0](https://github.com/leather-wallet/mono/compare/leather-mono-v1.4.17...leather-mono-v1.5.0) (2024-05-30)
 
 

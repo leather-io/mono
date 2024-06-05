@@ -1,16 +1,16 @@
 {
-  ".": "1.5.0",
-  "apps/mobile": "1.4.1",
-  "packages/bitcoin": "0.6.6",
-  "packages/constants": "0.6.1",
+  ".": "2.0.0",
+  "apps/mobile": "1.5.0",
+  "packages/bitcoin": "0.6.7",
+  "packages/constants": "0.6.2",
   "packages/eslint-config": "0.4.0",
-  "packages/models": "0.6.6",
-  "packages/prettier-config": "0.4.0",
-  "packages/panda-preset": "0.1.0",
-  "packages/query": "0.6.8",
-  "packages/tokens": "0.5.0",
+  "packages/models": "0.6.7",
+  "packages/prettier-config": "0.4.1",
+  "packages/panda-preset": "0.1.1",
+  "packages/query": "0.6.9",
+  "packages/tokens": "0.5.1",
   "packages/tsconfig-config": "0.4.0",
-  "packages/rpc": "0.3.10",
-  "packages/ui": "1.3.1",
-  "packages/utils": "0.6.6"
+  "packages/rpc": "1.0.0",
+  "packages/ui": "1.3.2",
+  "packages/utils": "0.6.7"
 }

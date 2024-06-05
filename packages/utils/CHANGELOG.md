@@ -28,6 +28,24 @@
     * @leather-wallet/models bumped to 0.6.5
     * @leather-wallet/rpc bumped to 0.3.9
 
+## [0.6.7](https://github.com/leather-wallet/mono/compare/utils-v0.6.6...utils-v0.6.7) (2024-06-05)
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/constants bumped to 0.6.2
+    * @leather-wallet/models bumped to 0.6.7
+    * @leather-wallet/rpc bumped to 1.0.0
+  * devDependencies
+    * @leather-wallet/prettier-config bumped to 0.4.1
+
 ## [0.6.6](https://github.com/leather-wallet/mono/compare/utils-v0.6.5...utils-v0.6.6) (2024-05-30)
 
 
