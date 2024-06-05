@@ -12,6 +12,7 @@
     "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch --preserveWatchOutput\"  \"pnpm build:all --watch --preserveWatchOutput\" ",
     "build:web": "pnpm assets:web && tsc -p ./tsconfig.web.json",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "panda": "panda codegen -c ./panda.config.ts",

@@ -15,6 +15,7 @@
     "build": "tsup",
     "build:watch": "tsup --watch",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",

@@ -15,6 +15,7 @@
     "build": "tsup index.ts --format esm && tsc --emitDeclarationOnly",
     "build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
