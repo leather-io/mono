@@ -22,6 +22,24 @@
   * devDependencies
     * @leather-wallet/panda-preset bumped to 0.1.0
 
+## [1.4.0](https://github.com/leather-wallet/mono/compare/ui-v1.3.2...ui-v1.4.0) (2024-06-05)
+
+
+### Features
+
+* migrate extension components , ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([5404b07](https://github.com/leather-wallet/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/tokens bumped to 0.5.2
+    * @leather-wallet/utils bumped to 0.7.0
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather-wallet/panda-preset bumped to 0.2.0
+
 ## [1.3.2](https://github.com/leather-wallet/mono/compare/ui-v1.3.1...ui-v1.3.2) (2024-06-05)
 
 

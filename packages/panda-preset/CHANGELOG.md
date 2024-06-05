@@ -6,6 +6,20 @@
   * devDependencies
     * @leather-wallet/tokens bumped to 0.5.1
 
+## [0.2.0](https://github.com/leather-wallet/mono/compare/panda-preset-v0.1.1...panda-preset-v0.2.0) (2024-06-05)
+
+
+### Features
+
+* migrate extension components , ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([5404b07](https://github.com/leather-wallet/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/tokens bumped to 0.5.2
+
 ## [0.1.0](https://github.com/leather-wallet/mono/compare/panda-preset-v0.0.5...panda-preset-v0.1.0) (2024-05-31)
 
 

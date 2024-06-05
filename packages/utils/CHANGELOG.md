@@ -28,6 +28,24 @@
     * @leather-wallet/models bumped to 0.6.5
     * @leather-wallet/rpc bumped to 0.3.9
 
+## [0.7.0](https://github.com/leather-wallet/mono/compare/utils-v0.6.7...utils-v0.7.0) (2024-06-05)
+
+
+### Features
+
+* migrate extension components , ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([5404b07](https://github.com/leather-wallet/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/constants bumped to 0.6.3
+    * @leather-wallet/models bumped to 0.6.8
+    * @leather-wallet/rpc bumped to 1.0.1
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.5.0
+
 ## [0.6.7](https://github.com/leather-wallet/mono/compare/utils-v0.6.6...utils-v0.6.7) (2024-06-05)
 
 

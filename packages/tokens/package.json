@@ -2,7 +2,7 @@
   "name": "@leather-wallet/tokens",
   "author": "Leather.io contact@leather.io",
   "description": "Shared design tokens",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "license": "MIT",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
   "repository": {

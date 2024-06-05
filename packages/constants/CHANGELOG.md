@@ -1,6 +1,12 @@
 # Changelog
 
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.5.0
+
 ## [0.6.2](https://github.com/leather-wallet/mono/compare/constants-v0.6.1...constants-v0.6.2) (2024-06-05)
 
 

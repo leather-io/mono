@@ -1,5 +1,11 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.5.0
+
 ## [0.5.1](https://github.com/leather-wallet/mono/compare/tokens-v0.5.0...tokens-v0.5.1) (2024-06-05)
 
 

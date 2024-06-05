@@ -47,6 +47,17 @@
   * dependencies
     * @leather-wallet/crypto bumped to 1.0.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/constants bumped to 0.6.3
+    * @leather-wallet/models bumped to 0.6.8
+    * @leather-wallet/utils bumped to 0.7.0
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather-wallet/rpc bumped to 1.0.1
+
 ## [0.6.7](https://github.com/leather-wallet/mono/compare/bitcoin-v0.6.6...bitcoin-v0.6.7) (2024-06-05)
 
 
