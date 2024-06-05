@@ -36,6 +36,20 @@
   * dependencies
     * @leather-wallet/models bumped to 0.6.6
 
+## [1.0.1](https://github.com/leather-wallet/mono/compare/rpc-v1.0.0...rpc-v1.0.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* event name is 'stx_signMessage' ([ba8f930](https://github.com/leather-wallet/mono/commit/ba8f9304d9a53698ef8c1fdc7c984aa8cf507d51))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.6.8
+
 ## [1.0.0](https://github.com/leather-wallet/mono/compare/rpc-v0.3.10...rpc-v1.0.0) (2024-06-05)
 
 

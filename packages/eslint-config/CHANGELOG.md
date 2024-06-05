@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/leather-wallet/mono/compare/eslint-config-v0.4.0...eslint-config-v0.5.0) (2024-06-05)
+
+
+### Features
+
+* migrate extension components , ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([5404b07](https://github.com/leather-wallet/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
+
 ## [0.4.0](https://github.com/leather-wallet/mono/compare/eslint-config-v0.3.1...eslint-config-v0.4.0) (2024-05-17)
 
 

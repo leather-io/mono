@@ -16,6 +16,25 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.2.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.1.2...leather-mono-v2.2.0) (2024-06-05)
+
+
+### Features
+
+* migrate extension components , ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([5404b07](https://github.com/leather-wallet/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
+
+
+### Bug Fixes
+
+* event name is 'stx_signMessage' ([ba8f930](https://github.com/leather-wallet/mono/commit/ba8f9304d9a53698ef8c1fdc7c984aa8cf507d51))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/eslint-config bumped to 0.5.0
+
 ## [2.1.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.1.1...leather-mono-v2.1.2) (2024-06-05)
 
 
