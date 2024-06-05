@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsup",
     "build:watch": "tsup --watch",
-    "prepublish": "build",
+    "prepublish": "pnpm build",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit"
   },
