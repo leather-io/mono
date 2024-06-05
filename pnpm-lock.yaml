@@ -407,9 +407,6 @@ importers:
       '@types/react':
         specifier: 18.2.79
         version: 18.2.79
-      concurrently:
-        specifier: 8.2.2
-        version: 8.2.2
       eslint:
         specifier: 8.53.0
         version: 8.53.0
