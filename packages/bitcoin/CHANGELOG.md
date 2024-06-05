@@ -41,6 +41,12 @@
   * dependencies
     * @leather-wallet/crypto bumped to 1.0.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/crypto bumped to 1.0.1
+
 ## [0.6.7](https://github.com/leather-wallet/mono/compare/bitcoin-v0.6.6...bitcoin-v0.6.7) (2024-06-05)
 
 
