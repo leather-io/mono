@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/leather-wallet/mono/compare/prettier-config-v0.4.0...prettier-config-v0.4.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+
 ## [0.4.0](https://github.com/leather-wallet/mono/compare/prettier-config-v0.3.1...prettier-config-v0.4.0) (2024-05-17)
 
 

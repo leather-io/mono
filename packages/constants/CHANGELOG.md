@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [0.6.2](https://github.com/leather-wallet/mono/compare/constants-v0.6.1...constants-v0.6.2) (2024-06-05)
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/prettier-config bumped to 0.4.1
+
 ## [0.6.1](https://github.com/leather-wallet/mono/compare/constants-v0.6.0...constants-v0.6.1) (2024-05-20)
 
 

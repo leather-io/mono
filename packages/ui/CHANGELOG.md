@@ -22,6 +22,22 @@
   * devDependencies
     * @leather-wallet/panda-preset bumped to 0.1.0
 
+## [1.3.2](https://github.com/leather-wallet/mono/compare/ui-v1.3.1...ui-v1.3.2) (2024-06-05)
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/tokens bumped to 0.5.1
+  * devDependencies
+    * @leather-wallet/panda-preset bumped to 0.1.1
+
 ## [1.3.0](https://github.com/leather-wallet/mono/compare/ui-v1.2.2...ui-v1.3.0) (2024-05-30)
 
 

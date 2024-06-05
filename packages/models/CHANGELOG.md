@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.7](https://github.com/leather-wallet/mono/compare/models-v0.6.6...models-v0.6.7) (2024-06-05)
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* react.JSX deprecated ([845efe1](https://github.com/leather-wallet/mono/commit/845efe1cfaf36e83fef5202b2d86aa03dbe0a70a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/prettier-config bumped to 0.4.1
+
 ## [0.6.6](https://github.com/leather-wallet/mono/compare/models-v0.6.5...models-v0.6.6) (2024-05-30)
 
 

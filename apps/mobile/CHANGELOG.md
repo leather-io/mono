@@ -32,6 +32,27 @@
   * dependencies
     * @leather-wallet/ui bumped to 1.3.1
 
+## [1.5.0](https://github.com/leather-wallet/mono/compare/mobile-v1.4.1...mobile-v1.5.0) (2024-06-05)
+
+
+### Features
+
+* run expo prebuild, install detox, jest, expo config for detox ([4921410](https://github.com/leather-wallet/mono/commit/4921410ef6f3c350210c5fbdbac3e0fbf85ef51a))
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/constants bumped to 0.6.2
+    * @leather-wallet/tokens bumped to 0.5.1
+    * @leather-wallet/ui bumped to 1.3.2
+
 ## [1.4.0](https://github.com/leather-wallet/mono/compare/mobile-v1.3.3...mobile-v1.4.0) (2024-05-30)
 
 

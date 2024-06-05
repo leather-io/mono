@@ -36,6 +36,25 @@
   * dependencies
     * @leather-wallet/models bumped to 0.6.6
 
+## [1.0.0](https://github.com/leather-wallet/mono/compare/rpc-v0.3.10...rpc-v1.0.0) (2024-06-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rpc:** users relying on existing implicit behaviour need to update their code with the latest README.md instructions
+
+### Bug Fixes
+
+* **rpc:** do not augment global type implicitly ([5ea44b2](https://github.com/leather-wallet/mono/commit/5ea44b2169d4a7a3151059e94a8682e6c14b0e6a))
+* **rpc:** export LeatherProvider ([fb532a2](https://github.com/leather-wallet/mono/commit/fb532a2f0b6f583de24821c97bd0ca52e21dec4a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/models bumped to 0.6.7
+
 ## [0.3.4](https://github.com/leather-wallet/mono/compare/rpc-v0.3.3...rpc-v0.3.4) (2024-05-17)
 
 

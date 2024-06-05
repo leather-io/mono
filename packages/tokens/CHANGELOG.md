@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.1](https://github.com/leather-wallet/mono/compare/tokens-v0.5.0...tokens-v0.5.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-wallet/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather-wallet/prettier-config bumped to 0.4.1
+
 ## [0.5.0](https://github.com/leather-wallet/mono/compare/tokens-v0.4.0...tokens-v0.5.0) (2024-05-30)
 
 
