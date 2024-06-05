@@ -7,11 +7,13 @@ runs:
       uses: pnpm/action-setup@v4
       with:
         version: '9.1.4'
+
     - name: Set up node
       uses: actions/setup-node@v3
       with:
         node-version: 20
         cache: 'pnpm'
-    - name: install dependencies
+
+    - name: Install dependencies
       run: pnpm install
       shell: bash
