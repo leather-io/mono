@@ -1,5 +1,5 @@
 {
-  ".": "2.0.0",
+  ".": "2.1.0",
   "apps/mobile": "1.5.0",
   "packages/bitcoin": "0.6.7",
   "packages/constants": "0.6.2",
