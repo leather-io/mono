@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/leather-wallet/mono/compare/crypto-v1.0.0...crypto-v1.0.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* trial error release fix ([1670ba3](https://github.com/leather-wallet/mono/commit/1670ba31447e291be90c59391be71ee302688e41))
+
 ## 1.0.0 (2024-06-05)
 
 

@@ -2,7 +2,7 @@
   "name": "@leather-wallet/crypto",
   "author": "leather-wallet",
   "description": "Generic crypto utils package for Leather",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "build": "tsup",

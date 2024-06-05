@@ -33,6 +33,12 @@
   * dependencies
     * @leather-wallet/bitcoin bumped to 0.6.8
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.6.9
+
 ## [0.6.9](https://github.com/leather-wallet/mono/compare/query-v0.6.8...query-v0.6.9) (2024-06-05)
 
 
