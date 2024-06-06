@@ -1,8 +1,6 @@
 {
   "extends": "../tsconfig-config/tsconfig.base",
   "compilerOptions": {
-    "composite": true,
-    "incremental": true,
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
@@ -15,7 +13,7 @@
   "include": [
     "**/*.web.ts",
     "**/*.web.tsx",
-    "web.ts",
+    "*.web.ts",
     "**/*web.stories.tsx",
     "src/.storybook-*/*",
     "src/icons/*",
