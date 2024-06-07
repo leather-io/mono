@@ -2,7 +2,7 @@
   "name": "@leather-wallet/query",
   "author": "Leather.io contact@leather.io",
   "description": "Leather query",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "license": "MIT",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/query",
   "repository": {

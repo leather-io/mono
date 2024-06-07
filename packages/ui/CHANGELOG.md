@@ -28,6 +28,12 @@
   * dependencies
     * @leather-wallet/utils bumped to 0.8.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/utils bumped to 0.8.1
+
 ## [1.4.0](https://github.com/leather-wallet/mono/compare/ui-v1.3.2...ui-v1.4.0) (2024-06-05)
 
 

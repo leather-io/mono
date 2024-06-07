@@ -16,6 +16,14 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.4.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.3.1...leather-mono-v2.4.0) (2024-06-07)
+
+
+### Features
+
+* add stacks tx and status model ([974aa25](https://github.com/leather-wallet/mono/commit/974aa2587b25e913421e01f89ada8313255ade09))
+* prevent react import in models ([04c681d](https://github.com/leather-wallet/mono/commit/04c681d54d415cdd604161f17acc2fd68091cdcc))
+
 ## [2.3.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.3.0...leather-mono-v2.3.1) (2024-06-07)
 
 
