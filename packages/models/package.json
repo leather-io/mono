@@ -2,7 +2,7 @@
   "name": "@leather-wallet/models",
   "author": "Leather.io contact@leather.io",
   "description": "Leather models and types",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "license": "MIT",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
   "repository": {

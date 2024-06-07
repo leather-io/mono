@@ -6,6 +6,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.7.0](https://github.com/leather-wallet/mono/compare/models-v0.6.8...models-v0.7.0) (2024-06-07)
+
+
+### Features
+
+* add stacks queries ([ba0ab05](https://github.com/leather-wallet/mono/commit/ba0ab053cf99c4fa5875079e956cdf7f58deb810))
+
 ## [0.6.7](https://github.com/leather-wallet/mono/compare/models-v0.6.6...models-v0.6.7) (2024-06-05)
 
 
