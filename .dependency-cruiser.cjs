@@ -14,6 +14,17 @@ module.exports = {
       },
     },
     {
+      name: 'prevent-react-imports-in-models',
+      severity: 'error',
+      comment: `Models should not import React.`,
+      from: {
+        path: '^packages/models',
+      },
+      to: {
+        path: ['react', '@types/react'],
+      },
+    },
+    {
       name: 'no-import-apps-in-packages',
       severity: 'error',
       comment: `Packages should not import apps. Apps should import packages.`,
