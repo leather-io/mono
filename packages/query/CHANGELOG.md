@@ -51,6 +51,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.8.1](https://github.com/leather-wallet/mono/compare/query-v0.8.0...query-v0.8.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* export hiro api types ([844c839](https://github.com/leather-wallet/mono/commit/844c8399620ef714431404969678b916ee749b86))
+
 ## [0.8.0](https://github.com/leather-wallet/mono/compare/query-v0.7.1...query-v0.8.0) (2024-06-07)
 
 
