@@ -25,13 +25,13 @@
   },
   "bugs": "https://github.com/leather-wallet/mono/issues",
   "dependencies": {
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
     "bignumber.js": "9.1.2"
   },
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",
     "@leather-wallet/tsconfig-config": "workspace:*",
-    "@types/react": "18.2.79",
     "eslint": "8.53.0",
     "prettier": "3.3.0",
     "tsup": "8.1.0",
