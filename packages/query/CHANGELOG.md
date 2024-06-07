@@ -51,6 +51,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.7.1](https://github.com/leather-wallet/mono/compare/query-v0.7.0...query-v0.7.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* stacks queries unit test failing ([4f2f425](https://github.com/leather-wallet/mono/commit/4f2f425e376b54bcf850f1bbff138179e1dd5576))
+
 ## [0.7.0](https://github.com/leather-wallet/mono/compare/query-v0.6.12...query-v0.7.0) (2024-06-07)
 
 
