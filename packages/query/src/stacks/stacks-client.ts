@@ -137,7 +137,7 @@ export function stacksClient(basePath: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<MempoolTransactionListResponse>(
-            `${basePath}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`
+            `${basePath}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`
           ),
         { throwOnTimeout: true }
       );
