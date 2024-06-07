@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.4.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.4.0...leather-mono-v2.4.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* export hiro api types ([844c839](https://github.com/leather-wallet/mono/commit/844c8399620ef714431404969678b916ee749b86))
+
 ## [2.4.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.3.1...leather-mono-v2.4.0) (2024-06-07)
 
 
