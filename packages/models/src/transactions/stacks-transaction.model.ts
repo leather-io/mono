@@ -1,4 +1,7 @@
-import type React from 'react';
+import type { MempoolTransaction, Transaction } from '@stacks/stacks-blockchain-api-types';
+
+export type StacksTx = MempoolTransaction | Transaction;
+export type StacksTxStatus = 'failed' | 'pending' | 'success';
 
 export interface StxTransfer {
   amount: string;
@@ -11,12 +14,4 @@ export interface FtTransfer {
   amount: string;
   sender?: string;
   recipient?: string;
-}
-
-export interface TxTransferDetails {
-  caption: string;
-  icon: React.ReactNode;
-  link: string;
-  title: string;
-  value: number | string | null;
 }
