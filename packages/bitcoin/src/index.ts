@@ -1,6 +1,5 @@
 export * from './bip322/bip322-utils';
 export * from './bip322/sign-message-bip322-bitcoinjs';
-export * from './bip322/sign-message-bip322';
 export * from './bitcoin-signer';
 export * from './bitcoin.network';
 export * from './bitcoin.utils';
