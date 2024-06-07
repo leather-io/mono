@@ -51,6 +51,23 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.7.0](https://github.com/leather-wallet/mono/compare/query-v0.6.12...query-v0.7.0) (2024-06-07)
+
+
+### Features
+
+* add stacks queries ([ba0ab05](https://github.com/leather-wallet/mono/commit/ba0ab053cf99c4fa5875079e956cdf7f58deb810))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.7.0
+    * @leather-wallet/models bumped to 0.7.0
+    * @leather-wallet/rpc bumped to 1.0.2
+    * @leather-wallet/utils bumped to 0.8.0
+
 ## [0.6.9](https://github.com/leather-wallet/mono/compare/query-v0.6.8...query-v0.6.9) (2024-06-05)
 
 

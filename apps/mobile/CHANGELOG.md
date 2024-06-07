@@ -42,6 +42,12 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/ui bumped to 1.4.1
+
 ## [1.5.0](https://github.com/leather-wallet/mono/compare/mobile-v1.4.1...mobile-v1.5.0) (2024-06-05)
 
 
