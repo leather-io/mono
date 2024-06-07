@@ -11,10 +11,10 @@ import {
   bufferCV,
   cvToHex,
   deserializeCV,
+  principalToString,
   standardPrincipalCV,
   tupleCV,
 } from '@stacks/transactions';
-import { principalToString } from '@stacks/transactions/dist/esm/clarity/types/principalCV';
 
 import { isString, isUndefined } from '@leather-wallet/utils';
 
