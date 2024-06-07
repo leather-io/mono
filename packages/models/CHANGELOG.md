@@ -6,6 +6,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.8.0](https://github.com/leather-wallet/mono/compare/models-v0.7.0...models-v0.8.0) (2024-06-07)
+
+
+### Features
+
+* add stacks tx and status model ([974aa25](https://github.com/leather-wallet/mono/commit/974aa2587b25e913421e01f89ada8313255ade09))
+
 ## [0.7.0](https://github.com/leather-wallet/mono/compare/models-v0.6.8...models-v0.7.0) (2024-06-07)
 
 
