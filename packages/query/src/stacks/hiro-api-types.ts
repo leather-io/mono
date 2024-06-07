@@ -2,7 +2,7 @@ import { ContractInterfaceFunction } from '@stacks/rpc-client';
 import { ContractInterfaceResponse } from '@stacks/stacks-blockchain-api-types';
 import type { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
 
-type SelectedKeys =
+export type SelectedKeys =
   | 'balance'
   | 'total_sent'
   | 'total_received'
