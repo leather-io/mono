@@ -1,5 +1,5 @@
 {
-  ".": "2.3.0",
+  ".": "2.3.1",
   "apps/mobile": "1.5.2",
   "packages/bitcoin": "0.7.0",
   "packages/constants": "0.6.3",
@@ -7,7 +7,7 @@
   "packages/models": "0.7.0",
   "packages/prettier-config": "0.4.1",
   "packages/panda-preset": "0.2.0",
-  "packages/query": "0.7.0",
+  "packages/query": "0.7.1",
   "packages/tokens": "0.5.2",
   "packages/tsconfig-config": "0.4.0",
   "packages/rpc": "1.0.2",

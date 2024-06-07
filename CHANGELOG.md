@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.3.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.3.0...leather-mono-v2.3.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* stacks queries unit test failing ([4f2f425](https://github.com/leather-wallet/mono/commit/4f2f425e376b54bcf850f1bbff138179e1dd5576))
+
 ## [2.3.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.2.0...leather-mono-v2.3.0) (2024-06-07)
 
 
