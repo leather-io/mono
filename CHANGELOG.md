@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.4.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.4.1...leather-mono-v2.4.2) (2024-06-08)
+
+
+### Bug Fixes
+
+* stacks mempool query ([46364be](https://github.com/leather-wallet/mono/commit/46364be962afd8075d619752082c65921f3f413e))
+
 ## [2.4.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.4.0...leather-mono-v2.4.1) (2024-06-07)
 
 

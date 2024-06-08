@@ -51,6 +51,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.8.2](https://github.com/leather-wallet/mono/compare/query-v0.8.1...query-v0.8.2) (2024-06-08)
+
+
+### Bug Fixes
+
+* stacks mempool query ([46364be](https://github.com/leather-wallet/mono/commit/46364be962afd8075d619752082c65921f3f413e))
+
 ## [0.8.1](https://github.com/leather-wallet/mono/compare/query-v0.8.0...query-v0.8.1) (2024-06-07)
 
 
