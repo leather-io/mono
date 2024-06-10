@@ -34,6 +34,13 @@
   * dependencies
     * @leather-wallet/utils bumped to 0.8.1
 
+## [1.4.3](https://github.com/leather-wallet/mono/compare/ui-v1.4.2...ui-v1.4.3) (2024-06-10)
+
+
+### Bug Fixes
+
+* update README, ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([3a91910](https://github.com/leather-wallet/mono/commit/3a9191068ee01854b432f24cc011fcb73756a4c6))
+
 ## [1.4.0](https://github.com/leather-wallet/mono/compare/ui-v1.3.2...ui-v1.4.0) (2024-06-05)
 
 
