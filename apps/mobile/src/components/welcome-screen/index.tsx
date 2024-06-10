@@ -9,6 +9,7 @@ import { InputState, TextInput } from '@/components/text-input';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useFormSubmission } from '@/queries/use-form-submissions';
 import { emailRegexp } from '@/utils/regexp';
+import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Linking from 'expo-linking';
 import LottieView from 'lottie-react-native';
@@ -222,19 +223,21 @@ export function WelcomeScreen() {
   const submittedComponent = (
     <Box backgroundColor="base.ink.background-primary" padding="6">
       <Text variant="body01" color="base.ink.text-subdued" paddingBottom="5">
-        Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the
-        meantime, please{' '}
-        <Text
-          onPress={() => Linking.openURL(BROWSER_EXTENSION_LINK)}
-          textDecorationLine="underline"
-        >
-          check out our browser extension.
-        </Text>
+        <Trans>
+          Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the
+          meantime, please{' '}
+          <Text
+            onPress={() => Linking.openURL(BROWSER_EXTENSION_LINK)}
+            textDecorationLine="underline"
+          >
+            check out our browser extension.
+          </Text>
+        </Trans>
       </Text>
       <Button
         testID={WelcomeScreenTestIds.OpenXButton}
         onPress={() => Linking.openURL(TWITTER_LINK)}
-        title="Follow us"
+        title={t`Follow us`}
         buttonState="outline"
         Icon={<XLogo width={20} height={20} />}
         mb="3"
@@ -246,7 +249,7 @@ export function WelcomeScreen() {
           setEmail('');
         }}
         mb="7"
-        title="Done"
+        title={t`Done`}
         buttonState="default"
       />
     </Box>
@@ -255,7 +258,7 @@ export function WelcomeScreen() {
   const submissionComponent = (
     <Box backgroundColor="base.ink.background-primary" padding="6">
       <Text variant="body01" color="base.ink.text-subdued" paddingBottom="5">
-        Stay in the loop and be the first one to hear about new developments
+        <Trans>Stay in the loop and be the first one to hear about new developments</Trans>
       </Text>
 
       <TextInput
@@ -280,7 +283,7 @@ export function WelcomeScreen() {
         spellCheck={false}
         mb="6"
         testID={WelcomeScreenTestIds.EmailInput}
-        placeholder="Email address"
+        placeholder={t`Email address`}
         // This input is currently flickering and that is a bug introduced in ios 17.
         // Refer to this issue in RN: https://github.com/facebook/react-native/issues/39411
       />
@@ -290,7 +293,7 @@ export function WelcomeScreen() {
           submitForm(email);
         }}
         mb="7"
-        title={isLoading || showSuccess ? undefined : 'Submit'}
+        title={isLoading || showSuccess ? undefined : t`Submit`}
         buttonState={getButtonState()}
         disabled={isButtonDisabled}
         testID={WelcomeScreenTestIds.SubmitEmailButton}
@@ -321,19 +324,23 @@ export function WelcomeScreen() {
                 loop={false}
               />
             </Box>
-            <Animated.View style={title1Style}>
-              <Text variant="heading02" color="dark.ink.text-primary">
-                Bitcoin for
-              </Text>
-            </Animated.View>
-            <Animated.View style={title2Style}>
-              <Text variant="heading02" color="dark.ink.text-primary">
-                the rest of us
-              </Text>
-            </Animated.View>
+            <Trans>
+              <Animated.View style={title1Style}>
+                <Text variant="heading02" color="dark.ink.text-primary">
+                  Bitcoin for
+                </Text>
+              </Animated.View>
+              <Animated.View style={title2Style}>
+                <Text variant="heading02" color="dark.ink.text-primary">
+                  the rest of us
+                </Text>
+              </Animated.View>
+            </Trans>
             <Animated.View style={subtitleStyle}>
               <Text variant="heading05" color="dark.ink.text-primary" paddingTop="5">
-                Leather is the only wallet you need to tap into the multilayered Bitcoin economy
+                <Trans>
+                  Leather is the only wallet you need to tap into the multilayered Bitcoin economy
+                </Trans>
               </Text>
             </Animated.View>
             <Animated.View

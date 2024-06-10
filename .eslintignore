@@ -11,3 +11,4 @@ dist-all/
 dist-web/
 .turbo/
 leather-styles/
+messages.js
