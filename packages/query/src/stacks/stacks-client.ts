@@ -143,16 +143,16 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getRawTransactionById(txId: string) {
+    async getRawTransactionById(txid: string) {
       const resp = await rateLimiter.add(
-        () => axios.get<GetRawTransactionResult>(`${basePath}/extended/v1/tx/${txId}/raw`),
+        () => axios.get<GetRawTransactionResult>(`${basePath}/extended/v1/tx/${txid}/raw`),
         { throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getTransactionById(txId: string) {
+    async getTransactionById(txid: string) {
       const resp = await rateLimiter.add(
-        () => axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txId}`),
+        () => axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txid}`),
         { throwOnTimeout: true }
       );
       return resp.data;

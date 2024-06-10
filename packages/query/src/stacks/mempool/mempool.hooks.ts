@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 
-import { increaseValueByOneMicroStx, isDefined, microStxToStx } from '@leather-wallet/utils';
+import { increaseValueByOneMicroStx, isUndefined, microStxToStx } from '@leather-wallet/utils';
 
 import { useTransactionsById } from '../transactions/transactions-by-id.query';
 import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';
@@ -24,7 +24,7 @@ export function useStacksPendingTransactions(address: string) {
       transactions: txs
         .map(tx => tx.data)
         .filter(tx => {
-          if (typeof tx === 'undefined') return false;
+          if (isUndefined(tx)) return false;
           if (droppedCache.has(tx.tx_id)) return false;
           if (tx.tx_status !== 'pending') {
             // Stale txs persist in the mempool endpoint so we
@@ -33,9 +33,7 @@ export function useStacksPendingTransactions(address: string) {
             return false;
           }
           return true;
-        })
-        .filter(tx => !!tx)
-        .filter(isDefined) as MempoolTransaction[],
+        }) as MempoolTransaction[],
     };
   }, [txs, query]);
 }
