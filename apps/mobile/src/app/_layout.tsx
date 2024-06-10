@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { StatusBar } from 'react-native';
 
+import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { usePersistedStore, useProtectedStore } from '@/state';
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -22,6 +25,8 @@ export const unstable_settings = {
   initialRouteName: 'index',
 };
 
+initiateI18n();
+
 function RootLayout() {
   const hasProtectedStoreHydrated = useProtectedStore(state => state._hasHydrated);
   const hasPersistedStoreHydrated = usePersistedStore(state => state._hasHydrated);
@@ -37,11 +42,13 @@ function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AppWithNavigation />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <I18nProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AppWithNavigation />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </I18nProvider>
   );
 }
 
