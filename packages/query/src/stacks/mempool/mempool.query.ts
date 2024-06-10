@@ -12,6 +12,5 @@ export function useAccountMempoolQuery(
     enabled: !!address,
     queryKey: ['account-mempool', address],
     queryFn: () => client.getAddressMempoolTransactions(address),
-    refetchOnWindowFocus: false,
   });
 }

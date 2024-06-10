@@ -12,8 +12,8 @@ const options = {
 export function useTransactionsById(txids: string[]) {
   const client = useStacksClient();
 
-  async function transactionByIdFetcher(txId: string) {
-    return client.getTransactionById(txId);
+  async function transactionByIdFetcher(txid: string) {
+    return client.getTransactionById(txid);
   }
 
   return useQueries({
@@ -30,8 +30,8 @@ export function useTransactionsById(txids: string[]) {
 export function useTransactionById(txid: string) {
   const client = useStacksClient();
 
-  async function transactionByIdFetcher(txId: string) {
-    return client.getTransactionById(txId);
+  async function transactionByIdFetcher(txid: string) {
+    return client.getTransactionById(txid);
   }
 
   return useQuery({
