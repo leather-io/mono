@@ -65,7 +65,7 @@ const dropdownContentStyles = css({
   p: '0',
   willChange: 'transform, opacity',
   zIndex: 999,
-  // TODO re-enable these and check if Settings tests still fail
+  // TODO:  leather-wallet/extension#64 re-enable these and check if Settings tests still fail
   // _closed: { animation: 'slideDownAndOut 140ms ease-in-out' },
   // _open: { animation: 'slideUpAndFade 140ms ease-in-out' },
 });
