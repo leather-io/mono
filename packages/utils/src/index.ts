@@ -154,3 +154,7 @@ export function getTicker(value: string) {
   }
   return name.toUpperCase();
 }
+
+export function propIfDefined(prop: string, value: any) {
+  return isBoolean(value) ? { [prop]: value } : {};
+}
