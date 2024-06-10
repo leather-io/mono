@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.4.3](https://github.com/leather-wallet/mono/compare/leather-mono-v2.4.2...leather-mono-v2.4.3) (2024-06-10)
+
+
+### Bug Fixes
+
+* ecpair import ([c94718b](https://github.com/leather-wallet/mono/commit/c94718bec2d67f3c489caae3974f6605a2fa6bd9))
+
 ## [2.4.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.4.1...leather-mono-v2.4.2) (2024-06-08)
 
 

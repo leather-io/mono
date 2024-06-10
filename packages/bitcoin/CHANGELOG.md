@@ -67,6 +67,13 @@
   * devDependencies
     * @leather-wallet/rpc bumped to 1.0.3
 
+## [0.7.2](https://github.com/leather-wallet/mono/compare/bitcoin-v0.7.1...bitcoin-v0.7.2) (2024-06-10)
+
+
+### Bug Fixes
+
+* ecpair import ([c94718b](https://github.com/leather-wallet/mono/commit/c94718bec2d67f3c489caae3974f6605a2fa6bd9))
+
 ## [0.7.0](https://github.com/leather-wallet/mono/compare/bitcoin-v0.6.10...bitcoin-v0.7.0) (2024-06-07)
 
 

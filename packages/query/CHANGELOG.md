@@ -51,6 +51,12 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/bitcoin bumped to 0.7.2
+
 ## [0.8.2](https://github.com/leather-wallet/mono/compare/query-v0.8.1...query-v0.8.2) (2024-06-08)
 
 
