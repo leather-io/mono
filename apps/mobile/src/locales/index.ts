@@ -1,5 +1,4 @@
 import { messages as english } from './en/messages';
-import { messages as french } from './fr/messages';
 import { messages as pseudo } from './pseudo-locale/messages';
 
 export const LOCALES = [
@@ -7,11 +6,6 @@ export const LOCALES = [
     label: 'English',
     locale: 'en',
     messages: english,
-  },
-  {
-    label: 'Français',
-    locale: 'fr',
-    messages: french,
   },
   {
     label: 'PseudoEnglish',
