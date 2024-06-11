@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.5.3](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.2...leather-mono-v2.5.3) (2024-06-11)
+
+
+### Bug Fixes
+
+* hook for increase fee ([bb9256c](https://github.com/leather-wallet/mono/commit/bb9256c096117caeb510a99a5d900c60c678a644))
+
 ## [2.5.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.1...leather-mono-v2.5.2) (2024-06-11)
 
 
