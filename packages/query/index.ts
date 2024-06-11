@@ -71,6 +71,8 @@ export * from './src/stacks/token-metadata/non-fungible-tokens/non-fungible-toke
 export * from './src/stacks/token-metadata/non-fungible-tokens/non-fungible-token-metadata.hooks';
 export * from './src/stacks/token-metadata/non-fungible-tokens/non-fungible-token-metadata.query';
 export * from './src/stacks/token-metadata/token-metadata.utils';
+export * from './src/stacks/transactions/raw-transaction-by-id.hooks';
+export * from './src/stacks/transactions/raw-transaction-by-id.query';
 export * from './src/stacks/transactions/transactions-by-id.query';
 export * from './src/stacks/transactions/transactions-with-transfers.hooks';
 export * from './src/stacks/transactions/transactions-with-transfers.query';
