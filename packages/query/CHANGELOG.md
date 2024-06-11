@@ -57,6 +57,13 @@
   * dependencies
     * @leather-wallet/bitcoin bumped to 0.7.2
 
+## [0.8.4](https://github.com/leather-wallet/mono/compare/query-v0.8.3...query-v0.8.4) (2024-06-11)
+
+
+### Bug Fixes
+
+* export query changes ([c91863f](https://github.com/leather-wallet/mono/commit/c91863f5858f400edf5307fd5ef90ffcf7eb3ee9))
+
 ## [0.8.2](https://github.com/leather-wallet/mono/compare/query-v0.8.1...query-v0.8.2) (2024-06-08)
 
 
