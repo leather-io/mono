@@ -57,6 +57,13 @@
   * dependencies
     * @leather-wallet/bitcoin bumped to 0.7.2
 
+## [0.8.6](https://github.com/leather-wallet/mono/compare/query-v0.8.5...query-v0.8.6) (2024-06-11)
+
+
+### Bug Fixes
+
+* hook for increase fee ([bb9256c](https://github.com/leather-wallet/mono/commit/bb9256c096117caeb510a99a5d900c60c678a644))
+
 ## [0.8.5](https://github.com/leather-wallet/mono/compare/query-v0.8.4...query-v0.8.5) (2024-06-11)
 
 
