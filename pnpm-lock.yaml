@@ -103,6 +103,9 @@ importers:
       '@tanstack/react-query':
         specifier: 4.35.7
         version: 4.35.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      buffer:
+        specifier: 6.0.3
+        version: 6.0.3
       expo:
         specifier: 51.0.8
         version: 51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
@@ -3993,8 +3996,8 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
-  '@stacks/auth@6.15.0':
-    resolution: {integrity: sha512-foL5tXWGhOxtU8t/sGnQB+mFPYL22Zy+kZvdhce/qwev+whx/DhJJtwdF9xnFk3ZZ9XE0dQGwxiddE/q7GZ7Pw==}
+  '@stacks/auth@6.9.0':
+    resolution: {integrity: sha512-tBOB+H/96TUNK9pKmr1YQoiIItUFp2ms5RCNYPSjy3/lbIYYJYtw/O2fOS78fVQvCCpuObhhO65AVsrE/IzQeg==}
 
   '@stacks/common@6.13.0':
     resolution: {integrity: sha512-wwzyihjaSdmL6NxKvDeayy3dqM0L0Q2sawmdNtzJDi0FnXuJGm5PeapJj7bEfcI9XwI7Bw5jZoC6mCn9nc5YIw==}
@@ -4005,14 +4008,17 @@ packages:
   '@stacks/connect@7.4.0':
     resolution: {integrity: sha512-2jhTHL6Wi7Y/B1AwUuumUUE5F+/X7AvtbJ3BzsNVP7yB+yswmtjC3ZO3jYEohBcuAay5ysfNWUYdjfiXvp0NDQ==}
 
-  '@stacks/encryption@6.15.0':
-    resolution: {integrity: sha512-506BdBvWhbXY1jxCdUcdbBzcSJctO2nzgzfenQwUuoBABSc1N/MFwQdlR9ZusY+E31zBxQPLfbr36V05/p2cfQ==}
+  '@stacks/encryption@6.13.1':
+    resolution: {integrity: sha512-y5IFX3/nGI3fCk70gE0JwH70GpshD8RhUfvhMLcL96oNaec1cCdj1ZUiQupeicfYTHuraaVBYU9xLls4TRmypg==}
 
   '@stacks/network@6.13.0':
     resolution: {integrity: sha512-Ss/Da4BNyPBBj1OieM981fJ7SkevKqLPkzoI1+Yo7cYR2df+0FipIN++Z4RfpJpc8ne60vgcx7nJZXQsiGhKBQ==}
 
-  '@stacks/profile@6.15.0':
-    resolution: {integrity: sha512-+m11HYHU45+f98FySsVmofeLFWxnhnwZ5jbREoD2f53fmBulsSbJpDUVg3w4aPdj6hg4+o7rkg09gbirIXNWBw==}
+  '@stacks/network@6.8.1':
+    resolution: {integrity: sha512-n8M25pPbLqpSBctabtsLOTBlmPvm9EPQpTI//x7HLdt5lEjDXxauEQt0XGSvDUZwecrmztqt9xNxlciiGApRBw==}
+
+  '@stacks/profile@6.9.0':
+    resolution: {integrity: sha512-sIR60DsAHi8C6zGqKqSe1r2hXTMHgwrJkX3fAaP3de40KeplZ2bkE+0B83yismEeU2baNc+AukyVvWJv0PfP0A==}
 
   '@stacks/rpc-client@1.0.3':
     resolution: {integrity: sha512-lao7MKCq39VA86v2rJzmgjHKG5bg9LWdLSzvktuEy3lfatVki/hRm6sitkmNhYVcdUVp3YV9gyW6mvu7U9weWw==}
@@ -5554,6 +5560,9 @@ packages:
 
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+
+  buffer@6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
   builtins@1.0.3:
     resolution: {integrity: sha512-uYBjakWipfaO/bXI7E8rq6kpwHRZK5cNYrUv2OzZSI/FvmdMyXJ2tG9dKcjEC5YHmHpUAwsargWIZNWdxb/bnQ==}
@@ -16300,12 +16309,12 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@stacks/auth@6.15.0':
+  '@stacks/auth@6.9.0':
     dependencies:
       '@stacks/common': 6.13.0
-      '@stacks/encryption': 6.15.0
-      '@stacks/network': 6.13.0
-      '@stacks/profile': 6.15.0
+      '@stacks/encryption': 6.13.1
+      '@stacks/network': 6.8.1
+      '@stacks/profile': 6.9.0
       cross-fetch: 3.1.8
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -16322,16 +16331,16 @@ snapshots:
 
   '@stacks/connect@7.4.0':
     dependencies:
-      '@stacks/auth': 6.15.0
+      '@stacks/auth': 6.9.0
       '@stacks/connect-ui': 6.1.1
-      '@stacks/network': 6.13.0
-      '@stacks/profile': 6.15.0
+      '@stacks/network': 6.8.1
+      '@stacks/profile': 6.9.0
       '@stacks/transactions': 6.15.0
       jsontokens: 4.0.1
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/encryption@6.15.0':
+  '@stacks/encryption@6.13.1':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
@@ -16350,10 +16359,17 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/profile@6.15.0':
+  '@stacks/network@6.8.1':
     dependencies:
       '@stacks/common': 6.13.0
-      '@stacks/network': 6.13.0
+      cross-fetch: 3.1.8
+    transitivePeerDependencies:
+      - encoding
+
+  '@stacks/profile@6.9.0':
+    dependencies:
+      '@stacks/common': 6.13.0
+      '@stacks/network': 6.8.1
       '@stacks/transactions': 6.15.0
       jsontokens: 4.0.1
       schema-inspector: 2.1.0
@@ -18895,6 +18911,11 @@ snapshots:
   buffer-from@1.1.2: {}
 
   buffer@5.7.1:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+
+  buffer@6.0.3:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
