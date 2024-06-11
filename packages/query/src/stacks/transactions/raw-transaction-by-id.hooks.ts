@@ -12,11 +12,10 @@ export function useStacksRawTransaction(txid: string) {
   const { data: rawTxData, isLoading: isLoadingRawTx } = useRawTransactionById(txid);
 
   return useMemo(() => {
-    const match = rawTxCache.get(txid);
-    // No need to fetch again
-    if (match) return match;
-    rawTxCache.set(txid, rawTxData?.raw_tx);
     if (isUndefined(rawTxData)) return { isLoadingRawTx, rawTx: undefined };
+    const match = rawTxCache.get(txid);
+    if (match) return { isLoadingRawTx, rawTx: deserializeTransaction(match) };
+    rawTxCache.set(txid, rawTxData.raw_tx);
     return { isLoadingRawTx, rawTx: deserializeTransaction(rawTxData.raw_tx) };
   }, [isLoadingRawTx, rawTxData, txid]);
 }
