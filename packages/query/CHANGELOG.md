@@ -57,6 +57,13 @@
   * dependencies
     * @leather-wallet/bitcoin bumped to 0.7.2
 
+## [0.8.5](https://github.com/leather-wallet/mono/compare/query-v0.8.4...query-v0.8.5) (2024-06-11)
+
+
+### Bug Fixes
+
+* raw tx hook after relocation ([bb4b807](https://github.com/leather-wallet/mono/commit/bb4b807cdf20c781040d938ab63ab652de9046b5))
+
 ## [0.8.4](https://github.com/leather-wallet/mono/compare/query-v0.8.3...query-v0.8.4) (2024-06-11)
 
 
