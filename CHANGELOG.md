@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.5.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.1...leather-mono-v2.5.2) (2024-06-11)
+
+
+### Bug Fixes
+
+* raw tx hook after relocation ([bb4b807](https://github.com/leather-wallet/mono/commit/bb4b807cdf20c781040d938ab63ab652de9046b5))
+
 ## [2.5.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.0...leather-mono-v2.5.1) (2024-06-11)
 
 
