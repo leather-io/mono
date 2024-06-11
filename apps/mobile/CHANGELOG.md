@@ -60,6 +60,19 @@
   * dependencies
     * @leather-wallet/ui bumped to 1.4.3
 
+## [1.6.0](https://github.com/leather-wallet/mono/compare/mobile-v1.5.4...mobile-v1.6.0) (2024-06-11)
+
+
+### Features
+
+* implement i18n with lingui ([bb805cb](https://github.com/leather-wallet/mono/commit/bb805cb3135323871e46f86a80d182fe710fa0f3))
+
+
+### Bug Fixes
+
+* pas de français pour l'instant ([6b09576](https://github.com/leather-wallet/mono/commit/6b0957621d8394a3fc3d0a91b0ef38a63f0ab7e3))
+* use cjs file ([1c13a6e](https://github.com/leather-wallet/mono/commit/1c13a6e161e5f646f674e49c9d102ab0708bd939))
+
 ## [1.5.0](https://github.com/leather-wallet/mono/compare/mobile-v1.4.1...mobile-v1.5.0) (2024-06-05)
 
 

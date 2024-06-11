@@ -1,6 +1,6 @@
 {
-  ".": "2.4.4",
-  "apps/mobile": "1.5.4",
+  ".": "2.5.0",
+  "apps/mobile": "1.6.0",
   "packages/bitcoin": "0.7.2",
   "packages/constants": "0.6.3",
   "packages/eslint-config": "0.5.0",
