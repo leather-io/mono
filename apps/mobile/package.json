@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "android": "expo run:android",
-    "build": "tsc --build",
-    "build:watch": "tsc --build --watch --preserveWatchOutput",
+    "build": "tsc --build && pnpm lingui",
+    "build:watch": "concurrently \"tsc --build --watch --preserveWatchOutput\"  \"pnpm lingui:watch\" ",
     "e2e:build:ios-release": "detox build --configuration ios.release --config-path ./.detoxrc.cjs --loglevel debug",
     "e2e:test:ios-release": "detox test --configuration ios.release --config-path ./.detoxrc.cjs --loglevel debug",
     "eas-build-on-success": "./eas-hooks/eas-build-on-success.sh",
@@ -15,6 +15,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "ios": "expo run:ios",
     "ios:build": "expo run:ios --no-bundler",
+    "lingui": "pnpm lingui:extract && pnpm lingui:compile",
     "lingui:compile": "lingui compile",
     "lingui:compile:watch": "lingui compile --watch --debounce 300",
     "lingui:extract": "lingui extract --clean",
