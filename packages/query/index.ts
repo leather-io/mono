@@ -77,6 +77,8 @@ export * from './src/stacks/transactions/transactions-by-id.query';
 export * from './src/stacks/transactions/transactions-with-transfers.hooks';
 export * from './src/stacks/transactions/transactions-with-transfers.query';
 export * from './src/leather-query-provider';
+export * from './src/query-config';
+export * from './src/query-prefixes';
 export * from './types/api-types';
 export * from './types/inscription';
 export * from './types/remote-config';
