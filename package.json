@@ -2,7 +2,7 @@
   "name": "leather-mono",
   "author": "Leather Wallet",
   "description": "Leather wallet shared code",
-  "version": "2.5.3",
+  "version": "2.6.0",
   "license": "MIT",
   "type": "module",
   "scripts": {

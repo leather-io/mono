@@ -60,6 +60,13 @@
   * dependencies
     * @leather-wallet/ui bumped to 1.4.3
 
+## [1.7.0](https://github.com/leather-wallet/mono/compare/mobile-v1.6.0...mobile-v1.7.0) (2024-06-12)
+
+
+### Features
+
+* add buffer polyfill ([0c317e1](https://github.com/leather-wallet/mono/commit/0c317e1b861de40f5cbf2ca634e58e7172f33ed5))
+
 ## [1.6.0](https://github.com/leather-wallet/mono/compare/mobile-v1.5.4...mobile-v1.6.0) (2024-06-11)
 
 
