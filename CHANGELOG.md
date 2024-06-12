@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.6.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.0...leather-mono-v2.6.1) (2024-06-12)
+
+
+### Bug Fixes
+
+* query release ([2da2019](https://github.com/leather-wallet/mono/commit/2da20190308d363310236870cfddd44fa5ac8e19))
+
 ## [2.6.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.3...leather-mono-v2.6.0) (2024-06-12)
 
 
