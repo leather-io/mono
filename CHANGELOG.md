@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.6.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.3...leather-mono-v2.6.0) (2024-06-12)
+
+
+### Features
+
+* add buffer polyfill ([0c317e1](https://github.com/leather-wallet/mono/commit/0c317e1b861de40f5cbf2ca634e58e7172f33ed5))
+
 ## [2.5.3](https://github.com/leather-wallet/mono/compare/leather-mono-v2.5.2...leather-mono-v2.5.3) (2024-06-11)
 
 
