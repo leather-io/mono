@@ -8,7 +8,8 @@
     "build": "tsup",
     "build:watch": "tsup --watch",
     "prepublish": "pnpm build",
-    "test:unit": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "exports": {

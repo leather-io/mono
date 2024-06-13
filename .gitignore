@@ -8,3 +8,4 @@ tsconfig.tsbuildinfo
 .DS_Store
 
 leather-styles
+coverage/

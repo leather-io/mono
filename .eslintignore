@@ -12,3 +12,4 @@ dist-web/
 .turbo/
 leather-styles/
 messages.js
+coverage/
