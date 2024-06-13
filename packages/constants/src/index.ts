@@ -2,7 +2,8 @@ export const gaiaUrl = 'https://hub.blockstack.org';
 
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';
-export const HIGH_FEE_WARNING_LEARN_MORE_URL_STX = 'https://hiro.so/questions/fee-estimates';
+export const HIGH_FEE_WARNING_LEARN_MORE_URL_STX =
+  'https://leather.gitbook.io/guides/transactions/fees';
 
 export const DEFAULT_FEE_RATE = 400;
 
