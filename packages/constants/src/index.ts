@@ -1,5 +1,10 @@
 export const gaiaUrl = 'https://hub.blockstack.org';
 
+export const ZERO_INDEX = 0;
+
+export const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
+export const ORD_IO_URL = 'https://ord.io';
+
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_STX =
