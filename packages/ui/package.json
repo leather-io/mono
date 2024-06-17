@@ -26,11 +26,11 @@
   },
   "exports": {
     ".": {
-      "types": "./dist-web/web.d.ts",
-      "import": "./dist-web/web.js",
-      "require": "./dist-web/web.js"
+      "types": "./dist-all/web.d.ts",
+      "import": "./dist-all/web.js",
+      "require": "./dist-all/web.js"
     },
-    "./native": "./dist-native/native.js"
+    "./native": "./dist-all/native.js"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
@@ -101,6 +101,9 @@
     "tslib": "2.6.2",
     "typescript": "5.3.3"
   },
+  "files": [
+    "dist-all"
+  ],
   "publishConfig": {
     "access": "public"
   }
