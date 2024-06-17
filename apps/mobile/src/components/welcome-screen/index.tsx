@@ -40,7 +40,7 @@ export function WelcomeScreen() {
 
   const {
     mutate: submitForm,
-    isLoading,
+    isPending,
     data: formData,
     reset: resetForm,
     isError: isSubmissionError,
@@ -164,10 +164,10 @@ export function WelcomeScreen() {
   }, [isSubmitted]);
 
   const doesEmailPass = emailRegexp.test(email);
-  const isButtonDisabled = !doesEmailPass || isLoading;
+  const isButtonDisabled = !doesEmailPass || isPending;
 
   function getButtonState(): ButtonState {
-    if (isLoading) {
+    if (isPending) {
       return 'default';
     }
     if (isButtonDisabled) {
@@ -293,12 +293,12 @@ export function WelcomeScreen() {
           submitForm(email);
         }}
         mb="7"
-        title={isLoading || showSuccess ? undefined : t`Submit`}
+        title={isPending || showSuccess ? undefined : t`Submit`}
         buttonState={getButtonState()}
         disabled={isButtonDisabled}
         testID={WelcomeScreenTestIds.SubmitEmailButton}
         Icon={
-          isLoading ? (
+          isPending ? (
             <Spinner />
           ) : showSuccess ? (
             <CheckmarkCircle width={20} height={20} />

@@ -1,12 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { useStacksClient } from '../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
 
 const networkStatusQueryOptions = {
-  keepPreviousData: true,
-  cacheTime: staleTime,
+  gcTime: staleTime,
+  placeholderData: keepPreviousData,
   refetchOnMount: false,
   refetchInterval: false,
   refetchOnReconnect: false,

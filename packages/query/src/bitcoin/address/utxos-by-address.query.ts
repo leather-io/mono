@@ -50,9 +50,9 @@ export function useTaprootAccountUtxosQuery({
   const network = useLeatherNetwork();
   const client = useBitcoinClient();
 
-  return useQuery(
-    [QueryPrefixes.TaprootAddressUtxos, currentAccountIndex, network.id],
-    async () => {
+  return useQuery({
+    queryKey: [QueryPrefixes.TaprootAddressUtxos, currentAccountIndex, network.id],
+    queryFn: async () => {
       let currentNumberOfAddressesWithoutUtxos = 0;
       const addressIndexCounter = createCounter(0);
       let foundUnspentTransactions: UtxoWithDerivationPath[] = [];
@@ -93,9 +93,7 @@ export function useTaprootAccountUtxosQuery({
       }
       return foundUnspentTransactions;
     },
-    {
-      refetchInterval: 15000,
-      refetchOnWindowFocus: false,
-    }
-  );
+    refetchInterval: 15000,
+    refetchOnWindowFocus: false,
+  });
 }

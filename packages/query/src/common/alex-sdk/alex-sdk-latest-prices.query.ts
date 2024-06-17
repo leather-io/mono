@@ -3,7 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { alex } from './alex-sdk.hooks';
 
 export function useAlexSdkLatestPricesQuery() {
-  return useQuery(['alex-sdk-latest-prices'], async () => alex.getLatestPrices(), {
+  return useQuery({
+    queryKey: ['alex-sdk-latest-prices'],
+    queryFn: async () => alex.getLatestPrices(),
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

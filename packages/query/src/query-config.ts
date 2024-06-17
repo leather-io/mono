@@ -1,10 +1,7 @@
 import { QueryObserverSuccessResult, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 
-type AllowedReactQueryConfigOptions = keyof Pick<
-  UseQueryOptions,
-  'select' | 'initialData' | 'onSuccess' | 'onSettled' | 'onError' | 'suspense'
->;
+type AllowedReactQueryConfigOptions = keyof Pick<UseQueryOptions, 'select' | 'initialData'>;
 
 export type AppUseQueryConfig<QueryFnData, Response> = Pick<
   UseQueryOptions<QueryFnData, unknown, Response>,

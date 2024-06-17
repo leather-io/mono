@@ -22,7 +22,7 @@ function fetchInscriptionsByParam() {
 const weekInMs = 1000 * 60 * 60 * 24 * 7;
 const inscriptionsByOutputQueryOptions = {
   staleTime: weekInMs,
-  cacheTime: weekInMs,
+  gcTime: weekInMs,
 } as const;
 
 export function useGetInscriptionsByOutputQuery<T extends unknown = FetchInscriptionResp>(
@@ -45,7 +45,7 @@ export function useGetInscriptionsByOutputQuery<T extends unknown = FetchInscrip
 }
 
 const inscriptionsByOutputQueriesOptions = {
-  cacheTime: Infinity,
+  gcTime: Infinity,
   staleTime: 15 * 60 * 1000,
   refetchOnWindowFocus: false,
 } as const;

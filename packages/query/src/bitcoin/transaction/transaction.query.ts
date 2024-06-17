@@ -31,7 +31,7 @@ export function useGetBitcoinTransaction<T extends unknown = FetchBitcoinTransac
 }
 
 const queryOptions = {
-  cacheTime: Infinity,
+  gcTime: Infinity,
   staleTime: 15 * 60 * 1000,
   refetchOnWindowFocus: false,
 } as const;

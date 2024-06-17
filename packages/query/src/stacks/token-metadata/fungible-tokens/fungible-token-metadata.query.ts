@@ -14,20 +14,16 @@ import { FtAssetResponse, isFtAsset } from '../token-metadata.utils';
 const staleTime = 12 * 60 * 60 * 1000;
 
 const queryOptions = {
-  keepPreviousData: true,
-  cacheTime: staleTime,
-  staleTime: staleTime,
+  gcTime: staleTime,
   refetchOnMount: false,
-  refetchInterval: false,
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,
   retry: 0,
-} as const;
+  staleTime,
+};
 
 function fetchFungibleTokenMetadata(client: StacksClient) {
-  return (principal: string) => async () => {
-    return client.getFtMetadata(principal) as unknown as FtAssetResponse;
-  };
+  return (principal: string) => client.getFtMetadata(principal) as unknown as FtAssetResponse;
 }
 
 export function useGetFungibleTokenMetadataQuery(principal: string) {
@@ -36,7 +32,7 @@ export function useGetFungibleTokenMetadataQuery(principal: string) {
 
   return useQuery({
     queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-    queryFn: fetchFungibleTokenMetadata(client)(principal),
+    queryFn: () => fetchFungibleTokenMetadata(client)(principal),
     ...queryOptions,
   });
 }
@@ -53,7 +49,7 @@ export function useGetFungibleTokensBalanceMetadataQuery(
       return {
         enabled: !!principal,
         queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: fetchFungibleTokenMetadata(client)(principal),
+        queryFn: () => fetchFungibleTokenMetadata(client)(principal),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           const { contractAssetName } = getStacksContractIdStringParts(key);
@@ -82,7 +78,7 @@ export function useGetFungibleTokensMetadataQuery(keys: string[]) {
       return {
         enabled: !!principal,
         queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: fetchFungibleTokenMetadata(client)(principal),
+        queryFn: () => fetchFungibleTokenMetadata(client)(principal),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           return createSip10CryptoAssetInfo(key, resp);

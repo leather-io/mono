@@ -10,7 +10,7 @@ import { fetchNamesForAddress } from './bns.utils';
 const staleTime = 24 * 60 * 60 * 1000; // 24 hours
 
 const bnsQueryOptions = {
-  cacheTime: Infinity,
+  gcTime: Infinity,
   staleTime: staleTime,
   refetchOnMount: false,
   refetchInterval: false,
