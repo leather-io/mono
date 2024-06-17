@@ -29,7 +29,9 @@ function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github
 export function useRemoteConfig() {
   const env = useLeatherEnv();
   const leatherGh = useLeatherGithub();
-  const { data } = useQuery(['walletConfig'], fetchLeatherMessages(env, leatherGh), {
+  const { data } = useQuery({
+    queryKey: ['walletConfig'],
+    queryFn: fetchLeatherMessages(env, leatherGh),
     // As we're fetching from Github, a third-party, we want
     // to avoid any unnecessary stress on their services, so
     // we use quite slow stale/retry times

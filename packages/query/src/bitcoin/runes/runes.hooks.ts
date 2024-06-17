@@ -23,12 +23,10 @@ export function useRuneTokens(addresses: string[]) {
   const results = useGetRunesTickerInfoQuery(runesBalances);
 
   return useMemo(() => {
-    // We can potentially use the 'combine' option in react-query v5 to replace this?
-    // https://tanstack.com/query/latest/docs/framework/react/reference/useQueries#combine
-    const isInitialLoading = results.some(query => query.isInitialLoading);
+    const isLoading = results.some(query => query.isLoading);
     const runes = results.map(query => query.data).filter(isDefined);
 
-    return { isInitialLoading, runes };
+    return { isLoading, runes };
   }, [results]);
 }
 

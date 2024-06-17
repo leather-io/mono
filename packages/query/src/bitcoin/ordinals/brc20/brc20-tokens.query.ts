@@ -39,8 +39,8 @@ export function useGetBrc20TokensQuery({
   const query = useInfiniteQuery({
     queryKey: [QueryPrefixes.GetBrc20Tokens, currentNsBitcoinAddress, network.id],
     async queryFn({ pageParam }) {
-      const fromIndex: number = pageParam?.fromIndex ?? 0;
-      let addressesWithoutTokens = pageParam?.addressesWithoutTokens ?? 0;
+      const fromIndex = pageParam.fromIndex;
+      let addressesWithoutTokens = pageParam.addressesWithoutTokens;
 
       const addressesData = getNextTaprootAddressBatch(
         fromIndex,
@@ -83,17 +83,21 @@ export function useGetBrc20TokensQuery({
         fromIndex,
       };
     },
-    getNextPageParam(prevInscriptionQuery) {
-      const { fromIndex, brc20Tokens, addressesWithoutTokens } = prevInscriptionQuery;
+    initialPageParam: {
+      addressesWithoutTokens: 0,
+      fromIndex: 0,
+    },
+    getNextPageParam(lastPage) {
+      const { fromIndex, brc20Tokens, addressesWithoutTokens } = lastPage;
 
       if (addressesWithoutTokens >= stopSearchAfterNumberAddressesWithoutBrc20Tokens) {
         return undefined;
       }
 
       return {
-        fromIndex: fromIndex + addressesSimultaneousFetchLimit,
         addressesWithoutTokens,
         brc20Tokens,
+        fromIndex: fromIndex + addressesSimultaneousFetchLimit,
       };
     },
     refetchOnMount: false,

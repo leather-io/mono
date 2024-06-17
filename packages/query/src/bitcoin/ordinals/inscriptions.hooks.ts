@@ -50,23 +50,15 @@ export function useInscriptions({
   nativeSegwitAddress: string;
   taprootKeychain: HDKey | undefined;
 }) {
-  return useGetInscriptionsInfiniteQuery(
-    {
-      taprootKeychain,
-      nativeSegwitAddress,
-    },
-    {
-      select(data) {
-        return {
-          ...data,
-          pages: data.pages.map(page => ({
-            ...page,
-            inscriptions: page.inscriptions.map(createInscriptionHiro),
-          })),
-        };
-      },
-    }
-  );
+  const query = useGetInscriptionsInfiniteQuery({
+    taprootKeychain,
+    nativeSegwitAddress,
+  });
+  return {
+    ...query,
+    inscriptions:
+      query.data?.pages.flatMap(page => page.inscriptions.map(createInscriptionHiro)) ?? [],
+  };
 }
 
 export function useInscriptionsAddressesMap({

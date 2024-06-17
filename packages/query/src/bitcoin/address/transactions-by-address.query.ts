@@ -7,7 +7,7 @@ import { useBitcoinClient } from '../bitcoin-client';
 
 const staleTime = 10 * 1000;
 
-const queryOptions = { staleTime, cacheTime: Infinity, refetchInterval: staleTime };
+const queryOptions = { staleTime, gcTime: Infinity, refetchInterval: staleTime };
 
 export function useGetBitcoinTransactionsByAddressQuery<T extends unknown = BitcoinTx[]>(
   address: string,
@@ -34,7 +34,7 @@ export function useGetBitcoinTransactionsByAddressesQuery<T extends unknown = Bi
       return {
         enabled: !!address,
         queryKey: ['btc-txs-by-address', address],
-        queryFn: async ({ signal }: QueryFunctionContext<string[], any>) =>
+        queryFn: async ({ signal }: QueryFunctionContext) =>
           client.addressApi.getTransactionsByAddress(address, signal),
         ...queryOptions,
         ...options,

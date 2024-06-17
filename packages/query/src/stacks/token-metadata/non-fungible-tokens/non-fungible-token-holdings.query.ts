@@ -6,7 +6,7 @@ import { StacksClient, useStacksClient } from '../../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
 
-const queryOptions = { cacheTime: staleTime, staleTime, refetchhOnFocus: false } as const;
+const queryOptions = { gcTime: staleTime, staleTime, refetchOnFocus: false } as const;
 
 function fetchNonFungibleTokenHoldings(client: StacksClient) {
   return async (address: string) => {

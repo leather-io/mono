@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { HDKey } from '@scure/bip32';
-import { UseInfiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getTaprootAddress } from '@leather-wallet/bitcoin';
@@ -19,16 +19,6 @@ const addressesSimultaneousFetchLimit = 5;
 
 // Hiro API max limit = 60
 const inscriptionsLazyLoadLimit = 20;
-
-interface InfiniteQueryPageParam {
-  pageParam?: {
-    fromIndex: number;
-    offset: number;
-    addressesWithoutOrdinalsNum: number;
-    addressesMap: Record<string, number>;
-  };
-  signal?: AbortSignal;
-}
 
 interface InscriptionsQueryResponse {
   results: InscriptionResponseHiro[];
@@ -65,30 +55,17 @@ async function fetchInscriptions({
   return res.data;
 }
 
-export interface GetInscriptionsInfiniteQuery {
-  offset: number;
-  total: number;
-  stopNextFetch: boolean;
-  inscriptions: InscriptionResponseHiro[];
-  fromIndex: number;
-  addressesWithoutOrdinalsNum: number;
-  addressesMap: Record<string, number>;
-}
-
 /**
  * // TO REFACTOR
  * Returns all inscriptions for the user's current account
  */
-export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscriptionsInfiniteQuery>(
-  {
-    taprootKeychain,
-    nativeSegwitAddress,
-  }: {
-    nativeSegwitAddress: string;
-    taprootKeychain: HDKey | undefined;
-  },
-  options?: UseInfiniteQueryOptions<GetInscriptionsInfiniteQuery, unknown, T>
-) {
+export function useGetInscriptionsInfiniteQuery({
+  taprootKeychain,
+  nativeSegwitAddress,
+}: {
+  nativeSegwitAddress: string;
+  taprootKeychain: HDKey | undefined;
+}) {
   const network = useLeatherNetwork();
   const limiter = useHiroApiRateLimiter();
 
@@ -110,27 +87,28 @@ export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscripti
     [taprootKeychain, network.chain.bitcoin.bitcoinNetwork]
   );
 
-  const query = useInfiniteQuery<GetInscriptionsInfiniteQuery, unknown, T>({
+  const query = useInfiniteQuery({
     queryKey: [QueryPrefixes.GetInscriptions, nativeSegwitAddress, network.id],
-    async queryFn({ pageParam, signal }: InfiniteQueryPageParam) {
+    async queryFn({ pageParam, signal }) {
       const responsesArr: InscriptionsQueryResponse[] = [];
-      let fromIndex = pageParam?.fromIndex ?? 0;
-      let addressesWithoutOrdinalsNum = pageParam?.addressesWithoutOrdinalsNum ?? 0;
-      let addressesMap =
-        pageParam?.addressesMap ??
-        getTaprootAddressData(fromIndex, fromIndex + addressesSimultaneousFetchLimit);
+      let fromIndex = pageParam.fromIndex;
+      let addressesWithoutOrdinalsNum = pageParam.addressesWithoutOrdinalsNum;
+      let addressesMap = getTaprootAddressData(
+        fromIndex,
+        fromIndex + addressesSimultaneousFetchLimit
+      );
 
       let addressesData = getTaprootAddressData(
         fromIndex,
         fromIndex + addressesSimultaneousFetchLimit
       );
 
-      let offset = pageParam?.offset || 0;
+      let offset = pageParam.offset;
       // Loop through addresses until we reach the limit, or until we find an address with many inscriptions
       while (addressesWithoutOrdinalsNum < stopSearchAfterNumberAddressesWithoutOrdinals) {
         const addresses = Object.keys(addressesData);
 
-        // add native segwit address to 1 chunk of addresses
+        // Add native segwit address to 1 chunk of addresses
         if (fromIndex === 0) {
           addresses.unshift(nativeSegwitAddress);
         }
@@ -149,13 +127,13 @@ export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscripti
 
         responsesArr.push(response);
 
-        // stop loop to dynamically fetch inscriptions from 1 address if there are many inscriptions
+        // Stop loop to dynamically fetch inscriptions from 1 address if there are many inscriptions
         if (response.total > inscriptionsLazyLoadLimit && response.results.length > 0) {
           addressesWithoutOrdinalsNum = 0;
           break;
         }
 
-        // case when we fetched all inscriptions from address with many inscriptions
+        // Case when we fetched all inscriptions from address with many inscriptions
         if (response.total === 0 && response.offset > 0) {
           offset = 0;
         }
@@ -168,7 +146,7 @@ export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscripti
           fromIndex + addressesSimultaneousFetchLimit
         );
 
-        // add new addresses to the map
+        // Add new addresses to the map
         addressesMap = {
           ...addressesMap,
           ...addressesData,
@@ -193,12 +171,19 @@ export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscripti
         addressesMap,
       };
     },
-    getNextPageParam(prevInscriptionsQuery) {
+    initialPageParam: {
+      addressesMap: {},
+      addressesWithoutOrdinalsNum: 0,
+      fromIndex: 0,
+      offset: 0,
+      total: 0,
+    },
+    getNextPageParam(lastPage) {
       const { offset, total, stopNextFetch, fromIndex, addressesWithoutOrdinalsNum, addressesMap } =
-        prevInscriptionsQuery;
+        lastPage;
       if (stopNextFetch) return undefined;
 
-      // calculate offset for next fetch
+      // Calculate offset for next fetch
       let calculatedOffset = offset + inscriptionsLazyLoadLimit;
 
       if (offset + inscriptionsLazyLoadLimit > total) {
@@ -217,7 +202,6 @@ export function useGetInscriptionsInfiniteQuery<T extends unknown = GetInscripti
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: true,
-    ...options,
   });
 
   return query;
@@ -229,7 +213,7 @@ export function useInscriptionsByAddressQuery(address: string) {
 
   const query = useInfiniteQuery({
     queryKey: [QueryPrefixes.InscriptionsByAddress, network.id, address],
-    async queryFn({ pageParam = 0, signal }) {
+    async queryFn({ pageParam, signal }) {
       return limiter.add(
         () =>
           fetchInscriptions({
@@ -240,9 +224,10 @@ export function useInscriptionsByAddressQuery(address: string) {
         { priority: 1, signal, throwOnTimeout: true }
       );
     },
-    getNextPageParam(prevInscriptionsQuery) {
-      if (prevInscriptionsQuery.offset >= prevInscriptionsQuery.total) return undefined;
-      return prevInscriptionsQuery.offset + 60;
+    initialPageParam: 0,
+    getNextPageParam(lastPage) {
+      if (lastPage.offset >= lastPage.total) return undefined;
+      return lastPage.offset + 60;
     },
     refetchOnMount: false,
     refetchOnReconnect: false,

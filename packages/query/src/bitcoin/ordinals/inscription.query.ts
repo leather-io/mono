@@ -9,7 +9,7 @@ import { QueryPrefixes } from '../../query-prefixes';
 
 const inscriptionQueryOptions = {
   staleTime: Infinity,
-  cacheTime: Infinity,
+  gcTime: Infinity,
 } as const;
 
 /**

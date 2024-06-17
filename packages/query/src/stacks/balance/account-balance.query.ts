@@ -8,7 +8,6 @@ const staleTime = 1 * 60 * 1000;
 
 const balanceQueryOptions = {
   staleTime,
-  keepPreviousData: false,
   refetchOnMount: true,
 } as const;
 

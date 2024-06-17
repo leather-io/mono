@@ -34,8 +34,6 @@ function useSip10Tokens(address: string): {
   const infoResults = useSip10TokensCryptoAssetInfo(address);
 
   return useMemo(() => {
-    // We can potentially use the 'combine' option in react-query v5 to replace this?
-    // https://tanstack.com/query/latest/docs/framework/react/reference/useQueries#combine
     const isInitialLoading =
       balancesResults.some(query => query.isInitialLoading) ||
       infoResults.some(query => query.isInitialLoading);

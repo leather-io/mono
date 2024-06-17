@@ -4,7 +4,7 @@ import { QueryClient } from '@tanstack/react-query';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 1,
+      gcTime: 1,
     },
   },
 });
