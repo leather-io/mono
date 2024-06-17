@@ -67,6 +67,13 @@
   * devDependencies
     * @leather-wallet/rpc bumped to 1.0.3
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/constants bumped to 0.6.4
+    * @leather-wallet/utils bumped to 0.8.2
+
 ## [0.7.2](https://github.com/leather-wallet/mono/compare/bitcoin-v0.7.1...bitcoin-v0.7.2) (2024-06-10)
 
 

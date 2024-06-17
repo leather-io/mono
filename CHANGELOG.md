@@ -16,6 +16,14 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.6.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.1...leather-mono-v2.6.2) (2024-06-17)
+
+
+### Bug Fixes
+
+* high fee warning link ([d60c888](https://github.com/leather-wallet/mono/commit/d60c8884e24e015f5297992d4416e51eaa295ef7))
+* specify dist folder to include in publish, ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([d6b3975](https://github.com/leather-wallet/mono/commit/d6b3975936e7a77b7e0ea425a4b463ebda57ba90))
+
 ## [2.6.1](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.0...leather-mono-v2.6.1) (2024-06-12)
 
 

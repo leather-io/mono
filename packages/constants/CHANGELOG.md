@@ -7,6 +7,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.6.4](https://github.com/leather-wallet/mono/compare/constants-v0.6.3...constants-v0.6.4) (2024-06-17)
+
+
+### Bug Fixes
+
+* high fee warning link ([d60c888](https://github.com/leather-wallet/mono/commit/d60c8884e24e015f5297992d4416e51eaa295ef7))
+
 ## [0.6.2](https://github.com/leather-wallet/mono/compare/constants-v0.6.1...constants-v0.6.2) (2024-06-05)
 
 

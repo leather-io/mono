@@ -34,6 +34,20 @@
   * dependencies
     * @leather-wallet/utils bumped to 0.8.1
 
+## [1.4.4](https://github.com/leather-wallet/mono/compare/ui-v1.4.3...ui-v1.4.4) (2024-06-17)
+
+
+### Bug Fixes
+
+* specify dist folder to include in publish, ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([d6b3975](https://github.com/leather-wallet/mono/commit/d6b3975936e7a77b7e0ea425a4b463ebda57ba90))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/utils bumped to 0.8.2
+
 ## [1.4.3](https://github.com/leather-wallet/mono/compare/ui-v1.4.2...ui-v1.4.3) (2024-06-10)
 
 
