@@ -34,6 +34,14 @@
   * dependencies
     * @leather-wallet/utils bumped to 0.8.1
 
+## [1.4.5](https://github.com/leather-wallet/mono/compare/ui-v1.4.4...ui-v1.4.5) (2024-06-18)
+
+
+### Bug Fixes
+
+* disable pointer events on label ([1d2a9ac](https://github.com/leather-wallet/mono/commit/1d2a9ac3162900bcdb024395a65900273b396120))
+* export AddressDisplayer,  add avatarIcons ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([6226537](https://github.com/leather-wallet/mono/commit/62265379f4ec8c4407b424f6e69ff53885dc943d))
+
 ## [1.4.4](https://github.com/leather-wallet/mono/compare/ui-v1.4.3...ui-v1.4.4) (2024-06-17)
 
 
