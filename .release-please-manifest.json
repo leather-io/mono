@@ -1,6 +1,6 @@
 {
-  ".": "2.6.2",
-  "apps/mobile": "1.7.1",
+  ".": "2.6.3",
+  "apps/mobile": "1.7.2",
   "packages/bitcoin": "0.7.3",
   "packages/constants": "0.6.4",
   "packages/eslint-config": "0.5.0",
@@ -11,7 +11,7 @@
   "packages/tokens": "0.5.2",
   "packages/tsconfig-config": "0.4.0",
   "packages/rpc": "1.0.3",
-  "packages/ui": "1.4.4",
+  "packages/ui": "1.4.5",
   "packages/utils": "0.8.2",
   "packages/crypto": "1.0.1"
 }

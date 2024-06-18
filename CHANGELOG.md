@@ -16,6 +16,14 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.6.3](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.2...leather-mono-v2.6.3) (2024-06-18)
+
+
+### Bug Fixes
+
+* disable pointer events on label ([1d2a9ac](https://github.com/leather-wallet/mono/commit/1d2a9ac3162900bcdb024395a65900273b396120))
+* export AddressDisplayer,  add avatarIcons ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([6226537](https://github.com/leather-wallet/mono/commit/62265379f4ec8c4407b424f6e69ff53885dc943d))
+
 ## [2.6.2](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.1...leather-mono-v2.6.2) (2024-06-17)
 
 
