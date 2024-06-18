@@ -1,7 +1,6 @@
 export { Accordion } from './src/components/accordion/accordion.web';
-export { Avatar } from './src/components/avatar/avatar.web';
-export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.web';
-export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.web';
+export { AddressDisplayer } from './src/components/address-displayer/address-displayer.web';
+export * from './src/components/avatar';
 export { BulletSeparator } from './src/components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './src/components/button/button.web';
 export { Callout } from './src/components/callout/callout.web';
