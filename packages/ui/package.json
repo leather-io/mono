@@ -6,11 +6,10 @@
   "scripts": {
     "assets:native": "mkdir -p dist-native/src && cp -r src/assets-native ./dist-native/src/",
     "assets:web": "mkdir -p dist-web/src && cp -r src/assets-web ./dist-web/src",
-    "build": "pnpm panda && pnpm build:native && pnpm build:web && pnpm build:all",
+    "build": "pnpm panda && pnpm build:native && pnpm build:web",
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
-    "build:all": "pnpm assets:web && pnpm assets:native && tsc --build ./tsconfig.json",
     "build:native": "pnpm assets:native && tsc -p ./tsconfig.native.json",
-    "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch --preserveWatchOutput\"  \"pnpm build:all --watch --preserveWatchOutput\" ",
+    "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch --preserveWatchOutput\" ",
     "build:web": "pnpm assets:web && tsup --config tsup.config.web.ts",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
@@ -26,11 +25,11 @@
   },
   "exports": {
     ".": {
-      "types": "./dist-all/web.d.ts",
-      "import": "./dist-all/web.js",
-      "require": "./dist-all/web.js"
+      "types": "./dist-web/web.d.ts",
+      "import": "./dist-web/web.js",
+      "require": "./dist-web/web.js"
     },
-    "./native": "./dist-all/native.js"
+    "./native": "./dist-native/native.js"
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
@@ -102,7 +101,8 @@
     "typescript": "5.3.3"
   },
   "files": [
-    "dist-all"
+    "dist-web",
+    "dist-native"
   ],
   "publishConfig": {
     "access": "public"

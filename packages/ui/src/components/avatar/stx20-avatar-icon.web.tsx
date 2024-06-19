@@ -1,4 +1,5 @@
-import Stx20AvatarIconSrc from '../../assets-web/avatars/stx20-avatar-icon.png';
+import Stx20AvatarIconSrc from 'src/assets-web/avatars/stx20-avatar-icon.png';
+
 import { Avatar, type AvatarProps } from './avatar.web';
 
 const fallback = 'ST';
