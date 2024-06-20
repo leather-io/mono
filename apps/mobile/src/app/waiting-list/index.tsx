@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 
-import { WaitingList as WaitingListLayout } from './waiting-list-layout';
+import { WaitingList } from './waiting-list';
 
-export default function WaitingList() {
+export default function WaitingListPage() {
   const router = useRouter();
-  return <WaitingListLayout onHiddenPressAction={() => router.replace('/')} />;
+  return <WaitingList onHiddenPressAction={() => router.replace('/')} />;
 }
