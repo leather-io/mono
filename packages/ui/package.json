@@ -25,11 +25,7 @@
     "typecheck": "tsc --noEmit --project ./tsconfig.json"
   },
   "exports": {
-    ".": {
-      "types": "./dist-all/web.d.ts",
-      "import": "./dist-all/web.js",
-      "require": "./dist-all/web.js"
-    },
+    ".": "./dist-all/web.js",
     "./native": "./dist-native/native.js"
   },
   "dependencies": {

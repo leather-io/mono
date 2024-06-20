@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { StatusBar } from 'react-native';
 
-import { LeatherSplash } from '@/components/animations/leather-splash';
+import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { usePersistedStore, useProtectedStore } from '@/state';
@@ -19,7 +18,7 @@ void SplashScreen.preventAutoHideAsync();
 export { ErrorBoundary } from 'expo-router';
 
 // Ensure that reloading on `/modal` keeps a back button present
-export const unstable_settings = { initialRouteName: 'waiting-list/index' };
+export const unstable_settings = { initialRouteName: '/' };
 
 initiateI18n();
 
@@ -41,39 +40,20 @@ export default function RootLayout() {
     <I18nProvider i18n={i18n}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <AppWithNavigation />
+          <SplashScreenGuard>
+            <AppRouter />
+          </SplashScreenGuard>
         </ThemeProvider>
       </QueryClientProvider>
     </I18nProvider>
   );
 }
 
-// interface SplashScreenContainerProps {
-//   children: React.ReactNode;
-// }
-// function SplashScreenContainer({ children }: SplashScreenContainerProps) {
-
-// }
-
-function AppWithNavigation() {
-  const [animationFinished, setAnimationFinished] = useState(false);
-
-  if (!animationFinished) {
-    return (
-      <Box backgroundColor="base.ink.component-background-default" flex={1}>
-        <LeatherSplash onAnimationEnd={() => setAnimationFinished(true)} />
-      </Box>
-    );
-  }
-
-  const bg = !animationFinished
-    ? 'base.ink.component-background-default'
-    : 'dark.ink.background-secondary';
-
+function AppRouter() {
   return (
-    <Box backgroundColor={bg} flex={1}>
+    <Box backgroundColor="dark.ink.background-secondary" flex={1}>
       <StatusBar barStyle="light-content" />
-      <Slot initialRouteName="waiting-list/index" />
+      <Slot />
     </Box>
   );
 }

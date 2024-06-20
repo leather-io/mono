@@ -13,34 +13,34 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/welcome-screen/index.tsx:327
+#: src/app/waiting-list/waiting-list.tsx:330
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:252
+#: src/app/waiting-list/waiting-list.tsx:255
 msgid "Done"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:286
+#: src/app/waiting-list/waiting-list.tsx:289
 msgid "Email address"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:240
+#: src/app/waiting-list/waiting-list.tsx:243
 msgid "Follow us"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:341
+#: src/app/waiting-list/waiting-list.tsx:344
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:261
+#: src/app/waiting-list/waiting-list.tsx:264
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:296
+#: src/app/waiting-list/waiting-list.tsx:299
 msgid "Submit"
 msgstr ""
 
-#: src/components/welcome-screen/index.tsx:226
+#: src/app/waiting-list/waiting-list.tsx:229
 msgid "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
 msgstr ""

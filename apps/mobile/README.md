@@ -6,11 +6,19 @@ Leather is the most popular and trusted wallet for apps built on Bitcoin. And no
 
 This app is an [Expo](https://expo.dev/) mobile application. So there are a few prerequisites to have installed on your computer before we can proceed.
 
+You'll need to create a `.env` file to set which app mode the wallet runs in
+
+```
+# .env
+# `prelaunch` or `live`
+EXPO_PUBLIC_APP_START_MODE='prelaunch'
+```
+
 ### Prerequisites
 
-- [Node and NPM](https://nodejs.org/en/download)
+- [Node and Pnpm](https://nodejs.org/en/download)
 - [Watchman](https://facebook.github.io/watchman/docs/install#buildinstall) for MacOS and Linux users.
-- `npm install` in the monorepo root folder.
+- `pnpm i` in the monorepo root folder.
 
 If you want to run this in an iOS simulator:
 
@@ -35,11 +43,11 @@ Running on Android device
 
 ### Running the application
 
-- `npm run start` if you want to test the app on your personal Android or iOS device
+- `pnpm run start` if you want to test the app on your personal Android or iOS device
 
-- `npm run ios` if you want to run it on iOS simulator
+- `pnpm run ios` if you want to run it on iOS simulator
 
-- `npm run android` if you want to run it on Android emulator
+- `pnpm run android` if you want to run it on Android emulator
 
 ## License
 
