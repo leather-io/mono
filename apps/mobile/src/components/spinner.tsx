@@ -6,7 +6,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import { SPINNER, animate, infiniteLoop } from './animation-utils';
+import { SPINNER, animate, infiniteLoop } from '../app/waiting-list/animation-utils';
 
 export function Spinner() {
   const spinner = {

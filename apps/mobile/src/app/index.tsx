@@ -1,3 +1,5 @@
-import { WelcomeScreen } from '@/components/welcome-screen';
+import { Stack } from 'expo-router';
 
-export default WelcomeScreen;
+export function Root() {
+  return <Stack initialRouteName="waiting-list/index" />;
+}

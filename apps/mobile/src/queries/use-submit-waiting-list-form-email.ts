@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-export function useFormSubmission() {
+export function useSubmitWaitingListEmailForm() {
   return useMutation({
     mutationKey: ['formSubmission'],
     mutationFn: async (email: string) => {
@@ -10,18 +10,11 @@ export function useFormSubmission() {
           method: 'POST',
           headers: new Headers({ 'content-type': 'application/json' }),
           body: JSON.stringify({
-            fields: [
-              {
-                name: 'email',
-                value: email,
-              },
-            ],
+            fields: [{ name: 'email', value: email }],
           }),
         }
       );
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Email submission failed');
       return response.json();
     },
   });

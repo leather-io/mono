@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Image, Keyboard, KeyboardAvoidingView, SafeAreaView } from 'react-native';
+import { Image, Keyboard, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import CheckmarkCircle from '@/assets/checkmark-circle.svg';
@@ -7,7 +7,7 @@ import XLogo from '@/assets/logo-x.svg';
 import { AnimatedButton, Button, ButtonState } from '@/components/button';
 import { InputState, TextInput } from '@/components/text-input';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
-import { useFormSubmission } from '@/queries/use-form-submissions';
+import { useSubmitWaitingListEmailForm } from '@/queries/use-submit-waiting-list-form-email';
 import { emailRegexp } from '@/utils/regexp';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -17,6 +17,7 @@ import LottieView from 'lottie-react-native';
 import { Box, Text, Theme } from '@leather.io/ui/native';
 
 import { WelcomeScreenTestIds } from '../../../test-ids';
+import { Spinner } from '../../components/spinner';
 import {
   BOTTOM_SHEET,
   BTC,
@@ -31,9 +32,13 @@ import {
   keyboardAnimationFn,
   stringAnimationFn,
 } from './animation-utils';
-import { Spinner } from './spinner';
 
-export function WelcomeScreen() {
+interface WelcomeScreenLayoutProps {
+  onHiddenPressAction(): void;
+}
+export function WaitingList(props: WelcomeScreenLayoutProps) {
+  const { onHiddenPressAction } = props;
+
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [email, setEmail] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
@@ -44,7 +49,7 @@ export function WelcomeScreen() {
     data: formData,
     reset: resetForm,
     isError: isSubmissionError,
-  } = useFormSubmission();
+  } = useSubmitWaitingListEmailForm();
 
   const isSubmitted = !!formData;
 
@@ -156,9 +161,7 @@ export function WelcomeScreen() {
     let timeout: ReturnType<typeof setTimeout>;
     if (isSubmitted) {
       setShowSuccess(true);
-      timeout = setTimeout(() => {
-        setShowSuccess(false);
-      }, 800);
+      timeout = setTimeout(() => setShowSuccess(false), 800);
     }
     return () => clearTimeout(timeout);
   }, [isSubmitted]);
@@ -346,7 +349,12 @@ export function WelcomeScreen() {
             <Animated.View
               style={[{ position: 'absolute', transform: [{ rotateZ: '100deg' }] }, btcStyle]}
             >
-              <Image style={{ width: 73, height: 73 }} source={require('@/assets/Pixel BTC.png')} />
+              <Pressable onLongPress={() => onHiddenPressAction()}>
+                <Image
+                  style={{ width: 73, height: 73 }}
+                  source={require('@/assets/Pixel BTC.png')}
+                />
+              </Pressable>
             </Animated.View>
             <Animated.View style={[{ position: 'absolute' }, diamondStyle]}>
               <Image style={{ width: 69, height: 88.5 }} source={require('@/assets/crystal.png')} />
