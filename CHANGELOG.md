@@ -16,6 +16,18 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.7.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.3...leather-mono-v2.7.0) (2024-06-20)
+
+
+### Features
+
+* add decoded auth request model ([d8b06c0](https://github.com/leather-wallet/mono/commit/d8b06c0a1512bd977b3f78039e2c72855f895c43))
+
+
+### Bug Fixes
+
+* test export for png, deprecate dist-all ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([cf673e2](https://github.com/leather-wallet/mono/commit/cf673e2ba10906debbba45d49eb33df09f096911))
+
 ## [2.6.3](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.2...leather-mono-v2.6.3) (2024-06-18)
 
 

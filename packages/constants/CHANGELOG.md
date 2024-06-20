@@ -7,6 +7,13 @@
   * devDependencies
     * @leather-wallet/eslint-config bumped to 0.5.0
 
+## [0.7.0](https://github.com/leather-wallet/mono/compare/constants-v0.6.4...constants-v0.7.0) (2024-06-20)
+
+
+### Features
+
+* add decoded auth request model ([d8b06c0](https://github.com/leather-wallet/mono/commit/d8b06c0a1512bd977b3f78039e2c72855f895c43))
+
 ## [0.6.4](https://github.com/leather-wallet/mono/compare/constants-v0.6.3...constants-v0.6.4) (2024-06-17)
 
 

@@ -2,7 +2,7 @@
   "name": "@leather-wallet/bitcoin",
   "author": "Leather.io contact@leather.io",
   "description": "Shared bitcoin utilities",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "license": "MIT",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/bitcoin",
   "repository": {

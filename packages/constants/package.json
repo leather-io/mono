@@ -2,7 +2,7 @@
   "name": "@leather-wallet/constants",
   "author": "Leather.io contact@leather.io",
   "description": "Shared bitcoin utilities",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "license": "MIT",
   "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/constants",
   "repository": {
