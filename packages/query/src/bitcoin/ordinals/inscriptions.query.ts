@@ -56,7 +56,7 @@ async function fetchInscriptions({
 }
 
 /**
- * // TO REFACTOR
+ * // TODO: Refactor: https://github.com/leather-io/issues/issues/109
  * Returns all inscriptions for the user's current account
  */
 export function useGetInscriptionsInfiniteQuery({
@@ -158,7 +158,7 @@ export function useGetInscriptionsInfiniteQuery({
 
       const inscriptions = responsesArr.flatMap(response => response.results);
 
-      // get offset and total from the last response
+      // Get offset and total from the last response
       const total = responsesArr[responsesArr.length - 1]?.total;
 
       return {
