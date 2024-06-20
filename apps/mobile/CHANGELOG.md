@@ -80,6 +80,12 @@
     * @leather-wallet/constants bumped to 0.7.0
     * @leather-wallet/ui bumped to 1.4.6
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/ui bumped to 1.4.7
+
 ## [1.7.0](https://github.com/leather-wallet/mono/compare/mobile-v1.6.0...mobile-v1.7.0) (2024-06-12)
 
 
