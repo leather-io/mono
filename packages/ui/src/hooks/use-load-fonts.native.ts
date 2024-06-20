@@ -21,9 +21,7 @@ export function useLoadFonts({ onLoaded }: { onLoaded?: () => unknown }) {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      onLoaded?.();
-    }
+    if (loaded) onLoaded?.();
   }, [loaded]);
 
   return {
