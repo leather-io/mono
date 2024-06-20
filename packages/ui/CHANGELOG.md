@@ -34,6 +34,20 @@
   * dependencies
     * @leather-wallet/utils bumped to 0.8.1
 
+## [1.4.6](https://github.com/leather-wallet/mono/compare/ui-v1.4.5...ui-v1.4.6) (2024-06-20)
+
+
+### Bug Fixes
+
+* test export for png, deprecate dist-all ref leather-wallet/issues[#64](https://github.com/leather-wallet/mono/issues/64) ([cf673e2](https://github.com/leather-wallet/mono/commit/cf673e2ba10906debbba45d49eb33df09f096911))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather-wallet/utils bumped to 0.8.3
+
 ## [1.4.5](https://github.com/leather-wallet/mono/compare/ui-v1.4.4...ui-v1.4.5) (2024-06-18)
 
 
