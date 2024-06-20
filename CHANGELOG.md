@@ -16,6 +16,13 @@
     * @leather-wallet/prettier-config bumped to 0.4.0
     * @leather-wallet/tsconfig-config bumped to 0.4.0
 
+## [2.7.1](https://github.com/leather-io/mono/compare/leather-mono-v2.7.0...leather-mono-v2.7.1) (2024-06-20)
+
+
+### Bug Fixes
+
+* rollback change to project dist output and remove .png, ref leather-wallet/issues[#103](https://github.com/leather-io/mono/issues/103) ([eda71ff](https://github.com/leather-io/mono/commit/eda71fff5ee63e21f5405e9637e958f0ac6ddb85))
+
 ## [2.7.0](https://github.com/leather-wallet/mono/compare/leather-mono-v2.6.3...leather-mono-v2.7.0) (2024-06-20)
 
 

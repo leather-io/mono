@@ -34,6 +34,13 @@
   * dependencies
     * @leather-wallet/utils bumped to 0.8.1
 
+## [1.4.7](https://github.com/leather-io/mono/compare/ui-v1.4.6...ui-v1.4.7) (2024-06-20)
+
+
+### Bug Fixes
+
+* rollback change to project dist output and remove .png, ref leather-wallet/issues[#103](https://github.com/leather-io/mono/issues/103) ([eda71ff](https://github.com/leather-io/mono/commit/eda71fff5ee63e21f5405e9637e958f0ac6ddb85))
+
 ## [1.4.6](https://github.com/leather-wallet/mono/compare/ui-v1.4.5...ui-v1.4.6) (2024-06-20)
 
 
