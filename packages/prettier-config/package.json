@@ -4,14 +4,14 @@
   "description": "Shared prettier configuration",
   "version": "0.4.1",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/prettier-config",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/prettier-config",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
     "directory": "packages/prettier-config"
   },
   "type": "module",
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "prettier": "3.3.0"

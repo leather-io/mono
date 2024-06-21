@@ -4,7 +4,7 @@
   "description": "Leather query",
   "version": "0.8.10",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/query",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/query",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
@@ -29,7 +29,7 @@
       "require": "./dist/index.js"
     }
   },
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@fungible-systems/zone-file": "2.0.0",
     "@hirosystems/token-metadata-api-client": "1.2.0",

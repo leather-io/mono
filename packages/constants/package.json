@@ -4,7 +4,7 @@
   "description": "Shared bitcoin utilities",
   "version": "0.7.0",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/constants",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/constants",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
@@ -23,7 +23,7 @@
   "exports": {
     ".": "./dist/index.js"
   },
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",

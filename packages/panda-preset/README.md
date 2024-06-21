@@ -9,7 +9,7 @@ This package contains Leathers panda preset configuration
 
 ## License
 
-[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
 
 ---
 

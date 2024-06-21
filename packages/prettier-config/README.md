@@ -63,7 +63,7 @@ pnpm install -D @leather-wallet/prettier-config
 
 ## License
 
-[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
 
 ---
 

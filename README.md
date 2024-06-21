@@ -45,4 +45,4 @@ To be able to develop packages and test those in extension, check out this [guid
 
 ## License
 
-[MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)

@@ -4,7 +4,7 @@
   "description": "Shared bitcoin utilities",
   "version": "0.8.3",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/utils",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/utils",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
@@ -25,7 +25,7 @@
   "exports": {
     ".": "./dist/index.js"
   },
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@leather-wallet/constants": "workspace:*",
     "@leather-wallet/models": "workspace:*",

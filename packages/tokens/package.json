@@ -4,7 +4,7 @@
   "description": "Shared design tokens",
   "version": "0.5.2",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tokens",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/tokens",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
@@ -20,7 +20,7 @@
   "exports": {
     ".": "./dist/index.mjs"
   },
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "devDependencies": {
     "@leather-wallet/eslint-config": "workspace:*",
     "@leather-wallet/prettier-config": "workspace:*",

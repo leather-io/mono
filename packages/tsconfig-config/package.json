@@ -4,13 +4,13 @@
   "description": "Shared tsconfig configuration",
   "version": "0.4.0",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/tsconfig-config",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/tsconfig-config",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
     "directory": "packages/tsconfig-config"
   },
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "typescript": "5.4.5"
   },

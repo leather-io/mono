@@ -54,12 +54,12 @@
   * dependencies
     * @leather-wallet/models bumped to 0.9.0
 
-## [1.0.1](https://github.com/leather-wallet/mono/compare/rpc-v1.0.0...rpc-v1.0.1) (2024-06-05)
+## [1.0.1](https://github.com/leather-io/mono/compare/rpc-v1.0.0...rpc-v1.0.1) (2024-06-05)
 
 
 ### Bug Fixes
 
-* event name is 'stx_signMessage' ([ba8f930](https://github.com/leather-wallet/mono/commit/ba8f9304d9a53698ef8c1fdc7c984aa8cf507d51))
+* event name is 'stx_signMessage' ([ba8f930](https://github.com/leather-io/mono/commit/ba8f9304d9a53698ef8c1fdc7c984aa8cf507d51))
 
 
 ### Dependencies
@@ -68,7 +68,7 @@
   * dependencies
     * @leather-wallet/models bumped to 0.6.8
 
-## [1.0.0](https://github.com/leather-wallet/mono/compare/rpc-v0.3.10...rpc-v1.0.0) (2024-06-05)
+## [1.0.0](https://github.com/leather-io/mono/compare/rpc-v0.3.10...rpc-v1.0.0) (2024-06-05)
 
 
 ### ⚠ BREAKING CHANGES
@@ -77,8 +77,8 @@
 
 ### Bug Fixes
 
-* **rpc:** do not augment global type implicitly ([5ea44b2](https://github.com/leather-wallet/mono/commit/5ea44b2169d4a7a3151059e94a8682e6c14b0e6a))
-* **rpc:** export LeatherProvider ([fb532a2](https://github.com/leather-wallet/mono/commit/fb532a2f0b6f583de24821c97bd0ca52e21dec4a))
+* **rpc:** do not augment global type implicitly ([5ea44b2](https://github.com/leather-io/mono/commit/5ea44b2169d4a7a3151059e94a8682e6c14b0e6a))
+* **rpc:** export LeatherProvider ([fb532a2](https://github.com/leather-io/mono/commit/fb532a2f0b6f583de24821c97bd0ca52e21dec4a))
 
 
 ### Dependencies
@@ -87,12 +87,12 @@
   * dependencies
     * @leather-wallet/models bumped to 0.6.7
 
-## [0.3.4](https://github.com/leather-wallet/mono/compare/rpc-v0.3.3...rpc-v0.3.4) (2024-05-17)
+## [0.3.4](https://github.com/leather-io/mono/compare/rpc-v0.3.3...rpc-v0.3.4) (2024-05-17)
 
 
 ### Bug Fixes
 
-* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-wallet/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
+* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-io/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
 
 
 ### Dependencies
@@ -101,12 +101,12 @@
   * dependencies
     * @leather-wallet/models bumped to 0.6.0
 
-## [0.3.2](https://github.com/leather-wallet/mono/compare/rpc-v0.3.1...rpc-v0.3.2) (2024-05-17)
+## [0.3.2](https://github.com/leather-io/mono/compare/rpc-v0.3.1...rpc-v0.3.2) (2024-05-17)
 
 
 ### Bug Fixes
 
-* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-wallet/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
+* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-io/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
 
 
 ### Dependencies
@@ -115,44 +115,44 @@
   * dependencies
     * @leather-wallet/models bumped to 0.5.0
 
-## [0.3.0](https://github.com/leather-wallet/mono/compare/rpc-v0.2.1...rpc-v0.3.0) (2024-05-08)
+## [0.3.0](https://github.com/leather-io/mono/compare/rpc-v0.2.1...rpc-v0.3.0) (2024-05-08)
 
-* refactor: pkg org and asset data models ([a46a82c](https://github.com/leather-wallet/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
-
-### Bug Fixes
-
-* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-wallet/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
-
-## [0.2.1](https://github.com/leather-wallet/mono/compare/types-v0.2.0...types-v0.2.1) (2024-05-07)
-
+* refactor: pkg org and asset data models ([a46a82c](https://github.com/leather-io/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
 
 ### Bug Fixes
 
-* types success bug, closes leather-wallet/extension[#5314](https://github.com/leather-wallet/mono/issues/5314) ([31ef5e4](https://github.com/leather-wallet/mono/commit/31ef5e420830f86c1f85c2bfdd8b8730c09d298c))
+* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-io/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
 
-## [0.2.0](https://github.com/leather-wallet/mono/compare/types-v0.1.0...types-v0.2.0) (2024-04-23)
+## [0.2.1](https://github.com/leather-io/mono/compare/types-v0.2.0...types-v0.2.1) (2024-05-07)
+
+
+### Bug Fixes
+
+* types success bug, closes leather-wallet/extension[#5314](https://github.com/leather-io/mono/issues/5314) ([31ef5e4](https://github.com/leather-io/mono/commit/31ef5e420830f86c1f85c2bfdd8b8730c09d298c))
+
+## [0.2.0](https://github.com/leather-io/mono/compare/types-v0.1.0...types-v0.2.0) (2024-04-23)
 
 
 ### Features
 
-* add turborepo + watch dev mode ([d415d79](https://github.com/leather-wallet/mono/commit/d415d79394488c0cb74765d367b3af8db1d24772))
-* bootstrap release-please ([76b995a](https://github.com/leather-wallet/mono/commit/76b995a37ecfda0aa006b90ab21cadc57dae8e80))
-* reset to pnpm workspaces ([fa7de49](https://github.com/leather-wallet/mono/commit/fa7de49928ee099419db9ff3e91c7dc7b15a4ffa))
+* add turborepo + watch dev mode ([d415d79](https://github.com/leather-io/mono/commit/d415d79394488c0cb74765d367b3af8db1d24772))
+* bootstrap release-please ([76b995a](https://github.com/leather-io/mono/commit/76b995a37ecfda0aa006b90ab21cadc57dae8e80))
+* reset to pnpm workspaces ([fa7de49](https://github.com/leather-io/mono/commit/fa7de49928ee099419db9ff3e91c7dc7b15a4ffa))
 
 
 ### Bug Fixes
 
-* **tokens:** bundle pkg ([75c05e1](https://github.com/leather-wallet/mono/commit/75c05e1a7ebc4e8fa93254f3cb7e73ba760f76bb))
+* **tokens:** bundle pkg ([75c05e1](https://github.com/leather-io/mono/commit/75c05e1a7ebc4e8fa93254f3cb7e73ba760f76bb))
 
-## [0.1.0](https://github.com/leather-wallet/mono/compare/types-v0.0.20...types-v0.1.0) (2024-04-23)
+## [0.1.0](https://github.com/leather-io/mono/compare/types-v0.0.20...types-v0.1.0) (2024-04-23)
 
 
 ### Features
 
-* add turborepo + watch dev mode ([d415d79](https://github.com/leather-wallet/mono/commit/d415d79394488c0cb74765d367b3af8db1d24772))
-* reset to pnpm workspaces ([fa7de49](https://github.com/leather-wallet/mono/commit/fa7de49928ee099419db9ff3e91c7dc7b15a4ffa))
+* add turborepo + watch dev mode ([d415d79](https://github.com/leather-io/mono/commit/d415d79394488c0cb74765d367b3af8db1d24772))
+* reset to pnpm workspaces ([fa7de49](https://github.com/leather-io/mono/commit/fa7de49928ee099419db9ff3e91c7dc7b15a4ffa))
 
 
 ### Bug Fixes
 
-* **tokens:** bundle pkg ([75c05e1](https://github.com/leather-wallet/mono/commit/75c05e1a7ebc4e8fa93254f3cb7e73ba760f76bb))
+* **tokens:** bundle pkg ([75c05e1](https://github.com/leather-io/mono/commit/75c05e1a7ebc4e8fa93254f3cb7e73ba760f76bb))

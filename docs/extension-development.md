@@ -11,8 +11,8 @@ One method to achieve this is through hard linking. Here is a step-by-step guide
 1. Clone the repositories:
 
    ```
-   $ git clone https://github.com/leather-wallet/mono
-   $ git clone https://github.com/leather-wallet/extension
+   $ git clone https://github.com/leather-io/mono
+   $ git clone https://github.com/leather-io/extension
    ```
 
    For simplicity, do this in the same folder so that `mono` and `extension` are sibling directories.
