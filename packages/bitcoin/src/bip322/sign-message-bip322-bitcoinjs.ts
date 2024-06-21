@@ -2,7 +2,7 @@ import { base64 } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { BitcoinNetworkModes } from '@leather-wallet/models';
+import { BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network';
 import {

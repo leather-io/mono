@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
-import { KEBAB_REGEX } from '@leather-wallet/constants';
-import type { NetworkModes } from '@leather-wallet/models';
+import { KEBAB_REGEX } from '@leather.io/constants';
+import type { NetworkModes } from '@leather.io/models';
 
 export { createCounter } from './counter';
 export * from './math';

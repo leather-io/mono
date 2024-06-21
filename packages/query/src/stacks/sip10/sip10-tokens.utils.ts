@@ -1,7 +1,7 @@
 import type { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
 
-import type { CryptoAssetBalance, Sip10CryptoAssetInfo } from '@leather-wallet/models';
-import { getPrincipalFromContractId, getTicker, isUndefined } from '@leather-wallet/utils';
+import type { CryptoAssetBalance, Sip10CryptoAssetInfo } from '@leather.io/models';
+import { getPrincipalFromContractId, getTicker, isUndefined } from '@leather.io/utils';
 
 import { SwapAsset } from '../../common/alex-sdk/alex-sdk.hooks';
 import { getStacksContractIdStringParts } from '../temp-utils';

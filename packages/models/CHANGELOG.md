@@ -4,7 +4,7 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather.io/eslint-config bumped to 0.5.0
 
 ## [0.9.0](https://github.com/leather-io/mono/compare/models-v0.8.0...models-v0.9.0) (2024-06-20)
 
@@ -32,7 +32,7 @@
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 * react.JSX deprecated ([845efe1](https://github.com/leather-io/mono/commit/845efe1cfaf36e83fef5202b2d86aa03dbe0a70a))
 
 
@@ -40,7 +40,7 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/prettier-config bumped to 0.4.1
+    * @leather.io/prettier-config bumped to 0.4.1
 
 ## [0.6.6](https://github.com/leather-io/mono/compare/models-v0.6.5...models-v0.6.6) (2024-05-30)
 
@@ -111,9 +111,9 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.4.0
-    * @leather-wallet/prettier-config bumped to 0.4.0
-    * @leather-wallet/tsconfig-config bumped to 0.4.0
+    * @leather.io/eslint-config bumped to 0.4.0
+    * @leather.io/prettier-config bumped to 0.4.0
+    * @leather.io/tsconfig-config bumped to 0.4.0
 
 ## [0.5.0](https://github.com/leather-io/mono/compare/models-v0.4.6...models-v0.5.0) (2024-05-17)
 
@@ -142,9 +142,9 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.3.0
-    * @leather-wallet/prettier-config bumped to 0.3.0
-    * @leather-wallet/tsconfig-config bumped to 0.3.0
+    * @leather.io/eslint-config bumped to 0.3.0
+    * @leather.io/prettier-config bumped to 0.3.0
+    * @leather.io/tsconfig-config bumped to 0.3.0
 
 ## [0.4.5](https://github.com/leather-io/mono/compare/models-v0.4.4...models-v0.4.5) (2024-05-15)
 

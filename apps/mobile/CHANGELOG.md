@@ -4,87 +4,87 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.5.0
-    * @leather-wallet/tokens bumped to 0.3.0
-    * @leather-wallet/ui bumped to 1.2.1
+    * @leather.io/constants bumped to 0.5.0
+    * @leather.io/tokens bumped to 0.3.0
+    * @leather.io/ui bumped to 1.2.1
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.3.0
+    * @leather.io/eslint-config bumped to 0.3.0
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.0
-    * @leather-wallet/tokens bumped to 0.4.0
-    * @leather-wallet/ui bumped to 1.2.2
+    * @leather.io/constants bumped to 0.6.0
+    * @leather.io/tokens bumped to 0.4.0
+    * @leather.io/ui bumped to 1.2.2
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.4.0
+    * @leather.io/eslint-config bumped to 0.4.0
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.1
+    * @leather.io/constants bumped to 0.6.1
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/ui bumped to 1.3.1
+    * @leather.io/ui bumped to 1.3.1
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.3
-    * @leather-wallet/tokens bumped to 0.5.2
-    * @leather-wallet/ui bumped to 1.4.0
+    * @leather.io/constants bumped to 0.6.3
+    * @leather.io/tokens bumped to 0.5.2
+    * @leather.io/ui bumped to 1.4.0
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather.io/eslint-config bumped to 0.5.0
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/ui bumped to 1.4.1
+    * @leather.io/ui bumped to 1.4.1
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/ui bumped to 1.4.2
+    * @leather.io/ui bumped to 1.4.2
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/ui bumped to 1.4.3
+    * @leather.io/ui bumped to 1.4.3
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.4
-    * @leather-wallet/ui bumped to 1.4.4
+    * @leather.io/constants bumped to 0.6.4
+    * @leather.io/ui bumped to 1.4.4
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/ui bumped to 1.4.5
+    * @leather.io/ui bumped to 1.4.5
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.7.0
-    * @leather-wallet/ui bumped to 1.4.6
+    * @leather.io/constants bumped to 0.7.0
+    * @leather.io/ui bumped to 1.4.6
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/ui bumped to 1.4.7
+    * @leather.io/ui bumped to 1.4.7
 
 ## [1.7.0](https://github.com/leather-io/mono/compare/mobile-v1.6.0...mobile-v1.7.0) (2024-06-12)
 
@@ -116,16 +116,16 @@
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.2
-    * @leather-wallet/tokens bumped to 0.5.1
-    * @leather-wallet/ui bumped to 1.3.2
+    * @leather.io/constants bumped to 0.6.2
+    * @leather.io/tokens bumped to 0.5.1
+    * @leather.io/ui bumped to 1.3.2
 
 ## [1.4.0](https://github.com/leather-io/mono/compare/mobile-v1.3.3...mobile-v1.4.0) (2024-05-30)
 
@@ -144,8 +144,8 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/tokens bumped to 0.5.0
-    * @leather-wallet/ui bumped to 1.3.0
+    * @leather.io/tokens bumped to 0.5.0
+    * @leather.io/ui bumped to 1.3.0
 
 ## [1.3.0](https://github.com/leather-io/mono/compare/mobile-v1.2.0...mobile-v1.3.0) (2024-05-07)
 

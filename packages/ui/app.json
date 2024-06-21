@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "@leather-wallet/ui",
+    "name": "@leather.io/ui",
     "slug": "leather-wallet_ui",
     "version": "1.0.0",
     "orientation": "portrait",

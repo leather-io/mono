@@ -1,7 +1,7 @@
 import { hexToCV } from '@stacks/transactions';
 import { type UseQueryResult, useQueries } from '@tanstack/react-query';
 
-import { getPrincipalFromContractId } from '@leather-wallet/utils';
+import { getPrincipalFromContractId } from '@leather.io/utils';
 
 import { QueryPrefixes } from '../../../query-prefixes';
 import { useStacksClient } from '../../stacks-client';

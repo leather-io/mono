@@ -1,6 +1,6 @@
 export default ({ config }) => ({
   ...config,
-  name: '@leather-wallet/ui',
+  name: '@leather.io/ui',
   slug: 'leather-wallet_ui',
   extra: {
     storybookEnabled: process.env.STORYBOOK_ENABLED,

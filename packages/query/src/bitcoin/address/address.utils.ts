@@ -1,6 +1,6 @@
-import { BTC_DECIMALS } from '@leather-wallet/constants';
-import type { Money } from '@leather-wallet/models';
-import { isEmptyArray } from '@leather-wallet/utils';
+import { BTC_DECIMALS } from '@leather.io/constants';
+import type { Money } from '@leather.io/models';
+import { isEmptyArray } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
 

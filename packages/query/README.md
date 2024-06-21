@@ -1,4 +1,4 @@
-# @leather-wallet/queries
+# @leather.io/queries
 
 We use `React Query` to fetch APIs and to manage the cache of the responses.
 

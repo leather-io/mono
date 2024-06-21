@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { CryptoCurrencies } from '@leather-wallet/models';
+import { CryptoCurrencies } from '@leather.io/models';
 
 import { marketDataQueryOptions } from '../market-data.query';
 

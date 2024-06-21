@@ -1,8 +1,8 @@
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { DerivationPathDepth } from '@leather-wallet/crypto';
-import { BitcoinNetworkModes } from '@leather-wallet/models';
+import { DerivationPathDepth } from '@leather.io/crypto';
+import { BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 import {

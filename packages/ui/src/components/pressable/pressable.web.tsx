@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { type RecipeVariantProps, css, cva } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
-import { isDefined } from '@leather-wallet/utils';
+import { isDefined } from '@leather.io/utils';
 
 const basePseudoOutlineProps = {
   content: '""',

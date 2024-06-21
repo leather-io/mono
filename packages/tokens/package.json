@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/tokens",
+  "name": "@leather.io/tokens",
   "author": "Leather.io contact@leather.io",
   "description": "Shared design tokens",
   "version": "0.5.2",
@@ -7,7 +7,7 @@
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/tokens",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
+    "url": "git@github.com:leather-io/mono.git",
     "directory": "packages/tokens"
   },
   "scripts": {
@@ -22,9 +22,9 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "devDependencies": {
-    "@leather-wallet/eslint-config": "workspace:*",
-    "@leather-wallet/prettier-config": "workspace:*",
-    "@leather-wallet/tsconfig-config": "workspace:*",
+    "@leather.io/eslint-config": "workspace:*",
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
     "prettier": "3.3.0",
     "tsup": "8.1.0"
   },

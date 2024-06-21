@@ -15,7 +15,7 @@ This package contains `eslint` configuration to be shared across projects.
 - Install as a dev dependency in packages / apps:
 
   ```sh
-  npm i --save-dev @leather-wallet/eslint-config
+  npm i --save-dev @leather.io/eslint-config
   ```
 
 - Add eslint configuration file:
@@ -23,7 +23,7 @@ This package contains `eslint` configuration to be shared across projects.
   ```js
   // .eslintrc.js
   module.exports = {
-    extends: ['@leather-wallet/eslint-config', 'universe/native'],
+    extends: ['@leather.io/eslint-config', 'universe/native'],
 
     // add this if you have typescript in your package / app
     parserOptions: {

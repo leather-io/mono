@@ -16,7 +16,7 @@ import {
   tupleCV,
 } from '@stacks/transactions';
 
-import { isString, isUndefined } from '@leather-wallet/utils';
+import { isString, isUndefined } from '@leather.io/utils';
 
 import { StacksClient } from '../stacks-client';
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "@leather-wallet/mobile",
+    "name": "@leather.io/mobile",
     "slug": "leather-wallet-mobile",
     "version": "1.0.0",
     "orientation": "portrait",

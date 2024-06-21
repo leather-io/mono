@@ -2,20 +2,20 @@ import { useCallback, useMemo } from 'react';
 
 import BigNumber from 'bignumber.js';
 
-import { currencyDecimalsMap } from '@leather-wallet/constants';
+import { currencyDecimalsMap } from '@leather.io/constants';
 import {
   CryptoCurrencies,
   MarketData,
   Money,
   createMarketData,
   createMarketPair,
-} from '@leather-wallet/models';
+} from '@leather.io/models';
 import {
   baseCurrencyAmountInQuote,
   calculateMeanAverage,
   convertAmountToFractionalUnit,
   createMoney,
-} from '@leather-wallet/utils';
+} from '@leather.io/utils';
 
 import {
   selectBinanceUsdPrice,

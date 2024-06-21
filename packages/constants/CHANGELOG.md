@@ -5,7 +5,7 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather.io/eslint-config bumped to 0.5.0
 
 ## [0.7.0](https://github.com/leather-io/mono/compare/constants-v0.6.4...constants-v0.7.0) (2024-06-20)
 
@@ -26,14 +26,14 @@
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/prettier-config bumped to 0.4.1
+    * @leather.io/prettier-config bumped to 0.4.1
 
 ## [0.6.1](https://github.com/leather-io/mono/compare/constants-v0.6.0...constants-v0.6.1) (2024-05-20)
 
@@ -66,9 +66,9 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.4.0
-    * @leather-wallet/prettier-config bumped to 0.4.0
-    * @leather-wallet/tsconfig-config bumped to 0.4.0
+    * @leather.io/eslint-config bumped to 0.4.0
+    * @leather.io/prettier-config bumped to 0.4.0
+    * @leather.io/tsconfig-config bumped to 0.4.0
 
 ## [0.5.0](https://github.com/leather-io/mono/compare/constants-v0.4.1...constants-v0.5.0) (2024-05-17)
 
@@ -94,9 +94,9 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.3.0
-    * @leather-wallet/prettier-config bumped to 0.3.0
-    * @leather-wallet/tsconfig-config bumped to 0.3.0
+    * @leather.io/eslint-config bumped to 0.3.0
+    * @leather.io/prettier-config bumped to 0.3.0
+    * @leather.io/tsconfig-config bumped to 0.3.0
 
 ## [0.4.0](https://github.com/leather-io/mono/compare/constants-v0.3.0...constants-v0.4.0) (2024-05-07)
 

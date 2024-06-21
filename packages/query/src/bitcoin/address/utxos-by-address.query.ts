@@ -1,11 +1,8 @@
 import { HDKey } from '@scure/bip32';
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  getNativeSegwitAddressIndexDerivationPath,
-  getTaprootAddress,
-} from '@leather-wallet/bitcoin';
-import { createCounter } from '@leather-wallet/utils';
+import { getNativeSegwitAddressIndexDerivationPath, getTaprootAddress } from '@leather.io/bitcoin';
+import { createCounter } from '@leather.io/utils';
 
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';

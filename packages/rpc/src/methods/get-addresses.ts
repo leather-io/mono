@@ -1,4 +1,4 @@
-import { AllowAdditionalProperties } from '@leather-wallet/models';
+import { AllowAdditionalProperties } from '@leather.io/models';
 
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
 

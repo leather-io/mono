@@ -3,8 +3,8 @@ import { bytesToHex } from '@stacks/common';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { BitcoinTx } from '@leather-wallet/models';
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
+import { BitcoinTx } from '@leather.io/models';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather.io/models';
 
 import { Paginated } from '../../../types/api-types';
 import { InscriptionResponseHiro } from '../../../types/inscription';

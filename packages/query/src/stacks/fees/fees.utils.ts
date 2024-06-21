@@ -2,9 +2,9 @@ import { bytesToHex } from '@stacks/common';
 import { StacksTransaction, serializePayload } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
-import { DEFAULT_FEE_RATE } from '@leather-wallet/constants';
-import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
+import { DEFAULT_FEE_RATE } from '@leather.io/constants';
+import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import { FeeEstimation, StacksTxFeeEstimation } from '../hiro-api-types';
 

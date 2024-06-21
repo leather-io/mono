@@ -14,7 +14,7 @@ import { useTheme } from '@shopify/restyle';
 import * as Linking from 'expo-linking';
 import LottieView from 'lottie-react-native';
 
-import { Box, Text, Theme } from '@leather-wallet/ui/native';
+import { Box, Text, Theme } from '@leather.io/ui/native';
 
 import { WelcomeScreenTestIds } from '../../../test-ids';
 import {

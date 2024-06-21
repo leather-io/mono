@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import type { BitcoinTx } from '@leather-wallet/models';
-import { sumNumbers } from '@leather-wallet/utils';
+import type { BitcoinTx } from '@leather.io/models';
+import { sumNumbers } from '@leather.io/utils';
 
 import {
   useGetBitcoinTransactionsByAddressQuery,

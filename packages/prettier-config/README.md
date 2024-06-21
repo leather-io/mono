@@ -19,14 +19,14 @@ This package is the prettier configuration for Leather
 - Install as a dev dependency in packages / apps:
 
 ```sh
-pnpm install -D @leather-wallet/prettier-config
+pnpm install -D @leather.io/prettier-config
 ```
 
 - Add prettier configuration file:
 
   ```js
   // .prettierrc.js
-  import defaultConfig from '@leather-wallet/prettier-config';
+  import defaultConfig from '@leather.io/prettier-config';
 
   export default { ...defaultConfig };
   ```

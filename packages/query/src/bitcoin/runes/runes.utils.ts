@@ -1,5 +1,5 @@
-import { type RuneCryptoAssetInfo, createCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
+import { type RuneCryptoAssetInfo, createCryptoAssetBalance } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import type { RuneBalance, RuneTickerInfo } from '../bitcoin-client';
 

@@ -1,4 +1,4 @@
-import { ValueOf } from '@leather-wallet/models';
+import { ValueOf } from '@leather.io/models';
 
 import { DefineGetAddressesMethod } from './methods/get-addresses';
 import { DefineGetInfoMethod } from './methods/get-info';

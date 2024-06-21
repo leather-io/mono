@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/mobile",
+  "name": "@leather.io/mobile",
   "version": "1.7.4",
   "type": "module",
   "scripts": {
@@ -31,9 +31,9 @@
   },
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
-    "@leather-wallet/constants": "workspace:*",
-    "@leather-wallet/tokens": "workspace:*",
-    "@leather-wallet/ui": "workspace:*",
+    "@leather.io/constants": "workspace:*",
+    "@leather.io/tokens": "workspace:*",
+    "@leather.io/ui": "workspace:*",
     "@lingui/core": "4.11.1",
     "@lingui/react": "4.11.1",
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -78,7 +78,7 @@
     "@babel/core": "7.24.6",
     "@babel/runtime": "7.23.2",
     "@config-plugins/detox": "8.0.0",
-    "@leather-wallet/eslint-config": "workspace:*",
+    "@leather.io/eslint-config": "workspace:*",
     "@lingui/cli": "4.11.1",
     "@lingui/macro": "4.11.1",
     "@types/jest": "29.5.12",

@@ -1,1 +1,1 @@
-# @leather-wallet/models
+# @leather.io/models

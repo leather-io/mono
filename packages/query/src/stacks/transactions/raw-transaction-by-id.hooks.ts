@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { deserializeTransaction } from '@stacks/transactions';
 
-import { isUndefined } from '@leather-wallet/utils';
+import { isUndefined } from '@leather.io/utils';
 
 import { useRawTransactionById } from './raw-transaction-by-id.query';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/models",
+  "name": "@leather.io/models",
   "author": "Leather.io contact@leather.io",
   "description": "Leather models and types",
   "version": "0.9.0",
@@ -7,7 +7,7 @@
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/models",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
+    "url": "git@github.com:leather-io/mono.git",
     "directory": "packages/models"
   },
   "type": "module",
@@ -29,9 +29,9 @@
     "bignumber.js": "9.1.2"
   },
   "devDependencies": {
-    "@leather-wallet/eslint-config": "workspace:*",
-    "@leather-wallet/prettier-config": "workspace:*",
-    "@leather-wallet/tsconfig-config": "workspace:*",
+    "@leather.io/eslint-config": "workspace:*",
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
     "eslint": "8.53.0",
     "prettier": "3.3.0",
     "tsup": "8.1.0",
@@ -42,7 +42,7 @@
     "leather wallet",
     "models"
   ],
-  "prettier": "@leather-wallet/prettier-config",
+  "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
   }

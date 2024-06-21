@@ -19,7 +19,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Box, Text, Theme, TextInput as UITextInput } from '@leather-wallet/ui/native';
+import { Box, Text, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 

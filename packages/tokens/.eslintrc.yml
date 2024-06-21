@@ -1,4 +1,4 @@
-extends: '@leather-wallet/eslint-config'
+extends: '@leather.io/eslint-config'
 parserOptions:
   project: ./tsconfig.json
 ignorePatterns: dist

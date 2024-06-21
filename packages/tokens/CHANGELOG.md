@@ -4,29 +4,29 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather.io/eslint-config bumped to 0.5.0
 
 ## [0.5.1](https://github.com/leather-io/mono/compare/tokens-v0.5.0...tokens-v0.5.1) (2024-06-05)
 
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/prettier-config bumped to 0.4.1
+    * @leather.io/prettier-config bumped to 0.4.1
 
 ## [0.5.0](https://github.com/leather-io/mono/compare/tokens-v0.4.0...tokens-v0.5.0) (2024-05-30)
 
 
 ### Features
 
-* export as esm, ref leather-wallet/issues[#62](https://github.com/leather-io/mono/issues/62) ([6dfab53](https://github.com/leather-io/mono/commit/6dfab539b5358d16743d3e0a22358e9540ef9260))
-* panda preset package, ref leather-wallet/issues[#62](https://github.com/leather-io/mono/issues/62) ([0161799](https://github.com/leather-io/mono/commit/01617991e1e975339324e68916eec9012824c440))
+* export as esm, ref leather-io/issues[#62](https://github.com/leather-io/mono/issues/62) ([6dfab53](https://github.com/leather-io/mono/commit/6dfab539b5358d16743d3e0a22358e9540ef9260))
+* panda preset package, ref leather-io/issues[#62](https://github.com/leather-io/mono/issues/62) ([0161799](https://github.com/leather-io/mono/commit/01617991e1e975339324e68916eec9012824c440))
 
 ## [0.4.0](https://github.com/leather-io/mono/compare/tokens-v0.3.1...tokens-v0.4.0) (2024-05-17)
 
@@ -54,9 +54,9 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.4.0
-    * @leather-wallet/prettier-config bumped to 0.4.0
-    * @leather-wallet/tsconfig-config bumped to 0.4.0
+    * @leather.io/eslint-config bumped to 0.4.0
+    * @leather.io/prettier-config bumped to 0.4.0
+    * @leather.io/tsconfig-config bumped to 0.4.0
 
 ## [0.3.0](https://github.com/leather-io/mono/compare/tokens-v0.2.1...tokens-v0.3.0) (2024-05-17)
 
@@ -84,9 +84,9 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.3.0
-    * @leather-wallet/prettier-config bumped to 0.3.0
-    * @leather-wallet/tsconfig-config bumped to 0.3.0
+    * @leather.io/eslint-config bumped to 0.3.0
+    * @leather.io/prettier-config bumped to 0.3.0
+    * @leather.io/tsconfig-config bumped to 0.3.0
 
 ## [0.2.0](https://github.com/leather-io/mono/compare/tokens-v0.1.0...tokens-v0.2.0) (2024-04-23)
 

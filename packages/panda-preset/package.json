@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/panda-preset",
+  "name": "@leather.io/panda-preset",
   "author": "Leather, LLC",
   "description": "Leather styles package",
   "version": "0.2.0",
@@ -16,7 +16,7 @@
     "@pandacss/dev": "0.40.1"
   },
   "devDependencies": {
-    "@leather-wallet/tokens": "workspace:*",
+    "@leather.io/tokens": "workspace:*",
     "tsup": "8.1.0"
   },
   "publishConfig": {

@@ -14,7 +14,7 @@ The purpose of [typescript](https://www.typescriptlang.org/) is to add strong ty
 - Install as a dev dependency in packages / apps:
 
   ```sh
-  pnpm add -D @leather-wallet/tsconfig-config
+  pnpm add -D @leather.io/tsconfig-config
   ```
 
 - Add typescript configuration file to your package that extends the base
@@ -22,7 +22,7 @@ The purpose of [typescript](https://www.typescriptlang.org/) is to add strong ty
   ```jsonc
   // packages/package/tsconfig.json
   {
-    "extends": ["@leather-wallet/tsconfig-config/tsconfig.base.json"],
+    "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
     "include": ["**/*", ".*.ts"],
     "exclude": []
   }

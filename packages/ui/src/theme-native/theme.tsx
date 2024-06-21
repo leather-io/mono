@@ -2,7 +2,7 @@ import { ColorSchemeName } from 'react-native';
 
 import { ThemeProvider as ThemeProviderRestyle, createTheme } from '@shopify/restyle';
 
-import { AllThemePalette, colorThemes, getMobileTextVariants } from '@leather-wallet/tokens';
+import { AllThemePalette, colorThemes, getMobileTextVariants } from '@leather.io/tokens';
 
 const textVariants = getMobileTextVariants();
 

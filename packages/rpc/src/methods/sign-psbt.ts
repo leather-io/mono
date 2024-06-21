@@ -1,4 +1,4 @@
-import { DefaultNetworkConfigurations } from '@leather-wallet/models';
+import { DefaultNetworkConfigurations } from '@leather.io/models';
 
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
 

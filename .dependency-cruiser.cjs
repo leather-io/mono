@@ -43,7 +43,7 @@ module.exports = {
         path: '^packages',
       },
       to: {
-        path: ['@leather-wallet/ui'],
+        path: ['@leather.io/ui'],
       },
     },
     {

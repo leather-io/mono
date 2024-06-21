@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 import { StacksTransaction } from '@stacks/transactions';
 
-import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
+import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import {
   useConfigFeeEstimationsMaxEnabled,

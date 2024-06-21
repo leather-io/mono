@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 
-import { isDefined } from '@leather-wallet/utils';
+import { isDefined } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { RuneBalance, type RuneTickerInfo, useBitcoinClient } from '../bitcoin-client';

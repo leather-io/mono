@@ -1,5 +1,5 @@
 // TODO: These utilities are needed in the Stacks queries, but
-// they will later be available in @leather-wallet/stacks. We should
+// they will later be available in @leather.io/stacks. We should
 // remove these when possible.
 
 /**

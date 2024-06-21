@@ -4,14 +4,14 @@ import { Currency, type TokenInfo } from 'alex-sdk';
 import { AlexSDK } from 'alex-sdk';
 import BigNumber from 'bignumber.js';
 
-import { MarketData, Money, createMarketData, createMarketPair } from '@leather-wallet/models';
+import { MarketData, Money, createMarketData, createMarketPair } from '@leather.io/models';
 import {
   convertAmountToFractionalUnit,
   createMoney,
   getPrincipalFromContractId,
   isDefined,
   sortAssetsByName,
-} from '@leather-wallet/utils';
+} from '@leather.io/utils';
 
 import { useStxAvailableUnlockedBalance } from '../../stacks/balance/account-balance.hooks';
 import { useTransferableSip10Tokens } from '../../stacks/sip10/sip10-tokens.hooks';
