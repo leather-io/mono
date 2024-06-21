@@ -54,6 +54,27 @@
   * dependencies
     * @leather.io/models bumped to 0.9.0
 
+## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v1.0.4...@leather.io/rpc-v2.0.0) (2024-06-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rpc:** users relying on existing implicit behaviour need to update their code with the latest README.md instructions
+
+### Bug Fixes
+
+* add missing 'hex' field in signPsbt response ([e9e6870](https://github.com/leather-io/mono/commit/e9e6870e5d11351feb23f643dc57ab26b6fabea6))
+* event name is 'stx_signMessage' ([ba8f930](https://github.com/leather-io/mono/commit/ba8f9304d9a53698ef8c1fdc7c984aa8cf507d51))
+* **rpc:** do not augment global type implicitly ([5ea44b2](https://github.com/leather-io/mono/commit/5ea44b2169d4a7a3151059e94a8682e6c14b0e6a))
+* **rpc:** export LeatherProvider ([fb532a2](https://github.com/leather-io/mono/commit/fb532a2f0b6f583de24821c97bd0ca52e21dec4a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.10.0
+
 ## [1.0.1](https://github.com/leather-io/mono/compare/rpc-v1.0.0...rpc-v1.0.1) (2024-06-05)
 
 

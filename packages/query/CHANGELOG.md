@@ -75,6 +75,61 @@
     * @leather.io/rpc bumped to 1.0.4
     * @leather.io/utils bumped to 0.8.3
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.8.10...@leather.io/query-v0.9.0) (2024-06-21)
+
+
+### Features
+
+* add stacks queries ([ba0ab05](https://github.com/leather-io/mono/commit/ba0ab053cf99c4fa5875079e956cdf7f58deb810))
+* add stacks tx and status model ([974aa25](https://github.com/leather-io/mono/commit/974aa2587b25e913421e01f89ada8313255ade09))
+* add turborepo + watch dev mode ([d415d79](https://github.com/leather-io/mono/commit/d415d79394488c0cb74765d367b3af8db1d24772))
+* bootstrap release-please ([76b995a](https://github.com/leather-io/mono/commit/76b995a37ecfda0aa006b90ab21cadc57dae8e80))
+* mobile store ([7f21492](https://github.com/leather-io/mono/commit/7f2149216d3561c9e39036528937f9816b90218a))
+* move basic bitcoin queries from extension ([7ce5efe](https://github.com/leather-io/mono/commit/7ce5efe5e7383f2245ff3ec90ac429ba898a1410))
+* prepare monorepo packages for extension development ([4fb2dbc](https://github.com/leather-io/mono/commit/4fb2dbc786987d50800cb80329c5986a51bec4c2))
+* tweak bitcoin queries for extension ([dc92174](https://github.com/leather-io/mono/commit/dc9217421593ce35d809d5f555f055b716792837))
+* update bitcoin inscription queries ([d4dc8d9](https://github.com/leather-io/mono/commit/d4dc8d9ea05b746663a859d59949cf1e42789d50))
+
+
+### Bug Fixes
+
+* [@leather-wallet](https://github.com/leather-wallet) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* apply queries changes ([33bb19a](https://github.com/leather-io/mono/commit/33bb19ad5b52b95850103a9b6ed36165046a20f8))
+* apply queries updates from extension ([c71aa0f](https://github.com/leather-io/mono/commit/c71aa0fba9768a86bfc014c1765a86277d3bac89))
+* apply recent query updates ([892351a](https://github.com/leather-io/mono/commit/892351a71a83ec70d5fcc683113f6590fa63fa66))
+* brc20 and utxo updates to query package ([af07ecf](https://github.com/leather-io/mono/commit/af07ecfecbe3446c43d31b02dda6faed5b522772))
+* bundle packages so that those work in node envs too ([02b6347](https://github.com/leather-io/mono/commit/02b63476e4ea4a519718b31bcc1aeb53aae263f0))
+* export hiro api types ([844c839](https://github.com/leather-io/mono/commit/844c8399620ef714431404969678b916ee749b86))
+* export query changes ([c91863f](https://github.com/leather-io/mono/commit/c91863f5858f400edf5307fd5ef90ffcf7eb3ee9))
+* hook for increase fee ([bb9256c](https://github.com/leather-io/mono/commit/bb9256c096117caeb510a99a5d900c60c678a644))
+* query release ([2da2019](https://github.com/leather-io/mono/commit/2da20190308d363310236870cfddd44fa5ac8e19))
+* raw tx hook after relocation ([bb4b807](https://github.com/leather-io/mono/commit/bb4b807cdf20c781040d938ab63ab652de9046b5))
+* refactor comment ([8b35862](https://github.com/leather-io/mono/commit/8b358629666a78bca3b907a77b52a9c0ba56af2f))
+* stacks mempool query ([46364be](https://github.com/leather-io/mono/commit/46364be962afd8075d619752082c65921f3f413e))
+* stacks queries unit test failing ([4f2f425](https://github.com/leather-io/mono/commit/4f2f425e376b54bcf850f1bbff138179e1dd5576))
+* syncpack ([8dcee26](https://github.com/leather-io/mono/commit/8dcee260c8cb7b81028ff8ae70341f88db5d256e))
+* too strict stamps schema ([293452e](https://github.com/leather-io/mono/commit/293452e9c7d5578f6a2d71279c6163d7ba50ff93))
+* undefined ordinalsbot config ([4ab0881](https://github.com/leather-io/mono/commit/4ab0881afb939f9b8fbaf84a529eaae88ac0d391))
+* update asset model naming ([9f1c87e](https://github.com/leather-io/mono/commit/9f1c87e54d57353b1400ff4565139b8b7cbf001f))
+* update inscription model and update inscription queries ([657f923](https://github.com/leather-io/mono/commit/657f9238cb2512f345af732cb5e34dd69e674e9f))
+* update queries with useConfigSwapEnabled ([cf293c3](https://github.com/leather-io/mono/commit/cf293c39342f212f90c2e4583d02144cd370b6bd))
+* use local config when env is set to testing/dev ([e3dc66f](https://github.com/leather-io/mono/commit/e3dc66fdda7283b4969392de53a6cdbbb10aad7c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.8.0
+    * @leather.io/constants bumped to 0.8.0
+    * @leather.io/models bumped to 0.10.0
+    * @leather.io/rpc bumped to 2.0.0
+    * @leather.io/utils bumped to 0.9.0
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.6.0
+    * @leather.io/prettier-config bumped to 0.5.0
+    * @leather.io/tsconfig-config bumped to 0.5.0
+
 ## [0.8.10](https://github.com/leather-io/mono/compare/query-v0.8.9...query-v0.8.10) (2024-06-20)
 
 
