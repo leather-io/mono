@@ -1,6 +1,6 @@
 import type { HTMLStyledProps } from 'leather-styles/types';
 
-import { isEven } from '@leather-wallet/utils';
+import { isEven } from '@leather.io/utils';
 
 import { AddressDisplayerLayout } from './address-displayer.layout.web';
 import { groupByFour } from './address-displayer.utils';

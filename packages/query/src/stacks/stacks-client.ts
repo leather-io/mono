@@ -14,8 +14,8 @@ import type {
 } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
 
-import { DEFAULT_LIST_LIMIT } from '@leather-wallet/constants';
-import { STX20_API_BASE_URL_MAINNET } from '@leather-wallet/models';
+import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
+import { STX20_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 import { Paginated } from '../../types/api-types';
 import { getHiroApiRateLimiter } from '../hiro-rate-limiter';

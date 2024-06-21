@@ -1,9 +1,4 @@
-import {
-  calculateMeanAverage,
-  initBigNumber,
-  isFulfilled,
-  isRejected,
-} from '@leather-wallet/utils';
+import { calculateMeanAverage, initBigNumber, isFulfilled, isRejected } from '@leather.io/utils';
 
 import { useGetAllBitcoinFeeEstimatesQuery } from './fee-estimates.query';
 

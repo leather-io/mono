@@ -4,17 +4,17 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.3.0
-    * @leather-wallet/prettier-config bumped to 0.3.0
-    * @leather-wallet/tsconfig-config bumped to 0.3.0
+    * @leather.io/eslint-config bumped to 0.3.0
+    * @leather.io/prettier-config bumped to 0.3.0
+    * @leather.io/tsconfig-config bumped to 0.3.0
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.4.0
-    * @leather-wallet/prettier-config bumped to 0.4.0
-    * @leather-wallet/tsconfig-config bumped to 0.4.0
+    * @leather.io/eslint-config bumped to 0.4.0
+    * @leather.io/prettier-config bumped to 0.4.0
+    * @leather.io/tsconfig-config bumped to 0.4.0
 
 ## [2.7.2](https://github.com/leather-io/mono/compare/leather-mono-v2.7.1...leather-mono-v2.7.2) (2024-06-20)
 
@@ -28,7 +28,7 @@
 
 ### Bug Fixes
 
-* rollback change to project dist output and remove .png, ref leather-wallet/issues[#103](https://github.com/leather-io/mono/issues/103) ([eda71ff](https://github.com/leather-io/mono/commit/eda71fff5ee63e21f5405e9637e958f0ac6ddb85))
+* rollback change to project dist output and remove .png, ref leather-io/issues[#103](https://github.com/leather-io/mono/issues/103) ([eda71ff](https://github.com/leather-io/mono/commit/eda71fff5ee63e21f5405e9637e958f0ac6ddb85))
 
 ## [2.7.0](https://github.com/leather-io/mono/compare/leather-mono-v2.6.3...leather-mono-v2.7.0) (2024-06-20)
 
@@ -40,7 +40,7 @@
 
 ### Bug Fixes
 
-* test export for png, deprecate dist-all ref leather-wallet/issues[#64](https://github.com/leather-io/mono/issues/64) ([cf673e2](https://github.com/leather-io/mono/commit/cf673e2ba10906debbba45d49eb33df09f096911))
+* test export for png, deprecate dist-all ref leather-io/issues[#64](https://github.com/leather-io/mono/issues/64) ([cf673e2](https://github.com/leather-io/mono/commit/cf673e2ba10906debbba45d49eb33df09f096911))
 
 ## [2.6.3](https://github.com/leather-io/mono/compare/leather-mono-v2.6.2...leather-mono-v2.6.3) (2024-06-18)
 
@@ -48,7 +48,7 @@
 ### Bug Fixes
 
 * disable pointer events on label ([1d2a9ac](https://github.com/leather-io/mono/commit/1d2a9ac3162900bcdb024395a65900273b396120))
-* export AddressDisplayer,  add avatarIcons ref leather-wallet/issues[#64](https://github.com/leather-io/mono/issues/64) ([6226537](https://github.com/leather-io/mono/commit/62265379f4ec8c4407b424f6e69ff53885dc943d))
+* export AddressDisplayer,  add avatarIcons ref leather-io/issues[#64](https://github.com/leather-io/mono/issues/64) ([6226537](https://github.com/leather-io/mono/commit/62265379f4ec8c4407b424f6e69ff53885dc943d))
 
 ## [2.6.2](https://github.com/leather-io/mono/compare/leather-mono-v2.6.1...leather-mono-v2.6.2) (2024-06-17)
 
@@ -56,7 +56,7 @@
 ### Bug Fixes
 
 * high fee warning link ([d60c888](https://github.com/leather-io/mono/commit/d60c8884e24e015f5297992d4416e51eaa295ef7))
-* specify dist folder to include in publish, ref leather-wallet/issues[#64](https://github.com/leather-io/mono/issues/64) ([d6b3975](https://github.com/leather-io/mono/commit/d6b3975936e7a77b7e0ea425a4b463ebda57ba90))
+* specify dist folder to include in publish, ref leather-io/issues[#64](https://github.com/leather-io/mono/issues/64) ([d6b3975](https://github.com/leather-io/mono/commit/d6b3975936e7a77b7e0ea425a4b463ebda57ba90))
 
 ## [2.6.1](https://github.com/leather-io/mono/compare/leather-mono-v2.6.0...leather-mono-v2.6.1) (2024-06-12)
 
@@ -111,7 +111,7 @@
 
 ### Bug Fixes
 
-* update README, ref leather-wallet/issues[#64](https://github.com/leather-io/mono/issues/64) ([3a91910](https://github.com/leather-io/mono/commit/3a9191068ee01854b432f24cc011fcb73756a4c6))
+* update README, ref leather-io/issues[#64](https://github.com/leather-io/mono/issues/64) ([3a91910](https://github.com/leather-io/mono/commit/3a9191068ee01854b432f24cc011fcb73756a4c6))
 
 ## [2.4.3](https://github.com/leather-io/mono/compare/leather-mono-v2.4.2...leather-mono-v2.4.3) (2024-06-10)
 
@@ -161,7 +161,7 @@
 
 ### Features
 
-* migrate extension components , ref leather-wallet/issues[#64](https://github.com/leather-io/mono/issues/64) ([5404b07](https://github.com/leather-io/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
+* migrate extension components , ref leather-io/issues[#64](https://github.com/leather-io/mono/issues/64) ([5404b07](https://github.com/leather-io/mono/commit/5404b07a0ad48865d70a13b9801394f4fc577da3))
 
 
 ### Bug Fixes
@@ -173,7 +173,7 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.5.0
+    * @leather.io/eslint-config bumped to 0.5.0
 
 ## [2.1.2](https://github.com/leather-io/mono/compare/leather-mono-v2.1.1...leather-mono-v2.1.2) (2024-06-05)
 
@@ -210,7 +210,7 @@
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 * react.JSX deprecated ([845efe1](https://github.com/leather-io/mono/commit/845efe1cfaf36e83fef5202b2d86aa03dbe0a70a))
 * **rpc:** do not augment global type implicitly ([5ea44b2](https://github.com/leather-io/mono/commit/5ea44b2169d4a7a3151059e94a8682e6c14b0e6a))
 * **rpc:** export LeatherProvider ([fb532a2](https://github.com/leather-io/mono/commit/fb532a2f0b6f583de24821c97bd0ca52e21dec4a))
@@ -220,17 +220,17 @@
 
 * The following workspace dependencies were updated
   * devDependencies
-    * @leather-wallet/prettier-config bumped to 0.4.1
+    * @leather.io/prettier-config bumped to 0.4.1
 
 ## [1.5.0](https://github.com/leather-io/mono/compare/leather-mono-v1.4.17...leather-mono-v1.5.0) (2024-05-30)
 
 
 ### Features
 
-* export as esm, ref leather-wallet/issues[#62](https://github.com/leather-io/mono/issues/62) ([6dfab53](https://github.com/leather-io/mono/commit/6dfab539b5358d16743d3e0a22358e9540ef9260))
-* panda preset package, ref leather-wallet/issues[#62](https://github.com/leather-io/mono/issues/62) ([0161799](https://github.com/leather-io/mono/commit/01617991e1e975339324e68916eec9012824c440))
+* export as esm, ref leather-io/issues[#62](https://github.com/leather-io/mono/issues/62) ([6dfab53](https://github.com/leather-io/mono/commit/6dfab539b5358d16743d3e0a22358e9540ef9260))
+* panda preset package, ref leather-io/issues[#62](https://github.com/leather-io/mono/issues/62) ([0161799](https://github.com/leather-io/mono/commit/01617991e1e975339324e68916eec9012824c440))
 * update expo to v51 ([f39f98d](https://github.com/leather-io/mono/commit/f39f98dfb03d6ce56a2ce31385b9bdc8de17915e))
-* use panda preset, initial component migration, ref leather-wallet/issues[#63](https://github.com/leather-io/mono/issues/63) ([0c33df2](https://github.com/leather-io/mono/commit/0c33df2d1c92069e1e85df3e151d621ed68d3019))
+* use panda preset, initial component migration, ref leather-io/issues[#63](https://github.com/leather-io/mono/issues/63) ([0c33df2](https://github.com/leather-io/mono/commit/0c33df2d1c92069e1e85df3e151d621ed68d3019))
 
 
 ### Bug Fixes

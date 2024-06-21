@@ -11,7 +11,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import LottieView from 'lottie-react-native';
 
-import { Box, ThemeProvider, useLoadFonts } from '@leather-wallet/ui/native';
+import { Box, ThemeProvider, useLoadFonts } from '@leather.io/ui/native';
 
 void SplashScreen.preventAutoHideAsync();
 

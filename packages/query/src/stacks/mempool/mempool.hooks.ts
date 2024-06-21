@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 
-import { increaseValueByOneMicroStx, isUndefined, microStxToStx } from '@leather-wallet/utils';
+import { increaseValueByOneMicroStx, isUndefined, microStxToStx } from '@leather.io/utils';
 
 import { useTransactionsById } from '../transactions/transactions-by-id.query';
 import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';

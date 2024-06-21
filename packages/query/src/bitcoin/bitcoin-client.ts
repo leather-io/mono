@@ -7,7 +7,7 @@ import {
   type BitcoinTx,
   MarketData,
   Money,
-} from '@leather-wallet/models';
+} from '@leather.io/models';
 
 import { UtxoResponseItem } from '../../types/utxo';
 import { useLeatherNetwork } from '../leather-query-provider';

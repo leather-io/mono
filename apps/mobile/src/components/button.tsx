@@ -20,7 +20,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Text, Theme, TouchableOpacity } from '@leather-wallet/ui/native';
+import { Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 const buttonRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 

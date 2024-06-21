@@ -1,4 +1,5 @@
-import { getWebTextVariants } from '@leather-wallet/tokens';
 import { defineTextStyles } from '@pandacss/dev';
+
+import { getWebTextVariants } from '@leather.io/tokens';
 
 export const textStyles = defineTextStyles({ ...getWebTextVariants() });

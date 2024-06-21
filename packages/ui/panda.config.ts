@@ -9,7 +9,7 @@ export default defineConfig({
 
   prefix: 'leather',
 
-  presets: ['@leather-wallet/panda-preset'],
+  presets: ['@leather.io/panda-preset'],
 
   studio: { logo: '💼' },
 

@@ -28,13 +28,13 @@ importers:
       '@commitlint/config-conventional':
         specifier: 18.0.0
         version: 18.0.0
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:packages/prettier-config
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:packages/tsconfig-config
       dependency-cruiser:
@@ -64,13 +64,13 @@ importers:
       '@expo/vector-icons':
         specifier: 14.0.0
         version: 14.0.0
-      '@leather-wallet/constants':
+      '@leather.io/constants':
         specifier: workspace:*
         version: link:../../packages/constants
-      '@leather-wallet/tokens':
+      '@leather.io/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
-      '@leather-wallet/ui':
+      '@leather.io/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@lingui/core':
@@ -200,7 +200,7 @@ importers:
       '@config-plugins/detox':
         specifier: 8.0.0
         version: 8.0.0(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@lingui/cli':
@@ -266,16 +266,16 @@ importers:
       '@bitcoinerlab/secp256k1':
         specifier: 1.0.2
         version: 1.0.2
-      '@leather-wallet/constants':
+      '@leather.io/constants':
         specifier: workspace:*
         version: link:../constants
-      '@leather-wallet/crypto':
+      '@leather.io/crypto':
         specifier: workspace:*
         version: link:../crypto
-      '@leather-wallet/models':
+      '@leather.io/models':
         specifier: workspace:*
         version: link:../models
-      '@leather-wallet/utils':
+      '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
       '@noble/hashes':
@@ -315,16 +315,16 @@ importers:
         specifier: 1.1.2
         version: 1.1.2
     devDependencies:
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@leather-wallet/rpc':
+      '@leather.io/rpc':
         specifier: workspace:*
         version: link:../rpc
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
       '@vitest/coverage-istanbul':
@@ -351,13 +351,13 @@ importers:
 
   packages/constants:
     devDependencies:
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
       concurrently:
@@ -419,13 +419,13 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
     devDependencies:
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
       eslint:
@@ -447,7 +447,7 @@ importers:
         specifier: 0.40.1
         version: 0.40.1(jsdom@22.1.0)(typescript@5.4.5)
     devDependencies:
-      '@leather-wallet/tokens':
+      '@leather.io/tokens':
         specifier: workspace:*
         version: link:../tokens
       tsup:
@@ -471,19 +471,19 @@ importers:
       '@hirosystems/token-metadata-api-client':
         specifier: 1.2.0
         version: 1.2.0
-      '@leather-wallet/bitcoin':
+      '@leather.io/bitcoin':
         specifier: workspace:*
         version: link:../bitcoin
-      '@leather-wallet/constants':
+      '@leather.io/constants':
         specifier: workspace:*
         version: link:../constants
-      '@leather-wallet/models':
+      '@leather.io/models':
         specifier: workspace:*
         version: link:../models
-      '@leather-wallet/rpc':
+      '@leather.io/rpc':
         specifier: workspace:*
         version: link:../rpc
-      '@leather-wallet/utils':
+      '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
       '@noble/hashes':
@@ -544,13 +544,13 @@ importers:
         specifier: 3.23.6
         version: 3.23.6
     devDependencies:
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
       '@tanstack/eslint-plugin-query':
@@ -592,7 +592,7 @@ importers:
 
   packages/rpc:
     dependencies:
-      '@leather-wallet/models':
+      '@leather.io/models':
         specifier: workspace:*
         version: link:../models
     devDependencies:
@@ -602,13 +602,13 @@ importers:
 
   packages/tokens:
     devDependencies:
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
       prettier:
@@ -629,10 +629,10 @@ importers:
       '@expo/vector-icons':
         specifier: 14.0.0
         version: 14.0.0
-      '@leather-wallet/tokens':
+      '@leather.io/tokens':
         specifier: workspace:*
         version: link:../tokens
-      '@leather-wallet/utils':
+      '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
       '@radix-ui/react-accessible-icon':
@@ -723,10 +723,10 @@ importers:
       '@babel/runtime':
         specifier: 7.23.2
         version: 7.23.2
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/panda-preset':
+      '@leather.io/panda-preset':
         specifier: workspace:*
         version: link:../panda-preset
       '@pandacss/dev':
@@ -825,26 +825,26 @@ importers:
 
   packages/utils:
     dependencies:
-      '@leather-wallet/constants':
+      '@leather.io/constants':
         specifier: workspace:*
         version: link:../constants
-      '@leather-wallet/models':
+      '@leather.io/models':
         specifier: workspace:*
         version: link:../models
-      '@leather-wallet/rpc':
+      '@leather.io/rpc':
         specifier: workspace:*
         version: link:../rpc
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
     devDependencies:
-      '@leather-wallet/eslint-config':
+      '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@leather-wallet/prettier-config':
+      '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
-      '@leather-wallet/tsconfig-config':
+      '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
       '@vitest/coverage-istanbul':

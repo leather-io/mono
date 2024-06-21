@@ -1,4 +1,4 @@
-import { createInscription } from '@leather-wallet/models';
+import { createInscription } from '@leather.io/models';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 

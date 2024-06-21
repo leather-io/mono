@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { isDefined } from '@leather-wallet/utils';
+import { isDefined } from '@leather.io/utils';
 
 import { useConfigRunesEnabled } from '../../common/remote-config/remote-config.query';
 import { useLeatherNetwork } from '../../leather-query-provider';

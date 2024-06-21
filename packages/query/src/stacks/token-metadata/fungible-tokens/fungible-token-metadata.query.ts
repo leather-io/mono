@@ -1,8 +1,8 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import { createCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney, getPrincipalFromContractId, getTicker } from '@leather-wallet/utils';
+import { createCryptoAssetBalance } from '@leather.io/models';
+import { createMoney, getPrincipalFromContractId, getTicker } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { AddressBalanceResponse } from '../../hiro-api-types';

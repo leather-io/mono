@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/tsconfig-config",
+  "name": "@leather.io/tsconfig-config",
   "author": "Leather.io contact@leather.io",
   "description": "Shared tsconfig configuration",
   "version": "0.4.0",
@@ -7,7 +7,7 @@
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/tsconfig-config",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
+    "url": "git@github.com:leather-io/mono.git",
     "directory": "packages/tsconfig-config"
   },
   "bugs": "https://github.com/leather-io/mono/issues",

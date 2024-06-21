@@ -4,10 +4,10 @@ import { HDKey } from '@scure/bip32';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { getTaprootAddress } from '@leather-wallet/bitcoin';
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather-wallet/models';
-import { createNumArrayOfRange } from '@leather-wallet/utils';
-import { ensureArray } from '@leather-wallet/utils';
+import { getTaprootAddress } from '@leather.io/bitcoin';
+import { HIRO_INSCRIPTIONS_API_URL } from '@leather.io/models';
+import { createNumArrayOfRange } from '@leather.io/utils';
+import { ensureArray } from '@leather.io/utils';
 
 import type { InscriptionResponseHiro } from '../../../types/inscription';
 import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';

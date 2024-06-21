@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/rpc",
+  "name": "@leather.io/rpc",
   "author": "leather-wallet",
   "description": "RPC types package for Leather",
   "version": "1.0.4",
@@ -17,7 +17,7 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
-    "@leather-wallet/models": "workspace:*"
+    "@leather.io/models": "workspace:*"
   },
   "devDependencies": {
     "tsup": "8.1.0"

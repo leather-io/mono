@@ -12,10 +12,10 @@ import {
 import { sva } from 'leather-styles/css';
 import { SystemStyleObject } from 'leather-styles/types';
 
-import { propIfDefined } from '@leather-wallet/utils';
+import { propIfDefined } from '@leather.io/utils';
 
 import { createStyleContext } from '../../utils/style-context.web';
-//FIXME leather-wallet/issues#64: This is a double up of a hook that already exists in the codebase.
+//FIXME leather-io/issues#64: This is a double up of a hook that already exists in the codebase.
 import { useOnMount } from './use-on-mount';
 
 const hackyDelayOneMs = 1;

@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/query",
+  "name": "@leather.io/query",
   "author": "Leather.io contact@leather.io",
   "description": "Leather query",
   "version": "0.8.10",
@@ -7,7 +7,7 @@
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/query",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
+    "url": "git@github.com:leather-io/mono.git",
     "directory": "packages/query"
   },
   "type": "module",
@@ -33,11 +33,11 @@
   "dependencies": {
     "@fungible-systems/zone-file": "2.0.0",
     "@hirosystems/token-metadata-api-client": "1.2.0",
-    "@leather-wallet/bitcoin": "workspace:*",
-    "@leather-wallet/constants": "workspace:*",
-    "@leather-wallet/models": "workspace:*",
-    "@leather-wallet/rpc": "workspace:*",
-    "@leather-wallet/utils": "workspace:*",
+    "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/constants": "workspace:*",
+    "@leather.io/models": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.4.0",
     "@scure/base": "1.1.6",
     "@scure/bip32": "1.4.0",
@@ -58,9 +58,9 @@
     "zod": "3.23.6"
   },
   "devDependencies": {
-    "@leather-wallet/eslint-config": "workspace:*",
-    "@leather-wallet/prettier-config": "workspace:*",
-    "@leather-wallet/tsconfig-config": "workspace:*",
+    "@leather.io/eslint-config": "workspace:*",
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
     "@tanstack/eslint-plugin-query": "5.20.1",
     "@types/jsdom": "21.1.3",
     "@types/lodash.get": "4.4.9",
@@ -82,7 +82,7 @@
   "peerDependencies": {
     "react": "*"
   },
-  "prettier": "@leather-wallet/prettier-config",
+  "prettier": "@leather.io/prettier-config",
   "publishConfig": {
     "access": "public"
   }

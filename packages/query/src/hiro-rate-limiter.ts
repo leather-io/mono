@@ -1,6 +1,6 @@
 import PQueue from 'p-queue';
 
-import { HIRO_API_BASE_URL_TESTNET } from '@leather-wallet/models';
+import { HIRO_API_BASE_URL_TESTNET } from '@leather.io/models';
 
 import { useCurrentNetworkState } from './leather-query-provider';
 

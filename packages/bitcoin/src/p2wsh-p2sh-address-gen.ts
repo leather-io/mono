@@ -2,18 +2,18 @@ import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58check } from '@scure/base';
 
-import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather-wallet/crypto';
-import { NetworkModes } from '@leather-wallet/models';
+import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather.io/crypto';
+import { NetworkModes } from '@leather.io/models';
 
 /**
  * @deprecated
- * Use `deriveBip39MnemonicFromSeed` from `@leather-wallet/crypto`
+ * Use `deriveBip39MnemonicFromSeed` from `@leather.io/crypto`
  */
 export const deriveBtcBip49SeedFromMnemonic = deriveBip39MnemonicFromSeed;
 
 /**
  * @deprecated
- * Use `deriveRootBip32Keychain` from `@leather-wallet/crypto`
+ * Use `deriveRootBip32Keychain` from `@leather.io/crypto`
  */
 export const deriveRootBtcKeychain = deriveRootBip32Keychain;
 

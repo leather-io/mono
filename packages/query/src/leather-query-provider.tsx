@@ -3,7 +3,7 @@ import { ReactNode, createContext, useContext, useMemo } from 'react';
 import { ChainID } from '@stacks/common';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { NetworkConfiguration, NetworkModes } from '@leather-wallet/models';
+import { NetworkConfiguration, NetworkModes } from '@leather.io/models';
 
 import type { RemoteConfig } from '../types/remote-config';
 

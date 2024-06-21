@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import type { Money, StxCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney, subtractMoney, sumMoney } from '@leather-wallet/utils';
+import type { Money, StxCryptoAssetBalance } from '@leather.io/models';
+import { createMoney, subtractMoney, sumMoney } from '@leather.io/utils';
 
 import {
   AccountBalanceStxKeys,

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import { BTC_DECIMALS, STX_DECIMALS } from '@leather-wallet/constants';
-import { Money } from '@leather-wallet/models';
+import { BTC_DECIMALS, STX_DECIMALS } from '@leather.io/constants';
+import { Money } from '@leather.io/models';
 
 import { initBigNumber } from '../math/helpers';
 

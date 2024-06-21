@@ -1,5 +1,6 @@
-import { tokens as leatherTokens } from '@leather-wallet/tokens';
 import { defineTokens } from '@pandacss/dev';
+
+import { tokens as leatherTokens } from '@leather.io/tokens';
 
 import { colors } from './colors';
 

@@ -4,7 +4,7 @@ import type {
   Transaction,
 } from '@stacks/stacks-blockchain-api-types';
 
-import { createMoney, sumNumbers } from '@leather-wallet/utils';
+import { createMoney, sumNumbers } from '@leather.io/utils';
 
 type PendingTransactionType = 'inbound' | 'outbound';
 

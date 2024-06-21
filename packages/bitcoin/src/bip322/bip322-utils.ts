@@ -5,8 +5,8 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory } from 'ecpair';
 import { encode } from 'varuint-bitcoin';
 
-import { PaymentTypes } from '@leather-wallet/rpc';
-import { isString } from '@leather-wallet/utils';
+import { PaymentTypes } from '@leather.io/rpc';
+import { isString } from '@leather.io/utils';
 
 import { toXOnly } from '../bitcoin.utils';
 

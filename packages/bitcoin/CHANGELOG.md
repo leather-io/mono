@@ -4,85 +4,85 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.6.2
-    * @leather-wallet/utils bumped to 0.6.2
+    * @leather.io/models bumped to 0.6.2
+    * @leather.io/utils bumped to 0.6.2
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.6.3
-    * @leather-wallet/utils bumped to 0.6.3
+    * @leather.io/models bumped to 0.6.3
+    * @leather.io/utils bumped to 0.6.3
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.6.4
-    * @leather-wallet/utils bumped to 0.6.4
+    * @leather.io/models bumped to 0.6.4
+    * @leather.io/utils bumped to 0.6.4
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.6.5
-    * @leather-wallet/utils bumped to 0.6.5
+    * @leather.io/models bumped to 0.6.5
+    * @leather.io/utils bumped to 0.6.5
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.6.6
-    * @leather-wallet/utils bumped to 0.6.6
+    * @leather.io/models bumped to 0.6.6
+    * @leather.io/utils bumped to 0.6.6
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/crypto bumped to 1.0.0
+    * @leather.io/crypto bumped to 1.0.0
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/crypto bumped to 1.0.1
+    * @leather.io/crypto bumped to 1.0.1
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.3
-    * @leather-wallet/models bumped to 0.6.8
-    * @leather-wallet/utils bumped to 0.7.0
+    * @leather.io/constants bumped to 0.6.3
+    * @leather.io/models bumped to 0.6.8
+    * @leather.io/utils bumped to 0.7.0
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.5.0
-    * @leather-wallet/rpc bumped to 1.0.1
+    * @leather.io/eslint-config bumped to 0.5.0
+    * @leather.io/rpc bumped to 1.0.1
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.8.0
-    * @leather-wallet/utils bumped to 0.8.1
+    * @leather.io/models bumped to 0.8.0
+    * @leather.io/utils bumped to 0.8.1
   * devDependencies
-    * @leather-wallet/rpc bumped to 1.0.3
+    * @leather.io/rpc bumped to 1.0.3
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.4
-    * @leather-wallet/utils bumped to 0.8.2
+    * @leather.io/constants bumped to 0.6.4
+    * @leather.io/utils bumped to 0.8.2
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.7.0
-    * @leather-wallet/models bumped to 0.9.0
-    * @leather-wallet/utils bumped to 0.8.3
+    * @leather.io/constants bumped to 0.7.0
+    * @leather.io/models bumped to 0.9.0
+    * @leather.io/utils bumped to 0.8.3
   * devDependencies
-    * @leather-wallet/rpc bumped to 1.0.4
+    * @leather.io/rpc bumped to 1.0.4
 
 ## [0.7.2](https://github.com/leather-io/mono/compare/bitcoin-v0.7.1...bitcoin-v0.7.2) (2024-06-10)
 
@@ -103,29 +103,29 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/models bumped to 0.7.0
-    * @leather-wallet/utils bumped to 0.8.0
+    * @leather.io/models bumped to 0.7.0
+    * @leather.io/utils bumped to 0.8.0
   * devDependencies
-    * @leather-wallet/rpc bumped to 1.0.2
+    * @leather.io/rpc bumped to 1.0.2
 
 ## [0.6.7](https://github.com/leather-io/mono/compare/bitcoin-v0.6.6...bitcoin-v0.6.7) (2024-06-05)
 
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 
 
 ### Dependencies
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.2
-    * @leather-wallet/models bumped to 0.6.7
-    * @leather-wallet/utils bumped to 0.6.7
+    * @leather.io/constants bumped to 0.6.2
+    * @leather.io/models bumped to 0.6.7
+    * @leather.io/utils bumped to 0.6.7
   * devDependencies
-    * @leather-wallet/prettier-config bumped to 0.4.1
-    * @leather-wallet/rpc bumped to 1.0.0
+    * @leather.io/prettier-config bumped to 0.4.1
+    * @leather.io/rpc bumped to 1.0.0
 
 ## [0.6.1](https://github.com/leather-io/mono/compare/bitcoin-v0.6.0...bitcoin-v0.6.1) (2024-05-20)
 
@@ -139,9 +139,9 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.1
-    * @leather-wallet/models bumped to 0.6.1
-    * @leather-wallet/utils bumped to 0.6.1
+    * @leather.io/constants bumped to 0.6.1
+    * @leather.io/models bumped to 0.6.1
+    * @leather.io/utils bumped to 0.6.1
 
 ## [0.6.0](https://github.com/leather-io/mono/compare/bitcoin-v0.5.1...bitcoin-v0.6.0) (2024-05-17)
 
@@ -166,13 +166,13 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.6.0
-    * @leather-wallet/models bumped to 0.6.0
-    * @leather-wallet/utils bumped to 0.6.0
+    * @leather.io/constants bumped to 0.6.0
+    * @leather.io/models bumped to 0.6.0
+    * @leather.io/utils bumped to 0.6.0
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.4.0
-    * @leather-wallet/prettier-config bumped to 0.4.0
-    * @leather-wallet/tsconfig-config bumped to 0.4.0
+    * @leather.io/eslint-config bumped to 0.4.0
+    * @leather.io/prettier-config bumped to 0.4.0
+    * @leather.io/tsconfig-config bumped to 0.4.0
 
 ## [0.5.0](https://github.com/leather-io/mono/compare/bitcoin-v0.4.1...bitcoin-v0.5.0) (2024-05-17)
 
@@ -197,13 +197,13 @@
 
 * The following workspace dependencies were updated
   * dependencies
-    * @leather-wallet/constants bumped to 0.5.0
-    * @leather-wallet/models bumped to 0.5.0
-    * @leather-wallet/utils bumped to 0.5.0
+    * @leather.io/constants bumped to 0.5.0
+    * @leather.io/models bumped to 0.5.0
+    * @leather.io/utils bumped to 0.5.0
   * devDependencies
-    * @leather-wallet/eslint-config bumped to 0.3.0
-    * @leather-wallet/prettier-config bumped to 0.3.0
-    * @leather-wallet/tsconfig-config bumped to 0.3.0
+    * @leather.io/eslint-config bumped to 0.3.0
+    * @leather.io/prettier-config bumped to 0.3.0
+    * @leather.io/tsconfig-config bumped to 0.3.0
 
 ## [0.4.0](https://github.com/leather-io/mono/compare/bitcoin-v0.3.0...bitcoin-v0.4.0) (2024-05-07)
 

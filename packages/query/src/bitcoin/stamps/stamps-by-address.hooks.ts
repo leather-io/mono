@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import { Src20CryptoAssetInfo, createCryptoAssetBalance } from '@leather-wallet/models';
-import { createMoney } from '@leather-wallet/utils';
+import { Src20CryptoAssetInfo, createCryptoAssetBalance } from '@leather.io/models';
+import { createMoney } from '@leather.io/utils';
 
 import { Src20Token, useStampsByAddressQuery } from './stamps-by-address.query';
 

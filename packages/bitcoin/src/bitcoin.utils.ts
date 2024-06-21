@@ -4,10 +4,10 @@ import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
 
-import { DerivationPathDepth, extractAccountIndexFromPath } from '@leather-wallet/crypto';
-import { BitcoinNetworkModes, NetworkModes } from '@leather-wallet/models';
-import type { PaymentTypes } from '@leather-wallet/rpc';
-import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather-wallet/utils';
+import { DerivationPathDepth, extractAccountIndexFromPath } from '@leather.io/crypto';
+import { BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
+import type { PaymentTypes } from '@leather.io/rpc';
+import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
 import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 import { getTaprootPayment } from './p2tr-address-gen';

@@ -1,1 +1,1 @@
-# @leather-wallet/constants
+# @leather.io/constants

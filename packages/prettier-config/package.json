@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/prettier-config",
+  "name": "@leather.io/prettier-config",
   "author": "Leather.io contact@leather.io",
   "description": "Shared prettier configuration",
   "version": "0.4.1",
@@ -7,7 +7,7 @@
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/prettier-config",
   "repository": {
     "type": "git",
-    "url": "git@github.com:leather-wallet/mono.git",
+    "url": "git@github.com:leather-io/mono.git",
     "directory": "packages/prettier-config"
   },
   "type": "module",

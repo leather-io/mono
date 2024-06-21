@@ -22,7 +22,7 @@ One method to achieve this is through hard linking. Here is a step-by-step guide
    ```json
    "dependencies": {
        ...
-       "@leather-wallet/query": "file:../mono/packages/query"
+       "@leather.io/query": "file:../mono/packages/query"
        ...
    }
    ```
@@ -35,11 +35,11 @@ One method to achieve this is through hard linking. Here is a step-by-step guide
    ...
    "pnpm": {
      "overrides": {
-       "@leather-wallet/bitcoin": "file:../mono/packages/bitcoin",
-       "@leather-wallet/constants": "file:../mono/packages/constants",
-       "@leather-wallet/models": "file:../mono/packages/models",
-       "@leather-wallet/utils": "file:../mono/packages/utils",
-       "@leather-wallet/types": "file:../mono/packages/types"
+       "@leather.io/bitcoin": "file:../mono/packages/bitcoin",
+       "@leather.io/constants": "file:../mono/packages/constants",
+       "@leather.io/models": "file:../mono/packages/models",
+       "@leather.io/utils": "file:../mono/packages/utils",
+       "@leather.io/types": "file:../mono/packages/types"
      }
    }
    ```

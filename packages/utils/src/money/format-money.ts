@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import { currencyDecimalsMap } from '@leather-wallet/constants';
-import type { Currencies, Money, NumType } from '@leather-wallet/models';
+import { currencyDecimalsMap } from '@leather.io/constants';
+import type { Currencies, Money, NumType } from '@leather.io/models';
 
 import { isBigInt, isUndefined } from '..';
 

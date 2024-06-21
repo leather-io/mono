@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Inscription } from '@leather-wallet/models';
+import { Inscription } from '@leather.io/models';
 
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../bitcoin-client';

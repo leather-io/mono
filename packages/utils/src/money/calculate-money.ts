@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
-import type { MarketData, Money, NumType } from '@leather-wallet/models';
-import { formatMarketPair } from '@leather-wallet/models';
+import type { MarketData, Money, NumType } from '@leather.io/models';
+import { formatMarketPair } from '@leather.io/models';
 
 import { isNumber } from '..';
 import { initBigNumber, sumNumbers } from '../math/helpers';

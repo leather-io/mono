@@ -5,7 +5,7 @@
 
 ### Bug Fixes
 
-* [@leather-wallet](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
+* [@leather.io](https://github.com/leather-io) sorting in prettier ([a44b063](https://github.com/leather-io/mono/commit/a44b0631b745c0ca4abe4d36eb5dfc34a33afce8))
 
 ## [0.4.0](https://github.com/leather-io/mono/compare/prettier-config-v0.3.1...prettier-config-v0.4.0) (2024-05-17)
 

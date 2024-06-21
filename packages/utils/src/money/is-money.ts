@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Money } from '@leather-wallet/models';
+import { Money } from '@leather.io/models';
 
 import { isObject } from '..';
 

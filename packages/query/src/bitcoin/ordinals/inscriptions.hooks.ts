@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { HDKey } from '@scure/bip32';
 
-import { isUndefined } from '@leather-wallet/utils';
+import { isUndefined } from '@leather.io/utils';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import { createInscriptionHiro } from './inscription.utils';

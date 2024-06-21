@@ -1,5 +1,5 @@
 {
-  "name": "@leather-wallet/crypto",
+  "name": "@leather.io/crypto",
   "author": "leather-wallet",
   "description": "Generic crypto utils package for Leather",
   "version": "1.0.1",
