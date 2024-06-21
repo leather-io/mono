@@ -4,7 +4,7 @@
   "description": "Leather models and types",
   "version": "0.9.0",
   "license": "MIT",
-  "homepage": "https://github.com/leather-wallet/mono/tree/dev/packages/models",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/models",
   "repository": {
     "type": "git",
     "url": "git@github.com:leather-wallet/mono.git",
@@ -23,7 +23,7 @@
   "exports": {
     ".": "./dist/index.js"
   },
-  "bugs": "https://github.com/leather-wallet/mono/issues",
+  "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@stacks/stacks-blockchain-api-types": "7.8.2",
     "bignumber.js": "9.1.2"

@@ -54,7 +54,7 @@ It runs on changed files using `pnpm --filter=[$LATEST_HASH]`. As this is a clea
 
 ## License
 
-[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
 
 ---
 

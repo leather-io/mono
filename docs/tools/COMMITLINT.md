@@ -51,7 +51,7 @@ Checking locally improves developer experience as it provides quick feedback on 
 
 ## License
 
-[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-wallet/mono)
+[MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
 
 ---
 
