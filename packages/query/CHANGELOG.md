@@ -75,6 +75,13 @@
     * @leather.io/rpc bumped to 1.0.4
     * @leather.io/utils bumped to 0.8.3
 
+## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.0...@leather.io/query-v0.9.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* ledger bitcoin query ([180615f](https://github.com/leather-io/mono/commit/180615f63f63ad921d3d0f96e64d39736f59c021))
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.8.10...@leather.io/query-v0.9.0) (2024-06-21)
 
 
