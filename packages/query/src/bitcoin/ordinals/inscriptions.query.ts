@@ -212,6 +212,7 @@ export function useInscriptionsByAddressQuery(address: string) {
   const limiter = useHiroApiRateLimiter();
 
   const query = useInfiniteQuery({
+    enabled: !!address,
     queryKey: [QueryPrefixes.InscriptionsByAddress, network.id, address],
     async queryFn({ pageParam, signal }) {
       return limiter.add(

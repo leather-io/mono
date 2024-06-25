@@ -12,7 +12,6 @@ export function useGetBitcoinBalanceByAddress(address: string) {
 
   const {
     data: utxos,
-    isInitialLoading,
     isLoading,
     isFetching,
   } = useNativeSegwitUtxosByAddress({
@@ -29,7 +28,6 @@ export function useGetBitcoinBalanceByAddress(address: string) {
 
   return {
     balance,
-    isInitialLoading,
     isLoading,
     isFetching,
   };
