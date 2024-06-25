@@ -18,7 +18,7 @@ export function isErrorTooManyRequests<TData, TError = unknown>(
 }
 
 export function isInitializingData<TData, TError = unknown>(query: UseQueryResult<TData, TError>) {
-  return query.isInitialLoading || query.isRefetching;
+  return query.isLoading || query.isRefetching;
 }
 
 export function isFetchedWithSuccess<TData, TError = unknown>(

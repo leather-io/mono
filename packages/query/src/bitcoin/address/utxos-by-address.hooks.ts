@@ -68,10 +68,9 @@ export function useNativeSegwitUtxosByAddress({
   filterPendingTxsUtxos,
   filterRunesUtxos,
 }: UseFilterUtxosByAddressArgs) {
-  const { filterOutInscriptions, isInitialLoadingInscriptions } =
-    useFilterInscriptionsByAddress(address);
-  const { filterOutPendingTxsUtxos, isInitialLoading } = useFilterPendingUtxosByAddress(address);
-  const { filterOutRunesUtxos, isInitialLoadingRunesData } = useFilterRuneUtxosByAddress(address);
+  const { filterOutInscriptions, isLoadingInscriptions } = useFilterInscriptionsByAddress(address);
+  const { filterOutPendingTxsUtxos, isLoading } = useFilterPendingUtxosByAddress(address);
+  const { filterOutRunesUtxos, isLoadingRunesData } = useFilterRuneUtxosByAddress(address);
 
   const utxosQuery = useGetUtxosByAddressQuery(address, {
     select(utxos) {
@@ -98,11 +97,7 @@ export function useNativeSegwitUtxosByAddress({
 
   return {
     ...utxosQuery,
-    isInitialLoading:
-      utxosQuery.isInitialLoading ||
-      isInitialLoading ||
-      isInitialLoadingInscriptions ||
-      isInitialLoadingRunesData,
+    isLoading: utxosQuery.isLoading || isLoading || isLoadingInscriptions || isLoadingRunesData,
   };
 }
 
@@ -110,7 +105,7 @@ function useFilterInscriptionsByAddress(address: string) {
   const {
     data: inscriptionsList,
     hasNextPage: hasMoreInscriptionsToLoad,
-    isInitialLoading: isInitialLoadingInscriptions,
+    isLoading: isLoadingInscriptions,
   } = useInscriptionsByAddressQuery(address);
 
   const filterOutInscriptions = useCallback(
@@ -124,13 +119,13 @@ function useFilterInscriptionsByAddress(address: string) {
 
   return {
     filterOutInscriptions,
-    isInitialLoadingInscriptions: hasMoreInscriptionsToLoad || isInitialLoadingInscriptions,
+    isLoadingInscriptions: hasMoreInscriptionsToLoad || isLoadingInscriptions,
   };
 }
 
 function useFilterRuneUtxosByAddress(address: string) {
   // TO-DO what if data is undefined?
-  const { data = [], isInitialLoading } = useRunesOutputsByAddress(address);
+  const { data = [], isLoading } = useRunesOutputsByAddress(address);
   const runesEnabled = useRunesEnabled();
 
   const filterOutRunesUtxos = useCallback(
@@ -147,13 +142,12 @@ function useFilterRuneUtxosByAddress(address: string) {
 
   return {
     filterOutRunesUtxos,
-    isInitialLoadingRunesData: isInitialLoading,
+    isLoadingRunesData: isLoading,
   };
 }
 
 function useFilterPendingUtxosByAddress(address: string) {
-  const { data: pendingInputs = [], isInitialLoading } =
-    useBitcoinPendingTransactionsInputs(address);
+  const { data: pendingInputs = [], isLoading } = useBitcoinPendingTransactionsInputs(address);
 
   const filterOutPendingTxsUtxos = useCallback(
     (utxos: UtxoResponseItem[]) => {
@@ -169,6 +163,6 @@ function useFilterPendingUtxosByAddress(address: string) {
 
   return {
     filterOutPendingTxsUtxos,
-    isInitialLoading,
+    isLoading,
   };
 }

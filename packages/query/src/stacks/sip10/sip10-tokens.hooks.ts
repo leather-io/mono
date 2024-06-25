@@ -27,16 +27,15 @@ export interface Sip10TokenAssetDetails {
 }
 
 function useSip10Tokens(address: string): {
-  isInitialLoading: boolean;
+  isLoading: boolean;
   tokens: Sip10TokenAssetDetails[];
 } {
   const balancesResults = useSip10TokensCryptoAssetBalance(address);
   const infoResults = useSip10TokensCryptoAssetInfo(address);
 
   return useMemo(() => {
-    const isInitialLoading =
-      balancesResults.some(query => query.isInitialLoading) ||
-      infoResults.some(query => query.isInitialLoading);
+    const isLoading =
+      balancesResults.some(query => query.isLoading) || infoResults.some(query => query.isLoading);
     const tokenBalances = balancesResults
       .map(query => query.data)
       .filter(isDefined)
@@ -54,7 +53,7 @@ function useSip10Tokens(address: string): {
     });
 
     return {
-      isInitialLoading,
+      isLoading,
       tokens: tokens.filter(isDefined),
     };
   }, [balancesResults, infoResults]);
@@ -73,13 +72,13 @@ interface UseSip10TokensArgs {
   filter?: Sip10CryptoAssetFilter;
 }
 export function useFilteredSip10Tokens({ address, filter = 'all' }: UseSip10TokensArgs) {
-  const { isInitialLoading, tokens = [] } = useSip10Tokens(address);
+  const { isLoading, tokens = [] } = useSip10Tokens(address);
   const { data: swapAssets = [] } = useAlexSwappableAssets(address);
   const filteredTokens = useMemo(
     () => filterSip10Tokens(swapAssets, tokens, filter),
     [swapAssets, tokens, filter]
   );
-  return { isInitialLoading, tokens: filteredTokens };
+  return { isLoading, tokens: filteredTokens };
 }
 
 export function useTransferableSip10Tokens(address: string) {
