@@ -10,9 +10,9 @@ import { createNumArrayOfRange } from '@leather.io/utils';
 import { ensureArray } from '@leather.io/utils';
 
 import type { InscriptionResponseHiro } from '../../../types/inscription';
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { QueryPrefixes } from '../../query-prefixes';
+import { useHiroApiRateLimiter } from '../../rate-limiter/hiro-rate-limiter';
 
 const stopSearchAfterNumberAddressesWithoutOrdinals = 5;
 const addressesSimultaneousFetchLimit = 5;
@@ -118,6 +118,7 @@ export function useGetInscriptionsInfiniteQuery({
               addresses,
               offset,
               limit: inscriptionsLazyLoadLimit,
+              signal,
             }),
           {
             signal,

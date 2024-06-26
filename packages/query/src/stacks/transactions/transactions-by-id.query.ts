@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
 
 import { useStacksClient } from '../stacks-client';
 
@@ -12,15 +12,11 @@ const options = {
 export function useTransactionsById(txids: string[]) {
   const client = useStacksClient();
 
-  async function transactionByIdFetcher(txid: string) {
-    return client.getTransactionById(txid);
-  }
-
   return useQueries({
     queries: txids.map(txid => {
       return {
         queryKey: ['transaction-by-id', txid],
-        queryFn: () => transactionByIdFetcher(txid),
+        queryFn: ({ signal }: QueryFunctionContext) => client.getTransactionById(txid, signal),
         ...options,
       };
     }),
@@ -30,13 +26,9 @@ export function useTransactionsById(txids: string[]) {
 export function useTransactionById(txid: string) {
   const client = useStacksClient();
 
-  async function transactionByIdFetcher(txid: string) {
-    return client.getTransactionById(txid);
-  }
-
   return useQuery({
     queryKey: ['transaction-by-id', txid],
-    queryFn: () => transactionByIdFetcher(txid),
+    queryFn: ({ signal }) => client.getTransactionById(txid, signal),
     ...options,
   });
 }

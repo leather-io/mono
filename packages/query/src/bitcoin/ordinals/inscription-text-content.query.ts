@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { QueryPrefixes } from '../../query-prefixes';
+import { useHiroApiRateLimiter } from '../../rate-limiter/hiro-rate-limiter';
 
 const queryOptions = {
   staleTime: Infinity,

@@ -11,7 +11,7 @@ const queryOptions = {
   refetchOnWindowFocus: true,
 };
 
-function fetchAccountTxsWithTransfers(client: StacksClient, signal?: AbortSignal) {
+function fetchAccountTxsWithTransfers(client: StacksClient, signal: AbortSignal) {
   return async (address: string) => client.getAccountTransactionsWithTransfers(address, signal);
 }
 

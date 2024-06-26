@@ -11,6 +11,6 @@ export function useAccountMempoolQuery(
   return useQuery({
     enabled: !!address,
     queryKey: ['account-mempool', address],
-    queryFn: () => client.getAddressMempoolTransactions(address),
+    queryFn: ({ signal }) => client.getAddressMempoolTransactions(address, signal),
   });
 }

@@ -2,12 +2,14 @@ import PQueue from 'p-queue';
 
 import { HIRO_API_BASE_URL_TESTNET } from '@leather.io/models';
 
-import { useCurrentNetworkState } from './leather-query-provider';
+import { useCurrentNetworkState } from '../leather-query-provider';
+import { PriorityQueue } from './queue-class';
 
 const hiroStacksMainnetApiLimiter = new PQueue({
-  interval: 60000,
-  intervalCap: 100,
+  interval: 1000,
+  intervalCap: 3,
   timeout: 60000,
+  queueClass: PriorityQueue,
 });
 
 const hiroStacksTestnetApiLimiter = new PQueue({
@@ -25,6 +27,8 @@ export function useHiroApiRateLimiter(): PQueue {
       return hiroStacksMainnetApiLimiter;
     case 'testnet':
       return hiroStacksTestnetApiLimiter;
+    default:
+      return hiroStacksMainnetApiLimiter;
   }
 }
 
