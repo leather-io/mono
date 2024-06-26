@@ -1,33 +1,33 @@
 # UI
 
-This package contains Leather Wallet's UI library. It is intended for use in applications that are using [panda css](https://panda-css.com/).
+This package contains Leather Wallet's UI library for our web + React Native applications.
 
-# Setup
+## Web Setup
 
-To setup in your application you need to:
+Our web apps use [panda css](https://panda-css.com/). To setup in your application you need to:
 
 - install panda-css
 - setup panda css and configure it to acknowledge the library code
 - configure webpack to load the files correctly
 
-## Panda configuration
+### Panda configuration
 
 Specify the library as part of the `panda.config` `include`:
 
-```json
+```js
   include: [
     './node_modules/@leather.io/ui/dist-all/src/**/*.{js,jsx,ts,tsx}',
     './src/**/*.{js,jsx,ts,tsx}',
   ],
 ```
 
-## Webpack configuration
+### Webpack configuration
 
 - Alias `react` and `react-dom` to avoid react errors.
 
 - Configure your `module` to handle `jsx` files
 
-```json
+```js
 export const config = {
 ...
   module: {
@@ -43,7 +43,7 @@ export const config = {
       ...
       {
         test: /\.(js)$/,
-        include: [/node_modules\/@cteic\/ui/],
+        include: [/node_modules\/@leather.io\/ui/],
         loader: 'esbuild-loader',
         options: { tsconfig: './tsconfig.json', loader: 'jsx',target: 'es2020' },
       },
