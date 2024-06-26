@@ -86,6 +86,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.4.7
 
+## [1.8.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.8.0...@leather.io/mobile-v1.8.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* add scripts ([9967136](https://github.com/leather-io/mono/commit/99671360233b4a25601b21962a87101c4645b98c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.5.1
+
 ## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.7.4...@leather.io/mobile-v1.8.0) (2024-06-21)
 
 
