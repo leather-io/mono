@@ -10,7 +10,7 @@
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "build:all": "pnpm assets:web && pnpm assets:native && tsc --build ./tsconfig.json",
     "build:native": "pnpm assets:native && tsc -p ./tsconfig.native.json",
-    "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch --preserveWatchOutput\" ",
+    "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch\" ",
     "build:web": "pnpm assets:web && tsup --config tsup.config.web.ts",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
