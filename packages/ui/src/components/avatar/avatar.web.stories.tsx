@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import StampsAvatarIconSrc from '../../assets-web/avatars/stamps-avatar-icon.png';
 import { PlaceholderIcon } from '../../icons/placeholder-icon.web';
 import { Avatar as Component } from './avatar.web';
 
@@ -27,7 +26,7 @@ export const Avatar: Story = {
   args: {
     children: (
       <>
-        <Component.Image alt="ST" src={StampsAvatarIconSrc} />
+        <Component.Image alt="ST" src="" />
         <Component.Fallback>ST</Component.Fallback>
       </>
     ),

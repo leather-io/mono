@@ -39,3 +39,6 @@ dist-native/
 
 # panda
 leather-styles/
+
+# storybook
+storybook-static/
