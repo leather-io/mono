@@ -34,6 +34,22 @@
   * dependencies
     * @leather.io/utils bumped to 0.8.1
 
+## [1.5.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.5.0...@leather.io/ui-v1.5.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* failing watcher ([24ab58b](https://github.com/leather-io/mono/commit/24ab58b49c4eefdf94332ccda4d50003d86c1ff0))
+* setup dialog component in monorepo,  ref leather-wallet/issues[#108](https://github.com/leather-io/mono/issues/108) ([d5053f2](https://github.com/leather-io/mono/commit/d5053f2031f139b9dae621df3a4f5944bad7dd05))
+* update README,  ref leather-wallet/issues[#64](https://github.com/leather-io/mono/issues/64) ([b1e62f1](https://github.com/leather-io/mono/commit/b1e62f123dc839ec676344ae2875f076e5097f30))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.9.1
+
 ## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.4.7...@leather.io/ui-v1.5.0) (2024-06-21)
 
 

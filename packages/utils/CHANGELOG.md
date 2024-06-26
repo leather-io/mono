@@ -49,6 +49,13 @@
     * @leather.io/models bumped to 0.9.0
     * @leather.io/rpc bumped to 1.0.4
 
+## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.9.0...@leather.io/utils-v0.9.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* setup dialog component in monorepo,  ref leather-wallet/issues[#108](https://github.com/leather-io/mono/issues/108) ([d5053f2](https://github.com/leather-io/mono/commit/d5053f2031f139b9dae621df3a4f5944bad7dd05))
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.8.3...@leather.io/utils-v0.9.0) (2024-06-21)
 
 
