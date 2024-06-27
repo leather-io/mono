@@ -227,6 +227,7 @@ export function useInscriptionsByAddressQuery(address: string) {
     },
     initialPageParam: 0,
     getNextPageParam(lastPage) {
+      if (!address) return undefined;
       if (lastPage.offset >= lastPage.total) return undefined;
       return lastPage.offset + 60;
     },
@@ -238,8 +239,9 @@ export function useInscriptionsByAddressQuery(address: string) {
 
   // Auto-trigger next request
   useEffect(() => {
+    if (!address) return;
     void query.fetchNextPage();
-  }, [query, query.data]);
+  }, [address, query, query.data]);
 
   return query;
 }
