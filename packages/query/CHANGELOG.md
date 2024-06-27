@@ -82,6 +82,13 @@
     * @leather.io/bitcoin bumped to 0.8.1
     * @leather.io/utils bumped to 0.9.1
 
+## [0.9.3](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.2...@leather.io/query-v0.9.3) (2024-06-27)
+
+
+### Bug Fixes
+
+* inscriptions query by address ([6652d21](https://github.com/leather-io/mono/commit/6652d21fddf479ff94a8160d34bf6d02a50d674e))
+
 ## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.0...@leather.io/query-v0.9.1) (2024-06-25)
 
 
