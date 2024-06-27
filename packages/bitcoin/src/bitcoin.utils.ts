@@ -36,11 +36,11 @@ export function initBitcoinAccount(derivationPath: string, policy: string): Bitc
  * has a number of networks, its often only necessary to consider the higher
  * level concepts of mainnet and testnet
  */
-export const bitcoinNetworkToCoreNetworkMap: Record<BitcoinNetworkModes, NetworkModes> = {
+export const bitcoinNetworkToCoreNetworkMap: Record<BitcoinNetworkModes, BitcoinNetworkModes> = {
   mainnet: 'mainnet',
   testnet: 'testnet',
-  regtest: 'testnet',
-  signet: 'testnet',
+  regtest: 'regtest',
+  signet: 'signet',
 };
 export function bitcoinNetworkModeToCoreNetworkMode(mode: BitcoinNetworkModes) {
   return bitcoinNetworkToCoreNetworkMap[mode];
@@ -52,9 +52,11 @@ export function bitcoinNetworkModeToCoreNetworkMode(mode: BitcoinNetworkModes) {
  * @example
  * `m/86'/1'/0'/0/0`
  */
-export const coinTypeMap: Record<NetworkModes, 0 | 1> = {
+export const coinTypeMap: Record<BitcoinNetworkModes, 0 | 1 | 2 | 3> = {
   mainnet: 0,
   testnet: 1,
+  regtest: 2,
+  signet: 3,
 };
 
 export function getBitcoinCoinTypeIndexByNetwork(network: BitcoinNetworkModes) {
