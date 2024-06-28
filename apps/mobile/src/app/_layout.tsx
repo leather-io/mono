@@ -1,4 +1,5 @@
 import { StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { initiateI18n } from '@/i18n';
@@ -38,13 +39,15 @@ export default function RootLayout() {
 
   return (
     <I18nProvider i18n={i18n}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <SplashScreenGuard>
-            <AppRouter />
-          </SplashScreenGuard>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            <SplashScreenGuard>
+              <AppRouter />
+            </SplashScreenGuard>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>
     </I18nProvider>
   );
 }

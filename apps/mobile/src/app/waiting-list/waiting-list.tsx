@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Image, Keyboard, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
+import { Image, Keyboard, KeyboardAvoidingView, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CheckmarkCircle from '@/assets/checkmark-circle.svg';
 import XLogo from '@/assets/logo-x.svg';
