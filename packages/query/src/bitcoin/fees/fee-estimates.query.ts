@@ -5,7 +5,7 @@ import { BitcoinNetworkModes } from '@leather.io/models';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { AppUseQueryConfig } from '../../query-config';
 // import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { BitcoinClient, useBitcoinClient } from '../bitcoin-client';
+import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 
 function fetchAllBitcoinFeeEstimates(client: BitcoinClient, network: BitcoinNetworkModes) {
   return async () =>

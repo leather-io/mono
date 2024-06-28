@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { AppUseQueryConfig } from '../../query-config';
-import { type RunesOutputsByAddress, useBitcoinClient } from '../bitcoin-client';
+import { RunesOutputsByAddress } from '../clients/best-in-slot';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 import { useRunesEnabled } from './runes.hooks';
 
 const queryOptions = { staleTime: 5 * 60 * 1000 };

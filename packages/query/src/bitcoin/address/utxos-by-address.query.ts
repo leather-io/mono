@@ -8,7 +8,7 @@ import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import type { AppUseQueryConfig } from '../../query-config';
 import { QueryPrefixes } from '../../query-prefixes';
-import { useBitcoinClient } from '../bitcoin-client';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 import { hasInscriptions } from './address.utils';
 
 const staleTime = 3 * 60 * 1000;

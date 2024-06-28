@@ -6,7 +6,7 @@ export * from './src/bitcoin/address/utxos-by-address.query';
 export * from './src/bitcoin/balance/btc-balance.hooks';
 export * from './src/bitcoin/balance/btc-native-segwit-balance.hooks';
 export * from './src/bitcoin/balance/btc-taproot-balance.hooks';
-export * from './src/bitcoin/bitcoin-client';
+export * from './src/bitcoin/clients/bitcoin-client';
 export * from './src/bitcoin/contract/send-accepted-bitcoin-contract-offer';
 export * from './src/bitcoin/fees/fee-estimates.hooks';
 export * from './src/bitcoin/fees/fee-estimates.query';

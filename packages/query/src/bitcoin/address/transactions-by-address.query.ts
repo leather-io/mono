@@ -3,7 +3,7 @@ import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-quer
 import type { BitcoinTx } from '@leather.io/models';
 
 import { AppUseQueryConfig } from '../../query-config';
-import { useBitcoinClient } from '../bitcoin-client';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 
 const staleTime = 10 * 1000;
 
