@@ -5,14 +5,18 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getTaprootAddress } from '@leather.io/bitcoin';
-import { HIRO_INSCRIPTIONS_API_URL } from '@leather.io/models';
+import {
+  HIRO_INSCRIPTIONS_API_URL,
+  WalletDefaultNetworkConfigurationIds,
+} from '@leather.io/models';
 import { createNumArrayOfRange } from '@leather.io/utils';
 import { ensureArray } from '@leather.io/utils';
 
 import type { InscriptionResponseHiro } from '../../../types/inscription';
-import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { QueryPrefixes } from '../../query-prefixes';
+import { useHiroApiRateLimiter } from '../../rate-limiter/hiro-rate-limiter';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 
 const stopSearchAfterNumberAddressesWithoutOrdinals = 5;
 const addressesSimultaneousFetchLimit = 5;
@@ -118,6 +122,7 @@ export function useGetInscriptionsInfiniteQuery({
               addresses,
               offset,
               limit: inscriptionsLazyLoadLimit,
+              signal,
             }),
           {
             signal,
@@ -207,29 +212,34 @@ export function useGetInscriptionsInfiniteQuery({
   return query;
 }
 
+const bestinslotInscriptionsRequestNum = 2000;
+
 export function useInscriptionsByAddressQuery(address: string) {
   const network = useLeatherNetwork();
-  const limiter = useHiroApiRateLimiter();
+  const client = useBitcoinClient();
 
   const query = useInfiniteQuery({
     enabled: !!address,
     queryKey: [QueryPrefixes.InscriptionsByAddress, network.id, address],
     async queryFn({ pageParam, signal }) {
-      return limiter.add(
-        () =>
-          fetchInscriptions({
-            addresses: address,
-            offset: pageParam,
-            signal,
-          }),
-        { priority: 1, signal, throwOnTimeout: true }
-      );
+      const res = await client.BestinSlotApi.getInscriptionsByAddress({
+        address,
+        network: network.id as WalletDefaultNetworkConfigurationIds,
+        offset: pageParam,
+        signal,
+        count: bestinslotInscriptionsRequestNum,
+      });
+
+      return {
+        offset: pageParam,
+        data: res.data,
+      };
     },
     initialPageParam: 0,
     getNextPageParam(lastPage) {
       if (!address) return undefined;
-      if (lastPage.offset >= lastPage.total) return undefined;
-      return lastPage.offset + 60;
+      if (lastPage.data.length < bestinslotInscriptionsRequestNum) return undefined;
+      return lastPage.offset + bestinslotInscriptionsRequestNum;
     },
     refetchOnMount: false,
     refetchOnReconnect: false,

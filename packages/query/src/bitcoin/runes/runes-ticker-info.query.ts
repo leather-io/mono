@@ -3,7 +3,8 @@ import { useQueries } from '@tanstack/react-query';
 import { isDefined } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
-import { RuneBalance, type RuneTickerInfo, useBitcoinClient } from '../bitcoin-client';
+import { RuneBalance, RuneTickerInfo } from '../clients/best-in-slot';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 import { useRunesEnabled } from './runes.hooks';
 import { createRuneCryptoAssetDetails } from './runes.utils';
 

@@ -18,8 +18,8 @@ import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { STX20_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 import { Paginated } from '../../types/api-types';
-import { getHiroApiRateLimiter } from '../hiro-rate-limiter';
 import { useLeatherNetwork } from '../leather-query-provider';
+import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
   AddressBalanceResponse,
   ContractInterfaceResponseWithFunctions,
@@ -43,7 +43,7 @@ export function stacksClient(basePath: string) {
   const rateLimiter = getHiroApiRateLimiter(basePath);
 
   return {
-    async getAccountBalance(address: string, signal?: AbortSignal) {
+    async getAccountBalance(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressBalanceResponse>(`${basePath}/extended/v1/address/${address}/balances`, {
@@ -53,23 +53,23 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getAccountNonces(address: string, signal?: AbortSignal) {
+    async getAccountNonces(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressNonces>(`${basePath}/extended/v1/address/${address}/nonces`, { signal }),
-        { throwOnTimeout: true }
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
     // TODO: Need to replace, this endpoint has been deprecated
-    async getAccountTransactionsWithTransfers(address: string, signal?: AbortSignal) {
+    async getAccountTransactionsWithTransfers(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressTransactionsWithTransfersListResponse>(
             `${basePath}/extended/v1/address/${address}/transactions_with_transfers?limit=${DEFAULT_LIST_LIMIT}`,
             { signal }
           ),
-        { throwOnTimeout: true }
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -95,13 +95,13 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getNamesOwnedByAddress(address: string, signal?: AbortSignal) {
+    async getNamesOwnedByAddress(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<BnsNamesOwnByAddressResponse>(`${basePath}/v1/addresses/stacks/${address}`, {
             signal,
           }),
-        { priority: 2, signal, throwOnTimeout: true }
+        { signal, priority: 2, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -111,63 +111,72 @@ export function stacksClient(basePath: string) {
           axios.get<BnsGetNameInfoResponse>(`${basePath}/v1/names/${name}`, {
             signal,
           }),
-        { throwOnTimeout: true }
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
     async getNetworkStatus(url: string) {
       const resp = await rateLimiter.add(() => axios.get(url, { timeout: 30000 }), {
         throwOnTimeout: true,
-        priority: 1,
+        priority: 3,
       });
 
       return resp.data;
     },
-    async getNftHoldings(address: string) {
+    async getNftHoldings(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<NonFungibleTokenHoldingsResponse>(
-            `${basePath}/extended/v1/tokens/nft/holdings?principal=${address}&limit=${DEFAULT_LIST_LIMIT}`
+            `${basePath}/extended/v1/tokens/nft/holdings?principal=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+            { signal }
           ),
-        { throwOnTimeout: true }
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getAddressMempoolTransactions(address: string) {
+    async getAddressMempoolTransactions(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<MempoolTransactionListResponse>(
-            `${basePath}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`
+            `${basePath}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+            { signal }
           ),
-        { throwOnTimeout: true }
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getRawTransactionById(txid: string) {
+    async getRawTransactionById(txid: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
-        () => axios.get<GetRawTransactionResult>(`${basePath}/extended/v1/tx/${txid}/raw`),
-        { throwOnTimeout: true }
+        () =>
+          axios.get<GetRawTransactionResult>(`${basePath}/extended/v1/tx/${txid}/raw`, { signal }),
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getTransactionById(txid: string) {
+    async getTransactionById(txid: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
-        () => axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txid}`),
-        { throwOnTimeout: true }
+        () =>
+          axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txid}`, {
+            signal,
+          }),
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getFtMetadata(address: string) {
+    async getFtMetadata(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
-        () => axios.get<FtMetadataResponse>(`${basePath}/metadata/v1/ft/${address}`),
-        { throwOnTimeout: true }
+        () => axios.get<FtMetadataResponse>(`${basePath}/metadata/v1/ft/${address}`, { signal }),
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getNftMetadata(address: string, tokenId: number) {
+    async getNftMetadata(address: string, tokenId: number, signal: AbortSignal) {
       const resp = await rateLimiter.add(
-        () => axios.get<NftMetadataResponse>(`${basePath}/metadata/v1/nft/${address}/${tokenId}`),
-        { throwOnTimeout: true }
+        () =>
+          axios.get<NftMetadataResponse>(`${basePath}/metadata/v1/nft/${address}/${tokenId}`, {
+            signal,
+          }),
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -188,7 +197,7 @@ export function stacksClient(basePath: string) {
               signal,
             }
           ),
-        { signal, throwOnTimeout: true }
+        { priority: 2, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -205,13 +214,17 @@ export function stacksClient(basePath: string) {
               signal,
             }
           ),
-        { throwOnTimeout: true }
+        { signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getStx20Balances(address: string) {
-      const resp = await axios.get<Stx20BalanceResponse>(
-        `${STX20_API_BASE_URL_MAINNET}/balance/${address}`
+    async getStx20Balances(address: string, signal: AbortSignal) {
+      const resp = await rateLimiter.add(
+        () =>
+          axios.get<Stx20BalanceResponse>(`${STX20_API_BASE_URL_MAINNET}/balance/${address}`, {
+            signal,
+          }),
+        { signal, throwOnTimeout: true }
       );
       return resp.data.balances;
     },

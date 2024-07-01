@@ -24,3 +24,37 @@ export interface InscriptionResponseHiro {
   tx_id: string;
   value: string;
 }
+
+interface BestinSlotInscriptionDelegateResponse {
+  delegate_id: string;
+  render_url?: string | null;
+  mime_type?: string | null;
+  content_url: string;
+  bis_url: string;
+}
+
+interface BestInSlotInscriptionMetadataResponse {
+  name: string;
+  [key: string]: any;
+}
+
+export interface BestinslotInscriptionResponse {
+  inscription_name?: string | null;
+  inscription_id: string;
+  inscription_number: number;
+  parent_ids: string[];
+  metadata?: BestInSlotInscriptionMetadataResponse | null;
+  owner_wallet_addr: string;
+  mime_type?: string | null;
+  last_sale_price?: number | null;
+  slug?: string | null;
+  collection_name?: string | null;
+  satpoint: string;
+  last_transfer_block_height?: number | null;
+  genesis_height: number;
+  content_url: string;
+  bis_url: string;
+  render_url?: string | null;
+  bitmap_number?: number | null;
+  delegate?: BestinSlotInscriptionDelegateResponse | null;
+}

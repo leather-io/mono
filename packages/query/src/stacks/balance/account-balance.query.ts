@@ -11,7 +11,7 @@ const balanceQueryOptions = {
   refetchOnMount: true,
 } as const;
 
-function fetchAccountBalance(client: StacksClient, signal?: AbortSignal) {
+function fetchAccountBalance(client: StacksClient, signal: AbortSignal) {
   return async (address: string) => client.getAccountBalance(address, signal);
 }
 

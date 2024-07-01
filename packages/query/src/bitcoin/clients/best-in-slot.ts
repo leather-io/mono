@@ -1,41 +1,19 @@
 import axios from 'axios';
+import { ZodError, z } from 'zod';
 
 import {
   BESTINSLOT_API_BASE_URL_MAINNET,
   BESTINSLOT_API_BASE_URL_TESTNET,
   type BitcoinNetworkModes,
-  type BitcoinTx,
   MarketData,
   Money,
+  WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 
-import { UtxoResponseItem } from '../../types/utxo';
-import { useLeatherNetwork } from '../leather-query-provider';
-import { getBlockstreamRatelimiter } from './blockstream-rate-limiter';
-
-interface BestinslotInscription {
-  inscription_name: string | null;
-  inscription_id: string;
-  inscription_number: number;
-  metadata: any | null;
-  wallet: string;
-  mime_type: string;
-  media_length: number;
-  genesis_ts: number;
-  genesis_height: number;
-  genesis_fee: number;
-  output_value: number;
-  satpoint: string;
-  collection_name: string | null;
-  collection_slug: string | null;
-  last_transfer_block_height: number;
-  content_url: string;
-  bis_url: string;
-  byte_size: number;
-}
+import { BestinslotInscriptionResponse } from '../../../types/inscription';
 
 export interface BestinSlotInscriptionByIdResponse {
-  data: BestinslotInscription;
+  data: BestinslotInscriptionResponse;
   block_height: number;
 }
 
@@ -156,7 +134,58 @@ interface RunesOutputsByAddressResponse {
   data: RunesOutputsByAddress[];
 }
 
-function BestinSlotApi() {
+interface BestInSlotInscriptionByAddressArgs {
+  address: string;
+  network?: WalletDefaultNetworkConfigurationIds;
+  sortBy?: 'inscr_num';
+  order?: 'asc' | 'desc';
+  offset?: number;
+  count?: number;
+  signal?: AbortSignal;
+  exclude_brc20?: boolean;
+  cursed_only?: boolean;
+}
+
+interface BestinSlotInscriptionByAddressResponse {
+  block_height: number;
+  data: BestinslotInscriptionResponse[];
+}
+
+const bestInSlotInscriptionDelegateSchema = z.object({
+  delegate_id: z.string(),
+  render_url: z.string().nullable().optional(),
+  mime_type: z.string().nullable().optional(),
+  content_url: z.string(),
+  bis_url: z.string(),
+});
+
+const bestInSlotInscriptionSchema = z.object({
+  inscription_name: z.string().nullable().optional(),
+  inscription_id: z.string(),
+  inscription_number: z.number(),
+  parent_ids: z.array(z.string()),
+  metadata: z.any().nullable(),
+  owner_wallet_addr: z.string(),
+  mime_type: z.string().nullable().optional(),
+  last_sale_price: z.number().nullable().optional(),
+  slug: z.string().nullable().optional(),
+  collection_name: z.string().nullable().optional(),
+  satpoint: z.string(),
+  last_transfer_block_height: z.number().nullable().optional(),
+  genesis_height: z.number(),
+  content_url: z.string(),
+  bis_url: z.string(),
+  render_url: z.string().nullable().optional(),
+  bitmap_number: z.number().nullable().optional(),
+  delegate: bestInSlotInscriptionDelegateSchema.nullable().optional(),
+});
+
+const inscriptionsByAddressSchema = z.object({
+  block_height: z.number(),
+  data: z.array(bestInSlotInscriptionSchema),
+});
+
+export function BestinSlotApi() {
   const url = BESTINSLOT_API_BASE_URL_MAINNET;
   const testnetUrl = BESTINSLOT_API_BASE_URL_TESTNET;
 
@@ -165,6 +194,46 @@ function BestinSlotApi() {
       'x-api-key': `${process.env.BESTINSLOT_API_KEY}`,
     },
   };
+
+  /**
+   * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-runes-and-bitmap-v3-api-mainnet+testnet+signet/wallets#get-wallet-inscriptions
+   */
+  async function getInscriptionsByAddress({
+    address,
+    network = WalletDefaultNetworkConfigurationIds.mainnet,
+    sortBy = 'inscr_num',
+    order = 'asc',
+    offset = 0,
+    // 2000 is the maximum count
+    count = 100,
+    exclude_brc20 = false,
+    signal,
+  }: BestInSlotInscriptionByAddressArgs) {
+    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+
+    const queryParams = new URLSearchParams({
+      address,
+      sort_by: sortBy,
+      order,
+      exclude_brc20: exclude_brc20.toString(),
+      offset: offset.toString(),
+      count: count.toString(),
+    });
+
+    const resp = await axios.get<BestinSlotInscriptionByAddressResponse>(
+      `${baseUrl}/wallet/inscriptions?${queryParams}`,
+      { ...defaultOptions, signal }
+    );
+
+    try {
+      return inscriptionsByAddressSchema.parse(resp.data);
+    } catch (e) {
+      // TODO: should be analytics
+      // eslint-disable-next-line no-console
+      if (e instanceof ZodError) console.log('schema_fail', e);
+      throw e;
+    }
+  }
 
   async function getInscriptionsByTransactionId(id: string) {
     const resp = await axios.get<BestinSlotInscriptionsByTxIdResponse>(
@@ -267,6 +336,7 @@ function BestinSlotApi() {
   }
 
   return {
+    getInscriptionsByAddress,
     getInscriptionsByTransactionId,
     getInscriptionById,
     getBrc20Balances,
@@ -276,134 +346,4 @@ function BestinSlotApi() {
     getRunesBatchOutputsInfo,
     getRunesOutputsByAddress,
   };
-}
-
-function AddressApi(basePath: string) {
-  const rateLimiter = getBlockstreamRatelimiter(basePath);
-  return {
-    async getTransactionsByAddress(address: string, signal?: AbortSignal) {
-      const resp = await rateLimiter.add(
-        () => axios.get<BitcoinTx[]>(`${basePath}/address/${address}/txs`, { signal }),
-        { signal, throwOnTimeout: true }
-      );
-      return resp.data;
-    },
-    async getUtxosByAddress(address: string, signal?: AbortSignal): Promise<UtxoResponseItem[]> {
-      const resp = await rateLimiter.add(
-        () => axios.get<UtxoResponseItem[]>(`${basePath}/address/${address}/utxo`, { signal }),
-        { signal, priority: 1, throwOnTimeout: true }
-      );
-      return resp.data.sort((a, b) => a.vout - b.vout);
-    },
-  };
-}
-
-interface FeeEstimateEarnApiResponse {
-  name: string;
-  height: number;
-  hash: string;
-  time: string;
-  latest_url: string;
-  previous_hash: string;
-  previous_url: string;
-  peer_count: number;
-  unconfirmed_count: number;
-  high_fee_per_kb: number;
-  medium_fee_per_kb: number;
-  low_fee_per_kb: number;
-  last_fork_height: number;
-  last_fork_hash: string;
-}
-interface FeeEstimateMempoolSpaceApiResponse {
-  fastestFee: number;
-  halfHourFee: number;
-  hourFee: number;
-  economyFee: number;
-  minimumFee: number;
-}
-
-export interface FeeResult {
-  fast: number;
-  medium: number;
-  slow: number;
-}
-
-function FeeEstimatesApi() {
-  return {
-    async getFeeEstimatesFromBlockcypherApi(network: 'main' | 'test3'): Promise<FeeResult> {
-      // https://www.blockcypher.com/dev/bitcoin/#restful-resources
-      const resp = await axios.get<FeeEstimateEarnApiResponse>(
-        `https://api.blockcypher.com/v1/btc/${network}`
-      );
-      const { low_fee_per_kb, medium_fee_per_kb, high_fee_per_kb } = resp.data;
-      // These fees are in satoshis per kb
-      return {
-        slow: low_fee_per_kb / 1000,
-        medium: medium_fee_per_kb / 1000,
-        fast: high_fee_per_kb / 1000,
-      };
-    },
-    async getFeeEstimatesFromMempoolSpaceApi(): Promise<FeeResult> {
-      const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(
-        `https://mempool.space/api/v1/fees/recommended`
-      );
-      const { fastestFee, halfHourFee, hourFee } = resp.data;
-      return {
-        slow: hourFee,
-        medium: halfHourFee,
-        fast: fastestFee,
-      };
-    },
-  };
-}
-
-function TransactionsApi(basePath: string) {
-  return {
-    async getBitcoinTransaction(txid: string) {
-      const resp = await axios.get(`${basePath}/tx/${txid}`);
-      return resp.data;
-    },
-
-    async getBitcoinTransactionHex(txid: string) {
-      const resp = await axios.get(`${basePath}/tx/${txid}/hex`, {
-        responseType: 'text',
-      });
-      return resp.data;
-    },
-
-    async broadcastTransaction(tx: string) {
-      // TODO: refactor to use `axios`
-      // https://github.com/leather-io/extension/issues/4521
-      // eslint-disable-next-line no-restricted-globals
-      return fetch(`${basePath}/tx`, {
-        method: 'POST',
-        body: tx,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-    },
-  };
-}
-
-export interface BitcoinClient {
-  addressApi: ReturnType<typeof AddressApi>;
-  feeEstimatesApi: ReturnType<typeof FeeEstimatesApi>;
-  transactionsApi: ReturnType<typeof TransactionsApi>;
-  BestinSlotApi: ReturnType<typeof BestinSlotApi>;
-}
-
-export function bitcoinClient(basePath: string): BitcoinClient {
-  return {
-    addressApi: AddressApi(basePath),
-    feeEstimatesApi: FeeEstimatesApi(),
-    transactionsApi: TransactionsApi(basePath),
-    BestinSlotApi: BestinSlotApi(),
-  };
-}
-
-export function useBitcoinClient() {
-  const network = useLeatherNetwork();
-
-  return bitcoinClient(network.chain.bitcoin.bitcoinUrl);
 }
