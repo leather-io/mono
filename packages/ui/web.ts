@@ -4,7 +4,7 @@ export * from './src/components/avatar';
 export { BulletSeparator } from './src/components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './src/components/button/button.web';
 export { Callout } from './src/components/callout/callout.web';
-export { Dialog } from './src/components/dialog/dialog.web';
+export * from './src/components/dialog';
 export { DropdownMenu } from './src/components/dropdown-menu/dropdown-menu.web';
 export { Flag, type FlagProps } from './src/components/flag/flag.web';
 export { IconButton } from './src/components/icon-button/icon-button.web';
