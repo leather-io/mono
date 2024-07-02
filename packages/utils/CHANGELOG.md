@@ -49,6 +49,13 @@
     * @leather.io/models bumped to 0.9.0
     * @leather.io/rpc bumped to 1.0.4
 
+## [0.9.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.9.1...@leather.io/utils-v0.9.2) (2024-07-02)
+
+
+### Bug Fixes
+
+* change spam replacement text, add test cases, ref leather-wallet/issues[#5589](https://github.com/leather-io/mono/issues/5589) ([f5b1237](https://github.com/leather-io/mono/commit/f5b1237ee01b07dc7a94668881f635f9c77a2e70))
+
 ## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.9.0...@leather.io/utils-v0.9.1) (2024-06-26)
 
 
