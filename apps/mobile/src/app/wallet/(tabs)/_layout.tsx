@@ -1,6 +1,5 @@
 import { RefObject, createContext, useRef } from 'react';
 
-import ArrowLeft from '@/assets/arrow-left.svg';
 import EmojiSmile from '@/assets/emoji-smile.svg';
 import Inbox from '@/assets/inbox.svg';
 import Menu from '@/assets/menu.svg';
@@ -8,21 +7,21 @@ import PaperPlane from '@/assets/paper-plane.svg';
 import Swap from '@/assets/swap.svg';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { createBlurredHeader } from '@/components/blurred-header';
+import { APP_ROUTES } from '@/constants';
 import { Trans } from '@lingui/macro';
-import { Tabs } from 'expo-router';
+import { Tabs, usePathname, useRouter } from 'expo-router';
+import { ExpoRouter } from 'expo-router/types/expo-router';
 
 import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
-type BottomTabBarProps = Parameters<NonNullable<Parameters<typeof Tabs>[0]['tabBar']>>[0];
-
-function createFilledActionBar(ref: RefObject<ActionBarMethods>) {
-  return function ({ navigation: { navigate } }: BottomTabBarProps) {
+function createFilledActionBar(ref: RefObject<ActionBarMethods>, router: ExpoRouter.Router) {
+  return function () {
     return (
       <ActionBar
         ref={ref}
         left={
           <TouchableOpacity
-            onPress={() => navigate('send')}
+            onPress={() => router.navigate(APP_ROUTES.WalletSend)}
             justifyContent="center"
             alignItems="center"
             flexDirection="row"
@@ -38,7 +37,7 @@ function createFilledActionBar(ref: RefObject<ActionBarMethods>) {
         }
         center={
           <TouchableOpacity
-            onPress={() => navigate('receive')}
+            onPress={() => router.navigate(APP_ROUTES.WalletReceive)}
             justifyContent="center"
             alignItems="center"
             flex={1}
@@ -54,7 +53,7 @@ function createFilledActionBar(ref: RefObject<ActionBarMethods>) {
         }
         right={
           <TouchableOpacity
-            onPress={() => navigate('swap')}
+            onPress={() => router.navigate(APP_ROUTES.WalletSwap)}
             justifyContent="center"
             flex={1}
             height="100%"
@@ -77,15 +76,19 @@ export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods>
   ref: null,
 });
 
+function getBorderColor(isSelected: boolean) {
+  return isSelected ? 'base.ink.action-primary-default' : 'base.ink.border-default';
+}
+
+export const TAB_BAR_HEIGHT = 60;
+
 export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
 
-  const navigationHeader = createBlurredHeader({
-    left: (
-      <TouchableOpacity height={48} width={48} justifyContent="center" alignItems="center">
-        <ArrowLeft height={24} width={24} />
-      </TouchableOpacity>
-    ),
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const NavigationHeader = createBlurredHeader({
     center: (
       <TouchableOpacity height={48} px="3" flexDirection="row" alignItems="center" gap="2">
         <Box borderRadius="round" p="1" bg="base.blue.background-secondary">
@@ -99,32 +102,75 @@ export default function TabLayout() {
         <Menu height={24} width={24} />
       </TouchableOpacity>
     ),
+    bottom: (
+      <Box
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        height={TAB_BAR_HEIGHT}
+      >
+        <TouchableOpacity
+          onPress={() => router.navigate(APP_ROUTES.WalletAllAssets)}
+          height="100%"
+          flex={1}
+          alignItems="center"
+          justifyContent="center"
+          borderBottomWidth={4}
+          borderColor={getBorderColor(pathname === APP_ROUTES.WalletAllAssets)}
+        >
+          <Text variant="label01">All assets</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.navigate(APP_ROUTES.WalletTokens)}
+          height="100%"
+          flex={1}
+          alignItems="center"
+          justifyContent="center"
+          borderBottomWidth={4}
+          borderColor={getBorderColor(pathname === APP_ROUTES.WalletTokens)}
+        >
+          <Text variant="label01">Tokens</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.navigate(APP_ROUTES.WalletCollectibles)}
+          height="100%"
+          flex={1}
+          alignItems="center"
+          justifyContent="center"
+          borderBottomWidth={4}
+          borderColor={getBorderColor(pathname === APP_ROUTES.WalletCollectibles)}
+        >
+          <Text variant="label01">Collectibles</Text>
+        </TouchableOpacity>
+      </Box>
+    ),
   });
   return (
     <ActionBarContext.Provider value={{ ref }}>
-      <Tabs tabBar={createFilledActionBar(ref)}>
+      <Tabs tabBar={() => null}>
         <Tabs.Screen
-          name="send"
+          name="all-assets"
           options={{
-            title: 'Send',
-            header: navigationHeader,
+            title: 'All Assets',
+            header: NavigationHeader,
           }}
         />
         <Tabs.Screen
-          name="receive"
+          name="collectibles"
           options={{
-            title: 'Receive',
-            header: navigationHeader,
+            title: 'Collectibles',
+            header: NavigationHeader,
           }}
         />
         <Tabs.Screen
-          name="swap"
+          name="tokens"
           options={{
-            title: 'Swap',
-            header: navigationHeader,
+            title: 'Tokens',
+            header: NavigationHeader,
           }}
         />
       </Tabs>
+      {createFilledActionBar(ref, router)()}
     </ActionBarContext.Provider>
   );
 }

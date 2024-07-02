@@ -8,60 +8,60 @@ import { useTheme } from '@shopify/restyle';
 
 import { Text, Theme } from '@leather.io/ui/native';
 
-import { ActionBarContext } from './_layout';
+import { ActionBarContext, TAB_BAR_HEIGHT } from './_layout';
 
 const DATA = [
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'First Item',
+    title: 'Amazing asset',
   },
   {
-    title: 'Second Item',
+    title: 'Amazing asset',
   },
 ];
 
-const SCROLL_UNTIL_CLOSE = 50;
-const SCROLL_PADDING_BOTTOM = 50;
-const SCROLL_PADDING_TOP = 20;
+const scrollUntilClosed = 50;
+const scrollPaddingBottom = 50;
+const scrollPaddingTop = 20;
 
 /**
  *
- * Check if FlatList is SCROLL_PADDING_BOTTOM pixels off the bottom
+ * Check if FlatList is scrollPaddingBottom pixels off the bottom
  *
  * @param nativeEvent
  * @returns boolean
@@ -70,7 +70,7 @@ const isCloseToBottom = (
   { layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent,
   contentOffsetBottom: number
 ) => {
-  const paddingToBottom = SCROLL_PADDING_BOTTOM;
+  const paddingToBottom = scrollPaddingBottom;
   return (
     layoutMeasurement.height + contentOffset.y - contentOffsetBottom >=
     contentSize.height - paddingToBottom
@@ -79,13 +79,13 @@ const isCloseToBottom = (
 
 /**
  *
- * Check if FlatList is SCROLL_PADDING_TOP pixels off the top
+ * Check if FlatList is scrollPaddingTop pixels off the top
  *
  * @param nativeEvent
  * @returns boolean
  */
 const isCloseToTop = ({ contentOffset }: NativeScrollEvent, contentOffsetTop: number) => {
-  const paddingToTop = SCROLL_PADDING_TOP;
+  const paddingToTop = scrollPaddingTop;
 
   return contentOffset.y <= -contentOffsetTop + paddingToTop;
 };
@@ -103,7 +103,7 @@ export default function SendScreen() {
   }, [refreshing]);
 
   const contentOffsetBottom = bottom + ACTION_BAR_TOTAL_HEIGHT;
-  const contentOffsetTop = top + HEADER_HEIGHT;
+  const contentOffsetTop = top + HEADER_HEIGHT + TAB_BAR_HEIGHT;
 
   function createOnScrollHandler() {
     let savedYOffset: number | null = null;
@@ -127,8 +127,8 @@ export default function SendScreen() {
         actionBarContext.ref?.current?.show();
         return;
       }
-      // If the list scrolled more than SCROLL_UNTIL_CLOSE pixels after last save, hide action bar
-      if (yOffset - savedYOffset > SCROLL_UNTIL_CLOSE) {
+      // If the list scrolled more than scrollUntilClosed pixels after last save, hide action bar
+      if (yOffset - savedYOffset > scrollUntilClosed) {
         savedYOffset = yOffset;
         if (isShown) {
           actionBarContext.ref?.current?.hide();
