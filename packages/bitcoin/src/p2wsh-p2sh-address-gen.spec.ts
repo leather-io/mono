@@ -7,10 +7,10 @@ import { hashP2WPKH } from '@stacks/transactions';
 import { BIP32Factory } from 'bip32';
 import * as bitcoin from 'bitcoinjs-lib';
 
+import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather.io/crypto';
+
 import {
   decodeCompressedWifPrivateKey,
-  deriveBtcBip49SeedFromMnemonic,
-  deriveRootBtcKeychain,
   makePayToScriptHashAddress,
   makePayToScriptHashAddressBytes,
   makePayToScriptHashKeyHash,
@@ -112,8 +112,8 @@ describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
       let child: HDKey;
 
       beforeAll(async () => {
-        seed = await deriveBtcBip49SeedFromMnemonic(phrase);
-        root = deriveRootBtcKeychain(seed);
+        seed = await deriveBip39MnemonicFromSeed(phrase);
+        root = deriveRootBip32Keychain(seed);
         child = root.derive(key.path);
       });
 
