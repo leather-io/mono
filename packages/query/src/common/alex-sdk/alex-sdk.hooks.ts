@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
-import { Currency, type TokenInfo } from 'alex-sdk';
-import { AlexSDK } from 'alex-sdk';
+import { AlexSDK, Currency, type TokenInfo } from 'alex-sdk';
 import BigNumber from 'bignumber.js';
 
 import { MarketData, Money, createMarketData, createMarketPair } from '@leather.io/models';
@@ -48,10 +47,10 @@ export function useAlexCurrencyPriceAsMarketData() {
     (principal: string, symbol: string) => {
       const tokenInfo = supportedCurrencies
         .filter(isDefined)
-        .find(token => getPrincipalFromContractId(token.contractAddress) === principal);
+        .find(token => getPrincipalFromContractId(token.underlyingToken) === principal);
       if (!prices || !tokenInfo)
         return createMarketData(createMarketPair(symbol, 'USD'), createMoney(0, 'USD'));
-      const currency = tokenInfo.id as Currency;
+      const currency = tokenInfo.id;
       const price = convertAmountToFractionalUnit(new BigNumber(prices[currency] ?? 0), 2);
       return createMarketData(createMarketPair(symbol, 'USD'), createMoney(price, 'USD'));
     },
@@ -68,15 +67,14 @@ function useCreateSwapAsset(address: string) {
   return useCallback(
     (tokenInfo?: TokenInfo): SwapAsset | undefined => {
       if (!prices) return;
-      if (!tokenInfo) {
-        // logger.error('No token data found to swap');
-        return;
-      }
+      if (!tokenInfo) return;
 
-      const currency = tokenInfo.id as Currency;
-      const principal = getPrincipalFromContractId(tokenInfo.contractAddress);
-      const availableBalance = sip10Tokens.find(token => token.info.contractId === principal)
-        ?.balance.availableBalance;
+      const currency = tokenInfo.id;
+      const principal = getPrincipalFromContractId(tokenInfo.underlyingToken);
+
+      const availableBalance = sip10Tokens.find(
+        token => token.info.contractId === tokenInfo.underlyingToken
+      )?.balance.availableBalance;
 
       const swapAsset = {
         currency,
@@ -97,7 +95,8 @@ function useCreateSwapAsset(address: string) {
 
       return {
         ...swapAsset,
-        balance: availableBalance ?? createMoney(0, tokenInfo.name, tokenInfo.decimals),
+        balance:
+          availableBalance ?? createMoney(0, tokenInfo.name, tokenInfo.underlyingTokenDecimals),
         marketData: availableBalance
           ? priceAsMarketData(principal, availableBalance.symbol)
           : priceAsMarketData(principal, tokenInfo.name),
