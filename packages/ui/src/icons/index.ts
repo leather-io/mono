@@ -7,6 +7,7 @@ export * from './checkmark-circle-icon';
 export * from './checkmark-icon';
 export * from './chevron-down-icon';
 export * from './chevron-up-icon';
+export * from './chevron-right-icon.web';
 export * from './chevrons-right-icon';
 export * from './circle-icon';
 export * from './close-icon';
