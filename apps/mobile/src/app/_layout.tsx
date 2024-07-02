@@ -1,10 +1,12 @@
 import { StatusBar } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { usePersistedStore, useProtectedStore } from '@/state';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -43,7 +45,11 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
             <SplashScreenGuard>
-              <AppRouter />
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <BottomSheetModalProvider>
+                  <AppRouter />
+                </BottomSheetModalProvider>
+              </GestureHandlerRootView>
             </SplashScreenGuard>
           </ThemeProvider>
         </QueryClientProvider>
