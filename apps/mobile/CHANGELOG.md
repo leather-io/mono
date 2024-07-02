@@ -86,6 +86,14 @@
   * dependencies
     * @leather.io/ui bumped to 1.4.7
 
+## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.9.0...@leather.io/mobile-v1.10.0) (2024-07-02)
+
+
+### Features
+
+* add bottom sheet modal ([c7b953b](https://github.com/leather-io/mono/commit/c7b953b38319ddc2194670b60f470c3233d01d92))
+* add header tabs ([6cddfd4](https://github.com/leather-io/mono/commit/6cddfd4bfb739b9678e4442fc0de4401f3105e88))
+
 ## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.8.1...@leather.io/mobile-v1.9.0) (2024-07-02)
 
 
