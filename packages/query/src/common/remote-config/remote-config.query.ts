@@ -116,7 +116,7 @@ export function useConfigRunesEnabled() {
   return get(config, 'runesEnabled', false);
 }
 
-export function useConfigSwapEnabled() {
+export function useConfigSwapsEnabled() {
   const config = useRemoteConfig();
-  return get(config, 'swapEnabled', false);
+  return get(config, 'swapsEnabled', false);
 }

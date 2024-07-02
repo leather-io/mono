@@ -529,8 +529,8 @@ importers:
         specifier: 5.45.1
         version: 5.45.1(react@18.2.0)
       alex-sdk:
-        specifier: 0.1.26
-        version: 0.1.26(@stacks/network@6.13.0)(@stacks/transactions@6.15.0)
+        specifier: 2.1.3
+        version: 2.1.3(@stacks/network@6.13.0)(@stacks/transactions@6.15.0)
       axios:
         specifier: 1.6.7
         version: 1.6.7
@@ -5167,12 +5167,12 @@ packages:
   ajv@8.15.0:
     resolution: {integrity: sha512-15BTtQUOsSrmHCy+B4VnAiJAJxJ8IFgu6fcjFQF3jQYZ78nLSQthlFg4ehp+NLIyfvFgOlxNsjKIEhydtFPVHQ==}
 
-  alex-sdk@0.1.26:
-    resolution: {integrity: sha512-uUjbONoAit6htxZGLOFev8v2h59kE31fM1X9efH0Yi1eLXYSSXojj+iFPTlQTQvIysyseXGxkX4VVTc9aQ13sg==}
+  alex-sdk@2.1.3:
+    resolution: {integrity: sha512-sxzMj8kZ8kXja3rdLJn+4tI+MCgdFQD8Aai0jLPwhlViuf3Zuzv8q8YOdxe6/PTsryjTGyNWzNTmQ7WF1tWk3w==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@stacks/network': '*'
-      '@stacks/transactions': '*'
+      '@stacks/network': ^6.3.0
+      '@stacks/transactions': ^6.2.0
 
   anser@1.4.10:
     resolution: {integrity: sha512-hCv9AqTQ8ycjpSd3upOJd7vFwW1JaoYQ7tpham03GJ1ca8/65rqn0RpaWpItOAd6ylW9wAw6luXYPJIyPFVOww==}
@@ -5770,8 +5770,8 @@ packages:
   cjs-module-lexer@1.3.1:
     resolution: {integrity: sha512-a3KdPAANPbNE4ZUv9h6LckSl9zLsYOP4MBmhIPkRaeyybt+r4UghLvq+xw/YwUcC1gqylCkL4rdVs3Lwupjm4Q==}
 
-  clarity-codegen@0.3.6:
-    resolution: {integrity: sha512-Be1J8RFtPFGfWtQ/7enl3xkU1j2KkIS9W7RbuofIVYfKp11MCZSGQeNV+Gh0dQOQIs3O0WQLLg03ikyNaWtYzQ==}
+  clarity-codegen@0.5.2:
+    resolution: {integrity: sha512-t0uvboeZTII7n2lgobAxcQnhyjXwbUKYdUKJA3yjoaOXPvtr5i2zFV7H1E6ZeDMfqd3vIksMPvpdFfXum9SoNQ==}
     hasBin: true
     peerDependencies:
       '@stacks/transactions': '*'
@@ -18496,11 +18496,11 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  alex-sdk@0.1.26(@stacks/network@6.13.0)(@stacks/transactions@6.15.0):
+  alex-sdk@2.1.3(@stacks/network@6.13.0)(@stacks/transactions@6.15.0):
     dependencies:
       '@stacks/network': 6.13.0
       '@stacks/transactions': 6.15.0
-      clarity-codegen: 0.3.6(@stacks/transactions@6.15.0)
+      clarity-codegen: 0.5.2(@stacks/transactions@6.15.0)
     transitivePeerDependencies:
       - debug
 
@@ -19254,7 +19254,7 @@ snapshots:
 
   cjs-module-lexer@1.3.1: {}
 
-  clarity-codegen@0.3.6(@stacks/transactions@6.15.0):
+  clarity-codegen@0.5.2(@stacks/transactions@6.15.0):
     dependencies:
       '@stacks/stacks-blockchain-api-types': 7.8.2
       '@stacks/transactions': 6.15.0

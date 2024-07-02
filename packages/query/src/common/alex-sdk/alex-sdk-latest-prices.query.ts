@@ -1,8 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { Currency } from 'alex-sdk';
 
 import { alex } from './alex-sdk.hooks';
 
-export function useAlexSdkLatestPricesQuery() {
+export function useAlexSdkLatestPricesQuery(): UseQueryResult<
+  Partial<{
+    [currency in Currency]: number;
+  }>,
+  Error
+> {
   return useQuery({
     queryKey: ['alex-sdk-latest-prices'],
     queryFn: async () => alex.getLatestPrices(),
