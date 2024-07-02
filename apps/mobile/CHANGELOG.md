@@ -86,6 +86,23 @@
   * dependencies
     * @leather.io/ui bumped to 1.4.7
 
+## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.8.1...@leather.io/mobile-v1.9.0) (2024-07-02)
+
+
+### Features
+
+* add mobile action bar, header, flat list ([ae5e88b](https://github.com/leather-io/mono/commit/ae5e88b430a458adbddb41a784236c71466e483e))
+* implement animated action bar ([4e9d084](https://github.com/leather-io/mono/commit/4e9d084c5a7ea02a0d7e22a8c72db1a9403c3478))
+* **mobile:** add scaffold home route ([b9f14dc](https://github.com/leather-io/mono/commit/b9f14dcb7317b700cd17b10e72f4907407f7adf9))
+* **mobile:** handle initial route, closes leather-wallet/issues[#60](https://github.com/leather-io/mono/issues/60) ([5c249f6](https://github.com/leather-io/mono/commit/5c249f6589d61099817fa337ca0f9172d48ef180))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.6.0
+
 ## [1.8.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.8.0...@leather.io/mobile-v1.8.1) (2024-06-26)
 
 

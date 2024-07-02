@@ -34,6 +34,28 @@
   * dependencies
     * @leather.io/utils bumped to 0.8.1
 
+## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.5.1...@leather.io/ui-v1.6.0) (2024-07-02)
+
+
+### Features
+
+* add chevron right icon ([62dc8f8](https://github.com/leather-io/mono/commit/62dc8f88425170a57e479ff82932c914aa28e075))
+* add mobile action bar, header, flat list ([ae5e88b](https://github.com/leather-io/mono/commit/ae5e88b430a458adbddb41a784236c71466e483e))
+* **mobile:** add scaffold home route ([b9f14dc](https://github.com/leather-io/mono/commit/b9f14dcb7317b700cd17b10e72f4907407f7adf9))
+* **mobile:** handle initial route, closes leather-wallet/issues[#60](https://github.com/leather-io/mono/issues/60) ([5c249f6](https://github.com/leather-io/mono/commit/5c249f6589d61099817fa337ca0f9172d48ef180))
+
+
+### Bug Fixes
+
+* move DialogHeader to monorepo ([87da4d2](https://github.com/leather-io/mono/commit/87da4d2784b3e61f7c635e8aefc2ac97b0ae7815))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.9.2
+
 ## [1.5.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.5.0...@leather.io/ui-v1.5.1) (2024-06-26)
 
 

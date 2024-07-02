@@ -90,6 +90,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.9.1
 
+## [0.8.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.8.1...@leather.io/bitcoin-v0.8.2) (2024-07-02)
+
+
+### Bug Fixes
+
+* outdated get address fn,  ref leather-wallet/extension[#5548](https://github.com/leather-io/mono/issues/5548) ([e77d1cd](https://github.com/leather-io/mono/commit/e77d1cdaffa5781552265ea1646a2349bdccdaf5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.9.2
+
 ## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.7.4...@leather.io/bitcoin-v0.8.0) (2024-06-21)
 
 
