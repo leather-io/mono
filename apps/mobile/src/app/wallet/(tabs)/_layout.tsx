@@ -7,7 +7,9 @@ import PaperPlane from '@/assets/paper-plane.svg';
 import Swap from '@/assets/swap.svg';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { createBlurredHeader } from '@/components/blurred-header';
+import { Modal } from '@/components/bottom-sheet-modal';
 import { APP_ROUTES } from '@/constants';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Trans } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 import { ExpoRouter } from 'expo-router/types/expo-router';
@@ -87,6 +89,7 @@ export default function TabLayout() {
 
   const router = useRouter();
   const pathname = usePathname();
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const NavigationHeader = createBlurredHeader({
     center: (
@@ -98,7 +101,15 @@ export default function TabLayout() {
       </TouchableOpacity>
     ),
     right: (
-      <TouchableOpacity height={48} width={48} justifyContent="center" alignItems="center">
+      <TouchableOpacity
+        onPress={() => {
+          bottomSheetModalRef.current?.present();
+        }}
+        height={48}
+        width={48}
+        justifyContent="center"
+        alignItems="center"
+      >
         <Menu height={24} width={24} />
       </TouchableOpacity>
     ),
@@ -171,6 +182,9 @@ export default function TabLayout() {
         />
       </Tabs>
       {createFilledActionBar(ref, router)()}
+      <Modal ref={bottomSheetModalRef}>
+        <Text>Dummy modal text 🎉 Add blocks to see responsive modal</Text>
+      </Modal>
     </ActionBarContext.Provider>
   );
 }

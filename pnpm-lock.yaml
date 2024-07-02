@@ -64,6 +64,9 @@ importers:
       '@expo/vector-icons':
         specifier: 14.0.0
         version: 14.0.0
+      '@gorhom/bottom-sheet':
+        specifier: 4.6.3
+        version: 4.6.3(@types/react@18.2.79)(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@leather.io/constants':
         specifier: workspace:*
         version: link:../../packages/constants
@@ -172,6 +175,9 @@ importers:
       react-native:
         specifier: 0.74.1
         version: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
+      react-native-gesture-handler:
+        specifier: 2.16.1
+        version: 2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react-native-reanimated:
         specifier: 3.10.1
         version: 3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -2051,6 +2057,10 @@ packages:
       effect: 2.0.0-next.62
       fast-check: ^3.13.2
 
+  '@egjs/hammerjs@2.0.17':
+    resolution: {integrity: sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==}
+    engines: {node: '>=0.8.0'}
+
   '@emotion/use-insertion-effect-with-fallbacks@1.0.1':
     resolution: {integrity: sha512-jT/qyKZ9rzLErtrjGgdkMBn2OP8wl0G3sQlBb3YPryvKHsjvINUhVaPFfP+fpBcOkmrVOVEEHQFJ7nbj2TH2gw==}
     peerDependencies:
@@ -2738,6 +2748,27 @@ packages:
   '@fungible-systems/zone-file@2.0.0':
     resolution: {integrity: sha512-l7IqAjJSvvwKuShfVsQ70nhNfoTtqoow5vxblLaJJyl4XeIVdD28+clwTkJkag8oEPHPobJXfqLBDHHdF+E0hA==}
     engines: {node: '>=10'}
+
+  '@gorhom/bottom-sheet@4.6.3':
+    resolution: {integrity: sha512-fSuSfbtoKsjmSeyz+tG2C0GtcEL7PS63iEXI23c9M+HeCT1IFK6ffmIa2pqyqB43L1jtkR+BWkpZwqXnN4H8xA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-native': '*'
+      react: '*'
+      react-native: '*'
+      react-native-gesture-handler: '>=1.10.1'
+      react-native-reanimated: '>=2.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-native':
+        optional: true
+
+  '@gorhom/portal@1.0.14':
+    resolution: {integrity: sha512-MXyL4xvCjmgaORr/rtryDNFy3kU4qUbKlwtQqqsygd0xX3mhKjOLn6mQK8wfu0RkoE0pBE0nAasRoHua+/QZ7A==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -4682,6 +4713,9 @@ packages:
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
+
+  '@types/hammerjs@2.0.45':
+    resolution: {integrity: sha512-qkcUlZmX6c4J8q45taBKTL3p+LbITgyx7qhlPYOdOHZB7B31K0mXbP5YA7i7SgDeEGuI9MnumiKPEMrxg8j3KQ==}
 
   '@types/html-minifier-terser@6.1.0':
     resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
@@ -7441,6 +7475,9 @@ packages:
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
 
+  hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
 
@@ -9921,6 +9958,12 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  react-native-gesture-handler@2.16.1:
+    resolution: {integrity: sha512-7AlZS2IWDPQylAYOQle2mI0Xs0omAd/Kr+gAy58hjS14LUhxZAwYMVxcSFMlN9PfzXomoNVhmJBapDWIWUw/NA==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   react-native-helmet-async@2.0.4:
     resolution: {integrity: sha512-m3CkXWss6B1dd6mCMleLpzDCJJGGaHOLQsUzZv8kAASJmMfmVT4d2fx375iXKTRWT25ThBfae3dECuX5cq/8hg==}
@@ -13279,6 +13322,10 @@ snapshots:
       effect: 2.0.0-next.62
       fast-check: 3.15.0
 
+  '@egjs/hammerjs@2.0.17':
+    dependencies:
+      '@types/hammerjs': 2.0.45
+
   '@emotion/use-insertion-effect-with-fallbacks@1.0.1(react@18.2.0)':
     dependencies:
       react: 18.2.0
@@ -14414,6 +14461,23 @@ snapshots:
   '@floating-ui/utils@0.2.2': {}
 
   '@fungible-systems/zone-file@2.0.0': {}
+
+  '@gorhom/bottom-sheet@4.6.3(@types/react@18.2.79)(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@gorhom/portal': 1.0.14(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      invariant: 2.2.4
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
+      react-native-gesture-handler: 2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      react-native-reanimated: 3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.79
+
+  '@gorhom/portal@1.0.14(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      nanoid: 3.3.7
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.8.0)':
     dependencies:
@@ -17867,6 +17931,8 @@ snapshots:
   '@types/graceful-fs@4.1.9':
     dependencies:
       '@types/node': 20.14.0
+
+  '@types/hammerjs@2.0.45': {}
 
   '@types/html-minifier-terser@6.1.0': {}
 
@@ -21527,6 +21593,10 @@ snapshots:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
+  hoist-non-react-statics@3.3.2:
+    dependencies:
+      react-is: 16.13.1
+
   hookable@5.5.3: {}
 
   hosted-git-info@2.8.9: {}
@@ -24385,6 +24455,16 @@ snapshots:
   react-is@18.1.0: {}
 
   react-is@18.3.1: {}
+
+  react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@egjs/hammerjs': 2.0.17
+      hoist-non-react-statics: 3.3.2
+      invariant: 2.2.4
+      lodash: 4.17.21
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
 
   react-native-helmet-async@2.0.4(react@18.2.0):
     dependencies:
