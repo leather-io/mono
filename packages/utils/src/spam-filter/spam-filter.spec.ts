@@ -16,6 +16,10 @@ describe('Spam filter', () => {
     expect(spamFilter('https://fake')).toEqual(spamReplacement);
     expect(spamFilter('http://fake')).toEqual(spamReplacement);
   });
+  it('should flag tokens containing . as suspicious', () => {
+    expect(spamFilter('xxx.com')).toEqual(spamReplacement);
+    expect(spamFilter('xxxx.fund')).toEqual(spamReplacement);
+  });
   it('should detect spam words in strings and replace content', () => {
     expect(spamFilter('You won some stx')).toEqual(spamReplacement);
     expect(spamFilter('You Win some stx')).toEqual(spamReplacement);
