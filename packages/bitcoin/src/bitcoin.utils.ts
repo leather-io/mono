@@ -89,32 +89,31 @@ export function decodeBitcoinTx(tx: string): ReturnType<typeof btc.RawTx.decode>
 export function getAddressFromOutScript(script: Uint8Array, bitcoinNetwork: BtcSignerNetwork) {
   const outputScript = btc.OutScript.decode(script);
 
-  if (outputScript.type === 'pk' || outputScript.type === 'tr') {
-    return btc.Address(bitcoinNetwork).encode({
-      type: outputScript.type,
-      pubkey: outputScript.pubkey,
-    });
+  switch (outputScript.type) {
+    case 'pkh':
+    case 'sh':
+    case 'wpkh':
+    case 'wsh':
+      return btc.Address(bitcoinNetwork).encode({
+        type: outputScript.type,
+        hash: outputScript.hash,
+      });
+    case 'tr':
+      return btc.Address(bitcoinNetwork).encode({
+        type: outputScript.type,
+        pubkey: outputScript.pubkey,
+      });
+    case 'ms':
+      return btc.p2ms(outputScript.m, outputScript.pubkeys).address ?? '';
+    case 'pk':
+      return btc.p2pk(outputScript.pubkey, bitcoinNetwork).address ?? '';
+    case 'unknown':
+      return 'unknown';
+    case 'tr_ms':
+    case 'tr_ns':
+    default:
+      return '';
   }
-  if (outputScript.type === 'ms' || outputScript.type === 'tr_ms') {
-    return btc.Address(bitcoinNetwork).encode({
-      type: outputScript.type,
-      pubkeys: outputScript.pubkeys,
-      m: outputScript.m,
-    });
-  }
-  if (outputScript.type === 'tr_ns') {
-    return btc.Address(bitcoinNetwork).encode({
-      type: outputScript.type,
-      pubkeys: outputScript.pubkeys,
-    });
-  }
-  if (outputScript.type === 'unknown') {
-    return 'unknown';
-  }
-  return btc.Address(bitcoinNetwork).encode({
-    type: outputScript.type,
-    hash: outputScript.hash,
-  });
 }
 
 /**
