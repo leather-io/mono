@@ -1,7 +1,7 @@
 const urlRegex =
   /(http|https|ftp)|(((http|ftp|https):\/\/)?(((http|ftp|https):\/\/)?(([\w.-]*)\.([\w]*))))/g;
 const spamWords = ['won', 'win', 'click'];
-export const spamReplacement = 'Unknown token';
+export const spamReplacement = 'Suspicious token';
 
 function spamUrlFilter(input: string) {
   return input.match(urlRegex);
