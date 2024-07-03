@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.6.0...@leather.io/eslint-config-v0.6.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* eslint missing no duplicate imports ([8734895](https://github.com/leather-io/mono/commit/8734895a09a782c20de14c1e55072c169ecbca9b))
+
 ## [0.6.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.5.0...@leather.io/eslint-config-v0.6.0) (2024-06-21)
 
 

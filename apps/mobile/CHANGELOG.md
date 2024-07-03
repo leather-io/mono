@@ -86,6 +86,16 @@
   * dependencies
     * @leather.io/ui bumped to 1.4.7
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.8.1
+    * @leather.io/tokens bumped to 0.6.1
+    * @leather.io/ui bumped to 1.6.1
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.6.1
+
 ## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.9.0...@leather.io/mobile-v1.10.0) (2024-07-02)
 
 
