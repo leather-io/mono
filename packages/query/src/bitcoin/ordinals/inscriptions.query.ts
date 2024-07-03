@@ -6,8 +6,7 @@ import axios from 'axios';
 
 import { getTaprootAddress } from '@leather.io/bitcoin';
 import { HIRO_INSCRIPTIONS_API_URL } from '@leather.io/models';
-import { createNumArrayOfRange } from '@leather.io/utils';
-import { ensureArray } from '@leather.io/utils';
+import { createNumArrayOfRange, ensureArray } from '@leather.io/utils';
 
 import type { InscriptionResponseHiro } from '../../../types/inscription';
 import { useHiroApiRateLimiter } from '../../hiro-rate-limiter';

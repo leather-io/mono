@@ -29,6 +29,7 @@ module.exports = {
     // methods, such as implicit use of signed transactions
     'deprecation/deprecation': 'warn',
     'no-console': ['error'],
+    'no-duplicate-imports': ['error'],
     'prefer-const': [
       'error',
       {

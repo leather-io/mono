@@ -1,7 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 
-import type { MarketData, Money, NumType } from '@leather.io/models';
-import { formatMarketPair } from '@leather.io/models';
+import { type MarketData, type Money, type NumType, formatMarketPair } from '@leather.io/models';
 
 import { isNumber } from '..';
 import { initBigNumber, sumNumbers } from '../math/helpers';
