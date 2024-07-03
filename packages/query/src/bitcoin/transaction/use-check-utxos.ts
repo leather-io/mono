@@ -147,7 +147,7 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
         setIsLoading(false);
       }
     },
-    [client, isTestnet, preventTransaction]
+    [client, isTestEnv, isTestnet, preventTransaction]
   );
 
   return {
