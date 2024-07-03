@@ -89,6 +89,27 @@
     * @leather.io/bitcoin bumped to 0.8.2
     * @leather.io/utils bumped to 0.9.2
 
+## [0.9.5](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.4...@leather.io/query-v0.9.5) (2024-07-03)
+
+
+### Bug Fixes
+
+* eslint missing no duplicate imports ([8734895](https://github.com/leather-io/mono/commit/8734895a09a782c20de14c1e55072c169ecbca9b))
+* swaps config and upgrade alex sdk ([1794a8f](https://github.com/leather-io/mono/commit/1794a8f890a8d1f212623b155ade441373f68bbc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.8.3
+    * @leather.io/constants bumped to 0.8.1
+    * @leather.io/models bumped to 0.10.1
+    * @leather.io/rpc bumped to 2.0.1
+    * @leather.io/utils bumped to 0.9.3
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.6.1
+
 ## [0.9.3](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.2...@leather.io/query-v0.9.3) (2024-06-27)
 
 

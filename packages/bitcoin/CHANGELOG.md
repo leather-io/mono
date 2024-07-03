@@ -90,6 +90,17 @@
   * dependencies
     * @leather.io/utils bumped to 0.9.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.8.1
+    * @leather.io/models bumped to 0.10.1
+    * @leather.io/utils bumped to 0.9.3
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.6.1
+    * @leather.io/rpc bumped to 2.0.1
+
 ## [0.8.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.8.1...@leather.io/bitcoin-v0.8.2) (2024-07-02)
 
 
