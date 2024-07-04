@@ -8,5 +8,6 @@ export enum APP_ROUTES {
   WalletSwap = '/wallet/swap',
   WalletTokens = '/wallet/tokens',
   WalletCollectibles = '/wallet/collectibles',
+  WalletBrowser = '/wallet/browser',
   WaitingList = '/waiting-list',
 }

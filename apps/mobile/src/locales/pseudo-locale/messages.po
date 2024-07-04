@@ -17,6 +17,10 @@ msgstr ""
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr ""
 
+#: src/components/browser/browser-empty-state.tsx:70
+msgid "Cancel"
+msgstr ""
+
 #: src/app/waiting-list/waiting-list.tsx:256
 msgid "Done"
 msgstr ""
@@ -55,4 +59,8 @@ msgstr ""
 
 #: src/app/waiting-list/waiting-list.tsx:230
 msgid "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
+msgstr ""
+
+#: src/components/browser/browser-empty-state.tsx:64
+msgid "Type URL or search"
 msgstr ""
