@@ -19,6 +19,9 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
     devDependencies:
+      '@babel/runtime':
+        specifier: 7.23.2
+        version: 7.23.2
       '@changesets/cli':
         specifier: 2.26.2
         version: 2.26.2
@@ -70,6 +73,9 @@ importers:
       '@leather.io/constants':
         specifier: workspace:*
         version: link:../../packages/constants
+      '@leather.io/crypto':
+        specifier: workspace:*
+        version: link:../../packages/crypto
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens

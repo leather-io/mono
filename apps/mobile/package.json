@@ -34,6 +34,7 @@
     "@expo/vector-icons": "14.0.0",
     "@gorhom/bottom-sheet": "4.6.3",
     "@leather.io/constants": "workspace:*",
+    "@leather.io/crypto": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@lingui/core": "4.11.1",
