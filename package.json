@@ -30,6 +30,7 @@
     "@ls-lint/ls-lint": "2.2.3"
   },
   "devDependencies": {
+    "@babel/runtime": "7.23.2",
     "@changesets/cli": "2.26.2",
     "@commitlint/cli": "18.0.0",
     "@commitlint/config-conventional": "18.0.0",
