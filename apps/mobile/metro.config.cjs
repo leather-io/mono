@@ -1,9 +1,3 @@
-/**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
- *
- * @format
- */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-console */
 
@@ -49,6 +43,15 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName.startsWith('@/')) {
     return context.resolveRequest(context, moduleName, platform);
   }
+
+  // Ensures resolution of the browser version of `@noble/hashes`s exports.
+  // Without this the node export is resolved, resulting in
+  // `crypto.getRandomValues` exceptions
+  // https://github.com/paulmillr/noble-hashes/blob/main/package.json#L47-L50
+  if (moduleName === '@noble/hashes/crypto') {
+    return context.resolveRequest(context, moduleName, platform);
+  }
+
   return symlinkResolver(context, moduleName, platform);
 };
 

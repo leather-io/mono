@@ -3,8 +3,8 @@ import merge from 'lodash.merge';
 import { StateCreator } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { EntityAdapter, EntitySetter, createEntity } from './entity-adapter';
-import { PERSISTED_KEY, filterObjectKeys } from './utils';
+import { EntityAdapter, EntitySetter, createEntity } from '../entity-adapter';
+import { PERSISTED_KEY, filterObjectKeys } from '../utils';
 
 interface Account {
   id: string;
