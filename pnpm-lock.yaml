@@ -127,6 +127,9 @@ importers:
       expo-constants:
         specifier: 16.0.1
         version: 16.0.1(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
+      expo-crypto:
+        specifier: 13.0.2
+        version: 13.0.2(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
       expo-font:
         specifier: 12.0.5
         version: 12.0.5(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
@@ -145,6 +148,9 @@ importers:
       expo-splash-screen:
         specifier: 0.27.4
         version: 0.27.4(expo-modules-autolinking@1.11.1)(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
+      expo-standard-web-crypto:
+        specifier: 1.8.1
+        version: 1.8.1(expo-crypto@13.0.2(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5)))
       expo-status-bar:
         specifier: 1.12.1
         version: 1.12.1
@@ -6878,6 +6884,11 @@ packages:
     peerDependencies:
       expo: '*'
 
+  expo-crypto@13.0.2:
+    resolution: {integrity: sha512-7f/IMPYJZkBM21LNEMXGrNo/0uXSVfZTwufUdpNKedJR0fm5fH4DCSN79ZddlV26nF90PuXjK2inIbI6lb0qRA==}
+    peerDependencies:
+      expo: '*'
+
   expo-file-system@17.0.1:
     resolution: {integrity: sha512-dYpnZJqTGj6HCYJyXAgpFkQWsiCH3HY1ek2cFZVHFoEc5tLz9gmdEgTF6nFHurvmvfmXqxi7a5CXyVm0aFYJBw==}
     peerDependencies:
@@ -6943,6 +6954,15 @@ packages:
     resolution: {integrity: sha512-JwepK1FjbwiOK2nwIFanfzj9s7UXYnpTwLX8A9v7Ec3K4V28yu8HooSc9X60cftBw9UZrs8Gwj4PgTpQabBS9A==}
     peerDependencies:
       expo: '*'
+
+  expo-standard-web-crypto@1.8.1:
+    resolution: {integrity: sha512-0T/FT45gpjRFI9LZdUAdrCLyBg+6lf1rEHFsEm8EryFxVnQ5eKknpGgx7hd6kLytGVIWWL4zc+yFSHrp2LVqXw==}
+    peerDependencies:
+      expo-crypto: ^13.0.0
+      expo-random: '*'
+    peerDependenciesMeta:
+      expo-random:
+        optional: true
 
   expo-status-bar@1.12.1:
     resolution: {integrity: sha512-/t3xdbS8KB0prj5KG5w7z+wZPFlPtkgs95BsmrP/E7Q0xHXTcDcQ6Cu2FkFuRM+PKTb17cJDnLkawyS5vDLxMA==}
@@ -20728,6 +20748,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  expo-crypto@13.0.2(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5)):
+    dependencies:
+      base64-js: 1.5.1
+      expo: 51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5)
+
   ? expo-file-system@17.0.1(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5)))(expo-linking@6.3.1(expo@51.0.8))(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
   : dependencies:
       expo: 51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5)))(expo-linking@6.3.1(expo@51.0.8))(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5)
@@ -20903,6 +20928,10 @@ snapshots:
       - encoding
       - expo-modules-autolinking
       - supports-color
+
+  expo-standard-web-crypto@1.8.1(expo-crypto@13.0.2(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))):
+    dependencies:
+      expo-crypto: 13.0.2(expo@51.0.8(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.1)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.4.5))
 
   expo-status-bar@1.12.1: {}
 
