@@ -1,9 +1,4 @@
-import {
-  HIRO_INSCRIPTIONS_API_URL,
-  Inscription,
-  createInscription,
-  whenInscriptionMimeType,
-} from '@leather.io/models';
+import { Inscription, createInscription, whenInscriptionMimeType } from '@leather.io/models';
 
 import { BestinslotInscriptionResponse, InscriptionResponseHiro } from '../../../types/inscription';
 
@@ -31,7 +26,7 @@ export function createBestinSlotInscription(
   inscription: BestinslotInscriptionResponse
 ): Inscription {
   const id = inscription.inscription_id;
-  const contentSrc = `${HIRO_INSCRIPTIONS_API_URL}/${id}/content`;
+  const contentSrc = inscription.content_url;
   const iframeSrc = `https://ordinals.com/preview/${id}`;
   const preview = `https://ordinals.hiro.so/inscription/${id}`;
   const title = `Inscription ${inscription.inscription_number}`;

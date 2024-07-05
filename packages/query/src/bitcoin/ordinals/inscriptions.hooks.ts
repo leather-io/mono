@@ -5,7 +5,8 @@ import { HDKey } from '@scure/bip32';
 import { isUndefined } from '@leather.io/utils';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
-import { createInscriptionHiro } from './inscription.utils';
+import { createBestinSlotInscription } from './inscription.utils';
+import { useBestInSlotGetInscriptionsInfiniteQuery } from './inscriptions-infinite.query';
 import { useGetInscriptionsInfiniteQuery } from './inscriptions.query';
 
 interface FindInscriptionsOnUtxoArgs {
@@ -50,14 +51,16 @@ export function useInscriptions({
   nativeSegwitAddress: string;
   taprootKeychain: HDKey | undefined;
 }) {
-  const query = useGetInscriptionsInfiniteQuery({
+  const query = useBestInSlotGetInscriptionsInfiniteQuery({
     taprootKeychain,
     nativeSegwitAddress,
   });
   return {
     ...query,
     inscriptions:
-      query.data?.pages.flatMap(page => page.inscriptions.map(createInscriptionHiro)) ?? [],
+      query.data?.pages.flatMap(page =>
+        page.inscriptions.filter(Boolean).map(createBestinSlotInscription)
+      ) ?? [],
   };
 }
 

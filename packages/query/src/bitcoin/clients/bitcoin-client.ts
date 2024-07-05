@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-import { BitcoinTx } from '@leather.io/models';
+import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
+import {
+  BESTINSLOT_API_BASE_URL_MAINNET,
+  BESTINSLOT_API_BASE_URL_TESTNET,
+  BitcoinTx,
+} from '@leather.io/models';
+import { whenNetwork } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
@@ -122,17 +128,28 @@ export interface BitcoinClient {
   BestinSlotApi: ReturnType<typeof BestinSlotApi>;
 }
 
-export function bitcoinClient(basePath: string): BitcoinClient {
+interface BitcoinClientArgs {
+  basePath: string;
+  bestInSlotPath: string;
+}
+
+export function bitcoinClient({ basePath, bestInSlotPath }: BitcoinClientArgs): BitcoinClient {
   return {
     addressApi: AddressApi(basePath),
     feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
-    BestinSlotApi: BestinSlotApi(),
+    BestinSlotApi: BestinSlotApi(bestInSlotPath),
   };
 }
 
 export function useBitcoinClient() {
   const network = useLeatherNetwork();
+  const bestInSlotPath = whenNetwork(
+    bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.bitcoinNetwork)
+  )({
+    mainnet: BESTINSLOT_API_BASE_URL_MAINNET,
+    testnet: BESTINSLOT_API_BASE_URL_TESTNET,
+  });
 
-  return bitcoinClient(network.chain.bitcoin.bitcoinUrl);
+  return bitcoinClient({ basePath: network.chain.bitcoin.bitcoinUrl, bestInSlotPath });
 }

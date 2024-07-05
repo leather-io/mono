@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { QueryPrefixes } from '../../query-prefixes';
-import { useHiroApiRateLimiter } from '../../rate-limiter/hiro-rate-limiter';
+import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
 
 const queryOptions = {
   staleTime: Infinity,
@@ -15,7 +15,7 @@ async function getInscriptionTextContent(src: string) {
 }
 
 export function useInscriptionTextContentQuery(contentSrc: string) {
-  const limiter = useHiroApiRateLimiter();
+  const limiter = useBestInSlotApiRateLimiter();
   return useQuery({
     queryKey: [QueryPrefixes.OrdinalTextContent, contentSrc],
     queryFn: async () => {

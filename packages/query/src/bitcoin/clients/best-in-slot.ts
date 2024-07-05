@@ -2,8 +2,6 @@ import axios from 'axios';
 import { ZodError, z } from 'zod';
 
 import {
-  BESTINSLOT_API_BASE_URL_MAINNET,
-  BESTINSLOT_API_BASE_URL_TESTNET,
   type BitcoinNetworkModes,
   MarketData,
   Money,
@@ -134,8 +132,7 @@ interface RunesOutputsByAddressResponse {
   data: RunesOutputsByAddress[];
 }
 
-interface BestInSlotInscriptionByAddressArgs {
-  address: string;
+interface BestInSlotInscriptionByAddressDefaultArgs {
   network?: WalletDefaultNetworkConfigurationIds;
   sortBy?: 'inscr_num';
   order?: 'asc' | 'desc';
@@ -144,6 +141,14 @@ interface BestInSlotInscriptionByAddressArgs {
   signal?: AbortSignal;
   exclude_brc20?: boolean;
   cursed_only?: boolean;
+}
+
+interface BestInSlotInscriptionByAddressArgs extends BestInSlotInscriptionByAddressDefaultArgs {
+  address: string;
+}
+
+interface BestInSlotInscriptionByAddressesArgs extends BestInSlotInscriptionByAddressDefaultArgs {
+  addresses: string[];
 }
 
 interface BestinSlotInscriptionByAddressResponse {
@@ -185,22 +190,12 @@ const inscriptionsByAddressSchema = z.object({
   data: z.array(bestInSlotInscriptionSchema),
 });
 
-export function BestinSlotApi() {
-  const url = BESTINSLOT_API_BASE_URL_MAINNET;
-  const testnetUrl = BESTINSLOT_API_BASE_URL_TESTNET;
-
-  const defaultOptions = {
-    headers: {
-      'x-api-key': `${process.env.BESTINSLOT_API_KEY}`,
-    },
-  };
-
+export function BestinSlotApi(basePath: string) {
   /**
    * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-runes-and-bitmap-v3-api-mainnet+testnet+signet/wallets#get-wallet-inscriptions
    */
   async function getInscriptionsByAddress({
     address,
-    network = WalletDefaultNetworkConfigurationIds.mainnet,
     sortBy = 'inscr_num',
     order = 'asc',
     offset = 0,
@@ -209,8 +204,6 @@ export function BestinSlotApi() {
     exclude_brc20 = false,
     signal,
   }: BestInSlotInscriptionByAddressArgs) {
-    const baseUrl = network === 'mainnet' ? url : testnetUrl;
-
     const queryParams = new URLSearchParams({
       address,
       sort_by: sortBy,
@@ -221,8 +214,43 @@ export function BestinSlotApi() {
     });
 
     const resp = await axios.get<BestinSlotInscriptionByAddressResponse>(
-      `${baseUrl}/wallet/inscriptions?${queryParams}`,
-      { ...defaultOptions, signal }
+      `${basePath}/wallet/inscriptions?${queryParams}`,
+      { signal }
+    );
+
+    try {
+      return inscriptionsByAddressSchema.parse(resp.data);
+    } catch (e) {
+      // TODO: should be analytics
+      // eslint-disable-next-line no-console
+      if (e instanceof ZodError) console.log('schema_fail', e);
+      throw e;
+    }
+  }
+
+  async function getInscriptionsByAddresses({
+    addresses,
+    sortBy = 'inscr_num',
+    order = 'asc',
+    offset = 0,
+    // 2000 is the maximum count
+    count = 100,
+    exclude_brc20 = false,
+    signal,
+  }: BestInSlotInscriptionByAddressesArgs) {
+    const data = {
+      addresses,
+      sort_by: sortBy,
+      order,
+      exclude_brc20,
+      offset,
+      count,
+    };
+
+    const resp = await axios.post<BestinSlotInscriptionByAddressResponse>(
+      `${basePath}/wallet/inscriptions_batch`,
+      data,
+      { signal }
     );
 
     try {
@@ -237,10 +265,7 @@ export function BestinSlotApi() {
 
   async function getInscriptionsByTransactionId(id: string) {
     const resp = await axios.get<BestinSlotInscriptionsByTxIdResponse>(
-      `${url}/inscription/in_transaction?tx_id=${id}`,
-      {
-        ...defaultOptions,
-      }
+      `${basePath}/inscription/in_transaction?tx_id=${id}`
     );
 
     return resp.data;
@@ -248,10 +273,7 @@ export function BestinSlotApi() {
 
   async function getInscriptionById(id: string) {
     const resp = await axios.get<BestinSlotInscriptionByIdResponse>(
-      `${url}/inscription/single_info_id?inscription_id=${id}`,
-      {
-        ...defaultOptions,
-      }
+      `${basePath}/inscription/single_info_id?inscription_id=${id}`
     );
     return resp.data;
   }
@@ -259,50 +281,37 @@ export function BestinSlotApi() {
   /* BRC-20 */
   async function getBrc20Balances(address: string) {
     const resp = await axios.get<Brc20WalletBalancesResponse>(
-      `${url}/brc20/wallet_balances?address=${address}`,
-      {
-        ...defaultOptions,
-      }
+      `${basePath}/brc20/wallet_balances?address=${address}`
     );
     return resp.data;
   }
 
   async function getBrc20TickerInfo(ticker: string) {
     const resp = await axios.get<Brc20TickerInfoResponse>(
-      `${url}/brc20/ticker_info?ticker=${ticker}`,
-      {
-        ...defaultOptions,
-      }
+      `${basePath}/brc20/ticker_info?ticker=${ticker}`
     );
     return resp.data;
   }
 
   /* RUNES */
-  async function getRunesWalletBalances(address: string, network: BitcoinNetworkModes) {
-    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+  async function getRunesWalletBalances(address: string) {
     const resp = await axios.get<RunesWalletBalancesResponse>(
-      `${baseUrl}/runes/wallet_balances?address=${address}`,
-      { ...defaultOptions }
+      `${basePath}/runes/wallet_balances?address=${address}`
     );
     return resp.data.data;
   }
 
-  async function getRunesTickerInfo(runeName: string, network: BitcoinNetworkModes) {
-    const baseUrl = network === 'mainnet' ? url : testnetUrl;
+  async function getRunesTickerInfo(runeName: string) {
     const resp = await axios.get<RunesTickerInfoResponse>(
-      `${baseUrl}/runes/ticker_info?rune_name=${runeName}`,
-      { ...defaultOptions }
+      `${basePath}/runes/ticker_info?rune_name=${runeName}`
     );
     return resp.data.data;
   }
 
-  async function getRunesBatchOutputsInfo(outputs: string[], network: BitcoinNetworkModes) {
-    const baseUrl = network === 'mainnet' ? url : testnetUrl;
-
+  async function getRunesBatchOutputsInfo(outputs: string[]) {
     const resp = await axios.post<RunesOutputsByAddressResponse>(
-      `${baseUrl}/runes/batch_output_info`,
-      { queries: outputs },
-      { ...defaultOptions }
+      `${basePath}/runes/batch_output_info`,
+      { queries: outputs }
     );
     return resp.data.data;
   }
@@ -312,14 +321,12 @@ export function BestinSlotApi() {
    */
   async function getRunesOutputsByAddress({
     address,
-    network = 'mainnet',
     sortBy = 'output',
     order = 'asc',
     offset = 0,
     count = 100,
     signal,
   }: RunesOutputsByAddressArgs) {
-    const baseUrl = network === 'mainnet' ? url : testnetUrl;
     const queryParams = new URLSearchParams({
       address,
       sort_by: sortBy,
@@ -329,14 +336,15 @@ export function BestinSlotApi() {
     });
 
     const resp = await axios.get<RunesOutputsByAddressResponse>(
-      `${baseUrl}/runes/wallet_valid_outputs?${queryParams}`,
-      { ...defaultOptions, signal }
+      `${basePath}/runes/wallet_valid_outputs?${queryParams}`,
+      { signal }
     );
     return resp.data.data;
   }
 
   return {
     getInscriptionsByAddress,
+    getInscriptionsByAddresses,
     getInscriptionsByTransactionId,
     getInscriptionById,
     getBrc20Balances,

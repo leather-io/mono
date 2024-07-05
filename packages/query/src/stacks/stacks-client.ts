@@ -224,7 +224,7 @@ export function stacksClient(basePath: string) {
           axios.get<Stx20BalanceResponse>(`${STX20_API_BASE_URL_MAINNET}/balance/${address}`, {
             signal,
           }),
-        { signal, throwOnTimeout: true }
+        { signal, priority: 1, throwOnTimeout: true }
       );
       return resp.data.balances;
     },

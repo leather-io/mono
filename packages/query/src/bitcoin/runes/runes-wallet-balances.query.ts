@@ -21,11 +21,7 @@ export function useGetRunesWalletBalancesByAddressesQuery<T extends unknown = Ru
       return {
         enabled: !!address && (network.chain.bitcoin.bitcoinNetwork === 'testnet' || runesEnabled),
         queryKey: ['runes-wallet-balances', address],
-        queryFn: () =>
-          client.BestinSlotApi.getRunesWalletBalances(
-            address,
-            network.chain.bitcoin.bitcoinNetwork
-          ),
+        queryFn: () => client.BestinSlotApi.getRunesWalletBalances(address),
         ...queryOptions,
         ...options,
       };
