@@ -4,11 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ACTION_BAR_TOTAL_HEIGHT } from '@/components/action-bar';
 import { HEADER_HEIGHT } from '@/components/blurred-header';
+import { TAB_BAR_HEIGHT } from '@/components/tab-bar';
 import { useTheme } from '@shopify/restyle';
 
 import { Text, Theme } from '@leather.io/ui/native';
 
-import { ActionBarContext, TAB_BAR_HEIGHT } from './_layout';
+import { ActionBarContext } from './_layout';
 
 const DATA = [
   {

@@ -1,5 +1,5 @@
-import { ReactNode, forwardRef, useState } from 'react';
-import { Button, ViewStyle } from 'react-native';
+import { ReactNode, forwardRef } from 'react';
+import { ViewStyle } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -16,7 +16,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { BlurView } from 'expo-blur';
 
-import { Box, TouchableOpacity } from '@leather.io/ui/native';
+import { TouchableOpacity } from '@leather.io/ui/native';
 
 const absoluteStyle = {
   position: 'absolute',
@@ -73,7 +73,6 @@ export const Modal = forwardRef<BottomSheetModal, { children: ReactNode }>(funct
   { children },
   ref
 ) {
-  const [boxNumber, setBoxNumber] = useState(1);
   const { bottom } = useSafeAreaInsets();
 
   return (
@@ -90,10 +89,6 @@ export const Modal = forwardRef<BottomSheetModal, { children: ReactNode }>(funct
         }}
       >
         {children}
-        <Button title="add" onPress={() => setBoxNumber(boxNumber + 1)} />
-        {new Array(boxNumber).fill(undefined).map((_, idx) => (
-          <Box key={idx} height={50} width={50} bg="base.ink.text-primary" />
-        ))}
       </BottomSheetView>
     </BottomSheetModal>
   );

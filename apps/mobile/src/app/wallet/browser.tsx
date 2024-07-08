@@ -22,7 +22,10 @@ export default function BrowserScreen() {
       return (
         <BrowerInUse
           textURL={textURL}
-          goToInactiveBrowser={() => setBrowserType(BrowserType.inactive)}
+          goToInactiveBrowser={() => {
+            setBrowserType(BrowserType.inactive);
+            setTextURL('');
+          }}
         />
       );
   }

@@ -17,7 +17,7 @@ msgstr ""
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 
-#: src/components/browser/browser-empty-state.tsx:70
+#: src/components/browser/browser-empty-state.tsx:154
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -37,11 +37,11 @@ msgstr "Follow us"
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 
-#: src/app/wallet/(tabs)/_layout.tsx:52
+#: src/app/wallet/(tabs)/_layout.tsx:53
 msgid "Receive"
 msgstr "Receive"
 
-#: src/app/wallet/(tabs)/_layout.tsx:36
+#: src/app/wallet/(tabs)/_layout.tsx:37
 msgid "Send"
 msgstr "Send"
 
@@ -53,7 +53,7 @@ msgstr "Stay in the loop and be the first one to hear about new developments"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/app/wallet/(tabs)/_layout.tsx:68
+#: src/app/wallet/(tabs)/_layout.tsx:69
 msgid "Swap"
 msgstr "Swap"
 
@@ -61,6 +61,6 @@ msgstr "Swap"
 msgid "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
 msgstr "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
 
-#: src/components/browser/browser-empty-state.tsx:64
+#: src/components/browser/browser-empty-state.tsx:148
 msgid "Type URL or search"
 msgstr "Type URL or search"
