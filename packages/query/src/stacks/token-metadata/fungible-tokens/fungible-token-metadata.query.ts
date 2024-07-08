@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 import { createCryptoAssetBalance } from '@leather.io/models';
@@ -22,8 +22,9 @@ const queryOptions = {
   staleTime,
 };
 
-function fetchFungibleTokenMetadata(client: StacksClient) {
-  return (principal: string) => client.getFtMetadata(principal) as unknown as FtAssetResponse;
+function fetchFungibleTokenMetadata(client: StacksClient, signal: AbortSignal) {
+  return (principal: string) =>
+    client.getFtMetadata(principal, signal) as unknown as FtAssetResponse;
 }
 
 export function useGetFungibleTokenMetadataQuery(principal: string) {
@@ -32,7 +33,7 @@ export function useGetFungibleTokenMetadataQuery(principal: string) {
 
   return useQuery({
     queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-    queryFn: () => fetchFungibleTokenMetadata(client)(principal),
+    queryFn: ({ signal }) => fetchFungibleTokenMetadata(client, signal)(principal),
     ...queryOptions,
   });
 }
@@ -49,7 +50,8 @@ export function useGetFungibleTokensBalanceMetadataQuery(
       return {
         enabled: !!principal,
         queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: () => fetchFungibleTokenMetadata(client)(principal),
+        queryFn: ({ signal }: QueryFunctionContext) =>
+          fetchFungibleTokenMetadata(client, signal)(principal),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           const { contractAssetName } = getStacksContractIdStringParts(key);
@@ -78,7 +80,8 @@ export function useGetFungibleTokensMetadataQuery(keys: string[]) {
       return {
         enabled: !!principal,
         queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: () => fetchFungibleTokenMetadata(client)(principal),
+        queryFn: ({ signal }: QueryFunctionContext) =>
+          fetchFungibleTokenMetadata(client, signal)(principal),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           return createSip10CryptoAssetInfo(key, resp);

@@ -1,7 +1,7 @@
 import { type RuneCryptoAssetInfo, createCryptoAssetBalance } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import type { RuneBalance, RuneTickerInfo } from '../bitcoin-client';
+import { RuneBalance, RuneTickerInfo } from '../clients/best-in-slot';
 
 const defaultRunesSymbol = '¤';
 

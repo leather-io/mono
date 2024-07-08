@@ -16,7 +16,7 @@ export function useStx20BalancesQuery<T extends unknown = Stx20Balance[]>(
   return useQuery({
     enabled: network.chain.stacks.chainId === ChainID.Mainnet,
     queryKey: ['stx20-balances', address],
-    queryFn: () => client.getStx20Balances(address),
+    queryFn: ({ signal }) => client.getStx20Balances(address, signal),
     ...options,
   });
 }

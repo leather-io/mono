@@ -3,7 +3,7 @@ import { UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 import { BitcoinTx } from '@leather.io/models';
 
 import { AppUseQueryConfig } from '../../query-config';
-import { BitcoinClient, useBitcoinClient } from '../bitcoin-client';
+import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 
 function fetchBitcoinTransaction(client: BitcoinClient) {
   return async (txid: string) => {

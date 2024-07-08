@@ -8,7 +8,7 @@ import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
 import { QueryPrefixes } from '../../../query-prefixes';
-import { useBitcoinClient } from '../../bitcoin-client';
+import { useBitcoinClient } from '../../clients/bitcoin-client';
 
 const addressesSimultaneousFetchLimit = 3;
 const stopSearchAfterNumberAddressesWithoutBrc20Tokens = 3;
