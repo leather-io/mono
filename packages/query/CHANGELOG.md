@@ -89,6 +89,20 @@
     * @leather.io/bitcoin bumped to 0.8.2
     * @leather.io/utils bumped to 0.9.2
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.5...@leather.io/query-v0.10.0) (2024-07-08)
+
+
+### Features
+
+* add custom queue class to remove tasks from queue ([1d3acb0](https://github.com/leather-io/mono/commit/1d3acb079e3196343be1506331bcd3b84333c5aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.8.4
+
 ## [0.9.5](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.4...@leather.io/query-v0.9.5) (2024-07-03)
 
 
