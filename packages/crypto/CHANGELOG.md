@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.2...@leather.io/crypto-v1.0.3) (2024-07-08)
+
+
+### Bug Fixes
+
+* polyfill crypto, resolve @nobel/hashes correctly, closes leather-io/issues[#134](https://github.com/leather-io/mono/issues/134) ([25930f3](https://github.com/leather-io/mono/commit/25930f35fc1c371b72a112eeb0e97738684aae6c))
+* resolve @noble/hashes/crypto with a regular resolver instead of symlink ([25930f3](https://github.com/leather-io/mono/commit/25930f35fc1c371b72a112eeb0e97738684aae6c))
+
 ## [1.0.2](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.1...@leather.io/crypto-v1.0.2) (2024-06-21)
 
 

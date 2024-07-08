@@ -96,6 +96,28 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.6.1
 
+## [1.11.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.10.1...@leather.io/mobile-v1.11.0) (2024-07-08)
+
+
+### Features
+
+* browser empty state ([28ba242](https://github.com/leather-io/mono/commit/28ba24281b0b5b0bd80d69dc0a8c3286bab36b14))
+* implement basic browser ([bf7b422](https://github.com/leather-io/mono/commit/bf7b42266d8530316719ab87e92c98e4256d6934))
+
+
+### Bug Fixes
+
+* **mobile:** metro bundling issue, closes leather-io/issues[#105](https://github.com/leather-io/mono/issues/105) ([1089b5e](https://github.com/leather-io/mono/commit/1089b5eacb5f26d5bae3fbf6b68b5f9cb0f7bd1f))
+* polyfill crypto, resolve @nobel/hashes correctly, closes leather-io/issues[#134](https://github.com/leather-io/mono/issues/134) ([25930f3](https://github.com/leather-io/mono/commit/25930f35fc1c371b72a112eeb0e97738684aae6c))
+* resolve @noble/hashes/crypto with a regular resolver instead of symlink ([25930f3](https://github.com/leather-io/mono/commit/25930f35fc1c371b72a112eeb0e97738684aae6c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.0.3
+
 ## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.9.0...@leather.io/mobile-v1.10.0) (2024-07-02)
 
 

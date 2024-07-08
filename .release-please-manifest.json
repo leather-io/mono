@@ -1,16 +1,16 @@
 {
-  "apps/mobile": "1.10.1",
-  "packages/bitcoin": "0.8.3",
+  "apps/mobile": "1.11.0",
+  "packages/bitcoin": "0.8.4",
   "packages/constants": "0.8.1",
   "packages/eslint-config": "0.6.1",
   "packages/models": "0.10.1",
   "packages/prettier-config": "0.5.0",
   "packages/panda-preset": "0.3.1",
-  "packages/query": "0.9.5",
+  "packages/query": "0.10.0",
   "packages/tokens": "0.6.1",
   "packages/tsconfig-config": "0.5.0",
   "packages/rpc": "2.0.1",
   "packages/ui": "1.6.1",
   "packages/utils": "0.9.3",
-  "packages/crypto": "1.0.2"
+  "packages/crypto": "1.0.3"
 }

@@ -101,6 +101,12 @@
     * @leather.io/eslint-config bumped to 0.6.1
     * @leather.io/rpc bumped to 2.0.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.0.3
+
 ## [0.8.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.8.1...@leather.io/bitcoin-v0.8.2) (2024-07-02)
 
 
