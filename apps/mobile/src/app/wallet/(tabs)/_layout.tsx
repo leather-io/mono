@@ -8,6 +8,7 @@ import Swap from '@/assets/swap.svg';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { createBlurredHeader } from '@/components/blurred-header';
 import { Modal } from '@/components/bottom-sheet-modal';
+import { TabBar } from '@/components/tab-bar';
 import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Trans } from '@lingui/macro';
@@ -78,12 +79,6 @@ export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods>
   ref: null,
 });
 
-function getBorderColor(isSelected: boolean) {
-  return isSelected ? 'base.ink.action-primary-default' : 'base.ink.border-default';
-}
-
-export const TAB_BAR_HEIGHT = 60;
-
 export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
 
@@ -114,46 +109,31 @@ export default function TabLayout() {
       </TouchableOpacity>
     ),
     bottom: (
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        height={TAB_BAR_HEIGHT}
-      >
-        <TouchableOpacity
-          onPress={() => router.navigate(APP_ROUTES.WalletAllAssets)}
-          height="100%"
-          flex={1}
-          alignItems="center"
-          justifyContent="center"
-          borderBottomWidth={4}
-          borderColor={getBorderColor(pathname === APP_ROUTES.WalletAllAssets)}
-        >
-          <Text variant="label01">All assets</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => router.navigate(APP_ROUTES.WalletTokens)}
-          height="100%"
-          flex={1}
-          alignItems="center"
-          justifyContent="center"
-          borderBottomWidth={4}
-          borderColor={getBorderColor(pathname === APP_ROUTES.WalletTokens)}
-        >
-          <Text variant="label01">Tokens</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => router.navigate(APP_ROUTES.WalletCollectibles)}
-          height="100%"
-          flex={1}
-          alignItems="center"
-          justifyContent="center"
-          borderBottomWidth={4}
-          borderColor={getBorderColor(pathname === APP_ROUTES.WalletCollectibles)}
-        >
-          <Text variant="label01">Collectibles</Text>
-        </TouchableOpacity>
-      </Box>
+      <TabBar
+        tabs={[
+          {
+            onPress() {
+              router.navigate(APP_ROUTES.WalletAllAssets);
+            },
+            title: 'All assets',
+            isActive: pathname === APP_ROUTES.WalletAllAssets,
+          },
+          {
+            onPress() {
+              router.navigate(APP_ROUTES.WalletTokens);
+            },
+            title: 'Tokens',
+            isActive: pathname === APP_ROUTES.WalletTokens,
+          },
+          {
+            onPress() {
+              router.navigate(APP_ROUTES.WalletCollectibles);
+            },
+            title: 'Collectibles',
+            isActive: pathname === APP_ROUTES.WalletCollectibles,
+          },
+        ]}
+      />
     ),
   });
   return (

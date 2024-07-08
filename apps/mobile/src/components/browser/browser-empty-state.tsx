@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import { TextInput } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import NoFavicon from '@/assets/no-favicon.svg';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
+import { TabBar } from '../tab-bar';
 import { formatURL } from './utils';
 
 interface BrowserEmptyStateProps {
@@ -14,12 +18,81 @@ interface BrowserEmptyStateProps {
   goToActiveBrowser: () => void;
 }
 
+interface Shortcut {
+  title: string;
+  link: string;
+  description?: string;
+  favicon?: string;
+}
+
+const SUGGESTED: Shortcut[] = [
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+];
+
+const RECENT: Shortcut[] = [
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+];
+
+const CONNECTED: Shortcut[] = [
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
+  { link: 'https://gamma.io', title: 'Title' },
+  { link: 'https://gamma.io', title: 'Title' },
+];
+
+type CurrentTab = 'suggested' | 'recent' | 'connected';
+
+function AppWidget({ onPress, shortcut }: { shortcut: Shortcut; onPress: () => void }) {
+  return (
+    <TouchableOpacity onPress={onPress} flexDirection="row" gap="3">
+      <Box borderRadius="sm">
+        <NoFavicon height={60} width={60} />
+      </Box>
+
+      <Box justifyContent="center" gap="1">
+        <Text variant="label02">{shortcut.title}</Text>
+        {shortcut.description ? (
+          <Text variant="label03" color="base.ink.text-subdued">
+            {shortcut.description}
+          </Text>
+        ) : null}
+      </Box>
+    </TouchableOpacity>
+  );
+}
+
 export function BrowserEmptyState({
   textURL,
   setTextURL,
   goToActiveBrowser,
 }: BrowserEmptyStateProps) {
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
+  const [currentTab, setCurrentTab] = useState<CurrentTab>('suggested');
   const theme = useTheme<Theme>();
   function redirect(url: string) {
     setTextURL(formatURL(url));
@@ -32,6 +105,17 @@ export function BrowserEmptyState({
 
   function resetTextInput() {
     setTextURL('');
+  }
+
+  function getCurrentArray() {
+    switch (currentTab) {
+      case 'connected':
+        return CONNECTED;
+      case 'recent':
+        return RECENT;
+      case 'suggested':
+        return SUGGESTED;
+    }
   }
 
   return (
@@ -72,6 +156,50 @@ export function BrowserEmptyState({
           </TouchableOpacity>
         ) : null}
       </Box>
+      <TabBar
+        tabs={[
+          {
+            onPress() {
+              setCurrentTab('suggested');
+            },
+            title: 'Suggested',
+            isActive: currentTab === 'suggested',
+          },
+          {
+            onPress() {
+              setCurrentTab('recent');
+            },
+            title: 'Recent',
+            isActive: currentTab === 'recent',
+          },
+          {
+            onPress() {
+              setCurrentTab('connected');
+            },
+            title: 'Connected',
+            isActive: currentTab === 'connected',
+          },
+        ]}
+      />
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: theme.spacing['5'],
+          paddingTop: theme.spacing['5'],
+          paddingBottom: theme.spacing['5'] + bottom,
+          gap: theme.spacing[3],
+        }}
+      >
+        {getCurrentArray().map(shortcut => (
+          <AppWidget
+            key={shortcut.link}
+            shortcut={shortcut}
+            onPress={() => {
+              setTextURL(shortcut.link);
+              goToActiveBrowser();
+            }}
+          />
+        ))}
+      </ScrollView>
     </Box>
   );
 }

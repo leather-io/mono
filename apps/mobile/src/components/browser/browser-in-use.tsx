@@ -24,7 +24,6 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   const theme = useTheme<Theme>();
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   function closeBrowser() {
