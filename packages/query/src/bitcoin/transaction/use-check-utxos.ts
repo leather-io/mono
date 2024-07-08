@@ -6,7 +6,7 @@ import { bytesToHex } from '@stacks/common';
 import { isUndefined } from '@leather.io/utils';
 
 import { useCurrentNetworkState, useIsLeatherTestingEnv } from '../../leather-query-provider';
-import { BitcoinClient, useBitcoinClient } from '../bitcoin-client';
+import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 import { getNumberOfInscriptionOnUtxoUsingOrdinalsCom } from '../ordinals/inscriptions.query';
 
 class PreventTransactionError extends Error {

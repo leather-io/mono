@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { QueryPrefixes } from '../../../query-prefixes';
@@ -8,10 +8,10 @@ const staleTime = 15 * 60 * 1000; // 15 min
 
 const queryOptions = { gcTime: staleTime, staleTime, refetchOnFocus: false } as const;
 
-function fetchNonFungibleTokenHoldings(client: StacksClient) {
+function fetchNonFungibleTokenHoldings(client: StacksClient, signal: AbortSignal) {
   return async (address: string) => {
     if (!address) return;
-    return client.getNftHoldings(address);
+    return client.getNftHoldings(address, signal);
   };
 }
 
@@ -23,7 +23,8 @@ export function createNonFungibleTokenHoldingsQuery(
   return {
     enabled: !!address,
     queryKey: [QueryPrefixes.GetNftHoldings, address, network],
-    queryFn: () => fetchNonFungibleTokenHoldings(client)(address),
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      fetchNonFungibleTokenHoldings(client, signal)(address),
     ...queryOptions,
   };
 }

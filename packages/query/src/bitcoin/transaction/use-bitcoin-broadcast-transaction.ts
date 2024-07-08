@@ -5,7 +5,7 @@ import { TransactionInput } from '@scure/btc-signer/psbt';
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
 import { delay } from '@leather.io/utils';
 
-import { useBitcoinClient } from '../bitcoin-client';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 import { filterOutIntentionalUtxoSpend, useCheckUnspendableUtxos } from './use-check-utxos';
 
 interface BroadcastCallbackArgs {

@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { Inscription } from '@leather.io/models';
 
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
-import { RunesOutputsByAddress } from '../bitcoin-client';
-import { createInscriptionHiro } from '../ordinals/inscription.utils';
+import { RunesOutputsByAddress } from '../clients/best-in-slot';
+import { createBestinSlotInscription } from '../ordinals/inscription.utils';
 import { useInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
 import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks';
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
@@ -110,8 +110,8 @@ function useFilterInscriptionsByAddress(address: string) {
 
   const filterOutInscriptions = useCallback(
     (utxos: UtxoResponseItem[]) => {
-      const inscriptionResponses = inscriptionsList?.pages.flatMap(page => page.results) ?? [];
-      const inscriptions = inscriptionResponses.map(createInscriptionHiro);
+      const inscriptionResponses = inscriptionsList?.pages.flatMap(page => page.data) ?? [];
+      const inscriptions = inscriptionResponses.map(createBestinSlotInscription);
       return filterUtxosWithInscriptions(inscriptions, utxos);
     },
     [inscriptionsList?.pages]

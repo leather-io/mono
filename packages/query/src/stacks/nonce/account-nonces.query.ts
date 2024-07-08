@@ -10,8 +10,8 @@ const queryOptions = {
   refetchOnWindowFocus: 'always',
 } as const;
 
-function fetchAccountNonces(client: StacksClient) {
-  return async (address: string) => client.getAccountNonces(address);
+function fetchAccountNonces(client: StacksClient, signal: AbortSignal) {
+  return async (address: string) => client.getAccountNonces(address, signal);
 }
 
 type FetchAccountNoncesResp = Awaited<ReturnType<ReturnType<typeof fetchAccountNonces>>>;
@@ -26,7 +26,7 @@ export function useGetAccountNoncesQuery<T extends unknown = FetchAccountNoncesR
   return useQuery({
     enabled: !!address,
     queryKey: ['account-nonces', address, network],
-    queryFn: () => fetchAccountNonces(client)(address),
+    queryFn: ({ signal }) => fetchAccountNonces(client, signal)(address),
     ...queryOptions,
     ...options,
   });

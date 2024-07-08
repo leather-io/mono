@@ -108,7 +108,7 @@ interface FetchNamesForAddressArgs {
   client: StacksClient;
   address: string;
   isTestnet: boolean;
-  signal?: AbortSignal;
+  signal: AbortSignal;
 }
 export async function fetchNamesForAddress({
   client,
