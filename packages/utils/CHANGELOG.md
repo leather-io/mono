@@ -49,6 +49,13 @@
     * @leather.io/models bumped to 0.9.0
     * @leather.io/rpc bumped to 1.0.4
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.9.3...@leather.io/utils-v0.10.0) (2024-07-10)
+
+
+### Features
+
+* add util for empty string check ([952c403](https://github.com/leather-io/mono/commit/952c40351a31e290499b9095d91a5fba00747775))
+
 ## [0.9.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.9.2...@leather.io/utils-v0.9.3) (2024-07-03)
 
 
