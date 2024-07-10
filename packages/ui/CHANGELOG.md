@@ -44,6 +44,12 @@
     * @leather.io/eslint-config bumped to 0.6.1
     * @leather.io/panda-preset bumped to 0.3.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.10.0
+
 ## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.5.1...@leather.io/ui-v1.6.0) (2024-07-02)
 
 
