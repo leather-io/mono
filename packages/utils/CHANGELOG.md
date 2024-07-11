@@ -49,6 +49,13 @@
     * @leather.io/models bumped to 0.9.0
     * @leather.io/rpc bumped to 1.0.4
 
+## [0.10.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.10.0...@leather.io/utils-v0.10.1) (2024-07-11)
+
+
+### Bug Fixes
+
+* emptry string util ([ea5ffe0](https://github.com/leather-io/mono/commit/ea5ffe0bea5278d3a61b143996ed938fb33f23c3))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.9.3...@leather.io/utils-v0.10.0) (2024-07-10)
 
 

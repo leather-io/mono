@@ -102,6 +102,12 @@
   * dependencies
     * @leather.io/ui bumped to 1.6.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.6.3
+
 ## [1.11.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.10.1...@leather.io/mobile-v1.11.0) (2024-07-08)
 
 
