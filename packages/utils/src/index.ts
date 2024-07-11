@@ -20,8 +20,8 @@ export function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
-export function isNotEmptyString(value: unknown): value is string {
-  return isString(value) && value !== '';
+export function isEmptyString(value: unknown): value is string {
+  return isString(value) && value === '';
 }
 
 export function isBigInt(value: unknown): value is bigint {
