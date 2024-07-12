@@ -2,7 +2,6 @@ export * from './arrow-down-icon.web';
 export * from './arrow-left-icon';
 export * from './arrow-up-icon';
 export * from './bitcoin-icon';
-export * from './bitcoin-contract-icon';
 export * from './checkmark-circle-icon';
 export * from './checkmark-icon';
 export * from './chevron-down-icon';
