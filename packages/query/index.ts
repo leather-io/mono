@@ -7,7 +7,6 @@ export * from './src/bitcoin/balance/btc-balance.hooks';
 export * from './src/bitcoin/balance/btc-native-segwit-balance.hooks';
 export * from './src/bitcoin/balance/btc-taproot-balance.hooks';
 export * from './src/bitcoin/clients/bitcoin-client';
-export * from './src/bitcoin/contract/send-accepted-bitcoin-contract-offer';
 export * from './src/bitcoin/fees/fee-estimates.hooks';
 export * from './src/bitcoin/fees/fee-estimates.query';
 export * from './src/bitcoin/ordinals/brc20/brc20-tokens.hooks';
