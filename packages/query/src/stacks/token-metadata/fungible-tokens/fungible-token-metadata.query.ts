@@ -22,20 +22,36 @@ const queryOptions = {
   staleTime,
 };
 
-function fetchFungibleTokenMetadata(client: StacksClient, signal: AbortSignal) {
-  return (principal: string) =>
-    client.getFtMetadata(principal, signal) as unknown as FtAssetResponse;
+interface CreateFungibleTokenMetadataQueryOptionsArgs {
+  address: string;
+  client: StacksClient;
+  network: string;
+}
+export function createFungibleTokenMetadataQueryOptions({
+  address,
+  client,
+  network,
+}: CreateFungibleTokenMetadataQueryOptionsArgs) {
+  return {
+    enabled: !!address,
+    queryKey: ['get-ft-metadata', address, network],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      client.getFtMetadata(address, signal) as unknown as FtAssetResponse,
+    ...queryOptions,
+  } as const;
 }
 
-export function useGetFungibleTokenMetadataQuery(principal: string) {
+export function useGetFungibleTokenMetadataQuery(address: string) {
   const client = useStacksClient();
   const network = useCurrentNetworkState();
 
-  return useQuery({
-    queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-    queryFn: ({ signal }) => fetchFungibleTokenMetadata(client, signal)(principal),
-    ...queryOptions,
-  });
+  return useQuery(
+    createFungibleTokenMetadataQueryOptions({
+      address,
+      client,
+      network: network.chain.stacks.url,
+    })
+  );
 }
 
 export function useGetFungibleTokensBalanceMetadataQuery(
@@ -46,12 +62,13 @@ export function useGetFungibleTokensBalanceMetadataQuery(
 
   return useQueries({
     queries: Object.entries(ftBalances).map(([key, value]) => {
-      const principal = getPrincipalFromContractId(key);
+      const address = getPrincipalFromContractId(key);
       return {
-        enabled: !!principal,
-        queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: ({ signal }: QueryFunctionContext) =>
-          fetchFungibleTokenMetadata(client, signal)(principal),
+        ...createFungibleTokenMetadataQueryOptions({
+          address,
+          client,
+          network: network.chain.stacks.url,
+        }),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           const { contractAssetName } = getStacksContractIdStringParts(key);
@@ -64,7 +81,6 @@ export function useGetFungibleTokensBalanceMetadataQuery(
             ),
           };
         },
-        ...queryOptions,
       };
     }),
   });
@@ -76,17 +92,17 @@ export function useGetFungibleTokensMetadataQuery(keys: string[]) {
 
   return useQueries({
     queries: keys.map(key => {
-      const principal = getPrincipalFromContractId(key);
+      const address = getPrincipalFromContractId(key);
       return {
-        enabled: !!principal,
-        queryKey: ['get-ft-metadata', principal, network.chain.stacks.url],
-        queryFn: ({ signal }: QueryFunctionContext) =>
-          fetchFungibleTokenMetadata(client, signal)(principal),
+        ...createFungibleTokenMetadataQueryOptions({
+          address,
+          client,
+          network: network.chain.stacks.url,
+        }),
         select: (resp: FtAssetResponse) => {
           if (!(resp && isFtAsset(resp))) return;
           return createSip10CryptoAssetInfo(key, resp);
         },
-        ...queryOptions,
       };
     }),
   });
