@@ -65,6 +65,7 @@ export * from './src/stacks/stacks-client';
 export * from './src/stacks/stx20-api-types';
 export * from './src/stacks/stx20/stx20-tokens.hooks';
 export * from './src/stacks/stx20/stx20-tokens.query';
+export * from './src/stacks/token-metadata/fungible-tokens/fungible-token-metadata.hooks';
 export * from './src/stacks/token-metadata/fungible-tokens/fungible-token-metadata.query';
 export * from './src/stacks/token-metadata/non-fungible-tokens/non-fungible-token-holdings.query';
 export * from './src/stacks/token-metadata/non-fungible-tokens/non-fungible-token-metadata.hooks';

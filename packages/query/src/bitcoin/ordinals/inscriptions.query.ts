@@ -13,7 +13,7 @@ import { createNumArrayOfRange, ensureArray } from '@leather.io/utils';
 
 import type { InscriptionResponseHiro } from '../../../types/inscription';
 import { useLeatherNetwork } from '../../leather-query-provider';
-import { QueryPrefixes } from '../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
 import { useHiroApiRateLimiter } from '../../rate-limiter/hiro-rate-limiter';
 import { useBitcoinClient } from '../clients/bitcoin-client';
@@ -92,7 +92,7 @@ export function useGetInscriptionsInfiniteQuery({
   );
 
   const query = useInfiniteQuery({
-    queryKey: [QueryPrefixes.GetInscriptions, nativeSegwitAddress, network.id],
+    queryKey: [BitcoinQueryPrefixes.GetInscriptions, nativeSegwitAddress, network.id],
     async queryFn({ pageParam, signal }) {
       const responsesArr: InscriptionsQueryResponse[] = [];
       let fromIndex = pageParam.fromIndex;
@@ -221,7 +221,7 @@ export function useInscriptionsByAddressQuery(address: string) {
 
   const query = useInfiniteQuery({
     enabled: !!address,
-    queryKey: [QueryPrefixes.InscriptionsByAddress, network.id, address],
+    queryKey: [BitcoinQueryPrefixes.InscriptionsByAddress, network.id, address],
     async queryFn({ pageParam, signal }) {
       const res = await limiter.add(
         () =>

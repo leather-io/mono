@@ -1,10 +1,11 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData } from '@tanstack/react-query';
 
-import { useStacksClient } from '../stacks-client';
+import { StacksQueryPrefixes } from '../../query-prefixes';
+import { StacksClient } from '../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
 
-const networkStatusQueryOptions = {
+const queryOptions = {
   gcTime: staleTime,
   placeholderData: keepPreviousData,
   refetchOnMount: false,
@@ -12,12 +13,17 @@ const networkStatusQueryOptions = {
   refetchOnReconnect: false,
 } as const;
 
-export function useGetNetworkStatus(url: string) {
-  const client = useStacksClient();
-
-  return useQuery({
-    queryKey: ['network-status', url],
+interface CreateGetNetworkStatusQueryOptionsArgs {
+  client: StacksClient;
+  url: string;
+}
+export function createGetNetworkStatusQueryOptions({
+  client,
+  url,
+}: CreateGetNetworkStatusQueryOptionsArgs) {
+  return {
+    queryKey: [StacksQueryPrefixes.GetNetworkStatus, url],
     queryFn: () => client.getNetworkStatus(url),
-    ...networkStatusQueryOptions,
-  });
+    ...queryOptions,
+  } as const;
 }

@@ -1,34 +1,29 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext } from '@tanstack/react-query';
 
-import { useCurrentNetworkState } from '../../leather-query-provider';
-import { AppUseQueryConfig } from '../../query-config';
-import { StacksClient, useStacksClient } from '../stacks-client';
+import { StacksQueryPrefixes } from '../../query-prefixes';
+import { StacksClient } from '../stacks-client';
 
 const staleTime = 1 * 60 * 1000;
 
-const balanceQueryOptions = {
+const queryOptions = {
   staleTime,
   refetchOnMount: true,
 } as const;
 
-function fetchAccountBalance(client: StacksClient, signal: AbortSignal) {
-  return async (address: string) => client.getAccountBalance(address, signal);
+interface CreateGetStacksAccountBalanceQueryOptionsArgs {
+  address: string;
+  client: StacksClient;
+  network: string;
 }
-
-type FetchAccountBalanceResp = Awaited<ReturnType<ReturnType<typeof fetchAccountBalance>>>;
-
-export function useStacksAccountBalanceQuery<T extends unknown = FetchAccountBalanceResp>(
-  address: string,
-  options?: AppUseQueryConfig<FetchAccountBalanceResp, T>
-) {
-  const client = useStacksClient();
-  const network = useCurrentNetworkState();
-
-  return useQuery({
+export function createGetStacksAccountBalanceQueryOptions({
+  address,
+  client,
+  network,
+}: CreateGetStacksAccountBalanceQueryOptionsArgs) {
+  return {
     enabled: !!address,
-    queryKey: ['get-address-stx-balance', address, network.id],
-    queryFn: async ({ signal }) => fetchAccountBalance(client, signal)(address),
-    ...balanceQueryOptions,
-    ...options,
-  });
+    queryKey: [StacksQueryPrefixes.GetAccountBalance, address, network],
+    queryFn: ({ signal }: QueryFunctionContext) => client.getAccountBalance(address, signal),
+    ...queryOptions,
+  } as const;
 }

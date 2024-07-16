@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ZodError, z } from 'zod';
 
 import { AppUseQueryConfig } from '../../query-config';
-import { QueryPrefixes } from '../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
 const stampSchema = z.object({
   stamp: z.number(),
@@ -92,7 +92,7 @@ export function useStampsByAddressQuery<T extends unknown = FetchStampsByAddress
   options?: AppUseQueryConfig<FetchStampsByAddressResp, T>
 ) {
   return useQuery({
-    queryKey: [QueryPrefixes.StampsByAddress, address],
+    queryKey: [BitcoinQueryPrefixes.StampsByAddress, address],
     queryFn: () => fetchStampsByAddress(address),
     refetchOnWindowFocus: false,
     ...options,

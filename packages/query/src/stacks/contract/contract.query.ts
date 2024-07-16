@@ -1,27 +1,41 @@
 import { type ContractCallPayload, TransactionTypes } from '@stacks/connect';
 import { useQuery } from '@tanstack/react-query';
 
-import { useStacksClient } from '../stacks-client';
+import { StacksQueryPrefixes } from '../../query-prefixes';
+import { StacksClient, useStacksClient } from '../stacks-client';
 
-export function useGetContractInterfaceQuery(transactionRequest: ContractCallPayload | null) {
-  const client = useStacksClient();
+const queryOptions = {
+  staleTime: 30 * 60 * 1000,
+  refetchOnWindowFocus: false,
+} as const;
 
-  async function fetchContractInterface() {
-    if (!transactionRequest || transactionRequest?.txType !== TransactionTypes.ContractCall) return;
-    const contractAddress = transactionRequest.contractAddress;
-    const contractName = transactionRequest.contractName;
-    return client.getContractInterface(contractAddress, contractName);
-  }
-
-  return useQuery({
-    enabled: transactionRequest?.txType === TransactionTypes.ContractCall && !!transactionRequest,
+interface CreateGetContractInterfaceQueryOptionsArgs {
+  client: StacksClient;
+  transactionRequest: ContractCallPayload | null;
+}
+export function createGetContractInterfaceQueryOptions({
+  client,
+  transactionRequest,
+}: CreateGetContractInterfaceQueryOptionsArgs) {
+  return {
+    enabled: !!transactionRequest && transactionRequest.txType === TransactionTypes.ContractCall,
     queryKey: [
-      'contract-interface',
+      StacksQueryPrefixes.GetContractInterface,
       transactionRequest?.contractName,
       transactionRequest?.contractAddress,
     ],
-    queryFn: fetchContractInterface,
-    staleTime: 30 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
+    queryFn: () => {
+      if (!transactionRequest || transactionRequest?.txType !== TransactionTypes.ContractCall)
+        return;
+      const contractAddress = transactionRequest.contractAddress;
+      const contractName = transactionRequest.contractName;
+      return client.getContractInterface(contractAddress, contractName);
+    },
+    ...queryOptions,
+  } as const;
+}
+
+export function useGetContractInterfaceQuery(transactionRequest: ContractCallPayload | null) {
+  const client = useStacksClient();
+  return useQuery(createGetContractInterfaceQueryOptions({ client, transactionRequest }));
 }

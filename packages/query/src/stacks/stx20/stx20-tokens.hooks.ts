@@ -1,10 +1,13 @@
+import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import { type Stx20CryptoAssetInfo, createCryptoAssetBalance } from '@leather.io/models';
+import { Stx20CryptoAssetInfo, createCryptoAssetBalance } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import type { Stx20Balance } from '../stx20-api-types';
-import { useStx20BalancesQuery } from './stx20-tokens.query';
+import { useCurrentNetworkState } from '../../leather-query-provider';
+import { useStacksClient } from '../stacks-client';
+import { Stx20Balance } from '../stx20-api-types';
+import { createGetStx20BalancesQueryOptions } from './stx20-tokens.query';
 
 function createStx20CryptoAssetInfo(stx20Balance: Stx20Balance): Stx20CryptoAssetInfo {
   return {
@@ -14,7 +17,15 @@ function createStx20CryptoAssetInfo(stx20Balance: Stx20Balance): Stx20CryptoAsse
 }
 
 export function useStx20Tokens(address: string) {
-  return useStx20BalancesQuery(address, {
+  const client = useStacksClient();
+  const network = useCurrentNetworkState();
+
+  return useQuery({
+    ...createGetStx20BalancesQueryOptions({
+      address,
+      chainId: network.chain.stacks.chainId,
+      client,
+    }),
     select: resp =>
       resp.map(stx20Balance => ({
         balance: createCryptoAssetBalance(

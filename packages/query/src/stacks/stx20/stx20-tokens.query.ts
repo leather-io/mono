@@ -1,22 +1,23 @@
-import { ChainID } from '@stacks/transactions';
-import { useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext } from '@tanstack/react-query';
 
-import { useCurrentNetworkState } from '../../leather-query-provider';
-import type { AppUseQueryConfig } from '../../query-config';
-import { useStacksClient } from '../stacks-client';
-import type { Stx20Balance } from '../stx20-api-types';
+import { ChainID } from '@leather.io/models';
 
-export function useStx20BalancesQuery<T extends unknown = Stx20Balance[]>(
-  address: string,
-  options?: AppUseQueryConfig<Stx20Balance[], T>
-) {
-  const client = useStacksClient();
-  const network = useCurrentNetworkState();
+import { StacksQueryPrefixes } from '../../query-prefixes';
+import { StacksClient } from '../stacks-client';
 
-  return useQuery({
-    enabled: network.chain.stacks.chainId === ChainID.Mainnet,
-    queryKey: ['stx20-balances', address],
-    queryFn: ({ signal }) => client.getStx20Balances(address, signal),
-    ...options,
-  });
+interface CreateGetStx20BalancesQueryOptionsArgs {
+  address: string;
+  chainId: ChainID;
+  client: StacksClient;
+}
+export function createGetStx20BalancesQueryOptions({
+  address,
+  chainId,
+  client,
+}: CreateGetStx20BalancesQueryOptionsArgs) {
+  return {
+    enabled: chainId === ChainID.Mainnet,
+    queryKey: [StacksQueryPrefixes.GetStx20Balances, address],
+    queryFn: ({ signal }: QueryFunctionContext) => client.getStx20Balances(address, signal),
+  } as const;
 }

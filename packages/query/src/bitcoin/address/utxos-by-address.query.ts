@@ -7,7 +7,7 @@ import { createCounter } from '@leather.io/utils';
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import type { AppUseQueryConfig } from '../../query-config';
-import { QueryPrefixes } from '../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 import { useBitcoinClient } from '../clients/bitcoin-client';
 import { hasInscriptions } from './address.utils';
 
@@ -48,7 +48,7 @@ export function useTaprootAccountUtxosQuery({
   const client = useBitcoinClient();
 
   return useQuery({
-    queryKey: [QueryPrefixes.TaprootAddressUtxos, currentAccountIndex, network.id],
+    queryKey: [BitcoinQueryPrefixes.TaprootAddressUtxos, currentAccountIndex, network.id],
     queryFn: async () => {
       let currentNumberOfAddressesWithoutUtxos = 0;
       const addressIndexCounter = createCounter(0);

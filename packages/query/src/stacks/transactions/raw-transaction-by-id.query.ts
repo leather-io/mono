@@ -1,16 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { useStacksClient } from '../stacks-client';
+import { StacksQueryPrefixes } from '../../query-prefixes';
+import { StacksClient, useStacksClient } from '../stacks-client';
 
-export function useRawTransactionById(txid: string) {
+interface CreateGetRawTransactionByIdQueryOptionsArgs {
+  client: StacksClient;
+  txid: string;
+}
+export function createGetRawTransactionByIdQueryOptions({
+  client,
+  txid,
+}: CreateGetRawTransactionByIdQueryOptionsArgs) {
+  return {
+    queryKey: [StacksQueryPrefixes.GetRawTransactionById, txid],
+    queryFn: ({ signal }: QueryFunctionContext) => client.getRawTransactionById(txid, signal),
+  } as const;
+}
+
+export function useGetRawTransactionByIdQuery(txid: string) {
   const client = useStacksClient();
-
-  async function rawTransactionByIdFetcher(txid: string, signal: AbortSignal) {
-    return client.getRawTransactionById(txid, signal);
-  }
-
-  return useQuery({
-    queryKey: ['raw-transaction-by-id', txid],
-    queryFn: ({ signal }) => rawTransactionByIdFetcher(txid, signal),
-  });
+  return useQuery(createGetRawTransactionByIdQueryOptions({ client, txid }));
 }

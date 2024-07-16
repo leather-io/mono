@@ -1,21 +1,18 @@
-import type { ContractCallPayload, TransactionPayload } from '@stacks/connect';
-import type { ContractInterfaceFunction } from '@stacks/rpc-client';
+import type { ContractCallPayload } from '@stacks/connect';
+import { ContractInterfaceFunction } from '@stacks/rpc-client';
+import { useQuery } from '@tanstack/react-query';
 
-import { useGetContractInterfaceQuery } from './contract.query';
+import { useStacksClient } from '../stacks-client';
+import { createGetContractInterfaceQueryOptions } from './contract.query';
 
-export function useContractInterface(transactionRequest: ContractCallPayload | null) {
-  return useGetContractInterfaceQuery(transactionRequest).data;
-}
-
-export function useContractFunction(transactionRequest: TransactionPayload | null) {
-  const contractInterface = useContractInterface(transactionRequest as ContractCallPayload);
-
-  if (!transactionRequest || transactionRequest.txType !== 'contract_call' || !contractInterface)
-    return;
-
-  const selectedFunction = contractInterface.functions.find((func: ContractInterfaceFunction) => {
-    return func.name === transactionRequest.functionName;
+export function useContractFunction(transactionRequest: ContractCallPayload | null) {
+  const client = useStacksClient();
+  return useQuery({
+    ...createGetContractInterfaceQueryOptions({ client, transactionRequest }),
+    select: resp =>
+      resp?.functions.find((func: ContractInterfaceFunction) => {
+        if (!transactionRequest || transactionRequest.txType !== 'contract_call') return;
+        return func.name === transactionRequest?.functionName;
+      }),
   });
-
-  return selectedFunction;
 }

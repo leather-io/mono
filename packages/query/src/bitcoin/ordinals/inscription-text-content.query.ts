@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { QueryPrefixes } from '../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
 
 const queryOptions = {
@@ -17,7 +17,7 @@ async function getInscriptionTextContent(src: string) {
 export function useInscriptionTextContentQuery(contentSrc: string) {
   const limiter = useBestInSlotApiRateLimiter();
   return useQuery({
-    queryKey: [QueryPrefixes.OrdinalTextContent, contentSrc],
+    queryKey: [BitcoinQueryPrefixes.OrdinalTextContent, contentSrc],
     queryFn: async () => {
       return limiter.add(() => getInscriptionTextContent(contentSrc), {
         throwOnTimeout: true,

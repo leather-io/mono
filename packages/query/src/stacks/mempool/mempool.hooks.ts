@@ -4,20 +4,20 @@ import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 
 import { increaseValueByOneMicroStx, isUndefined, microStxToStx } from '@leather.io/utils';
 
-import { useTransactionsById } from '../transactions/transactions-by-id.query';
+import { useGetTransactionByIdListQuery } from '../transactions/transactions-by-id.query';
 import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';
-import { useAccountMempoolQuery } from './mempool.query';
+import { useGetAddressMempoolTransactionsQuery } from './mempool.query';
 import { calculatePendingTxsMoneyBalance } from './mempool.utils';
 
 const droppedCache = new Map();
 
 export function useStacksPendingTransactions(address: string) {
-  const query = useAccountMempoolQuery(address);
+  const query = useGetAddressMempoolTransactionsQuery(address);
   const mempoolTxs = query.data ? query.data.results : [];
   const results = mempoolTxs.filter(
     tx => tx.tx_status === 'pending' && !droppedCache.has(tx.tx_id)
   );
-  const txs = useTransactionsById(results.map(tx => tx.tx_id));
+  const txs = useGetTransactionByIdListQuery(results.map(tx => tx.tx_id));
   return useMemo(() => {
     return {
       query,
