@@ -1,34 +1,24 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { AppUseQueryConfig } from '../../query-config';
+import { StacksQueryPrefixes } from '../../query-prefixes';
 import { StacksTxFeeEstimation } from '../hiro-api-types';
-import { StacksClient, useStacksClient } from '../stacks-client';
+import { StacksClient } from '../stacks-client';
 import { defaultApiFeeEstimations } from './fees.utils';
 
-function fetchTransactionFeeEstimation(client: StacksClient) {
-  return async (estimatedLen: number | null, transactionPayload: string) =>
-    client.postFeeTransaction(estimatedLen, transactionPayload);
+interface CreatePostStacksFeeTransactionQueryOptionsArgs {
+  client: StacksClient;
+  estimatedLen: number | null;
+  transactionPayload: string;
 }
-
-type FetchTransactionFeeEstimationResp = Awaited<
-  ReturnType<ReturnType<typeof fetchTransactionFeeEstimation>>
->;
-
-export function useGetStacksTransactionFeeEstimationQuery<
-  T extends unknown = FetchTransactionFeeEstimationResp,
->(
-  estimatedLen: number | null,
-  transactionPayload: string,
-  options?: AppUseQueryConfig<FetchTransactionFeeEstimationResp, T>
-) {
-  const client = useStacksClient();
-
-  return useQuery({
+export function createPostStacksFeeTransactionQueryOptions({
+  client,
+  estimatedLen,
+  transactionPayload,
+}: CreatePostStacksFeeTransactionQueryOptionsArgs) {
+  return {
     enabled: transactionPayload !== '',
-    queryKey: ['stacks-tx-fee-estimation', transactionPayload],
+    queryKey: [StacksQueryPrefixes.PostFeeTransaction, transactionPayload],
     queryFn: async () => {
       try {
-        return await fetchTransactionFeeEstimation(client)(estimatedLen, transactionPayload);
+        return await client.postFeeTransaction(estimatedLen, transactionPayload);
       } catch (err) {
         return {
           cost_scalar_change_by_byte: 0,
@@ -39,6 +29,5 @@ export function useGetStacksTransactionFeeEstimationQuery<
         } as StacksTxFeeEstimation;
       }
     },
-    ...options,
-  });
+  } as const;
 }

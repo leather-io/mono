@@ -6,19 +6,19 @@ import { isDefined, isUndefined } from '@leather.io/utils';
 import { useAlexSwappableAssets } from '../../common/alex-sdk/alex-sdk.hooks';
 import { useStacksAccountBalanceFungibleTokens } from '../balance/account-balance.hooks';
 import {
-  useGetFungibleTokensBalanceMetadataQuery,
-  useGetFungibleTokensMetadataQuery,
-} from '../token-metadata/fungible-tokens/fungible-token-metadata.query';
+  useStacksFungibleTokensBalance,
+  useStacksFungibleTokensMetadata,
+} from '../token-metadata/fungible-tokens/fungible-token-metadata.hooks';
 import { type Sip10CryptoAssetFilter, filterSip10Tokens } from './sip10-tokens.utils';
 
 function useSip10TokensCryptoAssetBalance(address: string) {
   const { data: tokens = {} } = useStacksAccountBalanceFungibleTokens(address);
-  return useGetFungibleTokensBalanceMetadataQuery(tokens);
+  return useStacksFungibleTokensBalance(tokens);
 }
 
 function useSip10TokensCryptoAssetInfo(address: string) {
   const { data: tokens = {} } = useStacksAccountBalanceFungibleTokens(address);
-  return useGetFungibleTokensMetadataQuery(Object.keys(tokens));
+  return useStacksFungibleTokensMetadata(Object.keys(tokens));
 }
 
 export interface Sip10TokenAssetDetails {

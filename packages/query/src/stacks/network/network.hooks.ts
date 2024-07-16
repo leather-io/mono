@@ -1,6 +1,13 @@
-import { useGetNetworkStatus } from './network.query';
+import { useQuery } from '@tanstack/react-query';
 
-export function useNetworkStatus(url: string) {
-  const result = useGetNetworkStatus(url);
-  return result.isSuccess;
+import { useStacksClient } from '../stacks-client';
+import { createGetNetworkStatusQueryOptions } from './network.query';
+
+export function useStacksNetworkStatus(url: string) {
+  const client = useStacksClient();
+
+  return useQuery({
+    ...createGetNetworkStatusQueryOptions({ client, url }),
+    select: resp => resp.isSuccess,
+  });
 }

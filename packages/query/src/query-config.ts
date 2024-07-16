@@ -3,6 +3,9 @@ import { isAxiosError } from 'axios';
 
 type AllowedReactQueryConfigOptions = keyof Pick<UseQueryOptions, 'select' | 'initialData'>;
 
+/**
+ * @deprecated Do not use, will be completely removed with query refactor
+ */
 export type AppUseQueryConfig<QueryFnData, Response> = Pick<
   UseQueryOptions<QueryFnData, unknown, Response>,
   AllowedReactQueryConfigOptions

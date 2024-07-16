@@ -5,7 +5,7 @@ import { HIRO_INSCRIPTIONS_API_URL } from '@leather.io/models';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import { AppUseQueryConfig } from '../../query-config';
-import { QueryPrefixes } from '../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
 const inscriptionQueryOptions = {
   staleTime: Infinity,
@@ -30,7 +30,7 @@ export function useGetInscriptionQuery<T extends unknown = FetchInscriptionResp>
 ) {
   return useQuery({
     enabled: !!id,
-    queryKey: [QueryPrefixes.InscriptionMetadata, id],
+    queryKey: [BitcoinQueryPrefixes.InscriptionMetadata, id],
     queryFn: () => fetchInscription()(id),
     ...inscriptionQueryOptions,
     ...options,

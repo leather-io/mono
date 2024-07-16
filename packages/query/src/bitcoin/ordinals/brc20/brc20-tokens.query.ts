@@ -7,7 +7,7 @@ import type { Signer } from '@leather.io/bitcoin';
 import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
-import { QueryPrefixes } from '../../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../../query-prefixes';
 import { useBitcoinClient } from '../../clients/bitcoin-client';
 
 const addressesSimultaneousFetchLimit = 3;
@@ -37,7 +37,7 @@ export function useGetBrc20TokensQuery({
   );
 
   const query = useInfiniteQuery({
-    queryKey: [QueryPrefixes.GetBrc20Tokens, currentNsBitcoinAddress, network.id],
+    queryKey: [BitcoinQueryPrefixes.GetBrc20Tokens, currentNsBitcoinAddress, network.id],
     async queryFn({ pageParam }) {
       const fromIndex = pageParam.fromIndex;
       let addressesWithoutTokens = pageParam.addressesWithoutTokens;

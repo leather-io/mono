@@ -7,7 +7,7 @@ import { getTaprootAddress } from '@leather.io/bitcoin';
 import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
-import { QueryPrefixes } from '../../query-prefixes';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
 import { useBitcoinClient } from '../clients/bitcoin-client';
 
@@ -45,7 +45,7 @@ export function useBestInSlotGetInscriptionsInfiniteQuery({
   );
 
   const query = useInfiniteQuery({
-    queryKey: [QueryPrefixes.GetInscriptions, 'bis', nativeSegwitAddress, network.id],
+    queryKey: [BitcoinQueryPrefixes.GetInscriptions, 'bis', nativeSegwitAddress, network.id],
     async queryFn({ pageParam, signal }) {
       const responsesArr = [];
       let fromIndex = pageParam.fromIndex;
