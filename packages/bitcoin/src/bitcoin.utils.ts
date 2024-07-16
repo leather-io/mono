@@ -34,7 +34,7 @@ export function initBitcoinAccount(derivationPath: string, policy: string): Bitc
 /**
  * Represents a map of `BitcoinNetworkModes` to `NetworkModes`. While Bitcoin
  * has a number of networks, its often only necessary to consider the higher
- * level concepts of mainnet and testnet
+ * level concept of mainnet and testnet
  */
 export const bitcoinNetworkToCoreNetworkMap: Record<BitcoinNetworkModes, NetworkModes> = {
   mainnet: 'mainnet',
@@ -256,6 +256,10 @@ export function getTaprootAddress({ index, keychain, network }: GetTaprootAddres
   return payment.address;
 }
 
+/**
+ * @deprecated
+ * Use `deriveRootBip32Keychain` in `@leather.io/crypto` instead
+ */
 export function mnemonicToRootNode(secretKey: string) {
   const seed = mnemonicToSeedSync(secretKey);
   return HDKey.fromMasterSeed(seed);

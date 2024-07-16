@@ -6,15 +6,24 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { EntityAdapter, EntitySetter, createEntity } from '../entity-adapter';
 import { PERSISTED_KEY, filterObjectKeys } from '../utils';
 
-interface Account {
+interface BitcoinAccount {
+  /**
+   * `id` is in the key info format described in BIP388 https://bips.dev/388
+   * `masterFingerprint/derivationPath`
+   * @example
+   * `2f4b29ec/84'/0'/0'`
+   */
   id: string;
-  xpub: string;
+  type: 'mnemonic' | 'ledger';
+  policy: string;
 }
 
 interface PersistedState {
-  theme: string;
   _hasHydrated: boolean;
-  accounts: EntityAdapter<Account>;
+  theme: string;
+  accounts: {
+    bitcoin: EntityAdapter<BitcoinAccount>;
+  };
 }
 
 interface PersistedAction {
@@ -32,20 +41,18 @@ export const createPersistedStore: StateCreator<
   [['zustand/persist', unknown]]
 > = persist(
   set => {
-    function setAccounts(setter: EntitySetter<Account>) {
-      set(state => ({ ...state, accounts: { ...setter(state.accounts) } }));
+    function setBitcoinAccounts(setter: EntitySetter<BitcoinAccount>) {
+      set(state => ({ ...state, accounts: { bitcoin: { ...setter(state.accounts.bitcoin) } } }));
     }
 
     return {
-      accounts: createEntity<Account>(setAccounts),
+      accounts: {
+        bitcoin: createEntity<BitcoinAccount>(setBitcoinAccounts),
+      },
       theme: 'light',
       setTheme: theme => set(state => ({ ...state, theme })),
       _hasHydrated: false,
-      setHasHydrated: state => {
-        set({
-          _hasHydrated: state,
-        });
-      },
+      setHasHydrated: state => set({ _hasHydrated: state }),
     };
   },
   {
