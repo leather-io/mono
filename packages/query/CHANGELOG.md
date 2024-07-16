@@ -103,6 +103,13 @@
     * @leather.io/bitcoin bumped to 0.8.6
     * @leather.io/utils bumped to 0.10.1
 
+## [0.11.1](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.0...@leather.io/query-v0.11.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* query rune creation ([6bf3bef](https://github.com/leather-io/mono/commit/6bf3beff223ea8b298b4a73bbbb2f06cc7749a02))
+
 ## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.10.2...@leather.io/query-v0.11.0) (2024-07-16)
 
 
