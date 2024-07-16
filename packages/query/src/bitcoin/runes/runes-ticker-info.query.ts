@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import { baseCurrencyAmountInQuote, createMoney, isDefined, satToBtc } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, isDefined } from '@leather.io/utils';
 
 import { useCryptoCurrencyMarketDataMeanAverage } from '../../common/market-data/market-data.hooks';
 import { RuneBalance, RuneTickerInfo } from '../clients/best-in-slot';
@@ -25,7 +25,7 @@ export function useGetRunesTickerInfoQuery(runesBalances: RuneBalance[]) {
         queryFn: () => client.BestinSlotApi.getRunesTickerInfo(runeBalance.rune_name),
         select: (resp: RuneTickerInfo) => {
           const fiatPrice = baseCurrencyAmountInQuote(
-            createMoney(new BigNumber(satToBtc(resp.min_listed_unit_price_in_sats ?? 0)), 'BTC'),
+            createMoney(new BigNumber(resp.min_listed_unit_price_in_sats ?? 0), 'BTC'),
             btcMarketData
           );
           return createRuneCryptoAssetDetails(runeBalance, resp, fiatPrice);
