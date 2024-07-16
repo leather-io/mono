@@ -108,6 +108,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.6.3
 
+## [1.11.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.11.2...@leather.io/mobile-v1.11.3) (2024-07-16)
+
+
+### Bug Fixes
+
+* **mobile:** missing readable-stream resolution, closes leather-io/issues[#164](https://github.com/leather-io/mono/issues/164) ([5b2b6e7](https://github.com/leather-io/mono/commit/5b2b6e7a576e127e4d0fb662f68c6eea73df426e))
+
 ## [1.11.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.10.1...@leather.io/mobile-v1.11.0) (2024-07-08)
 
 
