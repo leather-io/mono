@@ -23,6 +23,10 @@ config.resolver = {
   unstable_conditionNames: ['require', 'node', 'import'],
 };
 
+config.resolver.extraNodeModules = {
+  stream: require.resolve('readable-stream'),
+};
+
 // #1 - Watch all files in the monorepo
 config.watchFolders = [workspaceRoot];
 // #2 - Force resolving nested modules to the folders below
