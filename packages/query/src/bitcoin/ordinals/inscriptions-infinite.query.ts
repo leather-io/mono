@@ -77,6 +77,7 @@ export function useBestInSlotGetInscriptionsInfiniteQuery({
               offset,
               count: inscriptionsLazyLoadLimit,
               signal,
+              order: 'desc',
             }),
           {
             signal,
