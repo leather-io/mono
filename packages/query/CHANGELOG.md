@@ -103,6 +103,19 @@
     * @leather.io/bitcoin bumped to 0.8.6
     * @leather.io/utils bumped to 0.10.1
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.10.2...@leather.io/query-v0.11.0) (2024-07-16)
+
+
+### Features
+
+* add rune market data ([f872eb0](https://github.com/leather-io/mono/commit/f872eb076a14f5ff21fd61243e3ed7769418ae80))
+* export bis rate limiter ([d4d3b8b](https://github.com/leather-io/mono/commit/d4d3b8b8f2cf70138c6a3a57ae73b8f0ab459887))
+
+
+### Bug Fixes
+
+* bis inscriptions order, closes leather-io/extension[#5654](https://github.com/leather-io/mono/issues/5654) ([d47e156](https://github.com/leather-io/mono/commit/d47e1567c2eec91ed5680f279540f058df4f5aa6))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.9.5...@leather.io/query-v0.10.0) (2024-07-08)
 
 
