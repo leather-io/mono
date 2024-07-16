@@ -8,6 +8,12 @@ import {
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 
+import {
+  bestInSlotInscriptionSchema,
+  inscriptionsByAddressSchema,
+  runeTickerInfoSchema,
+} from './zod-schemas';
+
 export type BestInSlotInscriptionResponse = z.infer<typeof bestInSlotInscriptionSchema>;
 
 export interface BestinSlotInscriptionByIdResponse {
@@ -77,31 +83,8 @@ interface RunesWalletBalancesResponse {
   data: RuneBalance[];
 }
 
-export interface RuneTickerInfo {
-  rune_id: string;
-  rune_number: string;
-  rune_name: string;
-  spaced_rune_name: string;
-  symbol: string;
-  decimals: number;
-  per_mint_amount: string;
-  mint_cnt: string;
-  mint_cnt_limit: string;
-  premined_supply: string;
-  total_minted_supply: string;
-  burned_supply: string;
-  circulating_supply: string;
-  mint_progress: number;
-  mint_start_block: number | null;
-  mint_end_block: number | null;
-  genesis_block: number;
-  deploy_ts: string;
-  deploy_txid: string;
-  auto_upgrade: boolean;
-  holder_count: number;
-  event_count: number;
-  mintable: boolean;
-}
+export type RuneTickerInfo = z.infer<typeof runeTickerInfoSchema>;
+
 interface RunesTickerInfoResponse {
   block_height: number;
   data: RuneTickerInfo;
@@ -115,6 +98,9 @@ export interface RunesOutputsByAddress {
   balances: number[];
   rune_names: string[];
   spaced_rune_names: string[];
+  total_balances: string[];
+  min_listed_unit_price_in_sats: string;
+  min_listed_unit_price_unisat: string;
 }
 
 interface RunesOutputsByAddressArgs {
@@ -155,40 +141,6 @@ interface BestinSlotInscriptionByAddressResponse {
   block_height: number;
   data: BestInSlotInscriptionsByTxIdResponse[];
 }
-
-const bestInSlotInscriptionDelegateSchema = z.object({
-  delegate_id: z.string(),
-  render_url: z.string().nullable().optional(),
-  mime_type: z.string().nullable().optional(),
-  content_url: z.string(),
-  bis_url: z.string(),
-});
-
-const bestInSlotInscriptionSchema = z.object({
-  inscription_name: z.string().nullable().optional(),
-  inscription_id: z.string(),
-  inscription_number: z.number(),
-  parent_ids: z.array(z.string()),
-  metadata: z.any().nullable(),
-  owner_wallet_addr: z.string(),
-  mime_type: z.string().nullable().optional(),
-  last_sale_price: z.number().nullable().optional(),
-  slug: z.string().nullable().optional(),
-  collection_name: z.string().nullable().optional(),
-  satpoint: z.string(),
-  last_transfer_block_height: z.number().nullable().optional(),
-  genesis_height: z.number(),
-  content_url: z.string(),
-  bis_url: z.string(),
-  render_url: z.string().nullable().optional(),
-  bitmap_number: z.number().nullable().optional(),
-  delegate: bestInSlotInscriptionDelegateSchema.nullable().optional(),
-});
-
-const inscriptionsByAddressSchema = z.object({
-  block_height: z.number(),
-  data: z.array(bestInSlotInscriptionSchema),
-});
 
 export function BestinSlotApi(basePath: string) {
   /**
@@ -302,10 +254,18 @@ export function BestinSlotApi(basePath: string) {
   }
 
   async function getRunesTickerInfo(runeName: string) {
-    const resp = await axios.get<RunesTickerInfoResponse>(
-      `${basePath}/runes/ticker_info?rune_name=${runeName}`
-    );
-    return resp.data.data;
+    try {
+      const resp = await axios.get<RunesTickerInfoResponse>(
+        `${basePath}/runes/ticker_info?rune_name=${runeName}`
+      );
+
+      return runeTickerInfoSchema.parse(resp.data.data);
+    } catch (e) {
+      // TODO: should be analytics
+      // eslint-disable-next-line no-console
+      if (e instanceof ZodError) console.log('schema_fail', Object.entries(e));
+      throw e;
+    }
   }
 
   async function getRunesBatchOutputsInfo(outputs: string[]) {
