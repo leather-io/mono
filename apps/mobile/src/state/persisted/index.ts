@@ -15,7 +15,7 @@ export interface BitcoinAccount {
    */
   id: string;
   type: 'mnemonic' | 'ledger';
-  policy: string;
+  descriptor: string;
 }
 
 interface PersistedState {

@@ -5,7 +5,7 @@ import {
   makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import {
-  createKeyOriginFromPath,
+  createKeyOriginPath,
   deriveBip39SeedFromMnemonic,
   deriveRootBip32Keychain,
   generateMnemonic,
@@ -21,6 +21,7 @@ export function useKeyStore() {
 
   return useMemo(
     () => ({
+      bitcoinAccounts: Object.values(persisted.accounts.bitcoin),
       async generateNewMnemonicPhrase() {
         const mnemonic = generateMnemonic();
         const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic);
@@ -44,27 +45,47 @@ export function useKeyStore() {
         // / _  \  __/  _| (_| | (__| || (_) | |  | | | | | (_| |
         // \/ \_/\___|_|  \__,_|\___|\__\___/|_|  |_|_| |_|\__, |
         //                                                 |___/
+        // To support testnet accounts as well
 
         const nativeSegwitPath = makeNativeSegwitAccountDerivationPath('mainnet', nextAccountIndex);
-        const nativeSegwitKeyInfo = createKeyOriginFromPath(nativeSegwitPath, fingerprint);
+        const nativeSegwitKeyInfo = createKeyOriginPath(fingerprint, nativeSegwitPath);
         const nativeSegwitKeychain = rootKeychain.derive(nativeSegwitPath);
-        const nativeSegwitPolicy = `[${nativeSegwitKeyInfo}]${nativeSegwitKeychain.publicExtendedKey}`;
+        const nativeSegwitDescriptor = `[${nativeSegwitKeyInfo}]${nativeSegwitKeychain.publicExtendedKey}`;
         persisted.accounts.bitcoin.addOne({
           type: 'mnemonic',
           id: nativeSegwitKeyInfo,
-          policy: nativeSegwitPolicy,
+          descriptor: nativeSegwitDescriptor,
         });
 
         // use helper fn to get path
         const taprootPath = makeTaprootAccountDerivationPath('mainnet', nextAccountIndex);
-        const taprootKeyInfo = createKeyOriginFromPath(taprootPath, fingerprint);
+        const taprootKeyInfo = createKeyOriginPath(fingerprint, taprootPath);
         const taprootKeychain = rootKeychain.derive(taprootPath);
-        const taprootPolicy = `[${taprootKeyInfo}]${taprootKeychain.publicExtendedKey}`;
+        const taprootDescriptor = `[${taprootKeyInfo}]${taprootKeychain.publicExtendedKey}`;
         persisted.accounts.bitcoin.addOne({
           type: 'mnemonic',
           id: taprootKeyInfo,
-          policy: taprootPolicy,
+          descriptor: taprootDescriptor,
         });
+      },
+
+      removeAccount(fingerprint: string, accountIndex: number) {
+        const nativeSegwitAccount =
+          persisted.accounts.bitcoin.entities[
+            createKeyOriginPath(
+              fingerprint,
+              makeNativeSegwitAccountDerivationPath('mainnet', accountIndex)
+            )
+          ];
+        persisted.accounts.bitcoin.removeOne(nativeSegwitAccount);
+        const taprootAccount =
+          persisted.accounts.bitcoin.entities[
+            createKeyOriginPath(
+              fingerprint,
+              makeTaprootAccountDerivationPath('mainnet', accountIndex)
+            )
+          ];
+        persisted.accounts.bitcoin.removeOne(taprootAccount);
       },
     }),
     [protectedStore, persisted]

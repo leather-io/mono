@@ -11,6 +11,8 @@ export function generateMnemonic() {
 export async function deriveBip39SeedFromMnemonic(mnemonic: string) {
   return mnemonicToSeed(mnemonic);
 }
+/** @deprecated Inaccurately named function, use `deriveBip39SeedFromMnemonic` */
+export const deriveBip39MnemonicFromSeed = deriveBip39SeedFromMnemonic;
 
 export function deriveRootBip32Keychain(seed: Uint8Array) {
   return HDKey.fromMasterSeed(seed);

@@ -26,12 +26,12 @@ export const extractAddressIndexFromPath = extractSectionFromDerivationPath(
 
 /**
  * @description
- * Key origin refers to the identifier commonly used as part of the key
+ * A key origin path refers to the identifier commonly used as part of the key
  * information provided as part of a Output Descriptor described in BIP-380. It
- * replaces the `m/` part of a derivation path with the fingerprint to which the
+ * replaces the `m/` part of a derivation path with the master key fingerprint to which the
  * key it describes belongs.
  * @example `0a3fd8ef/84'/0'/0'`
  */
-export function createKeyOriginFromPath(path: string, fingerprint: string) {
+export function createKeyOriginPath(fingerprint: string, path: string) {
   return `${fingerprint}/${path.replace('m/', '')}`;
 }

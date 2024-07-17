@@ -29,7 +29,8 @@
     "typecheck": "turbo run typecheck"
   },
   "dependencies": {
-    "@ls-lint/ls-lint": "2.2.3"
+    "@ls-lint/ls-lint": "2.2.3",
+    "vitest": "2.0.3"
   },
   "devDependencies": {
     "@babel/runtime": "7.23.2",

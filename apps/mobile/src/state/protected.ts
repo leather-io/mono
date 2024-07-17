@@ -6,23 +6,18 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { EntityAdapter, EntitySetter, createEntity } from './entity-adapter';
 import { PROTECTED_KEY, filterObjectKeys } from './utils';
 
-interface SoftwareWallet {
+interface Mnemonic {
+  /** Master key fingerprint */
   id: string;
-  type: 'software';
+  /** BIP39 mnemonic phrase */
   mnemonic: string;
+  /** User-defined name for wallet */
+  name?: string;
 }
-
-interface HardwareWallet {
-  id: string;
-  type: 'ledger';
-  deviceType: string;
-}
-
-type Wallet = SoftwareWallet | HardwareWallet;
 
 interface ProtectedState {
   _hasHydrated: boolean;
-  wallet: EntityAdapter<Wallet>;
+  mnemonic: EntityAdapter<Mnemonic>;
 }
 
 interface ProtectedAction {
@@ -31,7 +26,7 @@ interface ProtectedAction {
 
 export type ProtectedStore = ProtectedState & ProtectedAction;
 
-const NOT_PERSIST_KEYS = ['_hasHydrated'];
+const nonPersistedKeys = ['_hasHydrated'];
 
 export const createProtectedStore: StateCreator<
   ProtectedStore,
@@ -39,11 +34,11 @@ export const createProtectedStore: StateCreator<
   [['zustand/persist', unknown]]
 > = persist(
   set => {
-    function setWallet(setter: EntitySetter<Wallet>) {
-      set(state => ({ ...state, wallet: { ...setter(state.wallet) } }));
+    function setMnemonic(setter: EntitySetter<Mnemonic>) {
+      set(state => ({ ...state, mnemonic: { ...setter(state.mnemonic) } }));
     }
     return {
-      wallet: createEntity<Wallet>(setWallet),
+      mnemonic: createEntity<Mnemonic>(setMnemonic),
       _hasHydrated: false,
       setHasHydrated: state => {
         set({
@@ -55,16 +50,12 @@ export const createProtectedStore: StateCreator<
   {
     name: PROTECTED_KEY,
     onRehydrateStorage: state => {
-      // before hydration
-      return () => {
-        // after hydration
-        state.setHasHydrated(true);
-      };
+      return () => state.setHasHydrated(true);
     },
     merge: (persistedState: unknown, currentState: ProtectedStore) => {
       return merge({}, currentState, persistedState);
     },
-    partialize: state => filterObjectKeys(state, NOT_PERSIST_KEYS),
+    partialize: state => filterObjectKeys(state, nonPersistedKeys),
     storage: createJSONStorage(() => ({
       getItem(key) {
         return SecureStore.getItemAsync(key, {
