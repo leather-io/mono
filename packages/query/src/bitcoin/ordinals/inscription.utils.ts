@@ -27,7 +27,11 @@ export function createBestinSlotInscription(
   inscription: BestInSlotInscriptionResponse
 ): Inscription {
   const id = inscription.inscription_id;
-  const contentSrc = inscription.content_url;
+  const delegate = inscription.delegate;
+
+  const contentSrc = delegate ? delegate.content_url : inscription.content_url;
+  const mimeType = delegate ? delegate.mime_type : inscription.mime_type;
+
   const iframeSrc = `https://ordinals.com/preview/${id}`;
   const preview = `https://ordinals.hiro.so/inscription/${id}`;
   const title = `Inscription ${inscription.inscription_number}`;
@@ -50,7 +54,7 @@ export function createBestinSlotInscription(
     value: '0',
   };
 
-  if (!inscription.mime_type) {
+  if (!mimeType) {
     return {
       ...sharedInfo,
       mimeType: 'other',
@@ -59,7 +63,7 @@ export function createBestinSlotInscription(
     };
   }
 
-  return whenInscriptionMimeType<Inscription>(inscription.mime_type, {
+  return whenInscriptionMimeType<Inscription>(mimeType, {
     audio: () => ({
       ...sharedInfo,
       mimeType: 'audio',
