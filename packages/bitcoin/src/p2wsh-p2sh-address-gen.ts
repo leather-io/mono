@@ -2,14 +2,14 @@ import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { base58check } from '@scure/base';
 
-import { deriveBip39MnemonicFromSeed, deriveRootBip32Keychain } from '@leather.io/crypto';
+import { deriveBip39SeedFromMnemonic, deriveRootBip32Keychain } from '@leather.io/crypto';
 import { NetworkModes } from '@leather.io/models';
 
 /**
  * @deprecated
  * Use `deriveBip39MnemonicFromSeed` from `@leather.io/crypto`
  */
-export const deriveBtcBip49SeedFromMnemonic = deriveBip39MnemonicFromSeed;
+export const deriveBtcBip49SeedFromMnemonic = deriveBip39SeedFromMnemonic;
 
 /**
  * @deprecated
