@@ -103,6 +103,13 @@
     * @leather.io/bitcoin bumped to 0.8.6
     * @leather.io/utils bumped to 0.10.1
 
+## [0.11.2](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.1...@leather.io/query-v0.11.2) (2024-07-17)
+
+
+### Bug Fixes
+
+* inscriptions content url, closes leather-io/extension[#5657](https://github.com/leather-io/mono/issues/5657) ([7554ee0](https://github.com/leather-io/mono/commit/7554ee0032f62a9b04fb3b0acf11eae239c8e854))
+
 ## [0.11.1](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.0...@leather.io/query-v0.11.1) (2024-07-16)
 
 
