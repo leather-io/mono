@@ -127,7 +127,7 @@ export function BrowserEmptyState({
           flexDirection="row"
           bg="base.ink.background-primary"
           borderRadius="sm"
-          shadowColor="base.ink.background-overlay"
+          shadowColor="base.ink.background-secondary"
           shadowOffset={{ width: 0, height: 2 }}
           shadowOpacity={0.1}
           shadowRadius={5}
@@ -189,9 +189,9 @@ export function BrowserEmptyState({
           gap: theme.spacing[3],
         }}
       >
-        {getCurrentArray().map(shortcut => (
+        {getCurrentArray().map((shortcut, idx) => (
           <AppWidget
-            key={shortcut.link}
+            key={shortcut.link + idx}
             shortcut={shortcut}
             onPress={() => {
               setTextURL(shortcut.link);

@@ -12,6 +12,9 @@ You'll need to create a `.env` file to set which app mode the wallet runs in
 # .env
 # `prelaunch` or `live`
 EXPO_PUBLIC_APP_START_MODE='prelaunch'
+
+# test secret key
+EXPO_PUBLIC_SECRET_KEY="<24 words go here>"
 ```
 
 ### Prerequisites

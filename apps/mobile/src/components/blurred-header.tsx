@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { EdgeInsets } from 'react-native-safe-area-context';
 
 import { BlurView } from 'expo-blur';
 import { Stack, Tabs } from 'expo-router';
@@ -21,16 +21,16 @@ type NativeStackHeaderProps = Parameters<
 
 export const HEADER_HEIGHT = 64;
 
-export function createBlurredHeader(components?: {
+export function createBlurredHeader(props: {
   left?: ReactNode;
   center?: ReactNode;
   right?: ReactNode;
   bottom?: ReactNode;
+  insets: EdgeInsets;
 }) {
   return function BlurredHeader(
     _: BottomTabHeaderProps | NativeStackHeaderProps
   ): React.JSX.Element {
-    const { top } = useSafeAreaInsets();
     return (
       <BlurView
         tint="systemChromeMaterial"
@@ -38,7 +38,7 @@ export function createBlurredHeader(components?: {
         style={{
           width: '100%',
           position: 'absolute',
-          paddingTop: top,
+          paddingTop: props.insets.top,
           justifyContent: 'center',
         }}
       >
@@ -52,16 +52,16 @@ export function createBlurredHeader(components?: {
           gap="2"
         >
           <Box height="100%" flex={1} alignItems="flex-start" justifyContent="center">
-            {components?.left}
+            {props?.left}
           </Box>
           <Box height="100%" flex={2} alignItems="center" justifyContent="center">
-            {components?.center}
+            {props?.center}
           </Box>
           <Box height="100%" flex={1} alignItems="flex-end" justifyContent="center">
-            {components?.right}
+            {props?.right}
           </Box>
         </Box>
-        {components?.bottom}
+        {props?.bottom}
       </BlurView>
     );
   };

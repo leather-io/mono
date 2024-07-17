@@ -1,4 +1,5 @@
 import { RefObject, createContext, useRef } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import EmojiSmile from '@/assets/emoji-smile.svg';
 import Inbox from '@/assets/inbox.svg';
@@ -79,62 +80,87 @@ export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods>
   ref: null,
 });
 
+function HeaderCenter({ onPress }: { onPress?(): void }) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      height={48}
+      px="3"
+      flexDirection="row"
+      alignItems="center"
+      gap="2"
+    >
+      <Box borderRadius="round" p="1" bg="base.blue.background-secondary">
+        <EmojiSmile width={24} height={24} />
+      </Box>
+      <Text variant="heading05">Account 1</Text>
+    </TouchableOpacity>
+  );
+}
+
+function HeaderRight({ onPress }: { onPress?(): void }) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      height={48}
+      width={48}
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Menu height={24} width={24} />
+    </TouchableOpacity>
+  );
+}
+
+function HeaderBottom() {
+  const router = useRouter();
+  const pathname = usePathname();
+  return (
+    <TabBar
+      tabs={[
+        {
+          onPress() {
+            router.navigate(APP_ROUTES.WalletAllAssets);
+          },
+          title: 'All assets',
+          isActive: pathname === APP_ROUTES.WalletAllAssets,
+        },
+        {
+          onPress() {
+            router.navigate(APP_ROUTES.WalletTokens);
+          },
+          title: 'Tokens',
+          isActive: pathname === APP_ROUTES.WalletTokens,
+        },
+        {
+          onPress() {
+            router.navigate(APP_ROUTES.WalletCollectibles);
+          },
+          title: 'Collectibles',
+          isActive: pathname === APP_ROUTES.WalletCollectibles,
+        },
+      ]}
+    />
+  );
+}
+
 export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
 
   const router = useRouter();
-  const pathname = usePathname();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
+  const insets = useSafeAreaInsets();
   const NavigationHeader = createBlurredHeader({
-    center: (
-      <TouchableOpacity height={48} px="3" flexDirection="row" alignItems="center" gap="2">
-        <Box borderRadius="round" p="1" bg="base.blue.background-secondary">
-          <EmojiSmile width={24} height={24} />
-        </Box>
-        <Text variant="heading05">Account 1</Text>
-      </TouchableOpacity>
-    ),
+    insets,
+    center: <HeaderCenter />,
     right: (
-      <TouchableOpacity
+      <HeaderRight
         onPress={() => {
           bottomSheetModalRef.current?.present();
         }}
-        height={48}
-        width={48}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Menu height={24} width={24} />
-      </TouchableOpacity>
-    ),
-    bottom: (
-      <TabBar
-        tabs={[
-          {
-            onPress() {
-              router.navigate(APP_ROUTES.WalletAllAssets);
-            },
-            title: 'All assets',
-            isActive: pathname === APP_ROUTES.WalletAllAssets,
-          },
-          {
-            onPress() {
-              router.navigate(APP_ROUTES.WalletTokens);
-            },
-            title: 'Tokens',
-            isActive: pathname === APP_ROUTES.WalletTokens,
-          },
-          {
-            onPress() {
-              router.navigate(APP_ROUTES.WalletCollectibles);
-            },
-            title: 'Collectibles',
-            isActive: pathname === APP_ROUTES.WalletCollectibles,
-          },
-        ]}
       />
     ),
+    bottom: <HeaderBottom />,
   });
   return (
     <ActionBarContext.Provider value={{ ref }}>

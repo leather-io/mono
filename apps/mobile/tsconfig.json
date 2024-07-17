@@ -20,6 +20,6 @@
       "path": "../../packages/ui/tsconfig.native.json"
     }
   ],
-  "include": ["**/*.ts", "**/*.tsx", ".detoxrc.cjs"],
+  "include": ["**/*.ts", "**/*.tsx", ".detoxrc.cjs", "src/scripts/injected-provider.js"],
   "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist"]
 }
