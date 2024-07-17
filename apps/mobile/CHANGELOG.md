@@ -108,6 +108,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.6.3
 
+## [1.12.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.11.3...@leather.io/mobile-v1.12.0) (2024-07-17)
+
+
+### Features
+
+* browser get addresses ([472e3be](https://github.com/leather-io/mono/commit/472e3bec755e1c02efa09b14f0f1e41eaf5f85e2))
+
 ## [1.11.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.11.2...@leather.io/mobile-v1.11.3) (2024-07-16)
 
 
