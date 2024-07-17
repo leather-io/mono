@@ -11,20 +11,24 @@ import {
   getBitcoinCoinTypeIndexByNetwork,
 } from './bitcoin.utils';
 
-export function getTaprootAccountDerivationPath(
+export function makeTaprootAccountDerivationPath(
   network: BitcoinNetworkModes,
   accountIndex: number
 ) {
   return `m/86'/${getBitcoinCoinTypeIndexByNetwork(network)}'/${accountIndex}'`;
 }
+/** @deprecated Use makeTaprootAccountDerivationPath */
+export const getTaprootAccountDerivationPath = makeTaprootAccountDerivationPath;
 
-export function getTaprootAddressIndexDerivationPath(
+export function makeTaprootAddressIndexDerivationPath(
   network: BitcoinNetworkModes,
   accountIndex: number,
   addressIndex: number
 ) {
-  return getTaprootAccountDerivationPath(network, accountIndex) + `/0/${addressIndex}`;
+  return makeTaprootAccountDerivationPath(network, accountIndex) + `/0/${addressIndex}`;
 }
+/** @deprecated Use makeTaprootAddressIndexDerivationPath */
+export const getTaprootAddressIndexDerivationPath = makeTaprootAddressIndexDerivationPath;
 
 export function deriveTaprootAccount(keychain: HDKey, network: BitcoinNetworkModes) {
   if (keychain.depth !== DerivationPathDepth.Root)
@@ -34,8 +38,8 @@ export function deriveTaprootAccount(keychain: HDKey, network: BitcoinNetworkMod
     type: 'p2tr',
     network,
     accountIndex,
-    derivationPath: getTaprootAccountDerivationPath(network, accountIndex),
-    keychain: keychain.derive(getTaprootAccountDerivationPath(network, accountIndex)),
+    derivationPath: makeTaprootAccountDerivationPath(network, accountIndex),
+    keychain: keychain.derive(makeTaprootAccountDerivationPath(network, accountIndex)),
   });
 }
 

@@ -4,7 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { Spinner } from '@/components/spinner';
 import { TextInput } from '@/components/text-input';
-import { useKeyStore, usePersistedStore, useProtectedStore } from '@/state';
+import { usePersistedStore, useProtectedStore } from '@/state';
+import { useKeyStore } from '@/state/bitcoin-accounts/bitcoin-state';
 import { clearAllPersistedStorage } from '@/state/utils';
 
 export default function TokensScreen() {
@@ -13,7 +14,7 @@ export default function TokensScreen() {
   const keyStore = useKeyStore();
 
   const persisted = usePersistedStore();
-  const [text, onChangeText] = useState('2f4b29ec');
+  const [text, onChangeText] = useState('7d84296b');
   const [isGeneratingMnemonic, setIsGeneratingMnemonic] = useState(false);
 
   return (
@@ -40,7 +41,7 @@ export default function TokensScreen() {
           />
           <Button
             title="Generate account from fingerprint"
-            onPress={async () => keyStore.createNewAccountForKeychain(text)}
+            onPress={async () => keyStore.createNewSoftwareAccountForKeychain(text)}
           />
         </>
       )}

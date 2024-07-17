@@ -76,3 +76,14 @@ jobs:
 
       - name: Lint dependency rules
         run: pnpm lint:filenames
+
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - run: pnpm build
+
+      - name: Run unit tests
+        run: pnpm test:unit

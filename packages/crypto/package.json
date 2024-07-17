@@ -8,7 +8,7 @@
     "build": "tsup",
     "build:watch": "tsup --watch",
     "prepublish": "pnpm build",
-    "test:unit": "vitest",
+    "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -21,7 +21,7 @@
   "devDependencies": {
     "@vitest/coverage-istanbul": "0.34.6",
     "tsup": "8.1.0",
-    "vitest": "0.34.6"
+    "vitest": "2.0.3"
   },
   "files": [
     "dist"
