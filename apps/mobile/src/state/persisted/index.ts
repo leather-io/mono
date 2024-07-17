@@ -6,7 +6,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { EntityAdapter, EntitySetter, createEntity } from '../entity-adapter';
 import { PERSISTED_KEY, filterObjectKeys } from '../utils';
 
-interface BitcoinAccount {
+export interface BitcoinAccount {
   /**
    * `id` is in the key info format described in BIP388 https://bips.dev/388
    * `masterFingerprint/derivationPath`

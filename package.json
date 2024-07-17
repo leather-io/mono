@@ -24,6 +24,8 @@
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
+    "test": "turbo run test",
+    "test:unit": "pnpm -r test:unit",
     "typecheck": "turbo run typecheck"
   },
   "dependencies": {

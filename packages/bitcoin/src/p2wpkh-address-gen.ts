@@ -11,20 +11,24 @@ import {
   getBitcoinCoinTypeIndexByNetwork,
 } from './bitcoin.utils';
 
-export function getNativeSegwitAccountDerivationPath(
+export function makeNativeSegwitAccountDerivationPath(
   network: BitcoinNetworkModes,
   accountIndex: number
 ) {
   return `m/84'/${getBitcoinCoinTypeIndexByNetwork(network)}'/${accountIndex}'`;
 }
+/** @deprecated Use makeNativeSegwitAccountDerivationPath */
+export const getNativeSegwitAccountDerivationPath = makeNativeSegwitAccountDerivationPath;
 
-export function getNativeSegwitAddressIndexDerivationPath(
+export function makeNativeSegwitAddressIndexDerivationPath(
   network: BitcoinNetworkModes,
   accountIndex: number,
   addressIndex: number
 ) {
-  return getNativeSegwitAccountDerivationPath(network, accountIndex) + `/0/${addressIndex}`;
+  return makeNativeSegwitAccountDerivationPath(network, accountIndex) + `/0/${addressIndex}`;
 }
+/** @deprecated Use makeNativeSegwitAddressIndexDerivationPath */
+export const getNativeSegwitAddressIndexDerivationPath = makeNativeSegwitAddressIndexDerivationPath;
 
 export function deriveNativeSegwitAccountFromRootKeychain(
   keychain: HDKey,
@@ -35,8 +39,8 @@ export function deriveNativeSegwitAccountFromRootKeychain(
     type: 'p2wpkh',
     network,
     accountIndex,
-    derivationPath: getNativeSegwitAccountDerivationPath(network, accountIndex),
-    keychain: keychain.derive(getNativeSegwitAccountDerivationPath(network, accountIndex)),
+    derivationPath: makeNativeSegwitAccountDerivationPath(network, accountIndex),
+    keychain: keychain.derive(makeNativeSegwitAccountDerivationPath(network, accountIndex)),
   });
 }
 
