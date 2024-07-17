@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WebView, WebViewNavigation } from 'react-native-webview';
+import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
 import ArrowRotateClockwise from '@/assets/arrow-rotate-clockwise.svg';
 import ChevronLeft from '@/assets/chevron-left.svg';
@@ -9,23 +9,32 @@ import ChevronRight from '@/assets/chevron-right.svg';
 import Cross from '@/assets/cross-large.svg';
 import DotGridHorizontal from '@/assets/dot-grid-horizontal.svg';
 import { Modal } from '@/components/bottom-sheet-modal';
+import injectedProvider from '@/scripts/dist/injected-provider';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+
+import { ApproverModal } from './approval-ux-modal';
 
 interface BrowserInUseProp {
   textURL: string;
   goToInactiveBrowser: () => void;
 }
 
+interface BrowserMessageDetails {
+  jsonrpc: string;
+  id: string;
+  method: 'getAddresses';
+}
+export type BrowserMessage = BrowserMessageDetails | null;
+
 export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) {
   const { top, bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
+  const settingsModalRef = useRef<BottomSheetModal>(null);
   function closeBrowser() {
     goToInactiveBrowser();
   }
@@ -43,11 +52,19 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   }
 
   function openSettings() {
-    bottomSheetModalRef.current?.present();
+    settingsModalRef.current?.present();
   }
 
   function handleWebViewNavigationStateChange(newNavState: WebViewNavigation) {
     setNavState(newNavState);
+  }
+
+  const [message, setMessage] = useState<BrowserMessage>(null);
+
+  function onMessageHandler(event: WebViewMessageEvent) {
+    const newMessage = JSON.parse(event.nativeEvent.data);
+    // TODO: zod check newMessage
+    setMessage(newMessage);
   }
 
   return (
@@ -75,6 +92,8 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
         </Box>
       </Box>
       <WebView
+        onMessage={onMessageHandler}
+        injectedJavaScript={injectedProvider}
         ref={webViewRef}
         style={{
           flex: 1,
@@ -112,9 +131,10 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
           <DotGridHorizontal width={24} height={24} />
         </TouchableOpacity>
       </Box>
-      <Modal ref={bottomSheetModalRef}>
+      <Modal ref={settingsModalRef}>
         <Box p="5" />
       </Modal>
+      <ApproverModal webViewRef={webViewRef} message={message} setMessage={setMessage} />
     </View>
   );
 }

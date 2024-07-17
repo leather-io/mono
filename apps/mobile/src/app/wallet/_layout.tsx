@@ -1,4 +1,5 @@
 import { RefObject, createContext } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArrowLeft from '@/assets/arrow-left.svg';
 import EmojiSmile from '@/assets/emoji-smile.svg';
@@ -13,12 +14,10 @@ export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods>
   ref: null,
 });
 
-export default function StackLayout() {
-  const router = useRouter();
-
-  const leftComponent = (
+function HeaderLeft({ onPress }: { onPress?(): void }) {
+  return (
     <TouchableOpacity
-      onPress={() => router.back()}
+      onPress={onPress}
       height={48}
       width={48}
       justifyContent="center"
@@ -27,26 +26,48 @@ export default function StackLayout() {
       <ArrowLeft height={24} width={24} />
     </TouchableOpacity>
   );
+}
 
-  const centerComponent = (
-    <TouchableOpacity height={48} px="3" flexDirection="row" alignItems="center" gap="2">
+function HeaderCenter({ onPress }: { onPress?(): void }) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      height={48}
+      px="3"
+      flexDirection="row"
+      alignItems="center"
+      gap="2"
+    >
       <Box borderRadius="round" p="1" bg="base.blue.background-secondary">
         <EmojiSmile width={24} height={24} />
       </Box>
       <Text variant="heading05">Account 1</Text>
     </TouchableOpacity>
   );
+}
 
-  const rightComponent = (
-    <TouchableOpacity height={48} width={48} justifyContent="center" alignItems="center">
+function HeaderRight({ onPress }: { onPress?(): void }) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      height={48}
+      width={48}
+      justifyContent="center"
+      alignItems="center"
+    >
       <Menu height={24} width={24} />
     </TouchableOpacity>
   );
+}
+export default function StackLayout() {
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   const NavigationHeader = createBlurredHeader({
-    left: leftComponent,
-    center: centerComponent,
-    right: rightComponent,
+    insets,
+    left: <HeaderLeft onPress={() => router.back()} />,
+    center: <HeaderCenter />,
+    right: <HeaderRight />,
   });
   return (
     <Stack>

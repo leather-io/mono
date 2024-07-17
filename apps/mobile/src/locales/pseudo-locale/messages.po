@@ -37,11 +37,11 @@ msgstr ""
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:53
+#: src/app/wallet/(tabs)/_layout.tsx:54
 msgid "Receive"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:37
+#: src/app/wallet/(tabs)/_layout.tsx:38
 msgid "Send"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:69
+#: src/app/wallet/(tabs)/_layout.tsx:70
 msgid "Swap"
 msgstr ""
 

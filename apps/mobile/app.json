@@ -28,7 +28,18 @@
       },
       "package": "io.leather.mobilewallet"
     },
-    "plugins": ["expo-font", "expo-router", "expo-secure-store", "@config-plugins/detox"],
+    "plugins": [
+      "expo-font",
+      "expo-router",
+      "expo-secure-store",
+      "@config-plugins/detox",
+      [
+        "expo-asset",
+        {
+          "assets": ["src/assets/scripts/injected-provider.js"]
+        }
+      ]
+    ],
     "extra": {
       "router": {
         "origin": false

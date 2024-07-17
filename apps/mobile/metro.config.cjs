@@ -4,6 +4,7 @@
 const path = require('path');
 const { getDefaultConfig } = require('expo/metro-config');
 const MetroSymlinksResolver = require('@rnx-kit/metro-resolver-symlinks');
+const { updateInjectedProvider } = require('./scripts/update-injected-provider.cjs');
 
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, '../..');
@@ -41,6 +42,21 @@ const symlinkResolver = MetroSymlinksResolver({
   experimental_retryResolvingFromDisk: 'force',
 });
 
+function prepareDebounce(time) {
+  let timeout = null;
+  return callback => {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    timeout = setTimeout(callback, time);
+  };
+}
+
+const debounce = prepareDebounce(200);
+
+updateInjectedProvider();
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // TODO: either read tsconfig automatically or figure out another way of resolving tsconfig aliases.
   // If we add more aliases in tsconfig, we need to add those to this if statement.
@@ -55,6 +71,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === '@noble/hashes/crypto') {
     return context.resolveRequest(context, moduleName, platform);
   }
+  debounce(updateInjectedProvider);
 
   return symlinkResolver(context, moduleName, platform);
 };
