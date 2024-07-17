@@ -5,6 +5,7 @@ import {
   makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
 import {
+  createKeyOriginFromPath,
   deriveBip39SeedFromMnemonic,
   deriveRootBip32Keychain,
   generateMnemonic,
@@ -45,7 +46,7 @@ export function useKeyStore() {
         //                                                 |___/
 
         const nativeSegwitPath = makeNativeSegwitAccountDerivationPath('mainnet', nextAccountIndex);
-        const nativeSegwitKeyInfo = `${fingerprint}/${nativeSegwitPath.replace('m/', '')}`;
+        const nativeSegwitKeyInfo = createKeyOriginFromPath(nativeSegwitPath, fingerprint);
         const nativeSegwitKeychain = rootKeychain.derive(nativeSegwitPath);
         const nativeSegwitPolicy = `[${nativeSegwitKeyInfo}]${nativeSegwitKeychain.publicExtendedKey}`;
         persisted.accounts.bitcoin.addOne({
@@ -56,7 +57,7 @@ export function useKeyStore() {
 
         // use helper fn to get path
         const taprootPath = makeTaprootAccountDerivationPath('mainnet', nextAccountIndex);
-        const taprootKeyInfo = `${fingerprint}/${taprootPath.replace('m/', '')}`;
+        const taprootKeyInfo = createKeyOriginFromPath(taprootPath, fingerprint);
         const taprootKeychain = rootKeychain.derive(taprootPath);
         const taprootPolicy = `[${taprootKeyInfo}]${taprootKeychain.publicExtendedKey}`;
         persisted.accounts.bitcoin.addOne({
