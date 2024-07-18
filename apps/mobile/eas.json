@@ -1,7 +1,8 @@
 {
   "cli": {
     "version": ">= 7.8.1",
-    "promptToConfigurePushNotifications": false
+    "promptToConfigurePushNotifications": false,
+    "appVersionSource": "remote"
   },
   "build": {
     "test": {
@@ -10,32 +11,48 @@
         "withoutCredentials": true
       },
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "cocoapods": "1.15.2"
       }
     },
     "development": {
       "node": "20.11.0",
-      "pnpm": "8.15.3",
+      "pnpm": "9.1.4",
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "cocoapods": "1.15.2"
+      }
     },
     "preview-simulator": {
       "node": "20.11.0",
-      "pnpm": "8.15.3",
+      "pnpm": "9.1.4",
       "distribution": "internal",
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "cocoapods": "1.15.2"
       }
     },
     "preview": {
       "node": "20.11.0",
-      "pnpm": "8.15.3",
-      "distribution": "internal"
+      "pnpm": "9.1.4",
+      "distribution": "internal",
+      "ios": {
+        "cocoapods": "1.15.2"
+      }
     },
     "production": {
       "node": "20.11.0",
-      "pnpm": "8.15.3",
-      "distribution": "store"
+      "pnpm": "9.1.4",
+      "distribution": "store",
+      "autoIncrement": true,
+      "ios": {
+        "cocoapods": "1.15.2"
+      },
+      "env": {
+        "EXPO_PUBLIC_APP_START_MODE": "<should be either 'live' or 'prelaunch'>",
+        "EXPO_PUBLIC_SECRET_KEY": "<enter test dummy secret key here>"
+      }
     }
   },
   "submit": {

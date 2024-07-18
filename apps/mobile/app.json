@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "@leather.io/mobile",
+    "name": "Leather BTC",
     "slug": "leather-wallet-mobile",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "scheme": "myapp",
@@ -17,9 +17,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "io.leather.mobilewallet",
-      "buildNumber": "1.0.0"
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
