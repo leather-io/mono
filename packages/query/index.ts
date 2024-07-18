@@ -54,7 +54,6 @@ export * from './src/stacks/info/block-time.query';
 export * from './src/stacks/mempool/mempool.hooks';
 export * from './src/stacks/mempool/mempool.query';
 export * from './src/stacks/mempool/mempool.utils';
-export * from './src/stacks/network/network.hooks';
 export * from './src/stacks/network/network.query';
 export * from './src/stacks/nonce/account-nonces.hooks';
 export * from './src/stacks/nonce/account-nonces.query';

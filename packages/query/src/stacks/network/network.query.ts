@@ -1,7 +1,7 @@
-import { keepPreviousData } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient } from '../stacks-client';
+import { StacksClient, useStacksClient } from '../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
 
@@ -26,4 +26,9 @@ export function createGetNetworkStatusQueryOptions({
     queryFn: () => client.getNetworkStatus(url),
     ...queryOptions,
   } as const;
+}
+
+export function useGetStacksNetworkStatusQuery(url: string) {
+  const client = useStacksClient();
+  return useQuery(createGetNetworkStatusQueryOptions({ client, url }));
 }
