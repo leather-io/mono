@@ -60,7 +60,7 @@ async function fetchInscriptions({
 }
 
 /**
- * // TODO: Refactor: https://github.com/leather-io/issues/issues/109
+ * // TODO: Refactor: https://github.com/leather-io/issues/issues/124
  * Returns all inscriptions for the user's current account
  */
 export function useGetInscriptionsInfiniteQuery({
