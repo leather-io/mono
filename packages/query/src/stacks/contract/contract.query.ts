@@ -1,4 +1,4 @@
-import { type ContractCallPayload, TransactionTypes } from '@stacks/connect';
+import { type ContractCallPayload, TransactionPayload, TransactionTypes } from '@stacks/connect';
 import { useQuery } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
@@ -11,7 +11,7 @@ const queryOptions = {
 
 interface CreateGetContractInterfaceQueryOptionsArgs {
   client: StacksClient;
-  transactionRequest: ContractCallPayload | null;
+  transactionRequest: TransactionPayload | null;
 }
 export function createGetContractInterfaceQueryOptions({
   client,
@@ -21,8 +21,8 @@ export function createGetContractInterfaceQueryOptions({
     enabled: !!transactionRequest && transactionRequest.txType === TransactionTypes.ContractCall,
     queryKey: [
       StacksQueryPrefixes.GetContractInterface,
-      transactionRequest?.contractName,
-      transactionRequest?.contractAddress,
+      (transactionRequest as ContractCallPayload)?.contractName,
+      (transactionRequest as ContractCallPayload)?.contractAddress,
     ],
     queryFn: () => {
       if (!transactionRequest || transactionRequest?.txType !== TransactionTypes.ContractCall)
@@ -35,7 +35,7 @@ export function createGetContractInterfaceQueryOptions({
   } as const;
 }
 
-export function useGetContractInterfaceQuery(transactionRequest: ContractCallPayload | null) {
+export function useGetContractInterfaceQuery(transactionRequest: TransactionPayload | null) {
   const client = useStacksClient();
   return useQuery(createGetContractInterfaceQueryOptions({ client, transactionRequest }));
 }

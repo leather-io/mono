@@ -1,11 +1,11 @@
-import type { ContractCallPayload } from '@stacks/connect';
+import type { TransactionPayload } from '@stacks/connect';
 import { ContractInterfaceFunction } from '@stacks/rpc-client';
 import { useQuery } from '@tanstack/react-query';
 
 import { useStacksClient } from '../stacks-client';
 import { createGetContractInterfaceQueryOptions } from './contract.query';
 
-export function useContractFunction(transactionRequest: ContractCallPayload | null) {
+export function useContractFunction(transactionRequest: TransactionPayload | null) {
   const client = useStacksClient();
   return useQuery({
     ...createGetContractInterfaceQueryOptions({ client, transactionRequest }),
