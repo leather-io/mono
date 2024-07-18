@@ -121,6 +121,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.9.1
 
+## [1.0.2](https://github.com/leather-io/mono/compare/@leather.io/query-v1.0.1...@leather.io/query-v1.0.2) (2024-07-18)
+
+
+### Bug Fixes
+
+* minor bugs from query refactor ([7d91fd4](https://github.com/leather-io/mono/commit/7d91fd4426d041b82995522bd3bd31d7af4b1094))
+
 ## [1.0.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.3...@leather.io/query-v1.0.0) (2024-07-18)
 
 
