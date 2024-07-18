@@ -84,7 +84,7 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
     >
       <Box width="100%" px="5" justifyContent="center" alignItems="center">
         <BlurView
-          tint="systemChromeMaterial"
+          tint="systemChromeMaterialLight"
           intensity={90}
           style={{
             flexDirection: 'row',
