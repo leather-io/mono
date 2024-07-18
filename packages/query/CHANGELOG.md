@@ -115,6 +115,12 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.9.1
+
 ## [1.0.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.3...@leather.io/query-v1.0.0) (2024-07-18)
 
 
