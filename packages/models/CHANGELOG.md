@@ -12,6 +12,12 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.6.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.5.1
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.9.0...@leather.io/models-v0.10.0) (2024-06-21)
 
 
