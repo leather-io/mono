@@ -115,6 +115,17 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+## [1.0.0](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.3...@leather.io/query-v1.0.0) (2024-07-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* release please
+
+### Code Refactoring
+
+* release please ([4e02abe](https://github.com/leather-io/mono/commit/4e02abe6acb4f06ff6178a7cc59bf7526e925e8c))
+
 ## [0.11.2](https://github.com/leather-io/mono/compare/@leather.io/query-v0.11.1...@leather.io/query-v0.11.2) (2024-07-17)
 
 
