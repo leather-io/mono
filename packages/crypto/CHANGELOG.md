@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.3...@leather.io/crypto-v1.0.4) (2024-07-18)
+
+
+### Bug Fixes
+
+* crypto pkg release ([e667fa2](https://github.com/leather-io/mono/commit/e667fa28f1bd416af6632c28a3d2eda3dd806efd))
+
 ## [1.0.3](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.2...@leather.io/crypto-v1.0.3) (2024-07-08)
 
 
