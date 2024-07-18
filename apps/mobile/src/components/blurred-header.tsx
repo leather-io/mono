@@ -33,7 +33,7 @@ export function createBlurredHeader(props: {
   ): React.JSX.Element {
     return (
       <BlurView
-        tint="systemChromeMaterial"
+        tint="systemChromeMaterialLight"
         intensity={90}
         style={{
           width: '100%',
