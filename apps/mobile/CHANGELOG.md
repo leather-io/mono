@@ -108,6 +108,26 @@
   * dependencies
     * @leather.io/ui bumped to 1.6.3
 
+## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.12.0...@leather.io/mobile-v1.13.0) (2024-07-18)
+
+
+### Features
+
+* **mobile:** add base key generation ([2e96346](https://github.com/leather-io/mono/commit/2e9634644b459b3917ef353579ca0e476b87096d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.9.0
+    * @leather.io/constants bumped to 0.8.2
+    * @leather.io/rpc bumped to 2.0.2
+    * @leather.io/tokens bumped to 0.6.2
+    * @leather.io/ui bumped to 1.6.4
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.9.0
+
 ## [1.12.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.11.3...@leather.io/mobile-v1.12.0) (2024-07-17)
 
 

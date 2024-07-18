@@ -119,6 +119,25 @@
   * dependencies
     * @leather.io/utils bumped to 0.10.1
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.8.6...@leather.io/bitcoin-v0.9.0) (2024-07-18)
+
+
+### Features
+
+* **mobile:** add base key generation ([2e96346](https://github.com/leather-io/mono/commit/2e9634644b459b3917ef353579ca0e476b87096d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.8.2
+    * @leather.io/models bumped to 0.10.2
+    * @leather.io/utils bumped to 0.10.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.0.2
+    * @leather.io/tsconfig-config bumped to 0.5.1
+
 ## [0.8.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.8.1...@leather.io/bitcoin-v0.8.2) (2024-07-02)
 
 

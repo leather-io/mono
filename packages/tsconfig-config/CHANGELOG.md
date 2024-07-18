@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.5.0...@leather.io/tsconfig-config-v0.5.1) (2024-07-18)
+
+
+### Bug Fixes
+
+* do not strip comments from ts output ([ab2b5f6](https://github.com/leather-io/mono/commit/ab2b5f6e7244906ab5f6456b5f598d7fba7887ce))
+
 ## [0.5.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.4.0...@leather.io/tsconfig-config-v0.5.0) (2024-06-21)
 
 
