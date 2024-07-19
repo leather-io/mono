@@ -1,3 +1,5 @@
+import { isHexString } from '@leather.io/utils';
+
 export enum DerivationPathDepth {
   Root = 0,
   Purpose = 1,
@@ -24,6 +26,12 @@ export const extractAddressIndexFromPath = extractSectionFromDerivationPath(
   DerivationPathDepth.AddressIndex
 );
 
+export function extractFingerprintFromKeyOriginPath(keyOriginPath: string) {
+  const fingerprint = keyOriginPath.split('/')[0];
+  if (!isHexString(fingerprint)) throw new Error('Fingerprint must be a hexadecimal string');
+  return fingerprint;
+}
+
 /**
  * @description
  * A key origin path refers to the identifier commonly used as part of the key
@@ -33,5 +41,63 @@ export const extractAddressIndexFromPath = extractSectionFromDerivationPath(
  * @example `0a3fd8ef/84'/0'/0'`
  */
 export function createKeyOriginPath(fingerprint: string, path: string) {
+  if (!isHexString(fingerprint)) throw new Error('Fingerprint must be a hexadecimal string');
   return `${fingerprint}/${path.replace('m/', '')}`;
+}
+
+export function validateKeyOriginPath(keyOriginPath: string) {
+  if (keyOriginPath.includes('[') || keyOriginPath.includes(']'))
+    throw new Error('Key origin path should not contain square brackets');
+
+  if (!keyOriginPath.includes('/'))
+    throw new Error('Key origin path must contain a fingerprint and derivation path');
+
+  if (!isHexString(extractFingerprintFromKeyOriginPath(keyOriginPath)))
+    throw new Error('Fingerprint must be a hexadecimal string');
+
+  if (keyOriginPath.split('/').length < 4)
+    throw new Error('Key origin path is too short. Should describe at least to the account level');
+
+  return true;
+}
+
+/**
+ * @description
+ * Creates a descriptor with key origin and xpub
+ * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3`
+ */
+export function createExtendedPublicKeyDescriptor(keyOriginPath: string, xpub: string) {
+  validateKeyOriginPath(keyOriginPath);
+  return `[${keyOriginPath}]${xpub}`;
+}
+
+/**
+ * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3` -> `0a3fd8ef/84'/0'/0'`
+ */
+export function extractKeyOriginPathFromDescriptor(descriptor: string) {
+  const keyOriginPath = descriptor.split(']')[0].replace('[', '');
+  validateKeyOriginPath(keyOriginPath);
+  return keyOriginPath;
+}
+
+/**
+ * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3` -> `m/84'/0'/0'`
+ */
+export function extractDerivationPathFromDescriptor(descriptor: string) {
+  const keyOriginPath = extractKeyOriginPathFromDescriptor(descriptor);
+  return 'm/' + keyOriginPath.split('/').slice(1).join('/');
+}
+
+/**
+ * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3` -> `0a3fd8ef`
+ */
+export function extractFingerprintFromDescriptor(descriptor: string) {
+  return extractFingerprintFromKeyOriginPath(extractKeyOriginPathFromDescriptor(descriptor));
+}
+
+/**
+ * @example `[0a3fd8ef/84'/0'/6']xpuba1b…2c3` -> `6`
+ */
+export function extractAccountIndexFromDescriptor(descriptor: string) {
+  return extractAccountIndexFromPath(extractKeyOriginPathFromDescriptor(descriptor));
 }

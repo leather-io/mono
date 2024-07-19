@@ -1,11 +1,12 @@
 import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
-import { usePersistedStore, useProtectedStore } from '@/state';
+import { store } from '@/state';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
@@ -26,35 +27,34 @@ export const unstable_settings = { initialRouteName: '/' };
 initiateI18n();
 
 export default function RootLayout() {
-  const hasProtectedStoreHydrated = useProtectedStore(state => state._hasHydrated);
-  const hasPersistedStoreHydrated = usePersistedStore(state => state._hasHydrated);
-
   const { fontsLoaded } = useLoadFonts({
     onLoaded() {
       void SplashScreen.hideAsync();
     },
   });
 
-  if (!fontsLoaded || !hasProtectedStoreHydrated || !hasPersistedStoreHydrated) {
+  if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <I18nProvider i18n={i18n}>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <SplashScreenGuard>
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <BottomSheetModalProvider>
-                  <AppRouter />
-                </BottomSheetModalProvider>
-              </GestureHandlerRootView>
-            </SplashScreenGuard>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </SafeAreaProvider>
-    </I18nProvider>
+    <ReduxProvider store={store}>
+      <I18nProvider i18n={i18n}>
+        <SafeAreaProvider>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+              <SplashScreenGuard>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <BottomSheetModalProvider>
+                    <AppRouter />
+                  </BottomSheetModalProvider>
+                </GestureHandlerRootView>
+              </SplashScreenGuard>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </SafeAreaProvider>
+      </I18nProvider>
+    </ReduxProvider>
   );
 }
 

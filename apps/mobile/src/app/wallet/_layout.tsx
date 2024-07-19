@@ -50,6 +50,14 @@ export default function StackLayout() {
       <Stack.Screen name="home" options={{ header: NavigationHeaderHome }} />
       <Stack.Screen name="developer-console" options={{ header: NavigationDeveloperConsole }} />
       <Stack.Screen name="create-new-wallet" options={{ header: NavigationBack }} />
+      <Stack.Screen
+        name="developer-console/index"
+        options={{ header: NavigationDeveloperConsole }}
+      />
+      <Stack.Screen
+        name="developer-console/wallet-manager"
+        options={{ header: NavigationDeveloperConsole }}
+      />
     </Stack>
   );
 }

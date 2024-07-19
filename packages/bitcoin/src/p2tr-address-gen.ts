@@ -7,6 +7,7 @@ import { BitcoinNetworkModes } from '@leather.io/models';
 import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 import {
   BitcoinAccount,
+  deriveAddressIndexZeroFromAccount,
   ecdsaPublicKeyToSchnorr,
   getBitcoinCoinTypeIndexByNetwork,
 } from './bitcoin.utils';
@@ -58,4 +59,17 @@ export function getTaprootPaymentFromAddressIndex(keychain: HDKey, network: Bitc
   if (!keychain.publicKey) throw new Error('Keychain has no public key');
 
   return getTaprootPayment(keychain.publicKey, network);
+}
+
+interface DeriveTaprootReceiveAddressIndexArgs {
+  xpub: string;
+  network: BitcoinNetworkModes;
+}
+export function deriveTaprootReceiveAddressIndex({
+  xpub,
+  network,
+}: DeriveTaprootReceiveAddressIndexArgs) {
+  const keychain = HDKey.fromExtendedKey(xpub);
+  const zeroAddressIndex = deriveAddressIndexZeroFromAccount(keychain);
+  return getTaprootPaymentFromAddressIndex(zeroAddressIndex, network);
 }

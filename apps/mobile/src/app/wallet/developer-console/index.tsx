@@ -3,27 +3,23 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
-import { HEADER_HEIGHT } from '@/components/blurred-header';
 import { ApproverModal } from '@/components/browser/approval-ux-modal';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem, TitleListItem } from '@/components/developer-console/list-items';
+import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
+import { router } from 'expo-router';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
 export default function DeveloperConsoleScreen() {
-  const { top, bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const contentOffsetTop = top + HEADER_HEIGHT;
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
   const addWalletModalRef = useRef<BottomSheetModal>(null);
   return (
-    <Box
-      flex={1}
-      backgroundColor="base.ink.background-primary"
-      style={{ paddingTop: contentOffsetTop }}
-    >
+    <Box flex={1} backgroundColor="base.ink.background-primary" style={{}}>
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],
@@ -39,6 +35,10 @@ export default function DeveloperConsoleScreen() {
           <PressableListItem
             onPress={() => addWalletModalRef.current?.present()}
             title="Create wallet"
+          />
+          <PressableListItem
+            title="Wallet management"
+            onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsoleWalletManager)}
           />
         </Box>
         <Box gap="2">
@@ -62,9 +62,7 @@ export default function DeveloperConsoleScreen() {
       </ScrollView>
       <ApproverModal
         message={getAddressesMessage}
-        sendResult={() => {
-          setGetAddressesMessage(null);
-        }}
+        sendResult={() => setGetAddressesMessage(null)}
       />
       <AddWalletModal addWalletModalRef={addWalletModalRef} />
     </Box>
