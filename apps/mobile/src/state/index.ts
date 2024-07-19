@@ -1,9 +1,40 @@
-import { create } from 'zustand';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
+import { rememberReducer } from 'redux-remember';
 
-import { PersistedStore, createPersistedStore } from './persisted';
-import { ProtectedStore, createProtectedStore } from './protected';
-import { SessionStore, createSessionStore } from './session';
+import { createAsyncStorageEnhancer } from './/storage-persistors';
+import { accountsSlice } from './accounts/accounts.slice';
+import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.slice';
+import { settingsSlice } from './settings/settings.slice';
+import { walletSlice } from './wallets/wallets.slice';
 
-export const usePersistedStore = create<PersistedStore>()(createPersistedStore);
-export const useProtectedStore = create<ProtectedStore>()(createProtectedStore);
-export const useSessionStore = create<SessionStore>()(createSessionStore);
+const reducer = combineReducers({
+  wallets: walletSlice.reducer,
+  accounts: accountsSlice.reducer,
+  keychains: combineReducers({
+    bitcoin: bitcoinKeychainSlice.reducer,
+  }),
+  settings: settingsSlice.reducer,
+});
+
+export type RootState = ReturnType<typeof reducer>;
+
+const storageEnhancer = createAsyncStorageEnhancer([
+  'wallets',
+  'accounts',
+  'keychains',
+  'settings',
+]);
+
+export const store = configureStore({
+  reducer: rememberReducer(reducer),
+  devTools: false,
+  enhancers: getDefaultEnhancers => {
+    const enhancers = getDefaultEnhancers().concat(storageEnhancer);
+
+    if (process.env.NODE_ENV === 'development')
+      return enhancers.concat(devToolsEnhancer({ trace: true }));
+
+    return enhancers;
+  },
+});

@@ -6,6 +6,7 @@ export enum APP_ROUTES {
   WalletAllAssets = '/wallet/all-assets',
   WalletHome = '/wallet/home',
   WalletDeveloperConsole = '/wallet/developer-console',
+  WalletDeveloperConsoleWalletManager = '/wallet/developer-console/wallet-manager',
   WalletSend = '/wallet/send',
   WalletReceive = '/wallet/receive',
   WalletSwap = '/wallet/swap',

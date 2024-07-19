@@ -20,7 +20,7 @@ export function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
-export function isEmptyString(value: unknown): value is string {
+export function isEmptyString(value: unknown): value is '' {
   return isString(value) && value === '';
 }
 
@@ -82,6 +82,7 @@ export function isEmptyArray(data: unknown[]) {
   return data.length === 0;
 }
 
+// TODO: extension concept, remove remove from utils
 export const defaultWalletKeyId = 'default' as const;
 
 export function reverseBytes(bytes: Buffer): Buffer;
@@ -119,10 +120,12 @@ export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedR
   return p.status === 'rejected';
 }
 
+// TODO: Move to @leather.io/stacks
 export function getPrincipalFromContractId(identifier: string) {
   return identifier.split('::')[0];
 }
 
+// TODO: Move to @leather.io/stacks
 export function formatContractId(address: string, name: string) {
   return `${address}.${name}`;
 }
@@ -162,4 +165,29 @@ export function getTicker(value: string) {
 
 export function propIfDefined(prop: string, value: any) {
   return isBoolean(value) ? { [prop]: value } : {};
+}
+
+export function isHexString(value: string) {
+  return /^[0-9a-fA-F]+$/.test(value);
+}
+
+export function toHexString(value: number) {
+  return value.toString(16);
+}
+
+type MapFunction<T, U> = (value: T[keyof T], key: string) => U;
+
+export function mapObject<T extends object, U>(
+  obj: T,
+  mapFn: MapFunction<T, U>
+): { [K in keyof T]: U } {
+  const result: Partial<{ [K in keyof T]: U }> = {};
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      result[key] = mapFn(obj[key], key);
+    }
+  }
+
+  return result as { [K in keyof T]: U };
 }

@@ -212,9 +212,6 @@
           "expo-modules-core": "*"
         }
       }
-    },
-    "patchedDependencies": {
-      "zustand@4.5.2": "patches/zustand@4.5.2.patch"
     }
   }
 }
