@@ -1,8 +1,11 @@
-import { useGetInscriptionQuery } from './inscription.query';
-import { createInscriptionHiro } from './inscription.utils';
+import { useQuery } from '@tanstack/react-query';
+
+import { createGetInscriptionQueryOptions } from './inscription.query';
+import { createHiroInscription } from './inscription.utils';
 
 export function useInscription(id: string) {
-  return useGetInscriptionQuery(id, {
-    select: resp => createInscriptionHiro(resp),
+  return useQuery({
+    ...createGetInscriptionQueryOptions(id),
+    select: resp => createHiroInscription(resp),
   });
 }

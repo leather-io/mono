@@ -28,7 +28,6 @@ export * from './src/bitcoin/runes/runes-wallet-balances.query';
 export * from './src/bitcoin/runes/runes.hooks';
 export * from './src/bitcoin/stamps/stamps-by-address.hooks';
 export * from './src/bitcoin/stamps/stamps-by-address.query';
-export * from './src/bitcoin/transaction/transaction.query';
 export * from './src/bitcoin/transaction/use-bitcoin-broadcast-transaction';
 export * from './src/bitcoin/transaction/use-check-utxos';
 export * from './src/common/alex-sdk/alex-sdk-latest-prices.query';

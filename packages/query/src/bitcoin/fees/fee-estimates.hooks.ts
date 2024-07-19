@@ -1,9 +1,20 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { calculateMeanAverage, initBigNumber, isFulfilled, isRejected } from '@leather.io/utils';
 
-import { useGetAllBitcoinFeeEstimatesQuery } from './fee-estimates.query';
+import { useLeatherNetwork } from '../../leather-query-provider';
+import { useBitcoinClient } from '../clients/bitcoin-client';
+import { createGetBitcoinFeeEstimatesQueryOptions } from './fee-estimates.query';
 
 export function useAverageBitcoinFeeRates() {
-  return useGetAllBitcoinFeeEstimatesQuery({
+  const client = useBitcoinClient();
+  const network = useLeatherNetwork();
+
+  return useQuery({
+    ...createGetBitcoinFeeEstimatesQueryOptions({
+      client,
+      network: network.chain.bitcoin.bitcoinNetwork,
+    }),
     select(feeEstimates) {
       if (feeEstimates.every(isRejected)) {
         return {

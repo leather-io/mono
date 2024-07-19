@@ -1,37 +1,29 @@
-import { useQuery } from '@tanstack/react-query';
-
 import { BitcoinNetworkModes } from '@leather.io/models';
 
-import { useLeatherNetwork } from '../../leather-query-provider';
-import { AppUseQueryConfig } from '../../query-config';
-// import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
+import { BitcoinClient } from '../clients/bitcoin-client';
 
-function fetchAllBitcoinFeeEstimates(client: BitcoinClient, network: BitcoinNetworkModes) {
-  return async () =>
-    network === 'mainnet'
-      ? Promise.allSettled([
-          client.feeEstimatesApi.getFeeEstimatesFromMempoolSpaceApi(),
-          client.feeEstimatesApi.getFeeEstimatesFromBlockcypherApi('main'),
-        ])
-      : // Using `allSettled` so we can add more testnet apis to the array
-        Promise.allSettled([client.feeEstimatesApi.getFeeEstimatesFromBlockcypherApi('test3')]);
+async function fetchBitcoinFeeEstimates(client: BitcoinClient, network: BitcoinNetworkModes) {
+  if (network === 'mainnet')
+    return Promise.allSettled([
+      client.feeEstimatesApi.getFeeEstimatesFromMempoolSpaceApi(),
+      client.feeEstimatesApi.getFeeEstimatesFromBlockcypherApi('main'),
+    ]);
+  // Using `allSettled` so we can add more testnet apis to the array
+  return Promise.allSettled([client.feeEstimatesApi.getFeeEstimatesFromBlockcypherApi('test3')]);
 }
 
-type FetchAllBitcoinFeeEstimatesResp = Awaited<
-  ReturnType<ReturnType<typeof fetchAllBitcoinFeeEstimates>>
->;
-
-export function useGetAllBitcoinFeeEstimatesQuery<
-  T extends unknown = FetchAllBitcoinFeeEstimatesResp,
->(options?: AppUseQueryConfig<FetchAllBitcoinFeeEstimatesResp, T>) {
-  const client = useBitcoinClient();
-  const network = useLeatherNetwork();
-
-  return useQuery({
-    queryKey: ['average-bitcoin-fee-estimates', network.chain.bitcoin.bitcoinNetwork],
-    queryFn: fetchAllBitcoinFeeEstimates(client, network.chain.bitcoin.bitcoinNetwork),
+interface CreateGetBitcoinFeeEstimatesQueryOptionsArgs {
+  client: BitcoinClient;
+  network: BitcoinNetworkModes;
+}
+export function createGetBitcoinFeeEstimatesQueryOptions({
+  client,
+  network,
+}: CreateGetBitcoinFeeEstimatesQueryOptionsArgs) {
+  return {
+    queryKey: [BitcoinQueryPrefixes.GetBitcoinFeeEstimates, network],
+    queryFn: () => fetchBitcoinFeeEstimates(client, network),
     refetchInterval: 2000 * 60,
-    ...options,
-  });
+  } as const;
 }

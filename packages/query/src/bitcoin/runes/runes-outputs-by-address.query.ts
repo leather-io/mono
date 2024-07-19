@@ -1,37 +1,60 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import PQueue from 'p-queue';
+
+import { BitcoinNetworkModes } from '@leather.io/models';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
-import { AppUseQueryConfig } from '../../query-config';
+import { BitcoinQueryPrefixes } from '../../query-prefixes';
 import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
-import { RunesOutputsByAddress } from '../clients/best-in-slot';
-import { useBitcoinClient } from '../clients/bitcoin-client';
+import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 import { useRunesEnabled } from './runes.hooks';
 
-const queryOptions = { staleTime: 5 * 60 * 1000 };
+const queryOptions = { staleTime: 5 * 60 * 1000 } as const;
 
-export function useGetRunesOutputsByAddressQuery<T extends unknown = RunesOutputsByAddress[]>(
-  address: string,
-  options?: AppUseQueryConfig<RunesOutputsByAddress[], T>
-) {
-  const client = useBitcoinClient();
-  const runesEnabled = useRunesEnabled();
-  const network = useLeatherNetwork();
-  const limiter = useBestInSlotApiRateLimiter();
-
-  return useQuery({
+interface CreateGetRunesOutputsByAddressQueryOptionsArgs {
+  address: string;
+  client: BitcoinClient;
+  limiter: PQueue;
+  network: BitcoinNetworkModes;
+  runesEnabled: boolean;
+}
+export function createGetRunesOutputsByAddressQueryOptions({
+  address,
+  client,
+  limiter,
+  network,
+  runesEnabled,
+}: CreateGetRunesOutputsByAddressQueryOptionsArgs) {
+  return {
     enabled: !!address && runesEnabled,
-    queryKey: ['runes-outputs-by-address', address],
-    queryFn: ({ signal }) =>
+    queryKey: [BitcoinQueryPrefixes.GetRunesOutputsByAddress, address],
+    queryFn: ({ signal }: QueryFunctionContext) =>
       limiter.add(
         () =>
           client.BestinSlotApi.getRunesOutputsByAddress({
             address,
-            network: network.chain.bitcoin.bitcoinNetwork,
+            network,
             signal,
           }),
         { signal, throwOnTimeout: true }
       ),
     ...queryOptions,
-    ...options,
-  });
+  } as const;
+}
+
+export function useGetRunesOutputsByAddressQuery(address: string) {
+  const client = useBitcoinClient();
+  const network = useLeatherNetwork();
+  const runesEnabled = useRunesEnabled();
+  const limiter = useBestInSlotApiRateLimiter();
+
+  return useQuery(
+    createGetRunesOutputsByAddressQueryOptions({
+      address,
+      client,
+      limiter,
+      network: network.chain.bitcoin.bitcoinNetwork,
+      runesEnabled,
+    })
+  );
 }

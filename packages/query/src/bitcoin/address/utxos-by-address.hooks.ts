@@ -1,14 +1,17 @@
 import { useCallback } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
+
 import { Inscription } from '@leather.io/models';
 
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../clients/best-in-slot';
+import { useBitcoinClient } from '../clients/bitcoin-client';
 import { createBestinSlotInscription } from '../ordinals/inscription.utils';
-import { useInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
+import { useGetInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
 import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks';
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
-import { useGetUtxosByAddressQuery } from './utxos-by-address.query';
+import { createGetUtxosByAddressQueryOptions } from './utxos-by-address.query';
 
 export function filterUtxosWithInscriptions(
   inscriptions: Inscription[],
@@ -71,8 +74,10 @@ export function useNativeSegwitUtxosByAddress({
   const { filterOutInscriptions, isLoadingInscriptions } = useFilterInscriptionsByAddress(address);
   const { filterOutPendingTxsUtxos, isLoading } = useFilterPendingUtxosByAddress(address);
   const { filterOutRunesUtxos, isLoadingRunesData } = useFilterRuneUtxosByAddress(address);
+  const client = useBitcoinClient();
 
-  const utxosQuery = useGetUtxosByAddressQuery(address, {
+  const utxosQuery = useQuery({
+    ...createGetUtxosByAddressQueryOptions({ address, client }),
     select(utxos) {
       const filters = [];
       if (filterPendingTxsUtxos) {
@@ -106,7 +111,7 @@ function useFilterInscriptionsByAddress(address: string) {
     data: inscriptionsList,
     hasNextPage: hasMoreInscriptionsToLoad,
     isLoading: isLoadingInscriptions,
-  } = useInscriptionsByAddressQuery(address);
+  } = useGetInscriptionsByAddressQuery(address);
 
   const filterOutInscriptions = useCallback(
     (utxos: UtxoResponseItem[]) => {

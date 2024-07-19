@@ -1,54 +1,58 @@
 import { HDKey } from '@scure/bip32';
-import { useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getNativeSegwitAddressIndexDerivationPath, getTaprootAddress } from '@leather.io/bitcoin';
+import { NetworkConfiguration } from '@leather.io/models';
 import { createCounter } from '@leather.io/utils';
 
-import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
+import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
-import type { AppUseQueryConfig } from '../../query-config';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { useBitcoinClient } from '../clients/bitcoin-client';
+import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 import { hasInscriptions } from './address.utils';
 
 const staleTime = 3 * 60 * 1000;
 
 const queryOptions = { staleTime, refetchOnWindowFocus: false };
 
-export function useGetUtxosByAddressQuery<T extends unknown = UtxoResponseItem[]>(
-  address: string,
-  options?: AppUseQueryConfig<UtxoResponseItem[], T>
-) {
-  const client = useBitcoinClient();
-
-  return useQuery({
+interface CreateGetUtxosByAddressQueryOptionsArgs {
+  address: string;
+  client: BitcoinClient;
+}
+export function createGetUtxosByAddressQueryOptions({
+  address,
+  client,
+}: CreateGetUtxosByAddressQueryOptionsArgs) {
+  return {
     enabled: !!address,
-    queryKey: ['btc-utxos-by-address', address],
-    queryFn: async ({ signal }) => client.addressApi.getUtxosByAddress(address, signal),
+    queryKey: [BitcoinQueryPrefixes.GetUtxosByAddress, address],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      client.addressApi.getUtxosByAddress(address, signal),
     ...queryOptions,
-    ...options,
-  });
+  } as const;
+}
+
+export function useGetUtxosByAddressQuery(address: string) {
+  const client = useBitcoinClient();
+  return useQuery(createGetUtxosByAddressQueryOptions({ address, client }));
 }
 
 const stopSearchAfterNumberAddressesWithoutUtxos = 5;
 
-/**
- * Returns all utxos for the user's current taproot account. The search for
- * utxos iterates through all addresses until a sufficiently large number of
- * empty addresses is found.
- */
-export function useTaprootAccountUtxosQuery({
-  taprootKeychain,
-  currentAccountIndex,
-}: {
-  taprootKeychain: HDKey | undefined;
+interface CreateGetTaprootUtxosByAddressQueryOptionsArgs {
+  client: BitcoinClient;
   currentAccountIndex: number;
-}) {
-  const network = useLeatherNetwork();
-  const client = useBitcoinClient();
-
-  return useQuery({
-    queryKey: [BitcoinQueryPrefixes.TaprootAddressUtxos, currentAccountIndex, network.id],
+  network: NetworkConfiguration;
+  taprootKeychain: HDKey | undefined;
+}
+export function createGetTaprootUtxosByAddressQueryOptions({
+  client,
+  currentAccountIndex,
+  network,
+  taprootKeychain,
+}: CreateGetTaprootUtxosByAddressQueryOptionsArgs) {
+  return {
+    queryKey: [BitcoinQueryPrefixes.GetTaprootUtxosByAddress, currentAccountIndex, network.id],
     queryFn: async () => {
       let currentNumberOfAddressesWithoutUtxos = 0;
       const addressIndexCounter = createCounter(0);
@@ -92,5 +96,30 @@ export function useTaprootAccountUtxosQuery({
     },
     refetchInterval: 15000,
     refetchOnWindowFocus: false,
-  });
+  } as const;
+}
+
+/**
+ * Returns all utxos for the user's current taproot account. The search for
+ * utxos iterates through all addresses until a sufficiently large number of
+ * empty addresses is found.
+ */
+export function useGetTaprootUtxosByAddressQuery({
+  taprootKeychain,
+  currentAccountIndex,
+}: {
+  taprootKeychain: HDKey | undefined;
+  currentAccountIndex: number;
+}) {
+  const network = useLeatherNetwork();
+  const client = useBitcoinClient();
+
+  return useQuery(
+    createGetTaprootUtxosByAddressQueryOptions({
+      client,
+      currentAccountIndex,
+      network,
+      taprootKeychain,
+    })
+  );
 }

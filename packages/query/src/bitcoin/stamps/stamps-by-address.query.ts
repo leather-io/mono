@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ZodError, z } from 'zod';
 
-import { AppUseQueryConfig } from '../../query-config';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
 const stampSchema = z.object({
@@ -85,16 +84,14 @@ async function fetchStampsByAddress(address: string): Promise<StampsByAddressQue
   }
 }
 
-type FetchStampsByAddressResp = Awaited<ReturnType<typeof fetchStampsByAddress>>;
-
-export function useStampsByAddressQuery<T extends unknown = FetchStampsByAddressResp>(
-  address: string,
-  options?: AppUseQueryConfig<FetchStampsByAddressResp, T>
-) {
-  return useQuery({
-    queryKey: [BitcoinQueryPrefixes.StampsByAddress, address],
+export function createGetStampsByAddressQueryOptions(address: string) {
+  return {
+    queryKey: [BitcoinQueryPrefixes.GetStampsByAddress, address],
     queryFn: () => fetchStampsByAddress(address),
     refetchOnWindowFocus: false,
-    ...options,
-  });
+  } as const;
+}
+
+export function useGetStampsByAddressQuery(address: string) {
+  return useQuery(createGetStampsByAddressQueryOptions(address));
 }
