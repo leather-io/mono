@@ -117,6 +117,18 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.9.1
 
+## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.13.1...@leather.io/mobile-v1.14.0) (2024-07-19)
+
+
+### Features
+
+* build eas on release ([3e3a8c7](https://github.com/leather-io/mono/commit/3e3a8c74fe11a48c59bf5f3f3c98b8943aeb782c))
+
+
+### Bug Fixes
+
+* blur tint bug ([d829cdc](https://github.com/leather-io/mono/commit/d829cdce5bb9891682e8179688ab1149a9d19527))
+
 ## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.12.0...@leather.io/mobile-v1.13.0) (2024-07-18)
 
 
