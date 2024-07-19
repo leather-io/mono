@@ -48,10 +48,6 @@
       "autoIncrement": true,
       "ios": {
         "cocoapods": "1.15.2"
-      },
-      "env": {
-        "EXPO_PUBLIC_APP_START_MODE": "<should be either 'live' or 'prelaunch'>",
-        "EXPO_PUBLIC_SECRET_KEY": "<enter test dummy secret key here>"
       }
     }
   },
