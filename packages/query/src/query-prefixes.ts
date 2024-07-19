@@ -3,15 +3,20 @@
  * queries they are used in to be read from any part of the app.
  */
 export enum BitcoinQueryPrefixes {
-  Brc20TokenBalance = 'brc20-token-balance',
-  OrdinalTextContent = 'ordinal-text-content',
-  TaprootAddressUtxos = 'taproot-address-utxos',
-  InscriptionsByAddress = 'inscriptions-by-address',
-  InscriptionMetadata = 'inscription-metadata',
+  GetInscriptionTextContent = 'get-inscription-text-content',
+  GetTransactionsByAddress = 'get-transactions-by-address',
+  GetTaprootUtxosByAddress = 'get-taproot-utxos-by-address',
+  GetInscriptionsByAddress = 'get-inscriptions-by-address',
+  GetInscription = 'get-inscription',
   GetInscriptions = 'get-inscriptions',
-  StampCollection = 'stamp-collection',
-  StampsByAddress = 'stamps-by-address',
+  GetStampsByAddress = 'get-stamps-by-address',
   GetBrc20Tokens = 'get-brc20-tokens',
+  GetUtxosByAddress = 'get-utxos-by-address',
+  GetBitcoinFeeEstimates = 'bitcoin-fee-estimates',
+  GetInscriptionsByParam = 'get-inscriptions-by-param',
+  GetRunesOutputsByAddress = 'get-runes-outputs-by-address',
+  GetRunesTickerInfo = 'get-runes-ticker-info',
+  GetRunesWalletBalances = 'get-runes-wallet-balances',
 }
 
 export enum StacksQueryPrefixes {

@@ -3,7 +3,7 @@ import { Inscription, createInscription, whenInscriptionMimeType } from '@leathe
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import { BestInSlotInscriptionResponse } from '../clients/best-in-slot';
 
-export function createInscriptionHiro(inscriptionResponse: InscriptionResponseHiro) {
+export function createHiroInscription(inscriptionResponse: InscriptionResponseHiro) {
   const {
     content_type: contentType,
     genesis_block_height: genesisBlockHeight,

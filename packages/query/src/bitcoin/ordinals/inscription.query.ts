@@ -4,10 +4,9 @@ import axios from 'axios';
 import { HIRO_INSCRIPTIONS_API_URL } from '@leather.io/models';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
-import { AppUseQueryConfig } from '../../query-config';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
-const inscriptionQueryOptions = {
+const queryOptions = {
   staleTime: Infinity,
   gcTime: Infinity,
 } as const;
@@ -15,24 +14,20 @@ const inscriptionQueryOptions = {
 /**
  * @param path - inscription/:inscription_id
  */
-function fetchInscription() {
-  return async (id: string) => {
-    const res = await axios.get(`${HIRO_INSCRIPTIONS_API_URL}/${id}`);
-    return res.data as InscriptionResponseHiro;
-  };
+async function fetchInscription(id: string) {
+  const res = await axios.get(`${HIRO_INSCRIPTIONS_API_URL}/${id}`);
+  return res.data as InscriptionResponseHiro;
 }
 
-type FetchInscriptionResp = Awaited<ReturnType<ReturnType<typeof fetchInscription>>>;
-
-export function useGetInscriptionQuery<T extends unknown = FetchInscriptionResp>(
-  id: string,
-  options?: AppUseQueryConfig<FetchInscriptionResp, T>
-) {
-  return useQuery({
+export function createGetInscriptionQueryOptions(id: string) {
+  return {
     enabled: !!id,
-    queryKey: [BitcoinQueryPrefixes.InscriptionMetadata, id],
-    queryFn: () => fetchInscription()(id),
-    ...inscriptionQueryOptions,
-    ...options,
-  });
+    queryKey: [BitcoinQueryPrefixes.GetInscription, id],
+    queryFn: () => fetchInscription(id),
+    ...queryOptions,
+  } as const;
+}
+
+export function useGetInscriptionQuery(id: string) {
+  return useQuery(createGetInscriptionQueryOptions(id));
 }

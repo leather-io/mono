@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { AlexSDK, Currency, type TokenInfo } from 'alex-sdk';
 import BigNumber from 'bignumber.js';
 
@@ -15,16 +16,13 @@ import {
 import { useStxAvailableUnlockedBalance } from '../../stacks/balance/account-balance.hooks';
 import { useTransferableSip10Tokens } from '../../stacks/sip10/sip10-tokens.hooks';
 import { useAlexSdkLatestPricesQuery } from './alex-sdk-latest-prices.query';
-import { useAlexSdkSwappableCurrencyQuery } from './alex-sdk-swappable-currency.query';
-
-// TODO: Import from ui pkg or move to utils?
-function getAvatarFallback(val: string) {
-  return val.slice(0, 2);
-}
+import {
+  createGetAlexSwappableCurrenciesQueryOptions,
+  useGetAlexSwappableCurrenciesQuery,
+} from './alex-sdk-swappable-currency.query';
 
 export const alex = new AlexSDK();
 
-// TODO: Coordinate this with how we handle other assets
 export interface SwapAsset {
   address?: string;
   balance: Money;
@@ -40,7 +38,7 @@ export interface SwapAsset {
 export const defaultSwapFee = createMoney(1000000, 'STX');
 
 export function useAlexCurrencyPriceAsMarketData() {
-  const { data: supportedCurrencies = [] } = useAlexSdkSwappableCurrencyQuery();
+  const { data: supportedCurrencies = [] } = useGetAlexSwappableCurrenciesQuery();
   const { data: prices } = useAlexSdkLatestPricesQuery();
 
   return useCallback(
@@ -78,7 +76,7 @@ function useCreateSwapAsset(address: string) {
 
       const swapAsset = {
         currency,
-        fallback: getAvatarFallback(tokenInfo.name),
+        fallback: tokenInfo.name.slice(0, 2),
         icon: tokenInfo.icon,
         name: tokenInfo.name,
         principal,
@@ -108,7 +106,8 @@ function useCreateSwapAsset(address: string) {
 
 export function useAlexSwappableAssets(address: string) {
   const createSwapAsset = useCreateSwapAsset(address);
-  return useAlexSdkSwappableCurrencyQuery({
+  return useQuery({
+    ...createGetAlexSwappableCurrenciesQueryOptions(),
     select: resp => sortAssetsByName(resp.map(createSwapAsset).filter(isDefined)),
   });
 }

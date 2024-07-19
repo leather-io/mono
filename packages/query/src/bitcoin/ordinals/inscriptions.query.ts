@@ -214,14 +214,14 @@ export function useGetInscriptionsInfiniteQuery({
 
 const bestinslotInscriptionsRequestNum = 2000;
 
-export function useInscriptionsByAddressQuery(address: string) {
+export function useGetInscriptionsByAddressQuery(address: string) {
   const network = useLeatherNetwork();
   const client = useBitcoinClient();
   const limiter = useBestInSlotApiRateLimiter();
 
   const query = useInfiniteQuery({
     enabled: !!address,
-    queryKey: [BitcoinQueryPrefixes.InscriptionsByAddress, network.id, address],
+    queryKey: [BitcoinQueryPrefixes.GetInscriptionsByAddress, network.id, address],
     async queryFn({ pageParam, signal }) {
       const res = await limiter.add(
         () =>

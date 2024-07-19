@@ -1,12 +1,14 @@
+import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 import { Src20CryptoAssetInfo, createCryptoAssetBalance } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { Src20Token, useStampsByAddressQuery } from './stamps-by-address.query';
+import { Src20Token, createGetStampsByAddressQueryOptions } from './stamps-by-address.query';
 
 export function useStampsByAddress(address: string) {
-  return useStampsByAddressQuery(address, {
+  return useQuery({
+    ...createGetStampsByAddressQueryOptions(address),
     select: resp => resp.data?.stamps,
   });
 }
@@ -22,7 +24,8 @@ function createSrc20CryptoAssetInfo(src20: Src20Token): Src20CryptoAssetInfo {
 }
 
 export function useSrc20TokensByAddress(address: string) {
-  return useStampsByAddressQuery(address, {
+  return useQuery({
+    ...createGetStampsByAddressQueryOptions(address),
     select: resp =>
       resp.data.src20.map(token => ({
         balance: createCryptoAssetBalance(
