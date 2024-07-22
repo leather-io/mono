@@ -38,6 +38,7 @@ export const tokens = {
     headerHeight: { value: '80px' },
     footerHeight: { value: '95px' },
     popupWidth: { value: '390px' },
+    popupMaxWidth: { value: '640px' },
     popupHeight: { value: '756px' },
     popupHeaderHeight: { value: '68px' },
     headerContainerHeight: { value: '40px' },
