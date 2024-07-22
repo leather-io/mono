@@ -10,7 +10,7 @@ import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
-export function DeveloperConsoleScreen() {
+export default function DeveloperConsoleScreen() {
   const { top, bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const contentOffsetTop = top + HEADER_HEIGHT;
