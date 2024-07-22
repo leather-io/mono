@@ -1,5 +1,4 @@
-import { Ref, useEffect, useRef } from 'react';
-import WebView from 'react-native-webview';
+import { useEffect, useRef } from 'react';
 
 import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
 import { getDummyKeys } from '@/state/dummy';
@@ -15,9 +14,8 @@ import { Modal } from '../bottom-sheet-modal';
 import { BrowserMessage } from './browser-in-use';
 
 interface ApproverModalProps {
-  webViewRef: Ref<WebView>;
   message: BrowserMessage;
-  setMessage(newMessage: BrowserMessage): void;
+  sendResult(result: object): void;
 }
 
 export function ApproverModal(props: ApproverModalProps) {
@@ -54,15 +52,7 @@ export function ApproverModal(props: ApproverModalProps) {
       stacksAccountAddress: dummyKeys.stxAddress,
     });
 
-    if (typeof props.webViewRef === 'object') {
-      props.webViewRef?.current?.postMessage(
-        JSON.stringify({
-          id: props.message?.id,
-          result: { addresses: keysToIncludeInResponse },
-        })
-      );
-      props.setMessage(null);
-    }
+    props.sendResult({ addresses: keysToIncludeInResponse });
   }
 
   return (
