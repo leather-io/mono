@@ -117,6 +117,19 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.9.1
 
+## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.14.0...@leather.io/mobile-v1.15.0) (2024-07-22)
+
+
+### Features
+
+* add home and devtool screens ([83a8fba](https://github.com/leather-io/mono/commit/83a8fba1de88aec576ec9174ab2c07279e4877a6))
+
+
+### Bug Fixes
+
+* add encryption compliance to info.plist ([c6155a1](https://github.com/leather-io/mono/commit/c6155a1017f7a9a5e2b5171c909d1fa9266e9d5a))
+* export default route on developer console ([bdf4206](https://github.com/leather-io/mono/commit/bdf4206782a81e1391b63d797b7a2f1296d239d7))
+
 ## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.13.1...@leather.io/mobile-v1.14.0) (2024-07-19)
 
 
