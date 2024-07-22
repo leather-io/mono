@@ -134,7 +134,18 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
       <Modal ref={settingsModalRef}>
         <Box p="5" />
       </Modal>
-      <ApproverModal webViewRef={webViewRef} message={message} setMessage={setMessage} />
+      <ApproverModal
+        sendResult={result => {
+          webViewRef?.current?.postMessage(
+            JSON.stringify({
+              id: message?.id,
+              result,
+            })
+          );
+          setMessage(null);
+        }}
+        message={message}
+      />
     </View>
   );
 }

@@ -7,7 +7,7 @@ export default function Home() {
     throw new Error('You need to set EXPO_PUBLIC_SECRET_KEY');
   }
   return whenAppStartMode(process.env.EXPO_PUBLIC_APP_START_MODE as AppStartMode)({
-    live: <Redirect href={APP_ROUTES.WalletAllAssets} />,
+    live: <Redirect href={APP_ROUTES.WalletHome} />,
     prelaunch: <Redirect href={APP_ROUTES.WaitingList} />,
   });
 }
