@@ -73,6 +73,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.3.3
 
+## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.6.5...@leather.io/ui-v1.7.0) (2024-07-23)
+
+
+### Features
+
+* add pen and dots icons ([396e326](https://github.com/leather-io/mono/commit/396e3268a31ff525501e5977f83b453f59897efa))
+
 ## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.5.1...@leather.io/ui-v1.6.0) (2024-07-02)
 
 
