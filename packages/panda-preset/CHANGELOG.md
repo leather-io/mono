@@ -18,6 +18,12 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.6.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tokens bumped to 0.6.3
+
 ## [0.3.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.2.0...@leather.io/panda-preset-v0.3.0) (2024-06-21)
 
 

@@ -18,6 +18,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+## [0.6.3](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.6.2...@leather.io/tokens-v0.6.3) (2024-07-23)
+
+
+### Bug Fixes
+
+* add popup maxWidth token, ref [#5260](https://github.com/leather-io/mono/issues/5260) ([1ba81cc](https://github.com/leather-io/mono/commit/1ba81cc8e66b6a72674e4e65f03077b09e0ced28))
+
 ## [0.6.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.5.2...@leather.io/tokens-v0.6.0) (2024-06-21)
 
 

@@ -117,6 +117,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.9.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.6.3
+    * @leather.io/ui bumped to 1.6.5
+
 ## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.14.0...@leather.io/mobile-v1.15.0) (2024-07-22)
 
 
