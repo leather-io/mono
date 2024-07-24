@@ -59,6 +59,12 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.1.0
+
 ## [0.10.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.10.0...@leather.io/utils-v0.10.1) (2024-07-11)
 
 

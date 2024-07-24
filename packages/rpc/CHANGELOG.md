@@ -66,6 +66,13 @@
   * dependencies
     * @leather.io/models bumped to 0.10.2
 
+## [2.1.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.0.2...@leather.io/rpc-v2.1.0) (2024-07-24)
+
+
+### Features
+
+* don't use zod on defineRpcMethod ([491671c](https://github.com/leather-io/mono/commit/491671c677241ed770693b00c9c1cf913dfc938a))
+
 ## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v1.0.4...@leather.io/rpc-v2.0.0) (2024-06-21)
 
 
