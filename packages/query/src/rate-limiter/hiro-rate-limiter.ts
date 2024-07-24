@@ -13,10 +13,10 @@ const hiroStacksMainnetApiLimiter = new PQueue({
 });
 
 const hiroStacksTestnetApiLimiter = new PQueue({
-  concurrency: 20,
   interval: 60000,
-  intervalCap: 20,
+  intervalCap: 50,
   timeout: 60000,
+  queueClass: PriorityQueue,
 });
 
 export function useHiroApiRateLimiter(): PQueue {
