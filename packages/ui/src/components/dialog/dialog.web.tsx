@@ -39,13 +39,11 @@ export function Dialog({
   isShowing,
   wrapChildren = true,
 }: RadixDialogProps) {
-  if (!isShowing) return null;
-
   const maxHeightOffset = getHeightOffset(header, footer);
   const contentMaxHeight = getContentMaxHeight(maxHeightOffset);
 
   return (
-    <RadixDialog.Root open>
+    <RadixDialog.Root open={isShowing}>
       <RadixDialog.Portal>
         <RadixDialog.Overlay
           className={css({
@@ -54,15 +52,12 @@ export function Dialog({
             inset: 0,
             animation: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 999,
-            // height: '100%',
-            // width: '100%',
           })}
         >
           <RadixDialog.Content
             onPointerDownOutside={onClose}
             className={css({
               bg: 'ink.background-primary',
-              //   bg: 'red',
               // remove borderRadius on small to give impression of full page
               borderRadius: { base: '0', md: 'md' },
               boxShadow:
@@ -75,7 +70,9 @@ export function Dialog({
               height: { base: '100%', md: 'auto' },
               maxWidth: { base: '100vw', md: 'pageWidth' },
               maxHeight: { base: '100vh', md: '90vh' },
-              animation: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+              '&[data-state=open]': {
+                animation: { base: '', md: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
+              },
             })}
           >
             {header && cloneElement(header, { onClose })}
