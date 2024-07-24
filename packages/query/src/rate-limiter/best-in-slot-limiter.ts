@@ -13,10 +13,10 @@ const bestInSlotMainnetApiLimiter = new PQueue({
 });
 
 const bestInSlotTestnetApiLimiter = new PQueue({
-  concurrency: 20,
-  interval: 60000,
-  intervalCap: 20,
+  interval: 1000,
+  intervalCap: 4,
   timeout: 60000,
+  queueClass: PriorityQueue,
 });
 
 export function useBestInSlotApiRateLimiter(): PQueue {
