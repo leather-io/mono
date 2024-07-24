@@ -44,7 +44,14 @@ export function ItemLayout({
             {isValidElement(titleLeft) ? (
               titleLeft
             ) : (
-              <styled.span textStyle="label.02">{titleLeft}</styled.span>
+              <styled.span
+                textStyle="label.02"
+                maxWidth={{ base: '175px', md: 'unset' }}
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {titleLeft}
+              </styled.span>
             )}
             {isSelected && (
               <Box height="20px">
