@@ -5,6 +5,7 @@ export type StxSignMessageTypes = 'utf8' | 'structured';
 export interface StxSignMessageRequestParamsBase {
   type: StxSignMessageTypes;
   network?: 'mainnet' | 'testnet' | 'devnet' | 'mocknet';
+  [x: string]: unknown;
 }
 
 export interface StxSignMessageRequestParamsUtf8 extends StxSignMessageRequestParamsBase {

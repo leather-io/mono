@@ -17,7 +17,8 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
-    "@leather.io/models": "workspace:*"
+    "@leather.io/models": "workspace:*",
+    "zod": "3.23.6"
   },
   "devDependencies": {
     "tsup": "8.1.0"

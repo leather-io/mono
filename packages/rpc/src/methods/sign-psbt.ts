@@ -28,6 +28,7 @@ export interface SignPsbtRequestParams {
   hex: string;
   network: DefaultNetworkConfigurations;
   signAtIndex?: number | number[];
+  [x: string]: unknown;
 }
 
 export interface SignPsbtResponseBody {
