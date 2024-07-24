@@ -130,6 +130,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.7.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.7.0
+    * @leather.io/ui bumped to 1.8.0
+
 ## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.14.0...@leather.io/mobile-v1.15.0) (2024-07-22)
 
 
