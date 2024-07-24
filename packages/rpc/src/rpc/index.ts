@@ -103,40 +103,13 @@ export type ExtractSuccessResponse<T> = Extract<T, RpcSuccessResponse<any>>;
 
 export type ExtractErrorResponse<T> = Extract<T, RpcErrorResponse<any>>;
 
-function defineRpcMethodSchema<
-  TMethod extends string,
-  TRequest extends z.ZodType<RpcRequest<string>>,
-  TResponse extends z.ZodType<RpcResponse<object>>,
->(method: TMethod, requestSchema: TRequest, responseSchema: TResponse) {
-  return z.record(
-    z.literal(method),
-    z.object({
-      request: requestSchema,
-      response: responseSchema,
-    })
-  );
-}
-
-type DefineRpcMethodSchema<
-  TRequest extends RpcRequest<string>,
-  TResponse extends RpcResponse<object>,
-> = ReturnType<
-  typeof defineRpcMethodSchema<TRequest['method'], z.ZodType<TRequest>, z.ZodType<TResponse>>
->;
-
-// TODO: method should not be optional
 export type DefineRpcMethod<
-  TRequest extends RpcRequest<string>,
+  TRequest extends RpcRequest<string, RpcParameter>,
   TResponse extends RpcResponse<object>,
-> = z.infer<DefineRpcMethodSchema<TRequest, TResponse>>;
-
-// export type DefineRpcMethod<
-//   TRequest extends RpcRequest<string, RpcParameter>,
-//   TResponse extends RpcResponse<object>,
-// > = Record<
-//   TRequest['method'],
-//   {
-//     request: TRequest;
-//     response: TResponse;
-//   }
-// >;
+> = Record<
+  TRequest['method'],
+  {
+    request: TRequest;
+    response: TResponse;
+  }
+>;
