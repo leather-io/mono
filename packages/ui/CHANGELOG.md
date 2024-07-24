@@ -73,6 +73,28 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.3.3
 
+## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.7.0...@leather.io/ui-v1.8.0) (2024-07-24)
+
+
+### Features
+
+* add animation on dialog open ([0c448aa](https://github.com/leather-io/mono/commit/0c448aa4213ffd010c02ef1ce669d988fa670a7d))
+
+
+### Bug Fixes
+
+* dot icon colors ([48bf4be](https://github.com/leather-io/mono/commit/48bf4be5c02c6fde8d13feed5cac4b340402dd70))
+* handle long token names gracefully, ref leather-wallet/extension[#5673](https://github.com/leather-io/mono/issues/5673) ([0d555f3](https://github.com/leather-io/mono/commit/0d555f38e85be4317fffee60413d5fb86cd09d6e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.7.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.3.4
+
 ## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.6.5...@leather.io/ui-v1.7.0) (2024-07-23)
 
 

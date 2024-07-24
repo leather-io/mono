@@ -18,6 +18,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.6.3...@leather.io/tokens-v0.7.0) (2024-07-24)
+
+
+### Features
+
+* add animation on dialog open ([0c448aa](https://github.com/leather-io/mono/commit/0c448aa4213ffd010c02ef1ce669d988fa670a7d))
+
 ## [0.6.3](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.6.2...@leather.io/tokens-v0.6.3) (2024-07-23)
 
 
