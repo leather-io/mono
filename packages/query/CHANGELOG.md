@@ -121,6 +121,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.9.1
 
+## [2.0.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.0.0...@leather.io/query-v2.0.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* rate limiting on testnet ([92020b6](https://github.com/leather-io/mono/commit/92020b6e102678fdfb5725f4622c8a4fca54514a))
+
 ## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/query-v1.0.2...@leather.io/query-v2.0.0) (2024-07-20)
 
 

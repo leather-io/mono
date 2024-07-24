@@ -6,7 +6,7 @@
   "packages/models": "0.10.2",
   "packages/prettier-config": "0.5.0",
   "packages/panda-preset": "0.3.4",
-  "packages/query": "2.0.0",
+  "packages/query": "2.0.1",
   "packages/tokens": "0.7.0",
   "packages/tsconfig-config": "0.5.1",
   "packages/rpc": "2.0.2",
