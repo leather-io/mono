@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
 import { HEADER_HEIGHT } from '@/components/blurred-header';
 import { ApproverModal } from '@/components/browser/approval-ux-modal';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem, TitleListItem } from '@/components/developer-console/list-items';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
@@ -15,6 +17,7 @@ export default function DeveloperConsoleScreen() {
   const theme = useTheme<Theme>();
   const contentOffsetTop = top + HEADER_HEIGHT;
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
+  const addWalletModalRef = useRef<BottomSheetModal>(null);
   return (
     <Box
       flex={1}
@@ -33,6 +36,10 @@ export default function DeveloperConsoleScreen() {
           <TitleListItem title="Open dummy page" />
           <PressableListItem title="Drawer" />
           <PressableListItem title="Page" />
+          <PressableListItem
+            onPress={() => addWalletModalRef.current?.present()}
+            title="Create wallet"
+          />
         </Box>
         <Box gap="2">
           <TitleListItem title="Trigger API presets" />
@@ -59,6 +66,7 @@ export default function DeveloperConsoleScreen() {
           setGetAddressesMessage(null);
         }}
       />
+      <AddWalletModal addWalletModalRef={addWalletModalRef} />
     </Box>
   );
 }
