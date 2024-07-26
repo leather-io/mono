@@ -4,7 +4,7 @@ import {
 } from '@leather.io/bitcoin';
 import {
   deriveBip39SeedFromMnemonic,
-  deriveAccountDescriptor as deriveKeychainDescriptor,
+  deriveKeychainDescriptor,
   deriveRootBip32Keychain,
   extractKeyOriginPathFromDescriptor,
   generateMnemonic,
@@ -13,7 +13,7 @@ import {
 
 import { removesAccount, userAddsAccount } from './accounts/accounts.slice';
 import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.slice';
-import { findHighestAccountIndexOfFingerprint } from './keychains/keychain-state-helpers';
+import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.slice';

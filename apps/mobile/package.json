@@ -97,7 +97,7 @@
     "react-native-webview": "13.8.6",
     "react-redux": "9.1.2",
     "readable-stream": "4.5.2",
-    "redux-remember": "5.1.0"
+    "redux-persist": "6.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.24.6",

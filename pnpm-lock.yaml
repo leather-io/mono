@@ -254,9 +254,9 @@ importers:
       readable-stream:
         specifier: 4.5.2
         version: 4.5.2
-      redux-remember:
-        specifier: 5.1.0
-        version: 5.1.0(redux@5.0.1)
+      redux-persist:
+        specifier: 6.0.0
+        version: 6.0.0(react@18.2.0)(redux@5.0.1)
     devDependencies:
       '@babel/core':
         specifier: 7.24.6
@@ -1721,6 +1721,10 @@ packages:
 
   '@babel/runtime@7.24.8':
     resolution: {integrity: sha512-5F7SDGs1T72ZczbRwbGO9lQi0NLjQxzl6i4lJxLxfW9U5UluCSyEJeniWvnhl3/euNiqQVbo8zruhsDfid0esA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.25.0':
+    resolution: {integrity: sha512-7dRy4DwXwtzBrPbZflqxnvfxLF8kdZXPkhymtDeFoFqE6ldzjQFgYTtYIFARcLEYDrqfBfYcZt1WqFxRoyC9Rw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.24.6':
@@ -10407,10 +10411,14 @@ packages:
       expo: '*'
       redux: '*'
 
-  redux-remember@5.1.0:
-    resolution: {integrity: sha512-Z6/S/brpwflOsGpX8Az93eujJ5fytMcaefxDfx0iib5d0DkL804zlw/Fhh/4HzZ5nXsP67j1zPUeDNWO1rhfvA==}
+  redux-persist@6.0.0:
+    resolution: {integrity: sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==}
     peerDependencies:
-      redux: '>=5.0.0'
+      react: '>=16'
+      redux: '>4.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   redux-thunk@3.1.0:
     resolution: {integrity: sha512-NW2r5T6ksUKXCabzhL9z+h206HQw/NJkcLm1GPImRQ8IzfXwRGqjVhKJGauHirT0DAuyy6hjdnMZaRoAcy0Klw==}
@@ -13017,6 +13025,10 @@ snapshots:
       regenerator-runtime: 0.14.1
 
   '@babel/runtime@7.24.8':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
+  '@babel/runtime@7.25.0':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -17157,7 +17169,7 @@ snapshots:
 
   '@redux-devtools/core@4.0.0(react-redux@9.1.2(@types/react@18.2.79)(react@18.2.0)(redux@5.0.1))(react@18.2.0)(redux@5.0.1)':
     dependencies:
-      '@babel/runtime': 7.24.8
+      '@babel/runtime': 7.25.0
       '@redux-devtools/instrument': 2.2.0(redux@5.0.1)
       lodash: 4.17.21
       react: 18.2.0
@@ -26242,9 +26254,11 @@ snapshots:
       - '@redux-devtools/core'
       - immutable
 
-  redux-remember@5.1.0(redux@5.0.1):
+  redux-persist@6.0.0(react@18.2.0)(redux@5.0.1):
     dependencies:
       redux: 5.0.1
+    optionalDependencies:
+      react: 18.2.0
 
   redux-thunk@3.1.0(redux@5.0.1):
     dependencies:

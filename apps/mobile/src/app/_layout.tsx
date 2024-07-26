@@ -6,13 +6,14 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
-import { store } from '@/state';
+import { persistor, store } from '@/state';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import { Box, ThemeProvider, useLoadFonts } from '@leather.io/ui/native';
 
@@ -33,27 +34,27 @@ export default function RootLayout() {
     },
   });
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  if (!fontsLoaded) return null;
 
   return (
     <ReduxProvider store={store}>
-      <I18nProvider i18n={i18n}>
-        <SafeAreaProvider>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-              <SplashScreenGuard>
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                  <BottomSheetModalProvider>
-                    <AppRouter />
-                  </BottomSheetModalProvider>
-                </GestureHandlerRootView>
-              </SplashScreenGuard>
-            </ThemeProvider>
-          </QueryClientProvider>
-        </SafeAreaProvider>
-      </I18nProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <I18nProvider i18n={i18n}>
+          <SafeAreaProvider>
+            <QueryClientProvider client={queryClient}>
+              <ThemeProvider>
+                <SplashScreenGuard>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    <BottomSheetModalProvider>
+                      <AppRouter />
+                    </BottomSheetModalProvider>
+                  </GestureHandlerRootView>
+                </SplashScreenGuard>
+              </ThemeProvider>
+            </QueryClientProvider>
+          </SafeAreaProvider>
+        </I18nProvider>
+      </PersistGate>
     </ReduxProvider>
   );
 }

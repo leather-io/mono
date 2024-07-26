@@ -1,7 +1,7 @@
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { DerivationPathDepth } from '@leather.io/crypto';
+import { DerivationPathDepth, deriveKeychainFromXpub } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
@@ -65,7 +65,7 @@ export function deriveNativeSegWitReceiveAddressIndex({
   network,
 }: DeriveNativeSegWitReceiveAddressIndexArgs) {
   if (!xpub) return;
-  const keychain = HDKey.fromExtendedKey(xpub);
+  const keychain = deriveKeychainFromXpub(xpub);
   if (!keychain) return;
   const zeroAddressIndex = deriveAddressIndexZeroFromAccount(keychain);
   return getNativeSegWitPaymentFromAddressIndex(zeroAddressIndex, network);

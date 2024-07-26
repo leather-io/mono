@@ -1,12 +1,12 @@
 import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
 
-import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
-import { isDefined } from '@leather.io/utils';
-
 import {
-  filterKeychainsByAccountIndex,
-  filterKeychainsByFingerprint,
-} from './keychain-state-helpers';
+  extractAccountIndexFromDescriptor,
+  extractAccountIndexFromPath,
+  extractFingerprintFromDescriptor,
+  extractKeyOriginPathFromDescriptor,
+} from '@leather.io/crypto';
+import { isDefined } from '@leather.io/utils';
 
 interface RemoveAccount {
   fingerprint: string;
@@ -28,4 +28,30 @@ export function filterKeychainsToRemove<T extends { descriptor: string }>(
 
     return removeManyFn(state, keyOriginPathsToRemove);
   };
+}
+
+interface WithDescriptor {
+  descriptor: string;
+}
+
+export function filterKeychainsByFingerprint(fingerprint: string) {
+  return (account: WithDescriptor) =>
+    extractFingerprintFromDescriptor(account.descriptor) === fingerprint;
+}
+
+export function filterKeychainsByAccountIndex(accountIndex: number) {
+  return (account: WithDescriptor) =>
+    extractAccountIndexFromDescriptor(account.descriptor) === accountIndex;
+}
+
+export function findHighestAccountIndexOfFingerprint<T extends WithDescriptor>(
+  accounts: T[],
+  fingerprint: string
+) {
+  return Math.max(
+    0,
+    ...accounts
+      .filter(filterKeychainsByFingerprint(fingerprint))
+      .map(account => extractAccountIndexFromPath(account.descriptor))
+  );
 }

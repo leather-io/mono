@@ -21,8 +21,9 @@ export default function WalletManager() {
     <Box flex={1} backgroundColor="base.ink.background-primary">
       <ScrollView
         contentContainerStyle={{
+          marginTop: theme.spacing['7'],
           paddingHorizontal: theme.spacing['3'],
-          paddingTop: insets.top,
+          paddingTop: insets.top + theme.spacing['5'],
           paddingBottom: theme.spacing['5'] + bottom,
           gap: theme.spacing[5],
         }}

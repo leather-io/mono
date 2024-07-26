@@ -158,6 +158,6 @@ export function animate<
   K extends Record<string, number>,
 >(component: T, animFn: (x: number) => number, position: K) {
   Object.entries(component).forEach(([key, sharedValue]) => {
-    sharedValue.value = animFn(position[key]);
+    sharedValue.value = animFn(position[key] ?? 0);
   });
 }

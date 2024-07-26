@@ -1,7 +1,7 @@
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
-import { DerivationPathDepth } from '@leather.io/crypto';
+import { DerivationPathDepth, deriveKeychainFromXpub } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
@@ -69,7 +69,9 @@ export function deriveTaprootReceiveAddressIndex({
   xpub,
   network,
 }: DeriveTaprootReceiveAddressIndexArgs) {
-  const keychain = HDKey.fromExtendedKey(xpub);
+  const keychain = deriveKeychainFromXpub(xpub);
+
   const zeroAddressIndex = deriveAddressIndexZeroFromAccount(keychain);
+
   return getTaprootPaymentFromAddressIndex(zeroAddressIndex, network);
 }

@@ -11,6 +11,7 @@
     "incremental": true,
     "baseUrl": ".",
     "rootDir": ".",
+    "noUncheckedIndexedAccess": true,
     "paths": {
       "@/*": ["src/*"]
     }

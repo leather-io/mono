@@ -2,7 +2,7 @@ import {
   filterKeychainsByAccountIndex,
   filterKeychainsByFingerprint,
   findHighestAccountIndexOfFingerprint,
-} from './keychain-state-helpers';
+} from './keychains';
 
 const fingerprintAlpha = 'deadbeef';
 const fingerprintBeta = 'cafebabe';

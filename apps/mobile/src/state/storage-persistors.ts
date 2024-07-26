@@ -1,14 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { rememberEnhancer } from 'redux-remember';
+import { PersistConfig } from 'redux-persist';
 
 import { RootState } from '.';
 
-export function createAsyncStorageEnhancer(reducersToPersist: (keyof RootState)[]) {
-  return rememberEnhancer(AsyncStorage, reducersToPersist, {
-    prefix: 'leatherAsync',
-  });
-}
+export const persistConfig: PersistConfig<RootState> = {
+  key: 'root',
+  version: 0,
+  storage: AsyncStorage,
+  whitelist: ['wallets', 'accounts', 'keychains', 'settings'],
+};
 
 // Mnemonics are accessed directly from SecureStore to avoid leaving them in the
 // app state. Read the key only at the time it is needed for signing.
