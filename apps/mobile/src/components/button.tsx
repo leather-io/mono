@@ -1,6 +1,7 @@
-import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react';
+import { ComponentPropsWithoutRef, FC, forwardRef } from 'react';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { SvgProps } from 'react-native-svg';
 
 import {
   BaseTheme,
@@ -17,6 +18,7 @@ import {
   spacing,
   spacingShorthand,
   useRestyle,
+  useTheme,
   visible,
 } from '@shopify/restyle';
 
@@ -33,7 +35,7 @@ type BaseButtonProps<Theme extends BaseTheme> = OpacityProps<Theme> &
 type Props = BaseButtonProps<Theme> & ComponentPropsWithoutRef<typeof RNTouchableOpacity>;
 const composedRestyleFunction = composeRestyleFunctions<Theme, Props>(buttonRestyleFunctions);
 
-export type ButtonState = 'default' | 'disabled' | 'success' | 'outline';
+export type ButtonState = 'default' | 'disabled' | 'success' | 'outline' | 'ghost';
 
 function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState, T>) {
   switch (buttonState) {
@@ -45,6 +47,8 @@ function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState,
       return match.success;
     case 'outline':
       return match.outline;
+    case 'ghost':
+      return match.ghost;
   }
 }
 
@@ -58,21 +62,21 @@ export const Button = forwardRef(
     }: Props & {
       title?: string;
       buttonState: ButtonState;
-      Icon?: ReactNode;
+      Icon?: FC<SvgProps>;
     },
     ref
   ) => {
     const props = useRestyle(composedRestyleFunction, rest);
-
-    const bg = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
-      buttonState,
-      {
-        default: 'base.ink.text-primary',
-        disabled: 'base.ink.background-secondary',
-        success: 'base.green.background-primary',
-        outline: 'base.ink.background-primary',
-      }
-    );
+    const theme = useTheme<Theme>();
+    const bg = whenButtonState<
+      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
+    >(buttonState, {
+      default: 'base.ink.text-primary',
+      disabled: 'base.ink.background-secondary',
+      success: 'base.green.background-primary',
+      outline: 'base.ink.background-primary',
+      ghost: undefined,
+    });
 
     const textColor = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
       buttonState,
@@ -81,6 +85,7 @@ export const Button = forwardRef(
         disabled: 'base.ink.text-non-interactive',
         success: 'base.green.action-primary-default',
         outline: 'base.ink.action-primary-default',
+        ghost: 'base.ink.text-primary',
       }
     );
 
@@ -91,6 +96,7 @@ export const Button = forwardRef(
       disabled: undefined,
       success: undefined,
       outline: 'base.ink.action-primary-default',
+      ghost: undefined,
     });
 
     const borderWidth = whenButtonState<number | undefined>(buttonState, {
@@ -98,6 +104,7 @@ export const Button = forwardRef(
       disabled: undefined,
       success: undefined,
       outline: 1,
+      ghost: undefined,
     });
 
     const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
@@ -118,7 +125,7 @@ export const Button = forwardRef(
         gap={hasGap ? '2' : undefined}
         {...props}
       >
-        {Icon}
+        {Icon && <Icon height={24} width={24} color={theme.colors[textColor]} />}
         <Text variant={textVariant} color={textColor}>
           {title}
         </Text>

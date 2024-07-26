@@ -1,4 +1,4 @@
-import { FC, Ref, useState } from 'react';
+import { FC, RefObject, useCallback, useState } from 'react';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -14,9 +14,11 @@ import EnvelopeIcon from '@/assets/envelope.svg';
 import EyeIcon from '@/assets/eye.svg';
 import NfcIcon from '@/assets/nfc.svg';
 import PlusIcon from '@/assets/plus-icon.svg';
+import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
@@ -40,7 +42,7 @@ export function AddWalletListItem({
   const theme = useTheme<Theme>();
   return (
     <TouchableOpacity onPress={onPress} py="3" flexDirection="row" gap="4" alignItems="center">
-      {!Icon ? null : (
+      {Icon && (
         <Box flexDirection="row" p="2" bg="base.ink.background-secondary" borderRadius="round">
           <Icon
             color={
@@ -55,11 +57,11 @@ export function AddWalletListItem({
       )}
       <Box flexDirection="column">
         <Text variant="label02">{title}</Text>
-        {subtitle ? (
+        {subtitle && (
           <Text color="base.ink.text-subdued" variant="label03">
             {subtitle}
           </Text>
-        ) : null}
+        )}
       </Box>
     </TouchableOpacity>
   );
@@ -89,16 +91,26 @@ const UNAVAILABLE_FEATURES = {
   },
 };
 
-interface AddWalletModalProps {
-  addWalletModalRef: Ref<BottomSheetModal>;
+interface AddWalletModalBaseProps {
+  addWalletModalRef: RefObject<BottomSheetModal>;
 }
-export function AddWalletModal({ addWalletModalRef }: AddWalletModalProps) {
-  const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
-  const animatedPosition = useSharedValue(CLOSED_ANIMATED_POSITION);
 
-  function createWallet() {
-    // TODO: navigate to create wallet screen
-  }
+export function AddWalletModal({ addWalletModalRef }: AddWalletModalBaseProps) {
+  const router = useRouter();
+  const createWallet = useCallback(() => {
+    router.navigate(APP_ROUTES.WalletCreateNewWallet);
+    addWalletModalRef.current?.close();
+  }, [router]);
+
+  return <AddWalletModalUI createWallet={createWallet} addWalletModalRef={addWalletModalRef} />;
+}
+interface AddWalletModalUIProps extends AddWalletModalBaseProps {
+  createWallet(): unknown;
+}
+export function AddWalletModalUI({ addWalletModalRef, createWallet }: AddWalletModalUIProps) {
+  const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
+  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
+
   function restoreWallet() {
     // TODO: navigate to restore wallet screen
   }

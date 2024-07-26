@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/app/waiting-list/waiting-list.tsx:331
+#: src/app/waiting-list/waiting-list.tsx:325
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 
@@ -33,7 +33,7 @@ msgstr "Email address"
 msgid "Follow us"
 msgstr "Follow us"
 
-#: src/app/waiting-list/waiting-list.tsx:345
+#: src/app/waiting-list/waiting-list.tsx:339
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 

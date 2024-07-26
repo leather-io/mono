@@ -8,7 +8,9 @@ import {
   BorderProps,
   LayoutProps,
   OpacityProps,
+  PositionProps,
   ResponsiveValue,
+  RestyleFunctionContainer,
   SpacingProps,
   SpacingShorthandProps,
   TextShadowProps,
@@ -22,6 +24,7 @@ import {
   createVariant,
   layout,
   opacity,
+  position,
   spacing,
   spacingShorthand,
   textShadow,
@@ -48,6 +51,7 @@ type BaseButtonProps<Theme extends BaseTheme> = VariantProps<Theme, 'textVariant
   LayoutProps<Theme> &
   TextColorProps<Theme> &
   TextShadowProps<Theme> &
+  PositionProps<Theme> &
   ComponentPropsWithoutRef<typeof RNTouchableOpacity>;
 
 export const buttonRestyleFunctions = [
@@ -61,10 +65,11 @@ export const buttonRestyleFunctions = [
   backgroundColor,
   backgroundColorShorthand,
   layout,
+  position,
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
 export const TouchableOpacity = createRestyleComponent<BaseButtonProps<Theme>, Theme>(
-  buttonRestyleFunctions,
+  buttonRestyleFunctions as RestyleFunctionContainer<BaseButtonProps<Theme>, Theme>[],
   RNTouchableOpacity
 );
