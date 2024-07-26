@@ -12,5 +12,6 @@ export enum APP_ROUTES {
   WalletTokens = '/wallet/tokens',
   WalletCollectibles = '/wallet/collectibles',
   WalletBrowser = '/wallet/browser',
+  WalletCreateNewWallet = '/wallet/create-new-wallet',
   WaitingList = '/waiting-list',
 }

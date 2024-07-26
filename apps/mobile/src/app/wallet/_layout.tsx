@@ -36,6 +36,10 @@ export default function StackLayout() {
     left: <BackButtonHeader onPress={() => router.back()} />,
     center: <TitleHeader title="Developer tools" />,
   });
+  const NavigationBack = createBlurredHeader({
+    insets,
+    left: <BackButtonHeader onPress={() => router.back()} />,
+  });
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -45,6 +49,7 @@ export default function StackLayout() {
       <Stack.Screen name="browser" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ header: NavigationHeaderHome }} />
       <Stack.Screen name="developer-console" options={{ header: NavigationDeveloperConsole }} />
+      <Stack.Screen name="create-new-wallet" options={{ header: NavigationBack }} />
     </Stack>
   );
 }

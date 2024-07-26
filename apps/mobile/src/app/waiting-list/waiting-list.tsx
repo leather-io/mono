@@ -243,7 +243,7 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
         onPress={() => Linking.openURL(TWITTER_LINK)}
         title={t`Follow us`}
         buttonState="outline"
-        Icon={<XLogo width={20} height={20} />}
+        Icon={XLogo}
         mb="3"
       />
       <Button
@@ -301,13 +301,7 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
         buttonState={getButtonState()}
         disabled={isButtonDisabled}
         testID={WelcomeScreenTestIds.SubmitEmailButton}
-        Icon={
-          isPending ? (
-            <Spinner />
-          ) : showSuccess ? (
-            <CheckmarkCircle width={20} height={20} />
-          ) : undefined
-        }
+        Icon={isPending ? Spinner : showSuccess ? CheckmarkCircle : undefined}
       />
     </Box>
   );
