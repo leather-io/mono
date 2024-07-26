@@ -24,6 +24,10 @@ export function deriveRootBip32Keychain(seed: Uint8Array) {
   return HDKey.fromMasterSeed(seed);
 }
 
+export function deriveKeychainFromXpub(xpub: string) {
+  return HDKey.fromExtendedKey(xpub);
+}
+
 /**
  * Gets keychain fingerprint directly from mnemonic. This is useful for
  * referencing a mnemonic safely by an identifier.
@@ -33,7 +37,7 @@ export async function getMnemonicRootKeyFingerprint(mnemonic: string) {
   return toHexString(keychain.fingerprint);
 }
 
-export function deriveAccountDescriptor(rootKeychain: HDKey, path: string) {
+export function deriveKeychainDescriptor(rootKeychain: HDKey, path: string) {
   const masterFingerprint = toHexString(rootKeychain.fingerprint);
   const keyOriginPath = createKeyOriginPath(masterFingerprint, path);
 

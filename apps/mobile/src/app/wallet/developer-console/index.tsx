@@ -19,7 +19,7 @@ export default function DeveloperConsoleScreen() {
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
   const addWalletModalRef = useRef<BottomSheetModal>(null);
   return (
-    <Box flex={1} backgroundColor="base.ink.background-primary" style={{}}>
+    <Box flex={1} backgroundColor="base.ink.background-primary">
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],
@@ -45,13 +45,13 @@ export default function DeveloperConsoleScreen() {
           <TitleListItem title="Trigger API presets" />
           <PressableListItem
             title="getAddresses"
-            onPress={() => {
+            onPress={() =>
               setGetAddressesMessage({
                 jsonrpc: '2.0',
                 id: 'string',
                 method: 'getAddresses',
-              });
-            }}
+              })
+            }
           />
           <PressableListItem title="signMessage" />
           <PressableListItem title="transferBtc" />

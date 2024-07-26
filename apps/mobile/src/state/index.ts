@@ -1,8 +1,17 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
-import { rememberReducer } from 'redux-remember';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
 
-import { createAsyncStorageEnhancer } from './/storage-persistors';
+import { persistConfig } from './/storage-persistors';
 import { accountsSlice } from './accounts/accounts.slice';
 import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.slice';
 import { settingsSlice } from './settings/settings.slice';
@@ -19,22 +28,21 @@ const reducer = combineReducers({
 
 export type RootState = ReturnType<typeof reducer>;
 
-const storageEnhancer = createAsyncStorageEnhancer([
-  'wallets',
-  'accounts',
-  'keychains',
-  'settings',
-]);
-
 export const store = configureStore({
-  reducer: rememberReducer(reducer),
+  reducer: persistReducer(persistConfig, reducer),
   devTools: false,
   enhancers: getDefaultEnhancers => {
-    const enhancers = getDefaultEnhancers().concat(storageEnhancer);
-
     if (process.env.NODE_ENV === 'development')
-      return enhancers.concat(devToolsEnhancer({ trace: true }));
+      return getDefaultEnhancers().concat(devToolsEnhancer({ trace: true }));
 
-    return enhancers;
+    return getDefaultEnhancers();
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);
