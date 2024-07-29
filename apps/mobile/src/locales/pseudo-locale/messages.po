@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/app/wallet/(tabs)/action-bar.tsx:38
+msgid "{label}"
+msgstr ""
+
 #: src/app/waiting-list/waiting-list.tsx:325
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr ""
@@ -37,24 +41,12 @@ msgstr ""
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:54
-msgid "Receive"
-msgstr ""
-
-#: src/app/wallet/(tabs)/_layout.tsx:38
-msgid "Send"
-msgstr ""
-
 #: src/app/waiting-list/waiting-list.tsx:265
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr ""
 
 #: src/app/waiting-list/waiting-list.tsx:300
 msgid "Submit"
-msgstr ""
-
-#: src/app/wallet/(tabs)/_layout.tsx:70
-msgid "Swap"
 msgstr ""
 
 #: src/app/waiting-list/waiting-list.tsx:230

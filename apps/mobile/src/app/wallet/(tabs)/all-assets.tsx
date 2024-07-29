@@ -9,7 +9,7 @@ import { useTheme } from '@shopify/restyle';
 
 import { Text, Theme } from '@leather.io/ui/native';
 
-import { ActionBarContext } from './_layout';
+import { ActionBarContext } from './action-bar';
 
 const DATA = [
   {

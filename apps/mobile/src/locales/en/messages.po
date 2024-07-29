@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/app/wallet/(tabs)/action-bar.tsx:38
+msgid "{label}"
+msgstr "{label}"
+
 #: src/app/waiting-list/waiting-list.tsx:325
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
@@ -37,14 +41,6 @@ msgstr "Follow us"
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 
-#: src/app/wallet/(tabs)/_layout.tsx:54
-msgid "Receive"
-msgstr "Receive"
-
-#: src/app/wallet/(tabs)/_layout.tsx:38
-msgid "Send"
-msgstr "Send"
-
 #: src/app/waiting-list/waiting-list.tsx:265
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr "Stay in the loop and be the first one to hear about new developments"
@@ -52,10 +48,6 @@ msgstr "Stay in the loop and be the first one to hear about new developments"
 #: src/app/waiting-list/waiting-list.tsx:300
 msgid "Submit"
 msgstr "Submit"
-
-#: src/app/wallet/(tabs)/_layout.tsx:70
-msgid "Swap"
-msgstr "Swap"
 
 #: src/app/waiting-list/waiting-list.tsx:230
 msgid "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
