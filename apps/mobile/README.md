@@ -52,6 +52,12 @@ Running on Android device
 
 - `pnpm run android` if you want to run it on Android emulator
 
+If you encounter difficulties with `pnpm run ios` you can instead run:
+
+- `pnpm start`
+
+- Once started press `i` to open it in the ios simulator
+
 ## License
 
 [MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
