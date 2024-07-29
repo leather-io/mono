@@ -66,6 +66,13 @@
   * dependencies
     * @leather.io/models bumped to 0.10.2
 
+## [2.1.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.0...@leather.io/rpc-v2.1.1) (2024-07-29)
+
+
+### Bug Fixes
+
+* **rpc:** add stx public key, improve types ([8940013](https://github.com/leather-io/mono/commit/89400136de591c433b438589fff6b22cebe8306a))
+
 ## [2.1.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.0.2...@leather.io/rpc-v2.1.0) (2024-07-24)
 
 

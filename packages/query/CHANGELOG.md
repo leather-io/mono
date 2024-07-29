@@ -129,6 +129,22 @@
     * @leather.io/rpc bumped to 2.1.0
     * @leather.io/utils bumped to 0.10.3
 
+## [2.1.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.0.2...@leather.io/query-v2.1.0) (2024-07-29)
+
+
+### Features
+
+* add inscription output value ([171e2ad](https://github.com/leather-io/mono/commit/171e2ad9ee594f1393cd5734de12894a8e95f1dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.0
+    * @leather.io/rpc bumped to 2.1.1
+    * @leather.io/utils bumped to 0.11.0
+
 ## [2.0.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.0.0...@leather.io/query-v2.0.1) (2024-07-24)
 
 

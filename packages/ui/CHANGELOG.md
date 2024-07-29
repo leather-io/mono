@@ -79,6 +79,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.10.3
 
+## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.8.1...@leather.io/ui-v1.9.0) (2024-07-29)
+
+
+### Features
+
+* create new wallet ([fe4a2f2](https://github.com/leather-io/mono/commit/fe4a2f2a7a337443b6562a2430109329b4a45ed1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.11.0
+
 ## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.7.0...@leather.io/ui-v1.8.0) (2024-07-24)
 
 
