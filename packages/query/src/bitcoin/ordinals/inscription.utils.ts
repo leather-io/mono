@@ -37,6 +37,8 @@ export function createBestinSlotInscription(
   const title = `Inscription ${inscription.inscription_number}`;
   const [txid, output, offset] = inscription.satpoint.split(':');
 
+  const genesisTimestamp = new Date(inscription.genesis_ts).getTime();
+
   const sharedInfo = {
     id: inscription.inscription_id,
     number: inscription.inscription_number,
@@ -48,10 +50,9 @@ export function createBestinSlotInscription(
     title,
     genesisBlockHeight: inscription.genesis_height,
 
-    // TODO: currently no data from BestinSlot API
-    genesisBlockHash: '0',
-    genesisTimestamp: 0,
-    value: '0',
+    genesisBlockHash: inscription.genesis_block_hash,
+    genesisTimestamp: Math.floor(genesisTimestamp / 1000),
+    value: inscription.output_value.toString(),
   };
 
   if (!mimeType) {

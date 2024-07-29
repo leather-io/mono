@@ -76,6 +76,9 @@ export const bestInSlotInscriptionSchema = z.object({
   render_url: z.string().nullable().optional(),
   bitmap_number: z.number().nullable().optional(),
   delegate: bestInSlotInscriptionDelegateSchema.nullable().optional(),
+  output_value: z.number(),
+  genesis_ts: z.string(),
+  genesis_block_hash: z.string(),
 });
 
 export const inscriptionsByAddressSchema = z.object({
