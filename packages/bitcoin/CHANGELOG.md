@@ -133,6 +133,23 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.1.0
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.9.2...@leather.io/bitcoin-v0.10.0) (2024-07-29)
+
+
+### Features
+
+* **mobile:** keychain store ([0ec895c](https://github.com/leather-io/mono/commit/0ec895ca94480d8fc35882caaef8e05eb5620c61))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.1.0
+    * @leather.io/utils bumped to 0.11.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.1.1
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.8.6...@leather.io/bitcoin-v0.9.0) (2024-07-18)
 
 

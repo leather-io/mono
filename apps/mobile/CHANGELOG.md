@@ -147,6 +147,28 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.9.2
 
+## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.15.4...@leather.io/mobile-v1.16.0) (2024-07-29)
+
+
+### Features
+
+* add create wallet drawer ([05360b4](https://github.com/leather-io/mono/commit/05360b45625e460d465f461b283298de927cdd21))
+* create new wallet ([fe4a2f2](https://github.com/leather-io/mono/commit/fe4a2f2a7a337443b6562a2430109329b4a45ed1))
+* **mobile:** keychain store ([0ec895c](https://github.com/leather-io/mono/commit/0ec895ca94480d8fc35882caaef8e05eb5620c61))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.0
+    * @leather.io/crypto bumped to 1.1.0
+    * @leather.io/rpc bumped to 2.1.1
+    * @leather.io/ui bumped to 1.9.0
+    * @leather.io/utils bumped to 0.11.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.10.0
+
 ## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.14.0...@leather.io/mobile-v1.15.0) (2024-07-22)
 
 

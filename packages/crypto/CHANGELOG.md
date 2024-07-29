@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.4...@leather.io/crypto-v1.1.0) (2024-07-29)
+
+
+### Features
+
+* **mobile:** keychain store ([0ec895c](https://github.com/leather-io/mono/commit/0ec895ca94480d8fc35882caaef8e05eb5620c61))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.11.0
+
 ## [1.0.4](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.3...@leather.io/crypto-v1.0.4) (2024-07-18)
 
 

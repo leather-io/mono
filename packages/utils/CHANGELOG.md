@@ -65,6 +65,20 @@
   * dependencies
     * @leather.io/rpc bumped to 2.1.0
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.10.3...@leather.io/utils-v0.11.0) (2024-07-29)
+
+
+### Features
+
+* **mobile:** keychain store ([0ec895c](https://github.com/leather-io/mono/commit/0ec895ca94480d8fc35882caaef8e05eb5620c61))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.1.1
+
 ## [0.10.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.10.0...@leather.io/utils-v0.10.1) (2024-07-11)
 
 
