@@ -11,6 +11,7 @@ module.exports = {
       to: {
         path: '^(?!packages/models)',
         dependencyTypesNot: ['type-only'],
+        pathNot: ['^packages/models/[^/]+/[^/]+', 'node_modules/.pnpm/zod@.*'],
       },
     },
     {
