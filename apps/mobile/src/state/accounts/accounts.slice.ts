@@ -1,15 +1,17 @@
-import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 
-import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
+import { createAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 
+import type { RootState } from '..';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.slice';
 import { handleEntityActionWith, makeAccountIdentifer } from '../utils';
+import { initalizeAccount } from './accounts';
 
 export interface AccountStore {
   id: string;
   name?: string;
-  ofKeychains: string[];
+  status?: 'deleted';
 }
 
 const adapter = createEntityAdapter<AccountStore, string>({
@@ -26,12 +28,9 @@ export const accountsSlice = createSlice({
     builder
       // Provision the first account with new wallet creation
       .addCase(userAddsWallet, (state, action) => {
-        // A new wallet always starts with account index 0
+        // A new wallet always starts with an account index 0
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, 0);
-        const ofKeychains = action.payload.withKeychains.bitcoin.map(k =>
-          extractKeyOriginPathFromDescriptor(k.descriptor)
-        );
-        adapter.addOne(state, { id, ofKeychains });
+        adapter.addOne(state, { id });
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -46,14 +45,27 @@ export const accountsSlice = createSlice({
       )
 
       .addCase(
-        removesAccount,
-        handleEntityActionWith(adapter.removeOne, payload =>
-          makeAccountIdentifer(payload.fingerprint, payload.accountIndex)
-        )
+        userRemovesAccount,
+        handleEntityActionWith(adapter.updateOne, payload => ({
+          id: makeAccountIdentifer(payload.fingerprint, payload.accountIndex),
+          changes: { status: 'deleted' } as const,
+        }))
       )
 
       .addCase(...handleAppResetWithState(initialState)),
 });
+
+const selectors = adapter.getSelectors((state: RootState) => state.accounts);
+
+export const selectAccounts = createSelector(selectors.selectAll, accounts =>
+  accounts.filter(account => account.status !== 'deleted').map(account => initalizeAccount(account))
+);
+
+export function useAccounts(fingerprint: string) {
+  return {
+    list: useSelector(selectAccounts).filter(account => account.fingerprint === fingerprint),
+  };
+}
 
 interface AddAccountPayload {
   account: AccountStore;
@@ -67,4 +79,4 @@ interface RemoveAccountPayload {
   fingerprint: string;
   accountIndex: number;
 }
-export const removesAccount = createAction<RemoveAccountPayload>('accounts/removeAccount');
+export const userRemovesAccount = createAction<RemoveAccountPayload>('accounts/removeAccount');

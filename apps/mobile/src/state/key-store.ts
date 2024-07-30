@@ -6,12 +6,11 @@ import {
   deriveBip39SeedFromMnemonic,
   deriveKeychainDescriptor,
   deriveRootBip32Keychain,
-  extractKeyOriginPathFromDescriptor,
   generateMnemonic,
   getMnemonicRootKeyFingerprint,
 } from '@leather.io/crypto';
 
-import { removesAccount, userAddsAccount } from './accounts/accounts.slice';
+import { userAddsAccount, userRemovesAccount } from './accounts/accounts.slice';
 import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.slice';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
@@ -35,7 +34,7 @@ export function useKeyStore() {
       const { keychains: bitcoin } = await this.deriveNextAccountBitcoinKeychainsFrom(fingerprint);
 
       wallets.add({
-        wallet: { type: 'software', fingerprint },
+        wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
         withKeychains: { bitcoin },
       });
     },
@@ -46,12 +45,7 @@ export function useKeyStore() {
 
       dispatch(
         userAddsAccount({
-          account: {
-            id: makeAccountIdentifer(fingerprint, accountIndex),
-            ofKeychains: bitcoin.map(keychain =>
-              extractKeyOriginPathFromDescriptor(keychain.descriptor)
-            ),
-          },
+          account: { id: makeAccountIdentifer(fingerprint, accountIndex) },
           withKeychains: { bitcoin },
         })
       );
@@ -92,7 +86,7 @@ export function useKeyStore() {
     },
 
     removeAccount(fingerprint: string, accountIndex: number) {
-      dispatch(removesAccount({ fingerprint, accountIndex }));
+      dispatch(userRemovesAccount({ fingerprint, accountIndex }));
     },
   };
 }

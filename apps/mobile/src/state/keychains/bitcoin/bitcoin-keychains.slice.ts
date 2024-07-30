@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { removesAccount, userAddsAccount } from '@/state/accounts/accounts.slice';
+import { userAddsAccount } from '@/state/accounts/accounts.slice';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/state/global-action';
 import { selectNetwork } from '@/state/settings/settings.slice';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
@@ -54,8 +54,6 @@ export const bitcoinKeychainSlice = createSlice({
         userAddsAccount,
         handleEntityActionWith(adapter.addMany, payload => payload.withKeychains?.bitcoin ?? [])
       )
-
-      .addCase(removesAccount, filterKeychainsToRemove(adapter.removeMany))
 
       .addCase(userRemovesWallet, filterKeychainsToRemove(adapter.removeMany))
 
