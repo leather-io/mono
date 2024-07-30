@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Button, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { WalletList } from '@/components/account-list/account-list';
+import { WalletList } from '@/components/wallet-manager';
 import { useKeyStore } from '@/state/key-store';
 import { clearAllPersistedStorage } from '@/state/utils';
+import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
@@ -31,12 +32,11 @@ export default function WalletManager() {
         <Button title="Clear store" onPress={() => clearAllPersistedStorage()} />
         <Button
           title={generatingWallet ? 'Generating…' : 'Create wallet'}
-          onPress={() => {
+          onPress={async () => {
             setGeneratingWallet(true);
-            requestAnimationFrame(async () => {
-              await keys.createNewSoftwareWallet();
-              setGeneratingWallet(false);
-            });
+            await nextAnimationFrame();
+            await keys.createNewSoftwareWallet();
+            setGeneratingWallet(false);
           }}
         />
         <WalletList />

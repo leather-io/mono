@@ -10,14 +10,19 @@ import {
 import { mnemonicStore } from '../storage-persistors';
 import { handleEntityActionWith, useAppDispatch, useAppSelector } from '../utils';
 
-export interface SoftwareWallet {
-  type: 'software';
+export interface AbstractWalletStore {
   fingerprint: string;
+  createdOn: string;
   name?: string;
 }
-export type Wallet = SoftwareWallet; // Soon HardwareWallet;
 
-const adapter = createEntityAdapter<Wallet, string>({
+export interface SoftwareWalletStore extends AbstractWalletStore {
+  type: 'software';
+}
+
+export type WalletStore = SoftwareWalletStore; // Next HardwareWallet;
+
+const adapter = createEntityAdapter<WalletStore, string>({
   selectId: key => key.fingerprint,
 });
 

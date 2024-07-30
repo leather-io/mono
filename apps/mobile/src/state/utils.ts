@@ -28,18 +28,20 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-type AdapterMethod<T> = (state: EntityState<T, string>, ...args: any[]) => void;
-
-export function handleEntityActionWith<T, P>(
-  adapterMethod: AdapterMethod<T>,
-  selectPayload: (payload: P) => unknown
-) {
-  return (state: EntityState<T, string>, action: PayloadAction<P>) => {
-    const selectedPayload = selectPayload(action.payload);
-    adapterMethod(state, selectedPayload);
-  };
-}
-
 export function makeAccountIdentifer(fingerprint: string, accountIndex: number) {
   return [fingerprint, accountIndex].join('/');
+}
+
+type AdapterMethod<T> = (state: EntityState<T, string>, args: any) => void;
+
+export function handleEntityActionWith<State, Payload, R extends AdapterMethod<State>>(
+  adapterMethod: R,
+  // Payload selector fn expected to return the value passsed to second
+  // parameter of the adapter method
+  payloadSelector: (payload: Payload) => Parameters<R>[1]['payload']
+) {
+  return (state: EntityState<State, string>, action: PayloadAction<Payload>) => {
+    const selectedPayload = payloadSelector(action.payload);
+    adapterMethod(state, selectedPayload);
+  };
 }
