@@ -1,4 +1,4 @@
-import { HIRO_INSCRIPTIONS_API_URL } from '../../network.model';
+import { HIRO_INSCRIPTIONS_API_URL } from '../../network/network.model';
 import { InscriptionCryptoAssetInfo } from '../crypto-asset-info.model';
 
 /**

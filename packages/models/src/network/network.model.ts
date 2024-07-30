@@ -1,4 +1,7 @@
-import { Blockchains } from './types';
+import { z } from 'zod';
+
+import { Blockchains } from '../types';
+import { networkConfigurationSchema } from './network.schema';
 
 export const HIRO_API_BASE_URL_MAINNET = 'https://api.hiro.so';
 export const HIRO_API_BASE_URL_TESTNET = 'https://api.testnet.hiro.so';
@@ -34,11 +37,11 @@ const supportedBlockchains = ['stacks', 'bitcoin'] as const;
 
 export type SupportedBlockchains = (typeof supportedBlockchains)[number];
 
-const networkModes = ['mainnet', 'testnet'] as const;
+export const networkModes = ['mainnet', 'testnet'] as const;
+export const testnetModes = ['testnet', 'regtest', 'signet'] as const;
 
 export type NetworkModes = (typeof networkModes)[number];
-
-type BitcoinTestnetModes = 'testnet' | 'regtest' | 'signet';
+type BitcoinTestnetModes = (typeof testnetModes)[number];
 
 export type BitcoinNetworkModes = NetworkModes | BitcoinTestnetModes;
 
@@ -61,14 +64,7 @@ export interface StacksChainConfig extends BaseChainConfig {
   subnetChainId?: ChainID;
 }
 
-export interface NetworkConfiguration {
-  name: string;
-  id: DefaultNetworkConfigurations;
-  chain: {
-    bitcoin: BitcoinChainConfig;
-    stacks: StacksChainConfig;
-  };
-}
+export type NetworkConfiguration = z.infer<typeof networkConfigurationSchema>;
 
 const networkMainnet: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds.mainnet,
