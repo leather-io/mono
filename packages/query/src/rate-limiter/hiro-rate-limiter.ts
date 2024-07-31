@@ -6,15 +6,15 @@ import { useCurrentNetworkState } from '../leather-query-provider';
 import { PriorityQueue } from './queue-class';
 
 const hiroStacksMainnetApiLimiter = new PQueue({
-  interval: 60000,
-  intervalCap: 100,
+  interval: 1200,
+  intervalCap: 2,
   timeout: 60000,
   queueClass: PriorityQueue,
 });
 
 const hiroStacksTestnetApiLimiter = new PQueue({
-  interval: 60000,
-  intervalCap: 50,
+  interval: 1200,
+  intervalCap: 2,
   timeout: 60000,
   queueClass: PriorityQueue,
 });
