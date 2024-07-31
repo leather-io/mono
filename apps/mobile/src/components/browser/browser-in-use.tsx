@@ -77,7 +77,7 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
           justifyContent="center"
           alignItems="flex-start"
         >
-          <Cross height={24} width={24} />
+          <Cross height={24} width={24} color={theme.colors['base.ink.text-primary']} />
         </TouchableOpacity>
         <Box flex={999} p="5" justifyContent="center" alignItems="center">
           <Text variant="label02" color="base.ink.text-primary" numberOfLines={1}>

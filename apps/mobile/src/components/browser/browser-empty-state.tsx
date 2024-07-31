@@ -4,12 +4,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import NoFavicon from '@/assets/no-favicon.svg';
-import { Trans, t } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { TabBar } from '../tab-bar';
+import { TransText } from '../trans-text';
 import { formatURL } from './utils';
 
 interface BrowserEmptyStateProps {
@@ -150,9 +151,7 @@ export function BrowserEmptyState({
         </Box>
         {textURL ? (
           <TouchableOpacity p="3" mx="2" justifyContent="center" onPress={resetTextInput}>
-            <Text variant="label02">
-              <Trans>Cancel</Trans>
-            </Text>
+            <TransText variant="label02">Cancel </TransText>
           </TouchableOpacity>
         ) : null}
       </Box>

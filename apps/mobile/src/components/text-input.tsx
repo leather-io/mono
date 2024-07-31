@@ -19,7 +19,9 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Box, Text, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
+import { Box, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
+
+import { TransText } from './trans-text';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 
@@ -77,9 +79,9 @@ export function TextInput({
       />
       {inputState === 'error' ? (
         <Box position="absolute" bottom={5}>
-          <Text color="base.red.action-primary-default" variant="caption01">
+          <TransText color="base.red.action-primary-default" variant="caption01">
             Something is wrong!
-          </Text>
+          </TransText>
         </Box>
       ) : null}
     </Box>

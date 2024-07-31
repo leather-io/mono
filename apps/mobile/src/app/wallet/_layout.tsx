@@ -2,9 +2,10 @@ import { RefObject, createContext } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ActionBarMethods } from '@/components/action-bar';
-import { createBlurredHeader } from '@/components/blurred-header';
 import { AccountHeader } from '@/components/headers/account';
 import { BackButtonHeader } from '@/components/headers/back-button';
+import { BlurredHeader } from '@/components/headers/containers/blurred-header';
+import { SimpleHeader } from '@/components/headers/containers/simple-header';
 import { LeatherLogoHeader } from '@/components/headers/leather-logo';
 import { MenuHeader } from '@/components/headers/menu';
 import { OptionsHeader } from '@/components/headers/options';
@@ -20,43 +21,52 @@ export default function StackLayout() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const NavigationHeader = createBlurredHeader({
-    insets,
-    left: <BackButtonHeader onPress={() => router.back()} />,
-    center: <AccountHeader />,
-    right: <MenuHeader />,
-  });
-  const NavigationHeaderHome = createBlurredHeader({
-    insets,
-    left: <LeatherLogoHeader />,
-    right: <OptionsHeader onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsole)} />,
-  });
-  const NavigationDeveloperConsole = createBlurredHeader({
-    insets,
-    left: <BackButtonHeader onPress={() => router.back()} />,
-    center: <TitleHeader title="Developer tools" />,
-  });
-  const NavigationBack = createBlurredHeader({
-    insets,
-    left: <BackButtonHeader onPress={() => router.back()} />,
-  });
+  const NavigationHeader = (
+    <BlurredHeader
+      insets={insets}
+      left={<BackButtonHeader onPress={() => router.back()} />}
+      center={<AccountHeader />}
+      right={<MenuHeader />}
+    />
+  );
+
+  const NavigationHeaderHome = (
+    <SimpleHeader
+      insets={insets}
+      left={<LeatherLogoHeader />}
+      right={<OptionsHeader onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsole)} />}
+    />
+  );
+
+  const NavigationDeveloperConsole = (
+    <SimpleHeader
+      insets={insets}
+      left={<BackButtonHeader onPress={() => router.back()} />}
+      center={<TitleHeader title="Developer tools" />}
+    />
+  );
+
+  const NavigationBackSimple = (
+    <SimpleHeader insets={insets} left={<BackButtonHeader onPress={() => router.back()} />} />
+  );
+
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="send" options={{ header: NavigationHeader }} />
-      <Stack.Screen name="receive" options={{ header: NavigationHeader }} />
-      <Stack.Screen name="swap" options={{ header: NavigationHeader }} />
+      <Stack.Screen name="send" options={{ header: () => NavigationHeader }} />
+      <Stack.Screen name="receive" options={{ header: () => NavigationHeader }} />
+      <Stack.Screen name="swap" options={{ header: () => NavigationHeader }} />
       <Stack.Screen name="browser" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ header: NavigationHeaderHome }} />
-      <Stack.Screen name="developer-console" options={{ header: NavigationDeveloperConsole }} />
-      <Stack.Screen name="create-new-wallet" options={{ header: NavigationBack }} />
+      <Stack.Screen name="home" options={{ header: () => NavigationHeaderHome }} />
+      <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
+      <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen
         name="developer-console/index"
-        options={{ header: NavigationDeveloperConsole }}
+        options={{ header: () => NavigationDeveloperConsole }}
       />
       <Stack.Screen
         name="developer-console/wallet-manager"
-        options={{ header: NavigationDeveloperConsole }}
+        options={{ header: () => NavigationDeveloperConsole }}
       />
     </Stack>
   );

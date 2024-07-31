@@ -8,6 +8,7 @@ import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem, TitleListItem } from '@/components/developer-console/list-items';
 import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
@@ -29,12 +30,12 @@ export default function DeveloperConsoleScreen() {
         }}
       >
         <Box gap="2">
-          <TitleListItem title="Open dummy page" />
-          <PressableListItem title="Drawer" />
-          <PressableListItem title="Page" />
+          <TitleListItem title={t`Open dummy page`} />
+          <PressableListItem title={t`Drawer`} />
+          <PressableListItem title={t`Page`} />
           <PressableListItem
             onPress={() => addWalletModalRef.current?.present()}
-            title="Create wallet"
+            title={t`Create wallet`}
           />
           <PressableListItem
             title="Wallet management"
@@ -42,9 +43,9 @@ export default function DeveloperConsoleScreen() {
           />
         </Box>
         <Box gap="2">
-          <TitleListItem title="Trigger API presets" />
+          <TitleListItem title={t`Trigger API presets`} />
           <PressableListItem
-            title="getAddresses"
+            title={t`getAddresses`}
             onPress={() =>
               setGetAddressesMessage({
                 jsonrpc: '2.0',

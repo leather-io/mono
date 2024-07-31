@@ -6,12 +6,14 @@ import CircleQuestionMark from '@/assets/circle-questionmark.svg';
 import Copy from '@/assets/copy.svg';
 import GraduateCap from '@/assets/graduate-cap.svg';
 import Pointer from '@/assets/pointer.svg';
-import { HEADER_HEIGHT } from '@/components/blurred-header';
 import { Button } from '@/components/button';
 import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
+import { TransText } from '@/components/trans-text';
+import { APP_ROUTES } from '@/constants';
 import { useTheme } from '@shopify/restyle';
 import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
+import { useRouter } from 'expo-router';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
@@ -23,9 +25,9 @@ function getTestMnemonic() {
 }
 
 export default function CreateNewWallet() {
-  const { top, bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const contentOffsetTop = top + HEADER_HEIGHT;
+  const router = useRouter();
   const test_array = getTestMnemonic().split(' ');
   const [isHidden, setIsHidden] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
@@ -35,7 +37,7 @@ export default function CreateNewWallet() {
       backgroundColor="base.ink.background-primary"
       px="5"
       justifyContent="space-between"
-      style={{ paddingTop: contentOffsetTop, paddingBottom: bottom + theme.spacing['5'] }}
+      style={{ paddingBottom: bottom + theme.spacing['5'] }}
     >
       <Box>
         <Box gap="3" pt="5">
@@ -55,10 +57,10 @@ export default function CreateNewWallet() {
               color={theme.colors['base.ink.text-primary']}
             />
           </TouchableOpacity>
-          <Text variant="heading03">BACK UP YOUR SECRET KEY</Text>
-          <Text variant="label01">
+          <TransText variant="heading03">BACK UP YOUR SECRET KEY</TransText>
+          <TransText variant="label01">
             Your Secret Key grants you access to your wallet and its assets.
-          </Text>
+          </TransText>
         </Box>
 
         <Box my="5">
@@ -85,10 +87,10 @@ export default function CreateNewWallet() {
               >
                 <Pointer height={24} width={24} color={theme.colors['base.ink.text-primary']} />
                 <Box>
-                  <Text variant="label02">Tap to view Secret Key</Text>
-                  <Text variant="label02" color="base.red.action-primary-default">
+                  <TransText variant="label02">Tap to view Secret Key</TransText>
+                  <TransText variant="label02" color="base.red.action-primary-default">
                     For your eyes only
-                  </Text>
+                  </TransText>
                 </Box>
               </TouchableOpacity>
             </BlurView>
@@ -109,7 +111,7 @@ export default function CreateNewWallet() {
             borderWidth={1}
           >
             <GraduateCap height={24} width={24} color={theme.colors['base.ink.text-subdued']} />
-            <Text
+            <TransText
               style={{
                 flexShrink: 1,
                 flexDirection: 'row',
@@ -131,7 +133,7 @@ export default function CreateNewWallet() {
                 Learn more
               </Text>
               {' ->'}
-            </Text>
+            </TransText>
           </Box>
         </Box>
       </Box>
@@ -148,7 +150,7 @@ export default function CreateNewWallet() {
         />
         <Button
           onPress={() => {
-            // TODO: navigate to the next screen
+            router.navigate(APP_ROUTES.WalletSecureYourWallet);
           }}
           buttonState="default"
           title="I've backed it up"

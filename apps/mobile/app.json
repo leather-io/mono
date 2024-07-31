@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false
     },
@@ -34,7 +36,15 @@
       [
         "expo-asset",
         {
-          "assets": ["src/assets/scripts/injected-provider.js"]
+          "assets": [
+            "src/assets/scripts/injected-provider.js"
+          ]
+        }
+      ],
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
         }
       ]
     ],

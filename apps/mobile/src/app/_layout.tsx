@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
+import { ToastWrapper } from '@/components/toast/toast-context';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/state';
@@ -46,7 +47,9 @@ export default function RootLayout() {
                 <SplashScreenGuard>
                   <GestureHandlerRootView style={{ flex: 1 }}>
                     <BottomSheetModalProvider>
-                      <AppRouter />
+                      <ToastWrapper>
+                        <AppRouter />
+                      </ToastWrapper>
                     </BottomSheetModalProvider>
                   </GestureHandlerRootView>
                 </SplashScreenGuard>

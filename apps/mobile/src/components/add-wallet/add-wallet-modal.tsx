@@ -23,6 +23,7 @@ import { useRouter } from 'expo-router';
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from '../bottom-sheet-modal';
+import { TransText } from '../trans-text';
 
 interface AddWalletListItemProps {
   Icon?: FC<SvgProps>;
@@ -134,9 +135,9 @@ export function AddWalletModalUI({ addWalletModalRef, createWallet }: AddWalletM
           />
         </Box>
         <Box px="5" pt="5">
-          <Text pb="5" variant="heading03">
+          <TransText pb="5" variant="heading03">
             Add wallet to {'{Use case}'}
-          </Text>
+          </TransText>
           <Box flexDirection="column" gap="1">
             <AddWalletListItem
               onPress={createWallet}

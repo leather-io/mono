@@ -5,8 +5,9 @@ import { APP_ROUTES } from '@/constants';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
+import { TransText } from '../trans-text';
 import { AccountCard } from './account-card';
 
 export function MyAccounts() {
@@ -16,10 +17,10 @@ export function MyAccounts() {
     <Box>
       <Box flexDirection="column" paddingBottom="3">
         <TouchableOpacity flexDirection="row" gap="1" alignItems="center">
-          <Text variant="heading05">My accounts</Text>
+          <TransText variant="heading05">My accounts</TransText>
           <Chevron width={16} height={16} />
         </TouchableOpacity>
-        <Text variant="caption01">$0</Text>
+        <TransText variant="caption01">$0</TransText>
       </Box>
       <ScrollView horizontal contentContainerStyle={{ gap: theme.spacing['2'] }}>
         <AccountCard onPress={() => router.push(APP_ROUTES.WalletAllAssets)} />

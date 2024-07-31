@@ -1,7 +1,9 @@
 import Chevron from '@/assets/chevron-right.svg';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+
+import { TransText } from '../trans-text';
 
 export function AccountCard({ onPress }: { onPress(): void }) {
   const theme = useTheme<Theme>();
@@ -26,18 +28,18 @@ export function AccountCard({ onPress }: { onPress(): void }) {
         right={theme.spacing[5]}
         top={theme.spacing[5]}
       >
-        <Text variant="label03" color="base.ink.text-subdued">
+        <TransText variant="label03" color="base.ink.text-subdued">
           Ledger
-        </Text>
+        </TransText>
       </Box>
       <Box p="2" borderRadius="round" backgroundColor="base.ink.background-secondary">
         <Chevron width={32} height={32} />
       </Box>
       <Box gap="1">
-        <Text variant="label02">$0</Text>
-        <Text variant="label02" color="base.ink.text-subdued">
+        <TransText variant="label02">$0</TransText>
+        <TransText variant="label02" color="base.ink.text-subdued">
           Account 1
-        </Text>
+        </TransText>
       </Box>
     </TouchableOpacity>
   );

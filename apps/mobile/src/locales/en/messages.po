@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-06-05 16:21+0400\n"
+"POT-Creation-Date: 2024-07-31 10:04+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,46 +13,66 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/trans-text.tsx:8
+msgid "{children}"
+msgstr "{children}"
+
 #: src/app/wallet/(tabs)/action-bar.tsx:38
 msgid "{label}"
 msgstr "{label}"
 
-#: src/app/waiting-list/waiting-list.tsx:325
+#: src/app/waiting-list/waiting-list.tsx:324
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 
-#: src/components/browser/browser-empty-state.tsx:154
-msgid "Cancel"
-msgstr "Cancel"
+#: src/app/wallet/developer-console/index.tsx:38
+msgid "Create wallet"
+msgstr "Create wallet"
 
-#: src/app/waiting-list/waiting-list.tsx:256
+#: src/app/waiting-list/waiting-list.tsx:255
 msgid "Done"
 msgstr "Done"
 
-#: src/app/waiting-list/waiting-list.tsx:290
+#: src/app/wallet/developer-console/index.tsx:34
+msgid "Drawer"
+msgstr "Drawer"
+
+#: src/app/waiting-list/waiting-list.tsx:289
 msgid "Email address"
 msgstr "Email address"
 
-#: src/app/waiting-list/waiting-list.tsx:244
+#: src/app/wallet/secure-your-wallet.tsx:77
+msgid "Enable device security"
+msgstr "Enable device security"
+
+#: src/app/waiting-list/waiting-list.tsx:243
 msgid "Follow us"
 msgstr "Follow us"
 
-#: src/app/waiting-list/waiting-list.tsx:339
-msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
-msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
+#: src/app/wallet/developer-console/index.tsx:48
+msgid "getAddresses"
+msgstr "getAddresses"
 
-#: src/app/waiting-list/waiting-list.tsx:265
-msgid "Stay in the loop and be the first one to hear about new developments"
-msgstr "Stay in the loop and be the first one to hear about new developments"
+#: src/app/wallet/developer-console/index.tsx:33
+msgid "Open dummy page"
+msgstr "Open dummy page"
 
-#: src/app/waiting-list/waiting-list.tsx:300
+#: src/app/wallet/developer-console/index.tsx:35
+msgid "Page"
+msgstr "Page"
+
+#: src/app/wallet/secure-your-wallet.tsx:68
+msgid "Skip for now"
+msgstr "Skip for now"
+
+#: src/app/waiting-list/waiting-list.tsx:299
 msgid "Submit"
 msgstr "Submit"
 
-#: src/app/waiting-list/waiting-list.tsx:230
-msgid "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
-msgstr "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the meantime, please <0>check out our browser extension.</0>"
+#: src/app/wallet/developer-console/index.tsx:46
+msgid "Trigger API presets"
+msgstr "Trigger API presets"
 
-#: src/components/browser/browser-empty-state.tsx:148
+#: src/components/browser/browser-empty-state.tsx:149
 msgid "Type URL or search"
 msgstr "Type URL or search"
