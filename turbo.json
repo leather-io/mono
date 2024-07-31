@@ -1,24 +1,35 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
+      "outputs": [
+        "dist/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
     },
     "build:watch": {},
     "format": {},
     "format:check": {},
     "lint": {
-      "inputs": ["src/**"],
+      "inputs": [
+        "src/**"
+      ],
       "outputs": [],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "lint:fix": {
       "outputs": []
     },
     "typecheck": {},
     "check:all": {
-      "dependsOn": ["build", "lint", "format", "typecheck"]
+      "dependsOn": [
+        "build",
+        "lint",
+        "format",
+        "typecheck"
+      ]
     },
     "dev": {
       "cache": false,
