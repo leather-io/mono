@@ -697,6 +697,19 @@ importers:
         specifier: 8.1.0
         version: 8.1.0(@swc/core@1.5.24)(postcss@8.4.38)(typescript@5.4.5)
 
+  packages/stacks:
+    dependencies:
+      '@leather.io/models':
+        specifier: workspace:*
+        version: link:../models
+      zod:
+        specifier: 3.23.6
+        version: 3.23.6
+    devDependencies:
+      tsup:
+        specifier: 8.1.0
+        version: 8.1.0(@swc/core@1.5.24)(postcss@8.4.38)(typescript@5.4.5)
+
   packages/tokens:
     devDependencies:
       '@leather.io/eslint-config':
