@@ -5,13 +5,16 @@ import { createAction, createEntityAdapter, createSelector, createSlice } from '
 import type { RootState } from '..';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.slice';
+import { StacksKeychainStore } from '../keychains/stacks/stacks-keychains.slice';
 import { handleEntityActionWith, makeAccountIdentifer } from '../utils';
 import { initalizeAccount } from './accounts';
+
+type AccountStatus = 'deleted';
 
 export interface AccountStore {
   id: string;
   name?: string;
-  status?: 'deleted';
+  status?: AccountStatus;
 }
 
 const adapter = createEntityAdapter<AccountStore, string>({
@@ -28,8 +31,8 @@ export const accountsSlice = createSlice({
     builder
       // Provision the first account with new wallet creation
       .addCase(userAddsWallet, (state, action) => {
-        // A new wallet always starts with an account index 0
-        const id = makeAccountIdentifer(action.payload.wallet.fingerprint, 0);
+        const firstAccountIndex = 0;
+        const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
         adapter.addOne(state, { id });
       })
 
@@ -71,6 +74,7 @@ interface AddAccountPayload {
   account: AccountStore;
   withKeychains: {
     bitcoin: BitcoinKeychainStore[];
+    stacks: StacksKeychainStore[];
   };
 }
 export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');

@@ -55,3 +55,19 @@ export function findHighestAccountIndexOfFingerprint<T extends WithDescriptor>(
       .map(account => extractAccountIndexFromPath(account.descriptor))
   );
 }
+
+export function descriptorKeychainSelectors<T extends WithDescriptor>(keychainList: T[]) {
+  function fromFingerprint(fingerprint: string) {
+    return keychainList.filter(filterKeychainsByFingerprint(fingerprint));
+  }
+
+  function fromAccountIndex(fingerprint: string, accountIndex: number) {
+    return fromFingerprint(fingerprint).filter(filterKeychainsByAccountIndex(accountIndex));
+  }
+
+  return {
+    list: keychainList,
+    fromFingerprint,
+    fromAccountIndex,
+  };
+}

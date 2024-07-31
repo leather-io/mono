@@ -191,3 +191,7 @@ export function mapObject<T extends object, U>(
 
   return result as { [K in keyof T]: U };
 }
+
+export function assertIsTruthy<T>(val: T): asserts val is NonNullable<T> {
+  if (!val) throw new Error(`expected: true, actual: ${val}`);
+}

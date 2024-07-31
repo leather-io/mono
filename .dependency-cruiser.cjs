@@ -60,6 +60,17 @@ module.exports = {
       },
     },
     {
+      name: 'no-imports-from-stacks-or-bitcoin-to-crypto',
+      severity: 'error',
+      comment: `@leather.io/crypto should not import from @leather.io/stacks or @leather.io/bitcoin.`,
+      from: {
+        path: 'packages/crypto',
+      },
+      to: {
+        path: 'packages/(stacks|bitcoin)',
+      },
+    },
+    {
       name: 'no-circular',
       severity: 'error',
       comment:

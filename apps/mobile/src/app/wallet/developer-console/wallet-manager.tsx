@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Button, ScrollView } from 'react-native';
+import { Button, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletList } from '@/components/wallet-manager';
 import { useKeyStore } from '@/state/key-store';
-import { deleteAllMnemonics } from '@/state/storage-persistors';
+import { useSettings } from '@/state/settings/settings.slice';
 import { clearAllPersistedStorage } from '@/state/utils';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
@@ -13,40 +13,37 @@ import { useTheme } from '@shopify/restyle';
 import { Box, Theme } from '@leather.io/ui/native';
 
 export default function WalletManager() {
-  const insets = useSafeAreaInsets();
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const keys = useKeyStore();
   const wallets = useWallets();
+  const settings = useSettings();
   const [generatingWallet, setGeneratingWallet] = useState(false);
   return (
     <Box flex={1} backgroundColor="base.ink.background-primary">
       <ScrollView
         contentContainerStyle={{
-          marginTop: theme.spacing['7'],
           paddingHorizontal: theme.spacing['3'],
-          paddingTop: insets.top + theme.spacing['5'],
           paddingBottom: theme.spacing['5'] + bottom,
           gap: theme.spacing[5],
         }}
       >
-        <Button
-          title="Clear store"
-          onPress={async () => {
-            const fingerprintArr = wallets.list.map(wallet => wallet.fingerprint);
-            await deleteAllMnemonics(fingerprintArr);
-            await clearAllPersistedStorage();
-          }}
-        />
-        <Button
-          title={generatingWallet ? 'Generating…' : 'Create wallet'}
-          onPress={async () => {
-            setGeneratingWallet(true);
-            await nextAnimationFrame();
-            await keys.createNewSoftwareWallet();
-            setGeneratingWallet(false);
-          }}
-        />
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            title="Clear"
+            onPress={() => clearAllPersistedStorage(wallets.list.map(wallet => wallet.fingerprint))}
+          />
+          <Button
+            title={generatingWallet ? 'Generating…' : 'Create wallet'}
+            onPress={async () => {
+              setGeneratingWallet(true);
+              await nextAnimationFrame();
+              await keys.createNewSoftwareWallet();
+              setGeneratingWallet(false);
+            }}
+          />
+          <Button title="Toggle network" onPress={() => settings.toggleNetwork()} />
+        </View>
         <WalletList />
       </ScrollView>
     </Box>

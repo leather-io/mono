@@ -2,6 +2,7 @@ import {
   extractAccountIndexFromPath,
   extractAddressIndexFromPath,
   extractDerivationPathFromDescriptor,
+  extractKeyFromDescriptor,
   extractKeyOriginPathFromDescriptor,
   validateKeyOriginPath,
 } from './derivation-path-utils';
@@ -61,5 +62,11 @@ describe(extractKeyOriginPathFromDescriptor.name, () => {
     expect(extractKeyOriginPathFromDescriptor("[0a3fd8ef/84'/0'/0']xpub")).toEqual(
       "0a3fd8ef/84'/0'/0'"
     );
+  });
+});
+
+describe(extractKeyFromDescriptor.name, () => {
+  test('should extract the key from a descriptor', () => {
+    expect(extractKeyFromDescriptor("[0a3fd8ef/84'/0'/0']xpub")).toEqual('xpub');
   });
 });

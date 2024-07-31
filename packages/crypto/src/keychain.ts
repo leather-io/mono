@@ -10,7 +10,7 @@ import { toHexString } from '@leather.io/utils';
 
 import {
   DerivationPathDepth,
-  createExtendedPublicKeyDescriptor,
+  createDescriptor,
   createKeyOriginPath,
 } from './derivation-path-utils';
 
@@ -41,7 +41,7 @@ export async function getMnemonicRootKeyFingerprint(mnemonic: string, passphrase
   return toHexString(keychain.fingerprint);
 }
 
-export function deriveKeychainDescriptor(rootKeychain: HDKey, path: string) {
+export function deriveKeychainExtendedPublicKeyDescriptor(rootKeychain: HDKey, path: string) {
   const masterFingerprint = toHexString(rootKeychain.fingerprint);
   const keyOriginPath = createKeyOriginPath(masterFingerprint, path);
 
@@ -49,7 +49,7 @@ export function deriveKeychainDescriptor(rootKeychain: HDKey, path: string) {
     throw new Error('Cannot derive account keychain from non-root keychain');
 
   const accountKeychain = rootKeychain.derive(path);
-  return createExtendedPublicKeyDescriptor(keyOriginPath, accountKeychain.publicExtendedKey);
+  return createDescriptor(keyOriginPath, accountKeychain.publicExtendedKey);
 }
 
 export function isValidMnemonicWord(word: string): boolean {
