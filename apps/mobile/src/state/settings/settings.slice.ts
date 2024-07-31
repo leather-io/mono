@@ -17,11 +17,13 @@ export type Theme = 'light' | 'dark' | 'system';
 export interface SettingsState {
   theme: Theme;
   network: DefaultNetworkConfigurations;
+  createdOn: string;
 }
 
 const initialState: SettingsState = {
   theme: 'light',
   network: WalletDefaultNetworkConfigurationIds.mainnet,
+  createdOn: new Date().toISOString(),
 };
 
 export const settingsSlice = createSlice({
@@ -51,14 +53,23 @@ export const { userChangedTheme, userChangedNetwork } = settingsSlice.actions;
 
 export function useSettings() {
   const dispatch = useAppDispatch();
+  const network = useSelector(selectNetwork);
   return {
     theme: useSelector(theme),
     changeAppTheme(theme: Theme) {
       dispatch(userChangedTheme(theme));
     },
-    network: useSelector(selectNetwork),
+    network,
     changeAppNetwork(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetwork(network));
+    },
+    // TODO: Remove when live, debug only
+    toggleNetwork() {
+      dispatch(
+        network.chain.bitcoin.bitcoinNetwork === 'mainnet'
+          ? userChangedNetwork('testnet')
+          : userChangedNetwork('mainnet')
+      );
     },
   };
 }

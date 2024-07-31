@@ -5,12 +5,14 @@ import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs
 
 import { resetWallet } from './global-action';
 import { RootState, store } from './index';
+import { deleteAllMnemonics } from './storage-persistors';
 
 export function filterObjectKeys(object: object, keys: string[]) {
   return Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
 }
 
-export async function clearAllPersistedStorage() {
+export async function clearAllPersistedStorage(fingerprints: string[]) {
+  await deleteAllMnemonics(fingerprints);
   store.dispatch(resetWallet());
   await AsyncStorage.clear();
 }

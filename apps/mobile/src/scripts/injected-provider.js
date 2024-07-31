@@ -1,5 +1,5 @@
 function createEventListeners() {
-  let eventListeners = {};
+  const eventListeners = {};
   return {
     addEventListener(type, handler) {
       eventListeners[type] = handler;
@@ -14,6 +14,7 @@ function createEventListeners() {
     },
   };
 }
+
 const eventListeners = createEventListeners();
 
 const provider = {
@@ -53,7 +54,7 @@ const provider = {
 };
 
 Object.defineProperty(window, 'HiroWalletProvider', {
-  get: a => {
+  get: () => {
     // window.ReactNativeWebView.postMessage('get leather provider', a);
     return provider;
   },

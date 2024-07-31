@@ -28,7 +28,11 @@ export default function () {
   async function createWallet(biometrics: boolean) {
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
-      await keyStore.restoreWalletFromMnemonic(mnemonic, biometrics, passphrase ?? undefined);
+      await keyStore.restoreWalletFromMnemonic({
+        mnemonic,
+        biometrics,
+        passphrase: passphrase ?? undefined,
+      });
       toastContext.displayToast({ type: 'success', title: 'Wallet added successfully' });
     }
   }

@@ -63,12 +63,12 @@ export function validateKeyOriginPath(keyOriginPath: string) {
 
 /**
  * @description
- * Creates a descriptor with key origin and xpub
- * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3`
+ * Creates a descriptor with key origin and xpub or public key
+ * @returns `[0a3fd8ef/84'/0'/0']xpuba1b…2c3`
  */
-export function createExtendedPublicKeyDescriptor(keyOriginPath: string, xpub: string) {
+export function createDescriptor(keyOriginPath: string, key: string) {
   validateKeyOriginPath(keyOriginPath);
-  return `[${keyOriginPath}]${xpub}`;
+  return `[${keyOriginPath}]${key}`;
 }
 
 /**
@@ -100,4 +100,11 @@ export function extractFingerprintFromDescriptor(descriptor: string) {
  */
 export function extractAccountIndexFromDescriptor(descriptor: string) {
   return extractAccountIndexFromPath(extractKeyOriginPathFromDescriptor(descriptor));
+}
+
+/**
+ * @example `[0a3fd8ef/84'/0'/6']xpuba1b…2c3` -> `xpuba1b…2c3`
+ */
+export function extractKeyFromDescriptor(descriptor: string) {
+  return descriptor.split(']')[1];
 }
