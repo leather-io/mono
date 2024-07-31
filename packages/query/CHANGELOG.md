@@ -129,6 +129,23 @@
     * @leather.io/rpc bumped to 2.1.0
     * @leather.io/utils bumped to 0.10.3
 
+## [2.2.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.1.0...@leather.io/query-v2.2.0) (2024-07-31)
+
+
+### Features
+
+* implement mempool api, closes leather-io/issues[#215](https://github.com/leather-io/mono/issues/215) ([51b462b](https://github.com/leather-io/mono/commit/51b462b1c7e374e94d0b0af4a72a37645904951f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.1
+    * @leather.io/models bumped to 0.11.0
+    * @leather.io/rpc bumped to 2.1.2
+    * @leather.io/utils bumped to 0.11.1
+
 ## [2.1.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.0.2...@leather.io/query-v2.1.0) (2024-07-29)
 
 
