@@ -18,6 +18,14 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.10.2...@leather.io/models-v0.11.0) (2024-07-31)
+
+
+### Features
+
+* add network config schema ([bc6030e](https://github.com/leather-io/mono/commit/bc6030e19d1873436b89943283246dfb4ad3470a))
+* implement mempool api, closes leather-io/issues[#215](https://github.com/leather-io/mono/issues/215) ([51b462b](https://github.com/leather-io/mono/commit/51b462b1c7e374e94d0b0af4a72a37645904951f))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.9.0...@leather.io/models-v0.10.0) (2024-06-21)
 
 

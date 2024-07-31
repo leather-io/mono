@@ -147,6 +147,28 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.9.2
 
+## [1.17.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.16.0...@leather.io/mobile-v1.17.0) (2024-07-31)
+
+
+### Features
+
+* link to Add Wallet if no wallets created, ref leather-wallet/issues[#176](https://github.com/leather-io/mono/issues/176) ([177bdbd](https://github.com/leather-io/mono/commit/177bdbdd7272df8c2828cfefe1434a7bbcce4f01))
+* security screen + toast + simple headers + localization ([eb84b45](https://github.com/leather-io/mono/commit/eb84b4501acd95e208b558b50c224a21ceeaf9f1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.1
+    * @leather.io/crypto bumped to 1.1.1
+    * @leather.io/models bumped to 0.11.0
+    * @leather.io/rpc bumped to 2.1.2
+    * @leather.io/ui bumped to 1.9.1
+    * @leather.io/utils bumped to 0.11.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.10.1
+
 ## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.15.4...@leather.io/mobile-v1.16.0) (2024-07-29)
 
 
