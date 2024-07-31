@@ -1,17 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { HeaderAvoidingContainer } from '@/components/headers/containers/header-avoiding-container';
+import { TransText } from '@/components/trans-text';
 
-export default function SwapScreen() {
+export default function SendScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Send ✈️</Text>
-    </View>
+    <HeaderAvoidingContainer justifyContent="center" alignItems="center">
+      <TransText>Send</TransText>
+    </HeaderAvoidingContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

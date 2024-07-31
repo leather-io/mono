@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
+import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
 import { useRouter } from 'expo-router';
 
@@ -9,14 +10,14 @@ export default function SwapScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text>Collectibles 🖼️</Text>
+      <TransText>Collectibles 🖼️</TransText>
       <TouchableOpacity
         onPress={() => router.navigate(APP_ROUTES.WalletBrowser)}
         p="4"
         bg="base.ink.background-primary"
         borderRadius="sm"
       >
-        <Text>navigate to browser</Text>
+        <TransText>navigate to browser</TransText>
       </TouchableOpacity>
     </View>
   );

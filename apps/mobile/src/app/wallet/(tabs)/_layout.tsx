@@ -4,14 +4,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import EmojiSmile from '@/assets/emoji-smile.svg';
 import Menu from '@/assets/menu.svg';
 import { ActionBarMethods } from '@/components/action-bar';
-import { createBlurredHeader } from '@/components/blurred-header';
 import { Modal } from '@/components/bottom-sheet-modal';
+import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
+import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, TouchableOpacity } from '@leather.io/ui/native';
 
 import { ActionBarContainer, ActionBarContext } from './action-bar';
 
@@ -28,7 +29,7 @@ function HeaderCenter({ onPress }: { onPress?(): void }) {
       <Box borderRadius="round" p="1" bg="base.blue.background-secondary">
         <EmojiSmile width={24} height={24} />
       </Box>
-      <Text variant="heading05">Account 1</Text>
+      <TransText variant="heading05">Account 1</TransText>
     </TouchableOpacity>
   );
 }
@@ -84,18 +85,20 @@ export default function TabLayout() {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const insets = useSafeAreaInsets();
-  const NavigationHeader = createBlurredHeader({
-    insets,
-    center: <HeaderCenter />,
-    right: (
-      <HeaderRight
-        onPress={() => {
-          bottomSheetModalRef.current?.present();
-        }}
-      />
-    ),
-    bottom: <HeaderBottom />,
-  });
+  const NavigationHeader = (
+    <BlurredHeader
+      insets={insets}
+      center={<HeaderCenter />}
+      right={
+        <HeaderRight
+          onPress={() => {
+            bottomSheetModalRef.current?.present();
+          }}
+        />
+      }
+      bottom={<HeaderBottom />}
+    />
+  );
   return (
     <ActionBarContext.Provider value={{ ref }}>
       <Tabs tabBar={() => null}>
@@ -103,27 +106,27 @@ export default function TabLayout() {
           name="all-assets"
           options={{
             title: 'All Assets',
-            header: NavigationHeader,
+            header: () => NavigationHeader,
           }}
         />
         <Tabs.Screen
           name="collectibles"
           options={{
             title: 'Collectibles',
-            header: NavigationHeader,
+            header: () => NavigationHeader,
           }}
         />
         <Tabs.Screen
           name="tokens"
           options={{
             title: 'Tokens',
-            header: NavigationHeader,
+            header: () => NavigationHeader,
           }}
         />
       </Tabs>
       <ActionBarContainer ref={ref} />
       <Modal ref={bottomSheetModalRef}>
-        <Text>Dummy modal text 🎉 Add blocks to see responsive modal</Text>
+        <TransText>Dummy modal text 🎉 Add blocks to see responsive modal</TransText>
       </Modal>
     </ActionBarContext.Provider>
   );

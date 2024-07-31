@@ -1,9 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { TransText } from '@/components/trans-text';
 
 export default function TokenScreen() {
   return (
     <View style={styles.container}>
-      <Text>Tokens 🪙</Text>
+      <TransText>Tokens 🪙</TransText>
     </View>
   );
 }
