@@ -10,11 +10,11 @@ import { whenNetwork } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
-import { getBlockstreamRatelimiter } from '../blockstream-rate-limiter';
+import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
 import { BestinSlotApi } from './best-in-slot';
 
 function AddressApi(basePath: string) {
-  const rateLimiter = getBlockstreamRatelimiter(basePath);
+  const rateLimiter = getBitcoinRatelimiter(basePath);
   return {
     async getTransactionsByAddress(address: string, signal?: AbortSignal) {
       const resp = await rateLimiter.add(
