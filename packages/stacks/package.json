@@ -1,0 +1,32 @@
+{
+  "name": "@leather.io/stacks",
+  "author": "leather.io",
+  "description": "Stacks package for Leather",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "prepublish": "pnpm build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit",
+    "types": "tsc --declaration --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "dependencies": {
+    "@leather.io/models": "workspace:*",
+    "zod": "3.23.6"
+  },
+  "devDependencies": {
+    "tsup": "8.1.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
