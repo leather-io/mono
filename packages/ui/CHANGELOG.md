@@ -85,6 +85,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.11.1
 
+## [1.9.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.9.1...@leather.io/ui-v1.9.2) (2024-08-01)
+
+
+### Bug Fixes
+
+* accept variant types for dialog header ([7c8163d](https://github.com/leather-io/mono/commit/7c8163d6b480251b404899590061869708085ca1))
+* specify loader to stop build failure for icons ([34165b6](https://github.com/leather-io/mono/commit/34165b68508392d0cf29d36dba10aceaa466a48b))
+
 ## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.8.1...@leather.io/ui-v1.9.0) (2024-07-29)
 
 
