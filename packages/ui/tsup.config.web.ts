@@ -13,4 +13,9 @@ export default defineConfig({
   minifyWhitespace: true,
   splitting: true,
   treeshake: true,
+  target: 'esnext',
+  loader: {
+    '.js': 'jsx',
+    '.jsx': 'jsx',
+  },
 });

@@ -45,7 +45,12 @@ export const config = {
         test: /\.(js)$/,
         include: [/node_modules\/@leather.io\/ui/],
         loader: 'esbuild-loader',
-        options: { tsconfig: './tsconfig.json', loader: 'jsx',target: 'es2020' },
+        options: { tsconfig: './tsconfig.json',
+        loader: {
+          '.js': 'jsx',
+          '.jsx': 'jsx'
+        },
+        target: 'es2020' },
       },
 
 ```
