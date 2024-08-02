@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/notify-user-modal.tsx:60
+msgid "\"{0}\" isn't ready yet."
+msgstr "\"{0}\" isn't ready yet."
+
 #: src/components/trans-text.tsx:8
 msgid "{children}"
 msgstr "{children}"
@@ -25,7 +29,7 @@ msgstr "{label}"
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 
-#: src/app/wallet/developer-console/index.tsx:38
+#: src/app/wallet/developer-console/index.tsx:63
 msgid "Create wallet"
 msgstr "Create wallet"
 
@@ -33,7 +37,7 @@ msgstr "Create wallet"
 msgid "Done"
 msgstr "Done"
 
-#: src/app/wallet/developer-console/index.tsx:34
+#: src/app/wallet/developer-console/index.tsx:59
 msgid "Drawer"
 msgstr "Drawer"
 
@@ -49,17 +53,29 @@ msgstr "Enable device security"
 msgid "Follow us"
 msgstr "Follow us"
 
-#: src/app/wallet/developer-console/index.tsx:48
+#: src/app/wallet/developer-console/index.tsx:73
 msgid "getAddresses"
 msgstr "getAddresses"
 
-#: src/app/wallet/developer-console/index.tsx:33
+#: src/components/notify-user-modal.tsx:66
+msgid "Notify me when it's ready"
+msgstr "Notify me when it's ready"
+
+#: src/app/wallet/developer-console/index.tsx:58
 msgid "Open dummy page"
 msgstr "Open dummy page"
 
-#: src/app/wallet/developer-console/index.tsx:35
+#: src/app/wallet/developer-console/index.tsx:60
 msgid "Page"
 msgstr "Page"
+
+#: src/app/wallet/developer-console/index.tsx:91
+msgid "register for Push notifications"
+msgstr "register for Push notifications"
+
+#: src/app/wallet/developer-console/index.tsx:95
+msgid "schedule dummy notifications in 3s"
+msgstr "schedule dummy notifications in 3s"
 
 #: src/app/wallet/secure-your-wallet.tsx:68
 msgid "Skip for now"
@@ -69,9 +85,13 @@ msgstr "Skip for now"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/app/wallet/developer-console/index.tsx:46
+#: src/app/wallet/developer-console/index.tsx:71
 msgid "Trigger API presets"
 msgstr "Trigger API presets"
+
+#: src/app/wallet/developer-console/index.tsx:89
+msgid "Trigger other functionality"
+msgstr "Trigger other functionality"
 
 #: src/components/browser/browser-empty-state.tsx:149
 msgid "Type URL or search"
