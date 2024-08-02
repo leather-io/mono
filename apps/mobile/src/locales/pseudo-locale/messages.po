@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/notify-user-modal.tsx:60
+msgid "\"{0}\" isn't ready yet."
+msgstr ""
+
 #: src/components/trans-text.tsx:8
 msgid "{children}"
 msgstr ""
@@ -25,7 +29,7 @@ msgstr ""
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:38
+#: src/app/wallet/developer-console/index.tsx:63
 msgid "Create wallet"
 msgstr ""
 
@@ -33,7 +37,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:34
+#: src/app/wallet/developer-console/index.tsx:59
 msgid "Drawer"
 msgstr ""
 
@@ -49,16 +53,28 @@ msgstr ""
 msgid "Follow us"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:48
+#: src/app/wallet/developer-console/index.tsx:73
 msgid "getAddresses"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:33
+#: src/components/notify-user-modal.tsx:66
+msgid "Notify me when it's ready"
+msgstr ""
+
+#: src/app/wallet/developer-console/index.tsx:58
 msgid "Open dummy page"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:35
+#: src/app/wallet/developer-console/index.tsx:60
 msgid "Page"
+msgstr ""
+
+#: src/app/wallet/developer-console/index.tsx:91
+msgid "register for Push notifications"
+msgstr ""
+
+#: src/app/wallet/developer-console/index.tsx:95
+msgid "schedule dummy notifications in 3s"
 msgstr ""
 
 #: src/app/wallet/secure-your-wallet.tsx:68
@@ -69,8 +85,12 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:46
+#: src/app/wallet/developer-console/index.tsx:71
 msgid "Trigger API presets"
+msgstr ""
+
+#: src/app/wallet/developer-console/index.tsx:89
+msgid "Trigger other functionality"
 msgstr ""
 
 #: src/components/browser/browser-empty-state.tsx:149

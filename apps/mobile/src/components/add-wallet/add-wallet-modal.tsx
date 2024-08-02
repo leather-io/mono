@@ -1,4 +1,4 @@
-import { FC, RefObject, useCallback, useState } from 'react';
+import { FC, RefObject, useCallback, useRef, useState } from 'react';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -23,6 +23,7 @@ import { useRouter } from 'expo-router';
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from '../bottom-sheet-modal';
+import { NotifyUserModal, OptionData } from '../notify-user-modal';
 import { TransText } from '../trans-text';
 
 interface AddWalletListItemProps {
@@ -97,18 +98,47 @@ interface AddWalletModalBaseProps {
 }
 
 export function AddWalletModal({ addWalletModalRef }: AddWalletModalBaseProps) {
+  const notifyUserModalRef = useRef<BottomSheetModal>(null);
   const router = useRouter();
+  const [optionData, setOptionData] = useState<OptionData | null>(null);
   const createWallet = useCallback(() => {
     router.navigate(APP_ROUTES.WalletCreateNewWallet);
     addWalletModalRef.current?.close();
   }, [router]);
 
-  return <AddWalletModalUI createWallet={createWallet} addWalletModalRef={addWalletModalRef} />;
+  function onOpenNotificationsModal(option: OptionData) {
+    setOptionData(option);
+    notifyUserModalRef.current?.present();
+  }
+  function onCloseNotificationsModal() {
+    setOptionData(null);
+  }
+
+  return (
+    <>
+      <AddWalletModalUI
+        onOpenNotificationsModal={onOpenNotificationsModal}
+        createWallet={createWallet}
+        addWalletModalRef={addWalletModalRef}
+      />
+
+      <NotifyUserModal
+        optionData={optionData}
+        onCloseNotificationsModal={onCloseNotificationsModal}
+        notifyUserModalRef={notifyUserModalRef}
+      />
+    </>
+  );
 }
 interface AddWalletModalUIProps extends AddWalletModalBaseProps {
   createWallet(): unknown;
+  onOpenNotificationsModal(option: OptionData): unknown;
 }
-export function AddWalletModalUI({ addWalletModalRef, createWallet }: AddWalletModalUIProps) {
+export function AddWalletModalUI({
+  addWalletModalRef,
+  createWallet,
+  onOpenNotificationsModal,
+}: AddWalletModalUIProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
   const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
 
@@ -163,7 +193,9 @@ export function AddWalletModalUI({ addWalletModalRef, createWallet }: AddWalletM
                   return (
                     <AddWalletListItem
                       key={featureKey}
-                      onPress={openOptions}
+                      onPress={() =>
+                        onOpenNotificationsModal({ title: feature.title, id: featureKey })
+                      }
                       title={feature.title}
                       subtitle={feature.subtitle}
                       Icon={feature.Icon}

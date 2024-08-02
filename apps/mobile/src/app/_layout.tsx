@@ -8,7 +8,6 @@ import { ToastWrapper } from '@/components/toast/toast-context';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/state';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -46,11 +45,9 @@ export default function RootLayout() {
               <ThemeProvider>
                 <SplashScreenGuard>
                   <GestureHandlerRootView style={{ flex: 1 }}>
-                    <BottomSheetModalProvider>
-                      <ToastWrapper>
-                        <AppRouter />
-                      </ToastWrapper>
-                    </BottomSheetModalProvider>
+                    <ToastWrapper>
+                      <AppRouter />
+                    </ToastWrapper>
                   </GestureHandlerRootView>
                 </SplashScreenGuard>
               </ThemeProvider>
