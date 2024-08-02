@@ -6,15 +6,15 @@ import { useCurrentNetworkState } from '../leather-query-provider';
 import { PriorityQueue } from './queue-class';
 
 const bestInSlotMainnetApiLimiter = new PQueue({
-  interval: 1000,
-  intervalCap: 4,
+  interval: 1500,
+  intervalCap: 10,
   timeout: 60000,
   queueClass: PriorityQueue,
 });
 
 const bestInSlotTestnetApiLimiter = new PQueue({
-  interval: 1000,
-  intervalCap: 4,
+  interval: 1500,
+  intervalCap: 10,
   timeout: 60000,
   queueClass: PriorityQueue,
 });

@@ -166,7 +166,7 @@ export function stacksClient(basePath: string) {
     async getFtMetadata(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () => axios.get<FtMetadataResponse>(`${basePath}/metadata/v1/ft/${address}`, { signal }),
-        { signal, throwOnTimeout: true }
+        { signal, priority: 2, throwOnTimeout: true }
       );
       return resp.data;
     },
