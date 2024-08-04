@@ -129,6 +129,13 @@
     * @leather.io/rpc bumped to 2.1.0
     * @leather.io/utils bumped to 0.10.3
 
+## [2.3.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.2.0...@leather.io/query-v2.3.0) (2024-08-04)
+
+
+### Features
+
+* increase bis limits ([f15837c](https://github.com/leather-io/mono/commit/f15837c5db309564317272d21dc539d7c5e6cc19))
+
 ## [2.2.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.1.0...@leather.io/query-v2.2.0) (2024-07-31)
 
 

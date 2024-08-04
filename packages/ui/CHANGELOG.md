@@ -85,6 +85,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.11.1
 
+## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.9.2...@leather.io/ui-v1.10.0) (2024-08-04)
+
+
+### Features
+
+* push notifications ([ecbad95](https://github.com/leather-io/mono/commit/ecbad95afd58ee8565be7ceb04d58057148a459b))
+
 ## [1.9.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.9.1...@leather.io/ui-v1.9.2) (2024-08-01)
 
 
