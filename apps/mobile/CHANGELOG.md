@@ -153,6 +153,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.9.2
 
+## [1.18.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.17.1...@leather.io/mobile-v1.18.0) (2024-08-04)
+
+
+### Features
+
+* push notifications ([ecbad95](https://github.com/leather-io/mono/commit/ecbad95afd58ee8565be7ceb04d58057148a459b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.10.0
+
 ## [1.17.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.16.0...@leather.io/mobile-v1.17.0) (2024-07-31)
 
 
