@@ -8,6 +8,7 @@ import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
 import { BitcoinQueryPrefixes } from '../../../query-prefixes';
+import { useBestInSlotApiRateLimiter } from '../../../rate-limiter/best-in-slot-limiter';
 import { useBitcoinClient } from '../../clients/bitcoin-client';
 
 const addressesSimultaneousFetchLimit = 3;
@@ -23,6 +24,7 @@ export function useGetBrc20TokensQuery({
   const network = useLeatherNetwork();
   const currentNsBitcoinAddress = nativeSegwitAddress;
   const client = useBitcoinClient();
+  const limiter = useBestInSlotApiRateLimiter();
 
   if (!createTaprootSigner) throw new Error('No signer');
 
@@ -52,11 +54,17 @@ export function useGetBrc20TokensQuery({
       }
 
       const brc20TokensPromises = addressesData.map(async address => {
-        const brc20Tokens = await client.BestinSlotApi.getBrc20Balances(address);
-
+        const brc20Tokens = await limiter.add(
+          () => client.BestinSlotApi.getBrc20Balances(address),
+          {
+            throwOnTimeout: true,
+          }
+        );
         const tickerPromises = await Promise.all(
           brc20Tokens.data.map(token => {
-            return client.BestinSlotApi.getBrc20TickerInfo(token.ticker);
+            return limiter.add(() => client.BestinSlotApi.getBrc20TickerInfo(token.ticker), {
+              throwOnTimeout: true,
+            });
           })
         );
 
