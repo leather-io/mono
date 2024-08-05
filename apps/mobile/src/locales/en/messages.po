@@ -101,3 +101,4 @@ msgstr ""
 #: src/components/browser/browser-empty-state.tsx:149
 msgid "Type URL or search"
 msgstr ""
+
