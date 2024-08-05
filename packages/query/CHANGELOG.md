@@ -129,6 +129,14 @@
     * @leather.io/rpc bumped to 2.1.0
     * @leather.io/utils bumped to 0.10.3
 
+## [2.4.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.3.0...@leather.io/query-v2.4.0) (2024-08-05)
+
+
+### Features
+
+* rate limit all bis requests, closes leather-io/extension[#5707](https://github.com/leather-io/mono/issues/5707) ([9474622](https://github.com/leather-io/mono/commit/9474622e6f0079aba7641fbcf11544f9122d88f7))
+* remove bnsx name from lookup for account names, closes leather-io/extension[#5679](https://github.com/leather-io/mono/issues/5679) ([7ca1ecc](https://github.com/leather-io/mono/commit/7ca1ecc2068b8a1790011404ca871fc6d7c62fb8))
+
 ## [2.3.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.2.0...@leather.io/query-v2.3.0) (2024-08-04)
 
 

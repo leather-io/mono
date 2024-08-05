@@ -153,6 +153,14 @@
   * dependencies
     * @leather.io/ui bumped to 1.9.2
 
+## [1.19.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.18.0...@leather.io/mobile-v1.19.0) (2024-08-05)
+
+
+### Features
+
+* add crowdin integration ([cd9af15](https://github.com/leather-io/mono/commit/cd9af151dcdf408a0e8fdb1525fe11f4d2936db7))
+* faceid for secure store ([f20a6a1](https://github.com/leather-io/mono/commit/f20a6a125c05b0b79395c0d849747af0e37ee72f))
+
 ## [1.18.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.17.1...@leather.io/mobile-v1.18.0) (2024-08-04)
 
 
