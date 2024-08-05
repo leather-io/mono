@@ -3,7 +3,7 @@ name: Crowdin Action
 on:
   push:
     branches:
-      - dev
+      - fix/crowdin-ci
 
 jobs:
   synchronize-with-crowdin:
