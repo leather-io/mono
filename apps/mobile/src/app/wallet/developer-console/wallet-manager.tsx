@@ -4,7 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletList } from '@/components/wallet-manager';
 import { useKeyStore } from '@/state/key-store';
+import { deleteAllMnemonics } from '@/state/storage-persistors';
 import { clearAllPersistedStorage } from '@/state/utils';
+import { useWallets } from '@/state/wallets/wallets.slice';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { useTheme } from '@shopify/restyle';
 
@@ -15,9 +17,8 @@ export default function WalletManager() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const keys = useKeyStore();
-
+  const wallets = useWallets();
   const [generatingWallet, setGeneratingWallet] = useState(false);
-
   return (
     <Box flex={1} backgroundColor="base.ink.background-primary">
       <ScrollView
@@ -29,7 +30,14 @@ export default function WalletManager() {
           gap: theme.spacing[5],
         }}
       >
-        <Button title="Clear store" onPress={() => clearAllPersistedStorage()} />
+        <Button
+          title="Clear store"
+          onPress={async () => {
+            const fingerprintArr = wallets.list.map(wallet => wallet.fingerprint);
+            await deleteAllMnemonics(fingerprintArr);
+            await clearAllPersistedStorage();
+          }}
+        />
         <Button
           title={generatingWallet ? 'Generating…' : 'Create wallet'}
           onPress={async () => {
