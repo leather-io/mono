@@ -10,7 +10,6 @@ import { LeatherLogoHeader } from '@/components/headers/leather-logo';
 import { MenuHeader } from '@/components/headers/menu';
 import { OptionsHeader } from '@/components/headers/options';
 import { TitleHeader } from '@/components/headers/title';
-import { APP_ROUTES } from '@/constants';
 import { Stack, useRouter } from 'expo-router';
 
 export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods> | null }>({
@@ -31,10 +30,18 @@ export default function StackLayout() {
   );
 
   const NavigationHeaderHome = (
+    <SimpleHeader insets={insets} left={<LeatherLogoHeader />} right={<OptionsHeader />} />
+  );
+
+  const NavigationBackSimple = (
+    <SimpleHeader insets={insets} left={<BackButtonHeader onPress={() => router.back()} />} />
+  );
+
+  const NavigationSettings = (
     <SimpleHeader
       insets={insets}
-      left={<LeatherLogoHeader />}
-      right={<OptionsHeader onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsole)} />}
+      left={<BackButtonHeader onPress={() => router.back()} />}
+      center={<TitleHeader title="Settings" />}
     />
   );
 
@@ -44,10 +51,6 @@ export default function StackLayout() {
       left={<BackButtonHeader onPress={() => router.back()} />}
       center={<TitleHeader title="Developer tools" />}
     />
-  );
-
-  const NavigationBackSimple = (
-    <SimpleHeader insets={insets} left={<BackButtonHeader onPress={() => router.back()} />} />
   );
 
   return (
@@ -60,6 +63,7 @@ export default function StackLayout() {
       <Stack.Screen name="home" options={{ header: () => NavigationHeaderHome }} />
       <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
+      <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings }} />
       <Stack.Screen
         name="developer-console/index"
         options={{ header: () => NavigationDeveloperConsole }}
