@@ -13,6 +13,7 @@ import { AccountCard } from './account-card';
 export function MyAccounts() {
   const theme = useTheme<Theme>();
   const router = useRouter();
+
   return (
     <Box>
       <Box flexDirection="column" paddingBottom="3">

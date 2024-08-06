@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import EmojiSmile from '@/assets/emoji-smile.svg';
 import Menu from '@/assets/menu.svg';
 import { ActionBarMethods } from '@/components/action-bar';
+import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/container';
 import { Modal } from '@/components/bottom-sheet-modal';
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
@@ -13,8 +14,6 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
 import { Box, TouchableOpacity } from '@leather.io/ui/native';
-
-import { ActionBarContainer, ActionBarContext } from './action-bar';
 
 function HeaderCenter({ onPress }: { onPress?(): void }) {
   return (
@@ -82,7 +81,6 @@ function HeaderBottom() {
 
 export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const insets = useSafeAreaInsets();
   const NavigationHeader = (
@@ -99,6 +97,7 @@ export default function TabLayout() {
       bottom={<HeaderBottom />}
     />
   );
+
   return (
     <ActionBarContext.Provider value={{ ref }}>
       <Tabs tabBar={() => null}>
