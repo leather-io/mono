@@ -21,12 +21,16 @@ msgstr ""
 msgid "{children}"
 msgstr ""
 
-#: src/app/wallet/(tabs)/action-bar.tsx:38
+#: src/components/action-bar/container.tsx:138
 msgid "{label}"
 msgstr ""
 
 #: src/app/waiting-list/waiting-list.tsx:324
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
+msgstr ""
+
+#: src/components/action-bar/container.tsx:156
+msgid "Add Wallet"
 msgstr ""
 
 #: src/app/wallet/developer-console/index.tsx:63
@@ -69,6 +73,10 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
+#: src/components/action-bar/container.tsx:174
+msgid "Receive"
+msgstr ""
+
 #: src/app/wallet/developer-console/index.tsx:91
 msgid "register for Push notifications"
 msgstr ""
@@ -77,12 +85,20 @@ msgstr ""
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
+#: src/components/action-bar/container.tsx:167
+msgid "Send"
+msgstr ""
+
 #: src/app/wallet/secure-your-wallet.tsx:68
 msgid "Skip for now"
 msgstr ""
 
 #: src/app/waiting-list/waiting-list.tsx:299
 msgid "Submit"
+msgstr ""
+
+#: src/components/action-bar/container.tsx:181
+msgid "Swap"
 msgstr ""
 
 #: src/app/wallet/developer-console/index.tsx:71
