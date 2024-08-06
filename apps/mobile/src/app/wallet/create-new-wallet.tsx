@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Checkmark from '@/assets/checkmark-circle.svg';
@@ -10,27 +10,43 @@ import { Button } from '@/components/button';
 import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
 import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
+import { tempMnemonicStore } from '@/state/storage-persistors';
 import { useTheme } from '@shopify/restyle';
 import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 
+import { generateMnemonic } from '@leather.io/crypto';
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
-function getTestMnemonic() {
-  if (process.env.EXPO_PUBLIC_SECRET_KEY) {
-    return process.env.EXPO_PUBLIC_SECRET_KEY;
-  }
-  throw new Error('No mnemonic is provided in EXPO_PUBLIC_SECRET_KEY');
+function MnemonicDisplay({ mnemonic }: { mnemonic: string | null }) {
+  if (!mnemonic) return null;
+
+  const mnemonicWords = mnemonic.split(' ');
+
+  return (
+    <Box justifyContent="center" flexDirection="row" flexWrap="wrap" gap="2">
+      {mnemonicWords.map((word, idx) => (
+        <MnemonicWordBox key={word + idx} wordIdx={idx + 1} word={word} />
+      ))}
+    </Box>
+  );
 }
 
 export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const router = useRouter();
-  const test_array = getTestMnemonic().split(' ');
   const [isHidden, setIsHidden] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
+  const [mnemonic, setMnemonic] = useState<string | null>(null);
+
+  useEffect(() => {
+    const tempMnemonic = generateMnemonic();
+    setMnemonic(tempMnemonic);
+    tempMnemonicStore.setTemporaryMnemonic(tempMnemonic);
+  }, []);
+
   return (
     <Box
       flex={1}
@@ -95,12 +111,7 @@ export default function CreateNewWallet() {
               </TouchableOpacity>
             </BlurView>
           )}
-
-          <Box justifyContent="center" flexDirection="row" flexWrap="wrap" gap="2">
-            {test_array.map((word, idx) => (
-              <MnemonicWordBox key={word + idx} wordIdx={idx + 1} word={word} />
-            ))}
-          </Box>
+          <MnemonicDisplay mnemonic={mnemonic} />
           <Box
             p="3"
             mt="3"
@@ -140,8 +151,10 @@ export default function CreateNewWallet() {
       <Box>
         <Button
           onPress={async () => {
-            await Clipboard.setStringAsync(getTestMnemonic());
-            setIsCopied(true);
+            if (mnemonic) {
+              await Clipboard.setStringAsync(mnemonic);
+              setIsCopied(true);
+            }
           }}
           pb="4"
           Icon={isCopied ? Checkmark : Copy}

@@ -10,9 +10,14 @@ import {
 const mnemonic =
   'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
 
+const passphrase = 'abandoned cactus';
+
 describe(getMnemonicRootKeyFingerprint.name, () => {
   test('it derives the correct fingerprint of test mnemonic', async () =>
     expect(await getMnemonicRootKeyFingerprint(mnemonic)).toEqual('24682ead'));
+
+  test('it derives the correct fingerprint of test mnemonic with passphrase', async () =>
+    expect(await getMnemonicRootKeyFingerprint(mnemonic, passphrase)).toEqual('984c5aea'));
 });
 
 describe(deriveKeychainDescriptor.name, () => {

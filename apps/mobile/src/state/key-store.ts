@@ -23,14 +23,19 @@ export function useKeyStore() {
   const bitcoinKeychains = useBitcoinKeychains();
 
   return {
-    async createNewSoftwareWallet() {
+    async createTemporarySoftwareWallet() {
       const mnemonic = generateMnemonic();
-      return this.restoreWalletFromMnemonic(mnemonic);
+      return mnemonic;
     },
 
-    async restoreWalletFromMnemonic(mnemonic: string) {
-      const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic);
-      await mnemonicStore(fingerprint).setMnemonic(mnemonic);
+    async createNewSoftwareWallet() {
+      const mnemonic = generateMnemonic();
+      return this.restoreWalletFromMnemonic(mnemonic, true);
+    },
+
+    async restoreWalletFromMnemonic(mnemonic: string, biometrics: boolean, passphrase?: string) {
+      const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
+      await mnemonicStore(fingerprint).setMnemonic({ mnemonic, biometrics, passphrase });
       const { keychains: bitcoin } = await this.deriveNextAccountBitcoinKeychainsFrom(fingerprint);
 
       wallets.add({
