@@ -40,7 +40,6 @@ export function Home() {
           contentInset={{ bottom: contentOffsetBottom }}
         >
           <MyAccounts />
-          <Box style={{ marginBottom: 40 }} />
           <Earn />
         </ScrollView>
       </Box>

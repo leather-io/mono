@@ -49,7 +49,7 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:77
+#: src/app/wallet/secure-your-wallet.tsx:86
 msgid "Enable device security"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:68
+#: src/app/wallet/secure-your-wallet.tsx:77
 msgid "Skip for now"
 msgstr ""
 

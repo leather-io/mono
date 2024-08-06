@@ -54,9 +54,9 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:77
+#: src/app/wallet/secure-your-wallet.tsx:86
 msgid "Enable device security"
-msgstr ""
+msgstr "Enable device security"
 
 #: src/app/waiting-list/waiting-list.tsx:243
 msgid "Follow us"
@@ -94,9 +94,9 @@ msgstr ""
 msgid "Send"
 msgstr "Send"
 
-#: src/app/wallet/secure-your-wallet.tsx:68
+#: src/app/wallet/secure-your-wallet.tsx:77
 msgid "Skip for now"
-msgstr ""
+msgstr "Skip for now"
 
 #: src/app/waiting-list/waiting-list.tsx:299
 msgid "Submit"

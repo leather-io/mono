@@ -32,8 +32,8 @@ export function deriveKeychainFromXpub(xpub: string) {
  * Gets keychain fingerprint directly from mnemonic. This is useful for
  * referencing a mnemonic safely by an identifier.
  */
-export async function getMnemonicRootKeyFingerprint(mnemonic: string) {
-  const keychain = deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic));
+export async function getMnemonicRootKeyFingerprint(mnemonic: string, passphrase?: string) {
+  const keychain = deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic, passphrase));
   return toHexString(keychain.fingerprint);
 }
 

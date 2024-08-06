@@ -20,7 +20,11 @@ export interface SoftwareWalletStore extends AbstractWalletStore {
   type: 'software';
 }
 
-export type WalletStore = SoftwareWalletStore; // Next HardwareWallet;
+export interface LedgerWalletStore extends AbstractWalletStore {
+  type: 'ledger';
+}
+
+export type WalletStore = SoftwareWalletStore | LedgerWalletStore; // Next HardwareWallet;
 
 const adapter = createEntityAdapter<WalletStore, string>({
   selectId: key => key.fingerprint,
