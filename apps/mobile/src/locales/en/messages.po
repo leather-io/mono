@@ -38,6 +38,10 @@ msgstr ""
 msgid "Add Wallet"
 msgstr "Add Wallet"
 
+#: src/app/wallet/recover-wallet.tsx:143
+msgid "Continue"
+msgstr "Continue"
+
 #: src/app/wallet/developer-console/index.tsx:63
 msgid "Create wallet"
 msgstr ""
@@ -66,6 +70,10 @@ msgstr ""
 msgid "getAddresses"
 msgstr ""
 
+#: src/app/wallet/recover-wallet.tsx:21
+msgid "Invalid words: {0}"
+msgstr "Invalid words: {0}"
+
 #: src/components/notify-user-modal.tsx:66
 msgid "Notify me when it's ready"
 msgstr ""
@@ -77,6 +85,10 @@ msgstr ""
 #: src/app/wallet/developer-console/index.tsx:60
 msgid "Page"
 msgstr ""
+
+#: src/app/wallet/recover-wallet.tsx:119
+msgid "Paste"
+msgstr "Paste"
 
 #: src/components/action-bar/container.tsx:174
 msgid "Receive"
@@ -98,6 +110,10 @@ msgstr "Send"
 msgid "Skip for now"
 msgstr "Skip for now"
 
+#: src/components/text-input.tsx:61
+msgid "Something is wrong!"
+msgstr "Something is wrong!"
+
 #: src/app/waiting-list/waiting-list.tsx:299
 msgid "Submit"
 msgstr ""
@@ -117,3 +133,7 @@ msgstr ""
 #: src/components/browser/browser-empty-state.tsx:149
 msgid "Type URL or search"
 msgstr ""
+
+#: src/app/wallet/recover-wallet.tsx:129
+msgid "Type your recovery phrase"
+msgstr "Type your recovery phrase"

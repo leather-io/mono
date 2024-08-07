@@ -106,6 +106,11 @@ export function AddWalletModal({ addWalletModalRef }: AddWalletModalBaseProps) {
     addWalletModalRef.current?.close();
   }, [router]);
 
+  const restoreWallet = useCallback(() => {
+    router.navigate(APP_ROUTES.WalletRecoverWallet);
+    addWalletModalRef.current?.close();
+  }, [router]);
+
   function onOpenNotificationsModal(option: OptionData) {
     setOptionData(option);
     notifyUserModalRef.current?.present();
@@ -119,6 +124,7 @@ export function AddWalletModal({ addWalletModalRef }: AddWalletModalBaseProps) {
       <AddWalletModalUI
         onOpenNotificationsModal={onOpenNotificationsModal}
         createWallet={createWallet}
+        restoreWallet={restoreWallet}
         addWalletModalRef={addWalletModalRef}
       />
 
@@ -132,19 +138,18 @@ export function AddWalletModal({ addWalletModalRef }: AddWalletModalBaseProps) {
 }
 interface AddWalletModalUIProps extends AddWalletModalBaseProps {
   createWallet(): unknown;
+  restoreWallet(): unknown;
   onOpenNotificationsModal(option: OptionData): unknown;
 }
 export function AddWalletModalUI({
   addWalletModalRef,
   createWallet,
+  restoreWallet,
   onOpenNotificationsModal,
 }: AddWalletModalUIProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
   const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
 
-  function restoreWallet() {
-    // TODO: navigate to restore wallet screen
-  }
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
   }
