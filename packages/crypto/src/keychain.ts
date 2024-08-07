@@ -1,5 +1,9 @@
 import { HDKey } from '@scure/bip32';
-import { mnemonicToSeed, generateMnemonic as scureGenerateMnemonic } from '@scure/bip39';
+import {
+  mnemonicToSeed,
+  generateMnemonic as scureGenerateMnemonic,
+  validateMnemonic,
+} from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 
 import { toHexString } from '@leather.io/utils';
@@ -46,4 +50,12 @@ export function deriveKeychainDescriptor(rootKeychain: HDKey, path: string) {
 
   const accountKeychain = rootKeychain.derive(path);
   return createExtendedPublicKeyDescriptor(keyOriginPath, accountKeychain.publicExtendedKey);
+}
+
+export function isValidMnemonicWord(word: string): boolean {
+  return wordlist.includes(word);
+}
+
+export function isValidMnemonic(mnemonic: string): boolean {
+  return validateMnemonic(mnemonic, wordlist);
 }

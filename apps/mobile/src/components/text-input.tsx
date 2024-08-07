@@ -1,6 +1,7 @@
-import { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { ComponentPropsWithoutRef, ReactNode, RefObject } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
+import { t } from '@lingui/macro';
 import {
   BaseTheme,
   LayoutProps,
@@ -19,9 +20,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Box, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
-
-import { TransText } from './trans-text';
+import { Box, Text, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 
@@ -50,11 +49,16 @@ function whenInputState<T>(inputState: InputState, match: Record<InputState, T>)
 export function TextInput({
   inputState,
   Icon,
+  ref,
+  errorMessage,
   ...rest
 }: Props & {
   inputState: InputState;
   Icon?: ReactNode;
+  ref?: RefObject<RNTextInput>;
+  errorMessage?: string;
 }) {
+  const _errorMessage = errorMessage ?? t`Something is wrong!`;
   const theme = useTheme<Theme>();
   const props = useRestyle(composedRestyleFunction, rest);
 
@@ -78,10 +82,10 @@ export function TextInput({
         {...props}
       />
       {inputState === 'error' ? (
-        <Box position="absolute" bottom={5}>
-          <TransText color="base.red.action-primary-default" variant="caption01">
-            Something is wrong!
-          </TransText>
+        <Box position="absolute" style={{ bottom: -30 }}>
+          <Text color="base.red.action-primary-default" variant="caption01">
+            {_errorMessage}
+          </Text>
         </Box>
       ) : null}
     </Box>

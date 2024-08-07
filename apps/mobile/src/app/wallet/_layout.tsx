@@ -62,6 +62,7 @@ export default function StackLayout() {
       <Stack.Screen name="browser" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ header: () => NavigationHeaderHome }} />
       <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
+      <Stack.Screen name="recover-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings }} />
       <Stack.Screen
