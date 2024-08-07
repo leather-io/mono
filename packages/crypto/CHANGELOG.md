@@ -6,6 +6,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.11.1
 
+## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.1.1...@leather.io/crypto-v1.2.0) (2024-08-07)
+
+
+### Features
+
+* add wallet functionality ([22328de](https://github.com/leather-io/mono/commit/22328de6810867b6cf3d57570357eb5ed1266ebf))
+* restore wallet ([544f7e5](https://github.com/leather-io/mono/commit/544f7e59bb7c75c0581105bf1ad2bd60000836e6))
+
 ## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.0.4...@leather.io/crypto-v1.1.0) (2024-07-29)
 
 

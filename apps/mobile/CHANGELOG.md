@@ -153,6 +153,31 @@
   * dependencies
     * @leather.io/ui bumped to 1.9.2
 
+## [1.20.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.19.0...@leather.io/mobile-v1.20.0) (2024-08-07)
+
+
+### Features
+
+* add wallet functionality ([22328de](https://github.com/leather-io/mono/commit/22328de6810867b6cf3d57570357eb5ed1266ebf))
+* restore wallet ([544f7e5](https://github.com/leather-io/mono/commit/544f7e59bb7c75c0581105bf1ad2bd60000836e6))
+* settings page ([378c64b](https://github.com/leather-io/mono/commit/378c64b6e1b1e3fbc8f3d1330317f340ef01ab05))
+
+
+### Bug Fixes
+
+* add action bar to home screen ([b5a1ccf](https://github.com/leather-io/mono/commit/b5a1ccfb2c635971ac6b29ee27d287c75372d775))
+* delete test scheme ([93220f1](https://github.com/leather-io/mono/commit/93220f1bbf64a2e689aaeddddc9b7fc59e01cc5a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.2
+    * @leather.io/crypto bumped to 1.2.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.10.2
+
 ## [1.19.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.18.0...@leather.io/mobile-v1.19.0) (2024-08-05)
 
 
