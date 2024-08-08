@@ -87,6 +87,9 @@ jobs:
       - name: 🛫 Prepare for takeoff! 🛫
         run: |
           cd apps/mobile
+          # No wait on simulator version build of the app
+          eas build --platform ios --profile=simulator --non-interactive --no-wait
+          # Release version of the app, we should wait for it to see the result
           eas build --platform ios --profile=production --non-interactive --auto-submit
         env:
           EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
