@@ -12,7 +12,7 @@ export function SplashScreenGuard({ children }: SplashScreenGuardProps) {
 
   if (!animationFinished) {
     return (
-      <Box backgroundColor="base.ink.component-background-default" flex={1}>
+      <Box backgroundColor="ink.component-background-default" flex={1}>
         <LeatherSplash onAnimationEnd={() => setAnimationFinished(true)} />
       </Box>
     );

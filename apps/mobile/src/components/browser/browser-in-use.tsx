@@ -77,18 +77,18 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
           justifyContent="center"
           alignItems="flex-start"
         >
-          <Cross height={24} width={24} color={theme.colors['base.ink.text-primary']} />
+          <Cross height={24} width={24} color={theme.colors['ink.text-primary']} />
         </TouchableOpacity>
         <Box flex={999} p="5" justifyContent="center" alignItems="center">
-          <Text variant="label02" color="base.ink.text-primary" numberOfLines={1}>
+          <Text variant="label02" color="ink.text-primary" numberOfLines={1}>
             {navState?.title}
           </Text>
-          <Text variant="label02" color="base.ink.text-subdued" numberOfLines={1}>
+          <Text variant="label02" color="ink.text-subdued" numberOfLines={1}>
             {navState?.url}
           </Text>
         </Box>
         <Box flex={1} p="5" justifyContent="center" alignItems="flex-end">
-          <Box height={40} width={40} borderRadius="round" bg="base.yellow.border" />
+          <Box height={40} width={40} borderRadius="round" bg="yellow.border" />
         </Box>
       </Box>
       <WebView
@@ -105,7 +105,7 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
         style={{ paddingBottom: theme.spacing[3] + bottom, paddingTop: theme.spacing[3] }}
         px="5"
         flexDirection="row"
-        bg="base.ink.background-primary"
+        bg="ink.background-primary"
         justifyContent="space-between"
       >
         <TouchableOpacity

@@ -9,6 +9,7 @@ import { PressableListItem, TitleListItem } from '@/components/developer-console
 import { useToastContext } from '@/components/toast/toast-context';
 import { APP_ROUTES } from '@/constants';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
+import { useSettings } from '@/state/settings/settings.slice';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -29,6 +30,8 @@ export default function DeveloperConsoleScreen() {
     cleanupNotificationReceivedListener,
   } = usePushNotifications();
 
+  const settings = useSettings();
+
   useEffect(() => {
     setNotificationReceivedListener(notification => {
       const notificationText =
@@ -44,8 +47,9 @@ export default function DeveloperConsoleScreen() {
       cleanupNotificationReceivedListener();
     };
   }, []);
+
   return (
-    <Box flex={1} backgroundColor="base.ink.background-primary">
+    <Box flex={1} backgroundColor="ink.background-primary">
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],
@@ -58,6 +62,10 @@ export default function DeveloperConsoleScreen() {
           <TitleListItem title={t`Open dummy page`} />
           <PressableListItem title={t`Drawer`} />
           <PressableListItem title={t`Page`} />
+          <PressableListItem
+            title={t`Toggle theme` + ': Current ' + settings.theme}
+            onPress={() => settings.toggleTheme()}
+          />
           <PressableListItem
             onPress={() => addWalletModalRef.current?.present()}
             title={t`Create wallet`}

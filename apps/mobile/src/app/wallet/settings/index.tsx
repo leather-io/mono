@@ -10,7 +10,7 @@ export default function SettingsScreen() {
   const theme = useTheme<Theme>();
 
   return (
-    <Box flex={1} backgroundColor="base.ink.background-primary">
+    <Box flex={1} backgroundColor="ink.background-primary">
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],

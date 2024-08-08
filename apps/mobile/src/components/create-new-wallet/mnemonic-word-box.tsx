@@ -8,14 +8,9 @@ interface MnemonicWordBoxProps {
 export function MnemonicWordBox({ wordIdx, word }: MnemonicWordBoxProps) {
   return (
     <Box flexGrow={1}>
-      <Box
-        flexDirection="row"
-        borderWidth={1}
-        borderColor="base.ink.border-default"
-        borderRadius="xs"
-      >
+      <Box flexDirection="row" borderWidth={1} borderColor="ink.border-default" borderRadius="xs">
         <Box width={32} height={24} justifyContent="center" alignItems="center">
-          <Text variant="label03" color="base.ink.text-subdued">
+          <Text variant="label03" color="ink.text-subdued">
             {wordIdx}
           </Text>
         </Box>
@@ -24,7 +19,7 @@ export function MnemonicWordBox({ wordIdx, word }: MnemonicWordBoxProps) {
           justifyContent="center"
           alignItems="center"
           borderLeftWidth={1}
-          borderColor="base.ink.border-default"
+          borderColor="ink.border-default"
         >
           <Text variant="label03">{word}</Text>
         </Box>

@@ -207,27 +207,27 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
     // so that we can change to a success state with animation
     switch (getButtonState()) {
       case 'default': {
-        buttonBackgroundColor.value = theme.colors['base.ink.text-primary'];
+        buttonBackgroundColor.value = theme.colors['ink.text-primary'];
         break;
       }
       case 'disabled': {
-        buttonBackgroundColor.value = theme.colors['base.ink.background-secondary'];
+        buttonBackgroundColor.value = theme.colors['ink.background-secondary'];
         break;
       }
       case 'success': {
-        buttonBackgroundColor.value = withTiming(theme.colors['base.green.background-primary']);
+        buttonBackgroundColor.value = withTiming(theme.colors['green.background-primary']);
         break;
       }
       case 'outline': {
-        buttonBackgroundColor.value = theme.colors['base.ink.background-primary'];
+        buttonBackgroundColor.value = theme.colors['ink.background-primary'];
         break;
       }
     }
   }, [getButtonState]);
 
   const submittedComponent = (
-    <Box backgroundColor="base.ink.background-primary" padding="6">
-      <TransText variant="body01" color="base.ink.text-subdued" paddingBottom="5">
+    <Box backgroundColor="ink.background-primary" padding="6">
+      <TransText variant="body01" color="ink.text-subdued" paddingBottom="5">
         Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the
         meantime, please{' '}
         <Text
@@ -259,8 +259,8 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
   );
 
   const submissionComponent = (
-    <Box backgroundColor="base.ink.background-primary" padding="6">
-      <TransText variant="body01" color="base.ink.text-subdued" paddingBottom="5">
+    <Box backgroundColor="ink.background-primary" padding="6">
+      <TransText variant="body01" color="ink.text-subdued" paddingBottom="5">
         Stay in the loop and be the first one to hear about new developments
       </TransText>
 
@@ -306,7 +306,7 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
   );
 
   return (
-    <Box flex={1} backgroundColor="dark.ink.background-secondary">
+    <Box flex={1} backgroundColor="ink.background-secondary">
       <SafeAreaView style={{ flex: 1 }}>
         <Animated.View style={[{ flex: 1 }, rootStyle]}>
           <Box paddingHorizontal="5" paddingTop="5">
@@ -323,18 +323,18 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
             </Box>
             <Trans>
               <Animated.View style={title1Style}>
-                <TransText variant="heading02" color="dark.ink.text-primary">
+                <TransText variant="heading02" color="ink.text-primary">
                   Bitcoin for
                 </TransText>
               </Animated.View>
               <Animated.View style={title2Style}>
-                <TransText variant="heading02" color="dark.ink.text-primary">
+                <TransText variant="heading02" color="ink.text-primary">
                   the rest of us
                 </TransText>
               </Animated.View>
             </Trans>
             <Animated.View style={subtitleStyle}>
-              <TransText variant="heading05" color="dark.ink.text-primary" paddingTop="5">
+              <TransText variant="heading05" color="ink.text-primary" paddingTop="5">
                 Leather is the only wallet you need to tap into the multilayered Bitcoin economy
               </TransText>
             </Animated.View>

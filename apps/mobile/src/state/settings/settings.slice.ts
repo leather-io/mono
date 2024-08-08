@@ -40,12 +40,12 @@ export const settingsSlice = createSlice({
   extraReducers: builder => builder.addCase(...handleAppResetWithState(initialState)),
 });
 
-const settingsSelector = (state: RootState) => state.settings;
+const selectSettings = (state: RootState) => state.settings;
 
-const theme = createSelector(settingsSelector, state => state.theme);
+const selectTheme = createSelector(selectSettings, state => state.theme);
 
 export const selectNetwork = createSelector(
-  settingsSelector,
+  selectSettings,
   state => defaultNetworksKeyedById[state.network]
 );
 
@@ -54,10 +54,16 @@ export const { userChangedTheme, userChangedNetwork } = settingsSlice.actions;
 export function useSettings() {
   const dispatch = useAppDispatch();
   const network = useSelector(selectNetwork);
+  const theme = useSelector(selectTheme);
   return {
-    theme: useSelector(theme),
+    theme,
     changeAppTheme(theme: Theme) {
       dispatch(userChangedTheme(theme));
+    },
+    toggleTheme() {
+      dispatch(
+        theme === 'light' ? dispatch(userChangedTheme('dark')) : dispatch(userChangedTheme('light'))
+      );
     },
     network,
     changeAppNetwork(network: DefaultNetworkConfigurations) {

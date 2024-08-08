@@ -92,7 +92,7 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
             paddingHorizontal: theme.spacing[5],
             paddingVertical: theme.spacing[2],
             height: '100%',
-            shadowColor: theme.colors['base.ink.background-overlay'],
+            shadowColor: theme.colors['ink.background-overlay'],
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.1,
             shadowRadius: 5,

@@ -83,7 +83,7 @@ export default function RecoverWallet() {
   return (
     <Box
       flex={1}
-      backgroundColor="base.ink.background-primary"
+      backgroundColor="ink.background-primary"
       px="5"
       justifyContent="space-between"
       style={{ paddingBottom: bottom + theme.spacing['5'] }}
@@ -100,11 +100,7 @@ export default function RecoverWallet() {
             zIndex={10}
             top={theme.spacing['1']}
           >
-            <CircleQuestionMark
-              height={16}
-              width={16}
-              color={theme.colors['base.ink.text-primary']}
-            />
+            <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
           </TouchableOpacity>
           <TransText variant="heading03">ENTER YOUR SECRET KEY</TransText>
           <TransText variant="label01">

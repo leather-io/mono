@@ -65,25 +65,25 @@ export function TextInput({
   const borderColor = whenInputState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
     inputState,
     {
-      default: 'base.ink.border-default',
-      focused: 'base.ink.action-primary-default',
-      error: 'base.red.action-primary-default',
+      default: 'ink.border-default',
+      focused: 'ink.action-primary-default',
+      error: 'red.action-primary-default',
     }
   );
 
   return (
     <Box>
       <UITextInput
-        placeholderTextColor={theme.colors['base.ink.text-subdued']}
+        placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}
         borderColor={borderColor}
         p="4"
-        color="base.ink.action-primary-default"
+        color="ink.action-primary-default"
         {...props}
       />
       {inputState === 'error' ? (
         <Box position="absolute" style={{ bottom: -30 }}>
-          <Text color="base.red.action-primary-default" variant="caption01">
+          <Text color="red.action-primary-default" variant="caption01">
             {_errorMessage}
           </Text>
         </Box>

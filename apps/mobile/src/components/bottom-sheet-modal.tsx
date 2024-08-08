@@ -93,7 +93,7 @@ export const Modal = forwardRef<
         animatedPosition={internalAnimatedPosition}
         handleComponent={() => (
           <Box position="absolute" top={-12} width="100%" alignItems="center">
-            <Box height={6} width={60} borderRadius="round" bg="base.green.background-primary" />
+            <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
           </Box>
         )}
       >

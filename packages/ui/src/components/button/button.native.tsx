@@ -23,17 +23,17 @@ function getColors(
   switch (variant) {
     case 'solid':
       return {
-        backgroundColor: 'dark.ink.action-primary-default',
-        textColor: 'dark.ink.background-primary',
+        backgroundColor: 'ink.action-primary-default',
+        textColor: 'ink.background-primary',
       } as const;
     case 'ghost':
       return {
-        textColor: 'dark.ink.text-primary',
+        textColor: 'ink.text-primary',
       } as const;
     case 'outline':
       return {
-        borderColor: 'dark.ink.text-primary',
-        textColor: 'dark.ink.text-primary',
+        borderColor: 'ink.text-primary',
+        textColor: 'ink.text-primary',
       } as const;
   }
 }

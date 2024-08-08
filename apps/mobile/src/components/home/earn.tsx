@@ -15,7 +15,7 @@ export function Earn() {
         justifyContent="space-between"
         p="5"
         borderRadius="xs"
-        backgroundColor="base.ink.background-secondary"
+        backgroundColor="ink.background-secondary"
         height={148}
       >
         <Box flexDirection="column">

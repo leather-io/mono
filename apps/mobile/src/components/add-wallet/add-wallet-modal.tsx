@@ -45,12 +45,12 @@ export function AddWalletListItem({
   return (
     <TouchableOpacity onPress={onPress} py="3" flexDirection="row" gap="4" alignItems="center">
       {Icon && (
-        <Box flexDirection="row" p="2" bg="base.ink.background-secondary" borderRadius="round">
+        <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
           <Icon
             color={
               isFeatureUnavailable
-                ? theme.colors['base.ink.text-subdued']
-                : theme.colors['base.ink.text-primary']
+                ? theme.colors['ink.text-subdued']
+                : theme.colors['ink.text-primary']
             }
             width={24}
             height={24}
@@ -60,7 +60,7 @@ export function AddWalletListItem({
       <Box flexDirection="column">
         <Text variant="label02">{title}</Text>
         {subtitle && (
-          <Text color="base.ink.text-subdued" variant="label03">
+          <Text color="ink.text-subdued" variant="label03">
             {subtitle}
           </Text>
         )}
@@ -162,7 +162,7 @@ export function AddWalletModalUI({
   return (
     <Modal animatedPosition={animatedPosition} ref={addWalletModalRef}>
       <AnimatedBox style={animatedStyle}>
-        <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="base.ink.text-primary">
+        <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
           <Image
             style={{ height: '100%' }}
             contentFit="cover"

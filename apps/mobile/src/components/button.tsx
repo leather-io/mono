@@ -71,21 +71,21 @@ export const Button = forwardRef(
     const bg = whenButtonState<
       ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
     >(buttonState, {
-      default: 'base.ink.text-primary',
-      disabled: 'base.ink.background-secondary',
-      success: 'base.green.background-primary',
-      outline: 'base.ink.background-primary',
+      default: 'ink.text-primary',
+      disabled: 'ink.background-secondary',
+      success: 'green.background-primary',
+      outline: 'ink.background-primary',
       ghost: undefined,
     });
 
     const textColor = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
       buttonState,
       {
-        default: 'base.ink.background-primary',
-        disabled: 'base.ink.text-non-interactive',
-        success: 'base.green.action-primary-default',
-        outline: 'base.ink.action-primary-default',
-        ghost: 'base.ink.text-primary',
+        default: 'ink.background-primary',
+        disabled: 'ink.text-non-interactive',
+        success: 'green.action-primary-default',
+        outline: 'ink.action-primary-default',
+        ghost: 'ink.text-primary',
       }
     );
 
@@ -95,7 +95,7 @@ export const Button = forwardRef(
       default: undefined,
       disabled: undefined,
       success: undefined,
-      outline: 'base.ink.action-primary-default',
+      outline: 'ink.action-primary-default',
       ghost: undefined,
     });
 

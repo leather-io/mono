@@ -14,7 +14,7 @@ interface SimpleHeaderProps {
 export function SimpleHeader(props: SimpleHeaderProps) {
   return (
     <Box
-      bg="base.ink.background-primary"
+      bg="ink.background-primary"
       style={{
         width: '100%',
         paddingTop: props.insets.top,

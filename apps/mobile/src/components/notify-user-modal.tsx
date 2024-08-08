@@ -53,7 +53,7 @@ export function NotifyUserModal({
           zIndex={10}
           position="absolute"
         >
-          <Cross height={24} width={24} color={theme.colors['base.ink.text-primary']} />
+          <Cross height={24} width={24} color={theme.colors['ink.text-primary']} />
         </TouchableOpacity>
         <Box gap="4">
           <TransText variant="heading05">Notify me when ready</TransText>
