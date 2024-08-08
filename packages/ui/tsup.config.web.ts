@@ -6,7 +6,7 @@ export default defineConfig({
   tsconfig: 'tsconfig.web.json',
   outDir: 'dist-web/',
   dts: true,
-  clean: true,
+  clean: false,
   minify: true,
   minifyIdentifiers: true,
   minifySyntax: true,

@@ -13,7 +13,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "build:watch": "tsup --watch",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "lint": "eslint . --fix --ignore-path ../../.eslintignore",

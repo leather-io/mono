@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "build:watch": "tsup --watch",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "prepublish": "pnpm build",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
