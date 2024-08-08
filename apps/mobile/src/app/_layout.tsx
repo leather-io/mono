@@ -1,4 +1,4 @@
-import { StatusBar } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -8,6 +8,8 @@ import { ToastWrapper } from '@/components/toast/toast-context';
 import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/state';
+import { useSettings } from '@/state/settings/settings.slice';
+import { HasChildren } from '@/utils/types';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -15,7 +17,7 @@ import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { Box, ThemeProvider, useLoadFonts } from '@leather.io/ui/native';
+import { Box, ThemeProvider as LeatherThemeProvider, useLoadFonts } from '@leather.io/ui/native';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -59,9 +61,16 @@ export default function RootLayout() {
   );
 }
 
+function ThemeProvider({ children }: HasChildren) {
+  const settings = useSettings();
+  const systemTheme = useColorScheme();
+  const theme = settings.theme === 'system' ? systemTheme : settings.theme;
+  return <LeatherThemeProvider theme={theme ?? 'light'}>{children}</LeatherThemeProvider>;
+}
+
 function AppRouter() {
   return (
-    <Box backgroundColor="dark.ink.background-secondary" flex={1}>
+    <Box backgroundColor="ink.background-secondary" flex={1}>
       <StatusBar barStyle="light-content" />
       <Slot />
     </Box>

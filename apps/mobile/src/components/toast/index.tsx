@@ -22,11 +22,7 @@ function getIcon(type: ToastType, theme: Theme) {
   switch (type) {
     case 'success':
       return (
-        <CheckmarkCircle
-          height={24}
-          width={24}
-          color={theme.colors['base.ink.background-primary']}
-        />
+        <CheckmarkCircle height={24} width={24} color={theme.colors['ink.background-primary']} />
       );
   }
 }
@@ -36,7 +32,7 @@ function getBackground(
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (type) {
     case 'success':
-      return 'base.ink.text-primary';
+      return 'ink.text-primary';
   }
 }
 export function Toast({ toastRef }: ToastProps) {
@@ -93,7 +89,7 @@ export function Toast({ toastRef }: ToastProps) {
         alignItems="center"
       >
         {getIcon(toastData.type, theme)}
-        <Text variant="label02" color="base.ink.background-primary">
+        <Text variant="label02" color="ink.background-primary">
           {toastData.title}
         </Text>
       </AnimatedBox>

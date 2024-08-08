@@ -14,7 +14,7 @@ export default function SwapScreen() {
       <TouchableOpacity
         onPress={() => router.navigate(APP_ROUTES.WalletBrowser)}
         p="4"
-        bg="base.ink.background-primary"
+        bg="ink.background-primary"
         borderRadius="sm"
       >
         <TransText>navigate to browser</TransText>

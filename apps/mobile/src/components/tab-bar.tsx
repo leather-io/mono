@@ -3,10 +3,10 @@ import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 export const TAB_BAR_HEIGHT = 60;
 
 function getBorderColor(isActive: boolean) {
-  return isActive ? 'base.ink.action-primary-default' : 'base.ink.border-default';
+  return isActive ? 'ink.action-primary-default' : 'ink.border-default';
 }
 function getTextColor(isActive: boolean) {
-  return isActive ? 'base.ink.text-primary' : 'base.ink.text-subdued';
+  return isActive ? 'ink.text-primary' : 'ink.text-subdued';
 }
 interface Tab {
   onPress(): void;

@@ -50,7 +50,7 @@ export default function CreateNewWallet() {
   return (
     <Box
       flex={1}
-      backgroundColor="base.ink.background-primary"
+      backgroundColor="ink.background-primary"
       px="5"
       justifyContent="space-between"
       style={{ paddingBottom: bottom + theme.spacing['5'] }}
@@ -67,11 +67,7 @@ export default function CreateNewWallet() {
             zIndex={10}
             top={theme.spacing['1']}
           >
-            <CircleQuestionMark
-              height={16}
-              width={16}
-              color={theme.colors['base.ink.text-primary']}
-            />
+            <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
           </TouchableOpacity>
           <TransText variant="heading03">BACK UP YOUR SECRET KEY</TransText>
           <TransText variant="label01">
@@ -101,10 +97,10 @@ export default function CreateNewWallet() {
                 alignItems="center"
                 gap="2"
               >
-                <Pointer height={24} width={24} color={theme.colors['base.ink.text-primary']} />
+                <Pointer height={24} width={24} color={theme.colors['ink.text-primary']} />
                 <Box>
                   <TransText variant="label02">Tap to view Secret Key</TransText>
-                  <TransText variant="label02" color="base.red.action-primary-default">
+                  <TransText variant="label02" color="red.action-primary-default">
                     For your eyes only
                   </TransText>
                 </Box>
@@ -117,11 +113,11 @@ export default function CreateNewWallet() {
             mt="3"
             flexDirection="row"
             gap="4"
-            borderColor="base.ink.text-subdued"
+            borderColor="ink.text-subdued"
             borderRadius="xs"
             borderWidth={1}
           >
-            <GraduateCap height={24} width={24} color={theme.colors['base.ink.text-subdued']} />
+            <GraduateCap height={24} width={24} color={theme.colors['ink.text-subdued']} />
             <TransText
               style={{
                 flexShrink: 1,
@@ -129,7 +125,7 @@ export default function CreateNewWallet() {
                 flexWrap: 'wrap',
               }}
               variant="label03"
-              color="base.ink.text-subdued"
+              color="ink.text-subdued"
             >
               We recommend writing these words in numbered order on a piece of paper and storing it
               in a safe place.{' '}
@@ -138,7 +134,7 @@ export default function CreateNewWallet() {
                   // TODO: navigate to a website
                 }}
                 variant="label03"
-                color="base.ink.text-subdued"
+                color="ink.text-subdued"
                 textDecorationLine="underline"
               >
                 Learn more

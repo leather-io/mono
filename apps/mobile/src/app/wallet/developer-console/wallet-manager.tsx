@@ -20,7 +20,7 @@ export default function WalletManager() {
   const settings = useSettings();
   const [generatingWallet, setGeneratingWallet] = useState(false);
   return (
-    <Box flex={1} backgroundColor="base.ink.background-primary">
+    <Box flex={1} backgroundColor="ink.background-primary">
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],

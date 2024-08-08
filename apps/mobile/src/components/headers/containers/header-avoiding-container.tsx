@@ -11,7 +11,7 @@ export function HeaderAvoidingContainer(props: PropsWithoutRef<Parameters<typeof
   return (
     <Box
       flex={1}
-      backgroundColor="base.ink.background-primary"
+      backgroundColor="ink.background-primary"
       style={{ paddingTop: contentOffsetTop }}
       {...props}
     />

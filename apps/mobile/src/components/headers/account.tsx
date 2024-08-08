@@ -14,7 +14,7 @@ export function AccountHeader({ onPress }: { onPress?(): void }) {
       alignItems="center"
       gap="2"
     >
-      <Box borderRadius="round" p="1" bg="base.blue.background-secondary">
+      <Box borderRadius="round" p="1" bg="blue.background-secondary">
         <EmojiSmile width={24} height={24} />
       </Box>
       <TransText variant="heading05">Account 1</TransText>

@@ -24,7 +24,7 @@ export function Home() {
 
   return (
     <ActionBarContext.Provider value={{ ref: actionBarRef }}>
-      <Box flex={1} bg="base.ink.background-primary">
+      <Box flex={1} bg="ink.background-primary">
         <ScrollView
           onScroll={createOnScrollHandler({
             actionBarRef,

@@ -24,7 +24,7 @@ export function AccountCard({
       height={180}
       p="5"
       borderRadius="sm"
-      borderColor="base.ink.border-transparent"
+      borderColor="ink.border-transparent"
       borderWidth={1}
       alignItems="flex-start"
       justifyContent="space-between"
@@ -33,23 +33,23 @@ export function AccountCard({
         <Box
           position="absolute"
           p="1"
-          borderColor="base.ink.border-transparent"
+          borderColor="ink.border-transparent"
           borderRadius="xs"
           borderWidth={1}
           right={theme.spacing[5]}
           top={theme.spacing[5]}
         >
-          <TransText variant="label03" color="base.ink.text-subdued">
+          <TransText variant="label03" color="ink.text-subdued">
             Ledger
           </TransText>
         </Box>
       )}
-      <Box p="2" borderRadius="round" backgroundColor="base.ink.background-secondary">
+      <Box p="2" borderRadius="round" backgroundColor="ink.background-secondary">
         <Chevron width={32} height={32} />
       </Box>
       <Box gap="1">
         <TransText variant="label02">$0</TransText>
-        <Text variant="label02" color="base.ink.text-subdued">
+        <Text variant="label02" color="ink.text-subdued">
           {fingerprint}
         </Text>
       </Box>

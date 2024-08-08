@@ -78,7 +78,7 @@ function AppWidget({ onPress, shortcut }: { shortcut: Shortcut; onPress: () => v
       <Box justifyContent="center" gap="1">
         <Text variant="label02">{shortcut.title}</Text>
         {shortcut.description ? (
-          <Text variant="label03" color="base.ink.text-subdued">
+          <Text variant="label03" color="ink.text-subdued">
             {shortcut.description}
           </Text>
         ) : null}
@@ -120,23 +120,23 @@ export function BrowserEmptyState({
   }
 
   return (
-    <Box flex={1} backgroundColor="base.ink.background-primary" style={{ paddingTop: top }}>
+    <Box flex={1} backgroundColor="ink.background-primary" style={{ paddingTop: top }}>
       <Box px="4" py="2" flexDirection="row">
         <Box
           py="2"
           px="2"
           flexDirection="row"
-          bg="base.ink.background-primary"
+          bg="ink.background-primary"
           borderRadius="sm"
-          shadowColor="base.ink.background-secondary"
+          shadowColor="ink.background-secondary"
           shadowOffset={{ width: 0, height: 2 }}
           shadowOpacity={0.1}
           shadowRadius={5}
-          borderColor="base.ink.border-transparent"
+          borderColor="ink.border-transparent"
           borderWidth={1}
           flex={1}
         >
-          <Box height={40} width={40} borderRadius="round" bg="base.yellow.border" />
+          <Box height={40} width={40} borderRadius="round" bg="yellow.border" />
           <TextInput
             keyboardType="web-search"
             textContentType="URL"
