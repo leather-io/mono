@@ -153,6 +153,25 @@
   * dependencies
     * @leather.io/ui bumped to 1.9.2
 
+## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.20.0...@leather.io/mobile-v1.21.0) (2024-08-08)
+
+
+### Features
+
+* **stacks:** key generation ([df20f5a](https://github.com/leather-io/mono/commit/df20f5ac4b9453821a2b3c3b48307f97fab496fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.3
+    * @leather.io/crypto bumped to 1.3.0
+    * @leather.io/ui bumped to 1.10.1
+    * @leather.io/utils bumped to 0.12.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.10.3
+
 ## [1.20.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.19.0...@leather.io/mobile-v1.20.0) (2024-08-07)
 
 

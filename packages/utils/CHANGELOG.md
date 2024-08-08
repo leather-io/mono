@@ -72,6 +72,13 @@
     * @leather.io/models bumped to 0.11.0
     * @leather.io/rpc bumped to 2.1.2
 
+## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.11.1...@leather.io/utils-v0.12.0) (2024-08-08)
+
+
+### Features
+
+* **stacks:** key generation ([df20f5a](https://github.com/leather-io/mono/commit/df20f5ac4b9453821a2b3c3b48307f97fab496fe))
+
 ## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.10.3...@leather.io/utils-v0.11.0) (2024-07-29)
 
 

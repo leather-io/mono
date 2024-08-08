@@ -6,6 +6,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.11.1
 
+## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.2.0...@leather.io/crypto-v1.3.0) (2024-08-08)
+
+
+### Features
+
+* **stacks:** key generation ([df20f5a](https://github.com/leather-io/mono/commit/df20f5ac4b9453821a2b3c3b48307f97fab496fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.12.0
+
 ## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.1.1...@leather.io/crypto-v1.2.0) (2024-08-07)
 
 
