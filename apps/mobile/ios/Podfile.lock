@@ -1617,7 +1617,7 @@ DEPENDENCIES:
   - "EXJSONUtils (from `../../../node_modules/.pnpm/expo-json-utils@0.13.1/node_modules/expo-json-utils/ios`)"
   - "EXManifests (from `../../../node_modules/.pnpm/expo-manifests@0.14.3_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.2_xbgcs6ja7wjrse2ftk7bmhqbly/node_modules/expo-manifests/ios`)"
   - "EXNotifications (from `../../../node_modules/.pnpm/expo-notifications@0.28.14_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+cor_ej2aa3lih5ql5gffswpxhryuzm/node_modules/expo-notifications/ios`)"
-  - "Expo (from `../../../node_modules/.pnpm/expo@51.0.8_heezxmajl46nnun76fjuasouii/node_modules/expo`)"
+  - "Expo (from `../../../node_modules/.pnpm/expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6__@react-native+ass_ngpiyxlr7brqfnmecammoxtkty/node_modules/expo`)"
   - "expo-dev-client (from `../../../node_modules/.pnpm/expo-dev-client@4.0.20_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7._rifmqb5cfjg5ul6bvzvo6g2p7y/node_modules/expo-dev-client/ios`)"
   - "expo-dev-launcher (from `../../../node_modules/.pnpm/expo-dev-launcher@4.0.22_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@_h7jdwexftuuwwjdqx7bo7dmkfy/node_modules/expo-dev-launcher`)"
   - "expo-dev-menu (from `../../../node_modules/.pnpm/expo-dev-menu@5.0.16_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24_dzf7zr72pqbtywnlxzt5pcpwce/node_modules/expo-dev-menu`)"
@@ -1627,17 +1627,17 @@ DEPENDENCIES:
   - "ExpoClipboard (from `../../../node_modules/.pnpm/expo-clipboard@6.0.3_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24_zz2em3aq3c366tzslsqmoddtmi/node_modules/expo-clipboard/ios`)"
   - "ExpoCrypto (from `../../../node_modules/.pnpm/expo-crypto@13.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6_uf6c4hhegk6m477jccjaylbjmq/node_modules/expo-crypto/ios`)"
   - "ExpoDevice (from `../../../node_modules/.pnpm/expo-device@6.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6__lkp72haiixegm66577ibo4unym/node_modules/expo-device/ios`)"
-  - "ExpoFileSystem (from `../../../node_modules/.pnpm/expo-file-system@17.0.1_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7_rwmhpp3p2xe5odxa4346x5kesm/node_modules/expo-file-system/ios`)"
+  - "ExpoFileSystem (from `../../../node_modules/.pnpm/expo-file-system@17.0.1_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7_6hksaogbbc3ep5obmcfw7lddaq/node_modules/expo-file-system/ios`)"
   - "ExpoFont (from `../../../node_modules/.pnpm/expo-font@12.0.5_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6___d6n2efb3v3w2hpfy4kvjkjd7hu/node_modules/expo-font/ios`)"
-  - "ExpoHead (from `../../../node_modules/.pnpm/expo-router@3.5.14_3sqe6ggvhu3po4nkx262l4l7py/node_modules/expo-router/ios`)"
+  - "ExpoHead (from `../../../node_modules/.pnpm/expo-router@3.5.14_ysrh2nitbreg53giyigfjlreim/node_modules/expo-router/ios`)"
   - "ExpoImage (from `../../../node_modules/.pnpm/expo-image@1.12.9_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6__pmcr3jeee7zxzl2mfne7zefiz4/node_modules/expo-image/ios`)"
-  - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7._x7xzybrjlgwqedtww3w6hoxhpq/node_modules/expo-keep-awake/ios`)"
+  - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7._ynw2iqnrh5j2lg34m2tsm7vufa/node_modules/expo-keep-awake/ios`)"
   - "ExpoLocalAuthentication (from `../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@bab_jowjhvrs2oe6pszhq2wxnu7azq/node_modules/expo-local-authentication/ios`)"
   - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.11/node_modules/expo-modules-core`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@13.0.1_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.8_@babel+core@7.24.6_jz7aaw3odr3ykyagrfwwwnab24/node_modules/expo-secure-store/ios`)"
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.4_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24_5zhd55xgbknoq722clqv7of7ki/node_modules/expo-system-ui/ios`)"
   - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7_qe6yd6cwa7fiwctjpbh42ulibq/node_modules/expo-web-browser/ios`)"
-  - "EXSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.8_@babel+core@7.24.6_@bab_gzhqxla2cztn3evycjilh3whra/node_modules/expo-splash-screen/ios`)"
+  - "EXSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.8_@babel+core@7.24.6_@bab_gb6ehrs5ge5uykbdodnena6nhu/node_modules/expo-splash-screen/ios`)"
   - "EXUpdatesInterface (from `../../../node_modules/.pnpm/expo-updates-interface@0.16.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+_64hqcaxw7d775xl7hbr5wk2xr4/node_modules/expo-updates-interface/ios`)"
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
@@ -1731,7 +1731,7 @@ EXTERNAL SOURCES:
   EXNotifications:
     :path: "../../../node_modules/.pnpm/expo-notifications@0.28.14_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+cor_ej2aa3lih5ql5gffswpxhryuzm/node_modules/expo-notifications/ios"
   Expo:
-    :path: "../../../node_modules/.pnpm/expo@51.0.8_heezxmajl46nnun76fjuasouii/node_modules/expo"
+    :path: "../../../node_modules/.pnpm/expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6__@react-native+ass_ngpiyxlr7brqfnmecammoxtkty/node_modules/expo"
   expo-dev-client:
     :path: "../../../node_modules/.pnpm/expo-dev-client@4.0.20_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7._rifmqb5cfjg5ul6bvzvo6g2p7y/node_modules/expo-dev-client/ios"
   expo-dev-launcher:
@@ -1751,15 +1751,15 @@ EXTERNAL SOURCES:
   ExpoDevice:
     :path: "../../../node_modules/.pnpm/expo-device@6.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6__lkp72haiixegm66577ibo4unym/node_modules/expo-device/ios"
   ExpoFileSystem:
-    :path: "../../../node_modules/.pnpm/expo-file-system@17.0.1_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7_rwmhpp3p2xe5odxa4346x5kesm/node_modules/expo-file-system/ios"
+    :path: "../../../node_modules/.pnpm/expo-file-system@17.0.1_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7_6hksaogbbc3ep5obmcfw7lddaq/node_modules/expo-file-system/ios"
   ExpoFont:
     :path: "../../../node_modules/.pnpm/expo-font@12.0.5_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6___d6n2efb3v3w2hpfy4kvjkjd7hu/node_modules/expo-font/ios"
   ExpoHead:
-    :path: "../../../node_modules/.pnpm/expo-router@3.5.14_3sqe6ggvhu3po4nkx262l4l7py/node_modules/expo-router/ios"
+    :path: "../../../node_modules/.pnpm/expo-router@3.5.14_ysrh2nitbreg53giyigfjlreim/node_modules/expo-router/ios"
   ExpoImage:
     :path: "../../../node_modules/.pnpm/expo-image@1.12.9_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7.24.6__pmcr3jeee7zxzl2mfne7zefiz4/node_modules/expo-image/ios"
   ExpoKeepAwake:
-    :path: "../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7._x7xzybrjlgwqedtww3w6hoxhpq/node_modules/expo-keep-awake/ios"
+    :path: "../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7._ynw2iqnrh5j2lg34m2tsm7vufa/node_modules/expo-keep-awake/ios"
   ExpoLocalAuthentication:
     :path: "../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@bab_jowjhvrs2oe6pszhq2wxnu7azq/node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
@@ -1771,7 +1771,7 @@ EXTERNAL SOURCES:
   ExpoWebBrowser:
     :path: "../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+core@7_qe6yd6cwa7fiwctjpbh42ulibq/node_modules/expo-web-browser/ios"
   EXSplashScreen:
-    :path: "../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.8_@babel+core@7.24.6_@bab_gzhqxla2cztn3evycjilh3whra/node_modules/expo-splash-screen/ios"
+    :path: "../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.8_@babel+core@7.24.6_@bab_gb6ehrs5ge5uykbdodnena6nhu/node_modules/expo-splash-screen/ios"
   EXUpdatesInterface:
     :path: "../../../node_modules/.pnpm/expo-updates-interface@0.16.2_expo@51.0.8_@babel+core@7.24.6_@babel+preset-env@7.24.6_@babel+_64hqcaxw7d775xl7hbr5wk2xr4/node_modules/expo-updates-interface/ios"
   FBLazyVector:
