@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
@@ -52,13 +52,15 @@ const stampsByAdressSchema = z.object({
   totalPages: z.number(),
   total: z.number(),
   last_block: z.number().optional(),
-  btc: z.object({
-    address: z.string(),
-    balance: z.number(),
-    txCount: z.number(),
-    unconfirmedBalance: z.number(),
-    unconfirmedTxCount: z.number(),
-  }),
+  btc: z
+    .object({
+      address: z.string(),
+      balance: z.number(),
+      txCount: z.number(),
+      unconfirmedBalance: z.number(),
+      unconfirmedTxCount: z.number(),
+    })
+    .optional(),
   data: z.object({
     stamps: z.array(stampSchema),
     src20: z.array(src20TokenSchema),
@@ -74,14 +76,7 @@ async function fetchStampsByAddress(address: string): Promise<StampsByAddressQue
   const resp = await axios.get<StampsByAddressQueryResponse>(
     `https://stampchain.io/api/v2/balance/${address}`
   );
-  try {
-    return stampsByAdressSchema.parse(resp.data);
-  } catch (e) {
-    // TODO: should be analytics
-    // eslint-disable-next-line no-console
-    if (e instanceof ZodError) console.log('schema_fail', e);
-    throw e;
-  }
+  return stampsByAdressSchema.parse(resp.data);
 }
 
 export function createGetStampsByAddressQueryOptions(address: string) {

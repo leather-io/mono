@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 import {
   type BitcoinNetworkModes,
@@ -170,14 +170,7 @@ export function BestinSlotApi(basePath: string) {
       { signal }
     );
 
-    try {
-      return inscriptionsByAddressSchema.parse(resp.data);
-    } catch (e) {
-      // TODO: should be analytics
-      // eslint-disable-next-line no-console
-      if (e instanceof ZodError) console.log('schema_fail', e);
-      throw e;
-    }
+    return inscriptionsByAddressSchema.parse(resp.data);
   }
 
   async function getInscriptionsByAddresses({
@@ -204,15 +197,7 @@ export function BestinSlotApi(basePath: string) {
       data,
       { signal }
     );
-
-    try {
-      return inscriptionsByAddressSchema.parse(resp.data);
-    } catch (e) {
-      // TODO: should be analytics
-      // eslint-disable-next-line no-console
-      if (e instanceof ZodError) console.log('schema_fail', e);
-      throw e;
-    }
+    return inscriptionsByAddressSchema.parse(resp.data);
   }
 
   async function getInscriptionsByTransactionId(id: string) {
@@ -254,18 +239,10 @@ export function BestinSlotApi(basePath: string) {
   }
 
   async function getRunesTickerInfo(runeName: string) {
-    try {
-      const resp = await axios.get<RunesTickerInfoResponse>(
-        `${basePath}/runes/ticker_info?rune_name=${runeName}`
-      );
-
-      return runeTickerInfoSchema.parse(resp.data.data);
-    } catch (e) {
-      // TODO: should be analytics
-      // eslint-disable-next-line no-console
-      if (e instanceof ZodError) console.log('schema_fail', Object.entries(e));
-      throw e;
-    }
+    const resp = await axios.get<RunesTickerInfoResponse>(
+      `${basePath}/runes/ticker_info?rune_name=${runeName}`
+    );
+    return runeTickerInfoSchema.parse(resp.data.data);
   }
 
   async function getRunesBatchOutputsInfo(outputs: string[]) {
