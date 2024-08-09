@@ -83,3 +83,4 @@ export * from './types/remote-config';
 export * from './types/utxo';
 export * from './src/rate-limiter/hiro-rate-limiter';
 export * from './src/rate-limiter/best-in-slot-limiter';
+export * from './src/utils';

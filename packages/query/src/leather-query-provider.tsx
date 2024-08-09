@@ -71,17 +71,18 @@ export function useCurrentNetworkState() {
   }, [currentNetwork]);
 }
 
+interface LeatherQueryProviderArgs {
+  client: QueryClient;
+  network: NetworkConfiguration;
+  children: ReactNode;
+  environment: LeatherEnvironment;
+}
 export function LeatherQueryProvider({
   client,
   network,
   children,
   environment,
-}: {
-  client: QueryClient;
-  network: NetworkConfiguration;
-  children: ReactNode;
-  environment: LeatherEnvironment;
-}) {
+}: LeatherQueryProviderArgs) {
   return (
     <LeatherNetworkContext.Provider value={network}>
       <LeatherEnvironmentContext.Provider value={environment}>
