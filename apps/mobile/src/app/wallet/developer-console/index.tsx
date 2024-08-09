@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
 import { ApproverModal } from '@/components/browser/approval-ux-modal';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
-import { PressableListItem, TitleListItem } from '@/components/developer-console/list-items';
+import { PressableListItem } from '@/components/developer-console/list-items';
 import { useToastContext } from '@/components/toast/toast-context';
 import { APP_ROUTES } from '@/constants';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
@@ -55,55 +55,46 @@ export default function DeveloperConsoleScreen() {
           paddingHorizontal: theme.spacing['3'],
           paddingTop: theme.spacing['5'],
           paddingBottom: theme.spacing['5'] + bottom,
-          gap: theme.spacing[5],
+          gap: theme.spacing[2],
         }}
       >
-        <Box gap="2">
-          <TitleListItem title={t`Open dummy page`} />
-          <PressableListItem title={t`Drawer`} />
-          <PressableListItem title={t`Page`} />
-          <PressableListItem
-            title={t`Toggle theme` + ': Current ' + settings.theme}
-            onPress={() => settings.toggleTheme()}
-          />
-          <PressableListItem
-            onPress={() => addWalletModalRef.current?.present()}
-            title={t`Create wallet`}
-          />
-          <PressableListItem
-            title="Wallet management"
-            onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsoleWalletManager)}
-          />
-        </Box>
-        <Box gap="2">
-          <TitleListItem title={t`Trigger API presets`} />
-          <PressableListItem
-            title={t`getAddresses`}
-            onPress={() =>
-              setGetAddressesMessage({
-                jsonrpc: '2.0',
-                id: 'string',
-                method: 'getAddresses',
-              })
-            }
-          />
-          <PressableListItem title="signMessage" />
-          <PressableListItem title="transferBtc" />
-          <PressableListItem title="signPsbt" />
-          <PressableListItem title="stx_signTransaction" />
-          <PressableListItem title="stx_signMessage" />
-        </Box>
-        <Box gap="2">
-          <TitleListItem title={t`Trigger other functionality`} />
-          <PressableListItem
-            title={t`register for Push notifications`}
-            onPress={registerPushNotifications}
-          />
-          <PressableListItem
-            title={t`schedule dummy notifications in 3s`}
-            onPress={() => _scheduleTestNotification(3)}
-          />
-        </Box>
+        <PressableListItem
+          title={t`Toggle theme` + ': Current ' + settings.theme}
+          onPress={() => settings.toggleTheme()}
+        />
+        <PressableListItem
+          onPress={() => addWalletModalRef.current?.present()}
+          title={t`Create wallet`}
+        />
+        <PressableListItem
+          title="Wallet management"
+          onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsoleWalletManager)}
+        />
+        <PressableListItem
+          title={t`getAddresses`}
+          onPress={() =>
+            setGetAddressesMessage({
+              jsonrpc: '2.0',
+              id: 'string',
+              method: 'getAddresses',
+            })
+          }
+        />
+        <PressableListItem
+          title={t`register for Push notifications`}
+          onPress={registerPushNotifications}
+        />
+        <PressableListItem
+          title={t`schedule dummy notifications in 3s`}
+          onPress={() => _scheduleTestNotification(3)}
+        />
+        <PressableListItem title="signMessage" />
+        <PressableListItem title="transferBtc" />
+        <PressableListItem title="signPsbt" />
+        <PressableListItem title="stx_signTransaction" />
+        <PressableListItem title="stx_signMessage" />
+        <PressableListItem title={t`Drawer`} />
+        <PressableListItem title={t`Page`} />
       </ScrollView>
       <ApproverModal
         message={getAddressesMessage}

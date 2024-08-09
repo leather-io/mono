@@ -37,7 +37,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:71
+#: src/app/wallet/developer-console/index.tsx:67
 msgid "Create wallet"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:63
+#: src/app/wallet/developer-console/index.tsx:96
 msgid "Drawer"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Follow us"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:81
+#: src/app/wallet/developer-console/index.tsx:74
 msgid "getAddresses"
 msgstr ""
 
@@ -73,11 +73,7 @@ msgstr ""
 msgid "Notify me when it's ready"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:62
-msgid "Open dummy page"
-msgstr ""
-
-#: src/app/wallet/developer-console/index.tsx:64
+#: src/app/wallet/developer-console/index.tsx:97
 msgid "Page"
 msgstr ""
 
@@ -89,11 +85,11 @@ msgstr ""
 msgid "Receive"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:99
+#: src/app/wallet/developer-console/index.tsx:84
 msgid "register for Push notifications"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:103
+#: src/app/wallet/developer-console/index.tsx:88
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
@@ -117,16 +113,8 @@ msgstr ""
 msgid "Swap"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:66
+#: src/app/wallet/developer-console/index.tsx:62
 msgid "Toggle theme"
-msgstr ""
-
-#: src/app/wallet/developer-console/index.tsx:79
-msgid "Trigger API presets"
-msgstr ""
-
-#: src/app/wallet/developer-console/index.tsx:97
-msgid "Trigger other functionality"
 msgstr ""
 
 #: src/components/browser/browser-empty-state.tsx:149
