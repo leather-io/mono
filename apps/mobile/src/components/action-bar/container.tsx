@@ -9,7 +9,7 @@ import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { APP_ROUTES } from '@/constants';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { Trans, t } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
 import { Text, TouchableOpacity } from '@leather.io/ui/native';
@@ -134,9 +134,7 @@ function ActionBarButton({ onPress, icon, label }: ActionBarButtonProps) {
       gap="2"
     >
       {icon}
-      <Text variant="label02">
-        <Trans>{label}</Trans>
-      </Text>
+      <Text variant="label02">{label}</Text>
     </TouchableOpacity>
   );
 }

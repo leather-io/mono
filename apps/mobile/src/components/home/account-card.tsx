@@ -1,10 +1,9 @@
 import Chevron from '@/assets/chevron-right.svg';
 import { WalletStore } from '@/state/wallets/wallets.slice';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
-
-import { TransText } from '../trans-text';
 
 export function AccountCard({
   onPress,
@@ -39,16 +38,16 @@ export function AccountCard({
           right={theme.spacing[5]}
           top={theme.spacing[5]}
         >
-          <TransText variant="label03" color="ink.text-subdued">
-            Ledger
-          </TransText>
+          <Text variant="label03" color="ink.text-subdued">
+            {t`Ledger`}
+          </Text>
         </Box>
       )}
       <Box p="2" borderRadius="round" backgroundColor="ink.background-secondary">
         <Chevron width={32} height={32} />
       </Box>
       <Box gap="1">
-        <TransText variant="label02">$0</TransText>
+        <Text variant="label02">$0</Text>
         <Text variant="label02" color="ink.text-subdued">
           {fingerprint}
         </Text>

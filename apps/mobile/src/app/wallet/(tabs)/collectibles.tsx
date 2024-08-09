@@ -1,23 +1,23 @@
 import { StyleSheet, View } from 'react-native';
 
-import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
+import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
-import { TouchableOpacity } from '@leather.io/ui/native';
+import { Text, TouchableOpacity } from '@leather.io/ui/native';
 
 export default function SwapScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <TransText>Collectibles 🖼️</TransText>
+      <Text>{t`Collectibles 🖼️`}</Text>
       <TouchableOpacity
         onPress={() => router.navigate(APP_ROUTES.WalletBrowser)}
         p="4"
         bg="ink.background-primary"
         borderRadius="sm"
       >
-        <TransText>navigate to browser</TransText>
+        <Text>{t`navigate to browser`}</Text>
       </TouchableOpacity>
     </View>
   );

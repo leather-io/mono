@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
+import { t } from '@lingui/macro';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -13,8 +14,9 @@ function handleRegistrationError(errorMessage: string) {
 async function _scheduleTestNotification(delaySeconds: number = 2) {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
+      title: t`You've got mail! 📬`,
+      body: t`Here is the notification body`,
+      /* eslint-disable-next-line lingui/no-unlocalized-strings  */
       data: { data: 'goes here', test: { test1: 'more data' } },
     },
     trigger: { seconds: delaySeconds },
@@ -39,7 +41,7 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      alert(t`Failed to get push token for push notification!`);
       return;
     }
     // Learn more about projectId:
@@ -60,7 +62,7 @@ async function registerForPushNotificationsAsync() {
       token = `${e}`;
     }
   } else {
-    alert('Must use physical device for Push Notifications');
+    alert(t`Must use physical device for Push Notifications`);
   }
 
   return token;

@@ -10,6 +10,8 @@ import { LeatherLogoHeader } from '@/components/headers/leather-logo';
 import { MenuHeader } from '@/components/headers/menu';
 import { OptionsHeader } from '@/components/headers/options';
 import { TitleHeader } from '@/components/headers/title';
+import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { Stack, useRouter } from 'expo-router';
 
 export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods> | null }>({
@@ -17,6 +19,8 @@ export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods>
 });
 
 export default function StackLayout() {
+  // connect this component to changes in i18n locale
+  useLingui();
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
@@ -41,7 +45,7 @@ export default function StackLayout() {
     <SimpleHeader
       insets={insets}
       left={<BackButtonHeader onPress={() => router.back()} />}
-      center={<TitleHeader title="Settings" />}
+      center={<TitleHeader title={t`Settings`} />}
     />
   );
 
@@ -49,7 +53,7 @@ export default function StackLayout() {
     <SimpleHeader
       insets={insets}
       left={<BackButtonHeader onPress={() => router.back()} />}
-      center={<TitleHeader title="Developer tools" />}
+      center={<TitleHeader title={t`Developer tools`} />}
     />
   );
 

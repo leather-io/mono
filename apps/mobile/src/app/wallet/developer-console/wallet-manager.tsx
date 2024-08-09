@@ -8,6 +8,7 @@ import { useSettings } from '@/state/settings/settings.slice';
 import { clearAllPersistedStorage } from '@/state/utils';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
@@ -30,11 +31,11 @@ export default function WalletManager() {
       >
         <View style={{ flexDirection: 'row' }}>
           <Button
-            title="Clear"
+            title={t`Clear`}
             onPress={() => clearAllPersistedStorage(wallets.list.map(wallet => wallet.fingerprint))}
           />
           <Button
-            title={generatingWallet ? 'Generating…' : 'Create wallet'}
+            title={generatingWallet ? t`Generating…` : t`Create wallet`}
             onPress={async () => {
               setGeneratingWallet(true);
               await nextAnimationFrame();
@@ -42,7 +43,7 @@ export default function WalletManager() {
               setGeneratingWallet(false);
             }}
           />
-          <Button title="Toggle network" onPress={() => settings.toggleNetwork()} />
+          <Button title={t`Toggle network`} onPress={() => settings.toggleNetwork()} />
         </View>
         <WalletList />
       </ScrollView>

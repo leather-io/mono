@@ -7,6 +7,7 @@ import {
   ActionBarContext,
   createOnScrollHandler,
 } from '@/components/action-bar/container';
+import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
@@ -16,6 +17,8 @@ import { Earn } from './earn';
 import { MyAccounts } from './my-accounts';
 
 export function Home() {
+  // connect this component to changes in i18n locale
+  useLingui();
   const { bottom, top } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const actionBarRef = useRef<ActionBarMethods>(null);

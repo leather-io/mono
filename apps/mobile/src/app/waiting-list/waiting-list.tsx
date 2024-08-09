@@ -7,7 +7,6 @@ import CheckmarkCircle from '@/assets/checkmark-circle.svg';
 import XLogo from '@/assets/logo-x.svg';
 import { AnimatedButton, Button, ButtonState } from '@/components/button';
 import { InputState, TextInput } from '@/components/text-input';
-import { TransText } from '@/components/trans-text';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useSubmitWaitingListEmailForm } from '@/queries/use-submit-waiting-list-form-email';
 import { emailRegexp } from '@/utils/regexp';
@@ -227,16 +226,16 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
 
   const submittedComponent = (
     <Box backgroundColor="ink.background-primary" padding="6">
-      <TransText variant="body01" color="ink.text-subdued" paddingBottom="5">
-        Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the
-        meantime, please{' '}
+      <Text variant="body01" color="ink.text-subdued" paddingBottom="5">
+        {t`Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the
+        meantime, please `}
         <Text
           onPress={() => Linking.openURL(BROWSER_EXTENSION_LINK)}
           textDecorationLine="underline"
         >
-          check out our browser extension.
+          {t`check out our browser extension.`}
         </Text>
-      </TransText>
+      </Text>
       <Button
         testID={WelcomeScreenTestIds.OpenXButton}
         onPress={() => Linking.openURL(TWITTER_LINK)}
@@ -260,9 +259,9 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
 
   const submissionComponent = (
     <Box backgroundColor="ink.background-primary" padding="6">
-      <TransText variant="body01" color="ink.text-subdued" paddingBottom="5">
-        Stay in the loop and be the first one to hear about new developments
-      </TransText>
+      <Text variant="body01" color="ink.text-subdued" paddingBottom="5">
+        {t`Stay in the loop and be the first one to hear about new developments`}
+      </Text>
 
       <TextInput
         value={email}
@@ -323,20 +322,20 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
             </Box>
             <Trans>
               <Animated.View style={title1Style}>
-                <TransText variant="heading02" color="ink.text-primary">
+                <Text variant="heading02" color="ink.text-primary">
                   Bitcoin for
-                </TransText>
+                </Text>
               </Animated.View>
               <Animated.View style={title2Style}>
-                <TransText variant="heading02" color="ink.text-primary">
+                <Text variant="heading02" color="ink.text-primary">
                   the rest of us
-                </TransText>
+                </Text>
               </Animated.View>
             </Trans>
             <Animated.View style={subtitleStyle}>
-              <TransText variant="heading05" color="ink.text-primary" paddingTop="5">
-                Leather is the only wallet you need to tap into the multilayered Bitcoin economy
-              </TransText>
+              <Text variant="heading05" color="ink.text-primary" paddingTop="5">
+                {t`Leather is the only wallet you need to tap into the multilayered Bitcoin economy`}
+              </Text>
             </Animated.View>
             <Animated.View
               style={[{ position: 'absolute', transform: [{ rotateZ: '100deg' }] }, btcStyle]}

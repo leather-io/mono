@@ -1,10 +1,12 @@
 import { HeaderAvoidingContainer } from '@/components/headers/containers/header-avoiding-container';
-import { TransText } from '@/components/trans-text';
+import { t } from '@lingui/macro';
+
+import { Text } from '@leather.io/ui/native';
 
 export default function SwapScreen() {
   return (
     <HeaderAvoidingContainer justifyContent="center" alignItems="center">
-      <TransText>Swap 🔄</TransText>
+      <Text>{t`Swap 🔄`}</Text>
     </HeaderAvoidingContainer>
   );
 }

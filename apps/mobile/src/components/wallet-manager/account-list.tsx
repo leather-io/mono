@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { Account } from '@/state/accounts/accounts';
+import { t } from '@lingui/macro';
 
 interface AccountLayoutProps {
   fingerprint: string;
@@ -15,18 +16,19 @@ export function AccountLayout({
   onRemoveAccount,
   renderKeychains,
 }: AccountLayoutProps) {
+  const { accountIndex } = account;
   return (
     <View key={account.id} style={{ marginBottom: 20 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={{ fontSize: 16, marginBottom: 8 }}>Account {account.accountIndex}</Text>
+        <Text style={{ fontSize: 16, marginBottom: 8 }}>{t`Account ${accountIndex}`}</Text>
         <Pressable
           style={{ marginBottom: 12, marginLeft: 8 }}
-          onPress={() => onRemoveAccount(account.accountIndex)}
+          onPress={() => onRemoveAccount(accountIndex)}
         >
           <Text>❌</Text>
         </Pressable>
       </View>
-      {renderKeychains(fingerprint, account.accountIndex)}
+      {renderKeychains(fingerprint, accountIndex)}
     </View>
   );
 }

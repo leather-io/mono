@@ -3,13 +3,13 @@ import { useSharedValue } from 'react-native-reanimated';
 
 import Cross from '@/assets/cross-large.svg';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from '../bottom-sheet-modal';
 import { Button } from '../button';
-import { TransText } from '../trans-text';
 
 interface SkipSecureWalletModalProps {
   skipSecureWalletModalRef: RefObject<BottomSheetModal>;
@@ -37,13 +37,13 @@ export function SkipSecureWalletModal({
           <Cross height={24} width={24} color={theme.colors['ink.text-primary']} />
         </TouchableOpacity>
         <Box gap="4">
-          <TransText variant="heading05">Sure You Want to Skip?</TransText>
-          <TransText variant="body01">
-            Skipping security setup means your wallet will not be protected by your device’s
-            security features. We highly recommend enabling security to protect your assets
-          </TransText>
+          <Text variant="heading05">{t`Sure You Want to Skip?`}</Text>
+          <Text variant="body01">
+            {t`Skipping security setup means your wallet will not be protected by your device’s
+            security features. We highly recommend enabling security to protect your assets`}
+          </Text>
         </Box>
-        <Button onPress={onSkip} buttonState="default" title="Yes, skip for now" />
+        <Button onPress={onSkip} buttonState="default" title={t`Yes, skip for now`} />
       </Box>
     </Modal>
   );

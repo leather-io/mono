@@ -1,14 +1,13 @@
 import Chevron from '@/assets/chevron-right.svg';
+import { t } from '@lingui/macro';
 
-import { Box, TouchableOpacity } from '@leather.io/ui/native';
-
-import { TransText } from '../trans-text';
+import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 export function Earn() {
   return (
     <Box>
       <TouchableOpacity flexDirection="row" gap="1" alignItems="center" paddingBottom="3">
-        <TransText variant="heading05">Earn</TransText>
+        <Text variant="heading05">{t`Earn`}</Text>
         <Chevron width={16} height={16} />
       </TouchableOpacity>
       <Box
@@ -19,10 +18,10 @@ export function Earn() {
         height={148}
       >
         <Box flexDirection="column">
-          <TransText variant="caption01">Total rewards</TransText>
-          <TransText variant="heading04">$0</TransText>
+          <Text variant="caption01">{t`Total rewards`}</Text>
+          <Text variant="heading04">$0</Text>
         </Box>
-        <TransText variant="caption01">Start stacking</TransText>
+        <Text variant="caption01">{t`Start stacking`}</Text>
       </Box>
     </Box>
   );

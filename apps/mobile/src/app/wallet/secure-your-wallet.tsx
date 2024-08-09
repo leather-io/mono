@@ -6,7 +6,6 @@ import Lock from '@/assets/lock.svg';
 import { Button } from '@/components/button';
 import { SkipSecureWalletModal } from '@/components/secure-your-wallet/skip-secure-wallet-modal';
 import { useToastContext } from '@/components/toast/toast-context';
-import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
 import { useKeyStore } from '@/state/key-store';
 import { tempMnemonicStore } from '@/state/storage-persistors';
@@ -15,7 +14,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 export default function () {
   const { bottom } = useSafeAreaInsets();
@@ -33,7 +32,7 @@ export default function () {
         biometrics,
         passphrase: passphrase ?? undefined,
       });
-      toastContext.displayToast({ type: 'success', title: 'Wallet added successfully' });
+      toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
     }
   }
 
@@ -59,10 +58,10 @@ export default function () {
           >
             <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
           </TouchableOpacity>
-          <TransText variant="heading03">SECURE YOUR WALLET</TransText>
-          <TransText variant="label01">
-            Use your device’s PIN, Face ID, or other biometrics for quick and secure access.
-          </TransText>
+          <Text variant="heading03">{t`SECURE YOUR WALLET`}</Text>
+          <Text variant="label01">
+            {t`Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`}
+          </Text>
         </Box>
         <Box justifyContent="center" alignItems="center">
           <Lock height={204} width={204} color={theme.colors['ink.text-primary']} />
