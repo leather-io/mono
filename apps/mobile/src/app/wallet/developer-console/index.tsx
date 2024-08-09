@@ -9,9 +9,11 @@ import { PressableListItem } from '@/components/developer-console/list-items';
 import { useToastContext } from '@/components/toast/toast-context';
 import { APP_ROUTES } from '@/constants';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
+import { LOCALES } from '@/locales';
 import { useSettings } from '@/state/settings/settings.slice';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
@@ -20,6 +22,8 @@ import { Box, Theme } from '@leather.io/ui/native';
 export default function DeveloperConsoleScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
+  const { i18n } = useLingui();
+
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
   const addWalletModalRef = useRef<BottomSheetModal>(null);
   const toast = useToastContext();
@@ -48,6 +52,20 @@ export default function DeveloperConsoleScreen() {
     };
   }, []);
 
+  function toggleLocalization() {
+    const locIdx = LOCALES.findIndex(loc => loc.locale === i18n.locale);
+    const isLastItem = locIdx === LOCALES.length - 1;
+    const nextIdx = isLastItem ? 0 : locIdx + 1;
+    const nextLocale = LOCALES[nextIdx];
+    if (!nextLocale) {
+      throw new Error("Didn't find next locale for some reason");
+    }
+    i18n.activate(nextLocale.locale);
+  }
+
+  const settingsTheme = settings.theme;
+  const locale = i18n.locale;
+
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
       <ScrollView
@@ -59,7 +77,7 @@ export default function DeveloperConsoleScreen() {
         }}
       >
         <PressableListItem
-          title={t`Toggle theme` + ': Current ' + settings.theme}
+          title={t`Toggle theme: Current ${settingsTheme}`}
           onPress={() => settings.toggleTheme()}
         />
         <PressableListItem
@@ -67,7 +85,7 @@ export default function DeveloperConsoleScreen() {
           title={t`Create wallet`}
         />
         <PressableListItem
-          title="Wallet management"
+          title={t`Wallet management`}
           onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsoleWalletManager)}
         />
         <PressableListItem
@@ -88,11 +106,12 @@ export default function DeveloperConsoleScreen() {
           title={t`schedule dummy notifications in 3s`}
           onPress={() => _scheduleTestNotification(3)}
         />
-        <PressableListItem title="signMessage" />
-        <PressableListItem title="transferBtc" />
-        <PressableListItem title="signPsbt" />
-        <PressableListItem title="stx_signTransaction" />
-        <PressableListItem title="stx_signMessage" />
+        <PressableListItem title={t`toggle localization: ${locale}`} onPress={toggleLocalization} />
+        <PressableListItem title={t`signMessage`} />
+        <PressableListItem title={t`transferBtc`} />
+        <PressableListItem title={t`signPsbt`} />
+        <PressableListItem title={t`stx_signTransaction`} />
+        <PressableListItem title={t`stx_signMessage`} />
         <PressableListItem title={t`Drawer`} />
         <PressableListItem title={t`Page`} />
       </ScrollView>

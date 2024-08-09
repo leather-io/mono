@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { PersistConfig } from 'redux-persist';
@@ -12,20 +13,27 @@ export const persistConfig: PersistConfig<RootState> = {
   whitelist: ['wallets', 'accounts', 'keychains', 'settings'],
 };
 
-const secureStoreConfig: SecureStore.SecureStoreOptions = {
-  authenticationPrompt: "Allow Leather to access application's secure storage",
-  keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-};
-const secureStoreConfigWithBiometrics = {
-  ...secureStoreConfig,
-  requireAuthentication: true,
-};
+function getBasicSecureStoreConfig() {
+  const secureStoreConfig: SecureStore.SecureStoreOptions = {
+    authenticationPrompt: t`Allow Leather to access application's secure storage`,
+    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+  };
+  return secureStoreConfig;
+}
+
+function getBiometricsSecureStoreConfig() {
+  const secureStoreConfigWithBiometrics = {
+    ...getBasicSecureStoreConfig(),
+    requireAuthentication: true,
+  };
+  return secureStoreConfigWithBiometrics;
+}
 
 function getSecureStoreConfig(biometrics: boolean) {
   if (biometrics) {
-    return secureStoreConfigWithBiometrics;
+    return getBiometricsSecureStoreConfig();
   }
-  return secureStoreConfig;
+  return getBasicSecureStoreConfig();
 }
 
 const mnemonicSchema = z.object({
@@ -49,25 +57,32 @@ export const tempMnemonicStore = {
       await SecureStore.setItemAsync(
         TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
         passphrase,
-        secureStoreConfig
+        getBasicSecureStoreConfig()
       );
     }
 
-    return SecureStore.setItemAsync(TEMPORARY_MNEMONIC_KEY, tempMnemonic, secureStoreConfig);
+    return SecureStore.setItemAsync(
+      TEMPORARY_MNEMONIC_KEY,
+      tempMnemonic,
+      getBasicSecureStoreConfig()
+    );
   },
   async getTemporaryMnemonic() {
     // Whenever you get a value from the store, delete that value from the store
-    const mnemonic = await SecureStore.getItemAsync(TEMPORARY_MNEMONIC_KEY, secureStoreConfig);
+    const mnemonic = await SecureStore.getItemAsync(
+      TEMPORARY_MNEMONIC_KEY,
+      getBasicSecureStoreConfig()
+    );
     const passphrase = await SecureStore.getItemAsync(
       TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
-      secureStoreConfig
+      getBasicSecureStoreConfig()
     );
     await this.deleteTemporaryMnemonic();
     return { mnemonic, passphrase };
   },
   async deleteTemporaryMnemonic() {
-    await SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, secureStoreConfig);
-    return SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, secureStoreConfig);
+    await SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, getBasicSecureStoreConfig());
+    return SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, getBasicSecureStoreConfig());
   },
 };
 
@@ -90,10 +105,10 @@ export function mnemonicStore(fingerprint: string): MnemonicStore {
   const passphraseKey = `${fingerprint}_passphrase`;
   return {
     async getMnemonic(passphrase) {
-      const mnemonic = await SecureStore.getItemAsync(fingerprint, secureStoreConfig);
+      const mnemonic = await SecureStore.getItemAsync(fingerprint, getBasicSecureStoreConfig());
       if (passphrase) {
         const passphrase =
-          (await SecureStore.getItemAsync(passphraseKey, secureStoreConfig)) ?? undefined;
+          (await SecureStore.getItemAsync(passphraseKey, getBasicSecureStoreConfig())) ?? undefined;
         return mnemonicSchema.parse({ mnemonic, passphrase });
       }
       return mnemonicSchema.parse({ mnemonic });
@@ -105,8 +120,8 @@ export function mnemonicStore(fingerprint: string): MnemonicStore {
     },
     async deleteMnemonic() {
       return Promise.all([
-        SecureStore.deleteItemAsync(fingerprint, secureStoreConfig),
-        SecureStore.deleteItemAsync(passphraseKey, secureStoreConfig),
+        SecureStore.deleteItemAsync(fingerprint, getBasicSecureStoreConfig()),
+        SecureStore.deleteItemAsync(passphraseKey, getBasicSecureStoreConfig()),
       ]);
     },
   };

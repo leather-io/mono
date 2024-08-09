@@ -12,7 +12,6 @@ import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from './bottom-sheet-modal';
 import { Button } from './button';
-import { TransText } from './trans-text';
 
 export interface OptionData {
   title: string;
@@ -36,6 +35,8 @@ export function NotifyUserModal({
     await registerPushNotifications();
     notifyUserModalRef.current?.dismiss();
   }
+  const title = optionData?.title;
+
   return (
     <Modal
       onDismiss={onCloseNotificationsModal}
@@ -56,8 +57,8 @@ export function NotifyUserModal({
           <Cross height={24} width={24} color={theme.colors['ink.text-primary']} />
         </TouchableOpacity>
         <Box gap="4">
-          <TransText variant="heading05">Notify me when ready</TransText>
-          <Text variant="body01">{t`"${optionData?.title}" isn't ready yet.`}</Text>
+          <Text variant="heading05">{t`Notify me when ready`}</Text>
+          <Text variant="body01">{t`"${title}" isn't ready yet.`}</Text>
         </Box>
         <Button
           onPress={onNotify}

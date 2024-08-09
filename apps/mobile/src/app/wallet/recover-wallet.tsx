@@ -6,7 +6,6 @@ import CircleQuestionMark from '@/assets/circle-questionmark.svg';
 import Note from '@/assets/note-2.svg';
 import { Button } from '@/components/button';
 import { InputState, TextInput } from '@/components/text-input';
-import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
 import { tempMnemonicStore } from '@/state/storage-persistors';
 import { t } from '@lingui/macro';
@@ -15,10 +14,11 @@ import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 
 import { isValidMnemonic, isValidMnemonicWord } from '@leather.io/crypto';
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 function constructErrorMessage(invalidWords: string[]) {
-  return t`Invalid words: ${invalidWords.join(', ')}`;
+  const joinedInvalidWords = invalidWords.join(', ');
+  return t`Invalid words: ${joinedInvalidWords}`;
 }
 
 function getInvalidMnemonicWords(recoveryMnemonic: string) {
@@ -102,10 +102,8 @@ export default function RecoverWallet() {
           >
             <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
           </TouchableOpacity>
-          <TransText variant="heading03">ENTER YOUR SECRET KEY</TransText>
-          <TransText variant="label01">
-            Paste or type a Secret Key to add its associated wallet.
-          </TransText>
+          <Text variant="heading03">{t`ENTER YOUR SECRET KEY`}</Text>
+          <Text variant="label01">{t`Paste or type a Secret Key to add its associated wallet.`}</Text>
         </Box>
         <Box>
           <Button

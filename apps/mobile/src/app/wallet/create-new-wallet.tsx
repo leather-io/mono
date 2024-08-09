@@ -8,9 +8,9 @@ import GraduateCap from '@/assets/graduate-cap.svg';
 import Pointer from '@/assets/pointer.svg';
 import { Button } from '@/components/button';
 import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
-import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
 import { tempMnemonicStore } from '@/state/storage-persistors';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
@@ -44,7 +44,7 @@ export default function CreateNewWallet() {
   useEffect(() => {
     const tempMnemonic = generateMnemonic();
     setMnemonic(tempMnemonic);
-    tempMnemonicStore.setTemporaryMnemonic(tempMnemonic);
+    void tempMnemonicStore.setTemporaryMnemonic(tempMnemonic);
   }, []);
 
   return (
@@ -69,10 +69,10 @@ export default function CreateNewWallet() {
           >
             <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
           </TouchableOpacity>
-          <TransText variant="heading03">BACK UP YOUR SECRET KEY</TransText>
-          <TransText variant="label01">
-            Your Secret Key grants you access to your wallet and its assets.
-          </TransText>
+          <Text variant="heading03">{t`BACK UP YOUR SECRET KEY`}</Text>
+          <Text variant="label01">
+            {t`Your Secret Key grants you access to your wallet and its assets.`}
+          </Text>
         </Box>
 
         <Box my="5">
@@ -99,10 +99,10 @@ export default function CreateNewWallet() {
               >
                 <Pointer height={24} width={24} color={theme.colors['ink.text-primary']} />
                 <Box>
-                  <TransText variant="label02">Tap to view Secret Key</TransText>
-                  <TransText variant="label02" color="red.action-primary-default">
-                    For your eyes only
-                  </TransText>
+                  <Text variant="label02">{t`Tap to view Secret Key`}</Text>
+                  <Text variant="label02" color="red.action-primary-default">
+                    {t`For your eyes only`}
+                  </Text>
                 </Box>
               </TouchableOpacity>
             </BlurView>
@@ -118,7 +118,7 @@ export default function CreateNewWallet() {
             borderWidth={1}
           >
             <GraduateCap height={24} width={24} color={theme.colors['ink.text-subdued']} />
-            <TransText
+            <Text
               style={{
                 flexShrink: 1,
                 flexDirection: 'row',
@@ -127,8 +127,8 @@ export default function CreateNewWallet() {
               variant="label03"
               color="ink.text-subdued"
             >
-              We recommend writing these words in numbered order on a piece of paper and storing it
-              in a safe place.{' '}
+              {t`We recommend writing these words in numbered order on a piece of paper and storing it
+              in a safe place.`}
               <Text
                 onPress={() => {
                   // TODO: navigate to a website
@@ -137,10 +137,10 @@ export default function CreateNewWallet() {
                 color="ink.text-subdued"
                 textDecorationLine="underline"
               >
-                Learn more
+                {t`Learn more`}
               </Text>
               {' ->'}
-            </TransText>
+            </Text>
           </Box>
         </Box>
       </Box>
@@ -155,14 +155,14 @@ export default function CreateNewWallet() {
           pb="4"
           Icon={isCopied ? Checkmark : Copy}
           buttonState="ghost"
-          title={isCopied ? 'Copied to clipboard' : 'Copy to clipboard'}
+          title={isCopied ? t`Copied to clipboard` : t`Copy to clipboard`}
         />
         <Button
           onPress={() => {
             router.navigate(APP_ROUTES.WalletSecureYourWallet);
           }}
           buttonState="default"
-          title="I've backed it up"
+          title={t`I've backed it up`}
         />
       </Box>
     </Box>

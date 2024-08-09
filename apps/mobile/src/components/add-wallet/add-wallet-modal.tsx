@@ -16,6 +16,7 @@ import NfcIcon from '@/assets/nfc.svg';
 import PlusIcon from '@/assets/plus-icon.svg';
 import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -24,7 +25,6 @@ import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from '../bottom-sheet-modal';
 import { NotifyUserModal, OptionData } from '../notify-user-modal';
-import { TransText } from '../trans-text';
 
 interface AddWalletListItemProps {
   Icon?: FC<SvgProps>;
@@ -70,28 +70,31 @@ export function AddWalletListItem({
 }
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-const UNAVAILABLE_FEATURES = {
-  hardwareWallet: {
-    title: 'Connect hardware wallet',
-    subtitle: 'Ledger, Trezor, Ryder and more',
-    Icon: NfcIcon,
-  },
-  emailRestore: {
-    title: 'Create or restore via email',
-    subtitle: 'Access custodial wallet',
-    Icon: EnvelopeIcon,
-  },
-  mpcWallet: {
-    title: 'Connect MPC wallet',
-    subtitle: 'Import existing accounts',
-    Icon: ColorSwatchIcon,
-  },
-  watchOnlyWallet: {
-    title: 'Create watch-only wallet',
-    subtitle: 'No key needed',
-    Icon: EyeIcon,
-  },
-};
+function getUnavailableFeatures() {
+  const UNAVAILABLE_FEATURES = {
+    hardwareWallet: {
+      title: t`Connect hardware wallet`,
+      subtitle: t`Ledger, Trezor, Ryder and more`,
+      Icon: NfcIcon,
+    },
+    emailRestore: {
+      title: t`Create or restore via email`,
+      subtitle: t`Access custodial wallet`,
+      Icon: EnvelopeIcon,
+    },
+    mpcWallet: {
+      title: t`Connect MPC wallet`,
+      subtitle: t`Import existing accounts`,
+      Icon: ColorSwatchIcon,
+    },
+    watchOnlyWallet: {
+      title: t`Create watch-only wallet`,
+      subtitle: t`No key needed`,
+      Icon: EyeIcon,
+    },
+  };
+  return UNAVAILABLE_FEATURES;
+}
 
 interface AddWalletModalBaseProps {
   addWalletModalRef: RefObject<BottomSheetModal>;
@@ -170,30 +173,30 @@ export function AddWalletModalUI({
           />
         </Box>
         <Box px="5" pt="5">
-          <TransText pb="5" variant="heading03">
-            Add wallet to {'{Use case}'}
-          </TransText>
+          <Text pb="5" variant="heading03">
+            {t`Add wallet to "Use case"`}
+          </Text>
           <Box flexDirection="column" gap="1">
             <AddWalletListItem
               onPress={createWallet}
-              title="Create new wallet"
-              subtitle="Create a new Bitcoin and Stacks wallet"
+              title={t`Create new wallet`}
+              subtitle={t`Create a new Bitcoin and Stacks wallet`}
               Icon={PlusIcon}
             />
             <AddWalletListItem
               onPress={restoreWallet}
-              title="Restore wallet"
-              subtitle="Import existing accounts"
+              title={t`Restore wallet`}
+              subtitle={t`Import existing accounts`}
               Icon={ArrowRotateClockwise}
             />
             <AddWalletListItem
               onPress={openOptions}
-              title="More options"
+              title={t`More options`}
               Icon={moreOptionsVisible ? undefined : DotGridHorizontal}
             />
             {!moreOptionsVisible
               ? null
-              : Object.entries(UNAVAILABLE_FEATURES).map(featureEntry => {
+              : Object.entries(getUnavailableFeatures()).map(featureEntry => {
                   const [featureKey, feature] = featureEntry;
                   return (
                     <AddWalletListItem

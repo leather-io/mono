@@ -6,55 +6,57 @@ import { ACTION_BAR_TOTAL_HEIGHT } from '@/components/action-bar';
 import { createOnScrollHandler, useActionBarContext } from '@/components/action-bar/container';
 import { HEADER_HEIGHT } from '@/components/headers/constants';
 import { TAB_BAR_HEIGHT } from '@/components/tab-bar';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Text, Theme } from '@leather.io/ui/native';
 
-const DATA = [
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-  {
-    title: 'Amazing asset',
-  },
-];
-
+function getDummyData() {
+  return [
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+    {
+      title: t`Amazing asset`,
+    },
+  ];
+}
 export default function SendScreen() {
   const { top, bottom } = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState(false);
@@ -81,7 +83,7 @@ export default function SendScreen() {
         snapToAlignment="center"
         contentInset={{ top: contentOffsetTop, bottom: contentOffsetBottom }}
         contentOffset={{ x: 0, y: -contentOffsetTop }}
-        data={DATA}
+        data={getDummyData()}
         renderItem={({ item }) => (
           <Text style={{ height: 100, backgroundColor: 'green' }}>{item.title}</Text>
         )}

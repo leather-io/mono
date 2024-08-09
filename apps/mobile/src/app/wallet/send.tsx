@@ -1,10 +1,12 @@
 import { HeaderAvoidingContainer } from '@/components/headers/containers/header-avoiding-container';
-import { TransText } from '@/components/trans-text';
+import { t } from '@lingui/macro';
+
+import { Text } from '@leather.io/ui/native';
 
 export default function SendScreen() {
   return (
     <HeaderAvoidingContainer justifyContent="center" alignItems="center">
-      <TransText>Send</TransText>
+      <Text>{t`Send`}</Text>
     </HeaderAvoidingContainer>
   );
 }

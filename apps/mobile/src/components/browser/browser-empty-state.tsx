@@ -10,7 +10,6 @@ import { useTheme } from '@shopify/restyle';
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { TabBar } from '../tab-bar';
-import { TransText } from '../trans-text';
 import { formatURL } from './utils';
 
 interface BrowserEmptyStateProps {
@@ -26,45 +25,55 @@ interface Shortcut {
   favicon?: string;
 }
 
-const SUGGESTED: Shortcut[] = [
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-];
+function getCurrentArray(currentTab: CurrentTab) {
+  const SUGGESTED: Shortcut[] = [
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+  ];
 
-const RECENT: Shortcut[] = [
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-];
+  const RECENT: Shortcut[] = [
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+  ];
 
-const CONNECTED: Shortcut[] = [
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title', description: 'Description' },
-  { link: 'https://gamma.io', title: 'Title' },
-  { link: 'https://gamma.io', title: 'Title' },
-];
+  const CONNECTED: Shortcut[] = [
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
+    { link: 'https://gamma.io', title: t`Title` },
+    { link: 'https://gamma.io', title: t`Title` },
+  ];
+  switch (currentTab) {
+    case 'connected':
+      return CONNECTED;
+    case 'recent':
+      return RECENT;
+    case 'suggested':
+      return SUGGESTED;
+  }
+}
 
 type CurrentTab = 'suggested' | 'recent' | 'connected';
 
@@ -108,17 +117,6 @@ export function BrowserEmptyState({
     setTextURL('');
   }
 
-  function getCurrentArray() {
-    switch (currentTab) {
-      case 'connected':
-        return CONNECTED;
-      case 'recent':
-        return RECENT;
-      case 'suggested':
-        return SUGGESTED;
-    }
-  }
-
   return (
     <Box flex={1} backgroundColor="ink.background-primary" style={{ paddingTop: top }}>
       <Box px="4" py="2" flexDirection="row">
@@ -151,7 +149,7 @@ export function BrowserEmptyState({
         </Box>
         {textURL ? (
           <TouchableOpacity p="3" mx="2" justifyContent="center" onPress={resetTextInput}>
-            <TransText variant="label02">Cancel </TransText>
+            <Text variant="label02">{t`Cancel`}</Text>
           </TouchableOpacity>
         ) : null}
       </Box>
@@ -161,21 +159,21 @@ export function BrowserEmptyState({
             onPress() {
               setCurrentTab('suggested');
             },
-            title: 'Suggested',
+            title: t`Suggested`,
             isActive: currentTab === 'suggested',
           },
           {
             onPress() {
               setCurrentTab('recent');
             },
-            title: 'Recent',
+            title: t`Recent`,
             isActive: currentTab === 'recent',
           },
           {
             onPress() {
               setCurrentTab('connected');
             },
-            title: 'Connected',
+            title: t`Connected`,
             isActive: currentTab === 'connected',
           },
         ]}
@@ -188,7 +186,7 @@ export function BrowserEmptyState({
           gap: theme.spacing[3],
         }}
       >
-        {getCurrentArray().map((shortcut, idx) => (
+        {getCurrentArray(currentTab).map((shortcut, idx) => (
           <AppWidget
             key={shortcut.link + idx}
             shortcut={shortcut}

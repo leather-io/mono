@@ -3,19 +3,18 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Chevron from '@/assets/chevron-right.svg';
 import { APP_ROUTES } from '@/constants';
 import { useWallets } from '@/state/wallets/wallets.slice';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
-import { TransText } from '../trans-text';
 import { AccountCard } from './account-card';
 
 export function MyAccounts() {
   const theme = useTheme<Theme>();
   const router = useRouter();
   const wallets = useWallets();
-
   if (wallets.list.length === 0) {
     return null;
   }
@@ -33,10 +32,10 @@ export function MyAccounts() {
     <Box style={{ marginBottom: 40 }}>
       <Box flexDirection="column" paddingBottom="3">
         <TouchableOpacity flexDirection="row" gap="1" alignItems="center">
-          <TransText variant="heading05">My accounts</TransText>
+          <Text variant="heading05">{t`My accounts`}</Text>
           <Chevron width={16} height={16} />
         </TouchableOpacity>
-        <TransText variant="caption01">$0</TransText>
+        <Text variant="caption01">$0</Text>
       </Box>
       <ScrollView horizontal contentContainerStyle={{ gap: theme.spacing['2'] }}>
         {accountComponents}

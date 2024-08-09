@@ -1,8 +1,7 @@
 import EmojiSmile from '@/assets/emoji-smile.svg';
+import { t } from '@lingui/macro';
 
-import { Box, TouchableOpacity } from '@leather.io/ui/native';
-
-import { TransText } from '../trans-text';
+import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 export function AccountHeader({ onPress }: { onPress?(): void }) {
   return (
@@ -17,7 +16,7 @@ export function AccountHeader({ onPress }: { onPress?(): void }) {
       <Box borderRadius="round" p="1" bg="blue.background-secondary">
         <EmojiSmile width={24} height={24} />
       </Box>
-      <TransText variant="heading05">Account 1</TransText>
+      <Text variant="heading05">{t`Account 1`}</Text>
     </TouchableOpacity>
   );
 }

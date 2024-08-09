@@ -1,6 +1,7 @@
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Text, Theme } from '@leather.io/ui/native';
@@ -19,7 +20,7 @@ export default function SettingsScreen() {
           gap: theme.spacing[5],
         }}
       >
-        <Text>Hello</Text>
+        <Text>{t`Hello`}</Text>
       </ScrollView>
     </Box>
   );

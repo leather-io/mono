@@ -8,12 +8,12 @@ import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/co
 import { Modal } from '@/components/bottom-sheet-modal';
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
-import { TransText } from '@/components/trans-text';
 import { APP_ROUTES } from '@/constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
-import { Box, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 function HeaderCenter({ onPress }: { onPress?(): void }) {
   return (
@@ -28,7 +28,7 @@ function HeaderCenter({ onPress }: { onPress?(): void }) {
       <Box borderRadius="round" p="1" bg="blue.background-secondary">
         <EmojiSmile width={24} height={24} />
       </Box>
-      <TransText variant="heading05">Account 1</TransText>
+      <Text variant="heading05">{t`Account 1`}</Text>
     </TouchableOpacity>
   );
 }
@@ -57,21 +57,21 @@ function HeaderBottom() {
           onPress() {
             router.navigate(APP_ROUTES.WalletAllAssets);
           },
-          title: 'All assets',
+          title: t`All assets`,
           isActive: pathname === APP_ROUTES.WalletAllAssets,
         },
         {
           onPress() {
             router.navigate(APP_ROUTES.WalletTokens);
           },
-          title: 'Tokens',
+          title: t`Tokens`,
           isActive: pathname === APP_ROUTES.WalletTokens,
         },
         {
           onPress() {
             router.navigate(APP_ROUTES.WalletCollectibles);
           },
-          title: 'Collectibles',
+          title: t`Collectibles`,
           isActive: pathname === APP_ROUTES.WalletCollectibles,
         },
       ]}
@@ -104,28 +104,28 @@ export default function TabLayout() {
         <Tabs.Screen
           name="all-assets"
           options={{
-            title: 'All Assets',
+            title: t`All Assets`,
             header: () => NavigationHeader,
           }}
         />
         <Tabs.Screen
           name="collectibles"
           options={{
-            title: 'Collectibles',
+            title: t`Collectibles`,
             header: () => NavigationHeader,
           }}
         />
         <Tabs.Screen
           name="tokens"
           options={{
-            title: 'Tokens',
+            title: t`Tokens`,
             header: () => NavigationHeader,
           }}
         />
       </Tabs>
       <ActionBarContainer ref={ref} />
       <Modal ref={bottomSheetModalRef}>
-        <TransText>Dummy modal text 🎉 Add blocks to see responsive modal</TransText>
+        <Text>{t`Dummy modal text 🎉 Add blocks to see responsive modal`}</Text>
       </Modal>
     </ActionBarContext.Provider>
   );

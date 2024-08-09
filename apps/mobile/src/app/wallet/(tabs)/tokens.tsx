@@ -1,11 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 
-import { TransText } from '@/components/trans-text';
+import { t } from '@lingui/macro';
+
+import { Text } from '@leather.io/ui/native';
 
 export default function TokenScreen() {
   return (
     <View style={styles.container}>
-      <TransText>Tokens 🪙</TransText>
+      <Text>{t`Tokens 🪙`}</Text>
     </View>
   );
 }

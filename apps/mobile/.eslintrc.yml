@@ -1,11 +1,24 @@
 extends:
   - '@leather.io/eslint-config'
   - universe/native
+plugins:
+  - 'lingui'
 parserOptions:
   project: ./tsconfig.json
 ignorePatterns:
   - .eslintrc.js
   - '*.js'
+  - '*.spec.ts'
+  - '*.test.ts'
 rules:
   import/order: 0
   no-void: 0
+  lingui/no-unlocalized-strings:
+    - error
+    - ignoreFunction:
+        - Error
+  lingui/t-call-in-function: 2
+  lingui/no-single-variables-to-translate: 2
+  lingui/no-expression-in-message: 2
+  lingui/no-single-tag-to-translate: 2
+  lingui/no-trans-inside-trans: 2
