@@ -20,7 +20,7 @@
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
-    "prepare": "husky install",
+    "prepare": "husky",
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
@@ -28,25 +28,23 @@
     "test:unit": "pnpm -r test:unit",
     "typecheck": "turbo run typecheck"
   },
-  "dependencies": {
-    "@ls-lint/ls-lint": "2.2.3",
-    "vitest": "2.0.3"
-  },
   "devDependencies": {
-    "@babel/runtime": "7.23.2",
+    "@babel/runtime": "7.25.0",
     "@changesets/cli": "2.26.2",
     "@commitlint/cli": "18.0.0",
     "@commitlint/config-conventional": "18.0.0",
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "dependency-cruiser": "16.2.4",
+    "@ls-lint/ls-lint": "2.2.3",
+    "dependency-cruiser": "16.3.10",
     "eslint": "8.53.0",
-    "husky": "8.0.3",
-    "prettier": "3.3.0",
-    "syncpack": "12.3.0",
-    "turbo": "2.0.10",
-    "typescript": "5.4.5"
+    "husky": "9.1.4",
+    "prettier": "3.3.3",
+    "syncpack": "12.4.0",
+    "turbo": "2.0.13",
+    "typescript": "5.5.4",
+    "vitest": "2.0.5"
   },
   "engines": {
     "node": ">=20.11.0",

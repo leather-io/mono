@@ -1,7 +1,1 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-LATEST_HASH=$(git rev-parse --verify HEAD)
-
-# Run commands only in packages with changed files compared to previous commit and on their dependants in parallel
-pnpm check:all --filter="...[$LATEST_HASH]"
+pnpm

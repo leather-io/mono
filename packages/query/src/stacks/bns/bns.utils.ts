@@ -72,7 +72,7 @@ export async function fetchBtcNameOwner(
     const btcRecord = zonefile.txt.find(record => record.name === '_btc._addr');
     if (isUndefined(btcRecord)) return null;
     const txtValue = btcRecord.txt;
-    return isString(txtValue) ? txtValue : txtValue[0] ?? null;
+    return isString(txtValue) ? txtValue : (txtValue[0] ?? null);
   } catch (error) {
     // Name not found or invalid zonefile
     return null;
