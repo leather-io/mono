@@ -47,7 +47,7 @@
     "@rnx-kit/metro-resolver-symlinks": "0.1.35",
     "@shopify/restyle": "2.4.2",
     "@storybook/react": "7.6.15",
-    "expo": "51.0.8",
+    "expo": "51.0.26",
     "expo-asset": "10.0.6",
     "expo-constants": "16.0.2",
     "expo-font": "12.0.5",
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
-    "@babel/runtime": "7.23.2",
+    "@babel/runtime": "7.25.0",
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
     "@pandacss/dev": "0.40.1",
@@ -95,7 +95,7 @@
     "style-loader": "3.3.4",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "tslib": "2.6.2",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   },
   "files": [
     "dist-all",

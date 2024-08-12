@@ -30,9 +30,9 @@
     "@leather.io/tsconfig-config": "workspace:*",
     "concurrently": "8.2.2",
     "eslint": "8.53.0",
-    "prettier": "3.3.0",
+    "prettier": "3.3.3",
     "tsup": "8.1.0",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   },
   "keywords": [
     "constants",

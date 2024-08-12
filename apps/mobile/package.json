@@ -63,9 +63,9 @@
     "@stacks/common": "6.13.0",
     "@stacks/transactions": "6.15.0",
     "@stacks/wallet-sdk": "6.15.0",
-    "@tanstack/react-query": "5.45.1",
+    "@tanstack/react-query": "5.51.23",
     "buffer": "6.0.3",
-    "expo": "51.0.8",
+    "expo": "51.0.26",
     "expo-asset": "10.0.6",
     "expo-blur": "13.0.2",
     "expo-clipboard": "6.0.3",
@@ -113,7 +113,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
-    "@babel/runtime": "7.23.2",
+    "@babel/runtime": "7.25.0",
     "@config-plugins/detox": "8.0.0",
     "@crowdin/cli": "4.1.1",
     "@leather.io/bitcoin": "workspace:*",
@@ -140,8 +140,8 @@
     "redux-devtools-expo-dev-plugin": "0.2.1",
     "ts-jest": "29.1.4",
     "tslib": "2.6.2",
-    "typescript": "5.4.5",
-    "vitest": "2.0.3"
+    "typescript": "5.5.4",
+    "vitest": "2.0.5"
   },
   "private": true,
   "publishConfig": {

@@ -1,4 +1,5 @@
 import { Query, QueryKey } from '@tanstack/react-query';
+import axios from 'axios';
 import { ZodError } from 'zod';
 
 export function formatQueryZodErrors(
@@ -14,3 +15,5 @@ export function formatQueryZodErrors(
     },
   ];
 }
+
+export const leatherQueryAxiosInstance = axios;
