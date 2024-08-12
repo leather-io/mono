@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig-config/tsconfig.base",
+  "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
   "compilerOptions": {
     "composite": true,
     "incremental": true,
@@ -9,6 +9,13 @@
     "rootDir": ".",
     "outDir": "./dist-native"
   },
-  "include": ["**/*.native.ts", "**/*.native.tsx", "native.ts", "**/theme-native/**/*"],
+  "include": [
+    "**/*.native.ts",
+    "**/*.native.tsx",
+    "native.ts",
+    "**/theme-native/**/*",
+    "src/icons/native/*",
+    "index.d.ts"
+  ],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
 }

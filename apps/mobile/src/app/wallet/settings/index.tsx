@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, Text, Theme, WalletIcon } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -21,6 +21,7 @@ export default function SettingsScreen() {
         }}
       >
         <Text>{t`Hello`}</Text>
+        <WalletIcon />
       </ScrollView>
     </Box>
   );
