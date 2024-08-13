@@ -14,13 +14,16 @@ import {
   BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
 } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 import { BlurView } from 'expo-blur';
 
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Theme, TouchableOpacity, createTextInput } from '@leather.io/ui/native';
+
+export const UIBottomSheetTextInput = createTextInput(BottomSheetTextInput);
 
 const absoluteStyle = {
   position: 'absolute',

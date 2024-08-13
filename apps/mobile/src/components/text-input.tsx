@@ -51,12 +51,14 @@ export function TextInput({
   Icon,
   ref,
   errorMessage,
+  TextInputComponent,
   ...rest
 }: Props & {
   inputState: InputState;
   Icon?: ReactNode;
   ref?: RefObject<RNTextInput>;
   errorMessage?: string;
+  TextInputComponent?: typeof UITextInput;
 }) {
   const _errorMessage = errorMessage ?? t`Something is wrong!`;
   const theme = useTheme<Theme>();
@@ -71,9 +73,11 @@ export function TextInput({
     }
   );
 
+  const _TextInput = TextInputComponent ?? UITextInput;
+
   return (
     <Box>
-      <UITextInput
+      <_TextInput
         placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}
         borderColor={borderColor}

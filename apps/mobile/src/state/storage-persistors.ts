@@ -82,7 +82,10 @@ export const tempMnemonicStore = {
   },
   async deleteTemporaryMnemonic() {
     await SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, getBasicSecureStoreConfig());
-    return SecureStore.deleteItemAsync(TEMPORARY_MNEMONIC_KEY, getBasicSecureStoreConfig());
+    return SecureStore.deleteItemAsync(
+      TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
+      getBasicSecureStoreConfig()
+    );
   },
 };
 
@@ -104,14 +107,11 @@ interface MnemonicStore {
 export function mnemonicStore(fingerprint: string): MnemonicStore {
   const passphraseKey = `${fingerprint}_passphrase`;
   return {
-    async getMnemonic(passphrase) {
+    async getMnemonic() {
       const mnemonic = await SecureStore.getItemAsync(fingerprint, getBasicSecureStoreConfig());
-      if (passphrase) {
-        const passphrase =
-          (await SecureStore.getItemAsync(passphraseKey, getBasicSecureStoreConfig())) ?? undefined;
-        return mnemonicSchema.parse({ mnemonic, passphrase });
-      }
-      return mnemonicSchema.parse({ mnemonic });
+      const passphrase =
+        (await SecureStore.getItemAsync(passphraseKey, getBasicSecureStoreConfig())) ?? undefined;
+      return mnemonicSchema.parse({ mnemonic, passphrase });
     },
     async setMnemonic({ mnemonic, passphrase, biometrics }) {
       if (passphrase)
