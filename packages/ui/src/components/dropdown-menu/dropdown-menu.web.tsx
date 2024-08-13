@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef } from 'react';
+import { Children, ReactNode, forwardRef } from 'react';
 
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 import { css } from 'leather-styles/css';
@@ -112,9 +112,12 @@ const Separator: typeof RadixDropdownMenu.Separator = forwardRef((props, ref) =>
 const dropdownMenuGroupStyles = css({
   p: 'space.02',
 });
-const Group: typeof RadixDropdownMenu.Group = forwardRef((props, ref) => (
-  <RadixDropdownMenu.Separator className={dropdownMenuGroupStyles} ref={ref} {...props} />
-));
+const Group: typeof RadixDropdownMenu.Group = forwardRef((props, ref) => {
+  const hasChildren = Children.toArray(props.children).length > 0;
+  return hasChildren ? (
+    <RadixDropdownMenu.Separator className={dropdownMenuGroupStyles} ref={ref} {...props} />
+  ) : null;
+});
 
 export const DropdownMenu = {
   Root: RadixDropdownMenu.Root,
