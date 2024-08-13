@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Checkmark from '@/assets/checkmark-circle.svg';
@@ -51,11 +52,10 @@ export default function CreateNewWallet() {
     <Box
       flex={1}
       backgroundColor="ink.background-primary"
-      px="5"
       justifyContent="space-between"
       style={{ paddingBottom: bottom + theme.spacing['5'] }}
     >
-      <Box>
+      <ScrollView style={{ paddingHorizontal: theme.spacing['5'] }}>
         <Box gap="3" pt="5">
           <TouchableOpacity
             onPress={() => {
@@ -108,15 +108,7 @@ export default function CreateNewWallet() {
             </BlurView>
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
-          <Box
-            p="3"
-            mt="3"
-            flexDirection="row"
-            gap="4"
-            borderColor="ink.text-subdued"
-            borderRadius="xs"
-            borderWidth={1}
-          >
+          <Box p="3" mt="3" flexDirection="row" gap="4" borderRadius="xs">
             <GraduateCap height={24} width={24} color={theme.colors['ink.text-subdued']} />
             <Text
               style={{
@@ -127,8 +119,7 @@ export default function CreateNewWallet() {
               variant="label03"
               color="ink.text-subdued"
             >
-              {t`We recommend writing these words in numbered order on a piece of paper and storing it
-              in a safe place.`}
+              {t`We recommend writing these words in numbered order on a piece of paper and storing it in a safe place.`}
               <Text
                 onPress={() => {
                   // TODO: navigate to a website
@@ -143,8 +134,8 @@ export default function CreateNewWallet() {
             </Text>
           </Box>
         </Box>
-      </Box>
-      <Box>
+      </ScrollView>
+      <Box px="5">
         <Button
           onPress={async () => {
             if (mnemonic) {

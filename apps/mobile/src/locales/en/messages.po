@@ -129,11 +129,11 @@ msgstr "Connected"
 msgid "Continue"
 msgstr "Continue"
 
-#: src/app/wallet/create-new-wallet.tsx:158
+#: src/app/wallet/create-new-wallet.tsx:149
 msgid "Copied to clipboard"
 msgstr "Copied to clipboard"
 
-#: src/app/wallet/create-new-wallet.tsx:158
+#: src/app/wallet/create-new-wallet.tsx:149
 msgid "Copy to clipboard"
 msgstr "Copy to clipboard"
 
@@ -255,7 +255,7 @@ msgstr "Hello"
 msgid "Here is the notification body"
 msgstr "Here is the notification body"
 
-#: src/app/wallet/create-new-wallet.tsx:165
+#: src/app/wallet/create-new-wallet.tsx:156
 msgid "I've backed it up"
 msgstr "I've backed it up"
 
@@ -268,7 +268,7 @@ msgstr "Import existing accounts"
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
-#: src/app/wallet/create-new-wallet.tsx:140
+#: src/app/wallet/create-new-wallet.tsx:131
 msgid "Learn more"
 msgstr "Learn more"
 
@@ -524,13 +524,9 @@ msgstr "Wallet added successfully"
 msgid "Wallet management"
 msgstr "Wallet management"
 
-#: src/app/wallet/create-new-wallet.tsx:130
-msgid ""
-"We recommend writing these words in numbered order on a piece of paper and storing it\n"
-"in a safe place."
-msgstr ""
-"We recommend writing these words in numbered order on a piece of paper and storing it\n"
-"in a safe place."
+#: src/app/wallet/create-new-wallet.tsx:122
+msgid "We recommend writing these words in numbered order on a piece of paper and storing it in a safe place."
+msgstr "We recommend writing these words in numbered order on a piece of paper and storing it in a safe place."
 
 #: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:46
 msgid "Yes, skip for now"
