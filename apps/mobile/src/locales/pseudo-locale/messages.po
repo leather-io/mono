@@ -46,6 +46,10 @@ msgstr ""
 msgid "Add wallet to \"Use case\""
 msgstr ""
 
+#: src/app/wallet/recover-wallet.tsx:155
+msgid "Advanced options"
+msgstr ""
+
 #: src/app/wallet/(tabs)/_layout.tsx:60
 msgid "All assets"
 msgstr ""
@@ -79,6 +83,11 @@ msgstr ""
 msgid "BACK UP YOUR SECRET KEY"
 msgstr ""
 
+#: src/app/wallet/recover-wallet.tsx:173
+#: src/components/recover-wallet/recover-wallet-modal.tsx:42
+msgid "BIP39 passphrase"
+msgstr ""
+
 #: src/components/browser/browser-empty-state.tsx:152
 msgid "Cancel"
 msgstr ""
@@ -100,6 +109,10 @@ msgstr ""
 msgid "Collectibles 🖼️"
 msgstr ""
 
+#: src/components/recover-wallet/recover-wallet-modal.tsx:65
+msgid "Confirm"
+msgstr ""
+
 #: src/components/add-wallet/add-wallet-modal.tsx:76
 msgid "Connect hardware wallet"
 msgstr ""
@@ -112,7 +125,7 @@ msgstr ""
 msgid "Connected"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:137
+#: src/app/wallet/recover-wallet.tsx:187
 msgid "Continue"
 msgstr ""
 
@@ -178,6 +191,10 @@ msgstr ""
 msgid "Developer tools"
 msgstr ""
 
+#: src/app/wallet/recover-wallet.tsx:175
+msgid "Disabled"
+msgstr ""
+
 #: src/app/waiting-list/waiting-list.tsx:254
 msgid "Done"
 msgstr ""
@@ -202,7 +219,11 @@ msgstr ""
 msgid "Enable device security"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:105
+#: src/app/wallet/recover-wallet.tsx:175
+msgid "Enabled"
+msgstr ""
+
+#: src/app/wallet/recover-wallet.tsx:121
 msgid "ENTER YOUR SECRET KEY"
 msgstr ""
 
@@ -243,7 +264,7 @@ msgstr ""
 msgid "Import existing accounts"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:21
+#: src/app/wallet/recover-wallet.tsx:27
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr ""
 
@@ -295,11 +316,15 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:113
+#: src/components/recover-wallet/recover-wallet-modal.tsx:49
+msgid "Passphrase"
+msgstr ""
+
+#: src/app/wallet/recover-wallet.tsx:129
 msgid "Paste"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:106
+#: src/app/wallet/recover-wallet.tsx:122
 msgid "Paste or type a Secret Key to add its associated wallet."
 msgstr ""
 
@@ -358,7 +383,7 @@ msgid ""
 "security features. We highly recommend enabling security to protect your assets"
 msgstr ""
 
-#: src/components/text-input.tsx:61
+#: src/components/text-input.tsx:63
 msgid "Something is wrong!"
 msgstr ""
 
@@ -475,7 +500,7 @@ msgstr ""
 msgid "Type URL or search"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:123
+#: src/app/wallet/recover-wallet.tsx:139
 msgid "Type your recovery phrase"
 msgstr ""
 

@@ -46,6 +46,10 @@ msgstr "Add Wallet"
 msgid "Add wallet to \"Use case\""
 msgstr "Add wallet to \"Use case\""
 
+#: src/app/wallet/recover-wallet.tsx:155
+msgid "Advanced options"
+msgstr "Advanced options"
+
 #: src/app/wallet/(tabs)/_layout.tsx:60
 msgid "All assets"
 msgstr "All assets"
@@ -79,6 +83,11 @@ msgstr "Amazing asset"
 msgid "BACK UP YOUR SECRET KEY"
 msgstr "BACK UP YOUR SECRET KEY"
 
+#: src/app/wallet/recover-wallet.tsx:173
+#: src/components/recover-wallet/recover-wallet-modal.tsx:42
+msgid "BIP39 passphrase"
+msgstr "BIP39 passphrase"
+
 #: src/components/browser/browser-empty-state.tsx:152
 msgid "Cancel"
 msgstr "Cancel"
@@ -100,6 +109,10 @@ msgstr "Collectibles"
 msgid "Collectibles 🖼️"
 msgstr "Collectibles 🖼️"
 
+#: src/components/recover-wallet/recover-wallet-modal.tsx:65
+msgid "Confirm"
+msgstr "Confirm"
+
 #: src/components/add-wallet/add-wallet-modal.tsx:76
 msgid "Connect hardware wallet"
 msgstr "Connect hardware wallet"
@@ -112,7 +125,7 @@ msgstr "Connect MPC wallet"
 msgid "Connected"
 msgstr "Connected"
 
-#: src/app/wallet/recover-wallet.tsx:137
+#: src/app/wallet/recover-wallet.tsx:187
 msgid "Continue"
 msgstr "Continue"
 
@@ -178,6 +191,10 @@ msgstr "Description"
 msgid "Developer tools"
 msgstr "Developer tools"
 
+#: src/app/wallet/recover-wallet.tsx:175
+msgid "Disabled"
+msgstr "Disabled"
+
 #: src/app/waiting-list/waiting-list.tsx:254
 msgid "Done"
 msgstr "Done"
@@ -202,7 +219,11 @@ msgstr "Email address"
 msgid "Enable device security"
 msgstr "Enable device security"
 
-#: src/app/wallet/recover-wallet.tsx:105
+#: src/app/wallet/recover-wallet.tsx:175
+msgid "Enabled"
+msgstr "Enabled"
+
+#: src/app/wallet/recover-wallet.tsx:121
 msgid "ENTER YOUR SECRET KEY"
 msgstr "ENTER YOUR SECRET KEY"
 
@@ -243,7 +264,7 @@ msgstr "I've backed it up"
 msgid "Import existing accounts"
 msgstr "Import existing accounts"
 
-#: src/app/wallet/recover-wallet.tsx:21
+#: src/app/wallet/recover-wallet.tsx:27
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
@@ -295,11 +316,15 @@ msgstr "Notify me when ready"
 msgid "Page"
 msgstr "Page"
 
-#: src/app/wallet/recover-wallet.tsx:113
+#: src/components/recover-wallet/recover-wallet-modal.tsx:49
+msgid "Passphrase"
+msgstr "Passphrase"
+
+#: src/app/wallet/recover-wallet.tsx:129
 msgid "Paste"
 msgstr "Paste"
 
-#: src/app/wallet/recover-wallet.tsx:106
+#: src/app/wallet/recover-wallet.tsx:122
 msgid "Paste or type a Secret Key to add its associated wallet."
 msgstr "Paste or type a Secret Key to add its associated wallet."
 
@@ -360,7 +385,7 @@ msgstr ""
 "Skipping security setup means your wallet will not be protected by your device’s\n"
 "security features. We highly recommend enabling security to protect your assets"
 
-#: src/components/text-input.tsx:61
+#: src/components/text-input.tsx:63
 msgid "Something is wrong!"
 msgstr "Something is wrong!"
 
@@ -479,7 +504,7 @@ msgstr "transferBtc"
 msgid "Type URL or search"
 msgstr "Type URL or search"
 
-#: src/app/wallet/recover-wallet.tsx:123
+#: src/app/wallet/recover-wallet.tsx:139
 msgid "Type your recovery phrase"
 msgstr "Type your recovery phrase"
 

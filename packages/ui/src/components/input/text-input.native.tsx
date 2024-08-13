@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, ComponentType } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
 import {
@@ -61,7 +61,11 @@ export const textInputRestyleFunctions = [
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
-export const TextInput = createRestyleComponent<BaseButtonProps<Theme>, Theme>(
-  textInputRestyleFunctions,
-  RNTextInput
-);
+export function createTextInput<T extends ComponentType>(TextInputComponent: T) {
+  return createRestyleComponent<BaseButtonProps<Theme>, Theme>(
+    textInputRestyleFunctions,
+    TextInputComponent
+  );
+}
+
+export const TextInput = createTextInput(RNTextInput);
