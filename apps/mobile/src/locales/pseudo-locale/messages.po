@@ -46,6 +46,10 @@ msgstr ""
 msgid "Add wallet to \"Use case\""
 msgstr ""
 
+#: src/app/wallet/generating-wallet.tsx:23
+msgid "Adding Wallet"
+msgstr ""
+
 #: src/app/wallet/recover-wallet.tsx:155
 msgid "Advanced options"
 msgstr ""
@@ -215,7 +219,7 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:85
+#: src/app/wallet/secure-your-wallet.tsx:88
 msgid "Enable device security"
 msgstr ""
 
@@ -352,7 +356,7 @@ msgstr ""
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:61
+#: src/app/wallet/secure-your-wallet.tsx:65
 msgid "SECURE YOUR WALLET"
 msgstr ""
 
@@ -373,7 +377,7 @@ msgstr ""
 msgid "signPsbt"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:76
+#: src/app/wallet/secure-your-wallet.tsx:80
 msgid "Skip for now"
 msgstr ""
 
@@ -504,7 +508,7 @@ msgstr ""
 msgid "Type your recovery phrase"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:63
+#: src/app/wallet/secure-your-wallet.tsx:67
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 msgstr ""
 
@@ -512,7 +516,7 @@ msgstr ""
 msgid "Wallet {fingerprint}"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:35
+#: src/app/wallet/secure-your-wallet.tsx:38
 msgid "Wallet added successfully"
 msgstr ""
 

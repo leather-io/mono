@@ -9,6 +9,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { APP_ROUTES } from '@/constants';
 import { useKeyStore } from '@/state/key-store';
 import { tempMnemonicStore } from '@/state/storage-persistors';
+import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -27,12 +28,15 @@ export default function () {
   async function createWallet(biometrics: boolean) {
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
+      router.navigate(APP_ROUTES.WalletGeneratingWallet);
+      await nextAnimationFrame();
       await keyStore.restoreWalletFromMnemonic({
         mnemonic,
         biometrics,
         passphrase: passphrase ?? undefined,
       });
       toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
+      router.navigate(APP_ROUTES.WalletHome);
     }
   }
 
@@ -79,7 +83,6 @@ export default function () {
             onPress={async () => {
               // TODO: set high security level
               await createWallet(true);
-              router.navigate(APP_ROUTES.WalletHome);
             }}
             buttonState="default"
             title={t`Enable device security`}
@@ -90,7 +93,6 @@ export default function () {
         onSkip={async () => {
           // TODO: set low security level
           await createWallet(false);
-          router.navigate(APP_ROUTES.WalletHome);
         }}
         skipSecureWalletModalRef={skipSecureWalletModalRef}
       />
