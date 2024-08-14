@@ -14,16 +14,20 @@ import { useAppDispatch } from '../utils';
 
 export type Theme = 'light' | 'dark' | 'system';
 
+export type WalletSecurityLevel = 'undefined' | 'secure' | 'insecure';
+
 export interface SettingsState {
   theme: Theme;
   network: DefaultNetworkConfigurations;
   createdOn: string;
+  walletSecurityLevel: WalletSecurityLevel;
 }
 
 const initialState: SettingsState = {
   theme: 'light',
   network: WalletDefaultNetworkConfigurationIds.mainnet,
   createdOn: new Date().toISOString(),
+  walletSecurityLevel: 'undefined',
 };
 
 export const settingsSlice = createSlice({
@@ -35,6 +39,9 @@ export const settingsSlice = createSlice({
     },
     userChangedNetwork(state, action: PayloadAction<DefaultNetworkConfigurations>) {
       state.network = action.payload;
+    },
+    userChangedWalletSecurityLevel(state, action: PayloadAction<WalletSecurityLevel>) {
+      state.walletSecurityLevel = action.payload;
     },
   },
   extraReducers: builder => builder.addCase(...handleAppResetWithState(initialState)),
@@ -49,11 +56,18 @@ export const selectNetwork = createSelector(
   state => defaultNetworksKeyedById[state.network]
 );
 
-export const { userChangedTheme, userChangedNetwork } = settingsSlice.actions;
+export const selectWalletSecurityLevel = createSelector(
+  selectSettings,
+  state => state.walletSecurityLevel
+);
+
+export const { userChangedTheme, userChangedNetwork, userChangedWalletSecurityLevel } =
+  settingsSlice.actions;
 
 export function useSettings() {
   const dispatch = useAppDispatch();
   const network = useSelector(selectNetwork);
+  const walletSecurityLevel = useSelector(selectWalletSecurityLevel);
   const theme = useSelector(selectTheme);
   return {
     theme,
@@ -76,6 +90,10 @@ export function useSettings() {
           ? userChangedNetwork('testnet')
           : userChangedNetwork('mainnet')
       );
+    },
+    walletSecurityLevel,
+    changeWalletSecurityLevel(level: WalletSecurityLevel) {
+      dispatch(userChangedWalletSecurityLevel(level));
     },
   };
 }

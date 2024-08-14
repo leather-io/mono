@@ -50,7 +50,7 @@ msgstr ""
 msgid "Adding Wallet"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:155
+#: src/app/wallet/recover-wallet.tsx:154
 msgid "Advanced options"
 msgstr ""
 
@@ -83,11 +83,11 @@ msgstr ""
 msgid "Amazing asset"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:72
+#: src/app/wallet/create-new-wallet.tsx:71
 msgid "BACK UP YOUR SECRET KEY"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:173
+#: src/app/wallet/recover-wallet.tsx:172
 #: src/components/recover-wallet/recover-wallet-modal.tsx:42
 msgid "BIP39 passphrase"
 msgstr ""
@@ -129,15 +129,15 @@ msgstr ""
 msgid "Connected"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:187
+#: src/app/wallet/recover-wallet.tsx:186
 msgid "Continue"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:149
+#: src/app/wallet/create-new-wallet.tsx:148
 msgid "Copied to clipboard"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:149
+#: src/app/wallet/create-new-wallet.tsx:148
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -153,7 +153,7 @@ msgstr ""
 msgid "Create or restore via email"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:85
+#: src/app/wallet/developer-console/index.tsx:86
 #: src/app/wallet/developer-console/wallet-manager.tsx:38
 msgid "Create wallet"
 msgstr ""
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Developer tools"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:175
+#: src/app/wallet/recover-wallet.tsx:174
 msgid "Disabled"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:115
+#: src/app/wallet/developer-console/index.tsx:116
 msgid "Drawer"
 msgstr ""
 
@@ -219,15 +219,15 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:88
+#: src/app/wallet/secure-your-wallet.tsx:65
 msgid "Enable device security"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:175
+#: src/app/wallet/recover-wallet.tsx:174
 msgid "Enabled"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:121
+#: src/app/wallet/recover-wallet.tsx:120
 msgid "ENTER YOUR SECRET KEY"
 msgstr ""
 
@@ -239,7 +239,7 @@ msgstr ""
 msgid "Follow us"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:104
+#: src/app/wallet/create-new-wallet.tsx:103
 msgid "For your eyes only"
 msgstr ""
 
@@ -247,7 +247,7 @@ msgstr ""
 msgid "Generating…"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:92
+#: src/app/wallet/developer-console/index.tsx:93
 msgid "getAddresses"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Here is the notification body"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:156
+#: src/app/wallet/create-new-wallet.tsx:155
 msgid "I've backed it up"
 msgstr ""
 
@@ -268,11 +268,11 @@ msgstr ""
 msgid "Import existing accounts"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:27
+#: src/app/wallet/recover-wallet.tsx:26
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:131
+#: src/app/wallet/create-new-wallet.tsx:130
 msgid "Learn more"
 msgstr ""
 
@@ -316,7 +316,7 @@ msgstr ""
 msgid "Notify me when ready"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:116
+#: src/app/wallet/developer-console/index.tsx:117
 msgid "Page"
 msgstr ""
 
@@ -324,11 +324,11 @@ msgstr ""
 msgid "Passphrase"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:129
+#: src/app/wallet/recover-wallet.tsx:128
 msgid "Paste"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:122
+#: src/app/wallet/recover-wallet.tsx:121
 msgid "Paste or type a Secret Key to add its associated wallet."
 msgstr ""
 
@@ -344,7 +344,7 @@ msgstr ""
 msgid "Recent"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:102
+#: src/app/wallet/developer-console/index.tsx:103
 msgid "register for Push notifications"
 msgstr ""
 
@@ -352,11 +352,11 @@ msgstr ""
 msgid "Restore wallet"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:106
+#: src/app/wallet/developer-console/index.tsx:107
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:65
+#: src/app/wallet/secure-your-wallet.tsx:43
 msgid "SECURE YOUR WALLET"
 msgstr ""
 
@@ -369,15 +369,15 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:110
+#: src/app/wallet/developer-console/index.tsx:111
 msgid "signMessage"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:112
+#: src/app/wallet/developer-console/index.tsx:113
 msgid "signPsbt"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:80
+#: src/app/wallet/secure-your-wallet.tsx:58
 msgid "Skip for now"
 msgstr ""
 
@@ -399,11 +399,11 @@ msgstr ""
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:114
+#: src/app/wallet/developer-console/index.tsx:115
 msgid "stx_signMessage"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:113
+#: src/app/wallet/developer-console/index.tsx:114
 msgid "stx_signTransaction"
 msgstr ""
 
@@ -427,7 +427,7 @@ msgstr ""
 msgid "Swap 🔄"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:102
+#: src/app/wallet/create-new-wallet.tsx:101
 msgid "Tap to view Secret Key"
 msgstr ""
 
@@ -471,7 +471,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:109
+#: src/app/wallet/developer-console/index.tsx:110
 msgid "toggle localization: {locale}"
 msgstr ""
 
@@ -479,7 +479,7 @@ msgstr ""
 msgid "Toggle network"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:80
+#: src/app/wallet/developer-console/index.tsx:81
 msgid "Toggle theme: Current {settingsTheme}"
 msgstr ""
 
@@ -496,7 +496,7 @@ msgstr ""
 msgid "Total rewards"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:111
+#: src/app/wallet/developer-console/index.tsx:112
 msgid "transferBtc"
 msgstr ""
 
@@ -504,11 +504,11 @@ msgstr ""
 msgid "Type URL or search"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:139
+#: src/app/wallet/recover-wallet.tsx:138
 msgid "Type your recovery phrase"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:67
+#: src/app/wallet/secure-your-wallet.tsx:45
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 msgstr ""
 
@@ -516,15 +516,19 @@ msgstr ""
 msgid "Wallet {fingerprint}"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:38
+#: src/hooks/create-wallet.ts:27
 msgid "Wallet added successfully"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:88
+#: src/app/wallet/developer-console/index.tsx:89
 msgid "Wallet management"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:122
+#: src/app/wallet/developer-console/index.tsx:79
+msgid "walletSecurityLevel:"
+msgstr ""
+
+#: src/app/wallet/create-new-wallet.tsx:121
 msgid "We recommend writing these words in numbered order on a piece of paper and storing it in a safe place."
 msgstr ""
 
@@ -536,6 +540,6 @@ msgstr ""
 msgid "You've got mail! 📬"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:74
+#: src/app/wallet/create-new-wallet.tsx:73
 msgid "Your Secret Key grants you access to your wallet and its assets."
 msgstr ""

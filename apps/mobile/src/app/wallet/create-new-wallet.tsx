@@ -9,13 +9,12 @@ import GraduateCap from '@/assets/graduate-cap.svg';
 import Pointer from '@/assets/pointer.svg';
 import { Button } from '@/components/button';
 import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
-import { APP_ROUTES } from '@/constants';
+import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/state/storage-persistors';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
-import { useRouter } from 'expo-router';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
@@ -37,10 +36,10 @@ function MnemonicDisplay({ mnemonic }: { mnemonic: string | null }) {
 export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const router = useRouter();
   const [isHidden, setIsHidden] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
+  const { navigateAndCreateWallet } = useCreateWallet();
 
   useEffect(() => {
     const tempMnemonic = generateMnemonic();
@@ -150,7 +149,7 @@ export default function CreateNewWallet() {
         />
         <Button
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletSecureYourWallet);
+            navigateAndCreateWallet();
           }}
           buttonState="default"
           title={t`I've backed it up`}
