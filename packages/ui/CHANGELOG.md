@@ -91,6 +91,29 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.11.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.10.1...@leather.io/ui-v1.11.0) (2024-08-14)
+
+
+### Features
+
+* implement bip39 passphrase ([84d72f7](https://github.com/leather-io/mono/commit/84d72f772f583b2b4985d02ed67dcbc689de90be))
+* **mobile:** use dark mode ([087739b](https://github.com/leather-io/mono/commit/087739b1f6139215a1ed5aa1cca27d9df8a47a40))
+
+
+### Bug Fixes
+
+* improve watch mode ([38e257c](https://github.com/leather-io/mono/commit/38e257c31384ba96b521164891c65016baa12a19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.7.1
+    * @leather.io/utils bumped to 0.12.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.3.5
+
 ## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.9.2...@leather.io/ui-v1.10.0) (2024-08-04)
 
 

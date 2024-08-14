@@ -156,6 +156,25 @@
     * @leather.io/crypto bumped to 1.3.0
     * @leather.io/utils bumped to 0.12.0
 
+## [0.10.4](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.10.3...@leather.io/bitcoin-v0.10.4) (2024-08-14)
+
+
+### Bug Fixes
+
+* improve watch mode ([38e257c](https://github.com/leather-io/mono/commit/38e257c31384ba96b521164891c65016baa12a19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.8.3
+    * @leather.io/crypto bumped to 1.3.1
+    * @leather.io/models bumped to 0.11.1
+    * @leather.io/utils bumped to 0.12.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.1.3
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.9.2...@leather.io/bitcoin-v0.10.0) (2024-07-29)
 
 

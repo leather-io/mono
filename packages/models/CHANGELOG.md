@@ -18,6 +18,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+## [0.11.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.11.0...@leather.io/models-v0.11.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* improve watch mode ([38e257c](https://github.com/leather-io/mono/commit/38e257c31384ba96b521164891c65016baa12a19))
+
 ## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.10.2...@leather.io/models-v0.11.0) (2024-07-31)
 
 

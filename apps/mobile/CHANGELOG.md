@@ -153,6 +153,43 @@
   * dependencies
     * @leather.io/ui bumped to 1.9.2
 
+## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.21.0...@leather.io/mobile-v1.22.0) (2024-08-14)
+
+
+### Features
+
+* add lingui eslint and localize strings ([98af657](https://github.com/leather-io/mono/commit/98af657a7b05f40c5685bf29bad711437b9e5bcc))
+* add lottie animation ([5c42c51](https://github.com/leather-io/mono/commit/5c42c5174ed5595264b43e70dc45974d7858ceb9))
+* implement bip39 passphrase ([84d72f7](https://github.com/leather-io/mono/commit/84d72f772f583b2b4985d02ed67dcbc689de90be))
+* keep user's wallet security level decision ([6147001](https://github.com/leather-io/mono/commit/6147001dc8cb21ffd1979f7db12f6ef4c14b8e34))
+* keep user's wallet security level decision ([f86d08d](https://github.com/leather-io/mono/commit/f86d08dcef7dbc3a02ffe99f3b75c6876d9b7b4a))
+* **mobile:** use dark mode ([087739b](https://github.com/leather-io/mono/commit/087739b1f6139215a1ed5aa1cca27d9df8a47a40))
+* notify on existing wallet ([b808813](https://github.com/leather-io/mono/commit/b80881307f8d4eb33014d61a4b5927edf5248a0d))
+
+
+### Bug Fixes
+
+* display active developer console functionality first ([925f20b](https://github.com/leather-io/mono/commit/925f20b744ca967574340163eccecb2c23208881))
+* header should be under bottom sheet overlay ([c090fbb](https://github.com/leather-io/mono/commit/c090fbb007d7fe5410be89f90f37da7bdbeee26b))
+* **mobile:** stacks account grouping, closes leather-io/issues[#246](https://github.com/leather-io/mono/issues/246) ([ca70903](https://github.com/leather-io/mono/commit/ca70903e39c56e610f4bf1643038266b7f84d3ec))
+* update create wallet styles ([c096241](https://github.com/leather-io/mono/commit/c096241c87f3ba179fe3b4f435b35dfa03d757e9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.4
+    * @leather.io/constants bumped to 0.8.3
+    * @leather.io/crypto bumped to 1.3.1
+    * @leather.io/models bumped to 0.11.1
+    * @leather.io/rpc bumped to 2.1.3
+    * @leather.io/tokens bumped to 0.7.1
+    * @leather.io/ui bumped to 1.11.0
+    * @leather.io/utils bumped to 0.12.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.10.4
+
 ## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.20.0...@leather.io/mobile-v1.21.0) (2024-08-08)
 
 

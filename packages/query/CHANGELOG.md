@@ -142,6 +142,24 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.4.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.4.2...@leather.io/query-v2.4.3) (2024-08-14)
+
+
+### Bug Fixes
+
+* **query:** remove internal zod fail handling ([56712ee](https://github.com/leather-io/mono/commit/56712eeb44ffc8b92856a2d5fbc6a2603d5720a2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.10.4
+    * @leather.io/constants bumped to 0.8.3
+    * @leather.io/models bumped to 0.11.1
+    * @leather.io/rpc bumped to 2.1.3
+    * @leather.io/utils bumped to 0.12.1
+
 ## [2.4.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.3.0...@leather.io/query-v2.4.0) (2024-08-05)
 
 
