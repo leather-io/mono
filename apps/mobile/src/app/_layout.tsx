@@ -1,4 +1,4 @@
-import { StatusBar, useColorScheme } from 'react-native';
+import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -65,16 +65,16 @@ export default function RootLayout() {
 }
 
 function ThemeProvider({ children }: HasChildren) {
-  const settings = useSettings();
-  const systemTheme = useColorScheme();
-  const theme = settings.theme === 'system' ? systemTheme : settings.theme;
-  return <LeatherThemeProvider theme={theme ?? 'light'}>{children}</LeatherThemeProvider>;
+  const { theme } = useSettings();
+  return <LeatherThemeProvider theme={theme}>{children}</LeatherThemeProvider>;
 }
 
 function AppRouter() {
+  const { whenTheme } = useSettings();
+
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle={whenTheme({ dark: 'light-content', light: 'dark-content' } as const)} />
       <Slot />
     </Box>
   );
