@@ -11,7 +11,11 @@ import { initalizeStacksAccount, stacksChainIdToCoreNetworkMode } from '@leather
 
 import type { RootState } from '../..';
 import { handleEntityActionWith } from '../../utils';
-import { descriptorKeychainSelectors, filterKeychainsToRemove } from '../keychains';
+import {
+  descriptorKeychainSelectors,
+  filterKeychainsByStacksAccount,
+  filterKeychainsToRemove,
+} from '../keychains';
 
 export interface StacksKeychainStore {
   // Stacks doesn't use the concept of BIP-380 Descriptors the same way Bitcoin
@@ -66,5 +70,5 @@ const stacksKeychainList = createSelector(
 
 export function useStacksKeychains() {
   const list = useSelector(stacksKeychainList);
-  return useMemo(() => descriptorKeychainSelectors(list), [list]);
+  return useMemo(() => descriptorKeychainSelectors(list, filterKeychainsByStacksAccount), [list]);
 }
