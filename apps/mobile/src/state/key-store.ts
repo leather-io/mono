@@ -18,6 +18,19 @@ import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.slice';
 
+export enum KEYCHAIN_ERROR {
+  WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
+}
+
+export const keychainErrorHandlers = {
+  throwKeyExistsError() {
+    throw new Error(KEYCHAIN_ERROR.WALLET_ALREADY_EXISTS);
+  },
+  isKeyExistsError(e: unknown) {
+    return e instanceof Error && e.message === KEYCHAIN_ERROR.WALLET_ALREADY_EXISTS;
+  },
+};
+
 export function useKeyStore() {
   const dispatch = useAppDispatch();
   const wallets = useWallets();
@@ -34,6 +47,10 @@ export function useKeyStore() {
       return this.restoreWalletFromMnemonic({ mnemonic, biometrics: true });
     },
 
+    async isWalletInKeychain({ fingerprint }: { fingerprint: string }) {
+      return !!wallets.list.find(wallet => wallet.fingerprint === fingerprint);
+    },
+
     async restoreWalletFromMnemonic({
       biometrics,
       mnemonic,
@@ -44,6 +61,10 @@ export function useKeyStore() {
       passphrase?: string;
     }) {
       const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
+      if (await this.isWalletInKeychain({ fingerprint })) {
+        keychainErrorHandlers.throwKeyExistsError();
+        return;
+      }
       await mnemonicStore(fingerprint).setMnemonic({ mnemonic, biometrics, passphrase });
       const { bitcoinKeychains, stacksKeychains } =
         await this.deriveNextAccountKeychainsFrom(fingerprint);

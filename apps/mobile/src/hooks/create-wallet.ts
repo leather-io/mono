@@ -1,6 +1,6 @@
 import { useToastContext } from '@/components/toast/toast-context';
 import { APP_ROUTES } from '@/constants';
-import { useKeyStore } from '@/state/key-store';
+import { keychainErrorHandlers, useKeyStore } from '@/state/key-store';
 import { useSettings } from '@/state/settings/settings.slice';
 import { tempMnemonicStore } from '@/state/storage-persistors';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
@@ -12,20 +12,29 @@ export function useCreateWallet() {
   const toastContext = useToastContext();
   const keyStore = useKeyStore();
   const { walletSecurityLevel, changeWalletSecurityLevel } = useSettings();
-
   async function createWallet({ biometrics }: { biometrics: boolean }) {
     changeWalletSecurityLevel(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
       router.navigate(APP_ROUTES.WalletGeneratingWallet);
       await nextAnimationFrame();
-      await keyStore.restoreWalletFromMnemonic({
-        mnemonic,
-        biometrics,
-        passphrase: passphrase ?? undefined,
-      });
-      toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
-      router.navigate(APP_ROUTES.WalletHome);
+      try {
+        await keyStore.restoreWalletFromMnemonic({
+          mnemonic,
+          biometrics,
+          passphrase: passphrase ?? undefined,
+        });
+        toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
+        router.navigate(APP_ROUTES.WalletHome);
+      } catch (e) {
+        if (keychainErrorHandlers.isKeyExistsError(e)) {
+          toastContext.displayToast({ type: 'info', title: t`Wallet already exists` });
+          router.back();
+          return;
+        }
+        toastContext.displayToast({ type: 'info', title: t`Something went wrong` });
+        router.back();
+      }
     }
   }
 
