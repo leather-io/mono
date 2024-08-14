@@ -23,7 +23,11 @@ import {
 
 import type { RootState } from '../..';
 import { handleEntityActionWith } from '../../utils';
-import { descriptorKeychainSelectors, filterKeychainsToRemove } from '../keychains';
+import {
+  descriptorKeychainSelectors,
+  filterKeychainsByAccountIndex,
+  filterKeychainsToRemove,
+} from '../keychains';
 
 export interface BitcoinKeychainStore {
   descriptor: string;
@@ -93,5 +97,5 @@ const bitcoinKeychainList = createSelector(
 
 export function useBitcoinKeychains() {
   const list = useSelector(bitcoinKeychainList);
-  return useMemo(() => descriptorKeychainSelectors(list), [list]);
+  return useMemo(() => descriptorKeychainSelectors(list, filterKeychainsByAccountIndex), [list]);
 }
