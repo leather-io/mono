@@ -76,6 +76,7 @@ export default function DeveloperConsoleScreen() {
           gap: theme.spacing[2],
         }}
       >
+        <PressableListItem title={t`walletSecurityLevel:` + ' ' + settings.walletSecurityLevel} />
         <PressableListItem
           title={t`Toggle theme: Current ${settingsTheme}`}
           onPress={() => settings.toggleTheme()}

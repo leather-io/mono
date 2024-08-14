@@ -11,13 +11,12 @@ import Note from '@/assets/note-2.svg';
 import { Button } from '@/components/button';
 import { RecoverWalletModal } from '@/components/recover-wallet/recover-wallet-modal';
 import { InputState, TextInput } from '@/components/text-input';
-import { APP_ROUTES } from '@/constants';
+import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/state/storage-persistors';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
-import { useRouter } from 'expo-router';
 
 import { isValidMnemonic, isValidMnemonicWord } from '@leather.io/crypto';
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
@@ -37,7 +36,6 @@ function getInvalidMnemonicWords(recoveryMnemonic: string) {
 export default function RecoverWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const router = useRouter();
   const [recoveryMnemonic, setRecoveryMnemonic] = useState('');
   const inputRef = useRef<RNTextInput>(null);
   const [inputState, setInputState] = useState<InputState>('default');
@@ -46,6 +44,7 @@ export default function RecoverWallet() {
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const recoverWalletModalRef = useRef<BottomSheetModal>(null);
   const [passphrase, setPassphrase] = useState('');
+  const { navigateAndCreateWallet } = useCreateWallet();
 
   function validateMnemonicOnBlur() {
     const invalidWords = getInvalidMnemonicWords(recoveryMnemonic);
@@ -78,7 +77,7 @@ export default function RecoverWallet() {
     const isValid = isValidMnemonic(recoveryMnemonic);
     if (isValid) {
       await tempMnemonicStore.setTemporaryMnemonic(recoveryMnemonic, passphrase);
-      router.navigate(APP_ROUTES.WalletSecureYourWallet);
+      navigateAndCreateWallet();
     }
   }
 

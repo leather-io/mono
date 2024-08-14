@@ -5,40 +5,18 @@ import CircleQuestionMark from '@/assets/circle-questionmark.svg';
 import Lock from '@/assets/lock.svg';
 import { Button } from '@/components/button';
 import { SkipSecureWalletModal } from '@/components/secure-your-wallet/skip-secure-wallet-modal';
-import { useToastContext } from '@/components/toast/toast-context';
-import { APP_ROUTES } from '@/constants';
-import { useKeyStore } from '@/state/key-store';
-import { tempMnemonicStore } from '@/state/storage-persistors';
-import { nextAnimationFrame } from '@/utils/next-animation-frame';
+import { useCreateWallet } from '@/hooks/create-wallet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import { useRouter } from 'expo-router';
 
 import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
-export default function () {
+export default function SecureYourWalletScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const skipSecureWalletModalRef = useRef<BottomSheetModal>(null);
-  const router = useRouter();
-  const toastContext = useToastContext();
-  const keyStore = useKeyStore();
-
-  async function createWallet(biometrics: boolean) {
-    const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
-    if (mnemonic) {
-      router.navigate(APP_ROUTES.WalletGeneratingWallet);
-      await nextAnimationFrame();
-      await keyStore.restoreWalletFromMnemonic({
-        mnemonic,
-        biometrics,
-        passphrase: passphrase ?? undefined,
-      });
-      toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
-      router.navigate(APP_ROUTES.WalletHome);
-    }
-  }
+  const { createWallet } = useCreateWallet();
 
   return (
     <>
@@ -81,8 +59,7 @@ export default function () {
           />
           <Button
             onPress={async () => {
-              // TODO: set high security level
-              await createWallet(true);
+              await createWallet({ biometrics: true });
             }}
             buttonState="default"
             title={t`Enable device security`}
@@ -91,8 +68,7 @@ export default function () {
       </Box>
       <SkipSecureWalletModal
         onSkip={async () => {
-          // TODO: set low security level
-          await createWallet(false);
+          await createWallet({ biometrics: false });
         }}
         skipSecureWalletModalRef={skipSecureWalletModalRef}
       />
