@@ -10,6 +10,7 @@ import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/state';
 import { useSettings } from '@/state/settings/settings.slice';
 import { HasChildren } from '@/utils/types';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -47,9 +48,11 @@ export default function RootLayout() {
               <ThemeProvider>
                 <SplashScreenGuard>
                   <GestureHandlerRootView style={{ flex: 1 }}>
-                    <ToastWrapper>
-                      <AppRouter />
-                    </ToastWrapper>
+                    <BottomSheetModalProvider>
+                      <ToastWrapper>
+                        <AppRouter />
+                      </ToastWrapper>
+                    </BottomSheetModalProvider>
                   </GestureHandlerRootView>
                 </SplashScreenGuard>
               </ThemeProvider>

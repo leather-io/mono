@@ -163,7 +163,7 @@ export function AddWalletModalUI({
   }));
 
   return (
-    <Modal animatedPosition={animatedPosition} ref={addWalletModalRef}>
+    <Modal isScrollView animatedPosition={animatedPosition} ref={addWalletModalRef}>
       <AnimatedBox style={animatedStyle}>
         <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
           <Image

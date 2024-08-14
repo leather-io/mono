@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   BottomSheetBackdropProps,
   BottomSheetModal,
-  BottomSheetModalProvider,
+  BottomSheetScrollView,
   BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
@@ -79,38 +79,43 @@ export const CLOSED_ANIMATED_POSITION = -888;
 
 export const Modal = forwardRef<
   BottomSheetModal,
-  { children: ReactNode; animatedPosition?: SharedValue<number>; onDismiss?(): void }
->(function ({ children, animatedPosition, onDismiss }, ref) {
+  {
+    isScrollView?: boolean;
+    children: ReactNode;
+    animatedPosition?: SharedValue<number>;
+    onDismiss?(): void;
+  }
+>(function ({ isScrollView, children, animatedPosition, onDismiss }, ref) {
   const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_POSITION);
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
+  const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
   return (
-    <BottomSheetModalProvider>
-      <BottomSheetModal
-        onDismiss={onDismiss}
-        enableDynamicSizing
-        ref={ref}
-        enablePanDownToClose
-        backdropComponent={Backdrop}
-        animatedPosition={internalAnimatedPosition}
-        handleComponent={() => (
-          <Box position="absolute" top={-12} width="100%" alignItems="center">
-            <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
-          </Box>
-        )}
+    <BottomSheetModal
+      stackBehavior="push"
+      onDismiss={onDismiss}
+      enableDynamicSizing
+      ref={ref}
+      enablePanDownToClose
+      backdropComponent={Backdrop}
+      animatedPosition={internalAnimatedPosition}
+      handleComponent={() => (
+        <Box position="absolute" top={-12} width="100%" alignItems="center">
+          <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
+        </Box>
+      )}
+    >
+      <BottomSheetComponent
+        style={{
+          paddingBottom: bottom,
+          borderTopLeftRadius: theme.borderRadii.lg,
+          borderTopRightRadius: theme.borderRadii.lg,
+          overflow: 'hidden',
+        }}
       >
-        <BottomSheetView
-          style={{
-            paddingBottom: bottom,
-            borderTopLeftRadius: theme.borderRadii.lg,
-            borderTopRightRadius: theme.borderRadii.lg,
-            overflow: 'hidden',
-          }}
-        >
-          {children}
-        </BottomSheetView>
-      </BottomSheetModal>
-    </BottomSheetModalProvider>
+        {children}
+      </BottomSheetComponent>
+    </BottomSheetModal>
   );
 });
