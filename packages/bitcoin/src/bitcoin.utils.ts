@@ -31,6 +31,17 @@ export function initBitcoinAccount(derivationPath: string, policy: string): Bitc
   };
 }
 
+export function makeBitcoinDerivationPath(
+  paymentType: PaymentTypes,
+  network: BitcoinNetworkModes,
+  accountIndex: number,
+  addressIndex: number
+) {
+  const purpose = derivationPathPurposeByPaymentType(paymentType);
+  const coinType = getBitcoinCoinTypeIndexByNetwork(network);
+  return `m/${purpose}'/${coinType}'/${accountIndex}'/0/${addressIndex}`;
+}
+
 /**
  * Represents a map of `BitcoinNetworkModes` to `NetworkModes`. While Bitcoin
  * has a number of networks, its often only necessary to consider the higher
@@ -44,6 +55,24 @@ export const bitcoinNetworkToCoreNetworkMap: Record<BitcoinNetworkModes, Network
 };
 export function bitcoinNetworkModeToCoreNetworkMode(mode: BitcoinNetworkModes) {
   return bitcoinNetworkToCoreNetworkMap[mode];
+}
+
+/**
+ * Map representing the "Purpose" section of a derivation path. Consider example
+ * below, purpose is 86, thus a taproot payment
+ * @example
+ * `m/86'/0'/0'/0/0`
+ */
+export const derivationPurposeMap: Record<PaymentTypes, number> = {
+  p2pkh: 44,
+  p2wpkh: 84,
+  p2tr: 86,
+  p2sh: 49,
+  'p2wpkh-p2sh': 49,
+};
+
+export function derivationPathPurposeByPaymentType(payment: PaymentTypes) {
+  return derivationPurposeMap[payment];
 }
 
 /**
