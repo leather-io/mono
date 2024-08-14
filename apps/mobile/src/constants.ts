@@ -17,5 +17,6 @@ export enum APP_ROUTES {
   WalletRecoverWallet = '/wallet/recover-wallet',
   WalletSecureYourWallet = '/wallet/secure-your-wallet',
   WalletSettings = '/wallet/settings',
+  WalletGeneratingWallet = '/wallet/generating-wallet',
   WaitingList = '/waiting-list',
 }
