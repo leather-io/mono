@@ -6,6 +6,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.11.1
 
+## [1.3.1](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.3.0...@leather.io/crypto-v1.3.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* improve watch mode ([38e257c](https://github.com/leather-io/mono/commit/38e257c31384ba96b521164891c65016baa12a19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.12.1
+
 ## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.2.0...@leather.io/crypto-v1.3.0) (2024-08-08)
 
 

@@ -72,6 +72,20 @@
   * dependencies
     * @leather.io/models bumped to 0.11.0
 
+## [2.1.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.2...@leather.io/rpc-v2.1.3) (2024-08-14)
+
+
+### Bug Fixes
+
+* improve watch mode ([38e257c](https://github.com/leather-io/mono/commit/38e257c31384ba96b521164891c65016baa12a19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.11.1
+
 ## [2.1.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.0...@leather.io/rpc-v2.1.1) (2024-07-29)
 
 
