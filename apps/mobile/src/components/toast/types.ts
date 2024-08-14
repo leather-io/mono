@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 
-export type ToastType = 'success';
+export type ToastType = 'success' | 'info';
 
 export interface ToastData {
   title: string;

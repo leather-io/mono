@@ -391,6 +391,10 @@ msgstr ""
 msgid "Something is wrong!"
 msgstr ""
 
+#: src/hooks/create-wallet.ts:35
+msgid "Something went wrong"
+msgstr ""
+
 #: src/components/home/earn.tsx:24
 msgid "Start stacking"
 msgstr ""
@@ -518,6 +522,10 @@ msgstr ""
 
 #: src/hooks/create-wallet.ts:27
 msgid "Wallet added successfully"
+msgstr ""
+
+#: src/hooks/create-wallet.ts:31
+msgid "Wallet already exists"
 msgstr ""
 
 #: src/app/wallet/developer-console/index.tsx:89

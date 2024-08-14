@@ -24,6 +24,8 @@ function getIcon(type: ToastType, theme: Theme) {
       return (
         <CheckmarkCircle height={24} width={24} color={theme.colors['ink.background-primary']} />
       );
+    case 'info':
+      return null;
   }
 }
 
@@ -32,6 +34,7 @@ function getBackground(
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (type) {
     case 'success':
+    case 'info':
       return 'ink.text-primary';
   }
 }
