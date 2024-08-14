@@ -6,7 +6,6 @@ import { deriveBip39SeedFromMnemonic } from '@leather.io/crypto';
 import { testMnemonic } from '../../../config/test-helpers';
 import {
   deriveStxPrivateKey,
-  initalizeStacksAccount,
   stacksRootKeychainToAccountDescriptor,
   whenStacksChainId,
 } from './stacks.utils';
@@ -56,19 +55,5 @@ describe(stacksRootKeychainToAccountDescriptor.name, () => {
     expect(descriptor).toEqual(
       "[24682ead/44'/5757'/0'/0/0]025b2c58cbf22ad02e1a53041189ace847192834e0664cab4ed1a39676e8a8ddf8"
     );
-  });
-});
-
-describe(initalizeStacksAccount.name, () => {
-  const descriptor = stacksRootKeychainToAccountDescriptor(testMnemonicKeychain, 0);
-
-  test('it derives the correct mainnet address', () => {
-    const account = initalizeStacksAccount(descriptor, 'mainnet');
-    expect(account.address).toEqual('SP148VBW07WJ81V6B1FM0QP4AKB14QSRQQXERFRRV');
-  });
-
-  test('it derives the correct testnet address', () => {
-    const account = initalizeStacksAccount(descriptor, 'testnet');
-    expect(account.address).toEqual('ST148VBW07WJ81V6B1FM0QP4AKB14QSRQQZ717SWG');
   });
 });

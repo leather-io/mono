@@ -28,6 +28,10 @@ export function deriveRootBip32Keychain(seed: Uint8Array) {
   return HDKey.fromMasterSeed(seed);
 }
 
+export async function deriveRootKeychainFromMnemonic(mnemonic: string, passphrase?: string) {
+  return deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic, passphrase));
+}
+
 export function deriveKeychainFromXpub(xpub: string) {
   return HDKey.fromExtendedKey(xpub);
 }

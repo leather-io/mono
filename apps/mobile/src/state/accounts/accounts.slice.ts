@@ -118,8 +118,8 @@ export const accountsSlice = createSlice({
 
 const selectors = adapter.getSelectors((state: RootState) => state.accounts);
 
-export const selectAccounts = (status?: AccountStatus) =>
-  createSelector(selectors.selectAll, accounts => {
+export function selectAccounts(status?: AccountStatus) {
+  return createSelector(selectors.selectAll, accounts => {
     switch (status) {
       case 'active':
         return accounts.filter(account => account.status === 'active').map(initalizeAccount);
@@ -129,16 +129,19 @@ export const selectAccounts = (status?: AccountStatus) =>
         return accounts.map(initalizeAccount);
     }
   });
+}
 
 export const selectAccountsByFingerprint = (fingerprint: string, status?: AccountStatus) =>
   createSelector(selectAccounts(status), accounts =>
     accounts.filter(account => account.fingerprint === fingerprint)
   );
-export const selectAccountByIdx = (fingerprint: string, idx: number) =>
-  createSelector(
+
+export function selectAccountByIndex(fingerprint: string, idx: number) {
+  return createSelector(
     selectAccountsByFingerprint(fingerprint),
     accounts => accounts.filter(account => account.accountIndex === idx)[0]
   );
+}
 
 export function useAccountsByFingerprint(fingerprint: string, status?: AccountStatus) {
   return {
@@ -152,8 +155,8 @@ export function useAccounts(status?: AccountStatus) {
   };
 }
 
-export function useAccountByIdx(fingerprint: string, idx: number) {
-  return useSelector(selectAccountByIdx(fingerprint, idx));
+export function useAccountByIndex(fingerprint: string, index: number) {
+  return useSelector(selectAccountByIndex(fingerprint, index));
 }
 
 type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;

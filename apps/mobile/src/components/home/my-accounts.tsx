@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { APP_ROUTES } from '@/routes';
+import { useAccounts } from '@/state/accounts/accounts.slice';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
@@ -17,16 +18,16 @@ export function MyAccounts() {
   const theme = useTheme<Theme>();
   const router = useRouter();
   const wallets = useWallets();
+  const accounts = useAccounts();
   const modalRef = useRef<BottomSheetModal>(null);
-  if (wallets.list.length === 0) {
-    return null;
-  }
 
-  const accountComponents = wallets.list.map(wallet => (
+  if (wallets.list.length === 0) return null;
+
+  const accountComponents = accounts.list.map(account => (
     <AccountCard
-      key={wallet.fingerprint}
-      fingerprint={wallet.fingerprint}
-      type={wallet.type}
+      type="software"
+      key={account.id}
+      fingerprint={account.id}
       onPress={() => router.push(APP_ROUTES.WalletAllAssets)}
     />
   ));
@@ -46,6 +47,7 @@ export function MyAccounts() {
         <Text variant="caption01">$0</Text>
       </Box>
       <ScrollView
+        showsHorizontalScrollIndicator={false}
         horizontal
         contentContainerStyle={{ gap: theme.spacing['2'], paddingHorizontal: theme.spacing['5'] }}
       >

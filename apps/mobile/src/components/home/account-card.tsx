@@ -4,15 +4,12 @@ import { useTheme } from '@shopify/restyle';
 
 import { Box, ChevronRightIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
-export function AccountCard({
-  onPress,
-  fingerprint,
-  type,
-}: {
+export interface AccountCardProps {
   onPress(): void;
   fingerprint: string;
   type: WalletStore['type'];
-}) {
+}
+export function AccountCard({ onPress, fingerprint, type }: AccountCardProps) {
   const theme = useTheme<Theme>();
   const isLedger = type === 'ledger';
   return (

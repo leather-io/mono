@@ -1,6 +1,8 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-02 10:41-0400\n"
+"POT-Creation-Date: 2024-09-03 13:30+0200\n"
+"POT-Creation-Date: 2024-09-03 13:30+0200\n"
+"POT-Creation-Date: 2024-09-03 13:30+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -185,7 +187,7 @@ msgstr ""
 msgid "BTC"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:151
+#: src/components/browser/browser-empty-state.tsx:155
 #: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:27
 #: src/components/wallet-settings/remove-wallet-modal.tsx:25
 msgid "Cancel"
@@ -224,7 +226,7 @@ msgstr ""
 msgid "Connect MPC wallet"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:175
+#: src/components/browser/browser-empty-state.tsx:179
 msgid "Connected"
 msgstr ""
 
@@ -441,7 +443,7 @@ msgstr ""
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
-#: src/components/home/account-card.tsx:41
+#: src/components/home/account-card.tsx:38
 msgid "Ledger"
 msgstr ""
 
@@ -470,7 +472,7 @@ msgstr ""
 msgid "Must use physical device for Push Notifications"
 msgstr ""
 
-#: src/components/home/my-accounts.tsx:43
+#: src/components/home/my-accounts.tsx:44
 msgid "My accounts"
 msgstr ""
 
@@ -557,7 +559,7 @@ msgstr ""
 msgid "Receive 💰"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:168
+#: src/components/browser/browser-empty-state.tsx:172
 msgid "Recent"
 msgstr ""
 
@@ -590,7 +592,7 @@ msgstr ""
 #: src/app/wallet/_layout.tsx:113
 #: src/app/wallet/settings/index.tsx:59
 msgid "Security"
-msgstr ""
+msgstr ">>>>>>> 035016f (weds)"
 
 #: src/app/wallet/send.tsx:9
 #: src/components/action-bar/container.tsx:168
@@ -656,7 +658,7 @@ msgstr ""
 msgid "Successfully copied to clipboard!"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:161
+#: src/components/browser/browser-empty-state.tsx:165
 msgid "Suggested"
 msgstr ""
 
@@ -772,7 +774,7 @@ msgstr ""
 msgid "transferBtc"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:146
+#: src/components/browser/browser-empty-state.tsx:150
 msgid "Type URL or search"
 msgstr ""
 

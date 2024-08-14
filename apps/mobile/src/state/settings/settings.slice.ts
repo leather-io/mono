@@ -82,9 +82,7 @@ export function useSettings() {
       dispatch(userChangedTheme(theme));
     },
     toggleTheme() {
-      dispatch(
-        theme === 'light' ? dispatch(userChangedTheme('dark')) : dispatch(userChangedTheme('light'))
-      );
+      dispatch(theme === 'light' ? userChangedTheme('dark') : userChangedTheme('light'));
     },
     network,
     changeAppNetwork(network: DefaultNetworkConfigurations) {

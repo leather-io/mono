@@ -1,26 +1,16 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { compressPrivateKey } from '@stacks/encryption';
-import {
-  AddressVersion,
-  ChainID,
-  createStacksPrivateKey,
-  createStacksPublicKey,
-  getPublicKey,
-  publicKeyToAddress,
-} from '@stacks/transactions';
+import { ChainID, createStacksPrivateKey, getPublicKey } from '@stacks/transactions';
 
 import {
   DerivationPathDepth,
   createDescriptor,
   createKeyOriginPath,
   extractAddressIndexFromPath,
-  extractFingerprintFromKeyOriginPath,
-  extractKeyFromDescriptor,
-  extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
 import type { NetworkModes } from '@leather.io/models';
-import { assertIsTruthy, toHexString, whenNetwork } from '@leather.io/utils';
+import { assertIsTruthy, toHexString } from '@leather.io/utils';
 
 export const stxDerivationWithAccount = `m/44'/5757'/0'/0/{account}`;
 
@@ -70,26 +60,4 @@ export function stacksRootKeychainToAccountDescriptor(keychain: HDKey, accountIn
     createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex)),
     bytesToHex(publicKey.data)
   );
-}
-
-export function initalizeStacksAccount(descriptor: string, network: NetworkModes) {
-  const keyOrigin = extractKeyOriginPathFromDescriptor(descriptor);
-  const pubKey = extractKeyFromDescriptor(descriptor);
-  const accountIndex = extractStacksDerivationPathAccountIndex(keyOrigin);
-  const publicKey = createStacksPublicKey(pubKey);
-
-  return {
-    descriptor,
-    keyOrigin,
-    fingerprint: extractFingerprintFromKeyOriginPath(keyOrigin),
-    accountIndex,
-    publicKey,
-    address: publicKeyToAddress(
-      whenNetwork(network)({
-        mainnet: AddressVersion.MainnetSingleSig,
-        testnet: AddressVersion.TestnetSingleSig,
-      }),
-      publicKey
-    ),
-  };
 }
