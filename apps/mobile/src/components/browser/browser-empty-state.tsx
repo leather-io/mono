@@ -76,7 +76,11 @@ function getCurrentArray(currentTab: CurrentTab) {
 
 type CurrentTab = 'suggested' | 'recent' | 'connected';
 
-function AppWidget({ onPress, shortcut }: { shortcut: Shortcut; onPress: () => void }) {
+interface AppWidgetProps {
+  onPress: () => void;
+  shortcut: Shortcut;
+}
+function AppWidget({ onPress, shortcut }: AppWidgetProps) {
   return (
     <TouchableOpacity onPress={onPress} flexDirection="row" gap="3">
       <Box borderRadius="sm">

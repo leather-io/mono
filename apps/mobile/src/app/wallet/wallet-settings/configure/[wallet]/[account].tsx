@@ -7,7 +7,7 @@ import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameModal } from '@/components/wallet-settings/account-name-modal';
 import { Account } from '@/state/accounts/accounts';
 import {
-  useAccountByIdx,
+  useAccountByIndex,
   userRenamesAccount,
   userTogglesHideAccount,
 } from '@/state/accounts/accounts.slice';
@@ -98,7 +98,7 @@ export default function ConfigureAccountScreen() {
   }
   const fingerprint = params.wallet;
   const accountIndex = +params.account;
-  const account = useAccountByIdx(fingerprint, accountIndex);
+  const account = useAccountByIndex(fingerprint, accountIndex);
   if (!account) {
     throw new Error('No account is found');
   }

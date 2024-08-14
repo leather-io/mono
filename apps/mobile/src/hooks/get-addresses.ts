@@ -21,7 +21,7 @@ export interface HardwareStacksAccount {
   dataPublicKey: string;
 }
 
-export type StacksAccount = SoftwareStacksAccount | HardwareStacksAccount;
+export type StacksAccountResponse = SoftwareStacksAccount | HardwareStacksAccount;
 
 // We could think of making the arguments optional here.
 export function formatAddressesForGetAddresses({

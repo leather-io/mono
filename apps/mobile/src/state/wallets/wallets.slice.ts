@@ -58,12 +58,12 @@ export const walletSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(userAddsWallet, (state, action) => {
-        return adapter.addOne(
+      .addCase(userAddsWallet, (state, action) =>
+        adapter.addOne(
           state,
           addWalletDefaults({ wallet: action.payload.wallet, walletIdx: state.ids.length })
-        );
-      })
+        )
+      )
 
       .addCase(
         userRemovesWallet,

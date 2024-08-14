@@ -4,10 +4,15 @@ import { useSelector } from 'react-redux';
 import { userAddsAccount } from '@/state/accounts/accounts.slice';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/state/global-action';
 import { selectNetwork } from '@/state/settings/settings.slice';
+import { mnemonicStore } from '@/state/storage-persistors';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 
-import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
-import { initalizeStacksAccount, stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
+import { decomposeDescriptor, extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
+import {
+  createSignFnFromMnemonic,
+  initalizeStacksSigner,
+  stacksChainIdToCoreNetworkMode,
+} from '@leather.io/stacks';
 
 import type { RootState } from '../..';
 import { handleEntityActionWith } from '../../utils';
@@ -56,19 +61,28 @@ export const stacksKeychainSelectors = adapter.getSelectors(
   (state: RootState) => state.keychains.stacks
 );
 
+function createSignFnFromBiometricMnemonicStore(descriptor: string) {
+  const { keyOrigin, fingerprint } = decomposeDescriptor(descriptor);
+  return createSignFnFromMnemonic(keyOrigin, () => mnemonicStore(fingerprint).getMnemonic());
+}
+
 const stacksKeychainList = createSelector(
   stacksKeychainSelectors.selectAll,
   selectNetwork,
   (accounts, network) =>
     accounts.map(account =>
-      initalizeStacksAccount(
-        account.descriptor,
-        stacksChainIdToCoreNetworkMode(network.chain.stacks.chainId)
-      )
+      initalizeStacksSigner({
+        descriptor: account.descriptor,
+        network: stacksChainIdToCoreNetworkMode(network.chain.stacks.chainId),
+        signFn: createSignFnFromBiometricMnemonicStore(account.descriptor),
+      })
     )
 );
 
 export function useStacksKeychains() {
   const list = useSelector(stacksKeychainList);
-  return useMemo(() => descriptorKeychainSelectors(list, filterKeychainsByStacksAccount), [list]);
+  return useMemo(
+    () => ({ ...descriptorKeychainSelectors(list, filterKeychainsByStacksAccount) }),
+    [list]
+  );
 }

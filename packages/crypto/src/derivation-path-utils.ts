@@ -26,6 +26,13 @@ export const extractAddressIndexFromPath = extractSectionFromDerivationPath(
   DerivationPathDepth.AddressIndex
 );
 
+export function addAddressIndexToPath(path: string, index: number) {
+  const accountIndex = extractAccountIndexFromPath(path);
+  if (!Number.isInteger(accountIndex)) throw new Error('Invalid path, must have account index');
+  const assumedReceiveChangeIndex = 0;
+  return `${path}/${assumedReceiveChangeIndex}/${index}`;
+}
+
 export function extractFingerprintFromKeyOriginPath(keyOriginPath: string) {
   const fingerprint = keyOriginPath.split('/')[0];
   if (!isHexString(fingerprint)) throw new Error('Fingerprint must be a hexadecimal string');
@@ -107,4 +114,14 @@ export function extractAccountIndexFromDescriptor(descriptor: string) {
  */
 export function extractKeyFromDescriptor(descriptor: string) {
   return descriptor.split(']')[1];
+}
+
+export function decomposeDescriptor(descriptor: string) {
+  return {
+    descriptor,
+    keyOrigin: extractKeyOriginPathFromDescriptor(descriptor),
+    fingerprint: extractFingerprintFromDescriptor(descriptor),
+    derivationPath: extractDerivationPathFromDescriptor(descriptor),
+    accountIndex: extractAccountIndexFromDescriptor(descriptor),
+  };
 }
