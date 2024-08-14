@@ -1,5 +1,7 @@
+import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import { whenTheme } from '@/utils/when-theme';
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 
 import {
@@ -12,12 +14,13 @@ import type { RootState } from '..';
 import { handleAppResetWithState } from '../global-action';
 import { useAppDispatch } from '../utils';
 
-export type Theme = 'light' | 'dark' | 'system';
+export type ThemeStore = 'light' | 'dark' | 'system';
+export type Theme = Exclude<ThemeStore, 'system'>;
 
 export type WalletSecurityLevel = 'undefined' | 'secure' | 'insecure';
 
 export interface SettingsState {
-  theme: Theme;
+  theme: ThemeStore;
   network: DefaultNetworkConfigurations;
   createdOn: string;
   walletSecurityLevel: WalletSecurityLevel;
@@ -34,7 +37,7 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    userChangedTheme(state, action: PayloadAction<Theme>) {
+    userChangedTheme(state, action: PayloadAction<ThemeStore>) {
       state.theme = action.payload;
     },
     userChangedNetwork(state, action: PayloadAction<DefaultNetworkConfigurations>) {
@@ -68,10 +71,14 @@ export function useSettings() {
   const dispatch = useAppDispatch();
   const network = useSelector(selectNetwork);
   const walletSecurityLevel = useSelector(selectWalletSecurityLevel);
-  const theme = useSelector(selectTheme);
+  const systemTheme = useColorScheme();
+  const themeStore = useSelector(selectTheme);
+  const theme = (themeStore === 'system' ? systemTheme : themeStore) ?? 'light';
+
   return {
     theme,
-    changeAppTheme(theme: Theme) {
+    whenTheme: whenTheme(theme),
+    changeAppTheme(theme: ThemeStore) {
       dispatch(userChangedTheme(theme));
     },
     toggleTheme() {
