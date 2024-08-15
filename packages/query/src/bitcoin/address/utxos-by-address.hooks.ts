@@ -65,19 +65,32 @@ interface UseFilterUtxosByAddressArgs {
 
 type filterUtxoFunctionType = (utxos: UtxoResponseItem[]) => UtxoResponseItem[];
 
+function useUtxosByAddressQuery(address: string) {
+  const client = useBitcoinClient();
+
+  return useQuery({
+    ...createGetUtxosByAddressQueryOptions({ address, client }),
+  });
+}
+
 export function useNativeSegwitUtxosByAddress({
   address,
   filterInscriptionUtxos,
   filterPendingTxsUtxos,
   filterRunesUtxos,
 }: UseFilterUtxosByAddressArgs) {
-  const { filterOutInscriptions, isLoadingInscriptions } = useFilterInscriptionsByAddress(address);
-  const { filterOutPendingTxsUtxos, isLoading } = useFilterPendingUtxosByAddress(address);
-  const { filterOutRunesUtxos, isLoadingRunesData } = useFilterRuneUtxosByAddress(address);
   const client = useBitcoinClient();
 
-  const utxosQuery = useQuery({
+  const initialUtxosQuery = useUtxosByAddressQuery(address);
+
+  const { filterOutInscriptions, isLoadingInscriptions } = useFilterInscriptionsByAddress(address);
+  const { filterOutPendingTxsUtxos, isLoading: isLoadingPendingTxs } =
+    useFilterPendingUtxosByAddress(address);
+  const { filterOutRunesUtxos, isLoadingRunesData } = useFilterRuneUtxosByAddress(address);
+
+  const filteredUtxosQuery = useQuery({
     ...createGetUtxosByAddressQueryOptions({ address, client }),
+    enabled: !!initialUtxosQuery.data, // Enable filtering only after initial UTXOs are fetched
     select(utxos) {
       const filters = [];
       if (filterPendingTxsUtxos) {
@@ -101,8 +114,16 @@ export function useNativeSegwitUtxosByAddress({
   });
 
   return {
-    ...utxosQuery,
-    isLoading: utxosQuery.isLoading || isLoading || isLoadingInscriptions || isLoadingRunesData,
+    initialUtxosQuery,
+    filteredUtxosQuery,
+    data: filteredUtxosQuery.data || initialUtxosQuery.data,
+    isLoading: initialUtxosQuery.isLoading,
+    isLoadingAllData:
+      initialUtxosQuery.isLoading ||
+      isLoadingInscriptions ||
+      isLoadingPendingTxs ||
+      isLoadingRunesData,
+    isLoadingAdditionalData: isLoadingInscriptions || isLoadingPendingTxs || isLoadingRunesData,
   };
 }
 
