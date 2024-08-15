@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { HStack, styled } from 'leather-styles/jsx';
 
-import { CheckmarkIcon } from '../../icons/checkmark-icon';
-import { ChevronDownIcon } from '../../icons/chevron-down-icon';
-import { PlaceholderIcon } from '../../icons/placeholder-icon';
+import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
+import { ChevronDownIcon } from '../../icons/chevron-down-icon.web';
+import { PlaceholderIcon } from '../../icons/placeholder-icon.web';
 import { SelectItemLayout } from './select-item.layout.web';
 import { Select as Component, SelectItem } from './select.web';
 

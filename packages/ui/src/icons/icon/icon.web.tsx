@@ -1,7 +1,7 @@
 import { styled } from 'leather-styles/jsx';
 import type { HTMLStyledProps } from 'leather-styles/types';
 
-type IconVariant = 'default' | 'small';
+import { IconVariant } from './icon.shared';
 
 export interface IconProps extends HTMLStyledProps<'svg'> {
   variant?: IconVariant;

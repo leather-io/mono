@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { HStack, styled } from 'leather-styles/jsx';
 
-import { PlaceholderIcon } from '../../icons/placeholder-icon';
+import { PlaceholderIcon } from '../../icons/placeholder-icon.web';
 import { DropdownMenuItemLayout } from './dropdown-menu-item.layout.web';
 import { DropdownMenu as Component, DropdownMenuItem } from './dropdown-menu.web';
 

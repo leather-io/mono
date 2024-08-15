@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import * as RadixAccordion from '@radix-ui/react-accordion';
 import { css } from 'leather-styles/css';
 
-import { ChevronDownIcon } from '../../icons/index';
+import { ChevronDownIcon } from '../../icons/index.web';
 
 const accordionTriggerStyles = css({
   position: 'relative',

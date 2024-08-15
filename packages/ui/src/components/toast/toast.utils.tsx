@@ -1,4 +1,4 @@
-import { CheckmarkCircleIcon, ErrorIcon, InfoCircleIcon } from '../../icons/index';
+import { CheckmarkCircleIcon, ErrorIcon, InfoCircleIcon } from '../../icons/index.web';
 import type { ToastVariant } from './toast.web';
 
 export function getIconVariant(variant?: ToastVariant) {

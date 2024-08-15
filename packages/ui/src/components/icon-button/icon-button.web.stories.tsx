@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { PlaceholderIcon, SendIcon } from '../../icons/index';
+import { PlaceholderIcon, SendIcon } from '../../icons/index.web';
 import { IconButton as Component } from './icon-button.web';
 
 const meta: Meta<typeof Component> = {

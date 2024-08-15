@@ -1,4 +1,9 @@
-import { CheckmarkCircleIcon, ErrorCircleIcon, ErrorIcon, InfoCircleIcon } from '../../icons';
+import {
+  CheckmarkCircleIcon,
+  ErrorCircleIcon,
+  ErrorIcon,
+  InfoCircleIcon,
+} from '../../icons/index.web';
 
 export function getIconVariant(variant?: string) {
   switch (variant) {

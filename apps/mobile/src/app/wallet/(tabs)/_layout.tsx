@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import EmojiSmile from '@/assets/emoji-smile.svg';
-import Menu from '@/assets/menu.svg';
 import { ActionBarMethods } from '@/components/action-bar';
 import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/container';
 import { Modal } from '@/components/bottom-sheet-modal';
@@ -13,7 +11,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, EmojiSmileIcon, HamburgerIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 function HeaderCenter({ onPress }: { onPress?(): void }) {
   return (
@@ -26,7 +24,7 @@ function HeaderCenter({ onPress }: { onPress?(): void }) {
       gap="2"
     >
       <Box borderRadius="round" p="1" bg="blue.background-secondary">
-        <EmojiSmile width={24} height={24} />
+        <EmojiSmileIcon />
       </Box>
       <Text variant="heading05">{t`Account 1`}</Text>
     </TouchableOpacity>
@@ -42,7 +40,7 @@ function HeaderRight({ onPress }: { onPress?(): void }) {
       justifyContent="center"
       alignItems="center"
     >
-      <Menu height={24} width={24} />
+      <HamburgerIcon />
     </TouchableOpacity>
   );
 }

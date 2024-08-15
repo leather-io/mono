@@ -3,11 +3,10 @@ import { TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import NoFavicon from '@/assets/no-favicon.svg';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, PlaceholderIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { TabBar } from '../tab-bar';
 import { formatURL } from './utils';
@@ -81,7 +80,7 @@ function AppWidget({ onPress, shortcut }: { shortcut: Shortcut; onPress: () => v
   return (
     <TouchableOpacity onPress={onPress} flexDirection="row" gap="3">
       <Box borderRadius="sm">
-        <NoFavicon height={60} width={60} />
+        <PlaceholderIcon height={60} width={60} />
       </Box>
 
       <Box justifyContent="center" gap="1">

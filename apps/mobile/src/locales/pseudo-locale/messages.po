@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/notify-user-modal.tsx:61
+#: src/components/notify-user-modal.tsx:66
 msgid "\"{title}\" isn't ready yet."
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:323
+#: src/app/waiting-list/waiting-list.tsx:321
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:82
+#: src/components/add-wallet/add-wallet-modal.tsx:69
 msgid "Access custodial wallet"
 msgstr ""
 
@@ -29,8 +29,8 @@ msgstr ""
 msgid "Account {accountIndex}"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:31
-#: src/components/headers/account.tsx:19
+#: src/app/wallet/(tabs)/_layout.tsx:29
+#: src/components/headers/account.tsx:18
 msgid "Account 1"
 msgstr ""
 
@@ -38,11 +38,11 @@ msgstr ""
 msgid "Add new account for {fingerprint} 🆕"
 msgstr ""
 
-#: src/components/action-bar/container.tsx:154
+#: src/components/action-bar/container.tsx:157
 msgid "Add Wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:177
+#: src/components/add-wallet/add-wallet-modal.tsx:165
 msgid "Add wallet to \"Use case\""
 msgstr ""
 
@@ -50,15 +50,15 @@ msgstr ""
 msgid "Adding Wallet"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:154
+#: src/app/wallet/recover-wallet.tsx:157
 msgid "Advanced options"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:60
+#: src/app/wallet/(tabs)/_layout.tsx:58
 msgid "All assets"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:107
+#: src/app/wallet/(tabs)/_layout.tsx:105
 msgid "All Assets"
 msgstr ""
 
@@ -83,20 +83,20 @@ msgstr ""
 msgid "Amazing asset"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:71
+#: src/app/wallet/create-new-wallet.tsx:76
 msgid "BACK UP YOUR SECRET KEY"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:172
-#: src/components/recover-wallet/recover-wallet-modal.tsx:42
+#: src/app/wallet/recover-wallet.tsx:179
+#: src/components/recover-wallet/recover-wallet-modal.tsx:39
 msgid "BIP39 passphrase"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:152
+#: src/components/browser/browser-empty-state.tsx:151
 msgid "Cancel"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:236
+#: src/app/waiting-list/waiting-list.tsx:234
 msgid "check out our browser extension."
 msgstr ""
 
@@ -104,8 +104,8 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:74
-#: src/app/wallet/(tabs)/_layout.tsx:114
+#: src/app/wallet/(tabs)/_layout.tsx:72
+#: src/app/wallet/(tabs)/_layout.tsx:112
 msgid "Collectibles"
 msgstr ""
 
@@ -113,43 +113,43 @@ msgstr ""
 msgid "Collectibles 🖼️"
 msgstr ""
 
-#: src/components/recover-wallet/recover-wallet-modal.tsx:65
+#: src/components/recover-wallet/recover-wallet-modal.tsx:62
 msgid "Confirm"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:76
+#: src/components/add-wallet/add-wallet-modal.tsx:63
 msgid "Connect hardware wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:86
+#: src/components/add-wallet/add-wallet-modal.tsx:73
 msgid "Connect MPC wallet"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:176
+#: src/components/browser/browser-empty-state.tsx:175
 msgid "Connected"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:186
+#: src/app/wallet/recover-wallet.tsx:193
 msgid "Continue"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:148
+#: src/app/wallet/create-new-wallet.tsx:153
 msgid "Copied to clipboard"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:148
+#: src/app/wallet/create-new-wallet.tsx:153
 msgid "Copy to clipboard"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:183
+#: src/components/add-wallet/add-wallet-modal.tsx:171
 msgid "Create a new Bitcoin and Stacks wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:182
+#: src/components/add-wallet/add-wallet-modal.tsx:170
 msgid "Create new wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:81
+#: src/components/add-wallet/add-wallet-modal.tsx:68
 msgid "Create or restore via email"
 msgstr ""
 
@@ -158,11 +158,12 @@ msgstr ""
 msgid "Create wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:91
+#: src/components/add-wallet/add-wallet-modal.tsx:78
 msgid "Create watch-only wallet"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:30
+#: src/components/browser/browser-empty-state.tsx:29
+#: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
 #: src/components/browser/browser-empty-state.tsx:33
 #: src/components/browser/browser-empty-state.tsx:34
@@ -180,14 +181,13 @@ msgstr ""
 #: src/components/browser/browser-empty-state.tsx:46
 #: src/components/browser/browser-empty-state.tsx:47
 #: src/components/browser/browser-empty-state.tsx:48
-#: src/components/browser/browser-empty-state.tsx:49
-#: src/components/browser/browser-empty-state.tsx:53
+#: src/components/browser/browser-empty-state.tsx:52
+#: src/components/browser/browser-empty-state.tsx:54
 #: src/components/browser/browser-empty-state.tsx:55
 #: src/components/browser/browser-empty-state.tsx:56
-#: src/components/browser/browser-empty-state.tsx:57
-#: src/components/browser/browser-empty-state.tsx:61
+#: src/components/browser/browser-empty-state.tsx:60
+#: src/components/browser/browser-empty-state.tsx:62
 #: src/components/browser/browser-empty-state.tsx:63
-#: src/components/browser/browser-empty-state.tsx:64
 msgid "Description"
 msgstr ""
 
@@ -195,11 +195,11 @@ msgstr ""
 msgid "Developer tools"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:174
+#: src/app/wallet/recover-wallet.tsx:181
 msgid "Disabled"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:254
+#: src/app/waiting-list/waiting-list.tsx:252
 msgid "Done"
 msgstr ""
 
@@ -207,27 +207,27 @@ msgstr ""
 msgid "Drawer"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:128
+#: src/app/wallet/(tabs)/_layout.tsx:126
 msgid "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgstr ""
 
-#: src/components/home/earn.tsx:10
+#: src/components/home/earn.tsx:9
 msgid "Earn"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:288
+#: src/app/waiting-list/waiting-list.tsx:286
 msgid "Email address"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:65
+#: src/app/wallet/secure-your-wallet.tsx:70
 msgid "Enable device security"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:174
+#: src/app/wallet/recover-wallet.tsx:181
 msgid "Enabled"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:120
+#: src/app/wallet/recover-wallet.tsx:123
 msgid "ENTER YOUR SECRET KEY"
 msgstr ""
 
@@ -235,11 +235,11 @@ msgstr ""
 msgid "Failed to get push token for push notification!"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:242
+#: src/app/waiting-list/waiting-list.tsx:240
 msgid "Follow us"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:103
+#: src/app/wallet/create-new-wallet.tsx:108
 msgid "For your eyes only"
 msgstr ""
 
@@ -259,36 +259,36 @@ msgstr ""
 msgid "Here is the notification body"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:155
+#: src/app/wallet/create-new-wallet.tsx:160
 msgid "I've backed it up"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:87
-#: src/components/add-wallet/add-wallet-modal.tsx:189
+#: src/components/add-wallet/add-wallet-modal.tsx:74
+#: src/components/add-wallet/add-wallet-modal.tsx:177
 msgid "Import existing accounts"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:26
+#: src/app/wallet/recover-wallet.tsx:31
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:130
+#: src/app/wallet/create-new-wallet.tsx:135
 msgid "Learn more"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:337
+#: src/app/waiting-list/waiting-list.tsx:335
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
-#: src/components/home/account-card.tsx:42
+#: src/components/home/account-card.tsx:41
 msgid "Ledger"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:77
+#: src/components/add-wallet/add-wallet-modal.tsx:64
 msgid "Ledger, Trezor, Ryder and more"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:194
+#: src/components/add-wallet/add-wallet-modal.tsx:182
 msgid "More options"
 msgstr ""
 
@@ -296,7 +296,7 @@ msgstr ""
 msgid "Must use physical device for Push Notifications"
 msgstr ""
 
-#: src/components/home/my-accounts.tsx:35
+#: src/components/home/my-accounts.tsx:34
 msgid "My accounts"
 msgstr ""
 
@@ -304,15 +304,15 @@ msgstr ""
 msgid "navigate to browser"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:92
+#: src/components/add-wallet/add-wallet-modal.tsx:79
 msgid "No key needed"
 msgstr ""
 
-#: src/components/notify-user-modal.tsx:67
+#: src/components/notify-user-modal.tsx:72
 msgid "Notify me when it's ready"
 msgstr ""
 
-#: src/components/notify-user-modal.tsx:60
+#: src/components/notify-user-modal.tsx:65
 msgid "Notify me when ready"
 msgstr ""
 
@@ -320,19 +320,19 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: src/components/recover-wallet/recover-wallet-modal.tsx:49
+#: src/components/recover-wallet/recover-wallet-modal.tsx:46
 msgid "Passphrase"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:128
+#: src/app/wallet/recover-wallet.tsx:131
 msgid "Paste"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:121
+#: src/app/wallet/recover-wallet.tsx:124
 msgid "Paste or type a Secret Key to add its associated wallet."
 msgstr ""
 
-#: src/components/action-bar/container.tsx:172
+#: src/components/action-bar/container.tsx:175
 msgid "Receive"
 msgstr ""
 
@@ -340,7 +340,7 @@ msgstr ""
 msgid "Receive 💰"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:169
+#: src/components/browser/browser-empty-state.tsx:168
 msgid "Recent"
 msgstr ""
 
@@ -348,7 +348,7 @@ msgstr ""
 msgid "register for Push notifications"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-modal.tsx:188
+#: src/components/add-wallet/add-wallet-modal.tsx:176
 msgid "Restore wallet"
 msgstr ""
 
@@ -356,12 +356,12 @@ msgstr ""
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:43
+#: src/app/wallet/secure-your-wallet.tsx:48
 msgid "SECURE YOUR WALLET"
 msgstr ""
 
 #: src/app/wallet/send.tsx:9
-#: src/components/action-bar/container.tsx:165
+#: src/components/action-bar/container.tsx:168
 msgid "Send"
 msgstr ""
 
@@ -377,11 +377,11 @@ msgstr ""
 msgid "signPsbt"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:58
+#: src/app/wallet/secure-your-wallet.tsx:63
 msgid "Skip for now"
 msgstr ""
 
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:42
+#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:40
 msgid ""
 "Skipping security setup means your wallet will not be protected by your device’s\n"
 "security features. We highly recommend enabling security to protect your assets"
@@ -395,11 +395,11 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/home/earn.tsx:24
+#: src/components/home/earn.tsx:23
 msgid "Start stacking"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:263
+#: src/app/waiting-list/waiting-list.tsx:261
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr ""
 
@@ -411,19 +411,19 @@ msgstr ""
 msgid "stx_signTransaction"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:298
+#: src/app/waiting-list/waiting-list.tsx:296
 msgid "Submit"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:162
+#: src/components/browser/browser-empty-state.tsx:161
 msgid "Suggested"
 msgstr ""
 
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:40
+#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:38
 msgid "Sure You Want to Skip?"
 msgstr ""
 
-#: src/components/action-bar/container.tsx:179
+#: src/components/action-bar/container.tsx:182
 msgid "Swap"
 msgstr ""
 
@@ -431,16 +431,17 @@ msgstr ""
 msgid "Swap 🔄"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:101
+#: src/app/wallet/create-new-wallet.tsx:106
 msgid "Tap to view Secret Key"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:230
+#: src/app/waiting-list/waiting-list.tsx:228
 msgid ""
 "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the\n"
 "meantime, please"
 msgstr ""
 
+#: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:30
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
@@ -460,18 +461,17 @@ msgstr ""
 #: src/components/browser/browser-empty-state.tsx:46
 #: src/components/browser/browser-empty-state.tsx:47
 #: src/components/browser/browser-empty-state.tsx:48
-#: src/components/browser/browser-empty-state.tsx:49
+#: src/components/browser/browser-empty-state.tsx:52
 #: src/components/browser/browser-empty-state.tsx:53
 #: src/components/browser/browser-empty-state.tsx:54
 #: src/components/browser/browser-empty-state.tsx:55
 #: src/components/browser/browser-empty-state.tsx:56
-#: src/components/browser/browser-empty-state.tsx:57
+#: src/components/browser/browser-empty-state.tsx:60
 #: src/components/browser/browser-empty-state.tsx:61
 #: src/components/browser/browser-empty-state.tsx:62
 #: src/components/browser/browser-empty-state.tsx:63
 #: src/components/browser/browser-empty-state.tsx:64
 #: src/components/browser/browser-empty-state.tsx:65
-#: src/components/browser/browser-empty-state.tsx:66
 msgid "Title"
 msgstr ""
 
@@ -487,8 +487,8 @@ msgstr ""
 msgid "Toggle theme: Current {settingsTheme}"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:67
-#: src/app/wallet/(tabs)/_layout.tsx:121
+#: src/app/wallet/(tabs)/_layout.tsx:65
+#: src/app/wallet/(tabs)/_layout.tsx:119
 msgid "Tokens"
 msgstr ""
 
@@ -496,7 +496,7 @@ msgstr ""
 msgid "Tokens 🪙"
 msgstr ""
 
-#: src/components/home/earn.tsx:21
+#: src/components/home/earn.tsx:20
 msgid "Total rewards"
 msgstr ""
 
@@ -504,15 +504,15 @@ msgstr ""
 msgid "transferBtc"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:147
+#: src/components/browser/browser-empty-state.tsx:146
 msgid "Type URL or search"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:138
+#: src/app/wallet/recover-wallet.tsx:141
 msgid "Type your recovery phrase"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:45
+#: src/app/wallet/secure-your-wallet.tsx:50
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 msgstr ""
 
@@ -536,11 +536,11 @@ msgstr ""
 msgid "walletSecurityLevel:"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:121
+#: src/app/wallet/create-new-wallet.tsx:126
 msgid "We recommend writing these words in numbered order on a piece of paper and storing it in a safe place."
 msgstr ""
 
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:46
+#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:44
 msgid "Yes, skip for now"
 msgstr ""
 
@@ -548,6 +548,6 @@ msgstr ""
 msgid "You've got mail! 📬"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:73
+#: src/app/wallet/create-new-wallet.tsx:78
 msgid "Your Secret Key grants you access to your wallet and its assets."
 msgstr ""

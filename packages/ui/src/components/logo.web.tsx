@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { LogomarkIcon } from '../icons/logomark-icon';
+import { LogomarkIcon } from '../icons/logomark-icon.web';
 
 interface LogoProps {
   onClick?(): void;

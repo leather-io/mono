@@ -5,8 +5,8 @@ import { Button } from '../../components/button/button.web';
 import { ItemLayoutWithButtons } from '../../components/item-layout/item-layout-with-buttons.web';
 import { ItemLayout } from '../../components/item-layout/item-layout.web';
 import { Pressable as Component } from '../../components/pressable/pressable.web';
-import { CopyIcon } from '../../icons/copy-icon';
-import { QrCodeIcon } from '../../icons/qr-code-icon';
+import { CopyIcon } from '../../icons/copy-icon.web';
+import { QrCodeIcon } from '../../icons/qr-code-icon.web';
 import { BtcAvatarIcon } from '../avatar/btc-avatar-icon.web';
 
 const meta: Meta<typeof Component> = {

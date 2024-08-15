@@ -5,7 +5,7 @@ import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { pressableBaseStyles, pressableStyles } from '../../components/pressable/pressable.web';
-import { ChevronDownIcon } from '../../icons/index';
+import { ChevronDownIcon } from '../../icons/index.web';
 import { Flag } from '../flag/flag.web';
 
 export interface DropdownMenuItem {

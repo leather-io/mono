@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { ErrorCircleIcon } from '../../icons';
+import { ErrorCircleIcon } from '../../icons/index.web';
 import { Tag as Component } from './tag.web';
 
 const meta: Meta<typeof Component> = {

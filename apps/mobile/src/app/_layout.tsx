@@ -18,7 +18,7 @@ import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { Box, ThemeProvider as LeatherThemeProvider, useLoadFonts } from '@leather.io/ui/native';
+import { Box, ThemeProvider as LeatherThemeProvider } from '@leather.io/ui/native';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -31,13 +31,7 @@ export const unstable_settings = { initialRouteName: '/' };
 initiateI18n();
 
 export default function RootLayout() {
-  const { fontsLoaded } = useLoadFonts({
-    onLoaded() {
-      void SplashScreen.hideAsync();
-    },
-  });
-
-  if (!fontsLoaded) return null;
+  void SplashScreen.hideAsync();
 
   return (
     <ReduxProvider store={store}>
