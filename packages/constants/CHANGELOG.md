@@ -19,6 +19,26 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.8.3...@leather.io/constants-v0.9.0) (2024-08-15)
+
+
+### Features
+
+* upgrade pkgs ([c091981](https://github.com/leather-io/mono/commit/c09198150ed429989d920d6350ad43d0ff4cfe5c))
+
+
+### Bug Fixes
+
+* husky for commitlint only ([ce93a4b](https://github.com/leather-io/mono/commit/ce93a4bc95fbb5128288558ffbeebfccfded38ef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.0
+    * @leather.io/tsconfig-config bumped to 0.6.0
+
 ## [0.8.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.8.2...@leather.io/constants-v0.8.3) (2024-08-14)
 
 

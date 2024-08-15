@@ -153,6 +153,35 @@
   * dependencies
     * @leather.io/ui bumped to 1.9.2
 
+## [1.23.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.22.0...@leather.io/mobile-v1.23.0) (2024-08-15)
+
+
+### Features
+
+* upgrade pkgs ([c091981](https://github.com/leather-io/mono/commit/c09198150ed429989d920d6350ad43d0ff4cfe5c))
+
+
+### Bug Fixes
+
+* husky for commitlint only ([ce93a4b](https://github.com/leather-io/mono/commit/ce93a4bc95fbb5128288558ffbeebfccfded38ef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.11.0
+    * @leather.io/constants bumped to 0.9.0
+    * @leather.io/crypto bumped to 1.4.0
+    * @leather.io/models bumped to 0.12.0
+    * @leather.io/rpc bumped to 2.1.4
+    * @leather.io/tokens bumped to 0.8.0
+    * @leather.io/ui bumped to 1.12.0
+    * @leather.io/utils bumped to 0.13.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.11.0
+    * @leather.io/prettier-config bumped to 0.6.0
+
 ## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.21.0...@leather.io/mobile-v1.22.0) (2024-08-14)
 
 

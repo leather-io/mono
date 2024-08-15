@@ -156,6 +156,32 @@
     * @leather.io/crypto bumped to 1.3.0
     * @leather.io/utils bumped to 0.12.0
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.10.4...@leather.io/bitcoin-v0.11.0) (2024-08-15)
+
+
+### Features
+
+* upgrade pkgs ([c091981](https://github.com/leather-io/mono/commit/c09198150ed429989d920d6350ad43d0ff4cfe5c))
+
+
+### Bug Fixes
+
+* husky for commitlint only ([ce93a4b](https://github.com/leather-io/mono/commit/ce93a4bc95fbb5128288558ffbeebfccfded38ef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.9.0
+    * @leather.io/crypto bumped to 1.4.0
+    * @leather.io/models bumped to 0.12.0
+    * @leather.io/utils bumped to 0.13.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.0
+    * @leather.io/rpc bumped to 2.1.4
+    * @leather.io/tsconfig-config bumped to 0.6.0
+
 ## [0.10.4](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.10.3...@leather.io/bitcoin-v0.10.4) (2024-08-14)
 
 
