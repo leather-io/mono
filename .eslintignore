@@ -10,5 +10,6 @@ dist-native/
 dist-all/
 dist-web/
 .turbo/
+.tsup/
 leather-styles/
 messages.js

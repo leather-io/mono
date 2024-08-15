@@ -2,12 +2,6 @@ import { useRef, useState } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import ChevronDown from '@/assets/chevron-down.svg';
-import ChevronRight from '@/assets/chevron-right.svg';
-import ChevronUp from '@/assets/chevron-up.svg';
-import CircleQuestionMark from '@/assets/circle-questionmark.svg';
-import Lock from '@/assets/lock.svg';
-import Note from '@/assets/note-2.svg';
 import { Button } from '@/components/button';
 import { RecoverWalletModal } from '@/components/recover-wallet/recover-wallet-modal';
 import { InputState, TextInput } from '@/components/text-input';
@@ -19,7 +13,18 @@ import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
 import { isValidMnemonic, isValidMnemonicWord } from '@leather.io/crypto';
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  LockIcon,
+  NoteIcon,
+  QuestionCircleIcon,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 function constructErrorMessage(invalidWords: string[]) {
   const joinedInvalidWords = invalidWords.join(', ');
@@ -92,8 +97,6 @@ export default function RecoverWallet() {
     setShowAdvancedOptions(!showAdvancedOptions);
   }
 
-  const ToggledChevron = showAdvancedOptions ? ChevronUp : ChevronDown;
-
   return (
     <>
       <Box
@@ -115,7 +118,7 @@ export default function RecoverWallet() {
               zIndex={10}
               top={theme.spacing['1']}
             >
-              <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
+              <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
             <Text variant="heading03">{t`ENTER YOUR SECRET KEY`}</Text>
             <Text variant="label01">{t`Paste or type a Secret Key to add its associated wallet.`}</Text>
@@ -126,7 +129,7 @@ export default function RecoverWallet() {
               style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 100 }}
               buttonState="default"
               title={t`Paste`}
-              Icon={Note}
+              icon={<NoteIcon />}
             />
             <TextInput
               onBlur={validateMnemonicOnBlur}
@@ -152,7 +155,11 @@ export default function RecoverWallet() {
             justifyContent="space-between"
           >
             <Text variant="label02">{t`Advanced options`}</Text>
-            <ToggledChevron color={theme.colors['ink.text-primary']} height={16} width={16} />
+            {showAdvancedOptions ? (
+              <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
+            ) : (
+              <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
+            )}
           </TouchableOpacity>
           {!showAdvancedOptions ? null : (
             <TouchableOpacity
@@ -166,7 +173,7 @@ export default function RecoverWallet() {
             >
               <Box flexDirection="row" gap="4">
                 <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
-                  <Lock color={theme.colors['ink.text-primary']} width={24} height={24} />
+                  <LockIcon color={theme.colors['ink.text-primary']} />
                 </Box>
                 <Box flexDirection="column">
                   <Text variant="label02">{t`BIP39 passphrase`}</Text>
@@ -175,7 +182,7 @@ export default function RecoverWallet() {
                   </Text>
                 </Box>
               </Box>
-              <ChevronRight color={theme.colors['ink.text-primary']} width={16} height={16} />
+              <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
           )}
         </Box>

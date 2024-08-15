@@ -3,12 +3,21 @@
   "compilerOptions": {
     "composite": true,
     "incremental": true,
+    "tsBuildInfoFile": "tsconfig.native.tsbuildinfo",
     "jsx": "react-native",
+    "jsxImportSource": "react",
     "lib": ["es2017", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist-native"
   },
-  "include": ["**/*.native.ts", "**/*.native.tsx", "native.ts", "**/theme-native/**/*"],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
+  "include": [
+    "**/*.native.ts",
+    "**/*.native.tsx",
+    "native.ts",
+    "**/theme-native/**/*",
+    "**/*.shared.tsx",
+    "global.d.ts"
+  ],
+  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
 }

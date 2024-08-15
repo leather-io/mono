@@ -1,7 +1,6 @@
-import { ComponentPropsWithoutRef, FC, forwardRef } from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { SvgProps } from 'react-native-svg';
 
 import {
   BaseTheme,
@@ -18,7 +17,6 @@ import {
   spacing,
   spacingShorthand,
   useRestyle,
-  useTheme,
   visible,
 } from '@shopify/restyle';
 
@@ -52,22 +50,36 @@ function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState,
   }
 }
 
+export function getTextColor(buttonState: ButtonState) {
+  return whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
+    buttonState,
+    {
+      default: 'ink.background-primary',
+      disabled: 'ink.text-non-interactive',
+      success: 'green.action-primary-default',
+      outline: 'ink.action-primary-default',
+      ghost: 'ink.text-primary',
+    }
+  );
+}
+
+// TODO: Move to UI library
 export const Button = forwardRef(
   (
     {
       title,
       buttonState,
-      Icon,
+      icon,
       ...rest
     }: Props & {
       title?: string;
       buttonState: ButtonState;
-      Icon?: FC<SvgProps>;
+      icon?: React.ReactNode;
     },
     ref
   ) => {
     const props = useRestyle(composedRestyleFunction, rest);
-    const theme = useTheme<Theme>();
+
     const bg = whenButtonState<
       ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
     >(buttonState, {
@@ -78,16 +90,7 @@ export const Button = forwardRef(
       ghost: undefined,
     });
 
-    const textColor = whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
-      buttonState,
-      {
-        default: 'ink.background-primary',
-        disabled: 'ink.text-non-interactive',
-        success: 'green.action-primary-default',
-        outline: 'ink.action-primary-default',
-        ghost: 'ink.text-primary',
-      }
-    );
+    const textColor = getTextColor(buttonState);
 
     const borderColor = whenButtonState<
       ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
@@ -109,7 +112,7 @@ export const Button = forwardRef(
 
     const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
 
-    const hasGap = !!Icon && !!title;
+    const hasGap = !!icon && !!title;
 
     return (
       <TouchableOpacity
@@ -125,7 +128,7 @@ export const Button = forwardRef(
         gap={hasGap ? '2' : undefined}
         {...props}
       >
-        {Icon && <Icon height={24} width={24} color={theme.colors[textColor]} />}
+        {icon}
         <Text variant={textVariant} color={textColor}>
           {title}
         </Text>

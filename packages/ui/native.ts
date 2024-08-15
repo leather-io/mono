@@ -4,5 +4,6 @@ export { Text } from './src/components/text/text.native';
 export { TextInput, createTextInput } from './src/components/input/text-input.native';
 export { generateTheme, ThemeProvider } from './src/theme-native';
 export { TouchableOpacity } from './src/components/button/touchable-opacity.native';
-export { useLoadFonts } from './src/hooks/use-load-fonts.native';
 export type { Theme } from './src/theme-native';
+export { Icon } from './src/icons/icon/icon.native';
+export * from './src/icons/index.native';

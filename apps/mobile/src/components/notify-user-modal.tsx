@@ -1,17 +1,22 @@
 import { RefObject } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 
-import Bell from '@/assets/bell.svg';
-import Cross from '@/assets/cross-large.svg';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  CloseIcon,
+  NotificationIcon,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from './bottom-sheet-modal';
-import { Button } from './button';
+import { Button, getTextColor } from './button';
 
 export interface OptionData {
   title: string;
@@ -54,7 +59,7 @@ export function NotifyUserModal({
           zIndex={10}
           position="absolute"
         >
-          <Cross height={24} width={24} color={theme.colors['ink.text-primary']} />
+          <CloseIcon />
         </TouchableOpacity>
         <Box gap="4">
           <Text variant="heading05">{t`Notify me when ready`}</Text>
@@ -62,7 +67,7 @@ export function NotifyUserModal({
         </Box>
         <Button
           onPress={onNotify}
-          Icon={Bell}
+          icon={<NotificationIcon color={theme.colors[getTextColor('default')]} />}
           buttonState="default"
           title={t`Notify me when it's ready`}
         />

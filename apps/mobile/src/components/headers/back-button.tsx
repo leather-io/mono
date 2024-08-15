@@ -1,6 +1,4 @@
-import ArrowLeft from '@/assets/arrow-left.svg';
-
-import { TouchableOpacity } from '@leather.io/ui/native';
+import { ArrowLeftIcon, TouchableOpacity } from '@leather.io/ui/native';
 
 export function BackButtonHeader({ onPress }: { onPress?(): void }) {
   return (
@@ -11,7 +9,7 @@ export function BackButtonHeader({ onPress }: { onPress?(): void }) {
       justifyContent="center"
       alignItems="center"
     >
-      <ArrowLeft height={24} width={24} />
+      <ArrowLeftIcon />
     </TouchableOpacity>
   );
 }

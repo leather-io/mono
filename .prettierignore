@@ -1,6 +1,7 @@
 node_modules/
 pnpm-lock.yaml
 .turbo/
+.tsup/
 dist/
 dist-native/
 dist-all/

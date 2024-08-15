@@ -7,8 +7,8 @@ import {
   pressableCaptionStyles,
   pressableChevronStyles,
 } from '../../components/pressable/pressable.web';
-import { CheckmarkIcon } from '../../icons/checkmark-icon';
-import { ChevronUpIcon } from '../../icons/chevron-up-icon';
+import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
+import { ChevronUpIcon } from '../../icons/chevron-up-icon.web';
 
 interface ItemLayoutProps {
   captionLeft: ReactNode;

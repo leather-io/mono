@@ -27,4 +27,4 @@ export { Spinner } from './src/components/spinner.web';
 export { shimmerStyles } from './src/components/skeleton-loader/shimmer.styles.web';
 export { SkeletonLoader } from './src/components/skeleton-loader/skeleton-loader.web';
 export { Icon } from './src/icons/icon/icon.web';
-export * from './src/icons';
+export * from './src/icons/index.web';

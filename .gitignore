@@ -3,6 +3,7 @@ dist
 build
 tsconfig.tsbuildinfo
 .turbo/
+.tsup/
 # macOS
 .DS_Store
 leather-styles

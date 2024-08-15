@@ -1,14 +1,13 @@
-import Chevron from '@/assets/chevron-right.svg';
 import { t } from '@lingui/macro';
 
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, ChevronRightIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 export function Earn() {
   return (
     <Box>
       <TouchableOpacity flexDirection="row" gap="1" alignItems="center" paddingBottom="3">
         <Text variant="heading05">{t`Earn`}</Text>
-        <Chevron width={16} height={16} />
+        <ChevronRightIcon variant="small" />
       </TouchableOpacity>
       <Box
         justifyContent="space-between"

@@ -1,4 +1,4 @@
-import * as Icons from '..';
+import * as Icons from '../index.web';
 
 function getIconsListForGallery() {
   const icons: string[] = [];

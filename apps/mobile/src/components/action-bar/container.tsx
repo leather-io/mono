@@ -1,10 +1,6 @@
 import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
-import Inbox from '@/assets/inbox.svg';
-import PaperPlane from '@/assets/paper-plane.svg';
-import Plus from '@/assets/plus-icon.svg';
-import Swap from '@/assets/swap.svg';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { APP_ROUTES } from '@/constants';
 import { useWallets } from '@/state/wallets/wallets.slice';
@@ -12,7 +8,14 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
-import { Text, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  InboxIcon,
+  PlusIcon,
+  SendIcon,
+  SwapIcon,
+  Text,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
 
 import { AddWalletModal } from '../add-wallet/add-wallet-modal';
@@ -150,7 +153,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       center={
         <ActionBarButton
           onPress={() => addWalletModalRef.current?.present()}
-          icon={<Plus width={24} height={24} />}
+          icon={<PlusIcon />}
           label={t`Add Wallet`}
         />
       }
@@ -161,21 +164,21 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       left={
         <ActionBarButton
           onPress={() => router.navigate(APP_ROUTES.WalletSend)}
-          icon={<PaperPlane width={24} height={24} />}
+          icon={<SendIcon />}
           label={t`Send`}
         />
       }
       center={
         <ActionBarButton
           onPress={() => router.navigate(APP_ROUTES.WalletReceive)}
-          icon={<Inbox width={24} height={24} />}
+          icon={<InboxIcon />}
           label={t`Receive`}
         />
       }
       right={
         <ActionBarButton
           onPress={() => router.navigate(APP_ROUTES.WalletSwap)}
-          icon={<Swap width={24} height={24} />}
+          icon={<SwapIcon />}
           label={t`Swap`}
         />
       }

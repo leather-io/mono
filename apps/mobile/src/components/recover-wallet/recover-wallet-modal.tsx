@@ -1,12 +1,10 @@
 import { RefObject, useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 
-import Lock from '@/assets/lock.svg';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, LockIcon, Text } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal, UIBottomSheetTextInput } from '../bottom-sheet-modal';
 import { Button } from '../button';
@@ -28,7 +26,6 @@ export function RecoverWalletModal({
   setPassphrase,
 }: RecoverWalletModalProps) {
   const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
-  const theme = useTheme<Theme>();
   const [internalPassphrase, setInternalPassphrase] = useState(passphrase);
 
   return (
@@ -37,7 +34,7 @@ export function RecoverWalletModal({
         <Box>
           <Box flexDirection="row" alignItems="center" gap="3">
             <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
-              <Lock color={theme.colors['ink.text-primary']} width={24} height={24} />
+              <LockIcon />
             </Box>
             <Text variant="heading05">{t`BIP39 passphrase`}</Text>
           </Box>

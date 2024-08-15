@@ -3,9 +3,7 @@ import { Image, Keyboard, KeyboardAvoidingView, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import CheckmarkCircle from '@/assets/checkmark-circle.svg';
-import XLogo from '@/assets/logo-x.svg';
-import { AnimatedButton, Button, ButtonState } from '@/components/button';
+import { AnimatedButton, Button, ButtonState, getTextColor } from '@/components/button';
 import { InputState, TextInput } from '@/components/text-input';
 import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useSubmitWaitingListEmailForm } from '@/queries/use-submit-waiting-list-form-email';
@@ -15,7 +13,7 @@ import { useTheme } from '@shopify/restyle';
 import * as Linking from 'expo-linking';
 import LottieView from 'lottie-react-native';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, CheckmarkCircleIcon, Text, Theme, XLogoIcon } from '@leather.io/ui/native';
 
 import { WelcomeScreenTestIds } from '../../../test-ids';
 import { Spinner } from '../../components/spinner';
@@ -241,7 +239,7 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
         onPress={() => Linking.openURL(TWITTER_LINK)}
         title={t`Follow us`}
         buttonState="outline"
-        Icon={XLogo}
+        icon={<XLogoIcon color={theme.colors[getTextColor('outline')]} />}
         mb="3"
       />
       <Button
@@ -299,7 +297,7 @@ export function WaitingList(props: WelcomeScreenLayoutProps) {
         buttonState={getButtonState()}
         disabled={isButtonDisabled}
         testID={WelcomeScreenTestIds.SubmitEmailButton}
-        Icon={isPending ? Spinner : showSuccess ? CheckmarkCircle : undefined}
+        icon={isPending ? <Spinner /> : showSuccess ? <CheckmarkCircleIcon /> : undefined}
       />
     </Box>
   );

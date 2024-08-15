@@ -31,6 +31,17 @@
     "web": {
       "favicon": "./src/assets-native/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      {
+        "fonts": [
+          "../assets-native/fonts/SpaceMono-Regular.ttf",
+          "../assets-native/fonts/ABCDiatype-Regular.otf",
+          "../assets-native/fonts/ABCDiatype-Light.otf",
+          "../assets-native/fonts/ABCDiatype-Medium.otf",
+          "../assets-native/fonts/marche-super-pro.otf"
+        ]
+      }
+    ]
   }
 }

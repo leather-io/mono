@@ -1,12 +1,10 @@
 import { RefObject } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 
-import Cross from '@/assets/cross-large.svg';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, CloseIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_POSITION, Modal } from '../bottom-sheet-modal';
 import { Button } from '../button';
@@ -20,7 +18,7 @@ export function SkipSecureWalletModal({
   onSkip,
 }: SkipSecureWalletModalProps) {
   const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
-  const theme = useTheme<Theme>();
+
   return (
     <Modal animatedPosition={animatedPosition} ref={skipSecureWalletModalRef}>
       <Box p="5" justifyContent="space-between" gap="5">
@@ -34,7 +32,7 @@ export function SkipSecureWalletModal({
           zIndex={10}
           position="absolute"
         >
-          <Cross height={24} width={24} color={theme.colors['ink.text-primary']} />
+          <CloseIcon />
         </TouchableOpacity>
         <Box gap="4">
           <Text variant="heading05">{t`Sure You Want to Skip?`}</Text>

@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import CircleQuestionMark from '@/assets/circle-questionmark.svg';
-import Lock from '@/assets/lock.svg';
 import { Button } from '@/components/button';
 import { SkipSecureWalletModal } from '@/components/secure-your-wallet/skip-secure-wallet-modal';
 import { useCreateWallet } from '@/hooks/create-wallet';
@@ -10,7 +8,14 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  LockIcon,
+  QuestionCircleIcon,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 export default function SecureYourWalletScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -38,7 +43,7 @@ export default function SecureYourWalletScreen() {
             zIndex={10}
             top={theme.spacing['1']}
           >
-            <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
+            <QuestionCircleIcon variant="small" />
           </TouchableOpacity>
           <Text variant="heading03">{t`SECURE YOUR WALLET`}</Text>
           <Text variant="label01">
@@ -46,7 +51,7 @@ export default function SecureYourWalletScreen() {
           </Text>
         </Box>
         <Box justifyContent="center" alignItems="center">
-          <Lock height={204} width={204} color={theme.colors['ink.text-primary']} />
+          <LockIcon height={204} width={204} />
         </Box>
         <Box>
           <Button

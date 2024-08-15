@@ -1,9 +1,8 @@
-import Chevron from '@/assets/chevron-right.svg';
 import { WalletStore } from '@/state/wallets/wallets.slice';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, ChevronRightIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 export function AccountCard({
   onPress,
@@ -44,7 +43,7 @@ export function AccountCard({
         </Box>
       )}
       <Box p="2" borderRadius="round" backgroundColor="ink.background-secondary">
-        <Chevron width={32} height={32} />
+        <ChevronRightIcon width={32} height={32} />
       </Box>
       <Box gap="1">
         <Text variant="label02">$0</Text>

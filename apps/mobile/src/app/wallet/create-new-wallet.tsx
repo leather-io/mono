@@ -2,11 +2,6 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Checkmark from '@/assets/checkmark-circle.svg';
-import CircleQuestionMark from '@/assets/circle-questionmark.svg';
-import Copy from '@/assets/copy.svg';
-import GraduateCap from '@/assets/graduate-cap.svg';
-import Pointer from '@/assets/pointer.svg';
 import { Button } from '@/components/button';
 import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
 import { useCreateWallet } from '@/hooks/create-wallet';
@@ -17,7 +12,17 @@ import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
 
 import { generateMnemonic } from '@leather.io/crypto';
-import { Box, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  CheckmarkCircleIcon,
+  CopyIcon,
+  PointerIcon,
+  QuestionCircleIcon,
+  StudyIcon,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 function MnemonicDisplay({ mnemonic }: { mnemonic: string | null }) {
   if (!mnemonic) return null;
@@ -66,7 +71,7 @@ export default function CreateNewWallet() {
             zIndex={10}
             top={theme.spacing['1']}
           >
-            <CircleQuestionMark height={16} width={16} color={theme.colors['ink.text-primary']} />
+            <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
           <Text variant="heading03">{t`BACK UP YOUR SECRET KEY`}</Text>
           <Text variant="label01">
@@ -96,7 +101,7 @@ export default function CreateNewWallet() {
                 alignItems="center"
                 gap="2"
               >
-                <Pointer height={24} width={24} color={theme.colors['ink.text-primary']} />
+                <PointerIcon />
                 <Box>
                   <Text variant="label02">{t`Tap to view Secret Key`}</Text>
                   <Text variant="label02" color="red.action-primary-default">
@@ -108,7 +113,7 @@ export default function CreateNewWallet() {
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
           <Box p="3" mt="3" flexDirection="row" gap="4" borderRadius="xs">
-            <GraduateCap height={24} width={24} color={theme.colors['ink.text-subdued']} />
+            <StudyIcon color={theme.colors['ink.text-subdued']} />
             <Text
               style={{
                 flexShrink: 1,
@@ -143,7 +148,7 @@ export default function CreateNewWallet() {
             }
           }}
           pb="4"
-          Icon={isCopied ? Checkmark : Copy}
+          icon={isCopied ? <CheckmarkCircleIcon /> : <CopyIcon />}
           buttonState="ghost"
           title={isCopied ? t`Copied to clipboard` : t`Copy to clipboard`}
         />

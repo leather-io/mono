@@ -13,11 +13,12 @@
   "include": [
     "**/*.web.ts",
     "**/*.web.tsx",
-    "*.web.ts",
-    "**/*web.stories.tsx",
+    "web.ts",
+    "**/*.web.stories.tsx",
     "src/.storybook-*/*",
+    "**/*.shared.tsx",
     "src/icons/*",
-    "src/types/*"
+    "global.d.ts"
   ],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "**/*.js", "./dist-*"]
+  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
 }

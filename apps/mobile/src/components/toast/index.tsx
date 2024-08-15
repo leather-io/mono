@@ -2,10 +2,9 @@ import { useImperativeHandle, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import CheckmarkCircle from '@/assets/checkmark-circle.svg';
 import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, CheckmarkCircleIcon, Text, Theme } from '@leather.io/ui/native';
 
 import { ToastData, ToastMethods, ToastProps, ToastType } from './types';
 
@@ -21,9 +20,7 @@ const TOAST_OPEN_DURATION = 3000;
 function getIcon(type: ToastType, theme: Theme) {
   switch (type) {
     case 'success':
-      return (
-        <CheckmarkCircle height={24} width={24} color={theme.colors['ink.background-primary']} />
-      );
+      return <CheckmarkCircleIcon color={theme.colors['ink.background-primary']} />;
     case 'info':
       return null;
   }

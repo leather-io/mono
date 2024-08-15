@@ -1,6 +1,4 @@
-import ChevronRight from '@/assets/chevron-right.svg';
-
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, ChevronRightIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 export function PressableListItem({ onPress, title }: { onPress?(): void; title: string }) {
   const isDisabled = !onPress;
@@ -16,7 +14,7 @@ export function PressableListItem({ onPress, title }: { onPress?(): void; title:
       <Text variant="label01" color={isDisabled ? 'ink.text-subdued' : 'ink.text-primary'}>
         {title}
       </Text>
-      <ChevronRight width={16} height={16} />
+      <ChevronRightIcon variant="small" />
     </TouchableOpacity>
   );
 }

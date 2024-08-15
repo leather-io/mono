@@ -1,5 +1,5 @@
-import LeatherLogoIcon from '@/assets/leather-logo.svg';
+import { LogomarkIcon } from '@leather.io/ui/native';
 
 export function LeatherLogoHeader() {
-  return <LeatherLogoIcon width={86} />;
+  return <LogomarkIcon />;
 }

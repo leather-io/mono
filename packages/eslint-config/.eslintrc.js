@@ -22,7 +22,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
   ],
 
-  ignorePatterns: ['./leather-styles', 'tsup.config.ts'],
+  ignorePatterns: ['./leather-styles', 'tsup.config.*'],
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'deprecation'],
   rules: {
     // This rule helps highlight areas of the code that use deprecated
