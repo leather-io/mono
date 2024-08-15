@@ -39,27 +39,33 @@ export function useStacksPendingTransactions(address: string) {
 }
 
 export function useMempoolTxsInboundBalance(address: string) {
-  const { transactions: pendingTransactions } = useStacksPendingTransactions(address);
+  const { transactions: pendingTransactions, query } = useStacksPendingTransactions(address);
   const confirmedTxs = useStacksConfirmedTransactions(address);
 
-  return calculatePendingTxsMoneyBalance({
-    address,
-    confirmedTxs,
-    pendingTxs: pendingTransactions,
-    type: 'inbound',
-  });
+  return {
+    query,
+    balance: calculatePendingTxsMoneyBalance({
+      address,
+      confirmedTxs,
+      pendingTxs: pendingTransactions,
+      type: 'inbound',
+    }),
+  };
 }
 
 export function useMempoolTxsOutboundBalance(address: string) {
-  const { transactions: pendingTransactions } = useStacksPendingTransactions(address);
+  const { transactions: pendingTransactions, query } = useStacksPendingTransactions(address);
   const confirmedTxs = useStacksConfirmedTransactions(address);
 
-  return calculatePendingTxsMoneyBalance({
-    address,
-    confirmedTxs,
-    pendingTxs: pendingTransactions,
-    type: 'outbound',
-  });
+  return {
+    query,
+    balance: calculatePendingTxsMoneyBalance({
+      address,
+      confirmedTxs,
+      pendingTxs: pendingTransactions,
+      type: 'outbound',
+    }),
+  };
 }
 
 export function useStacksValidateFeeByNonce(address: string) {

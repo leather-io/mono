@@ -49,7 +49,7 @@ export function stacksClient(basePath: string) {
           axios.get<AddressBalanceResponse>(`${basePath}/extended/v1/address/${address}/balances`, {
             signal,
           }),
-        { signal, throwOnTimeout: true }
+        { priority: 1, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
