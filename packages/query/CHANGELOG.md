@@ -142,6 +142,13 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.6.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.5.0...@leather.io/query-v2.6.0) (2024-08-16)
+
+
+### Features
+
+* change stacks client requests priorities ([1178a85](https://github.com/leather-io/mono/commit/1178a85c099f7b1caec9ec2ab8d426bcab06230c))
+
 ## [2.5.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.4.3...@leather.io/query-v2.5.0) (2024-08-15)
 
 
