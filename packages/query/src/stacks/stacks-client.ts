@@ -39,6 +39,26 @@ export interface CallReadOnlyFunctionArgs {
   signal?: AbortSignal;
 }
 
+const priorityLevels = {
+  getNetworkStatus: 6,
+  getAccountTransactionsWithTransfers: 5,
+  getNamesOwnedByAddress: 5,
+  getAccountBalance: 4,
+  getAccountNonces: 4,
+  getNameInfo: 4,
+  getNftHoldings: 4,
+  getAddressMempoolTransactions: 4,
+  getRawTransactionById: 4,
+  getTransactionById: 4,
+  getContractInterface: 4,
+  getNetworkBlockTimes: 3,
+  postFeeTransaction: 2,
+  getFtMetadata: 2,
+  getNftMetadata: 2,
+  callReadOnlyFunction: 2,
+  getStx20Balances: 1,
+};
+
 export function stacksClient(basePath: string) {
   const rateLimiter = getHiroApiRateLimiter(basePath);
 
@@ -49,7 +69,7 @@ export function stacksClient(basePath: string) {
           axios.get<AddressBalanceResponse>(`${basePath}/extended/v1/address/${address}/balances`, {
             signal,
           }),
-        { priority: 1, signal, throwOnTimeout: true }
+        { priority: priorityLevels.getAccountBalance, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -57,7 +77,7 @@ export function stacksClient(basePath: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressNonces>(`${basePath}/extended/v1/address/${address}/nonces`, { signal }),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getAccountNonces, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -69,7 +89,11 @@ export function stacksClient(basePath: string) {
             `${basePath}/extended/v1/address/${address}/transactions_with_transfers?limit=${DEFAULT_LIST_LIMIT}`,
             { signal }
           ),
-        { signal, throwOnTimeout: true }
+        {
+          priority: priorityLevels.getAccountTransactionsWithTransfers,
+          signal,
+          throwOnTimeout: true,
+        }
       );
       return resp.data;
     },
@@ -80,10 +104,7 @@ export function stacksClient(basePath: string) {
             estimated_len: estimatedLen,
             transaction_payload: transactionPayload,
           }),
-        {
-          priority: 2,
-          throwOnTimeout: true,
-        }
+        { priority: priorityLevels.postFeeTransaction, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -91,7 +112,7 @@ export function stacksClient(basePath: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<NetworkBlockTimesResponse>(`${basePath}/extended/v1/info/network_block_times`),
-        { throwOnTimeout: true }
+        { priority: priorityLevels.getNetworkBlockTimes, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -101,7 +122,7 @@ export function stacksClient(basePath: string) {
           axios.get<BnsNamesOwnByAddressResponse>(`${basePath}/v1/addresses/stacks/${address}`, {
             signal,
           }),
-        { signal, priority: 2, throwOnTimeout: true }
+        { priority: priorityLevels.getNamesOwnedByAddress, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -111,16 +132,15 @@ export function stacksClient(basePath: string) {
           axios.get<BnsGetNameInfoResponse>(`${basePath}/v1/names/${name}`, {
             signal,
           }),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getNameInfo, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
     async getNetworkStatus(url: string) {
       const resp = await rateLimiter.add(() => axios.get(url, { timeout: 30000 }), {
+        priority: priorityLevels.getNetworkStatus,
         throwOnTimeout: true,
-        priority: 3,
       });
-
       return resp.data;
     },
     async getNftHoldings(address: string, signal: AbortSignal) {
@@ -130,7 +150,7 @@ export function stacksClient(basePath: string) {
             `${basePath}/extended/v1/tokens/nft/holdings?principal=${address}&limit=${DEFAULT_LIST_LIMIT}`,
             { signal }
           ),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getNftHoldings, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -141,7 +161,7 @@ export function stacksClient(basePath: string) {
             `${basePath}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
             { signal }
           ),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getAddressMempoolTransactions, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -149,7 +169,7 @@ export function stacksClient(basePath: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<GetRawTransactionResult>(`${basePath}/extended/v1/tx/${txid}/raw`, { signal }),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getRawTransactionById, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -159,14 +179,14 @@ export function stacksClient(basePath: string) {
           axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txid}`, {
             signal,
           }),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getTransactionById, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
     async getFtMetadata(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () => axios.get<FtMetadataResponse>(`${basePath}/metadata/v1/ft/${address}`, { signal }),
-        { signal, priority: 2, throwOnTimeout: true }
+        { priority: priorityLevels.getFtMetadata, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -176,7 +196,7 @@ export function stacksClient(basePath: string) {
           axios.get<NftMetadataResponse>(`${basePath}/metadata/v1/nft/${address}/${tokenId}`, {
             signal,
           }),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getNftMetadata, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -197,7 +217,7 @@ export function stacksClient(basePath: string) {
               signal,
             }
           ),
-        { priority: 2, signal, throwOnTimeout: true }
+        { priority: priorityLevels.callReadOnlyFunction, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -210,11 +230,9 @@ export function stacksClient(basePath: string) {
         () =>
           axios.get<ContractInterfaceResponseWithFunctions>(
             `${basePath}/v2/contracts/interface/${contractAddress}/${contractName}`,
-            {
-              signal,
-            }
+            { signal }
           ),
-        { signal, throwOnTimeout: true }
+        { priority: priorityLevels.getContractInterface, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
@@ -224,7 +242,7 @@ export function stacksClient(basePath: string) {
           axios.get<Stx20BalanceResponse>(`${STX20_API_BASE_URL_MAINNET}/balance/${address}`, {
             signal,
           }),
-        { signal, priority: 1, throwOnTimeout: true }
+        { priority: priorityLevels.getStx20Balances, signal, throwOnTimeout: true }
       );
       return resp.data.balances;
     },
@@ -235,6 +253,5 @@ export type StacksClient = ReturnType<typeof stacksClient>;
 
 export function useStacksClient() {
   const network = useLeatherNetwork();
-
   return stacksClient(network.chain.stacks.url);
 }
