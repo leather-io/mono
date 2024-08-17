@@ -7,6 +7,8 @@ import { token } from 'leather-styles/tokens';
 
 import { pxStringToNumber } from '@leather.io/utils';
 
+import { DialogFooter } from './dialog-footer.web';
+
 export interface DialogProps {
   isShowing: boolean;
   onClose?(): void;
@@ -91,7 +93,7 @@ export function Dialog({
             ) : (
               children
             )}
-            {footer}
+            {footer && <DialogFooter>{footer}</DialogFooter>}
           </RadixDialog.Content>
         </RadixDialog.Overlay>
       </RadixDialog.Portal>
