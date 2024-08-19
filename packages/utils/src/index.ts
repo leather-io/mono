@@ -8,6 +8,8 @@ export * from './math';
 export * from './money';
 export * from './sort-assets';
 export * from './truncate-middle';
+export * from './time';
+
 export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';
 export { pxStringToNumber } from './px-string-to-number/px-string-to-number';
