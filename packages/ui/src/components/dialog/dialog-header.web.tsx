@@ -20,7 +20,7 @@ export function DialogHeader({ onClose, title, variant = 'default' }: DialogHead
       p="space.04"
       bg="transparent"
       width="100%"
-      minHeight="40px"
+      minHeight="headerHeight"
     >
       {title && (
         <styled.h2
