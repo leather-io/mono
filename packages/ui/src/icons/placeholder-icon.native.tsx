@@ -1,5 +1,5 @@
-import PlaceholderSmall from '../assets/icons/placeholder-small.svg';
-import Placeholder from '../assets/icons/placeholder.svg';
+import PlaceholderSmall from '../assets/icons/placeholder-16-16.svg';
+import Placeholder from '../assets/icons/placeholder-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function PlaceholderIcon({ variant, ...props }: IconProps) {

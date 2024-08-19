@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
+  <path fill="currentColor" d="M8 8.667a.667.667 0 1 0 0-1.334.667.667 0 0 0 0 1.334Zm5.5 0a.667.667 0 1 0 0-1.333.667.667 0 0 0 0 1.333Zm-11 0a.667.667 0 1 0 0-1.334.667.667 0 0 0 0 1.334Z"/>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 8.667a.667.667 0 1 0 0-1.334.667.667 0 0 0 0 1.334Zm5.5 0a.667.667 0 1 0 0-1.333.667.667 0 0 0 0 1.333Zm-11 0a.667.667 0 1 0 0-1.334.667.667 0 0 0 0 1.334Z"/>
+</svg>

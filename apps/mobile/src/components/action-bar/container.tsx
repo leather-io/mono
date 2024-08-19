@@ -9,10 +9,10 @@ import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
 import {
+  ArrowsRepeatLeftRightIcon,
   InboxIcon,
+  PaperPlaneIcon,
   PlusIcon,
-  SendIcon,
-  SwapIcon,
   Text,
   TouchableOpacity,
 } from '@leather.io/ui/native';
@@ -164,7 +164,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       left={
         <ActionBarButton
           onPress={() => router.navigate(APP_ROUTES.WalletSend)}
-          icon={<SendIcon />}
+          icon={<PaperPlaneIcon />}
           label={t`Send`}
         />
       }
@@ -178,7 +178,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       right={
         <ActionBarButton
           onPress={() => router.navigate(APP_ROUTES.WalletSwap)}
-          icon={<SwapIcon />}
+          icon={<ArrowsRepeatLeftRightIcon />}
           label={t`Swap`}
         />
       }

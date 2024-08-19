@@ -7,9 +7,9 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import {
+  BellAlarmIcon,
   Box,
   CloseIcon,
-  NotificationIcon,
   Text,
   Theme,
   TouchableOpacity,
@@ -67,7 +67,7 @@ export function NotifyUserModal({
         </Box>
         <Button
           onPress={onNotify}
-          icon={<NotificationIcon color={theme.colors[getTextColor('default')]} />}
+          icon={<BellAlarmIcon color={theme.colors[getTextColor('default')]} />}
           buttonState="default"
           title={t`Notify me when it's ready`}
         />

@@ -1,5 +1,5 @@
-import CopySmall from '../assets/icons/copy-small.svg';
-import Copy from '../assets/icons/copy.svg';
+import CopySmall from '../assets/icons/copy-16-16.svg';
+import Copy from '../assets/icons/copy-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function CopyIcon({ variant, ...props }: IconProps) {

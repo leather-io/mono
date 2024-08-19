@@ -14,14 +14,14 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
 import {
+  ArrowRotateClockwiseIcon,
   Box,
-  ColorSwatchIcon,
   EllipsisHIcon,
   EmailIcon,
-  EyeIcon,
-  NfcIcon,
+  Eye2Icon,
+  PaletteIcon,
   PlusIcon,
-  ReloadIcon,
+  SignalIcon,
   Text,
   Theme,
   TouchableOpacity,
@@ -62,7 +62,7 @@ function getUnavailableFeatures(theme: Theme) {
     hardwareWallet: {
       title: t`Connect hardware wallet`,
       subtitle: t`Ledger, Trezor, Ryder and more`,
-      icon: <NfcIcon color={theme.colors['ink.text-subdued']} />,
+      icon: <SignalIcon color={theme.colors['ink.text-subdued']} />,
     },
     emailRestore: {
       title: t`Create or restore via email`,
@@ -72,12 +72,12 @@ function getUnavailableFeatures(theme: Theme) {
     mpcWallet: {
       title: t`Connect MPC wallet`,
       subtitle: t`Import existing accounts`,
-      icon: <ColorSwatchIcon color={theme.colors['ink.text-subdued']} />,
+      icon: <PaletteIcon color={theme.colors['ink.text-subdued']} />,
     },
     watchOnlyWallet: {
       title: t`Create watch-only wallet`,
       subtitle: t`No key needed`,
-      icon: <EyeIcon color={theme.colors['ink.text-subdued']} />,
+      icon: <Eye2Icon color={theme.colors['ink.text-subdued']} />,
     },
   };
   return UNAVAILABLE_FEATURES;
@@ -174,7 +174,7 @@ export function AddWalletModalUI({
               onPress={restoreWallet}
               title={t`Restore wallet`}
               subtitle={t`Import existing accounts`}
-              icon={<ReloadIcon />}
+              icon={<ArrowRotateClockwiseIcon />}
             />
             <AddWalletListItem
               onPress={openOptions}

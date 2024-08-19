@@ -1,5 +1,5 @@
-import ArrowLeftSmall from '../assets/icons/arrow-left-small.svg';
-import ArrowLeft from '../assets/icons/arrow-left.svg';
+import ArrowLeftSmall from '../assets/icons/arrow-left-16-16.svg';
+import ArrowLeft from '../assets/icons/arrow-left-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function ArrowLeftIcon({ variant, ...props }: IconProps) {

@@ -1,14 +1,14 @@
 import {
   CheckmarkCircleIcon,
   ErrorCircleIcon,
-  ErrorIcon,
+  ErrorTriangleIcon,
   InfoCircleIcon,
 } from '../../icons/index.web';
 
 export function getIconVariant(variant?: string) {
   switch (variant) {
     case 'error':
-      return <ErrorIcon />;
+      return <ErrorTriangleIcon />;
     case 'success':
       return <CheckmarkCircleIcon />;
     case 'warning':

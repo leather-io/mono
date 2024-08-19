@@ -1,5 +1,5 @@
-import InboxSmall from '../assets/icons/inbox-small.svg';
-import Inbox from '../assets/icons/inbox.svg';
+import InboxSmall from '../assets/icons/inbox-16-16.svg';
+import Inbox from '../assets/icons/inbox-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function InboxIcon({ variant, ...props }: IconProps) {
