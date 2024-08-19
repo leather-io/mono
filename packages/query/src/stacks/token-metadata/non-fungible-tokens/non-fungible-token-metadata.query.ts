@@ -2,7 +2,7 @@ import { hexToCV } from '@stacks/transactions';
 import { QueryFunctionContext, type UseQueryResult, useQueries } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-import { getPrincipalFromContractId } from '@leather.io/utils';
+import { getPrincipalFromContractId, oneMonthInMs, oneWeekInMs } from '@leather.io/utils';
 
 import { StacksQueryPrefixes } from '../../../query-prefixes';
 import { StacksClient, useStacksClient } from '../../stacks-client';
@@ -12,7 +12,8 @@ import { useGetNonFungibleTokenHoldingsQuery } from './non-fungible-token-holdin
 const queryOptions = {
   refetchOnWindowFocus: false,
   refetchOnMount: false,
-  staleTime: 10 * 1000,
+  staleTime: oneWeekInMs,
+  gcTime: oneMonthInMs,
 } as const;
 
 function getTokenId(hex: string) {
@@ -34,10 +35,21 @@ export function createGetNonFungibleTokenMetadataQueryOptions({
   client,
   tokenId,
 }: CreateGetNonFungibleTokenMetadataQueryOptionsArgs) {
+  const queryKey = [StacksQueryPrefixes.GetNftMetadata, address, tokenId];
+
   return {
     enabled: !!tokenId,
-    queryKey: [StacksQueryPrefixes.GetNftMetadata, address, tokenId],
-    queryFn: ({ signal }: QueryFunctionContext) => client.getNftMetadata(address, tokenId, signal),
+    queryKey,
+    queryFn: async ({ signal }: QueryFunctionContext) => {
+      try {
+        return await client.getNftMetadata(address, tokenId, signal);
+      } catch (error) {
+        if (statusCodeNotFoundOrNotProcessable((error as AxiosError).request.status)) {
+          return null;
+        }
+        throw error;
+      }
+    },
     retry(_count: number, error: AxiosError) {
       if (statusCodeNotFoundOrNotProcessable(error.request.status)) return false;
       return true;
