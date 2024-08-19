@@ -10,8 +10,7 @@ export function DialogFooter({ children, ...props }: DialogFooterProps) {
       gap="space.05"
       p="space.05"
       bottom={0}
-      width="100vw"
-      maxWidth="100%"
+      width="100%"
       zIndex={1}
       minHeight="footerHeight"
       position="fixed"
