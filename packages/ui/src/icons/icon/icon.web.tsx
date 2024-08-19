@@ -1,23 +1,21 @@
-import { styled } from 'leather-styles/jsx';
-import type { HTMLStyledProps } from 'leather-styles/types';
+import React from 'react';
+
+import { token } from 'leather-styles/tokens';
 
 import { IconVariant } from './icon.shared';
 
-export interface IconProps extends HTMLStyledProps<'svg'> {
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
   variant?: IconVariant;
 }
-export function Icon({ children, opacity = '1', ...props }: IconProps) {
-  return (
-    <styled.svg fill="none" height="24" opacity={opacity} viewBox="0 0 24 24" width="24" {...props}>
-      {children}
-    </styled.svg>
-  );
-}
+export function Icon({ children, ...props }: IconProps) {
+  const child = React.Children.only(children) as React.ReactElement;
 
-export function IconSmall({ children, opacity = '1', ...props }: IconProps) {
   return (
-    <styled.svg fill="none" height="16" opacity={opacity} viewBox="0 0 16 16" width="16" {...props}>
-      {children}
-    </styled.svg>
+    <>
+      {React.cloneElement(child, {
+        color: token('colors.ink.action-primary-default'),
+        ...props,
+      })}
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { LogomarkIcon } from '../icons/logomark-icon.web';
+import { LeatherLogomarkIcon } from '../icons/leather-logomark-icon.web';
 
 interface LogoProps {
   onClick?(): void;
@@ -14,7 +14,7 @@ export function Logo({ onClick }: LogoProps) {
       onClick={onClick ? onClick : undefined}
       height="headerContainerHeight"
     >
-      <LogomarkIcon width="logoWidth" height="logoHeight" />
+      <LeatherLogomarkIcon />
     </styled.button>
   );
 }

@@ -42,8 +42,6 @@ export const tokens = {
     popupHeight: { value: '756px' },
     popupHeaderHeight: { value: '68px' },
     headerContainerHeight: { value: '40px' },
-    logoHeight: { value: '32px' },
-    logoWidth: { value: '86px' },
     inputHeight: { value: '64px' },
     iconButtonWithLabelWidth: { value: '64px' },
     settingsMenuWidth: { value: '240px' },

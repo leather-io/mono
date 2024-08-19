@@ -14,11 +14,10 @@
     "**/*.web.ts",
     "**/*.web.tsx",
     "web.ts",
-    "**/*.web.stories.tsx",
-    "src/.storybook-*/*",
     "**/*.shared.tsx",
-    "src/icons/*",
-    "global.d.ts"
+    "global.d.ts",
+    "leather-styles",
+    "panda.config.ts"
   ],
   "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
 }

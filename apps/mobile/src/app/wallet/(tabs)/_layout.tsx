@@ -11,7 +11,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
-import { Box, EmojiSmileIcon, HamburgerIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { BarsTwoIcon, Box, EmojiSmileIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 function HeaderCenter({ onPress }: { onPress?(): void }) {
   return (
@@ -40,7 +40,7 @@ function HeaderRight({ onPress }: { onPress?(): void }) {
       justifyContent="center"
       alignItems="center"
     >
-      <HamburgerIcon />
+      <BarsTwoIcon />
     </TouchableOpacity>
   );
 }

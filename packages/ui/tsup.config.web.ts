@@ -1,7 +1,19 @@
+import { clean } from 'esbuild-plugin-clean';
+import svgrPlugin from 'esbuild-plugin-svgr';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
+  bundle: false,
   entry: ['web.ts'],
+  esbuildPlugins: [
+    svgrPlugin({ typescript: true }),
+    clean({
+      cleanOnEndPatterns: ['./dist-web/src/assets-native'],
+    }),
+  ],
+  esbuildOptions(options, _) {
+    options.outbase = './';
+  },
   format: ['esm'],
   tsconfig: 'tsconfig.web.json',
   outDir: 'dist-web/',
@@ -16,6 +28,6 @@ export default defineConfig({
   target: 'esnext',
   loader: {
     '.js': 'jsx',
-    '.jsx': 'jsx',
+    '.svg': 'jsx',
   },
 });

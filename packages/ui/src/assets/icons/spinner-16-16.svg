@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" fill="none" viewBox="0 0 16 17">
+  <mask id="b" width="14" height="15" x="1" y="1" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+    <circle cx="8" cy="8.595" r="6" stroke="url(#a)" stroke-linecap="square" stroke-width="2" transform="rotate(90 8 8.595)"/>
+  </mask>
+  <g mask="url(#b)">
+    <circle cx="8" cy="8.595" r="6" stroke="currentColor" stroke-linecap="square" stroke-width="2" transform="rotate(90 8 8.595)"/>
+  </g>
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-7 0 0 -7 8 8.595)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12100F" stop-opacity="0"/>
+      <stop offset="1" stop-color="#12100F"/>
+    </radialGradient>
+  </defs>
+</svg>

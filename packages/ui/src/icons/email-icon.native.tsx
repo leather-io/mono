@@ -1,5 +1,5 @@
-import EmailSmall from '../assets/icons/email-small.svg';
-import Email from '../assets/icons/email.svg';
+import EmailSmall from '../assets/icons/email-16-16.svg';
+import Email from '../assets/icons/email-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function EmailIcon({ variant, ...props }: IconProps) {
