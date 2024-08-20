@@ -57,9 +57,9 @@ jobs:
       - name: Publish to NPM
         run: pnpm -r publish --no-git-checks
 
-
   trigger-extension-package-update:
     needs: release-please
+    if: needs.release-please.outputs.releases_created
     runs-on: ubuntu-latest
     steps:
       - name: Fire repository dispatch event
@@ -68,7 +68,6 @@ jobs:
           token: ${{ secrets.LEATHER_BOT }}
           repository: leather-io/extension
           event-type: leather-deps-updated
-
 
   # The logic below handles eas deployment and appstore submission:
   deploy-eas:
