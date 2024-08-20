@@ -2,6 +2,8 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, FlexProps } from 'leather-styles/jsx';
 import { SpacingToken } from 'leather-styles/tokens';
 
+import type { FlagAlignment } from './flag.shared';
+
 const flagStyles = css({
   '&[data-align="top"]': {
     alignItems: 'start',
@@ -14,14 +16,12 @@ const flagStyles = css({
   },
 });
 
-type FlagAlignment = 'top' | 'middle' | 'bottom';
-
 export interface FlagProps extends FlexProps {
-  spacing?: SpacingToken;
   align?: FlagAlignment;
   children: React.ReactNode;
   img?: React.ReactNode;
   reverse?: boolean;
+  spacing?: SpacingToken;
 }
 
 /**
