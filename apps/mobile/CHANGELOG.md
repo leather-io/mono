@@ -159,6 +159,31 @@
   * dependencies
     * @leather.io/stacks bumped to 1.0.0
 
+## [1.24.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.23.1...@leather.io/mobile-v1.24.0) (2024-08-21)
+
+
+### Features
+
+* mobile ui svg icons ([126f912](https://github.com/leather-io/mono/commit/126f91283ac8a9b0c2aa15d9dc4d91681b6e7376))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.11.1
+    * @leather.io/constants bumped to 0.9.1
+    * @leather.io/crypto bumped to 1.4.1
+    * @leather.io/models bumped to 0.12.1
+    * @leather.io/rpc bumped to 2.1.5
+    * @leather.io/stacks bumped to 1.0.1
+    * @leather.io/tokens bumped to 0.8.1
+    * @leather.io/ui bumped to 1.13.0
+    * @leather.io/utils bumped to 0.13.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.11.1
+    * @leather.io/eslint-config bumped to 0.7.0
+
 ## [1.23.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.22.0...@leather.io/mobile-v1.23.0) (2024-08-15)
 
 

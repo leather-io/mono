@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.6.1...@leather.io/eslint-config-v0.7.0) (2024-08-21)
+
+
+### Features
+
+* mobile ui svg icons ([126f912](https://github.com/leather-io/mono/commit/126f91283ac8a9b0c2aa15d9dc4d91681b6e7376))
+
 ## [0.6.1](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.6.0...@leather.io/eslint-config-v0.6.1) (2024-07-03)
 
 

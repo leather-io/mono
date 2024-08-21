@@ -72,6 +72,24 @@
     * @leather.io/models bumped to 0.11.0
     * @leather.io/rpc bumped to 2.1.2
 
+## [0.13.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.13.0...@leather.io/utils-v0.13.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* prevent unnecessary nft requerying ([06603c9](https://github.com/leather-io/mono/commit/06603c91048e1e517bbfaaace8e94edb25fbd751))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.9.1
+    * @leather.io/models bumped to 0.12.1
+    * @leather.io/rpc bumped to 2.1.5
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.7.0
+
 ## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.12.1...@leather.io/utils-v0.13.0) (2024-08-15)
 
 
