@@ -159,6 +159,20 @@
   * dependencies
     * @leather.io/stacks bumped to 1.0.0
 
+## [1.24.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.24.0...@leather.io/mobile-v1.24.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* address design qa issues ([6adcfeb](https://github.com/leather-io/mono/commit/6adcfeb2793a04059965a6d1c58bbcd6a2786d94))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.13.1
+
 ## [1.24.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.23.1...@leather.io/mobile-v1.24.0) (2024-08-21)
 
 

@@ -91,6 +91,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.13.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.13.0...@leather.io/ui-v1.13.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* address design qa issues ([6adcfeb](https://github.com/leather-io/mono/commit/6adcfeb2793a04059965a6d1c58bbcd6a2786d94))
+
 ## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.12.0...@leather.io/ui-v1.13.0) (2024-08-21)
 
 
