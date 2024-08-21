@@ -18,6 +18,12 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.5.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.7.0
+
 ## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.7.1...@leather.io/tokens-v0.8.0) (2024-08-15)
 
 

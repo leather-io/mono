@@ -91,6 +91,31 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.12.0...@leather.io/ui-v1.13.0) (2024-08-21)
+
+
+### Features
+
+* mobile ui svg icons ([126f912](https://github.com/leather-io/mono/commit/126f91283ac8a9b0c2aa15d9dc4d91681b6e7376))
+
+
+### Bug Fixes
+
+* move dialog footer to monorepo, ref leather-wallet/extension[#5248](https://github.com/leather-io/mono/issues/5248) ([a7bb3b9](https://github.com/leather-io/mono/commit/a7bb3b98221e99d7a77b2f2c9662ed8d27dc17b7))
+* ui storybook ([6e2d1b2](https://github.com/leather-io/mono/commit/6e2d1b2e56196a960748fe8377758b0cac96c08a))
+* update minHeight of dialog header, ref leather-wallet/extension[#5734](https://github.com/leather-io/mono/issues/5734) ([e5615eb](https://github.com/leather-io/mono/commit/e5615eb33d4c76a5fc8a5d6dd5a2ad89dc7a8baf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.8.1
+    * @leather.io/utils bumped to 0.13.1
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.7.0
+    * @leather.io/panda-preset bumped to 0.3.7
+
 ## [1.12.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.11.0...@leather.io/ui-v1.12.0) (2024-08-15)
 
 

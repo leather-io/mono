@@ -142,6 +142,26 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.6.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.6.0...@leather.io/query-v2.6.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* prevent unnecessary nft requerying ([06603c9](https://github.com/leather-io/mono/commit/06603c91048e1e517bbfaaace8e94edb25fbd751))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.11.1
+    * @leather.io/constants bumped to 0.9.1
+    * @leather.io/models bumped to 0.12.1
+    * @leather.io/rpc bumped to 2.1.5
+    * @leather.io/utils bumped to 0.13.1
+  * devDependencies
+    * @leather.io/eslint-config bumped to 0.7.0
+
 ## [2.6.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.5.0...@leather.io/query-v2.6.0) (2024-08-16)
 
 
