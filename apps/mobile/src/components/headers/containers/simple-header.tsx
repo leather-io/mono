@@ -23,7 +23,7 @@ export function SimpleHeader(props: SimpleHeaderProps) {
     >
       <Box
         py="3"
-        px="5"
+        px="3"
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { EdgeInsets } from 'react-native-safe-area-context';
 
-import { BlurView } from 'expo-blur';
+import { ThemedBlurView } from '@/components/blur-view';
 
 import { Box } from '@leather.io/ui/native';
 
@@ -17,8 +17,7 @@ interface BlurredHeaderProps {
 
 export function BlurredHeader(props: BlurredHeaderProps) {
   return (
-    <BlurView
-      tint="systemChromeMaterialLight"
+    <ThemedBlurView
       intensity={90}
       style={{
         width: '100%',
@@ -29,7 +28,7 @@ export function BlurredHeader(props: BlurredHeaderProps) {
     >
       <Box
         py="3"
-        px="5"
+        px="3"
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
@@ -47,6 +46,6 @@ export function BlurredHeader(props: BlurredHeaderProps) {
         </Box>
       </Box>
       {props?.bottom}
-    </BlurView>
+    </ThemedBlurView>
   );
 }

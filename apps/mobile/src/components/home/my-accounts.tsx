@@ -29,14 +29,17 @@ export function MyAccounts() {
 
   return (
     <Box style={{ marginBottom: 40 }}>
-      <Box flexDirection="column" paddingBottom="3">
+      <Box px="5" flexDirection="column" paddingBottom="3">
         <TouchableOpacity flexDirection="row" gap="1" alignItems="center">
           <Text variant="heading05">{t`My accounts`}</Text>
           <ChevronRightIcon variant="small" />
         </TouchableOpacity>
         <Text variant="caption01">$0</Text>
       </Box>
-      <ScrollView horizontal contentContainerStyle={{ gap: theme.spacing['2'] }}>
+      <ScrollView
+        horizontal
+        contentContainerStyle={{ gap: theme.spacing['2'], paddingHorizontal: theme.spacing['5'] }}
+      >
         {accountComponents}
       </ScrollView>
     </Box>

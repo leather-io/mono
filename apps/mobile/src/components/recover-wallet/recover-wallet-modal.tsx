@@ -4,10 +4,11 @@ import { useSharedValue } from 'react-native-reanimated';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 
-import { Box, LockIcon, Text } from '@leather.io/ui/native';
+import { Box, LockIcon } from '@leather.io/ui/native';
 
-import { CLOSED_ANIMATED_POSITION, Modal, UIBottomSheetTextInput } from '../bottom-sheet-modal';
+import { CLOSED_ANIMATED_SHARED_VALUE, Modal, UIBottomSheetTextInput } from '../bottom-sheet-modal';
 import { Button } from '../button';
+import { ModalHeader } from '../modal-headers/modal-header';
 import { TextInput } from '../text-input';
 
 export interface OptionData {
@@ -25,19 +26,14 @@ export function RecoverWalletModal({
   passphrase,
   setPassphrase,
 }: RecoverWalletModalProps) {
-  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
+  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const [internalPassphrase, setInternalPassphrase] = useState(passphrase);
 
   return (
     <Modal animatedPosition={animatedPosition} ref={recoverWalletModalRef}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box>
-          <Box flexDirection="row" alignItems="center" gap="3">
-            <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
-              <LockIcon />
-            </Box>
-            <Text variant="heading05">{t`BIP39 passphrase`}</Text>
-          </Box>
+          <ModalHeader Icon={LockIcon} modalVariant="normal" title={t`BIP39 passphrase`} />
           <TextInput
             value={internalPassphrase}
             onChangeText={text => {

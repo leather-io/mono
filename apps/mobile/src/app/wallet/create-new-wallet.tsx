@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ThemedBlurView } from '@/components/blur-view';
 import { Button } from '@/components/button';
 import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
+import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/state/storage-persistors';
-import { t } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import {
   Box,
-  CheckmarkCircleIcon,
   CopyIcon,
   PointerIcon,
   QuestionCircleIcon,
@@ -42,9 +42,9 @@ export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const [isHidden, setIsHidden] = useState(true);
-  const [isCopied, setIsCopied] = useState(false);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
+  const { displayToast } = useToastContext();
 
   useEffect(() => {
     const tempMnemonic = generateMnemonic();
@@ -73,7 +73,12 @@ export default function CreateNewWallet() {
           >
             <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
-          <Text variant="heading03">{t`BACK UP YOUR SECRET KEY`}</Text>
+          <Box>
+            <Trans>
+              <Text variant="heading03">BACK UP YOUR</Text>
+              <Text variant="heading03">SECRET KEY</Text>
+            </Trans>
+          </Box>
           <Text variant="label01">
             {t`Your Secret Key grants you access to your wallet and its assets.`}
           </Text>
@@ -81,8 +86,7 @@ export default function CreateNewWallet() {
 
         <Box my="5">
           {isHidden && (
-            <BlurView
-              tint="systemChromeMaterialLight"
+            <ThemedBlurView
               intensity={isHidden ? 30 : 0}
               style={{
                 position: 'absolute',
@@ -109,7 +113,7 @@ export default function CreateNewWallet() {
                   </Text>
                 </Box>
               </TouchableOpacity>
-            </BlurView>
+            </ThemedBlurView>
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
           <Box p="3" mt="3" flexDirection="row" gap="4" borderRadius="xs">
@@ -123,7 +127,7 @@ export default function CreateNewWallet() {
               variant="label03"
               color="ink.text-subdued"
             >
-              {t`We recommend writing these words in numbered order on a piece of paper and storing it in a safe place.`}
+              {t`We recommend writing these words in numbered order on a piece of paper and storing it in a safe place.`}{' '}
               <Text
                 onPress={() => {
                   // TODO: navigate to a website
@@ -139,18 +143,17 @@ export default function CreateNewWallet() {
           </Box>
         </Box>
       </ScrollView>
-      <Box px="5">
+      <Box px="5" gap="4">
         <Button
           onPress={async () => {
             if (mnemonic) {
               await Clipboard.setStringAsync(mnemonic);
-              setIsCopied(true);
+              displayToast({ title: t`Successfully copied to clipboard!`, type: 'success' });
             }
           }}
-          pb="4"
-          icon={isCopied ? <CheckmarkCircleIcon /> : <CopyIcon />}
+          icon={<CopyIcon />}
           buttonState="ghost"
-          title={isCopied ? t`Copied to clipboard` : t`Copy to clipboard`}
+          title={t`Copy to clipboard`}
         />
         <Button
           onPress={() => {

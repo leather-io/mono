@@ -35,7 +35,6 @@ export function Home() {
             contentOffsetBottom,
           })}
           contentContainerStyle={{
-            paddingHorizontal: theme.spacing['5'],
             paddingTop: theme.spacing['5'],
             paddingBottom: theme.spacing['5'],
             gap: theme.spacing[3],
@@ -43,7 +42,9 @@ export function Home() {
           contentInset={{ bottom: contentOffsetBottom }}
         >
           <MyAccounts />
-          <Earn />
+          <Box px="5">
+            <Earn />
+          </Box>
         </ScrollView>
       </Box>
       <ActionBarContainer ref={actionBarRef} />

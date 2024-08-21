@@ -19,9 +19,10 @@ import {
   useBottomSheet,
 } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
-import { BlurView } from 'expo-blur';
 
 import { Box, Theme, TouchableOpacity, createTextInput } from '@leather.io/ui/native';
+
+import { ThemedBlurView } from './blur-view';
 
 export const UIBottomSheetTextInput = createTextInput(BottomSheetTextInput);
 
@@ -33,7 +34,7 @@ const absoluteStyle = {
   left: 0,
 } satisfies ViewStyle;
 
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+const AnimatedBlurView = Animated.createAnimatedComponent(ThemedBlurView);
 
 function Backdrop({ animatedIndex }: BottomSheetBackdropProps) {
   const { close } = useBottomSheet();
@@ -52,7 +53,6 @@ function Backdrop({ animatedIndex }: BottomSheetBackdropProps) {
   return (
     <AnimatedBlurView
       animatedProps={animatedProps}
-      tint="systemChromeMaterial"
       style={[
         {
           width: '100%',
@@ -75,7 +75,7 @@ function Backdrop({ animatedIndex }: BottomSheetBackdropProps) {
     </AnimatedBlurView>
   );
 }
-export const CLOSED_ANIMATED_POSITION = -888;
+export const CLOSED_ANIMATED_SHARED_VALUE = -888;
 
 export const Modal = forwardRef<
   BottomSheetModal,
@@ -84,15 +84,21 @@ export const Modal = forwardRef<
     children: ReactNode;
     animatedPosition?: SharedValue<number>;
     onDismiss?(): void;
+    animatedIndex?: SharedValue<number>;
   }
->(function ({ isScrollView, children, animatedPosition, onDismiss }, ref) {
-  const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_POSITION);
+>(function ({ isScrollView, children, animatedPosition, animatedIndex, onDismiss }, ref) {
+  const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
+  const defaultAnimatedIndex = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
+
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
+  const internalAnimatedIndex = animatedIndex ?? defaultAnimatedIndex;
+
   const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
   return (
     <BottomSheetModal
+      animatedIndex={internalAnimatedIndex}
       stackBehavior="push"
       onDismiss={onDismiss}
       enableDynamicSizing
@@ -108,6 +114,7 @@ export const Modal = forwardRef<
     >
       <BottomSheetComponent
         style={{
+          backgroundColor: theme.colors['ink.background-primary'],
           paddingBottom: bottom,
           borderTopLeftRadius: theme.borderRadii.lg,
           borderTopRightRadius: theme.borderRadii.lg,
