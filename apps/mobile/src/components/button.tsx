@@ -33,12 +33,14 @@ type BaseButtonProps<Theme extends BaseTheme> = OpacityProps<Theme> &
 type Props = BaseButtonProps<Theme> & ComponentPropsWithoutRef<typeof RNTouchableOpacity>;
 const composedRestyleFunction = composeRestyleFunctions<Theme, Props>(buttonRestyleFunctions);
 
-export type ButtonState = 'default' | 'disabled' | 'success' | 'outline' | 'ghost';
+export type ButtonState = 'default' | 'critical' | 'disabled' | 'success' | 'outline' | 'ghost';
 
 function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState, T>) {
   switch (buttonState) {
     case 'default':
       return match.default;
+    case 'critical':
+      return match.critical;
     case 'disabled':
       return match.disabled;
     case 'success':
@@ -55,6 +57,7 @@ export function getTextColor(buttonState: ButtonState) {
     buttonState,
     {
       default: 'ink.background-primary',
+      critical: 'ink.background-primary',
       disabled: 'ink.text-non-interactive',
       success: 'green.action-primary-default',
       outline: 'ink.action-primary-default',
@@ -84,6 +87,7 @@ export const Button = forwardRef(
       ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
     >(buttonState, {
       default: 'ink.text-primary',
+      critical: 'red.action-primary-default',
       disabled: 'ink.background-secondary',
       success: 'green.background-primary',
       outline: 'ink.background-primary',
@@ -96,6 +100,7 @@ export const Button = forwardRef(
       ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
     >(buttonState, {
       default: undefined,
+      critical: undefined,
       disabled: undefined,
       success: undefined,
       outline: 'ink.action-primary-default',
@@ -104,6 +109,7 @@ export const Button = forwardRef(
 
     const borderWidth = whenButtonState<number | undefined>(buttonState, {
       default: undefined,
+      critical: undefined,
       disabled: undefined,
       success: undefined,
       outline: 1,

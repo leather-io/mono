@@ -5,7 +5,7 @@ import { Button } from '@/components/button';
 import { SkipSecureWalletModal } from '@/components/secure-your-wallet/skip-secure-wallet-modal';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { t } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import {
@@ -45,7 +45,12 @@ export default function SecureYourWalletScreen() {
           >
             <QuestionCircleIcon variant="small" />
           </TouchableOpacity>
-          <Text variant="heading03">{t`SECURE YOUR WALLET`}</Text>
+          <Box>
+            <Trans>
+              <Text variant="heading03">SECURE</Text>
+              <Text variant="heading03">YOUR WALLET</Text>
+            </Trans>
+          </Box>
           <Text variant="label01">
             {t`Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`}
           </Text>
@@ -72,7 +77,8 @@ export default function SecureYourWalletScreen() {
         </Box>
       </Box>
       <SkipSecureWalletModal
-        onSkip={async () => {
+        onSubmit={async () => {
+          skipSecureWalletModalRef.current?.close();
           await createWallet({ biometrics: false });
         }}
         skipSecureWalletModalRef={skipSecureWalletModalRef}

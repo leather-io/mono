@@ -1,4 +1,4 @@
-import { useImperativeHandle, useState } from 'react';
+import { useImperativeHandle, useRef, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
@@ -12,7 +12,7 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const TOP_POSITION = {
   closed: -100,
-  opened: 100,
+  opened: 72,
 };
 
 const TOAST_OPEN_DURATION = 3000;
@@ -39,12 +39,14 @@ export function Toast({ toastRef }: ToastProps) {
   const theme = useTheme<Theme>();
   const [toastData, setToastData] = useState<ToastData | null>(null);
   const top = useSharedValue<number>(TOP_POSITION.closed);
+  const timeout = useRef<NodeJS.Timeout>();
 
   useImperativeHandle<ToastMethods, ToastMethods>(toastRef, () => ({
     display(data) {
       setToastData(data);
       top.value = withTiming(TOP_POSITION.opened);
-      setTimeout(() => {
+      clearTimeout(timeout.current);
+      timeout.current = setTimeout(() => {
         top.value = withTiming(TOP_POSITION.closed);
       }, TOAST_OPEN_DURATION);
     },

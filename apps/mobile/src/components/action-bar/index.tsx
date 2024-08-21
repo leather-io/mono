@@ -8,9 +8,10 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@shopify/restyle';
-import { BlurView } from 'expo-blur';
 
 import { Box, Theme } from '@leather.io/ui/native';
+
+import { ThemedBlurView } from '../blur-view';
 
 export const ACTION_BAR_HEIGHT = 70;
 export const ACTION_BAR_BOTTOM_OFFSET = 40;
@@ -83,8 +84,7 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
       ]}
     >
       <Box width="100%" px="5" justifyContent="center" alignItems="center">
-        <BlurView
-          tint="systemChromeMaterialLight"
+        <ThemedBlurView
           intensity={90}
           style={{
             flexDirection: 'row',
@@ -99,16 +99,22 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
             borderRadius: theme.borderRadii.xs,
           }}
         >
-          <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
-            {props?.left}
-          </Box>
-          <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
-            {props?.center}
-          </Box>
-          <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
-            {props?.right}
-          </Box>
-        </BlurView>
+          {props.left && (
+            <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
+              {props.left}
+            </Box>
+          )}
+          {props.center && (
+            <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
+              {props.center}
+            </Box>
+          )}
+          {props.right && (
+            <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
+              {props?.right}
+            </Box>
+          )}
+        </ThemedBlurView>
       </Box>
     </Animated.View>
   );

@@ -55,3 +55,4 @@ export * from './trash-icon.web';
 export * from './unlock-icon.web';
 export * from './world-icon.web';
 export * from './zap-icon.web';
+export * from './triangle-exclamation-icon.web';

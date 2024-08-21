@@ -20,7 +20,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Box, Text, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
+import { Box, Text, TextInputProps, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 
@@ -51,6 +51,7 @@ export function TextInput({
   Icon,
   ref,
   errorMessage,
+  textVariant,
   TextInputComponent,
   ...rest
 }: Props & {
@@ -58,6 +59,7 @@ export function TextInput({
   Icon?: ReactNode;
   ref?: RefObject<RNTextInput>;
   errorMessage?: string;
+  textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;
 }) {
   const _errorMessage = errorMessage ?? t`Something is wrong!`;
@@ -78,6 +80,7 @@ export function TextInput({
   return (
     <Box>
       <_TextInput
+        textVariant={textVariant}
         placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}
         borderColor={borderColor}

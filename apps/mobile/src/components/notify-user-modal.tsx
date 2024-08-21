@@ -15,7 +15,7 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
-import { CLOSED_ANIMATED_POSITION, Modal } from './bottom-sheet-modal';
+import { CLOSED_ANIMATED_SHARED_VALUE, Modal } from './bottom-sheet-modal';
 import { Button, getTextColor } from './button';
 
 export interface OptionData {
@@ -33,7 +33,7 @@ export function NotifyUserModal({
   optionData,
   onCloseNotificationsModal,
 }: NotifyUserModalProps) {
-  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
+  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
   const { registerPushNotifications } = usePushNotifications();
   async function onNotify() {

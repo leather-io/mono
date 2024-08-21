@@ -27,7 +27,7 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
-import { CLOSED_ANIMATED_POSITION, Modal } from '../bottom-sheet-modal';
+import { CLOSED_ANIMATED_SHARED_VALUE, Modal } from '../bottom-sheet-modal';
 import { NotifyUserModal, OptionData } from '../notify-user-modal';
 
 interface AddWalletListItemProps {
@@ -138,20 +138,19 @@ export function AddWalletModalUI({
   onOpenNotificationsModal,
 }: AddWalletModalUIProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
-  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_POSITION);
+  const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
 
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
   }
-
   const animatedStyle = useAnimatedStyle(() => ({
-    marginTop: interpolate(animatedPosition.value, [800, 300], [-200, 0], Extrapolation.CLAMP),
-    marginBottom: interpolate(animatedPosition.value, [800, 300], [200, 0], Extrapolation.CLAMP),
+    marginTop: interpolate(animatedIndex.value, [-1, 0], [-200, 0], Extrapolation.CLAMP),
+    marginBottom: interpolate(animatedIndex.value, [-1, 0], [200, 0], Extrapolation.CLAMP),
   }));
 
   return (
-    <Modal isScrollView animatedPosition={animatedPosition} ref={addWalletModalRef}>
+    <Modal isScrollView animatedIndex={animatedIndex} ref={addWalletModalRef}>
       <AnimatedBox style={animatedStyle}>
         <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
           <Image
@@ -160,7 +159,7 @@ export function AddWalletModalUI({
             source={require('@/assets/create-wallet-image.png')}
           />
         </Box>
-        <Box px="5" pt="5">
+        <Box p="5">
           <Text pb="5" variant="heading03">
             {t`Add wallet to "Use case"`}
           </Text>

@@ -31,3 +31,5 @@ export * from './study-icon.native';
 export * from './swap-icon.native';
 export * from './wallet-icon.native';
 export * from './x-logo-icon.native';
+export * from './triangle-exclamation-icon.native';
+export type { IconProps } from './icon/icon.native';

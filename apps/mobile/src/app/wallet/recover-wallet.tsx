@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/button';
@@ -8,7 +9,7 @@ import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/state/storage-persistors';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { t } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
@@ -50,11 +51,12 @@ export default function RecoverWallet() {
   const recoverWalletModalRef = useRef<BottomSheetModal>(null);
   const [passphrase, setPassphrase] = useState('');
   const { navigateAndCreateWallet } = useCreateWallet();
+  const hidePasteButton = recoveryMnemonic.length > 0;
 
   function validateMnemonicOnBlur() {
     const invalidWords = getInvalidMnemonicWords(recoveryMnemonic);
     const isError = invalidWords.length !== 0;
-    if (isError) {
+    if (recoveryMnemonic.length > 0 && isError) {
       setInputState('error');
       setErrorMessage(constructErrorMessage(invalidWords));
     } else {
@@ -102,11 +104,9 @@ export default function RecoverWallet() {
       <Box
         flex={1}
         backgroundColor="ink.background-primary"
-        px="5"
-        justifyContent="space-between"
         style={{ paddingBottom: bottom + theme.spacing['5'] }}
       >
-        <Box>
+        <KeyboardAwareScrollView contentContainerStyle={{ paddingHorizontal: theme.spacing['5'] }}>
           <Box gap="3" pt="5">
             <TouchableOpacity
               onPress={() => {
@@ -120,18 +120,26 @@ export default function RecoverWallet() {
             >
               <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
-            <Text variant="heading03">{t`ENTER YOUR SECRET KEY`}</Text>
+            <Box>
+              <Trans>
+                <Text variant="heading03">ENTER YOUR</Text>
+                <Text variant="heading03">SECRET KEY</Text>
+              </Trans>
+            </Box>
             <Text variant="label01">{t`Paste or type a Secret Key to add its associated wallet.`}</Text>
           </Box>
           <Box mb="3">
-            <Button
-              onPress={pasteFromClipboard}
-              style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 100 }}
-              buttonState="default"
-              title={t`Paste`}
-              icon={<NoteIcon />}
-            />
+            {!hidePasteButton && (
+              <Button
+                onPress={pasteFromClipboard}
+                style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 100 }}
+                buttonState="default"
+                title={t`Paste`}
+                icon={<NoteIcon color={theme.colors['ink.background-primary']} />}
+              />
+            )}
             <TextInput
+              textVariant="label01"
               onBlur={validateMnemonicOnBlur}
               ref={inputRef}
               mt="5"
@@ -166,7 +174,8 @@ export default function RecoverWallet() {
               onPress={() => {
                 recoverWalletModalRef.current?.present();
               }}
-              py="3"
+              pt="3"
+              pb="5"
               flexDirection="row"
               justifyContent="space-between"
               alignItems="center"
@@ -185,8 +194,9 @@ export default function RecoverWallet() {
               <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
           )}
-        </Box>
+        </KeyboardAwareScrollView>
         <Button
+          mx="5"
           onPress={onSubmit}
           disabled={isButtonDisabled}
           buttonState={isButtonDisabled ? 'disabled' : 'default'}

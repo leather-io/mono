@@ -4,14 +4,7 @@ import { Box, EmojiSmileIcon, Text, TouchableOpacity } from '@leather.io/ui/nati
 
 export function AccountHeader({ onPress }: { onPress?(): void }) {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      height={48}
-      px="3"
-      flexDirection="row"
-      alignItems="center"
-      gap="2"
-    >
+    <TouchableOpacity onPress={onPress} p="3" flexDirection="row" alignItems="center" gap="2">
       <Box borderRadius="round" p="1" bg="blue.background-secondary">
         <EmojiSmileIcon />
       </Box>

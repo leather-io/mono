@@ -32,7 +32,7 @@ import {
 
 import { Theme } from '../../theme-native';
 
-type BaseButtonProps<Theme extends BaseTheme> = ComponentPropsWithoutRef<typeof RNTextInput> &
+export type TextInputProps<Theme extends BaseTheme> = ComponentPropsWithoutRef<typeof RNTextInput> &
   VariantProps<Theme, 'textVariants', 'textVariant'> &
   OpacityProps<Theme> &
   VisibleProps<Theme> &
@@ -62,7 +62,7 @@ export const textInputRestyleFunctions = [
 ];
 
 export function createTextInput<T extends ComponentType>(TextInputComponent: T) {
-  return createRestyleComponent<BaseButtonProps<Theme>, Theme>(
+  return createRestyleComponent<TextInputProps<Theme>, Theme>(
     textInputRestyleFunctions,
     TextInputComponent
   );
