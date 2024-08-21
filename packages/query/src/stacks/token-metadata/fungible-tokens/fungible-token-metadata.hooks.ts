@@ -27,7 +27,7 @@ export function useStacksFungibleTokensBalance(
           client,
           network: network.chain.stacks.url,
         }),
-        select: (resp: FtAssetResponse) => {
+        select: (resp: FtAssetResponse | null) => {
           if (!(resp && isFtAsset(resp))) return;
           const { contractAssetName } = getStacksContractIdStringParts(key);
           const name = resp.name || contractAssetName;
@@ -57,7 +57,7 @@ export function useStacksFungibleTokensMetadata(keys: string[]) {
           client,
           network: network.chain.stacks.url,
         }),
-        select: (resp: FtAssetResponse) => {
+        select: (resp: FtAssetResponse | null) => {
           if (!(resp && isFtAsset(resp))) return;
           return createSip10CryptoAssetInfo(key, resp);
         },

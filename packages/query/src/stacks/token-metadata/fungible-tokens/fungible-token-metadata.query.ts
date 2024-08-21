@@ -1,19 +1,20 @@
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+
+import { oneMonthInMs, oneWeekInMs } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../../query-prefixes';
-import { type StacksClient, useStacksClient } from '../../stacks-client';
+import { StacksClient, useStacksClient } from '../../stacks-client';
 import { FtAssetResponse } from '../token-metadata.utils';
 
-const staleTime = 12 * 60 * 60 * 1000;
-
 const queryOptions = {
-  gcTime: staleTime,
   refetchOnMount: false,
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,
+  staleTime: oneWeekInMs,
+  gcTime: oneMonthInMs,
   retry: 0,
-  staleTime,
 } as const;
 
 interface CreateGetFungibleTokenMetadataQueryOptionsArgs {
@@ -21,6 +22,7 @@ interface CreateGetFungibleTokenMetadataQueryOptionsArgs {
   client: StacksClient;
   network: string;
 }
+
 export function createGetFungibleTokenMetadataQueryOptions({
   address,
   client,
@@ -29,8 +31,18 @@ export function createGetFungibleTokenMetadataQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetFtMetadata, address, network],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      client.getFtMetadata(address, signal) as unknown as FtAssetResponse,
+    queryFn: async ({ signal }: QueryFunctionContext) => {
+      try {
+        const res = await client.getFtMetadata(address, signal);
+        return res as unknown as FtAssetResponse;
+      } catch (error) {
+        const status = (error as AxiosError).request?.status;
+        if (status === 404 || status === 422) {
+          return null;
+        }
+        throw error;
+      }
+    },
     ...queryOptions,
   } as const;
 }
