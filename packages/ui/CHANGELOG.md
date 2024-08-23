@@ -91,6 +91,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.14.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.14.0...@leather.io/ui-v1.14.1) (2024-08-23)
+
+
+### Bug Fixes
+
+* web ui build missing src folder ([01e9a2d](https://github.com/leather-io/mono/commit/01e9a2ddcfe87bd42fd5d7c2da517ef62dbf6aa2))
+
 ## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.13.1...@leather.io/ui-v1.14.0) (2024-08-23)
 
 
