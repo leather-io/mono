@@ -10,14 +10,6 @@
       "leather-styles/*": ["leather-styles/*"]
     }
   },
-  "include": [
-    "**/*.web.ts",
-    "**/*.web.tsx",
-    "web.ts",
-    "**/*.shared.tsx",
-    "global.d.ts",
-    "leather-styles",
-    "panda.config.ts"
-  ],
+  "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts", "**/*.shared.tsx", "global.d.ts"],
   "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
 }
