@@ -142,6 +142,23 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.7.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.6.1...@leather.io/query-v2.7.0) (2024-08-23)
+
+
+### Features
+
+* prevent ft tokens unnecessary requerying, closes leather-io/extension[#5755](https://github.com/leather-io/mono/issues/5755) ([97e13cf](https://github.com/leather-io/mono/commit/97e13cf73c2c553539dbde464d4ce9587e32acf9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.11.2
+    * @leather.io/models bumped to 0.13.0
+    * @leather.io/rpc bumped to 2.1.6
+    * @leather.io/utils bumped to 0.13.2
+
 ## [2.6.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.6.0...@leather.io/query-v2.6.1) (2024-08-21)
 
 

@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.8.1...@leather.io/tokens-v0.9.0) (2024-08-23)
+
+
+### Features
+
+* web svg icons ([2bc1989](https://github.com/leather-io/mono/commit/2bc1989c2f46e09c61740136c41b9baf48c49def))
+
 ## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.7.1...@leather.io/tokens-v0.8.0) (2024-08-15)
 
 

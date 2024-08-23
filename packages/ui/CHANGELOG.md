@@ -91,6 +91,23 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.13.1...@leather.io/ui-v1.14.0) (2024-08-23)
+
+
+### Features
+
+* web svg icons ([2bc1989](https://github.com/leather-io/mono/commit/2bc1989c2f46e09c61740136c41b9baf48c49def))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.9.0
+    * @leather.io/utils bumped to 0.13.2
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.3.8
+
 ## [1.13.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.13.0...@leather.io/ui-v1.13.1) (2024-08-21)
 
 
