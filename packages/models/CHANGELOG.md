@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.12.1...@leather.io/models-v0.13.0) (2024-08-23)
+
+
+### Features
+
+* add hiro extended url ([fd2eaab](https://github.com/leather-io/mono/commit/fd2eaab07ccdba682b10ef7cd3c5ebd9722bf1e9))
+
 ## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.11.1...@leather.io/models-v0.12.0) (2024-08-15)
 
 

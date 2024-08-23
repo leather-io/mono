@@ -2,7 +2,7 @@
   "name": "@leather.io/panda-preset",
   "author": "Leather, LLC",
   "description": "Leather styles package",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "license": "MIT",
   "type": "module",
   "scripts": {
