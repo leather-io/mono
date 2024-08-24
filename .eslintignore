@@ -7,7 +7,6 @@ pnpm-lock.yaml
 .eslintrc.js
 dist/
 dist-native/
-dist-all/
 dist-web/
 .turbo/
 .tsup/

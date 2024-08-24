@@ -7,11 +7,18 @@
     "lib": ["esnext", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
-    "outDir": "./dist-all",
+    "outDir": "./dist-web",
     "paths": {
       "leather-styles/*": ["leather-styles/*"]
     }
   },
   "include": ["**/*", "src/.storybook-*/*", "**/*.*.stories.tsx", "global.d.ts", "leather-styles"],
-  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
+  "exclude": [
+    "node_modules",
+    "babel.config.cjs",
+    "metro.config.cjs",
+    "tsup.config.*.ts",
+    "**/*.js",
+    "./dist-*"
+  ]
 }
