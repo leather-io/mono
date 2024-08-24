@@ -10,6 +10,20 @@
       "leather-styles/*": ["leather-styles/*"]
     }
   },
-  "include": ["**/*.web.ts", "**/*.web.tsx", "web.ts", "**/*.shared.tsx", "global.d.ts"],
-  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
+  "include": [
+    "**/*.web.ts",
+    "**/*.web.tsx",
+    "web.ts",
+    "**/*.shared.tsx",
+    "global.d.ts",
+    "leather-styles"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.cjs",
+    "metro.config.cjs",
+    "tsup.config.*.ts",
+    "**/*.js",
+    "./dist-*"
+  ]
 }

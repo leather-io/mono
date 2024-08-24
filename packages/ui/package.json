@@ -6,7 +6,6 @@
   "scripts": {
     "build": "pnpm panda && pnpm build:native && pnpm build:web",
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
-    "build:all": "tsc --build ./tsconfig.json",
     "build:native": "tsup --config tsup.config.native.ts",
     "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch\" ",
     "build:web": "tsup --config tsup.config.web.ts",
