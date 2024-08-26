@@ -43,6 +43,7 @@ export default defineConfig({
   target: 'esnext',
   loader: {
     '.js': 'jsx',
+    '.jsx': 'jsx',
     '.svg': 'jsx',
   },
 });
