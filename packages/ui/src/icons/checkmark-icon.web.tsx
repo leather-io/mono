@@ -1,17 +1,28 @@
-import CheckmarkSmall from '../assets/icons/checkmark-16-16.svg';
-import Checkmark from '../assets/icons/checkmark-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import { Icon, IconProps, IconSmall } from './icon/icon.web';
 
 export function CheckmarkIcon({ variant, ...props }: IconProps) {
   if (variant === 'small')
     return (
-      <Icon {...props}>
-        <CheckmarkSmall />
-      </Icon>
+      <IconSmall {...props}>
+        <path
+          d="M1.8335 10.0625L6.00016 13.5L14.1668 2.5"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </IconSmall>
     );
+
   return (
     <Icon {...props}>
-      <Checkmark />
+      <path
+        d="M3 15L9.29412 20L21 4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </Icon>
   );
 }

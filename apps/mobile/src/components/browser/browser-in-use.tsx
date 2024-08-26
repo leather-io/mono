@@ -9,12 +9,12 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
 import {
-  ArrowRotateClockwiseIcon,
   Box,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
   EllipsisHIcon,
+  ReloadIcon,
   Text,
   Theme,
   TouchableOpacity,
@@ -130,7 +130,7 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
           <ChevronRightIcon />
         </TouchableOpacity>
         <TouchableOpacity p="3" onPress={reload}>
-          <ArrowRotateClockwiseIcon />
+          <ReloadIcon />
         </TouchableOpacity>
         <TouchableOpacity p="3" onPress={openSettings}>
           <EllipsisHIcon />

@@ -1,5 +1,5 @@
-import PlusSmall from '../assets/icons/plus-16-16.svg';
-import Plus from '../assets/icons/plus-24-24.svg';
+import PlusSmall from '../assets/icons/plus-small.svg';
+import Plus from '../assets/icons/plus.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function PlusIcon({ variant, ...props }: IconProps) {

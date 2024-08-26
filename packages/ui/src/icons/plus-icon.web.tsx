@@ -1,17 +1,27 @@
-import PlusSmall from '../assets/icons/plus-16-16.svg';
-import Plus from '../assets/icons/plus-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import { Icon, IconProps, IconSmall } from './icon/icon.web';
 
 export function PlusIcon({ variant, ...props }: IconProps) {
   if (variant === 'small')
     return (
-      <Icon {...props}>
-        <PlusSmall />
-      </Icon>
+      <IconSmall {...props}>
+        <path
+          d="M8 2.5V8M8 8V13.5M8 8H2.5M8 8H13.5"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </IconSmall>
     );
+
   return (
     <Icon {...props}>
-      <Plus />
+      <path
+        d="M12 4V12M12 12V20M12 12H4M12 12H20"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </Icon>
   );
 }

@@ -4,12 +4,13 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "pnpm panda && pnpm build:native && pnpm build:web",
+    "assets:web": "mkdir -p dist-web/src && cp -r src/assets-web ./dist-web/src && cp -r src/assets ./dist-web/src",
+    "build": "pnpm panda && pnpm build:native && pnpm build:web && pnpm build:all",
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "build:all": "tsc --build ./tsconfig.json",
     "build:native": "tsup --config tsup.config.native.ts",
     "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch\" ",
-    "build:web": "tsup --config tsup.config.web.ts",
+    "build:web": "pnpm assets:web && tsup --config tsup.config.web.ts",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
@@ -23,7 +24,7 @@
     "typecheck": "tsc --noEmit --project ./tsconfig.json"
   },
   "exports": {
-    ".": "./dist-web/web.js",
+    ".": "./dist-all/web.js",
     "./native": "./dist-native/native.js"
   },
   "dependencies": {
@@ -86,7 +87,6 @@
     "babel-preset-expo": "11.0.6",
     "concurrently": "8.2.2",
     "css-loader": "6.10.0",
-    "esbuild-plugin-clean": "1.0.1",
     "esbuild-plugin-copy": "2.1.1",
     "esbuild-plugin-svgr": "2.1.0",
     "eslint": "8.53.0",
@@ -102,6 +102,7 @@
     "typescript": "5.5.4"
   },
   "files": [
+    "dist-all",
     "dist-web",
     "dist-native"
   ],

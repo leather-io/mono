@@ -1,5 +1,5 @@
-import LockSmall from '../assets/icons/lock-16-16.svg';
-import Lock from '../assets/icons/lock-24-24.svg';
+import LockSmall from '../assets/icons/lock-small.svg';
+import Lock from '../assets/icons/lock.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function LockIcon({ variant, ...props }: IconProps) {

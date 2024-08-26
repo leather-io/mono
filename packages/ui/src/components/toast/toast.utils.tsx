@@ -1,4 +1,4 @@
-import { CheckmarkCircleIcon, ErrorTriangleIcon, InfoCircleIcon } from '../../icons/index.web';
+import { CheckmarkCircleIcon, ErrorIcon, InfoCircleIcon } from '../../icons/index.web';
 import type { ToastVariant } from './toast.web';
 
 export function getIconVariant(variant?: ToastVariant) {
@@ -8,7 +8,7 @@ export function getIconVariant(variant?: ToastVariant) {
     case 'success':
       return <CheckmarkCircleIcon color="green.action-primary-default" />;
     case 'error':
-      return <ErrorTriangleIcon color="red.action-primary-default" />;
+      return <ErrorIcon color="red.action-primary-default" />;
     default:
       return <InfoCircleIcon color="ink.ink.background-primary" />;
   }

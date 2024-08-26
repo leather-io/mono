@@ -12,6 +12,6 @@
       "leather-styles/*": ["leather-styles/*"]
     }
   },
-  "include": ["**/*", "src/.storybook-*/*", "**/*.*.stories.tsx", "global.d.ts", "leather-styles"],
+  "include": ["**/*", "src/.storybook-*/*", "global.d.ts", "leather-styles"],
   "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist-*"]
 }

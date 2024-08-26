@@ -1,5 +1,5 @@
-import WalletSmall from '../assets/icons/wallet-16-16.svg';
-import Wallet from '../assets/icons/wallet-24-24.svg';
+import WalletSmall from '../assets/icons/wallet-small.svg';
+import Wallet from '../assets/icons/wallet.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function WalletIcon({ variant, ...props }: IconProps) {

@@ -16,7 +16,7 @@ Specify the library as part of the `panda.config` `include`:
 
 ```js
   include: [
-    './node_modules/@leather.io/ui/dist-web/src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@leather.io/ui/dist-all/src/**/*.{js,jsx,ts,tsx}',
     './src/**/*.{js,jsx,ts,tsx}',
   ],
 ```

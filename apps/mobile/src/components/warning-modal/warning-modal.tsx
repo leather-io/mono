@@ -2,7 +2,7 @@ import { RefObject } from 'react';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import { Box, ErrorTriangleIcon, Text } from '@leather.io/ui/native';
+import { Box, Text, TriangleExclamationIcon } from '@leather.io/ui/native';
 
 import { Modal } from '../bottom-sheet-modal';
 import { Button, ButtonState } from '../button';
@@ -51,7 +51,7 @@ export function WarningModal({
             <ModalHeader
               title={title}
               modalVariant={variant}
-              Icon={ErrorTriangleIcon}
+              Icon={TriangleExclamationIcon}
               onPressSupport={onPressSupport}
             />
           </Box>

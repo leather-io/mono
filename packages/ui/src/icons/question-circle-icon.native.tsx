@@ -1,5 +1,5 @@
-import QuestionCircleSmall from '../assets/icons/question-circle-16-16.svg';
-import QuestionCircle from '../assets/icons/question-circle-24-24.svg';
+import QuestionCircleSmall from '../assets/icons/question-circle-small.svg';
+import QuestionCircle from '../assets/icons/question-circle.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 export function QuestionCircleIcon({ variant, ...props }: IconProps) {

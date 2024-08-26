@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { PaperPlaneIcon, PlaceholderIcon } from '../../icons/index.web';
+import { PlaceholderIcon, SendIcon } from '../../icons/index.web';
 import { IconButton as Component } from './icon-button.web';
 
 const meta: Meta<typeof Component> = {
@@ -23,7 +23,7 @@ export const IconButton: Story = {
 
 export const WithLabel: Story = {
   args: {
-    icon: <PaperPlaneIcon />,
+    icon: <SendIcon />,
     label: 'Send',
   },
 };

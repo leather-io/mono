@@ -16,9 +16,9 @@ import { generateMnemonic } from '@leather.io/crypto';
 import {
   Box,
   CopyIcon,
-  GraduateCapIcon,
-  PointerHandIcon,
+  PointerIcon,
   QuestionCircleIcon,
+  StudyIcon,
   Text,
   Theme,
   TouchableOpacity,
@@ -105,7 +105,7 @@ export default function CreateNewWallet() {
                 alignItems="center"
                 gap="2"
               >
-                <PointerHandIcon />
+                <PointerIcon />
                 <Box>
                   <Text variant="label02">{t`Tap to view Secret Key`}</Text>
                   <Text variant="label02" color="red.action-primary-default">
@@ -117,7 +117,7 @@ export default function CreateNewWallet() {
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
           <Box p="3" mt="3" flexDirection="row" gap="4" borderRadius="xs">
-            <GraduateCapIcon color={theme.colors['ink.text-subdued']} />
+            <StudyIcon color={theme.colors['ink.text-subdued']} />
             <Text
               style={{
                 flexShrink: 1,

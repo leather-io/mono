@@ -20,7 +20,7 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   LockIcon,
-  NoteEmptyIcon,
+  NoteIcon,
   QuestionCircleIcon,
   Text,
   Theme,
@@ -135,7 +135,7 @@ export default function RecoverWallet() {
                 style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 100 }}
                 buttonState="default"
                 title={t`Paste`}
-                icon={<NoteEmptyIcon color={theme.colors['ink.background-primary']} />}
+                icon={<NoteIcon color={theme.colors['ink.background-primary']} />}
               />
             )}
             <TextInput
