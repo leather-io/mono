@@ -8,7 +8,7 @@ ignore:
   - .git
   - dist
   - apps/mobile/.expo/*
-  - packages/ui/dist-all
+  - packages/ui/dist-web
   - node_modules
   - packages/*/node_modules
   - apps/*/node_modules

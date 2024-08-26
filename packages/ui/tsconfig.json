@@ -7,7 +7,7 @@
     "lib": ["esnext", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
-    "outDir": "./dist-all",
+    "outDir": "./dist-web",
     "paths": {
       "leather-styles/*": ["leather-styles/*"]
     }
