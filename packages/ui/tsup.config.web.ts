@@ -1,34 +1,19 @@
-import { copy } from 'esbuild-plugin-copy';
+import { clean } from 'esbuild-plugin-clean';
 import svgrPlugin from 'esbuild-plugin-svgr';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
+  bundle: false,
   entry: ['web.ts'],
   esbuildPlugins: [
     svgrPlugin({ typescript: true }),
-    copy({
-      assets: [
-        {
-          from: ['./src/assets/**/*'],
-          to: ['./src/assets'],
-        },
-        {
-          from: ['./src/assets-web/**/*'],
-          to: ['./src/assets-web'],
-        },
-        {
-          from: ['./src/components/**/*'],
-          to: ['./src/components'],
-        },
-        {
-          from: ['./src/icons/**/*'],
-          to: ['./src/icons'],
-        },
-      ],
-      copyOnStart: true,
-      watch: true,
+    clean({
+      cleanOnEndPatterns: ['./dist-web/src/assets-native'],
     }),
   ],
+  esbuildOptions(options, _) {
+    options.outbase = './';
+  },
   format: ['esm'],
   tsconfig: 'tsconfig.web.json',
   outDir: 'dist-web/',

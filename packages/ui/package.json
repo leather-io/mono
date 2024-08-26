@@ -86,6 +86,7 @@
     "babel-preset-expo": "11.0.6",
     "concurrently": "8.2.2",
     "css-loader": "6.10.0",
+    "esbuild-plugin-clean": "1.0.1",
     "esbuild-plugin-copy": "2.1.1",
     "esbuild-plugin-svgr": "2.1.0",
     "eslint": "8.53.0",
