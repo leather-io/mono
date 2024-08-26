@@ -120,3 +120,8 @@ export function useConfigSwapsEnabled() {
   const config = useRemoteConfig();
   return get(config, 'swapsEnabled', false);
 }
+
+export function useBrc20SendEnabled() {
+  const config = useRemoteConfig();
+  return get(config, 'brc20SendEnabled', false);
+}
