@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, ScrollView, View } from 'react-native';
+import { Button, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletList } from '@/components/wallet-manager';
@@ -11,7 +11,7 @@ import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, Theme } from '@leather.io/ui/native';
 
 export default function WalletManager() {
   const { bottom } = useSafeAreaInsets();
@@ -22,7 +22,7 @@ export default function WalletManager() {
   const [generatingWallet, setGeneratingWallet] = useState(false);
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
-      <ScrollView
+      <Sheet
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],
           paddingBottom: theme.spacing['5'] + bottom,
@@ -46,7 +46,7 @@ export default function WalletManager() {
           <Button title={t`Toggle network`} onPress={() => settings.toggleNetwork()} />
         </View>
         <WalletList />
-      </ScrollView>
+      </Sheet>
     </Box>
   );
 }

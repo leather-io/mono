@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
@@ -13,7 +12,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Eye1ClosedIcon, PlusIcon, Theme } from '@leather.io/ui/native';
+import { Box, Eye1ClosedIcon, PlusIcon, Sheet, Theme } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -25,7 +24,7 @@ export default function SettingsScreen() {
   return (
     <>
       <Box justifyContent="space-between" flex={1} backgroundColor="ink.background-primary">
-        <ScrollView
+        <Sheet
           contentContainerStyle={{
             paddingTop: theme.spacing['5'],
             paddingBottom: theme.spacing['5'] + bottom,
@@ -35,7 +34,7 @@ export default function SettingsScreen() {
           <Box px="5">
             <WalletsList variant="active" />
           </Box>
-        </ScrollView>
+        </Sheet>
         <Box>
           <Divider />
           <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }} gap="6">

@@ -1,4 +1,3 @@
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/button';
@@ -15,6 +14,7 @@ import {
   Box,
   CopyIcon,
   QuestionCircleIcon,
+  Sheet,
   Text,
   Theme,
   TouchableOpacity,
@@ -39,7 +39,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
       justifyContent="space-between"
       style={{ paddingBottom: bottom + theme.spacing['5'] }}
     >
-      <ScrollView style={{ paddingHorizontal: theme.spacing['5'] }}>
+      <Sheet style={{ paddingHorizontal: theme.spacing['5'] }}>
         <Box gap="3" pt="5">
           <TouchableOpacity
             onPress={() => {
@@ -62,7 +62,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
         <Box my="5">
           <MnemonicDisplay mnemonic={mnemonic} />
         </Box>
-      </ScrollView>
+      </Sheet>
       <Box px="5" gap="4">
         <Button
           onPress={async () => {

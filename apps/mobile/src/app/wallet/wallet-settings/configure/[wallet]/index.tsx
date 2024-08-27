@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
@@ -30,6 +29,7 @@ import {
   ChevronUpIcon,
   Eye1ClosedIcon,
   InboxIcon,
+  Sheet,
   SquareLinesBottomIcon,
   Text,
   Theme,
@@ -69,7 +69,7 @@ function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet:
   return (
     <>
       <Box flex={1} justifyContent="space-between" backgroundColor="ink.background-primary">
-        <ScrollView
+        <Sheet
           contentContainerStyle={{
             paddingTop: theme.spacing['5'],
             paddingBottom: theme.spacing['5'],
@@ -129,7 +129,7 @@ function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet:
               </>
             )}
           </Box>
-        </ScrollView>
+        </Sheet>
         <Box mb="7">
           <Divider />
           <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }}>

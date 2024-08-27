@@ -1,12 +1,10 @@
-import { ScrollView } from 'react-native-gesture-handler';
-
 import { APP_ROUTES } from '@/constants';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, ChevronRightIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, ChevronRightIcon, Sheet, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { AccountCard } from './account-card';
 
@@ -36,12 +34,12 @@ export function MyAccounts() {
         </TouchableOpacity>
         <Text variant="caption01">$0</Text>
       </Box>
-      <ScrollView
+      <Sheet
         horizontal
         contentContainerStyle={{ gap: theme.spacing['2'], paddingHorizontal: theme.spacing['5'] }}
       >
         {accountComponents}
-      </ScrollView>
+      </Sheet>
     </Box>
   );
 }

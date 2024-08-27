@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
@@ -17,7 +16,7 @@ import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, Theme } from '@leather.io/ui/native';
 
 export default function DeveloperConsoleScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -68,7 +67,7 @@ export default function DeveloperConsoleScreen() {
 
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
-      <ScrollView
+      <Sheet
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],
           paddingTop: theme.spacing['5'],
@@ -115,7 +114,7 @@ export default function DeveloperConsoleScreen() {
         <PressableListItem title={t`stx_signMessage`} />
         <PressableListItem title={t`Drawer`} />
         <PressableListItem title={t`Page`} />
-      </ScrollView>
+      </Sheet>
       <ApproverModal
         message={getAddressesMessage}
         sendResult={() => setGetAddressesMessage(null)}

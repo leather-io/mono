@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getAvatarIcon } from '@/components/avatar-icon';
@@ -18,7 +17,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 
-import { Box, Eye1ClosedIcon, HeadIcon, PassportIcon, Theme } from '@leather.io/ui/native';
+import { Box, Eye1ClosedIcon, HeadIcon, PassportIcon, Sheet, Theme } from '@leather.io/ui/native';
 
 function ConfigureAccount({
   fingerprint,
@@ -55,7 +54,7 @@ function ConfigureAccount({
   return (
     <>
       <Box flex={1} backgroundColor="ink.background-primary">
-        <ScrollView
+        <Sheet
           contentContainerStyle={{
             paddingTop: theme.spacing['5'],
             paddingBottom: theme.spacing['5'] + bottom,
@@ -75,7 +74,7 @@ function ConfigureAccount({
             <Cell title={t`Avatar`} Icon={HeadIcon} onPress={() => {}} />
             <Cell title={t`Hide account`} Icon={Eye1ClosedIcon} onPress={toggleHideAccount} />
           </Box>
-        </ScrollView>
+        </Sheet>
       </Box>
       <AccountNameModal name={account.name} setName={setName} modalRef={accountNameModalRef} />
     </>

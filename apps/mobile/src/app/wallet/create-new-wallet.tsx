@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedBlurView } from '@/components/blur-view';
@@ -19,6 +18,7 @@ import {
   GraduateCapIcon,
   PointerHandIcon,
   QuestionCircleIcon,
+  Sheet,
   Text,
   Theme,
   TouchableOpacity,
@@ -45,7 +45,7 @@ export default function CreateNewWallet() {
       justifyContent="space-between"
       style={{ paddingBottom: bottom + theme.spacing['5'] }}
     >
-      <ScrollView style={{ paddingHorizontal: theme.spacing['5'] }}>
+      <Sheet style={{ paddingHorizontal: theme.spacing['5'] }}>
         <Box gap="3" pt="5">
           <TouchableOpacity
             onPress={() => {
@@ -128,7 +128,7 @@ export default function CreateNewWallet() {
             </Text>
           </Box>
         </Box>
-      </ScrollView>
+      </Sheet>
       <Box px="5" gap="4">
         <Button
           onPress={async () => {

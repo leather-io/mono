@@ -17,7 +17,7 @@ msgstr ""
 msgid "\"{title}\" isn't ready yet."
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:44
+#: src/app/wallet/wallet-settings/index.tsx:43
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Add new account for {fingerprint} 🆕"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:51
+#: src/app/wallet/wallet-settings/index.tsx:50
 msgid "Add wallet"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Amazing asset"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:74
 msgid "Avatar"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "BIP39 passphrase"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:151
+#: src/components/browser/browser-empty-state.tsx:150
 #: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:27
 #: src/components/wallet-settings/remove-wallet-modal.tsx:25
 msgid "Cancel"
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Connect MPC wallet"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:175
+#: src/components/browser/browser-empty-state.tsx:174
 msgid "Connected"
 msgstr ""
 
@@ -209,7 +209,7 @@ msgstr ""
 msgid "Create or restore via email"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:86
+#: src/app/wallet/developer-console/index.tsx:85
 #: src/app/wallet/developer-console/wallet-manager.tsx:38
 msgid "Create wallet"
 msgstr ""
@@ -222,7 +222,8 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:29
+#: src/components/browser/browser-empty-state.tsx:28
+#: src/components/browser/browser-empty-state.tsx:30
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
 #: src/components/browser/browser-empty-state.tsx:33
@@ -240,14 +241,13 @@ msgstr ""
 #: src/components/browser/browser-empty-state.tsx:45
 #: src/components/browser/browser-empty-state.tsx:46
 #: src/components/browser/browser-empty-state.tsx:47
-#: src/components/browser/browser-empty-state.tsx:48
-#: src/components/browser/browser-empty-state.tsx:52
+#: src/components/browser/browser-empty-state.tsx:51
+#: src/components/browser/browser-empty-state.tsx:53
 #: src/components/browser/browser-empty-state.tsx:54
 #: src/components/browser/browser-empty-state.tsx:55
-#: src/components/browser/browser-empty-state.tsx:56
-#: src/components/browser/browser-empty-state.tsx:60
+#: src/components/browser/browser-empty-state.tsx:59
+#: src/components/browser/browser-empty-state.tsx:61
 #: src/components/browser/browser-empty-state.tsx:62
-#: src/components/browser/browser-empty-state.tsx:63
 msgid "Description"
 msgstr ""
 
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:116
+#: src/app/wallet/developer-console/index.tsx:115
 msgid "Drawer"
 msgstr ""
 
@@ -311,11 +311,11 @@ msgstr ""
 msgid "Generating…"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:93
+#: src/app/wallet/developer-console/index.tsx:92
 msgid "getAddresses"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:27
+#: src/app/wallet/settings/index.tsx:26
 msgid "Hello"
 msgstr ""
 
@@ -323,11 +323,11 @@ msgstr ""
 msgid "Here is the notification body"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:43
+#: src/app/wallet/wallet-settings/index.tsx:42
 msgid "Hidden accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
 msgid "Hide account"
 msgstr ""
 
@@ -369,11 +369,11 @@ msgstr ""
 msgid "Must use physical device for Push Notifications"
 msgstr ""
 
-#: src/components/home/my-accounts.tsx:34
+#: src/components/home/my-accounts.tsx:32
 msgid "My accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:68
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:67
 #: src/components/wallet-settings/account-name-modal.tsx:22
 #: src/components/wallet-settings/wallet-name-modal.tsx:22
 msgid "Name"
@@ -395,7 +395,7 @@ msgstr ""
 msgid "Notify me when ready"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:117
+#: src/app/wallet/developer-console/index.tsx:116
 msgid "Page"
 msgstr ""
 
@@ -428,11 +428,11 @@ msgstr ""
 msgid "Receive 💰"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:168
+#: src/components/browser/browser-empty-state.tsx:167
 msgid "Recent"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:103
+#: src/app/wallet/developer-console/index.tsx:102
 msgid "register for Push notifications"
 msgstr ""
 
@@ -454,7 +454,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:107
+#: src/app/wallet/developer-console/index.tsx:106
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
@@ -468,11 +468,11 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:111
+#: src/app/wallet/developer-console/index.tsx:110
 msgid "signMessage"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:113
+#: src/app/wallet/developer-console/index.tsx:112
 msgid "signPsbt"
 msgstr ""
 
@@ -500,11 +500,11 @@ msgstr ""
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:115
+#: src/app/wallet/developer-console/index.tsx:114
 msgid "stx_signMessage"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:114
+#: src/app/wallet/developer-console/index.tsx:113
 msgid "stx_signTransaction"
 msgstr ""
 
@@ -517,7 +517,7 @@ msgstr ""
 msgid "Successfully copied to clipboard!"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:161
+#: src/components/browser/browser-empty-state.tsx:160
 msgid "Suggested"
 msgstr ""
 
@@ -549,6 +549,7 @@ msgid ""
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 msgstr ""
 
+#: src/components/browser/browser-empty-state.tsx:28
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:30
 #: src/components/browser/browser-empty-state.tsx:31
@@ -568,22 +569,21 @@ msgstr ""
 #: src/components/browser/browser-empty-state.tsx:45
 #: src/components/browser/browser-empty-state.tsx:46
 #: src/components/browser/browser-empty-state.tsx:47
-#: src/components/browser/browser-empty-state.tsx:48
+#: src/components/browser/browser-empty-state.tsx:51
 #: src/components/browser/browser-empty-state.tsx:52
 #: src/components/browser/browser-empty-state.tsx:53
 #: src/components/browser/browser-empty-state.tsx:54
 #: src/components/browser/browser-empty-state.tsx:55
-#: src/components/browser/browser-empty-state.tsx:56
+#: src/components/browser/browser-empty-state.tsx:59
 #: src/components/browser/browser-empty-state.tsx:60
 #: src/components/browser/browser-empty-state.tsx:61
 #: src/components/browser/browser-empty-state.tsx:62
 #: src/components/browser/browser-empty-state.tsx:63
 #: src/components/browser/browser-empty-state.tsx:64
-#: src/components/browser/browser-empty-state.tsx:65
 msgid "Title"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:110
+#: src/app/wallet/developer-console/index.tsx:109
 msgid "toggle localization: {locale}"
 msgstr ""
 
@@ -591,7 +591,7 @@ msgstr ""
 msgid "Toggle network"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:81
+#: src/app/wallet/developer-console/index.tsx:80
 msgid "Toggle theme: Current {settingsTheme}"
 msgstr ""
 
@@ -608,11 +608,11 @@ msgstr ""
 msgid "Total rewards"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:112
+#: src/app/wallet/developer-console/index.tsx:111
 msgid "transferBtc"
 msgstr ""
 
-#: src/components/browser/browser-empty-state.tsx:146
+#: src/components/browser/browser-empty-state.tsx:145
 msgid "Type URL or search"
 msgstr ""
 
@@ -644,15 +644,15 @@ msgstr ""
 msgid "Wallet already exists"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:89
+#: src/app/wallet/developer-console/index.tsx:88
 msgid "Wallet management"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:33
+#: src/app/wallet/settings/index.tsx:32
 msgid "Wallets (temp button)"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:79
+#: src/app/wallet/developer-console/index.tsx:78
 msgid "walletSecurityLevel:"
 msgstr ""
 

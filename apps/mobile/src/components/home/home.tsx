@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -10,7 +9,7 @@ import {
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, Theme } from '@leather.io/ui/native';
 
 import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar';
 import { Earn } from './earn';
@@ -28,7 +27,7 @@ export function Home() {
   return (
     <ActionBarContext.Provider value={{ ref: actionBarRef }}>
       <Box flex={1} bg="ink.background-primary">
-        <ScrollView
+        <Sheet
           onScroll={createOnScrollHandler({
             actionBarRef,
             contentOffsetTop,
@@ -45,7 +44,7 @@ export function Home() {
           <Box px="5">
             <Earn />
           </Box>
-        </ScrollView>
+        </Sheet>
       </Box>
       <ActionBarContainer ref={actionBarRef} />
     </ActionBarContext.Provider>

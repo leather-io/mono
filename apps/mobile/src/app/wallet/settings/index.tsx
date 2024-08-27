@@ -1,4 +1,3 @@
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/button';
@@ -7,7 +6,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, Text, Theme } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -16,7 +15,7 @@ export default function SettingsScreen() {
 
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
-      <ScrollView
+      <Sheet
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['3'],
           paddingTop: theme.spacing['5'],
@@ -32,7 +31,7 @@ export default function SettingsScreen() {
           buttonState="default"
           title={t`Wallets (temp button)`}
         />
-      </ScrollView>
+      </Sheet>
     </Box>
   );
 }

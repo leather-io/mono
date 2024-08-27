@@ -1,10 +1,9 @@
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, Theme } from '@leather.io/ui/native';
 
 export default function HiddenAccountsScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -12,7 +11,7 @@ export default function HiddenAccountsScreen() {
 
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
-      <ScrollView
+      <Sheet
         contentContainerStyle={{
           paddingTop: theme.spacing['5'],
           paddingBottom: theme.spacing['5'] + bottom,
@@ -22,7 +21,7 @@ export default function HiddenAccountsScreen() {
         <Box px="5">
           <WalletsList variant="hidden" />
         </Box>
-      </ScrollView>
+      </Sheet>
     </Box>
   );
 }

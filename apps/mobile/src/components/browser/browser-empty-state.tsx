@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { TextInput } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, PlaceholderIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, PlaceholderIcon, Sheet, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 import { TabBar } from '../tab-bar';
 import { formatURL } from './utils';
@@ -177,7 +176,7 @@ export function BrowserEmptyState({
           },
         ]}
       />
-      <ScrollView
+      <Sheet
         contentContainerStyle={{
           paddingHorizontal: theme.spacing['5'],
           paddingTop: theme.spacing['5'],
@@ -195,7 +194,7 @@ export function BrowserEmptyState({
             }}
           />
         ))}
-      </ScrollView>
+      </Sheet>
     </Box>
   );
 }
