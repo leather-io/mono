@@ -4,42 +4,49 @@ import type { Meta } from '@storybook/react';
 import { Box, Flex } from 'leather-styles/jsx';
 
 import { Button } from '../button/button.web';
-import { DialogHeader } from './dialog-header.web';
-import { Dialog as Component } from './dialog.web';
+import { SheetHeader } from './sheet-header.web';
+import { Sheet as Component } from './sheet.web';
 
 const meta: Meta<typeof Component> = {
   component: Component,
   tags: ['autodocs'],
-  title: 'Dialog',
+  title: 'Sheet',
+  parameters: {
+    docs: {
+      description: {
+        component: 'The Sheet component is used to display a modal/dialog sheet.',
+      },
+    },
+  },
 };
 
 export default meta;
 
-export function Dialog() {
+export function Sheet() {
   const [isShowing, setIsShowing] = useState(false);
   return (
     <>
       <Button onClick={() => setIsShowing(!isShowing)}>Open</Button>
       <Component
-        header={<DialogHeader title="Leather" />}
+        header={<SheetHeader title="Leather" />}
         isShowing={isShowing}
         onClose={() => setIsShowing(false)}
       >
         <Box textAlign="center" height="60vh">
-          Let's start a dialogue.
+          Let's start talk sheet.
         </Box>
       </Component>
     </>
   );
 }
 
-export function DialogWithFooter() {
+export function SheetWithFooter() {
   const [isShowing, setIsShowing] = useState(false);
   return (
     <>
       <Button onClick={() => setIsShowing(!isShowing)}>Open</Button>
       <Component
-        header={<DialogHeader title="Send" />}
+        header={<SheetHeader title="Send" />}
         isShowing={isShowing}
         onClose={() => setIsShowing(false)}
         footer={
@@ -49,20 +56,20 @@ export function DialogWithFooter() {
         }
       >
         <Box textAlign="center" height="60vh">
-          Let's start a dialogue.
+          Let's talk sheet.
         </Box>
       </Component>
     </>
   );
 }
 
-export function DialogWithButtonsFooter() {
+export function SheetWithButtonsFooter() {
   const [isShowing, setIsShowing] = useState(false);
   return (
     <>
       <Button onClick={() => setIsShowing(!isShowing)}>Open</Button>
       <Component
-        header={<DialogHeader title="Send" />}
+        header={<SheetHeader title="Send" />}
         isShowing={isShowing}
         onClose={() => setIsShowing(false)}
         footer={
@@ -77,7 +84,7 @@ export function DialogWithButtonsFooter() {
         }
       >
         <Box textAlign="center" height="60vh">
-          Let's start a dialogue.
+          Let's talk sheet.
         </Box>
       </Component>
     </>
