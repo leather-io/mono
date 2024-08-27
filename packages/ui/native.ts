@@ -11,3 +11,6 @@ export { TouchableOpacity } from './src/components/button/touchable-opacity.nati
 export type { Theme } from './src/theme-native';
 export { Icon } from './src/icons/icon/icon.native';
 export * from './src/icons/index.native';
+export { Flag } from './src/components/flag/flag.native';
+export { ItemLayout } from './src/components/item-layout/item-layout.native';
+export { Cell } from './src/components/cell/cell.native';
