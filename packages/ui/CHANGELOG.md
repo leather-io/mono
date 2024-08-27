@@ -91,6 +91,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.14.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.14.2...@leather.io/ui-v1.14.3) (2024-08-27)
+
+
+### Bug Fixes
+
+* rename dialog as sheet, ref leather-io/issues[#268](https://github.com/leather-io/mono/issues/268) ([cb0fed5](https://github.com/leather-io/mono/commit/cb0fed5c7e10a68e7b7180fb6ab5274570b6a155))
+
 ## [1.14.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.14.1...@leather.io/ui-v1.14.2) (2024-08-27)
 
 

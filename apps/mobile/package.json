@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "1.25.2",
+  "version": "1.25.3",
   "type": "module",
   "scripts": {
     "android": "expo run:android",
