@@ -3,7 +3,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getAvatarIcon } from '@/components/avatar-icon';
-import { Cell } from '@/components/cell';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameModal } from '@/components/wallet-settings/account-name-modal';
 import { Account } from '@/state/accounts/accounts';
@@ -18,7 +17,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 
-import { Box, Eye1ClosedIcon, HeadIcon, PassportIcon, Theme } from '@leather.io/ui/native';
+import { Box, Cell, Eye1ClosedIcon, HeadIcon, PassportIcon, Theme } from '@leather.io/ui/native';
 
 function ConfigureAccount({
   fingerprint,

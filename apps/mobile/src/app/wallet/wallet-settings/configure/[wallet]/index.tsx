@@ -3,7 +3,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
-import { Cell } from '@/components/cell';
 import { Divider } from '@/components/divider';
 import { RemoveWalletModal } from '@/components/wallet-settings/remove-wallet-modal';
 import { WalletNameModal } from '@/components/wallet-settings/wallet-name-modal';
@@ -26,6 +25,7 @@ import {
   ArrowsRepeatLeftRightIcon,
   BarcodeIcon,
   Box,
+  Cell,
   ChevronDownIcon,
   ChevronUpIcon,
   Eye1ClosedIcon,

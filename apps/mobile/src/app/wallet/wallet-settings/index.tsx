@@ -3,7 +3,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
-import { Cell } from '@/components/cell';
 import { Divider } from '@/components/divider';
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
 import { APP_ROUTES } from '@/constants';
@@ -13,7 +12,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Eye1ClosedIcon, PlusIcon, Theme } from '@leather.io/ui/native';
+import { Box, Cell, Eye1ClosedIcon, PlusIcon, Theme } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();

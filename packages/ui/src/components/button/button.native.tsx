@@ -3,8 +3,7 @@ import { TouchableOpacity, ViewStyle } from 'react-native';
 import { ResponsiveValue } from '@shopify/restyle';
 import { Theme } from 'native';
 
-import { Box } from '../box/box.native';
-import { Text } from '../text/text.native';
+import { Box, Text } from '../../../native';
 
 type ButtonVariant = 'solid' | 'outline' | 'ghost';
 type ButtonSize = 'medium' | 'small';
