@@ -17,7 +17,7 @@ msgstr ""
 msgid "\"{title}\" isn't ready yet."
 msgstr "\"{title}\" isn't ready yet."
 
-#: src/app/wallet/wallet-settings/index.tsx:44
+#: src/app/wallet/wallet-settings/index.tsx:43
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr "{hiddenAccountsLength} hidden accounts"
 
@@ -70,7 +70,7 @@ msgstr "Add account"
 msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} 🆕"
 
-#: src/app/wallet/wallet-settings/index.tsx:51
+#: src/app/wallet/wallet-settings/index.tsx:50
 msgid "Add wallet"
 msgstr "Add wallet"
 
@@ -136,7 +136,7 @@ msgstr "Allow Leather to access application's secure storage"
 msgid "Amazing asset"
 msgstr "Amazing asset"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:74
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -323,11 +323,11 @@ msgstr "Hello"
 msgid "Here is the notification body"
 msgstr "Here is the notification body"
 
-#: src/app/wallet/wallet-settings/index.tsx:43
+#: src/app/wallet/wallet-settings/index.tsx:42
 msgid "Hidden accounts"
 msgstr "Hidden accounts"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
 msgid "Hide account"
 msgstr "Hide account"
 
@@ -373,7 +373,7 @@ msgstr "Must use physical device for Push Notifications"
 msgid "My accounts"
 msgstr "My accounts"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:68
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:67
 #: src/components/wallet-settings/account-name-modal.tsx:22
 #: src/components/wallet-settings/wallet-name-modal.tsx:22
 msgid "Name"
