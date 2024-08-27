@@ -94,6 +94,7 @@
     "metro-cache": "0.80.5",
     "metro-config": "0.80.5",
     "metro-resolver": "0.80.5",
+    "moment": "2.30.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",

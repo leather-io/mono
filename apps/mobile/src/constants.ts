@@ -17,6 +17,11 @@ export enum APP_ROUTES {
   WalletRecoverWallet = '/wallet/recover-wallet',
   WalletSecureYourWallet = '/wallet/secure-your-wallet',
   WalletSettings = '/wallet/settings',
+  WalletWalletsSettings = '/wallet/wallet-settings',
+  WalletWalletsSettingsHiddenAccounts = '/wallet/wallet-settings/hidden-accounts',
+  WalletWalletsSettingsConfigureWallet = '/wallet/wallet-settings/configure/[wallet]',
+  WalletWalletsSettingsConfigureAccount = '/wallet/wallet-settings/configure/[wallet]/[account]',
+  WalletWalletsSettingsConfigureViewSecretKey = '/wallet/wallet-settings/configure/[wallet]/view-secret-key',
   WalletGeneratingWallet = '/wallet/generating-wallet',
   WaitingList = '/waiting-list',
 }

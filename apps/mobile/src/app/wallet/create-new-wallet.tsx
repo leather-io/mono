@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedBlurView } from '@/components/blur-view';
 import { Button } from '@/components/button';
-import { MnemonicWordBox } from '@/components/create-new-wallet/mnemonic-word-box';
+import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/state/storage-persistors';
@@ -23,20 +23,6 @@ import {
   Theme,
   TouchableOpacity,
 } from '@leather.io/ui/native';
-
-function MnemonicDisplay({ mnemonic }: { mnemonic: string | null }) {
-  if (!mnemonic) return null;
-
-  const mnemonicWords = mnemonic.split(' ');
-
-  return (
-    <Box justifyContent="center" flexDirection="row" flexWrap="wrap" gap="2">
-      {mnemonicWords.map((word, idx) => (
-        <MnemonicWordBox key={word + idx} wordIdx={idx + 1} word={word} />
-      ))}
-    </Box>
-  );
-}
 
 export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();

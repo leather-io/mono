@@ -14,6 +14,8 @@ import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { Stack, useRouter } from 'expo-router';
 
+import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+
 export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods> | null }>({
   ref: null,
 });
@@ -49,6 +51,36 @@ export default function StackLayout() {
     />
   );
 
+  function NavigationWalletSettings(title: string = t`Settings`) {
+    return (
+      <SimpleHeader
+        insets={insets}
+        left={<BackButtonHeader onPress={() => router.back()} />}
+        center={<TitleHeader title={title} />}
+        right={
+          <TouchableOpacity
+            px="3"
+            onPress={() => {
+              // TODO: open network settings
+              // either modal or screen
+            }}
+          >
+            <Box
+              p="1"
+              bg="ink.background-secondary"
+              borderWidth={1}
+              borderColor="ink.border-transparent"
+              borderRadius="xs"
+            >
+              <Text variant="label03" color="ink.text-subdued">
+                {t`Testnet`}
+              </Text>
+            </Box>
+          </TouchableOpacity>
+        }
+      />
+    );
+  }
   const NavigationDeveloperConsole = (
     <SimpleHeader
       insets={insets}
@@ -69,6 +101,28 @@ export default function StackLayout() {
       <Stack.Screen name="recover-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings }} />
+      <Stack.Screen
+        name="wallet-settings/index"
+        options={{ header: () => NavigationWalletSettings() }}
+      />
+      <Stack.Screen
+        name="wallet-settings/hidden-accounts"
+        options={{ header: () => NavigationWalletSettings() }}
+      />
+      <Stack.Screen
+        name="wallet-settings/configure/[wallet]/[account]"
+        options={{ header: props => NavigationWalletSettings(props.options.title) }}
+      />
+      <Stack.Screen
+        name="wallet-settings/configure/[wallet]/index"
+        options={{
+          header: props => NavigationWalletSettings(props.options.title),
+        }}
+      />
+      <Stack.Screen
+        name="wallet-settings/configure/[wallet]/view-secret-key"
+        options={{ header: () => NavigationBackSimple }}
+      />
       <Stack.Screen
         name="developer-console/index"
         options={{ header: () => NavigationDeveloperConsole }}
