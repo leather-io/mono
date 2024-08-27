@@ -17,7 +17,7 @@ msgstr ""
 msgid "\"{title}\" isn't ready yet."
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:44
+#: src/app/wallet/wallet-settings/index.tsx:43
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Add new account for {fingerprint} 🆕"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:51
+#: src/app/wallet/wallet-settings/index.tsx:50
 msgid "Add wallet"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Amazing asset"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:74
 msgid "Avatar"
 msgstr ""
 
@@ -323,11 +323,11 @@ msgstr ""
 msgid "Here is the notification body"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:43
+#: src/app/wallet/wallet-settings/index.tsx:42
 msgid "Hidden accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
 msgid "Hide account"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgstr ""
 msgid "My accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:68
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:67
 #: src/components/wallet-settings/account-name-modal.tsx:22
 #: src/components/wallet-settings/wallet-name-modal.tsx:22
 msgid "Name"
