@@ -1,10 +1,10 @@
 import { Flex, FlexProps } from 'leather-styles/jsx';
 
-interface DialogFooterProps extends FlexProps {
+interface SheetFooterProps extends FlexProps {
   children: React.ReactNode;
 }
 
-export function DialogFooter({ children, ...props }: DialogFooterProps) {
+export function SheetFooter({ children, ...props }: SheetFooterProps) {
   return (
     <Flex
       gap="space.05"

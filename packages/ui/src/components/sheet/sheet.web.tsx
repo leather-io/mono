@@ -7,13 +7,13 @@ import { token } from 'leather-styles/tokens';
 
 import { pxStringToNumber } from '@leather.io/utils';
 
-import { DialogFooter } from './dialog-footer.web';
+import { SheetFooter } from './sheet-footer.web';
 
-export interface DialogProps {
+export interface SheetProps {
   isShowing: boolean;
   onClose?(): void;
 }
-interface RadixDialogProps extends DialogProps {
+interface RadixDialogProps extends SheetProps {
   children: ReactNode;
   footer?: ReactNode;
   header?: ReactElement<any, string | JSXElementConstructor<any>>;
@@ -33,7 +33,7 @@ function getContentMaxHeight(maxHeightOffset: number) {
   return `calc(${virtualHeight}vh - ${maxHeightOffset}px)`;
 }
 
-export function Dialog({
+export function Sheet({
   children,
   footer,
   header,
@@ -93,7 +93,7 @@ export function Dialog({
             ) : (
               children
             )}
-            {footer && <DialogFooter>{footer}</DialogFooter>}
+            {footer && <SheetFooter>{footer}</SheetFooter>}
           </RadixDialog.Content>
         </RadixDialog.Overlay>
       </RadixDialog.Portal>

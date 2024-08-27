@@ -5,13 +5,13 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { CloseIcon } from '../../icons/index.web';
 import { IconButton } from '../icon-button/icon-button.web';
 
-interface DialogHeaderProps {
+interface SheetHeaderProps {
   onClose?(): void;
   title?: ReactNode;
   variant?: 'default' | 'large';
 }
 
-export function DialogHeader({ onClose, title, variant = 'default' }: DialogHeaderProps) {
+export function SheetHeader({ onClose, title, variant = 'default' }: SheetHeaderProps) {
   return (
     <Flex
       justifyContent="flex-end"
