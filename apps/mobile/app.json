@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false
     },
@@ -45,7 +47,9 @@
       [
         "expo-asset",
         {
-          "assets": ["src/assets/scripts/injected-provider.js"]
+          "assets": [
+            "src/assets/scripts/injected-provider.js"
+          ]
         }
       ],
       [
@@ -63,6 +67,9 @@
         "projectId": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc"
       }
     },
-    "owner": "leather-wallet"
+    "owner": "leather-wallet",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Text } from 'react-native';
 
-import { useAccounts } from '@/state/accounts/accounts.slice';
+import { useAccountsByFingerprint } from '@/state/accounts/accounts.slice';
 import { useKeyStore } from '@/state/key-store';
 import { useBitcoinKeychains } from '@/state/keychains/bitcoin/bitcoin-keychains.slice';
 import { useStacksKeychains } from '@/state/keychains/stacks/stacks-keychains.slice';
@@ -42,14 +42,14 @@ interface AccountsProps {
 }
 export function Accounts({ fingerprint }: AccountsProps) {
   const keys = useKeyStore();
-  const accounts = useAccounts(fingerprint);
+  const accounts = useAccountsByFingerprint(fingerprint);
 
   return accounts.list.map(account => (
     <AccountLayout
       key={account.id}
       fingerprint={fingerprint}
       account={account}
-      onRemoveAccount={index => keys.removeAccount(fingerprint, index)}
+      onHideAccount={index => keys.hideAccount(fingerprint, index)}
       renderKeychains={(fingerprint, accountIndex) => (
         <>
           <StacksKeychains fingerprint={fingerprint} accountIndex={accountIndex} />

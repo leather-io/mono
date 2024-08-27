@@ -2,7 +2,10 @@
   "extends": "../../packages/tsconfig-config/tsconfig.base",
   "compilerOptions": {
     "jsx": "react-native",
-    "lib": ["es2022", "DOM"],
+    "lib": [
+      "es2022",
+      "DOM"
+    ],
     "module": "es2022",
     "moduleResolution": "Bundler",
     "allowJs": false,
@@ -13,7 +16,9 @@
     "rootDir": ".",
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     }
   },
   "references": [
@@ -21,6 +26,19 @@
       "path": "../../packages/ui/tsconfig.native.json"
     }
   ],
-  "include": ["**/*.ts", "**/*.tsx", ".detoxrc.cjs", "src/scripts/injected-provider.js"],
-  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".detoxrc.cjs",
+    "src/scripts/injected-provider.js",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.cjs",
+    "metro.config.cjs",
+    "**/*.js",
+    "./dist"
+  ]
 }

@@ -2,7 +2,7 @@ import { createAction } from '@reduxjs/toolkit';
 
 import { BitcoinKeychainStore } from './keychains/bitcoin/bitcoin-keychains.slice';
 import { StacksKeychainStore } from './keychains/stacks/stacks-keychains.slice';
-import { WalletStore } from './wallets/wallets.slice';
+import { PartialWalletStore } from './wallets/wallets.slice';
 
 export const resetWallet = createAction('global/resetWallet');
 
@@ -12,7 +12,7 @@ export function handleAppResetWithState<T>(state: T) {
 }
 
 export interface AddWalletAction {
-  wallet: WalletStore;
+  wallet: PartialWalletStore;
   withKeychains: {
     bitcoin: BitcoinKeychainStore[];
     stacks: StacksKeychainStore[];

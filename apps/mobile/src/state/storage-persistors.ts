@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { t } from '@lingui/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
@@ -125,4 +127,28 @@ export function mnemonicStore(fingerprint: string): MnemonicStore {
       ]);
     },
   };
+}
+
+export function useMnemonic({
+  fingerprint,
+  shouldLoadOnInit = true,
+}: {
+  fingerprint: string;
+  shouldLoadOnInit?: boolean;
+}) {
+  const [mnemonic, setMnemonic] = useState<string | null>(null);
+  async function getMnemonic() {
+    const response = await mnemonicStore(fingerprint).getMnemonic();
+    if (response.mnemonic) {
+      setMnemonic(response.mnemonic);
+    } else {
+      throw new Error('No mnemonic found for this fingerprint');
+    }
+  }
+  useEffect(() => {
+    if (shouldLoadOnInit) {
+      void getMnemonic();
+    }
+  }, []);
+  return { mnemonic };
 }

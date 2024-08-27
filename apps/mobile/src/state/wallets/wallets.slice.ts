@@ -1,4 +1,6 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { t } from '@lingui/macro';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { produce } from 'immer';
 
 import { RootState } from '..';
 import {
@@ -8,12 +10,12 @@ import {
   userRemovesWallet,
 } from '../global-action';
 import { mnemonicStore } from '../storage-persistors';
-import { handleEntityActionWith, useAppDispatch, useAppSelector } from '../utils';
+import { Optional, handleEntityActionWith, useAppDispatch, useAppSelector } from '../utils';
 
 export interface AbstractWalletStore {
   fingerprint: string;
   createdOn: string;
-  name?: string;
+  name: string;
 }
 
 export interface SoftwareWalletStore extends AbstractWalletStore {
@@ -25,6 +27,24 @@ export interface LedgerWalletStore extends AbstractWalletStore {
 }
 
 export type WalletStore = SoftwareWalletStore | LedgerWalletStore; // Next HardwareWallet;
+
+export type PartialWalletStore = Optional<WalletStore, 'name'>;
+
+function addWalletDefaults({
+  wallet,
+  walletIdx,
+}: {
+  wallet: PartialWalletStore;
+  walletIdx: number;
+}): WalletStore {
+  const updatedWallet = produce(wallet, draftWallet => {
+    if (!draftWallet.name) {
+      draftWallet.name = t`Wallet ${walletIdx}`;
+    }
+    return draftWallet;
+  });
+  return updatedWallet as WalletStore;
+}
 
 const adapter = createEntityAdapter<WalletStore, string>({
   selectId: key => key.fingerprint,
@@ -38,20 +58,34 @@ export const walletSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(
-        userAddsWallet,
-        handleEntityActionWith(adapter.addOne, payload => payload.wallet)
-      )
+      .addCase(userAddsWallet, (state, action) => {
+        return adapter.addOne(
+          state,
+          addWalletDefaults({ wallet: action.payload.wallet, walletIdx: state.ids.length })
+        );
+      })
 
       .addCase(
         userRemovesWallet,
         handleEntityActionWith(adapter.removeOne, payload => payload.fingerprint)
       )
 
+      .addCase(
+        userRenamesWallet,
+        handleEntityActionWith(adapter.updateOne, payload => ({
+          id: payload.fingerprint,
+          changes: { name: payload.name },
+        }))
+      )
+
       .addCase(...handleAppResetWithState(initialState)),
 });
 
 const selectors = adapter.getSelectors((state: RootState) => state.wallets);
+
+export function useWalletByFingerprint(fingerprint: string) {
+  return useAppSelector(state => selectors.selectById(state, fingerprint));
+}
 
 export function useWallets() {
   const dispatch = useAppDispatch();
@@ -67,3 +101,9 @@ export function useWallets() {
     },
   };
 }
+
+interface RenameWalletPayload {
+  fingerprint: string;
+  name: string;
+}
+export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');

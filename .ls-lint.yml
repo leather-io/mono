@@ -1,8 +1,8 @@
 ls:
   .ts: regex:[a-z0-9\-\._]+
-  .tsx: regex:[a-z0-9\-\._]+
+  .tsx: regex:[a-z0-9\-\[\]\._]+
   .js: regex:[a-z0-9\-\._]+
-  .dir: regex:[a-z0-9\(\)\-\._]+
+  .dir: regex:[a-z0-9\(\)\[\]\-\._]+
 
 ignore:
   - .git

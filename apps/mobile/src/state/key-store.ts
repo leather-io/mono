@@ -11,7 +11,7 @@ import {
 } from '@leather.io/crypto';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
-import { userAddsAccount, userRemovesAccount } from './accounts/accounts.slice';
+import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.slice';
 import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.slice';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
@@ -129,8 +129,10 @@ export function useKeyStore() {
       };
     },
 
-    removeAccount(fingerprint: string, accountIndex: number) {
-      dispatch(userRemovesAccount({ fingerprint, accountIndex }));
+    hideAccount(fingerprint: string, accountIndex: number) {
+      dispatch(
+        userTogglesHideAccount({ accountId: makeAccountIdentifer(fingerprint, accountIndex) })
+      );
     },
   };
 }

@@ -7,13 +7,13 @@ import { t } from '@lingui/macro';
 interface AccountLayoutProps {
   fingerprint: string;
   account: Account;
-  onRemoveAccount: (accountIndex: number) => void;
+  onHideAccount: (accountIndex: number) => void;
   renderKeychains(fingerprint: string, accountIndex: number): ReactNode;
 }
 export function AccountLayout({
   fingerprint,
   account,
-  onRemoveAccount,
+  onHideAccount,
   renderKeychains,
 }: AccountLayoutProps) {
   const { accountIndex } = account;
@@ -23,7 +23,7 @@ export function AccountLayout({
         <Text style={{ fontSize: 16, marginBottom: 8 }}>{t`Account ${accountIndex}`}</Text>
         <Pressable
           style={{ marginBottom: 12, marginLeft: 8 }}
-          onPress={() => onRemoveAccount(accountIndex)}
+          onPress={() => onHideAccount(accountIndex)}
         >
           <Text>❌</Text>
         </Pressable>
