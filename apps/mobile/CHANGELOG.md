@@ -177,6 +177,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.14.3
 
+## [1.26.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.25.3...@leather.io/mobile-v1.26.0) (2024-08-28)
+
+
+### Features
+
+* wallet settings screens ([c10b0e5](https://github.com/leather-io/mono/commit/c10b0e50b3e0fdfe4da68d5127025af9977db33a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.15.0
+
 ## [1.25.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.24.1...@leather.io/mobile-v1.25.0) (2024-08-23)
 
 
