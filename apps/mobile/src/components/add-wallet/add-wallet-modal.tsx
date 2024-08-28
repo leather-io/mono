@@ -6,7 +6,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

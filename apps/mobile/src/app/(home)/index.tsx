@@ -1,4 +1,4 @@
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { AppStartMode, whenAppStartMode } from '@/utils/when-app-start-mode';
 import { Redirect } from 'expo-router';
 

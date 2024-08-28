@@ -4,8 +4,8 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { InputState, TextInput } from '@/components/text-input';
-import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/constants';
 import { useSubmitWaitingListEmailForm } from '@/queries/use-submit-waiting-list-form-email';
+import { BROWSER_EXTENSION_LINK, TWITTER_LINK } from '@/routes';
 import { emailRegexp } from '@/utils/regexp';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

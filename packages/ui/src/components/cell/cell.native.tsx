@@ -5,14 +5,16 @@ import { ResponsiveValue, useTheme } from '@shopify/restyle';
 import { Box, ChevronRightIcon, IconProps, Text, Theme, TouchableOpacity } from '../../../native';
 
 type RegularCellVariant = 'active' | 'inactive' | 'critical';
+type RadioCellVariant = 'radio';
 type SwitchCellVariant = 'switch';
-type CellVariant = RegularCellVariant | SwitchCellVariant;
+type CellVariant = RegularCellVariant | RadioCellVariant | SwitchCellVariant;
 
 function getIconColor(
   variant: CellVariant
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (variant) {
     case 'active':
+    case 'radio':
     case 'switch':
       return 'ink.text-primary';
     case 'inactive':
@@ -27,6 +29,7 @@ function getIconBackgroundColor(
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (variant) {
     case 'active':
+    case 'radio':
     case 'switch':
       return 'ink.background-secondary';
     case 'inactive':
@@ -34,6 +37,10 @@ function getIconBackgroundColor(
     case 'critical':
       return 'red.background-primary';
   }
+}
+
+interface RadioCell {
+  variant: RadioCellVariant;
 }
 
 interface SwitchCell {
@@ -53,7 +60,7 @@ interface BaseCell {
   Icon: React.FC<IconProps>;
 }
 
-type CellProps = BaseCell & (RegularCell | SwitchCell);
+type CellProps = BaseCell & (RegularCell | RadioCell | SwitchCell);
 
 export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
   const theme = useTheme<Theme>();
@@ -80,6 +87,11 @@ export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
           )}
         </Box>
       </Box>
+      {props.variant !== 'radio' && props.variant !== 'switch' && (
+        <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
+      )}
+      {/* TODO: Temp placeholder - implement custom radio button */}
+      {props.variant === 'radio' && <></>}
       {props.variant === 'switch' && (
         <Switch
           trackColor={{
@@ -95,9 +107,6 @@ export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
           onValueChange={props.toggleSwitchValue}
           value={props.switchValue}
         />
-      )}
-      {props.variant !== 'switch' && (
-        <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
       )}
     </TouchableOpacity>
   );

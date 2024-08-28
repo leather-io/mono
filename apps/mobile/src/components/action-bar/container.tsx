@@ -2,7 +2,7 @@ import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } f
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';

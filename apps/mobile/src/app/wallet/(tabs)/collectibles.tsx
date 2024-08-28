@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 

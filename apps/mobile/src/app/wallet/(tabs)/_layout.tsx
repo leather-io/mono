@@ -6,7 +6,7 @@ import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/co
 import { Modal } from '@/components/bottom-sheet-modal';
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
