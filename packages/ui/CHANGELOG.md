@@ -91,6 +91,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.14.3...@leather.io/ui-v1.15.0) (2024-08-28)
+
+
+### Features
+
+* wallet settings screens ([c10b0e5](https://github.com/leather-io/mono/commit/c10b0e50b3e0fdfe4da68d5127025af9977db33a))
+
 ## [1.14.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.14.2...@leather.io/ui-v1.14.3) (2024-08-27)
 
 
