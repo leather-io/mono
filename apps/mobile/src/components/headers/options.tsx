@@ -1,4 +1,4 @@
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { useRouter } from 'expo-router';
 
 import { Box, PulseIcon, SettingsSliderThreeIcon, TouchableOpacity } from '@leather.io/ui/native';

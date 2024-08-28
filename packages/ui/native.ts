@@ -1,3 +1,4 @@
+export { Accordion } from './src/components/accordion/accordion.native';
 export { Box } from './src/components/box/box.native';
 export {
   AnimatedButton,

@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
 import { Divider } from '@/components/divider';
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { useAccounts } from '@/state/accounts/accounts.slice';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';

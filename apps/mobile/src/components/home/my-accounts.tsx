@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { useWallets } from '@/state/wallets/wallets.slice';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

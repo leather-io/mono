@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { useAccountsByFingerprint } from '@/state/accounts/accounts.slice';
 import { useKeyStore } from '@/state/key-store';
 import { t } from '@lingui/macro';

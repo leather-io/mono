@@ -43,13 +43,15 @@ export default function StackLayout() {
     <SimpleHeader insets={insets} left={<BackButtonHeader onPress={() => router.back()} />} />
   );
 
-  const NavigationSettings = (
-    <SimpleHeader
-      insets={insets}
-      left={<BackButtonHeader onPress={() => router.back()} />}
-      center={<TitleHeader title={t`Settings`} />}
-    />
-  );
+  function NavigationSettings(title: string = t`Settings`) {
+    return (
+      <SimpleHeader
+        insets={insets}
+        left={<BackButtonHeader onPress={() => router.back()} />}
+        center={<TitleHeader title={title} />}
+      />
+    );
+  }
 
   function NavigationWalletSettings(title: string = t`Settings`) {
     return (
@@ -81,6 +83,7 @@ export default function StackLayout() {
       />
     );
   }
+
   const NavigationDeveloperConsole = (
     <SimpleHeader
       insets={insets}
@@ -100,7 +103,27 @@ export default function StackLayout() {
       <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="recover-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
-      <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings }} />
+      <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings() }} />
+      <Stack.Screen
+        name="settings/display/index"
+        options={{ header: () => NavigationSettings(t`Display`) }}
+      />
+      <Stack.Screen
+        name="settings/security/index"
+        options={{ header: () => NavigationSettings(t`Security`) }}
+      />
+      <Stack.Screen
+        name="settings/networks/index"
+        options={{ header: () => NavigationSettings(t`Networks`) }}
+      />
+      <Stack.Screen
+        name="settings/notifications/index"
+        options={{ header: () => NavigationSettings(t`Notifications`) }}
+      />
+      <Stack.Screen
+        name="settings/help/index"
+        options={{ header: () => NavigationSettings(t`Help`) }}
+      />
       <Stack.Screen
         name="wallet-settings/index"
         options={{ header: () => NavigationWalletSettings() }}

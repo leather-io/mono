@@ -1,5 +1,5 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { APP_ROUTES } from '@/constants';
+import { APP_ROUTES } from '@/routes';
 import { keychainErrorHandlers, useKeyStore } from '@/state/key-store';
 import { useSettings } from '@/state/settings/settings.slice';
 import { tempMnemonicStore } from '@/state/storage-persistors';
