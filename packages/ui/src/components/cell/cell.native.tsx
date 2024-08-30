@@ -1,14 +1,19 @@
+import { Switch } from 'react-native';
+
 import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
 import { Box, ChevronRightIcon, IconProps, Text, Theme, TouchableOpacity } from '../../../native';
 
-type CellVariant = 'active' | 'inactive' | 'critical';
+type RegularCellVariant = 'active' | 'inactive' | 'critical';
+type SwitchCellVariant = 'switch';
+type CellVariant = RegularCellVariant | SwitchCellVariant;
 
 function getIconColor(
   variant: CellVariant
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (variant) {
     case 'active':
+    case 'switch':
       return 'ink.text-primary';
     case 'inactive':
       return 'ink.text-subdued';
@@ -22,6 +27,7 @@ function getIconBackgroundColor(
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (variant) {
     case 'active':
+    case 'switch':
       return 'ink.background-secondary';
     case 'inactive':
       return 'ink.background-secondary';
@@ -30,17 +36,29 @@ function getIconBackgroundColor(
   }
 }
 
-interface CellProps {
+interface SwitchCell {
+  variant: SwitchCellVariant;
+  switchValue: boolean;
+  toggleSwitchValue(): void;
+}
+
+interface RegularCell {
+  variant?: RegularCellVariant;
+}
+
+interface BaseCell {
   title: string;
   subtitle?: string;
   onPress?(): unknown;
   Icon: React.FC<IconProps>;
-  variant?: CellVariant;
 }
 
-export function Cell({ title, subtitle, onPress, Icon, variant = 'active' }: CellProps) {
+type CellProps = BaseCell & (RegularCell | SwitchCell);
+
+export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
   const theme = useTheme<Theme>();
   const isDisabled = !onPress;
+  const _variant = props.variant ?? 'active';
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -50,8 +68,8 @@ export function Cell({ title, subtitle, onPress, Icon, variant = 'active' }: Cel
       alignItems="center"
     >
       <Box flexDirection="row" gap="4">
-        <Box flexDirection="row" p="2" bg={getIconBackgroundColor(variant)} borderRadius="round">
-          <Icon color={theme.colors[getIconColor(variant)]} />
+        <Box flexDirection="row" p="2" bg={getIconBackgroundColor(_variant)} borderRadius="round">
+          <Icon color={theme.colors[getIconColor(_variant)]} />
         </Box>
         <Box flexDirection="column" justifyContent="center">
           <Text variant="label02">{title}</Text>
@@ -62,7 +80,25 @@ export function Cell({ title, subtitle, onPress, Icon, variant = 'active' }: Cel
           )}
         </Box>
       </Box>
-      <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
+      {props.variant === 'switch' && (
+        <Switch
+          trackColor={{
+            false: theme.colors['ink.background-secondary'],
+            true: theme.colors['ink.text-primary'],
+          }}
+          thumbColor={
+            props.switchValue
+              ? theme.colors['ink.background-primary']
+              : theme.colors['ink.background-primary']
+          }
+          ios_backgroundColor={theme.colors['ink.background-secondary']}
+          onValueChange={props.toggleSwitchValue}
+          value={props.switchValue}
+        />
+      )}
+      {props.variant !== 'switch' && (
+        <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
+      )}
     </TouchableOpacity>
   );
 }
