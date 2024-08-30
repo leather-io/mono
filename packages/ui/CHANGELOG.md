@@ -91,6 +91,19 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.15.0...@leather.io/ui-v1.16.0) (2024-08-30)
+
+
+### Features
+
+* add native cell component to UI library ([e3e61bb](https://github.com/leather-io/mono/commit/e3e61bbabad7fb5621353b684acfb9e4c0301d92))
+
+
+### Bug Fixes
+
+* add link to update button, ref leather-io/issues[#289](https://github.com/leather-io/mono/issues/289) ([c6aa874](https://github.com/leather-io/mono/commit/c6aa8748a61cb90b370680b052ad97207ffe8f42))
+* adjust BigTitle padding and close, ref leather-io/extension[#5802](https://github.com/leather-io/mono/issues/5802) ([169fdc4](https://github.com/leather-io/mono/commit/169fdc4f369cf849097993b8b7656f4843159fd7))
+
 ## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.14.3...@leather.io/ui-v1.15.0) (2024-08-28)
 
 
