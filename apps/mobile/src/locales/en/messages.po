@@ -327,7 +327,7 @@ msgstr "Here is the notification body"
 msgid "Hidden accounts"
 msgstr "Hidden accounts"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
 msgid "Hide account"
 msgstr "Hide account"
 

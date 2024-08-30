@@ -72,7 +72,14 @@ function ConfigureAccount({
               }}
             />
             <Cell title={t`Avatar`} Icon={HeadIcon} onPress={() => {}} />
-            <Cell title={t`Hide account`} Icon={Eye1ClosedIcon} onPress={toggleHideAccount} />
+            <Cell
+              title={t`Hide account`}
+              Icon={Eye1ClosedIcon}
+              onPress={toggleHideAccount}
+              variant="switch"
+              switchValue={account.status === 'hidden'}
+              toggleSwitchValue={toggleHideAccount}
+            />
           </Box>
         </ScrollView>
       </Box>

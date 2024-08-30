@@ -327,7 +327,7 @@ msgstr ""
 msgid "Hidden accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:75
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
 msgid "Hide account"
 msgstr ""
 
