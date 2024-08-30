@@ -1,7 +1,7 @@
 import { BestInSlotInscriptionResponse } from '../src/bitcoin/clients/best-in-slot';
 import { createBestInSlotInscription } from '../src/bitcoin/ordinals/inscription.utils';
 
-export const mockInscriptionResponse1: BestInSlotInscriptionResponse = {
+export const mockInscriptionResponse: BestInSlotInscriptionResponse = {
   inscription_name: null,
   inscription_id: 'bcbb27db6062dbd8de71eb77ce6f04b398e6ed04bf1104dd1c9b17b15c291b3di65',
   inscription_number: 72251550,
@@ -27,7 +27,7 @@ export const mockInscriptionResponse1: BestInSlotInscriptionResponse = {
   delegate: null,
 };
 
-export const mockInscription1 = createBestInSlotInscription(mockInscriptionResponse1);
+export const mockInscription1 = createBestInSlotInscription(mockInscriptionResponse);
 
 export const mockInscriptionResponse2: BestInSlotInscriptionResponse = {
   inscription_name: null,
