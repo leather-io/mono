@@ -142,6 +142,13 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.7.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.7.0...@leather.io/query-v2.7.1) (2024-08-30)
+
+
+### Bug Fixes
+
+* mock inscriptions naming ([da4769d](https://github.com/leather-io/mono/commit/da4769d779382ab372f843144830e4021b13b85b))
+
 ## [2.7.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.6.1...@leather.io/query-v2.7.0) (2024-08-23)
 
 
