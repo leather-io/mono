@@ -39,10 +39,10 @@ export interface CallReadOnlyFunctionArgs {
   signal?: AbortSignal;
 }
 
-const priorityLevels = {
+export const priorityLevels = {
   getNetworkStatus: 6,
-  getAccountTransactionsWithTransfers: 5,
   getNamesOwnedByAddress: 5,
+  getAccountTransactionsWithTransfers: 4,
   getAccountBalance: 4,
   getAccountNonces: 4,
   getNameInfo: 4,

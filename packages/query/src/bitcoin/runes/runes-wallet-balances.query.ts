@@ -29,7 +29,7 @@ export function createGetRunesWalletBalancesByAddressesQueryOptions({
     enabled: !!address && (network.chain.bitcoin.bitcoinNetwork === 'testnet' || runesEnabled),
     queryKey: [BitcoinQueryPrefixes.GetRunesWalletBalances, address],
     queryFn: () =>
-      limiter.add(() => client.BestinSlotApi.getRunesWalletBalances(address), {
+      limiter.add(() => client.BestInSlotApi.getRunesWalletBalances(address), {
         throwOnTimeout: true,
       }),
     ...queryOptions,

@@ -11,7 +11,7 @@ import { whenNetwork } from '@leather.io/utils';
 import { UtxoResponseItem } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
-import { BestinSlotApi } from './best-in-slot';
+import { BestInSlotApi } from './best-in-slot';
 
 function AddressApi(basePath: string) {
   const rateLimiter = getBitcoinRatelimiter(basePath);
@@ -125,7 +125,7 @@ export interface BitcoinClient {
   addressApi: ReturnType<typeof AddressApi>;
   feeEstimatesApi: ReturnType<typeof FeeEstimatesApi>;
   transactionsApi: ReturnType<typeof TransactionsApi>;
-  BestinSlotApi: ReturnType<typeof BestinSlotApi>;
+  BestInSlotApi: ReturnType<typeof BestInSlotApi>;
 }
 
 interface BitcoinClientArgs {
@@ -138,7 +138,7 @@ export function bitcoinClient({ basePath, bestInSlotPath }: BitcoinClientArgs): 
     addressApi: AddressApi(basePath),
     feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
-    BestinSlotApi: BestinSlotApi(bestInSlotPath),
+    BestInSlotApi: BestInSlotApi(bestInSlotPath),
   };
 }
 

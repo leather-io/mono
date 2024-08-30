@@ -4,19 +4,19 @@ import { HDKey } from '@scure/bip32';
 
 import { isUndefined } from '@leather.io/utils';
 
-import { InscriptionResponseHiro } from '../../../types/inscription';
-import { createBestinSlotInscription } from './inscription.utils';
+import { BestInSlotInscriptionResponse } from '../clients/best-in-slot';
+import { createBestInSlotInscription } from './inscription.utils';
 import { useBestInSlotGetInscriptionsInfiniteQuery } from './inscriptions-infinite.query';
-import { useGetInscriptionsInfiniteQuery } from './inscriptions.query';
 
 interface FindInscriptionsOnUtxoArgs {
   index: number;
-  inscriptions: InscriptionResponseHiro[];
+  inscriptions: BestInSlotInscriptionResponse[];
   txId: string;
 }
 export function findInscriptionsOnUtxo({ index, inscriptions, txId }: FindInscriptionsOnUtxoArgs) {
   return inscriptions?.filter(inscription => {
-    return `${txId}:${index.toString()}` === inscription.output;
+    const [txid, output] = inscription.satpoint.split(':');
+    return `${txId}:${index.toString()}` === `${txid}:${output}`;
   });
 }
 
@@ -27,7 +27,7 @@ export function useNumberOfInscriptionsOnUtxo({
   nativeSegwitAddress: string;
   taprootKeychain: HDKey | undefined;
 }) {
-  const query = useGetInscriptionsInfiniteQuery({
+  const query = useBestInSlotGetInscriptionsInfiniteQuery({
     taprootKeychain,
     nativeSegwitAddress,
   });
@@ -59,7 +59,7 @@ export function useInscriptions({
     ...query,
     inscriptions:
       query.data?.pages.flatMap(page =>
-        page.inscriptions.filter(Boolean).map(createBestinSlotInscription)
+        page.inscriptions.filter(Boolean).map(createBestInSlotInscription)
       ) ?? [],
   };
 }
@@ -71,7 +71,7 @@ export function useInscriptionsAddressesMap({
   nativeSegwitAddress: string;
   taprootKeychain: HDKey | undefined;
 }) {
-  const query = useGetInscriptionsInfiniteQuery({
+  const query = useBestInSlotGetInscriptionsInfiniteQuery({
     taprootKeychain,
     nativeSegwitAddress,
   });

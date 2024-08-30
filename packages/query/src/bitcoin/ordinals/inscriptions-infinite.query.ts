@@ -72,7 +72,7 @@ export function useBestInSlotGetInscriptionsInfiniteQuery({
 
         const response = await limiter.add(
           () =>
-            client.BestinSlotApi.getInscriptionsByAddresses({
+            client.BestInSlotApi.getInscriptionsByAddresses({
               addresses,
               offset,
               count: inscriptionsLazyLoadLimit,

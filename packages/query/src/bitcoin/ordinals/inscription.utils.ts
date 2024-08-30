@@ -1,7 +1,10 @@
 import { Inscription, createInscription, whenInscriptionMimeType } from '@leather.io/models';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
-import { BestInSlotInscriptionResponse } from '../clients/best-in-slot';
+import {
+  BestInSlotInscriptionResponse,
+  BestinSlotInscriptionBatchInfoResponse,
+} from '../clients/best-in-slot';
 
 export function createHiroInscription(inscriptionResponse: InscriptionResponseHiro) {
   const {
@@ -23,7 +26,23 @@ export function createHiroInscription(inscriptionResponse: InscriptionResponseHi
   });
 }
 
-export function createBestinSlotInscription(
+// there are disrepancies in inscription models in BiS api
+export function normalizeBestInSlotInscriptionResponse(
+  inscription: BestinSlotInscriptionBatchInfoResponse
+): BestInSlotInscriptionResponse {
+  const date = new Date(inscription.genesis_ts * 1000);
+  const genesis_ts = date.toISOString();
+
+  return {
+    ...inscription,
+    output_value: inscription.output_value || 0,
+    owner_wallet_addr: inscription.wallet,
+    genesis_ts,
+    genesis_block_hash: '',
+  };
+}
+
+export function createBestInSlotInscription(
   inscription: BestInSlotInscriptionResponse
 ): Inscription {
   const id = inscription.inscription_id;

@@ -31,7 +31,7 @@ export function createGetRunesOutputsByAddressQueryOptions({
     queryFn: ({ signal }: QueryFunctionContext) =>
       limiter.add(
         () =>
-          client.BestinSlotApi.getRunesOutputsByAddress({
+          client.BestInSlotApi.getRunesOutputsByAddress({
             address,
             network,
             signal,

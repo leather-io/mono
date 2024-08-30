@@ -51,7 +51,7 @@ async function checkInscribedUtxosByBestinslot({
    * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-bitmap-v3-api-mainnet+testnet/inscriptions
    */
   const inscriptionIdsList = await Promise.all(
-    txids.map(id => client.BestinSlotApi.getInscriptionsByTransactionId(id))
+    txids.map(id => client.BestInSlotApi.getInscriptionsByTransactionId(id))
   );
 
   const inscriptionIds = inscriptionIdsList.flatMap(inscription =>
@@ -59,7 +59,7 @@ async function checkInscribedUtxosByBestinslot({
   );
 
   const inscriptionsList = await Promise.all(
-    inscriptionIds.map(id => client.BestinSlotApi.getInscriptionById(id))
+    inscriptionIds.map(id => client.BestInSlotApi.getInscriptionById(id))
   );
 
   const hasInscribedUtxos = inscriptionsList.some(resp => {

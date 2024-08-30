@@ -30,7 +30,7 @@ export function createGetRunesTickerInfoQueryOptions({
     enabled: isDefined(runeBalance) && runesEnabled,
     queryKey: [BitcoinQueryPrefixes.GetRunesTickerInfo, runeBalance.rune_name],
     queryFn: () =>
-      limiter.add(() => client.BestinSlotApi.getRunesTickerInfo(runeBalance.rune_name), {
+      limiter.add(() => client.BestInSlotApi.getRunesTickerInfo(runeBalance.rune_name), {
         throwOnTimeout: true,
       }),
     ...queryOptions,

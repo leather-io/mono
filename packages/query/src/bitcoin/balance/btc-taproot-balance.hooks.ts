@@ -7,8 +7,8 @@ import { createMoney, sumNumbers } from '@leather.io/utils';
 import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { filterUtxosWithInscriptions } from '../address/utxos-by-address.hooks';
 import { useGetTaprootUtxosByAddressQuery } from '../address/utxos-by-address.query';
-import { createHiroInscription } from '../ordinals/inscription.utils';
-import { useGetInscriptionsInfiniteQuery } from '../ordinals/inscriptions.query';
+import { createBestInSlotInscription } from '../ordinals/inscription.utils';
+import { useBestInSlotGetInscriptionsInfiniteQuery } from '../ordinals/inscriptions-infinite.query';
 
 const RETRIEVE_UTXO_DUST_AMOUNT = 10000;
 
@@ -26,7 +26,7 @@ export function useCurrentTaprootAccountUninscribedUtxos({
     currentAccountIndex,
   });
 
-  const query = useGetInscriptionsInfiniteQuery({
+  const query = useBestInSlotGetInscriptionsInfiniteQuery({
     taprootKeychain,
     nativeSegwitAddress,
   });
@@ -34,7 +34,7 @@ export function useCurrentTaprootAccountUninscribedUtxos({
   return useMemo(() => {
     const inscriptionsResponse = query.data?.pages?.flatMap(page => page.inscriptions) ?? [];
 
-    const inscriptions = inscriptionsResponse.map(createHiroInscription);
+    const inscriptions = inscriptionsResponse.map(createBestInSlotInscription);
 
     const filteredUtxosList = utxos
       .filter(utxo => utxo.status.confirmed)
