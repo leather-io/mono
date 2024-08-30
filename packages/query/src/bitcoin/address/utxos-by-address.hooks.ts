@@ -7,7 +7,7 @@ import { Inscription } from '@leather.io/models';
 import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../clients/best-in-slot';
 import { useBitcoinClient } from '../clients/bitcoin-client';
-import { createBestinSlotInscription } from '../ordinals/inscription.utils';
+import { createBestInSlotInscription } from '../ordinals/inscription.utils';
 import { useGetInscriptionsByAddressQuery } from '../ordinals/inscriptions.query';
 import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks';
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
@@ -20,7 +20,8 @@ export function filterUtxosWithInscriptions(
   return utxos.filter(
     utxo =>
       !inscriptions?.some(
-        inscription => `${utxo.txid}:${utxo.vout.toString()}` === inscription.output
+        inscription =>
+          `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
       )
   );
 }
@@ -137,7 +138,7 @@ function useFilterInscriptionsByAddress(address: string) {
   const filterOutInscriptions = useCallback(
     (utxos: UtxoResponseItem[]) => {
       const inscriptionResponses = inscriptionsList?.pages.flatMap(page => page.data) ?? [];
-      const inscriptions = inscriptionResponses.map(createBestinSlotInscription);
+      const inscriptions = inscriptionResponses.map(createBestInSlotInscription);
       return filterUtxosWithInscriptions(inscriptions, utxos);
     },
     [inscriptionsList?.pages]

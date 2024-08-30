@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { useBitcoinClient } from '../clients/bitcoin-client';
 import { createGetInscriptionQueryOptions } from './inscription.query';
-import { createHiroInscription } from './inscription.utils';
+import { createBestInSlotInscription } from './inscription.utils';
 
 export function useInscription(id: string) {
+  const client = useBitcoinClient();
   return useQuery({
-    ...createGetInscriptionQueryOptions(id),
-    select: resp => createHiroInscription(resp),
+    ...createGetInscriptionQueryOptions(id, client.BestInSlotApi),
+    select: resp => createBestInSlotInscription(resp.data),
   });
 }

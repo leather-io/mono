@@ -10,13 +10,16 @@ import {
 
 import {
   bestInSlotInscriptionSchema,
+  bestInslotInscriptionBatchInfoSchema,
   inscriptionsByAddressSchema,
   runeTickerInfoSchema,
 } from './zod-schemas';
 
 export type BestInSlotInscriptionResponse = z.infer<typeof bestInSlotInscriptionSchema>;
-
-export interface BestinSlotInscriptionByIdResponse {
+export type BestinSlotInscriptionBatchInfoResponse = z.infer<
+  typeof bestInslotInscriptionBatchInfoSchema
+>;
+export interface BestInSlotInscriptionByIdResponse {
   data: BestInSlotInscriptionResponse;
   block_height: number;
 }
@@ -24,6 +27,10 @@ export interface BestinSlotInscriptionByIdResponse {
 export interface BestInSlotInscriptionsByTxIdResponse {
   data: { inscription_id: string }[];
   blockHeight: number;
+}
+
+export interface BestInSlotInscriptionsBatchInfoResponse {
+  data: { query: string; result: BestinSlotInscriptionBatchInfoResponse[] | null }[];
 }
 
 /* BRC-20 */
@@ -137,12 +144,12 @@ interface BestInSlotInscriptionByAddressesArgs extends BestInSlotInscriptionByAd
   addresses: string[];
 }
 
-interface BestinSlotInscriptionByAddressResponse {
+interface BestInSlotInscriptionByAddressResponse {
   block_height: number;
   data: BestInSlotInscriptionsByTxIdResponse[];
 }
 
-export function BestinSlotApi(basePath: string) {
+export function BestInSlotApi(basePath: string) {
   /**
    * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-runes-and-bitmap-v3-api-mainnet+testnet+signet/wallets#get-wallet-inscriptions
    */
@@ -165,7 +172,7 @@ export function BestinSlotApi(basePath: string) {
       count: count.toString(),
     });
 
-    const resp = await axios.get<BestinSlotInscriptionByAddressResponse>(
+    const resp = await axios.get<BestInSlotInscriptionByAddressResponse>(
       `${basePath}/wallet/inscriptions?${queryParams}`,
       { signal }
     );
@@ -192,7 +199,7 @@ export function BestinSlotApi(basePath: string) {
       count,
     };
 
-    const resp = await axios.post<BestinSlotInscriptionByAddressResponse>(
+    const resp = await axios.post<BestInSlotInscriptionByAddressResponse>(
       `${basePath}/wallet/inscriptions_batch`,
       data,
       { signal }
@@ -208,8 +215,21 @@ export function BestinSlotApi(basePath: string) {
     return resp.data;
   }
 
+  /**
+   * @see https://docs.bestinslot.xyz/reference/api-reference/ordinals-and-brc-20-and-runes-and-bitmap-v3-api-mainnet+testnet+signet/inscriptions#get-batch-inscription-information
+   * @param queries can be a list of inscription id, inscription number or location (txid:index), however all types must be the same.
+   *
+   */
+  async function getBatchInscriptionInfo(queries: string[]) {
+    const resp = await axios.post<BestInSlotInscriptionsBatchInfoResponse>(
+      `${basePath}/inscription/batch_info`,
+      { queries }
+    );
+    return resp.data;
+  }
+
   async function getInscriptionById(id: string) {
-    const resp = await axios.get<BestinSlotInscriptionByIdResponse>(
+    const resp = await axios.get<BestInSlotInscriptionByIdResponse>(
       `${basePath}/inscription/single_info_id?inscription_id=${id}`
     );
     return resp.data;
@@ -290,5 +310,6 @@ export function BestinSlotApi(basePath: string) {
     getRunesTickerInfo,
     getRunesBatchOutputsInfo,
     getRunesOutputsByAddress,
+    getBatchInscriptionInfo,
   };
 }
