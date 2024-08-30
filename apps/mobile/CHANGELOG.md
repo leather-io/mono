@@ -177,6 +177,25 @@
   * dependencies
     * @leather.io/ui bumped to 1.14.3
 
+## [1.27.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.26.0...@leather.io/mobile-v1.27.0) (2024-08-30)
+
+
+### Features
+
+* add native cell component to UI library ([e3e61bb](https://github.com/leather-io/mono/commit/e3e61bbabad7fb5621353b684acfb9e4c0301d92))
+
+
+### Bug Fixes
+
+* add link to update button, ref leather-io/issues[#289](https://github.com/leather-io/mono/issues/289) ([c6aa874](https://github.com/leather-io/mono/commit/c6aa8748a61cb90b370680b052ad97207ffe8f42))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.16.0
+
 ## [1.26.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.25.3...@leather.io/mobile-v1.26.0) (2024-08-28)
 
 
