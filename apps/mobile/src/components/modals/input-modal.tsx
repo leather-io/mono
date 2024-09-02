@@ -3,10 +3,9 @@ import { useSharedValue } from 'react-native-reanimated';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import { Box, IconProps } from '@leather.io/ui/native';
+import { Box, Button, IconProps } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_SHARED_VALUE, Modal, UIBottomSheetTextInput } from '../bottom-sheet-modal';
-import { Button } from '../button';
 import { ModalHeader } from '../modal-headers/modal-header';
 import { TextInput } from '../text-input';
 

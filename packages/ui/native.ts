@@ -1,5 +1,10 @@
 export { Box } from './src/components/box/box.native';
-export { Button } from './src/components/button/button.native';
+export {
+  AnimatedButton,
+  Button,
+  type ButtonState,
+  getButtonTextColor,
+} from './src/components/button/button.native';
 export { Text } from './src/components/text/text.native';
 export {
   TextInput,

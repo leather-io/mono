@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { Button } from '@/components/button';
 import { APP_ROUTES } from '@/constants';
 import { useAccountsByFingerprint } from '@/state/accounts/accounts.slice';
 import { useKeyStore } from '@/state/key-store';
@@ -10,6 +9,7 @@ import { useRouter } from 'expo-router';
 
 import {
   Box,
+  Button,
   ChevronDownIcon,
   ChevronUpIcon,
   PlusIcon,

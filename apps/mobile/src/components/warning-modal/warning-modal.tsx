@@ -2,10 +2,9 @@ import { RefObject } from 'react';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import { Box, ErrorTriangleIcon, Text } from '@leather.io/ui/native';
+import { Box, Button, ButtonState, ErrorTriangleIcon, Text } from '@leather.io/ui/native';
 
 import { Modal } from '../bottom-sheet-modal';
-import { Button, ButtonState } from '../button';
 import { ModalHeader } from '../modal-headers/modal-header';
 import { WarningModalVariant } from './types';
 

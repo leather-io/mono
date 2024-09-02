@@ -1,76 +1,145 @@
-import { TouchableOpacity, ViewStyle } from 'react-native';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
+import Animated from 'react-native-reanimated';
 
-import { ResponsiveValue } from '@shopify/restyle';
-import { Theme } from 'native';
+import {
+  BaseTheme,
+  LayoutProps,
+  OpacityProps,
+  ResponsiveValue,
+  SpacingProps,
+  SpacingShorthandProps,
+  VariantProps,
+  VisibleProps,
+  composeRestyleFunctions,
+  layout,
+  opacity,
+  spacing,
+  spacingShorthand,
+  useRestyle,
+  visible,
+} from '@shopify/restyle';
 
-import { Box, Text } from '../../../native';
+import { Text, Theme, TouchableOpacity } from '../../../native';
 
-type ButtonVariant = 'solid' | 'outline' | 'ghost';
-type ButtonSize = 'medium' | 'small';
+const buttonRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 
-export interface ButtonProps {
-  variant: ButtonVariant;
-  size?: ButtonSize;
-  onPress: () => unknown;
-  label: string;
-  style?: ViewStyle;
-}
+type BaseButtonProps<Theme extends BaseTheme> = OpacityProps<Theme> &
+  VisibleProps<Theme> &
+  SpacingProps<Theme> &
+  SpacingShorthandProps<Theme> &
+  LayoutProps<Theme>;
 
-function getColors(
-  variant: ButtonVariant
-): Record<string, ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>> {
-  switch (variant) {
-    case 'solid':
-      return {
-        backgroundColor: 'ink.action-primary-default',
-        textColor: 'ink.background-primary',
-      } as const;
-    case 'ghost':
-      return {
-        textColor: 'ink.text-primary',
-      } as const;
+type Props = BaseButtonProps<Theme> & ComponentPropsWithoutRef<typeof RNTouchableOpacity>;
+const composedRestyleFunction = composeRestyleFunctions<Theme, Props>(buttonRestyleFunctions);
+
+export type ButtonState = 'default' | 'critical' | 'disabled' | 'success' | 'outline' | 'ghost';
+
+function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState, T>) {
+  switch (buttonState) {
+    case 'default':
+      return match.default;
+    case 'critical':
+      return match.critical;
+    case 'disabled':
+      return match.disabled;
+    case 'success':
+      return match.success;
     case 'outline':
-      return {
-        borderColor: 'ink.text-primary',
-        textColor: 'ink.text-primary',
-      } as const;
+      return match.outline;
+    case 'ghost':
+      return match.ghost;
   }
 }
 
-function getSize(size: ButtonSize) {
-  switch (size) {
-    case 'medium':
-      return {
-        p: '3',
-        gap: '2',
-      } as const;
-    case 'small':
-      return {
-        p: '2',
-        gap: '1',
-      } as const;
-  }
-}
-
-export function Button({ onPress, label, variant, size = 'medium', style }: ButtonProps) {
-  const colorStyles = getColors(variant);
-  const sizeStyles = getSize(size);
-
-  return (
-    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', ...style }}>
-      <Box
-        borderRadius="xs"
-        p={sizeStyles.p}
-        gap={sizeStyles.gap}
-        flexDirection="row"
-        backgroundColor={colorStyles.backgroundColor}
-        borderWidth={colorStyles.borderColor ? 1 : undefined}
-        borderColor={colorStyles.borderColor}
-      >
-        <Text color={colorStyles.textColor} variant="label02">
-          {label}
-        </Text>
-      </Box>
-    </TouchableOpacity>
+export function getButtonTextColor(buttonState: ButtonState) {
+  return whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
+    buttonState,
+    {
+      default: 'ink.background-primary',
+      critical: 'ink.background-primary',
+      disabled: 'ink.text-non-interactive',
+      success: 'green.action-primary-default',
+      outline: 'ink.action-primary-default',
+      ghost: 'ink.text-primary',
+    }
   );
 }
+
+export const Button = forwardRef(
+  (
+    {
+      title,
+      buttonState,
+      icon,
+      ...rest
+    }: Props & {
+      title?: string;
+      buttonState: ButtonState;
+      icon?: React.ReactNode;
+    },
+    ref
+  ) => {
+    const props = useRestyle(composedRestyleFunction, rest);
+
+    const bg = whenButtonState<
+      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
+    >(buttonState, {
+      default: 'ink.text-primary',
+      critical: 'red.action-primary-default',
+      disabled: 'ink.background-secondary',
+      success: 'green.background-primary',
+      outline: 'ink.background-primary',
+      ghost: undefined,
+    });
+
+    const textColor = getButtonTextColor(buttonState);
+
+    const borderColor = whenButtonState<
+      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
+    >(buttonState, {
+      default: undefined,
+      critical: undefined,
+      disabled: undefined,
+      success: undefined,
+      outline: 'ink.action-primary-default',
+      ghost: undefined,
+    });
+
+    const borderWidth = whenButtonState<number | undefined>(buttonState, {
+      default: undefined,
+      critical: undefined,
+      disabled: undefined,
+      success: undefined,
+      outline: 1,
+      ghost: undefined,
+    });
+
+    const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
+
+    const hasGap = !!icon && !!title;
+
+    return (
+      <TouchableOpacity
+        ref={ref}
+        bg={bg}
+        p="3"
+        borderRadius="xs"
+        justifyContent="center"
+        alignItems="center"
+        borderColor={borderColor}
+        borderWidth={borderWidth}
+        flexDirection="row"
+        gap={hasGap ? '2' : undefined}
+        {...props}
+      >
+        {icon}
+        <Text variant={textVariant} color={textColor}>
+          {title}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+);
+
+export const AnimatedButton = Animated.createAnimatedComponent(Button);
