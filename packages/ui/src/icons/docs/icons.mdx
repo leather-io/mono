@@ -26,7 +26,9 @@ import { iconsList } from './icons-list';
       const IconComponent = Icon[item];
       return (
         <IconItem key={item} name={item}>
-          <IconComponent />
+          <div width="24px" height="24px">
+            <IconComponent />
+          </div>
         </IconItem>
       );
     })}
@@ -42,7 +44,9 @@ import { iconsList } from './icons-list';
       const IconComponent = Icon[item];
       return (
         <IconItem key={item} name={item}>
-          <IconComponent variant="small" width="16px" />
+          <div width="16px" height="16px">
+            <IconComponent variant="small" />
+          </div>
         </IconItem>
       );
     })}
