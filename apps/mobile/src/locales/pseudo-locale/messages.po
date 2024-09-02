@@ -98,7 +98,7 @@ msgstr ""
 msgid "Adding Wallet"
 msgstr ""
 
-#: src/components/wallet-settings/account-card.tsx:36
+#: src/components/wallet-settings/account-card.tsx:45
 msgid "Address"
 msgstr ""
 
@@ -470,7 +470,7 @@ msgstr ""
 msgid "Must use physical device for Push Notifications"
 msgstr ""
 
-#: src/components/home/my-accounts.tsx:34
+#: src/components/home/my-accounts.tsx:43
 msgid "My accounts"
 msgstr ""
 

@@ -108,6 +108,9 @@ importers:
       '@lingui/react':
         specifier: 4.11.1
         version: 4.11.1(react@18.2.0)
+      '@mgcrea/react-native-dnd':
+        specifier: 2.2.0
+        version: 2.2.0(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-haptic-feedback@2.3.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@noble/hashes':
         specifier: 1.4.0
         version: 1.4.0
@@ -252,6 +255,9 @@ importers:
       react-native:
         specifier: 0.74.1
         version: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
+      react-native-draggable-flatlist:
+        specifier: 4.0.1
+        version: 4.0.1(@babel/core@7.24.6)(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))
       react-native-gesture-handler:
         specifier: 2.16.1
         version: 2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -361,6 +367,9 @@ importers:
       eslint-plugin-lingui:
         specifier: 0.3.0
         version: 0.3.0(eslint@8.53.0)(typescript@5.5.4)
+      eslint-plugin-react-hooks:
+        specifier: 4.6.2
+        version: 4.6.2(eslint@8.53.0)
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@20.14.0)(babel-plugin-macros@3.1.0)
@@ -2407,7 +2416,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.18.28':
     resolution: {integrity: sha512-fvbVPId6s6etindzP6Nzos/CS1NurMVy4JKozjebArHr63tBid5i/UY5Pp+4wTCAM20gB2SjRdwcwoL6HFC4Iw==}
@@ -2726,6 +2735,7 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -2742,6 +2752,15 @@ packages:
 
   '@messageformat/parser@5.1.0':
     resolution: {integrity: sha512-jKlkls3Gewgw6qMjKZ9SFfHUpdzEVdovKFtW1qRhJ3WI4FW5R/NnGDqr8SDGz+krWDO3ki94boMmQvGke1HwUQ==}
+
+  '@mgcrea/react-native-dnd@2.2.0':
+    resolution: {integrity: sha512-gD6vn/ui7wn/GpaBJM5lWlvM+K6x4tBQftS/rjO97979B/Ue2JTc9/ybrJCF7adOH4BrW9aaRmjyBb/exJ4DOQ==}
+    peerDependencies:
+      react: '>=17'
+      react-native: '>=0.70'
+      react-native-gesture-handler: '>=2'
+      react-native-haptic-feedback: '>=2'
+      react-native-reanimated: '>=3'
 
   '@microsoft/api-extractor-model@7.29.5':
     resolution: {integrity: sha512-axMwj4pgtYH6/IclP9ly33laSwTym1kBwSUcoHElc2LYAE5NNlhGT78ucEpIZtqEZaGgA8yxGXIyS17XCC2Iuw==}
@@ -10222,11 +10241,23 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
+  react-native-draggable-flatlist@4.0.1:
+    resolution: {integrity: sha512-ZO1QUTNx64KZfXGXeXcBfql67l38X7kBcJ3rxUVZzPHt5r035GnGzIC0F8rqSXp6zgnwgUYMfB6zQc5PKmPL9Q==}
+    peerDependencies:
+      react-native: '>=0.64.0'
+      react-native-gesture-handler: '>=2.0.0'
+      react-native-reanimated: '>=2.8.0'
+
   react-native-gesture-handler@2.16.1:
     resolution: {integrity: sha512-7AlZS2IWDPQylAYOQle2mI0Xs0omAd/Kr+gAy58hjS14LUhxZAwYMVxcSFMlN9PfzXomoNVhmJBapDWIWUw/NA==}
     peerDependencies:
       react: '*'
       react-native: '*'
+
+  react-native-haptic-feedback@2.3.1:
+    resolution: {integrity: sha512-dPfjV4iVHfhVyfG+nRd88ygjahbdup7KFZDM5L2aNIAzqbNtKxHZn5O1pHegwSj1t15VJliu0GyTX7XpBDeXUw==}
+    peerDependencies:
+      react-native: '>=0.60.0'
 
   react-native-helmet-async@2.0.4:
     resolution: {integrity: sha512-m3CkXWss6B1dd6mCMleLpzDCJJGGaHOLQsUzZv8kAASJmMfmVT4d2fx375iXKTRWT25ThBfae3dECuX5cq/8hg==}
@@ -14948,6 +14979,14 @@ snapshots:
   '@messageformat/parser@5.1.0':
     dependencies:
       moo: 0.5.2
+
+  '@mgcrea/react-native-dnd@2.2.0(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-haptic-feedback@2.3.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
+      react-native-gesture-handler: 2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      react-native-haptic-feedback: 2.3.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))
+      react-native-reanimated: 3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
 
   '@microsoft/api-extractor-model@7.29.5(@types/node@20.14.0)':
     dependencies:
@@ -25307,6 +25346,16 @@ snapshots:
 
   react-is@18.3.1: {}
 
+  react-native-draggable-flatlist@4.0.1(@babel/core@7.24.6)(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)):
+    dependencies:
+      '@babel/preset-typescript': 7.24.7(@babel/core@7.24.6)
+      react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
+      react-native-gesture-handler: 2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      react-native-reanimated: 3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
+
   react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
     dependencies:
       '@egjs/hammerjs': 2.0.17
@@ -25315,6 +25364,10 @@ snapshots:
       lodash: 4.17.21
       prop-types: 15.8.1
       react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
+
+  react-native-haptic-feedback@2.3.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)):
+    dependencies:
       react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
 
   react-native-helmet-async@2.0.4(react@18.2.0):

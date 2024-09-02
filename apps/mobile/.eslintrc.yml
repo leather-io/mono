@@ -1,6 +1,7 @@
 extends:
   - '@leather.io/eslint-config'
   - universe/native
+  - 'plugin:react-hooks/recommended'
 plugins:
   - 'lingui'
 parserOptions:

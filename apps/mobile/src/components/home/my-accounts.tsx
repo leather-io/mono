@@ -1,7 +1,10 @@
+import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { APP_ROUTES } from '@/routes';
 import { useWallets } from '@/state/wallets/wallets.slice';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -14,6 +17,7 @@ export function MyAccounts() {
   const theme = useTheme<Theme>();
   const router = useRouter();
   const wallets = useWallets();
+  const modalRef = useRef<BottomSheetModal>(null);
   if (wallets.list.length === 0) {
     return null;
   }
@@ -30,7 +34,12 @@ export function MyAccounts() {
   return (
     <Box style={{ marginBottom: 40 }}>
       <Box px="5" flexDirection="column" paddingBottom="3">
-        <TouchableOpacity flexDirection="row" gap="1" alignItems="center">
+        <TouchableOpacity
+          onPress={() => modalRef.current?.present()}
+          flexDirection="row"
+          gap="1"
+          alignItems="center"
+        >
           <Text variant="heading05">{t`My accounts`}</Text>
           <ChevronRightIcon variant="small" />
         </TouchableOpacity>
@@ -42,6 +51,7 @@ export function MyAccounts() {
       >
         {accountComponents}
       </ScrollView>
+      <AccountSelectorSheet modalRef={modalRef} />
     </Box>
   );
 }

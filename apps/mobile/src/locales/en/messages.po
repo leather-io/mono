@@ -98,7 +98,7 @@ msgstr "Add, configure and remove"
 msgid "Adding Wallet"
 msgstr "Adding Wallet"
 
-#: src/components/wallet-settings/account-card.tsx:36
+#: src/components/wallet-settings/account-card.tsx:45
 msgid "Address"
 msgstr "Address"
 
@@ -470,7 +470,7 @@ msgstr "More options"
 msgid "Must use physical device for Push Notifications"
 msgstr "Must use physical device for Push Notifications"
 
-#: src/components/home/my-accounts.tsx:34
+#: src/components/home/my-accounts.tsx:43
 msgid "My accounts"
 msgstr "My accounts"
 

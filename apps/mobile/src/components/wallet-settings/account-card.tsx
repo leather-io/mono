@@ -1,3 +1,5 @@
+import { LayoutChangeEvent } from 'react-native';
+
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
@@ -7,10 +9,14 @@ export function AccountCard({
   Icon,
   name,
   onPress,
+  onLongPress,
+  onLayout,
 }: {
   Icon: React.FC<IconProps>;
   name: string;
-  onPress?(): unknown;
+  onPress?(): void;
+  onLongPress?(): void;
+  onLayout?(e: LayoutChangeEvent): void;
 }) {
   const theme = useTheme<Theme>();
 
@@ -19,11 +25,14 @@ export function AccountCard({
   return (
     <Container
       onPress={onPress}
+      onLongPress={onLongPress}
       flexDirection="column"
       p="5"
       borderRadius="sm"
       borderWidth={1}
       borderColor="ink.border-transparent"
+      backgroundColor="ink.background-primary"
+      onLayout={onLayout}
     >
       <Box mb="6" p="2" alignSelf="flex-start" borderRadius="round" bg="ink.text-primary">
         <Icon color={theme.colors['ink.background-primary']} />
