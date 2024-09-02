@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Box, Circle } from 'leather-styles/jsx';
+import { Box } from 'leather-styles/jsx';
 
 import { Flag as Component } from './flag.web';
 
@@ -18,7 +18,7 @@ const meta: Meta<typeof Component> = {
     controls: { include: ['align'] },
   },
   render: ({ children, ...args }) => (
-    <Component {...args} img={<Circle size="40px" backgroundColor="red.background-secondary" />}>
+    <Component {...args} img={<img width="24" height="24" src="./favicon.svg" />}>
       {children}
     </Component>
   ),
@@ -30,6 +30,6 @@ type Story = StoryObj<typeof Component>;
 
 export const Flag: Story = {
   args: {
-    children: <Box width="300px" height="20px" backgroundColor="red.background-secondary" />,
+    children: <Box>Some flag content</Box>,
   },
 };

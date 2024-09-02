@@ -2,7 +2,7 @@ import { ReactNode, isValidElement } from 'react';
 
 import { Flag } from '../../components/flag/flag.native';
 import { Text } from '../../components/text/text.native';
-import { ChevronUpIcon } from '../../icons/chevron-up-icon.native';
+import { ChevronDownIcon } from '../../icons/chevron-down-icon.native';
 import { Box } from '../box/box.native';
 import { HStack } from '../box/hstack.native';
 import { Stack } from '../box/stack.native';
@@ -56,13 +56,7 @@ export function ItemLayout({
               </Text>
             )}
           </Stack>
-          {showChevron && (
-            <ChevronUpIcon
-              color="ink.action-primary-default"
-              transform="rotate(90deg)"
-              variant="small"
-            />
-          )}
+          {showChevron && <ChevronDownIcon color="ink.action-primary-default" variant="small" />}
         </HStack>
       </Box>
     </Flag>
