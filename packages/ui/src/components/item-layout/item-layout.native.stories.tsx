@@ -1,8 +1,7 @@
-import { View } from 'react-native';
-
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Box } from '../box/box.native';
+import { Box } from '../../../native';
+import { Eye1ClosedIcon } from '../../icons/eye-1-closed-icon.native';
 import { ItemLayout } from './item-layout.native';
 
 const meta: Meta<typeof ItemLayout> = {
@@ -13,9 +12,9 @@ const meta: Meta<typeof ItemLayout> = {
   parameters: {},
   decorators: [
     Story => (
-      <View style={{ height: 40 }}>
+      <Box flexDirection="row" justifyContent="space-between" alignItems="center">
         <Story />
-      </View>
+      </Box>
     ),
   ],
 };
@@ -24,12 +23,12 @@ export default meta;
 
 export const ItemLayoutStory = {
   args: {
-    captionLeft: 'Hello',
-    captionRight: 'World',
-    flagImg: <Box style={{ flex: 1, backgroundColor: 'green' }} />,
+    captionLeft: 'captionLeft',
+    captionRight: 'captionRight',
+    flagImg: <Eye1ClosedIcon />,
     showChevron: true,
-    titleRight: 'Goodbye',
-    titleLeft: 'World',
+    titleRight: 'titleRight',
+    titleLeft: 'titleLeft',
   },
   argTypes: {},
 } satisfies StoryObj<typeof ItemLayout>;
