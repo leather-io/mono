@@ -592,7 +592,7 @@ importers:
         version: link:../tokens
       tsup:
         specifier: 8.1.0
-        version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@20.14.0))(@swc/core@1.7.12)(postcss@8.4.38)(typescript@5.5.4)
+        version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@20.14.0))(@swc/core@1.7.12)(postcss@8.4.41)(typescript@5.5.4)
 
   packages/prettier-config:
     dependencies:
@@ -957,6 +957,9 @@ importers:
       '@storybook/theming':
         specifier: 7.6.17
         version: 7.6.17(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@svgr/webpack':
+        specifier: 8.1.0
+        version: 8.1.0(typescript@5.5.4)
       '@types/react':
         specifier: 18.2.79
         version: 18.2.79
@@ -1672,6 +1675,12 @@ packages:
 
   '@babel/plugin-transform-property-literals@7.24.7':
     resolution: {integrity: sha512-EMi4MLQSHfd2nrCqQEWxFdha2gBCqU4ZcCng4WBGZ5CJL4bBRW0ptdqqDdeirGZcpALazVVNJqRmsO8/+oNCBA==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+
+  '@babel/plugin-transform-react-constant-elements@7.25.1':
+    resolution: {integrity: sha512-SLV/giH/V4SmloZ6Dt40HjTGTAIkxn33TVIHxNGNvo8ezMhrxBkzisj4op1KZYPIOHFLqhv60OHvX+YRu4xbmQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -4489,6 +4498,10 @@ packages:
     peerDependencies:
       '@svgr/core': '*'
 
+  '@svgr/webpack@8.1.0':
+    resolution: {integrity: sha512-LnhVjMWyMQV9ZmeEy26maJk+8HTIbd59cH4F2MJ439k9DqejRisfFNGAPvRYlKETuh9LrImlS8aKsBgKjMA8WA==}
+    engines: {node: '>=14'}
+
   '@swc/core-darwin-arm64@1.7.12':
     resolution: {integrity: sha512-9ng+kLgw7WCeikQYqjdVj9j8QVPwp3Gwlaker84HGKm1aJ2q6XQMTdEh/9ASwOqBHRHckLe+zYGylfCmgpLlLg==}
     engines: {node: '>=10'}
@@ -4945,13 +4958,13 @@ packages:
     resolution: {integrity: sha512-n8oxjeb5aIbPFEtmQxQYOLI0i9n5ySBEY/ZEHHZqKQSFnxio1rv6dthascc9dLuwrL0RC5mPCxB7vnAVGAYWAQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      eslint: 8.56.0
 
   '@typescript-eslint/utils@6.21.0':
     resolution: {integrity: sha512-NfWVaC8HP9T8cbKQxHcsJBY5YE1O33+jpMwN45qzWWaPDZgLIbo12toGMWnmhvCpd3sIxkpDw3Wv1B3dYrbDQQ==}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
-      eslint: ^7.0.0 || ^8.0.0
+      eslint: 8.56.0
 
   '@typescript-eslint/utils@6.9.0':
     resolution: {integrity: sha512-5Wf+Jsqya7WcCO8me504FBigeQKVLAMPmUzYgDbWchINNh1KJbxCgVya3EQ2MjvJMVeXl3pofRmprqX6mfQkjQ==}
@@ -5295,10 +5308,6 @@ packages:
   ansi-styles@5.2.0:
     resolution: {integrity: sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==}
     engines: {node: '>=10'}
-
-  ansi-styles@6.2.1:
-    resolution: {integrity: sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==}
-    engines: {node: '>=12'}
 
   any-promise@1.3.0:
     resolution: {integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==}
@@ -12073,10 +12082,6 @@ packages:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
     engines: {node: '>=10'}
 
-  wrap-ansi@8.1.0:
-    resolution: {integrity: sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==}
-    engines: {node: '>=12'}
-
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
@@ -12950,6 +12955,11 @@ snapshots:
       - supports-color
 
   '@babel/plugin-transform-property-literals@7.24.7(@babel/core@7.24.6)':
+    dependencies:
+      '@babel/core': 7.24.6
+      '@babel/helper-plugin-utils': 7.24.8
+
+  '@babel/plugin-transform-react-constant-elements@7.25.1(@babel/core@7.24.6)':
     dependencies:
       '@babel/core': 7.24.6
       '@babel/helper-plugin-utils': 7.24.8
@@ -14645,7 +14655,7 @@ snapshots:
       string-width-cjs: string-width@4.2.3
       strip-ansi: 7.1.0
       strip-ansi-cjs: strip-ansi@6.0.1
-      wrap-ansi: 8.1.0
+      wrap-ansi: 7.0.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
   '@isaacs/ttlcache@1.4.1': {}
@@ -18088,6 +18098,20 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@svgr/webpack@8.1.0(typescript@5.5.4)':
+    dependencies:
+      '@babel/core': 7.24.6
+      '@babel/plugin-transform-react-constant-elements': 7.25.1(@babel/core@7.24.6)
+      '@babel/preset-env': 7.25.3(@babel/core@7.24.6)
+      '@babel/preset-react': 7.24.7(@babel/core@7.24.6)
+      '@babel/preset-typescript': 7.24.7(@babel/core@7.24.6)
+      '@svgr/core': 8.1.0(typescript@5.5.4)
+      '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@5.5.4))
+      '@svgr/plugin-svgo': 8.1.0(@svgr/core@8.1.0(typescript@5.5.4))(typescript@5.5.4)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   '@swc/core-darwin-arm64@1.7.12':
     optional: true
 
@@ -19046,8 +19070,6 @@ snapshots:
 
   ansi-styles@5.2.0: {}
 
-  ansi-styles@6.2.1: {}
-
   any-promise@1.3.0: {}
 
   anymatch@3.1.3:
@@ -19703,7 +19725,7 @@ snapshots:
 
   caniuse-api@3.0.0:
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.3
       caniuse-lite: 1.0.30001651
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
@@ -24880,13 +24902,6 @@ snapshots:
       '@csstools/utilities': 1.0.0(postcss@8.4.41)
       postcss: 8.4.41
 
-  postcss-load-config@4.0.2(postcss@8.4.38):
-    dependencies:
-      lilconfig: 3.1.2
-      yaml: 2.5.0
-    optionalDependencies:
-      postcss: 8.4.38
-
   postcss-load-config@4.0.2(postcss@8.4.41):
     dependencies:
       lilconfig: 3.1.2
@@ -26725,31 +26740,6 @@ snapshots:
 
   tslib@2.6.2: {}
 
-  tsup@8.1.0(@microsoft/api-extractor@7.47.6(@types/node@20.14.0))(@swc/core@1.7.12)(postcss@8.4.38)(typescript@5.5.4):
-    dependencies:
-      bundle-require: 4.2.1(esbuild@0.21.5)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      debug: 4.3.6
-      esbuild: 0.21.5
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.38)
-      resolve-from: 5.0.0
-      rollup: 4.21.0
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tree-kill: 1.2.2
-    optionalDependencies:
-      '@microsoft/api-extractor': 7.47.6(@types/node@20.14.0)
-      '@swc/core': 1.7.12
-      postcss: 8.4.38
-      typescript: 5.5.4
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-
   tsup@8.1.0(@microsoft/api-extractor@7.47.6(@types/node@20.14.0))(@swc/core@1.7.12)(postcss@8.4.41)(typescript@5.5.4):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.21.5)
@@ -27364,12 +27354,6 @@ snapshots:
       ansi-styles: 4.3.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
-
-  wrap-ansi@8.1.0:
-    dependencies:
-      ansi-styles: 6.2.1
-      string-width: 5.1.2
-      strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
 

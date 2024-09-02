@@ -49,7 +49,7 @@ const config: StorybookConfig = {
       },
     },
   },
-  staticDirs: ['../assets-web'],
+  staticDirs: ['../assets', '../assets-web'],
   stories: ['../**/*.mdx', '../**/*.web.stories.@(ts|tsx)'],
   swc: () => ({
     jsc: {
@@ -72,7 +72,42 @@ const config: StorybookConfig = {
         extensions: config.resolve.extensions,
       })
     );
+    config.module ??= {};
+    config.module.rules ??= [];
+    // This modifies the existing image rule to exclude `.svg` files
+    // so we can load it instead with @svgr/webpack
+    const imageRule = config.module.rules.find((rule: any) => {
+      if (rule && typeof rule !== 'string' && rule.test instanceof RegExp) {
+        return rule.test.test('.svg');
+      }
+    });
+    if (imageRule && typeof imageRule !== 'string') {
+      imageRule.exclude = /\.svg$/;
+    }
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            svgoConfig: {
+              plugins: [
+                {
+                  name: 'preset-default',
+                  params: {
+                    overrides: {
+                      removeViewBox: false,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    });
     return config;
   },
 };
+
 export default config;
