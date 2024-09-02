@@ -33,6 +33,19 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export function makeAccountIdentifer(fingerprint: string, accountIndex: number) {
   return [fingerprint, accountIndex].join('/');
 }
+export function destructAccountIdentifer(accountId: string) {
+  const [fingerprint, accountIndex, ...rest] = accountId.split('/');
+  if (
+    fingerprint === undefined ||
+    accountIndex === undefined ||
+    Number.isNaN(+accountIndex) ||
+    rest.length !== 0
+  ) {
+    throw new Error('Incorrect accountId is passed to destructAccountIdentifer function');
+  }
+
+  return { fingerprint, accountIndex: +accountIndex };
+}
 
 type AdapterMethod<T> = (state: EntityState<T, string>, args: any) => void;
 

@@ -80,49 +80,65 @@ export const CLOSED_ANIMATED_SHARED_VALUE = -888;
 export const Modal = forwardRef<
   BottomSheetModal,
   {
+    shouldHaveContainer?: boolean;
     isScrollView?: boolean;
     children: ReactNode;
     animatedPosition?: SharedValue<number>;
     onDismiss?(): void;
     animatedIndex?: SharedValue<number>;
   }
->(function ({ isScrollView, children, animatedPosition, animatedIndex, onDismiss }, ref) {
-  const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
-  const defaultAnimatedIndex = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
+>(
+  (
+    {
+      shouldHaveContainer = true,
+      isScrollView,
+      children,
+      animatedPosition,
+      animatedIndex,
+      onDismiss,
+    },
+    ref
+  ) => {
+    const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
+    const defaultAnimatedIndex = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
 
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
-  const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
-  const internalAnimatedIndex = animatedIndex ?? defaultAnimatedIndex;
+    const { bottom } = useSafeAreaInsets();
+    const theme = useTheme<Theme>();
+    const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
+    const internalAnimatedIndex = animatedIndex ?? defaultAnimatedIndex;
 
-  const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
-  return (
-    <BottomSheetModal
-      animatedIndex={internalAnimatedIndex}
-      stackBehavior="push"
-      onDismiss={onDismiss}
-      enableDynamicSizing
-      ref={ref}
-      enablePanDownToClose
-      backdropComponent={Backdrop}
-      animatedPosition={internalAnimatedPosition}
-      handleComponent={() => (
-        <Box position="absolute" top={-12} width="100%" alignItems="center">
-          <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
-        </Box>
-      )}
-    >
-      <BottomSheetComponent
-        style={{
-          backgroundColor: theme.colors['ink.background-primary'],
-          paddingBottom: bottom,
-          borderTopLeftRadius: theme.borderRadii.lg,
-          borderTopRightRadius: theme.borderRadii.lg,
-          overflow: 'hidden',
-        }}
+    const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
+    return (
+      <BottomSheetModal
+        animatedIndex={internalAnimatedIndex}
+        stackBehavior="push"
+        onDismiss={onDismiss}
+        enableDynamicSizing
+        ref={ref}
+        enablePanDownToClose
+        backdropComponent={Backdrop}
+        animatedPosition={internalAnimatedPosition}
+        handleComponent={() => (
+          <Box position="absolute" top={-12} width="100%" alignItems="center">
+            <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
+          </Box>
+        )}
       >
-        {children}
-      </BottomSheetComponent>
-    </BottomSheetModal>
-  );
-});
+        {shouldHaveContainer && (
+          <BottomSheetComponent
+            style={{
+              backgroundColor: theme.colors['ink.background-primary'],
+              paddingBottom: bottom,
+              borderTopLeftRadius: theme.borderRadii.lg,
+              borderTopRightRadius: theme.borderRadii.lg,
+              overflow: 'hidden',
+            }}
+          >
+            {children}
+          </BottomSheetComponent>
+        )}
+        {!shouldHaveContainer && children}
+      </BottomSheetModal>
+    );
+  }
+);
