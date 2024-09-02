@@ -91,6 +91,15 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.17.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.16.0...@leather.io/ui-v1.17.0) (2024-09-02)
+
+
+### Features
+
+* add button to native library, closes leather-io/issues[#289](https://github.com/leather-io/mono/issues/289) ([c06c7de](https://github.com/leather-io/mono/commit/c06c7dee893137bed6de9eb7c84504720a730408))
+* settings screen ([1ba517d](https://github.com/leather-io/mono/commit/1ba517d0ee828686d7454b91fc23d72fbb17bc96))
+* switch cell ([62cb7d2](https://github.com/leather-io/mono/commit/62cb7d2874df16ae9d42606ef9228be1cfed5e23))
+
 ## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.15.0...@leather.io/ui-v1.16.0) (2024-08-30)
 
 
