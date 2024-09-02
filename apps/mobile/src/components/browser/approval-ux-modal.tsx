@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
 import { getDummyKeys } from '@/state/dummy';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { t } from '@lingui/macro';
 
 import {
   getNativeSegWitPaymentFromAddressIndex,
@@ -58,7 +59,7 @@ export function ApproverModal(props: ApproverModalProps) {
   return (
     <Modal ref={approverModalRef}>
       <Box p="5">
-        <Button variant="solid" label="submit" onPress={approve} />
+        <Button title={t`Submit`} buttonState="default" onPress={approve} />
       </Box>
     </Modal>
   );

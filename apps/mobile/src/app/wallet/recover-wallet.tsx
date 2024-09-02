@@ -3,7 +3,6 @@ import { TextInput as RNTextInput } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button } from '@/components/button';
 import { RecoverWalletModal } from '@/components/recover-wallet/recover-wallet-modal';
 import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
@@ -16,6 +15,7 @@ import * as Clipboard from 'expo-clipboard';
 import { isValidMnemonic, isValidMnemonicWord } from '@leather.io/crypto';
 import {
   Box,
+  Button,
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronUpIcon,

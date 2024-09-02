@@ -1,7 +1,6 @@
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button } from '@/components/button';
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
@@ -13,6 +12,7 @@ import { useLocalSearchParams } from 'expo-router';
 
 import {
   Box,
+  Button,
   CopyIcon,
   QuestionCircleIcon,
   Text,

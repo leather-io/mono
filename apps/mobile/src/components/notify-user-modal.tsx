@@ -9,14 +9,15 @@ import { useTheme } from '@shopify/restyle';
 import {
   BellAlarmIcon,
   Box,
+  Button,
   CloseIcon,
   Text,
   Theme,
   TouchableOpacity,
+  getButtonTextColor,
 } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_SHARED_VALUE, Modal } from './bottom-sheet-modal';
-import { Button, getTextColor } from './button';
 
 export interface OptionData {
   title: string;
@@ -67,7 +68,7 @@ export function NotifyUserModal({
         </Box>
         <Button
           onPress={onNotify}
-          icon={<BellAlarmIcon color={theme.colors[getTextColor('default')]} />}
+          icon={<BellAlarmIcon color={theme.colors[getButtonTextColor('default')]} />}
           buttonState="default"
           title={t`Notify me when it's ready`}
         />

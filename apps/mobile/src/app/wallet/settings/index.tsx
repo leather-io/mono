@@ -1,13 +1,12 @@
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button } from '@/components/button';
 import { APP_ROUTES } from '@/constants';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, Text, Theme } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();

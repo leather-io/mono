@@ -18,32 +18,11 @@ const meta: Meta<typeof Button> = {
 
 export default meta;
 
-// good example of argtypes: https://github.com/storybookjs/react-native/blob/next/examples/expo-example/components/ControlExamples/ControlExample/ControlExample.stories.tsx
 export const ButtonStory = {
   args: {
-    variant: 'solid',
-    size: 'medium',
     onPress: () => {},
-    label: 'solid',
+    title: 'Submit',
+    buttonState: 'default',
   },
-  argTypes: {
-    size: {
-      control: { type: 'radio' },
-      options: {
-        Medium: 'medium',
-        Small: 'small',
-      },
-    },
-    variant: {
-      control: { type: 'radio' },
-      options: {
-        Solid: 'solid',
-        Outline: 'outline',
-        Ghost: 'ghost',
-      },
-    },
-    label: {
-      control: { type: 'text' },
-    },
-  },
+  argTypes: {},
 } satisfies StoryObj<typeof Button>;

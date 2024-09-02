@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/notify-user-modal.tsx:66
+#: src/components/notify-user-modal.tsx:67
 msgid "\"{title}\" isn't ready yet."
 msgstr "\"{title}\" isn't ready yet."
 
@@ -21,7 +21,7 @@ msgstr "\"{title}\" isn't ready yet."
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr "{hiddenAccountsLength} hidden accounts"
 
-#: src/app/waiting-list/waiting-list.tsx:321
+#: src/app/waiting-list/waiting-list.tsx:330
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 
@@ -155,7 +155,7 @@ msgstr "Cancel"
 msgid "Change name"
 msgstr "Change name"
 
-#: src/app/waiting-list/waiting-list.tsx:234
+#: src/app/waiting-list/waiting-list.tsx:243
 msgid "check out our browser extension."
 msgstr "check out our browser extension."
 
@@ -259,7 +259,7 @@ msgstr "Developer tools"
 msgid "Disabled"
 msgstr "Disabled"
 
-#: src/app/waiting-list/waiting-list.tsx:252
+#: src/app/waiting-list/waiting-list.tsx:261
 msgid "Done"
 msgstr "Done"
 
@@ -275,7 +275,7 @@ msgstr "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgid "Earn"
 msgstr "Earn"
 
-#: src/app/waiting-list/waiting-list.tsx:286
+#: src/app/waiting-list/waiting-list.tsx:295
 msgid "Email address"
 msgstr "Email address"
 
@@ -299,7 +299,7 @@ msgstr "Export xPub"
 msgid "Failed to get push token for push notification!"
 msgstr "Failed to get push token for push notification!"
 
-#: src/app/waiting-list/waiting-list.tsx:240
+#: src/app/waiting-list/waiting-list.tsx:249
 msgid "Follow us"
 msgstr "Follow us"
 
@@ -315,7 +315,7 @@ msgstr "Generating…"
 msgid "getAddresses"
 msgstr "getAddresses"
 
-#: src/app/wallet/settings/index.tsx:27
+#: src/app/wallet/settings/index.tsx:26
 msgid "Hello"
 msgstr "Hello"
 
@@ -349,7 +349,7 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Learn more"
 msgstr "Learn more"
 
-#: src/app/waiting-list/waiting-list.tsx:335
+#: src/app/waiting-list/waiting-list.tsx:344
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 
@@ -387,11 +387,11 @@ msgstr "navigate to browser"
 msgid "No key needed"
 msgstr "No key needed"
 
-#: src/components/notify-user-modal.tsx:72
+#: src/components/notify-user-modal.tsx:73
 msgid "Notify me when it's ready"
 msgstr "Notify me when it's ready"
 
-#: src/components/notify-user-modal.tsx:65
+#: src/components/notify-user-modal.tsx:66
 msgid "Notify me when ready"
 msgstr "Notify me when ready"
 
@@ -496,7 +496,7 @@ msgstr "Something went wrong"
 msgid "Start stacking"
 msgstr "Start stacking"
 
-#: src/app/waiting-list/waiting-list.tsx:261
+#: src/app/waiting-list/waiting-list.tsx:270
 msgid "Stay in the loop and be the first one to hear about new developments"
 msgstr "Stay in the loop and be the first one to hear about new developments"
 
@@ -508,7 +508,8 @@ msgstr "stx_signMessage"
 msgid "stx_signTransaction"
 msgstr "stx_signTransaction"
 
-#: src/app/waiting-list/waiting-list.tsx:296
+#: src/app/waiting-list/waiting-list.tsx:305
+#: src/components/browser/approval-ux-modal.tsx:62
 msgid "Submit"
 msgstr "Submit"
 
@@ -537,7 +538,7 @@ msgstr "Tap to view Secret Key"
 msgid "Testnet"
 msgstr "Testnet"
 
-#: src/app/waiting-list/waiting-list.tsx:228
+#: src/app/waiting-list/waiting-list.tsx:237
 msgid ""
 "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the\n"
 "meantime, please"
@@ -652,7 +653,7 @@ msgstr "Wallet already exists"
 msgid "Wallet management"
 msgstr "Wallet management"
 
-#: src/app/wallet/settings/index.tsx:33
+#: src/app/wallet/settings/index.tsx:32
 msgid "Wallets (temp button)"
 msgstr "Wallets (temp button)"
 
