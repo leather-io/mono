@@ -137,6 +137,7 @@ export function useMnemonic({
   shouldLoadOnInit?: boolean;
 }) {
   const [mnemonic, setMnemonic] = useState<string | null>(null);
+  const [passphrase, setPassphrase] = useState<string | null>(null);
   async function getMnemonic() {
     const response = await mnemonicStore(fingerprint).getMnemonic();
     if (response.mnemonic) {
@@ -144,11 +145,15 @@ export function useMnemonic({
     } else {
       throw new Error('No mnemonic found for this fingerprint');
     }
+
+    if (response.passphrase) {
+      setPassphrase(response.passphrase);
+    }
   }
   useEffect(() => {
     if (shouldLoadOnInit) {
       void getMnemonic();
     }
   }, []);
-  return { mnemonic };
+  return { mnemonic, passphrase };
 }

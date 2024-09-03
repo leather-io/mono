@@ -2,18 +2,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
-import { useToastContext } from '@/components/toast/toast-context';
-import { useCreateWallet } from '@/hooks/create-wallet';
 import { useMnemonic } from '@/store/storage-persistors';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import * as Clipboard from 'expo-clipboard';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import {
   Box,
   Button,
-  CopyIcon,
   QuestionCircleIcon,
   Text,
   Theme,
@@ -23,9 +19,8 @@ import {
 function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const { navigateAndCreateWallet } = useCreateWallet();
-  const { displayToast } = useToastContext();
-  const { mnemonic } = useMnemonic({ fingerprint });
+  const router = useRouter();
+  const { mnemonic, passphrase } = useMnemonic({ fingerprint });
 
   if (!mnemonic) {
     return null;
@@ -60,22 +55,13 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
         </Box>
 
         <Box my="5">
-          <MnemonicDisplay mnemonic={mnemonic} />
+          <MnemonicDisplay mnemonic={mnemonic} passphrase={passphrase} />
         </Box>
       </ScrollView>
       <Box px="5" gap="4">
         <Button
-          onPress={async () => {
-            await Clipboard.setStringAsync(mnemonic);
-            displayToast({ title: t`Successfully copied to clipboard!`, type: 'success' });
-          }}
-          icon={<CopyIcon />}
-          buttonState="ghost"
-          title={t`Copy to clipboard`}
-        />
-        <Button
           onPress={() => {
-            navigateAndCreateWallet();
+            router.back();
           }}
           buttonState="default"
           title={t`I've backed it up`}
