@@ -39,7 +39,11 @@ export interface TextColorProps<Theme extends BaseTheme> {
   textDecorationColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
 }
 
-type BaseButtonProps<Theme extends BaseTheme> = VariantProps<Theme, 'textVariants', 'textVariant'> &
+export type TouchableOpacityProps<Theme extends BaseTheme> = VariantProps<
+  Theme,
+  'textVariants',
+  'textVariant'
+> &
   OpacityProps<Theme> &
   VisibleProps<Theme> &
   TypographyProps<Theme> &
@@ -69,7 +73,7 @@ export const buttonRestyleFunctions = [
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
-export const TouchableOpacity = createRestyleComponent<BaseButtonProps<Theme>, Theme>(
-  buttonRestyleFunctions as RestyleFunctionContainer<BaseButtonProps<Theme>, Theme>[],
+export const TouchableOpacity = createRestyleComponent<TouchableOpacityProps<Theme>, Theme>(
+  buttonRestyleFunctions as RestyleFunctionContainer<TouchableOpacityProps<Theme>, Theme>[],
   RNTouchableOpacity
 );

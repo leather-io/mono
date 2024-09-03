@@ -11,7 +11,7 @@ import {
   UIBottomSheetTextInput,
 } from '@leather.io/ui/native';
 
-import { ModalHeader } from '../modal-headers/modal-header';
+import { ModalHeader } from '../headers/modal-header';
 import { TextInput } from '../text-input';
 
 export interface OptionData {

@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Box } from '../box/box.native';
+import { Text } from '../text/text.native';
 import { Flag } from './flag.native';
 
 const meta: Meta<typeof Flag> = {
@@ -32,9 +33,13 @@ export default meta;
 
 export const FlagStory = {
   args: {
-    children: <Box flex={1} backgroundColor="blue.background-primary" />,
+    children: (
+      <Box backgroundColor="blue.background-primary" height={50}>
+        <Text variant="label02">Hello</Text>
+      </Box>
+    ),
     reverse: false,
-    img: <Box flex={1} backgroundColor="green.background-primary" />,
+    img: <Box backgroundColor="green.background-primary" height={50} width={50} />,
   },
   argTypes: {},
 } satisfies StoryObj<typeof Flag>;

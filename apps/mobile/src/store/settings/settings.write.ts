@@ -27,7 +27,7 @@ export interface SettingsState {
 }
 
 const initialState: SettingsState = {
-  theme: 'light',
+  theme: 'system',
   network: WalletDefaultNetworkConfigurationIds.mainnet,
   createdOn: new Date().toISOString(),
   walletSecurityLevel: 'undefined',
@@ -77,8 +77,9 @@ export function useSettings() {
 
   return {
     theme,
+    themeStore,
     whenTheme: whenTheme(theme),
-    changeAppTheme(theme: ThemeStore) {
+    changeTheme(theme: ThemeStore) {
       dispatch(userChangedTheme(theme));
     },
     toggleTheme() {

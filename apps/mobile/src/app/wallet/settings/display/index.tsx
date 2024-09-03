@@ -5,20 +5,28 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
-import { ThemeSheet } from '@/features/settings/theme-sheet';
+import { ThemeSheet } from '@/features/settings/theme-sheet/theme-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 
 import {
+  Avatar,
   BitcoinCircleIcon,
   Box,
   Cell,
+  ChevronRightIcon,
   DollarCircleIcon,
+  Flag,
+  ItemLayout,
   PackageSecurityIcon,
   SheetRef,
-  SunIcon,
+  SunInCloudIcon,
   Theme,
+  TouchableOpacity,
 } from '@leather.io/ui/native';
+import { capitalize } from '@leather.io/utils';
 
 export default function SettingsDisplayScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -27,6 +35,8 @@ export default function SettingsDisplayScreen() {
   const conversionUnitSheetRef = useRef<SheetRef>(null);
   const accountIdentifierSheetRef = useRef<SheetRef>(null);
   const theme = useTheme<Theme>();
+  const { themeStore } = useSettings();
+  const { i18n } = useLingui();
 
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
@@ -38,20 +48,31 @@ export default function SettingsDisplayScreen() {
           gap: theme.spacing[5],
         }}
       >
-        <Cell
-          title={t`Theme`}
-          subtitle={t`System`}
-          Icon={SunIcon}
+        <TouchableOpacity
           onPress={() => {
             themeSheetRef.current?.present();
           }}
-        />
+        >
+          <Flag
+            img={
+              <Avatar>
+                <SunInCloudIcon />
+              </Avatar>
+            }
+          >
+            <ItemLayout
+              actionIcon={<ChevronRightIcon variant="small" />}
+              captionLeft={i18n._(capitalize(themeStore))}
+              titleLeft={t`Theme`}
+            />
+          </Flag>
+        </TouchableOpacity>
         <Cell
           title={t`Bitcoin unit`}
           subtitle={t`BTC`}
           Icon={BitcoinCircleIcon}
           onPress={() => {
-            themeSheetRef.current?.present();
+            bitcoinUnitSheetRef.current?.present();
           }}
         />
         <Cell
@@ -59,7 +80,7 @@ export default function SettingsDisplayScreen() {
           subtitle={t`USD`}
           Icon={DollarCircleIcon}
           onPress={() => {
-            themeSheetRef.current?.present();
+            conversionUnitSheetRef.current?.present();
           }}
         />
         <Cell
@@ -67,7 +88,7 @@ export default function SettingsDisplayScreen() {
           subtitle={t`BNS name`}
           Icon={PackageSecurityIcon}
           onPress={() => {
-            themeSheetRef.current?.present();
+            accountIdentifierSheetRef.current?.present();
           }}
         />
       </ScrollView>

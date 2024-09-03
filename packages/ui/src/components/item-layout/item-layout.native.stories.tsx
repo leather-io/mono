@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Box } from '../../../native';
-import { Eye1ClosedIcon } from '../../icons/eye-1-closed-icon.native';
+import { Box, ChevronRightIcon } from '../../../native';
 import { ItemLayout } from './item-layout.native';
 
 const meta: Meta<typeof ItemLayout> = {
@@ -23,12 +22,11 @@ export default meta;
 
 export const ItemLayoutStory = {
   args: {
+    actionIcon: <ChevronRightIcon color="ink.action-primary-default" variant="small" />,
     captionLeft: 'captionLeft',
     captionRight: 'captionRight',
-    flagImg: <Eye1ClosedIcon />,
-    showChevron: true,
-    titleRight: 'titleRight',
     titleLeft: 'titleLeft',
+    titleRight: 'titleRight',
   },
   argTypes: {},
 } satisfies StoryObj<typeof ItemLayout>;
