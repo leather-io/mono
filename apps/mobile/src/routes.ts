@@ -30,6 +30,7 @@ export enum APP_ROUTES {
   WalletWalletsSettingsHiddenAccounts = '/wallet/wallet-settings/hidden-accounts',
   WalletWalletsSettingsConfigureWallet = '/wallet/wallet-settings/configure/[wallet]',
   WalletWalletsSettingsConfigureAccount = '/wallet/wallet-settings/configure/[wallet]/[account]',
+  WalletWalletsSettingsConfigureAccountAvatar = '/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar',
   WalletWalletsSettingsConfigureViewSecretKey = '/wallet/wallet-settings/configure/[wallet]/view-secret-key',
   WalletGeneratingWallet = '/wallet/generating-wallet',
   WaitingList = '/waiting-list',

@@ -5,12 +5,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameModal } from '@/components/wallet-settings/account-name-modal';
+import { APP_ROUTES } from '@/routes';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { z } from 'zod';
 
 import {
@@ -34,7 +35,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   const accountNameModalRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
-
+  const router = useRouter();
   useEffect(() => {
     navigation.setOptions({ title: account.name });
   }, [account.name, navigation]);
@@ -73,7 +74,16 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                 accountNameModalRef.current?.present();
               }}
             />
-            <Cell title={t`Avatar`} Icon={HeadIcon} onPress={() => {}} />
+            <Cell
+              title={t`Avatar`}
+              Icon={HeadIcon}
+              onPress={() => {
+                router.navigate({
+                  pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccountAvatar,
+                  params: { wallet: fingerprint, account: accountIndex },
+                });
+              }}
+            />
             <Cell
               title={t`Hide account`}
               Icon={Eye1ClosedIcon}

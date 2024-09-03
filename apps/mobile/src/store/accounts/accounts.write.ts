@@ -102,7 +102,7 @@ export const accountsSlice = createSlice({
       )
 
       .addCase(
-        userAddsIconToAccountPayload,
+        userUpdatesAccountIcon,
         handleEntityActionWith(adapter.updateOne, payload => ({
           id: makeAccountIdentifer(payload.fingerprint, payload.accountIndex),
           changes: { icon: payload.icon },
@@ -183,12 +183,12 @@ interface RenameAccountPayload {
 }
 export const userRenamesAccount = createAction<RenameAccountPayload>('accounts/renameAccount');
 
-interface AddIconToAccountPayload {
+interface UpdateAccountIconPayload {
   fingerprint: string;
   accountIndex: number;
   icon: string;
 }
-export const userAddsIconToAccountPayload = createAction<AddIconToAccountPayload>(
+export const userUpdatesAccountIcon = createAction<UpdateAccountIconPayload>(
   'accounts/addIconToAccount'
 );
 

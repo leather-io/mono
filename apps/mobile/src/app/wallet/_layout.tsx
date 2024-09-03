@@ -133,8 +133,12 @@ export default function StackLayout() {
         options={{ header: () => NavigationWalletSettings() }}
       />
       <Stack.Screen
-        name="wallet-settings/configure/[wallet]/[account]"
+        name="wallet-settings/configure/[wallet]/[account]/index"
         options={{ header: props => NavigationWalletSettings(props.options.title) }}
+      />
+      <Stack.Screen
+        name="wallet-settings/configure/[wallet]/[account]/choose-avatar"
+        options={{ header: () => NavigationBackSimple }}
       />
       <Stack.Screen
         name="wallet-settings/configure/[wallet]/index"
