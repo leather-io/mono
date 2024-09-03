@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useRef, useState } from 'react';
+import { RefObject, useState } from 'react';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -6,55 +6,30 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import { APP_ROUTES } from '@/routes';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
 
 import {
   ArrowRotateClockwiseIcon,
   Box,
+  CLOSED_ANIMATED_SHARED_VALUE,
   EllipsisHIcon,
   EmailIcon,
   Eye2Icon,
   PaletteIcon,
   PlusIcon,
+  Sheet,
+  SheetRef,
   SignalIcon,
   Text,
   Theme,
-  TouchableOpacity,
+  ThemeVariant,
 } from '@leather.io/ui/native';
 
-import { CLOSED_ANIMATED_SHARED_VALUE, Modal } from '../bottom-sheet-modal';
-import { NotifyUserModal, OptionData } from '../notify-user-modal';
+import { OptionData } from '../sheets/notify-user-sheet';
+import { AddWalletListItem } from './add-wallet-list-item';
 
-interface AddWalletListItemProps {
-  icon?: React.ReactNode;
-  title: string;
-  subtitle?: string;
-  onPress(): unknown;
-}
-export function AddWalletListItem({ icon, title, subtitle, onPress }: AddWalletListItemProps) {
-  return (
-    <TouchableOpacity onPress={onPress} py="3" flexDirection="row" gap="4" alignItems="center">
-      {icon && (
-        <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
-          {icon}
-        </Box>
-      )}
-      <Box flexDirection="column">
-        <Text variant="label02">{title}</Text>
-        {subtitle && (
-          <Text color="ink.text-subdued" variant="label03">
-            {subtitle}
-          </Text>
-        )}
-      </Box>
-    </TouchableOpacity>
-  );
-}
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 function getUnavailableFeatures(theme: Theme) {
@@ -83,60 +58,23 @@ function getUnavailableFeatures(theme: Theme) {
   return UNAVAILABLE_FEATURES;
 }
 
-interface AddWalletModalBaseProps {
-  addWalletModalRef: RefObject<BottomSheetModal>;
+interface AddWalletSheetBaseProps {
+  addWalletSheetRef: RefObject<SheetRef>;
 }
 
-export function AddWalletModal({ addWalletModalRef }: AddWalletModalBaseProps) {
-  const notifyUserModalRef = useRef<BottomSheetModal>(null);
-  const router = useRouter();
-  const [optionData, setOptionData] = useState<OptionData | null>(null);
-  const createWallet = useCallback(() => {
-    router.navigate(APP_ROUTES.WalletCreateNewWallet);
-    addWalletModalRef.current?.close();
-  }, [router]);
-
-  const restoreWallet = useCallback(() => {
-    router.navigate(APP_ROUTES.WalletRecoverWallet);
-    addWalletModalRef.current?.close();
-  }, [router]);
-
-  function onOpenNotificationsModal(option: OptionData) {
-    setOptionData(option);
-    notifyUserModalRef.current?.present();
-  }
-  function onCloseNotificationsModal() {
-    setOptionData(null);
-  }
-
-  return (
-    <>
-      <AddWalletModalUI
-        onOpenNotificationsModal={onOpenNotificationsModal}
-        createWallet={createWallet}
-        restoreWallet={restoreWallet}
-        addWalletModalRef={addWalletModalRef}
-      />
-
-      <NotifyUserModal
-        optionData={optionData}
-        onCloseNotificationsModal={onCloseNotificationsModal}
-        notifyUserModalRef={notifyUserModalRef}
-      />
-    </>
-  );
-}
-interface AddWalletModalUIProps extends AddWalletModalBaseProps {
+interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   createWallet(): unknown;
   restoreWallet(): unknown;
   onOpenNotificationsModal(option: OptionData): unknown;
+  themeVariant: ThemeVariant;
 }
-export function AddWalletModalUI({
-  addWalletModalRef,
+export function AddWalletSheetLayout({
+  addWalletSheetRef,
   createWallet,
   restoreWallet,
   onOpenNotificationsModal,
-}: AddWalletModalUIProps) {
+  themeVariant,
+}: AddWalletSheetLayoutProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
@@ -150,7 +88,12 @@ export function AddWalletModalUI({
   }));
 
   return (
-    <Modal isScrollView animatedIndex={animatedIndex} ref={addWalletModalRef}>
+    <Sheet
+      isScrollView
+      animatedIndex={animatedIndex}
+      ref={addWalletSheetRef}
+      themeVariant={themeVariant}
+    >
       <AnimatedBox style={animatedStyle}>
         <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
           <Image
@@ -200,6 +143,6 @@ export function AddWalletModalUI({
           </Box>
         </Box>
       </AnimatedBox>
-    </Modal>
+    </Sheet>
   );
 }

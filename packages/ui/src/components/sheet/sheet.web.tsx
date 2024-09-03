@@ -7,7 +7,7 @@ import { token } from 'leather-styles/tokens';
 
 import { pxStringToNumber } from '@leather.io/utils';
 
-import { SheetFooter } from './sheet-footer.web';
+import { SheetFooter } from './components/sheet-footer.web';
 
 export interface SheetProps {
   isShowing: boolean;

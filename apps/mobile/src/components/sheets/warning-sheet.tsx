@@ -1,14 +1,21 @@
 import { RefObject } from 'react';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 
-import { Box, Button, ButtonState, ErrorTriangleIcon, Text } from '@leather.io/ui/native';
+import {
+  Box,
+  Button,
+  ButtonState,
+  ErrorTriangleIcon,
+  Sheet,
+  SheetRef,
+  Text,
+} from '@leather.io/ui/native';
 
-import { Modal } from '../bottom-sheet-modal';
 import { ModalHeader } from '../modal-headers/modal-header';
-import { WarningModalVariant } from './types';
+import { WarningSheetVariant } from './types';
 
-function getSubmitButtonState(variant: WarningModalVariant): ButtonState {
+function getSubmitButtonState(variant: WarningSheetVariant): ButtonState {
   switch (variant) {
     case 'normal':
       return 'default';
@@ -17,9 +24,9 @@ function getSubmitButtonState(variant: WarningModalVariant): ButtonState {
   }
 }
 
-interface WarningModalProps {
-  modalRef: RefObject<BottomSheetModal>;
-  variant: WarningModalVariant;
+interface WarningSheetProps {
+  sheetRef: RefObject<SheetRef>;
+  variant: WarningSheetVariant;
   title: string;
   description: string;
   submitButton: {
@@ -33,17 +40,18 @@ interface WarningModalProps {
   onPressSupport?(): unknown;
 }
 
-export function WarningModal({
-  modalRef,
+export function WarningSheet({
+  sheetRef,
   variant,
   title,
   description,
   submitButton,
   skipButton,
   onPressSupport,
-}: WarningModalProps) {
+}: WarningSheetProps) {
+  const { theme: themeVariant } = useSettings();
   return (
-    <Modal ref={modalRef}>
+    <Sheet ref={sheetRef} themeVariant={themeVariant}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box gap="5">
           <Box>
@@ -65,13 +73,13 @@ export function WarningModal({
           <Button
             onPress={() => {
               skipButton.onPress?.();
-              modalRef.current?.dismiss();
+              sheetRef.current?.dismiss();
             }}
             buttonState="ghost"
             title={skipButton.title}
           />
         </Box>
       </Box>
-    </Modal>
+    </Sheet>
   );
 }

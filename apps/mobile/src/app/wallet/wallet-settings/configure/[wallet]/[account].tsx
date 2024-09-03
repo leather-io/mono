@@ -8,13 +8,20 @@ import { AccountNameModal } from '@/components/wallet-settings/account-name-moda
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { z } from 'zod';
 
-import { Box, Cell, Eye1ClosedIcon, HeadIcon, PassportIcon, Theme } from '@leather.io/ui/native';
+import {
+  Box,
+  Cell,
+  Eye1ClosedIcon,
+  HeadIcon,
+  PassportIcon,
+  SheetRef,
+  Theme,
+} from '@leather.io/ui/native';
 
 interface ConfigureAccountProps {
   fingerprint: string;
@@ -24,7 +31,7 @@ interface ConfigureAccountProps {
 function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccountProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const accountNameModalRef = useRef<BottomSheetModal>(null);
+  const accountNameModalRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
@@ -78,7 +85,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           </Box>
         </ScrollView>
       </Box>
-      <AccountNameModal name={account.name} setName={setName} modalRef={accountNameModalRef} />
+      <AccountNameModal name={account.name} setName={setName} sheetRef={accountNameModalRef} />
     </>
   );
 }

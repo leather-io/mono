@@ -2,23 +2,22 @@ import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
+import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
 import { APP_ROUTES } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.write';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Cell, Eye1ClosedIcon, PlusIcon, Theme } from '@leather.io/ui/native';
+import { Box, Cell, Eye1ClosedIcon, PlusIcon, SheetRef, Theme } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const router = useRouter();
-  const addWalletModalRef = useRef<BottomSheetModal>(null);
+  const addWalletSheetRef = useRef<SheetRef>(null);
   const hiddenAccounts = useAccounts('hidden');
   const hiddenAccountsLength = hiddenAccounts.list.length;
   return (
@@ -50,13 +49,13 @@ export default function SettingsScreen() {
               title={t`Add wallet`}
               Icon={PlusIcon}
               onPress={() => {
-                addWalletModalRef.current?.present();
+                addWalletSheetRef.current?.present();
               }}
             />
           </Box>
         </Box>
       </Box>
-      <AddWalletModal addWalletModalRef={addWalletModalRef} />
+      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>
   );
 }

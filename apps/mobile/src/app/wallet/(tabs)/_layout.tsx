@@ -3,15 +3,22 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ActionBarMethods } from '@/components/action-bar';
 import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/container';
-import { Modal } from '@/components/bottom-sheet-modal';
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
 import { APP_ROUTES } from '@/routes';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
-import { BarsTwoIcon, Box, EmojiSmileIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  BarsTwoIcon,
+  Box,
+  EmojiSmileIcon,
+  Sheet,
+  SheetRef,
+  Text,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 function HeaderCenter({ onPress }: { onPress?(): void }) {
   return (
@@ -79,8 +86,9 @@ function HeaderBottom() {
 
 export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const bottomSheetModalRef = useRef<SheetRef>(null);
   const insets = useSafeAreaInsets();
+  const { theme: themeVariant } = useSettings();
   const NavigationHeader = (
     <BlurredHeader
       insets={insets}
@@ -122,9 +130,9 @@ export default function TabLayout() {
         />
       </Tabs>
       <ActionBarContainer ref={ref} />
-      <Modal ref={bottomSheetModalRef}>
+      <Sheet ref={bottomSheetModalRef} themeVariant={themeVariant}>
         <Text>{t`Dummy modal text 🎉 Add blocks to see responsive modal`}</Text>
-      </Modal>
+      </Sheet>
     </ActionBarContext.Provider>
   );
 }

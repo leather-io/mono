@@ -3,9 +3,8 @@ import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
-import { Modal } from '@/components/bottom-sheet-modal';
 import injectedProvider from '@/scripts/dist/injected-provider';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 import { useTheme } from '@shopify/restyle';
 
 import {
@@ -15,6 +14,8 @@ import {
   ChevronRightIcon,
   CloseIcon,
   EllipsisHIcon,
+  Sheet,
+  SheetRef,
   Text,
   Theme,
   TouchableOpacity,
@@ -39,7 +40,8 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   const theme = useTheme<Theme>();
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
-  const settingsModalRef = useRef<BottomSheetModal>(null);
+  const settingsModalRef = useRef<SheetRef>(null);
+  const { theme: themeVariant } = useSettings();
   function closeBrowser() {
     goToInactiveBrowser();
   }
@@ -136,9 +138,9 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
           <EllipsisHIcon />
         </TouchableOpacity>
       </Box>
-      <Modal ref={settingsModalRef}>
+      <Sheet ref={settingsModalRef} themeVariant={themeVariant}>
         <Box p="5" />
-      </Modal>
+      </Sheet>
       <ApproverModal
         sendResult={result => {
           webViewRef?.current?.postMessage(

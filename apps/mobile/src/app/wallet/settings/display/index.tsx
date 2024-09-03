@@ -2,11 +2,10 @@ import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AccountIdentifierModal } from '@/features/settings/account-identifier-modal';
-import { BitcoinUnitModal } from '@/features/settings/bitcoin-unit-modal';
-import { ConversionUnitModal } from '@/features/settings/conversion-unit-modal';
-import { ThemeModal } from '@/features/settings/theme-modal';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
+import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
+import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
+import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
@@ -16,16 +15,17 @@ import {
   Cell,
   DollarCircleIcon,
   PackageSecurityIcon,
+  SheetRef,
   SunIcon,
   Theme,
 } from '@leather.io/ui/native';
 
 export default function SettingsDisplayScreen() {
   const { bottom } = useSafeAreaInsets();
-  const themeModalRef = useRef<BottomSheetModal>(null);
-  const bitcoinUnitModalRef = useRef<BottomSheetModal>(null);
-  const conversionUnitModalRef = useRef<BottomSheetModal>(null);
-  const accountIdentifierModalRef = useRef<BottomSheetModal>(null);
+  const themeSheetRef = useRef<SheetRef>(null);
+  const bitcoinUnitSheetRef = useRef<SheetRef>(null);
+  const conversionUnitSheetRef = useRef<SheetRef>(null);
+  const accountIdentifierSheetRef = useRef<SheetRef>(null);
   const theme = useTheme<Theme>();
 
   return (
@@ -43,7 +43,7 @@ export default function SettingsDisplayScreen() {
           subtitle={t`System`}
           Icon={SunIcon}
           onPress={() => {
-            themeModalRef.current?.present();
+            themeSheetRef.current?.present();
           }}
         />
         <Cell
@@ -51,7 +51,7 @@ export default function SettingsDisplayScreen() {
           subtitle={t`BTC`}
           Icon={BitcoinCircleIcon}
           onPress={() => {
-            themeModalRef.current?.present();
+            themeSheetRef.current?.present();
           }}
         />
         <Cell
@@ -59,7 +59,7 @@ export default function SettingsDisplayScreen() {
           subtitle={t`USD`}
           Icon={DollarCircleIcon}
           onPress={() => {
-            themeModalRef.current?.present();
+            themeSheetRef.current?.present();
           }}
         />
         <Cell
@@ -67,14 +67,14 @@ export default function SettingsDisplayScreen() {
           subtitle={t`BNS name`}
           Icon={PackageSecurityIcon}
           onPress={() => {
-            themeModalRef.current?.present();
+            themeSheetRef.current?.present();
           }}
         />
       </ScrollView>
-      <ThemeModal modalRef={themeModalRef} />
-      <BitcoinUnitModal modalRef={bitcoinUnitModalRef} />
-      <ConversionUnitModal modalRef={conversionUnitModalRef} />
-      <AccountIdentifierModal modalRef={accountIdentifierModalRef} />
+      <ThemeSheet sheetRef={themeSheetRef} />
+      <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
+      <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />
+      <AccountIdentifierSheet sheetRef={accountIdentifierSheetRef} />
     </Box>
   );
 }

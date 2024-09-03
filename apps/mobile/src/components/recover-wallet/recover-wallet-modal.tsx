@@ -1,11 +1,10 @@
 import { RefObject } from 'react';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 
-import { LockIcon } from '@leather.io/ui/native';
+import { LockIcon, SheetRef } from '@leather.io/ui/native';
 
-import { InputModal } from '../modals/input-modal';
+import { InputSheet } from '../sheets/input-sheet';
 
 export interface OptionData {
   title: string;
@@ -13,7 +12,7 @@ export interface OptionData {
 }
 
 interface RecoverWalletModalProps {
-  recoverWalletModalRef: RefObject<BottomSheetModal>;
+  recoverWalletModalRef: RefObject<SheetRef>;
   passphrase: string;
   setPassphrase(passphrase: string): unknown;
 }
@@ -23,8 +22,8 @@ export function RecoverWalletModal({
   setPassphrase,
 }: RecoverWalletModalProps) {
   return (
-    <InputModal
-      modalRef={recoverWalletModalRef}
+    <InputSheet
+      sheetRef={recoverWalletModalRef}
       initialValue={passphrase}
       title={t`BIP39 passphrase`}
       TitleIcon={LockIcon}

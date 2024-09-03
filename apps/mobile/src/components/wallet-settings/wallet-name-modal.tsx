@@ -1,28 +1,27 @@
 import { RefObject } from 'react';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 
-import { PassportIcon } from '@leather.io/ui/native';
+import { PassportIcon, SheetRef } from '@leather.io/ui/native';
 
-import { InputModal } from '../modals/input-modal';
+import { InputSheet } from '../sheets/input-sheet';
 
 interface WalletNameModalProps {
-  modalRef: RefObject<BottomSheetModal>;
+  sheetRef: RefObject<SheetRef>;
   name: string;
   setName(name: string): unknown;
 }
-export function WalletNameModal({ modalRef, name, setName }: WalletNameModalProps) {
+export function WalletNameModal({ sheetRef, name, setName }: WalletNameModalProps) {
   return (
-    <InputModal
-      modalRef={modalRef}
+    <InputSheet
+      sheetRef={sheetRef}
       initialValue={name}
       title={t`Change name`}
       TitleIcon={PassportIcon}
       placeholder={t`Name`}
       submitTitle={t`Save`}
       onSubmit={newName => {
-        modalRef.current?.close();
+        sheetRef.current?.close();
         setName(newName);
       }}
     />

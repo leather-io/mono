@@ -36,11 +36,13 @@ const darkTheme = generateTheme('dark');
 
 export type Theme = typeof lightTheme & typeof darkTheme;
 
+export type ThemeVariant = 'light' | 'dark';
+
 export function ThemeProvider({
   children,
   theme,
 }: {
-  theme: 'light' | 'dark';
+  theme: ThemeVariant;
   children: React.ReactNode;
 }) {
   return (

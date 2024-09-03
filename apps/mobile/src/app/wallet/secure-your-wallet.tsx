@@ -3,7 +3,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SkipSecureWalletModal } from '@/components/secure-your-wallet/skip-secure-wallet-modal';
 import { useCreateWallet } from '@/hooks/create-wallet';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
@@ -12,6 +11,7 @@ import {
   Button,
   LockIcon,
   QuestionCircleIcon,
+  SheetRef,
   Text,
   Theme,
   TouchableOpacity,
@@ -20,7 +20,7 @@ import {
 export default function SecureYourWalletScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const skipSecureWalletModalRef = useRef<BottomSheetModal>(null);
+  const skipSecureWalletModalRef = useRef<SheetRef>(null);
   const { createWallet } = useCreateWallet();
 
   return (

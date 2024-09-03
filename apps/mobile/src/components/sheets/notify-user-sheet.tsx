@@ -1,8 +1,7 @@
 import { RefObject } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
 
 import { usePushNotifications } from '@/hooks/use-push-notifications';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
@@ -11,30 +10,29 @@ import {
   Box,
   Button,
   CloseIcon,
+  Sheet,
+  SheetRef,
   Text,
   Theme,
   TouchableOpacity,
   getButtonTextColor,
 } from '@leather.io/ui/native';
 
-import { CLOSED_ANIMATED_SHARED_VALUE, Modal } from './bottom-sheet-modal';
-
 export interface OptionData {
   title: string;
   id: string;
 }
 
-interface NotifyUserModalProps {
-  notifyUserModalRef: RefObject<BottomSheetModal>;
+interface NotifyUserSheetProps {
+  notifyUserModalRef: RefObject<SheetRef>;
   optionData: OptionData | null;
   onCloseNotificationsModal(): unknown;
 }
-export function NotifyUserModal({
+export function NotifyUserSheet({
   notifyUserModalRef,
   optionData,
   onCloseNotificationsModal,
-}: NotifyUserModalProps) {
-  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
+}: NotifyUserSheetProps) {
   const theme = useTheme<Theme>();
   const { registerPushNotifications } = usePushNotifications();
   async function onNotify() {
@@ -42,11 +40,12 @@ export function NotifyUserModal({
     notifyUserModalRef.current?.dismiss();
   }
   const title = optionData?.title;
+  const { theme: themeVariant } = useSettings();
 
   return (
-    <Modal
+    <Sheet
+      themeVariant={themeVariant}
       onDismiss={onCloseNotificationsModal}
-      animatedPosition={animatedPosition}
       ref={notifyUserModalRef}
     >
       <Box p="5" justifyContent="space-between" gap="5">
@@ -73,6 +72,6 @@ export function NotifyUserModal({
           title={t`Notify me when it's ready`}
         />
       </Box>
-    </Modal>
+    </Sheet>
   );
 }

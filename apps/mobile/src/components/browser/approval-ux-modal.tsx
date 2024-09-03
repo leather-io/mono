@@ -2,16 +2,15 @@ import { useEffect, useRef } from 'react';
 
 import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
 import { getDummyKeys } from '@/store/dummy';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
 
 import {
   getNativeSegWitPaymentFromAddressIndex,
   getTaprootPaymentFromAddressIndex,
 } from '@leather.io/bitcoin';
-import { Box, Button } from '@leather.io/ui/native';
+import { Box, Button, Sheet, SheetRef } from '@leather.io/ui/native';
 
-import { Modal } from '../bottom-sheet-modal';
 import { BrowserMessage } from './browser-in-use';
 
 interface ApproverModalProps {
@@ -20,8 +19,9 @@ interface ApproverModalProps {
 }
 
 export function ApproverModal(props: ApproverModalProps) {
-  const approverModalRef = useRef<BottomSheetModal>(null);
+  const approverModalRef = useRef<SheetRef>(null);
 
+  const { theme: themeVariant } = useSettings();
   useEffect(() => {
     if (props.message === null) {
       approverModalRef.current?.close();
@@ -57,10 +57,10 @@ export function ApproverModal(props: ApproverModalProps) {
   }
 
   return (
-    <Modal ref={approverModalRef}>
+    <Sheet ref={approverModalRef} themeVariant={themeVariant}>
       <Box p="5">
         <Button title={t`Submit`} buttonState="default" onPress={approve} />
       </Box>
-    </Modal>
+    </Sheet>
   );
 }

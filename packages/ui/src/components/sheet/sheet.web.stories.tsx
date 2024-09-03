@@ -4,7 +4,7 @@ import type { Meta } from '@storybook/react';
 import { Box, Flex } from 'leather-styles/jsx';
 
 import { Button } from '../button/button.web';
-import { SheetHeader } from './sheet-header.web';
+import { SheetHeader } from './components/sheet-header.web';
 import { Sheet as Component } from './sheet.web';
 
 const meta: Meta<typeof Component> = {

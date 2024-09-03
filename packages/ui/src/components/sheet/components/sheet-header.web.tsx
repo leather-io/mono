@@ -2,8 +2,8 @@ import { ReactNode } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { CloseIcon } from '../../icons/index.web';
-import { IconButton } from '../icon-button/icon-button.web';
+import { CloseIcon } from '../../../icons/index.web';
+import { IconButton } from '../../icon-button/icon-button.web';
 
 interface SheetHeaderProps {
   onClose?(): void;

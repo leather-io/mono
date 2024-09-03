@@ -1,12 +1,13 @@
 import { RefObject } from 'react';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 
-import { WarningModal } from '../warning-modal/warning-modal';
+import { SheetRef } from '@leather.io/ui/native';
+
+import { WarningSheet } from '../sheets/warning-sheet';
 
 interface SkipSecureWalletModalProps {
-  skipSecureWalletModalRef: RefObject<BottomSheetModal>;
+  skipSecureWalletModalRef: RefObject<SheetRef>;
   onSubmit(): unknown;
 }
 export function SkipSecureWalletModal({
@@ -14,8 +15,8 @@ export function SkipSecureWalletModal({
   onSubmit,
 }: SkipSecureWalletModalProps) {
   return (
-    <WarningModal
-      modalRef={skipSecureWalletModalRef}
+    <WarningSheet
+      sheetRef={skipSecureWalletModalRef}
       title={t`Proceed without security`}
       description={t`Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets`}
       variant="normal"
