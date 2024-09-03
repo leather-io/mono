@@ -70,6 +70,10 @@ msgstr ""
 msgid "Account label"
 msgstr ""
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:42
+msgid "Account label updated"
+msgstr ""
+
 #: src/components/wallet-settings/wallet-card.tsx:103
 msgid "Add account"
 msgstr ""
@@ -162,9 +166,9 @@ msgstr ""
 
 #: src/app/wallet/settings/security/index.tsx:37
 msgid "App authentication"
-msgstr ""
+msgstr "<<<<<<< HEAD"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:78
 msgid "Avatar"
 msgstr ""
 
@@ -199,6 +203,14 @@ msgstr ""
 msgid "check out our browser extension."
 msgstr ""
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:61
+msgid "Choose account avatar"
+msgstr ""
+
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:62
+msgid "Choose an image"
+msgstr ""
+
 #: src/app/wallet/developer-console/wallet-manager.tsx:34
 msgid "Clear"
 msgstr ""
@@ -210,8 +222,9 @@ msgstr ""
 
 #: src/app/wallet/(tabs)/collectibles.tsx:13
 msgid "Collectibles 🖼️"
-msgstr ""
+msgstr "<<<<<<< HEAD<<<<<<< HEAD"
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:77
 #: src/components/recover-wallet/recover-wallet-modal.tsx:31
 msgid "Confirm"
 msgstr ""
@@ -415,9 +428,9 @@ msgstr ""
 
 #: src/app/wallet/wallet-settings/index.tsx:41
 msgid "Hidden accounts"
-msgstr ""
+msgstr "<<<<<<< HEAD"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:78
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:88
 msgid "Hide account"
 msgstr ""
 
@@ -482,9 +495,9 @@ msgstr ""
 
 #: src/components/home/my-accounts.tsx:53
 msgid "My accounts"
-msgstr ""
+msgstr "<<<<<<< HEAD"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:69
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:70
 #: src/components/wallet-settings/account-name-modal.tsx:21
 #: src/components/wallet-settings/wallet-name-modal.tsx:21
 msgid "Name"
@@ -522,6 +535,10 @@ msgstr ""
 
 #: src/components/sheets/notify-user-sheet.tsx:65
 msgid "Notify me when ready"
+msgstr "<<<<<<< HEAD"
+
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:64
+msgid "Or choose one of your collectibles"
 msgstr ""
 
 #: src/app/wallet/developer-console/index.tsx:111

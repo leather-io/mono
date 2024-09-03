@@ -70,6 +70,10 @@ msgstr "Account identifier"
 msgid "Account label"
 msgstr "Account label"
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:42
+msgid "Account label updated"
+msgstr "Account label updated"
+
 #: src/components/wallet-settings/wallet-card.tsx:103
 msgid "Add account"
 msgstr "Add account"
@@ -162,9 +166,9 @@ msgstr "Analytics and app authentication"
 
 #: src/app/wallet/settings/security/index.tsx:37
 msgid "App authentication"
-msgstr "App authentication"
+msgstr "App authentication<<<<<<< HEAD"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:78
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -199,6 +203,14 @@ msgstr "Change name"
 msgid "check out our browser extension."
 msgstr "check out our browser extension."
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:61
+msgid "Choose account avatar"
+msgstr "Choose account avatar"
+
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:62
+msgid "Choose an image"
+msgstr "Choose an image"
+
 #: src/app/wallet/developer-console/wallet-manager.tsx:34
 msgid "Clear"
 msgstr "Clear"
@@ -210,8 +222,9 @@ msgstr "Collectibles"
 
 #: src/app/wallet/(tabs)/collectibles.tsx:13
 msgid "Collectibles 🖼️"
-msgstr "Collectibles 🖼️"
+msgstr "Collectibles 🖼️<<<<<<< HEAD<<<<<<< HEAD"
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:77
 #: src/components/recover-wallet/recover-wallet-modal.tsx:31
 msgid "Confirm"
 msgstr "Confirm"
@@ -415,9 +428,9 @@ msgstr "Here is the notification body"
 
 #: src/app/wallet/wallet-settings/index.tsx:41
 msgid "Hidden accounts"
-msgstr "Hidden accounts"
+msgstr "Hidden accounts<<<<<<< HEAD"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:78
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:88
 msgid "Hide account"
 msgstr "Hide account"
 
@@ -482,9 +495,9 @@ msgstr "Must use physical device for Push Notifications"
 
 #: src/components/home/my-accounts.tsx:53
 msgid "My accounts"
-msgstr "My accounts"
+msgstr "My accounts<<<<<<< HEAD"
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:69
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:70
 #: src/components/wallet-settings/account-name-modal.tsx:21
 #: src/components/wallet-settings/wallet-name-modal.tsx:21
 msgid "Name"
@@ -522,7 +535,11 @@ msgstr "Notify me when it's ready"
 
 #: src/components/sheets/notify-user-sheet.tsx:65
 msgid "Notify me when ready"
-msgstr "Notify me when ready"
+msgstr "Notify me when ready<<<<<<< HEAD"
+
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:64
+msgid "Or choose one of your collectibles"
+msgstr "Or choose one of your collectibles"
 
 #: src/app/wallet/developer-console/index.tsx:111
 msgid "Page"

@@ -20,26 +20,29 @@ import ZapIcon from '@/assets/avatar-icons/zap.svg';
 
 import { IconProps } from '@leather.io/ui/native';
 
-export type AvatarIcon =
-  | 'alien'
-  | 'bank'
-  | 'car'
-  | 'code'
-  | 'flag'
-  | 'folder'
-  | 'gift'
-  | 'heart'
-  | 'home'
-  | 'inbox'
-  | 'palette'
-  | 'piggybank'
-  | 'pizza'
-  | 'rocket'
-  | 'saturn'
-  | 'smile'
-  | 'space'
-  | 'sparkles'
-  | 'zap';
+export const iconNames = [
+  'alien',
+  'bank',
+  'car',
+  'code',
+  'flag',
+  'folder',
+  'gift',
+  'heart',
+  'home',
+  'inbox',
+  'palette',
+  'piggybank',
+  'pizza',
+  'rocket',
+  'saturn',
+  'smile',
+  'space',
+  'sparkles',
+  'zap',
+] as const;
+
+export type AvatarIcon = (typeof iconNames)[number];
 
 export function getAvatarIcon(icon: AvatarIcon | string): React.FC<IconProps> {
   switch (icon) {
