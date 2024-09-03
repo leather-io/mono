@@ -86,3 +86,4 @@ export * from './src/utils';
 export * from './test/mock-inscriptions';
 export * from './test/mock-utxos';
 export * from './test/mock-btc-txs';
+export * from './src/stacks/stacks-client';
