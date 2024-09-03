@@ -78,7 +78,7 @@ export function useSettings() {
   return {
     theme,
     whenTheme: whenTheme(theme),
-    changeAppTheme(theme: ThemeStore) {
+    changeTheme(theme: ThemeStore) {
       dispatch(userChangedTheme(theme));
     },
     toggleTheme() {

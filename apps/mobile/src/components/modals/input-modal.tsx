@@ -6,7 +6,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Box, Button, IconProps } from '@leather.io/ui/native';
 
 import { CLOSED_ANIMATED_SHARED_VALUE, Modal, UIBottomSheetTextInput } from '../bottom-sheet-modal';
-import { ModalHeader } from '../modal-headers/modal-header';
+import { ModalHeader } from '../headers/modal-header';
 import { TextInput } from '../text-input';
 
 export interface OptionData {

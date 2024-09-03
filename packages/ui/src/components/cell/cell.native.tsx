@@ -2,7 +2,15 @@ import { Switch } from 'react-native';
 
 import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
-import { Box, ChevronRightIcon, IconProps, Text, Theme, TouchableOpacity } from '../../../native';
+import {
+  Box,
+  ChevronRightIcon,
+  IconProps,
+  RadioButton,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '../../../native';
 
 type RegularCellVariant = 'active' | 'inactive' | 'critical';
 type RadioCellVariant = 'radio';
@@ -40,6 +48,7 @@ function getIconBackgroundColor(
 }
 
 interface RadioCell {
+  isSelected: boolean;
   variant: RadioCellVariant;
 }
 
@@ -57,7 +66,7 @@ interface BaseCell {
   title: string;
   subtitle?: string;
   onPress?(): unknown;
-  Icon: React.FC<IconProps>;
+  Icon?: React.FC<IconProps>;
 }
 
 type CellProps = BaseCell & (RegularCell | RadioCell | SwitchCell);
@@ -75,9 +84,11 @@ export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
       alignItems="center"
     >
       <Box flexDirection="row" gap="4">
-        <Box flexDirection="row" p="2" bg={getIconBackgroundColor(_variant)} borderRadius="round">
-          <Icon color={theme.colors[getIconColor(_variant)]} />
-        </Box>
+        {Icon && (
+          <Box flexDirection="row" p="2" bg={getIconBackgroundColor(_variant)} borderRadius="round">
+            <Icon color={theme.colors[getIconColor(_variant)]} />
+          </Box>
+        )}
         <Box flexDirection="column" justifyContent="center">
           <Text variant="label02">{title}</Text>
           {subtitle && (
@@ -87,11 +98,10 @@ export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
           )}
         </Box>
       </Box>
-      {props.variant !== 'radio' && props.variant !== 'switch' && (
+      {_variant === 'active' && (
         <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
       )}
-      {/* TODO: Temp placeholder - implement custom radio button */}
-      {props.variant === 'radio' && <></>}
+      {props.variant === 'radio' && <RadioButton isSelected={props.isSelected} />}
       {props.variant === 'switch' && (
         <Switch
           trackColor={{

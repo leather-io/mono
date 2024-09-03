@@ -20,3 +20,4 @@ export * from './src/icons/index.native';
 export { Flag } from './src/components/flag/flag.native';
 export { ItemLayout } from './src/components/item-layout/item-layout.native';
 export { Cell } from './src/components/cell/cell.native';
+export { RadioButton } from './src/components/radio-button/radio-button.native';

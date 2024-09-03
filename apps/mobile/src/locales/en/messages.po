@@ -306,6 +306,8 @@ msgstr "Developer tools"
 #: src/app/wallet/recover-wallet.tsx:190
 #: src/app/wallet/settings/networks/index.tsx:40
 #: src/app/wallet/settings/networks/index.tsx:47
+#: src/features/settings/theme-modal.tsx:24
+#: src/features/settings/theme-modal.tsx:25
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -347,6 +349,7 @@ msgstr "Enable device security"
 #: src/app/wallet/settings/networks/index.tsx:33
 #: src/app/wallet/settings/security/index.tsx:31
 #: src/app/wallet/settings/security/index.tsx:39
+#: src/features/settings/theme-modal.tsx:23
 msgid "Enabled"
 msgstr "Enabled"
 
@@ -394,7 +397,6 @@ msgstr "Guides"
 #: src/features/settings/email-address-modal.tsx:18
 #: src/features/settings/email-notifications-modal.tsx:18
 #: src/features/settings/push-notifications-modal.tsx:18
-#: src/features/settings/theme-modal.tsx:18
 msgid "Hello"
 msgstr "Hello"
 
@@ -454,6 +456,7 @@ msgid "Lock app"
 msgstr "Lock app"
 
 #: src/app/wallet/settings/networks/index.tsx:32
+#: src/features/settings/theme-modal.tsx:23
 msgid "Mainnet"
 msgstr "Mainnet"
 
@@ -603,6 +606,7 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/app/wallet/settings/networks/index.tsx:46
+#: src/features/settings/theme-modal.tsx:25
 msgid "Signet"
 msgstr "Signet"
 
@@ -686,6 +690,7 @@ msgstr "Tap to view Secret Key"
 
 #: src/app/wallet/_layout.tsx:78
 #: src/app/wallet/settings/networks/index.tsx:39
+#: src/features/settings/theme-modal.tsx:24
 msgid "Testnet"
 msgstr "Testnet"
 
@@ -706,6 +711,7 @@ msgstr ""
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 
 #: src/app/wallet/settings/display/index.tsx:42
+#: src/features/settings/theme-modal.tsx:22
 msgid "Theme"
 msgstr "Theme"
 

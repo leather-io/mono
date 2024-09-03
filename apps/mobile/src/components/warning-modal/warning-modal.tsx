@@ -5,7 +5,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Box, Button, ButtonState, ErrorTriangleIcon, Text } from '@leather.io/ui/native';
 
 import { Modal } from '../bottom-sheet-modal';
-import { ModalHeader } from '../modal-headers/modal-header';
+import { ModalHeader } from '../headers/modal-header';
 import { WarningModalVariant } from './types';
 
 function getSubmitButtonState(variant: WarningModalVariant): ButtonState {

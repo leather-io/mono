@@ -13,7 +13,6 @@ import {
   Theme,
 } from '@leather.io/ui/native';
 
-// TODO: Replace with radio button group
 export default function SettingsNetworksScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
@@ -29,24 +28,24 @@ export default function SettingsNetworksScreen() {
         }}
       >
         <Cell
+          isSelected
           title={t`Mainnet`}
           subtitle={t`Enabled`}
           Icon={GlobeIcon}
-          onPress={() => {}}
           variant="radio"
         />
         <Cell
+          isSelected={false}
           title={t`Testnet`}
           subtitle={t`Disabled`}
           Icon={TestTubeIcon}
-          onPress={() => {}}
           variant="radio"
         />
         <Cell
+          isSelected={false}
           title={t`Signet`}
           subtitle={t`Disabled`}
           Icon={PlaygroundFormsIcon}
-          onPress={() => {}}
           variant="radio"
         />
       </ScrollView>
