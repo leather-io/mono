@@ -3,20 +3,17 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
-import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { useSettings } from '@/store/settings/settings.write';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import * as Clipboard from 'expo-clipboard';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import {
   BlurView,
   Box,
   Button,
-  CopyIcon,
   GraduateCapIcon,
   PointerHandIcon,
   QuestionCircleIcon,
@@ -33,7 +30,6 @@ export default function CreateNewWallet() {
   const [isHidden, setIsHidden] = useState(true);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
-  const { displayToast } = useToastContext();
 
   useEffect(() => {
     const tempMnemonic = generateMnemonic();
@@ -134,17 +130,6 @@ export default function CreateNewWallet() {
         </Box>
       </ScrollView>
       <Box px="5" gap="4">
-        <Button
-          onPress={async () => {
-            if (mnemonic) {
-              await Clipboard.setStringAsync(mnemonic);
-              displayToast({ title: t`Successfully copied to clipboard!`, type: 'success' });
-            }
-          }}
-          icon={<CopyIcon />}
-          buttonState="ghost"
-          title={t`Copy to clipboard`}
-        />
         <Button
           onPress={() => {
             navigateAndCreateWallet();
