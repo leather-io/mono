@@ -177,6 +177,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.14.3
 
+## [1.29.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.28.0...@leather.io/mobile-v1.29.0) (2024-09-03)
+
+
+### Features
+
+* account-selector ([2ac0837](https://github.com/leather-io/mono/commit/2ac08370dc056e2b66e2e22b24ea73c94c772f6c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.17.1
+
 ## [1.28.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.27.0...@leather.io/mobile-v1.28.0) (2024-09-02)
 
 
