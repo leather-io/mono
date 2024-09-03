@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
+import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { RemoveWalletModal } from '@/components/wallet-settings/remove-wallet-modal';
 import { WalletNameModal } from '@/components/wallet-settings/wallet-name-modal';
@@ -11,7 +11,6 @@ import { userRemovesWallet } from '@/store/global-action';
 import { useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { WalletStore, userRenamesWallet } from '@/store/wallets/wallets.write';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
@@ -27,6 +26,7 @@ import {
   Cell,
   Eye1ClosedIcon,
   InboxIcon,
+  SheetRef,
   SquareLinesBottomIcon,
   Text,
   Theme,
@@ -40,9 +40,9 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const router = useRouter();
-  const addWalletModalRef = useRef<BottomSheetModal>(null);
-  const walletNameModalRef = useRef<BottomSheetModal>(null);
-  const removeWalletModalRef = useRef<BottomSheetModal>(null);
+  const addWalletSheetRef = useRef<SheetRef>(null);
+  const walletNameModalRef = useRef<SheetRef>(null);
+  const removeWalletModalRef = useRef<SheetRef>(null);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -129,9 +129,9 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           </Box>
         </Box>
       </Box>
-      <AddWalletModal addWalletModalRef={addWalletModalRef} />
-      <WalletNameModal modalRef={walletNameModalRef} name={wallet.name} setName={setName} />
-      <RemoveWalletModal onSubmit={removeWallet} modalRef={removeWalletModalRef} />
+      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
+      <WalletNameModal sheetRef={walletNameModalRef} name={wallet.name} setName={setName} />
+      <RemoveWalletModal onSubmit={removeWallet} sheetRef={removeWalletModalRef} />
     </>
   );
 }

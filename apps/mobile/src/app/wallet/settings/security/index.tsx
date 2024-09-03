@@ -2,18 +2,17 @@ import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnalyticsModal } from '@/features/settings/analytics-modal';
-import { AppAuthenticationModal } from '@/features/settings/app-authentication-modal';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
+import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Cell, CookieIcon, KeyholeIcon, Theme } from '@leather.io/ui/native';
+import { Box, Cell, CookieIcon, KeyholeIcon, SheetRef, Theme } from '@leather.io/ui/native';
 
 export default function SettingsSecurityScreen() {
   const { bottom } = useSafeAreaInsets();
-  const analyticsModalRef = useRef<BottomSheetModal>(null);
-  const appAuthenticationModalRef = useRef<BottomSheetModal>(null);
+  const analyticsModalRef = useRef<SheetRef>(null);
+  const appAuthenticationModalRef = useRef<SheetRef>(null);
   const theme = useTheme<Theme>();
 
   return (
@@ -43,8 +42,8 @@ export default function SettingsSecurityScreen() {
           }}
         />
       </ScrollView>
-      <AnalyticsModal modalRef={analyticsModalRef} />
-      <AppAuthenticationModal modalRef={appAuthenticationModalRef} />
+      <AnalyticsSheet sheetRef={analyticsModalRef} />
+      <AppAuthenticationSheet sheetRef={appAuthenticationModalRef} />
     </Box>
   );
 }

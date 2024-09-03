@@ -1,18 +1,19 @@
 import { RefObject } from 'react';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 
-import { WarningModal } from '../warning-modal/warning-modal';
+import { SheetRef } from '@leather.io/ui/native';
+
+import { WarningSheet } from '../sheets/warning-sheet';
 
 interface RemoveWalletModalProps {
-  modalRef: RefObject<BottomSheetModal>;
+  sheetRef: RefObject<SheetRef>;
   onSubmit(): unknown;
 }
-export function RemoveWalletModal({ modalRef, onSubmit }: RemoveWalletModalProps) {
+export function RemoveWalletModal({ sheetRef, onSubmit }: RemoveWalletModalProps) {
   return (
-    <WarningModal
-      modalRef={modalRef}
+    <WarningSheet
+      sheetRef={sheetRef}
       title={t`Remove wallet`}
       variant="critical"
       description={t`The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet. 

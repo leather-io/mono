@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { EdgeInsets } from 'react-native-safe-area-context';
 
-import { ThemedBlurView } from '@/components/blur-view';
+import { useSettings } from '@/store/settings/settings.write';
 
-import { Box } from '@leather.io/ui/native';
+import { BlurView, Box } from '@leather.io/ui/native';
 
 import { HEADER_HEIGHT } from '../constants';
 
@@ -15,14 +15,16 @@ interface BlurredHeaderProps {
   insets: EdgeInsets;
 }
 
-export function BlurredHeader(props: BlurredHeaderProps) {
+export function BlurredHeader({ left, center, right, bottom, insets }: BlurredHeaderProps) {
+  const { theme: themeVariant } = useSettings();
   return (
-    <ThemedBlurView
+    <BlurView
+      themeVariant={themeVariant}
       intensity={90}
       style={{
         width: '100%',
         position: 'absolute',
-        paddingTop: props.insets.top,
+        paddingTop: insets.top,
         justifyContent: 'center',
       }}
     >
@@ -36,16 +38,16 @@ export function BlurredHeader(props: BlurredHeaderProps) {
         gap="2"
       >
         <Box height="100%" flex={1} alignItems="flex-start" justifyContent="center">
-          {props?.left}
+          {left}
         </Box>
         <Box height="100%" flex={2} alignItems="center" justifyContent="center">
-          {props?.center}
+          {center}
         </Box>
         <Box height="100%" flex={1} alignItems="flex-end" justifyContent="center">
-          {props?.right}
+          {right}
         </Box>
       </Box>
-      {props?.bottom}
-    </ThemedBlurView>
+      {bottom}
+    </BlurView>
   );
 }

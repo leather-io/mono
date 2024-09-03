@@ -7,7 +7,6 @@ import { RecoverWalletModal } from '@/components/recover-wallet/recover-wallet-m
 import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/store/storage-persistors';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
@@ -22,6 +21,7 @@ import {
   LockIcon,
   NoteEmptyIcon,
   QuestionCircleIcon,
+  SheetRef,
   Text,
   Theme,
   TouchableOpacity,
@@ -48,7 +48,7 @@ export default function RecoverWallet() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const recoverWalletModalRef = useRef<BottomSheetModal>(null);
+  const recoverWalletModalRef = useRef<SheetRef>(null);
   const [passphrase, setPassphrase] = useState('');
   const { navigateAndCreateWallet } = useCreateWallet();
   const hidePasteButton = recoveryMnemonic.length > 0;

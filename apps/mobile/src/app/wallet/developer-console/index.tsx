@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
+import { AddWalletSheet } from '@/components/add-wallet/';
 import { ApproverModal } from '@/components/browser/approval-ux-modal';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem } from '@/components/developer-console/list-items';
@@ -11,13 +11,12 @@ import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { LOCALES } from '@/locales';
 import { APP_ROUTES } from '@/routes';
 import { useSettings } from '@/store/settings/settings.write';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, SheetRef, Theme } from '@leather.io/ui/native';
 
 export default function DeveloperConsoleScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -25,7 +24,7 @@ export default function DeveloperConsoleScreen() {
   const { i18n } = useLingui();
 
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
-  const addWalletModalRef = useRef<BottomSheetModal>(null);
+  const addWalletSheetRef = useRef<SheetRef>(null);
   const toast = useToastContext();
   const {
     registerPushNotifications,
@@ -82,7 +81,7 @@ export default function DeveloperConsoleScreen() {
           onPress={() => settings.toggleTheme()}
         />
         <PressableListItem
-          onPress={() => addWalletModalRef.current?.present()}
+          onPress={() => addWalletSheetRef.current?.present()}
           title={t`Create wallet`}
         />
         <PressableListItem
@@ -120,7 +119,7 @@ export default function DeveloperConsoleScreen() {
         message={getAddressesMessage}
         sendResult={() => setGetAddressesMessage(null)}
       />
-      <AddWalletModal addWalletModalRef={addWalletModalRef} />
+      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </Box>
   );
 }

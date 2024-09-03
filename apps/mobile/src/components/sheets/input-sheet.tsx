@@ -1,11 +1,16 @@
 import { RefObject, useState } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSettings } from '@/store/settings/settings.write';
 
-import { Box, Button, IconProps } from '@leather.io/ui/native';
+import {
+  Box,
+  Button,
+  IconProps,
+  Sheet,
+  SheetRef,
+  UIBottomSheetTextInput,
+} from '@leather.io/ui/native';
 
-import { CLOSED_ANIMATED_SHARED_VALUE, Modal, UIBottomSheetTextInput } from '../bottom-sheet-modal';
 import { ModalHeader } from '../modal-headers/modal-header';
 import { TextInput } from '../text-input';
 
@@ -14,8 +19,8 @@ export interface OptionData {
   id: string;
 }
 
-interface InputModalProps {
-  modalRef: RefObject<BottomSheetModal>;
+interface InputSheetProps {
+  sheetRef: RefObject<SheetRef>;
   initialValue: string;
   title: string;
   TitleIcon: React.FC<IconProps>;
@@ -25,8 +30,8 @@ interface InputModalProps {
   onDismiss?(): unknown;
 }
 
-export function InputModal({
-  modalRef,
+export function InputSheet({
+  sheetRef,
   initialValue,
   placeholder,
   title,
@@ -34,11 +39,11 @@ export function InputModal({
   submitTitle,
   onSubmit,
   onDismiss,
-}: InputModalProps) {
-  const animatedPosition = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
+}: InputSheetProps) {
   const [internalValue, setInternalValue] = useState(initialValue);
+  const { theme: themeVariant } = useSettings();
   return (
-    <Modal onDismiss={onDismiss} animatedPosition={animatedPosition} ref={modalRef}>
+    <Sheet onDismiss={onDismiss} ref={sheetRef} themeVariant={themeVariant}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box>
           <ModalHeader Icon={TitleIcon} modalVariant="normal" title={title} />
@@ -59,6 +64,6 @@ export function InputModal({
         </Box>
         <Button onPress={() => onSubmit(internalValue)} buttonState="default" title={submitTitle} />
       </Box>
-    </Modal>
+    </Sheet>
   );
 }

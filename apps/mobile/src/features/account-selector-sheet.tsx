@@ -3,24 +3,24 @@ import { ScrollView } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { getAvatarIcon } from '@/components/avatar-icon';
-import { Modal } from '@/components/bottom-sheet-modal';
 import { Draggable } from '@/components/draggable';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { APP_ROUTES } from '@/routes';
 import { useAccounts, userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
+import { useSettings } from '@/store/settings/settings.write';
 import { destructAccountIdentifer, useAppDispatch } from '@/store/utils';
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
 
-import { Box } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 
-export function AccountSelectorSheet({ modalRef }: { modalRef: RefObject<BottomSheetModal> }) {
+export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRef> }) {
   const scrollViewRef = useRef<ScrollView>(null);
   const placeholderIdx = useSharedValue<null | number>(null);
   const accounts = useAccounts().list;
   const direction = useSharedValue<'down' | 'up'>('down');
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { theme: themeVariant } = useSettings();
   const checkIdxWithinBounds = useCallback(
     (id: number) => {
       return id >= 0 && id < accounts.length;
@@ -50,38 +50,34 @@ export function AccountSelectorSheet({ modalRef }: { modalRef: RefObject<BottomS
   const onAccountPress = useCallback(
     (accountId: string) => {
       const { fingerprint, accountIndex } = destructAccountIdentifer(accountId);
-      modalRef.current?.close();
+      sheetRef.current?.close();
       router.navigate({
         pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccount,
         params: { fingerprint, account: accountIndex },
       });
     },
-    [router, modalRef]
+    [router, sheetRef]
   );
 
   return (
-    <Modal shouldHaveContainer={false} ref={modalRef}>
-      <BottomSheetScrollView ref={scrollViewRef}>
-        <Box p="5" gap="5">
-          {accounts.map((account, idx) => {
-            return (
-              <Draggable
-                idx={idx}
-                direction={direction}
-                scrollViewRef={scrollViewRef}
-                placeholderIdx={placeholderIdx}
-                cardsLength={accounts.length}
-                key={account.id}
-                cardId={account.id}
-                onCardPress={onAccountPress}
-                swapCardIndexes={swapAccountIndexes}
-              >
-                <AccountCard Icon={getAvatarIcon(account.icon)} name={account.name} />
-              </Draggable>
-            );
-          })}
-        </Box>
-      </BottomSheetScrollView>
-    </Modal>
+    <Sheet isScrollView shouldHaveContainer={false} ref={sheetRef} themeVariant={themeVariant}>
+      <Box p="5" gap="5">
+        {accounts.map((account, idx) => (
+          <Draggable
+            idx={idx}
+            direction={direction}
+            scrollViewRef={scrollViewRef}
+            placeholderIdx={placeholderIdx}
+            cardsLength={accounts.length}
+            key={account.id}
+            cardId={account.id}
+            onCardPress={onAccountPress}
+            swapCardIndexes={swapAccountIndexes}
+          >
+            <AccountCard Icon={getAvatarIcon(account.icon)} name={account.name} />
+          </Draggable>
+        ))}
+      </Box>
+    </Sheet>
   );
 }

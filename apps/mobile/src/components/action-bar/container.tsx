@@ -4,7 +4,6 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { APP_ROUTES } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
@@ -13,12 +12,13 @@ import {
   InboxIcon,
   PaperPlaneIcon,
   PlusIcon,
+  SheetRef,
   Text,
   TouchableOpacity,
 } from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
 
-import { AddWalletModal } from '../add-wallet/add-wallet-modal';
+import { AddWalletSheet } from '../add-wallet/';
 
 const scrollUntilClosed = 50;
 const scrollPaddingBottom = 50;
@@ -145,14 +145,14 @@ function ActionBarButton({ onPress, icon, label }: ActionBarButtonProps) {
 export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const router = useRouter();
   const wallets = useWallets();
-  const addWalletModalRef = useRef<BottomSheetModal>(null);
+  const addWalletSheetRef = useRef<SheetRef>(null);
 
   const actionBar = isEmptyArray(wallets.list) ? (
     <ActionBar
       ref={ref}
       center={
         <ActionBarButton
-          onPress={() => addWalletModalRef.current?.present()}
+          onPress={() => addWalletSheetRef.current?.present()}
           icon={<PlusIcon />}
           label={t`Add Wallet`}
         />
@@ -188,7 +188,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   return (
     <>
       {actionBar}
-      <AddWalletModal addWalletModalRef={addWalletModalRef} />
+      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>
   );
 });

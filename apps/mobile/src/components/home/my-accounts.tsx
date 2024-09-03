@@ -5,12 +5,18 @@ import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { APP_ROUTES } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.write';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, ChevronRightIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  ChevronRightIcon,
+  SheetRef,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 import { AccountCard } from './account-card';
 
@@ -19,7 +25,10 @@ export function MyAccounts() {
   const router = useRouter();
   const wallets = useWallets();
   const accounts = useAccounts();
-  const modalRef = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<SheetRef>(null);
+  if (wallets.list.length === 0) {
+    return null;
+  }
 
   if (wallets.list.length === 0) return null;
 
@@ -36,7 +45,7 @@ export function MyAccounts() {
     <Box style={{ marginBottom: 40 }}>
       <Box px="5" flexDirection="column" paddingBottom="3">
         <TouchableOpacity
-          onPress={() => modalRef.current?.present()}
+          onPress={() => sheetRef.current?.present()}
           flexDirection="row"
           gap="1"
           alignItems="center"
@@ -53,7 +62,7 @@ export function MyAccounts() {
       >
         {accountComponents}
       </ScrollView>
-      <AccountSelectorSheet modalRef={modalRef} />
+      <AccountSelectorSheet sheetRef={sheetRef} />
     </Box>
   );
 }

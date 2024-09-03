@@ -10,7 +10,6 @@ import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/store';
 import { useSettings } from '@/store/settings/settings.write';
 import { HasChildren } from '@/utils/types';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -18,7 +17,7 @@ import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { Box, ThemeProvider as LeatherThemeProvider } from '@leather.io/ui/native';
+import { Box, ThemeProvider as LeatherThemeProvider, SheetProvider } from '@leather.io/ui/native';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -42,11 +41,11 @@ export default function RootLayout() {
               <ThemeProvider>
                 <SplashScreenGuard>
                   <GestureHandlerRootView style={{ flex: 1 }}>
-                    <BottomSheetModalProvider>
+                    <SheetProvider>
                       <ToastWrapper>
                         <AppRouter />
                       </ToastWrapper>
-                    </BottomSheetModalProvider>
+                    </SheetProvider>
                   </GestureHandlerRootView>
                 </SplashScreenGuard>
               </ThemeProvider>

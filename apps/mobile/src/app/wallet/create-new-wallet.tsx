@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedBlurView } from '@/components/blur-view';
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
+import { useSettings } from '@/store/settings/settings.write';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -13,6 +13,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import {
+  BlurView,
   Box,
   Button,
   CopyIcon,
@@ -27,6 +28,8 @@ import {
 export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
+
+  const { theme: themeVariant } = useSettings();
   const [isHidden, setIsHidden] = useState(true);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
@@ -72,7 +75,8 @@ export default function CreateNewWallet() {
 
         <Box my="5">
           {isHidden && (
-            <ThemedBlurView
+            <BlurView
+              themeVariant={themeVariant}
               intensity={isHidden ? 30 : 0}
               style={{
                 position: 'absolute',
@@ -99,7 +103,7 @@ export default function CreateNewWallet() {
                   </Text>
                 </Box>
               </TouchableOpacity>
-            </ThemedBlurView>
+            </BlurView>
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
           <Box p="3" mt="3" flexDirection="row" gap="4" borderRadius="xs">
