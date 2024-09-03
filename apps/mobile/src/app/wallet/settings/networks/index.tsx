@@ -5,15 +5,18 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import {
+  Avatar,
   Box,
-  Cell,
+  Flag,
   GlobeIcon,
+  ItemLayout,
   PlaygroundFormsIcon,
+  RadioButton,
   TestTubeIcon,
   Theme,
+  TouchableOpacity,
 } from '@leather.io/ui/native';
 
-// TODO: Replace with radio button group
 export default function SettingsNetworksScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
@@ -28,27 +31,51 @@ export default function SettingsNetworksScreen() {
           gap: theme.spacing[5],
         }}
       >
-        <Cell
-          title={t`Mainnet`}
-          subtitle={t`Enabled`}
-          Icon={GlobeIcon}
-          onPress={() => {}}
-          variant="radio"
-        />
-        <Cell
-          title={t`Testnet`}
-          subtitle={t`Disabled`}
-          Icon={TestTubeIcon}
-          onPress={() => {}}
-          variant="radio"
-        />
-        <Cell
-          title={t`Signet`}
-          subtitle={t`Disabled`}
-          Icon={PlaygroundFormsIcon}
-          onPress={() => {}}
-          variant="radio"
-        />
+        <TouchableOpacity onPress={() => {}}>
+          <Flag
+            img={
+              <Avatar>
+                <GlobeIcon />
+              </Avatar>
+            }
+          >
+            <ItemLayout
+              actionIcon={<RadioButton disabled isSelected />}
+              titleLeft={t`Mainnet`}
+              captionLeft={t`Enabled`}
+            />
+          </Flag>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {}}>
+          <Flag
+            img={
+              <Avatar>
+                <TestTubeIcon />
+              </Avatar>
+            }
+          >
+            <ItemLayout
+              actionIcon={<RadioButton disabled isSelected={false} />}
+              titleLeft={t`Testnet`}
+              captionLeft={t`Disabled`}
+            />
+          </Flag>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {}}>
+          <Flag
+            img={
+              <Avatar>
+                <PlaygroundFormsIcon />
+              </Avatar>
+            }
+          >
+            <ItemLayout
+              actionIcon={<RadioButton disabled isSelected={false} />}
+              titleLeft={t`Signet`}
+              captionLeft={t`Disabled`}
+            />
+          </Flag>
+        </TouchableOpacity>
       </ScrollView>
     </Box>
   );

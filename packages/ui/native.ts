@@ -1,6 +1,9 @@
 export { Accordion } from './src/components/accordion/accordion.native';
+export { Avatar } from './src/components/avatar/avatar.native';
 export { Box } from './src/components/box/box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
+export { HStack } from './src/components/box/hstack.native';
+export { Stack } from './src/components/box/stack.native';
 export {
   AnimatedButton,
   Button,
@@ -28,3 +31,4 @@ export {
   UIBottomSheetTextInput,
   CLOSED_ANIMATED_SHARED_VALUE,
 } from './src/components/sheet/sheet.native';
+export { RadioButton } from './src/components/radio-button/radio-button.native';

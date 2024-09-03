@@ -62,7 +62,6 @@ export default function DeveloperConsoleScreen() {
     i18n.activate(nextLocale.locale);
   }
 
-  const settingsTheme = settings.theme;
   const locale = i18n.locale;
 
   return (
@@ -76,10 +75,6 @@ export default function DeveloperConsoleScreen() {
         }}
       >
         <PressableListItem title={t`walletSecurityLevel:` + ' ' + settings.walletSecurityLevel} />
-        <PressableListItem
-          title={t`Toggle theme: Current ${settingsTheme}`}
-          onPress={() => settings.toggleTheme()}
-        />
         <PressableListItem
           onPress={() => addWalletSheetRef.current?.present()}
           title={t`Create wallet`}

@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
+import { MODAL_HEADER_HEIGHT } from './constants';
+
 type ModalHeaderVariant = 'normal' | 'critical';
 
 function getIconBackgroundColor(
@@ -46,23 +48,27 @@ export function ModalHeader({
 }) {
   const theme = useTheme<Theme>();
   return (
-    <Box gap="3" flexDirection="row" alignItems="center">
-      {onPressSupport && (
-        <TouchableOpacity
-          onPress={onPressSupport}
-          p="5"
-          right={-12}
-          top={-12}
-          zIndex={10}
-          position="absolute"
-        >
+    <Box alignItems="center" flexDirection="row" height={MODAL_HEADER_HEIGHT}>
+      <Box alignItems="flex-start" flex={2}>
+        <Box alignItems="center" flexDirection="row" gap="3">
+          <Box
+            bg={getIconBackgroundColor(modalVariant)}
+            borderRadius="round"
+            flexDirection="row"
+            p="2"
+          >
+            <Icon color={theme.colors[getIconColor(modalVariant)]} />
+          </Box>
+          <Text color="ink.text-primary" variant="heading05">
+            {title}
+          </Text>
+        </Box>
+      </Box>
+      <Box alignItems="flex-end" flex={1}>
+        <TouchableOpacity onPress={onPressSupport} zIndex={10}>
           <QuestionCircleIcon variant="small" />
         </TouchableOpacity>
-      )}
-      <Box borderRadius="round" p="2" bg={getIconBackgroundColor(modalVariant)}>
-        <Icon color={theme.colors[getIconColor(modalVariant)]} />
       </Box>
-      <Text variant="heading05">{title}</Text>
     </Box>
   );
 }

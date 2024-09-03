@@ -20,10 +20,6 @@ export enum APP_ROUTES {
   // Settings
   WalletSettings = '/wallet/settings',
   WalletSettingsDisplay = '/wallet/settings/display',
-  WalletSettingsDisplayTheme = '/wallet/settings/display/theme',
-  WalletSettingsDisplayBitcoinUnit = '/wallet/settings/display/bitcoin-unit',
-  WalletSettingsDisplayConversionUnit = '/wallet/settings/display/conversion-unit',
-  WalletSettingsDisplayAccountIdentifier = '/wallet/settings/display/account-identifier',
   WalletSettingsSecurity = '/wallet/settings/security',
   WalletSettingsNetworks = '/wallet/settings/networks',
   WalletSettingsNotifications = '/wallet/settings/notifications',

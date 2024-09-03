@@ -56,6 +56,7 @@ export * from './settings-gear-icon.native';
 export * from './shield-icon.native';
 export * from './square-lines-bottom-icon.native';
 export * from './sun-icon.native';
+export * from './sun-in-cloud-icon.native';
 export * from './support-icon.native';
 export * from './test-tube-icon.native';
 export type { IconProps } from './icon/icon.native';
