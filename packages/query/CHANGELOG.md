@@ -142,6 +142,13 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.7.1...@leather.io/query-v2.8.0) (2024-09-03)
+
+
+### Features
+
+* add gaia requests to priority levels ([14ad7a4](https://github.com/leather-io/mono/commit/14ad7a4f692e52ad9fa42fe07c4e0a27af2ba687))
+
 ## [2.7.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.7.0...@leather.io/query-v2.7.1) (2024-08-30)
 
 

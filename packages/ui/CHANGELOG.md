@@ -91,6 +91,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.12.0
 
+## [1.17.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.17.0...@leather.io/ui-v1.17.1) (2024-09-03)
+
+
+### Bug Fixes
+
+* remove transform and icons to fix storybook ([0022d14](https://github.com/leather-io/mono/commit/0022d147d7ae3d85b06be3efa0f711a28faca325))
+* storybook icons, closes leather-io/issues[#294](https://github.com/leather-io/mono/issues/294) ([49ad904](https://github.com/leather-io/mono/commit/49ad90497e1b09b8370e4bf76843a5f34f6aba62))
+
 ## [1.17.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.16.0...@leather.io/ui-v1.17.0) (2024-09-02)
 
 
