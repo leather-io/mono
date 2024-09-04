@@ -86,7 +86,7 @@ export function useSettings() {
       dispatch(theme === 'light' ? userChangedTheme('dark') : userChangedTheme('light'));
     },
     network,
-    changeAppNetwork(network: DefaultNetworkConfigurations) {
+    changeNetwork(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetwork(network));
     },
     // TODO: Remove when live, debug only
