@@ -21,10 +21,10 @@ export function ThemeSheetLayout({ children, sheetRef }: ThemeSheetLayoutProps) 
     <Sheet isScrollView ref={sheetRef} themeVariant={themeVariant}>
       <Box
         style={{
+          gap: theme.spacing[5],
+          paddingBottom: theme.spacing['5'] + bottom,
           paddingHorizontal: theme.spacing['5'],
           paddingTop: theme.spacing['4'],
-          paddingBottom: theme.spacing['5'] + bottom,
-          gap: theme.spacing[5],
         }}
       >
         <ModalHeader
