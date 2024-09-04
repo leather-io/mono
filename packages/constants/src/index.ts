@@ -33,3 +33,5 @@ export const KEBAB_REGEX = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g;
 export const DEFAULT_LIST_LIMIT = 50;
 
 export const TOKEN_NAME_LENGTH = 4;
+
+export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
