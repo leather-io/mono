@@ -25,6 +25,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.9.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.9.1...@leather.io/constants-v0.9.2) (2024-09-04)
+
+
+### Bug Fixes
+
+* update support links, ref leather-io/extension[#5813](https://github.com/leather-io/mono/issues/5813) ([d182c0a](https://github.com/leather-io/mono/commit/d182c0a0794fb18becc43699685a1e59bc3aff90))
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.8.3...@leather.io/constants-v0.9.0) (2024-08-15)
 
 

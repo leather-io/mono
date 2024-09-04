@@ -142,6 +142,22 @@
     * @leather.io/bitcoin bumped to 0.10.3
     * @leather.io/utils bumped to 0.12.0
 
+## [2.9.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.8.0...@leather.io/query-v2.9.0) (2024-09-04)
+
+
+### Features
+
+* export from stacks client file ([b7dded9](https://github.com/leather-io/mono/commit/b7dded98f82a332fdbd1287b8b01d744f8c95121))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.11.3
+    * @leather.io/constants bumped to 0.9.2
+    * @leather.io/utils bumped to 0.13.3
+
 ## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.7.1...@leather.io/query-v2.8.0) (2024-09-03)
 
 
