@@ -16,6 +16,13 @@
     * @leather.io/models bumped to 0.13.0
     * @leather.io/utils bumped to 0.13.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.4.3
+    * @leather.io/utils bumped to 0.13.3
+
 ## 1.0.0 (2024-08-15)
 
 

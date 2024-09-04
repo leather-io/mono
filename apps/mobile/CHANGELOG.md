@@ -177,6 +177,19 @@
   * dependencies
     * @leather.io/ui bumped to 1.14.3
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.11.3
+    * @leather.io/constants bumped to 0.9.2
+    * @leather.io/crypto bumped to 1.4.3
+    * @leather.io/stacks bumped to 1.0.3
+    * @leather.io/ui bumped to 1.17.2
+    * @leather.io/utils bumped to 0.13.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.11.3
+
 ## [1.29.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.28.0...@leather.io/mobile-v1.29.0) (2024-09-03)
 
 
