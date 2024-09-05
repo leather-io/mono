@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   Easing,
@@ -18,13 +18,13 @@ import { Box } from '../box/box.native';
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 export const ANIMATION_DURATION = 1_000;
-const ANIMATION_EASING = Easing.ease;
-const LEFT_POS_START = -100;
-const LEFT_POS_END = 100;
+const animationEasing = Easing.ease;
+const leftPosStart = -100;
+const leftPosEnd = 100;
 
 function SkeletonLoaderAnimation(props: React.ComponentProps<typeof Box>) {
   const theme = useTheme();
-  const animatedLeft = useSharedValue(LEFT_POS_START);
+  const animatedLeft = useSharedValue(leftPosStart);
 
   const color = theme.colors['ink.text-non-interactive'];
 
@@ -33,19 +33,19 @@ function SkeletonLoaderAnimation(props: React.ComponentProps<typeof Box>) {
     const initialLeftPos = interpolate(
       animationProgress,
       [0, ANIMATION_DURATION],
-      [LEFT_POS_START, LEFT_POS_END]
+      [leftPosStart, leftPosEnd]
     );
 
     // start animation from the interpolated position (synced with other loaders) and then repeat
     animatedLeft.value = withSequence(
       withTiming(initialLeftPos, { duration: 0 }),
-      withTiming(LEFT_POS_END, {
+      withTiming(leftPosEnd, {
         duration: ANIMATION_DURATION - animationProgress,
-        easing: ANIMATION_EASING,
+        easing: animationEasing,
       }),
-      withTiming(LEFT_POS_START, { duration: 0 }),
+      withTiming(leftPosStart, { duration: 0 }),
       withRepeat(
-        withTiming(LEFT_POS_END, { duration: ANIMATION_DURATION, easing: ANIMATION_EASING }),
+        withTiming(leftPosEnd, { duration: ANIMATION_DURATION, easing: animationEasing }),
         -1
       )
     );
