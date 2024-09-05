@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { userAddsAccount } from '@/state/accounts/accounts.slice';
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/state/global-action';
-import { selectNetwork } from '@/state/settings/settings.slice';
+import { userAddsAccount } from '@/store/accounts/accounts.write';
+import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
+import { selectNetwork } from '@/store/settings/settings.write';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 import memoize from 'just-memoize';
 

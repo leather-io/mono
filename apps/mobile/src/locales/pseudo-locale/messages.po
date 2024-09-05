@@ -1,8 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-03 13:30+0200\n"
-"POT-Creation-Date: 2024-09-03 13:30+0200\n"
-"POT-Creation-Date: 2024-09-03 13:30+0200\n"
+"POT-Creation-Date: 2024-09-06 10:00+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,7 +45,7 @@ msgstr ""
 msgid "Access custodial wallet"
 msgstr ""
 
-#: src/state/accounts/accounts.slice.ts:40
+#: src/store/accounts/accounts.write.ts:40
 msgid "Account {accountIdx}"
 msgstr ""
 
@@ -104,20 +102,20 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:108
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:109
 msgid "Address reuse"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:112
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:113
 msgid "Address scan range"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:113
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:114
 msgid "Address types"
 msgstr ""
 
 #: src/app/wallet/recover-wallet.tsx:165
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:104
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:105
 msgid "Advanced options"
 msgstr ""
 
@@ -133,7 +131,7 @@ msgstr ""
 msgid "All enabled"
 msgstr ""
 
-#: src/state/storage-persistors.ts:20
+#: src/store/storage-persistors.ts:20
 msgid "Allow Leather to access application's secure storage"
 msgstr ""
 
@@ -166,7 +164,7 @@ msgstr ""
 msgid "App authentication"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:74
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:69
 msgid "Avatar"
 msgstr ""
 
@@ -268,7 +266,7 @@ msgstr ""
 msgid "Create watch-only wallet"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:124
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:125
 msgid "Creation date"
 msgstr ""
 
@@ -352,11 +350,11 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:115
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:116
 msgid "Export key"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:114
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:115
 msgid "Export xPub"
 msgstr ""
 
@@ -413,7 +411,7 @@ msgstr ""
 msgid "Hidden accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:76
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:71
 msgid "Hide account"
 msgstr ""
 
@@ -476,7 +474,7 @@ msgstr ""
 msgid "My accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:67
+#: src/app/wallet/wallet-settings/configure/[wallet]/[account].tsx:62
 #: src/components/wallet-settings/account-name-modal.tsx:22
 #: src/components/wallet-settings/wallet-name-modal.tsx:22
 msgid "Name"
@@ -567,12 +565,12 @@ msgstr ""
 msgid "register for Push notifications"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:96
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:97
 #: src/components/wallet-settings/remove-wallet-modal.tsx:16
 msgid "Remove wallet"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:89
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:90
 msgid "Rename wallet"
 msgstr ""
 
@@ -592,7 +590,7 @@ msgstr ""
 #: src/app/wallet/_layout.tsx:113
 #: src/app/wallet/settings/index.tsx:59
 msgid "Security"
-msgstr ">>>>>>> 035016f (weds)"
+msgstr ""
 
 #: src/app/wallet/send.tsx:9
 #: src/components/action-bar/container.tsx:168
@@ -794,7 +792,7 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:79
+#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:80
 msgid "View Secret Key"
 msgstr ""
 
@@ -802,7 +800,7 @@ msgstr ""
 msgid "Wallet {fingerprint}"
 msgstr ""
 
-#: src/state/wallets/wallets.slice.ts:42
+#: src/store/wallets/wallets.write.ts:35
 msgid "Wallet {walletIdx}"
 msgstr ""
 

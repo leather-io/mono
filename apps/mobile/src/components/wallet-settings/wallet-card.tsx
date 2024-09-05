@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { APP_ROUTES } from '@/routes';
-import { useAccountsByFingerprint } from '@/state/accounts/accounts.slice';
-import { useKeyStore } from '@/state/key-store';
+import { useAccountsByFingerprint } from '@/store/accounts/accounts.write';
+import { useKeyStore } from '@/store/key-store';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -65,7 +65,7 @@ export function WalletCard({
             onPress={() => {
               router.navigate({
                 pathname: APP_ROUTES.WalletWalletsSettingsConfigureWallet,
-                params: { wallet: fingerprint },
+                params: { fingerprint },
               });
             }}
             py="3"
@@ -86,7 +86,7 @@ export function WalletCard({
                 onPress={() => {
                   router.navigate({
                     pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccount,
-                    params: { wallet: fingerprint, account: account.accountIndex },
+                    params: { fingerprint, account: account.accountIndex },
                   });
                 }}
                 key={account.id}

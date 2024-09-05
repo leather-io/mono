@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { userAddsAccount } from '@/state/accounts/accounts.slice';
-import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/state/global-action';
-import { selectNetwork } from '@/state/settings/settings.slice';
-import { mnemonicStore } from '@/state/storage-persistors';
+import { userAddsAccount } from '@/store/accounts/accounts.write';
+import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
+import { selectNetwork } from '@/store/settings/settings.write';
+import { mnemonicStore } from '@/store/storage-persistors';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 
 import { decomposeDescriptor, extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';

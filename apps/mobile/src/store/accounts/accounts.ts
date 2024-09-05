@@ -1,4 +1,4 @@
-import type { AccountStore } from './accounts.slice';
+import { type AccountStore, useAccountByIndex } from './accounts.write';
 
 export function deserializeAccountId(accountId: string) {
   const [fingerprint, accountIndex] = accountId.split('/');
@@ -15,3 +15,20 @@ export function initalizeAccount(account: AccountStore) {
 }
 
 export type Account = ReturnType<typeof initalizeAccount>;
+
+interface AccountLoaderProps {
+  fingerprint: string;
+  accountIndex: number;
+  fallback?: React.ReactNode;
+  children(account: Account): React.ReactNode;
+}
+export function AccountLoader({
+  fingerprint,
+  accountIndex,
+  fallback,
+  children,
+}: AccountLoaderProps) {
+  const account = useAccountByIndex(fingerprint, accountIndex);
+  if (!account) return fallback ?? null;
+  return children(account);
+}

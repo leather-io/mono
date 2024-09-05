@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
-import { useMnemonic } from '@/state/storage-persistors';
+import { useMnemonic } from '@/store/storage-persistors';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
@@ -87,8 +87,8 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
 
 export default function ViewSecretKeyScreen() {
   const params = useLocalSearchParams();
-  if (!params.wallet || typeof params.wallet !== 'string') {
+  if (!params.fingerprint || typeof params.fingerprint !== 'string') {
     throw new Error('No fingerprint is passed to ViewSecretKeyScreen');
   }
-  return <ViewSecretKey fingerprint={params.wallet} />;
+  return <ViewSecretKey fingerprint={params.fingerprint} />;
 }

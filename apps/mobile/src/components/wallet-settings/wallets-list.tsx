@@ -1,4 +1,4 @@
-import { useWallets } from '@/state/wallets/wallets.slice';
+import { useWallets } from '@/store/wallets/wallets.read';
 
 import { WalletViewVariant } from './types';
 import { WalletCard } from './wallet-card';

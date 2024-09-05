@@ -7,8 +7,8 @@ import { Modal } from '@/components/bottom-sheet-modal';
 import { Draggable } from '@/components/draggable';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { APP_ROUTES } from '@/routes';
-import { useAccounts, userUpdatesAccountOrder } from '@/state/accounts/accounts.slice';
-import { destructAccountIdentifer, useAppDispatch } from '@/state/utils';
+import { useAccounts, userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
+import { destructAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
 
@@ -53,7 +53,7 @@ export function AccountSelectorSheet({ modalRef }: { modalRef: RefObject<BottomS
       modalRef.current?.close();
       router.navigate({
         pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccount,
-        params: { wallet: fingerprint, account: accountIndex },
+        params: { fingerprint, account: accountIndex },
       });
     },
     [router, modalRef]

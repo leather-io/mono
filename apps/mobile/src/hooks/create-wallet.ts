@@ -1,8 +1,8 @@
 import { useToastContext } from '@/components/toast/toast-context';
 import { APP_ROUTES } from '@/routes';
-import { keychainErrorHandlers, useKeyStore } from '@/state/key-store';
-import { useSettings } from '@/state/settings/settings.slice';
-import { tempMnemonicStore } from '@/state/storage-persistors';
+import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
+import { useSettings } from '@/store/settings/settings.write';
+import { tempMnemonicStore } from '@/store/storage-persistors';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { WalletStore } from '@/state/wallets/wallets.slice';
+import { WalletStore } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 
 interface WalletListLayoutProps {

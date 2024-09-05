@@ -1,10 +1,10 @@
 import { Text } from 'react-native';
 
-import { useAccountsByFingerprint } from '@/state/accounts/accounts.slice';
-import { useKeyStore } from '@/state/key-store';
-import { useBitcoinKeychains } from '@/state/keychains/bitcoin/bitcoin-keychains.slice';
-import { useStacksKeychains } from '@/state/keychains/stacks/stacks-keychains.slice';
-import { useWallets } from '@/state/wallets/wallets.slice';
+import { useAccountsByFingerprint } from '@/store/accounts/accounts.write';
+import { useKeyStore } from '@/store/key-store';
+import { useBitcoinKeychains } from '@/store/keychains/bitcoin/bitcoin-keychains.write';
+import { useStacksKeychains } from '@/store/keychains/stacks/stacks-keychains.write';
+import { useWallets } from '@/store/wallets/wallets.read';
 
 import { AccountLayout } from './account-list';
 import { WalletListLayout } from './wallets';

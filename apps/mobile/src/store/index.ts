@@ -11,12 +11,12 @@ import {
   persistStore,
 } from 'redux-persist';
 
-import { persistConfig } from './/storage-persistors';
-import { accountsSlice } from './accounts/accounts.slice';
-import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.slice';
-import { stacksKeychainSlice } from './keychains/stacks/stacks-keychains.slice';
-import { settingsSlice } from './settings/settings.slice';
-import { walletSlice } from './wallets/wallets.slice';
+import { accountsSlice } from './accounts/accounts.write';
+import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.write';
+import { stacksKeychainSlice } from './keychains/stacks/stacks-keychains.write';
+import { settingsSlice } from './settings/settings.write';
+import { persistConfig } from './storage-persistors';
+import { walletSlice } from './wallets/wallets.write';
 
 const reducer = combineReducers({
   wallets: walletSlice.reducer,

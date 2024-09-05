@@ -3,7 +3,7 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
 import { APP_ROUTES } from '@/routes';
-import { useWallets } from '@/state/wallets/wallets.slice';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';

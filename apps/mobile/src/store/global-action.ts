@@ -1,8 +1,8 @@
 import { createAction } from '@reduxjs/toolkit';
 
-import { BitcoinKeychainStore } from './keychains/bitcoin/bitcoin-keychains.slice';
-import { StacksKeychainStore } from './keychains/stacks/stacks-keychains.slice';
-import { PartialWalletStore } from './wallets/wallets.slice';
+import { BitcoinKeychainStore } from './keychains/bitcoin/bitcoin-keychains.write';
+import { StacksKeychainStore } from './keychains/stacks/stacks-keychains.write';
+import { PartialWalletStore } from './wallets/wallets.write';
 
 export const resetWallet = createAction('global/resetWallet');
 

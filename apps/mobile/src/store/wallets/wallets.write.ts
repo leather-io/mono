@@ -2,15 +2,8 @@ import { t } from '@lingui/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
-import { RootState } from '..';
-import {
-  AddWalletAction,
-  handleAppResetWithState,
-  userAddsWallet,
-  userRemovesWallet,
-} from '../global-action';
-import { mnemonicStore } from '../storage-persistors';
-import { Optional, handleEntityActionWith, useAppDispatch, useAppSelector } from '../utils';
+import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
+import { Optional, handleEntityActionWith } from '../utils';
 
 export interface AbstractWalletStore {
   fingerprint: string;
@@ -46,11 +39,11 @@ function addWalletDefaults({
   return updatedWallet as WalletStore;
 }
 
-const adapter = createEntityAdapter<WalletStore, string>({
+export const walletAdapter = createEntityAdapter<WalletStore, string>({
   selectId: key => key.fingerprint,
 });
 
-const initialState = adapter.getInitialState();
+const initialState = walletAdapter.getInitialState();
 
 export const walletSlice = createSlice({
   name: 'wallets',
@@ -59,7 +52,7 @@ export const walletSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(userAddsWallet, (state, action) =>
-        adapter.addOne(
+        walletAdapter.addOne(
           state,
           addWalletDefaults({ wallet: action.payload.wallet, walletIdx: state.ids.length })
         )
@@ -67,12 +60,12 @@ export const walletSlice = createSlice({
 
       .addCase(
         userRemovesWallet,
-        handleEntityActionWith(adapter.removeOne, payload => payload.fingerprint)
+        handleEntityActionWith(walletAdapter.removeOne, payload => payload.fingerprint)
       )
 
       .addCase(
         userRenamesWallet,
-        handleEntityActionWith(adapter.updateOne, payload => ({
+        handleEntityActionWith(walletAdapter.updateOne, payload => ({
           id: payload.fingerprint,
           changes: { name: payload.name },
         }))
@@ -80,27 +73,6 @@ export const walletSlice = createSlice({
 
       .addCase(...handleAppResetWithState(initialState)),
 });
-
-const selectors = adapter.getSelectors((state: RootState) => state.wallets);
-
-export function useWalletByFingerprint(fingerprint: string) {
-  return useAppSelector(state => selectors.selectById(state, fingerprint));
-}
-
-export function useWallets() {
-  const dispatch = useAppDispatch();
-
-  return {
-    list: useAppSelector(selectors.selectAll),
-    add(action: AddWalletAction) {
-      return dispatch(userAddsWallet(action));
-    },
-    remove(fingerprint: string) {
-      void mnemonicStore(fingerprint).deleteMnemonic();
-      return dispatch(userRemovesWallet({ fingerprint }));
-    },
-  };
-}
 
 interface RenameWalletPayload {
   fingerprint: string;

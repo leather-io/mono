@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RecoverWalletModal } from '@/components/recover-wallet/recover-wallet-modal';
 import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
-import { tempMnemonicStore } from '@/state/storage-persistors';
+import { tempMnemonicStore } from '@/store/storage-persistors';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
