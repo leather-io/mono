@@ -5,37 +5,32 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameModal } from '@/components/wallet-settings/account-name-modal';
-import { Account } from '@/state/accounts/accounts';
-import {
-  useAccountByIndex,
-  userRenamesAccount,
-  userTogglesHideAccount,
-} from '@/state/accounts/accounts.slice';
-import { makeAccountIdentifer, useAppDispatch } from '@/state/utils';
+import { Account, AccountLoader } from '@/store/accounts/accounts';
+import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
+import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { z } from 'zod';
 
 import { Box, Cell, Eye1ClosedIcon, HeadIcon, PassportIcon, Theme } from '@leather.io/ui/native';
 
-function ConfigureAccount({
-  fingerprint,
-  accountIndex,
-  account,
-}: {
+interface ConfigureAccountProps {
   fingerprint: string;
   accountIndex: number;
   account: Account;
-}) {
+}
+function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccountProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const accountNameModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+
   useEffect(() => {
     navigation.setOptions({ title: account.name });
-  }, []);
+  }, [account.name, navigation]);
 
   function setName(name: string) {
     dispatch(
@@ -88,21 +83,20 @@ function ConfigureAccount({
   );
 }
 
+const configureAccountParamsSchema = z.object({
+  fingerprint: z.string(),
+  account: z.string().transform(value => Number(value)),
+});
+
 export default function ConfigureAccountScreen() {
   const params = useLocalSearchParams();
-  if (!params.wallet || typeof params.wallet !== 'string') {
-    throw new Error('No wallet fingerprint is passed in parameters');
-  }
-  if (!params.account || typeof params.account !== 'string' || Number.isNaN(+params.account)) {
-    throw new Error('No account is passed in parameters');
-  }
-  const fingerprint = params.wallet;
-  const accountIndex = +params.account;
-  const account = useAccountByIndex(fingerprint, accountIndex);
-  if (!account) {
-    throw new Error('No account is found');
-  }
+  const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
+
   return (
-    <ConfigureAccount fingerprint={fingerprint} accountIndex={accountIndex} account={account} />
+    <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex} fallback={null}>
+      {account => (
+        <ConfigureAccount fingerprint={fingerprint} accountIndex={accountIndex} account={account} />
+      )}
+    </AccountLoader>
   );
 }

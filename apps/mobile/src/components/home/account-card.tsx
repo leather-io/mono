@@ -1,4 +1,4 @@
-import { WalletStore } from '@/state/wallets/wallets.slice';
+import { WalletStore } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 

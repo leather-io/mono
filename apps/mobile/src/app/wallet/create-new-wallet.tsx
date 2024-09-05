@@ -6,7 +6,7 @@ import { ThemedBlurView } from '@/components/blur-view';
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useCreateWallet } from '@/hooks/create-wallet';
-import { tempMnemonicStore } from '@/state/storage-persistors';
+import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';

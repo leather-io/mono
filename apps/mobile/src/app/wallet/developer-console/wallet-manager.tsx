@@ -3,10 +3,10 @@ import { Button, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletList } from '@/components/wallet-manager';
-import { useKeyStore } from '@/state/key-store';
-import { useSettings } from '@/state/settings/settings.slice';
-import { clearAllPersistedStorage } from '@/state/utils';
-import { useWallets } from '@/state/wallets/wallets.slice';
+import { useKeyStore } from '@/store/key-store';
+import { useSettings } from '@/store/settings/settings.write';
+import { clearAllPersistedStorage } from '@/store/utils';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

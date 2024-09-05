@@ -10,7 +10,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { LOCALES } from '@/locales';
 import { APP_ROUTES } from '@/routes';
-import { useSettings } from '@/state/settings/settings.slice';
+import { useSettings } from '@/store/settings/settings.write';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';

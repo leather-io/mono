@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
-import { getDummyKeys } from '@/state/dummy';
+import { getDummyKeys } from '@/store/dummy';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 

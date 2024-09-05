@@ -7,18 +7,16 @@ import { Divider } from '@/components/divider';
 import { RemoveWalletModal } from '@/components/wallet-settings/remove-wallet-modal';
 import { WalletNameModal } from '@/components/wallet-settings/wallet-name-modal';
 import { APP_ROUTES } from '@/routes';
-import { userRemovesWallet } from '@/state/global-action';
-import { useAppDispatch } from '@/state/utils';
-import {
-  WalletStore,
-  useWalletByFingerprint,
-  userRenamesWallet,
-} from '@/state/wallets/wallets.slice';
+import { userRemovesWallet } from '@/store/global-action';
+import { useAppDispatch } from '@/store/utils';
+import { WalletLoader } from '@/store/wallets/wallets.read';
+import { WalletStore, userRenamesWallet } from '@/store/wallets/wallets.write';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import moment from 'moment';
+import { z } from 'zod';
 
 import {
   Accordion,
@@ -35,7 +33,10 @@ import {
   TrashIcon,
 } from '@leather.io/ui/native';
 
-function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet: WalletStore }) {
+interface ConfigureWalletProps {
+  wallet: WalletStore;
+}
+function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const router = useRouter();
@@ -51,7 +52,7 @@ function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet:
   function setName(name: string) {
     dispatch(
       userRenamesWallet({
-        fingerprint,
+        fingerprint: wallet.fingerprint,
         name,
       })
     );
@@ -60,7 +61,7 @@ function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet:
 
   function removeWallet() {
     router.back();
-    dispatch(userRemovesWallet({ fingerprint }));
+    dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
   }
 
   return (
@@ -81,7 +82,7 @@ function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet:
               onPress={() => {
                 router.navigate({
                   pathname: APP_ROUTES.WalletWalletsSettingsConfigureViewSecretKey,
-                  params: { wallet: fingerprint },
+                  params: { fingerprint: wallet.fingerprint },
                 });
               }}
             />
@@ -135,15 +136,15 @@ function ConfigureWallet({ fingerprint, wallet }: { fingerprint: string; wallet:
   );
 }
 
+const configureWalletParamsSchema = z.object({ fingerprint: z.string() });
+
 export default function ConfigureWalletScreen() {
   const params = useLocalSearchParams();
+  const { fingerprint } = configureWalletParamsSchema.parse(params);
 
-  if (!params.wallet || typeof params.wallet !== 'string') {
-    throw new Error('No wallet fingerprint is passed in parameters');
-  }
-  const wallet = useWalletByFingerprint(params.wallet);
-  if (!wallet) {
-    throw new Error('No wallet is found');
-  }
-  return <ConfigureWallet fingerprint={params.wallet} wallet={wallet} />;
+  return (
+    <WalletLoader fingerprint={fingerprint}>
+      {wallet => <ConfigureWallet wallet={wallet} />}
+    </WalletLoader>
+  );
 }

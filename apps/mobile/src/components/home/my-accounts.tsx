@@ -3,8 +3,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { APP_ROUTES } from '@/routes';
-import { useAccounts } from '@/state/accounts/accounts.slice';
-import { useWallets } from '@/state/wallets/wallets.slice';
+import { useAccounts } from '@/store/accounts/accounts.write';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

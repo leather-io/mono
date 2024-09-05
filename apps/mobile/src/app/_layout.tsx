@@ -5,10 +5,10 @@ import { Provider as ReduxProvider } from 'react-redux';
 
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { ToastWrapper } from '@/components/toast/toast-context';
-import { initiateI18n } from '@/i18n';
+import { initiateI18n } from '@/locales';
 import { queryClient } from '@/queries/query';
-import { persistor, store } from '@/state';
-import { useSettings } from '@/state/settings/settings.slice';
+import { persistor, store } from '@/store';
+import { useSettings } from '@/store/settings/settings.write';
 import { HasChildren } from '@/utils/types';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { i18n } from '@lingui/core';

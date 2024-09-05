@@ -6,7 +6,7 @@ import { AddWalletModal } from '@/components/add-wallet/add-wallet-modal';
 import { Divider } from '@/components/divider';
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
 import { APP_ROUTES } from '@/routes';
-import { useAccounts } from '@/state/accounts/accounts.slice';
+import { useAccounts } from '@/store/accounts/accounts.write';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

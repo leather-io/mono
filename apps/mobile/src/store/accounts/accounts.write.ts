@@ -7,8 +7,8 @@ import { produce } from 'immer';
 
 import type { RootState } from '..';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
-import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.slice';
-import { StacksKeychainStore } from '../keychains/stacks/stacks-keychains.slice';
+import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.write';
+import { StacksKeychainStore } from '../keychains/stacks/stacks-keychains.write';
 import { Optional, handleEntityActionWith, makeAccountIdentifer } from '../utils';
 import { initalizeAccount } from './accounts';
 

@@ -1,6 +1,6 @@
 import { LegacyRef, forwardRef } from 'react';
 
-import { useSettings } from '@/state/settings/settings.slice';
+import { useSettings } from '@/store/settings/settings.write';
 import { BlurTint, BlurView, BlurViewProps } from 'expo-blur';
 
 export const ThemedBlurView = forwardRef((props: BlurViewProps, ref: LegacyRef<BlurView>) => {

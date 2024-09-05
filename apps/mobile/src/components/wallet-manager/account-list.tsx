@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { Account } from '@/state/accounts/accounts';
+import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 
 interface AccountLayoutProps {

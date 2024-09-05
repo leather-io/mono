@@ -11,12 +11,12 @@ import {
 } from '@leather.io/crypto';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
-import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.slice';
-import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.slice';
+import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.write';
+import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.write';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';
-import { useWallets } from './wallets/wallets.slice';
+import { useWallets } from './wallets/wallets.read';
 
 export enum KEYCHAIN_ERROR {
   WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
