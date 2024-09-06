@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { APP_ROUTES } from '@/routes';
-import { useAccountsByFingerprint } from '@/store/accounts/accounts.write';
+import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

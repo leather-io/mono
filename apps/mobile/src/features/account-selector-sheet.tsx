@@ -6,7 +6,8 @@ import { getAvatarIcon } from '@/components/avatar-icon';
 import { Draggable } from '@/components/draggable';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { APP_ROUTES } from '@/routes';
-import { useAccounts, userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
+import { useAccounts } from '@/store/accounts/accounts.read';
+import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useSettings } from '@/store/settings/settings.write';
 import { destructAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { useRouter } from 'expo-router';
@@ -60,7 +61,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
   );
 
   return (
-    <Sheet isScrollView shouldHaveContainer={false} ref={sheetRef} themeVariant={themeVariant}>
+    <Sheet isScrollView ref={sheetRef} themeVariant={themeVariant}>
       <Box p="5" gap="5">
         {accounts.map((account, idx) => (
           <Draggable

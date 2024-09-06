@@ -45,6 +45,12 @@ export const walletAdapter = createEntityAdapter<WalletStore, string>({
 
 const initialState = walletAdapter.getInitialState();
 
+interface RenameWalletPayload {
+  fingerprint: string;
+  name: string;
+}
+export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');
+
 export const walletSlice = createSlice({
   name: 'wallets',
   initialState,
@@ -73,9 +79,3 @@ export const walletSlice = createSlice({
 
       .addCase(...handleAppResetWithState(initialState)),
 });
-
-interface RenameWalletPayload {
-  fingerprint: string;
-  name: string;
-}
-export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');

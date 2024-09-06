@@ -1,33 +1,11 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-
 import { userAddsAccount } from '@/store/accounts/accounts.write';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
-import { selectNetwork } from '@/store/settings/settings.write';
-import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
-import memoize from 'just-memoize';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import {
-  bitcoinNetworkModeToCoreNetworkMode,
-  deriveNativeSegWitReceiveAddressIndex,
-  deriveTaprootReceiveAddressIndex,
-  extractExtendedPublicKeyFromPolicy,
-  inferNetworkFromPath,
-  inferPaymentTypeFromPath,
-} from '@leather.io/bitcoin';
-import {
-  extractDerivationPathFromDescriptor,
-  extractFingerprintFromDescriptor,
-  extractKeyOriginPathFromDescriptor,
-} from '@leather.io/crypto';
+import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 
-import type { RootState } from '../..';
 import { handleEntityActionWith } from '../../utils';
-import {
-  descriptorKeychainSelectors,
-  filterKeychainsByAccountIndex,
-  filterKeychainsToRemove,
-} from '../keychains';
+import { filterKeychainsToRemove } from '../keychains';
 
 export interface BitcoinKeychainStore {
   descriptor: string;
@@ -35,6 +13,8 @@ export interface BitcoinKeychainStore {
 const adapter = createEntityAdapter<BitcoinKeychainStore, string>({
   selectId: keychain => extractKeyOriginPathFromDescriptor(keychain.descriptor),
 });
+
+export { adapter as bitcoinKeychainAdapter };
 
 const initialState = adapter.getInitialState();
 
@@ -58,44 +38,3 @@ export const bitcoinKeychainSlice = createSlice({
 
       .addCase(...handleAppResetWithState(initialState)),
 });
-
-export const bitcoinKeychainSelectors = adapter.getSelectors(
-  (state: RootState) => state.keychains.bitcoin
-);
-
-function initializeBitcoinKeychain(descriptor: string) {
-  const derivationFn =
-    inferPaymentTypeFromPath(extractDerivationPathFromDescriptor(descriptor)) === 'p2wpkh'
-      ? deriveNativeSegWitReceiveAddressIndex
-      : deriveTaprootReceiveAddressIndex;
-
-  const result = {
-    descriptor,
-    fingerprint: extractFingerprintFromDescriptor(descriptor),
-    ...derivationFn({
-      xpub: extractExtendedPublicKeyFromPolicy(descriptor),
-      network: inferNetworkFromPath(extractKeyOriginPathFromDescriptor(descriptor)),
-    }),
-  };
-  return result;
-}
-
-const memoizedInitalizeBitcoinKeychain = memoize(initializeBitcoinKeychain);
-
-const bitcoinKeychainList = createSelector(
-  bitcoinKeychainSelectors.selectAll,
-  selectNetwork,
-  (accounts, network) =>
-    accounts
-      .filter(
-        account =>
-          inferNetworkFromPath(extractKeyOriginPathFromDescriptor(account.descriptor)) ===
-          bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.bitcoinNetwork)
-      )
-      .map(account => memoizedInitalizeBitcoinKeychain(account.descriptor))
-);
-
-export function useBitcoinKeychains() {
-  const list = useSelector(bitcoinKeychainList);
-  return useMemo(() => descriptorKeychainSelectors(list, filterKeychainsByAccountIndex), [list]);
-}

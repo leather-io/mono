@@ -1,4 +1,5 @@
-import { type AccountStore, useAccountByIndex } from './accounts.write';
+import { useAccountByIndex } from './accounts.read';
+import { type AccountStore } from './accounts.write';
 
 export function deserializeAccountId(accountId: string) {
   const [fingerprint, accountIndex] = accountId.split('/');
