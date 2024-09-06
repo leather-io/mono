@@ -190,6 +190,26 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.30.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.29.1...@leather.io/mobile-v1.30.0) (2024-09-06)
+
+
+### Features
+
+* add Sheet component and migrate Modal, ref leather-io/issues[#228](https://github.com/leather-io/mono/issues/228) ([59e9dbe](https://github.com/leather-io/mono/commit/59e9dbe1a72044842464d199f36eb79903a30d17))
+* shared stacks signing logic ([7041146](https://github.com/leather-io/mono/commit/7041146cd3c599b1e1f8ae6fc64dfa7e2d22399a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.12.0
+    * @leather.io/crypto bumped to 1.5.0
+    * @leather.io/stacks bumped to 1.1.0
+    * @leather.io/ui bumped to 1.18.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.12.0
+
 ## [1.29.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.28.0...@leather.io/mobile-v1.29.0) (2024-09-03)
 
 
