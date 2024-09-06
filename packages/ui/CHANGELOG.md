@@ -97,6 +97,19 @@
   * dependencies
     * @leather.io/utils bumped to 0.13.3
 
+## [1.18.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.17.2...@leather.io/ui-v1.18.0) (2024-09-06)
+
+
+### Features
+
+* add native Skeleton Loader to UI library ([83701e0](https://github.com/leather-io/mono/commit/83701e06f2909c495f64bc2aa794a2ed645441e7))
+* add Sheet component and migrate Modal, ref leather-io/issues[#228](https://github.com/leather-io/mono/issues/228) ([59e9dbe](https://github.com/leather-io/mono/commit/59e9dbe1a72044842464d199f36eb79903a30d17))
+
+
+### Bug Fixes
+
+* rename constants and import react ([b0f64a0](https://github.com/leather-io/mono/commit/b0f64a038bc60f2485037f3928ecb5f6d8d03d99))
+
 ## [1.17.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.17.0...@leather.io/ui-v1.17.1) (2024-09-03)
 
 

@@ -24,6 +24,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.13.3
 
+## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.4.3...@leather.io/crypto-v1.5.0) (2024-09-06)
+
+
+### Features
+
+* shared stacks signing logic ([7041146](https://github.com/leather-io/mono/commit/7041146cd3c599b1e1f8ae6fc64dfa7e2d22399a))
+
 ## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.3.1...@leather.io/crypto-v1.4.0) (2024-08-15)
 
 
