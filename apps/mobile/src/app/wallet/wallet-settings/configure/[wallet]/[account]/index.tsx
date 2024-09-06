@@ -110,7 +110,7 @@ export default function ConfigureAccountScreen() {
   const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
 
   return (
-    <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex} fallback={null}>
+    <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
       {account => (
         <ConfigureAccount fingerprint={fingerprint} accountIndex={accountIndex} account={account} />
       )}

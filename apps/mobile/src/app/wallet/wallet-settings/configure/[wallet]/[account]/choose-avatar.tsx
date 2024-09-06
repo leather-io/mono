@@ -5,7 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToastContext } from '@/components/toast/toast-context';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
 import { Account } from '@/store/accounts/accounts';
-import { useAccountByIndex, userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
+import { useAccountByIndex } from '@/store/accounts/accounts.read';
+import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
 import { useAppDispatch } from '@/store/utils';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -19,7 +20,6 @@ interface ChooseAvatarProps {
   accountIndex: number;
   account: Account;
 }
-
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();

@@ -12,7 +12,7 @@ import {
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
 import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.write';
-import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.write';
+import { useBitcoinKeychains } from './keychains/bitcoin/bitcoin-keychains.read';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';

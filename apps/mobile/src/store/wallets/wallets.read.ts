@@ -1,6 +1,6 @@
 import { RootState } from '..';
 import { Account } from '../accounts/accounts';
-import { useAccountsByFingerprint } from '../accounts/accounts.write';
+import { useAccountsByFingerprint } from '../accounts/accounts.read';
 import { AddWalletAction, userAddsWallet, userRemovesWallet } from '../global-action';
 import { mnemonicStore } from '../storage-persistors';
 import { useAppDispatch, useAppSelector } from '../utils';

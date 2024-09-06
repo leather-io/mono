@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { APP_ROUTES } from '@/routes';
-import { useAccounts } from '@/store/accounts/accounts.write';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -26,9 +26,6 @@ export function MyAccounts() {
   const wallets = useWallets();
   const accounts = useAccounts();
   const sheetRef = useRef<SheetRef>(null);
-  if (wallets.list.length === 0) {
-    return null;
-  }
 
   if (wallets.list.length === 0) return null;
 
@@ -36,7 +33,7 @@ export function MyAccounts() {
     <AccountCard
       type="software"
       key={account.id}
-      fingerprint={account.id}
+      fingerprint={account.name}
       onPress={() => router.push(APP_ROUTES.WalletAllAssets)}
     />
   ));

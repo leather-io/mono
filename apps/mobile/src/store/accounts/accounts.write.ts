@@ -1,18 +1,14 @@
-import { useSelector } from 'react-redux';
-
 import { AvatarIcon } from '@/components/avatar-icon';
 import { t } from '@lingui/macro';
-import { createAction, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
-import type { RootState } from '..';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.write';
 import { StacksKeychainStore } from '../keychains/stacks/stacks-keychains.write';
 import { Optional, handleEntityActionWith, makeAccountIdentifer } from '../utils';
-import { initalizeAccount } from './accounts';
 
-type AccountStatus = 'active' | 'hidden';
+export type AccountStatus = 'active' | 'hidden';
 
 export interface AccountStore {
   id: string;
@@ -21,7 +17,7 @@ export interface AccountStore {
   status: AccountStatus;
 }
 
-const adapter = createEntityAdapter<AccountStore, string>({
+export const accountsAdapter = createEntityAdapter<AccountStore, string>({
   selectId: account => account.id,
 });
 
@@ -47,7 +43,7 @@ function addAccountDefaults({
   return updatedAccount as AccountStore;
 }
 
-const initialState = adapter.getInitialState();
+const initialState = accountsAdapter.getInitialState();
 
 export const accountsSlice = createSlice({
   name: 'accounts',
@@ -60,7 +56,7 @@ export const accountsSlice = createSlice({
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
 
-        adapter.addOne(
+        accountsAdapter.addOne(
           state,
           addAccountDefaults({ account: { id }, accountIdx: state.ids.length })
         );
@@ -69,11 +65,11 @@ export const accountsSlice = createSlice({
       .addCase(userRemovesWallet, (state, action) => {
         const fingerprint = action.payload.fingerprint;
         const accountIds = state.ids.filter(id => id.startsWith(fingerprint));
-        adapter.removeMany(state, accountIds);
+        accountsAdapter.removeMany(state, accountIds);
       })
 
       .addCase(userAddsAccount, (state, action) => {
-        return adapter.addOne(
+        return accountsAdapter.addOne(
           state,
           addAccountDefaults({ account: action.payload.account, accountIdx: state.ids.length })
         );
@@ -81,7 +77,7 @@ export const accountsSlice = createSlice({
 
       .addCase(
         userTogglesHideAccount,
-        handleEntityActionWith(adapter.updateOne, (payload, state) => {
+        handleEntityActionWith(accountsAdapter.updateOne, (payload, state) => {
           let newStatus: AccountStatus = 'active' as const;
           if (state.entities[payload.accountId]?.status === 'active') {
             newStatus = 'hidden' as const;
@@ -95,7 +91,7 @@ export const accountsSlice = createSlice({
 
       .addCase(
         userRenamesAccount,
-        handleEntityActionWith(adapter.updateOne, payload => ({
+        handleEntityActionWith(accountsAdapter.updateOne, payload => ({
           id: payload.accountId,
           changes: { name: payload.name },
         }))
@@ -103,7 +99,7 @@ export const accountsSlice = createSlice({
 
       .addCase(
         userUpdatesAccountIcon,
-        handleEntityActionWith(adapter.updateOne, payload => ({
+        handleEntityActionWith(accountsAdapter.updateOne, payload => ({
           id: makeAccountIdentifer(payload.fingerprint, payload.accountIndex),
           changes: { icon: payload.icon },
         }))
@@ -115,49 +111,6 @@ export const accountsSlice = createSlice({
 
       .addCase(...handleAppResetWithState(initialState)),
 });
-
-const selectors = adapter.getSelectors((state: RootState) => state.accounts);
-
-export function selectAccounts(status?: AccountStatus) {
-  return createSelector(selectors.selectAll, accounts => {
-    switch (status) {
-      case 'active':
-        return accounts.filter(account => account.status === 'active').map(initalizeAccount);
-      case 'hidden':
-        return accounts.filter(account => account.status === 'hidden').map(initalizeAccount);
-      default:
-        return accounts.map(initalizeAccount);
-    }
-  });
-}
-
-export const selectAccountsByFingerprint = (fingerprint: string, status?: AccountStatus) =>
-  createSelector(selectAccounts(status), accounts =>
-    accounts.filter(account => account.fingerprint === fingerprint)
-  );
-
-export function selectAccountByIndex(fingerprint: string, idx: number) {
-  return createSelector(
-    selectAccountsByFingerprint(fingerprint),
-    accounts => accounts.filter(account => account.accountIndex === idx)[0]
-  );
-}
-
-export function useAccountsByFingerprint(fingerprint: string, status?: AccountStatus) {
-  return {
-    list: useSelector(selectAccountsByFingerprint(fingerprint, status)),
-  };
-}
-
-export function useAccounts(status?: AccountStatus) {
-  return {
-    list: useSelector(selectAccounts(status)),
-  };
-}
-
-export function useAccountByIndex(fingerprint: string, index: number) {
-  return useSelector(selectAccountByIndex(fingerprint, index));
-}
 
 type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
 

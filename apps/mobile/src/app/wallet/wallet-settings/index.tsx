@@ -6,7 +6,7 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
 import { APP_ROUTES } from '@/routes';
-import { useAccounts } from '@/store/accounts/accounts.write';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';

@@ -45,7 +45,7 @@ msgstr "5 enabled"
 msgid "Access custodial wallet"
 msgstr "Access custodial wallet"
 
-#: src/store/accounts/accounts.write.ts:40
+#: src/store/accounts/accounts.write.ts:36
 msgid "Account {accountIdx}"
 msgstr "Account {accountIdx}"
 
@@ -493,7 +493,7 @@ msgstr "More options"
 msgid "Must use physical device for Push Notifications"
 msgstr "Must use physical device for Push Notifications"
 
-#: src/components/home/my-accounts.tsx:53
+#: src/components/home/my-accounts.tsx:50
 msgid "My accounts"
 msgstr "My accounts"
 

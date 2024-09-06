@@ -1,9 +1,9 @@
 import { Text } from 'react-native';
 
-import { useAccountsByFingerprint } from '@/store/accounts/accounts.write';
+import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
-import { useBitcoinKeychains } from '@/store/keychains/bitcoin/bitcoin-keychains.write';
-import { useStacksKeychains } from '@/store/keychains/stacks/stacks-keychains.write';
+import { useBitcoinKeychains } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useStacksKeychains } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 
 import { AccountLayout } from './account-list';
