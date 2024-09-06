@@ -57,6 +57,59 @@ export const mockInscriptionResponse2: BestInSlotInscriptionResponse = {
 
 export const mockInscription2 = createBestInSlotInscription(mockInscriptionResponse2);
 
+export const mockInscriptionResponse3 = {
+  inscription_name: null,
+  inscription_id: 'a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
+  inscription_number: 10371348,
+  parent_ids: [],
+  output_value: 546,
+  genesis_block_hash: '00000000000000000003fb85f8ae82f194786416cf699961b04d2953fbbd63d4',
+  genesis_ts: '2023-06-01T05:00:57.000Z',
+  metadata: null,
+  owner_wallet_addr: 'bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq',
+  mime_type: 'text/plain;charset=utf-8',
+  last_sale_price: null,
+  slug: null,
+  collection_name: null,
+  satpoint: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce:0:0',
+  last_transfer_block_height: 810183,
+  genesis_height: 792337,
+  content_url:
+    'https://bis-ord-content.fra1.cdn.digitaloceanspaces.com/ordinals/a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
+  bis_url:
+    'https://bestinslot.xyz/ordinals/inscription/a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
+  render_url: null,
+  bitmap_number: null,
+  delegate: null,
+};
+
+// non-zero offset
+export const mockInscriptionResponseNonZeroOffset: BestInSlotInscriptionResponse = {
+  inscription_name: null,
+  inscription_id: 'a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
+  inscription_number: 10371348,
+  parent_ids: [],
+  output_value: 546,
+  genesis_block_hash: '00000000000000000003fb85f8ae82f194786416cf699961b04d2953fbbd63d4',
+  genesis_ts: '2023-06-01T05:00:57.000Z',
+  metadata: null,
+  owner_wallet_addr: 'bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq',
+  mime_type: 'text/plain;charset=utf-8',
+  last_sale_price: null,
+  slug: null,
+  collection_name: null,
+  satpoint: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce:0:1',
+  last_transfer_block_height: 810183,
+  genesis_height: 792337,
+  content_url:
+    'https://bis-ord-content.fra1.cdn.digitaloceanspaces.com/ordinals/a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
+  bis_url:
+    'https://bestinslot.xyz/ordinals/inscription/a5ab63799f0bbd2571d1b90de9ebff815f7526787e27263d2f604e22f9118d0ci0',
+  render_url: null,
+  bitmap_number: null,
+  delegate: null,
+};
+
 export const mockInscriptionResponsesList = [
   {
     inscription_name: null,
