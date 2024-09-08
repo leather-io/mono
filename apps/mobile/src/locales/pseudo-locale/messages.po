@@ -62,7 +62,7 @@ msgstr ""
 msgid "Account created"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:87
+#: src/app/wallet/settings/display/index.tsx:60
 msgid "Account identifier"
 msgstr ""
 
@@ -178,16 +178,17 @@ msgstr ""
 msgid "BIP39 passphrase"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:71
+#: src/app/wallet/settings/display/index.tsx:44
+#: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:88
-msgid "BNS name"
+#: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:25
+msgid "Bitcoin unit updated"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:72
-msgid "BTC"
+#: src/app/wallet/settings/display/index.tsx:61
+msgid "BNS name"
 msgstr ""
 
 #: src/components/browser/browser-empty-state.tsx:155
@@ -249,7 +250,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:79
+#: src/app/wallet/settings/display/index.tsx:52
 msgid "Conversion unit"
 msgstr ""
 
@@ -290,10 +291,6 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
-#: src/features/settings/theme-sheet/theme-switcher.tsx:28
-msgid "Dark"
-msgstr ""
-
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
@@ -328,9 +325,7 @@ msgid "Developer tools"
 msgstr ""
 
 #: src/app/wallet/recover-wallet.tsx:190
-#: src/app/wallet/settings/networks/networks-switcher.tsx:36
-#: src/app/wallet/settings/networks/networks-switcher.tsx:51
-#: src/app/wallet/settings/networks/networks-switcher.tsx:66
+#: src/app/wallet/settings/networks/index.tsx:44
 msgid "Disabled"
 msgstr ""
 
@@ -369,9 +364,7 @@ msgid "Enable device security"
 msgstr ""
 
 #: src/app/wallet/recover-wallet.tsx:190
-#: src/app/wallet/settings/networks/networks-switcher.tsx:36
-#: src/app/wallet/settings/networks/networks-switcher.tsx:51
-#: src/app/wallet/settings/networks/networks-switcher.tsx:66
+#: src/app/wallet/settings/networks/index.tsx:44
 #: src/app/wallet/settings/security/index.tsx:30
 #: src/app/wallet/settings/security/index.tsx:38
 msgid "Enabled"
@@ -416,7 +409,6 @@ msgstr ""
 #: src/features/settings/account-identifier-sheet.tsx:16
 #: src/features/settings/analytics-sheet.tsx:16
 #: src/features/settings/app-authentication-sheet.tsx:16
-#: src/features/settings/bitcoin-unit-sheet.tsx:15
 #: src/features/settings/conversion-unit-sheet.tsx:15
 #: src/features/settings/email-address-sheet.tsx:15
 #: src/features/settings/email-notifications-sheet.tsx:15
@@ -475,16 +467,8 @@ msgstr ""
 msgid "Ledger, Trezor, Ryder and more"
 msgstr ""
 
-#: src/features/settings/theme-sheet/theme-switcher.tsx:22
-msgid "Light"
-msgstr ""
-
 #: src/app/wallet/settings/index.tsx:108
 msgid "Lock app"
-msgstr ""
-
-#: src/app/wallet/settings/networks/networks-switcher.tsx:35
-msgid "Mainnet"
 msgstr ""
 
 #: src/app/wallet/settings/index.tsx:68
@@ -514,7 +498,7 @@ msgstr ""
 msgid "navigate to browser"
 msgstr ""
 
-#: src/app/wallet/settings/networks/index.tsx:16
+#: src/app/wallet/settings/networks/index.tsx:36
 msgid "Network changed"
 msgstr ""
 
@@ -651,10 +635,6 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/app/wallet/settings/networks/networks-switcher.tsx:65
-msgid "Signet"
-msgstr ""
-
 #: src/app/wallet/developer-console/index.tsx:105
 msgid "signMessage"
 msgstr ""
@@ -724,16 +704,11 @@ msgstr ""
 msgid "Swap 🔄"
 msgstr ""
 
-#: src/features/settings/theme-sheet/theme-switcher.tsx:16
-msgid "System"
-msgstr ""
-
 #: src/app/wallet/create-new-wallet.tsx:95
 msgid "Tap to view Secret Key"
 msgstr ""
 
 #: src/app/wallet/_layout.tsx:78
-#: src/app/wallet/settings/networks/networks-switcher.tsx:50
 msgid "Testnet"
 msgstr ""
 
@@ -749,12 +724,12 @@ msgid ""
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:66
-#: src/features/settings/theme-sheet/theme-sheet.layout.tsx:36
+#: src/app/wallet/settings/display/index.tsx:36
+#: src/features/settings/theme-sheet/theme-sheet.tsx:28
 msgid "Theme"
 msgstr ""
 
-#: src/features/settings/theme-sheet/theme-sheet.tsx:21
+#: src/features/settings/theme-sheet/theme-sheet.tsx:24
 msgid "Theme updated"
 msgstr ""
 
@@ -829,7 +804,7 @@ msgstr ""
 msgid "Type your recovery phrase"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:80
+#: src/app/wallet/settings/display/index.tsx:53
 msgid "USD"
 msgstr ""
 

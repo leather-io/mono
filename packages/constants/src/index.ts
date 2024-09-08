@@ -1,3 +1,5 @@
+import type { BitcoinUnit, BitcoinUnitInfo } from '@leather.io/models';
+
 export const gaiaUrl = 'https://hub.blockstack.org';
 
 export const ZERO_INDEX = 0;
@@ -35,3 +37,16 @@ export const DEFAULT_LIST_LIMIT = 50;
 export const TOKEN_NAME_LENGTH = 4;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
+
+export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
+  bitcoin: {
+    name: 'bitcoin',
+    symbol: 'BTC',
+    decimal: '1',
+  },
+  satoshi: {
+    name: 'satoshi',
+    symbol: 'sat',
+    decimal: '0.00000001',
+  },
+};

@@ -8,7 +8,6 @@ interface AvatarButtonProps {
   onPress(): void;
   isSelected: boolean;
 }
-
 export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {
   const theme = useTheme<Theme>();
   const Icon = getAvatarIcon(icon);

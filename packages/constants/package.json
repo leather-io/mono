@@ -24,6 +24,9 @@
     ".": "./dist/index.js"
   },
   "bugs": "https://github.com/leather-io/mono/issues",
+  "dependencies": {
+    "@leather.io/models": "workspace:*"
+  },
   "devDependencies": {
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",

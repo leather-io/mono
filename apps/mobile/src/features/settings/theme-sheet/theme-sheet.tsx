@@ -1,13 +1,15 @@
 import { RefObject } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { ThemeStore, useSettings } from '@/store/settings/settings.write';
+import { ThemeStore, defaultThemes, useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { SheetRef, SunInCloudIcon } from '@leather.io/ui/native';
+import { capitalize } from '@leather.io/utils';
 
-import { ThemeSheetLayout } from './theme-sheet.layout';
-import { ThemeSwitcher } from './theme-switcher';
+import { SettingsSheetLayout } from '../settings-sheet.layout';
+import { ThemeCell } from './theme-cell';
 
 interface ThemeSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -15,6 +17,7 @@ interface ThemeSheetProps {
 export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
+  const { i18n } = useLingui();
 
   function onUpdateTheme(theme: ThemeStore) {
     settings.changeTheme(theme);
@@ -22,8 +25,16 @@ export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   }
 
   return (
-    <ThemeSheetLayout sheetRef={sheetRef}>
-      <ThemeSwitcher activeTheme={settings.themeStore} onUpdateTheme={onUpdateTheme} />
-    </ThemeSheetLayout>
+    <SettingsSheetLayout icon={<SunInCloudIcon />} sheetRef={sheetRef} title={t`Theme`}>
+      {defaultThemes.map(theme => (
+        <ThemeCell
+          key={theme}
+          activeTheme={settings.themeStore}
+          onUpdateTheme={onUpdateTheme}
+          theme={theme}
+          title={i18n._(capitalize(theme))}
+        />
+      ))}
+    </SettingsSheetLayout>
   );
 }

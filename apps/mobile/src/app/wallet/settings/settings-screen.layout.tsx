@@ -6,7 +6,7 @@ import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
-export default function NetworksScreenLayout({ children }: HasChildren) {
+export default function SettingsScreenLayout({ children }: HasChildren) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
 
