@@ -1,17 +1,18 @@
-import { RefObject } from 'react';
+import { ReactNode, RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSettings } from '@/store/settings/settings.write';
 import { HasChildren } from '@/utils/types';
-import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Sheet, SheetHeader, SheetRef, SunInCloudIcon, Theme } from '@leather.io/ui/native';
+import { Avatar, Box, Sheet, SheetHeader, SheetRef, Theme } from '@leather.io/ui/native';
 
-interface ThemeSheetLayoutProps extends HasChildren {
+interface SettingsSheetLayoutProps extends HasChildren {
+  icon: ReactNode;
   sheetRef: RefObject<SheetRef>;
+  title: string;
 }
-export function ThemeSheetLayout({ children, sheetRef }: ThemeSheetLayoutProps) {
+export function SettingsSheetLayout({ children, icon, sheetRef, title }: SettingsSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   const { theme: themeVariant } = useSettings();
   const theme = useTheme<Theme>();
@@ -26,15 +27,7 @@ export function ThemeSheetLayout({ children, sheetRef }: ThemeSheetLayoutProps) 
           paddingTop: theme.spacing['4'],
         }}
       >
-        <SheetHeader
-          icon={
-            <Box bg="ink.background-secondary" borderRadius="round" flexDirection="row" p="2">
-              <SunInCloudIcon color="ink.text-primary" />
-            </Box>
-          }
-          onPressSupport={() => {}}
-          title={t`Theme`}
-        />
+        <SheetHeader icon={<Avatar>{icon}</Avatar>} onPressSupport={() => {}} title={title} />
         {children}
       </Box>
     </Sheet>

@@ -478,6 +478,10 @@ importers:
         version: 2.0.5(@types/node@20.14.0)(jsdom@22.1.0)(lightningcss@1.23.0)(terser@5.31.6)
 
   packages/constants:
+    dependencies:
+      '@leather.io/models':
+        specifier: workspace:*
+        version: link:../models
     devDependencies:
       '@leather.io/eslint-config':
         specifier: workspace:*
