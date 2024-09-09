@@ -190,6 +190,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.31.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.31.0...@leather.io/mobile-v1.31.1) (2024-09-09)
+
+
+### Bug Fixes
+
+* fix issue with translations leather-io/issues[#136](https://github.com/leather-io/mono/issues/136) ([b102b2a](https://github.com/leather-io/mono/commit/b102b2adb8ffe41f77906fa3577116896f2f8739))
+
 ## [1.31.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.30.0...@leather.io/mobile-v1.31.0) (2024-09-09)
 
 
