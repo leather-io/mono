@@ -190,6 +190,34 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.31.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.30.0...@leather.io/mobile-v1.31.0) (2024-09-09)
+
+
+### Features
+
+* add avatar selector ([29c1467](https://github.com/leather-io/mono/commit/29c14678293b7188c33624dc5b9c935945c75206))
+* radio button and theme modal, leather-io/extension[#302](https://github.com/leather-io/mono/issues/302) and leather-io/extension[#209](https://github.com/leather-io/mono/issues/209) ([08cab29](https://github.com/leather-io/mono/commit/08cab29ece4638ae4c13682ecf4dbc570aef7dbc))
+* settings network, closes leather-io/extension[#196](https://github.com/leather-io/mono/issues/196) ([d63e2d1](https://github.com/leather-io/mono/commit/d63e2d1e1c6f5a42ac31313dc69d03238f75631f))
+
+
+### Bug Fixes
+
+* regenerate lingui files ([150fe39](https://github.com/leather-io/mono/commit/150fe39f632b6eaa4bacf97010ef29209527b0be))
+* update mnemonic key view ([dd0a808](https://github.com/leather-io/mono/commit/dd0a808a6d6bcb8d3cc31a06a4c96c419fb335d7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.12.1
+    * @leather.io/crypto bumped to 1.5.1
+    * @leather.io/stacks bumped to 1.1.1
+    * @leather.io/ui bumped to 1.19.0
+    * @leather.io/utils bumped to 0.14.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.12.1
+
 ## [1.30.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.29.1...@leather.io/mobile-v1.30.0) (2024-09-06)
 
 
