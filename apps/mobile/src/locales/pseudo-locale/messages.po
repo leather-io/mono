@@ -166,7 +166,7 @@ msgstr ""
 
 #: src/app/wallet/settings/security/index.tsx:37
 msgid "App authentication"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:78
 msgid "Avatar"
@@ -223,7 +223,7 @@ msgstr ""
 
 #: src/app/wallet/(tabs)/collectibles.tsx:13
 msgid "Collectibles 🖼️"
-msgstr "<<<<<<< HEAD<<<<<<< HEAD"
+msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:77
 #: src/components/recover-wallet/recover-wallet-modal.tsx:31
@@ -428,7 +428,7 @@ msgstr ""
 
 #: src/app/wallet/wallet-settings/index.tsx:41
 msgid "Hidden accounts"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:88
 msgid "Hide account"
@@ -495,7 +495,7 @@ msgstr ""
 
 #: src/components/home/my-accounts.tsx:53
 msgid "My accounts"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:70
 #: src/components/wallet-settings/account-name-modal.tsx:21
@@ -535,7 +535,7 @@ msgstr ""
 
 #: src/components/sheets/notify-user-sheet.tsx:65
 msgid "Notify me when ready"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:64
 msgid "Or choose one of your collectibles"
