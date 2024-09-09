@@ -166,7 +166,7 @@ msgstr "Analytics and app authentication"
 
 #: src/app/wallet/settings/security/index.tsx:37
 msgid "App authentication"
-msgstr "App authentication<<<<<<< HEAD"
+msgstr "App authentication"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:78
 msgid "Avatar"
@@ -223,7 +223,7 @@ msgstr "Collectibles"
 
 #: src/app/wallet/(tabs)/collectibles.tsx:13
 msgid "Collectibles 🖼️"
-msgstr "Collectibles 🖼️<<<<<<< HEAD<<<<<<< HEAD"
+msgstr "Collectibles 🖼️"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:77
 #: src/components/recover-wallet/recover-wallet-modal.tsx:31
@@ -428,7 +428,7 @@ msgstr "Here is the notification body"
 
 #: src/app/wallet/wallet-settings/index.tsx:41
 msgid "Hidden accounts"
-msgstr "Hidden accounts<<<<<<< HEAD"
+msgstr "Hidden accounts"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:88
 msgid "Hide account"
@@ -495,7 +495,7 @@ msgstr "Must use physical device for Push Notifications"
 
 #: src/components/home/my-accounts.tsx:53
 msgid "My accounts"
-msgstr "My accounts<<<<<<< HEAD"
+msgstr "My accounts"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:70
 #: src/components/wallet-settings/account-name-modal.tsx:21
@@ -535,7 +535,7 @@ msgstr "Notify me when it's ready"
 
 #: src/components/sheets/notify-user-sheet.tsx:65
 msgid "Notify me when ready"
-msgstr "Notify me when ready<<<<<<< HEAD"
+msgstr "Notify me when ready"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:64
 msgid "Or choose one of your collectibles"
