@@ -13,20 +13,20 @@ import { Box, Button, Sheet, SheetRef } from '@leather.io/ui/native';
 
 import { BrowserMessage } from './browser-in-use';
 
-interface ApproverModalProps {
+interface ApproverSheetProps {
   message: BrowserMessage;
   sendResult(result: object): void;
 }
 
-export function ApproverModal(props: ApproverModalProps) {
-  const approverModalRef = useRef<SheetRef>(null);
+export function ApproverSheet(props: ApproverSheetProps) {
+  const approverSheetRef = useRef<SheetRef>(null);
 
   const { theme: themeVariant } = useSettings();
   useEffect(() => {
     if (props.message === null) {
-      approverModalRef.current?.close();
+      approverSheetRef.current?.close();
     } else {
-      approverModalRef.current?.present();
+      approverSheetRef.current?.present();
     }
   }, [props.message]);
 
@@ -57,7 +57,7 @@ export function ApproverModal(props: ApproverModalProps) {
   }
 
   return (
-    <Sheet ref={approverModalRef} themeVariant={themeVariant}>
+    <Sheet ref={approverSheetRef} themeVariant={themeVariant}>
       <Box p="5">
         <Button title={t`Submit`} buttonState="default" onPress={approve} />
       </Box>

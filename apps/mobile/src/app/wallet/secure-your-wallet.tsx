@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { SkipSecureWalletModal } from '@/components/secure-your-wallet/skip-secure-wallet-modal';
+import { SkipSecureWalletSheet } from '@/components/secure-your-wallet/skip-secure-wallet-sheet';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -20,7 +20,7 @@ import {
 export default function SecureYourWalletScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const skipSecureWalletModalRef = useRef<SheetRef>(null);
+  const sheetRef = useRef<SheetRef>(null);
   const { createWallet } = useCreateWallet();
 
   return (
@@ -61,7 +61,7 @@ export default function SecureYourWalletScreen() {
         <Box>
           <Button
             onPress={async () => {
-              skipSecureWalletModalRef.current?.present();
+              sheetRef.current?.present();
             }}
             pb="4"
             buttonState="ghost"
@@ -76,12 +76,12 @@ export default function SecureYourWalletScreen() {
           />
         </Box>
       </Box>
-      <SkipSecureWalletModal
+      <SkipSecureWalletSheet
         onSubmit={async () => {
-          skipSecureWalletModalRef.current?.close();
+          sheetRef.current?.close();
           await createWallet({ biometrics: false });
         }}
-        skipSecureWalletModalRef={skipSecureWalletModalRef}
+        sheetRef={sheetRef}
       />
     </>
   );

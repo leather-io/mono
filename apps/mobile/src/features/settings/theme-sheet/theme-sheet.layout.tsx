@@ -1,13 +1,12 @@
 import { RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ModalHeader } from '@/components/headers/modal-header';
 import { useSettings } from '@/store/settings/settings.write';
 import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Sheet, SheetRef, SunInCloudIcon, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, SheetHeader, SheetRef, SunInCloudIcon, Theme } from '@leather.io/ui/native';
 
 interface ThemeSheetLayoutProps extends HasChildren {
   sheetRef: RefObject<SheetRef>;
@@ -27,9 +26,12 @@ export function ThemeSheetLayout({ children, sheetRef }: ThemeSheetLayoutProps) 
           paddingTop: theme.spacing['4'],
         }}
       >
-        <ModalHeader
-          Icon={SunInCloudIcon}
-          modalVariant="normal"
+        <SheetHeader
+          icon={
+            <Box bg="ink.background-secondary" borderRadius="round" flexDirection="row" p="2">
+              <SunInCloudIcon color="ink.text-primary" />
+            </Box>
+          }
           onPressSupport={() => {}}
           title={t`Theme`}
         />

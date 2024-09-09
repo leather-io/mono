@@ -24,20 +24,20 @@ export interface OptionData {
 }
 
 interface NotifyUserSheetProps {
-  notifyUserModalRef: RefObject<SheetRef>;
+  notifyUserSheetRef: RefObject<SheetRef>;
   optionData: OptionData | null;
-  onCloseNotificationsModal(): unknown;
+  onCloseNotificationsSheet(): unknown;
 }
 export function NotifyUserSheet({
-  notifyUserModalRef,
+  notifyUserSheetRef,
   optionData,
-  onCloseNotificationsModal,
+  onCloseNotificationsSheet,
 }: NotifyUserSheetProps) {
   const theme = useTheme<Theme>();
   const { registerPushNotifications } = usePushNotifications();
   async function onNotify() {
     await registerPushNotifications();
-    notifyUserModalRef.current?.dismiss();
+    notifyUserSheetRef.current?.dismiss();
   }
   const title = optionData?.title;
   const { theme: themeVariant } = useSettings();
@@ -45,13 +45,13 @@ export function NotifyUserSheet({
   return (
     <Sheet
       themeVariant={themeVariant}
-      onDismiss={onCloseNotificationsModal}
-      ref={notifyUserModalRef}
+      onDismiss={onCloseNotificationsSheet}
+      ref={notifyUserSheetRef}
     >
       <Box p="5" justifyContent="space-between" gap="5">
         <TouchableOpacity
           onPress={() => {
-            notifyUserModalRef.current?.close();
+            notifyUserSheetRef.current?.close();
           }}
           p="5"
           right={0}

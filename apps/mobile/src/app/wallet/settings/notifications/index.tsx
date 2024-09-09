@@ -20,9 +20,9 @@ import {
 
 export default function SettingsNotificationsScreen() {
   const { bottom } = useSafeAreaInsets();
-  const pushNotificationsModalRef = useRef<SheetRef>(null);
-  const emailNotificationsRef = useRef<SheetRef>(null);
-  const emailAddressModalRef = useRef<SheetRef>(null);
+  const pushNotificationsSheetRef = useRef<SheetRef>(null);
+  const emailNotificationsSheetRef = useRef<SheetRef>(null);
+  const emailAddressSheetRef = useRef<SheetRef>(null);
   const theme = useTheme<Theme>();
 
   return (
@@ -40,7 +40,7 @@ export default function SettingsNotificationsScreen() {
           subtitle={t`All enabled`}
           Icon={SquareNotificationIcon}
           onPress={() => {
-            pushNotificationsModalRef.current?.present();
+            pushNotificationsSheetRef.current?.present();
           }}
         />
         <Cell
@@ -48,7 +48,7 @@ export default function SettingsNotificationsScreen() {
           subtitle={t`5 enabled`}
           Icon={EmailNotificationIcon}
           onPress={() => {
-            emailNotificationsRef.current?.present();
+            emailNotificationsSheetRef.current?.present();
           }}
         />
         <Cell
@@ -56,13 +56,13 @@ export default function SettingsNotificationsScreen() {
           subtitle={t`None/Awaiting verification/Verified`}
           Icon={EmailIcon}
           onPress={() => {
-            emailAddressModalRef.current?.present();
+            emailAddressSheetRef.current?.present();
           }}
         />
       </ScrollView>
-      <PushNotificationsSheet sheetRef={pushNotificationsModalRef} />
-      <EmailNotificationsSheet sheetRef={emailNotificationsRef} />
-      <EmailAddressSheet sheetRef={emailAddressModalRef} />
+      <PushNotificationsSheet sheetRef={pushNotificationsSheetRef} />
+      <EmailNotificationsSheet sheetRef={emailNotificationsSheetRef} />
+      <EmailAddressSheet sheetRef={emailAddressSheetRef} />
     </Box>
   );
 }

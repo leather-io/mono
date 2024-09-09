@@ -27,7 +27,7 @@ import {
   ThemeVariant,
 } from '@leather.io/ui/native';
 
-import { OptionData } from '../sheets/notify-user-sheet';
+import { OptionData } from '../sheets/notify-user-sheet.layout';
 import { AddWalletListItem } from './add-wallet-list-item';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -65,14 +65,14 @@ interface AddWalletSheetBaseProps {
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   createWallet(): unknown;
   restoreWallet(): unknown;
-  onOpenNotificationsModal(option: OptionData): unknown;
+  onOpenNotificationsSheet(option: OptionData): unknown;
   themeVariant: ThemeVariant;
 }
 export function AddWalletSheetLayout({
   addWalletSheetRef,
   createWallet,
   restoreWallet,
-  onOpenNotificationsModal,
+  onOpenNotificationsSheet,
   themeVariant,
 }: AddWalletSheetLayoutProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
@@ -132,7 +132,7 @@ export function AddWalletSheetLayout({
                     <AddWalletListItem
                       key={featureKey}
                       onPress={() =>
-                        onOpenNotificationsModal({ title: feature.title, id: featureKey })
+                        onOpenNotificationsSheet({ title: feature.title, id: featureKey })
                       }
                       title={feature.title}
                       subtitle={feature.subtitle}

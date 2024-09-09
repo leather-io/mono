@@ -11,8 +11,8 @@ import { Box, Cell, CookieIcon, KeyholeIcon, SheetRef, Theme } from '@leather.io
 
 export default function SettingsSecurityScreen() {
   const { bottom } = useSafeAreaInsets();
-  const analyticsModalRef = useRef<SheetRef>(null);
-  const appAuthenticationModalRef = useRef<SheetRef>(null);
+  const analyticsSheetRef = useRef<SheetRef>(null);
+  const appAuthenticationSheetRef = useRef<SheetRef>(null);
   const theme = useTheme<Theme>();
 
   return (
@@ -30,7 +30,7 @@ export default function SettingsSecurityScreen() {
           subtitle={t`Enabled`}
           Icon={CookieIcon}
           onPress={() => {
-            analyticsModalRef.current?.present();
+            analyticsSheetRef.current?.present();
           }}
         />
         <Cell
@@ -38,12 +38,12 @@ export default function SettingsSecurityScreen() {
           subtitle={t`Enabled`}
           Icon={KeyholeIcon}
           onPress={() => {
-            appAuthenticationModalRef.current?.present();
+            appAuthenticationSheetRef.current?.present();
           }}
         />
       </ScrollView>
-      <AnalyticsSheet sheetRef={analyticsModalRef} />
-      <AppAuthenticationSheet sheetRef={appAuthenticationModalRef} />
+      <AnalyticsSheet sheetRef={analyticsSheetRef} />
+      <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />
     </Box>
   );
 }

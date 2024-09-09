@@ -4,33 +4,33 @@ import { t } from '@lingui/macro';
 
 import { LockIcon, SheetRef } from '@leather.io/ui/native';
 
-import { InputSheet } from '../sheets/input-sheet';
+import { InputSheet } from '../sheets/input-sheet.layout';
 
 export interface OptionData {
   title: string;
   id: string;
 }
 
-interface RecoverWalletModalProps {
-  recoverWalletModalRef: RefObject<SheetRef>;
+interface RecoverWalletSheetProps {
+  recoverWalletSheetRef: RefObject<SheetRef>;
   passphrase: string;
   setPassphrase(passphrase: string): unknown;
 }
-export function RecoverWalletModal({
-  recoverWalletModalRef,
+export function RecoverWalletSheet({
+  recoverWalletSheetRef,
   passphrase,
   setPassphrase,
-}: RecoverWalletModalProps) {
+}: RecoverWalletSheetProps) {
   return (
     <InputSheet
-      sheetRef={recoverWalletModalRef}
+      sheetRef={recoverWalletSheetRef}
       initialValue={passphrase}
       title={t`BIP39 passphrase`}
       TitleIcon={LockIcon}
       placeholder={t`Passphrase`}
       submitTitle={t`Confirm`}
       onSubmit={newPassphrase => {
-        recoverWalletModalRef.current?.close();
+        recoverWalletSheetRef.current?.close();
         setPassphrase(newPassphrase);
       }}
     />

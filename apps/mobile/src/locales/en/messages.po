@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/sheets/notify-user-sheet.tsx:66
+#: src/components/sheets/notify-user-sheet.layout.tsx:66
 msgid "\"{title}\" isn't ready yet."
 msgstr "\"{title}\" isn't ready yet."
 
@@ -66,7 +66,7 @@ msgstr "Account created"
 msgid "Account identifier"
 msgstr "Account identifier"
 
-#: src/components/wallet-settings/account-name-modal.tsx:19
+#: src/components/wallet-settings/account-name-sheet.tsx:19
 msgid "Account label"
 msgstr "Account label"
 
@@ -174,7 +174,7 @@ msgstr "Avatar"
 
 #: src/app/wallet/recover-wallet.tsx:188
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
-#: src/components/recover-wallet/recover-wallet-modal.tsx:28
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:28
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
@@ -191,12 +191,11 @@ msgid "BTC"
 msgstr "BTC"
 
 #: src/components/browser/browser-empty-state.tsx:155
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:28
-#: src/components/wallet-settings/remove-wallet-modal.tsx:26
+#: src/components/sheets/warning-sheet.layout.tsx:74
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/wallet-settings/wallet-name-modal.tsx:19
+#: src/components/wallet-settings/wallet-name-sheet.tsx:19
 msgid "Change name"
 msgstr "Change name"
 
@@ -226,7 +225,7 @@ msgid "Collectibles 🖼️"
 msgstr "Collectibles 🖼️"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:77
-#: src/components/recover-wallet/recover-wallet-modal.tsx:31
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:31
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -498,8 +497,8 @@ msgid "My accounts"
 msgstr "My accounts"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:70
-#: src/components/wallet-settings/account-name-modal.tsx:21
-#: src/components/wallet-settings/wallet-name-modal.tsx:21
+#: src/components/wallet-settings/account-name-sheet.tsx:21
+#: src/components/wallet-settings/wallet-name-sheet.tsx:21
 msgid "Name"
 msgstr "Name"
 
@@ -529,11 +528,11 @@ msgstr "None/Awaiting verification/Verified"
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/sheets/notify-user-sheet.tsx:72
+#: src/components/sheets/notify-user-sheet.layout.tsx:72
 msgid "Notify me when it's ready"
 msgstr "Notify me when it's ready"
 
-#: src/components/sheets/notify-user-sheet.tsx:65
+#: src/components/sheets/notify-user-sheet.layout.tsx:65
 msgid "Notify me when ready"
 msgstr "Notify me when ready"
 
@@ -545,7 +544,7 @@ msgstr "Or choose one of your collectibles"
 msgid "Page"
 msgstr "Page"
 
-#: src/components/recover-wallet/recover-wallet-modal.tsx:30
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:30
 msgid "Passphrase"
 msgstr "Passphrase"
 
@@ -563,12 +562,11 @@ msgstr "Paste or type a Secret Key to add its associated wallet."
 msgid "Placeholder"
 msgstr "Placeholder"
 
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:24
-#: src/components/wallet-settings/remove-wallet-modal.tsx:22
+#: src/components/sheets/warning-sheet.layout.tsx:69
 msgid "Proceed"
 msgstr "Proceed"
 
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:20
+#: src/components/secure-your-wallet/skip-secure-wallet-sheet.tsx:17
 msgid "Proceed without security"
 msgstr "Proceed without security"
 
@@ -597,7 +595,7 @@ msgid "register for Push notifications"
 msgstr "register for Push notifications"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:97
-#: src/components/wallet-settings/remove-wallet-modal.tsx:17
+#: src/components/wallet-settings/remove-wallet-sheet.tsx:16
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
@@ -609,8 +607,8 @@ msgstr "Rename wallet"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
-#: src/components/wallet-settings/account-name-modal.tsx:22
-#: src/components/wallet-settings/wallet-name-modal.tsx:22
+#: src/components/wallet-settings/account-name-sheet.tsx:22
+#: src/components/wallet-settings/wallet-name-sheet.tsx:22
 msgid "Save"
 msgstr "Save"
 
@@ -653,7 +651,7 @@ msgstr "signPsbt"
 msgid "Skip for now"
 msgstr "Skip for now"
 
-#: src/components/secure-your-wallet/skip-secure-wallet-modal.tsx:21
+#: src/components/secure-your-wallet/skip-secure-wallet-sheet.tsx:18
 msgid "Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets"
 msgstr "Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets"
 
@@ -731,7 +729,7 @@ msgstr ""
 "Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the\n"
 "meantime, please"
 
-#: src/components/wallet-settings/remove-wallet-modal.tsx:19
+#: src/components/wallet-settings/remove-wallet-sheet.tsx:17
 msgid ""
 "The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet. \n"
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
@@ -740,7 +738,7 @@ msgstr ""
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 
 #: src/app/wallet/settings/display/index.tsx:66
-#: src/features/settings/theme-sheet/theme-sheet.layout.tsx:34
+#: src/features/settings/theme-sheet/theme-sheet.layout.tsx:36
 msgid "Theme"
 msgstr "Theme"
 
