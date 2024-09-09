@@ -7,11 +7,11 @@ import {
   Button,
   IconProps,
   Sheet,
+  SheetHeader,
   SheetRef,
   UIBottomSheetTextInput,
 } from '@leather.io/ui/native';
 
-import { ModalHeader } from '../headers/modal-header';
 import { TextInput } from '../text-input';
 
 export interface OptionData {
@@ -46,7 +46,14 @@ export function InputSheet({
     <Sheet onDismiss={onDismiss} ref={sheetRef} themeVariant={themeVariant}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box>
-          <ModalHeader Icon={TitleIcon} modalVariant="normal" title={title} />
+          <SheetHeader
+            icon={
+              <Box bg="ink.background-secondary" borderRadius="round" flexDirection="row" p="2">
+                <TitleIcon color="ink.text-primary" />
+              </Box>
+            }
+            title={title}
+          />
           <TextInput
             value={internalValue}
             onChangeText={text => {

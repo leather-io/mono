@@ -86,7 +86,7 @@ function HeaderBottom() {
 
 export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
-  const bottomSheetModalRef = useRef<SheetRef>(null);
+  const bottomSheetRef = useRef<SheetRef>(null);
   const insets = useSafeAreaInsets();
   const { theme: themeVariant } = useSettings();
   const NavigationHeader = (
@@ -96,7 +96,7 @@ export default function TabLayout() {
       right={
         <HeaderRight
           onPress={() => {
-            bottomSheetModalRef.current?.present();
+            bottomSheetRef.current?.present();
           }}
         />
       }
@@ -130,7 +130,7 @@ export default function TabLayout() {
         />
       </Tabs>
       <ActionBarContainer ref={ref} />
-      <Sheet ref={bottomSheetModalRef} themeVariant={themeVariant}>
+      <Sheet ref={bottomSheetRef} themeVariant={themeVariant}>
         <Text>{t`Dummy modal text 🎉 Add blocks to see responsive modal`}</Text>
       </Sheet>
     </ActionBarContext.Provider>

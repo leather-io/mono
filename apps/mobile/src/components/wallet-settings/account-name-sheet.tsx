@@ -4,14 +4,14 @@ import { t } from '@lingui/macro';
 
 import { PassportIcon, SheetRef } from '@leather.io/ui/native';
 
-import { InputSheet } from '../sheets/input-sheet';
+import { InputSheet } from '../sheets/input-sheet.layout';
 
-interface AccountNameModalProps {
+interface AccountNameSheetProps {
   sheetRef: RefObject<SheetRef>;
   name: string;
   setName(name: string): unknown;
 }
-export function AccountNameModal({ sheetRef, name, setName }: AccountNameModalProps) {
+export function AccountNameSheet({ sheetRef, name, setName }: AccountNameSheetProps) {
   return (
     <InputSheet
       sheetRef={sheetRef}

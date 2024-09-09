@@ -21,7 +21,7 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
-import { ApproverModal } from './approval-ux-modal';
+import { ApproverSheet } from './approval-ux-modal';
 
 interface BrowserInUseProp {
   textURL: string;
@@ -40,7 +40,7 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   const theme = useTheme<Theme>();
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
-  const settingsModalRef = useRef<SheetRef>(null);
+  const settingsSheetRef = useRef<SheetRef>(null);
   const { theme: themeVariant } = useSettings();
   function closeBrowser() {
     goToInactiveBrowser();
@@ -59,7 +59,7 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   }
 
   function openSettings() {
-    settingsModalRef.current?.present();
+    settingsSheetRef.current?.present();
   }
 
   function handleWebViewNavigationStateChange(newNavState: WebViewNavigation) {
@@ -138,10 +138,10 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
           <EllipsisHIcon />
         </TouchableOpacity>
       </Box>
-      <Sheet ref={settingsModalRef} themeVariant={themeVariant}>
+      <Sheet ref={settingsSheetRef} themeVariant={themeVariant}>
         <Box p="5" />
       </Sheet>
-      <ApproverModal
+      <ApproverSheet
         sendResult={result => {
           webViewRef?.current?.postMessage(
             JSON.stringify({

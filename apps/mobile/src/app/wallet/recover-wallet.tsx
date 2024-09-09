@@ -3,7 +3,7 @@ import { TextInput as RNTextInput } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RecoverWalletModal } from '@/components/recover-wallet/recover-wallet-modal';
+import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
 import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { tempMnemonicStore } from '@/store/storage-persistors';
@@ -48,7 +48,7 @@ export default function RecoverWallet() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const recoverWalletModalRef = useRef<SheetRef>(null);
+  const recoverWalletSheetRef = useRef<SheetRef>(null);
   const [passphrase, setPassphrase] = useState('');
   const { navigateAndCreateWallet } = useCreateWallet();
   const hidePasteButton = recoveryMnemonic.length > 0;
@@ -172,7 +172,7 @@ export default function RecoverWallet() {
           {!showAdvancedOptions ? null : (
             <TouchableOpacity
               onPress={() => {
-                recoverWalletModalRef.current?.present();
+                recoverWalletSheetRef.current?.present();
               }}
               pt="3"
               pb="5"
@@ -203,10 +203,10 @@ export default function RecoverWallet() {
           title={t`Continue`}
         />
       </Box>
-      <RecoverWalletModal
+      <RecoverWalletSheet
         setPassphrase={setPassphrase}
         passphrase={passphrase}
-        recoverWalletModalRef={recoverWalletModalRef}
+        recoverWalletSheetRef={recoverWalletSheetRef}
       />
     </>
   );

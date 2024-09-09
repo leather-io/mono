@@ -4,8 +4,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
-import { RemoveWalletModal } from '@/components/wallet-settings/remove-wallet-modal';
-import { WalletNameModal } from '@/components/wallet-settings/wallet-name-modal';
+import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
+import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
 import { APP_ROUTES } from '@/routes';
 import { userRemovesWallet } from '@/store/global-action';
 import { useAppDispatch } from '@/store/utils';
@@ -41,8 +41,8 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const theme = useTheme<Theme>();
   const router = useRouter();
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const walletNameModalRef = useRef<SheetRef>(null);
-  const removeWalletModalRef = useRef<SheetRef>(null);
+  const walletNameSheetRef = useRef<SheetRef>(null);
+  const removeWalletSheetRef = useRef<SheetRef>(null);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -90,14 +90,14 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               title={t`Rename wallet`}
               Icon={SquareLinesBottomIcon}
               onPress={() => {
-                walletNameModalRef.current?.present();
+                walletNameSheetRef.current?.present();
               }}
             />
             <Cell
               title={t`Remove wallet`}
               Icon={TrashIcon}
               onPress={() => {
-                removeWalletModalRef.current?.present();
+                removeWalletSheetRef.current?.present();
               }}
               variant="critical"
             />
@@ -130,8 +130,8 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
         </Box>
       </Box>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
-      <WalletNameModal sheetRef={walletNameModalRef} name={wallet.name} setName={setName} />
-      <RemoveWalletModal onSubmit={removeWallet} sheetRef={removeWalletModalRef} />
+      <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
+      <RemoveWalletSheet onSubmit={removeWallet} sheetRef={removeWalletSheetRef} />
     </>
   );
 }

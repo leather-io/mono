@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { NotifyUserSheet, OptionData } from '../sheets/notify-user-sheet';
+import { NotifyUserSheet, OptionData } from '../sheets/notify-user-sheet.layout';
 import { AddWalletSheetLayout } from './add-wallet-sheet.layout';
 
 interface AddWalletSheetBaseProps {
@@ -14,7 +14,7 @@ interface AddWalletSheetBaseProps {
 }
 
 export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
-  const notifyUserModalRef = useRef<SheetRef>(null);
+  const notifyUserSheetRef = useRef<SheetRef>(null);
   const { theme: themeVariant } = useSettings();
   const router = useRouter();
   const [optionData, setOptionData] = useState<OptionData | null>(null);
@@ -28,18 +28,18 @@ export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
     addWalletSheetRef.current?.close();
   }, [router]);
 
-  function onOpenNotificationsModal(option: OptionData) {
+  function onOpenNotificationsSheet(option: OptionData) {
     setOptionData(option);
-    notifyUserModalRef.current?.present();
+    notifyUserSheetRef.current?.present();
   }
-  function onCloseNotificationsModal() {
+  function onCloseNotificationsSheet() {
     setOptionData(null);
   }
 
   return (
     <>
       <AddWalletSheetLayout
-        onOpenNotificationsModal={onOpenNotificationsModal}
+        onOpenNotificationsSheet={onOpenNotificationsSheet}
         createWallet={createWallet}
         restoreWallet={restoreWallet}
         addWalletSheetRef={addWalletSheetRef}
@@ -48,8 +48,8 @@ export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
 
       <NotifyUserSheet
         optionData={optionData}
-        onCloseNotificationsModal={onCloseNotificationsModal}
-        notifyUserModalRef={notifyUserModalRef}
+        onCloseNotificationsSheet={onCloseNotificationsSheet}
+        notifyUserSheetRef={notifyUserSheetRef}
       />
     </>
   );

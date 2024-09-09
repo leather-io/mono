@@ -31,4 +31,5 @@ export {
   UIBottomSheetTextInput,
   CLOSED_ANIMATED_SHARED_VALUE,
 } from './src/components/sheet/sheet.native';
+export { SheetHeader } from './src/components/sheet/components/sheet-header.native';
 export { RadioButton } from './src/components/radio-button/radio-button.native';

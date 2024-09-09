@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { AccountCard } from '@/components/wallet-settings/account-card';
-import { AccountNameModal } from '@/components/wallet-settings/account-name-modal';
+import { AccountNameSheet } from '@/components/wallet-settings/account-name-sheet';
 import { APP_ROUTES } from '@/routes';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
@@ -32,7 +32,7 @@ interface ConfigureAccountProps {
 function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccountProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const accountNameModalRef = useRef<SheetRef>(null);
+  const accountNameSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const router = useRouter();
@@ -71,7 +71,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               subtitle={account.name}
               Icon={PassportIcon}
               onPress={() => {
-                accountNameModalRef.current?.present();
+                accountNameSheetRef.current?.present();
               }}
             />
             <Cell
@@ -95,7 +95,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           </Box>
         </ScrollView>
       </Box>
-      <AccountNameModal name={account.name} setName={setName} sheetRef={accountNameModalRef} />
+      <AccountNameSheet name={account.name} setName={setName} sheetRef={accountNameSheetRef} />
     </>
   );
 }
