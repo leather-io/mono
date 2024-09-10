@@ -10,7 +10,7 @@ export {
   type ButtonState,
   getButtonTextColor,
 } from './src/components/button/button.native';
-export { Text } from './src/components/text/text.native';
+export { Text, type TextProps } from './src/components/text/text.native';
 export {
   TextInput,
   createTextInput,
