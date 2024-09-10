@@ -16,3 +16,4 @@ function createLeatherText() {
 }
 
 export const Text = createLeatherText();
+export type TextProps = Parameters<typeof Text>['0'];

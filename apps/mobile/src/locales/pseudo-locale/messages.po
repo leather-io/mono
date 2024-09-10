@@ -269,6 +269,10 @@ msgstr ""
 msgid "Create or restore via email"
 msgstr ""
 
+#: src/components/widgets/account/cards/create-wallet-card.tsx:17
+msgid "Create or restore wallet"
+msgstr ""
+
 #: src/app/wallet/developer-console/index.tsx:80
 #: src/app/wallet/developer-console/wallet-manager.tsx:38
 msgid "Create wallet"
@@ -276,6 +280,10 @@ msgstr ""
 
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:53
 msgid "Create watch-only wallet"
+msgstr ""
+
+#: src/components/widgets/account/cards/create-wallet-card.tsx:18
+msgid "Create, Import or connect instantly"
 msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:125
@@ -343,7 +351,7 @@ msgstr ""
 msgid "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgstr ""
 
-#: src/components/home/earn.tsx:9
+#: src/components/home/earn.tsx:12
 msgid "Earn"
 msgstr ""
 
@@ -443,6 +451,10 @@ msgstr ""
 msgid "Import existing accounts"
 msgstr ""
 
+#: src/components/widgets/account/cards/import-wallet-card.tsx:16
+msgid "Import wallet"
+msgstr ""
+
 #: src/app/wallet/recover-wallet.tsx:32
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr ""
@@ -455,7 +467,7 @@ msgstr ""
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
-#: src/components/home/account-card.tsx:38
+#: src/components/widgets/account/ledger-badge.tsx:19
 msgid "Ledger"
 msgstr ""
 
@@ -488,7 +500,7 @@ msgstr ""
 msgid "Must use physical device for Push Notifications"
 msgstr ""
 
-#: src/components/home/my-accounts.tsx:50
+#: src/components/widgets/account/account-header.tsx:14
 msgid "My accounts"
 msgstr ""
 
@@ -530,6 +542,10 @@ msgstr ""
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:65
 msgid "Notify me when ready"
+msgstr ""
+
+#: src/components/widgets/account/cards/import-wallet-card.tsx:17
+msgid "One place, all wallets"
 msgstr ""
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:64
@@ -663,7 +679,7 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/home/earn.tsx:23
+#: src/components/home/earn.tsx:26
 msgid "Start stacking"
 msgstr ""
 
@@ -797,7 +813,7 @@ msgstr ""
 msgid "Tokens 🪙"
 msgstr ""
 
-#: src/components/home/earn.tsx:20
+#: src/components/home/earn.tsx:23
 msgid "Total rewards"
 msgstr ""
 

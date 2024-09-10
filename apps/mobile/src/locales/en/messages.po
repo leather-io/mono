@@ -269,6 +269,10 @@ msgstr "Create new wallet"
 msgid "Create or restore via email"
 msgstr "Create or restore via email"
 
+#: src/components/widgets/account/cards/create-wallet-card.tsx:17
+msgid "Create or restore wallet"
+msgstr "Create or restore wallet"
+
 #: src/app/wallet/developer-console/index.tsx:80
 #: src/app/wallet/developer-console/wallet-manager.tsx:38
 msgid "Create wallet"
@@ -277,6 +281,10 @@ msgstr "Create wallet"
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:53
 msgid "Create watch-only wallet"
 msgstr "Create watch-only wallet"
+
+#: src/components/widgets/account/cards/create-wallet-card.tsx:18
+msgid "Create, Import or connect instantly"
+msgstr "Create, Import or connect instantly"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:125
 msgid "Creation date"
@@ -343,7 +351,7 @@ msgstr "Drawer"
 msgid "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgstr "Dummy modal text 🎉 Add blocks to see responsive modal"
 
-#: src/components/home/earn.tsx:9
+#: src/components/home/earn.tsx:12
 msgid "Earn"
 msgstr "Earn"
 
@@ -443,6 +451,10 @@ msgstr "I've backed it up"
 msgid "Import existing accounts"
 msgstr "Import existing accounts"
 
+#: src/components/widgets/account/cards/import-wallet-card.tsx:16
+msgid "Import wallet"
+msgstr "Import wallet"
+
 #: src/app/wallet/recover-wallet.tsx:32
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
@@ -455,7 +467,7 @@ msgstr "Learn"
 msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 
-#: src/components/home/account-card.tsx:38
+#: src/components/widgets/account/ledger-badge.tsx:19
 msgid "Ledger"
 msgstr "Ledger"
 
@@ -488,7 +500,7 @@ msgstr "More options"
 msgid "Must use physical device for Push Notifications"
 msgstr "Must use physical device for Push Notifications"
 
-#: src/components/home/my-accounts.tsx:50
+#: src/components/widgets/account/account-header.tsx:14
 msgid "My accounts"
 msgstr "My accounts"
 
@@ -531,6 +543,10 @@ msgstr "Notify me when it's ready"
 #: src/components/sheets/notify-user-sheet.layout.tsx:65
 msgid "Notify me when ready"
 msgstr "Notify me when ready"
+
+#: src/components/widgets/account/cards/import-wallet-card.tsx:17
+msgid "One place, all wallets"
+msgstr "One place, all wallets"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:64
 msgid "Or choose one of your collectibles"
@@ -663,7 +679,7 @@ msgstr "Something is wrong!"
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
-#: src/components/home/earn.tsx:23
+#: src/components/home/earn.tsx:26
 msgid "Start stacking"
 msgstr "Start stacking"
 
@@ -801,7 +817,7 @@ msgstr "Tokens"
 msgid "Tokens 🪙"
 msgstr "Tokens 🪙"
 
-#: src/components/home/earn.tsx:20
+#: src/components/home/earn.tsx:23
 msgid "Total rewards"
 msgstr "Total rewards"
 
