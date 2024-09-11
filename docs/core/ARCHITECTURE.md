@@ -21,7 +21,7 @@ As a largely single-product company, with a vision for being a multi-product com
 This is a basic blueprint of the monorepo. We will begin with a package based monorepo and then decide whether to also host `apps` here too
 
 ```md
-leather-mono
+mono
 ├─ apps
 │ ├─ extension
 │ ├─ mobile
@@ -47,8 +47,8 @@ leather-mono
 
 # Useful references
 
-- https://medium.com/reactbrasil/reuse-your-eslint-prettier-config-in-a-monorepo-with-lerna-54c1800cacdc
-- https://github.com/muravjev/configs/
-- https://www.raulmelo.me/en/blog/replacing-lerna-and-yarn-with-pnpm-workspaces
-- https://medium.com/@guysenpai89/nx-monorepo-publish-your-libraries-to-github-packages-with-github-actions-semantic-release-fa9822467b24
-- https://www.javierbrea.com/blog/pnpm-nx-monorepo-01/
+- [Reuse your ESLint / Prettier Config in a Monorepo](https://medium.com/reactbrasil/reuse-your-eslint-prettier-config-in-a-monorepo-with-lerna-54c1800cacdc)
+- [Monorepo Configuration](https://github.com/muravjev/configs/)
+- [Replacing Lerna/Yarn with pnpm Workspaces](https://www.raulmelo.me/en/blog/replacing-lerna-and-yarn-with-pnpm-workspaces)
+- [Publish Nx Monorepo Libraries in Github Actions with Semantic Releases](https://medium.com/@guysenpai89/nx-monorepo-publish-your-libraries-to-github-packages-with-github-actions-semantic-release-fa9822467b24)
+- [pnpm and Nx Monorepo Guide](https://www.javierbrea.com/blog/pnpm-nx-monorepo-01/)
