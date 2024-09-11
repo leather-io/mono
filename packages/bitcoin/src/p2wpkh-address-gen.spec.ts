@@ -1,4 +1,6 @@
-import { deriveNativeSegWitReceiveAddressIndex } from './p2wpkh-address-gen';
+import { deriveKeychainFromXpub } from '@leather.io/crypto';
+
+import { deriveNativeSegwitReceiveAddressIndexZero } from './p2wpkh-address-gen';
 
 describe('Bitcoin bech32 (P2WPKH address derivation', () => {
   describe('from extended public key', () => {
@@ -34,12 +36,13 @@ describe('Bitcoin bech32 (P2WPKH address derivation', () => {
     ];
 
     describe.each(accounts)('Account', account => {
-      const keychain = deriveNativeSegWitReceiveAddressIndex({
-        xpub: account.extended_public_key,
+      const keychain = deriveKeychainFromXpub(account.extended_public_key);
+      const { payment } = deriveNativeSegwitReceiveAddressIndexZero({
+        keychain,
         network: 'mainnet',
       });
       test('bech 32 address', () =>
-        expect(keychain?.address).toEqual(account.zeroIndexChildAddress));
+        expect(payment?.address).toEqual(account.zeroIndexChildAddress));
     });
   });
 });

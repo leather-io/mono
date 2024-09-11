@@ -2,7 +2,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Divider } from '@/components/divider';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -43,7 +43,7 @@ export default function SettingsScreen() {
           subtitle={t`Add, configure and remove`}
           Icon={WalletIcon}
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletWalletsSettings);
+            router.navigate(AppRoutes.WalletWalletsSettings);
           }}
         />
         <Divider />
@@ -52,7 +52,7 @@ export default function SettingsScreen() {
           subtitle={t`Theme, bitcoin unit and more`}
           Icon={SunIcon}
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletSettingsDisplay);
+            router.navigate(AppRoutes.WalletSettingsDisplay);
           }}
         />
         <Cell
@@ -60,7 +60,7 @@ export default function SettingsScreen() {
           subtitle={t`Analytics and app authentication`}
           Icon={ShieldIcon}
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletSettingsSecurity);
+            router.navigate(AppRoutes.WalletSettingsSecurity);
           }}
         />
         <Cell
@@ -68,7 +68,7 @@ export default function SettingsScreen() {
           subtitle={t`Mainnet, testnet or signet`}
           Icon={GlobeTiltedIcon}
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletSettingsNetworks);
+            router.navigate(AppRoutes.WalletSettingsNetworks);
           }}
         />
         <Cell
@@ -76,7 +76,7 @@ export default function SettingsScreen() {
           subtitle={t`Push and email notifications`}
           Icon={BellIcon}
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletSettingsNotifications);
+            router.navigate(AppRoutes.WalletSettingsNotifications);
           }}
         />
         <Cell
@@ -84,7 +84,7 @@ export default function SettingsScreen() {
           subtitle={t`Support, guides and articles`}
           Icon={SupportIcon}
           onPress={() => {
-            router.navigate(APP_ROUTES.WalletSettingsHelp);
+            router.navigate(AppRoutes.WalletSettingsHelp);
           }}
         />
         <Accordion

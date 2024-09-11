@@ -5,6 +5,7 @@ import {
   validateMnemonic,
 } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
+import memoize from 'just-memoize';
 
 import { toHexString } from '@leather.io/utils';
 
@@ -12,6 +13,7 @@ import {
   DerivationPathDepth,
   createDescriptor,
   createKeyOriginPath,
+  keyOriginToDerivationPath,
 } from './derivation-path-utils';
 
 export function generateMnemonic() {
@@ -32,9 +34,16 @@ export async function deriveRootKeychainFromMnemonic(mnemonic: string, passphras
   return deriveRootBip32Keychain(await deriveBip39SeedFromMnemonic(mnemonic, passphrase));
 }
 
-export function deriveKeychainFromXpub(xpub: string) {
-  return HDKey.fromExtendedKey(xpub);
+export async function deriveChildKeychainFromMnemnonic(
+  path: string,
+  mnemonic: string,
+  passphrase?: string
+) {
+  const rootKeychain = deriveRootBip32Keychain(await mnemonicToSeed(mnemonic, passphrase));
+  return rootKeychain.derive(keyOriginToDerivationPath(path));
 }
+
+export const deriveKeychainFromXpub = memoize((xpub: string) => HDKey.fromExtendedKey(xpub));
 
 /**
  * Gets keychain fingerprint directly from mnemonic. This is useful for

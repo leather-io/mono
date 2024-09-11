@@ -22,9 +22,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
   const router = useRouter();
   const { mnemonic, passphrase } = useMnemonic({ fingerprint });
 
-  if (!mnemonic) {
-    return null;
-  }
+  if (!mnemonic) return null;
 
   // TODO: get mnemonic key of wallet
   return (

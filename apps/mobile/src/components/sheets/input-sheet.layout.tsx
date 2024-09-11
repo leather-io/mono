@@ -26,10 +26,9 @@ interface InputSheetProps {
   TitleIcon: React.FC<IconProps>;
   placeholder: string;
   submitTitle: string;
-  onSubmit(newVal: string): unknown;
-  onDismiss?(): unknown;
+  onSubmit(newVal: string): void;
+  onDismiss?(): void;
 }
-
 export function InputSheet({
   sheetRef,
   initialValue,

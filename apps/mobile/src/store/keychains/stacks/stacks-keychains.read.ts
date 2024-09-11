@@ -25,7 +25,7 @@ function createSignFnFromBiometricMnemonicStore(descriptor: string) {
   return createSignFnFromMnemonic(keyOrigin, () => mnemonicStore(fingerprint).getMnemonic());
 }
 
-const stacksKeychainList = createSelector(
+const stacksSigners = createSelector(
   stacksKeychainSelectors.selectAll,
   selectNetwork,
   (accounts, network) =>
@@ -38,8 +38,8 @@ const stacksKeychainList = createSelector(
     )
 );
 
-export function useStacksKeychains() {
-  const list = useSelector(stacksKeychainList);
+export function useStacksSigners() {
+  const list = useSelector(stacksSigners);
   return useMemo(
     () => ({ ...descriptorKeychainSelectors(list, filterKeychainsByStacksAccount) }),
     [list]

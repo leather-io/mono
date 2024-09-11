@@ -9,8 +9,9 @@ import { PressableListItem } from '@/components/developer-console/list-items';
 import { useToastContext } from '@/components/toast/toast-context';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { LOCALES } from '@/locales';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings.write';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
@@ -22,6 +23,8 @@ export default function DeveloperConsoleScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const { i18n } = useLingui();
+
+  const wallets = useWallets();
 
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
@@ -81,7 +84,11 @@ export default function DeveloperConsoleScreen() {
         />
         <PressableListItem
           title={t`Wallet management`}
-          onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsoleWalletManager)}
+          onPress={() => router.navigate(AppRoutes.WalletDeveloperConsoleWalletManager)}
+        />
+        <PressableListItem
+          title={t`Bitcoin Scrach Pad`}
+          onPress={() => router.navigate(AppRoutes.WalletDeveloperBitcoinScratchPad)}
         />
         <PressableListItem
           title={t`getAddresses`}
@@ -111,6 +118,8 @@ export default function DeveloperConsoleScreen() {
         <PressableListItem title={t`Page`} />
       </ScrollView>
       <ApproverSheet
+        fingerprint={wallets.list[0] ? wallets.list[0].fingerprint : ''}
+        accountIndex={0}
         message={getAddressesMessage}
         sendResult={() => setGetAddressesMessage(null)}
       />

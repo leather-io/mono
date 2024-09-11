@@ -5,7 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameSheet } from '@/components/wallet-settings/account-name-sheet';
-import { APP_ROUTES } from '@/routes';
+import { AccountId } from '@/models/domain.model';
+import { AppRoutes } from '@/routes';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
@@ -24,9 +25,7 @@ import {
   Theme,
 } from '@leather.io/ui/native';
 
-interface ConfigureAccountProps {
-  fingerprint: string;
-  accountIndex: number;
+interface ConfigureAccountProps extends AccountId {
   account: Account;
 }
 function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccountProps) {
@@ -79,7 +78,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               Icon={HeadIcon}
               onPress={() => {
                 router.navigate({
-                  pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccountAvatar,
+                  pathname: AppRoutes.WalletWalletsSettingsConfigureAccountAvatar,
                   params: { wallet: fingerprint, account: accountIndex },
                 });
               }}

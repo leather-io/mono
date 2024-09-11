@@ -6,7 +6,7 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
 import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { userRemovesWallet } from '@/store/global-action';
 import { useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -81,7 +81,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               Icon={Eye1ClosedIcon}
               onPress={() => {
                 router.navigate({
-                  pathname: APP_ROUTES.WalletWalletsSettingsConfigureViewSecretKey,
+                  pathname: AppRoutes.WalletWalletsSettingsConfigureViewSecretKey,
                   params: { fingerprint: wallet.fingerprint },
                 });
               }}

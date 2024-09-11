@@ -1,3 +1,4 @@
+import { WalletId } from '@/models/domain.model';
 import { createAction } from '@reduxjs/toolkit';
 
 import { BitcoinKeychainStore } from './keychains/bitcoin/bitcoin-keychains.write';
@@ -20,7 +21,5 @@ export interface AddWalletAction {
 }
 export const userAddsWallet = createAction<AddWalletAction>('global/userAddsWallet');
 
-export interface RemoveWalletAction {
-  fingerprint: string;
-}
+export type RemoveWalletAction = WalletId;
 export const userRemovesWallet = createAction<RemoveWalletAction>('global/userRemovesWallet');

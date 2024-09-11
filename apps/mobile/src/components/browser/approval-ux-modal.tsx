@@ -1,27 +1,36 @@
 import { useEffect, useRef } from 'react';
 
 import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
-import { getDummyKeys } from '@/store/dummy';
+import { AccountId } from '@/models/domain.model';
+import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
 
-import {
-  getNativeSegWitPaymentFromAddressIndex,
-  getTaprootPaymentFromAddressIndex,
-} from '@leather.io/bitcoin';
+import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import { Box, Button, Sheet, SheetRef } from '@leather.io/ui/native';
 
 import { BrowserMessage } from './browser-in-use';
 
-interface ApproverSheetProps {
+interface ApproverSheetProps extends AccountId {
   message: BrowserMessage;
   sendResult(result: object): void;
 }
-
 export function ApproverSheet(props: ApproverSheetProps) {
-  const approverSheetRef = useRef<SheetRef>(null);
+  const { fingerprint, accountIndex, sendResult } = props;
 
   const { theme: themeVariant } = useSettings();
+  const approverSheetRef = useRef<SheetRef>(null);
+
+  const stacksAccount = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+
+  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+
   useEffect(() => {
     if (props.message === null) {
       approverSheetRef.current?.close();
@@ -31,29 +40,21 @@ export function ApproverSheet(props: ApproverSheetProps) {
   }, [props.message]);
 
   function approve() {
-    const dummyKeys = getDummyKeys();
-
     const keysToIncludeInResponse = formatAddressesForGetAddresses({
       taproot: {
-        address: getTaprootPaymentFromAddressIndex(
-          dummyKeys.taprootAccount.keychain.deriveChild(0).deriveChild(0),
-          'mainnet'
-        ).address as string,
-        publicKey: dummyKeys.taprootAccount.keychain.publicKey as Uint8Array,
-        derivationPath: dummyKeys.taprootAccount.derivationPath,
+        address: taprootPayer.address,
+        publicKey: taprootPayer.publicKey,
+        derivationPath: keyOriginToDerivationPath(taprootPayer.keyOrigin),
       },
       nativeSegwit: {
-        address: getNativeSegWitPaymentFromAddressIndex(
-          dummyKeys.nativeSegwitAccount.keychain.deriveChild(0).deriveChild(0),
-          'mainnet'
-        ).address as string,
-        publicKey: dummyKeys.nativeSegwitAccount.keychain.publicKey as Uint8Array,
-        derivationPath: dummyKeys.nativeSegwitAccount.derivationPath,
+        address: nativeSegwitPayer.address,
+        publicKey: nativeSegwitPayer.publicKey,
+        derivationPath: keyOriginToDerivationPath(nativeSegwitPayer.keyOrigin),
       },
-      stacksAccountAddress: dummyKeys.stxAddress,
+      stacksAccountAddress: stacksAccount?.address ?? '',
     });
 
-    props.sendResult({ addresses: keysToIncludeInResponse });
+    sendResult({ addresses: keysToIncludeInResponse });
   }
 
   return (

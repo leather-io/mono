@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { APP_ROUTES } from '@/routes';
+import { WalletId } from '@/models/domain.model';
+import { AppRoutes } from '@/routes';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { t } from '@lingui/macro';
@@ -24,15 +25,11 @@ import { useToastContext } from '../toast/toast-context';
 import { AccountCard } from './account-card';
 import { WalletViewVariant } from './types';
 
-export function WalletCard({
-  fingerprint,
-  variant,
-  name,
-}: {
-  fingerprint: string;
+interface WalletCardProps extends WalletId {
   variant: WalletViewVariant;
   name: string;
-}) {
+}
+export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { list: accountsList } = useAccountsByFingerprint(fingerprint, variant);
   const [showAccounts, setShowAccounts] = useState(true);
   const theme = useTheme<Theme>();
@@ -64,7 +61,7 @@ export function WalletCard({
           <TouchableOpacity
             onPress={() => {
               router.navigate({
-                pathname: APP_ROUTES.WalletWalletsSettingsConfigureWallet,
+                pathname: AppRoutes.WalletWalletsSettingsConfigureWallet,
                 params: { fingerprint },
               });
             }}
@@ -85,7 +82,7 @@ export function WalletCard({
                 name={account.name}
                 onPress={() => {
                   router.navigate({
-                    pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccount,
+                    pathname: AppRoutes.WalletWalletsSettingsConfigureAccount,
                     params: { fingerprint, account: account.accountIndex },
                   });
                 }}

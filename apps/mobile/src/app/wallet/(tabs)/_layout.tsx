@@ -5,7 +5,7 @@ import { ActionBarMethods } from '@/components/action-bar';
 import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/container';
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
@@ -60,24 +60,24 @@ function HeaderBottom() {
       tabs={[
         {
           onPress() {
-            router.navigate(APP_ROUTES.WalletAllAssets);
+            router.navigate(AppRoutes.WalletAllAssets);
           },
           title: t`All assets`,
-          isActive: pathname === APP_ROUTES.WalletAllAssets,
+          isActive: pathname === AppRoutes.WalletAllAssets,
         },
         {
           onPress() {
-            router.navigate(APP_ROUTES.WalletTokens);
+            router.navigate(AppRoutes.WalletTokens);
           },
           title: t`Tokens`,
-          isActive: pathname === APP_ROUTES.WalletTokens,
+          isActive: pathname === AppRoutes.WalletTokens,
         },
         {
           onPress() {
-            router.navigate(APP_ROUTES.WalletCollectibles);
+            router.navigate(AppRoutes.WalletCollectibles);
           },
           title: t`Collectibles`,
-          isActive: pathname === APP_ROUTES.WalletCollectibles,
+          isActive: pathname === AppRoutes.WalletCollectibles,
         },
       ]}
     />

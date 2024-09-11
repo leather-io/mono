@@ -5,7 +5,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { Draggable } from '@/components/draggable';
 import { AccountCard } from '@/components/wallet-settings/account-card';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useSettings } from '@/store/settings/settings.write';
@@ -53,7 +53,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
       const { fingerprint, accountIndex } = destructAccountIdentifer(accountId);
       sheetRef.current?.close();
       router.navigate({
-        pathname: APP_ROUTES.WalletWalletsSettingsConfigureAccount,
+        pathname: AppRoutes.WalletWalletsSettingsConfigureAccount,
         params: { fingerprint, account: accountIndex },
       });
     },

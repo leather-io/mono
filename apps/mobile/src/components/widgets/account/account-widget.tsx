@@ -5,7 +5,7 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { BackButtonHeader } from '@/components/headers/back-button';
 import { SimpleHeader } from '@/components/headers/containers/simple-header';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { AccountStore } from '@/store/accounts/accounts.write';
 import { WalletStore } from '@/store/wallets/wallets.write';
 import { useRouter } from 'expo-router';
@@ -93,7 +93,7 @@ export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
         ))}
 
         {hasAccounts ? (
-          <ImportWalletCard onPress={() => router.navigate(APP_ROUTES.WalletRecoverWallet)} />
+          <ImportWalletCard onPress={() => router.navigate(AppRoutes.WalletRecoverWallet)} />
         ) : (
           <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
         )}
