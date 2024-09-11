@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useRef, useState } from 'react';
 
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings.write';
 import { useRouter } from 'expo-router';
 
@@ -19,14 +19,14 @@ export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
   const router = useRouter();
   const [optionData, setOptionData] = useState<OptionData | null>(null);
   const createWallet = useCallback(() => {
-    router.navigate(APP_ROUTES.WalletCreateNewWallet);
+    router.navigate(AppRoutes.WalletCreateNewWallet);
     addWalletSheetRef.current?.close();
-  }, [router]);
+  }, [addWalletSheetRef, router]);
 
   const restoreWallet = useCallback(() => {
-    router.navigate(APP_ROUTES.WalletRecoverWallet);
+    router.navigate(AppRoutes.WalletRecoverWallet);
     addWalletSheetRef.current?.close();
-  }, [router]);
+  }, [addWalletSheetRef, router]);
 
   function onOpenNotificationsSheet(option: OptionData) {
     setOptionData(option);

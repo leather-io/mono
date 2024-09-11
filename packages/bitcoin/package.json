@@ -43,6 +43,7 @@
     "bip32": "4.0.0",
     "bitcoinjs-lib": "6.1.5",
     "ecpair": "2.1.0",
+    "just-memoize": "2.2.0",
     "varuint-bitcoin": "1.1.2"
   },
   "devDependencies": {

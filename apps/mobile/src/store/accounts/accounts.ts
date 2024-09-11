@@ -1,3 +1,5 @@
+import { AccountId } from '@/models/domain.model';
+
 import { useAccountByIndex } from './accounts.read';
 import { type AccountStore } from './accounts.write';
 
@@ -17,9 +19,7 @@ export function initalizeAccount(account: AccountStore) {
 
 export type Account = ReturnType<typeof initalizeAccount>;
 
-interface AccountLoaderProps {
-  fingerprint: string;
-  accountIndex: number;
+interface AccountLoaderProps extends AccountId {
   fallback?: React.ReactNode;
   children(account: Account): React.ReactNode;
 }

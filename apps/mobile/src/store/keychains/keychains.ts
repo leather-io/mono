@@ -1,5 +1,6 @@
 import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
 
+import { BitcoinAccountKeychain } from '@leather.io/bitcoin';
 import {
   extractAccountIndexFromDescriptor,
   extractAccountIndexFromPath,
@@ -8,6 +9,8 @@ import {
   extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
 import { isDefined } from '@leather.io/utils';
+
+import { useBitcoinAccounts } from './bitcoin/bitcoin-keychains.read';
 
 interface RemoveAccount {
   fingerprint: string;
@@ -31,7 +34,7 @@ export function filterKeychainsToRemove<T extends { descriptor: string }>(
   };
 }
 
-interface WithDescriptor {
+export interface WithDescriptor {
   descriptor: string;
 }
 
@@ -83,4 +86,30 @@ export function descriptorKeychainSelectors<T extends WithDescriptor>(
     fromFingerprint,
     fromAccountIndex,
   };
+}
+
+interface BitcoinAccountLoaderProps {
+  fingerprint: string;
+  accountIndex: number;
+  fallback?: React.ReactNode;
+  children({
+    nativeSegwit,
+    taproot,
+  }: {
+    nativeSegwit: BitcoinAccountKeychain;
+    taproot: BitcoinAccountKeychain;
+  }): React.ReactNode;
+}
+export function BitcoinAccountLoader({
+  fingerprint,
+  accountIndex,
+  fallback,
+  children,
+}: BitcoinAccountLoaderProps) {
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+  if (!nativeSegwit || !taproot) return fallback ?? null;
+  return children({ nativeSegwit, taproot });
 }

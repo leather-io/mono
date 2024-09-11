@@ -4,7 +4,11 @@ import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
 import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
 
-import { DerivationPathDepth, extractAccountIndexFromPath } from '@leather.io/crypto';
+import {
+  DerivationPathDepth,
+  extractAccountIndexFromPath,
+  extractPurposeFromPath,
+} from '@leather.io/crypto';
 import { BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { PaymentTypes } from '@leather.io/rpc';
 import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
@@ -153,6 +157,12 @@ export function whenPaymentType(mode: PaymentTypes | BtcSignerLibPaymentTypeIden
     paymentMap[parseKnownPaymentType(mode)];
 }
 
+export type SupportedPaymentType = 'p2wpkh' | 'p2tr';
+export type SupportedPaymentTypeMap<T> = Record<SupportedPaymentType, T>;
+export function whenSupportedPaymentType(mode: SupportedPaymentType) {
+  return <T>(paymentMap: SupportedPaymentTypeMap<T>): T => paymentMap[mode];
+}
+
 /**
  * Infers the Bitcoin payment type from the derivation path.
  * Below we see path has 86 in it, per convention, this refers to taproot payments
@@ -160,10 +170,17 @@ export function whenPaymentType(mode: PaymentTypes | BtcSignerLibPaymentTypeIden
  * `m/86'/1'/0'/0/0`
  */
 export function inferPaymentTypeFromPath(path: string): PaymentTypes {
-  if (path.startsWith('m/84')) return 'p2wpkh';
-  if (path.startsWith('m/86')) return 'p2tr';
-  if (path.startsWith('m/44')) return 'p2pkh';
-  throw new Error(`Unable to infer payment type from path=${path}`);
+  const purpose = extractPurposeFromPath(path);
+  switch (purpose) {
+    case 84:
+      return 'p2wpkh';
+    case 86:
+      return 'p2tr';
+    case 44:
+      return 'p2pkh';
+    default:
+      throw new Error(`Unable to infer payment type from purpose=${purpose}`);
+  }
 }
 
 export function inferNetworkFromPath(path: string): NetworkModes {
@@ -245,14 +262,11 @@ export function getTaprootAddress({ index, keychain, network }: GetTaprootAddres
 
   const addressIndex = deriveAddressIndexKeychainFromAccount(keychain)(index);
 
-  if (!addressIndex.publicKey) {
-    throw new Error('Expected publicKey to be defined');
-  }
+  if (!addressIndex.publicKey) throw new Error('Expected publicKey to be defined');
 
   const payment = getTaprootPayment(addressIndex.publicKey, network);
 
   if (!payment.address) throw new Error('Expected address to be defined');
-
   return payment.address;
 }
 

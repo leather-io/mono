@@ -158,6 +158,10 @@ export default function StackLayout() {
         name="developer-console/wallet-manager"
         options={{ header: () => NavigationDeveloperConsole }}
       />
+      <Stack.Screen
+        name="developer-console/bitcoin-scratch-pad"
+        options={{ header: () => NavigationDeveloperConsole }}
+      />
       <Stack.Screen name="generating-wallet" options={{ headerShown: false }} />
     </Stack>
   );

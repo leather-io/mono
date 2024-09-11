@@ -1,3 +1,5 @@
+import { WalletId } from '@/models/domain.model';
+
 import { RootState } from '..';
 import { Account } from '../accounts/accounts';
 import { useAccountsByFingerprint } from '../accounts/accounts.read';
@@ -14,9 +16,10 @@ export function useWalletByFingerprint(fingerprint: string) {
 
 export function useWallets() {
   const dispatch = useAppDispatch();
-
+  const list = useAppSelector(selectors.selectAll);
   return {
-    list: useAppSelector(selectors.selectAll),
+    list,
+    hasWallets: list.length > 0,
     add(action: AddWalletAction) {
       return dispatch(userAddsWallet(action));
     },
@@ -27,8 +30,7 @@ export function useWallets() {
   };
 }
 
-interface WalletLoaderProps {
-  fingerprint: string;
+interface WalletLoaderProps extends WalletId {
   fallback?: React.ReactNode;
   children(wallet: WalletStore & { accounts: Account[] }): React.ReactNode;
 }

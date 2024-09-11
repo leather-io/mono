@@ -1,4 +1,5 @@
 import { AvatarIcon } from '@/components/avatar-icon';
+import { AccountId } from '@/models/domain.model';
 import { t } from '@lingui/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
@@ -136,9 +137,7 @@ interface RenameAccountPayload {
 }
 export const userRenamesAccount = createAction<RenameAccountPayload>('accounts/renameAccount');
 
-interface UpdateAccountIconPayload {
-  fingerprint: string;
-  accountIndex: number;
+interface UpdateAccountIconPayload extends AccountId {
   icon: string;
 }
 export const userUpdatesAccountIcon = createAction<UpdateAccountIconPayload>(

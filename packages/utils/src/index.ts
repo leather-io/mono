@@ -177,6 +177,10 @@ export function toHexString(value: number) {
   return value.toString(16);
 }
 
+export function hexToNumber(hex: string) {
+  return parseInt(hex, 16);
+}
+
 type MapFunction<T, U> = (value: T[keyof T], key: string) => U;
 
 export function mapObject<T extends object, U>(
@@ -200,4 +204,8 @@ export function assertIsTruthy<T>(val: T): asserts val is NonNullable<T> {
 
 export function capitalize(val: string) {
   return val.charAt(0).toUpperCase() + val.slice(1);
+}
+
+export function uniqueArray<T>(arr: T[]) {
+  return Array.from(new Set(arr));
 }

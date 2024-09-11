@@ -2,7 +2,7 @@ import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } f
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { ActionBar, ActionBarMethods } from '@/components/action-bar';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
@@ -163,21 +163,21 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       ref={ref}
       left={
         <ActionBarButton
-          onPress={() => router.navigate(APP_ROUTES.WalletSend)}
+          onPress={() => router.navigate(AppRoutes.WalletSend)}
           icon={<PaperPlaneIcon />}
           label={t`Send`}
         />
       }
       center={
         <ActionBarButton
-          onPress={() => router.navigate(APP_ROUTES.WalletReceive)}
+          onPress={() => router.navigate(AppRoutes.WalletReceive)}
           icon={<InboxIcon />}
           label={t`Receive`}
         />
       }
       right={
         <ActionBarButton
-          onPress={() => router.navigate(APP_ROUTES.WalletSwap)}
+          onPress={() => router.navigate(AppRoutes.WalletSwap)}
           icon={<ArrowsRepeatLeftRightIcon />}
           label={t`Swap`}
         />

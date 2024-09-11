@@ -1,3 +1,4 @@
+import { WalletId } from '@/models/domain.model';
 import { t } from '@lingui/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
@@ -45,8 +46,7 @@ export const walletAdapter = createEntityAdapter<WalletStore, string>({
 
 const initialState = walletAdapter.getInitialState();
 
-interface RenameWalletPayload {
-  fingerprint: string;
+interface RenameWalletPayload extends WalletId {
   name: string;
 }
 export const userRenamesWallet = createAction<RenameWalletPayload>('accounts/renameAccount');

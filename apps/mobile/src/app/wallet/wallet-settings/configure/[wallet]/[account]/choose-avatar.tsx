@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useToastContext } from '@/components/toast/toast-context';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
+import { AccountId } from '@/models/domain.model';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
@@ -15,9 +16,7 @@ import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Box, Button, Text, Theme } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
-interface ChooseAvatarProps {
-  fingerprint: string;
-  accountIndex: number;
+interface ChooseAvatarProps extends AccountId {
   account: Account;
 }
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {

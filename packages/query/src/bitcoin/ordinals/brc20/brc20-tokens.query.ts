@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { P2TROut } from '@scure/btc-signer/payment';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import type { Signer } from '@leather.io/bitcoin';
+import type { BitcoinSigner } from '@leather.io/bitcoin';
 import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
@@ -19,7 +19,7 @@ export function useGetBrc20TokensQuery({
   createTaprootSigner,
 }: {
   nativeSegwitAddress: string;
-  createTaprootSigner: ((addressIndex: number) => Signer<P2TROut>) | undefined;
+  createTaprootSigner: ((addressIndex: number) => BitcoinSigner<P2TROut>) | undefined;
 }) {
   const network = useLeatherNetwork();
   const currentNsBitcoinAddress = nativeSegwitAddress;

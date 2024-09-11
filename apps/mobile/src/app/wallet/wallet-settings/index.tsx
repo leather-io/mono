@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { WalletsList } from '@/components/wallet-settings/wallets-list';
-import { APP_ROUTES } from '@/routes';
+import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -42,7 +42,7 @@ export default function SettingsScreen() {
               subtitle={t`${hiddenAccountsLength} hidden accounts`}
               Icon={Eye1ClosedIcon}
               onPress={() => {
-                router.navigate(APP_ROUTES.WalletWalletsSettingsHiddenAccounts);
+                router.navigate(AppRoutes.WalletWalletsSettingsHiddenAccounts);
               }}
             />
             <Cell

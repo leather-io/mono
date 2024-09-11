@@ -1,9 +1,13 @@
-export enum APP_ROUTES {
+export const TWITTER_LINK = 'https://twitter.com/LeatherBTC';
+export const BROWSER_EXTENSION_LINK = 'https://leather.io/install-extension';
+
+export enum AppRoutes {
   Home = '/',
   WalletAllAssets = '/wallet/all-assets',
   WalletHome = '/wallet/home',
   WalletDeveloperConsole = '/wallet/developer-console',
   WalletDeveloperConsoleWalletManager = '/wallet/developer-console/wallet-manager',
+  WalletDeveloperBitcoinScratchPad = '/wallet/developer-console/bitcoin-scratch-pad',
   WalletSend = '/wallet/send',
   WalletReceive = '/wallet/receive',
   WalletSwap = '/wallet/swap',
