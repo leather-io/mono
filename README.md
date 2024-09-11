@@ -1,8 +1,17 @@
-# Monorepo Setup
+# Mono
 
-The purpose of this configuration is to ensure strict coding standards and facilitate code sharing. The monorepo uses `pnpm workspaces` at its core and provides several shared packages to be found under the `packages` folder.
+## Basic Setup
 
-### Monorepo setup
+To run applications and packages in the monorepo ensure you first run:
+
+1. `pnpm i` at the `mono` root.
+2. Run `pnpm build` to ensure all relevant packages are correctly built.
+
+## About
+
+The purpose of this monorepo configuration is to ensure strict coding standards and facilitate code sharing. The monorepo uses `pnpm workspaces` at its core and provides several shared packages to be found under the `packages` folder.
+
+### Monorepo Documentation
 
 - [Architecture](docs/core/ARCHITECTURE.md)
 - [Monorepo](docs/core/MONOREPO.md)
@@ -21,7 +30,7 @@ Some other configured tools are:
 - [LintStaged](docs/tools/LINTSTAGED.md): only run checks on staged files
 - [CommitLint](docs/tools/COMMITLINT.md) enforce [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) standard
 
-### Monorepo packages
+### Monorepo core packages
 
 The current packages are listed below
 
