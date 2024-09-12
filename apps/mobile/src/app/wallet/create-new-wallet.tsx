@@ -14,7 +14,6 @@ import {
   BlurView,
   Box,
   Button,
-  GraduateCapIcon,
   PointerHandIcon,
   QuestionCircleIcon,
   Text,
@@ -65,7 +64,7 @@ export default function CreateNewWallet() {
             </Trans>
           </Box>
           <Text variant="label01">
-            {t`Your Secret Key grants you access to your wallet and its assets.`}
+            {t`Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.`}
           </Text>
         </Box>
 
@@ -102,31 +101,6 @@ export default function CreateNewWallet() {
             </BlurView>
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
-          <Box p="3" mt="3" flexDirection="row" gap="4" borderRadius="xs">
-            <GraduateCapIcon color={theme.colors['ink.text-subdued']} />
-            <Text
-              style={{
-                flexShrink: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}
-              variant="label03"
-              color="ink.text-subdued"
-            >
-              {t`We recommend writing these words in numbered order on a piece of paper and storing it in a safe place.`}{' '}
-              <Text
-                onPress={() => {
-                  // TODO: navigate to a website
-                }}
-                variant="label03"
-                color="ink.text-subdued"
-                textDecorationLine="underline"
-              >
-                {t`Learn more`}
-              </Text>
-              {' ->'}
-            </Text>
-          </Box>
         </Box>
       </ScrollView>
       <Box px="5" gap="4">

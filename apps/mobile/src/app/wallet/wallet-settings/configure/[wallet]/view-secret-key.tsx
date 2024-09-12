@@ -48,7 +48,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
           >
             <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
-          <Text variant="heading03">{t`YOUR SECRET KEY`}</Text>
+          <Text variant="heading03">{t`SECRET KEY`}</Text>
           <Text variant="label01">
             {t`Your Secret Key grants you access to your wallet and its assets.`}
           </Text>
