@@ -172,11 +172,19 @@ msgstr "Avatar"
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:28
 msgid "BIP39 passphrase"
-msgstr "BIP39 passphrase"
+msgstr "BIP39 passphrase<<<<<<< HEAD"
+
+#: src/components/widgets/tokens/tokens.mocks.tsx:50
+msgid "Bitcoin"
+msgstr "Bitcoin"
+
+#: src/components/widgets/tokens/tokens.mocks.tsx:27
+msgid "Bitcoin blockchain"
+msgstr "Bitcoin blockchain>>>>>>> bbb518c (feat: add tokens widget, ref leather-io/issues#221)"
 
 #: src/app/wallet/developer-console/index.tsx:90
 msgid "Bitcoin Scrach Pad"
-msgstr "Bitcoin Scrach Pad"
+msgstr "Bitcoin Scrach Pad======="
 
 #: src/app/wallet/settings/display/index.tsx:44
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
@@ -275,7 +283,7 @@ msgstr "Create new wallet"
 msgid "Create or restore via email"
 msgstr "Create or restore via email"
 
-#: src/components/widgets/account/cards/create-wallet-card.tsx:17
+#: src/components/widgets/accounts/cards/create-wallet-card.tsx:17
 msgid "Create or restore wallet"
 msgstr "Create or restore wallet"
 
@@ -288,7 +296,7 @@ msgstr "Create wallet"
 msgid "Create watch-only wallet"
 msgstr "Create watch-only wallet"
 
-#: src/components/widgets/account/cards/create-wallet-card.tsx:18
+#: src/components/widgets/accounts/cards/create-wallet-card.tsx:18
 msgid "Create, Import or connect instantly"
 msgstr "Create, Import or connect instantly"
 
@@ -438,7 +446,7 @@ msgstr "I've backed it up"
 msgid "Import existing accounts"
 msgstr "Import existing accounts"
 
-#: src/components/widgets/account/cards/import-wallet-card.tsx:16
+#: src/components/widgets/accounts/cards/import-wallet-card.tsx:16
 msgid "Import wallet"
 msgstr "Import wallet"
 
@@ -450,7 +458,7 @@ msgstr "Invalid words: {joinedInvalidWords}"
 msgid "Learn"
 msgstr "Learn"
 
-#: src/components/widgets/account/ledger-badge.tsx:19
+#: src/components/widgets/accounts/ledger-badge.tsx:19
 msgid "Ledger"
 msgstr "Ledger"
 
@@ -461,6 +469,11 @@ msgstr "Ledger, Trezor, Ryder and more"
 #: src/app/wallet/settings/index.tsx:108
 msgid "Lock app"
 msgstr "Lock app"
+
+#: src/components/widgets/components/balance/fiat-balance.tsx:45
+#: src/components/widgets/components/balance/token-balance.tsx:21
+msgid "locked"
+msgstr "locked"
 
 #: src/app/wallet/settings/index.tsx:68
 msgid "Mainnet, testnet or signet"
@@ -475,9 +488,13 @@ msgstr "More options"
 msgid "Must use physical device for Push Notifications"
 msgstr "Must use physical device for Push Notifications"
 
-#: src/components/widgets/account/account-header.tsx:14
+#: src/components/widgets/accounts/accounts-header.tsx:14
 msgid "My accounts"
-msgstr "My accounts"
+msgstr "My accounts<<<<<<< HEAD"
+
+#: src/components/widgets/tokens/tokens-header.tsx:18
+msgid "My tokens"
+msgstr "My tokens"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:69
 #: src/components/wallet-settings/account-name-sheet.tsx:21
@@ -519,7 +536,7 @@ msgstr "Notify me when it's ready"
 msgid "Notify me when ready"
 msgstr "Notify me when ready"
 
-#: src/components/widgets/account/cards/import-wallet-card.tsx:17
+#: src/components/widgets/accounts/cards/import-wallet-card.tsx:17
 msgid "One place, all wallets"
 msgstr "One place, all wallets"
 
@@ -657,6 +674,14 @@ msgstr "Something is wrong!"
 #: src/hooks/create-wallet.ts:35
 msgid "Something went wrong"
 msgstr "Something went wrong"
+
+#: src/components/widgets/tokens/tokens.mocks.tsx:113
+msgid "Stacks"
+msgstr "Stacks"
+
+#: src/components/widgets/tokens/tokens.mocks.tsx:59
+msgid "Stacks blockchain"
+msgstr "Stacks blockchain"
 
 #: src/components/home/earn.tsx:26
 msgid "Start stacking"

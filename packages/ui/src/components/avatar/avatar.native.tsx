@@ -1,12 +1,11 @@
-import { Box } from '../box/box.native';
+import { createBox } from '@shopify/restyle';
 
-export interface AvatarProps {
-  children: React.ReactNode;
-}
-export function Avatar({ children }: AvatarProps) {
-  return (
-    <Box bg="ink.background-secondary" borderRadius="round" p="2">
-      {children}
-    </Box>
-  );
-}
+import { type Theme } from '../../theme-native';
+
+export const Avatar = createBox<Theme>();
+
+Avatar.defaultProps = {
+  bg: 'ink.background-secondary',
+  borderRadius: 'round',
+  p: '2',
+};

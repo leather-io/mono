@@ -7,14 +7,14 @@ import { Box, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { Widget } from '../widget';
 
-interface AccountWidgetProps {
+interface AccountsWidgetProps {
   balance?: React.ReactNode;
   children: React.ReactNode;
   header?: React.ReactNode;
   sheetRef?: React.RefObject<SheetRef>;
 }
 
-export function AccountWidgetLayout({ balance, children, header }: AccountWidgetProps) {
+export function AccountsWidgetLayout({ balance, children, header }: AccountsWidgetProps) {
   const theme = useTheme<Theme>();
   return (
     <Widget>

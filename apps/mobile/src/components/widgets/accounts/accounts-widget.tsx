@@ -12,9 +12,9 @@ import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { AccountBalance } from './account-balance';
-import { AccountHeader } from './account-header';
-import { AccountWidgetLayout } from './account-widget.layout';
+import { FiatBalance } from '../components/balance/fiat-balance';
+import { AccountsHeader } from './accounts-header';
+import { AccountsWidgetLayout } from './accounts-widget.layout';
 import { AccountCard } from './cards/account-card';
 import { AccountOverview } from './cards/account-overview-card';
 import { CreateWalletCard } from './cards/create-wallet-card';
@@ -25,12 +25,12 @@ interface MockedAccount extends AccountStore {
   balance: number;
 }
 
-interface AccountWidgetProps {
+interface AccountsWidgetProps {
   accounts: AccountStore[];
   wallets: WalletStore[];
 }
 
-export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
+export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
   const sheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
   const [selectedAccount, setSelectedAccount] = useState<MockedAccount | null>(null);
@@ -68,7 +68,7 @@ export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
         />
         <AccountOverview
           Icon={getAvatarIcon(selectedAccount.icon)}
-          heading={<AccountBalance balance={selectedAccount.balance} variant="heading02" />}
+          heading={<FiatBalance balance={selectedAccount.balance} variant="heading02" />}
           caption={selectedAccount.name}
         />
       </>
@@ -76,17 +76,17 @@ export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
   }
   return (
     <>
-      <AccountWidgetLayout
+      <AccountsWidgetLayout
         sheetRef={sheetRef}
-        header={<AccountHeader hasAccounts={hasAccounts} sheetRef={sheetRef} />}
-        balance={hasWallets && <AccountBalance balance={mockedWalletBalance} variant="heading03" />}
+        header={<AccountsHeader hasAccounts={hasAccounts} sheetRef={sheetRef} />}
+        balance={hasWallets && <FiatBalance balance={mockedWalletBalance} variant="heading03" />}
       >
         {mockedAccounts.map(account => (
           <AccountCard
             type={account.type as WalletStore['type']}
             Icon={getAvatarIcon(account.icon)}
             key={account.id}
-            label={<AccountBalance balance={account.balance} />}
+            label={<FiatBalance balance={account.balance} />}
             caption={account.name || ''}
             onPress={() => setSelectedAccount(account as MockedAccount)}
           />
@@ -97,7 +97,7 @@ export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
         ) : (
           <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
         )}
-      </AccountWidgetLayout>
+      </AccountsWidgetLayout>
 
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>
