@@ -97,6 +97,18 @@
   * dependencies
     * @leather.io/utils bumped to 0.13.3
 
+## [1.20.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.19.0...@leather.io/ui-v1.20.0) (2024-09-12)
+
+
+### Features
+
+* refactor ModalHeader to SheetHeader, ref leather-io/issues[#230](https://github.com/leather-io/mono/issues/230) ([8fe9880](https://github.com/leather-io/mono/commit/8fe988006ef7c6b1b7de49b13b653ed82d1012a4))
+
+
+### Bug Fixes
+
+* update icons and add terminal, ref leather-io/issues[#316](https://github.com/leather-io/mono/issues/316) ([7e5c901](https://github.com/leather-io/mono/commit/7e5c9015628ec32260637670d6a62a0c74650d0d))
+
 ## [1.19.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.18.0...@leather.io/ui-v1.19.0) (2024-09-09)
 
 
