@@ -1,7 +1,7 @@
 import { APP_ROUTES } from '@/routes';
 import { useRouter } from 'expo-router';
 
-import { Box, PulseIcon, SettingsSliderThreeIcon, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, SettingsGearIcon, TerminalIcon, TouchableOpacity } from '@leather.io/ui/native';
 
 export function OptionsHeader() {
   const router = useRouter();
@@ -9,10 +9,10 @@ export function OptionsHeader() {
   return (
     <Box flexDirection="row">
       <TouchableOpacity p="3" onPress={() => router.navigate(APP_ROUTES.WalletSettings)}>
-        <SettingsSliderThreeIcon />
+        <SettingsGearIcon />
       </TouchableOpacity>
       <TouchableOpacity p="3" onPress={() => router.navigate(APP_ROUTES.WalletDeveloperConsole)}>
-        <PulseIcon />
+        <TerminalIcon />
       </TouchableOpacity>
     </Box>
   );

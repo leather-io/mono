@@ -60,4 +60,5 @@ export * from './sun-in-cloud-icon.native';
 export * from './support-icon.native';
 export * from './test-tube-icon.native';
 export * from './key-icon.native';
+export * from './terminal-icon.native';
 export type { IconProps } from './icon/icon.native';
