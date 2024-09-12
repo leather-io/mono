@@ -25,7 +25,7 @@ msgstr ""
 msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:62
+#: src/app/wallet/create-new-wallet.tsx:61
 msgid "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
 msgstr ""
 
@@ -389,7 +389,7 @@ msgstr ""
 msgid "Follow us"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:98
+#: src/app/wallet/create-new-wallet.tsx:97
 msgid "For your eyes only"
 msgstr ""
 
@@ -433,7 +433,7 @@ msgstr ""
 msgid "Hide account"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:138
+#: src/app/wallet/create-new-wallet.tsx:112
 #: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:67
 msgid "I've backed it up"
 msgstr ""
@@ -449,10 +449,6 @@ msgstr ""
 
 #: src/app/wallet/settings/help/index.tsx:38
 msgid "Learn"
-msgstr ""
-
-#: src/app/wallet/create-new-wallet.tsx:125
-msgid "Learn more"
 msgstr ""
 
 #: src/app/waiting-list/waiting-list.tsx:344
@@ -620,6 +616,10 @@ msgstr ""
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
+#: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:51
+msgid "SECRET KEY"
+msgstr ""
+
 #: src/app/wallet/_layout.tsx:113
 #: src/app/wallet/settings/index.tsx:59
 msgid "Security"
@@ -712,7 +712,7 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:96
+#: src/app/wallet/create-new-wallet.tsx:95
 msgid "Tap to view Secret Key"
 msgstr ""
 
@@ -857,19 +857,14 @@ msgstr ""
 msgid "walletSecurityLevel:"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:116
-msgid "We recommend writing these words in numbered order on a piece of paper and storing it in a safe place."
-msgstr ""
-
 #: src/hooks/use-push-notifications.ts:17
 msgid "You've got mail! 📬"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:51
-msgid "YOUR SECRET KEY"
-msgstr ""
-
-#: src/app/wallet/create-new-wallet.tsx:68
 #: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:53
 msgid "Your Secret Key grants you access to your wallet and its assets."
+msgstr ""
+
+#: src/app/wallet/create-new-wallet.tsx:67
+msgid "Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager."
 msgstr ""
