@@ -65,6 +65,7 @@
     "@stacks/transactions": "6.15.0",
     "@stacks/wallet-sdk": "6.15.0",
     "@tanstack/react-query": "5.51.23",
+    "bignumber.js": "9.1.2",
     "buffer": "6.0.3",
     "dayjs": "1.11.13",
     "expo": "51.0.26",

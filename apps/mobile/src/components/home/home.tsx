@@ -1,9 +1,10 @@
-import { AccountWidget } from '@/components/widgets/account/account-widget';
+import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
+import { TokensWidget } from '@/components/widgets/tokens/tokens-widget';
+import { getMockTokens, mockTotalBalance } from '@/components/widgets/tokens/tokens.mocks';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
 
-import { Earn } from './earn';
 import { HomeLayout } from './home.layout';
 
 export function Home() {
@@ -13,8 +14,8 @@ export function Home() {
 
   return (
     <HomeLayout>
-      <AccountWidget accounts={accounts.list} wallets={wallets.list} />
-      <Earn />
+      <AccountsWidget accounts={accounts.list} wallets={wallets.list} />
+      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance.totalUsdBalance} />
     </HomeLayout>
   );
 }

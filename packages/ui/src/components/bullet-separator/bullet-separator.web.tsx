@@ -1,8 +1,10 @@
-import { ReactNode, cloneElement, isValidElement } from 'react';
+import { ReactNode } from 'react';
 
-import { Circle, CircleProps } from 'leather-styles/jsx';
+import { Circle } from 'leather-styles/jsx';
 
-function BulletOperator(props: CircleProps) {
+import { BulletSeparator as BulletSeparatorContainer } from './bullet-separator.shared';
+
+function BulletOperator() {
   return (
     <Circle
       display="inline-block"
@@ -11,7 +13,6 @@ function BulletOperator(props: CircleProps) {
       size="3px"
       // Visual adjustment for correct centering on retina displays
       transform="translateY(-0.5px)"
-      {...props}
     />
   );
 }
@@ -20,13 +21,7 @@ interface BulletSeparatorSeparatorProps {
   children: ReactNode;
 }
 export function BulletSeparator({ children }: BulletSeparatorSeparatorProps) {
-  const parsedChildren = Array.isArray(children) ? children : [children];
-  const content = parsedChildren
-    .flatMap((child: ReactNode, index: number) => {
-      if (!isValidElement(child)) return null;
-      return [cloneElement(child, { key: index }), <BulletOperator key={index + 'dot'} />];
-    })
-    .filter((val: ReactNode) => val !== null)
-    .slice(0, -1);
-  return <>{content}</>;
+  return (
+    <BulletSeparatorContainer operator={<BulletOperator />}>{children}</BulletSeparatorContainer>
+  );
 }

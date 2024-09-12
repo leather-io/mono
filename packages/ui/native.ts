@@ -1,7 +1,11 @@
 export { Accordion } from './src/components/accordion/accordion.native';
 export { Avatar } from './src/components/avatar/avatar.native';
+export { BulletSeparator } from './src/components/bullet-separator/bullet-separator.native';
+export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
+export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.native';
 export { Box } from './src/components/box/box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
+export { Chip } from './src/components/chip/chip.native';
 export { HStack } from './src/components/box/hstack.native';
 export { Stack } from './src/components/box/stack.native';
 export {

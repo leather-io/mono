@@ -2,7 +2,7 @@ import { RefObject, createContext } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ActionBarMethods } from '@/components/action-bar';
-import { AccountHeader } from '@/components/headers/account';
+import { AccountsHeader } from '@/components/headers/account';
 import { BackButtonHeader } from '@/components/headers/back-button';
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { SimpleHeader } from '@/components/headers/containers/simple-header';
@@ -30,7 +30,7 @@ export default function StackLayout() {
     <BlurredHeader
       insets={insets}
       left={<BackButtonHeader onPress={() => router.back()} />}
-      center={<AccountHeader />}
+      center={<AccountsHeader />}
       right={<MenuHeader />}
     />
   );

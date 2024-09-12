@@ -5,17 +5,17 @@ import { t } from '@lingui/macro';
 
 import { ChevronRightIcon, SheetRef, Text, TouchableOpacity } from '@leather.io/ui/native';
 
-interface AccountHeaderProps {
+interface AccountsHeaderProps {
   hasAccounts: boolean;
   sheetRef: React.RefObject<SheetRef>;
 }
 
-function AccountHeaderText() {
+function AccountsHeaderText() {
   return <Text variant="heading05">{t`My accounts`}</Text>;
 }
 
-export function AccountHeader({ hasAccounts, sheetRef }: AccountHeaderProps) {
-  if (!hasAccounts) return <AccountHeaderText />;
+export function AccountsHeader({ hasAccounts, sheetRef }: AccountsHeaderProps) {
+  if (!hasAccounts) return <AccountsHeaderText />;
   return (
     <>
       <TouchableOpacity
@@ -24,7 +24,7 @@ export function AccountHeader({ hasAccounts, sheetRef }: AccountHeaderProps) {
         gap="1"
         alignItems="center"
       >
-        <AccountHeaderText />
+        <AccountsHeaderText />
         <ChevronRightIcon variant="small" />
       </TouchableOpacity>
 
