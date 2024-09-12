@@ -174,6 +174,10 @@ msgstr "Avatar"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
+#: src/components/widgets/tokens/tokens.mocks.tsx:33
+msgid "Bitcoin"
+msgstr "Bitcoin"
+
 #: src/app/wallet/settings/display/index.tsx:44
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit"
@@ -450,6 +454,11 @@ msgstr "Ledger, Trezor, Ryder and more"
 msgid "Lock app"
 msgstr "Lock app"
 
+#: src/components/widgets/components/balance/fiat-balance.tsx:45
+#: src/components/widgets/components/balance/token-balance.tsx:24
+msgid "locked"
+msgstr "locked"
+
 #: src/app/wallet/settings/index.tsx:68
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
@@ -466,6 +475,10 @@ msgstr "Must use physical device for Push Notifications"
 #: src/components/widgets/account/account-header.tsx:14
 msgid "My accounts"
 msgstr "My accounts"
+
+#: src/components/widgets/tokens/token-header.tsx:18
+msgid "My tokens"
+msgstr "My tokens"
 
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:70
 #: src/components/wallet-settings/account-name-sheet.tsx:21
@@ -638,9 +651,13 @@ msgstr "Something is wrong!"
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
+#: src/components/widgets/tokens/tokens.mocks.tsx:71
+msgid "Stacks"
+msgstr "Stacks"
+
 #: src/components/home/earn.tsx:26
 msgid "Start stacking"
-msgstr "Start stacking"
+msgstr "Start stacking======="
 
 #: src/app/wallet/developer-console/index.tsx:109
 msgid "stx_signMessage"

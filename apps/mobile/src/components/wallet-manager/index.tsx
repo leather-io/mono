@@ -13,6 +13,7 @@ interface BitcoinKeychainProps {
   fingerprint: string;
   accountIndex: number;
 }
+
 function BitcoinKeychains({ fingerprint, accountIndex }: BitcoinKeychainProps) {
   const bitcoinKeychains = useBitcoinKeychains();
   const keychains = bitcoinKeychains.fromAccountIndex(fingerprint, accountIndex);

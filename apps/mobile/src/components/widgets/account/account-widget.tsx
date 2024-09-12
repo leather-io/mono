@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { AccountBalance } from './account-balance';
+import { FiatBalance } from '../components/balance/fiat-balance';
 import { AccountHeader } from './account-header';
 import { AccountWidgetLayout } from './account-widget.layout';
 import { AccountCard } from './cards/account-card';
@@ -68,7 +68,7 @@ export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
         />
         <AccountOverview
           Icon={getAvatarIcon(selectedAccount.icon)}
-          heading={<AccountBalance balance={selectedAccount.balance} variant="heading02" />}
+          heading={<FiatBalance balance={selectedAccount.balance} variant="heading02" />}
           caption={selectedAccount.name}
         />
       </>
@@ -79,14 +79,14 @@ export function AccountWidget({ accounts, wallets }: AccountWidgetProps) {
       <AccountWidgetLayout
         sheetRef={sheetRef}
         header={<AccountHeader hasAccounts={hasAccounts} sheetRef={sheetRef} />}
-        balance={hasWallets && <AccountBalance balance={mockedWalletBalance} variant="heading03" />}
+        balance={hasWallets && <FiatBalance balance={mockedWalletBalance} variant="heading03" />}
       >
         {mockedAccounts.map(account => (
           <AccountCard
             type={account.type as WalletStore['type']}
             Icon={getAvatarIcon(account.icon)}
             key={account.id}
-            label={<AccountBalance balance={account.balance} />}
+            label={<FiatBalance balance={account.balance} />}
             caption={account.name || ''}
             onPress={() => setSelectedAccount(account as MockedAccount)}
           />

@@ -6,7 +6,7 @@
     "tsBuildInfoFile": "tsconfig.native.tsbuildinfo",
     "jsx": "react-native",
     "jsxImportSource": "react",
-    "lib": ["es2017", "DOM"],
+    "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist-native"
