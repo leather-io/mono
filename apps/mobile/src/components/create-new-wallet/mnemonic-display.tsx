@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
-import { Box, Button, CopyIcon, KeyIcon, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, Text, Theme } from '@leather.io/ui/native';
 
 import { useToastContext } from '../toast/toast-context';
 import { MnemonicWordBox } from './mnemonic-word-box';
@@ -42,9 +42,8 @@ export function MnemonicDisplay({
             await Clipboard.setStringAsync(mnemonic);
             displayToast({ title: t`Successfully copied to clipboard!`, type: 'success' });
           }}
-          icon={<CopyIcon />}
           flex={1}
-          style={{ borderColor: theme.colors['ink.border-default'] }}
+          style={{ borderColor: theme.colors['ink.text-primary'] }}
           buttonState="outline"
           title={t`Copy`}
         />
@@ -52,9 +51,8 @@ export function MnemonicDisplay({
           onPress={async () => {
             // TODO: add Save to functionality
           }}
-          icon={<KeyIcon />}
           flex={1}
-          style={{ borderColor: theme.colors['ink.border-default'] }}
+          style={{ borderColor: theme.colors['ink.text-primary'] }}
           buttonState="outline"
           title={t`Save to...`}
         />
