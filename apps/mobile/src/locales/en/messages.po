@@ -253,7 +253,7 @@ msgstr "Continue"
 msgid "Conversion unit"
 msgstr "Conversion unit"
 
-#: src/components/create-new-wallet/mnemonic-display.tsx:49
+#: src/components/create-new-wallet/mnemonic-display.tsx:48
 msgid "Copy"
 msgstr "Copy"
 
@@ -624,7 +624,7 @@ msgstr "Restore wallet"
 msgid "Save"
 msgstr "Save"
 
-#: src/components/create-new-wallet/mnemonic-display.tsx:59
+#: src/components/create-new-wallet/mnemonic-display.tsx:57
 msgid "Save to..."
 msgstr "Save to..."
 
