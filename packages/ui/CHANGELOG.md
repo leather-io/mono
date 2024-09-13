@@ -97,6 +97,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.13.3
 
+## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.20.0...@leather.io/ui-v1.21.0) (2024-09-13)
+
+
+### Features
+
+* accounts widget ref leather-io/issues[#136](https://github.com/leather-io/mono/issues/136) ([5dec39c](https://github.com/leather-io/mono/commit/5dec39c84bd2764da2a5b6f71e57963a5f9b68f0))
+
 ## [1.20.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.19.0...@leather.io/ui-v1.20.0) (2024-09-12)
 
 
