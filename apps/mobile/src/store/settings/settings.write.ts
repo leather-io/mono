@@ -8,6 +8,7 @@ import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import {
   BitcoinUnit,
   DefaultNetworkConfigurations,
+  FiatCurrency,
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
@@ -26,6 +27,7 @@ export type WalletSecurityLevel = 'undefined' | 'secure' | 'insecure';
 
 export interface SettingsState {
   bitcoinUnit: BitcoinUnit;
+  conversionUnit: FiatCurrency;
   createdOn: string;
   network: DefaultNetworkConfigurations;
   theme: ThemeStore;
@@ -34,6 +36,7 @@ export interface SettingsState {
 
 const initialState: SettingsState = {
   bitcoinUnit: 'bitcoin',
+  conversionUnit: 'USD',
   createdOn: new Date().toISOString(),
   network: WalletDefaultNetworkConfigurationIds.mainnet,
   theme: 'system',
@@ -46,6 +49,9 @@ export const settingsSlice = createSlice({
   reducers: {
     userChangedBitcoinUnit(state, action: PayloadAction<BitcoinUnit>) {
       state.bitcoinUnit = action.payload;
+    },
+    userChangedConversionUnit(state, action: PayloadAction<FiatCurrency>) {
+      state.conversionUnit = action.payload;
     },
     userChangedTheme(state, action: PayloadAction<ThemeStore>) {
       state.theme = action.payload;
@@ -67,6 +73,7 @@ export const selectBitcoinUnit = createSelector(
   state => bitcoinUnitsKeyedByName[state.bitcoinUnit]
 );
 
+const selectConversionUnit = createSelector(selectSettings, state => state.conversionUnit);
 const selectTheme = createSelector(selectSettings, state => state.theme);
 
 export const selectNetwork = createSelector(
@@ -81,6 +88,7 @@ export const selectWalletSecurityLevel = createSelector(
 
 export const {
   userChangedBitcoinUnit,
+  userChangedConversionUnit,
   userChangedTheme,
   userChangedNetwork,
   userChangedWalletSecurityLevel,
@@ -92,16 +100,21 @@ export function useSettings() {
   const walletSecurityLevel = useSelector(selectWalletSecurityLevel);
   const systemTheme = useColorScheme();
   const bitcoinUnit = useSelector(selectBitcoinUnit);
+  const conversionUnit = useSelector(selectConversionUnit);
   const themeStore = useSelector(selectTheme);
   const theme = (themeStore === 'system' ? systemTheme : themeStore) ?? 'light';
 
   return {
     bitcoinUnit,
+    conversionUnit,
     theme,
     themeStore,
     whenTheme: whenTheme(theme),
     changeBitcoinUnit(unit: BitcoinUnit) {
       dispatch(userChangedBitcoinUnit(unit));
+    },
+    changeConversionUnit(unit: FiatCurrency) {
+      dispatch(userChangedConversionUnit(unit));
     },
     changeTheme(theme: ThemeStore) {
       dispatch(userChangedTheme(theme));

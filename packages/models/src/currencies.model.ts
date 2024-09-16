@@ -1,7 +1,7 @@
 import { LiteralUnion } from './types.utils';
 
-export type CryptoCurrencies = LiteralUnion<'BTC' | 'STX', string>;
+export type CryptoCurrency = LiteralUnion<'BTC' | 'STX', string>;
 
-export type FiatCurrencies = 'USD' | string;
+export type FiatCurrency = 'USD' | 'EUR' | 'GBP' | 'AUD' | 'CAD' | 'CNY' | 'JPY' | 'KRW' | string;
 
-export type Currencies = CryptoCurrencies | FiatCurrencies;
+export type Currency = CryptoCurrency | FiatCurrency;

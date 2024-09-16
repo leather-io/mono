@@ -25,6 +25,24 @@ export const currencyDecimalsMap = {
   BTC: BTC_DECIMALS,
   STX: STX_DECIMALS,
   USD: 2,
+  EUR: 2,
+  GBP: 2,
+  AUD: 2,
+  CAD: 2,
+  CNY: 2,
+  JPY: 0,
+  KRW: 0,
+} as const;
+
+export const currencyNameMap = {
+  USD: 'united states dollar',
+  EUR: 'euro',
+  GBP: 'british pound',
+  AUD: 'australian dollar',
+  CAD: 'canadian dollar',
+  CNY: 'chinese yuan',
+  JPY: 'japanese yen',
+  KRW: 'south korean won',
 } as const;
 
 // https://bitcoin.stackexchange.com/a/41082/139277

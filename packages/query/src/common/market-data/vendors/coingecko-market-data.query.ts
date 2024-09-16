@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { CryptoCurrencies } from '@leather.io/models';
+import { CryptoCurrency } from '@leather.io/models';
 
 import { marketDataQueryOptions } from '../market-data.query';
 
-const currencyNameMap: Record<CryptoCurrencies, string> = {
+const currencyNameMap: Record<CryptoCurrency, string> = {
   BTC: 'bitcoin',
   STX: 'blockstack',
 };
 
-async function fetchCoingeckoMarketData(currency: CryptoCurrencies) {
+async function fetchCoingeckoMarketData(currency: CryptoCurrency) {
   const resp = await axios.get(
     `https://api.coingecko.com/api/v3/simple/price?ids=${currencyNameMap[currency]}&vs_currencies=usd`
   );
@@ -21,7 +21,7 @@ export function selectCoingeckoUsdPrice(resp: any) {
   return (Object.values(resp)[0] as any)?.usd;
 }
 
-export function useCoinGeckoMarketDataQuery(currency: CryptoCurrencies) {
+export function useCoinGeckoMarketDataQuery(currency: CryptoCurrency) {
   return useQuery({
     queryFn: () => fetchCoingeckoMarketData(currency),
     queryKey: [`coin-gecko-market-data-${currency}`],
