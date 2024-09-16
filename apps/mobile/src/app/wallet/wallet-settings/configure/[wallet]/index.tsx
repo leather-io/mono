@@ -13,8 +13,8 @@ import { WalletLoader } from '@/store/wallets/wallets.read';
 import { WalletStore, userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
+import dayjs from 'dayjs';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import moment from 'moment';
 import { z } from 'zod';
 
 import {
@@ -124,7 +124,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }}>
             <Text variant="caption01">{t`Creation date`}</Text>
             <Text variant="caption01" color="ink.text-subdued">
-              {moment(wallet.createdOn).format('D MMM YYYY')}
+              {dayjs(wallet.createdOn).format('D MMM YYYY')}
             </Text>
           </Box>
         </Box>

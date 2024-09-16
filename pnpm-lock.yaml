@@ -153,6 +153,9 @@ importers:
       buffer:
         specifier: 6.0.3
         version: 6.0.3
+      dayjs:
+        specifier: 1.11.13
+        version: 1.11.13
       expo:
         specifier: 51.0.26
         version: 51.0.26(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(expo-constants@16.0.2)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.3(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.5.4)
@@ -240,9 +243,6 @@ importers:
       metro-resolver:
         specifier: 0.80.5
         version: 0.80.5
-      moment:
-        specifier: 2.30.1
-        version: 2.30.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2434,7 +2434,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.18.28':
     resolution: {integrity: sha512-fvbVPId6s6etindzP6Nzos/CS1NurMVy4JKozjebArHr63tBid5i/UY5Pp+4wTCAM20gB2SjRdwcwoL6HFC4Iw==}
@@ -6332,8 +6332,8 @@ packages:
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
-  dayjs@1.11.12:
-    resolution: {integrity: sha512-Rt2g+nTbLlDWZTwwrIXjy9MeiZmSDI375FvZs72ngxx8PDC6YXOeR3q5LAuPzjZQxhiWdRKac7RKV+YyQYfYIg==}
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -20335,7 +20335,7 @@ snapshots:
 
   date-fns@3.6.0: {}
 
-  dayjs@1.11.12: {}
+  dayjs@1.11.13: {}
 
   debug@2.6.9:
     dependencies:
@@ -23649,7 +23649,7 @@ snapshots:
   logkitty@0.7.1:
     dependencies:
       ansi-fragments: 0.2.1
-      dayjs: 1.11.12
+      dayjs: 1.11.13
       yargs: 15.4.1
 
   look-it-up@2.1.0: {}
@@ -24306,7 +24306,8 @@ snapshots:
       pkg-types: 1.1.3
       ufo: 1.5.4
 
-  moment@2.30.1: {}
+  moment@2.30.1:
+    optional: true
 
   moo@0.5.2: {}
 
