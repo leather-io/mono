@@ -18,14 +18,17 @@ export function AccountWidgetLayout({ balance, children, header }: AccountWidget
   const theme = useTheme<Theme>();
   return (
     <Widget>
-      <Box>
+      <Box marginHorizontal="5">
         {header}
         {balance}
       </Box>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         horizontal
-        contentContainerStyle={{ gap: theme.spacing['3'] }}
+        contentContainerStyle={{
+          gap: theme.spacing['3'],
+          marginHorizontal: theme.spacing['5'],
+        }}
       >
         {children}
       </ScrollView>
