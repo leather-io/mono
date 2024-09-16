@@ -1,25 +1,22 @@
 import BigNumber from 'bignumber.js';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
-import type { Currencies, Money, NumType } from '@leather.io/models';
+import type { Currency, Money, NumType } from '@leather.io/models';
 
 import { isBigInt, isUndefined } from '..';
 
 type KnownCurrencyDecimals = keyof typeof currencyDecimalsMap;
 
-function isResolutionOfCurrencyKnown(symbol: Currencies): symbol is KnownCurrencyDecimals {
+function isResolutionOfCurrencyKnown(symbol: Currency): symbol is KnownCurrencyDecimals {
   return symbol in currencyDecimalsMap;
 }
 
-function getDecimalsOfSymbolIfKnown(symbol: Currencies) {
+function getDecimalsOfSymbolIfKnown(symbol: Currency) {
   if (isResolutionOfCurrencyKnown(symbol)) return currencyDecimalsMap[symbol];
   return null;
 }
 
-function throwWhenDecimalUnknown(
-  symbol: Currencies,
-  decimals?: number
-): asserts decimals is number {
+function throwWhenDecimalUnknown(symbol: Currency, decimals?: number): asserts decimals is number {
   if (isUndefined(decimals) && isUndefined(getDecimalsOfSymbolIfKnown(symbol)))
     throw new Error(`Resolution of currency ${symbol} is unknown, must be described`);
 }
@@ -31,7 +28,7 @@ function throwWhenDecimalUnknown(
  */
 export function createMoneyFromDecimal(
   value: NumType,
-  symbol: Currencies,
+  symbol: Currency,
   resolution?: number
 ): Money {
   throwWhenDecimalUnknown(symbol, resolution);
@@ -45,7 +42,7 @@ export function createMoneyFromDecimal(
  * @param symbol Identifying letter code, e.g. EUR
  * @param resolution Optional, required if value not known at build-time
  */
-export function createMoney(value: NumType, symbol: Currencies, resolution?: number): Money {
+export function createMoney(value: NumType, symbol: Currency, resolution?: number): Money {
   throwWhenDecimalUnknown(symbol, resolution);
   const decimals = getDecimalsOfSymbolIfKnown(symbol) ?? resolution;
   const amount = new BigNumber(isBigInt(value) ? value.toString() : value);

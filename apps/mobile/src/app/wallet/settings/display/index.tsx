@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet';
-import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
+import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet/conversion-unit-sheet';
 import { ThemeSheet } from '@/features/settings/theme-sheet/theme-sheet';
 import { useSettings } from '@/store/settings/settings.write';
 import { t } from '@lingui/macro';

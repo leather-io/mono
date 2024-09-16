@@ -243,7 +243,12 @@ msgid "Continue"
 msgstr ""
 
 #: src/app/wallet/settings/display/index.tsx:52
+#: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
+msgstr ""
+
+#: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:25
+msgid "Conversion unit updated"
 msgstr ""
 
 #: src/components/create-new-wallet/mnemonic-display.tsx:48
@@ -392,7 +397,6 @@ msgstr ""
 #: src/features/settings/account-identifier-sheet.tsx:16
 #: src/features/settings/analytics-sheet.tsx:16
 #: src/features/settings/app-authentication-sheet.tsx:16
-#: src/features/settings/conversion-unit-sheet.tsx:15
 #: src/features/settings/email-address-sheet.tsx:15
 #: src/features/settings/email-notifications-sheet.tsx:15
 #: src/features/settings/push-notifications-sheet.tsx:16

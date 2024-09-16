@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
 import {
-  CryptoCurrencies,
+  CryptoCurrency,
   MarketData,
   Money,
   createMarketData,
@@ -42,7 +42,7 @@ function pullPriceDataFromAvailableResponses(responses: MarketDataVendorWithPric
     .map(val => convertAmountToFractionalUnit(val, currencyDecimalsMap.USD));
 }
 
-export function useCryptoCurrencyMarketDataMeanAverage(currency: CryptoCurrencies): MarketData {
+export function useCryptoCurrencyMarketDataMeanAverage(currency: CryptoCurrency): MarketData {
   const { data: coingecko } = useCoinGeckoMarketDataQuery(currency);
   const { data: coincap } = useCoincapMarketDataQuery(currency);
   const { data: binance } = useBinanceMarketDataQuery(currency);

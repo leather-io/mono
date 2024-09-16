@@ -1,11 +1,11 @@
 import type BigNumber from 'bignumber.js';
 
-import type { Currencies } from './currencies.model';
+import type { Currency } from './currencies.model';
 
 export type NumType = BigNumber | bigint | number;
 
 export interface Money {
   readonly amount: BigNumber;
-  readonly symbol: Currencies;
+  readonly symbol: Currency;
   readonly decimals: number;
 }

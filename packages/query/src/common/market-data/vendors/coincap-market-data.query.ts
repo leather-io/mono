@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { CryptoCurrencies } from '@leather.io/models';
+import { CryptoCurrency } from '@leather.io/models';
 
 import { marketDataQueryOptions } from '../market-data.query';
 
-const currencyNameMap: Record<CryptoCurrencies, string> = {
+const currencyNameMap: Record<CryptoCurrency, string> = {
   BTC: 'bitcoin',
   STX: 'stacks',
 };
 
-async function fetchCoincapMarketData(currency: CryptoCurrencies) {
+async function fetchCoincapMarketData(currency: CryptoCurrency) {
   const resp = await axios.get(`https://api.coincap.io/v2/assets/${currencyNameMap[currency]}`);
   return resp.data;
 }
@@ -18,7 +18,7 @@ async function fetchCoincapMarketData(currency: CryptoCurrencies) {
 export function selectCoincapUsdPrice(resp: any) {
   return resp?.data?.priceUsd;
 }
-export function useCoincapMarketDataQuery(currency: CryptoCurrencies) {
+export function useCoincapMarketDataQuery(currency: CryptoCurrency) {
   return useQuery({
     queryFn: () => fetchCoincapMarketData(currency),
     queryKey: [`coincap-market-data-${currency}`],
