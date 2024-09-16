@@ -8,7 +8,7 @@ interface WidgetProps {
 
 export function Widget({ children }: WidgetProps) {
   return (
-    <Box p="5" flexDirection="column" gap="3">
+    <Box paddingVertical="5" flexDirection="column" gap="3">
       {children}
     </Box>
   );

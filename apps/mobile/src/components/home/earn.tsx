@@ -7,7 +7,7 @@ import { Widget } from '../widgets/widget';
 export function Earn() {
   return (
     <Widget>
-      <Box>
+      <Box marginHorizontal="5">
         <TouchableOpacity flexDirection="row" gap="1" alignItems="center" paddingBottom="3">
           <Text variant="heading05">{t`Earn`}</Text>
           <ChevronRightIcon variant="small" />
