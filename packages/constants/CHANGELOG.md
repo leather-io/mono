@@ -25,6 +25,21 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.9.2...@leather.io/constants-v0.10.0) (2024-09-17)
+
+
+### Features
+
+* settings bitcoin unit, closes leather-io/issues[#201](https://github.com/leather-io/mono/issues/201) ([bfe44f9](https://github.com/leather-io/mono/commit/bfe44f92ed31e342a69b63a3d20a7ef07fb5cb75))
+* settings conversion unit, closes leather-io/issues[#200](https://github.com/leather-io/mono/issues/200) ([676683a](https://github.com/leather-io/mono/commit/676683a1a074f5ff2bd4b4f656ffb7c9c50d8a3f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.14.0
+
 ## [0.9.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.9.1...@leather.io/constants-v0.9.2) (2024-09-04)
 
 

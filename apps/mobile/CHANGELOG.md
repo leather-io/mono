@@ -190,6 +190,37 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.34.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.33.0...@leather.io/mobile-v1.34.0) (2024-09-17)
+
+
+### Features
+
+* settings bitcoin unit, closes leather-io/issues[#201](https://github.com/leather-io/mono/issues/201) ([bfe44f9](https://github.com/leather-io/mono/commit/bfe44f92ed31e342a69b63a3d20a7ef07fb5cb75))
+* settings conversion unit, closes leather-io/issues[#200](https://github.com/leather-io/mono/issues/200) ([676683a](https://github.com/leather-io/mono/commit/676683a1a074f5ff2bd4b4f656ffb7c9c50d8a3f))
+* simulator dev client ([3123d00](https://github.com/leather-io/mono/commit/3123d0087125551637516297769c205ca776a269))
+
+
+### Bug Fixes
+
+* update mnemomic secondary action buttons, ref leather-io/issues[#318](https://github.com/leather-io/mono/issues/318) ([cee040a](https://github.com/leather-io/mono/commit/cee040ac05231fbc316f75fa123fde84ebe8c98a))
+* use margin on scrollview to allow elements reach edge, closes leather-io/issues[#322](https://github.com/leather-io/mono/issues/322) ([842cc93](https://github.com/leather-io/mono/commit/842cc93d2b191f1e2e519f842588acacaa59286a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.12.2
+    * @leather.io/constants bumped to 0.10.0
+    * @leather.io/crypto bumped to 1.5.2
+    * @leather.io/models bumped to 0.14.0
+    * @leather.io/rpc bumped to 2.1.7
+    * @leather.io/stacks bumped to 1.1.2
+    * @leather.io/ui bumped to 1.21.1
+    * @leather.io/utils bumped to 0.15.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.12.2
+
 ## [1.33.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.32.0...@leather.io/mobile-v1.33.0) (2024-09-13)
 
 

@@ -149,6 +149,24 @@
     * @leather.io/bitcoin bumped to 0.12.1
     * @leather.io/utils bumped to 0.14.0
 
+## [2.11.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.10.1...@leather.io/query-v2.11.0) (2024-09-17)
+
+
+### Features
+
+* settings conversion unit, closes leather-io/issues[#200](https://github.com/leather-io/mono/issues/200) ([676683a](https://github.com/leather-io/mono/commit/676683a1a074f5ff2bd4b4f656ffb7c9c50d8a3f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.12.2
+    * @leather.io/constants bumped to 0.10.0
+    * @leather.io/models bumped to 0.14.0
+    * @leather.io/rpc bumped to 2.1.7
+    * @leather.io/utils bumped to 0.15.0
+
 ## [2.10.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.9.0...@leather.io/query-v2.10.0) (2024-09-06)
 
 
