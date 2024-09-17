@@ -4,12 +4,14 @@ import { t } from '@lingui/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { PersistConfig } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { z } from 'zod';
 
 import { RootState } from '.';
 
 export const persistConfig: PersistConfig<RootState> = {
   key: 'root',
+  stateReconciler: autoMergeLevel2,
   version: 0,
   storage: AsyncStorage,
   whitelist: ['wallets', 'accounts', 'keychains', 'settings'],

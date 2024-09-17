@@ -131,7 +131,7 @@ msgstr "All Assets"
 msgid "All enabled"
 msgstr "All enabled"
 
-#: src/store/storage-persistors.ts:20
+#: src/store/storage-persistors.ts:22
 msgid "Allow Leather to access application's secure storage"
 msgstr "Allow Leather to access application's secure storage"
 
