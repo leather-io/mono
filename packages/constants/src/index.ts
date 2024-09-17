@@ -1,4 +1,9 @@
-import type { BitcoinUnit, BitcoinUnitInfo } from '@leather.io/models';
+import type {
+  AccountDisplayPreference,
+  AccountDisplayPreferenceInfo,
+  BitcoinUnit,
+  BitcoinUnitInfo,
+} from '@leather.io/models';
 
 export const gaiaUrl = 'https://hub.blockstack.org';
 
@@ -66,5 +71,31 @@ export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
     name: 'satoshi',
     symbol: 'sat',
     decimal: '0.00000001',
+  },
+};
+
+export const accountDisplayPreferencesKeyedByType: Record<
+  AccountDisplayPreference,
+  AccountDisplayPreferenceInfo
+> = {
+  ns: {
+    type: 'ns',
+    blockchain: 'bitcoin',
+    name: 'Native SegWit',
+  },
+  tr: {
+    type: 'tr',
+    blockchain: 'bitcoin',
+    name: 'Taproot address',
+  },
+  bns: {
+    type: 'bns',
+    blockchain: 'stacks',
+    name: 'BNS name',
+  },
+  stacks: {
+    type: 'stacks',
+    blockchain: 'stacks',
+    name: 'Stacks address',
   },
 };

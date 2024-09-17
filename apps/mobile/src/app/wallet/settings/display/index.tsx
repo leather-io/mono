@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
+import { AccountIdentifierSheet } from '@/features/settings/account-identifier/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet/conversion-unit-sheet';
 import { ThemeSheet } from '@/features/settings/theme-sheet/theme-sheet';
@@ -26,7 +26,7 @@ export default function SettingsDisplayScreen() {
   const bitcoinUnitSheetRef = useRef<SheetRef>(null);
   const conversionUnitSheetRef = useRef<SheetRef>(null);
   const accountIdentifierSheetRef = useRef<SheetRef>(null);
-  const { bitcoinUnit, themeStore } = useSettings();
+  const { accountDisplayPreference, bitcoinUnit, conversionUnit, themeStore } = useSettings();
   const { i18n } = useLingui();
 
   return (
@@ -50,7 +50,7 @@ export default function SettingsDisplayScreen() {
         />
         <DisplayCell
           title={t`Conversion unit`}
-          caption={t`USD`}
+          caption={i18n._(conversionUnit)}
           icon={<DollarCircleIcon />}
           onCreateSheetRef={() => {
             conversionUnitSheetRef.current?.present();
@@ -58,7 +58,7 @@ export default function SettingsDisplayScreen() {
         />
         <DisplayCell
           title={t`Account identifier`}
-          caption={t`BNS name`}
+          caption={i18n._(accountDisplayPreference.name)}
           icon={<PackageSecurityIcon />}
           onCreateSheetRef={() => {
             accountIdentifierSheetRef.current?.present();

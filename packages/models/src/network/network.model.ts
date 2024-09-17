@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Blockchains } from '../types';
+import { Blockchain } from '../types';
 import { networkConfigurationSchema } from './network.schema';
 
 export const HIRO_API_BASE_URL_MAINNET = 'https://api.hiro.so';
@@ -49,7 +49,7 @@ type BitcoinTestnetModes = (typeof testnetModes)[number];
 export type BitcoinNetworkModes = NetworkModes | BitcoinTestnetModes;
 
 interface BaseChainConfig {
-  blockchain: Blockchains;
+  blockchain: Blockchain;
 }
 
 export interface BitcoinChainConfig extends BaseChainConfig {

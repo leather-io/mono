@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-17 14:28+0200\n"
+"POT-Creation-Date: 2024-09-18 11:25-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,6 +16,10 @@ msgstr ""
 #: src/components/sheets/notify-user-sheet.layout.tsx:66
 msgid "\"{title}\" isn't ready yet."
 msgstr "\"{title}\" isn't ready yet."
+
+#: src/features/settings/account-identifier/account-identifier-cell.tsx:30
+msgid "{caption} blockchain"
+msgstr "{caption} blockchain"
 
 #: src/app/wallet/wallet-settings/index.tsx:42
 msgid "{hiddenAccountsLength} hidden accounts"
@@ -59,8 +63,13 @@ msgid "Account created"
 msgstr "Account created"
 
 #: src/app/wallet/settings/display/index.tsx:60
+#: src/features/settings/account-identifier/account-identifier-sheet.tsx:33
 msgid "Account identifier"
 msgstr "Account identifier"
+
+#: src/features/settings/account-identifier/account-identifier-sheet.tsx:26
+msgid "Account identifier updated"
+msgstr "Account identifier updated"
 
 #: src/components/wallet-settings/account-name-sheet.tsx:19
 msgid "Account label"
@@ -172,7 +181,7 @@ msgstr "Avatar"
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:28
 msgid "BIP39 passphrase"
-msgstr "BIP39 passphrase<<<<<<< HEAD"
+msgstr "BIP39 passphrase"
 
 #: src/components/widgets/tokens/tokens.mocks.tsx:50
 msgid "Bitcoin"
@@ -180,11 +189,11 @@ msgstr "Bitcoin"
 
 #: src/components/widgets/tokens/tokens.mocks.tsx:27
 msgid "Bitcoin blockchain"
-msgstr "Bitcoin blockchain>>>>>>> bbb518c (feat: add tokens widget, ref leather-io/issues#221)"
+msgstr "Bitcoin blockchain"
 
 #: src/app/wallet/developer-console/index.tsx:90
 msgid "Bitcoin Scrach Pad"
-msgstr "Bitcoin Scrach Pad======="
+msgstr "Bitcoin Scrach Pad"
 
 #: src/app/wallet/settings/display/index.tsx:44
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
@@ -198,10 +207,6 @@ msgstr "Bitcoin unit updated"
 #: src/app/wallet/developer-console/bitcoin-scratch-pad.tsx:38
 msgid "BitcoinScratchPad"
 msgstr "BitcoinScratchPad"
-
-#: src/app/wallet/settings/display/index.tsx:61
-msgid "BNS name"
-msgstr "BNS name"
 
 #: src/components/browser/browser-empty-state.tsx:155
 #: src/components/sheets/warning-sheet.layout.tsx:74
@@ -410,7 +415,6 @@ msgstr "getAddresses"
 msgid "Guides"
 msgstr "Guides"
 
-#: src/features/settings/account-identifier-sheet.tsx:16
 #: src/features/settings/analytics-sheet.tsx:16
 #: src/features/settings/app-authentication-sheet.tsx:16
 #: src/features/settings/email-address-sheet.tsx:15
@@ -490,7 +494,7 @@ msgstr "Must use physical device for Push Notifications"
 
 #: src/components/widgets/accounts/accounts-header.tsx:14
 msgid "My accounts"
-msgstr "My accounts<<<<<<< HEAD"
+msgstr "My accounts"
 
 #: src/components/widgets/tokens/tokens-header.tsx:18
 msgid "My tokens"
@@ -822,10 +826,6 @@ msgstr "Type URL or search"
 #: src/app/wallet/recover-wallet.tsx:149
 msgid "Type your recovery phrase"
 msgstr "Type your recovery phrase"
-
-#: src/app/wallet/settings/display/index.tsx:53
-msgid "USD"
-msgstr "USD"
 
 #: src/app/wallet/secure-your-wallet.tsx:55
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
