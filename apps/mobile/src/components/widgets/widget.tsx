@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Box } from '@leather.io/ui/native';
 
 interface WidgetProps {

@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Box, Circle, Flex } from 'leather-styles/jsx';
-import { ZapIcon } from 'src/icons/index.web';
 
+import { ZapIcon } from '../../../icons/zap-icon.web';
 import { Button } from '../../button/button.web';
 import { Flag } from '../../flag/flag.web';
 import { ItemLayout } from '../../item-layout/item-layout.web';

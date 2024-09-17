@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { t } from '@lingui/macro';
 

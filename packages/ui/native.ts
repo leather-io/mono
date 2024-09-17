@@ -38,3 +38,4 @@ export {
 export { SheetHeader } from './src/components/sheet/components/sheet-header.native';
 export { RadioButton } from './src/components/radio-button/radio-button.native';
 export { Switch } from './src/components/switch/switch.native';
+export * from './src/components/collectibles/index.native';

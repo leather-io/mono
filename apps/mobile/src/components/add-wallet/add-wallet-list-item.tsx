@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 interface AddWalletListItemProps {

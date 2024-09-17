@@ -4,14 +4,6 @@ import BigNumber from 'bignumber.js';
 import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, StxAvatarIcon } from '@leather.io/ui/native';
 
-// provided by useTotalBalance hook in extension/src/app/common/hooks/balance/use-total-balance.tsx
-
-export const mockTotalBalance = {
-  totalUsdBalance: '$126.74',
-  totalBtcBalance: '0.00215005',
-  totalStxBalance: '0.0024',
-};
-
 export interface Token {
   availableBalance: Record<string, Money>;
   formattedBalance: { isAbbreviated: boolean; value: string };

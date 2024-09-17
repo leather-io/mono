@@ -2,8 +2,8 @@ import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import { useTheme } from '@shopify/restyle';
-import { Theme } from 'src/theme-native';
 
+import { Theme } from '../../theme-native';
 import { IconVariant } from './icon.shared';
 
 export interface IconProps extends SvgProps {
