@@ -75,7 +75,6 @@
     "expo-device": "6.0.2",
     "expo-font": "12.0.5",
     "expo-image": "1.12.9",
-    "expo-linking": "6.3.1",
     "expo-local-authentication": "14.0.1",
     "expo-notifications": "0.28.14",
     "expo-router": "3.5.14",

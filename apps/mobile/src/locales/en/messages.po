@@ -21,10 +21,6 @@ msgstr "\"{title}\" isn't ready yet."
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr "{hiddenAccountsLength} hidden accounts"
 
-#: src/app/waiting-list/waiting-list.tsx:330
-msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
-msgstr "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
-
 #: src/app/wallet/create-new-wallet.tsx:61
 msgid "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
 msgstr "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
@@ -199,10 +195,6 @@ msgstr "Cancel"
 msgid "Change name"
 msgstr "Change name"
 
-#: src/app/waiting-list/waiting-list.tsx:243
-msgid "check out our browser extension."
-msgstr "check out our browser extension."
-
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:61
 msgid "Choose account avatar"
 msgstr "Choose account avatar"
@@ -339,10 +331,6 @@ msgstr "Disabled"
 msgid "Display"
 msgstr "Display"
 
-#: src/app/waiting-list/waiting-list.tsx:261
-msgid "Done"
-msgstr "Done"
-
 #: src/app/wallet/developer-console/index.tsx:110
 msgid "Drawer"
 msgstr "Drawer"
@@ -355,7 +343,6 @@ msgstr "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgid "Earn"
 msgstr "Earn"
 
-#: src/app/waiting-list/waiting-list.tsx:295
 #: src/app/wallet/settings/notifications/index.tsx:55
 msgid "Email address"
 msgstr "Email address"
@@ -392,10 +379,6 @@ msgstr "Failed to get push token for push notification!"
 #: src/app/wallet/settings/index.tsx:95
 msgid "Fees"
 msgstr "Fees"
-
-#: src/app/waiting-list/waiting-list.tsx:249
-msgid "Follow us"
-msgstr "Follow us"
 
 #: src/app/wallet/create-new-wallet.tsx:97
 msgid "For your eyes only"
@@ -462,10 +445,6 @@ msgstr "Invalid words: {joinedInvalidWords}"
 #: src/app/wallet/settings/help/index.tsx:38
 msgid "Learn"
 msgstr "Learn"
-
-#: src/app/waiting-list/waiting-list.tsx:344
-msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
-msgstr "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 
 #: src/components/widgets/account/ledger-badge.tsx:19
 msgid "Ledger"
@@ -683,10 +662,6 @@ msgstr "Something went wrong"
 msgid "Start stacking"
 msgstr "Start stacking"
 
-#: src/app/waiting-list/waiting-list.tsx:270
-msgid "Stay in the loop and be the first one to hear about new developments"
-msgstr "Stay in the loop and be the first one to hear about new developments"
-
 #: src/app/wallet/developer-console/index.tsx:109
 msgid "stx_signMessage"
 msgstr "stx_signMessage"
@@ -695,7 +670,6 @@ msgstr "stx_signMessage"
 msgid "stx_signTransaction"
 msgstr "stx_signTransaction"
 
-#: src/app/waiting-list/waiting-list.tsx:305
 #: src/components/browser/approval-ux-modal.tsx:62
 msgid "Submit"
 msgstr "Submit"
@@ -736,14 +710,6 @@ msgstr "Tap to view Secret Key"
 #: src/app/wallet/settings/networks/networks-switcher.tsx:50
 msgid "Testnet"
 msgstr "Testnet"
-
-#: src/app/waiting-list/waiting-list.tsx:237
-msgid ""
-"Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the\n"
-"meantime, please"
-msgstr ""
-"Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the\n"
-"meantime, please"
 
 #: src/components/wallet-settings/remove-wallet-sheet.tsx:17
 msgid ""
