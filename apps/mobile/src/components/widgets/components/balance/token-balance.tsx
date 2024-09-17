@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { t } from '@lingui/macro';
 
 import { BulletSeparator, Text } from '@leather.io/ui/native';
