@@ -190,6 +190,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.34.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.34.0...@leather.io/mobile-v1.34.1) (2024-09-17)
+
+
+### Bug Fixes
+
+* redux persist config ([45521c5](https://github.com/leather-io/mono/commit/45521c5a95efac22339d84892370172e1d7a2aef))
+
 ## [1.34.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.33.0...@leather.io/mobile-v1.34.0) (2024-09-17)
 
 
