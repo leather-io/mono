@@ -14,6 +14,9 @@ interface BitcoinKeychainProps {
   accountIndex: number;
 }
 
+// <<< PETE continue here tomorrow. Maybe prep my PR to be open with mocks
+// <then start to get balances ?
+
 function BitcoinKeychains({ fingerprint, accountIndex }: BitcoinKeychainProps) {
   const bitcoinKeychains = useBitcoinKeychains();
   const keychains = bitcoinKeychains.fromAccountIndex(fingerprint, accountIndex);
