@@ -21,10 +21,6 @@ msgstr ""
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:330
-msgid "<0><1>Bitcoin for</1></0><2><3>the rest of us</3></2>"
-msgstr ""
-
 #: src/app/wallet/create-new-wallet.tsx:61
 msgid "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
 msgstr ""
@@ -200,10 +196,6 @@ msgstr ""
 msgid "Change name"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:243
-msgid "check out our browser extension."
-msgstr ""
-
 #: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:61
 msgid "Choose account avatar"
 msgstr ""
@@ -334,10 +326,6 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:261
-msgid "Done"
-msgstr ""
-
 #: src/app/wallet/developer-console/index.tsx:110
 msgid "Drawer"
 msgstr ""
@@ -350,7 +338,6 @@ msgstr ""
 msgid "Earn"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:295
 #: src/app/wallet/settings/notifications/index.tsx:55
 msgid "Email address"
 msgstr ""
@@ -384,10 +371,6 @@ msgstr ""
 
 #: src/app/wallet/settings/index.tsx:95
 msgid "Fees"
-msgstr ""
-
-#: src/app/waiting-list/waiting-list.tsx:249
-msgid "Follow us"
 msgstr ""
 
 #: src/app/wallet/create-new-wallet.tsx:97
@@ -453,10 +436,6 @@ msgstr ""
 
 #: src/app/wallet/settings/help/index.tsx:38
 msgid "Learn"
-msgstr ""
-
-#: src/app/waiting-list/waiting-list.tsx:344
-msgid "Leather is the only wallet you need to tap into the multilayered Bitcoin economy"
 msgstr ""
 
 #: src/components/widgets/account/ledger-badge.tsx:19
@@ -663,10 +642,6 @@ msgstr ""
 msgid "Start stacking"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:270
-msgid "Stay in the loop and be the first one to hear about new developments"
-msgstr ""
-
 #: src/app/wallet/developer-console/index.tsx:109
 msgid "stx_signMessage"
 msgstr ""
@@ -675,7 +650,6 @@ msgstr ""
 msgid "stx_signTransaction"
 msgstr ""
 
-#: src/app/waiting-list/waiting-list.tsx:305
 #: src/components/browser/approval-ux-modal.tsx:62
 msgid "Submit"
 msgstr ""
@@ -710,12 +684,6 @@ msgstr ""
 
 #: src/app/wallet/_layout.tsx:78
 msgid "Testnet"
-msgstr ""
-
-#: src/app/waiting-list/waiting-list.tsx:237
-msgid ""
-"Thanks for subscribing! We'll notify you when Leather's mobile app launches. In the\n"
-"meantime, please"
 msgstr ""
 
 #: src/components/wallet-settings/remove-wallet-sheet.tsx:17
