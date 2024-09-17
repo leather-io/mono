@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-17 14:28+0200\n"
+"POT-Creation-Date: 2024-09-18 11:25-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,6 +15,10 @@ msgstr ""
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:66
 msgid "\"{title}\" isn't ready yet."
+msgstr ""
+
+#: src/features/settings/account-identifier/account-identifier-cell.tsx:30
+msgid "{caption} blockchain"
 msgstr ""
 
 #: src/app/wallet/wallet-settings/index.tsx:42
@@ -59,7 +63,12 @@ msgid "Account created"
 msgstr ""
 
 #: src/app/wallet/settings/display/index.tsx:60
+#: src/features/settings/account-identifier/account-identifier-sheet.tsx:33
 msgid "Account identifier"
+msgstr ""
+
+#: src/features/settings/account-identifier/account-identifier-sheet.tsx:26
+msgid "Account identifier updated"
 msgstr ""
 
 #: src/components/wallet-settings/account-name-sheet.tsx:19
@@ -172,7 +181,7 @@ msgstr ""
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:28
 msgid "BIP39 passphrase"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/components/widgets/tokens/tokens.mocks.tsx:50
 msgid "Bitcoin"
@@ -197,10 +206,6 @@ msgstr ""
 
 #: src/app/wallet/developer-console/bitcoin-scratch-pad.tsx:38
 msgid "BitcoinScratchPad"
-msgstr ""
-
-#: src/app/wallet/settings/display/index.tsx:61
-msgid "BNS name"
 msgstr ""
 
 #: src/components/browser/browser-empty-state.tsx:155
@@ -410,7 +415,6 @@ msgstr ""
 msgid "Guides"
 msgstr ""
 
-#: src/features/settings/account-identifier-sheet.tsx:16
 #: src/features/settings/analytics-sheet.tsx:16
 #: src/features/settings/app-authentication-sheet.tsx:16
 #: src/features/settings/email-address-sheet.tsx:15
@@ -490,7 +494,7 @@ msgstr ""
 
 #: src/components/widgets/accounts/accounts-header.tsx:14
 msgid "My accounts"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/components/widgets/tokens/tokens-header.tsx:18
 msgid "My tokens"
@@ -819,10 +823,6 @@ msgstr ""
 
 #: src/app/wallet/recover-wallet.tsx:149
 msgid "Type your recovery phrase"
-msgstr ""
-
-#: src/app/wallet/settings/display/index.tsx:53
-msgid "USD"
 msgstr ""
 
 #: src/app/wallet/secure-your-wallet.tsx:55

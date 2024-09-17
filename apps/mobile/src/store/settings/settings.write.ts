@@ -4,8 +4,12 @@ import { useSelector } from 'react-redux';
 import { whenTheme } from '@/utils/when-theme';
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 
-import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import {
+  accountDisplayPreferencesKeyedByType,
+  bitcoinUnitsKeyedByName,
+} from '@leather.io/constants';
+import {
+  AccountDisplayPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
   FiatCurrency,
@@ -26,6 +30,7 @@ export type Theme = Exclude<ThemeStore, 'system'>;
 export type WalletSecurityLevel = 'undefined' | 'secure' | 'insecure';
 
 export interface SettingsState {
+  accountDisplayPreference: AccountDisplayPreference;
   bitcoinUnit: BitcoinUnit;
   conversionUnit: FiatCurrency;
   createdOn: string;
@@ -35,6 +40,7 @@ export interface SettingsState {
 }
 
 const initialState: SettingsState = {
+  accountDisplayPreference: 'ns',
   bitcoinUnit: 'bitcoin',
   conversionUnit: 'USD',
   createdOn: new Date().toISOString(),
@@ -47,6 +53,9 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
+    userChangedAccountDisplayPreference(state, action: PayloadAction<AccountDisplayPreference>) {
+      state.accountDisplayPreference = action.payload;
+    },
     userChangedBitcoinUnit(state, action: PayloadAction<BitcoinUnit>) {
       state.bitcoinUnit = action.payload;
     },
@@ -68,6 +77,11 @@ export const settingsSlice = createSlice({
 
 const selectSettings = (state: RootState) => state.settings;
 
+export const selectAccountDisplayPreference = createSelector(
+  selectSettings,
+  state => accountDisplayPreferencesKeyedByType[state.accountDisplayPreference]
+);
+
 export const selectBitcoinUnit = createSelector(
   selectSettings,
   state => bitcoinUnitsKeyedByName[state.bitcoinUnit]
@@ -87,6 +101,7 @@ export const selectWalletSecurityLevel = createSelector(
 );
 
 export const {
+  userChangedAccountDisplayPreference,
   userChangedBitcoinUnit,
   userChangedConversionUnit,
   userChangedTheme,
@@ -99,17 +114,22 @@ export function useSettings() {
   const network = useSelector(selectNetwork);
   const walletSecurityLevel = useSelector(selectWalletSecurityLevel);
   const systemTheme = useColorScheme();
+  const accountDisplayPreference = useSelector(selectAccountDisplayPreference);
   const bitcoinUnit = useSelector(selectBitcoinUnit);
   const conversionUnit = useSelector(selectConversionUnit);
   const themeStore = useSelector(selectTheme);
   const theme = (themeStore === 'system' ? systemTheme : themeStore) ?? 'light';
 
   return {
+    accountDisplayPreference,
     bitcoinUnit,
     conversionUnit,
     theme,
     themeStore,
     whenTheme: whenTheme(theme),
+    changeAccountDisplayPreference(type: AccountDisplayPreference) {
+      dispatch(userChangedAccountDisplayPreference(type));
+    },
     changeBitcoinUnit(unit: BitcoinUnit) {
       dispatch(userChangedBitcoinUnit(unit));
     },

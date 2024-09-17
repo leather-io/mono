@@ -1,4 +1,4 @@
-import { Blockchains } from '../types';
+import { Blockchain } from '../types';
 import { StacksFeeEstimate } from './stacks-fees.model';
 
 export enum FeeTypes {
@@ -17,7 +17,7 @@ export enum FeeCalculationTypes {
 }
 
 export interface Fees {
-  blockchain: Blockchains;
+  blockchain: Blockchain;
   estimates: StacksFeeEstimate[];
   calculation: FeeCalculationTypes;
 }
