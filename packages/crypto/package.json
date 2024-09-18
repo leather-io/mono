@@ -8,6 +8,7 @@
     "build": "tsup",
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "prepublish": "pnpm build",
+    "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -21,8 +22,6 @@
     "just-memoize": "2.2.0"
   },
   "devDependencies": {
-    "@vitest/coverage-istanbul": "0.34.6",
-    "@vitest/coverage-v8": "2.0.4",
     "tsup": "8.1.0",
     "vitest": "2.0.5"
   },

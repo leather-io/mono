@@ -51,7 +51,6 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "@vitest/coverage-istanbul": "0.34.6",
     "eslint": "8.53.0",
     "prettier": "3.3.3",
     "tslib": "2.6.2",

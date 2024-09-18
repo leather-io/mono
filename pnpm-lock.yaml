@@ -42,6 +42,9 @@ importers:
       '@ls-lint/ls-lint':
         specifier: 2.2.3
         version: 2.2.3
+      '@vitest/coverage-v8':
+        specifier: 2.0.5
+        version: 2.0.5(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))
       dependency-cruiser:
         specifier: 16.3.10
         version: 16.3.10
@@ -461,9 +464,6 @@ importers:
       '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
-      '@vitest/coverage-istanbul':
-        specifier: 0.34.6
-        version: 0.34.6(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))
       eslint:
         specifier: 8.53.0
         version: 8.53.0
@@ -529,12 +529,6 @@ importers:
         specifier: 2.2.0
         version: 2.2.0
     devDependencies:
-      '@vitest/coverage-istanbul':
-        specifier: 0.34.6
-        version: 0.34.6(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))
-      '@vitest/coverage-v8':
-        specifier: 2.0.4
-        version: 2.0.4(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.9(@types/node@22.5.5))(@swc/core@1.7.26)(postcss@8.4.47)(typescript@5.6.2)
@@ -715,9 +709,6 @@ importers:
       '@types/react':
         specifier: 18.2.79
         version: 18.2.79
-      '@vitest/coverage-istanbul':
-        specifier: 0.34.6
-        version: 0.34.6(vitest@2.0.5(@types/node@22.5.5)(jsdom@22.1.0)(lightningcss@1.27.0)(terser@5.33.0))
       concurrently:
         specifier: 8.2.2
         version: 8.2.2
@@ -1061,9 +1052,6 @@ importers:
       '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
-      '@vitest/coverage-istanbul':
-        specifier: 0.34.6
-        version: 0.34.6(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))
       eslint:
         specifier: 8.53.0
         version: 8.53.0
@@ -5129,15 +5117,10 @@ packages:
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
 
-  '@vitest/coverage-istanbul@0.34.6':
-    resolution: {integrity: sha512-5KaBNZPDSk2ybavC3rZ1pWGniw7sJ5usuwVGRUYzJwiBfWvnLpuUer7bjw7qUCRGdKJXrBgb/Dsgif9rkwMX/A==}
+  '@vitest/coverage-v8@2.0.5':
+    resolution: {integrity: sha512-qeFcySCg5FLO2bHHSa0tAZAOnAUbp4L6/A5JDuj9+bt53JREl8hpLjLHEWF0e/gWc8INVpJaqA7+Ene2rclpZg==}
     peerDependencies:
-      vitest: '>=0.32.0 <1'
-
-  '@vitest/coverage-v8@2.0.4':
-    resolution: {integrity: sha512-i4lx/Wpg5zF1h2op7j0wdwuEQxaL/YTwwQaKuKMHYj7MMh8c7I4W7PNfOptZBCSBZI0z1qwn64o0pM/pA8Tz1g==}
-    peerDependencies:
-      vitest: 2.0.4
+      vitest: 2.0.5
 
   '@vitest/expect@0.34.7':
     resolution: {integrity: sha512-G9iEtwrD6ZQ4MVHZufif9Iqz3eLtuwBBNx971fNAGPaugM7ftAWjQN+ob2zWhtzURp8RK3zGXOxVb01mFo3zAQ==}
@@ -19812,33 +19795,7 @@ snapshots:
       graphql: 15.8.0
       wonka: 4.0.15
 
-  '@vitest/coverage-istanbul@0.34.6(vitest@2.0.5(@types/node@22.5.5)(jsdom@22.1.0)(lightningcss@1.27.0)(terser@5.33.0))':
-    dependencies:
-      istanbul-lib-coverage: 3.2.2
-      istanbul-lib-instrument: 6.0.3
-      istanbul-lib-report: 3.0.1
-      istanbul-lib-source-maps: 4.0.1
-      istanbul-reports: 3.1.7
-      picocolors: 1.1.0
-      test-exclude: 6.0.0
-      vitest: 2.0.5(@types/node@22.5.5)(jsdom@22.1.0)(lightningcss@1.27.0)(terser@5.33.0)
-    transitivePeerDependencies:
-      - supports-color
-
-  '@vitest/coverage-istanbul@0.34.6(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))':
-    dependencies:
-      istanbul-lib-coverage: 3.2.2
-      istanbul-lib-instrument: 6.0.3
-      istanbul-lib-report: 3.0.1
-      istanbul-lib-source-maps: 4.0.1
-      istanbul-reports: 3.1.7
-      picocolors: 1.1.0
-      test-exclude: 6.0.0
-      vitest: 2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0)
-    transitivePeerDependencies:
-      - supports-color
-
-  '@vitest/coverage-v8@2.0.4(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))':
+  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@22.5.5)(jsdom@25.0.0)(lightningcss@1.27.0)(terser@5.33.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3

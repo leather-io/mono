@@ -85,5 +85,24 @@ jobs:
 
       - run: pnpm build
 
-      - name: Run unit tests
+      - name: Run unit tests with code coverage
         run: pnpm test:unit
+
+  test-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+        with:
+          fetch-depth: 0
+
+      - run: pnpm build
+
+      - name: Run unit tests with code coverage
+        run: pnpm test:coverage
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          files: ./app/mobile/coverage/.tmp/coverage-0.json
