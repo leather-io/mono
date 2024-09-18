@@ -10,6 +10,8 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "prepublish": "pnpm build",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
     "typecheck": "tsc --noEmit",
     "types": "tsc --declaration --emitDeclarationOnly"
   },

@@ -41,3 +41,8 @@ artifacts/
 
 expo-env.d.ts
 # @end expo-cli
+
+# Coverage reports
+coverage
+tmp
+.tmp

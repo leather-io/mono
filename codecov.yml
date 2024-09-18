@@ -1,0 +1,45 @@
+coverage:
+  status:
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
+
+comment:
+  layout: 'condensed_header, diff, flags, files, components'
+  require_changes: false # if true: only post the comment if coverage changes
+  hide_project_coverage: false # [true :: only show coverage on the git diff aka patch coverage]
+
+codecov:
+  require_ci_to_pass: false
+
+component_management:
+  individual_components:
+    - component_id: packages-bitcoin # this is an identifier that should not be changed
+      name: bitcoin # this is a display name, and can be changed freely
+      paths:
+        - packages/bitcoin
+
+    - component_id: packages-query
+      name: query
+      paths:
+        - packages/query
+
+    - component_id: packages-utils
+      name: utils
+      paths:
+        - packages/utils
+
+    - component_id: packages-crypto
+      name: crypto
+      paths:
+        - packages/crypto
+
+    - component_id: packages-stacks
+      name: stacks
+      paths:
+        - packages/stacks
+# When modifying this file, please validate using
+# curl -X POST --data-binary @codecov.yml https://codecov.io/validate

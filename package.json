@@ -25,6 +25,7 @@
     "syncpack:format": "syncpack format",
     "syncpack:lint": "syncpack lint",
     "test": "turbo run test",
+    "test:coverage": "pnpm -r test:coverage",
     "test:unit": "pnpm -r test:unit",
     "typecheck": "turbo run typecheck"
   },
@@ -37,6 +38,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@ls-lint/ls-lint": "2.2.3",
+    "@vitest/coverage-v8": "2.0.5",
     "dependency-cruiser": "16.3.10",
     "eslint": "8.53.0",
     "husky": "9.1.4",

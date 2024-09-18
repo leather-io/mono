@@ -7,7 +7,6 @@ export default defineWorkspace([
     test: {
       include: 'src/**/*.spec.{ts,tsx}',
       coverage: {
-        provider: 'istanbul',
         reporter: ['text', 'json-summary', 'json', 'html', 'lcov'],
         reportsDirectory: './coverage',
         reportOnFailure: true,
