@@ -16,7 +16,7 @@ export default function BitcoinScratchPad() {
   const { sign } = usePsbtSigner();
   const [text, setText] = useState('bc1qetcn9fdtzq3wez6vrljjyry225ml7j52h3kwgl');
 
-  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType('efd01538', 0);
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType('efd01538', 1);
 
   if (!nativeSegwit || !taproot) throw new Error('No signer found');
 
@@ -52,19 +52,19 @@ export default function BitcoinScratchPad() {
         onPress={async () => {
           const tx = new btc.Transaction();
           tx.addInput({
-            txid: 'bcbb27db6062dbd8de71eb77ce6f04b398e6ed04bf1104dd1c9b17b15c291b3d',
-            index: 68,
+            txid: 'c5fcf6fc646c33a49e4a0772a351a8ce942e7caf04aafc689eb599ca9c8f57d0',
+            index: 0,
             tapInternalKey: taprootPayer.payment.tapInternalKey,
             tapBip32Derivation: [payerToTapBip32Derivation(taprootPayer)],
             witnessUtxo: {
               script: taprootPayer.payment.script,
-              amount: 546n,
+              amount: 20000n,
             },
           });
 
           tx.addOutputAddress(
-            'bc1ph65ywff65f0nl84xaxwdxgc2rc2gpr70tptllffktt3qzyx859zsp3zvwl',
-            546n
+            'bc1pwz9n62p9dhjpqcpdmfcrewdnz3nk8jcved242vd2lj9fgvtvwnwscvdyre',
+            19000n
           );
 
           const signedTx = await sign(tx.toPSBT());
