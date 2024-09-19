@@ -8,8 +8,8 @@ import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
-import { useSettings } from '@/store/settings/settings.write';
-import { destructAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { useSettings } from '@/store/settings/settings';
+import { destructAccountIdentifier, useAppDispatch } from '@/store/utils';
 import { useRouter } from 'expo-router';
 
 import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
@@ -21,7 +21,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
   const direction = useSharedValue<'down' | 'up'>('down');
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const checkIdxWithinBounds = useCallback(
     (id: number) => {
       return id >= 0 && id < accounts.length;
@@ -50,7 +50,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
   );
   const onAccountPress = useCallback(
     (accountId: string) => {
-      const { fingerprint, accountIndex } = destructAccountIdentifer(accountId);
+      const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
       sheetRef.current?.close();
       router.navigate({
         pathname: AppRoutes.SettingsWalletConfigureAccount,
@@ -61,7 +61,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
   );
 
   return (
-    <Sheet isScrollView ref={sheetRef} themeVariant={themeVariant}>
+    <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5" gap="5">
         {accounts.map((account, idx) => (
           <Draggable

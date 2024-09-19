@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useCreateWallet } from '@/hooks/create-wallet';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -25,7 +25,7 @@ export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
 
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const [isHidden, setIsHidden] = useState(true);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
@@ -71,7 +71,7 @@ export default function CreateNewWallet() {
         <Box my="5">
           {isHidden && (
             <BlurView
-              themeVariant={themeVariant}
+              themeVariant={themeDerivedFromThemePreference}
               intensity={isHidden ? 30 : 0}
               style={{
                 position: 'absolute',

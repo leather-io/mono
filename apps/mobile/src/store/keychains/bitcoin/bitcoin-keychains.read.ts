@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/store';
-import { selectNetwork } from '@/store/settings/settings.write';
+import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { createSelector } from '@reduxjs/toolkit';
 import memoize from 'just-memoize';
 
@@ -56,7 +56,7 @@ function deriveBitcoinPayersFromStore(
 
 const bitcoinKeychains = createSelector(
   bitcoinKeychainSelectors.selectAll,
-  selectNetwork,
+  selectNetworkPreference,
   (keychains, network) =>
     deriveBitcoinPayersFromStore(keychains, network.chain.bitcoin.bitcoinNetwork)
 );

@@ -37,3 +37,4 @@ export {
 } from './src/components/sheet/sheet.native';
 export { SheetHeader } from './src/components/sheet/components/sheet-header.native';
 export { RadioButton } from './src/components/radio-button/radio-button.native';
+export { Switch } from './src/components/switch/switch.native';

@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -21,7 +21,7 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
   const { i18n } = useLingui();
 
   function onUpdateConversionUnit(unit: FiatCurrency) {
-    settings.changeConversionUnit(unit);
+    settings.changeFiatCurrencyPreference(unit);
     displayToast({ title: t`Conversion unit updated`, type: 'success' });
   }
 
@@ -30,9 +30,9 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
       {Object.entries(currencyNameMap).map(([symbol, name]) => (
         <ConversionUnitCell
           key={symbol}
-          activeConversionUnit={settings.conversionUnit}
+          activeConversionUnit={settings.fiatCurrencyPreference}
           onUpdateConversionUnit={onUpdateConversionUnit}
-          conversionUnit={symbol}
+          fiatCurrencyPreference={symbol}
           title={i18n._(name)}
         />
       ))}

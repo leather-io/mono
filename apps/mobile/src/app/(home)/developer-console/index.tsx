@@ -10,7 +10,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { LOCALES } from '@/locales';
 import { AppRoutes } from '@/routes';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -77,7 +77,9 @@ export default function DeveloperConsoleScreen() {
           gap: theme.spacing[2],
         }}
       >
-        <PressableListItem title={t`walletSecurityLevel:` + ' ' + settings.walletSecurityLevel} />
+        <PressableListItem
+          title={t`securityLevelPreference:` + ' ' + settings.securityLevelPreference}
+        />
         <PressableListItem
           onPress={() => addWalletSheetRef.current?.present()}
           title={t`Create wallet`}

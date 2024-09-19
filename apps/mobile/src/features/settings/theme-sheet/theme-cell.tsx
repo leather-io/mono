@@ -1,11 +1,11 @@
-import { ThemeStore } from '@/store/settings/settings.write';
+import { ThemePreference } from '@/store/settings/settings';
 
 import { ItemLayout, RadioButton, TouchableOpacity } from '@leather.io/ui/native';
 
 interface ThemeCellProps {
-  activeTheme: ThemeStore;
-  onUpdateTheme(theme: ThemeStore): void;
-  theme: ThemeStore;
+  activeTheme: ThemePreference;
+  onUpdateTheme(theme: ThemePreference): void;
+  theme: ThemePreference;
   title: string;
 }
 export function ThemeCell({ activeTheme, onUpdateTheme, theme, title }: ThemeCellProps) {

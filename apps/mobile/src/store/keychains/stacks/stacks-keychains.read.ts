@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/store';
-import { selectNetwork } from '@/store/settings/settings.write';
+import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { mnemonicStore } from '@/store/storage-persistors';
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -27,7 +27,7 @@ function createSignFnFromBiometricMnemonicStore(descriptor: string) {
 
 const stacksSigners = createSelector(
   stacksKeychainSelectors.selectAll,
-  selectNetwork,
+  selectNetworkPreference,
   (accounts, network) =>
     accounts.map(account =>
       initalizeStacksSigner({

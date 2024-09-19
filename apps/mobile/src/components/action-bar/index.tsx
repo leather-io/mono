@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { useTheme } from '@shopify/restyle';
 
 import { BlurView, Box, Theme } from '@leather.io/ui/native';
@@ -31,7 +31,7 @@ export interface ActionBarMethods {
 export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (props, ref) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const animatedBottom = useSharedValue(ACTION_BAR_BOTTOM_OFFSET + bottom);
   const animatedOpacity = useSharedValue(1);
 
@@ -85,7 +85,7 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
     >
       <Box width="100%" px="5" justifyContent="center" alignItems="center">
         <BlurView
-          themeVariant={themeVariant}
+          themeVariant={themeDerivedFromThemePreference}
           intensity={90}
           style={{
             flexDirection: 'row',

@@ -1,47 +1,40 @@
 import { useRef } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Cell, CookieIcon, KeyholeIcon, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+
+import SettingsScreenLayout from '../settings-screen.layout';
+import { SecurityCell } from './security-cell';
 
 export default function SettingsSecurityScreen() {
-  const { bottom } = useSafeAreaInsets();
   const analyticsSheetRef = useRef<SheetRef>(null);
   const appAuthenticationSheetRef = useRef<SheetRef>(null);
-  const theme = useTheme<Theme>();
+  const settings = useSettings();
 
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
-      <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: theme.spacing['5'],
-          paddingTop: theme.spacing['5'],
-          paddingBottom: theme.spacing['5'] + bottom,
-          gap: theme.spacing[5],
-        }}
-      >
-        <Cell
+      <SettingsScreenLayout>
+        <SecurityCell
           title={t`Analytics`}
-          subtitle={t`Enabled`}
-          Icon={CookieIcon}
-          onPress={() => {
+          caption={settings.analyticsPreference === 'consent-given' ? t`Enabled` : t`Disabled`}
+          icon={<CookieIcon />}
+          onCreateSheetRef={() => {
             analyticsSheetRef.current?.present();
           }}
         />
-        <Cell
+        <SecurityCell
           title={t`App authentication`}
-          subtitle={t`Enabled`}
-          Icon={KeyholeIcon}
-          onPress={() => {
+          caption={settings.securityLevelPreference === 'secure' ? t`Enabled` : t`Disabled`}
+          icon={<KeyholeIcon />}
+          onCreateSheetRef={() => {
             appAuthenticationSheetRef.current?.present();
           }}
         />
-      </ScrollView>
+      </SettingsScreenLayout>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />
       <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />
     </Box>
