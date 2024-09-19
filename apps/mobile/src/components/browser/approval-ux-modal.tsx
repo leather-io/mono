@@ -4,7 +4,7 @@ import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
 import { AccountId } from '@/models/domain.model';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
@@ -19,7 +19,7 @@ interface ApproverSheetProps extends AccountId {
 export function ApproverSheet(props: ApproverSheetProps) {
   const { fingerprint, accountIndex, sendResult } = props;
 
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const approverSheetRef = useRef<SheetRef>(null);
 
   const stacksAccount = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
@@ -58,7 +58,7 @@ export function ApproverSheet(props: ApproverSheetProps) {
   }
 
   return (
-    <Sheet ref={approverSheetRef} themeVariant={themeVariant}>
+    <Sheet ref={approverSheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5">
         <Button title={t`Submit`} buttonState="default" onPress={approve} />
       </Box>

@@ -1,7 +1,7 @@
 import { ReactNode, RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { HasChildren } from '@/utils/types';
 import { useTheme } from '@shopify/restyle';
 
@@ -14,11 +14,11 @@ interface SettingsSheetLayoutProps extends HasChildren {
 }
 export function SettingsSheetLayout({ children, icon, sheetRef, title }: SettingsSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const theme = useTheme<Theme>();
 
   return (
-    <Sheet isScrollView ref={sheetRef} themeVariant={themeVariant}>
+    <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box
         style={{
           gap: theme.spacing[5],

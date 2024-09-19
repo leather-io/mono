@@ -8,7 +8,7 @@ import { ToastWrapper } from '@/components/toast/toast-context';
 import { initiateI18n } from '@/locales';
 import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/store';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { HasChildren } from '@/utils/types';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
@@ -62,8 +62,10 @@ export default function RootLayout() {
 }
 
 function ThemeProvider({ children }: HasChildren) {
-  const { theme } = useSettings();
-  return <LeatherThemeProvider theme={theme}>{children}</LeatherThemeProvider>;
+  const { themeDerivedFromThemePreference } = useSettings();
+  return (
+    <LeatherThemeProvider theme={themeDerivedFromThemePreference}>{children}</LeatherThemeProvider>
+  );
 }
 
 function AppRouter() {

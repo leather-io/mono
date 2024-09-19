@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useRef, useState } from 'react';
 
 import { AppRoutes } from '@/routes';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
@@ -15,7 +15,7 @@ interface AddWalletSheetBaseProps {
 
 export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
   const notifyUserSheetRef = useRef<SheetRef>(null);
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const router = useRouter();
   const [optionData, setOptionData] = useState<OptionData | null>(null);
   const createWallet = useCallback(() => {
@@ -43,7 +43,7 @@ export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
         createWallet={createWallet}
         restoreWallet={restoreWallet}
         addWalletSheetRef={addWalletSheetRef}
-        themeVariant={themeVariant}
+        themeVariant={themeDerivedFromThemePreference}
       />
 
       <NotifyUserSheet

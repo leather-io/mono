@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { usePushNotifications } from '@/hooks/use-push-notifications';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
@@ -40,11 +40,11 @@ export function NotifyUserSheet({
     notifyUserSheetRef.current?.dismiss();
   }
   const title = optionData?.title;
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
 
   return (
     <Sheet
-      themeVariant={themeVariant}
+      themeVariant={themeDerivedFromThemePreference}
       onDismiss={onCloseNotificationsSheet}
       ref={notifyUserSheetRef}
     >

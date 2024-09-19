@@ -1,7 +1,7 @@
 import { useToastContext } from '@/components/toast/toast-context';
 import { AppRoutes } from '@/routes';
 import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/macro';
@@ -11,9 +11,9 @@ export function useCreateWallet() {
   const router = useRouter();
   const toastContext = useToastContext();
   const keyStore = useKeyStore();
-  const { walletSecurityLevel, changeWalletSecurityLevel } = useSettings();
+  const { changeSecurityLevelPreference, securityLevelPreference } = useSettings();
   async function createWallet({ biometrics }: { biometrics: boolean }) {
-    changeWalletSecurityLevel(biometrics ? 'secure' : 'insecure');
+    changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
       router.navigate(AppRoutes.GeneratingWallet);
@@ -39,7 +39,7 @@ export function useCreateWallet() {
   }
 
   async function navigateAndCreateWallet() {
-    switch (walletSecurityLevel) {
+    switch (securityLevelPreference) {
       case 'undefined':
         router.navigate(AppRoutes.SecureYourWallet);
         return;
@@ -52,7 +52,7 @@ export function useCreateWallet() {
       default:
         /* eslint-disable-next-line no-console  */
         console.warn(
-          "walletSecurityLevel is undefined. That shouldn't happen in a newly created store"
+          "securityLevelPreference is undefined. That shouldn't happen in a newly created store"
         );
         router.navigate(AppRoutes.SecureYourWallet);
     }

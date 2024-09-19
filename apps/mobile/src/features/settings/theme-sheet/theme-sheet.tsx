@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { ThemeStore, defaultThemes, useSettings } from '@/store/settings/settings.write';
+import { ThemePreference, defaultThemePreferences, useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -19,17 +19,17 @@ export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   const { displayToast } = useToastContext();
   const { i18n } = useLingui();
 
-  function onUpdateTheme(theme: ThemeStore) {
-    settings.changeTheme(theme);
+  function onUpdateTheme(theme: ThemePreference) {
+    settings.changeThemePreference(theme);
     displayToast({ title: t`Theme updated`, type: 'success' });
   }
 
   return (
     <SettingsSheetLayout icon={<SunInCloudIcon />} sheetRef={sheetRef} title={t`Theme`}>
-      {defaultThemes.map(theme => (
+      {defaultThemePreferences.map(theme => (
         <ThemeCell
           key={theme}
-          activeTheme={settings.themeStore}
+          activeTheme={settings.themePreference}
           onUpdateTheme={onUpdateTheme}
           theme={theme}
           title={i18n._(capitalize(theme))}

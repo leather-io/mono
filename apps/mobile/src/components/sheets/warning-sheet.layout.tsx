@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
 import {
@@ -31,9 +31,9 @@ export function WarningSheet({
   onSubmit,
   variant = 'normal',
 }: WarningSheetProps) {
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   return (
-    <Sheet ref={sheetRef} themeVariant={themeVariant}>
+    <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box gap="5">
           <Box>

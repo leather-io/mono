@@ -1,5 +1,5 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { defaultNetworks, useSettings } from '@/store/settings/settings.write';
+import { defaultNetworkPreferences, useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -32,18 +32,18 @@ export default function SettingsNetworksScreen() {
   const { i18n } = useLingui();
 
   function onChangeNetwork(network: DefaultNetworkConfigurations) {
-    settings.changeNetwork(network);
+    settings.changeNetworkPreference(network);
     displayToast({ title: t`Network changed`, type: 'success' });
   }
 
   return (
     <SettingsScreenLayout>
-      {defaultNetworks.map(network => (
+      {defaultNetworkPreferences.map(network => (
         <NetworkCell
           key={network}
-          caption={settings.network.id === network ? t`Enabled` : t`Disabled`}
+          caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
           icon={getNetworkIcon(network)}
-          isSelected={settings.network.id === network}
+          isSelected={settings.networkPreference.id === network}
           onChangeNetwork={() => onChangeNetwork(network)}
           title={i18n._(capitalize(network))}
         />

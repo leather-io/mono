@@ -1,6 +1,6 @@
 import { RefObject, useState } from 'react';
 
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 
 import {
   Box,
@@ -40,9 +40,9 @@ export function InputSheet({
   onDismiss,
 }: InputSheetProps) {
   const [internalValue, setInternalValue] = useState(initialValue);
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   return (
-    <Sheet onDismiss={onDismiss} ref={sheetRef} themeVariant={themeVariant}>
+    <Sheet onDismiss={onDismiss} ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box>
           <SheetHeader

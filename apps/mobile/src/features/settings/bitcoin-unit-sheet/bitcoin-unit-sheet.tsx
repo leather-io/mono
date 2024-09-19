@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -30,7 +30,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
       {Object.values(bitcoinUnitsKeyedByName).map(unit => (
         <BitcoinUnitCell
           key={unit.name}
-          activeBitcoinUnit={settings.bitcoinUnit.name}
+          activeBitcoinUnit={settings.bitcoinUnitPreference.name}
           caption={i18n._(unit.name)}
           onUpdateBitcoinUnit={onUpdateBitcoinUnit}
           unit={unit}

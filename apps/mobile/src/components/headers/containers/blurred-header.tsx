@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { EdgeInsets } from 'react-native-safe-area-context';
 
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 
 import { BlurView, Box } from '@leather.io/ui/native';
 
@@ -16,10 +16,10 @@ interface BlurredHeaderProps {
 }
 
 export function BlurredHeader({ left, center, right, bottom, insets }: BlurredHeaderProps) {
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   return (
     <BlurView
-      themeVariant={themeVariant}
+      themeVariant={themeDerivedFromThemePreference}
       intensity={90}
       style={{
         width: '100%',

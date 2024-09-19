@@ -74,26 +74,33 @@ export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   },
 };
 
+export enum AccountDisplayPreferenceType {
+  NativeSegwit = 'native-segwit',
+  Taproot = 'taproot',
+  Bns = 'bns',
+  Stacks = 'stacks',
+}
+
 export const accountDisplayPreferencesKeyedByType: Record<
   AccountDisplayPreference,
   AccountDisplayPreferenceInfo
 > = {
-  ns: {
-    type: 'ns',
+  [AccountDisplayPreferenceType.NativeSegwit]: {
+    type: 'native-segwit',
     blockchain: 'bitcoin',
-    name: 'Native SegWit',
+    name: 'Native SegWit address',
   },
-  tr: {
-    type: 'tr',
+  [AccountDisplayPreferenceType.Taproot]: {
+    type: 'taproot',
     blockchain: 'bitcoin',
     name: 'Taproot address',
   },
-  bns: {
+  [AccountDisplayPreferenceType.Bns]: {
     type: 'bns',
     blockchain: 'stacks',
     name: 'BNS name',
   },
-  stacks: {
+  [AccountDisplayPreferenceType.Stacks]: {
     type: 'stacks',
     blockchain: 'stacks',
     name: 'Stacks address',

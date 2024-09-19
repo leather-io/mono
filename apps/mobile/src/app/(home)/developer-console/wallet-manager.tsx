@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletList } from '@/components/wallet-manager';
 import { useKeyStore } from '@/store/key-store';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { clearAllPersistedStorage } from '@/store/utils';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';

@@ -3,21 +3,23 @@ import { ItemLayout, RadioButton, Text, TouchableOpacity } from '@leather.io/ui/
 
 interface ConversionUnitCellProps {
   activeConversionUnit: FiatCurrency;
-  conversionUnit: FiatCurrency;
+  fiatCurrencyPreference: FiatCurrency;
   onUpdateConversionUnit(unit: FiatCurrency): void;
   title: string;
 }
 export function ConversionUnitCell({
   activeConversionUnit,
-  conversionUnit,
+  fiatCurrencyPreference,
   onUpdateConversionUnit,
   title,
 }: ConversionUnitCellProps) {
   return (
-    <TouchableOpacity onPress={() => onUpdateConversionUnit(conversionUnit)}>
+    <TouchableOpacity onPress={() => onUpdateConversionUnit(fiatCurrencyPreference)}>
       <ItemLayout
-        actionIcon={<RadioButton disabled isSelected={activeConversionUnit === conversionUnit} />}
-        captionLeft={conversionUnit}
+        actionIcon={
+          <RadioButton disabled isSelected={activeConversionUnit === fiatCurrencyPreference} />
+        }
+        captionLeft={fiatCurrencyPreference}
         titleLeft={
           <Text textTransform="capitalize" variant="label02">
             {title}

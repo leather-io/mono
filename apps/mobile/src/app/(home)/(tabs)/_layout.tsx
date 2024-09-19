@@ -6,7 +6,7 @@ import { ActionBarContainer, ActionBarContext } from '@/components/action-bar/co
 import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { TabBar } from '@/components/tab-bar';
 import { AppRoutes } from '@/routes';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
@@ -88,7 +88,7 @@ export default function TabLayout() {
   const ref = useRef<ActionBarMethods>(null);
   const bottomSheetRef = useRef<SheetRef>(null);
   const insets = useSafeAreaInsets();
-  const { theme: themeVariant } = useSettings();
+  const { themeDerivedFromThemePreference } = useSettings();
   const NavigationHeader = (
     <BlurredHeader
       insets={insets}
@@ -130,7 +130,7 @@ export default function TabLayout() {
         />
       </Tabs>
       <ActionBarContainer ref={ref} />
-      <Sheet ref={bottomSheetRef} themeVariant={themeVariant}>
+      <Sheet ref={bottomSheetRef} themeVariant={themeDerivedFromThemePreference}>
         <Text>{t`Dummy modal text 🎉 Add blocks to see responsive modal`}</Text>
       </Sheet>
     </ActionBarContext.Provider>

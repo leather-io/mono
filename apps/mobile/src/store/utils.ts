@@ -33,7 +33,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export function makeAccountIdentifer(fingerprint: string, accountIndex: number) {
   return [fingerprint, accountIndex].join('/');
 }
-export function destructAccountIdentifer(accountId: string) {
+export function destructAccountIdentifier(accountId: string) {
   const [fingerprint, accountIndex, ...rest] = accountId.split('/');
   if (
     fingerprint === undefined ||
@@ -41,7 +41,7 @@ export function destructAccountIdentifer(accountId: string) {
     Number.isNaN(+accountIndex) ||
     rest.length !== 0
   ) {
-    throw new Error('Incorrect accountId is passed to destructAccountIdentifer function');
+    throw new Error('Incorrect accountId is passed to destructAccountIdentifier function');
   }
 
   return { fingerprint, accountIndex: +accountIndex };

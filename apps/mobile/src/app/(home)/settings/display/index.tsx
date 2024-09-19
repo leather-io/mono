@@ -4,7 +4,7 @@ import { AccountIdentifierSheet } from '@/features/settings/account-identifier/a
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet/conversion-unit-sheet';
 import { ThemeSheet } from '@/features/settings/theme-sheet/theme-sheet';
-import { useSettings } from '@/store/settings/settings.write';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -26,7 +26,12 @@ export default function SettingsDisplayScreen() {
   const bitcoinUnitSheetRef = useRef<SheetRef>(null);
   const conversionUnitSheetRef = useRef<SheetRef>(null);
   const accountIdentifierSheetRef = useRef<SheetRef>(null);
-  const { accountDisplayPreference, bitcoinUnit, conversionUnit, themeStore } = useSettings();
+  const {
+    accountDisplayPreference,
+    bitcoinUnitPreference,
+    fiatCurrencyPreference,
+    themePreference,
+  } = useSettings();
   const { i18n } = useLingui();
 
   return (
@@ -34,7 +39,7 @@ export default function SettingsDisplayScreen() {
       <SettingsScreenLayout>
         <DisplayCell
           title={t`Theme`}
-          caption={i18n._(capitalize(themeStore))}
+          caption={i18n._(capitalize(themePreference))}
           icon={<SunInCloudIcon />}
           onCreateSheetRef={() => {
             themeSheetRef.current?.present();
@@ -42,7 +47,7 @@ export default function SettingsDisplayScreen() {
         />
         <DisplayCell
           title={t`Bitcoin unit`}
-          caption={i18n._(bitcoinUnit.symbol)}
+          caption={i18n._(bitcoinUnitPreference.symbol)}
           icon={<BitcoinCircleIcon />}
           onCreateSheetRef={() => {
             bitcoinUnitSheetRef.current?.present();
@@ -50,7 +55,7 @@ export default function SettingsDisplayScreen() {
         />
         <DisplayCell
           title={t`Conversion unit`}
-          caption={i18n._(conversionUnit)}
+          caption={i18n._(fiatCurrencyPreference)}
           icon={<DollarCircleIcon />}
           onCreateSheetRef={() => {
             conversionUnitSheetRef.current?.present();
