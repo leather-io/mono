@@ -1,11 +1,16 @@
-import { createBox } from '@shopify/restyle';
+import { type BoxProps } from '@shopify/restyle';
 
 import { type Theme } from '../../theme-native';
+import { Box } from '../box/box.native';
 
-export const HStack = createBox<Theme>();
+interface HStackProps extends BoxProps<Theme> {
+  children: React.ReactNode;
+}
 
-HStack.defaultProps = {
-  flex: 1,
-  flexDirection: 'row',
-  alignItems: 'center',
-};
+export function HStack({ children, ...rest }: HStackProps) {
+  return (
+    <Box flex={1} flexDirection="row" alignItems="center" {...rest}>
+      {children}
+    </Box>
+  );
+}
