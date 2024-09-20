@@ -1,27 +1,31 @@
 import { ReactNode } from 'react';
 
-import { Circle } from 'leather-styles/jsx';
+import { Box, BoxProps, Circle } from 'leather-styles/jsx';
+import { SpacingToken } from 'leather-styles/tokens';
 
 import { BulletSeparator as BulletSeparatorContainer } from './bullet-separator.shared';
 
-function BulletOperator() {
+function BulletOperator(props: BoxProps) {
   return (
-    <Circle
-      display="inline-block"
-      verticalAlign="middle"
-      bg="currentColor"
-      size="3px"
-      // Visual adjustment for correct centering on retina displays
-      transform="translateY(-0.5px)"
-    />
+    <Box display="inline-block" verticalAlign="middle" {...props}>
+      <Circle
+        bg="currentColor"
+        size="3px"
+        // Visual adjustment for correct centering on retina displays
+        transform="translateY(-0.5px)"
+      />
+    </Box>
   );
 }
 
 interface BulletSeparatorSeparatorProps {
   children: ReactNode;
+  spacing?: SpacingToken;
 }
-export function BulletSeparator({ children }: BulletSeparatorSeparatorProps) {
+export function BulletSeparator({ children, spacing }: BulletSeparatorSeparatorProps) {
   return (
-    <BulletSeparatorContainer operator={<BulletOperator />}>{children}</BulletSeparatorContainer>
+    <BulletSeparatorContainer operator={<BulletOperator px={spacing} />}>
+      {children}
+    </BulletSeparatorContainer>
   );
 }

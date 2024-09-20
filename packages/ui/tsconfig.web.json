@@ -11,8 +11,8 @@
     }
   },
   "include": [
-    "**/*.web.ts",
-    "**/*.web.tsx",
+    "**/*.web.{ts,tsx}",
+    "**/*.web.{ts,tsx}",
     "web.ts",
     "**/*.shared.tsx",
     "global.d.ts",
