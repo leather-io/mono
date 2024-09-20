@@ -3,7 +3,7 @@ import { defineConfig } from '@pandacss/dev';
 export default defineConfig({
   preflight: true,
 
-  include: ['./**/*.web.{js,jsx,ts,tsx}'],
+  include: ['./**/*.web.{ts,tsx}', './**/*.web.stories.{ts,tsx}', './**/*.shared.{ts,tsx}'],
 
   exclude: [],
 
@@ -11,7 +11,7 @@ export default defineConfig({
 
   presets: ['@leather.io/panda-preset'],
 
-  studio: { logo: '💼' },
+  studio: { logo: '🖤' },
 
   jsxFramework: 'react',
 
