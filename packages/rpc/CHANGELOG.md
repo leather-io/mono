@@ -96,6 +96,20 @@
   * dependencies
     * @leather.io/models bumped to 0.14.0
 
+## [2.1.8](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.7...@leather.io/rpc-v2.1.8) (2024-09-20)
+
+
+### Bug Fixes
+
+* update btc-signer ([714fff0](https://github.com/leather-io/mono/commit/714fff083a581726feceab291d442997aabc9859))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.15.0
+
 ## [2.1.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.2...@leather.io/rpc-v2.1.3) (2024-08-14)
 
 

@@ -103,6 +103,25 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.21.1...@leather.io/ui-v1.22.0) (2024-09-20)
+
+
+### Features
+
+* add tokens widget, ref leather-io/issues[#221](https://github.com/leather-io/mono/issues/221) ([69e4377](https://github.com/leather-io/mono/commit/69e43770969d549f296c98d24ba3dc58b12b938d))
+
+
+### Bug Fixes
+
+* deprecate defaultProps usage, closes leather-io/issues[#324](https://github.com/leather-io/mono/issues/324) ([9db9f27](https://github.com/leather-io/mono/commit/9db9f27b388edce79edda024ed32bf238980b3d9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.0
+
 ## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.20.0...@leather.io/ui-v1.21.0) (2024-09-13)
 
 

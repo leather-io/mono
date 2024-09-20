@@ -85,6 +85,28 @@
   * dependencies
     * @leather.io/constants bumped to 0.9.2
 
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.15.0...@leather.io/utils-v0.16.0) (2024-09-20)
+
+
+### Features
+
+* add tokens widget, ref leather-io/issues[#221](https://github.com/leather-io/mono/issues/221) ([69e4377](https://github.com/leather-io/mono/commit/69e43770969d549f296c98d24ba3dc58b12b938d))
+* **bitcoin:** signer logic ([811c15c](https://github.com/leather-io/mono/commit/811c15cd6d4105b07dd89595f136703fd3defd4d))
+
+
+### Bug Fixes
+
+* update btc-signer ([714fff0](https://github.com/leather-io/mono/commit/714fff083a581726feceab291d442997aabc9859))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.11.0
+    * @leather.io/models bumped to 0.15.0
+    * @leather.io/rpc bumped to 2.1.8
+
 ## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.14.0...@leather.io/utils-v0.15.0) (2024-09-17)
 
 

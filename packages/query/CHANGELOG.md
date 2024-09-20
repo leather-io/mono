@@ -149,6 +149,30 @@
     * @leather.io/bitcoin bumped to 0.12.1
     * @leather.io/utils bumped to 0.14.0
 
+## [2.12.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.11.0...@leather.io/query-v2.12.0) (2024-09-20)
+
+
+### Features
+
+* **bitcoin:** signer logic ([811c15c](https://github.com/leather-io/mono/commit/811c15cd6d4105b07dd89595f136703fd3defd4d))
+
+
+### Bug Fixes
+
+* update alex-sdk ([b4fae71](https://github.com/leather-io/mono/commit/b4fae712a362ff1c8b12bfb596ad55dd79690f5d))
+* update btc-signer ([714fff0](https://github.com/leather-io/mono/commit/714fff083a581726feceab291d442997aabc9859))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.13.0
+    * @leather.io/constants bumped to 0.11.0
+    * @leather.io/models bumped to 0.15.0
+    * @leather.io/rpc bumped to 2.1.8
+    * @leather.io/utils bumped to 0.16.0
+
 ## [2.11.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.10.1...@leather.io/query-v2.11.0) (2024-09-17)
 
 
