@@ -1,5 +1,6 @@
 import {
   type ComponentProps,
+  FormEvent,
   LegacyRef,
   createContext,
   forwardRef,
@@ -11,12 +12,11 @@ import {
 
 import { sva } from 'leather-styles/css';
 import { SystemStyleObject } from 'leather-styles/types';
+import { useOnMount } from 'src/utils/use-on-mount';
 
 import { propIfDefined } from '@leather.io/utils';
 
 import { createStyleContext } from '../../utils/style-context.web';
-//FIXME leather-io/issues#64: This is a double up of a hook that already exists in the codebase.
-import { useOnMount } from './use-on-mount';
 
 const hackyDelayOneMs = 1;
 
@@ -162,7 +162,7 @@ function Root({ hasError, shrink, ...props }: RootProps) {
   );
 }
 
-const FieldBase = withContext('input', 'input');
+const FieldBase = withContext<HTMLInputElement, any>('input', 'input');
 
 const Field = forwardRef(({ type, ...props }: ComponentProps<'input'>, ref) => {
   const { setHasValue } = useInputContext();
@@ -194,7 +194,7 @@ const Field = forwardRef(({ type, ...props }: ComponentProps<'input'>, ref) => {
       ref={innerRef}
       {...inputTypeProps}
       {...props}
-      onInput={e => {
+      onInput={(e: FormEvent<HTMLInputElement>) => {
         // Note: this logic to determine if the field is empty may have to be
         // made dynamic to `input=type`, and potentially made configurable with
         // a callback passed to `Input.Root` e.g.

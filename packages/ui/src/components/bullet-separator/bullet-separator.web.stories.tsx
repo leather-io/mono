@@ -19,21 +19,23 @@ type Story = StoryObj<typeof Component>;
 
 export const BulletSeparator: Story = {
   render: () => (
-    <Component>
-      <span style={{ margin: '0 8px' }}>Item 1</span>
-      <span style={{ margin: '0 8px' }}>Item 2</span>
-      <span style={{ margin: '0 8px' }}>Item 3</span>
-    </Component>
+    <>
+      <Component spacing="space.03">
+        <span>Item 1</span>
+        <span>Item 2</span>
+        <span>Item 3</span>
+      </Component>
+    </>
   ),
 };
 
 export const WithCaption: Story = {
   render: () => (
     <Caption>
-      <Component>
-        <span style={{ margin: '0 6px' }}>Item 1</span>
-        <span style={{ margin: '0 6px' }}>Item 2</span>
-        <span style={{ margin: '0 6px' }}>Item 3</span>
+      <Component spacing="space.03">
+        <span>Item 1</span>
+        <span>Item 2</span>
+        <span>Item 3</span>
       </Component>
     </Caption>
   ),
@@ -42,10 +44,10 @@ export const WithCaption: Story = {
 export const WithTitle: Story = {
   render: () => (
     <Title>
-      <Component>
-        <span style={{ margin: '0 6px' }}>Item 1</span>
-        <span style={{ margin: '0 6px' }}>Item 2</span>
-        <span style={{ margin: '0 6px' }}>Item 3</span>
+      <Component spacing="space.02">
+        <span>Item 1</span>
+        <span>Item 2</span>
+        <span>Item 3</span>
       </Component>
     </Title>
   ),

@@ -28,3 +28,4 @@ export { shimmerStyles } from './src/components/skeleton-loader/shimmer.styles.w
 export { SkeletonLoader } from './src/components/skeleton-loader/skeleton-loader.web';
 export { Icon } from './src/icons/icon/icon.web';
 export * from './src/icons/index.web';
+export * from './src/components/approver/approver.web';

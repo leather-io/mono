@@ -48,7 +48,7 @@ const config: StorybookConfig = {
     },
   },
   staticDirs: ['../assets', '../assets-web'],
-  stories: ['../**/*.mdx', '../**/*.web.stories.@(ts|tsx)'],
+  stories: ['../**/*.web.stories.@(ts|tsx)'],
   swc: () => ({
     jsc: {
       transform: {

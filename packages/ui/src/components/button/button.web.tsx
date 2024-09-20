@@ -1,3 +1,5 @@
+import { forwardRef } from 'react';
+
 import { styled } from 'leather-styles/jsx';
 import { type ButtonVariantProps, button as buttonRecipe } from 'leather-styles/recipes';
 
@@ -9,10 +11,11 @@ export type ButtonProps = Omit<
 > &
   ButtonVariantProps;
 
-export function Button(props: ButtonProps) {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const { children, fullWidth, size, trigger, invert, type = 'button', variant, ...rest } = props;
   return (
     <StyledButton
+      ref={ref}
       className={buttonRecipe({ fullWidth, size, invert, trigger, variant })}
       type={type}
       {...rest}
@@ -20,4 +23,4 @@ export function Button(props: ButtonProps) {
       {children}
     </StyledButton>
   );
-}
+});
