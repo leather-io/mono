@@ -25,6 +25,20 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.10.0...@leather.io/constants-v0.11.0) (2024-09-20)
+
+
+### Features
+
+* settings account identifier, closes leather-io/issues[#205](https://github.com/leather-io/mono/issues/205) ([711c5a9](https://github.com/leather-io/mono/commit/711c5a96beff24130d82c733ebd8a111861c2efa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.15.0
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.9.2...@leather.io/constants-v0.10.0) (2024-09-17)
 
 

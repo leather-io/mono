@@ -36,6 +36,25 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.5.2...@leather.io/crypto-v1.6.0) (2024-09-20)
+
+
+### Features
+
+* **bitcoin:** signer logic ([811c15c](https://github.com/leather-io/mono/commit/811c15cd6d4105b07dd89595f136703fd3defd4d))
+
+
+### Bug Fixes
+
+* update btc-signer ([714fff0](https://github.com/leather-io/mono/commit/714fff083a581726feceab291d442997aabc9859))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.0
+
 ## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.4.3...@leather.io/crypto-v1.5.0) (2024-09-06)
 
 

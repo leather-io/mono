@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.14.0...@leather.io/models-v0.15.0) (2024-09-20)
+
+
+### Features
+
+* settings account identifier, closes leather-io/issues[#205](https://github.com/leather-io/mono/issues/205) ([711c5a9](https://github.com/leather-io/mono/commit/711c5a96beff24130d82c733ebd8a111861c2efa))
+
 ## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.13.0...@leather.io/models-v0.14.0) (2024-09-17)
 
 
