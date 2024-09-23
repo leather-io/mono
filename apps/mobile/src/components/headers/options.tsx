@@ -8,10 +8,10 @@ export function OptionsHeader() {
 
   return (
     <Box flexDirection="row">
-      <TouchableOpacity p="3" onPress={() => router.navigate(AppRoutes.WalletSettings)}>
+      <TouchableOpacity p="3" onPress={() => router.navigate(AppRoutes.Settings)}>
         <SettingsGearIcon />
       </TouchableOpacity>
-      <TouchableOpacity p="3" onPress={() => router.navigate(AppRoutes.WalletDeveloperConsole)}>
+      <TouchableOpacity p="3" onPress={() => router.navigate(AppRoutes.DeveloperConsole)}>
         <TerminalIcon />
       </TouchableOpacity>
     </Box>

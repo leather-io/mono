@@ -81,7 +81,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               Icon={Eye1ClosedIcon}
               onPress={() => {
                 router.navigate({
-                  pathname: AppRoutes.WalletWalletsSettingsConfigureViewSecretKey,
+                  pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
                   params: { fingerprint: wallet.fingerprint },
                 });
               }}

@@ -78,7 +78,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               Icon={HeadIcon}
               onPress={() => {
                 router.navigate({
-                  pathname: AppRoutes.WalletWalletsSettingsConfigureAccountAvatar,
+                  pathname: AppRoutes.SettingsWalletConfigureAccountAvatar,
                   params: { wallet: fingerprint, account: accountIndex },
                 });
               }}

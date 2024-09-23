@@ -12,7 +12,7 @@ export default function SwapScreen() {
     <View style={styles.container}>
       <Text>{t`Collectibles 🖼️`}</Text>
       <TouchableOpacity
-        onPress={() => router.navigate(AppRoutes.WalletBrowser)}
+        onPress={() => router.navigate(AppRoutes.Browser)}
         p="4"
         bg="ink.background-primary"
         borderRadius="sm"

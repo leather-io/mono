@@ -61,7 +61,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           <TouchableOpacity
             onPress={() => {
               router.navigate({
-                pathname: AppRoutes.WalletWalletsSettingsConfigureWallet,
+                pathname: AppRoutes.SettingsWalletConfigureWallet,
                 params: { fingerprint },
               });
             }}
@@ -82,7 +82,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                 name={account.name}
                 onPress={() => {
                   router.navigate({
-                    pathname: AppRoutes.WalletWalletsSettingsConfigureAccount,
+                    pathname: AppRoutes.SettingsWalletConfigureAccount,
                     params: { fingerprint, account: account.accountIndex },
                   });
                 }}

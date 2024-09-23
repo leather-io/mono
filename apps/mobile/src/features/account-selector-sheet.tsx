@@ -53,7 +53,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
       const { fingerprint, accountIndex } = destructAccountIdentifer(accountId);
       sheetRef.current?.close();
       router.navigate({
-        pathname: AppRoutes.WalletWalletsSettingsConfigureAccount,
+        pathname: AppRoutes.SettingsWalletConfigureAccount,
         params: { fingerprint, account: accountIndex },
       });
     },

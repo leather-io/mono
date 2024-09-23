@@ -163,21 +163,21 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       ref={ref}
       left={
         <ActionBarButton
-          onPress={() => router.navigate(AppRoutes.WalletSend)}
+          onPress={() => router.navigate(AppRoutes.Send)}
           icon={<PaperPlaneIcon />}
           label={t`Send`}
         />
       }
       center={
         <ActionBarButton
-          onPress={() => router.navigate(AppRoutes.WalletReceive)}
+          onPress={() => router.navigate(AppRoutes.Receive)}
           icon={<InboxIcon />}
           label={t`Receive`}
         />
       }
       right={
         <ActionBarButton
-          onPress={() => router.navigate(AppRoutes.WalletSwap)}
+          onPress={() => router.navigate(AppRoutes.Swap)}
           icon={<ArrowsRepeatLeftRightIcon />}
           label={t`Swap`}
         />

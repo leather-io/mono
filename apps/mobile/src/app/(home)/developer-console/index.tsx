@@ -84,11 +84,11 @@ export default function DeveloperConsoleScreen() {
         />
         <PressableListItem
           title={t`Wallet management`}
-          onPress={() => router.navigate(AppRoutes.WalletDeveloperConsoleWalletManager)}
+          onPress={() => router.navigate(AppRoutes.DeveloperConsoleWalletManager)}
         />
         <PressableListItem
           title={t`Bitcoin Scrach Pad`}
-          onPress={() => router.navigate(AppRoutes.WalletDeveloperBitcoinScratchPad)}
+          onPress={() => router.navigate(AppRoutes.DeveloperBitcoinScratchPad)}
         />
         <PressableListItem
           title={t`getAddresses`}
