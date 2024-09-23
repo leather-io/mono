@@ -53,7 +53,7 @@ export default function StackLayout() {
     );
   }
 
-  function NavigationWalletSettings(title: string = t`Settings`) {
+  function WalletNavigationSettings(title: string = t`Settings`) {
     return (
       <SimpleHeader
         insets={insets}
@@ -99,7 +99,7 @@ export default function StackLayout() {
       <Stack.Screen name="receive" options={{ header: () => NavigationHeader }} />
       <Stack.Screen name="swap" options={{ header: () => NavigationHeader }} />
       <Stack.Screen name="browser" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ header: () => NavigationHeaderHome }} />
+      <Stack.Screen name="index" options={{ header: () => NavigationHeaderHome }} />
       <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="recover-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
@@ -125,29 +125,29 @@ export default function StackLayout() {
         options={{ header: () => NavigationSettings(t`Help`) }}
       />
       <Stack.Screen
-        name="wallet-settings/index"
-        options={{ header: () => NavigationWalletSettings() }}
+        name="settings/wallet/index"
+        options={{ header: () => WalletNavigationSettings() }}
       />
       <Stack.Screen
-        name="wallet-settings/hidden-accounts"
-        options={{ header: () => NavigationWalletSettings() }}
+        name="settings/wallet/hidden-accounts"
+        options={{ header: () => WalletNavigationSettings() }}
       />
       <Stack.Screen
-        name="wallet-settings/configure/[wallet]/[account]/index"
-        options={{ header: props => NavigationWalletSettings(props.options.title) }}
+        name="settings/wallet/configure/[wallet]/[account]/index"
+        options={{ header: props => WalletNavigationSettings(props.options.title) }}
       />
       <Stack.Screen
-        name="wallet-settings/configure/[wallet]/[account]/choose-avatar"
+        name="settings/wallet/configure/[wallet]/[account]/choose-avatar"
         options={{ header: () => NavigationBackSimple }}
       />
       <Stack.Screen
-        name="wallet-settings/configure/[wallet]/index"
+        name="settings/wallet/configure/[wallet]/index"
         options={{
-          header: props => NavigationWalletSettings(props.options.title),
+          header: props => WalletNavigationSettings(props.options.title),
         }}
       />
       <Stack.Screen
-        name="wallet-settings/configure/[wallet]/view-secret-key"
+        name="settings/wallet/configure/[wallet]/view-secret-key"
         options={{ header: () => NavigationBackSimple }}
       />
       <Stack.Screen

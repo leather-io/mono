@@ -60,24 +60,24 @@ function HeaderBottom() {
       tabs={[
         {
           onPress() {
-            router.navigate(AppRoutes.WalletAllAssets);
+            router.navigate(AppRoutes.AllAssets);
           },
           title: t`All assets`,
-          isActive: pathname === AppRoutes.WalletAllAssets,
+          isActive: pathname === AppRoutes.AllAssets,
         },
         {
           onPress() {
-            router.navigate(AppRoutes.WalletTokens);
+            router.navigate(AppRoutes.Tokens);
           },
           title: t`Tokens`,
-          isActive: pathname === AppRoutes.WalletTokens,
+          isActive: pathname === AppRoutes.Tokens,
         },
         {
           onPress() {
-            router.navigate(AppRoutes.WalletCollectibles);
+            router.navigate(AppRoutes.Collectibles);
           },
           title: t`Collectibles`,
-          isActive: pathname === AppRoutes.WalletCollectibles,
+          isActive: pathname === AppRoutes.Collectibles,
         },
       ]}
     />

@@ -93,7 +93,7 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
         ))}
 
         {hasAccounts ? (
-          <ImportWalletCard onPress={() => router.navigate(AppRoutes.WalletRecoverWallet)} />
+          <ImportWalletCard onPress={() => router.navigate(AppRoutes.RecoverWallet)} />
         ) : (
           <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
         )}

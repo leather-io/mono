@@ -43,7 +43,7 @@ export default function SettingsScreen() {
           subtitle={t`Add, configure and remove`}
           Icon={WalletIcon}
           onPress={() => {
-            router.navigate(AppRoutes.WalletWalletsSettings);
+            router.navigate(AppRoutes.SettingsWallet);
           }}
         />
         <Divider />
@@ -52,7 +52,7 @@ export default function SettingsScreen() {
           subtitle={t`Theme, bitcoin unit and more`}
           Icon={SunIcon}
           onPress={() => {
-            router.navigate(AppRoutes.WalletSettingsDisplay);
+            router.navigate(AppRoutes.SettingsDisplay);
           }}
         />
         <Cell
@@ -60,7 +60,7 @@ export default function SettingsScreen() {
           subtitle={t`Analytics and app authentication`}
           Icon={ShieldIcon}
           onPress={() => {
-            router.navigate(AppRoutes.WalletSettingsSecurity);
+            router.navigate(AppRoutes.SettingsSecurity);
           }}
         />
         <Cell
@@ -68,7 +68,7 @@ export default function SettingsScreen() {
           subtitle={t`Mainnet, testnet or signet`}
           Icon={GlobeTiltedIcon}
           onPress={() => {
-            router.navigate(AppRoutes.WalletSettingsNetworks);
+            router.navigate(AppRoutes.SettingsNetworks);
           }}
         />
         <Cell
@@ -76,7 +76,7 @@ export default function SettingsScreen() {
           subtitle={t`Push and email notifications`}
           Icon={BellIcon}
           onPress={() => {
-            router.navigate(AppRoutes.WalletSettingsNotifications);
+            router.navigate(AppRoutes.SettingsNotifications);
           }}
         />
         <Cell
@@ -84,7 +84,7 @@ export default function SettingsScreen() {
           subtitle={t`Support, guides and articles`}
           Icon={SupportIcon}
           onPress={() => {
-            router.navigate(AppRoutes.WalletSettingsHelp);
+            router.navigate(AppRoutes.SettingsHelp);
           }}
         />
         <Accordion

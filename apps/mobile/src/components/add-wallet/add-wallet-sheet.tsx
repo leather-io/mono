@@ -19,12 +19,12 @@ export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
   const router = useRouter();
   const [optionData, setOptionData] = useState<OptionData | null>(null);
   const createWallet = useCallback(() => {
-    router.navigate(AppRoutes.WalletCreateNewWallet);
+    router.navigate(AppRoutes.CreateNewWallet);
     addWalletSheetRef.current?.close();
   }, [addWalletSheetRef, router]);
 
   const restoreWallet = useCallback(() => {
-    router.navigate(AppRoutes.WalletRecoverWallet);
+    router.navigate(AppRoutes.RecoverWallet);
     addWalletSheetRef.current?.close();
   }, [addWalletSheetRef, router]);
 

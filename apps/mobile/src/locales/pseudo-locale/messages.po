@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-18 11:25-0400\n"
+"POT-Creation-Date: 2024-09-19 15:15+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,23 +21,23 @@ msgstr ""
 msgid "{caption} blockchain"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:42
+#: src/app/(home)/settings/wallet/index.tsx:42
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:61
+#: src/app/(home)/create-new-wallet.tsx:61
 msgid "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:124
+#: src/app/(home)/recover-wallet.tsx:124
 msgid "<0>ENTER YOUR</0><1>SECRET KEY</1>"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:49
+#: src/app/(home)/secure-your-wallet.tsx:49
 msgid "<0>SECURE</0><1>YOUR WALLET</1>"
 msgstr ""
 
-#: src/app/wallet/settings/notifications/index.tsx:48
+#: src/app/(home)/settings/notifications/index.tsx:48
 msgid "5 enabled"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Account {accountIndex}"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:36
+#: src/app/(home)/(tabs)/_layout.tsx:36
 #: src/components/headers/account.tsx:11
 msgid "Account 1"
 msgstr ""
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Account created"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:60
+#: src/app/(home)/settings/display/index.tsx:60
 #: src/features/settings/account-identifier/account-identifier-sheet.tsx:33
 msgid "Account identifier"
 msgstr ""
@@ -75,7 +75,7 @@ msgstr ""
 msgid "Account label"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:41
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:41
 msgid "Account label updated"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Add new account for {fingerprint} 🆕"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:49
+#: src/app/(home)/settings/wallet/index.tsx:49
 msgid "Add wallet"
 msgstr ""
 
@@ -99,11 +99,11 @@ msgstr ""
 msgid "Add wallet to \"Use case\""
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:43
+#: src/app/(home)/settings/index.tsx:43
 msgid "Add, configure and remove"
 msgstr ""
 
-#: src/app/wallet/generating-wallet.tsx:23
+#: src/app/(home)/generating-wallet.tsx:23
 msgid "Adding Wallet"
 msgstr ""
 
@@ -111,32 +111,32 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:109
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:109
 msgid "Address reuse"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:113
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:113
 msgid "Address scan range"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:114
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:114
 msgid "Address types"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:165
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:105
+#: src/app/(home)/recover-wallet.tsx:165
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:105
 msgid "Advanced options"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:65
+#: src/app/(home)/(tabs)/_layout.tsx:65
 msgid "All assets"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:113
+#: src/app/(home)/(tabs)/_layout.tsx:113
 msgid "All Assets"
 msgstr ""
 
-#: src/app/wallet/settings/notifications/index.tsx:40
+#: src/app/(home)/settings/notifications/index.tsx:40
 msgid "All enabled"
 msgstr ""
 
@@ -144,40 +144,40 @@ msgstr ""
 msgid "Allow Leather to access application's secure storage"
 msgstr ""
 
-#: src/app/wallet/(tabs)/all-assets.tsx:17
-#: src/app/wallet/(tabs)/all-assets.tsx:20
-#: src/app/wallet/(tabs)/all-assets.tsx:23
-#: src/app/wallet/(tabs)/all-assets.tsx:26
-#: src/app/wallet/(tabs)/all-assets.tsx:29
-#: src/app/wallet/(tabs)/all-assets.tsx:32
-#: src/app/wallet/(tabs)/all-assets.tsx:35
-#: src/app/wallet/(tabs)/all-assets.tsx:38
-#: src/app/wallet/(tabs)/all-assets.tsx:41
-#: src/app/wallet/(tabs)/all-assets.tsx:44
-#: src/app/wallet/(tabs)/all-assets.tsx:47
-#: src/app/wallet/(tabs)/all-assets.tsx:50
-#: src/app/wallet/(tabs)/all-assets.tsx:53
-#: src/app/wallet/(tabs)/all-assets.tsx:56
+#: src/app/(home)/(tabs)/all-assets.tsx:17
+#: src/app/(home)/(tabs)/all-assets.tsx:20
+#: src/app/(home)/(tabs)/all-assets.tsx:23
+#: src/app/(home)/(tabs)/all-assets.tsx:26
+#: src/app/(home)/(tabs)/all-assets.tsx:29
+#: src/app/(home)/(tabs)/all-assets.tsx:32
+#: src/app/(home)/(tabs)/all-assets.tsx:35
+#: src/app/(home)/(tabs)/all-assets.tsx:38
+#: src/app/(home)/(tabs)/all-assets.tsx:41
+#: src/app/(home)/(tabs)/all-assets.tsx:44
+#: src/app/(home)/(tabs)/all-assets.tsx:47
+#: src/app/(home)/(tabs)/all-assets.tsx:50
+#: src/app/(home)/(tabs)/all-assets.tsx:53
+#: src/app/(home)/(tabs)/all-assets.tsx:56
 msgid "Amazing asset"
 msgstr ""
 
-#: src/app/wallet/settings/security/index.tsx:29
+#: src/app/(home)/settings/security/index.tsx:29
 msgid "Analytics"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:60
+#: src/app/(home)/settings/index.tsx:60
 msgid "Analytics and app authentication"
 msgstr ""
 
-#: src/app/wallet/settings/security/index.tsx:37
+#: src/app/(home)/settings/security/index.tsx:37
 msgid "App authentication"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:77
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:77
 msgid "Avatar"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:188
+#: src/app/(home)/recover-wallet.tsx:188
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:28
 msgid "BIP39 passphrase"
@@ -191,11 +191,11 @@ msgstr ""
 msgid "Bitcoin blockchain"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:90
+#: src/app/(home)/developer-console/index.tsx:90
 msgid "Bitcoin Scrach Pad"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:44
+#: src/app/(home)/settings/display/index.tsx:44
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit"
 msgstr ""
@@ -204,7 +204,7 @@ msgstr ""
 msgid "Bitcoin unit updated"
 msgstr ""
 
-#: src/app/wallet/developer-console/bitcoin-scratch-pad.tsx:38
+#: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:38
 msgid "BitcoinScratchPad"
 msgstr ""
 
@@ -217,28 +217,28 @@ msgstr ""
 msgid "Change name"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:60
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:60
 msgid "Choose account avatar"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:61
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:61
 msgid "Choose an image"
 msgstr ""
 
-#: src/app/wallet/developer-console/wallet-manager.tsx:34
+#: src/app/(home)/developer-console/wallet-manager.tsx:34
 msgid "Clear"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:79
-#: src/app/wallet/(tabs)/_layout.tsx:120
+#: src/app/(home)/(tabs)/_layout.tsx:79
+#: src/app/(home)/(tabs)/_layout.tsx:120
 msgid "Collectibles"
 msgstr ""
 
-#: src/app/wallet/(tabs)/collectibles.tsx:13
+#: src/app/(home)/(tabs)/collectibles.tsx:13
 msgid "Collectibles 🖼️"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:76
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:76
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:31
 msgid "Confirm"
 msgstr ""
@@ -255,15 +255,15 @@ msgstr ""
 msgid "Connected"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:94
+#: src/app/(home)/settings/index.tsx:94
 msgid "Contacts"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:203
+#: src/app/(home)/recover-wallet.tsx:203
 msgid "Continue"
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:52
+#: src/app/(home)/settings/display/index.tsx:52
 #: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
 msgstr ""
@@ -292,8 +292,8 @@ msgstr ""
 msgid "Create or restore wallet"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:83
-#: src/app/wallet/developer-console/wallet-manager.tsx:38
+#: src/app/(home)/developer-console/index.tsx:83
+#: src/app/(home)/developer-console/wallet-manager.tsx:38
 msgid "Create wallet"
 msgstr ""
 
@@ -305,7 +305,7 @@ msgstr ""
 msgid "Create, Import or connect instantly"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:125
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:125
 msgid "Creation date"
 msgstr ""
 
@@ -338,25 +338,25 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:91
+#: src/app/(home)/_layout.tsx:91
 msgid "Developer tools"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:190
-#: src/app/wallet/settings/networks/index.tsx:44
+#: src/app/(home)/recover-wallet.tsx:190
+#: src/app/(home)/settings/networks/index.tsx:44
 msgid "Disabled"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:109
-#: src/app/wallet/settings/index.tsx:51
+#: src/app/(home)/_layout.tsx:109
+#: src/app/(home)/settings/index.tsx:51
 msgid "Display"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:117
+#: src/app/(home)/developer-console/index.tsx:117
 msgid "Drawer"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:134
+#: src/app/(home)/(tabs)/_layout.tsx:134
 msgid "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgstr ""
 
@@ -364,30 +364,30 @@ msgstr ""
 msgid "Earn"
 msgstr ""
 
-#: src/app/wallet/settings/notifications/index.tsx:55
+#: src/app/(home)/settings/notifications/index.tsx:55
 msgid "Email address"
 msgstr ""
 
-#: src/app/wallet/settings/notifications/index.tsx:47
+#: src/app/(home)/settings/notifications/index.tsx:47
 msgid "Email notifications"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:75
+#: src/app/(home)/secure-your-wallet.tsx:75
 msgid "Enable device security"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:190
-#: src/app/wallet/settings/networks/index.tsx:44
-#: src/app/wallet/settings/security/index.tsx:30
-#: src/app/wallet/settings/security/index.tsx:38
+#: src/app/(home)/recover-wallet.tsx:190
+#: src/app/(home)/settings/networks/index.tsx:44
+#: src/app/(home)/settings/security/index.tsx:30
+#: src/app/(home)/settings/security/index.tsx:38
 msgid "Enabled"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:116
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:116
 msgid "Export key"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:115
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:115
 msgid "Export xPub"
 msgstr ""
 
@@ -395,23 +395,23 @@ msgstr ""
 msgid "Failed to get push token for push notification!"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:95
+#: src/app/(home)/settings/index.tsx:95
 msgid "Fees"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:97
+#: src/app/(home)/create-new-wallet.tsx:97
 msgid "For your eyes only"
 msgstr ""
 
-#: src/app/wallet/developer-console/wallet-manager.tsx:38
+#: src/app/(home)/developer-console/wallet-manager.tsx:38
 msgid "Generating…"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:94
+#: src/app/(home)/developer-console/index.tsx:94
 msgid "getAddresses"
 msgstr ""
 
-#: src/app/wallet/settings/help/index.tsx:36
+#: src/app/(home)/settings/help/index.tsx:36
 msgid "Guides"
 msgstr ""
 
@@ -423,8 +423,8 @@ msgstr ""
 msgid "Hello"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:125
-#: src/app/wallet/settings/index.tsx:83
+#: src/app/(home)/_layout.tsx:125
+#: src/app/(home)/settings/index.tsx:83
 msgid "Help"
 msgstr ""
 
@@ -432,16 +432,16 @@ msgstr ""
 msgid "Here is the notification body"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/index.tsx:41
+#: src/app/(home)/settings/wallet/index.tsx:41
 msgid "Hidden accounts"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:87
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:87
 msgid "Hide account"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:112
-#: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:65
+#: src/app/(home)/create-new-wallet.tsx:112
+#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:65
 msgid "I've backed it up"
 msgstr ""
 
@@ -454,11 +454,11 @@ msgstr ""
 msgid "Import wallet"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:32
+#: src/app/(home)/recover-wallet.tsx:32
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr ""
 
-#: src/app/wallet/settings/help/index.tsx:38
+#: src/app/(home)/settings/help/index.tsx:38
 msgid "Learn"
 msgstr ""
 
@@ -470,7 +470,7 @@ msgstr ""
 msgid "Ledger, Trezor, Ryder and more"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:108
+#: src/app/(home)/settings/index.tsx:108
 msgid "Lock app"
 msgstr ""
 
@@ -479,11 +479,11 @@ msgstr ""
 msgid "locked"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:68
+#: src/app/(home)/settings/index.tsx:68
 msgid "Mainnet, testnet or signet"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:91
+#: src/app/(home)/settings/index.tsx:91
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:124
 msgid "More options"
 msgstr ""
@@ -500,22 +500,22 @@ msgstr ""
 msgid "My tokens"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/index.tsx:69
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:69
 #: src/components/wallet-settings/account-name-sheet.tsx:21
 #: src/components/wallet-settings/wallet-name-sheet.tsx:21
 msgid "Name"
 msgstr ""
 
-#: src/app/wallet/(tabs)/collectibles.tsx:20
+#: src/app/(home)/(tabs)/collectibles.tsx:20
 msgid "navigate to browser"
 msgstr ""
 
-#: src/app/wallet/settings/networks/index.tsx:36
+#: src/app/(home)/settings/networks/index.tsx:36
 msgid "Network changed"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:117
-#: src/app/wallet/settings/index.tsx:67
+#: src/app/(home)/_layout.tsx:117
+#: src/app/(home)/settings/index.tsx:67
 msgid "Networks"
 msgstr ""
 
@@ -523,12 +523,12 @@ msgstr ""
 msgid "No key needed"
 msgstr ""
 
-#: src/app/wallet/settings/notifications/index.tsx:56
+#: src/app/(home)/settings/notifications/index.tsx:56
 msgid "None/Awaiting verification/Verified"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:121
-#: src/app/wallet/settings/index.tsx:75
+#: src/app/(home)/_layout.tsx:121
+#: src/app/(home)/settings/index.tsx:75
 msgid "Notifications"
 msgstr ""
 
@@ -544,11 +544,11 @@ msgstr ""
 msgid "One place, all wallets"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/[account]/choose-avatar.tsx:63
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:63
 msgid "Or choose one of your collectibles"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:118
+#: src/app/(home)/developer-console/index.tsx:118
 msgid "Page"
 msgstr ""
 
@@ -556,17 +556,17 @@ msgstr ""
 msgid "Passphrase"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:137
+#: src/app/(home)/recover-wallet.tsx:137
 msgid "Paste"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:129
+#: src/app/(home)/recover-wallet.tsx:129
 msgid "Paste or type a Secret Key to add its associated wallet."
 msgstr ""
 
-#: src/app/wallet/settings/help/index.tsx:32
-#: src/app/wallet/settings/help/index.tsx:36
-#: src/app/wallet/settings/help/index.tsx:39
+#: src/app/(home)/settings/help/index.tsx:32
+#: src/app/(home)/settings/help/index.tsx:36
+#: src/app/(home)/settings/help/index.tsx:39
 msgid "Placeholder"
 msgstr ""
 
@@ -578,11 +578,11 @@ msgstr ""
 msgid "Proceed without security"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:76
+#: src/app/(home)/settings/index.tsx:76
 msgid "Push and email notifications"
 msgstr ""
 
-#: src/app/wallet/settings/notifications/index.tsx:39
+#: src/app/(home)/settings/notifications/index.tsx:39
 msgid "Push notifications"
 msgstr ""
 
@@ -590,7 +590,7 @@ msgstr ""
 msgid "Receive"
 msgstr ""
 
-#: src/app/wallet/receive.tsx:9
+#: src/app/(home)/receive.tsx:9
 msgid "Receive 💰"
 msgstr ""
 
@@ -598,20 +598,20 @@ msgstr ""
 msgid "Recent"
 msgstr ""
 
-#: src/app/wallet/developer-console/bitcoin-scratch-pad.tsx:40
+#: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:40
 msgid "Recipient"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:104
+#: src/app/(home)/developer-console/index.tsx:104
 msgid "register for Push notifications"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:97
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:97
 #: src/components/wallet-settings/remove-wallet-sheet.tsx:16
 msgid "Remove wallet"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:90
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:90
 msgid "Rename wallet"
 msgstr ""
 
@@ -628,42 +628,42 @@ msgstr ""
 msgid "Save to..."
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:108
+#: src/app/(home)/developer-console/index.tsx:108
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:49
+#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:49
 msgid "SECRET KEY"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:113
-#: src/app/wallet/settings/index.tsx:59
+#: src/app/(home)/_layout.tsx:113
+#: src/app/(home)/settings/index.tsx:59
 msgid "Security"
 msgstr ""
 
-#: src/app/wallet/send.tsx:9
+#: src/app/(home)/send.tsx:9
 #: src/components/action-bar/container.tsx:168
 msgid "Send"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:46
-#: src/app/wallet/_layout.tsx:56
+#: src/app/(home)/_layout.tsx:46
+#: src/app/(home)/_layout.tsx:56
 msgid "Settings"
 msgstr ""
 
-#: src/app/wallet/developer-console/bitcoin-scratch-pad.tsx:50
+#: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:50
 msgid "Sign"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:112
+#: src/app/(home)/developer-console/index.tsx:112
 msgid "signMessage"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:114
+#: src/app/(home)/developer-console/index.tsx:114
 msgid "signPsbt"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:68
+#: src/app/(home)/secure-your-wallet.tsx:68
 msgid "Skip for now"
 msgstr ""
 
@@ -691,11 +691,11 @@ msgstr ""
 msgid "Start stacking"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:116
+#: src/app/(home)/developer-console/index.tsx:116
 msgid "stx_signMessage"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:115
+#: src/app/(home)/developer-console/index.tsx:115
 msgid "stx_signTransaction"
 msgstr ""
 
@@ -711,11 +711,11 @@ msgstr ""
 msgid "Suggested"
 msgstr ""
 
-#: src/app/wallet/settings/help/index.tsx:31
+#: src/app/(home)/settings/help/index.tsx:31
 msgid "Support and feedback"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:84
+#: src/app/(home)/settings/index.tsx:84
 msgid "Support, guides and articles"
 msgstr ""
 
@@ -723,15 +723,15 @@ msgstr ""
 msgid "Swap"
 msgstr ""
 
-#: src/app/wallet/swap.tsx:9
+#: src/app/(home)/swap.tsx:9
 msgid "Swap 🔄"
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:95
+#: src/app/(home)/create-new-wallet.tsx:95
 msgid "Tap to view Secret Key"
 msgstr ""
 
-#: src/app/wallet/_layout.tsx:78
+#: src/app/(home)/_layout.tsx:78
 msgid "Testnet"
 msgstr ""
 
@@ -741,7 +741,7 @@ msgid ""
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 msgstr ""
 
-#: src/app/wallet/settings/display/index.tsx:36
+#: src/app/(home)/settings/display/index.tsx:36
 #: src/features/settings/theme-sheet/theme-sheet.tsx:28
 msgid "Theme"
 msgstr ""
@@ -750,7 +750,7 @@ msgstr ""
 msgid "Theme updated"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:52
+#: src/app/(home)/settings/index.tsx:52
 msgid "Theme, bitcoin unit and more"
 msgstr ""
 
@@ -788,20 +788,20 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:111
+#: src/app/(home)/developer-console/index.tsx:111
 msgid "toggle localization: {locale}"
 msgstr ""
 
-#: src/app/wallet/developer-console/wallet-manager.tsx:46
+#: src/app/(home)/developer-console/wallet-manager.tsx:46
 msgid "Toggle network"
 msgstr ""
 
-#: src/app/wallet/(tabs)/_layout.tsx:72
-#: src/app/wallet/(tabs)/_layout.tsx:127
+#: src/app/(home)/(tabs)/_layout.tsx:72
+#: src/app/(home)/(tabs)/_layout.tsx:127
 msgid "Tokens"
 msgstr ""
 
-#: src/app/wallet/(tabs)/tokens.tsx:10
+#: src/app/(home)/(tabs)/tokens.tsx:10
 msgid "Tokens 🪙"
 msgstr ""
 
@@ -809,11 +809,11 @@ msgstr ""
 msgid "Total rewards"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:113
+#: src/app/(home)/developer-console/index.tsx:113
 msgid "transferBtc"
 msgstr ""
 
-#: src/app/wallet/developer-console/bitcoin-scratch-pad.tsx:42
+#: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:42
 msgid "Type here to translate!"
 msgstr ""
 
@@ -821,19 +821,19 @@ msgstr ""
 msgid "Type URL or search"
 msgstr ""
 
-#: src/app/wallet/recover-wallet.tsx:149
+#: src/app/(home)/recover-wallet.tsx:149
 msgid "Type your recovery phrase"
 msgstr ""
 
-#: src/app/wallet/secure-your-wallet.tsx:55
+#: src/app/(home)/secure-your-wallet.tsx:55
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:103
+#: src/app/(home)/settings/index.tsx:103
 msgid "Version"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/index.tsx:80
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:80
 msgid "View Secret Key"
 msgstr ""
 
@@ -853,15 +853,15 @@ msgstr ""
 msgid "Wallet already exists"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:86
+#: src/app/(home)/developer-console/index.tsx:86
 msgid "Wallet management"
 msgstr ""
 
-#: src/app/wallet/settings/index.tsx:42
+#: src/app/(home)/settings/index.tsx:42
 msgid "Wallets and accounts"
 msgstr ""
 
-#: src/app/wallet/developer-console/index.tsx:80
+#: src/app/(home)/developer-console/index.tsx:80
 msgid "walletSecurityLevel:"
 msgstr ""
 
@@ -869,10 +869,10 @@ msgstr ""
 msgid "You've got mail! 📬"
 msgstr ""
 
-#: src/app/wallet/wallet-settings/configure/[wallet]/view-secret-key.tsx:51
+#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:51
 msgid "Your Secret Key grants you access to your wallet and its assets."
 msgstr ""
 
-#: src/app/wallet/create-new-wallet.tsx:67
+#: src/app/(home)/create-new-wallet.tsx:67
 msgid "Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager."
 msgstr ""

@@ -16,7 +16,7 @@ export function useCreateWallet() {
     changeWalletSecurityLevel(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
-      router.navigate(AppRoutes.WalletGeneratingWallet);
+      router.navigate(AppRoutes.GeneratingWallet);
       await nextAnimationFrame();
       try {
         await keyStore.restoreWalletFromMnemonic({
@@ -25,7 +25,7 @@ export function useCreateWallet() {
           passphrase: passphrase ?? undefined,
         });
         toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
-        router.navigate(AppRoutes.WalletHome);
+        router.navigate(AppRoutes.Home);
       } catch (e) {
         if (keychainErrorHandlers.isKeyExistsError(e)) {
           toastContext.displayToast({ type: 'info', title: t`Wallet already exists` });
@@ -41,7 +41,7 @@ export function useCreateWallet() {
   async function navigateAndCreateWallet() {
     switch (walletSecurityLevel) {
       case 'undefined':
-        router.navigate(AppRoutes.WalletSecureYourWallet);
+        router.navigate(AppRoutes.SecureYourWallet);
         return;
       case 'secure':
         await createWallet({ biometrics: true });
@@ -54,7 +54,7 @@ export function useCreateWallet() {
         console.warn(
           "walletSecurityLevel is undefined. That shouldn't happen in a newly created store"
         );
-        router.navigate(AppRoutes.WalletSecureYourWallet);
+        router.navigate(AppRoutes.SecureYourWallet);
     }
   }
 

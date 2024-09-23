@@ -42,7 +42,7 @@ export default function SettingsScreen() {
               subtitle={t`${hiddenAccountsLength} hidden accounts`}
               Icon={Eye1ClosedIcon}
               onPress={() => {
-                router.navigate(AppRoutes.WalletWalletsSettingsHiddenAccounts);
+                router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
               }}
             />
             <Cell
