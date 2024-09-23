@@ -3,7 +3,7 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getNativeSegwitAddressIndexDerivationPath, getTaprootAddress } from '@leather.io/bitcoin';
 import { NetworkConfiguration } from '@leather.io/models';
-import { createCounter } from '@leather.io/utils';
+import { createCounter, oneWeekInMs } from '@leather.io/utils';
 
 import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
@@ -13,7 +13,7 @@ import { hasInscriptions } from './address.utils';
 
 const staleTime = 3 * 60 * 1000;
 
-const queryOptions = { staleTime, refetchOnWindowFocus: false };
+const queryOptions = { staleTime, gcTime: oneWeekInMs, refetchOnWindowFocus: false };
 
 interface CreateGetUtxosByAddressQueryOptionsArgs {
   address: string;
