@@ -49,12 +49,13 @@ runs:
       env:
         APPLE_ID: ${{ inputs.APPLE_ID }}
         ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
+
     - name: Create preview
       uses: expo/expo-github-action/preview@v8
+      working-directory: ./app/mobile
       with:
-        command: |
-          cd apps/mobile
-          eas update --auto
+        command: eas update --auto
+
     - name: EAS Update
       id: eas_update
       run: |
@@ -65,6 +66,7 @@ runs:
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
         COMMIT_MESSAGE: ${{ steps.extract_branch.outputs.commit_message }}
+
     # Wait for build to either succeed or fail
     - name: 🛫 Build for simulator 🛫
       id: simulator_build
