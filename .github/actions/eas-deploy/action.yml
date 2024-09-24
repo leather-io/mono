@@ -21,20 +21,24 @@ runs:
   steps:
     - name: Prepare the app
       uses: ./.github/actions/provision
+
     - name: Extract branch name
       shell: bash
       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
       id: extract_branch
+
     - name: Setup Expo and EAS
       uses: expo/expo-github-action@v8
       with:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
+
     - name: Install jq tool
       run: |
         sudo apt-get update
         sudo apt-get install jq
       shell: bash
+
     - name: Setup eas credentials
       run: |
         echo $(jq --arg APPLE_ID "$APPLE_ID" '.submit.production.ios.appleId = $APPLE_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
@@ -43,6 +47,7 @@ runs:
       env:
         APPLE_ID: ${{ inputs.APPLE_ID }}
         ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
+
     # Wait for build to either succeed or fail
     - name: 🛫 Build for simulator 🛫
       id: simulator_build
@@ -76,6 +81,7 @@ runs:
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+
     - name: Publish simulator expo link in PR
       if: ${{ steps.extract_branch.outputs.branch != 'dev' }}
       uses: actions/github-script@v7
