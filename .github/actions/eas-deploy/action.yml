@@ -50,6 +50,9 @@ runs:
         APPLE_ID: ${{ inputs.APPLE_ID }}
         ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
 
+    - name: Build monorepo
+      run: pnpm build
+
     - name: Create preview
       uses: expo/expo-github-action/preview@v8
       with:
@@ -58,10 +61,8 @@ runs:
 
     - name: EAS Update
       id: eas_update
-      run: |
-        pnpm build
-        cd apps/mobile
-        eas update --channel "simulator" --message "$COMMIT_MESSAGE"
+      working-directory: ./apps/mobile
+      run: eas update --channel "simulator" --message "$COMMIT_MESSAGE"
       shell: bash
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
