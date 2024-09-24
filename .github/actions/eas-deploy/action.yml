@@ -26,7 +26,8 @@ runs:
       shell: bash
       run: |
         echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        echo "commit_message=\"$(git show -s --format=%s)\"" >> $GITHUB_OUTPUT
+        git show -s --format=%s
+        echo "commit_message=$(git show -s --format=%s)" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Setup Expo and EAS
@@ -59,64 +60,64 @@ runs:
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
         COMMIT_MESSAGE: ${{ steps.extract_branch.outputs.commit_message }}
-    # Wait for build to either succeed or fail
-    - name: 🛫 Build for simulator 🛫
-      id: simulator_build
-      run: |
-        cd apps/mobile
-        if [[ "$BRANCH_NAME" == "dev" ]]
-        then
-          # No wait on simulator version build of the app if we are on a dev branch
-          eas build --platform ios --profile=simulator --non-interactive --no-wait
-        else
-          # set temporary command output 
-          setTmpOutput () { tee /tmp/capture.out; }
-
-          # get temporary command output 
-          getTmpOutput () { cat /tmp/capture.out; }
-          
-          eas build --platform ios --profile=simulator --non-interactive | setTmpOutput 
-
-          # Last line of the build output is the link to the expo build
-          UNSAFE_BUILD_LINK=$(getTmpOutput | tail -n 1)
-
-          if [[ $UNSAFE_BUILD_LINK == *"https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/"* ]]; then
-            echo "Found build link!"
-            echo "BUILD_LINK=$UNSAFE_BUILD_LINK" >> $GITHUB_OUTPUT
-          else
-            echo "No build link!"
-          fi
-
-        fi
-      shell: bash
-      env:
-        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
-        BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-
-    - name: Publish simulator expo link in PR
-      if: ${{ steps.extract_branch.outputs.branch != 'dev' }}
-      uses: actions/github-script@v7
-      env:
-        BUILD_LINK: ${{ steps.simulator_build.outputs.BUILD_LINK }}
-      with:
-        github-token: ${{ inputs.LEATHER_BOT }}
-        script: |
-          const { BUILD_LINK } = process.env
-          if(BUILD_LINK) {
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "Expo simulator build link: " + BUILD_LINK
-            })
-          }
-
-    - name: 🛫 Build for production 🛫
-      if: ${{ steps.extract_branch.outputs.branch == 'dev' }}
-      run: |
-        cd apps/mobile
-        # Release version of the app, we should wait for it to see the result
-        eas build --platform ios --profile=production --non-interactive --auto-submit
-      shell: bash
-      env:
-        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+    # # Wait for build to either succeed or fail
+    # - name: 🛫 Build for simulator 🛫
+    #   id: simulator_build
+    #   run: |
+    #     cd apps/mobile
+    #     if [[ "$BRANCH_NAME" == "dev" ]]
+    #     then
+    #       # No wait on simulator version build of the app if we are on a dev branch
+    #       eas build --platform ios --profile=simulator --non-interactive --no-wait
+    #     else
+    #       # set temporary command output
+    #       setTmpOutput () { tee /tmp/capture.out; }
+    #
+    #       # get temporary command output
+    #       getTmpOutput () { cat /tmp/capture.out; }
+    #
+    #       eas build --platform ios --profile=simulator --non-interactive | setTmpOutput
+    #
+    #       # Last line of the build output is the link to the expo build
+    #       UNSAFE_BUILD_LINK=$(getTmpOutput | tail -n 1)
+    #
+    #       if [[ $UNSAFE_BUILD_LINK == *"https://expo.dev/accounts/leather-wallet/projects/leather-wallet-mobile/builds/"* ]]; then
+    #         echo "Found build link!"
+    #         echo "BUILD_LINK=$UNSAFE_BUILD_LINK" >> $GITHUB_OUTPUT
+    #       else
+    #         echo "No build link!"
+    #       fi
+    #
+    #     fi
+    #   shell: bash
+    #   env:
+    #     EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+    #     BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+    #
+    # - name: Publish simulator expo link in PR
+    #   if: ${{ steps.extract_branch.outputs.branch != 'dev' }}
+    #   uses: actions/github-script@v7
+    #   env:
+    #     BUILD_LINK: ${{ steps.simulator_build.outputs.BUILD_LINK }}
+    #   with:
+    #     github-token: ${{ inputs.LEATHER_BOT }}
+    #     script: |
+    #       const { BUILD_LINK } = process.env
+    #       if(BUILD_LINK) {
+    #         github.rest.issues.createComment({
+    #           issue_number: context.issue.number,
+    #           owner: context.repo.owner,
+    #           repo: context.repo.repo,
+    #           body: "Expo simulator build link: " + BUILD_LINK
+    #         })
+    #       }
+    #
+    # - name: 🛫 Build for production 🛫
+    #   if: ${{ steps.extract_branch.outputs.branch == 'dev' }}
+    #   run: |
+    #     cd apps/mobile
+    #     # Release version of the app, we should wait for it to see the result
+    #     eas build --platform ios --profile=production --non-interactive --auto-submit
+    #   shell: bash
+    #   env:
+    #     EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
