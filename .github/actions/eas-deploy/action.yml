@@ -54,7 +54,7 @@ runs:
       uses: expo/expo-github-action/preview@v8
       with:
         working-directory: ./app/mobile
-        command: eas update --auto
+        command: eas update --auto --branch ${{ github.event.pull_request.head.ref }}
       env:
         token: ${{ inputs.EXPO_TOKEN }}
 
