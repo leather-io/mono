@@ -30,10 +30,6 @@ export const unstable_settings = { initialRouteName: '/' };
 initiateI18n();
 
 export default function RootLayout() {
-  if (!process.env.EXPO_PUBLIC_SECRET_KEY) {
-    throw new Error('You need to set EXPO_PUBLIC_SECRET_KEY');
-  }
-
   void SplashScreen.hideAsync();
 
   return (
