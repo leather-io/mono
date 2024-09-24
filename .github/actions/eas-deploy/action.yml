@@ -26,7 +26,7 @@ runs:
       shell: bash
       run: |
         echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        echo "commit_message=\"$(git log --oneline -1 --format=%s)\"" >> $GITHUB_OUTPUT
+        echo "commit_message=\"$(git show -s --format=%s)\"" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Setup Expo and EAS
