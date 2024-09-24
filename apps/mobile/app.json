@@ -4,6 +4,9 @@
       "ios",
       "android"
     ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
     "name": "Leather BTC",
     "slug": "leather-wallet-mobile",
     "version": "2.0.0",
@@ -75,7 +78,6 @@
     "owner": "leather-wallet",
     "experiments": {
       "typedRoutes": true
-    },
-    "runtimeVersion": "1.0.0"
+    }
   }
 }
