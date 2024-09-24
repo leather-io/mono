@@ -59,7 +59,7 @@
         }
       ],
       [
-        "expo-dev-launcher",
+        "expo-dev-client",
         {
           "launchMode": "launcher"
         }
