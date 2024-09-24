@@ -59,9 +59,9 @@
         }
       ],
       [
-        "expo-dev-client",
+        "expo-dev-launcher",
         {
-          "launchMode": "most-recent"
+          "launchMode": "launcher"
         }
       ]
     ],

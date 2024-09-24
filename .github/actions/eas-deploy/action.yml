@@ -52,8 +52,8 @@ runs:
 
     - name: Create preview
       uses: expo/expo-github-action/preview@v8
-      working-directory: ./app/mobile
       with:
+        working-directory: ./app/mobile
         command: eas update --auto
 
     - name: EAS Update
