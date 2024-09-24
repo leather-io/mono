@@ -55,6 +55,8 @@ runs:
       with:
         working-directory: ./app/mobile
         command: eas update --auto
+      env:
+        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
 
     - name: EAS Update
       id: eas_update
