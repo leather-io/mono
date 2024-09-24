@@ -103,6 +103,23 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.23.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.22.0...@leather.io/ui-v1.23.0) (2024-09-24)
+
+
+### Features
+
+* settings security, closes leather-io/issues[#304](https://github.com/leather-io/mono/issues/304) ([936fa26](https://github.com/leather-io/mono/commit/936fa2674ad1ae4342ec7aa70290005867816b6b))
+* **ui:** approver ([df513b3](https://github.com/leather-io/mono/commit/df513b35a6f6ad3bfc22b458281907a3e46766a8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.4.0
+
 ## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.21.1...@leather.io/ui-v1.22.0) (2024-09-20)
 
 

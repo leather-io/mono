@@ -190,6 +190,29 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.36.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.35.0...@leather.io/mobile-v1.36.0) (2024-09-24)
+
+
+### Features
+
+* settings security, closes leather-io/issues[#304](https://github.com/leather-io/mono/issues/304) ([936fa26](https://github.com/leather-io/mono/commit/936fa2674ad1ae4342ec7aa70290005867816b6b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.13.1
+    * @leather.io/constants bumped to 0.12.0
+    * @leather.io/crypto bumped to 1.6.1
+    * @leather.io/models bumped to 0.16.0
+    * @leather.io/rpc bumped to 2.1.9
+    * @leather.io/stacks bumped to 1.1.4
+    * @leather.io/ui bumped to 1.23.0
+    * @leather.io/utils bumped to 0.16.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.13.1
+
 ## [1.35.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.34.1...@leather.io/mobile-v1.35.0) (2024-09-20)
 
 

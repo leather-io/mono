@@ -149,6 +149,24 @@
     * @leather.io/bitcoin bumped to 0.12.1
     * @leather.io/utils bumped to 0.14.0
 
+## [2.13.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.12.0...@leather.io/query-v2.13.0) (2024-09-24)
+
+
+### Features
+
+* cache utxos and stacks balance for 1 week, closes leather-io/issues[#287](https://github.com/leather-io/mono/issues/287) ([fd953c8](https://github.com/leather-io/mono/commit/fd953c8bcc3dda0403a12cbe735eec1cf09229b2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.13.1
+    * @leather.io/constants bumped to 0.12.0
+    * @leather.io/models bumped to 0.16.0
+    * @leather.io/rpc bumped to 2.1.9
+    * @leather.io/utils bumped to 0.16.1
+
 ## [2.12.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.11.0...@leather.io/query-v2.12.0) (2024-09-20)
 
 
