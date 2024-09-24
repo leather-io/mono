@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@leather.io/utils": "workspace:*",
-    "@scure/bip32": "1.4.0",
-    "@scure/bip39": "1.3.0",
+    "@scure/bip32": "1.5.0",
+    "@scure/bip39": "1.4.0",
     "just-memoize": "2.2.0"
   },
   "devDependencies": {
