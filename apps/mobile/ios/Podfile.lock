@@ -1,6 +1,8 @@
 PODS:
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
+  - EASClient (0.12.0):
+    - ExpoModulesCore
   - EXApplication (5.9.1):
     - ExpoModulesCore
   - EXConstants (16.0.2):
@@ -297,6 +299,35 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - EXStructuredHeaders (3.8.0)
+  - EXUpdates (0.25.25):
+    - DoubleConversion
+    - EASClient
+    - EXManifests
+    - ExpoModulesCore
+    - EXStructuredHeaders
+    - EXUpdatesInterface
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - ReachabilitySwift
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - "sqlite3 (~> 3.45.3+1)"
+    - Yoga
   - EXUpdatesInterface (0.16.2):
     - ExpoModulesCore
   - FBLazyVector (0.74.1)
@@ -367,6 +398,7 @@ PODS:
     - FBLazyVector (= 0.74.1)
     - RCTRequired (= 0.74.1)
     - React-Core (= 0.74.1)
+  - ReachabilitySwift (5.2.3)
   - React (0.74.1):
     - React-Core (= 0.74.1)
     - React-Core/DevSupport (= 0.74.1)
@@ -1607,11 +1639,15 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
   - SocketRocket (0.7.0)
+  - "sqlite3 (3.45.3+1)":
+    - "sqlite3/common (= 3.45.3+1)"
+  - "sqlite3/common (3.45.3+1)"
   - Yoga (0.0.0)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - "EASClient (from `../../../node_modules/.pnpm/expo-eas-client@0.12.0/node_modules/expo-eas-client/ios`)"
   - "EXApplication (from `../../../node_modules/.pnpm/expo-application@5.9.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7_yx2f2gdh7hjuisboyd3i55y2re/node_modules/expo-application/ios`)"
   - "EXConstants (from `../../../node_modules/.pnpm/expo-constants@16.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7._xcqng4jhv4i76f2i4koarljrdq/node_modules/expo-constants/ios`)"
   - "EXJSONUtils (from `../../../node_modules/.pnpm/expo-json-utils@0.13.1/node_modules/expo-json-utils/ios`)"
@@ -1638,6 +1674,8 @@ DEPENDENCIES:
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.4_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_uipvbpbo46fysle2i5oj7v6ogy/node_modules/expo-system-ui/ios`)"
   - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@_u7hnocqw65hqqgquiq5tbos7l4/node_modules/expo-web-browser/ios`)"
   - "EXSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.26_@babel+core@7.24.6_@ba_v5ohsh25f77rxtqhfhjnjh47xu/node_modules/expo-splash-screen/ios`)"
+  - "EXStructuredHeaders (from `../../../node_modules/.pnpm/expo-structured-headers@3.8.0/node_modules/expo-structured-headers/ios`)"
+  - "EXUpdates (from `../../../node_modules/.pnpm/expo-updates@0.25.25_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_rb5wtq2tjonzmfntnrge5cmbkq/node_modules/expo-updates/ios`)"
   - "EXUpdatesInterface (from `../../../node_modules/.pnpm/expo-updates-interface@0.16.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel_cubabp64y4ahor54bavvt466lm/node_modules/expo-updates-interface/ios`)"
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
@@ -1709,17 +1747,21 @@ SPEC REPOS:
     - libdav1d
     - libwebp
     - lottie-ios
+    - ReachabilitySwift
     - SDWebImage
     - SDWebImageAVIFCoder
     - SDWebImageSVGCoder
     - SDWebImageWebPCoder
     - SocketRocket
+    - sqlite3
 
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EASClient:
+    :path: "../../../node_modules/.pnpm/expo-eas-client@0.12.0/node_modules/expo-eas-client/ios"
   EXApplication:
     :path: "../../../node_modules/.pnpm/expo-application@5.9.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7_yx2f2gdh7hjuisboyd3i55y2re/node_modules/expo-application/ios"
   EXConstants:
@@ -1772,6 +1814,10 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@_u7hnocqw65hqqgquiq5tbos7l4/node_modules/expo-web-browser/ios"
   EXSplashScreen:
     :path: "../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.26_@babel+core@7.24.6_@ba_v5ohsh25f77rxtqhfhjnjh47xu/node_modules/expo-splash-screen/ios"
+  EXStructuredHeaders:
+    :path: "../../../node_modules/.pnpm/expo-structured-headers@3.8.0/node_modules/expo-structured-headers/ios"
+  EXUpdates:
+    :path: "../../../node_modules/.pnpm/expo-updates@0.25.25_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_rb5wtq2tjonzmfntnrge5cmbkq/node_modules/expo-updates/ios"
   EXUpdatesInterface:
     :path: "../../../node_modules/.pnpm/expo-updates-interface@0.16.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel_cubabp64y4ahor54bavvt466lm/node_modules/expo-updates-interface/ios"
   FBLazyVector:
@@ -1901,6 +1947,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
+  EASClient: 1509a9a6b48b932ec61667644634daf2562983b8
   EXApplication: c08200c34daca7af7fd76ac4b9d606077410e8ad
   EXConstants: 409690fbfd5afea964e5e9d6c4eb2c2b59222c59
   EXJSONUtils: 30c17fd9cc364d722c0946a550dfbf1be92ef6a4
@@ -1927,6 +1974,8 @@ SPEC CHECKSUMS:
   ExpoSystemUI: b5ecc4b6781b6369fb8b3a0903bea36fae3dd090
   ExpoWebBrowser: 7595ccac6938eb65b076385fd23d035db9ecdc8e
   EXSplashScreen: d439ca817211886dc80a00f3761e3b6d861d7205
+  EXStructuredHeaders: cb8d1f698e144f4c5547b4c4963e1552f5d2b457
+  EXUpdates: e7f89aa0080d57b788f9309d25f575883f1dfa92
   EXUpdatesInterface: 996527fd7d1a5d271eb523258d603f8f92038f24
   FBLazyVector: 898d14d17bf19e2435cafd9ea2a1033efe445709
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
@@ -1941,6 +1990,7 @@ SPEC CHECKSUMS:
   RCTDeprecation: efb313d8126259e9294dc4ee0002f44a6f676aba
   RCTRequired: f49ea29cece52aee20db633ae7edc4b271435562
   RCTTypeSafety: a11979ff0570d230d74de9f604f7d19692157bc4
+  ReachabilitySwift: 7f151ff156cea1481a8411701195ac6a984f4979
   React: 88794fad7f460349dbc9df8a274d95f37a009f5d
   React-callinvoker: 7a7023e34a55c89ea2aa62486bb3c1164ab0be0c
   React-Codegen: af31a9323ce23988c255c9afd0ae9415ff894939
@@ -1997,6 +2047,7 @@ SPEC CHECKSUMS:
   SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
+  sqlite3: 02d1f07eaaa01f80a1c16b4b31dfcbb3345ee01a
   Yoga: 348f8b538c3ed4423eb58a8e5730feec50bce372
 
 PODFILE CHECKSUM: 1183a5e3969c957f2df7140e9b85ba46d355b320

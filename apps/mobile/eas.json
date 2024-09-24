@@ -13,7 +13,8 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2"
-      }
+      },
+      "channel": "test"
     },
     "simulator": {
       "node": "20.11.0",
@@ -23,7 +24,8 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2"
-      }
+      },
+      "channel": "simulator"
     },
     "development": {
       "node": "20.11.0",
@@ -32,7 +34,8 @@
       "distribution": "internal",
       "ios": {
         "cocoapods": "1.15.2"
-      }
+      },
+      "channel": "development"
     },
     "preview-simulator": {
       "node": "20.11.0",
@@ -41,7 +44,8 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2"
-      }
+      },
+      "channel": "preview-simulator"
     },
     "preview": {
       "node": "20.11.0",
@@ -49,7 +53,8 @@
       "distribution": "internal",
       "ios": {
         "cocoapods": "1.15.2"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "node": "20.11.0",
@@ -58,7 +63,8 @@
       "autoIncrement": true,
       "ios": {
         "cocoapods": "1.15.2"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {

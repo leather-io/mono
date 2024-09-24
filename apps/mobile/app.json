@@ -1,5 +1,9 @@
 {
   "expo": {
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "name": "Leather BTC",
     "slug": "leather-wallet-mobile",
     "version": "2.0.0",
@@ -13,7 +17,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -70,6 +75,7 @@
     "owner": "leather-wallet",
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "runtimeVersion": "1.0.0"
   }
 }

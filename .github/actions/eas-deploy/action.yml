@@ -23,7 +23,9 @@ runs:
       uses: ./.github/actions/provision
     - name: Extract branch name
       shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      run: |
+        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        echo "commit_message=${git log --oneline -1 --format=%s}" >> $GITHUB_OUTPUT
       id: extract_branch
     - name: Setup Expo and EAS
       uses: expo/expo-github-action@v8
@@ -43,6 +45,14 @@ runs:
       env:
         APPLE_ID: ${{ inputs.APPLE_ID }}
         ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
+    - name: EAS Update
+      id: eas_update
+      run: |
+        eas update --channel "simulator" --message "$COMMIT_MESSAGE"
+      shell: bash
+      env:
+        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+        COMMIT_MESSAGE: ${{ steps.extract_branch.outputs.commit_message }}
     # Wait for build to either succeed or fail
     - name: 🛫 Build for simulator 🛫
       id: simulator_build
