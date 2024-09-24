@@ -52,6 +52,7 @@ runs:
     - name: EAS Update
       id: eas_update
       run: |
+        cd apps/mobile
         eas update --channel "simulator" --message "$COMMIT_MESSAGE"
       shell: bash
       env:
