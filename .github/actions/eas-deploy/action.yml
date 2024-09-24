@@ -51,6 +51,7 @@ runs:
         ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
 
     - name: Build monorepo
+      shell: bash
       run: pnpm build
 
     - name: Create preview
