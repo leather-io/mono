@@ -6,17 +6,6 @@ Leather is the most popular and trusted wallet for apps built on Bitcoin. And no
 
 This app is an [Expo](https://expo.dev/) mobile application. So there are a few prerequisites to have installed on your computer before we can proceed.
 
-You'll need to create a `.env` file to set which app mode the wallet runs in
-
-```
-# .env
-# `prelaunch` or `live`
-EXPO_PUBLIC_APP_START_MODE='prelaunch'
-
-# test secret key
-EXPO_PUBLIC_SECRET_KEY="<24 words go here>"
-```
-
 ### Prerequisites
 
 - [Node and Pnpm](https://nodejs.org/en/download)
