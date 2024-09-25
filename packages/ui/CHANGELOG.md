@@ -103,6 +103,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.23.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.23.0...@leather.io/ui-v1.23.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* **ui:** export favicon ([6b62e4a](https://github.com/leather-io/mono/commit/6b62e4a3bbff77eed32e567209c66dff18876a7f))
+* **ui:** remove shadow from approver ([b90978e](https://github.com/leather-io/mono/commit/b90978ea73919011dfd1929f472f8e085b6a1f39))
+
 ## [1.23.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.22.0...@leather.io/ui-v1.23.0) (2024-09-24)
 
 

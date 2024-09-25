@@ -190,6 +190,22 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.11.3
 
+## [1.36.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.36.0...@leather.io/mobile-v1.36.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* do not show splash animation on dev ([3f569be](https://github.com/leather-io/mono/commit/3f569befa423152fc21a8def0e88977783e4069e))
+* **mobile:** handle missing wallets case, leather-io/issues[#338](https://github.com/leather-io/mono/issues/338) ([f601f19](https://github.com/leather-io/mono/commit/f601f194d63b02a3a1a7f8b1c09599d6dd83bdaf))
+* no need for an env variable anymore ([75854ac](https://github.com/leather-io/mono/commit/75854ac1ce95e44cf2c6216f43959f301d612376))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.23.1
+
 ## [1.36.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.35.0...@leather.io/mobile-v1.36.0) (2024-09-24)
 
 
