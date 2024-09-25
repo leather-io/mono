@@ -30,6 +30,7 @@ export * from './globe-tilted-icon.native';
 export * from './graduate-cap-icon.native';
 export * from './head-icon.native';
 export * from './inbox-icon.native';
+export * from './info-circle-icon.native';
 export * from './keyhole-icon.native';
 export * from './lock-icon.native';
 export * from './leather-lettermark-icon.native';

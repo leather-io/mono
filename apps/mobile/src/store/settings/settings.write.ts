@@ -24,6 +24,9 @@ export const settingsSlice = createSlice({
     userChangedBitcoinUnitPreference(state, action: PayloadAction<BitcoinUnit>) {
       state.bitcoinUnitPreference = action.payload;
     },
+    userChangedEmailAddressPreference(state, action: PayloadAction<string>) {
+      state.emailAddressPreference = action.payload;
+    },
     userChangedFiatCurrencyPreference(state, action: PayloadAction<FiatCurrency>) {
       state.fiatCurrencyPreference = action.payload;
     },
@@ -44,6 +47,7 @@ export const {
   userChangedAccountDisplayPreference,
   userChangedAnalyticsPreference,
   userChangedBitcoinUnitPreference,
+  userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
   userChangedSecurityLevelPreference,

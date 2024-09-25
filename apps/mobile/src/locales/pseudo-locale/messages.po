@@ -37,10 +37,6 @@ msgstr ""
 msgid "<0>SECURE</0><1>YOUR WALLET</1>"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:48
-msgid "5 enabled"
-msgstr ""
-
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:44
 msgid "Access custodial wallet"
 msgstr ""
@@ -62,7 +58,7 @@ msgstr ""
 msgid "Account created"
 msgstr ""
 
-#: src/app/(home)/settings/display/index.tsx:65
+#: src/app/(home)/settings/display/index.tsx:64
 #: src/features/settings/account-identifier/account-identifier-sheet.tsx:33
 msgid "Account identifier"
 msgstr ""
@@ -133,10 +129,6 @@ msgstr ""
 msgid "All Assets"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:40
-msgid "All enabled"
-msgstr ""
-
 #: src/features/settings/app-authentication-sheet.tsx:31
 msgid "Allow authentication"
 msgstr ""
@@ -192,6 +184,10 @@ msgstr ""
 msgid "Avatar"
 msgstr ""
 
+#: src/app/(home)/settings/notifications/email.tsx:38
+msgid "Awaiting verification"
+msgstr ""
+
 #: src/app/(home)/recover-wallet.tsx:188
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:28
@@ -210,7 +206,7 @@ msgstr ""
 msgid "Bitcoin Scrach Pad"
 msgstr ""
 
-#: src/app/(home)/settings/display/index.tsx:49
+#: src/app/(home)/settings/display/index.tsx:48
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit"
 msgstr ""
@@ -278,7 +274,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/app/(home)/settings/display/index.tsx:57
+#: src/app/(home)/settings/display/index.tsx:56
 #: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
 msgstr ""
@@ -324,6 +320,7 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
+#: src/app/(home)/settings/notifications/index.tsx:24
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
@@ -383,12 +380,15 @@ msgstr ""
 msgid "Earn"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:55
-msgid "Email address"
+#: src/app/(home)/settings/notifications/_layout.tsx:28
+#: src/app/(home)/settings/notifications/_layout.tsx:60
+msgid "Email"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:47
-msgid "Email notifications"
+#: src/app/(home)/settings/notifications/email.tsx:39
+#: src/features/settings/email-address-sheet.tsx:38
+#: src/features/settings/email-address-sheet.tsx:47
+msgid "Email address"
 msgstr ""
 
 #: src/app/(home)/secure-your-wallet.tsx:75
@@ -434,13 +434,7 @@ msgstr ""
 msgid "Guides"
 msgstr ""
 
-#: src/features/settings/email-address-sheet.tsx:15
-#: src/features/settings/email-notifications-sheet.tsx:15
-#: src/features/settings/push-notifications-sheet.tsx:16
-msgid "Hello"
-msgstr ""
-
-#: src/app/(home)/_layout.tsx:125
+#: src/app/(home)/_layout.tsx:122
 #: src/app/(home)/settings/index.tsx:83
 msgid "Help"
 msgstr ""
@@ -469,6 +463,10 @@ msgstr ""
 
 #: src/components/widgets/accounts/cards/import-wallet-card.tsx:16
 msgid "Import wallet"
+msgstr ""
+
+#: src/features/settings/email-address-sheet.tsx:27
+msgid "Invalid email address"
 msgstr ""
 
 #: src/app/(home)/recover-wallet.tsx:32
@@ -540,12 +538,12 @@ msgstr ""
 msgid "No key needed"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:56
-msgid "None/Awaiting verification/Verified"
+#: src/app/(home)/settings/notifications/index.tsx:23
+msgid "Notification"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:121
 #: src/app/(home)/settings/index.tsx:75
+#: src/app/(home)/settings/notifications/_layout.tsx:43
 msgid "Notifications"
 msgstr ""
 
@@ -595,12 +593,17 @@ msgstr ""
 msgid "Proceed without security"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:76
-msgid "Push and email notifications"
+#: src/features/settings/email-address-sheet.tsx:39
+msgid "Provide an email address for receiving notifications"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:39
-msgid "Push notifications"
+#: src/app/(home)/settings/notifications/_layout.tsx:21
+#: src/app/(home)/settings/notifications/_layout.tsx:53
+msgid "Push"
+msgstr ""
+
+#: src/app/(home)/settings/index.tsx:76
+msgid "Push and email notifications"
 msgstr ""
 
 #: src/components/action-bar/container.tsx:175
@@ -638,6 +641,7 @@ msgstr ""
 
 #: src/components/wallet-settings/account-name-sheet.tsx:22
 #: src/components/wallet-settings/wallet-name-sheet.tsx:22
+#: src/features/settings/email-address-sheet.tsx:54
 msgid "Save"
 msgstr ""
 
@@ -724,6 +728,10 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
+#: src/features/settings/email-address-sheet.tsx:34
+msgid "Submitted, check your email"
+msgstr ""
+
 #: src/components/create-new-wallet/mnemonic-display.tsx:43
 msgid "Successfully copied to clipboard!"
 msgstr ""
@@ -762,7 +770,7 @@ msgid ""
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 msgstr ""
 
-#: src/app/(home)/settings/display/index.tsx:41
+#: src/app/(home)/settings/display/index.tsx:40
 #: src/features/settings/theme-sheet/theme-sheet.tsx:28
 msgid "Theme"
 msgstr ""

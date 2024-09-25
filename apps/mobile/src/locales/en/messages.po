@@ -37,10 +37,6 @@ msgstr "<0>ENTER YOUR</0><1>SECRET KEY</1>"
 msgid "<0>SECURE</0><1>YOUR WALLET</1>"
 msgstr "<0>SECURE</0><1>YOUR WALLET</1>"
 
-#: src/app/(home)/settings/notifications/index.tsx:48
-msgid "5 enabled"
-msgstr "5 enabled"
-
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:44
 msgid "Access custodial wallet"
 msgstr "Access custodial wallet"
@@ -62,7 +58,7 @@ msgstr "Account 1"
 msgid "Account created"
 msgstr "Account created"
 
-#: src/app/(home)/settings/display/index.tsx:65
+#: src/app/(home)/settings/display/index.tsx:64
 #: src/features/settings/account-identifier/account-identifier-sheet.tsx:33
 msgid "Account identifier"
 msgstr "Account identifier"
@@ -133,10 +129,6 @@ msgstr "All assets"
 msgid "All Assets"
 msgstr "All Assets"
 
-#: src/app/(home)/settings/notifications/index.tsx:40
-msgid "All enabled"
-msgstr "All enabled"
-
 #: src/features/settings/app-authentication-sheet.tsx:31
 msgid "Allow authentication"
 msgstr "Allow authentication"
@@ -192,6 +184,10 @@ msgstr "App authorization updated"
 msgid "Avatar"
 msgstr "Avatar"
 
+#: src/app/(home)/settings/notifications/email.tsx:38
+msgid "Awaiting verification"
+msgstr "Awaiting verification"
+
 #: src/app/(home)/recover-wallet.tsx:188
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:28
@@ -210,7 +206,7 @@ msgstr "Bitcoin blockchain"
 msgid "Bitcoin Scrach Pad"
 msgstr "Bitcoin Scrach Pad"
 
-#: src/app/(home)/settings/display/index.tsx:49
+#: src/app/(home)/settings/display/index.tsx:48
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
@@ -278,7 +274,7 @@ msgstr "Contacts"
 msgid "Continue"
 msgstr "Continue"
 
-#: src/app/(home)/settings/display/index.tsx:57
+#: src/app/(home)/settings/display/index.tsx:56
 #: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
 msgstr "Conversion unit"
@@ -324,6 +320,7 @@ msgstr "Create, Import or connect instantly"
 msgid "Creation date"
 msgstr "Creation date"
 
+#: src/app/(home)/settings/notifications/index.tsx:24
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
@@ -383,13 +380,16 @@ msgstr "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgid "Earn"
 msgstr "Earn"
 
-#: src/app/(home)/settings/notifications/index.tsx:55
+#: src/app/(home)/settings/notifications/_layout.tsx:28
+#: src/app/(home)/settings/notifications/_layout.tsx:60
+msgid "Email"
+msgstr "Email"
+
+#: src/app/(home)/settings/notifications/email.tsx:39
+#: src/features/settings/email-address-sheet.tsx:38
+#: src/features/settings/email-address-sheet.tsx:47
 msgid "Email address"
 msgstr "Email address"
-
-#: src/app/(home)/settings/notifications/index.tsx:47
-msgid "Email notifications"
-msgstr "Email notifications"
 
 #: src/app/(home)/secure-your-wallet.tsx:75
 msgid "Enable device security"
@@ -434,13 +434,7 @@ msgstr "getAddresses"
 msgid "Guides"
 msgstr "Guides"
 
-#: src/features/settings/email-address-sheet.tsx:15
-#: src/features/settings/email-notifications-sheet.tsx:15
-#: src/features/settings/push-notifications-sheet.tsx:16
-msgid "Hello"
-msgstr "Hello"
-
-#: src/app/(home)/_layout.tsx:125
+#: src/app/(home)/_layout.tsx:122
 #: src/app/(home)/settings/index.tsx:83
 msgid "Help"
 msgstr "Help"
@@ -470,6 +464,10 @@ msgstr "Import existing accounts"
 #: src/components/widgets/accounts/cards/import-wallet-card.tsx:16
 msgid "Import wallet"
 msgstr "Import wallet"
+
+#: src/features/settings/email-address-sheet.tsx:27
+msgid "Invalid email address"
+msgstr "Invalid email address"
 
 #: src/app/(home)/recover-wallet.tsx:32
 msgid "Invalid words: {joinedInvalidWords}"
@@ -540,12 +538,12 @@ msgstr "Networks"
 msgid "No key needed"
 msgstr "No key needed"
 
-#: src/app/(home)/settings/notifications/index.tsx:56
-msgid "None/Awaiting verification/Verified"
-msgstr "None/Awaiting verification/Verified"
+#: src/app/(home)/settings/notifications/index.tsx:23
+msgid "Notification"
+msgstr "Notification"
 
-#: src/app/(home)/_layout.tsx:121
 #: src/app/(home)/settings/index.tsx:75
+#: src/app/(home)/settings/notifications/_layout.tsx:43
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -595,13 +593,18 @@ msgstr "Proceed"
 msgid "Proceed without security"
 msgstr "Proceed without security"
 
+#: src/features/settings/email-address-sheet.tsx:39
+msgid "Provide an email address for receiving notifications"
+msgstr "Provide an email address for receiving notifications"
+
+#: src/app/(home)/settings/notifications/_layout.tsx:21
+#: src/app/(home)/settings/notifications/_layout.tsx:53
+msgid "Push"
+msgstr "Push"
+
 #: src/app/(home)/settings/index.tsx:76
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
-
-#: src/app/(home)/settings/notifications/index.tsx:39
-msgid "Push notifications"
-msgstr "Push notifications"
 
 #: src/components/action-bar/container.tsx:175
 msgid "Receive"
@@ -638,6 +641,7 @@ msgstr "Restore wallet"
 
 #: src/components/wallet-settings/account-name-sheet.tsx:22
 #: src/components/wallet-settings/wallet-name-sheet.tsx:22
+#: src/features/settings/email-address-sheet.tsx:54
 msgid "Save"
 msgstr "Save"
 
@@ -724,6 +728,10 @@ msgstr "stx_signTransaction"
 msgid "Submit"
 msgstr "Submit"
 
+#: src/features/settings/email-address-sheet.tsx:34
+msgid "Submitted, check your email"
+msgstr "Submitted, check your email"
+
 #: src/components/create-new-wallet/mnemonic-display.tsx:43
 msgid "Successfully copied to clipboard!"
 msgstr "Successfully copied to clipboard!"
@@ -764,7 +772,7 @@ msgstr ""
 "The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet. \n"
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 
-#: src/app/(home)/settings/display/index.tsx:41
+#: src/app/(home)/settings/display/index.tsx:40
 #: src/features/settings/theme-sheet/theme-sheet.tsx:28
 msgid "Theme"
 msgstr "Theme"

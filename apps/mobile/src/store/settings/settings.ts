@@ -8,6 +8,7 @@ import {
   AnalyticsPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
+  EmailAddress,
   FiatCurrency,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
@@ -18,6 +19,7 @@ import {
   selectAnalyticsPreference,
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
+  selectEmailAddressPreference,
   selectNetworkPreference,
   selectSecurityLevelPreference,
   selectThemePreference,
@@ -26,6 +28,7 @@ import {
   userChangedAccountDisplayPreference,
   userChangedAnalyticsPreference,
   userChangedBitcoinUnitPreference,
+  userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
   userChangedSecurityLevelPreference,
@@ -43,8 +46,9 @@ export interface SettingsState {
   accountDisplayPreference: AccountDisplayPreference;
   analyticsPreference: AnalyticsPreference;
   bitcoinUnitPreference: BitcoinUnit;
-  fiatCurrencyPreference: FiatCurrency;
   createdOn: string;
+  emailAddressPreference: EmailAddress;
+  fiatCurrencyPreference: FiatCurrency;
   networkPreference: DefaultNetworkConfigurations;
   themePreference: ThemePreference;
   securityLevelPreference: SecurityLevelPreference;
@@ -54,8 +58,9 @@ export const initialState: SettingsState = {
   accountDisplayPreference: 'native-segwit',
   analyticsPreference: 'consent-given',
   bitcoinUnitPreference: 'bitcoin',
-  fiatCurrencyPreference: 'USD',
   createdOn: new Date().toISOString(),
+  emailAddressPreference: '',
+  fiatCurrencyPreference: 'USD',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   securityLevelPreference: 'insecure',
   themePreference: 'system',
@@ -68,6 +73,7 @@ export function useSettings() {
   const accountDisplayPreference = useSelector(selectAccountDisplayPreference);
   const analyticsPreference = useSelector(selectAnalyticsPreference);
   const bitcoinUnitPreference = useSelector(selectBitcoinUnitPreference);
+  const emailAddressPreference = useSelector(selectEmailAddressPreference);
   const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
   const networkPreference = useSelector(selectNetworkPreference);
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
@@ -80,6 +86,7 @@ export function useSettings() {
     accountDisplayPreference,
     analyticsPreference,
     bitcoinUnitPreference,
+    emailAddressPreference,
     fiatCurrencyPreference,
     networkPreference,
     themeDerivedFromThemePreference,
@@ -92,8 +99,11 @@ export function useSettings() {
     changeAnalyticsPreference(pref: AnalyticsPreference) {
       dispatch(userChangedAnalyticsPreference(pref));
     },
-    changeBitcoinUnit(unit: BitcoinUnit) {
+    changeBitcoinUnitPreference(unit: BitcoinUnit) {
       dispatch(userChangedBitcoinUnitPreference(unit));
+    },
+    changeEmailAddressPreference(address: string) {
+      dispatch(userChangedEmailAddressPreference(address));
     },
     changeFiatCurrencyPreference(unit: FiatCurrency) {
       dispatch(userChangedFiatCurrencyPreference(unit));
