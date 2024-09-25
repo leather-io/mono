@@ -29,3 +29,4 @@ export { SkeletonLoader } from './src/components/skeleton-loader/skeleton-loader
 export { Icon } from './src/icons/icon/icon.web';
 export * from './src/icons/index.web';
 export * from './src/components/approver/approver.web';
+export * from './src/components/favicon/favicon.web';
