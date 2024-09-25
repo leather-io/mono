@@ -30,6 +30,11 @@ export const selectCurrencyPreference = createSelector(
   state => state.fiatCurrencyPreference
 );
 
+export const selectEmailAddressPreference = createSelector(
+  selectSettings,
+  state => state.emailAddressPreference
+);
+
 export const selectNetworkPreference = createSelector(
   selectSettings,
   state => defaultNetworksKeyedById[state.networkPreference]

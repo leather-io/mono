@@ -5,7 +5,7 @@ import { AppAuthenticationSheet } from '@/features/settings/app-authentication-s
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { Box, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+import { CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
 
 import SettingsScreenLayout from '../settings-screen.layout';
 import { SecurityCell } from './security-cell';
@@ -16,7 +16,7 @@ export default function SettingsSecurityScreen() {
   const settings = useSettings();
 
   return (
-    <Box flex={1} backgroundColor="ink.background-primary">
+    <>
       <SettingsScreenLayout>
         <SecurityCell
           title={t`Analytics`}
@@ -37,6 +37,6 @@ export default function SettingsSecurityScreen() {
       </SettingsScreenLayout>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />
       <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />
-    </Box>
+    </>
   );
 }

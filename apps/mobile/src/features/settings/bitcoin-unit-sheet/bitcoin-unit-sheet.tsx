@@ -21,7 +21,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const { i18n } = useLingui();
 
   function onUpdateBitcoinUnit(unit: BitcoinUnit) {
-    settings.changeBitcoinUnit(unit);
+    settings.changeBitcoinUnitPreference(unit);
     displayToast({ title: t`Bitcoin unit updated`, type: 'success' });
   }
 

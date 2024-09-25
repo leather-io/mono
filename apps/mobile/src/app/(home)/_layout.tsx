@@ -116,10 +116,7 @@ export default function StackLayout() {
         name="settings/networks/index"
         options={{ header: () => NavigationSettings(t`Networks`) }}
       />
-      <Stack.Screen
-        name="settings/notifications/index"
-        options={{ header: () => NavigationSettings(t`Notifications`) }}
-      />
+      <Stack.Screen name="settings/notifications" options={{ headerShown: false }} />
       <Stack.Screen
         name="settings/help/index"
         options={{ header: () => NavigationSettings(t`Help`) }}

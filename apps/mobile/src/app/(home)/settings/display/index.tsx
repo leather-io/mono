@@ -10,7 +10,6 @@ import { useLingui } from '@lingui/react';
 
 import {
   BitcoinCircleIcon,
-  Box,
   DollarCircleIcon,
   PackageSecurityIcon,
   SheetRef,
@@ -35,7 +34,7 @@ export default function SettingsDisplayScreen() {
   const { i18n } = useLingui();
 
   return (
-    <Box flex={1} backgroundColor="ink.background-primary">
+    <>
       <SettingsScreenLayout>
         <DisplayCell
           title={t`Theme`}
@@ -74,6 +73,6 @@ export default function SettingsDisplayScreen() {
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />
       <AccountIdentifierSheet sheetRef={accountIdentifierSheetRef} />
-    </Box>
+    </>
   );
 }

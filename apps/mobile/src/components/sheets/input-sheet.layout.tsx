@@ -3,6 +3,7 @@ import { RefObject, useState } from 'react';
 import { useSettings } from '@/store/settings/settings';
 
 import {
+  Avatar,
   Box,
   Button,
   IconProps,
@@ -47,9 +48,9 @@ export function InputSheet({
         <Box>
           <SheetHeader
             icon={
-              <Box bg="ink.background-secondary" borderRadius="round" flexDirection="row" p="2">
-                <TitleIcon color="ink.text-primary" />
-              </Box>
+              <Avatar>
+                <TitleIcon />
+              </Avatar>
             }
             title={title}
           />

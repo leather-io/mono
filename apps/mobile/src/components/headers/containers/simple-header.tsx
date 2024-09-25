@@ -9,6 +9,7 @@ interface SimpleHeaderProps {
   left?: ReactNode;
   center?: ReactNode;
   right?: ReactNode;
+  bottom?: ReactNode;
   insets: EdgeInsets;
 }
 export function SimpleHeader(props: SimpleHeaderProps) {
@@ -40,6 +41,7 @@ export function SimpleHeader(props: SimpleHeaderProps) {
           {props?.right}
         </Box>
       </Box>
+      {props.bottom}
     </Box>
   );
 }

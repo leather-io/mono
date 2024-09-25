@@ -21,6 +21,7 @@ export enum AppRoutes {
   SettingsSecurity = '/settings/security',
   SettingsNetworks = '/settings/networks',
   SettingsNotifications = '/settings/notifications',
+  SettingsNotificationsEmail = '/settings/notifications/email',
   SettingsHelp = '/settings/help',
   SettingsWallet = '/settings/wallet',
   SettingsWalletHiddenAccounts = '/settings/wallet/hidden-accounts',

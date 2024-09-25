@@ -4,7 +4,14 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 
 import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
-import { Box, CheckmarkCircleIcon, Text, Theme } from '@leather.io/ui/native';
+import {
+  Box,
+  CheckmarkCircleIcon,
+  ErrorTriangleIcon,
+  InfoCircleIcon,
+  Text,
+  Theme,
+} from '@leather.io/ui/native';
 
 import { ToastData, ToastMethods, ToastProps, ToastType } from './types';
 
@@ -19,10 +26,14 @@ const TOAST_OPEN_DURATION = 3000;
 
 function getIcon(type: ToastType, theme: Theme) {
   switch (type) {
-    case 'success':
-      return <CheckmarkCircleIcon color={theme.colors['ink.background-primary']} />;
+    case 'error':
+      return <ErrorTriangleIcon color={theme.colors['red.action-primary-default']} />;
     case 'info':
-      return null;
+      return <InfoCircleIcon color={theme.colors['ink.background-primary']} />;
+    case 'success':
+      return <CheckmarkCircleIcon color={theme.colors['green.action-primary-default']} />;
+    default:
+      return <InfoCircleIcon color={theme.colors['ink.background-primary']} />;
   }
 }
 
@@ -30,8 +41,9 @@ function getBackground(
   type: ToastType
 ): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
   switch (type) {
-    case 'success':
+    case 'error':
     case 'info':
+    case 'success':
       return 'ink.text-primary';
   }
 }
