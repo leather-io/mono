@@ -22,7 +22,7 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
-import { ApproverSheet } from './approval-ux-modal';
+import { ApproverSheet } from './approval-ux-sheet';
 
 interface BrowserInUseProp {
   textURL: string;

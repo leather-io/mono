@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { ApproverSheet } from '@/components/browser/approval-ux-modal';
+import { ApproverSheet } from '@/components/browser/approval-ux-sheet';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem } from '@/components/developer-console/list-items';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -11,7 +11,7 @@ import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { LOCALES } from '@/locales';
 import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings';
-import { useWallets } from '@/store/wallets/wallets.read';
+import { WalletLoader, useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
@@ -119,12 +119,18 @@ export default function DeveloperConsoleScreen() {
         <PressableListItem title={t`Drawer`} />
         <PressableListItem title={t`Page`} />
       </ScrollView>
-      <ApproverSheet
-        fingerprint={wallets.list[0] ? wallets.list[0].fingerprint : ''}
-        accountIndex={0}
-        message={getAddressesMessage}
-        sendResult={() => setGetAddressesMessage(null)}
-      />
+      {wallets.list[0]?.fingerprint && (
+        <WalletLoader fingerprint={wallets.list[0].fingerprint}>
+          {wallet => (
+            <ApproverSheet
+              fingerprint={wallet.fingerprint}
+              accountIndex={0}
+              message={getAddressesMessage}
+              sendResult={() => setGetAddressesMessage(null)}
+            />
+          )}
+        </WalletLoader>
+      )}
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </Box>
   );

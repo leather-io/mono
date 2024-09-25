@@ -723,7 +723,7 @@ msgstr "stx_signMessage"
 msgid "stx_signTransaction"
 msgstr "stx_signTransaction"
 
-#: src/components/browser/approval-ux-modal.tsx:63
+#: src/components/browser/approval-ux-sheet.tsx:63
 msgid "Submit"
 msgstr "Submit"
 
