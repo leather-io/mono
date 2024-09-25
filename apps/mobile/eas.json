@@ -15,11 +15,19 @@
         "cocoapods": "1.15.2"
       }
     },
-    "simulator": {
+    "simulator-dev": {
       "node": "20.11.0",
       "pnpm": "9.6.0",
       "distribution": "internal",
-      "developmentClient": true,
+      "ios": {
+        "simulator": true,
+        "cocoapods": "1.15.2"
+      }
+    },
+    "simulator-pr": {
+      "node": "20.11.0",
+      "pnpm": "9.6.0",
+      "distribution": "internal",
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2"
