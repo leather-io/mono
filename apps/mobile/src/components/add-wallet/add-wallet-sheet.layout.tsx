@@ -104,7 +104,7 @@ export function AddWalletSheetLayout({
         </Box>
         <Box p="5">
           <Text pb="5" variant="heading03">
-            {t`Add wallet to "Use case"`}
+            {t`Add wallet`}
           </Text>
           <Box flexDirection="column" gap="1">
             <AddWalletListItem
