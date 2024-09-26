@@ -88,16 +88,13 @@ msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} 🆕"
 
 #: src/app/(home)/settings/wallet/index.tsx:49
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:107
 msgid "Add wallet"
 msgstr "Add wallet"
 
 #: src/components/action-bar/container.tsx:157
 msgid "Add Wallet"
 msgstr "Add Wallet"
-
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:107
-msgid "Add wallet to \"Use case\""
-msgstr "Add wallet to \"Use case\""
 
 #: src/app/(home)/settings/index.tsx:43
 msgid "Add, configure and remove"
