@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { useOnMount } from 'src/utils/use-on-mount';
-
+import { useOnMount } from '../../utils/use-on-mount';
 import { ChildRegister, useRegisterChildren } from '../../utils/use-register-children';
 
 type ApproverChildren = 'header' | 'actions' | 'advanced' | 'section' | 'subheader';

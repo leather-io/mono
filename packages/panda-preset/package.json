@@ -13,7 +13,7 @@
     ".": "./dist/preset.js"
   },
   "dependencies": {
-    "@pandacss/dev": "0.46.0"
+    "@pandacss/dev": "0.46.1"
   },
   "devDependencies": {
     "@leather.io/tokens": "workspace:*",

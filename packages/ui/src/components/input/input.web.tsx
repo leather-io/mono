@@ -12,11 +12,11 @@ import {
 
 import { sva } from 'leather-styles/css';
 import { SystemStyleObject } from 'leather-styles/types';
-import { useOnMount } from 'src/utils/use-on-mount';
 
 import { propIfDefined } from '@leather.io/utils';
 
 import { createStyleContext } from '../../utils/style-context.web';
+import { useOnMount } from '../../utils/use-on-mount';
 
 const hackyDelayOneMs = 1;
 

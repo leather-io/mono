@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 
 import { Box, styled } from 'leather-styles/jsx';
-import { Favicon } from 'src/components/favicon/favicon.web';
-import { Flag } from 'src/components/flag/flag.web';
 
 import { isString } from '@leather.io/utils';
 
+import { Favicon } from '../../../components/favicon/favicon.web';
+import { Flag } from '../../../components/flag/flag.web';
 import { ApproverHeaderAnimation } from '../animations/approver-animation.web';
 import { useRegisterApproverChild } from '../approver-context.shared';
 
