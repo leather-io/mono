@@ -1,6 +1,7 @@
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
-import { BulletSeparator } from 'src/components/bullet-separator/bullet-separator.web';
+
+import { BulletSeparator } from '../../../components/bullet-separator/bullet-separator.web';
 
 type ApproverStatusName = 'completed' | 'error' | 'pending';
 

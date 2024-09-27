@@ -1,7 +1,8 @@
 import { motion, stagger, useAnimate } from 'framer-motion';
 import { css } from 'leather-styles/css';
-import { HasChildren } from 'src/utils/has-children';
-import { useOnMount } from 'src/utils/use-on-mount';
+
+import { HasChildren } from '../../../utils/has-children';
+import { useOnMount } from '../../../utils/use-on-mount';
 
 const animationSelector = '& > *:not(.skip-animation)';
 

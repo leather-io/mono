@@ -2,15 +2,15 @@ import { useRef } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Flex } from 'leather-styles/jsx';
-import { AnimateChangeInHeight } from 'src/components/animate-height/animate-height.web';
-import { Button } from 'src/components/button/button.web';
-import { Flag } from 'src/components/flag/flag.web';
-import { ChevronDownIcon } from 'src/icons/chevron-down-icon.web';
-import { HasChildren } from 'src/utils/has-children';
-import { getScrollParent } from 'src/utils/utils.web';
 
 import { delay } from '@leather.io/utils';
 
+import { AnimateChangeInHeight } from '../../../components/animate-height/animate-height.web';
+import { Button } from '../../../components/button/button.web';
+import { Flag } from '../../../components/flag/flag.web';
+import { ChevronDownIcon } from '../../../icons/chevron-down-icon.web';
+import { HasChildren } from '../../../utils/has-children';
+import { getScrollParent } from '../../../utils/utils.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
 const slightPauseForContentEnterAnimation = () => delay(120);

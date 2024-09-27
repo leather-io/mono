@@ -7,7 +7,7 @@ export default defineConfig({
 
   exclude: [],
 
-  prefix: 'leather',
+  prefix: 'ui',
 
   presets: ['@leather.io/panda-preset'],
 
