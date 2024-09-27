@@ -22,7 +22,8 @@ export default defineConfig({
       ],
     }),
   ],
-  onSuccess: 'panda cssgen --outfile dist-web/styles.css',
+  onSuccess:
+    'panda cssgen --outfile dist-web/styles.css && tsc --build tsconfig.web.json --emitDeclarationOnly',
   format: ['esm'],
   tsconfig: 'tsconfig.web.json',
   outDir: 'dist-web',
