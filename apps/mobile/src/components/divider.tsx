@@ -1,5 +1,7 @@
-import { Box } from '@leather.io/ui/native';
+import { BoxProps } from '@shopify/restyle';
 
-export function Divider() {
-  return <Box width="100%" height={1} bg="ink.border-transparent" />;
+import { Box, Theme } from '@leather.io/ui/native';
+
+export function Divider(props: BoxProps<Theme>) {
+  return <Box bg="ink.border-transparent" height={1} width="100%" {...props} />;
 }

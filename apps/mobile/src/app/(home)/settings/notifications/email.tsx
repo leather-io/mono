@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Pressable } from 'react-native';
 
 import { EmailAddressSheet } from '@/features/settings/email-address-sheet';
 import { t } from '@lingui/macro';
@@ -21,7 +21,7 @@ export default function SettingsNotificationsEmailScreen() {
   return (
     <>
       <SettingsScreenLayout>
-        <TouchableOpacity
+        <Pressable
           onPress={() => {
             emailAddressSheetRef.current?.present();
           }}
@@ -39,7 +39,7 @@ export default function SettingsNotificationsEmailScreen() {
               titleLeft={t`Email address`}
             />
           </Flag>
-        </TouchableOpacity>
+        </Pressable>
       </SettingsScreenLayout>
       <EmailAddressSheet sheetRef={emailAddressSheetRef} />
     </>

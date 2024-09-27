@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
+import { Pressable } from 'react-native';
 
-import { Avatar, Flag, ItemLayout, RadioButton, TouchableOpacity } from '@leather.io/ui/native';
+import { Avatar, Flag, ItemLayout, RadioButton } from '@leather.io/ui/native';
 
 interface NetworkCellProps {
   caption: string;
@@ -17,7 +18,7 @@ export function NetworkCell({
   title,
 }: NetworkCellProps) {
   return (
-    <TouchableOpacity onPress={onChangeNetwork}>
+    <Pressable onPress={onChangeNetwork}>
       <Flag img={<Avatar>{icon}</Avatar>}>
         <ItemLayout
           actionIcon={<RadioButton disabled isSelected={isSelected} />}
@@ -25,6 +26,6 @@ export function NetworkCell({
           captionLeft={caption}
         />
       </Flag>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
