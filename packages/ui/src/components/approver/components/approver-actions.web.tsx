@@ -1,7 +1,7 @@
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
 
-import type { HasChildren } from '../../../utils/has-children';
+import type { HasChildren } from '../../../utils/has-children.shared';
 import {
   ApproverActionAnimation,
   ApproverActionsAnimationContainer,

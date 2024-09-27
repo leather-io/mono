@@ -2,13 +2,22 @@
 
 This package contains Leather Wallet's UI library for our web + React Native applications.
 
+## Architecture
+
+This package colocates Web and React Native code, such that commonalities such as shared logic and types are shared. **The naming convention must be followed.**
+
+- `*.web.ts` — bundled only for Web
+- `*.native.ts` — bundled only for React Native
+- `*.shared.ts` — bundled for all platforms
+
 ## Web Setup
 
 Our web apps use [panda css](https://panda-css.com/). To setup in your application you need to:
 
-- install panda-css
-- setup panda css and configure it to acknowledge the library code
-- configure webpack to load the files correctly
+- Install `@pandacss/dev`
+- Setup panda css and configure it to acknowledge the library code
+- Configure Webpack to load the files correctly
+- Import the library styles from `@leather.io/ui/styles`
 
 ### Panda configuration
 
@@ -16,7 +25,7 @@ Specify the library as part of the `panda.config` `include`:
 
 ```js
   include: [
-    './node_modules/@leather.io/ui/dist-web/src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@leather.io/ui/dist-web/**/*.{js,jsx,ts,tsx}',
     './src/**/*.{js,jsx,ts,tsx}',
   ],
 ```

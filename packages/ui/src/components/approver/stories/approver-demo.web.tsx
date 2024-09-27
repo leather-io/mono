@@ -1,7 +1,7 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Box, Circle, styled } from 'leather-styles/jsx';
-import { InfoCircleIcon } from 'src/icons/index.web';
 
+import { InfoCircleIcon } from '../../../icons/index.web';
 import { Button } from '../../button/button.web';
 import { Callout } from '../../callout/callout.web';
 import { Flag } from '../../flag/flag.web';

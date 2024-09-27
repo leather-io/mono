@@ -21,6 +21,8 @@
   ],
   "exclude": [
     "node_modules",
+    "**/*.web.ts",
+    "**/*.web.tsx",
     "babel.config.cjs",
     "metro.config.cjs",
     "tsup.config.*.ts",

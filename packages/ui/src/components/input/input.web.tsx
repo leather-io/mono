@@ -16,7 +16,7 @@ import { SystemStyleObject } from 'leather-styles/types';
 import { propIfDefined } from '@leather.io/utils';
 
 import { createStyleContext } from '../../utils/style-context.web';
-import { useOnMount } from '../../utils/use-on-mount';
+import { useOnMount } from '../../utils/use-on-mount.shared';
 
 const hackyDelayOneMs = 1;
 
