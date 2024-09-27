@@ -103,6 +103,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.24.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.24.0...@leather.io/ui-v1.24.1) (2024-09-27)
+
+
+### Bug Fixes
+
+* **ui:** types not bundled with package ([3357199](https://github.com/leather-io/mono/commit/33571997f96d97b1fe43a163e4ec0064ad6e2452))
+
 ## [1.24.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.23.1...@leather.io/ui-v1.24.0) (2024-09-27)
 
 
