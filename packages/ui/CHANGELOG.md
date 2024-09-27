@@ -103,6 +103,25 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.24.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.23.1...@leather.io/ui-v1.24.0) (2024-09-27)
+
+
+### Features
+
+* settings notifications, closes leather-io/issues[#195](https://github.com/leather-io/mono/issues/195) ([498a1db](https://github.com/leather-io/mono/commit/498a1dbfeb48bf65e2c415b5acb96c91b1f5675c))
+
+
+### Bug Fixes
+
+* trigger ui release ([f76ae6d](https://github.com/leather-io/mono/commit/f76ae6d072b2640c34c47ac54d6e2e4e7e1d0a3a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.2
+
 ## [1.23.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.23.0...@leather.io/ui-v1.23.1) (2024-09-25)
 
 
