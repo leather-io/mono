@@ -4,14 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import {
-  Box,
-  Cell,
-  GraduateCapIcon,
-  MagicBookIcon,
-  SupportIcon,
-  Theme,
-} from '@leather.io/ui/native';
+import { Box, GraduateCapIcon, MagicBookIcon, SupportIcon, Theme } from '@leather.io/ui/native';
+
+import { HelpCell } from './help-cell';
 
 export default function SettingsHelpScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -27,17 +22,22 @@ export default function SettingsHelpScreen() {
           gap: theme.spacing[5],
         }}
       >
-        <Cell
+        <HelpCell
           title={t`Support and feedback`}
-          subtitle={t`Placeholder`}
-          Icon={SupportIcon}
+          caption={t`Placeholder`}
+          icon={<SupportIcon />}
           onPress={() => {}}
         />
-        <Cell title={t`Guides`} subtitle={t`Placeholder`} Icon={MagicBookIcon} onPress={() => {}} />
-        <Cell
+        <HelpCell
+          title={t`Guides`}
+          caption={t`Placeholder`}
+          icon={<MagicBookIcon />}
+          onPress={() => {}}
+        />
+        <HelpCell
           title={t`Learn`}
-          subtitle={t`Placeholder`}
-          Icon={GraduateCapIcon}
+          caption={t`Placeholder`}
+          icon={<GraduateCapIcon />}
           onPress={() => {}}
         />
       </ScrollView>

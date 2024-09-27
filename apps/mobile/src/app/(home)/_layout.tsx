@@ -2,12 +2,9 @@ import { RefObject, createContext } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ActionBarMethods } from '@/components/action-bar';
-import { AccountsHeader } from '@/components/headers/account';
 import { BackButtonHeader } from '@/components/headers/back-button';
-import { BlurredHeader } from '@/components/headers/containers/blurred-header';
 import { SimpleHeader } from '@/components/headers/containers/simple-header';
 import { LeatherLogoHeader } from '@/components/headers/leather-logo';
-import { MenuHeader } from '@/components/headers/menu';
 import { OptionsHeader } from '@/components/headers/options';
 import { TitleHeader } from '@/components/headers/title';
 import { t } from '@lingui/macro';
@@ -26,14 +23,14 @@ export default function StackLayout() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const NavigationHeader = (
-    <BlurredHeader
-      insets={insets}
-      left={<BackButtonHeader onPress={() => router.back()} />}
-      center={<AccountsHeader />}
-      right={<MenuHeader />}
-    />
-  );
+  // const NavigationHeader = (
+  //   <BlurredHeader
+  //     insets={insets}
+  //     left={<BackButtonHeader onPress={() => router.back()} />}
+  //     center={<AccountsHeader />}
+  //     right={<MenuHeader />}
+  //   />
+  // );
 
   const NavigationHeaderHome = (
     <SimpleHeader insets={insets} left={<LeatherLogoHeader />} right={<OptionsHeader />} />
@@ -94,11 +91,12 @@ export default function StackLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      {/* TODO: Can these be removed, or they should go after index route? */}
+      {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="send" options={{ header: () => NavigationHeader }} />
       <Stack.Screen name="receive" options={{ header: () => NavigationHeader }} />
       <Stack.Screen name="swap" options={{ header: () => NavigationHeader }} />
-      <Stack.Screen name="browser" options={{ headerShown: false }} />
+      <Stack.Screen name="browser" options={{ headerShown: false }} /> */}
       <Stack.Screen name="index" options={{ header: () => NavigationHeaderHome }} />
       <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="recover-wallet" options={{ header: () => NavigationBackSimple }} />

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-30 13:35+0400\n"
+"POT-Creation-Date: 2024-09-30 09:05-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -96,7 +96,7 @@ msgstr ""
 msgid "Add Wallet"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:43
+#: src/app/(home)/settings/index.tsx:40
 msgid "Add, configure and remove"
 msgstr ""
 
@@ -167,7 +167,7 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:60
+#: src/app/(home)/settings/index.tsx:55
 msgid "Analytics and app authentication"
 msgstr ""
 
@@ -290,7 +290,7 @@ msgstr ""
 msgid "Connected"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:94
+#: src/app/(home)/settings/index.tsx:81
 msgid "Contacts"
 msgstr ""
 
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:24
+#: src/app/(home)/settings/notifications/index.tsx:25
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
@@ -382,7 +382,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:91
+#: src/app/(home)/_layout.tsx:88
 msgid "Developer tools"
 msgstr ""
 
@@ -393,8 +393,8 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:109
-#: src/app/(home)/settings/index.tsx:51
+#: src/app/(home)/_layout.tsx:107
+#: src/app/(home)/settings/index.tsx:48
 msgid "Display"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgstr ""
 msgid "Failed to get push token for push notification!"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:95
+#: src/app/(home)/settings/index.tsx:82
 msgid "Fees"
 msgstr ""
 
@@ -468,12 +468,12 @@ msgstr ""
 msgid "getAddresses"
 msgstr ""
 
-#: src/app/(home)/settings/help/index.tsx:36
+#: src/app/(home)/settings/help/index.tsx:32
 msgid "Guides"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:122
-#: src/app/(home)/settings/index.tsx:83
+#: src/app/(home)/_layout.tsx:120
+#: src/app/(home)/settings/index.tsx:72
 msgid "Help"
 msgstr ""
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Ledger, Trezor, Ryder and more"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:108
+#: src/app/(home)/settings/index.tsx:103
 msgid "Lock app"
 msgstr ""
 
@@ -533,11 +533,11 @@ msgstr ""
 msgid "locked"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:68
+#: src/app/(home)/settings/index.tsx:61
 msgid "Mainnet, testnet or signet"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:91
+#: src/app/(home)/settings/index.tsx:78
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:100
 msgid "More options"
 msgstr ""
@@ -572,8 +572,8 @@ msgstr ""
 msgid "Network changed"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:117
-#: src/app/(home)/settings/index.tsx:67
+#: src/app/(home)/_layout.tsx:115
+#: src/app/(home)/settings/index.tsx:60
 msgid "Networks"
 msgstr ""
 
@@ -581,11 +581,11 @@ msgstr ""
 msgid "No key needed"
 msgstr ""
 
-#: src/app/(home)/settings/notifications/index.tsx:23
+#: src/app/(home)/settings/notifications/index.tsx:24
 msgid "Notification"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:75
+#: src/app/(home)/settings/index.tsx:66
 #: src/app/(home)/settings/notifications/_layout.tsx:43
 msgid "Notifications"
 msgstr ""
@@ -626,8 +626,8 @@ msgstr ""
 msgid "Paste or type a Secret Key to add its associated wallet."
 msgstr ""
 
-#: src/app/(home)/settings/help/index.tsx:32
-#: src/app/(home)/settings/help/index.tsx:36
+#: src/app/(home)/settings/help/index.tsx:27
+#: src/app/(home)/settings/help/index.tsx:33
 #: src/app/(home)/settings/help/index.tsx:39
 msgid "Placeholder"
 msgstr ""
@@ -657,7 +657,7 @@ msgstr ""
 msgid "Push"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:76
+#: src/app/(home)/settings/index.tsx:67
 msgid "Push and email notifications"
 msgstr ""
 
@@ -720,8 +720,8 @@ msgstr ""
 msgid "SECRET KEY"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:113
-#: src/app/(home)/settings/index.tsx:59
+#: src/app/(home)/_layout.tsx:111
+#: src/app/(home)/settings/index.tsx:54
 msgid "Security"
 msgstr ""
 
@@ -734,8 +734,8 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:46
-#: src/app/(home)/_layout.tsx:56
+#: src/app/(home)/_layout.tsx:43
+#: src/app/(home)/_layout.tsx:53
 msgid "Settings"
 msgstr ""
 
@@ -803,11 +803,11 @@ msgstr ""
 msgid "Suggested"
 msgstr ""
 
-#: src/app/(home)/settings/help/index.tsx:31
+#: src/app/(home)/settings/help/index.tsx:26
 msgid "Support and feedback"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:84
+#: src/app/(home)/settings/index.tsx:73
 msgid "Support, guides and articles"
 msgstr ""
 
@@ -823,7 +823,7 @@ msgstr ""
 msgid "Tap to view Secret Key"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:78
+#: src/app/(home)/_layout.tsx:75
 msgid "Testnet"
 msgstr ""
 
@@ -842,7 +842,7 @@ msgstr ""
 msgid "Theme updated"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:52
+#: src/app/(home)/settings/index.tsx:49
 msgid "Theme, bitcoin unit and more"
 msgstr ""
 
@@ -929,7 +929,7 @@ msgstr ""
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:103
+#: src/app/(home)/settings/index.tsx:96
 msgid "Version"
 msgstr ""
 
@@ -957,7 +957,7 @@ msgstr ""
 msgid "Wallet management"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:42
+#: src/app/(home)/settings/index.tsx:39
 msgid "Wallets and accounts"
 msgstr ""
 

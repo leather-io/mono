@@ -3,15 +3,15 @@ import { Pressable } from 'react-native';
 
 import { Avatar, ChevronRightIcon, Flag, ItemLayout } from '@leather.io/ui/native';
 
-interface DisplayCellProps {
-  caption: string;
+interface SettingsCellProps {
+  caption?: string;
   icon: ReactNode;
-  onCreateSheetRef(): void;
+  onPress(): void;
   title: string;
 }
-export function DisplayCell({ caption, icon, onCreateSheetRef, title }: DisplayCellProps) {
+export function SettingsCell({ caption, icon, onPress, title }: SettingsCellProps) {
   return (
-    <Pressable onPress={onCreateSheetRef}>
+    <Pressable onPress={onPress}>
       <Flag img={<Avatar>{icon}</Avatar>}>
         <ItemLayout
           actionIcon={<ChevronRightIcon variant="small" />}

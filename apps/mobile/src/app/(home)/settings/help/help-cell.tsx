@@ -6,12 +6,12 @@ import { Avatar, ChevronRightIcon, Flag, ItemLayout } from '@leather.io/ui/nativ
 interface DisplayCellProps {
   caption: string;
   icon: ReactNode;
-  onCreateSheetRef(): void;
+  onPress(): void;
   title: string;
 }
-export function DisplayCell({ caption, icon, onCreateSheetRef, title }: DisplayCellProps) {
+export function HelpCell({ caption, icon, onPress, title }: DisplayCellProps) {
   return (
-    <Pressable onPress={onCreateSheetRef}>
+    <Pressable onPress={onPress}>
       <Flag img={<Avatar>{icon}</Avatar>}>
         <ItemLayout
           actionIcon={<ChevronRightIcon variant="small" />}

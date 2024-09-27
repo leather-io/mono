@@ -69,6 +69,7 @@
     "buffer": "6.0.3",
     "dayjs": "1.11.13",
     "expo": "51.0.26",
+    "expo-application": "5.9.1",
     "expo-asset": "10.0.6",
     "expo-blur": "13.0.2",
     "expo-clipboard": "6.0.3",

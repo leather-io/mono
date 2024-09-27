@@ -1,4 +1,5 @@
-import { Switch, TouchableOpacity } from 'react-native-gesture-handler';
+import { Pressable } from 'react-native';
+import { Switch } from 'react-native-gesture-handler';
 
 import { t } from '@lingui/macro';
 
@@ -10,7 +11,7 @@ import SettingsScreenLayout from '../settings-screen.layout';
 export default function SettingsNotificationsScreen() {
   return (
     <SettingsScreenLayout>
-      <TouchableOpacity onPress={() => {}}>
+      <Pressable onPress={() => {}}>
         <Flag
           img={
             <Avatar>
@@ -24,7 +25,7 @@ export default function SettingsNotificationsScreen() {
             captionLeft={t`Description`}
           />
         </Flag>
-      </TouchableOpacity>
+      </Pressable>
     </SettingsScreenLayout>
   );
 }

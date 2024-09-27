@@ -1,12 +1,7 @@
 import { ReactNode } from 'react';
+import { Pressable } from 'react-native';
 
-import {
-  Avatar,
-  ChevronRightIcon,
-  Flag,
-  ItemLayout,
-  TouchableOpacity,
-} from '@leather.io/ui/native';
+import { Avatar, ChevronRightIcon, Flag, ItemLayout } from '@leather.io/ui/native';
 
 interface SecurityCellProps {
   caption: string;
@@ -16,7 +11,7 @@ interface SecurityCellProps {
 }
 export function SecurityCell({ caption, icon, onCreateSheetRef, title }: SecurityCellProps) {
   return (
-    <TouchableOpacity onPress={onCreateSheetRef}>
+    <Pressable onPress={onCreateSheetRef}>
       <Flag img={<Avatar>{icon}</Avatar>}>
         <ItemLayout
           actionIcon={<ChevronRightIcon variant="small" />}
@@ -24,6 +19,6 @@ export function SecurityCell({ caption, icon, onCreateSheetRef, title }: Securit
           titleLeft={title}
         />
       </Flag>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
