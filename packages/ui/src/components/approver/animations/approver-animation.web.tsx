@@ -10,7 +10,7 @@ export const childElementInitialAnimationState = css({
   [animationSelector]: { opacity: 0, transform: 'translateY(-16px)' },
 });
 
-const staggerMenuItems = stagger(0.06, { startDelay: 0.36 });
+const staggerMenuItems = stagger(0.06, { startDelay: 0.3 });
 
 export function useApproverChildrenEntryAnimation() {
   const [scope, animate] = useAnimate();
