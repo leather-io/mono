@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { motion } from 'framer-motion';
 
-import { HasChildren } from '../../utils/has-children';
+import { HasChildren } from '../../utils/has-children.shared';
 import { useElementHeightListener } from '../../utils/use-element-height-listener.web';
 
 // https://github.com/framer/motion/discussions/1884#discussioncomment-5861808

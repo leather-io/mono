@@ -9,7 +9,7 @@ import { AnimateChangeInHeight } from '../../../components/animate-height/animat
 import { Button } from '../../../components/button/button.web';
 import { Flag } from '../../../components/flag/flag.web';
 import { ChevronDownIcon } from '../../../icons/chevron-down-icon.web';
-import { HasChildren } from '../../../utils/has-children';
+import { HasChildren } from '../../../utils/has-children.shared';
 import { getScrollParent } from '../../../utils/utils.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 

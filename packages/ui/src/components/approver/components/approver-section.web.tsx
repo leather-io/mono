@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { HasChildren } from '../../../utils/has-children';
+import { HasChildren } from '../../../utils/has-children.shared';
 import { useRegisterApproverChild } from '../approver-context.shared';
 
 export function ApproverSection(props: HasChildren) {

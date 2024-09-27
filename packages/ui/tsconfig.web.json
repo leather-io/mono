@@ -3,17 +3,16 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM"],
-    "baseUrl": ".",
-    "rootDir": ".",
+    "baseUrl": "./src",
     "outDir": "./dist-web",
     "paths": {
-      "leather-styles/*": ["leather-styles/*"]
+      "leather-styles/*": ["../leather-styles/*"]
     }
   },
   "include": [
-    "**/*.web.{ts,tsx}",
-    "**/*.web.{ts,tsx}",
-    "web.ts",
+    "**/*.web.ts",
+    "**/*.web.tsx",
+    "web.exports.ts",
     "**/*.shared.tsx",
     "global.d.ts",
     "leather-styles"

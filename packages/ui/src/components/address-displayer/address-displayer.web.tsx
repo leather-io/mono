@@ -3,7 +3,7 @@ import type { HTMLStyledProps } from 'leather-styles/types';
 import { isEven } from '@leather.io/utils';
 
 import { AddressDisplayerLayout } from './address-displayer.layout.web';
-import { groupByFour } from './address-displayer.utils';
+import { groupByFour } from './address-displayer.utils.shared';
 
 interface AddressDisplayerProps extends HTMLStyledProps<'span'> {
   address: string;

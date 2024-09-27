@@ -3,29 +3,30 @@ import svgrPlugin from 'esbuild-plugin-svgr';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['web.ts'],
+  entry: ['./src/**/*.{web,shared}.{ts,tsx}', './src/**/index.ts'],
+  bundle: false,
   esbuildPlugins: [
     svgrPlugin({ typescript: true }),
     copy({
+      copyOnStart: true,
+      watch: true,
       assets: [
         {
           from: ['./src/assets/**/*'],
-          to: ['./src/assets'],
+          to: ['./assets'],
         },
         {
           from: ['./src/assets-web/**/*'],
-          to: ['./src/assets-web'],
+          to: ['./assets-web'],
         },
       ],
-      copyOnStart: true,
-      watch: true,
     }),
   ],
-  onSuccess: 'tsc --build tsconfig.json',
+  onSuccess: 'panda cssgen --outfile dist-web/styles.css',
   format: ['esm'],
   tsconfig: 'tsconfig.web.json',
-  outDir: 'dist-web/',
-  clean: false,
+  outDir: 'dist-web',
+  clean: true,
   minify: true,
   minifyIdentifiers: true,
   minifySyntax: true,
