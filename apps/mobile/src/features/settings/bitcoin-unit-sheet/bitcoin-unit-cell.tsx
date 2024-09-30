@@ -1,5 +1,7 @@
+import { Pressable } from 'react-native';
+
 import { BitcoinUnit, BitcoinUnitInfo } from '@leather.io/models';
-import { ItemLayout, RadioButton, TouchableOpacity } from '@leather.io/ui/native';
+import { ItemLayout, RadioButton } from '@leather.io/ui/native';
 
 interface BitcoinUnitCellProps {
   activeBitcoinUnit: BitcoinUnit;
@@ -16,12 +18,12 @@ export function BitcoinUnitCell({
   title,
 }: BitcoinUnitCellProps) {
   return (
-    <TouchableOpacity onPress={() => onUpdateBitcoinUnit(unit.name)}>
+    <Pressable onPress={() => onUpdateBitcoinUnit(unit.name)}>
       <ItemLayout
         actionIcon={<RadioButton disabled isSelected={activeBitcoinUnit === unit.name} />}
         captionLeft={caption}
         titleLeft={title}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

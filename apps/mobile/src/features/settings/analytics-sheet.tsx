@@ -1,10 +1,11 @@
 import { RefObject } from 'react';
+import { Pressable } from 'react-native';
 
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { CookieIcon, ItemLayout, SheetRef, Switch, TouchableOpacity } from '@leather.io/ui/native';
+import { CookieIcon, ItemLayout, SheetRef, Switch } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -24,13 +25,13 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
 
   return (
     <SettingsSheetLayout icon={<CookieIcon />} sheetRef={sheetRef} title={t`Analytics`}>
-      <TouchableOpacity onPress={() => onUpdateAnalytics()}>
+      <Pressable onPress={() => onUpdateAnalytics()}>
         <ItemLayout
           actionIcon={<Switch disabled value={settings.analyticsPreference === 'consent-given'} />}
           captionLeft={t`Description`}
           titleLeft={t`Allow collection of data`}
         />
-      </TouchableOpacity>
+      </Pressable>
     </SettingsSheetLayout>
   );
 }

@@ -1,5 +1,7 @@
+import { Pressable } from 'react-native';
+
 import { FiatCurrency } from '@leather.io/models';
-import { ItemLayout, RadioButton, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { ItemLayout, RadioButton, Text } from '@leather.io/ui/native';
 
 interface ConversionUnitCellProps {
   activeConversionUnit: FiatCurrency;
@@ -14,7 +16,7 @@ export function ConversionUnitCell({
   title,
 }: ConversionUnitCellProps) {
   return (
-    <TouchableOpacity onPress={() => onUpdateConversionUnit(fiatCurrencyPreference)}>
+    <Pressable onPress={() => onUpdateConversionUnit(fiatCurrencyPreference)}>
       <ItemLayout
         actionIcon={
           <RadioButton disabled isSelected={activeConversionUnit === fiatCurrencyPreference} />
@@ -26,6 +28,6 @@ export function ConversionUnitCell({
           </Text>
         }
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

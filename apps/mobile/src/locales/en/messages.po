@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/features/settings/account-identifier/account-identifier-cell.tsx:30
+#: src/features/settings/account-identifier/account-identifier-cell.tsx:32
 msgid "{caption} blockchain"
 msgstr "{caption} blockchain"
 
@@ -133,11 +133,11 @@ msgstr "All assets"
 msgid "All Assets"
 msgstr "All Assets"
 
-#: src/features/settings/app-authentication-sheet.tsx:31
+#: src/features/settings/app-authentication-sheet.tsx:41
 msgid "Allow authentication"
 msgstr "Allow authentication"
 
-#: src/features/settings/analytics-sheet.tsx:31
+#: src/features/settings/analytics-sheet.tsx:32
 msgid "Allow collection of data"
 msgstr "Allow collection of data"
 
@@ -163,7 +163,7 @@ msgid "Amazing asset"
 msgstr "Amazing asset"
 
 #: src/app/(home)/settings/security/index.tsx:22
-#: src/features/settings/analytics-sheet.tsx:26
+#: src/features/settings/analytics-sheet.tsx:27
 msgid "Analytics"
 msgstr "Analytics"
 
@@ -171,16 +171,16 @@ msgstr "Analytics"
 msgid "Analytics and app authentication"
 msgstr "Analytics and app authentication"
 
-#: src/features/settings/analytics-sheet.tsx:22
+#: src/features/settings/analytics-sheet.tsx:23
 msgid "Analytics updated"
 msgstr "Analytics updated"
 
 #: src/app/(home)/settings/security/index.tsx:30
-#: src/features/settings/app-authentication-sheet.tsx:26
+#: src/features/settings/app-authentication-sheet.tsx:36
 msgid "App authentication"
 msgstr "App authentication"
 
-#: src/features/settings/app-authentication-sheet.tsx:22
+#: src/features/settings/app-authentication-sheet.tsx:27
 msgid "App authorization updated"
 msgstr "App authorization updated"
 
@@ -377,8 +377,8 @@ msgstr "Creation date"
 #: src/components/browser/browser-empty-state.tsx:60
 #: src/components/browser/browser-empty-state.tsx:62
 #: src/components/browser/browser-empty-state.tsx:63
-#: src/features/settings/analytics-sheet.tsx:30
-#: src/features/settings/app-authentication-sheet.tsx:30
+#: src/features/settings/analytics-sheet.tsx:31
+#: src/features/settings/app-authentication-sheet.tsx:40
 msgid "Description"
 msgstr "Description"
 
@@ -432,6 +432,10 @@ msgstr "Enable device security"
 msgid "Enabled"
 msgstr "Enabled"
 
+#: src/features/settings/app-authentication-sheet.tsx:32
+msgid "Error trying to authenticate"
+msgstr "Error trying to authenticate"
+
 #: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:116
 msgid "Export key"
 msgstr "Export key"
@@ -439,6 +443,10 @@ msgstr "Export key"
 #: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:115
 msgid "Export xPub"
 msgstr "Export xPub"
+
+#: src/features/settings/app-authentication-sheet.tsx:30
+msgid "Failed to authenticate"
+msgstr "Failed to authenticate"
 
 #: src/hooks/use-push-notifications.ts:44
 msgid "Failed to get push token for push notification!"
