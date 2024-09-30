@@ -61,7 +61,7 @@ msgstr "Account 1"
 msgid "Account created"
 msgstr "Account created"
 
-#: src/app/(home)/settings/display/index.tsx:64
+#: src/app/(home)/settings/display/index.tsx:72
 #: src/features/settings/account-identifier/account-identifier-sheet.tsx:33
 msgid "Account identifier"
 msgstr "Account identifier"
@@ -199,7 +199,7 @@ msgstr "Bitcoin blockchain"
 msgid "Bitcoin Scrach Pad"
 msgstr "Bitcoin Scrach Pad"
 
-#: src/app/(home)/settings/display/index.tsx:48
+#: src/app/(home)/settings/display/index.tsx:56
 #: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:29
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
@@ -282,7 +282,7 @@ msgstr "Contacts"
 msgid "Continue"
 msgstr "Continue"
 
-#: src/app/(home)/settings/display/index.tsx:56
+#: src/app/(home)/settings/display/index.tsx:64
 #: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
 msgstr "Conversion unit"
@@ -474,6 +474,10 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
+#: src/app/(home)/settings/display/index.tsx:81
+msgid "Hide home balance"
+msgstr "Hide home balance"
+
 #: src/app/(home)/create-new-wallet.tsx:112
 #: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:65
 msgid "I've backed it up"
@@ -509,8 +513,8 @@ msgstr "Ledger, Trezor, Ryder and more"
 msgid "Lock app"
 msgstr "Lock app"
 
-#: src/components/widgets/components/balance/fiat-balance.tsx:45
-#: src/components/widgets/components/balance/token-balance.tsx:19
+#: src/components/widgets/components/balance/fiat-balance.tsx:49
+#: src/components/widgets/components/balance/token-balance.tsx:37
 msgid "locked"
 msgstr "locked"
 
@@ -535,7 +539,7 @@ msgstr "My accounts"
 msgid "My collectibles"
 msgstr "My collectibles"
 
-#: src/components/widgets/tokens/tokens-widget.tsx:25
+#: src/components/widgets/tokens/tokens-widget.tsx:24
 msgid "My tokens"
 msgstr "My tokens"
 
@@ -796,6 +800,10 @@ msgstr "Swap 🔄"
 msgid "Tap to view Secret Key"
 msgstr "Tap to view Secret Key"
 
+#: src/app/(home)/settings/display/index.tsx:82
+msgid "Tap your balance to quickly toggle this setting"
+msgstr "Tap your balance to quickly toggle this setting"
+
 #: src/app/(home)/_layout.tsx:75
 msgid "Testnet"
 msgstr "Testnet"
@@ -808,7 +816,7 @@ msgstr ""
 "The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet. \n"
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 
-#: src/app/(home)/settings/display/index.tsx:40
+#: src/app/(home)/settings/display/index.tsx:48
 #: src/features/settings/theme-sheet/theme-sheet.tsx:28
 msgid "Theme"
 msgstr "Theme"

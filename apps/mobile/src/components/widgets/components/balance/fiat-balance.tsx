@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
 
+import { PrivateText } from '@/components/private-text';
+import { usePrivacyMode } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';
 
 import { BulletSeparator, Text, TextProps } from '@leather.io/ui/native';
@@ -18,6 +20,7 @@ export function FiatBalance({
   variant = 'label01',
   color = 'ink.text-primary',
 }: FiatBalanceProps) {
+  const isPrivate = usePrivacyMode();
   // FIXME: currencyLabel should be dynamic based on the user's currency
   const currencyLabel = '$';
   const formattedBalance = useMemo(
@@ -30,20 +33,22 @@ export function FiatBalance({
 
   if (!lockedBalance) {
     return (
-      <Text variant={variant} color={color}>
+      <PrivateText color={color} variant={variant}>
         {formattedBalance}
-      </Text>
+      </PrivateText>
     );
   }
 
   return (
     <BulletSeparator color={color}>
-      <Text variant={variant} color={color}>
+      <PrivateText color={color} variant={variant}>
         {formattedBalance}
-      </Text>
-      <Text variant={variant} color={color}>
-        {lockedBalance} {t`locked`}
-      </Text>
+      </PrivateText>
+      {!isPrivate ? (
+        <Text color={color} variant={variant}>
+          {lockedBalance} {t`locked`}
+        </Text>
+      ) : null}
     </BulletSeparator>
   );
 }

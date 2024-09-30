@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
@@ -40,9 +42,19 @@ export const selectNetworkPreference = createSelector(
   state => defaultNetworksKeyedById[state.networkPreference]
 );
 
+export const selectPrivacyModePreference = createSelector(
+  selectSettings,
+  state => state.privacyModePreference
+);
+
 export const selectSecurityLevelPreference = createSelector(
   selectSettings,
   state => state.securityLevelPreference
 );
 
 export const selectThemePreference = createSelector(selectSettings, state => state.themePreference);
+
+export function usePrivacyMode() {
+  const privacyMode = useSelector(selectPrivacyModePreference);
+  return privacyMode === 'hidden';
+}

@@ -11,9 +11,11 @@ import { useLingui } from '@lingui/react';
 import {
   BitcoinCircleIcon,
   DollarCircleIcon,
+  Eye1Icon,
   PackageSecurityIcon,
   SheetRef,
   SunInCloudIcon,
+  Switch,
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
@@ -28,10 +30,16 @@ export default function SettingsDisplayScreen() {
   const {
     accountDisplayPreference,
     bitcoinUnitPreference,
+    changePrivacyModePreference,
     fiatCurrencyPreference,
+    privacyModePreference,
     themePreference,
   } = useSettings();
   const { i18n } = useLingui();
+
+  function onUpdatePrivacyMode() {
+    changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
+  }
 
   return (
     <>
@@ -40,7 +48,7 @@ export default function SettingsDisplayScreen() {
           title={t`Theme`}
           caption={i18n._(capitalize(themePreference))}
           icon={<SunInCloudIcon />}
-          onCreateSheetRef={() => {
+          onPress={() => {
             themeSheetRef.current?.present();
           }}
         />
@@ -48,7 +56,7 @@ export default function SettingsDisplayScreen() {
           title={t`Bitcoin unit`}
           caption={i18n._(bitcoinUnitPreference.symbol)}
           icon={<BitcoinCircleIcon />}
-          onCreateSheetRef={() => {
+          onPress={() => {
             bitcoinUnitSheetRef.current?.present();
           }}
         />
@@ -56,7 +64,7 @@ export default function SettingsDisplayScreen() {
           title={t`Conversion unit`}
           caption={i18n._(fiatCurrencyPreference)}
           icon={<DollarCircleIcon />}
-          onCreateSheetRef={() => {
+          onPress={() => {
             conversionUnitSheetRef.current?.present();
           }}
         />
@@ -64,9 +72,16 @@ export default function SettingsDisplayScreen() {
           title={t`Account identifier`}
           caption={i18n._(accountDisplayPreference.name)}
           icon={<PackageSecurityIcon />}
-          onCreateSheetRef={() => {
+          onPress={() => {
             accountIdentifierSheetRef.current?.present();
           }}
+        />
+        <DisplayCell
+          actionIcon={<Switch disabled value={privacyModePreference === 'hidden'} />}
+          title={t`Hide home balance`}
+          caption={t`Tap your balance to quickly toggle this setting`}
+          icon={<Eye1Icon />}
+          onPress={() => onUpdatePrivacyMode()}
         />
       </SettingsScreenLayout>
       <ThemeSheet sheetRef={themeSheetRef} />

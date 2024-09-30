@@ -21,6 +21,7 @@ import {
   selectCurrencyPreference,
   selectEmailAddressPreference,
   selectNetworkPreference,
+  selectPrivacyModePreference,
   selectSecurityLevelPreference,
   selectThemePreference,
 } from './settings.read';
@@ -31,6 +32,7 @@ import {
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
+  userChangedPrivacyModePreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
 } from './settings.write';
@@ -40,7 +42,8 @@ export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
 
 export type ThemePreference = (typeof defaultThemePreferences)[number];
 export type Theme = Exclude<ThemePreference, 'system'>;
-export type SecurityLevelPreference = 'undefined' | 'secure' | 'insecure';
+export type SecurityLevelPreference = 'insecure' | 'secure' | 'undefined';
+export type PrivacyModePreference = 'hidden' | 'visible';
 
 export interface SettingsState {
   accountDisplayPreference: AccountDisplayPreference;
@@ -50,6 +53,7 @@ export interface SettingsState {
   emailAddressPreference: EmailAddress;
   fiatCurrencyPreference: FiatCurrency;
   networkPreference: DefaultNetworkConfigurations;
+  privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;
   securityLevelPreference: SecurityLevelPreference;
 }
@@ -62,6 +66,7 @@ export const initialState: SettingsState = {
   emailAddressPreference: '',
   fiatCurrencyPreference: 'USD',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
+  privacyModePreference: 'visible',
   securityLevelPreference: 'insecure',
   themePreference: 'system',
 };
@@ -75,6 +80,7 @@ export function useSettings() {
   const bitcoinUnitPreference = useSelector(selectBitcoinUnitPreference);
   const emailAddressPreference = useSelector(selectEmailAddressPreference);
   const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
+  const privacyModePreference = useSelector(selectPrivacyModePreference);
   const networkPreference = useSelector(selectNetworkPreference);
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
   const themePreference = useSelector(selectThemePreference);
@@ -89,6 +95,7 @@ export function useSettings() {
     emailAddressPreference,
     fiatCurrencyPreference,
     networkPreference,
+    privacyModePreference,
     themeDerivedFromThemePreference,
     themePreference,
     securityLevelPreference,
@@ -110,6 +117,9 @@ export function useSettings() {
     },
     changeNetworkPreference(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetworkPreference(network));
+    },
+    changePrivacyModePreference(mode: PrivacyModePreference) {
+      dispatch(userChangedPrivacyModePreference(mode));
     },
     changeSecurityLevelPreference(level: SecurityLevelPreference) {
       dispatch(userChangedSecurityLevelPreference(level));
