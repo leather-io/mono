@@ -15,11 +15,6 @@ import {
 
 import { TextInput } from '../text-input';
 
-export interface OptionData {
-  title: string;
-  id: string;
-}
-
 interface InputSheetProps {
   sheetRef: RefObject<SheetRef>;
   initialValue: string;

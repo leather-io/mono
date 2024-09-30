@@ -6,9 +6,11 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
+import { AppRoutes } from '@/routes';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 
 import {
   ArrowRotateClockwiseIcon,
@@ -32,32 +34,6 @@ import { AddWalletListItem } from './add-wallet-list-item';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-function getUnavailableFeatures(theme: Theme) {
-  const UNAVAILABLE_FEATURES = {
-    hardwareWallet: {
-      title: t`Connect hardware wallet`,
-      subtitle: t`Ledger, Trezor, Ryder and more`,
-      icon: <SignalIcon color={theme.colors['ink.text-subdued']} />,
-    },
-    emailRestore: {
-      title: t`Create or restore via email`,
-      subtitle: t`Access custodial wallet`,
-      icon: <EmailIcon color={theme.colors['ink.text-subdued']} />,
-    },
-    mpcWallet: {
-      title: t`Connect MPC wallet`,
-      subtitle: t`Import existing accounts`,
-      icon: <PaletteIcon color={theme.colors['ink.text-subdued']} />,
-    },
-    watchOnlyWallet: {
-      title: t`Create watch-only wallet`,
-      subtitle: t`No key needed`,
-      icon: <Eye2Icon color={theme.colors['ink.text-subdued']} />,
-    },
-  };
-  return UNAVAILABLE_FEATURES;
-}
-
 interface AddWalletSheetBaseProps {
   addWalletSheetRef: RefObject<SheetRef>;
 }
@@ -78,7 +54,7 @@ export function AddWalletSheetLayout({
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
-
+  const router = useRouter();
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
   }
@@ -124,22 +100,44 @@ export function AddWalletSheetLayout({
               title={t`More options`}
               icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
             />
-            {!moreOptionsVisible
-              ? null
-              : Object.entries(getUnavailableFeatures(theme)).map(featureEntry => {
-                  const [featureKey, feature] = featureEntry;
-                  return (
-                    <AddWalletListItem
-                      key={featureKey}
-                      onPress={() =>
-                        onOpenNotificationsSheet({ title: feature.title, id: featureKey })
-                      }
-                      title={feature.title}
-                      subtitle={feature.subtitle}
-                      icon={feature.icon}
-                    />
-                  );
-                })}
+            {moreOptionsVisible && (
+              <>
+                <AddWalletListItem
+                  title={t`Connect hardware wallet`}
+                  subtitle={t`Ledger, Trezor, Ryder and more`}
+                  icon={<SignalIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={() => {
+                    router.navigate(AppRoutes.HardwareWallets);
+                    addWalletSheetRef.current?.close();
+                  }}
+                />
+                <AddWalletListItem
+                  title={t`Create or restore via email`}
+                  subtitle={t`Access custodial wallet`}
+                  icon={<EmailIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={() => {
+                    onOpenNotificationsSheet({ title: t`Create or restore via email` });
+                  }}
+                />
+                <AddWalletListItem
+                  title={t`Connect MPC wallet`}
+                  subtitle={t`Import existing accounts`}
+                  icon={<PaletteIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={() => {
+                    router.navigate(AppRoutes.MpcWallets);
+                    addWalletSheetRef.current?.close();
+                  }}
+                />
+                <AddWalletListItem
+                  title={t`Create watch-only wallet`}
+                  subtitle={t`No key needed`}
+                  icon={<Eye2Icon color={theme.colors['ink.text-subdued']} />}
+                  onPress={() => {
+                    onOpenNotificationsSheet({ title: t`Create watch-only wallet` });
+                  }}
+                />
+              </>
+            )}
           </Box>
         </Box>
       </AnimatedBox>
