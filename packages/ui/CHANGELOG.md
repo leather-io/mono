@@ -103,6 +103,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.25.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.24.1...@leather.io/ui-v1.25.0) (2024-09-30)
+
+
+### Features
+
+* add collectibles widget, ref leather-io/issues[#222](https://github.com/leather-io/mono/issues/222) ([70d4ae2](https://github.com/leather-io/mono/commit/70d4ae256d745771b7c0858020353ad5f3ef6bdf))
+* mpc and hardware wallets ([b122675](https://github.com/leather-io/mono/commit/b12267576901dbdff7a47fb80624134faef6a85b))
+
 ## [1.24.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.24.0...@leather.io/ui-v1.24.1) (2024-09-27)
 
 
