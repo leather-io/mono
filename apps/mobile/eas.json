@@ -17,7 +17,7 @@
     },
     "simulator-dev": {
       "node": "20.11.0",
-      "pnpm": "9.6.0",
+      "pnpm": "9.11.0",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -26,7 +26,7 @@
     },
     "simulator-pr": {
       "node": "20.11.0",
-      "pnpm": "9.6.0",
+      "pnpm": "9.11.0",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -35,7 +35,7 @@
     },
     "development": {
       "node": "20.11.0",
-      "pnpm": "9.6.0",
+      "pnpm": "9.11.0",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
@@ -44,7 +44,7 @@
     },
     "preview-simulator": {
       "node": "20.11.0",
-      "pnpm": "9.6.0",
+      "pnpm": "9.11.0",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -53,7 +53,7 @@
     },
     "preview": {
       "node": "20.11.0",
-      "pnpm": "9.6.0",
+      "pnpm": "9.11.0",
       "distribution": "internal",
       "ios": {
         "cocoapods": "1.15.2"
@@ -61,7 +61,7 @@
     },
     "production": {
       "node": "20.11.0",
-      "pnpm": "9.6.0",
+      "pnpm": "9.11.0",
       "distribution": "store",
       "autoIncrement": true,
       "ios": {
