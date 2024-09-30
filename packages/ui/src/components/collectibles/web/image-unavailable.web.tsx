@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { Eye1ClosedIcon } from '../../../../native';
+import { Eye1ClosedIcon } from '../../../icons/eye-1-closed-icon.web';
 import { CollectiblePlaceholderLayout } from './collectible-placeholder.layout.web';
 
 export function ImageUnavailable() {
