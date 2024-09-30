@@ -1,7 +1,9 @@
+import { Pressable } from 'react-native';
+
 import { t } from '@lingui/macro';
 
 import { AccountDisplayPreference, AccountDisplayPreferenceInfo } from '@leather.io/models';
-import { ItemLayout, RadioButton, TouchableOpacity } from '@leather.io/ui/native';
+import { ItemLayout, RadioButton } from '@leather.io/ui/native';
 
 interface AccountIdentifierCellProps {
   activeAccountDisplayPreference: AccountDisplayPreference;
@@ -19,7 +21,7 @@ export function AccountIdentifierCell({
   title,
 }: AccountIdentifierCellProps) {
   return (
-    <TouchableOpacity onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}>
+    <Pressable onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}>
       <ItemLayout
         actionIcon={
           <RadioButton
@@ -30,6 +32,6 @@ export function AccountIdentifierCell({
         captionLeft={t`${caption} blockchain`}
         titleLeft={title}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

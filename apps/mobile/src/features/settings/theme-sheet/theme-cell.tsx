@@ -1,6 +1,8 @@
+import { Pressable } from 'react-native';
+
 import { ThemePreference } from '@/store/settings/settings';
 
-import { ItemLayout, RadioButton, TouchableOpacity } from '@leather.io/ui/native';
+import { ItemLayout, RadioButton } from '@leather.io/ui/native';
 
 interface ThemeCellProps {
   activeTheme: ThemePreference;
@@ -10,11 +12,11 @@ interface ThemeCellProps {
 }
 export function ThemeCell({ activeTheme, onUpdateTheme, theme, title }: ThemeCellProps) {
   return (
-    <TouchableOpacity onPress={() => onUpdateTheme(theme)}>
+    <Pressable onPress={() => onUpdateTheme(theme)}>
       <ItemLayout
         actionIcon={<RadioButton disabled isSelected={activeTheme === theme} />}
         titleLeft={title}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }
