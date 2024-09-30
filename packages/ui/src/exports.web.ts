@@ -32,3 +32,4 @@ export * from './components/approver/approver.web';
 export * from './components/favicon/favicon.web';
 export { usePressable } from './hooks/use-pressable.web';
 export * from './components/collectibles/index.web';
+export * from './components/switch/switch.web';
