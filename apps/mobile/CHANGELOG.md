@@ -196,6 +196,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.24.1
 
+## [1.38.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.38.0...@leather.io/mobile-v1.38.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* settings design qa ([812ed74](https://github.com/leather-io/mono/commit/812ed745b475beec87fd0552ba86ea7ed1013da9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.25.1
+
 ## [1.38.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.37.1...@leather.io/mobile-v1.38.0) (2024-09-30)
 
 

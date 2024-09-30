@@ -103,6 +103,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.25.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.25.0...@leather.io/ui-v1.25.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* correct broken import path for web icon ([a22cfec](https://github.com/leather-io/mono/commit/a22cfec5a2da179c75c03be037db94c536582324))
+* settings design qa ([812ed74](https://github.com/leather-io/mono/commit/812ed745b475beec87fd0552ba86ea7ed1013da9))
+
 ## [1.25.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.24.1...@leather.io/ui-v1.25.0) (2024-09-30)
 
 
