@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-25 06:31+0100\n"
+"POT-Creation-Date: 2024-09-30 13:35+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,10 +12,6 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
-
-#: src/components/sheets/notify-user-sheet.layout.tsx:66
-msgid "\"{title}\" isn't ready yet."
-msgstr ""
 
 #: src/features/settings/account-identifier/account-identifier-cell.tsx:30
 msgid "{caption} blockchain"
@@ -29,6 +25,14 @@ msgstr ""
 msgid "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
 msgstr ""
 
+#: src/components/hardware-wallet/hardware-wallet-list.layout.tsx:35
+msgid "<0>CONNECT</0><1>HARDWARE DEVICE</1>"
+msgstr ""
+
+#: src/components/mpc-wallet/mpc-wallet-list.layout.tsx:35
+msgid "<0>CONNECT</0><1>MPC WALLET</1>"
+msgstr ""
+
 #: src/app/(home)/recover-wallet.tsx:124
 msgid "<0>ENTER YOUR</0><1>SECRET KEY</1>"
 msgstr ""
@@ -37,7 +41,7 @@ msgstr ""
 msgid "<0>SECURE</0><1>YOUR WALLET</1>"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:44
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:116
 msgid "Access custodial wallet"
 msgstr ""
 
@@ -84,7 +88,7 @@ msgid "Add new account for {fingerprint} 🆕"
 msgstr ""
 
 #: src/app/(home)/settings/wallet/index.tsx:49
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:107
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:83
 msgid "Add wallet"
 msgstr ""
 
@@ -190,7 +194,7 @@ msgstr ""
 
 #: src/app/(home)/recover-wallet.tsx:188
 #: src/components/create-new-wallet/mnemonic-display.tsx:13
-#: src/components/recover-wallet/recover-wallet-sheet.tsx:28
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:23
 msgid "BIP39 passphrase"
 msgstr ""
 
@@ -219,9 +223,21 @@ msgstr ""
 msgid "BitcoinScratchPad"
 msgstr ""
 
+#: src/app/(home)/mpc-wallets.tsx:23
+msgid "BitGo"
+msgstr ""
+
+#: src/app/(home)/hardware-wallets.tsx:21
+msgid "Bitkey"
+msgstr ""
+
 #: src/components/browser/browser-empty-state.tsx:155
 #: src/components/sheets/warning-sheet.layout.tsx:74
 msgid "Cancel"
+msgstr ""
+
+#: src/app/(home)/mpc-wallets.tsx:24
+msgid "Capsule"
 msgstr ""
 
 #: src/components/wallet-settings/wallet-name-sheet.tsx:19
@@ -250,16 +266,24 @@ msgid "Collectibles 🖼️"
 msgstr ""
 
 #: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:76
-#: src/components/recover-wallet/recover-wallet-sheet.tsx:31
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:26
 msgid "Confirm"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:38
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:106
 msgid "Connect hardware wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:48
+#: src/app/(home)/hardware-wallets.tsx:50
+msgid "Connect hardware wallet: {hardwareWalletName}"
+msgstr ""
+
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:123
 msgid "Connect MPC wallet"
+msgstr ""
+
+#: src/app/(home)/mpc-wallets.tsx:54
+msgid "Connect Mpc wallet: {mpcWalletName}"
 msgstr ""
 
 #: src/components/browser/browser-empty-state.tsx:179
@@ -283,19 +307,24 @@ msgstr ""
 msgid "Conversion unit updated"
 msgstr ""
 
+#: src/app/(home)/mpc-wallets.tsx:25
+msgid "Copper"
+msgstr ""
+
 #: src/components/create-new-wallet/mnemonic-display.tsx:48
 msgid "Copy"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:113
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:89
 msgid "Create a new Bitcoin and Stacks wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:112
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:88
 msgid "Create new wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:43
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:115
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:119
 msgid "Create or restore via email"
 msgstr ""
 
@@ -308,7 +337,8 @@ msgstr ""
 msgid "Create wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:53
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:132
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:136
 msgid "Create watch-only wallet"
 msgstr ""
 
@@ -418,8 +448,16 @@ msgstr ""
 msgid "Fees"
 msgstr ""
 
+#: src/app/(home)/mpc-wallets.tsx:26
+msgid "Fireblocks"
+msgstr ""
+
 #: src/app/(home)/create-new-wallet.tsx:97
 msgid "For your eyes only"
+msgstr ""
+
+#: src/app/(home)/mpc-wallets.tsx:27
+msgid "Foredefi"
 msgstr ""
 
 #: src/app/(home)/developer-console/wallet-manager.tsx:38
@@ -456,8 +494,8 @@ msgstr ""
 msgid "I've backed it up"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:49
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:119
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:95
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:124
 msgid "Import existing accounts"
 msgstr ""
 
@@ -477,11 +515,12 @@ msgstr ""
 msgid "Learn"
 msgstr ""
 
+#: src/app/(home)/hardware-wallets.tsx:22
 #: src/components/widgets/accounts/ledger-badge.tsx:19
 msgid "Ledger"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:39
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:107
 msgid "Ledger, Trezor, Ryder and more"
 msgstr ""
 
@@ -499,7 +538,7 @@ msgid "Mainnet, testnet or signet"
 msgstr ""
 
 #: src/app/(home)/settings/index.tsx:91
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:124
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:100
 msgid "More options"
 msgstr ""
 
@@ -538,7 +577,7 @@ msgstr ""
 msgid "Networks"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:54
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:133
 msgid "No key needed"
 msgstr ""
 
@@ -551,16 +590,16 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:72
-msgid "Notify me when it's ready"
-msgstr ""
-
 #: src/components/sheets/notify-user-sheet.layout.tsx:65
-msgid "Notify me when ready"
+msgid "Notify me"
 msgstr ""
 
 #: src/components/widgets/accounts/cards/import-wallet-card.tsx:17
 msgid "One place, all wallets"
+msgstr ""
+
+#: src/app/(home)/hardware-wallets.tsx:23
+msgid "OneKey"
 msgstr ""
 
 #: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:63
@@ -571,8 +610,12 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: src/components/recover-wallet/recover-wallet-sheet.tsx:30
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:25
 msgid "Passphrase"
+msgstr ""
+
+#: src/app/(home)/hardware-wallets.tsx:24
+msgid "Passport"
 msgstr ""
 
 #: src/app/(home)/recover-wallet.tsx:137
@@ -587,6 +630,14 @@ msgstr ""
 #: src/app/(home)/settings/help/index.tsx:36
 #: src/app/(home)/settings/help/index.tsx:39
 msgid "Placeholder"
+msgstr ""
+
+#: src/app/(home)/mpc-wallets.tsx:28
+msgid "Portal"
+msgstr ""
+
+#: src/app/(home)/mpc-wallets.tsx:29
+msgid "Privy"
 msgstr ""
 
 #: src/components/sheets/warning-sheet.layout.tsx:69
@@ -608,6 +659,10 @@ msgstr ""
 
 #: src/app/(home)/settings/index.tsx:76
 msgid "Push and email notifications"
+msgstr ""
+
+#: src/app/(home)/mpc-wallets.tsx:30
+msgid "Qredo"
 msgstr ""
 
 #: src/components/action-bar/container.tsx:175
@@ -639,8 +694,12 @@ msgstr ""
 msgid "Rename wallet"
 msgstr ""
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:118
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:94
 msgid "Restore wallet"
+msgstr ""
+
+#: src/app/(home)/hardware-wallets.tsx:25
+msgid "Ryder"
 msgstr ""
 
 #: src/components/wallet-settings/account-name-sheet.tsx:22
@@ -787,6 +846,10 @@ msgstr ""
 msgid "Theme, bitcoin unit and more"
 msgstr ""
 
+#: src/components/sheets/notify-user-sheet.layout.tsx:58
+msgid "This feature is not available yet, but we can notify when it’s ready."
+msgstr ""
+
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:30
 #: src/components/browser/browser-empty-state.tsx:31
@@ -844,6 +907,10 @@ msgstr ""
 
 #: src/app/(home)/developer-console/index.tsx:115
 msgid "transferBtc"
+msgstr ""
+
+#: src/app/(home)/hardware-wallets.tsx:26
+msgid "Trezor"
 msgstr ""
 
 #: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:42

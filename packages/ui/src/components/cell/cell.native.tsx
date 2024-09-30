@@ -3,6 +3,7 @@ import { Switch } from 'react-native';
 import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
 import { Box, ChevronRightIcon, IconProps, Text, Theme, TouchableOpacity } from '../../../native';
+import { TouchableOpacityProps } from '../button/touchable-opacity.native';
 
 type RegularCellVariant = 'active' | 'inactive' | 'critical';
 type SwitchCellVariant = 'switch';
@@ -53,7 +54,7 @@ interface BaseCell {
   Icon?: React.FC<IconProps>;
 }
 
-type CellProps = BaseCell & (RegularCell | SwitchCell);
+type CellProps = BaseCell & (RegularCell | SwitchCell) & TouchableOpacityProps<Theme>;
 
 export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
   const theme = useTheme<Theme>();
@@ -61,6 +62,7 @@ export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
   const _variant = props.variant ?? 'active';
   return (
     <TouchableOpacity
+      {...props}
       onPress={onPress}
       disabled={isDisabled}
       flexDirection="row"

@@ -160,6 +160,8 @@ export default function StackLayout() {
         options={{ header: () => NavigationDeveloperConsole }}
       />
       <Stack.Screen name="generating-wallet" options={{ headerShown: false }} />
+      <Stack.Screen name="mpc-wallets" options={{ header: () => NavigationBackSimple }} />
+      <Stack.Screen name="hardware-wallets" options={{ header: () => NavigationBackSimple }} />
     </Stack>
   );
 }

@@ -14,6 +14,8 @@ export enum AppRoutes {
   RecoverWallet = '/recover-wallet',
   SecureYourWallet = '/secure-your-wallet',
   GeneratingWallet = '/generating-wallet',
+  MpcWallets = '/mpc-wallets',
+  HardwareWallets = '/hardware-wallets',
 
   // Settings
   Settings = '/settings',

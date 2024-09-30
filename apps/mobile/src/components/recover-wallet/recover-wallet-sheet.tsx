@@ -6,11 +6,6 @@ import { LockIcon, SheetRef } from '@leather.io/ui/native';
 
 import { InputSheet } from '../sheets/input-sheet.layout';
 
-export interface OptionData {
-  title: string;
-  id: string;
-}
-
 interface RecoverWalletSheetProps {
   recoverWalletSheetRef: RefObject<SheetRef>;
   passphrase: string;
