@@ -3,7 +3,6 @@ import React from 'react';
 import { t } from '@lingui/macro';
 
 import { Flag, ItemLayout } from '@leather.io/ui/native';
-import { formatMoney } from '@leather.io/utils';
 
 import { FiatBalance } from '../components/balance/fiat-balance';
 import { TokenBalance } from '../components/balance/token-balance';
@@ -35,9 +34,7 @@ export function TokensWidget({ tokens, totalBalance }: TokensWidgetProps) {
           <Flag key={ticker} img={icon} align="middle" spacing="1" reverse={false}>
             <ItemLayout
               titleLeft={tokenName}
-              titleRight={
-                availableBalance && <TokenBalance balance={formatMoney(availableBalance)} />
-              }
+              titleRight={availableBalance && <TokenBalance availableBalance={availableBalance} />}
               captionLeft={showChain(chain)}
               captionRight={<FiatBalance balance={fiatBalance} color="ink.text-subdued" />}
             />

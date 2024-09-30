@@ -9,7 +9,12 @@ import {
 } from '@leather.io/models';
 
 import { handleAppResetWithState } from '../global-action';
-import { SecurityLevelPreference, ThemePreference, initialState } from './settings';
+import {
+  PrivacyModePreference,
+  SecurityLevelPreference,
+  ThemePreference,
+  initialState,
+} from './settings';
 
 export const settingsSlice = createSlice({
   name: 'settings',
@@ -33,6 +38,9 @@ export const settingsSlice = createSlice({
     userChangedNetworkPreference(state, action: PayloadAction<DefaultNetworkConfigurations>) {
       state.networkPreference = action.payload;
     },
+    userChangedPrivacyModePreference(state, action: PayloadAction<PrivacyModePreference>) {
+      state.privacyModePreference = action.payload;
+    },
     userChangedSecurityLevelPreference(state, action: PayloadAction<SecurityLevelPreference>) {
       state.securityLevelPreference = action.payload;
     },
@@ -50,6 +58,7 @@ export const {
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
+  userChangedPrivacyModePreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
 } = settingsSlice.actions;
