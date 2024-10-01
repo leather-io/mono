@@ -11,7 +11,6 @@ export function ApproverSection(props: HasChildren) {
       mt="space.03"
       px="space.05"
       py="space.03"
-      rounded="sm"
       background="ink.background-primary"
       {...props}
     />
