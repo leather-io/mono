@@ -6,6 +6,9 @@ import {
 } from '@/components/widgets/collectibles';
 import { TokensWidget, getMockTokens } from '@/components/widgets/tokens';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
+import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
 
@@ -21,6 +24,32 @@ export function Home() {
   useLingui();
   const wallets = useWallets();
   const accounts = useAccounts();
+  // const fingerPrintAccounts = useAccountsByFingerprint(fingerprint);
+
+  const addresses = wallets.list.map(wallet => {
+    console.log('wallet', wallet.fingerprint);
+    const fingerprint = wallet.fingerprint;
+
+    const accounts = useAccountsByFingerprint(fingerprint);
+
+    return accounts.list.map(account => {
+      const bitcoinAccounts = useBitcoinAccounts().accountIndexByPaymentType(
+        wallet.fingerprint,
+        account.accountIndex
+      );
+      const stacksAccounts = useStacksSigners().fromAccountIndex(
+        wallet.fingerprint,
+        account.accountIndex
+      );
+      return {
+        bitcoinAccounts,
+        stacksAccounts,
+      };
+    });
+  });
+
+  console.log('------- addresses -----', addresses);
+  // console.log('accounts', accounts);
 
   return (
     <HomeLayout>
