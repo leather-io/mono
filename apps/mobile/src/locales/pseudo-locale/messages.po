@@ -135,7 +135,7 @@ msgid "Advanced options"
 msgstr ""
 
 #: src/components/widgets/accounts/components/cards/add-account-card.tsx:17
-msgid "All accounts in one place"
+msgid "All accounts in one"
 msgstr ""
 
 #: src/features/settings/app-authentication-sheet.tsx:41
@@ -186,12 +186,12 @@ msgstr ""
 msgid "BIP39 passphrase"
 msgstr ""
 
-#: src/components/widgets/tokens/tokens.mocks.tsx:42
-#: src/components/widgets/tokens/tokens.mocks.tsx:123
+#: src/mocks/tokens.mocks.tsx:34
+#: src/mocks/tokens.mocks.tsx:71
 msgid "Bitcoin"
 msgstr ""
 
-#: src/components/widgets/tokens/tokens.mocks.tsx:19
+#: src/mocks/tokens.mocks.tsx:21
 msgid "Bitcoin blockchain"
 msgstr ""
 
@@ -378,7 +378,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:107
+#: src/app/(home)/_layout.tsx:112
 #: src/app/(home)/settings/index.tsx:48
 msgid "Display"
 msgstr ""
@@ -457,7 +457,7 @@ msgstr ""
 msgid "Guides"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:120
+#: src/app/(home)/_layout.tsx:125
 #: src/app/(home)/settings/index.tsx:72
 msgid "Help"
 msgstr ""
@@ -513,8 +513,7 @@ msgstr ""
 msgid "Lock app"
 msgstr ""
 
-#: src/components/widgets/components/balance/fiat-balance.tsx:49
-#: src/components/widgets/components/balance/token-balance.tsx:37
+#: src/components/balance/balance.tsx:55
 msgid "locked"
 msgstr ""
 
@@ -531,11 +530,11 @@ msgstr ""
 msgid "Must use physical device for Push Notifications"
 msgstr ""
 
-#: src/components/widgets/accounts/accounts-widget.tsx:85
+#: src/components/widgets/accounts/accounts-widget.tsx:46
 msgid "My accounts"
 msgstr ""
 
-#: src/components/widgets/collectibles/collectibles-widget.tsx:17
+#: src/components/widgets/collectibles/collectibles-widget.tsx:18
 msgid "My collectibles"
 msgstr ""
 
@@ -553,7 +552,7 @@ msgstr ""
 msgid "Network changed"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:115
+#: src/app/(home)/_layout.tsx:120
 #: src/app/(home)/settings/index.tsx:60
 msgid "Networks"
 msgstr ""
@@ -697,7 +696,7 @@ msgstr ""
 msgid "SECRET KEY"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:111
+#: src/app/(home)/_layout.tsx:116
 #: src/app/(home)/settings/index.tsx:54
 msgid "Security"
 msgstr ""
@@ -744,15 +743,15 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/widgets/tokens/tokens.mocks.tsx:105
+#: src/mocks/tokens.mocks.tsx:56
 msgid "Stacks"
 msgstr ""
 
-#: src/components/widgets/tokens/tokens.mocks.tsx:51
+#: src/mocks/tokens.mocks.tsx:37
 msgid "Stacks blockchain"
 msgstr ""
 
-#: src/components/widgets/tokens/tokens.mocks.tsx:111
+#: src/mocks/tokens.mocks.tsx:59
 msgid "Stacks L2"
 msgstr ""
 

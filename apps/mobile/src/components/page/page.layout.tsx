@@ -7,16 +7,13 @@ import {
   ActionBarContext,
   createOnScrollHandler,
 } from '@/components/action-bar/container';
+import { HasChildren } from '@/utils/types';
 
 import { Box } from '@leather.io/ui/native';
 
 import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar';
 
-interface HomeLayoutProps {
-  children: React.ReactNode;
-}
-
-export function HomeLayout({ children }: HomeLayoutProps) {
+export function PageLayout({ children }: HasChildren) {
   const { bottom, top } = useSafeAreaInsets();
   const actionBarRef = useRef<ActionBarMethods>(null);
   const contentOffsetBottom = bottom + ACTION_BAR_TOTAL_HEIGHT;

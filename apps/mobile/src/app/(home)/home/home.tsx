@@ -1,22 +1,16 @@
+import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import {
   CollectiblesWidget,
   mockCollectibles,
   serializeCollectibles,
 } from '@/components/widgets/collectibles';
-import { TokensWidget, getMockTokens } from '@/components/widgets/tokens';
+import { TokensWidget } from '@/components/widgets/tokens';
+import { mockTotalBalance } from '@/mocks/balance.mocks';
+import { getMockTokens } from '@/mocks/tokens.mocks';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
-
-import { HomeLayout } from './home.layout';
-
-// FIXME - mock balances should be of type Money
-const mockTotalBalance = {
-  totalUsdBalance: '$126.74',
-  totalBtcBalance: '0.00215005',
-  totalStxBalance: '0.0024',
-};
 
 export function Home() {
   useLingui();
@@ -24,13 +18,13 @@ export function Home() {
   const accounts = useAccounts();
 
   return (
-    <HomeLayout>
+    <PageLayout>
       <AccountsWidget accounts={accounts.list} wallets={wallets.list} />
-      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance.totalUsdBalance} />
+      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
       <CollectiblesWidget
         collectibles={serializeCollectibles(mockCollectibles)}
-        totalBalance={mockTotalBalance.totalUsdBalance}
+        totalBalance={mockTotalBalance}
       />
-    </HomeLayout>
+    </PageLayout>
   );
 }

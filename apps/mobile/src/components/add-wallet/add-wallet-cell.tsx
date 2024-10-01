@@ -1,12 +1,12 @@
 import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
-interface AddWalletListItemProps {
+interface AddWalletCellProps {
   icon?: React.ReactNode;
   title: string;
   subtitle?: string;
   onPress(): void;
 }
-export function AddWalletListItem({ icon, title, subtitle, onPress }: AddWalletListItemProps) {
+export function AddWalletCell({ icon, title, subtitle, onPress }: AddWalletCellProps) {
   return (
     <TouchableOpacity onPress={onPress} py="3" flexDirection="row" gap="4" alignItems="center">
       {icon && (

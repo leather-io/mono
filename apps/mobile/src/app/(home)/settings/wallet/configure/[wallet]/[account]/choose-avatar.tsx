@@ -32,7 +32,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
     navigation.setOptions({ title: account.name });
   }, [account.name, navigation]);
 
-  const isSubmitDisalbed = newIcon === null;
+  const isSubmitDisabled = newIcon === null;
 
   function setAvatar(icon: string) {
     const payload = { fingerprint, accountIndex, icon };
@@ -70,9 +70,9 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
         bg="ink.background-primary"
       >
         <Button
-          disabled={isSubmitDisalbed}
+          disabled={isSubmitDisabled}
           onPress={onSubmit}
-          buttonState={isSubmitDisalbed ? 'disabled' : 'default'}
+          buttonState={isSubmitDisabled ? 'disabled' : 'default'}
           title={t`Confirm`}
         />
       </Box>

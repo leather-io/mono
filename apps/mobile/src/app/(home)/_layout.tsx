@@ -101,6 +101,11 @@ export default function StackLayout() {
       <Stack.Screen name="create-new-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="recover-wallet" options={{ header: () => NavigationBackSimple }} />
       <Stack.Screen name="secure-your-wallet" options={{ header: () => NavigationBackSimple }} />
+
+      <Stack.Screen
+        name="account/[account]/index"
+        options={{ header: () => NavigationBackSimple }}
+      />
       <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings() }} />
       <Stack.Screen
         name="settings/display/index"

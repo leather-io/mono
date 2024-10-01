@@ -14,7 +14,7 @@ export function AddAccountCard({ onPress }: AddAccountCardProps) {
       onPress={onPress}
       Icon={PlusIcon}
       label={t`Add account`}
-      caption={t`All accounts in one place`}
+      caption={t`All accounts in one`}
     />
   );
 }

@@ -1,4 +1,6 @@
-import { ReactNode, createContext, useCallback, useContext, useRef } from 'react';
+import { createContext, useCallback, useContext, useRef } from 'react';
+
+import { HasChildren } from '@/utils/types';
 
 import { Toast } from '.';
 import { ToastData, ToastMethods } from './types';
@@ -13,7 +15,7 @@ export const ToastContext = createContext<ToastContextType>({
 export function useToastContext() {
   return useContext(ToastContext);
 }
-export function ToastWrapper({ children }: { children: ReactNode }) {
+export function ToastWrapper({ children }: HasChildren) {
   const toastRef = useRef<ToastMethods>(null);
 
   const displayToast = useCallback(

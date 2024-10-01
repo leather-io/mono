@@ -1,16 +1,14 @@
 import { useState } from 'react';
 
+import { HasChildren } from '@/utils/types';
+
 import { Box } from '@leather.io/ui/native';
 
 import { LeatherSplash } from '../animations/leather-splash';
 
-interface SplashScreenGuardProps {
-  children: React.ReactNode;
-}
-
 const DEFAULT_ANIMATION_FINISHED = __DEV__;
 
-export function SplashScreenGuard({ children }: SplashScreenGuardProps) {
+export function SplashScreenGuard({ children }: HasChildren) {
   const [animationFinished, setAnimationFinished] = useState(DEFAULT_ANIMATION_FINISHED);
 
   if (!animationFinished) {

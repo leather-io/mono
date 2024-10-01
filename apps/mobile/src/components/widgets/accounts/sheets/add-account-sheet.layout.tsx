@@ -19,7 +19,7 @@ import {
   WalletPlusIcon,
 } from '@leather.io/ui/native';
 
-import { AddWalletListItem } from '../../../add-wallet/add-wallet-list-item';
+import { AddWalletCell } from '../../../add-wallet/add-wallet-cell';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -58,13 +58,13 @@ export function AddAccountSheetLayout({
             {t`Add account`}
           </Text>
           <Box flexDirection="column" gap="1">
-            <AddWalletListItem
+            <AddWalletCell
               onPress={addToWallet}
               title={t`Add to existing wallet`}
               subtitle={t`Choose existing leather wallet`}
               icon={<WalletPlusIcon />}
             />
-            <AddWalletListItem
+            <AddWalletCell
               onPress={addToNewWallet}
               title={t`Add to new wallet`}
               subtitle={t`Create new wallet`}
