@@ -14,7 +14,7 @@ type Story = StoryObj<typeof Component>;
 export const Item: Story = {
   render: () => (
     <Component
-      flagImg={<img width="24" height="24" src="./favicon.svg" />}
+      img={<img width="24" height="24" src="./favicon.svg" />}
       titleLeft="titleLeft"
       captionLeft="captionLeft"
       titleRight="titleRight"

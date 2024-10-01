@@ -12,9 +12,11 @@ const meta: Meta<typeof Approver> = {
   component: Approver,
   tags: ['autodocs'],
   title: 'Feature/Approver',
-  render: ({ children, ...args }) => (
+  render: ({ children, requester, ...args }) => (
     <Flex maxW="390px" h="680px" border="1px solid lightgrey" overflowY="auto">
-      <Approver {...args}>{children}</Approver>
+      <Approver requester="https://gamma.io" {...args}>
+        {children}
+      </Approver>
     </Flex>
   ),
 };
@@ -33,7 +35,7 @@ function DemoApproverContent() {
         </Approver.Subheader>
         <Pressable>
           <ItemLayout
-            flagImg={<Circle size="40px" backgroundColor="ink.border-default" />}
+            img={<Circle size="40px" backgroundColor="ink.border-default" />}
             titleLeft={<Box width="180px" height="14px" backgroundColor="ink.border-default" />}
             titleRight={<Box width="50px" height="14px" backgroundColor="ink.border-default" />}
             captionLeft={<Box width="70px" height="12px" backgroundColor="ink.border-default" />}
@@ -57,7 +59,7 @@ function DemoApproverContent() {
           titleRight="100 MICA"
           captionLeft="SIP-10"
           captionRight="$894,891"
-          flagImg={<Circle size="40px" backgroundColor="ink.border-default" />}
+          img={<Circle size="40px" backgroundColor="ink.border-default" />}
         />
       </Approver.Section>
       <Approver.Advanced>
@@ -69,7 +71,7 @@ function DemoApproverContent() {
               titleRight="Mr. Clicky"
               captionLeft="Interactive item"
               captionRight="Click me"
-              flagImg={<Circle size="40px" backgroundColor="ink.border-default" />}
+              img={<Circle size="40px" backgroundColor="ink.border-default" />}
             />
           </Pressable>
         </Approver.Section>
@@ -100,8 +102,8 @@ export const Pending: Story = {
   args: {
     children: (
       <>
-        <Approver.Header title="Some prompt that breaks two lines" requester="gamma.io" />
-        <Approver.Status status="pending" />
+        <Approver.Header title="Some prompt that breaks two lines" />
+        {/* <Approver.Status status="pending" /> */}
         <DemoApproverContent />
         <Approver.Actions
           actions={[
@@ -119,7 +121,7 @@ export const Completed: Story = {
   args: {
     children: (
       <>
-        <Approver.Header title="Completed" requester="alexlab.co" />
+        <Approver.Header title="Completed" />
         <Approver.Status status="completed" />
         <DemoApproverContent />
         <Approver.Actions
@@ -139,10 +141,7 @@ export const ActionsAlignToBottom: Story = {
   args: {
     children: (
       <>
-        <Approver.Header
-          title="Action align to bottom of page"
-          requester="…… even when there's no content to push it there"
-        />
+        <Approver.Header title="Action align to bottom of page" />
 
         <Approver.Actions
           actions={[

@@ -13,10 +13,9 @@ import { Approver } from '../approver.web';
 export function ApproverDemo() {
   return (
     <styled.div minH="100vh">
-      <Approver>
+      <Approver requester="https://gamma.io">
         <Approver.Header
-          title="Some prompt that bre"
-          requester="gamma.io"
+          title="Some prompt that breks onto two lines"
           iconTooltip={
             <TooltipProvider delayDuration={300}>
               <BasicTooltip label="Some tooltip">
@@ -44,7 +43,7 @@ export function ApproverDemo() {
             titleRight="Example"
             captionLeft="Example"
             captionRight="Example"
-            flagImg={<Circle size="40px" backgroundColor="ink.border-default" />}
+            img={<Circle size="40px" backgroundColor="ink.border-default" />}
           />
         </Approver.Section>
         <Approver.Advanced>
@@ -54,7 +53,7 @@ export function ApproverDemo() {
               <ItemLayout
                 captionLeft="Example"
                 captionRight="Example"
-                flagImg={<Circle size="40px" backgroundColor="ink.border-default" />}
+                img={<Circle size="40px" backgroundColor="ink.border-default" />}
                 titleLeft="Example"
                 titleRight="Example"
                 // mb="space.03"

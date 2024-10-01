@@ -8,17 +8,17 @@ import { Flag } from '../flag/flag.web';
 interface ItemWithButtonsLayoutProps {
   buttons: ReactNode;
   caption: string;
-  flagImg: ReactNode;
+  img: ReactNode;
   title: string;
 }
 export function ItemLayoutWithButtons({
   buttons,
   caption,
-  flagImg,
+  img,
   title,
 }: ItemWithButtonsLayoutProps) {
   return (
-    <Flag img={flagImg}>
+    <Flag img={img}>
       <Flex alignItems="center" justifyContent="space-between" width="100%">
         <Stack
           alignItems="start"

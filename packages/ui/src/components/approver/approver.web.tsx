@@ -11,13 +11,16 @@ import { ApproverSection } from './components/approver-section.web';
 import { ApproverStatus } from './components/approver-status.web';
 import { ApproverSubheader } from './components/approver-subheader.web';
 
-function Approver(props: HTMLStyledProps<'main'>) {
+interface ApproverProps extends HTMLStyledProps<'main'> {
+  requester: string;
+}
+function Approver({ requester, ...props }: ApproverProps) {
   const [isDisplayingAdvancedView, setIsDisplayingAdvancedView] = useState(false);
   const childRegister = useRegisterApproverChildren();
 
   return (
     <ApproverProvider
-      value={{ ...childRegister, isDisplayingAdvancedView, setIsDisplayingAdvancedView }}
+      value={{ requester, ...childRegister, isDisplayingAdvancedView, setIsDisplayingAdvancedView }}
     >
       <ApproverContainer {...props} />
     </ApproverProvider>
