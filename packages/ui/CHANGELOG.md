@@ -103,6 +103,19 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.26.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.25.1...@leather.io/ui-v1.26.0) (2024-10-01)
+
+
+### Features
+
+* add switch component ([d0a3023](https://github.com/leather-io/mono/commit/d0a3023c7e1776cdaa86b936dd778fdf940811ac))
+
+
+### Bug Fixes
+
+* refactor widget code, ref leather-io/issues[#349](https://github.com/leather-io/mono/issues/349) ([067d933](https://github.com/leather-io/mono/commit/067d9330886f479beea3f5aa406417ea81426fd0))
+* **ui:** approver updates, animations ([5c6477c](https://github.com/leather-io/mono/commit/5c6477ca607051265e960d587ee6652599356e90))
+
 ## [1.25.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.25.0...@leather.io/ui-v1.25.1) (2024-09-30)
 
 

@@ -196,6 +196,20 @@
   * dependencies
     * @leather.io/ui bumped to 1.24.1
 
+## [1.38.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.38.1...@leather.io/mobile-v1.38.2) (2024-10-01)
+
+
+### Bug Fixes
+
+* refactor widget code, ref leather-io/issues[#349](https://github.com/leather-io/mono/issues/349) ([067d933](https://github.com/leather-io/mono/commit/067d9330886f479beea3f5aa406417ea81426fd0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.26.0
+
 ## [1.38.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.38.0...@leather.io/mobile-v1.38.1) (2024-09-30)
 
 
