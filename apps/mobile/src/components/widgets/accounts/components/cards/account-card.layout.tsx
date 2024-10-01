@@ -3,7 +3,7 @@ import { useTheme } from '@shopify/restyle';
 
 import { Box, IconProps, Text, TouchableOpacity } from '@leather.io/ui/native';
 
-import { LedgerBadge } from '../ledger-badge';
+import { LedgerBadge } from '../../ledger-badge';
 
 export interface AccountCardLayoutProps {
   Icon: React.FC<IconProps>;

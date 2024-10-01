@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddWalletSheet } from '@/components/add-wallet/';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { BackButtonHeader } from '@/components/headers/back-button';
 import { SimpleHeader } from '@/components/headers/containers/simple-header';
@@ -16,10 +15,11 @@ import { Box, SheetRef } from '@leather.io/ui/native';
 
 import { FiatBalance } from '../components/balance/fiat-balance';
 import { Widget, WidgetHeader } from '../components/widget';
-import { AccountCard } from './cards/account-card';
-import { AccountOverview } from './cards/account-overview-card';
-import { CreateWalletCard } from './cards/create-wallet-card';
-import { ImportWalletCard } from './cards/import-wallet-card';
+import { AccountCard } from './components/cards/account-card';
+import { AccountOverview } from './components/cards/account-overview-card';
+import { AddAccountCard } from './components/cards/add-account-card';
+import { CreateWalletCard } from './components/cards/create-wallet-card';
+import { AddAccountSheet } from './sheets/add-account-sheet';
 
 interface MockedAccount extends AccountStore {
   type: WalletStore['type'];
@@ -33,7 +33,7 @@ interface AccountsWidgetProps {
 
 export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
   const sheetRef = useRef<SheetRef>(null);
-  const addWalletSheetRef = useRef<SheetRef>(null);
+  const addAccountSheetRef = useRef<SheetRef>(null);
   const [selectedAccount, setSelectedAccount] = useState<MockedAccount | null>(null);
   const insets = useSafeAreaInsets();
 
@@ -102,13 +102,13 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
         ))}
 
         {hasAccounts ? (
-          <ImportWalletCard onPress={() => router.navigate(AppRoutes.RecoverWallet)} />
+          <AddAccountCard onPress={() => router.navigate(AppRoutes.RecoverWallet)} />
         ) : (
-          <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
+          <CreateWalletCard onPress={() => addAccountSheetRef.current?.present()} />
         )}
       </Widget>
 
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
+      <AddAccountSheet addAccountSheetRef={addAccountSheetRef} />
     </>
   );
 }

@@ -11,6 +11,7 @@ import { useLingui } from '@lingui/react';
 
 import { HomeLayout } from './home.layout';
 
+// FIXME - mock balances should be of type Money
 const mockTotalBalance = {
   totalUsdBalance: '$126.74',
   totalBtcBalance: '0.00215005',
