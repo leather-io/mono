@@ -26,6 +26,14 @@ export function Home() {
   const accounts = useAccounts();
   // const fingerPrintAccounts = useAccountsByFingerprint(fingerprint);
 
+  // useTotalBalance probably needs to go to mono app
+
+  const btcAddress = useCurrentAccountNativeSegwitAddressIndexZero();
+  const { totalUsdBalance, isLoading, isLoadingAdditionalData } = useTotalBalance({
+    btcAddress,
+    stxAddress: account?.address || '',
+  });
+
   const addresses = wallets.list.map(wallet => {
     console.log('wallet', wallet.fingerprint);
     const fingerprint = wallet.fingerprint;
