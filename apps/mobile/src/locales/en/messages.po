@@ -53,7 +53,6 @@ msgstr "Account {accountIdx}"
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/app/(home)/(tabs)/_layout.tsx:36
 #: src/components/headers/account.tsx:11
 msgid "Account 1"
 msgstr "Account 1"
@@ -80,12 +79,22 @@ msgid "Account label updated"
 msgstr "Account label updated"
 
 #: src/components/wallet-settings/wallet-card.tsx:100
+#: src/components/widgets/accounts/components/cards/add-account-card.tsx:16
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:58
 msgid "Add account"
 msgstr "Add account"
 
 #: src/components/wallet-manager/wallets.tsx:38
 msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} 🆕"
+
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:63
+msgid "Add to existing wallet"
+msgstr "Add to existing wallet"
+
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:69
+msgid "Add to new wallet"
+msgstr "Add to new wallet"
 
 #: src/app/(home)/settings/wallet/index.tsx:49
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:83
@@ -125,13 +134,9 @@ msgstr "Address types"
 msgid "Advanced options"
 msgstr "Advanced options"
 
-#: src/app/(home)/(tabs)/_layout.tsx:65
-msgid "All assets"
-msgstr "All assets"
-
-#: src/app/(home)/(tabs)/_layout.tsx:113
-msgid "All Assets"
-msgstr "All Assets"
+#: src/components/widgets/accounts/components/cards/add-account-card.tsx:17
+msgid "All accounts in one place"
+msgstr "All accounts in one place"
 
 #: src/features/settings/app-authentication-sheet.tsx:41
 msgid "Allow authentication"
@@ -144,23 +149,6 @@ msgstr "Allow collection of data"
 #: src/store/storage-persistors.ts:22
 msgid "Allow Leather to access application's secure storage"
 msgstr "Allow Leather to access application's secure storage"
-
-#: src/app/(home)/(tabs)/all-assets.tsx:17
-#: src/app/(home)/(tabs)/all-assets.tsx:20
-#: src/app/(home)/(tabs)/all-assets.tsx:23
-#: src/app/(home)/(tabs)/all-assets.tsx:26
-#: src/app/(home)/(tabs)/all-assets.tsx:29
-#: src/app/(home)/(tabs)/all-assets.tsx:32
-#: src/app/(home)/(tabs)/all-assets.tsx:35
-#: src/app/(home)/(tabs)/all-assets.tsx:38
-#: src/app/(home)/(tabs)/all-assets.tsx:41
-#: src/app/(home)/(tabs)/all-assets.tsx:44
-#: src/app/(home)/(tabs)/all-assets.tsx:47
-#: src/app/(home)/(tabs)/all-assets.tsx:50
-#: src/app/(home)/(tabs)/all-assets.tsx:53
-#: src/app/(home)/(tabs)/all-assets.tsx:56
-msgid "Amazing asset"
-msgstr "Amazing asset"
 
 #: src/app/(home)/settings/security/index.tsx:22
 #: src/features/settings/analytics-sheet.tsx:27
@@ -253,18 +241,13 @@ msgstr "Choose account avatar"
 msgid "Choose an image"
 msgstr "Choose an image"
 
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:64
+msgid "Choose existing leather wallet"
+msgstr "Choose existing leather wallet"
+
 #: src/app/(home)/developer-console/wallet-manager.tsx:34
 msgid "Clear"
 msgstr "Clear"
-
-#: src/app/(home)/(tabs)/_layout.tsx:79
-#: src/app/(home)/(tabs)/_layout.tsx:120
-msgid "Collectibles"
-msgstr "Collectibles"
-
-#: src/app/(home)/(tabs)/collectibles.tsx:13
-msgid "Collectibles 🖼️"
-msgstr "Collectibles 🖼️"
 
 #: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:76
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:26
@@ -321,6 +304,7 @@ msgid "Create a new Bitcoin and Stacks wallet"
 msgstr "Create a new Bitcoin and Stacks wallet"
 
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:88
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:70
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
@@ -329,7 +313,7 @@ msgstr "Create new wallet"
 msgid "Create or restore via email"
 msgstr "Create or restore via email"
 
-#: src/components/widgets/accounts/cards/create-wallet-card.tsx:17
+#: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:17
 msgid "Create or restore wallet"
 msgstr "Create or restore wallet"
 
@@ -343,7 +327,7 @@ msgstr "Create wallet"
 msgid "Create watch-only wallet"
 msgstr "Create watch-only wallet"
 
-#: src/components/widgets/accounts/cards/create-wallet-card.tsx:18
+#: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:18
 msgid "Create, Import or connect instantly"
 msgstr "Create, Import or connect instantly"
 
@@ -402,10 +386,6 @@ msgstr "Display"
 #: src/app/(home)/developer-console/index.tsx:119
 msgid "Drawer"
 msgstr "Drawer"
-
-#: src/app/(home)/(tabs)/_layout.tsx:134
-msgid "Dummy modal text 🎉 Add blocks to see responsive modal"
-msgstr "Dummy modal text 🎉 Add blocks to see responsive modal"
 
 #: src/app/(home)/settings/notifications/_layout.tsx:28
 #: src/app/(home)/settings/notifications/_layout.tsx:60
@@ -504,10 +484,6 @@ msgstr "I've backed it up"
 msgid "Import existing accounts"
 msgstr "Import existing accounts"
 
-#: src/components/widgets/accounts/cards/import-wallet-card.tsx:16
-msgid "Import wallet"
-msgstr "Import wallet"
-
 #: src/features/settings/email-address-sheet.tsx:27
 msgid "Invalid email address"
 msgstr "Invalid email address"
@@ -569,10 +545,6 @@ msgstr "My tokens"
 msgid "Name"
 msgstr "Name"
 
-#: src/app/(home)/(tabs)/collectibles.tsx:20
-msgid "navigate to browser"
-msgstr "navigate to browser"
-
 #: src/app/(home)/settings/networks/index.tsx:36
 msgid "Network changed"
 msgstr "Network changed"
@@ -598,10 +570,6 @@ msgstr "Notifications"
 #: src/components/sheets/notify-user-sheet.layout.tsx:65
 msgid "Notify me"
 msgstr "Notify me"
-
-#: src/components/widgets/accounts/cards/import-wallet-card.tsx:17
-msgid "One place, all wallets"
-msgstr "One place, all wallets"
 
 #: src/app/(home)/hardware-wallets.tsx:23
 msgid "OneKey"
@@ -898,15 +866,6 @@ msgstr "toggle localization: {locale}"
 #: src/app/(home)/developer-console/wallet-manager.tsx:46
 msgid "Toggle network"
 msgstr "Toggle network"
-
-#: src/app/(home)/(tabs)/_layout.tsx:72
-#: src/app/(home)/(tabs)/_layout.tsx:127
-msgid "Tokens"
-msgstr "Tokens"
-
-#: src/app/(home)/(tabs)/tokens.tsx:10
-msgid "Tokens 🪙"
-msgstr "Tokens 🪙"
 
 #: src/app/(home)/developer-console/index.tsx:115
 msgid "transferBtc"

@@ -77,4 +77,5 @@ export * from './logos/logo-hardware-ledger.native';
 export * from './logos/logo-hardware-onekey.native';
 export * from './logos/logo-hardware-trezor.native';
 export * from './logos/logo-hardware-foundation.native';
+export * from './wallet-plus-icon.native';
 export type { IconProps } from './icon/icon.native';
