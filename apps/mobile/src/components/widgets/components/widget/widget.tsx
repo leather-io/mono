@@ -25,3 +25,6 @@ export function Widget({ children, header, scrollDirection = 'vertical' }: Widge
     </Box>
   );
 }
+
+// refactor to remove Pressable , fix balance display(reverse for Fiat) + line break
+// check if I broke add account

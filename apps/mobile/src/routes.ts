@@ -17,6 +17,9 @@ export enum AppRoutes {
   MpcWallets = '/mpc-wallets',
   HardwareWallets = '/hardware-wallets',
 
+  // Account
+  Account = '/account/[account]',
+
   // Settings
   Settings = '/settings',
   SettingsDisplay = '/settings/display',

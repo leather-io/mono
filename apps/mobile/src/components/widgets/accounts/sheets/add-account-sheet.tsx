@@ -25,7 +25,7 @@ export function AddAccountSheet({ addAccountSheetRef }: AddAccountSheetBaseProps
   const addToNewWallet = useCallback(() => {
     addWalletSheetRef.current?.present();
     addAccountSheetRef.current?.close();
-  }, [addAccountSheetRef, router]);
+  }, [addAccountSheetRef]);
 
   return (
     <>

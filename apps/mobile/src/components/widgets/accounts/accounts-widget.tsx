@@ -1,10 +1,9 @@
-import { useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRef } from 'react';
 
+import { AddWalletSheet } from '@/components/add-wallet/';
 import { getAvatarIcon } from '@/components/avatar-icon';
-import { BackButtonHeader } from '@/components/headers/back-button';
-import { SimpleHeader } from '@/components/headers/containers/simple-header';
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
+import { getMockAccounts } from '@/mocks/account.mocks';
 import { AppRoutes } from '@/routes';
 import { AccountStore } from '@/store/accounts/accounts.write';
 import { WalletStore } from '@/store/wallets/wallets.write';
@@ -13,18 +12,12 @@ import { useRouter } from 'expo-router';
 
 import { Box, SheetRef } from '@leather.io/ui/native';
 
-import { FiatBalance } from '../components/balance/fiat-balance';
+import { Balance } from '../../balance/balance';
 import { Widget, WidgetHeader } from '../components/widget';
 import { AccountCard } from './components/cards/account-card';
-import { AccountOverview } from './components/cards/account-overview-card';
 import { AddAccountCard } from './components/cards/add-account-card';
 import { CreateWalletCard } from './components/cards/create-wallet-card';
 import { AddAccountSheet } from './sheets/add-account-sheet';
-
-interface MockedAccount extends AccountStore {
-  type: WalletStore['type'];
-  balance: number;
-}
 
 interface AccountsWidgetProps {
   accounts: AccountStore[];
@@ -34,47 +27,15 @@ interface AccountsWidgetProps {
 export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
   const sheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
-  const [selectedAccount, setSelectedAccount] = useState<MockedAccount | null>(null);
-  const insets = useSafeAreaInsets();
+  const addWalletSheetRef = useRef<SheetRef>(null);
 
   const router = useRouter();
 
   const hasWallets = wallets.length > 0;
   const hasAccounts = accounts.length > 0;
 
-  // FIXME: this is fake data for now
-  // need to implement fetch of account?.type + balances
-  const mockedAccounts = accounts.map((account, index) => {
-    return {
-      ...account,
-      type: 'software',
-      balance: index + 10,
-    };
-  });
+  const { accounts: mockAccounts, balance } = getMockAccounts(accounts);
 
-  const mockedWalletBalance = mockedAccounts.reduce((sum, account) => sum + account.balance, 0);
-
-  if (selectedAccount) {
-    return (
-      <>
-        {/* FIXME: This is throwaway code to add a fake header 
-      - work needs to be done to update the  wallet/_layout header when account selected
-      - I tried passing navigation params but didn't figure it out yet
-       
-       - I think I will need to add a new Stack.Screen for this that also has the same asset widget below
-       */}
-        <SimpleHeader
-          insets={insets}
-          left={<BackButtonHeader onPress={() => setSelectedAccount(null)} />}
-        />
-        <AccountOverview
-          Icon={getAvatarIcon(selectedAccount.icon)}
-          heading={<FiatBalance balance={selectedAccount.balance} variant="heading02" />}
-          caption={selectedAccount.name}
-        />
-      </>
-    );
-  }
   return (
     <>
       <Widget
@@ -86,29 +47,38 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
               sheetRef={sheetRef}
               sheet={<AccountSelectorSheet sheetRef={sheetRef} />}
             />
-            {hasWallets && <FiatBalance balance={mockedWalletBalance} variant="heading03" />}
+            {hasWallets && <Balance balance={balance} variant="heading03" />}
           </Box>
         }
       >
-        {mockedAccounts.map(account => (
+        {mockAccounts.map(account => (
           <AccountCard
-            type={account.type as WalletStore['type']}
+            type={account.type}
             Icon={getAvatarIcon(account.icon)}
             key={account.id}
-            label={<FiatBalance balance={account.balance} />}
+            label={<Balance balance={account.balance} />}
             caption={account.name || ''}
-            onPress={() => setSelectedAccount(account as MockedAccount)}
+            onPress={() => {
+              router.navigate({
+                pathname: AppRoutes.Account,
+                params: {
+                  fingerprint: account.fingerprint,
+                  account: account.accountIndex,
+                },
+              });
+            }}
           />
         ))}
 
         {hasAccounts ? (
-          <AddAccountCard onPress={() => router.navigate(AppRoutes.RecoverWallet)} />
+          <AddAccountCard onPress={() => addAccountSheetRef.current?.present()} />
         ) : (
-          <CreateWalletCard onPress={() => addAccountSheetRef.current?.present()} />
+          <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
         )}
       </Widget>
 
       <AddAccountSheet addAccountSheetRef={addAccountSheetRef} />
+      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>
   );
 }

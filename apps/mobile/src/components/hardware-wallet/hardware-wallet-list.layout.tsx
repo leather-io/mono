@@ -1,13 +1,13 @@
-import { ReactNode } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { HasChildren } from '@/utils/types';
 import { Trans } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, QuestionCircleIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
-export function HardwareWalletListLayout({ children }: { children: ReactNode }) {
+export function HardwareWalletListLayout({ children }: HasChildren) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
 

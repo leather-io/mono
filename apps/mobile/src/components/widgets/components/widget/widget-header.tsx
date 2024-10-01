@@ -1,3 +1,4 @@
+import { Money } from '@leather.io/models';
 import { Box, SheetRef, TouchableOpacity } from '@leather.io/ui/native';
 
 import { WidgetTitle } from './widget-title';
@@ -6,7 +7,7 @@ interface WidgetHeaderProps {
   title: string;
   sheetRef?: React.RefObject<SheetRef>;
   sheet?: React.ReactNode;
-  totalBalance?: string;
+  totalBalance?: Money;
 }
 
 export function WidgetHeader({ title, totalBalance, sheetRef, sheet }: WidgetHeaderProps) {

@@ -2,16 +2,16 @@ import React from 'react';
 
 import { t } from '@lingui/macro';
 
+import { Money } from '@leather.io/models';
 import { Flag, ItemLayout } from '@leather.io/ui/native';
 
-import { FiatBalance } from '../components/balance/fiat-balance';
-import { TokenBalance } from '../components/balance/token-balance';
+import { type Token } from '../../../mocks/tokens.mocks';
+import { Balance } from '../../balance/balance';
 import { Widget, WidgetHeader } from '../components/widget';
-import { type Token } from './tokens.mocks';
 
 interface TokensWidgetProps {
   tokens: Token[];
-  totalBalance: string;
+  totalBalance: Money;
 }
 
 function showChain(chain: string) {
@@ -34,9 +34,9 @@ export function TokensWidget({ tokens, totalBalance }: TokensWidgetProps) {
           <Flag key={ticker} img={icon} align="middle" spacing="1" reverse={false}>
             <ItemLayout
               titleLeft={tokenName}
-              titleRight={availableBalance && <TokenBalance availableBalance={availableBalance} />}
+              titleRight={availableBalance && <Balance balance={availableBalance} />}
               captionLeft={showChain(chain)}
-              captionRight={<FiatBalance balance={fiatBalance} color="ink.text-subdued" />}
+              captionRight={<Balance balance={fiatBalance} color="ink.text-subdued" />}
             />
           </Flag>
         )

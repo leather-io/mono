@@ -30,7 +30,7 @@ import {
 } from '@leather.io/ui/native';
 
 import { OptionData } from '../sheets/notify-user-sheet.layout';
-import { AddWalletListItem } from './add-wallet-list-item';
+import { AddWalletCell } from './add-wallet-cell';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -83,26 +83,26 @@ export function AddWalletSheetLayout({
             {t`Add wallet`}
           </Text>
           <Box flexDirection="column" gap="1">
-            <AddWalletListItem
+            <AddWalletCell
               onPress={createWallet}
               title={t`Create new wallet`}
               subtitle={t`Create a new Bitcoin and Stacks wallet`}
               icon={<PlusIcon />}
             />
-            <AddWalletListItem
+            <AddWalletCell
               onPress={restoreWallet}
               title={t`Restore wallet`}
               subtitle={t`Import existing accounts`}
               icon={<ArrowRotateClockwiseIcon />}
             />
-            <AddWalletListItem
+            <AddWalletCell
               onPress={openOptions}
               title={t`More options`}
               icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
             />
             {moreOptionsVisible && (
               <>
-                <AddWalletListItem
+                <AddWalletCell
                   title={t`Connect hardware wallet`}
                   subtitle={t`Ledger, Trezor, Ryder and more`}
                   icon={<SignalIcon color={theme.colors['ink.text-subdued']} />}
@@ -111,7 +111,7 @@ export function AddWalletSheetLayout({
                     addWalletSheetRef.current?.close();
                   }}
                 />
-                <AddWalletListItem
+                <AddWalletCell
                   title={t`Create or restore via email`}
                   subtitle={t`Access custodial wallet`}
                   icon={<EmailIcon color={theme.colors['ink.text-subdued']} />}
@@ -119,7 +119,7 @@ export function AddWalletSheetLayout({
                     onOpenNotificationsSheet({ title: t`Create or restore via email` });
                   }}
                 />
-                <AddWalletListItem
+                <AddWalletCell
                   title={t`Connect MPC wallet`}
                   subtitle={t`Import existing accounts`}
                   icon={<PaletteIcon color={theme.colors['ink.text-subdued']} />}
@@ -128,7 +128,7 @@ export function AddWalletSheetLayout({
                     addWalletSheetRef.current?.close();
                   }}
                 />
-                <AddWalletListItem
+                <AddWalletCell
                   title={t`Create watch-only wallet`}
                   subtitle={t`No key needed`}
                   icon={<Eye2Icon color={theme.colors['ink.text-subdued']} />}
