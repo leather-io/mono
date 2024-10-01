@@ -3,9 +3,10 @@ import { createContext, useContext } from 'react';
 import { useOnMount } from '../../utils/use-on-mount.shared';
 import { ChildRegister, useRegisterChildren } from '../../utils/use-register-children.shared';
 
-type ApproverChildren = 'header' | 'actions' | 'advanced' | 'section' | 'subheader';
+type ApproverChildren = 'header' | 'actions' | 'advanced' | 'section' | 'subheader' | 'requester';
 
 interface ApproverContext extends ChildRegister<ApproverChildren> {
+  requester: string;
   isDisplayingAdvancedView: boolean;
   setIsDisplayingAdvancedView(val: boolean): void;
 }
@@ -17,7 +18,8 @@ export const ApproverProvider = approverContext.Provider;
 export function useApproverContext() {
   const context = useContext(approverContext);
   if (!context) throw new Error('`useApproverContext` must be used within a `ApproverProvider`');
-  return context;
+  const url = new URL(context.requester);
+  return { ...context, hostname: url.hostname };
 }
 
 export function useRegisterApproverChildren() {
