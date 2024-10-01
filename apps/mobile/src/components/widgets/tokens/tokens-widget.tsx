@@ -1,13 +1,13 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
-import { Flag, ItemLayout, SheetRef } from '@leather.io/ui/native';
+import { t } from '@lingui/macro';
+
+import { Flag, ItemLayout } from '@leather.io/ui/native';
 import { formatMoney } from '@leather.io/utils';
 
 import { FiatBalance } from '../components/balance/fiat-balance';
-import { formatLockedBalance } from '../components/balance/format-locked-balance';
 import { TokenBalance } from '../components/balance/token-balance';
-import { TokensHeader } from './tokens-header';
-import { TokensWidgetLayout } from './tokens-widget.layout';
+import { Widget, WidgetHeader } from '../components/widget';
 import { type Token } from './tokens.mocks';
 
 interface TokensWidgetProps {
@@ -15,47 +15,35 @@ interface TokensWidgetProps {
   totalBalance: string;
 }
 
-export function TokensWidget({ tokens, totalBalance }: TokensWidgetProps) {
-  const sheetRef = useRef<SheetRef>(null);
+function showChain(chain: string) {
+  if (chain === 'Stacks blockchain' || chain === 'Bitcoin blockchain') return '';
+  return chain;
+}
 
+export function TokensWidget({ tokens, totalBalance }: TokensWidgetProps) {
   return (
-    <TokensWidgetLayout
-      header={<TokensHeader tokens={tokens} totalBalance={totalBalance} sheetRef={sheetRef} />}
-      balance={tokens.length > 0 && <TokenBalance balance={totalBalance} />}
-    >
+    <Widget header={<WidgetHeader title={t`My tokens`} totalBalance={totalBalance} />}>
       {tokens.map(
         ({
-          availableBalance: { availableBalance, lockedBalance },
+          availableBalance: { availableBalance },
           icon,
           tokenName,
           ticker,
           chain,
           fiatBalance,
-          fiatLockedBalance,
         }) => (
           <Flag key={ticker} img={icon} align="middle" spacing="1" reverse={false}>
             <ItemLayout
               titleLeft={tokenName}
               titleRight={
-                availableBalance && (
-                  <TokenBalance
-                    balance={formatMoney(availableBalance)}
-                    lockedBalance={lockedBalance ? formatLockedBalance(lockedBalance) : undefined}
-                  />
-                )
+                availableBalance && <TokenBalance balance={formatMoney(availableBalance)} />
               }
-              captionLeft={chain}
-              captionRight={
-                <FiatBalance
-                  balance={fiatBalance}
-                  lockedBalance={fiatLockedBalance || undefined}
-                  color="ink.text-subdued"
-                />
-              }
+              captionLeft={showChain(chain)}
+              captionRight={<FiatBalance balance={fiatBalance} color="ink.text-subdued" />}
             />
           </Flag>
         )
       )}
-    </TokensWidgetLayout>
+    </Widget>
   );
 }

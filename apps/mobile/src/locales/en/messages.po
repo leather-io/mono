@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-09-30 09:05-0400\n"
+"POT-Creation-Date: 2024-10-01 09:52+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -199,6 +199,7 @@ msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
 #: src/components/widgets/tokens/tokens.mocks.tsx:42
+#: src/components/widgets/tokens/tokens.mocks.tsx:123
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -406,10 +407,6 @@ msgstr "Drawer"
 msgid "Dummy modal text 🎉 Add blocks to see responsive modal"
 msgstr "Dummy modal text 🎉 Add blocks to see responsive modal"
 
-#: src/components/home/earn.tsx:12
-msgid "Earn"
-msgstr "Earn"
-
 #: src/app/(home)/settings/notifications/_layout.tsx:28
 #: src/app/(home)/settings/notifications/_layout.tsx:60
 msgid "Email"
@@ -546,15 +543,15 @@ msgstr "More options"
 msgid "Must use physical device for Push Notifications"
 msgstr "Must use physical device for Push Notifications"
 
-#: src/components/widgets/accounts/accounts-header.tsx:12
+#: src/components/widgets/accounts/accounts-widget.tsx:85
 msgid "My accounts"
 msgstr "My accounts"
 
-#: src/components/widgets/collectibles/collectibles-header.tsx:14
+#: src/components/widgets/collectibles/collectibles-widget.tsx:17
 msgid "My collectibles"
 msgstr "My collectibles"
 
-#: src/components/widgets/tokens/tokens-header.tsx:16
+#: src/components/widgets/tokens/tokens-widget.tsx:25
 msgid "My tokens"
 msgstr "My tokens"
 
@@ -775,9 +772,9 @@ msgstr "Stacks"
 msgid "Stacks blockchain"
 msgstr "Stacks blockchain"
 
-#: src/components/home/earn.tsx:26
-msgid "Start stacking"
-msgstr "Start stacking"
+#: src/components/widgets/tokens/tokens.mocks.tsx:111
+msgid "Stacks L2"
+msgstr "Stacks L2"
 
 #: src/app/(home)/developer-console/index.tsx:118
 msgid "stx_signMessage"
@@ -902,10 +899,6 @@ msgstr "Tokens"
 #: src/app/(home)/(tabs)/tokens.tsx:10
 msgid "Tokens 🪙"
 msgstr "Tokens 🪙"
-
-#: src/components/home/earn.tsx:23
-msgid "Total rewards"
-msgstr "Total rewards"
 
 #: src/app/(home)/developer-console/index.tsx:115
 msgid "transferBtc"

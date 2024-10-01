@@ -5,16 +5,17 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { BackButtonHeader } from '@/components/headers/back-button';
 import { SimpleHeader } from '@/components/headers/containers/simple-header';
+import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { AppRoutes } from '@/routes';
 import { AccountStore } from '@/store/accounts/accounts.write';
 import { WalletStore } from '@/store/wallets/wallets.write';
+import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { Box, SheetRef } from '@leather.io/ui/native';
 
 import { FiatBalance } from '../components/balance/fiat-balance';
-import { AccountsHeader } from './accounts-header';
-import { AccountsWidgetLayout } from './accounts-widget.layout';
+import { Widget, WidgetHeader } from '../components/widget';
 import { AccountCard } from './cards/account-card';
 import { AccountOverview } from './cards/account-overview-card';
 import { CreateWalletCard } from './cards/create-wallet-card';
@@ -76,10 +77,18 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
   }
   return (
     <>
-      <AccountsWidgetLayout
-        sheetRef={sheetRef}
-        header={<AccountsHeader hasAccounts={hasAccounts} sheetRef={sheetRef} />}
-        balance={hasWallets && <FiatBalance balance={mockedWalletBalance} variant="heading03" />}
+      <Widget
+        scrollDirection="horizontal"
+        header={
+          <Box marginHorizontal="5">
+            <WidgetHeader
+              title={t`My accounts`}
+              sheetRef={sheetRef}
+              sheet={<AccountSelectorSheet sheetRef={sheetRef} />}
+            />
+            {hasWallets && <FiatBalance balance={mockedWalletBalance} variant="heading03" />}
+          </Box>
+        }
       >
         {mockedAccounts.map(account => (
           <AccountCard
@@ -97,7 +106,7 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
         ) : (
           <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
         )}
-      </AccountsWidgetLayout>
+      </Widget>
 
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>
