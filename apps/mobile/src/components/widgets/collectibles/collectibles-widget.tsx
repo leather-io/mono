@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
-import { CollectibleCard, CollectibleCardProps, SheetRef } from '@leather.io/ui/native';
+import { t } from '@lingui/macro';
 
-import { TokenBalance } from '../components/balance/token-balance';
-import { CollectiblesHeader } from './collectibles-header';
-import { CollectiblesWidgetLayout } from './collectibles-widget.layout';
+import { CollectibleCard, CollectibleCardProps } from '@leather.io/ui/native';
+
+import { Widget, WidgetHeader } from '../components/widget';
 
 interface CollectiblesWidgetProps {
   collectibles: CollectibleCardProps[];
@@ -12,22 +12,14 @@ interface CollectiblesWidgetProps {
 }
 
 export function CollectiblesWidget({ collectibles, totalBalance }: CollectiblesWidgetProps) {
-  const sheetRef = useRef<SheetRef>(null);
-
   return (
-    <CollectiblesWidgetLayout
-      header={
-        <CollectiblesHeader
-          collectibleCount={collectibles.length}
-          totalBalance={totalBalance}
-          sheetRef={sheetRef}
-        />
-      }
-      balance={collectibles.length > 0 && <TokenBalance balance={totalBalance} />}
+    <Widget
+      header={<WidgetHeader title={t`My collectibles`} totalBalance={totalBalance} />}
+      scrollDirection="horizontal"
     >
       {collectibles.map((collectible: CollectibleCardProps, index) => (
         <CollectibleCard key={index} {...collectible} />
       ))}
-    </CollectiblesWidgetLayout>
+    </Widget>
   );
 }

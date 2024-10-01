@@ -20,24 +20,6 @@ export interface Ordinal {
 
 const mockOrdinals: Ordinal[] = [
   {
-    id: 'a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949i0',
-    number: 74703951,
-    output: '0',
-    txid: 'a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949',
-    offset: '0',
-    address: 'bc1pwz9n62p9dhjpqcpdmfcrewdnz3nk8jcved242vd2lj9fgvtvwnwscvdyre',
-    preview:
-      'https://ordinals.hiro.so/inscription/a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949i0',
-    title: 'Inscription 74703951',
-    genesisBlockHeight: 857719,
-    genesisBlockHash: '00000000000000000002bc6789fc6742da4958d003d3abff740687a863613a46',
-    genesisTimestamp: 1724219117,
-    value: '546',
-    mimeType: 'html',
-    name: 'inscription',
-    src: 'https://ordinals.com/preview/a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949i0',
-  },
-  {
     id: '335209b72c452f52199ae09e8ce586a451ce452c73326f01f958d8aa8417e062i0',
     number: 73858867,
     output: '0',
@@ -54,6 +36,24 @@ const mockOrdinals: Ordinal[] = [
     mimeType: 'text',
     name: 'inscription',
     src: 'https://bis-ord-content.fra1.cdn.digitaloceanspaces.com/ordinals/335209b72c452f52199ae09e8ce586a451ce452c73326f01f958d8aa8417e062i0',
+  },
+  {
+    id: 'a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949i0',
+    number: 74703951,
+    output: '0',
+    txid: 'a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949',
+    offset: '0',
+    address: 'bc1pwz9n62p9dhjpqcpdmfcrewdnz3nk8jcved242vd2lj9fgvtvwnwscvdyre',
+    preview:
+      'https://ordinals.hiro.so/inscription/a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949i0',
+    title: 'Inscription 74703951',
+    genesisBlockHeight: 857719,
+    genesisBlockHash: '00000000000000000002bc6789fc6742da4958d003d3abff740687a863613a46',
+    genesisTimestamp: 1724219117,
+    value: '546',
+    mimeType: 'html',
+    name: 'inscription',
+    src: 'https://ordinals.com/preview/a494e48bf7120c959239e8c544bc821ca4fb5a46e5fff79938943d434f252949i0',
   },
   {
     id: 'cd27e71f955e021dd0840aa0544067fc92c3608009f2191a405f9f4910712b78i0',

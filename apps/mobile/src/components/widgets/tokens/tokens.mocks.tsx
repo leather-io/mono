@@ -107,4 +107,19 @@ export const getMockTokens = (): Token[] => [
     // isLoadingAdditionalData: false,
     // onSelectAsset: () => {},
   },
+  {
+    chain: t`Stacks L2`,
+    availableBalance: {
+      availableBalance: {
+        amount: new BigNumber('215005'),
+        symbol: 'sBTC',
+        decimals: 8,
+      },
+    },
+    formattedBalance: { isAbbreviated: false, value: '0.00215005' },
+    fiatBalance: '$126.74',
+    icon: <BtcAvatarIcon />,
+    ticker: 'sbtc',
+    tokenName: t`Bitcoin`,
+  },
 ];
