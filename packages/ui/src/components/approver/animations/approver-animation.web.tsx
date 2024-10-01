@@ -46,7 +46,7 @@ export function ApproverHeaderAnimation({ delay = 0, ...props }: ApproverHeaderA
   );
 }
 
-const actionsContainerDelay = 0.88;
+const actionsContainerDelay = 0.64;
 export function ApproverActionsAnimationContainer(props: HasChildren) {
   return (
     <motion.div
@@ -64,13 +64,13 @@ interface ApproverActionAnimationProps extends HasChildren {
   index: number;
 }
 export function ApproverActionAnimation({ children, index }: ApproverActionAnimationProps) {
-  const delay = actionsContainerDelay + 0.04 + (index + 1) * 0.06;
+  const delay = actionsContainerDelay + 0.04 + (index + 1) * 0.04;
   return (
     <motion.div
       style={{ display: 'flex' }}
       className={css({ '& > *': { flex: 1 } })}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { duration: 0.28, delay, ease: 'easeOut' } }}
+      animate={{ opacity: 1, transition: { duration: 0.48, delay, ease: 'easeOut' } }}
     >
       {children}
     </motion.div>

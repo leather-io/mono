@@ -27,6 +27,7 @@ export function ApproverContainer({ children, ...props }: HTMLStyledProps<'main'
     >
       <Flex
         className={childElementInitialAnimationState}
+        width="100%"
         ref={scope}
         flexDir="column"
         flex={1}
