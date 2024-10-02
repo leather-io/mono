@@ -196,6 +196,22 @@
   * dependencies
     * @leather.io/ui bumped to 1.24.1
 
+## [1.39.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.38.2...@leather.io/mobile-v1.39.0) (2024-10-02)
+
+
+### Features
+
+* app auth, closes leather-io/issues[#343](https://github.com/leather-io/mono/issues/343) ([7830a38](https://github.com/leather-io/mono/commit/7830a38654d5c14323669c6c84c53360a3a955c3))
+* settings privacy mode, closes leather-io/issues[#194](https://github.com/leather-io/mono/issues/194) ([7598cf4](https://github.com/leather-io/mono/commit/7598cf4d760794246cb60b970020e4194e62bcdd))
+* update create account flow, ref leather-io/issues[#350](https://github.com/leather-io/mono/issues/350) ([6790da3](https://github.com/leather-io/mono/commit/6790da394c86f71ce070211b1eb96d2c52a1e637))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.27.0
+
 ## [1.38.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.38.1...@leather.io/mobile-v1.38.2) (2024-10-01)
 
 
