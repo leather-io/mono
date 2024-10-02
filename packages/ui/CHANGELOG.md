@@ -103,6 +103,19 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.27.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.26.0...@leather.io/ui-v1.27.0) (2024-10-02)
+
+
+### Features
+
+* settings privacy mode, closes leather-io/issues[#194](https://github.com/leather-io/mono/issues/194) ([7598cf4](https://github.com/leather-io/mono/commit/7598cf4d760794246cb60b970020e4194e62bcdd))
+* update create account flow, ref leather-io/issues[#350](https://github.com/leather-io/mono/issues/350) ([6790da3](https://github.com/leather-io/mono/commit/6790da394c86f71ce070211b1eb96d2c52a1e637))
+
+
+### Bug Fixes
+
+* **ui:** approver margin updates ([30013d8](https://github.com/leather-io/mono/commit/30013d80e3245860b0f700e355977bee51f51b8f))
+
 ## [1.26.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.25.1...@leather.io/ui-v1.26.0) (2024-10-01)
 
 
