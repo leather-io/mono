@@ -14,6 +14,14 @@ const meta: Meta<typeof Approver> = {
   component: Approver,
   tags: ['autodocs'],
   title: 'Feature/Approver',
+  parameters: {
+    layout: 'fullscreen',
+    viewport: {
+      // Approver users `position: fixed`, so we need to adjust the iframe
+      // otherwise the fixed elements will spill out the frame
+      defaultViewport: 'approver',
+    },
+  },
   render: ({ children, requester, ...args }) => (
     <TooltipProvider>
       <Flex maxW="390px" h="680px" border="1px solid lightgrey" overflowY="auto">
@@ -130,6 +138,7 @@ export const Pending: Story = {
     ),
   },
 };
+
 export const Completed: Story = {
   args: {
     children: (

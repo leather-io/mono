@@ -5,6 +5,7 @@ import {
   childElementInitialAnimationState,
   useApproverChildrenEntryAnimation,
 } from '../animations/approver-animation.web';
+import { useApproverContext } from '../approver-context.shared';
 
 const applyMarginsToLastApproverSection = css({
   '& .approver-section:last-child': { mb: 'space.03' },
@@ -12,6 +13,7 @@ const applyMarginsToLastApproverSection = css({
 
 export function ApproverContainer({ children, ...props }: HTMLStyledProps<'main'>) {
   const scope = useApproverChildrenEntryAnimation();
+  const { actionBarHeight } = useApproverContext();
 
   return (
     <styled.main
@@ -32,6 +34,7 @@ export function ApproverContainer({ children, ...props }: HTMLStyledProps<'main'
         flexDir="column"
         flex={1}
         background="ink.background-secondary"
+        style={{ paddingBottom: `${actionBarHeight + 16}px` }}
       >
         {children}
       </Flex>

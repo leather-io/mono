@@ -16,11 +16,19 @@ interface ApproverProps extends HTMLStyledProps<'main'> {
 }
 function Approver({ requester, ...props }: ApproverProps) {
   const [isDisplayingAdvancedView, setIsDisplayingAdvancedView] = useState(false);
+  const [actionBarHeight, setActionBarHeight] = useState(0);
   const childRegister = useRegisterApproverChildren();
 
   return (
     <ApproverProvider
-      value={{ requester, ...childRegister, isDisplayingAdvancedView, setIsDisplayingAdvancedView }}
+      value={{
+        requester,
+        isDisplayingAdvancedView,
+        setIsDisplayingAdvancedView,
+        actionBarHeight,
+        setActionBarHeight,
+        ...childRegister,
+      }}
     >
       <ApproverContainer {...props} />
     </ApproverProvider>
