@@ -8,6 +8,8 @@ type ApproverChildren = 'header' | 'actions' | 'advanced' | 'section' | 'subhead
 interface ApproverContext extends ChildRegister<ApproverChildren> {
   requester: string;
   isDisplayingAdvancedView: boolean;
+  actionBarHeight: number;
+  setActionBarHeight(val: number): void;
   setIsDisplayingAdvancedView(val: boolean): void;
 }
 
