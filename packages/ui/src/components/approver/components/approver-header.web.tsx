@@ -12,14 +12,10 @@ import { useApproverContext, useRegisterApproverChild } from '../approver-contex
 
 interface ApproverHeaderProps extends HasChildren {
   title: ReactNode;
-  iconTooltip?: ReactNode;
+  info?: ReactNode;
   onPressRequestedByLink?(e: React.MouseEvent<HTMLAnchorElement>): void;
 }
-export function ApproverHeader({
-  title,
-  iconTooltip,
-  onPressRequestedByLink,
-}: ApproverHeaderProps) {
+export function ApproverHeader({ title, info, onPressRequestedByLink }: ApproverHeaderProps) {
   const { requester, hostname } = useApproverContext();
   useRegisterApproverChild('header');
   return (
@@ -31,7 +27,7 @@ export function ApproverHeader({
       pos="relative"
     >
       <ApproverHeaderAnimation>
-        <styled.h1 textStyle="heading.03" mr={iconTooltip ? 'space.06' : ''}>
+        <styled.h1 textStyle="heading.03" mr={info ? 'space.06' : ''}>
           {title}
         </styled.h1>
       </ApproverHeaderAnimation>
@@ -61,9 +57,9 @@ export function ApproverHeader({
           </styled.a>
         </Flag>
       </ApproverHeaderAnimation>
-      {iconTooltip && (
-        <Box pos="absolute" top="space.05" right="space.05" mt="space.01">
-          {iconTooltip}
+      {info && (
+        <Box pos="absolute" top="space.03" right="space.05" mt="space.01">
+          {info}
         </Box>
       )}
     </styled.header>

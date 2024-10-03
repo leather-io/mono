@@ -48,7 +48,6 @@ const defaultContentStyles = css({
   textAlign: 'center',
   wordWrap: 'break-word',
   color: 'ink.background-primary',
-
   "&[data-state='delayed-open'][data-side='top']": {
     animationName: 'slideDownAndFade',
   },
@@ -60,6 +59,9 @@ const defaultContentStyles = css({
   },
   "&[data-state='delayed-open'][data-side='left']": {
     animationName: 'slideRightAndFade',
+  },
+  '&[data-state="closed"]': {
+    animation: `fadeout 0.2s ease-out`,
   },
 });
 

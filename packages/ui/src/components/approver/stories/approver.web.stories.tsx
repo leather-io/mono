@@ -1,5 +1,7 @@
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Meta, StoryObj } from '@storybook/react';
 import { Box, Circle, Flex } from 'leather-styles/jsx';
+import { BasicTooltip, InfoCircleIcon } from 'src/exports.web';
 
 import { ZapIcon } from '../../../icons/zap-icon.web';
 import { Button } from '../../button/button.web';
@@ -13,11 +15,13 @@ const meta: Meta<typeof Approver> = {
   tags: ['autodocs'],
   title: 'Feature/Approver',
   render: ({ children, requester, ...args }) => (
-    <Flex maxW="390px" h="680px" border="1px solid lightgrey" overflowY="auto">
-      <Approver requester="https://gamma.io" {...args}>
-        {children}
-      </Approver>
-    </Flex>
+    <TooltipProvider>
+      <Flex maxW="390px" h="680px" border="1px solid lightgrey" overflowY="auto">
+        <Approver requester="https://gamma.io" width="100%" {...args}>
+          {children}
+        </Approver>
+      </Flex>
+    </TooltipProvider>
   ),
 };
 
@@ -102,8 +106,17 @@ export const Pending: Story = {
   args: {
     children: (
       <>
-        <Approver.Header title="Some prompt that breaks two lines" />
-        {/* <Approver.Status status="pending" /> */}
+        <Approver.Header
+          title="Connect app"
+          info={
+            <BasicTooltip label="Greetings, traveler">
+              <Box p="space.02">
+                <InfoCircleIcon color="ink.text-subdued" variant="small" />
+              </Box>
+            </BasicTooltip>
+          }
+        />
+        <Approver.Status status="pending" />
         <DemoApproverContent />
         <Approver.Actions
           actions={[

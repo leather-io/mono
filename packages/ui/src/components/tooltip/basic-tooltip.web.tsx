@@ -15,7 +15,7 @@ interface BasicTooltipProps {
 export function BasicTooltip({ children, label, disabled, side, asChild }: BasicTooltipProps) {
   const isDisabled = !label || disabled;
   return (
-    <Tooltip.Root>
+    <Tooltip.Root delayDuration={400}>
       <Tooltip.Trigger asChild={asChild}>{children}</Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content hidden={isDisabled} side={side} sideOffset={5}>
