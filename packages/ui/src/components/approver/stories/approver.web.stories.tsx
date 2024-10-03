@@ -1,7 +1,7 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Meta, StoryObj } from '@storybook/react';
 import { Box, Circle, Flex } from 'leather-styles/jsx';
-import { BasicTooltip, InfoCircleIcon } from 'src/exports.web';
+import { BasicTooltip, QuestionCircleIcon } from 'src/exports.web';
 
 import { ZapIcon } from '../../../icons/zap-icon.web';
 import { Button } from '../../button/button.web';
@@ -111,7 +111,7 @@ export const Pending: Story = {
           info={
             <BasicTooltip label="Greetings, traveler">
               <Box p="space.02">
-                <InfoCircleIcon color="ink.text-subdued" variant="small" />
+                <QuestionCircleIcon color="ink.text-subdued" variant="small" />
               </Box>
             </BasicTooltip>
           }

@@ -27,12 +27,13 @@ export function ApproverHeader({ title, info, onPressRequestedByLink }: Approver
       pos="relative"
     >
       <ApproverHeaderAnimation>
-        <styled.h1 textStyle="heading.03" mr={info ? 'space.06' : ''}>
+        <styled.h1 textStyle="heading.03" mr={info ? 'space.06' : undefined}>
           {title}
         </styled.h1>
       </ApproverHeaderAnimation>
       <ApproverHeaderAnimation delay={0.04}>
         <Flag
+          spacing="space.01"
           mt="space.02"
           textStyle="label.03"
           align="middle"
@@ -58,7 +59,7 @@ export function ApproverHeader({ title, info, onPressRequestedByLink }: Approver
         </Flag>
       </ApproverHeaderAnimation>
       {info && (
-        <Box pos="absolute" top="space.03" right="space.05" mt="space.01">
+        <Box pos="absolute" top="space.03" right="space.05" mt="space.02">
           {info}
         </Box>
       )}

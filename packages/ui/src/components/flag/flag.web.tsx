@@ -1,6 +1,6 @@
 import { css } from 'leather-styles/css';
 import { Box, Flex, FlexProps } from 'leather-styles/jsx';
-import { SpacingToken } from 'leather-styles/tokens';
+import { SpacingToken, Token, token } from 'leather-styles/tokens';
 
 import type { FlagAlignment } from './flag.shared';
 
@@ -46,9 +46,20 @@ export function Flag({
       className={flagStyles}
       {...props}
     >
-      <Box ml={reverse ? spacing : ''} mr={!reverse ? spacing : ''}>
+      <div
+        // Ugly code, however this deals with the nature of Panda being unable
+        // to infer the token to use from its static analysis, given that
+        // `spacing` maps to either `mr` or `ml` depending on the `reverse` prop
+        className={css({
+          mr: reverse ? undefined : 'var(--flag-spacing)',
+          ml: reverse ? 'var(--flag-spacing)' : undefined,
+        })}
+        style={
+          { '--flag-spacing': token.var(('spacing.' + spacing) as Token) } as React.CSSProperties
+        }
+      >
         {img}
-      </Box>
+      </div>
       <Box flex={1}>{children}</Box>
     </Flex>
   );
