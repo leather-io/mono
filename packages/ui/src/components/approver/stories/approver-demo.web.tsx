@@ -16,7 +16,7 @@ export function ApproverDemo() {
       <Approver requester="https://gamma.io">
         <Approver.Header
           title="Some prompt that breks onto two lines"
-          iconTooltip={
+          info={
             <TooltipProvider delayDuration={300}>
               <BasicTooltip label="Some tooltip">
                 <InfoCircleIcon color="ink.action-primary-default" variant="small" />
