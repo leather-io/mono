@@ -13,8 +13,8 @@ export function AddAccountCard({ onPress }: AddAccountCardProps) {
     <AccountCardLayout
       onPress={onPress}
       Icon={PlusIcon}
-      label={t`Add account`}
-      caption={t`All accounts in one`}
+      label={t({ id: 'add_account_card.title', message: 'Add account' })}
+      caption={t({ id: 'add_account_card.caption', message: 'All accounts in one' })}
     />
   );
 }

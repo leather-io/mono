@@ -16,7 +16,7 @@ export function LedgerBadge() {
       top={theme.spacing[5]}
     >
       <Text variant="label03" color="ink.text-subdued">
-        {t`Ledger`}
+        {t({ id: 'ledger', message: 'Ledger' })}
       </Text>
     </Box>
   );

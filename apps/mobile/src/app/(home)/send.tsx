@@ -6,7 +6,12 @@ import { Text } from '@leather.io/ui/native';
 export default function SendScreen() {
   return (
     <HeaderAvoidingContainer justifyContent="center" alignItems="center">
-      <Text>{t`Send`}</Text>
+      <Text>
+        {t({
+          id: 'send.header_title',
+          message: 'Send',
+        })}
+      </Text>
     </HeaderAvoidingContainer>
   );
 }

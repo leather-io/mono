@@ -16,10 +16,10 @@ export function AccountNameSheet({ sheetRef, name, setName }: AccountNameSheetPr
     <InputSheet
       sheetRef={sheetRef}
       initialValue={name}
-      title={t`Account label`}
+      title={t({ id: 'account_name.header_title', message: 'Account label' })}
       TitleIcon={PassportIcon}
-      placeholder={t`Name`}
-      submitTitle={t`Save`}
+      placeholder={t({ id: 'account_name.input_placeholder', message: 'Name' })}
+      submitTitle={t({ id: 'account_name.button', message: 'Save' })}
       onSubmit={newName => {
         sheetRef.current?.close();
         setName(newName);

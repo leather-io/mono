@@ -32,7 +32,7 @@ export function HardwareWalletListLayout({ children }: HasChildren) {
             <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
           <Box>
-            <Trans>
+            <Trans id="hardware_wallets.title">
               <Text variant="heading03">CONNECT</Text>
               <Text variant="heading03">HARDWARE DEVICE</Text>
             </Trans>

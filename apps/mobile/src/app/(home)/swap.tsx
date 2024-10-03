@@ -6,7 +6,12 @@ import { Text } from '@leather.io/ui/native';
 export default function SwapScreen() {
   return (
     <HeaderAvoidingContainer justifyContent="center" alignItems="center">
-      <Text>{t`Swap 🔄`}</Text>
+      <Text>
+        {t({
+          id: 'swap.header_title',
+          message: 'Swap',
+        })}
+      </Text>
     </HeaderAvoidingContainer>
   );
 }

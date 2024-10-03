@@ -21,7 +21,17 @@ function showChain(chain: string) {
 
 export function TokensWidget({ tokens, totalBalance }: TokensWidgetProps) {
   return (
-    <Widget header={<WidgetHeader title={t`My tokens`} totalBalance={totalBalance} />}>
+    <Widget
+      header={
+        <WidgetHeader
+          title={t({
+            id: 'tokens.header_title',
+            message: 'My tokens',
+          })}
+          totalBalance={totalBalance}
+        />
+      }
+    >
       {tokens.map(
         ({
           availableBalance: { availableBalance },

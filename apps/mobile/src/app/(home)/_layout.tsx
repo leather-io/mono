@@ -44,7 +44,12 @@ export default function StackLayout() {
     />
   );
 
-  function NavigationSettings(title: string = t`Settings`) {
+  function NavigationSettings(
+    title: string = t({
+      id: 'settings.header_title',
+      message: 'Settings',
+    })
+  ) {
     return (
       <SimpleHeader
         insets={insets}
@@ -54,7 +59,12 @@ export default function StackLayout() {
     );
   }
 
-  function WalletNavigationSettings(title: string = t`Settings`) {
+  function WalletNavigationSettings(
+    title: string = t({
+      id: 'settings.header_title',
+      message: 'Settings',
+    })
+  ) {
     return (
       <SimpleHeader
         insets={insets}
@@ -76,7 +86,10 @@ export default function StackLayout() {
               borderRadius="xs"
             >
               <Text variant="label03" color="ink.text-subdued">
-                {t`Testnet`}
+                {t({
+                  id: 'settings.header_network',
+                  message: 'Testnet',
+                })}
               </Text>
             </Box>
           </TouchableOpacity>
@@ -89,7 +102,14 @@ export default function StackLayout() {
     <SimpleHeader
       insets={insets}
       left={<BackButtonHeader onPress={() => router.back()} testID={TestId.backButton} />}
-      center={<TitleHeader title={t`Developer tools`} />}
+      center={
+        <TitleHeader
+          title={t({
+            id: 'developer_console.header_title',
+            message: 'Developer tools',
+          })}
+        />
+      }
     />
   );
 
@@ -113,20 +133,52 @@ export default function StackLayout() {
       <Stack.Screen name="settings/index" options={{ header: () => NavigationSettings() }} />
       <Stack.Screen
         name="settings/display/index"
-        options={{ header: () => NavigationSettings(t`Display`) }}
+        options={{
+          header: () =>
+            NavigationSettings(
+              t({
+                id: 'display.header_title',
+                message: 'Display',
+              })
+            ),
+        }}
       />
       <Stack.Screen
         name="settings/security/index"
-        options={{ header: () => NavigationSettings(t`Security`) }}
+        options={{
+          header: () =>
+            NavigationSettings(
+              t({
+                id: 'security.header_title',
+                message: 'Security',
+              })
+            ),
+        }}
       />
       <Stack.Screen
         name="settings/networks/index"
-        options={{ header: () => NavigationSettings(t`Networks`) }}
+        options={{
+          header: () =>
+            NavigationSettings(
+              t({
+                id: 'networks.header_title',
+                message: 'Networks',
+              })
+            ),
+        }}
       />
       <Stack.Screen name="settings/notifications" options={{ headerShown: false }} />
       <Stack.Screen
         name="settings/help/index"
-        options={{ header: () => NavigationSettings(t`Help`) }}
+        options={{
+          header: () =>
+            NavigationSettings(
+              t({
+                id: 'help.header_title',
+                message: 'Help',
+              })
+            ),
+        }}
       />
       <Stack.Screen
         name="settings/wallet/index"

@@ -78,7 +78,10 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           <Box px="5" gap="6">
             <Text variant="heading05">{wallet.name}</Text>
             <Cell.Root
-              title={t`View Secret Key`}
+              title={t({
+                id: 'configure_wallet.view_key.cell_title',
+                message: 'View Secret Key',
+              })}
               icon={<Eye1ClosedIcon />}
               onPress={() => {
                 router.navigate({
@@ -91,7 +94,10 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               <Cell.Chevron />
             </Cell.Root>
             <Cell.Root
-              title={t`Rename wallet`}
+              title={t({
+                id: 'configure_wallet.rename_wallet.cell_title',
+                message: 'Rename wallet',
+              })}
               icon={<SquareLinesBottomIcon />}
               onPress={() => {
                 walletNameSheetRef.current?.present();
@@ -101,7 +107,10 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               <Cell.Chevron />
             </Cell.Root>
             <Cell.Root
-              title={t`Remove wallet`}
+              title={t({
+                id: 'configure_wallet.remove_wallet.cell_title',
+                message: 'Remove wallet',
+              })}
               icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
               onPress={() => {
                 removeWalletSheetRef.current?.present();
@@ -111,35 +120,53 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               <Cell.Chevron />
             </Cell.Root>
             <Accordion
-              label={t`Advanced options`}
+              label={t({
+                id: 'configure_wallet.accordion_label',
+                message: 'Advanced options',
+              })}
               content={
                 <>
                   <Cell.Root
-                    title={t`Address reuse`}
+                    title={t({
+                      id: 'configure_wallet.address_reuse.cell_title',
+                      message: 'Address reuse',
+                    })}
                     icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t`Address scan range`}
+                    title={t({
+                      id: 'configure_wallet.address_scan_range.cell_title',
+                      message: 'Address scan range',
+                    })}
                     icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t`Address types`}
+                    title={t({
+                      id: 'configure_wallet.address_types.cell_title',
+                      message: 'Address types',
+                    })}
                     icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t`Export xPub`}
+                    title={t({
+                      id: 'configure_wallet.export_xpub.cell_title',
+                      message: 'Export xPub',
+                    })}
                     icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t`Export key`}
+                    title={t({
+                      id: 'configure_wallet.export_key.cell_title',
+                      message: 'Export key',
+                    })}
                     icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
                   >
                     <Cell.Chevron />
@@ -152,7 +179,12 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
         <Box mb="7">
           <Divider />
           <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }}>
-            <Text variant="caption01">{t`Creation date`}</Text>
+            <Text variant="caption01">
+              {t({
+                id: 'configure_wallet.creation_label',
+                message: 'Creation date',
+              })}
+            </Text>
             <Text variant="caption01" color="ink.text-subdued">
               {dayjs(wallet.createdOn).format('D MMM YYYY')}
             </Text>

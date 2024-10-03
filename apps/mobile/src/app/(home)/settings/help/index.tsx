@@ -28,8 +28,14 @@ export default function SettingsHelpScreen() {
         }}
       >
         <Cell.Root
-          title={t`Support and feedback`}
-          caption={t`Placeholder`}
+          title={t({
+            id: 'help.support.cell_title',
+            message: 'Support and feedback',
+          })}
+          caption={t({
+            id: 'help.support.cell_caption',
+            message: 'Placeholder',
+          })}
           icon={<SupportIcon />}
           onPress={() => {}}
         >
@@ -37,8 +43,14 @@ export default function SettingsHelpScreen() {
         </Cell.Root>
 
         <Cell.Root
-          title={t`Guides`}
-          caption={t`Placeholder`}
+          title={t({
+            id: 'help.guides.cell_title',
+            message: 'Guides',
+          })}
+          caption={t({
+            id: 'help.guides.cell_caption',
+            message: 'Placeholder',
+          })}
           icon={<MagicBookIcon />}
           onPress={() => {}}
         >
@@ -46,8 +58,14 @@ export default function SettingsHelpScreen() {
         </Cell.Root>
 
         <Cell.Root
-          title={t`Learn`}
-          caption={t`Placeholder`}
+          title={t({
+            id: 'help.learn.cell_title',
+            message: 'Learn',
+          })}
+          caption={t({
+            id: 'help.learn.cell_caption',
+            message: 'Placeholder',
+          })}
           icon={<GraduateCapIcon />}
           onPress={() => {}}
         >

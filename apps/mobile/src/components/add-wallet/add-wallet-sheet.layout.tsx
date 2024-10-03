@@ -56,9 +56,11 @@ export function AddWalletSheetLayout({
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
   const router = useRouter();
+
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
   }
+
   const animatedStyle = useAnimatedStyle(() => ({
     marginTop: interpolate(animatedIndex.value, [-1, 0], [-200, 0], Extrapolation.CLAMP),
     marginBottom: interpolate(animatedIndex.value, [-1, 0], [200, 0], Extrapolation.CLAMP),
@@ -81,33 +83,57 @@ export function AddWalletSheetLayout({
         </Box>
         <Box p="5">
           <Text pb="5" variant="heading03">
-            {t`Add wallet`}
+            {t({
+              id: 'add_wallet.header_title',
+              message: 'Add wallet',
+            })}
           </Text>
           <Box flexDirection="column" gap="1">
             <AddWalletCell
               onPress={createWallet}
-              title={t`Create new wallet`}
-              subtitle={t`Create a new Bitcoin and Stacks wallet`}
+              title={t({
+                id: 'add_wallet.create_wallet.cell_title',
+                message: 'Create new wallet',
+              })}
+              caption={t({
+                id: 'add_wallet.create_wallet.cell_caption',
+                message: 'Create a new Bitcoin and Stacks wallet',
+              })}
               testID={TestId.createNewWalletSheetButton}
               icon={<PlusIcon />}
             />
             <AddWalletCell
               onPress={restoreWallet}
-              title={t`Restore wallet`}
-              subtitle={t`Import existing accounts`}
+              title={t({
+                id: 'add_wallet.restore_wallet.cell_title',
+                message: 'Restore wallet',
+              })}
+              caption={t({
+                id: 'add_wallet.restore_wallet.cell_caption',
+                message: 'Import existing accounts',
+              })}
               testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
             />
             <AddWalletCell
               onPress={openOptions}
-              title={t`More options`}
+              title={t({
+                id: 'add_wallet.options.cell_title',
+                message: 'More options',
+              })}
               icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
             />
             {moreOptionsVisible && (
               <>
                 <AddWalletCell
-                  title={t`Connect hardware wallet`}
-                  subtitle={t`Ledger, Trezor, Ryder and more`}
+                  title={t({
+                    id: 'add_wallet.connect_wallet.cell_title',
+                    message: 'Connect hardware wallet',
+                  })}
+                  caption={t({
+                    id: 'add_wallet.connect_wallet.cell_caption',
+                    message: 'Ledger, Trezor, Ryder and more',
+                  })}
                   icon={<SignalIcon color={theme.colors['ink.text-subdued']} />}
                   onPress={() => {
                     router.navigate(AppRoutes.HardwareWallets);
@@ -115,16 +141,33 @@ export function AddWalletSheetLayout({
                   }}
                 />
                 <AddWalletCell
-                  title={t`Create or restore via email`}
-                  subtitle={t`Access custodial wallet`}
+                  title={t({
+                    id: 'add_wallet.email_wallet.cell_title',
+                    message: 'Create or restore via email',
+                  })}
+                  caption={t({
+                    id: 'add_wallet.email_wallet.cell_caption',
+                    message: 'Access custodial wallet',
+                  })}
                   icon={<EmailIcon color={theme.colors['ink.text-subdued']} />}
                   onPress={() => {
-                    onOpenSheet({ title: t`Create or restore via email` });
+                    onOpenSheet({
+                      title: t({
+                        id: 'email_wallet.header_title',
+                        message: 'Create or restore via email',
+                      }),
+                    });
                   }}
                 />
                 <AddWalletCell
-                  title={t`Connect MPC wallet`}
-                  subtitle={t`Import existing accounts`}
+                  title={t({
+                    id: 'add_wallet.mpc_wallet.cell_title',
+                    message: 'Connect MPC wallet',
+                  })}
+                  caption={t({
+                    id: 'add_wallet.mpc_wallet.cell_caption',
+                    message: 'Import existing accounts',
+                  })}
                   icon={<PaletteIcon color={theme.colors['ink.text-subdued']} />}
                   onPress={() => {
                     router.navigate(AppRoutes.MpcWallets);
@@ -132,11 +175,22 @@ export function AddWalletSheetLayout({
                   }}
                 />
                 <AddWalletCell
-                  title={t`Create watch-only wallet`}
-                  subtitle={t`No key needed`}
+                  title={t({
+                    id: 'add_wallet.watch_only_wallet.cell_title',
+                    message: 'Create watch-only wallet',
+                  })}
+                  caption={t({
+                    id: 'add_wallet.watch_only_wallet.cell_caption',
+                    message: 'No key needed',
+                  })}
                   icon={<Eye2Icon color={theme.colors['ink.text-subdued']} />}
                   onPress={() => {
-                    onOpenSheet({ title: t`Create watch-only wallet` });
+                    onOpenSheet({
+                      title: t({
+                        id: 'notify_user.watch_only_wallet.header_title',
+                        message: 'Create watch-only wallet',
+                      }),
+                    });
                   }}
                 />
               </>

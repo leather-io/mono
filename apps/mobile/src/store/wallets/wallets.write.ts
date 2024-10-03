@@ -33,7 +33,10 @@ function addWalletDefaults({
 }): WalletStore {
   const updatedWallet = produce(wallet, draftWallet => {
     if (!draftWallet.name) {
-      draftWallet.name = t`Wallet ${walletIdx}`;
+      draftWallet.name = t({
+        id: 'wallet.default.name',
+        message: `Wallet ${walletIdx}`,
+      });
     }
     return draftWallet;
   });

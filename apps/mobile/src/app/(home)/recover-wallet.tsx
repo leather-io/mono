@@ -30,7 +30,10 @@ import {
 
 function constructErrorMessage(invalidWords: string[]) {
   const joinedInvalidWords = invalidWords.join(', ');
-  return t`Invalid words: ${joinedInvalidWords}`;
+  return t({
+    id: 'recover_wallet.validation_error',
+    message: `Invalid words: ${joinedInvalidWords}`,
+  });
 }
 
 function getInvalidMnemonicWords(recoveryMnemonic: string) {
@@ -122,12 +125,17 @@ export default function RecoverWallet() {
               <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
             <Box>
-              <Trans>
+              <Trans id="recover_wallet.title">
                 <Text variant="heading03">ENTER YOUR</Text>
                 <Text variant="heading03">SECRET KEY</Text>
               </Trans>
             </Box>
-            <Text variant="label01">{t`Paste or type a Secret Key to add its associated wallet.`}</Text>
+            <Text variant="label01">
+              {t({
+                id: 'recover_wallet.subtitle',
+                message: 'Paste or type a Secret Key to add its associated wallet.',
+              })}
+            </Text>
           </Box>
           <Box mb="3">
             {!hidePasteButton && (
@@ -135,7 +143,10 @@ export default function RecoverWallet() {
                 onPress={pasteFromClipboard}
                 style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 100 }}
                 buttonState="default"
-                title={t`Paste`}
+                title={t({
+                  id: 'recover_wallet.paste_button',
+                  message: 'Paste',
+                })}
                 icon={<NoteEmptyIcon color={theme.colors['ink.background-primary']} />}
               />
             )}
@@ -147,7 +158,10 @@ export default function RecoverWallet() {
               value={recoveryMnemonic}
               errorMessage={errorMessage}
               onChangeText={onChangeText}
-              placeholder={t`Type your recovery phrase`}
+              placeholder={t({
+                id: 'recover_wallet.input_placeholder',
+                message: 'Type your recovery phrase',
+              })}
               inputState={inputState}
               height={220}
               multiline
@@ -164,7 +178,12 @@ export default function RecoverWallet() {
             flexDirection="row"
             justifyContent="space-between"
           >
-            <Text variant="label02">{t`Advanced options`}</Text>
+            <Text variant="label02">
+              {t({
+                id: 'recover_wallet.accordion_label',
+                message: 'Advanced options',
+              })}
+            </Text>
             {showAdvancedOptions ? (
               <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
             ) : (
@@ -187,9 +206,22 @@ export default function RecoverWallet() {
                   <LockIcon color={theme.colors['ink.text-primary']} />
                 </Box>
                 <Box flexDirection="column">
-                  <Text variant="label02">{t`BIP39 passphrase`}</Text>
+                  <Text variant="label02">
+                    {t({
+                      id: 'recover_wallet.passphrase_label',
+                      message: 'BIP39 passphrase',
+                    })}
+                  </Text>
                   <Text color="ink.text-subdued" variant="label03">
-                    {passphrase ? t`Enabled` : t`Disabled`}
+                    {passphrase
+                      ? t({
+                          id: 'recover_wallet.passphrase_enabled',
+                          message: 'Enabled',
+                        })
+                      : t({
+                          id: 'recover_wallet.passphrase_disabled',
+                          message: 'Disabled',
+                        })}
                   </Text>
                 </Box>
               </Box>
@@ -202,7 +234,10 @@ export default function RecoverWallet() {
           onPress={onSubmit}
           disabled={isButtonDisabled}
           buttonState={isButtonDisabled ? 'disabled' : 'default'}
-          title={t`Continue`}
+          title={t({
+            id: 'recover_wallet.button',
+            message: 'Continue',
+          })}
           testID={TestId.restoreWalletContinue}
         />
       </Box>

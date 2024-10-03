@@ -23,19 +23,52 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
           settings.changeSecurityLevelPreference(
             settings.securityLevelPreference === 'secure' ? 'insecure' : 'secure'
           );
-          displayToast({ title: t`App authorization updated`, type: 'success' });
+          displayToast({
+            title: t({
+              id: 'app_auth.toast_title_success',
+              message: 'App authorization updated',
+            }),
+            type: 'success',
+          });
           return;
         }
-        displayToast({ title: t`Failed to authenticate`, type: 'error' });
+        displayToast({
+          title: t({
+            id: 'app_auth.toast_title_error',
+            message: 'Failed to authenticate',
+          }),
+          type: 'error',
+        });
       })
-      .catch(() => displayToast({ title: t`Error trying to authenticate`, type: 'error' }));
+      .catch(() =>
+        displayToast({
+          title: t({
+            id: 'app_auth.toast_title_error',
+            message: 'Failed to authenticate',
+          }),
+          type: 'error',
+        })
+      );
   }
 
   return (
-    <SettingsSheetLayout icon={<KeyholeIcon />} sheetRef={sheetRef} title={t`App authentication`}>
+    <SettingsSheetLayout
+      icon={<KeyholeIcon />}
+      sheetRef={sheetRef}
+      title={t({
+        id: 'app_auth.header_title',
+        message: 'App authentication',
+      })}
+    >
       <Cell.Root
-        title={t`Allow authentication`}
-        caption={t`Description`}
+        title={t({
+          id: 'app_auth.cell_title',
+          message: 'Allow authentication',
+        })}
+        caption={t({
+          id: 'app_auth.cell_caption',
+          message: 'Placeholder',
+        })}
         onPress={() => onUpdateAppAuth()}
       >
         <Cell.Switch

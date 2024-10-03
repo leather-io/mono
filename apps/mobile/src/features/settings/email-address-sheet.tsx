@@ -24,19 +24,43 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
       emailAddressSchema.parse(address);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        displayToast({ title: t`Invalid email address`, type: 'error' });
+        displayToast({
+          title: t({
+            id: 'email_address.toast_title_error',
+            message: 'Invalid email address',
+          }),
+          type: 'error',
+        });
         return;
       }
     }
 
     settings.changeEmailAddressPreference(address);
     sheetRef.current?.close();
-    displayToast({ title: t`Submitted, check your email`, type: 'success' });
+    displayToast({
+      title: t({
+        id: 'email_address.toast_title_success',
+        message: 'Submitted, check your email',
+      }),
+      type: 'success',
+    });
   }
 
   return (
-    <SettingsSheetLayout icon={<EmailIcon />} sheetRef={sheetRef} title={t`Email address`}>
-      <Text>{t`Provide an email address for receiving notifications`}</Text>
+    <SettingsSheetLayout
+      icon={<EmailIcon />}
+      sheetRef={sheetRef}
+      title={t({
+        id: 'email_address.header_title',
+        message: 'Email address',
+      })}
+    >
+      <Text>
+        {t({
+          id: 'email_address.subtitle',
+          message: 'Provide an email address for receiving notifications',
+        })}
+      </Text>
       <TextInput
         autoCapitalize="none"
         autoComplete="off"
@@ -44,14 +68,20 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
         autoFocus
         inputState="focused"
         onChangeText={text => setEmailAddress(text)}
-        placeholder={t`Email address`}
+        placeholder={t({
+          id: 'email_address.input_placeholder',
+          message: 'Email address',
+        })}
         TextInputComponent={UIBottomSheetTextInput}
         value={emailAddress}
       />
       <Button
         buttonState="default"
         onPress={() => onSaveEmailAddress(emailAddress)}
-        title={t`Save`}
+        title={t({
+          id: 'email_address.save_button',
+          message: 'Save',
+        })}
       />
     </SettingsSheetLayout>
   );

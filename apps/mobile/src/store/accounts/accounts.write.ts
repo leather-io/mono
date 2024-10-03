@@ -34,7 +34,10 @@ function addAccountDefaults({
       draftAccount.icon = 'sparkles';
     }
     if (!draftAccount.name) {
-      draftAccount.name = t`Account ${accountIdx}`;
+      draftAccount.name = t({
+        id: 'account.default.name',
+        message: `Account ${accountIdx}`,
+      });
     }
     if (!draftAccount.status) {
       draftAccount.status = 'active';

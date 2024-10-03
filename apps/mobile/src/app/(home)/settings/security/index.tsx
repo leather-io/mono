@@ -18,8 +18,21 @@ export default function SettingsSecurityScreen() {
     <>
       <SettingsScreenLayout>
         <Cell.Root
-          title={t`Analytics`}
-          caption={settings.analyticsPreference === 'consent-given' ? t`Enabled` : t`Disabled`}
+          title={t({
+            id: 'security.analytics.cell_title',
+            message: 'Analytics',
+          })}
+          caption={
+            settings.analyticsPreference === 'consent-given'
+              ? t({
+                  id: 'security.analytics.cell_caption_enabled',
+                  message: 'Enabled',
+                })
+              : t({
+                  id: 'security.analytics.cell_caption_disabled',
+                  message: 'Disabled',
+                })
+          }
           icon={<CookieIcon />}
           onPress={() => {
             analyticsSheetRef.current?.present();
@@ -28,8 +41,21 @@ export default function SettingsSecurityScreen() {
           <Cell.Chevron />
         </Cell.Root>
         <Cell.Root
-          title={t`App authentication`}
-          caption={settings.securityLevelPreference === 'secure' ? t`Enabled` : t`Disabled`}
+          title={t({
+            id: 'security.app_auth.cell_title',
+            message: 'App authentication',
+          })}
+          caption={
+            settings.securityLevelPreference === 'secure'
+              ? t({
+                  id: 'security.app_auth.cell_caption_enabled',
+                  message: 'Enabled',
+                })
+              : t({
+                  id: 'security.app_auth.cell_caption_disabled',
+                  message: 'Disabled',
+                })
+          }
           icon={<KeyholeIcon />}
           onPress={() => {
             appAuthenticationSheetRef.current?.present();

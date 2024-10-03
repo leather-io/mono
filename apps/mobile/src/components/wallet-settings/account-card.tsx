@@ -42,7 +42,7 @@ export function AccountCard({
         <Box>
           <Text variant="label01">$1231</Text>
           <Text variant="caption01" color="ink.text-subdued">
-            {t`Address`}
+            {t`Placeholder for address`}
           </Text>
         </Box>
       </Box>

@@ -55,19 +55,31 @@ export function AddAccountSheetLayout({
       <AnimatedBox style={animatedStyle}>
         <Box p="5">
           <Text pb="5" variant="heading05">
-            {t`Add account`}
+            {t({ id: 'add_account.header_title', message: 'Add account' })}
           </Text>
           <Box flexDirection="column" gap="1">
             <AddWalletCell
               onPress={addToWallet}
-              title={t`Add to existing wallet`}
-              subtitle={t`Choose existing leather wallet`}
+              title={t({
+                id: 'add_account.existing_wallet.cell_title',
+                message: 'Add to existing wallet',
+              })}
+              caption={t({
+                id: 'add_account.existing_wallet.cell_caption',
+                message: 'Choose existing leather wallet',
+              })}
               icon={<WalletPlusIcon />}
             />
             <AddWalletCell
               onPress={addToNewWallet}
-              title={t`Add to new wallet`}
-              subtitle={t`Create new wallet`}
+              title={t({
+                id: 'add_account.new_wallet.cell_title',
+                message: 'Add to new wallet',
+              })}
+              caption={t({
+                id: 'add_account.new_wallet.cell_caption',
+                message: 'Create new wallet',
+              })}
               icon={<PlusIcon />}
             />
           </Box>

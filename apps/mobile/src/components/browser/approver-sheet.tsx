@@ -60,7 +60,14 @@ export function ApproverSheet(props: ApproverSheetProps) {
   return (
     <Sheet ref={approverSheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5">
-        <Button title={t`Submit`} buttonState="default" onPress={approve} />
+        <Button
+          title={t({
+            id: 'approver.button',
+            message: 'Submit',
+          })}
+          buttonState="default"
+          onPress={approve}
+        />
       </Box>
     </Sheet>
   );

@@ -12,6 +12,7 @@ export function useCreateWallet() {
   const toastContext = useToastContext();
   const keyStore = useKeyStore();
   const { changeSecurityLevelPreference, securityLevelPreference } = useSettings();
+
   async function createWallet({ biometrics }: { biometrics: boolean }) {
     changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
@@ -24,15 +25,33 @@ export function useCreateWallet() {
           biometrics,
           passphrase: passphrase ?? undefined,
         });
-        toastContext.displayToast({ type: 'success', title: t`Wallet added successfully` });
+        toastContext.displayToast({
+          type: 'success',
+          title: t({
+            id: 'create_wallet.toast_title_success',
+            message: 'Wallet added successfully',
+          }),
+        });
         router.navigate(AppRoutes.Home);
       } catch (e) {
         if (keychainErrorHandlers.isKeyExistsError(e)) {
-          toastContext.displayToast({ type: 'info', title: t`Wallet already exists` });
+          toastContext.displayToast({
+            type: 'error',
+            title: t({
+              id: 'create_wallet.wallet_exists.toast_title_error',
+              message: 'Wallet already exists',
+            }),
+          });
           router.back();
           return;
         }
-        toastContext.displayToast({ type: 'info', title: t`Something went wrong` });
+        toastContext.displayToast({
+          type: 'error',
+          title: t({
+            id: 'create_wallet.toast_title_error',
+            message: 'Something went wrong',
+          }),
+        });
         router.back();
       }
     }

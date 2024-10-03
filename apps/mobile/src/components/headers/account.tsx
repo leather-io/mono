@@ -2,6 +2,7 @@ import { t } from '@lingui/macro';
 
 import { Box, EmojiSmileIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
+// TODO: Remove? This seems unused now?
 export function AccountsHeader({ onPress }: { onPress?(): void }) {
   return (
     <TouchableOpacity onPress={onPress} p="3" flexDirection="row" alignItems="center" gap="2">

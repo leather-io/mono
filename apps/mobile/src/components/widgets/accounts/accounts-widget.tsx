@@ -9,6 +9,7 @@ import { TestId } from '@/shared/test-id';
 import { AccountStore } from '@/store/accounts/accounts.write';
 import { WalletStore } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { useRouter } from 'expo-router';
 
 import { Box, SheetRef } from '@leather.io/ui/native';
@@ -29,6 +30,7 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
   const sheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
+  const { i18n } = useLingui();
 
   const router = useRouter();
 
@@ -44,7 +46,10 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
         header={
           <Box marginHorizontal="5">
             <WidgetHeader
-              title={t`My accounts`}
+              title={t({
+                id: 'accounts.header_title',
+                message: 'My accounts',
+              })}
               sheetRef={sheetRef}
               sheet={<AccountSelectorSheet sheetRef={sheetRef} />}
             />
@@ -58,7 +63,11 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
             Icon={getAvatarIcon(account.icon)}
             key={account.id}
             label={<Balance balance={account.balance} />}
-            caption={account.name || ''}
+            caption={i18n._({
+              id: 'accounts.account.cell_caption',
+              message: '{name}',
+              values: { name: account.name || '' },
+            })}
             testID={TestId.homeAccountCard}
             onPress={() => {
               router.navigate({

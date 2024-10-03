@@ -62,7 +62,12 @@ export function TextInput({
   textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;
 }) {
-  const _errorMessage = errorMessage ?? t`Something is wrong!`;
+  const _errorMessage =
+    errorMessage ??
+    t({
+      id: 'input.default.error',
+      message: 'Something is wrong!',
+    });
   const theme = useTheme<Theme>();
   const props = useRestyle(composedRestyleFunction, rest);
 

@@ -46,13 +46,16 @@ export default function SecureYourWalletScreen() {
             <QuestionCircleIcon variant="small" />
           </TouchableOpacity>
           <Box>
-            <Trans>
+            <Trans id="secure_your_wallet.title">
               <Text variant="heading03">SECURE</Text>
               <Text variant="heading03">YOUR WALLET</Text>
             </Trans>
           </Box>
           <Text variant="label01">
-            {t`Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`}
+            {t({
+              id: 'secure_your_wallet.caption',
+              message: `Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`,
+            })}
           </Text>
         </Box>
         <Box justifyContent="center" alignItems="center">
@@ -65,14 +68,20 @@ export default function SecureYourWalletScreen() {
             }}
             pb="4"
             buttonState="ghost"
-            title={t`Skip for now`}
+            title={t({
+              id: 'secure_your_wallet.skip_button',
+              message: `Skip for now`,
+            })}
           />
           <Button
             onPress={async () => {
               await createWallet({ biometrics: true });
             }}
             buttonState="default"
-            title={t`Enable device security`}
+            title={t({
+              id: 'secure_your_wallet.security_button',
+              message: `Enable device security`,
+            })}
           />
         </Box>
       </Box>

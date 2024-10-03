@@ -9,8 +9,14 @@ export default function SettingsNotificationsScreen() {
   return (
     <SettingsScreenLayout>
       <Cell.Root
-        title={t`Notification`}
-        caption={t`Description`}
+        title={t({
+          id: 'notifications.push.cell_title',
+          message: 'Notification',
+        })}
+        caption={t({
+          id: 'notifications.push.cell_caption',
+          message: 'Placeholder',
+        })}
         icon={<PlaceholderIcon />}
         onPress={() => {}}
       >

@@ -3,12 +3,12 @@ import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 interface AddWalletCellProps {
   icon?: React.ReactNode;
   title: string;
-  subtitle?: string;
+  caption?: string;
   onPress(): void;
   testID?: string;
 }
 
-export function AddWalletCell({ icon, title, subtitle, onPress, testID }: AddWalletCellProps) {
+export function AddWalletCell({ icon, title, caption, onPress, testID }: AddWalletCellProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -25,9 +25,9 @@ export function AddWalletCell({ icon, title, subtitle, onPress, testID }: AddWal
       )}
       <Box flexDirection="column">
         <Text variant="label02">{title}</Text>
-        {subtitle && (
+        {caption && (
           <Text color="ink.text-subdued" variant="label03">
-            {subtitle}
+            {caption}
           </Text>
         )}
       </Box>

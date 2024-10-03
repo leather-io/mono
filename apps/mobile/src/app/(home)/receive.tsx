@@ -6,7 +6,12 @@ import { Text } from '@leather.io/ui/native';
 export default function ReceiveScreen() {
   return (
     <HeaderAvoidingContainer justifyContent="center" alignItems="center">
-      <Text>{t`Receive 💰`}</Text>
+      <Text>
+        {t({
+          id: 'receive.header_title',
+          message: 'Receive 💰',
+        })}
+      </Text>
     </HeaderAvoidingContainer>
   );
 }

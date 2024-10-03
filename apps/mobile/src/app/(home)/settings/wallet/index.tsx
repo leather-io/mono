@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 
 import { Box, Cell, Eye1ClosedIcon, PlusIcon, SheetRef, Theme } from '@leather.io/ui/native';
 
-export default function SettingsScreen() {
+export default function SettingsWalletScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const router = useRouter();
@@ -38,8 +38,14 @@ export default function SettingsScreen() {
           <Divider />
           <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }} gap="6">
             <Cell.Root
-              title={t`Hidden accounts`}
-              caption={t`${hiddenAccountsLength} hidden accounts`}
+              title={t({
+                id: 'wallet.hidden_accounts.cell_title',
+                message: 'Hidden accounts',
+              })}
+              caption={t({
+                id: 'wallet.hidden_accounts.cell_caption',
+                message: `${hiddenAccountsLength} hidden accounts`,
+              })}
               icon={<Eye1ClosedIcon />}
               onPress={() => {
                 router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
@@ -48,7 +54,10 @@ export default function SettingsScreen() {
               <Cell.Chevron />
             </Cell.Root>
             <Cell.Root
-              title={t`Add wallet`}
+              title={t({
+                id: 'wallet.add_wallet.cell_title',
+                message: 'Add wallet',
+              })}
               icon={<PlusIcon />}
               onPress={() => {
                 addWalletSheetRef.current?.present();

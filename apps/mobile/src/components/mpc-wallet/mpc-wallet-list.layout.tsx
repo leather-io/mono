@@ -32,7 +32,7 @@ export function MpcWalletListLayout({ children }: HasChildren) {
             <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
           <Box>
-            <Trans>
+            <Trans id="mpc_wallets.title">
               <Text variant="heading03">CONNECT</Text>
               <Text variant="heading03">MPC WALLET</Text>
             </Trans>

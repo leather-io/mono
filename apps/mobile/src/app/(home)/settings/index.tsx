@@ -42,8 +42,14 @@ export default function SettingsScreen() {
         <ScrollView>
           <Box paddingHorizontal="5" paddingVertical="5">
             <Cell.Root
-              title={t`Wallets and accounts`}
-              caption={t`Add, configure and remove`}
+              title={t({
+                id: 'settings.wallets.cell_title',
+                message: 'Wallets and accounts',
+              })}
+              caption={t({
+                id: 'settings.wallets.cell_caption',
+                message: 'Add, configure and remove',
+              })}
               icon={<WalletIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsWallet)}
               testID={TestId.settingsWalletAndAccountsButton}
@@ -55,8 +61,14 @@ export default function SettingsScreen() {
           <Box gap="2" paddingHorizontal="5" paddingVertical="5">
             <Cell.Root
               py="2"
-              title={t`Display`}
-              caption={t`Theme, bitcoin unit and more`}
+              title={t({
+                id: 'settings.display.cell_title',
+                message: 'Display',
+              })}
+              caption={t({
+                id: 'settings.display.cell_caption',
+                message: 'Theme, bitcoin unit and more',
+              })}
               icon={<SquareLinesBottomIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsDisplay)}
               testID={TestId.settingsDisplayButton}
@@ -65,8 +77,14 @@ export default function SettingsScreen() {
             </Cell.Root>
             <Cell.Root
               py="2"
-              title={t`Security`}
-              caption={t`Analytics and app authentication`}
+              title={t({
+                id: 'settings.security.cell_title',
+                message: 'Security',
+              })}
+              caption={t({
+                id: 'settings.security.cell_caption',
+                message: 'Analytics and app authentication',
+              })}
               icon={<ShieldIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsSecurity)}
               testID={TestId.settingsSecurityButton}
@@ -75,8 +93,14 @@ export default function SettingsScreen() {
             </Cell.Root>
             <Cell.Root
               py="2"
-              title={t`Networks`}
-              caption={t`Mainnet, testnet or signet`}
+              title={t({
+                id: 'settings.networks.cell_title',
+                message: 'Networks',
+              })}
+              caption={t({
+                id: 'settings.networks.cell_caption',
+                message: 'Mainnet, testnet or signet',
+              })}
               icon={<GlobeTiltedIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
               testID={TestId.settingsNetworkButton}
@@ -86,8 +110,14 @@ export default function SettingsScreen() {
 
             <Cell.Root
               py="2"
-              title={t`Notifications`}
-              caption={t`Push and email notifications`}
+              title={t({
+                id: 'settings.notifications.cell_title',
+                message: 'Notifications',
+              })}
+              caption={t({
+                id: 'settings.notifications.cell_caption',
+                message: 'Push and email notifications',
+              })}
               icon={<BellIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsNotifications)}
               testID={TestId.settingsNotificationsButton}
@@ -97,8 +127,14 @@ export default function SettingsScreen() {
 
             <Cell.Root
               py="2"
-              title={t`Help`}
-              caption={t`Support, guides and articles`}
+              title={t({
+                id: 'settings.help.cell_title',
+                message: 'Help',
+              })}
+              caption={t({
+                id: 'settings.help.cell_caption',
+                message: 'Support, guides and articles',
+              })}
               icon={<SupportIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsHelp)}
               testID={TestId.settingsHelpButton}
@@ -106,13 +142,19 @@ export default function SettingsScreen() {
               <Cell.Chevron />
             </Cell.Root>
             <Accordion
-              label={t`More options`}
+              label={t({
+                id: 'settings.accordion_label',
+                message: 'More options',
+              })}
               testID={TestId.settingsMoreOptionsButton}
               content={
                 <>
                   <Cell.Root
                     py="2"
-                    title={t`Contacts`}
+                    title={t({
+                      id: 'settings.contacts.cell_title',
+                      message: 'Contacts',
+                    })}
                     icon={<UsersTwoIcon />}
                     onPress={() => {
                       contactsSheetRef.current?.present();
@@ -123,7 +165,10 @@ export default function SettingsScreen() {
                   </Cell.Root>
                   <Cell.Root
                     py="2"
-                    title={t`Fees`}
+                    title={t({
+                      id: 'settings.fees.cell_title',
+                      message: 'Fees',
+                    })}
                     icon={<SettingsGearIcon />}
                     onPress={() => {
                       feesSheetRef.current?.present();
@@ -145,7 +190,12 @@ export default function SettingsScreen() {
             }}
           >
             <Box pt="5" pb="5">
-              <Text variant="label01">{t`Version`}</Text>
+              <Text variant="label01">
+                {t({
+                  id: 'settings.version_label',
+                  message: 'Version',
+                })}
+              </Text>
               <Text variant="caption01" color="ink.text-subdued">
                 {Application.nativeApplicationVersion}
               </Text>
@@ -156,14 +206,33 @@ export default function SettingsScreen() {
             <Button
               onPress={() => {}}
               buttonState="outline"
-              title={t`Lock app`}
+              title={t({
+                id: 'settings.lock_button',
+                message: 'Lock app',
+              })}
               testID={TestId.settingsLockAppButton}
             />
           </Box>
         </ScrollView>
       </Box>
-      <NotifyUserSheet sheetData={{ title: t`Contacts` }} sheetRef={contactsSheetRef} />
-      <NotifyUserSheet sheetData={{ title: t`Custom fees` }} sheetRef={feesSheetRef} />
+      <NotifyUserSheet
+        sheetData={{
+          title: t({
+            id: 'contacts.header_title',
+            message: 'Contacts',
+          }),
+        }}
+        sheetRef={contactsSheetRef}
+      />
+      <NotifyUserSheet
+        sheetData={{
+          title: t({
+            id: 'fees.header_title',
+            message: 'Custom fees',
+          }),
+        }}
+        sheetRef={feesSheetRef}
+      />
     </>
   );
 }

@@ -38,7 +38,13 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
     const payload = { fingerprint, accountIndex, icon };
     dispatch(userUpdatesAccountIcon(payload));
     router.back();
-    displayToast({ type: 'success', title: t`Account label updated` });
+    displayToast({
+      type: 'success',
+      title: t({
+        id: 'choose_avatar.toast_title',
+        message: 'Account label updated',
+      }),
+    });
   }
 
   function onSubmit() {
@@ -57,10 +63,25 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
         }}
       >
         <Box px="5" gap="6">
-          <Text variant="heading03">{t`Choose account avatar`}</Text>
-          <Text variant="heading05">{t`Choose an image`}</Text>
+          <Text variant="heading03">
+            {t({
+              id: 'choose_avatar.title',
+              message: 'Choose account avatar',
+            })}
+          </Text>
+          <Text variant="heading05">
+            {t({
+              id: 'choose_avatar.images.subtitle',
+              message: 'Choose an image',
+            })}
+          </Text>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
-          <Text variant="heading05">{t`Or choose one of your collectibles`}</Text>
+          <Text variant="heading05">
+            {t({
+              id: 'choose_avatar.collectibles.subtitle',
+              message: 'Or choose one of your collectibles',
+            })}
+          </Text>
         </Box>
       </ScrollView>
       <Box
@@ -73,7 +94,10 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
           disabled={isSubmitDisabled}
           onPress={onSubmit}
           buttonState={isSubmitDisabled ? 'disabled' : 'default'}
-          title={t`Confirm`}
+          title={t({
+            id: 'choose_avatar.button',
+            message: 'Confirm',
+          })}
         />
       </Box>
     </Box>
