@@ -157,7 +157,10 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
         <ActionBarButton
           onPress={() => addWalletSheetRef.current?.present()}
           icon={<PlusIcon />}
-          label={t`Add Wallet`}
+          label={t({
+            id: 'action_bar.add_wallet_label',
+            message: 'Add Wallet',
+          })}
           testID={TestId.homeAddWalletButton}
         />
       }
@@ -169,21 +172,30 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
         <ActionBarButton
           onPress={() => router.navigate(AppRoutes.Send)}
           icon={<PaperPlaneIcon />}
-          label={t`Send`}
+          label={t({
+            id: 'action_bar.send_label',
+            message: 'Send',
+          })}
         />
       }
       center={
         <ActionBarButton
           onPress={() => router.navigate(AppRoutes.Receive)}
           icon={<InboxIcon />}
-          label={t`Receive`}
+          label={t({
+            id: 'action_bar.receive_label',
+            message: 'Receive',
+          })}
         />
       }
       right={
         <ActionBarButton
           onPress={() => router.navigate(AppRoutes.Swap)}
           icon={<ArrowsRepeatLeftRightIcon />}
-          label={t`Swap`}
+          label={t({
+            id: 'action_bar.swap_label',
+            message: 'Swap',
+          })}
         />
       }
     />

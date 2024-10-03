@@ -46,9 +46,17 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
           >
             <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
-          <Text variant="heading03">{t`SECRET KEY`}</Text>
+          <Text variant="heading03">
+            {t({
+              id: 'view_secret_key.title',
+              message: 'SECRET KEY',
+            })}
+          </Text>
           <Text variant="label01">
-            {t`Your Secret Key grants you access to your wallet and its assets.`}
+            {t({
+              id: 'view_secret_key.subtitle',
+              message: 'Your Secret Key grants you access to your wallet and its assets.',
+            })}
           </Text>
         </Box>
 
@@ -62,7 +70,10 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
             router.back();
           }}
           buttonState="default"
-          title={t`I've backed it up`}
+          title={t({
+            id: 'view_secret_key.button',
+            message: `I've backed it up`,
+          })}
         />
       </Box>
     </Box>

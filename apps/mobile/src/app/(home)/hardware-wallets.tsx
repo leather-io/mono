@@ -18,12 +18,48 @@ import {
 
 function getUnavailableFeatures() {
   return {
-    bitgo: { title: t`Bitkey`, icon: <LogoHardwareBitkey /> },
-    capsule: { title: t`Ledger`, icon: <LogoHardwareLedger /> },
-    copper: { title: t`OneKey`, icon: <LogoHardwareOnekey /> },
-    fireblocks: { title: t`Passport`, icon: <LogoHardwareFoundation /> },
-    foredefi: { title: t`Ryder`, icon: <LogoHardwareRyder /> },
-    portal: { title: t`Trezor`, icon: <LogoHardwareTrezor /> },
+    bitkey: {
+      title: t({
+        id: 'hardware_wallets.bitkey',
+        message: 'Bitkey',
+      }),
+      icon: <LogoHardwareBitkey />,
+    },
+    capsule: {
+      title: t({
+        id: 'hardware_wallets.ledger',
+        message: 'Ledger',
+      }),
+      icon: <LogoHardwareLedger />,
+    },
+    copper: {
+      title: t({
+        id: 'hardware_wallets.onekey',
+        message: 'OneKey',
+      }),
+      icon: <LogoHardwareOnekey />,
+    },
+    fireblocks: {
+      title: t({
+        id: 'hardware_wallets.passport',
+        message: 'Passport',
+      }),
+      icon: <LogoHardwareFoundation />,
+    },
+    foredefi: {
+      title: t({
+        id: 'hardware_wallets.ryder',
+        message: 'Ryder',
+      }),
+      icon: <LogoHardwareRyder />,
+    },
+    portal: {
+      title: t({
+        id: 'hardware_wallets.trezor',
+        message: 'Trezor',
+      }),
+      icon: <LogoHardwareTrezor />,
+    },
   };
 }
 
@@ -49,7 +85,10 @@ export default function HardwareWalletListScreen() {
             const hardwareWalletName = feature.title;
             function onPress() {
               onOpenSheet({
-                title: t`Connect hardware wallet: ${hardwareWalletName}`,
+                title: t({
+                  id: 'notify_user.hardware_wallets.header_title',
+                  message: `Connect hardware wallet: ${hardwareWalletName}`,
+                }),
               });
             }
             return (

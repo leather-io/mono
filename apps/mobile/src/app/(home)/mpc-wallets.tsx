@@ -20,14 +20,62 @@ import {
 
 function getUnavailableFeatures() {
   return {
-    bitgo: { title: t`BitGo`, icon: <LogoMpcBitgo /> },
-    capsule: { title: t`Capsule`, icon: <LogoMpcCapsule /> },
-    copper: { title: t`Copper`, icon: <LogoMpcCopper /> },
-    fireblocks: { title: t`Fireblocks`, icon: <LogoMpcFireblocks /> },
-    foredefi: { title: t`Foredefi`, icon: <LogoMpcFordefi /> },
-    portal: { title: t`Portal`, icon: <LogoMpcPortal /> },
-    privy: { title: t`Privy`, icon: <LogoMpcPrivy /> },
-    qredo: { title: t`Qredo`, icon: <LogoMpcQredo /> },
+    bitgo: {
+      title: t({
+        id: 'mpc_wallets.bitgo',
+        message: 'BitGo',
+      }),
+      icon: <LogoMpcBitgo />,
+    },
+    capsule: {
+      title: t({
+        id: 'mpc_wallets.capsule',
+        message: 'Capsule',
+      }),
+      icon: <LogoMpcCapsule />,
+    },
+    copper: {
+      title: t({
+        id: 'mpc_wallets.copper',
+        message: 'Copper',
+      }),
+      icon: <LogoMpcCopper />,
+    },
+    fireblocks: {
+      title: t({
+        id: 'mpc_wallets.fireblocks',
+        message: 'Fireblocks',
+      }),
+      icon: <LogoMpcFireblocks />,
+    },
+    foredefi: {
+      title: t({
+        id: 'mpc_wallets.fordefi',
+        message: 'Fordefi',
+      }),
+      icon: <LogoMpcFordefi />,
+    },
+    portal: {
+      title: t({
+        id: 'mpc_wallets.portal',
+        message: 'Portal',
+      }),
+      icon: <LogoMpcPortal />,
+    },
+    privy: {
+      title: t({
+        id: 'mpc_wallets.privy',
+        message: 'Privy',
+      }),
+      icon: <LogoMpcPrivy />,
+    },
+    qredo: {
+      title: t({
+        id: 'mpc_wallets.oredo',
+        message: 'Qredo',
+      }),
+      icon: <LogoMpcQredo />,
+    },
   };
 }
 
@@ -51,11 +99,16 @@ export default function MpcWalletListScreen() {
           {Object.entries(getUnavailableFeatures()).map(featureEntry => {
             const [featureKey, feature] = featureEntry;
             const mpcWalletName = feature.title;
+
             function onPress() {
               onOpenSheet({
-                title: t`Connect Mpc wallet: ${mpcWalletName}`,
+                title: t({
+                  id: 'notify_user.mpc_wallet.header_title',
+                  message: `Connect Mpc wallet: ${mpcWalletName}`,
+                }),
               });
             }
+
             return (
               <Cell.Root
                 py="4"

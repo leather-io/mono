@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-10-08 14:33+0400\n"
+"POT-Creation-Date: 2024-10-09 16:05-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,177 +13,316 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/features/settings/account-identifier/account-identifier-sheet.tsx:40
-msgid "{blockchain} blockchain"
+#. js-lingui-explicit-id
+#: src/features/settings/account-identifier-sheet.tsx:53
+msgid "account_identifier.cell_caption"
 msgstr "{blockchain} blockchain"
 
-#: src/app/(home)/settings/wallet/index.tsx:42
-msgid "{hiddenAccountsLength} hidden accounts"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:87
+msgid "display.conversion_unit.cell_caption"
+msgstr "{currency}"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/index.tsx:45
+msgid "wallet.hidden_accounts.cell_caption"
 msgstr "{hiddenAccountsLength} hidden accounts"
 
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:105
+msgid "display.account_identifier.cell_caption"
+msgstr "{name}"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:76
+msgid "configure_account.name.cell_caption"
+msgstr "{name}"
+
+#. js-lingui-explicit-id
+#: src/components/widgets/accounts/accounts-widget.tsx:66
+msgid "accounts.account.cell_caption"
+msgstr "{name}"
+
+#. js-lingui-explicit-id
+#: src/features/settings/account-identifier-sheet.tsx:48
+msgid "account_identifier.cell_title"
+msgstr "{name}"
+
+#. js-lingui-explicit-id
+#: src/features/settings/bitcoin-unit-sheet.tsx:50
+msgid "bitcoin_unit.cell_caption"
+msgstr "{name}"
+
+#. js-lingui-explicit-id
+#: src/features/settings/conversion-unit-sheet.tsx:45
+msgid "conversion_unit.cell_title"
+msgstr "{name}"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/networks/index.tsx:55
+msgid "networks.cell_title"
+msgstr "{network}"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:69
+msgid "display.bitcoin_unit.cell_caption"
+msgstr "{symbol}"
+
+#. js-lingui-explicit-id
+#: src/features/settings/bitcoin-unit-sheet.tsx:45
+msgid "bitcoin_unit.cell_title"
+msgstr "{symbol}"
+
+#. js-lingui-explicit-id
+#: src/features/settings/conversion-unit-sheet.tsx:50
+msgid "conversion_unit.cell_caption"
+msgstr "{symbol}"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:51
+msgid "display.theme.cell_caption"
+msgstr "{theme}"
+
+#. js-lingui-explicit-id
+#: src/features/settings/theme-sheet.tsx:43
+msgid "theme.cell_title"
+msgstr "{theme}"
+
+#. js-lingui-explicit-id
+#: src/components/sheets/notify-user-sheet.layout.tsx:51
+msgid "notify_user.title"
+msgstr "{title}"
+
+#. js-lingui-explicit-id
 #: src/app/(home)/create-new-wallet.tsx:62
-msgid "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
+msgid "create_new_wallet.title"
 msgstr "<0>BACK UP YOUR</0><1>SECRET KEY</1>"
 
+#. js-lingui-explicit-id
 #: src/components/hardware-wallet/hardware-wallet-list.layout.tsx:35
-msgid "<0>CONNECT</0><1>HARDWARE DEVICE</1>"
+msgid "hardware_wallets.title"
 msgstr "<0>CONNECT</0><1>HARDWARE DEVICE</1>"
 
+#. js-lingui-explicit-id
 #: src/components/mpc-wallet/mpc-wallet-list.layout.tsx:35
-msgid "<0>CONNECT</0><1>MPC WALLET</1>"
+msgid "mpc_wallets.title"
 msgstr "<0>CONNECT</0><1>MPC WALLET</1>"
 
-#: src/app/(home)/recover-wallet.tsx:125
-msgid "<0>ENTER YOUR</0><1>SECRET KEY</1>"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:128
+msgid "recover_wallet.title"
 msgstr "<0>ENTER YOUR</0><1>SECRET KEY</1>"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/secure-your-wallet.tsx:49
-msgid "<0>SECURE</0><1>YOUR WALLET</1>"
+msgid "secure_your_wallet.title"
 msgstr "<0>SECURE</0><1>YOUR WALLET</1>"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:119
-msgid "Access custodial wallet"
+#. js-lingui-explicit-id
+#: src/app/(home)/create-new-wallet.tsx:101
+msgid "create_new_wallet.view_secret_key_label"
+msgstr "<0>Tap to view Secret Key</0><1>For your eyes only</1>"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:148
+msgid "add_wallet.email_wallet.cell_caption"
 msgstr "Access custodial wallet"
 
+#. js-lingui-explicit-id
 #: src/store/accounts/accounts.write.ts:37
-msgid "Account {accountIdx}"
+msgid "account.default.name"
 msgstr "Account {accountIdx}"
 
 #: src/components/wallet-manager/account-list.tsx:23
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
-#: src/components/headers/account.tsx:11
+#: src/components/headers/account.tsx:12
 msgid "Account 1"
 msgstr "Account 1"
 
-#: src/components/wallet-settings/wallet-card.tsx:99
-msgid "Account created"
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/wallet-card.tsx:100
+msgid "wallet.add_account.toast_title"
 msgstr "Account created"
 
-#: src/app/(home)/settings/display/index.tsx:80
-#: src/features/settings/account-identifier/account-identifier-sheet.tsx:32
-msgid "Account identifier"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:101
+msgid "display.account_identifier.cell_title"
 msgstr "Account identifier"
 
-#: src/features/settings/account-identifier/account-identifier-sheet.tsx:25
-msgid "Account identifier updated"
+#. js-lingui-explicit-id
+#: src/features/settings/account-identifier-sheet.tsx:38
+msgid "account_identifier.header_title"
+msgstr "Account identifier"
+
+#. js-lingui-explicit-id
+#: src/features/settings/account-identifier-sheet.tsx:26
+msgid "account_identifier.toast_title"
 msgstr "Account identifier updated"
 
+#. js-lingui-explicit-id
 #: src/components/wallet-settings/account-name-sheet.tsx:19
-msgid "Account label"
+msgid "account_name.header_title"
 msgstr "Account label"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:41
-msgid "Account label updated"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:43
+msgid "choose_avatar.toast_title"
 msgstr "Account label updated"
 
-#: src/components/wallet-settings/wallet-card.tsx:102
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/wallet-card.tsx:108
+msgid "wallet.add_account.button"
+msgstr "Add account"
+
+#. js-lingui-explicit-id
 #: src/components/widgets/accounts/components/cards/add-account-card.tsx:16
+msgid "add_account_card.title"
+msgstr "Add account"
+
+#. js-lingui-explicit-id
 #: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:58
-msgid "Add account"
+msgid "add_account.header_title"
 msgstr "Add account"
 
 #: src/components/wallet-manager/wallets.tsx:38
 msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} 🆕"
 
+#. js-lingui-explicit-id
 #: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:63
-msgid "Add to existing wallet"
+msgid "add_account.existing_wallet.cell_title"
 msgstr "Add to existing wallet"
 
-#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:69
-msgid "Add to new wallet"
+#. js-lingui-explicit-id
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:75
+msgid "add_account.new_wallet.cell_title"
 msgstr "Add to new wallet"
 
-#: src/app/(home)/settings/wallet/index.tsx:51
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:84
-msgid "Add wallet"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/index.tsx:57
+msgid "wallet.add_wallet.cell_title"
 msgstr "Add wallet"
 
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:86
+msgid "add_wallet.header_title"
+msgstr "Add wallet"
+
+#. js-lingui-explicit-id
 #: src/components/action-bar/container.tsx:160
-msgid "Add Wallet"
+msgid "action_bar.add_wallet_label"
 msgstr "Add Wallet"
 
-#: src/app/(home)/settings/index.tsx:46
-msgid "Add, configure and remove"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:49
+msgid "settings.wallets.cell_caption"
 msgstr "Add, configure and remove"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/generating-wallet.tsx:23
-msgid "Adding Wallet"
+msgid "add_wallet_animation.title"
 msgstr "Adding Wallet"
 
-#: src/components/wallet-settings/account-card.tsx:45
-msgid "Address"
-msgstr "Address"
-
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:118
-msgid "Address reuse"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:130
+msgid "configure_wallet.address_reuse.cell_title"
 msgstr "Address reuse"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:124
-msgid "Address scan range"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:139
+msgid "configure_wallet.address_scan_range.cell_title"
 msgstr "Address scan range"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:130
-msgid "Address types"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:148
+msgid "configure_wallet.address_types.cell_title"
 msgstr "Address types"
 
-#: src/app/(home)/recover-wallet.tsx:167
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:114
-msgid "Advanced options"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:182
+msgid "recover_wallet.accordion_label"
 msgstr "Advanced options"
 
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:123
+msgid "configure_wallet.accordion_label"
+msgstr "Advanced options"
+
+#. js-lingui-explicit-id
 #: src/components/widgets/accounts/components/cards/add-account-card.tsx:17
-msgid "All accounts in one"
+msgid "add_account_card.caption"
 msgstr "All accounts in one"
 
-#: src/features/settings/app-authentication-sheet.tsx:37
-msgid "Allow authentication"
+#. js-lingui-explicit-id
+#: src/features/settings/app-authentication-sheet.tsx:64
+msgid "app_auth.cell_title"
 msgstr "Allow authentication"
 
-#: src/features/settings/analytics-sheet.tsx:28
-msgid "Allow collection of data"
+#. js-lingui-explicit-id
+#: src/features/settings/analytics-sheet.tsx:41
+msgid "analytics.cell_title"
 msgstr "Allow collection of data"
 
+#. js-lingui-explicit-id
 #: src/store/storage-persistors.ts:22
-msgid "Allow Leather to access application's secure storage"
+msgid "authentication_prompt"
 msgstr "Allow Leather to access application's secure storage"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/security/index.tsx:21
-#: src/features/settings/analytics-sheet.tsx:26
-msgid "Analytics"
+msgid "security.analytics.cell_title"
 msgstr "Analytics"
 
-#: src/app/(home)/settings/index.tsx:69
-msgid "Analytics and app authentication"
+#. js-lingui-explicit-id
+#: src/features/settings/analytics-sheet.tsx:35
+msgid "analytics.header_title"
+msgstr "Analytics"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:84
+msgid "settings.security.cell_caption"
 msgstr "Analytics and app authentication"
 
-#: src/features/settings/analytics-sheet.tsx:22
-msgid "Analytics updated"
+#. js-lingui-explicit-id
+#: src/features/settings/analytics-sheet.tsx:23
+msgid "analytics.toast_title"
 msgstr "Analytics updated"
 
-#: src/app/(home)/settings/security/index.tsx:31
-#: src/features/settings/app-authentication-sheet.tsx:35
-msgid "App authentication"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/security/index.tsx:44
+msgid "security.app_auth.cell_title"
 msgstr "App authentication"
 
-#: src/features/settings/app-authentication-sheet.tsx:26
-msgid "App authorization updated"
+#. js-lingui-explicit-id
+#: src/features/settings/app-authentication-sheet.tsx:58
+msgid "app_auth.header_title"
+msgstr "App authentication"
+
+#. js-lingui-explicit-id
+#: src/features/settings/app-authentication-sheet.tsx:27
+msgid "app_auth.toast_title_success"
 msgstr "App authorization updated"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:79
-msgid "Avatar"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:89
+msgid "configure_account.avatar.cell_title"
 msgstr "Avatar"
 
-#: src/app/(home)/settings/notifications/email.tsx:18
-msgid "Awaiting verification"
-msgstr "Awaiting verification"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:210
+msgid "recover_wallet.passphrase_label"
+msgstr "BIP39 passphrase"
 
-#: src/app/(home)/recover-wallet.tsx:190
-#: src/components/create-new-wallet/mnemonic-display.tsx:13
+#. js-lingui-explicit-id
+#: src/components/create-new-wallet/mnemonic-display.tsx:14
+msgid "create_new_wallet.mnemonic.title"
+msgstr "BIP39 passphrase"
+
+#. js-lingui-explicit-id
 #: src/components/recover-wallet/recover-wallet-sheet.tsx:23
-msgid "BIP39 passphrase"
+msgid "recover_wallet.passphrase.header_title"
 msgstr "BIP39 passphrase"
 
 #: src/mocks/tokens.mocks.tsx:34
@@ -199,123 +338,177 @@ msgstr "Bitcoin blockchain"
 msgid "Bitcoin Scrach Pad"
 msgstr "Bitcoin Scrach Pad"
 
-#: src/app/(home)/settings/display/index.tsx:58
-#: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:28
-msgid "Bitcoin unit"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:65
+msgid "display.bitcoin_unit.cell_title"
 msgstr "Bitcoin unit"
 
-#: src/features/settings/bitcoin-unit-sheet/bitcoin-unit-sheet.tsx:24
-msgid "Bitcoin unit updated"
+#. js-lingui-explicit-id
+#: src/features/settings/bitcoin-unit-sheet.tsx:37
+msgid "bitcoin_unit.header_title"
+msgstr "Bitcoin unit"
+
+#. js-lingui-explicit-id
+#: src/features/settings/bitcoin-unit-sheet.tsx:25
+msgid "bitcoin_unit.toast_title"
 msgstr "Bitcoin unit updated"
 
 #: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:38
 msgid "BitcoinScratchPad"
 msgstr "BitcoinScratchPad"
 
-#: src/app/(home)/mpc-wallets.tsx:23
-msgid "BitGo"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:24
+msgid "mpc_wallets.bitgo"
 msgstr "BitGo"
 
-#: src/app/(home)/hardware-wallets.tsx:21
-msgid "Bitkey"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:22
+msgid "hardware_wallets.bitkey"
 msgstr "Bitkey"
 
-#: src/components/browser/browser-empty-state.tsx:155
-#: src/components/sheets/warning-sheet.layout.tsx:74
-msgid "Cancel"
+#. js-lingui-explicit-id
+#: src/components/browser/browser-empty-state.tsx:159
+msgid "browser.input_reset_label"
 msgstr "Cancel"
 
-#: src/app/(home)/mpc-wallets.tsx:24
-msgid "Capsule"
+#. js-lingui-explicit-id
+#: src/components/sheets/warning-sheet.layout.tsx:77
+msgid "warning.cancel_button"
+msgstr "Cancel"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:31
+msgid "mpc_wallets.capsule"
 msgstr "Capsule"
 
+#. js-lingui-explicit-id
 #: src/components/wallet-settings/wallet-name-sheet.tsx:19
-msgid "Change name"
+msgid "wallet_name.header_title"
 msgstr "Change name"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:60
-msgid "Choose account avatar"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:67
+msgid "choose_avatar.title"
 msgstr "Choose account avatar"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:61
-msgid "Choose an image"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:73
+msgid "choose_avatar.images.subtitle"
 msgstr "Choose an image"
 
-#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:64
-msgid "Choose existing leather wallet"
+#. js-lingui-explicit-id
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:67
+msgid "add_account.existing_wallet.cell_caption"
 msgstr "Choose existing leather wallet"
 
 #: src/app/(home)/developer-console/wallet-manager.tsx:35
 msgid "Clear"
 msgstr "Clear"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:76
-#: src/components/recover-wallet/recover-wallet-sheet.tsx:26
-msgid "Confirm"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:97
+msgid "choose_avatar.button"
 msgstr "Confirm"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:109
-msgid "Connect hardware wallet"
+#. js-lingui-explicit-id
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:32
+msgid "recover_wallet.passphrase.button"
+msgstr "Confirm"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:129
+msgid "add_wallet.connect_wallet.cell_title"
 msgstr "Connect hardware wallet"
 
-#: src/app/(home)/hardware-wallets.tsx:52
-msgid "Connect hardware wallet: {hardwareWalletName}"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:88
+msgid "notify_user.hardware_wallets.header_title"
 msgstr "Connect hardware wallet: {hardwareWalletName}"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:126
-msgid "Connect MPC wallet"
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:163
+msgid "add_wallet.mpc_wallet.cell_title"
 msgstr "Connect MPC wallet"
 
-#: src/app/(home)/mpc-wallets.tsx:56
-msgid "Connect Mpc wallet: {mpcWalletName}"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:105
+msgid "notify_user.mpc_wallet.header_title"
 msgstr "Connect Mpc wallet: {mpcWalletName}"
 
-#: src/components/browser/browser-empty-state.tsx:179
-msgid "Connected"
+#. js-lingui-explicit-id
+#: src/components/browser/browser-empty-state.tsx:193
+msgid "browser.connected.tab_title"
 msgstr "Connected"
 
-#: src/app/(home)/settings/index.tsx:115
-#: src/app/(home)/settings/index.tsx:165
-msgid "Contacts"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:154
+msgid "settings.contacts.cell_title"
 msgstr "Contacts"
 
-#: src/app/(home)/recover-wallet.tsx:205
-msgid "Continue"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:220
+msgid "contacts.header_title"
+msgstr "Contacts"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:237
+msgid "recover_wallet.button"
 msgstr "Continue"
 
-#: src/app/(home)/settings/display/index.tsx:69
-#: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:28
-msgid "Conversion unit"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:83
+msgid "display.conversion_unit.cell_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet/conversion-unit-sheet.tsx:24
-msgid "Conversion unit updated"
+#. js-lingui-explicit-id
+#: src/features/settings/conversion-unit-sheet.tsx:37
+msgid "conversion_unit.header_title"
+msgstr "Conversion unit"
+
+#. js-lingui-explicit-id
+#: src/features/settings/conversion-unit-sheet.tsx:25
+msgid "conversion_unit.toast_title"
 msgstr "Conversion unit updated"
 
-#: src/app/(home)/mpc-wallets.tsx:25
-msgid "Copper"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:38
+msgid "mpc_wallets.copper"
 msgstr "Copper"
 
-#: src/components/create-new-wallet/mnemonic-display.tsx:48
-msgid "Copy"
+#. js-lingui-explicit-id
+#: src/components/create-new-wallet/mnemonic-display.tsx:59
+msgid "create_new_wallet.mnemonic.copy_button"
 msgstr "Copy"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:90
-msgid "Create a new Bitcoin and Stacks wallet"
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:98
+msgid "add_wallet.create_wallet.cell_caption"
 msgstr "Create a new Bitcoin and Stacks wallet"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:89
-#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:70
-msgid "Create new wallet"
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:94
+msgid "add_wallet.create_wallet.cell_title"
 msgstr "Create new wallet"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:118
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:122
-msgid "Create or restore via email"
+#. js-lingui-explicit-id
+#: src/components/widgets/accounts/sheets/add-account-sheet.layout.tsx:79
+msgid "add_account.new_wallet.cell_caption"
+msgstr "Create new wallet"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:144
+msgid "add_wallet.email_wallet.cell_title"
 msgstr "Create or restore via email"
 
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:155
+msgid "email_wallet.header_title"
+msgstr "Create or restore via email"
+
+#. js-lingui-explicit-id
 #: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:17
-msgid "Create or restore wallet"
+msgid "create_wallet_card.title"
 msgstr "Create or restore wallet"
 
 #: src/app/(home)/developer-console/index.tsx:85
@@ -323,24 +516,31 @@ msgstr "Create or restore wallet"
 msgid "Create wallet"
 msgstr "Create wallet"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:135
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:139
-msgid "Create watch-only wallet"
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:178
+msgid "add_wallet.watch_only_wallet.cell_title"
 msgstr "Create watch-only wallet"
 
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:189
+msgid "notify_user.watch_only_wallet.header_title"
+msgstr "Create watch-only wallet"
+
+#. js-lingui-explicit-id
 #: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:18
-msgid "Create, Import or connect instantly"
+msgid "create_wallet_card.caption"
 msgstr "Create, Import or connect instantly"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:155
-msgid "Creation date"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:183
+msgid "configure_wallet.creation_label"
 msgstr "Creation date"
 
-#: src/app/(home)/settings/index.tsx:166
-msgid "Custom fees"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:229
+msgid "fees.header_title"
 msgstr "Custom fees"
 
-#: src/app/(home)/settings/notifications/index.tsx:13
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:31
 #: src/components/browser/browser-empty-state.tsx:32
@@ -367,88 +567,128 @@ msgstr "Custom fees"
 #: src/components/browser/browser-empty-state.tsx:60
 #: src/components/browser/browser-empty-state.tsx:62
 #: src/components/browser/browser-empty-state.tsx:63
-#: src/features/settings/analytics-sheet.tsx:29
-#: src/features/settings/app-authentication-sheet.tsx:38
 msgid "Description"
 msgstr "Description"
 
-#: src/app/(home)/_layout.tsx:92
-msgid "Developer tools"
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:107
+msgid "developer_console.header_title"
 msgstr "Developer tools"
 
-#: src/app/(home)/recover-wallet.tsx:192
-#: src/app/(home)/settings/networks/index.tsx:50
-#: src/app/(home)/settings/security/index.tsx:22
-#: src/app/(home)/settings/security/index.tsx:32
-msgid "Disabled"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:221
+msgid "recover_wallet.passphrase_disabled"
 msgstr "Disabled"
 
-#: src/app/(home)/_layout.tsx:116
-#: src/app/(home)/settings/index.tsx:58
-msgid "Display"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/networks/index.tsx:66
+msgid "networks.cell_caption_disabled"
+msgstr "Disabled"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/security/index.tsx:31
+msgid "security.analytics.cell_caption_disabled"
+msgstr "Disabled"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/security/index.tsx:54
+msgid "security.app_auth.cell_caption_disabled"
+msgstr "Disabled"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:139
+msgid "display.header_title"
+msgstr "Display"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:64
+msgid "settings.display.cell_title"
 msgstr "Display"
 
 #: src/app/(home)/developer-console/index.tsx:120
 msgid "Drawer"
 msgstr "Drawer"
 
-#: src/app/(home)/settings/notifications/_layout.tsx:28
-#: src/app/(home)/settings/notifications/_layout.tsx:60
-msgid "Email"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/notifications/_layout.tsx:32
+#: src/app/(home)/settings/notifications/_layout.tsx:76
+msgid "notifications.email.tab_title"
 msgstr "Email"
 
-#: src/app/(home)/settings/notifications/email.tsx:17
-#: src/features/settings/email-address-sheet.tsx:38
-#: src/features/settings/email-address-sheet.tsx:47
-msgid "Email address"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/notifications/email.tsx:18
+msgid "notifications.email.cell_title"
 msgstr "Email address"
 
-#: src/app/(home)/secure-your-wallet.tsx:75
-msgid "Enable device security"
+#. js-lingui-explicit-id
+#: src/features/settings/email-address-sheet.tsx:53
+msgid "email_address.header_title"
+msgstr "Email address"
+
+#. js-lingui-explicit-id
+#: src/features/settings/email-address-sheet.tsx:71
+msgid "email_address.input_placeholder"
+msgstr "Email address"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/secure-your-wallet.tsx:81
+msgid "secure_your_wallet.security_button"
 msgstr "Enable device security"
 
-#: src/app/(home)/recover-wallet.tsx:192
-#: src/app/(home)/settings/networks/index.tsx:50
-#: src/app/(home)/settings/security/index.tsx:22
-#: src/app/(home)/settings/security/index.tsx:32
-msgid "Enabled"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:217
+msgid "recover_wallet.passphrase_enabled"
 msgstr "Enabled"
 
-#: src/features/settings/app-authentication-sheet.tsx:31
-msgid "Error trying to authenticate"
-msgstr "Error trying to authenticate"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/networks/index.tsx:62
+msgid "networks.cell_caption_enabled"
+msgstr "Enabled"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:142
-msgid "Export key"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/security/index.tsx:27
+msgid "security.analytics.cell_caption_enabled"
+msgstr "Enabled"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/security/index.tsx:50
+msgid "security.app_auth.cell_caption_enabled"
+msgstr "Enabled"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:166
+msgid "configure_wallet.export_key.cell_title"
 msgstr "Export key"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:136
-msgid "Export xPub"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:157
+msgid "configure_wallet.export_xpub.cell_title"
 msgstr "Export xPub"
 
-#: src/features/settings/app-authentication-sheet.tsx:29
-msgid "Failed to authenticate"
+#. js-lingui-explicit-id
+#: src/features/settings/app-authentication-sheet.tsx:36
+#: src/features/settings/app-authentication-sheet.tsx:45
+msgid "app_auth.toast_title_error"
 msgstr "Failed to authenticate"
 
 #: src/hooks/use-push-notifications.ts:44
 msgid "Failed to get push token for push notification!"
 msgstr "Failed to get push token for push notification!"
 
-#: src/app/(home)/settings/index.tsx:126
-msgid "Fees"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:168
+msgid "settings.fees.cell_title"
 msgstr "Fees"
 
-#: src/app/(home)/mpc-wallets.tsx:26
-msgid "Fireblocks"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:45
+msgid "mpc_wallets.fireblocks"
 msgstr "Fireblocks"
 
-#: src/app/(home)/create-new-wallet.tsx:99
-msgid "For your eyes only"
-msgstr "For your eyes only"
-
-#: src/app/(home)/mpc-wallets.tsx:27
-msgid "Foredefi"
-msgstr "Foredefi"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:52
+msgid "mpc_wallets.fordefi"
+msgstr "Fordefi"
 
 #: src/app/(home)/developer-console/wallet-manager.tsx:40
 msgid "Generating…"
@@ -458,204 +698,316 @@ msgstr "Generating…"
 msgid "getAddresses"
 msgstr "getAddresses"
 
-#: src/app/(home)/settings/help/index.tsx:40
-msgid "Guides"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/help/index.tsx:46
+msgid "help.guides.cell_title"
 msgstr "Guides"
 
-#: src/app/(home)/_layout.tsx:129
-#: src/app/(home)/settings/index.tsx:100
-msgid "Help"
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:176
+msgid "help.header_title"
+msgstr "Help"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:130
+msgid "settings.help.cell_title"
 msgstr "Help"
 
 #: src/hooks/use-push-notifications.ts:18
 msgid "Here is the notification body"
 msgstr "Here is the notification body"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/wallet/index.tsx:41
-msgid "Hidden accounts"
+msgid "wallet.hidden_accounts.cell_title"
 msgstr "Hidden accounts"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:91
-msgid "Hide account"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:104
+msgid "configure_account.hide_account.cell_title"
 msgstr "Hide account"
 
-#: src/app/(home)/settings/display/index.tsx:91
-msgid "Hide home balance"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:119
+msgid "display.privacy_mode.cell_title"
 msgstr "Hide home balance"
 
-#: src/app/(home)/create-new-wallet.tsx:114
-#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:65
-msgid "I've backed it up"
+#. js-lingui-explicit-id
+#: src/app/(home)/create-new-wallet.tsx:120
+msgid "create_new_wallet.button"
 msgstr "I've backed it up"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:97
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:127
-msgid "Import existing accounts"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:73
+msgid "view_secret_key.button"
+msgstr "I've backed it up"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:111
+msgid "add_wallet.restore_wallet.cell_caption"
 msgstr "Import existing accounts"
 
-#: src/features/settings/email-address-sheet.tsx:27
-msgid "Invalid email address"
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:167
+msgid "add_wallet.mpc_wallet.cell_caption"
+msgstr "Import existing accounts"
+
+#. js-lingui-explicit-id
+#: src/features/settings/email-address-sheet.tsx:28
+msgid "email_address.toast_title_error"
 msgstr "Invalid email address"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/recover-wallet.tsx:33
-msgid "Invalid words: {joinedInvalidWords}"
+msgid "recover_wallet.validation_error"
 msgstr "Invalid words: {joinedInvalidWords}"
 
-#: src/app/(home)/settings/help/index.tsx:49
-msgid "Learn"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/help/index.tsx:61
+msgid "help.learn.cell_title"
 msgstr "Learn"
 
-#: src/app/(home)/hardware-wallets.tsx:22
-#: src/components/widgets/accounts/ledger-badge.tsx:19
-msgid "Ledger"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:29
+msgid "hardware_wallets.ledger"
 msgstr "Ledger"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:110
-msgid "Ledger, Trezor, Ryder and more"
+#. js-lingui-explicit-id
+#: src/components/widgets/accounts/ledger-badge.tsx:19
+msgid "ledger"
+msgstr "Ledger"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:133
+msgid "add_wallet.connect_wallet.cell_caption"
 msgstr "Ledger, Trezor, Ryder and more"
 
-#: src/app/(home)/settings/index.tsx:159
-msgid "Lock app"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:209
+msgid "settings.lock_button"
 msgstr "Lock app"
 
-#: src/components/balance/balance.tsx:55
+#. js-lingui-explicit-id
+#: src/components/balance/balance.tsx:56
 msgid "locked"
 msgstr "locked"
 
-#: src/app/(home)/settings/index.tsx:79
-msgid "Mainnet, testnet or signet"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:100
+msgid "settings.networks.cell_caption"
 msgstr "Mainnet, testnet or signet"
 
-#: src/app/(home)/settings/index.tsx:109
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:103
-msgid "More options"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:145
+msgid "settings.accordion_label"
+msgstr "More options"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:120
+msgid "add_wallet.options.cell_title"
 msgstr "More options"
 
 #: src/hooks/use-push-notifications.ts:65
 msgid "Must use physical device for Push Notifications"
 msgstr "Must use physical device for Push Notifications"
 
-#: src/components/widgets/accounts/accounts-widget.tsx:47
-msgid "My accounts"
+#. js-lingui-explicit-id
+#: src/components/widgets/accounts/accounts-widget.tsx:49
+msgid "accounts.header_title"
 msgstr "My accounts"
 
-#: src/components/widgets/collectibles/collectibles-widget.tsx:18
-msgid "My collectibles"
+#. js-lingui-explicit-id
+#: src/components/widgets/collectibles/collectibles-widget.tsx:20
+msgid "collectibles.header_title"
 msgstr "My collectibles"
 
-#: src/components/widgets/tokens/tokens-widget.tsx:24
-msgid "My tokens"
+#. js-lingui-explicit-id
+#: src/components/widgets/tokens/tokens-widget.tsx:27
+msgid "tokens.header_title"
 msgstr "My tokens"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:69
-#: src/components/wallet-settings/account-name-sheet.tsx:21
-#: src/components/wallet-settings/wallet-name-sheet.tsx:21
-msgid "Name"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:72
+msgid "configure_account.name.cell_title"
 msgstr "Name"
 
-#: src/app/(home)/settings/networks/index.tsx:41
-msgid "Network changed"
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/account-name-sheet.tsx:21
+msgid "account_name.input_placeholder"
+msgstr "Name"
+
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/wallet-name-sheet.tsx:21
+msgid "wallet_name.input_placeholder"
+msgstr "Name"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/networks/index.tsx:42
+msgid "settings.networks.toast_title"
 msgstr "Network changed"
 
-#: src/app/(home)/_layout.tsx:124
-#: src/app/(home)/settings/index.tsx:78
-msgid "Networks"
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:163
+msgid "networks.header_title"
 msgstr "Networks"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:136
-msgid "No key needed"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:96
+msgid "settings.networks.cell_title"
+msgstr "Networks"
+
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:182
+msgid "add_wallet.watch_only_wallet.cell_caption"
 msgstr "No key needed"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/notifications/index.tsx:12
-msgid "Notification"
+msgid "notifications.push.cell_title"
 msgstr "Notification"
 
-#: src/app/(home)/settings/index.tsx:89
-#: src/app/(home)/settings/notifications/_layout.tsx:43
-msgid "Notifications"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:113
+msgid "settings.notifications.cell_title"
 msgstr "Notifications"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:57
-msgid "Notify me"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/notifications/_layout.tsx:51
+msgid "notifications.header_title"
+msgstr "Notifications"
+
+#. js-lingui-explicit-id
+#: src/components/sheets/notify-user-sheet.layout.tsx:68
+msgid "notify_user.button"
 msgstr "Notify me"
 
-#: src/app/(home)/hardware-wallets.tsx:23
-msgid "OneKey"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:36
+msgid "hardware_wallets.onekey"
 msgstr "OneKey"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:63
-msgid "Or choose one of your collectibles"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:80
+msgid "choose_avatar.collectibles.subtitle"
 msgstr "Or choose one of your collectibles"
 
 #: src/app/(home)/developer-console/index.tsx:121
 msgid "Page"
 msgstr "Page"
 
-#: src/components/recover-wallet/recover-wallet-sheet.tsx:25
-msgid "Passphrase"
+#. js-lingui-explicit-id
+#: src/components/recover-wallet/recover-wallet-sheet.tsx:28
+msgid "recover_wallet.passphrase.input_placeholder"
 msgstr "Passphrase"
 
-#: src/app/(home)/hardware-wallets.tsx:24
-msgid "Passport"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:43
+msgid "hardware_wallets.passport"
 msgstr "Passport"
 
-#: src/app/(home)/recover-wallet.tsx:138
-msgid "Paste"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:146
+msgid "recover_wallet.paste_button"
 msgstr "Paste"
 
-#: src/app/(home)/recover-wallet.tsx:130
-msgid "Paste or type a Secret Key to add its associated wallet."
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:134
+msgid "recover_wallet.subtitle"
 msgstr "Paste or type a Secret Key to add its associated wallet."
 
-#: src/app/(home)/settings/help/index.tsx:32
-#: src/app/(home)/settings/help/index.tsx:41
-#: src/app/(home)/settings/help/index.tsx:50
-msgid "Placeholder"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/help/index.tsx:35
+msgid "help.support.cell_caption"
 msgstr "Placeholder"
 
-#: src/app/(home)/mpc-wallets.tsx:28
-msgid "Portal"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/help/index.tsx:50
+msgid "help.guides.cell_caption"
+msgstr "Placeholder"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/help/index.tsx:65
+msgid "help.learn.cell_caption"
+msgstr "Placeholder"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/notifications/email.tsx:22
+msgid "notifications.email.cell_caption"
+msgstr "Placeholder"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/notifications/index.tsx:16
+msgid "notifications.push.cell_caption"
+msgstr "Placeholder"
+
+#. js-lingui-explicit-id
+#: src/features/settings/analytics-sheet.tsx:45
+msgid "analytics.cell_caption"
+msgstr "Placeholder"
+
+#. js-lingui-explicit-id
+#: src/features/settings/app-authentication-sheet.tsx:68
+msgid "app_auth.cell_caption"
+msgstr "Placeholder"
+
+#: src/components/wallet-settings/account-card.tsx:45
+msgid "Placeholder for address"
+msgstr "Placeholder for address"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:59
+msgid "mpc_wallets.portal"
 msgstr "Portal"
 
-#: src/app/(home)/mpc-wallets.tsx:29
-msgid "Privy"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:66
+msgid "mpc_wallets.privy"
 msgstr "Privy"
 
+#. js-lingui-explicit-id
 #: src/components/sheets/warning-sheet.layout.tsx:69
-msgid "Proceed"
+msgid "warning.submit_button"
 msgstr "Proceed"
 
+#. js-lingui-explicit-id
 #: src/components/secure-your-wallet/skip-secure-wallet-sheet.tsx:17
-msgid "Proceed without security"
+msgid "skip_secure_wallet.header_title"
 msgstr "Proceed without security"
 
-#: src/features/settings/email-address-sheet.tsx:39
-msgid "Provide an email address for receiving notifications"
+#. js-lingui-explicit-id
+#: src/features/settings/email-address-sheet.tsx:59
+msgid "email_address.subtitle"
 msgstr "Provide an email address for receiving notifications"
 
-#: src/app/(home)/settings/notifications/_layout.tsx:21
-#: src/app/(home)/settings/notifications/_layout.tsx:53
-msgid "Push"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/notifications/_layout.tsx:22
+#: src/app/(home)/settings/notifications/_layout.tsx:66
+msgid "notifications.push.tab_title"
 msgstr "Push"
 
-#: src/app/(home)/settings/index.tsx:90
-msgid "Push and email notifications"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:117
+msgid "settings.notifications.cell_caption"
 msgstr "Push and email notifications"
 
-#: src/app/(home)/mpc-wallets.tsx:30
-msgid "Qredo"
+#. js-lingui-explicit-id
+#: src/app/(home)/mpc-wallets.tsx:73
+msgid "mpc_wallets.oredo"
 msgstr "Qredo"
 
-#: src/components/action-bar/container.tsx:179
-msgid "Receive"
+#. js-lingui-explicit-id
+#: src/components/action-bar/container.tsx:185
+msgid "action_bar.receive_label"
 msgstr "Receive"
 
-#: src/app/(home)/receive.tsx:9
-msgid "Receive 💰"
+#. js-lingui-explicit-id
+#: src/app/(home)/receive.tsx:10
+msgid "receive.header_title"
 msgstr "Receive 💰"
 
-#: src/components/browser/browser-empty-state.tsx:172
-msgid "Recent"
+#. js-lingui-explicit-id
+#: src/components/browser/browser-empty-state.tsx:183
+msgid "browser.recent.tab_title"
 msgstr "Recent"
 
 #: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:40
@@ -666,58 +1018,88 @@ msgstr "Recipient"
 msgid "register for Push notifications"
 msgstr "register for Push notifications"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:104
-#: src/components/wallet-settings/remove-wallet-sheet.tsx:16
-msgid "Remove wallet"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:110
+msgid "configure_wallet.remove_wallet.cell_title"
 msgstr "Remove wallet"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:94
-msgid "Rename wallet"
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/remove-wallet-sheet.tsx:16
+msgid "remove_wallet.header_title"
+msgstr "Remove wallet"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:97
+msgid "configure_wallet.rename_wallet.cell_title"
 msgstr "Rename wallet"
 
-#: src/components/add-wallet/add-wallet-sheet.layout.tsx:96
-msgid "Restore wallet"
+#. js-lingui-explicit-id
+#: src/components/add-wallet/add-wallet-sheet.layout.tsx:107
+msgid "add_wallet.restore_wallet.cell_title"
 msgstr "Restore wallet"
 
-#: src/app/(home)/hardware-wallets.tsx:25
-msgid "Ryder"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:50
+msgid "hardware_wallets.ryder"
 msgstr "Ryder"
 
+#. js-lingui-explicit-id
 #: src/components/wallet-settings/account-name-sheet.tsx:22
-#: src/components/wallet-settings/wallet-name-sheet.tsx:22
-#: src/features/settings/email-address-sheet.tsx:54
-msgid "Save"
+msgid "account_name.button"
 msgstr "Save"
 
-#: src/components/create-new-wallet/mnemonic-display.tsx:57
-msgid "Save to..."
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/wallet-name-sheet.tsx:22
+msgid "wallet_name.button"
+msgstr "Save"
+
+#. js-lingui-explicit-id
+#: src/features/settings/email-address-sheet.tsx:81
+msgid "email_address.save_button"
+msgstr "Save"
+
+#. js-lingui-explicit-id
+#: src/components/create-new-wallet/mnemonic-display.tsx:71
+msgid "create_new_wallet.mnemonic.save_button"
 msgstr "Save to..."
 
 #: src/app/(home)/developer-console/index.tsx:111
 msgid "schedule dummy notifications in 3s"
 msgstr "schedule dummy notifications in 3s"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:49
-msgid "SECRET KEY"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:50
+msgid "view_secret_key.title"
 msgstr "SECRET KEY"
 
-#: src/app/(home)/_layout.tsx:120
-#: src/app/(home)/settings/index.tsx:68
-msgid "Security"
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:151
+msgid "security.header_title"
+msgstr "Security"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:80
+msgid "settings.security.cell_title"
 msgstr "Security"
 
 #: src/app/(home)/developer-console/index.tsx:81
 msgid "securityLevelPreference:"
 msgstr "securityLevelPreference:"
 
-#: src/app/(home)/send.tsx:9
-#: src/components/action-bar/container.tsx:172
-msgid "Send"
+#. js-lingui-explicit-id
+#: src/app/(home)/send.tsx:10
+msgid "send.header_title"
 msgstr "Send"
 
-#: src/app/(home)/_layout.tsx:47
-#: src/app/(home)/_layout.tsx:57
-msgid "Settings"
+#. js-lingui-explicit-id
+#: src/components/action-bar/container.tsx:175
+msgid "action_bar.send_label"
+msgstr "Send"
+
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:48
+#: src/app/(home)/_layout.tsx:63
+msgid "settings.header_title"
 msgstr "Settings"
 
 #: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:50
@@ -732,20 +1114,24 @@ msgstr "signMessage"
 msgid "signPsbt"
 msgstr "signPsbt"
 
-#: src/app/(home)/secure-your-wallet.tsx:68
-msgid "Skip for now"
+#. js-lingui-explicit-id
+#: src/app/(home)/secure-your-wallet.tsx:71
+msgid "secure_your_wallet.skip_button"
 msgstr "Skip for now"
 
-#: src/components/secure-your-wallet/skip-secure-wallet-sheet.tsx:18
-msgid "Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets"
+#. js-lingui-explicit-id
+#: src/components/secure-your-wallet/skip-secure-wallet-sheet.tsx:21
+msgid "skip_secure_wallet.warning_caption"
 msgstr "Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets"
 
-#: src/components/text-input.tsx:65
-msgid "Something is wrong!"
+#. js-lingui-explicit-id
+#: src/components/text-input.tsx:67
+msgid "input.default.error"
 msgstr "Something is wrong!"
 
-#: src/hooks/create-wallet.ts:35
-msgid "Something went wrong"
+#. js-lingui-explicit-id
+#: src/hooks/create-wallet.ts:50
+msgid "create_wallet.toast_title_error"
 msgstr "Something went wrong"
 
 #: src/mocks/tokens.mocks.tsx:56
@@ -768,73 +1154,86 @@ msgstr "stx_signMessage"
 msgid "stx_signTransaction"
 msgstr "stx_signTransaction"
 
-#: src/components/browser/approver-sheet.tsx:63
-msgid "Submit"
+#. js-lingui-explicit-id
+#: src/components/browser/approver-sheet.tsx:64
+msgid "approver.button"
 msgstr "Submit"
 
-#: src/features/settings/email-address-sheet.tsx:34
-msgid "Submitted, check your email"
+#. js-lingui-explicit-id
+#: src/features/settings/email-address-sheet.tsx:41
+msgid "email_address.toast_title_success"
 msgstr "Submitted, check your email"
 
-#: src/components/create-new-wallet/mnemonic-display.tsx:43
-msgid "Successfully copied to clipboard!"
+#. js-lingui-explicit-id
+#: src/components/create-new-wallet/mnemonic-display.tsx:49
+msgid "create_new_wallet.mnemonic.toast_title"
 msgstr "Successfully copied to clipboard!"
 
-#: src/components/browser/browser-empty-state.tsx:165
-msgid "Suggested"
+#. js-lingui-explicit-id
+#: src/components/browser/browser-empty-state.tsx:173
+msgid "browser.suggested.tab_title"
 msgstr "Suggested"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/help/index.tsx:31
-msgid "Support and feedback"
+msgid "help.support.cell_title"
 msgstr "Support and feedback"
 
-#: src/app/(home)/settings/index.tsx:101
-msgid "Support, guides and articles"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:134
+msgid "settings.help.cell_caption"
 msgstr "Support, guides and articles"
 
-#: src/components/action-bar/container.tsx:186
-msgid "Swap"
+#. js-lingui-explicit-id
+#: src/app/(home)/swap.tsx:10
+msgid "swap.header_title"
 msgstr "Swap"
 
-#: src/app/(home)/swap.tsx:9
-msgid "Swap 🔄"
-msgstr "Swap 🔄"
+#. js-lingui-explicit-id
+#: src/components/action-bar/container.tsx:195
+msgid "action_bar.swap_label"
+msgstr "Swap"
 
-#: src/app/(home)/create-new-wallet.tsx:97
-msgid "Tap to view Secret Key"
-msgstr "Tap to view Secret Key"
-
-#: src/app/(home)/settings/display/index.tsx:92
-msgid "Tap your balance to quickly toggle this setting"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/display/index.tsx:123
+msgid "display.privacy_mode.cell_caption"
 msgstr "Tap your balance to quickly toggle this setting"
 
-#: src/app/(home)/_layout.tsx:79
-msgid "Testnet"
+#. js-lingui-explicit-id
+#: src/app/(home)/_layout.tsx:89
+msgid "settings.header_network"
 msgstr "Testnet"
 
-#: src/components/wallet-settings/remove-wallet-sheet.tsx:17
-msgid ""
-"The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet. \n"
-"Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
+#. js-lingui-explicit-id
+#: src/components/wallet-settings/remove-wallet-sheet.tsx:20
+msgid "remove_wallet.warning_caption"
 msgstr ""
-"The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet. \n"
+"The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet.\n"
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/display/index.tsx:47
-#: src/features/settings/theme-sheet/theme-sheet.tsx:27
-msgid "Theme"
+msgid "display.theme.cell_title"
 msgstr "Theme"
 
-#: src/features/settings/theme-sheet/theme-sheet.tsx:23
-msgid "Theme updated"
+#. js-lingui-explicit-id
+#: src/features/settings/theme-sheet.tsx:36
+msgid "theme.header_title"
+msgstr "Theme"
+
+#. js-lingui-explicit-id
+#: src/features/settings/theme-sheet.tsx:24
+msgid "theme.toast_title"
 msgstr "Theme updated"
 
-#: src/app/(home)/settings/index.tsx:59
-msgid "Theme, bitcoin unit and more"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:68
+msgid "settings.display.cell_caption"
 msgstr "Theme, bitcoin unit and more"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:50
-msgid "This feature is not available yet, but we can notify you when it’s ready."
+#. js-lingui-explicit-id
+#: src/components/sheets/notify-user-sheet.layout.tsx:58
+msgid "notify_user.subtitle"
 msgstr "This feature is not available yet, but we can notify you when it’s ready."
 
 #: src/components/browser/browser-empty-state.tsx:29
@@ -883,66 +1282,78 @@ msgstr "Toggle network"
 msgid "transferBtc"
 msgstr "transferBtc"
 
-#: src/app/(home)/hardware-wallets.tsx:26
-msgid "Trezor"
+#. js-lingui-explicit-id
+#: src/app/(home)/hardware-wallets.tsx:57
+msgid "hardware_wallets.trezor"
 msgstr "Trezor"
 
 #: src/app/(home)/developer-console/bitcoin-scratch-pad.tsx:42
 msgid "Type here to translate!"
 msgstr "Type here to translate!"
 
+#. js-lingui-explicit-id
 #: src/components/browser/browser-empty-state.tsx:150
-msgid "Type URL or search"
+msgid "browser.input_placeholder"
 msgstr "Type URL or search"
 
-#: src/app/(home)/recover-wallet.tsx:150
-msgid "Type your recovery phrase"
+#. js-lingui-explicit-id
+#: src/app/(home)/recover-wallet.tsx:161
+msgid "recover_wallet.input_placeholder"
 msgstr "Type your recovery phrase"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/secure-your-wallet.tsx:55
-msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
+msgid "secure_your_wallet.caption"
 msgstr "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 
-#: src/app/(home)/settings/index.tsx:148
-msgid "Version"
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/index.tsx:194
+msgid "settings.version_label"
 msgstr "Version"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/wallet/configure/[wallet]/index.tsx:81
-msgid "View Secret Key"
+msgid "configure_wallet.view_key.cell_title"
 msgstr "View Secret Key"
 
 #: src/components/wallet-manager/wallets.tsx:26
 msgid "Wallet {fingerprint}"
 msgstr "Wallet {fingerprint}"
 
+#. js-lingui-explicit-id
 #: src/store/wallets/wallets.write.ts:36
-msgid "Wallet {walletIdx}"
+msgid "wallet.default.name"
 msgstr "Wallet {walletIdx}"
 
-#: src/hooks/create-wallet.ts:27
-msgid "Wallet added successfully"
+#. js-lingui-explicit-id
+#: src/hooks/create-wallet.ts:30
+msgid "create_wallet.toast_title_success"
 msgstr "Wallet added successfully"
 
-#: src/hooks/create-wallet.ts:31
-msgid "Wallet already exists"
+#. js-lingui-explicit-id
+#: src/hooks/create-wallet.ts:40
+msgid "create_wallet.wallet_exists.toast_title_error"
 msgstr "Wallet already exists"
 
 #: src/app/(home)/developer-console/index.tsx:88
 msgid "Wallet management"
 msgstr "Wallet management"
 
+#. js-lingui-explicit-id
 #: src/app/(home)/settings/index.tsx:45
-msgid "Wallets and accounts"
+msgid "settings.wallets.cell_title"
 msgstr "Wallets and accounts"
 
 #: src/hooks/use-push-notifications.ts:17
 msgid "You've got mail! 📬"
 msgstr "You've got mail! 📬"
 
-#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:51
-msgid "Your Secret Key grants you access to your wallet and its assets."
+#. js-lingui-explicit-id
+#: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:56
+msgid "view_secret_key.subtitle"
 msgstr "Your Secret Key grants you access to your wallet and its assets."
 
+#. js-lingui-explicit-id
 #: src/app/(home)/create-new-wallet.tsx:68
-msgid "Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager."
+msgid "create_new_wallet.subtitle"
 msgstr "Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager."

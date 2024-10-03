@@ -20,10 +20,19 @@ export function RecoverWalletSheet({
     <InputSheet
       sheetRef={recoverWalletSheetRef}
       initialValue={passphrase}
-      title={t`BIP39 passphrase`}
+      title={t({
+        id: 'recover_wallet.passphrase.header_title',
+        message: `BIP39 passphrase`,
+      })}
       TitleIcon={LockIcon}
-      placeholder={t`Passphrase`}
-      submitTitle={t`Confirm`}
+      placeholder={t({
+        id: 'recover_wallet.passphrase.input_placeholder',
+        message: `Passphrase`,
+      })}
+      submitTitle={t({
+        id: 'recover_wallet.passphrase.button',
+        message: `Confirm`,
+      })}
       onSubmit={newPassphrase => {
         recoverWalletSheetRef.current?.close();
         setPassphrase(newPassphrase);

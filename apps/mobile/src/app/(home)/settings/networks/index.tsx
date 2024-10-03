@@ -38,7 +38,13 @@ export default function SettingsNetworksScreen() {
 
   function onChangeNetwork(network: DefaultNetworkConfigurations) {
     settings.changeNetworkPreference(network);
-    displayToast({ title: t`Network changed`, type: 'success' });
+    displayToast({
+      title: t({
+        id: 'settings.networks.toast_title',
+        message: 'Network changed',
+      }),
+      type: 'success',
+    });
   }
 
   return (
@@ -46,8 +52,22 @@ export default function SettingsNetworksScreen() {
       {defaultNetworkPreferences.map(network => (
         <Cell.Root
           icon={getNetworkIcon(network)}
-          title={i18n._(capitalize(network))}
-          caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
+          title={i18n._({
+            id: 'networks.cell_title',
+            message: '{network}',
+            values: { network: capitalize(network) },
+          })}
+          caption={
+            settings.networkPreference.id === network
+              ? t({
+                  id: 'networks.cell_caption_enabled',
+                  message: 'Enabled',
+                })
+              : t({
+                  id: 'networks.cell_caption_disabled',
+                  message: 'Disabled',
+                })
+          }
           key={network}
           onPress={() => onChangeNetwork(network)}
         >

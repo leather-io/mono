@@ -14,8 +14,11 @@ export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
       onPress={onPress}
       width={300}
       Icon={PlusIcon}
-      label={t`Create or restore wallet`}
-      caption={t`Create, Import or connect instantly`}
+      label={t({ id: 'create_wallet_card.title', message: 'Create or restore wallet' })}
+      caption={t({
+        id: 'create_wallet_card.caption',
+        message: 'Create, Import or connect instantly',
+      })}
     />
   );
 }

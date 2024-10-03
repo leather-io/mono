@@ -147,12 +147,20 @@ export function BrowserEmptyState({
             autoComplete="url"
             onSubmitEditing={submit}
             style={{ paddingHorizontal: theme.spacing[4], paddingVertical: theme.spacing[3] }}
-            placeholder={t`Type URL or search`}
+            placeholder={t({
+              id: 'browser.input_placeholder',
+              message: 'Type URL or search',
+            })}
           />
         </Box>
         {textURL ? (
           <TouchableOpacity p="3" mx="2" justifyContent="center" onPress={resetTextInput}>
-            <Text variant="label02">{t`Cancel`}</Text>
+            <Text variant="label02">
+              {t({
+                id: 'browser.input_reset_label',
+                message: 'Cancel',
+              })}
+            </Text>
           </TouchableOpacity>
         ) : null}
       </Box>
@@ -162,21 +170,30 @@ export function BrowserEmptyState({
             onPress() {
               setCurrentTab('suggested');
             },
-            title: t`Suggested`,
+            title: t({
+              id: 'browser.suggested.tab_title',
+              message: 'Suggested',
+            }),
             isActive: currentTab === 'suggested',
           },
           {
             onPress() {
               setCurrentTab('recent');
             },
-            title: t`Recent`,
+            title: t({
+              id: 'browser.recent.tab_title',
+              message: 'Recent',
+            }),
             isActive: currentTab === 'recent',
           },
           {
             onPress() {
               setCurrentTab('connected');
             },
-            title: t`Connected`,
+            title: t({
+              id: 'browser.connected.tab_title',
+              message: 'Connected',
+            }),
             isActive: currentTab === 'connected',
           },
         ]}

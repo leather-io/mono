@@ -11,6 +11,7 @@ import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { z } from 'zod';
@@ -35,6 +36,8 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const router = useRouter();
+  const { i18n } = useLingui();
+
   useEffect(() => {
     navigation.setOptions({ title: account.name });
   }, [account.name, navigation]);
@@ -66,8 +69,15 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           <Box px="5" gap="6">
             <AccountCard Icon={getAvatarIcon(account.icon)} name={account.name} key={account.id} />
             <Cell.Root
-              title={t`Name`}
-              caption={account.name}
+              title={t({
+                id: 'configure_account.name.cell_title',
+                message: 'Name',
+              })}
+              caption={i18n._({
+                id: 'configure_account.name.cell_caption',
+                message: '{name}',
+                values: { name: account.name },
+              })}
               icon={<PassportIcon />}
               onPress={() => {
                 accountNameSheetRef.current?.present();
@@ -76,7 +86,10 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               <Cell.Chevron />
             </Cell.Root>
             <Cell.Root
-              title={t`Avatar`}
+              title={t({
+                id: 'configure_account.avatar.cell_title',
+                message: 'Avatar',
+              })}
               icon={<HeadIcon />}
               onPress={() => {
                 router.navigate({
@@ -88,7 +101,10 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               <Cell.Chevron />
             </Cell.Root>
             <Cell.Root
-              title={t`Hide account`}
+              title={t({
+                id: 'configure_account.hide_account.cell_title',
+                message: 'Hide account',
+              })}
               icon={<Eye1ClosedIcon />}
               onPress={toggleHideAccount}
             >

@@ -52,7 +52,11 @@ export function Balance({
       </PrivateText>
       {!isPrivate ? (
         <Text color={color} variant={variant}>
-          {lockedBalance} {t`locked`}
+          {lockedBalance}
+          {t({
+            id: 'locked',
+            message: 'locked',
+          })}
         </Text>
       ) : null}
     </BulletSeparator>

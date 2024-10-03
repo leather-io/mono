@@ -19,7 +19,10 @@ export const persistConfig: PersistConfig<RootState> = {
 
 function getBasicSecureStoreConfig() {
   const secureStoreConfig: SecureStore.SecureStoreOptions = {
-    authenticationPrompt: t`Allow Leather to access application's secure storage`,
+    authenticationPrompt: t({
+      id: 'authentication_prompt',
+      message: `Allow Leather to access application's secure storage`,
+    }),
     keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
   };
   return secureStoreConfig;

@@ -19,14 +19,33 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
     settings.changeAnalyticsPreference(
       settings.analyticsPreference === 'consent-given' ? 'rejects-tracking' : 'consent-given'
     );
-    displayToast({ title: t`Analytics updated`, type: 'success' });
+    displayToast({
+      title: t({
+        id: 'analytics.toast_title',
+        message: 'Analytics updated',
+      }),
+      type: 'success',
+    });
   }
 
   return (
-    <SettingsSheetLayout icon={<CookieIcon />} sheetRef={sheetRef} title={t`Analytics`}>
+    <SettingsSheetLayout
+      icon={<CookieIcon />}
+      sheetRef={sheetRef}
+      title={t({
+        id: 'analytics.header_title',
+        message: 'Analytics',
+      })}
+    >
       <Cell.Root
-        title={t`Allow collection of data`}
-        caption={t`Description`}
+        title={t({
+          id: 'analytics.cell_title',
+          message: 'Allow collection of data',
+        })}
+        caption={t({
+          id: 'analytics.cell_caption',
+          message: 'Placeholder',
+        })}
         onPress={() => onUpdateAnalytics()}
       >
         <Cell.Switch

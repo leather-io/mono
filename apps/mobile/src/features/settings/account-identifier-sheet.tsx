@@ -10,7 +10,7 @@ import { AccountDisplayPreference } from '@leather.io/models';
 import { Cell, PackageSecurityIcon, SheetRef } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
-import { SettingsSheetLayout } from '../settings-sheet.layout';
+import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface AccountIdentifierSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -22,22 +22,38 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
 
   function onUpdateAccountDisplayPreference(identifier: AccountDisplayPreference) {
     settings.changeAccountDisplayPreference(identifier);
-    displayToast({ title: t`Account identifier updated`, type: 'success' });
+    displayToast({
+      title: t({
+        id: 'account_identifier.toast_title',
+        message: 'Account identifier updated',
+      }),
+      type: 'success',
+    });
   }
 
   return (
     <SettingsSheetLayout
       icon={<PackageSecurityIcon />}
       sheetRef={sheetRef}
-      title={t`Account identifier`}
+      title={t({
+        id: 'account_identifier.header_title',
+        message: 'Account identifier',
+      })}
     >
       {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => {
         const blockchain = capitalize(i18n._(accountDisplayPref.blockchain));
         return (
           <>
             <Cell.Root
-              title={i18n._(accountDisplayPref.name)}
-              caption={t`${blockchain} blockchain`}
+              title={i18n._({
+                id: 'account_identifier.cell_title',
+                message: '{name}',
+                values: { name: accountDisplayPref.name },
+              })}
+              caption={t({
+                id: 'account_identifier.cell_caption',
+                message: `${blockchain} blockchain`,
+              })}
               onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
             >
               <Cell.Radio

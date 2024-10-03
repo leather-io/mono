@@ -59,13 +59,17 @@ export default function CreateNewWallet() {
             <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
           </TouchableOpacity>
           <Box>
-            <Trans>
+            <Trans id="create_new_wallet.title">
               <Text variant="heading03">BACK UP YOUR</Text>
               <Text variant="heading03">SECRET KEY</Text>
             </Trans>
           </Box>
           <Text variant="label01">
-            {t`Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.`}
+            {t({
+              id: 'create_new_wallet.subtitle',
+              message:
+                'Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.',
+            })}
           </Text>
         </Box>
 
@@ -94,10 +98,12 @@ export default function CreateNewWallet() {
               >
                 <PointerHandIcon />
                 <Box>
-                  <Text variant="label02">{t`Tap to view Secret Key`}</Text>
-                  <Text variant="label02" color="red.action-primary-default">
-                    {t`For your eyes only`}
-                  </Text>
+                  <Trans id="create_new_wallet.view_secret_key_label">
+                    <Text variant="label02">Tap to view Secret Key</Text>
+                    <Text variant="label02" color="red.action-primary-default">
+                      For your eyes only
+                    </Text>
+                  </Trans>
                 </Box>
               </TouchableOpacity>
             </BlurView>
@@ -111,7 +117,10 @@ export default function CreateNewWallet() {
             navigateAndCreateWallet();
           }}
           buttonState="default"
-          title={t`I've backed it up`}
+          title={t({
+            id: 'create_new_wallet.button',
+            message: `I've backed it up`,
+          })}
           testID={TestId.walletCreationBackedUpButton}
         />
       </Box>

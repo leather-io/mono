@@ -66,12 +66,18 @@ export function WarningSheet({
           <Button
             onPress={onSubmit}
             buttonState={variant === 'critical' ? 'critical' : 'default'}
-            title={t`Proceed`}
+            title={t({
+              id: 'warning.submit_button',
+              message: `Proceed`,
+            })}
           />
           <Button
             onPress={() => sheetRef.current?.dismiss()}
             buttonState="ghost"
-            title={t`Cancel`}
+            title={t({
+              id: 'warning.cancel_button',
+              message: `Cancel`,
+            })}
           />
         </Box>
       </Box>

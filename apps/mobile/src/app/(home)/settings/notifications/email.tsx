@@ -7,6 +7,7 @@ import { Cell, EmailIcon, SheetRef } from '@leather.io/ui/native';
 
 import SettingsScreenLayout from '../settings-screen.layout';
 
+// TODO: Hook up to email service when available
 export default function SettingsNotificationsEmailScreen() {
   const emailAddressSheetRef = useRef<SheetRef>(null);
 
@@ -14,8 +15,14 @@ export default function SettingsNotificationsEmailScreen() {
     <>
       <SettingsScreenLayout>
         <Cell.Root
-          title={t`Email address`}
-          caption={t`Awaiting verification`}
+          title={t({
+            id: 'notifications.email.cell_title',
+            message: 'Email address',
+          })}
+          caption={t({
+            id: 'notifications.email.cell_caption',
+            message: 'Placeholder',
+          })}
           icon={<EmailIcon />}
           onPress={() => {
             emailAddressSheetRef.current?.present();

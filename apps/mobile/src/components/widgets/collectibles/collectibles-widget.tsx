@@ -15,7 +15,15 @@ interface CollectiblesWidgetProps {
 export function CollectiblesWidget({ collectibles, totalBalance }: CollectiblesWidgetProps) {
   return (
     <Widget
-      header={<WidgetHeader title={t`My collectibles`} totalBalance={totalBalance} />}
+      header={
+        <WidgetHeader
+          title={t({
+            id: 'collectibles.header_title',
+            message: 'My collectibles',
+          })}
+          totalBalance={totalBalance}
+        />
+      }
       scrollDirection="horizontal"
     >
       {collectibles.map((collectible: CollectibleCardProps, index) => (

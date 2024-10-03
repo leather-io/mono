@@ -96,10 +96,19 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             <Button
               onPress={async () => {
                 await keys.createNewAccountOfWallet(fingerprint);
-                displayToast({ type: 'success', title: t`Account created` });
+                displayToast({
+                  title: t({
+                    id: 'wallet.add_account.toast_title',
+                    message: `Account created`,
+                  }),
+                  type: 'success',
+                });
               }}
               buttonState="ghost"
-              title={t`Add account`}
+              title={t({
+                id: 'wallet.add_account.button',
+                message: `Add account`,
+              })}
               icon={<PlusIcon />}
             />
           )}

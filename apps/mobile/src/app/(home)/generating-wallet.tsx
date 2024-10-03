@@ -20,7 +20,10 @@ export default function GeneratingWalletScreen() {
         alignItems="center"
       >
         <Text variant="heading04" color="ink.text-subdued">
-          {t`Adding Wallet`}
+          {t({
+            id: 'add_wallet_animation.title',
+            message: 'Adding Wallet',
+          })}
         </Text>
       </Box>
       <WalletGenerationAnimation />

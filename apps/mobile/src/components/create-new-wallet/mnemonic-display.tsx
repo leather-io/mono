@@ -10,7 +10,12 @@ import { MnemonicWordBox } from './mnemonic-word-box';
 function PassphraseDisplay({ passphrase }: { passphrase: string }) {
   return (
     <Box>
-      <Text variant="label03" color="ink.text-subdued">{t`BIP39 passphrase`}</Text>
+      <Text variant="label03" color="ink.text-subdued">
+        {t({
+          id: 'create_new_wallet.mnemonic.title',
+          message: `BIP39 passphrase`,
+        })}
+      </Text>
       <Text variant="label02">{passphrase}</Text>
     </Box>
   );
@@ -40,12 +45,21 @@ export function MnemonicDisplay({
         <Button
           onPress={async () => {
             await Clipboard.setStringAsync(mnemonic);
-            displayToast({ title: t`Successfully copied to clipboard!`, type: 'success' });
+            displayToast({
+              title: t({
+                id: 'create_new_wallet.mnemonic.toast_title',
+                message: `Successfully copied to clipboard!`,
+              }),
+              type: 'success',
+            });
           }}
           flex={1}
           style={{ borderColor: theme.colors['ink.text-primary'] }}
           buttonState="outline"
-          title={t`Copy`}
+          title={t({
+            id: 'create_new_wallet.mnemonic.copy_button',
+            message: `Copy`,
+          })}
         />
         <Button
           onPress={async () => {
@@ -54,7 +68,10 @@ export function MnemonicDisplay({
           flex={1}
           style={{ borderColor: theme.colors['ink.text-primary'] }}
           buttonState="outline"
-          title={t`Save to...`}
+          title={t({
+            id: 'create_new_wallet.mnemonic.save_button',
+            message: `Save to...`,
+          })}
         />
       </Box>
     </Box>
