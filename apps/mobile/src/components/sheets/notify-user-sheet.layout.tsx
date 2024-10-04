@@ -17,35 +17,27 @@ import {
   getButtonTextColor,
 } from '@leather.io/ui/native';
 
-export interface OptionData {
+export interface NotifyUserSheetData {
   title: string;
 }
 
 interface NotifyUserSheetProps {
-  notifyUserSheetRef: RefObject<SheetRef>;
-  optionData: OptionData | null;
-  onCloseNotificationsSheet(): unknown;
+  onCloseSheet?(): unknown;
+  sheetData: NotifyUserSheetData | null;
+  sheetRef: RefObject<SheetRef>;
 }
-export function NotifyUserSheet({
-  notifyUserSheetRef,
-  optionData,
-  onCloseNotificationsSheet,
-}: NotifyUserSheetProps) {
+export function NotifyUserSheet({ onCloseSheet, sheetData, sheetRef }: NotifyUserSheetProps) {
   const theme = useTheme<Theme>();
+  const { themeDerivedFromThemePreference } = useSettings();
   const { registerPushNotifications } = usePushNotifications();
+
   async function onNotify() {
     await registerPushNotifications();
-    notifyUserSheetRef.current?.dismiss();
+    sheetRef.current?.dismiss();
   }
-  const title = optionData?.title;
-  const { themeDerivedFromThemePreference } = useSettings();
 
   return (
-    <Sheet
-      themeVariant={themeDerivedFromThemePreference}
-      onDismiss={onCloseNotificationsSheet}
-      ref={notifyUserSheetRef}
-    >
+    <Sheet themeVariant={themeDerivedFromThemePreference} onDismiss={onCloseSheet} ref={sheetRef}>
       <Image
         style={{ height: 180 }}
         contentFit="cover"
@@ -53,9 +45,9 @@ export function NotifyUserSheet({
       />
       <Box p="5" justifyContent="space-between" gap="5">
         <Box gap="4">
-          <Text variant="heading05">{title}</Text>
+          <Text variant="heading05">{sheetData?.title}</Text>
           <Text variant="body01">
-            {t`This feature is not available yet, but we can notify when it’s ready.`}
+            {t`This feature is not available yet, but we can notify you when it’s ready.`}
           </Text>
         </Box>
         <Button

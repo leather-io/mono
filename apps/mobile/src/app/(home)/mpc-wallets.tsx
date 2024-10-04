@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import { MpcWalletListLayout } from '@/components/mpc-wallet/mpc-wallet-list.layout';
-import { NotifyUserSheet, OptionData } from '@/components/sheets/notify-user-sheet.layout';
+import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { t } from '@lingui/macro';
 
 import {
@@ -32,14 +32,16 @@ function getUnavailableFeatures() {
 }
 
 export default function MpcWalletListScreen() {
-  const notifyUserSheetRef = useRef<SheetRef>(null);
-  const [optionData, setOptionData] = useState<OptionData | null>(null);
-  function onOpenNotificationsSheet(option: OptionData) {
-    setOptionData(option);
-    notifyUserSheetRef.current?.present();
+  const sheetRef = useRef<SheetRef>(null);
+  const [sheetData, setSheetData] = useState<NotifyUserSheetData | null>(null);
+
+  function onOpenSheet(option: NotifyUserSheetData) {
+    setSheetData(option);
+    sheetRef.current?.present();
   }
-  function onCloseNotificationsSheet() {
-    setOptionData(null);
+
+  function onCloseSheet() {
+    setSheetData(null);
   }
 
   return (
@@ -50,7 +52,7 @@ export default function MpcWalletListScreen() {
             const [featureKey, feature] = featureEntry;
             const mpcWalletName = feature.title;
             function onPress() {
-              onOpenNotificationsSheet({
+              onOpenSheet({
                 title: t`Connect Mpc wallet: ${mpcWalletName}`,
               });
             }
@@ -69,11 +71,7 @@ export default function MpcWalletListScreen() {
         </Box>
       </MpcWalletListLayout>
 
-      <NotifyUserSheet
-        optionData={optionData}
-        onCloseNotificationsSheet={onCloseNotificationsSheet}
-        notifyUserSheetRef={notifyUserSheetRef}
-      />
+      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
     </>
   );
 }

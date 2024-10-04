@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { NotifyUserSheet, OptionData } from '../sheets/notify-user-sheet.layout';
+import { NotifyUserSheet, NotifyUserSheetData } from '../sheets/notify-user-sheet.layout';
 import { AddWalletSheetLayout } from './add-wallet-sheet.layout';
 
 interface AddWalletSheetBaseProps {
@@ -14,10 +14,10 @@ interface AddWalletSheetBaseProps {
 }
 
 export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
-  const notifyUserSheetRef = useRef<SheetRef>(null);
+  const sheetRef = useRef<SheetRef>(null);
   const { themeDerivedFromThemePreference } = useSettings();
   const router = useRouter();
-  const [optionData, setOptionData] = useState<OptionData | null>(null);
+  const [sheetData, setSheetData] = useState<NotifyUserSheetData | null>(null);
   const createWallet = useCallback(() => {
     router.navigate(AppRoutes.CreateNewWallet);
     addWalletSheetRef.current?.close();
@@ -28,29 +28,26 @@ export function AddWalletSheet({ addWalletSheetRef }: AddWalletSheetBaseProps) {
     addWalletSheetRef.current?.close();
   }, [addWalletSheetRef, router]);
 
-  function onOpenNotificationsSheet(option: OptionData) {
-    setOptionData(option);
-    notifyUserSheetRef.current?.present();
+  function onOpenSheet(option: NotifyUserSheetData) {
+    setSheetData(option);
+    sheetRef.current?.present();
   }
-  function onCloseNotificationsSheet() {
-    setOptionData(null);
+
+  function onCloseSheet() {
+    setSheetData(null);
   }
 
   return (
     <>
       <AddWalletSheetLayout
-        onOpenNotificationsSheet={onOpenNotificationsSheet}
+        onOpenSheet={onOpenSheet}
         createWallet={createWallet}
         restoreWallet={restoreWallet}
         addWalletSheetRef={addWalletSheetRef}
         themeVariant={themeDerivedFromThemePreference}
       />
 
-      <NotifyUserSheet
-        optionData={optionData}
-        onCloseNotificationsSheet={onCloseNotificationsSheet}
-        notifyUserSheetRef={notifyUserSheetRef}
-      />
+      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
     </>
   );
 }

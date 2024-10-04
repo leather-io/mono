@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import { HardwareWalletListLayout } from '@/components/hardware-wallet/hardware-wallet-list.layout';
-import { NotifyUserSheet, OptionData } from '@/components/sheets/notify-user-sheet.layout';
+import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { t } from '@lingui/macro';
 
 import {
@@ -28,14 +28,16 @@ function getUnavailableFeatures() {
 }
 
 export default function HardwareWalletListScreen() {
-  const notifyUserSheetRef = useRef<SheetRef>(null);
-  const [optionData, setOptionData] = useState<OptionData | null>(null);
-  function onOpenNotificationsSheet(option: OptionData) {
-    setOptionData(option);
-    notifyUserSheetRef.current?.present();
+  const sheetRef = useRef<SheetRef>(null);
+  const [sheetData, setSheetData] = useState<NotifyUserSheetData | null>(null);
+
+  function onOpenSheet(option: NotifyUserSheetData) {
+    setSheetData(option);
+    sheetRef.current?.present();
   }
-  function onCloseNotificationsSheet() {
-    setOptionData(null);
+
+  function onCloseSheet() {
+    setSheetData(null);
   }
 
   return (
@@ -46,7 +48,7 @@ export default function HardwareWalletListScreen() {
             const [featureKey, feature] = featureEntry;
             const hardwareWalletName = feature.title;
             function onPress() {
-              onOpenNotificationsSheet({
+              onOpenSheet({
                 title: t`Connect hardware wallet: ${hardwareWalletName}`,
               });
             }
@@ -64,11 +66,7 @@ export default function HardwareWalletListScreen() {
           })}
         </Box>
       </HardwareWalletListLayout>
-      <NotifyUserSheet
-        optionData={optionData}
-        onCloseNotificationsSheet={onCloseNotificationsSheet}
-        notifyUserSheetRef={notifyUserSheetRef}
-      />
+      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
     </>
   );
 }

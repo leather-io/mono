@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-10-07 12:22+0400\n"
+"POT-Creation-Date: 2024-10-07 12:11-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -105,7 +105,7 @@ msgstr "Add wallet"
 msgid "Add Wallet"
 msgstr "Add Wallet"
 
-#: src/app/(home)/settings/index.tsx:39
+#: src/app/(home)/settings/index.tsx:45
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
@@ -155,7 +155,7 @@ msgstr "Allow Leather to access application's secure storage"
 msgid "Analytics"
 msgstr "Analytics"
 
-#: src/app/(home)/settings/index.tsx:60
+#: src/app/(home)/settings/index.tsx:66
 msgid "Analytics and app authentication"
 msgstr "Analytics and app authentication"
 
@@ -258,7 +258,7 @@ msgstr "Confirm"
 msgid "Connect hardware wallet"
 msgstr "Connect hardware wallet"
 
-#: src/app/(home)/hardware-wallets.tsx:50
+#: src/app/(home)/hardware-wallets.tsx:52
 msgid "Connect hardware wallet: {hardwareWalletName}"
 msgstr "Connect hardware wallet: {hardwareWalletName}"
 
@@ -266,7 +266,7 @@ msgstr "Connect hardware wallet: {hardwareWalletName}"
 msgid "Connect MPC wallet"
 msgstr "Connect MPC wallet"
 
-#: src/app/(home)/mpc-wallets.tsx:54
+#: src/app/(home)/mpc-wallets.tsx:56
 msgid "Connect Mpc wallet: {mpcWalletName}"
 msgstr "Connect Mpc wallet: {mpcWalletName}"
 
@@ -274,7 +274,8 @@ msgstr "Connect Mpc wallet: {mpcWalletName}"
 msgid "Connected"
 msgstr "Connected"
 
-#: src/app/(home)/settings/index.tsx:99
+#: src/app/(home)/settings/index.tsx:107
+#: src/app/(home)/settings/index.tsx:150
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -335,6 +336,10 @@ msgstr "Create, Import or connect instantly"
 msgid "Creation date"
 msgstr "Creation date"
 
+#: src/app/(home)/settings/index.tsx:151
+msgid "Custom fees"
+msgstr "Custom fees"
+
 #: src/app/(home)/settings/notifications/index.tsx:13
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:31
@@ -379,7 +384,7 @@ msgid "Disabled"
 msgstr "Disabled"
 
 #: src/app/(home)/_layout.tsx:112
-#: src/app/(home)/settings/index.tsx:50
+#: src/app/(home)/settings/index.tsx:56
 msgid "Display"
 msgstr "Display"
 
@@ -429,7 +434,7 @@ msgstr "Failed to authenticate"
 msgid "Failed to get push token for push notification!"
 msgstr "Failed to get push token for push notification!"
 
-#: src/app/(home)/settings/index.tsx:102
+#: src/app/(home)/settings/index.tsx:117
 msgid "Fees"
 msgstr "Fees"
 
@@ -458,7 +463,7 @@ msgid "Guides"
 msgstr "Guides"
 
 #: src/app/(home)/_layout.tsx:125
-#: src/app/(home)/settings/index.tsx:88
+#: src/app/(home)/settings/index.tsx:94
 msgid "Help"
 msgstr "Help"
 
@@ -509,7 +514,7 @@ msgstr "Ledger"
 msgid "Ledger, Trezor, Ryder and more"
 msgstr "Ledger, Trezor, Ryder and more"
 
-#: src/app/(home)/settings/index.tsx:126
+#: src/app/(home)/settings/index.tsx:146
 msgid "Lock app"
 msgstr "Lock app"
 
@@ -517,11 +522,11 @@ msgstr "Lock app"
 msgid "locked"
 msgstr "locked"
 
-#: src/app/(home)/settings/index.tsx:69
+#: src/app/(home)/settings/index.tsx:75
 msgid "Mainnet, testnet or signet"
 msgstr "Mainnet, testnet or signet"
 
-#: src/app/(home)/settings/index.tsx:96
+#: src/app/(home)/settings/index.tsx:102
 #: src/components/add-wallet/add-wallet-sheet.layout.tsx:100
 msgid "More options"
 msgstr "More options"
@@ -553,7 +558,7 @@ msgid "Network changed"
 msgstr "Network changed"
 
 #: src/app/(home)/_layout.tsx:120
-#: src/app/(home)/settings/index.tsx:68
+#: src/app/(home)/settings/index.tsx:74
 msgid "Networks"
 msgstr "Networks"
 
@@ -565,12 +570,12 @@ msgstr "No key needed"
 msgid "Notification"
 msgstr "Notification"
 
-#: src/app/(home)/settings/index.tsx:78
+#: src/app/(home)/settings/index.tsx:84
 #: src/app/(home)/settings/notifications/_layout.tsx:43
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:65
+#: src/components/sheets/notify-user-sheet.layout.tsx:57
 msgid "Notify me"
 msgstr "Notify me"
 
@@ -633,7 +638,7 @@ msgstr "Provide an email address for receiving notifications"
 msgid "Push"
 msgstr "Push"
 
-#: src/app/(home)/settings/index.tsx:79
+#: src/app/(home)/settings/index.tsx:85
 msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
@@ -697,7 +702,7 @@ msgid "SECRET KEY"
 msgstr "SECRET KEY"
 
 #: src/app/(home)/_layout.tsx:116
-#: src/app/(home)/settings/index.tsx:59
+#: src/app/(home)/settings/index.tsx:65
 msgid "Security"
 msgstr "Security"
 
@@ -783,7 +788,7 @@ msgstr "Suggested"
 msgid "Support and feedback"
 msgstr "Support and feedback"
 
-#: src/app/(home)/settings/index.tsx:89
+#: src/app/(home)/settings/index.tsx:95
 msgid "Support, guides and articles"
 msgstr "Support, guides and articles"
 
@@ -824,13 +829,13 @@ msgstr "Theme"
 msgid "Theme updated"
 msgstr "Theme updated"
 
-#: src/app/(home)/settings/index.tsx:51
+#: src/app/(home)/settings/index.tsx:57
 msgid "Theme, bitcoin unit and more"
 msgstr "Theme, bitcoin unit and more"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:58
-msgid "This feature is not available yet, but we can notify when it’s ready."
-msgstr "This feature is not available yet, but we can notify when it’s ready."
+#: src/components/sheets/notify-user-sheet.layout.tsx:50
+msgid "This feature is not available yet, but we can notify you when it’s ready."
+msgstr "This feature is not available yet, but we can notify you when it’s ready."
 
 #: src/components/browser/browser-empty-state.tsx:29
 #: src/components/browser/browser-empty-state.tsx:30
@@ -898,7 +903,7 @@ msgstr "Type your recovery phrase"
 msgid "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 msgstr "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
 
-#: src/app/(home)/settings/index.tsx:118
+#: src/app/(home)/settings/index.tsx:138
 msgid "Version"
 msgstr "Version"
 
@@ -926,7 +931,7 @@ msgstr "Wallet already exists"
 msgid "Wallet management"
 msgstr "Wallet management"
 
-#: src/app/(home)/settings/index.tsx:38
+#: src/app/(home)/settings/index.tsx:44
 msgid "Wallets and accounts"
 msgstr "Wallets and accounts"
 
