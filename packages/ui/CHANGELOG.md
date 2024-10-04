@@ -103,6 +103,15 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.27.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.27.0...@leather.io/ui-v1.27.1) (2024-10-04)
+
+
+### Bug Fixes
+
+* **ui:** add tooltip exit animation ([e9cc831](https://github.com/leather-io/mono/commit/e9cc83184fa1589cbda44fd5a52fb265055c42ae))
+* **ui:** flag component not accepting all spacing units ([789455b](https://github.com/leather-io/mono/commit/789455bd52326d3fee0d2e65675985ea5c0c57df))
+* **ui:** use position fixed action bar ([8436d4a](https://github.com/leather-io/mono/commit/8436d4afd359b4d1a59490e07e9a0599c5b54eba))
+
 ## [1.27.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.26.0...@leather.io/ui-v1.27.0) (2024-10-02)
 
 
