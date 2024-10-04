@@ -29,7 +29,7 @@ import {
   ThemeVariant,
 } from '@leather.io/ui/native';
 
-import { OptionData } from '../sheets/notify-user-sheet.layout';
+import { NotifyUserSheetData } from '../sheets/notify-user-sheet.layout';
 import { AddWalletCell } from './add-wallet-cell';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -41,14 +41,14 @@ interface AddWalletSheetBaseProps {
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   createWallet(): unknown;
   restoreWallet(): unknown;
-  onOpenNotificationsSheet(option: OptionData): unknown;
+  onOpenSheet(option: NotifyUserSheetData): unknown;
   themeVariant: ThemeVariant;
 }
 export function AddWalletSheetLayout({
   addWalletSheetRef,
   createWallet,
   restoreWallet,
-  onOpenNotificationsSheet,
+  onOpenSheet,
   themeVariant,
 }: AddWalletSheetLayoutProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
@@ -116,7 +116,7 @@ export function AddWalletSheetLayout({
                   subtitle={t`Access custodial wallet`}
                   icon={<EmailIcon color={theme.colors['ink.text-subdued']} />}
                   onPress={() => {
-                    onOpenNotificationsSheet({ title: t`Create or restore via email` });
+                    onOpenSheet({ title: t`Create or restore via email` });
                   }}
                 />
                 <AddWalletCell
@@ -133,7 +133,7 @@ export function AddWalletSheetLayout({
                   subtitle={t`No key needed`}
                   icon={<Eye2Icon color={theme.colors['ink.text-subdued']} />}
                   onPress={() => {
-                    onOpenNotificationsSheet({ title: t`Create watch-only wallet` });
+                    onOpenSheet({ title: t`Create watch-only wallet` });
                   }}
                 />
               </>
