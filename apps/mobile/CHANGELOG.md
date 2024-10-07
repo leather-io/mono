@@ -202,6 +202,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.40.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.39.1...@leather.io/mobile-v1.40.0) (2024-10-07)
+
+
+### Features
+
+* add account page, ref leather-io/issues[#138](https://github.com/leather-io/mono/issues/138) ([293cb1a](https://github.com/leather-io/mono/commit/293cb1a0194801719a61b114afedfb0ec0c1376e))
+
 ## [1.39.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.38.2...@leather.io/mobile-v1.39.0) (2024-10-02)
 
 
