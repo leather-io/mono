@@ -2,7 +2,7 @@ import { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
 import { TouchableOpacity, TouchableOpacityProps } from '../button/touchable-opacity.native';
 
-interface RadioButtonProps extends TouchableOpacityProps<Theme> {
+export interface RadioButtonProps extends TouchableOpacityProps<Theme> {
   isSelected: boolean;
 }
 export function RadioButton({ isSelected, ...props }: RadioButtonProps) {

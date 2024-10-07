@@ -65,32 +65,35 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
         >
           <Box px="5" gap="6">
             <AccountCard Icon={getAvatarIcon(account.icon)} name={account.name} key={account.id} />
-            <Cell
+            <Cell.Root
               title={t`Name`}
-              subtitle={account.name}
-              Icon={PassportIcon}
+              caption={account.name}
+              icon={<PassportIcon />}
               onPress={() => {
                 accountNameSheetRef.current?.present();
               }}
-            />
-            <Cell
+            >
+              <Cell.Chevron />
+            </Cell.Root>
+            <Cell.Root
               title={t`Avatar`}
-              Icon={HeadIcon}
+              icon={<HeadIcon />}
               onPress={() => {
                 router.navigate({
                   pathname: AppRoutes.SettingsWalletConfigureAccountAvatar,
                   params: { wallet: fingerprint, account: accountIndex },
                 });
               }}
-            />
-            <Cell
+            >
+              <Cell.Chevron />
+            </Cell.Root>
+            <Cell.Root
               title={t`Hide account`}
-              Icon={Eye1ClosedIcon}
+              icon={<Eye1ClosedIcon />}
               onPress={toggleHideAccount}
-              variant="switch"
-              switchValue={account.status === 'hidden'}
-              toggleSwitchValue={toggleHideAccount}
-            />
+            >
+              <Cell.Switch value={account.status === 'hidden'} onValueChange={toggleHideAccount} />
+            </Cell.Root>
           </Box>
         </ScrollView>
       </Box>

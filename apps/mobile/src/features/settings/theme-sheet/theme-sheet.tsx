@@ -5,11 +5,10 @@ import { ThemePreference, defaultThemePreferences, useSettings } from '@/store/s
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import { SheetRef, SunInCloudIcon } from '@leather.io/ui/native';
+import { Cell, SheetRef, SunInCloudIcon } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
 import { SettingsSheetLayout } from '../settings-sheet.layout';
-import { ThemeCell } from './theme-cell';
 
 interface ThemeSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -27,13 +26,13 @@ export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   return (
     <SettingsSheetLayout icon={<SunInCloudIcon />} sheetRef={sheetRef} title={t`Theme`}>
       {defaultThemePreferences.map(theme => (
-        <ThemeCell
-          key={theme}
-          activeTheme={settings.themePreference}
-          onUpdateTheme={onUpdateTheme}
-          theme={theme}
+        <Cell.Root
           title={i18n._(capitalize(theme))}
-        />
+          key={theme}
+          onPress={() => onUpdateTheme(theme)}
+        >
+          <Cell.Radio isSelected={settings.themePreference === theme} />
+        </Cell.Root>
       ))}
     </SettingsSheetLayout>
   );

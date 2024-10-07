@@ -40,14 +40,14 @@ export const currencyDecimalsMap = {
 } as const;
 
 export const currencyNameMap = {
-  USD: 'united states dollar',
-  EUR: 'euro',
-  GBP: 'british pound',
-  AUD: 'australian dollar',
-  CAD: 'canadian dollar',
-  CNY: 'chinese yuan',
-  JPY: 'japanese yen',
-  KRW: 'south korean won',
+  USD: 'United States Dollar',
+  EUR: 'Euro',
+  GBP: 'British Pound',
+  AUD: 'Australian Dollar',
+  CAD: 'Canadian Dollar',
+  CNY: 'Chinese Yuan',
+  JPY: 'Japanese Yen',
+  KRW: 'South Korean Won',
 } as const;
 
 // https://bitcoin.stackexchange.com/a/41082/139277

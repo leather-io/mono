@@ -7,11 +7,16 @@ import {
   DefaultNetworkConfigurations,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
-import { GlobeIcon, PlaygroundFormsIcon, TestTubeIcon } from '@leather.io/ui/native';
+import {
+  Cell,
+  GlobeIcon,
+  PlaceholderIcon,
+  PlaygroundFormsIcon,
+  TestTubeIcon,
+} from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
 import SettingsScreenLayout from '../settings-screen.layout';
-import { NetworkCell } from './network-cell';
 
 function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
@@ -22,7 +27,7 @@ function getNetworkIcon(network: DefaultNetworkConfigurations) {
     case WalletDefaultNetworkConfigurationIds.signet:
       return <PlaygroundFormsIcon />;
     default:
-      return <></>;
+      return <PlaceholderIcon />;
   }
 }
 
@@ -39,14 +44,15 @@ export default function SettingsNetworksScreen() {
   return (
     <SettingsScreenLayout>
       {defaultNetworkPreferences.map(network => (
-        <NetworkCell
-          key={network}
-          caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
+        <Cell.Root
           icon={getNetworkIcon(network)}
-          isSelected={settings.networkPreference.id === network}
-          onChangeNetwork={() => onChangeNetwork(network)}
           title={i18n._(capitalize(network))}
-        />
+          caption={settings.networkPreference.id === network ? t`Enabled` : t`Disabled`}
+          key={network}
+          onPress={() => onChangeNetwork(network)}
+        >
+          <Cell.Radio isSelected={settings.networkPreference.id === network} />
+        </Cell.Root>
       ))}
     </SettingsScreenLayout>
   );

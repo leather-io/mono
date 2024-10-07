@@ -10,17 +10,16 @@ import { useLingui } from '@lingui/react';
 
 import {
   BitcoinCircleIcon,
+  Cell,
   DollarCircleIcon,
   Eye1Icon,
   PackageSecurityIcon,
   SheetRef,
   SunInCloudIcon,
-  Switch,
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
 import SettingsScreenLayout from '../settings-screen.layout';
-import { DisplayCell } from './display-cell';
 
 export default function SettingsDisplayScreen() {
   const themeSheetRef = useRef<SheetRef>(null);
@@ -44,45 +43,61 @@ export default function SettingsDisplayScreen() {
   return (
     <>
       <SettingsScreenLayout>
-        <DisplayCell
+        <Cell.Root
           title={t`Theme`}
           caption={i18n._(capitalize(themePreference))}
           icon={<SunInCloudIcon />}
           onPress={() => {
             themeSheetRef.current?.present();
           }}
-        />
-        <DisplayCell
+        >
+          <Cell.Chevron />
+        </Cell.Root>
+
+        <Cell.Root
           title={t`Bitcoin unit`}
           caption={i18n._(bitcoinUnitPreference.symbol)}
           icon={<BitcoinCircleIcon />}
           onPress={() => {
             bitcoinUnitSheetRef.current?.present();
           }}
-        />
-        <DisplayCell
+        >
+          <Cell.Chevron />
+        </Cell.Root>
+
+        <Cell.Root
           title={t`Conversion unit`}
           caption={i18n._(fiatCurrencyPreference)}
           icon={<DollarCircleIcon />}
           onPress={() => {
             conversionUnitSheetRef.current?.present();
           }}
-        />
-        <DisplayCell
+        >
+          <Cell.Chevron />
+        </Cell.Root>
+
+        <Cell.Root
           title={t`Account identifier`}
           caption={i18n._(accountDisplayPreference.name)}
           icon={<PackageSecurityIcon />}
           onPress={() => {
             accountIdentifierSheetRef.current?.present();
           }}
-        />
-        <DisplayCell
-          actionIcon={<Switch disabled value={privacyModePreference === 'hidden'} />}
+        >
+          <Cell.Chevron />
+        </Cell.Root>
+
+        <Cell.Root
           title={t`Hide home balance`}
           caption={t`Tap your balance to quickly toggle this setting`}
           icon={<Eye1Icon />}
           onPress={() => onUpdatePrivacyMode()}
-        />
+        >
+          <Cell.Switch
+            onValueChange={() => onUpdatePrivacyMode()}
+            value={privacyModePreference === 'hidden'}
+          />
+        </Cell.Root>
       </SettingsScreenLayout>
       <ThemeSheet sheetRef={themeSheetRef} />
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />

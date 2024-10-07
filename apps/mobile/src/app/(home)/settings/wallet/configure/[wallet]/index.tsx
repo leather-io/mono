@@ -47,7 +47,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const dispatch = useAppDispatch();
   useEffect(() => {
     navigation.setOptions({ title: wallet.name });
-  }, []);
+  }, [navigation, wallet.name]);
 
   function setName(name: string) {
     dispatch(
@@ -76,44 +76,70 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
         >
           <Box px="5" gap="6">
             <Text variant="heading05">{wallet.name}</Text>
-            <Cell
+            <Cell.Root
               title={t`View Secret Key`}
-              Icon={Eye1ClosedIcon}
+              icon={<Eye1ClosedIcon />}
               onPress={() => {
                 router.navigate({
                   pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
                   params: { fingerprint: wallet.fingerprint },
                 });
               }}
-            />
-            <Cell
+            >
+              <Cell.Chevron />
+            </Cell.Root>
+            <Cell.Root
               title={t`Rename wallet`}
-              Icon={SquareLinesBottomIcon}
+              icon={<SquareLinesBottomIcon />}
               onPress={() => {
                 walletNameSheetRef.current?.present();
               }}
-            />
-            <Cell
+            >
+              <Cell.Chevron />
+            </Cell.Root>
+            <Cell.Root
               title={t`Remove wallet`}
-              Icon={TrashIcon}
+              icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
               onPress={() => {
                 removeWalletSheetRef.current?.present();
               }}
-              variant="critical"
-            />
+            >
+              <Cell.Chevron />
+            </Cell.Root>
             <Accordion
               label={t`Advanced options`}
               content={
                 <>
-                  <Cell
+                  <Cell.Root
                     title={t`Address reuse`}
-                    Icon={ArrowsRepeatLeftRightIcon}
-                    variant="inactive"
-                  />
-                  <Cell title={t`Address scan range`} Icon={BarcodeIcon} variant="inactive" />
-                  <Cell title={t`Address types`} Icon={InboxIcon} variant="inactive" />
-                  <Cell title={t`Export xPub`} Icon={ArrowOutOfBoxIcon} variant="inactive" />
-                  <Cell title={t`Export key`} Icon={ArrowOutOfBoxIcon} variant="inactive" />
+                    icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={t`Address scan range`}
+                    icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={t`Address types`}
+                    icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={t`Export xPub`}
+                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={t`Export key`}
+                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
                 </>
               }
             />

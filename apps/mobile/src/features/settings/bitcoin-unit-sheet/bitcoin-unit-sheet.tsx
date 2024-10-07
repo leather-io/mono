@@ -7,10 +7,9 @@ import { useLingui } from '@lingui/react';
 
 import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import { BitcoinUnit } from '@leather.io/models';
-import { BitcoinCircleIcon, SheetRef } from '@leather.io/ui/native';
+import { BitcoinCircleIcon, Cell, SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from '../settings-sheet.layout';
-import { BitcoinUnitCell } from './bitcoin-unit-cell';
 
 interface BitcoinUnitSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -28,14 +27,14 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   return (
     <SettingsSheetLayout icon={<BitcoinCircleIcon />} sheetRef={sheetRef} title={t`Bitcoin unit`}>
       {Object.values(bitcoinUnitsKeyedByName).map(unit => (
-        <BitcoinUnitCell
+        <Cell.Root
           key={unit.name}
-          activeBitcoinUnit={settings.bitcoinUnitPreference.name}
-          caption={i18n._(unit.name)}
-          onUpdateBitcoinUnit={onUpdateBitcoinUnit}
-          unit={unit}
           title={i18n._(unit.symbol)}
-        />
+          caption={i18n._(unit.name)}
+          onPress={() => onUpdateBitcoinUnit(unit.name)}
+        >
+          <Cell.Radio isSelected={settings.bitcoinUnitPreference.name === unit.name} />
+        </Cell.Root>
       ))}
     </SettingsSheetLayout>
   );
