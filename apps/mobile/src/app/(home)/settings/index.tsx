@@ -117,9 +117,10 @@ export default function SettingsScreen() {
           <Box pt="5" pb="5">
             <Text variant="label01">{t`Version`}</Text>
             <Text variant="caption01" color="ink.text-subdued">
-              {process.env.NODE_ENV === 'development'
-                ? Application.nativeBuildVersion
-                : Application.nativeApplicationVersion}
+              {Application.nativeApplicationVersion}
+            </Text>
+            <Text variant="caption01" color="ink.text-subdued">
+              {Application.nativeBuildVersion}
             </Text>
           </Box>
           <Button onPress={() => {}} buttonState="outline" title={t`Lock app`} />
