@@ -5,10 +5,9 @@ import { AppAuthenticationSheet } from '@/features/settings/app-authentication-s
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+import { Cell, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
 
 import SettingsScreenLayout from '../settings-screen.layout';
-import { SecurityCell } from './security-cell';
 
 export default function SettingsSecurityScreen() {
   const analyticsSheetRef = useRef<SheetRef>(null);
@@ -18,22 +17,26 @@ export default function SettingsSecurityScreen() {
   return (
     <>
       <SettingsScreenLayout>
-        <SecurityCell
+        <Cell.Root
           title={t`Analytics`}
           caption={settings.analyticsPreference === 'consent-given' ? t`Enabled` : t`Disabled`}
           icon={<CookieIcon />}
-          onCreateSheetRef={() => {
+          onPress={() => {
             analyticsSheetRef.current?.present();
           }}
-        />
-        <SecurityCell
+        >
+          <Cell.Chevron />
+        </Cell.Root>
+        <Cell.Root
           title={t`App authentication`}
           caption={settings.securityLevelPreference === 'secure' ? t`Enabled` : t`Disabled`}
           icon={<KeyholeIcon />}
-          onCreateSheetRef={() => {
+          onPress={() => {
             appAuthenticationSheetRef.current?.present();
           }}
-        />
+        >
+          <Cell.Chevron />
+        </Cell.Root>
       </SettingsScreenLayout>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />
       <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />

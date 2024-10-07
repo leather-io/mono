@@ -20,14 +20,14 @@ import {
 
 function getUnavailableFeatures() {
   return {
-    bitgo: { title: t`BitGo`, Icon: LogoMpcBitgo },
-    capsule: { title: t`Capsule`, Icon: LogoMpcCapsule },
-    copper: { title: t`Copper`, Icon: LogoMpcCopper },
-    fireblocks: { title: t`Fireblocks`, Icon: LogoMpcFireblocks },
-    foredefi: { title: t`Foredefi`, Icon: LogoMpcFordefi },
-    portal: { title: t`Portal`, Icon: LogoMpcPortal },
-    privy: { title: t`Privy`, Icon: LogoMpcPrivy },
-    qredo: { title: t`Qredo`, Icon: LogoMpcQredo },
+    bitgo: { title: t`BitGo`, icon: <LogoMpcBitgo /> },
+    capsule: { title: t`Capsule`, icon: <LogoMpcCapsule /> },
+    copper: { title: t`Copper`, icon: <LogoMpcCopper /> },
+    fireblocks: { title: t`Fireblocks`, icon: <LogoMpcFireblocks /> },
+    foredefi: { title: t`Foredefi`, icon: <LogoMpcFordefi /> },
+    portal: { title: t`Portal`, icon: <LogoMpcPortal /> },
+    privy: { title: t`Privy`, icon: <LogoMpcPrivy /> },
+    qredo: { title: t`Qredo`, icon: <LogoMpcQredo /> },
   };
 }
 
@@ -55,13 +55,15 @@ export default function MpcWalletListScreen() {
               });
             }
             return (
-              <Cell
+              <Cell.Root
                 py="4"
                 key={featureKey}
                 onPress={onPress}
                 title={feature.title}
-                Icon={feature.Icon}
-              />
+                icon={feature.icon}
+              >
+                <Cell.Chevron />
+              </Cell.Root>
             );
           })}
         </Box>

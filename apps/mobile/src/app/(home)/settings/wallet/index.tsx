@@ -37,21 +37,25 @@ export default function SettingsScreen() {
         <Box>
           <Divider />
           <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }} gap="6">
-            <Cell
+            <Cell.Root
               title={t`Hidden accounts`}
-              subtitle={t`${hiddenAccountsLength} hidden accounts`}
-              Icon={Eye1ClosedIcon}
+              caption={t`${hiddenAccountsLength} hidden accounts`}
+              icon={<Eye1ClosedIcon />}
               onPress={() => {
                 router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
               }}
-            />
-            <Cell
+            >
+              <Cell.Chevron />
+            </Cell.Root>
+            <Cell.Root
               title={t`Add wallet`}
-              Icon={PlusIcon}
+              icon={<PlusIcon />}
               onPress={() => {
                 addWalletSheetRef.current?.present();
               }}
-            />
+            >
+              <Cell.Chevron />
+            </Cell.Root>
           </Box>
         </Box>
       </Box>

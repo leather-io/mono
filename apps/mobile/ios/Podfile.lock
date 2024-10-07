@@ -1617,7 +1617,7 @@ DEPENDENCIES:
   - "EXJSONUtils (from `../../../node_modules/.pnpm/expo-json-utils@0.13.1/node_modules/expo-json-utils/ios`)"
   - "EXManifests (from `../../../node_modules/.pnpm/expo-manifests@0.14.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7._s33xdzailicz6yhdsnnpry6tqe/node_modules/expo-manifests/ios`)"
   - "EXNotifications (from `../../../node_modules/.pnpm/expo-notifications@0.28.14_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+co_zlncp7rrc5d7ddbbmtj7fd3ojy/node_modules/expo-notifications/ios`)"
-  - "Expo (from `../../../node_modules/.pnpm/expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.24.6__@react-native+as_lrhgzzxm2iv65idosv4dazehiq/node_modules/expo`)"
+  - "Expo (from `../../../node_modules/.pnpm/expo@51.0.26_myqknr2ojwjf6ytdd6j6fwllau/node_modules/expo`)"
   - "expo-dev-client (from `../../../node_modules/.pnpm/expo-dev-client@4.0.20_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7_3cpv37j7pij7qb6is7nyzva4iu/node_modules/expo-dev-client/ios`)"
   - "expo-dev-launcher (from `../../../node_modules/.pnpm/expo-dev-launcher@4.0.22_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core_u4zo7ghdvrxs254ouz5kcxfojy/node_modules/expo-dev-launcher`)"
   - "expo-dev-menu (from `../../../node_modules/.pnpm/expo-dev-menu@5.0.16_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_vzmamtqtux423k22xpriqb6eyy/node_modules/expo-dev-menu`)"
@@ -1731,7 +1731,7 @@ EXTERNAL SOURCES:
   EXNotifications:
     :path: "../../../node_modules/.pnpm/expo-notifications@0.28.14_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+co_zlncp7rrc5d7ddbbmtj7fd3ojy/node_modules/expo-notifications/ios"
   Expo:
-    :path: "../../../node_modules/.pnpm/expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.24.6__@react-native+as_lrhgzzxm2iv65idosv4dazehiq/node_modules/expo"
+    :path: "../../../node_modules/.pnpm/expo@51.0.26_myqknr2ojwjf6ytdd6j6fwllau/node_modules/expo"
   expo-dev-client:
     :path: "../../../node_modules/.pnpm/expo-dev-client@4.0.20_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7_3cpv37j7pij7qb6is7nyzva4iu/node_modules/expo-dev-client/ios"
   expo-dev-launcher:
@@ -1997,7 +1997,7 @@ SPEC CHECKSUMS:
   SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  Yoga: b9a182ab00cf25926e7f79657d08c5d23c2d03b0
+  Yoga: 348f8b538c3ed4423eb58a8e5730feec50bce372
 
 PODFILE CHECKSUM: 1183a5e3969c957f2df7140e9b85ba46d355b320
 

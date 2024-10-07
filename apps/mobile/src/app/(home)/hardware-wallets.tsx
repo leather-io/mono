@@ -18,12 +18,12 @@ import {
 
 function getUnavailableFeatures() {
   return {
-    bitgo: { title: t`Bitkey`, Icon: LogoHardwareBitkey },
-    capsule: { title: t`Ledger`, Icon: LogoHardwareLedger },
-    copper: { title: t`OneKey`, Icon: LogoHardwareOnekey },
-    fireblocks: { title: t`Passport`, Icon: LogoHardwareFoundation },
-    foredefi: { title: t`Ryder`, Icon: LogoHardwareRyder },
-    portal: { title: t`Trezor`, Icon: LogoHardwareTrezor },
+    bitgo: { title: t`Bitkey`, icon: <LogoHardwareBitkey /> },
+    capsule: { title: t`Ledger`, icon: <LogoHardwareLedger /> },
+    copper: { title: t`OneKey`, icon: <LogoHardwareOnekey /> },
+    fireblocks: { title: t`Passport`, icon: <LogoHardwareFoundation /> },
+    foredefi: { title: t`Ryder`, icon: <LogoHardwareRyder /> },
+    portal: { title: t`Trezor`, icon: <LogoHardwareTrezor /> },
   };
 }
 
@@ -51,13 +51,15 @@ export default function HardwareWalletListScreen() {
               });
             }
             return (
-              <Cell
+              <Cell.Root
                 py="4"
                 key={featureKey}
-                onPress={onPress}
                 title={feature.title}
-                Icon={feature.Icon}
-              />
+                icon={feature.icon}
+                onPress={onPress}
+              >
+                <Cell.Chevron />
+              </Cell.Root>
             );
           })}
         </Box>

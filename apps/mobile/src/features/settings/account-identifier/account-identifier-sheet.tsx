@@ -7,11 +7,10 @@ import { useLingui } from '@lingui/react';
 
 import { accountDisplayPreferencesKeyedByType } from '@leather.io/constants';
 import { AccountDisplayPreference } from '@leather.io/models';
-import { PackageSecurityIcon, SheetRef } from '@leather.io/ui/native';
+import { Cell, PackageSecurityIcon, SheetRef } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
 import { SettingsSheetLayout } from '../settings-sheet.layout';
-import { AccountIdentifierCell } from './account-identifier-cell';
 
 interface AccountIdentifierSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -32,16 +31,22 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
       sheetRef={sheetRef}
       title={t`Account identifier`}
     >
-      {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => (
-        <AccountIdentifierCell
-          key={accountDisplayPref.name}
-          accountDisplayPref={accountDisplayPref}
-          activeAccountDisplayPreference={settings.accountDisplayPreference.type}
-          caption={capitalize(i18n._(accountDisplayPref.blockchain))}
-          onUpdateAccountDisplayPreference={onUpdateAccountDisplayPreference}
-          title={i18n._(accountDisplayPref.name)}
-        />
-      ))}
+      {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => {
+        const blockchain = capitalize(i18n._(accountDisplayPref.blockchain));
+        return (
+          <>
+            <Cell.Root
+              title={i18n._(accountDisplayPref.name)}
+              caption={t`${blockchain} blockchain`}
+              onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
+            >
+              <Cell.Radio
+                isSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}
+              />
+            </Cell.Root>
+          </>
+        );
+      })}
     </SettingsSheetLayout>
   );
 }

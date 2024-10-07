@@ -7,10 +7,9 @@ import { useLingui } from '@lingui/react';
 
 import { currencyNameMap } from '@leather.io/constants';
 import { FiatCurrency } from '@leather.io/models';
-import { DollarCircleIcon, SheetRef } from '@leather.io/ui/native';
+import { Cell, DollarCircleIcon, SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from '../settings-sheet.layout';
-import { ConversionUnitCell } from './conversion-unit-cell';
 
 interface ConversionUnitSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -28,13 +27,14 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
   return (
     <SettingsSheetLayout icon={<DollarCircleIcon />} sheetRef={sheetRef} title={t`Conversion unit`}>
       {Object.entries(currencyNameMap).map(([symbol, name]) => (
-        <ConversionUnitCell
+        <Cell.Root
           key={symbol}
-          activeConversionUnit={settings.fiatCurrencyPreference}
-          onUpdateConversionUnit={onUpdateConversionUnit}
-          fiatCurrencyPreference={symbol}
           title={i18n._(name)}
-        />
+          caption={symbol}
+          onPress={() => onUpdateConversionUnit(symbol)}
+        >
+          <Cell.Radio isSelected={settings.fiatCurrencyPreference === symbol} />
+        </Cell.Root>
       ))}
     </SettingsSheetLayout>
   );

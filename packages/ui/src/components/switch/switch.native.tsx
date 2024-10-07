@@ -3,17 +3,16 @@ import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native';
 import { useTheme } from '@shopify/restyle';
 import { Theme } from 'from ../../../native';
 
-interface SwitchProps extends RNSwitchProps {
-  onToggleValue?(): void;
+export interface SwitchProps extends RNSwitchProps {
   value: boolean;
 }
-export function Switch({ onToggleValue, value, ...props }: SwitchProps) {
+export function Switch({ value, onValueChange, ...props }: SwitchProps) {
   const theme = useTheme<Theme>();
 
   return (
     <RNSwitch
       ios_backgroundColor={theme.colors['ink.background-secondary']}
-      onValueChange={onToggleValue}
+      onValueChange={onValueChange}
       thumbColor={
         value ? theme.colors['ink.background-primary'] : theme.colors['ink.background-primary']
       }

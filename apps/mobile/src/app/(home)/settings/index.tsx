@@ -13,6 +13,7 @@ import {
   BellIcon,
   Box,
   Button,
+  Cell,
   GlobeTiltedIcon,
   SettingsGearIcon,
   ShieldIcon,
@@ -24,8 +25,6 @@ import {
   WalletIcon,
 } from '@leather.io/ui/native';
 
-import { SettingsCell } from './settings-cell';
-
 export default function SettingsScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
@@ -35,51 +34,74 @@ export default function SettingsScreen() {
     <Box backgroundColor="ink.background-primary" flex={1}>
       <ScrollView>
         <Box paddingHorizontal="5" paddingVertical="5">
-          <SettingsCell
+          <Cell.Root
             title={t`Wallets and accounts`}
             caption={t`Add, configure and remove`}
             icon={<WalletIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsWallet)}
-          />
+          >
+            <Cell.Chevron />
+          </Cell.Root>
         </Box>
         <Divider />
-        <Box gap="5" paddingHorizontal="5" paddingVertical="5">
-          <SettingsCell
+        <Box gap="2" paddingHorizontal="5" paddingVertical="5">
+          <Cell.Root
+            py="2"
             title={t`Display`}
             caption={t`Theme, bitcoin unit and more`}
             icon={<SquareLinesBottomIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsDisplay)}
-          />
-          <SettingsCell
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+          <Cell.Root
+            py="2"
             title={t`Security`}
             caption={t`Analytics and app authentication`}
             icon={<ShieldIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsSecurity)}
-          />
-          <SettingsCell
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+          <Cell.Root
+            py="2"
             title={t`Networks`}
             caption={t`Mainnet, testnet or signet`}
             icon={<GlobeTiltedIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
-          />
-          <SettingsCell
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+
+          <Cell.Root
+            py="2"
             title={t`Notifications`}
             caption={t`Push and email notifications`}
             icon={<BellIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsNotifications)}
-          />
-          <SettingsCell
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+
+          <Cell.Root
+            py="2"
             title={t`Help`}
             caption={t`Support, guides and articles`}
             icon={<SupportIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsHelp)}
-          />
+          >
+            <Cell.Chevron />
+          </Cell.Root>
           <Accordion
             label={t`More options`}
             content={
               <>
-                <SettingsCell title={t`Contacts`} icon={<UsersTwoIcon />} onPress={() => {}} />
-                <SettingsCell title={t`Fees`} icon={<SettingsGearIcon />} onPress={() => {}} />
+                <Cell.Root py="2" title={t`Contacts`} icon={<UsersTwoIcon />}>
+                  <Cell.Chevron />
+                </Cell.Root>
+                <Cell.Root py="2" title={t`Fees`} icon={<SettingsGearIcon />}>
+                  <Cell.Chevron />
+                </Cell.Root>
               </>
             }
           />

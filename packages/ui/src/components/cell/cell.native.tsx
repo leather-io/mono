@@ -1,108 +1,71 @@
-import { Switch } from 'react-native';
+import { ReactElement, ReactNode, cloneElement } from 'react';
 
-import { ResponsiveValue, useTheme } from '@shopify/restyle';
+import { useTheme } from '@shopify/restyle';
 
-import { Box, ChevronRightIcon, IconProps, Text, Theme, TouchableOpacity } from '../../../native';
-import { TouchableOpacityProps } from '../button/touchable-opacity.native';
+import {
+  Avatar,
+  ChevronRightIcon,
+  Flag,
+  IconProps,
+  ItemLayout,
+  RadioButton,
+  Theme,
+  Switch as UISwitch,
+} from '../../../native';
+import { Pressable, PressableProps } from '../button/pressable.native';
+import { RadioButtonProps } from '../radio-button/radio-button.native';
+import { SwitchProps } from '../switch/switch.native';
 
-type RegularCellVariant = 'active' | 'inactive' | 'critical';
-type SwitchCellVariant = 'switch';
-type CellVariant = RegularCellVariant | SwitchCellVariant;
-
-function getIconColor(
-  variant: CellVariant
-): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
-  switch (variant) {
-    case 'active':
-    case 'switch':
-      return 'ink.text-primary';
-    case 'inactive':
-      return 'ink.text-subdued';
-    case 'critical':
-      return 'red.action-primary-default';
-  }
-}
-
-function getIconBackgroundColor(
-  variant: CellVariant
-): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
-  switch (variant) {
-    case 'active':
-    case 'switch':
-      return 'ink.background-secondary';
-    case 'inactive':
-      return 'ink.background-secondary';
-    case 'critical':
-      return 'red.background-primary';
-  }
-}
-
-interface SwitchCell {
-  variant: SwitchCellVariant;
-  switchValue: boolean;
-  toggleSwitchValue(): void;
-}
-
-interface RegularCell {
-  variant?: RegularCellVariant;
-}
-
-interface BaseCell {
+interface CellProps extends PressableProps<Theme> {
+  caption?: string;
+  icon?: ReactElement<IconProps>;
   title: string;
-  subtitle?: string;
-  onPress?(): unknown;
-  Icon?: React.FC<IconProps>;
+  children: NonNullable<ReactNode>;
 }
 
-type CellProps = BaseCell & (RegularCell | SwitchCell) & TouchableOpacityProps<Theme>;
-
-export function Cell({ title, subtitle, onPress, Icon, ...props }: CellProps) {
+export function Root({ caption, icon, title, children, ...props }: CellProps) {
   const theme = useTheme<Theme>();
-  const isDisabled = !onPress;
-  const _variant = props.variant ?? 'active';
-  return (
-    <TouchableOpacity
-      {...props}
-      onPress={onPress}
-      disabled={isDisabled}
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
+  const itemLayout = <ItemLayout actionIcon={children} captionLeft={caption} titleLeft={title} />;
+  const defaultColor: string = theme.colors['ink.text-primary'];
+
+  const content = icon ? (
+    <Flag
+      img={
+        <Avatar>
+          {cloneElement<IconProps>(icon, {
+            color: icon.props.color ?? defaultColor,
+          })}
+        </Avatar>
+      }
     >
-      <Box flexDirection="row" gap="4">
-        {Icon && (
-          <Box flexDirection="row" p="2" bg={getIconBackgroundColor(_variant)} borderRadius="round">
-            <Icon color={theme.colors[getIconColor(_variant)]} />
-          </Box>
-        )}
-        <Box flexDirection="column" justifyContent="center">
-          <Text variant="label02">{title}</Text>
-          {subtitle && (
-            <Text color="ink.text-subdued" variant="label03">
-              {subtitle}
-            </Text>
-          )}
-        </Box>
-      </Box>
-      {_variant === 'active' && (
-        <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
-      )}
-      {props.variant === 'switch' && (
-        <Switch
-          trackColor={{
-            false: theme.colors['ink.background-secondary'],
-            true: theme.colors['ink.text-primary'],
-          }}
-          thumbColor={
-            props.switchValue
-              ? theme.colors['ink.background-primary']
-              : theme.colors['ink.background-primary']
-          }
-          ios_backgroundColor={theme.colors['ink.background-secondary']}
-          onValueChange={props.toggleSwitchValue}
-          value={props.switchValue}
-        />
-      )}
-    </TouchableOpacity>
+      {itemLayout}
+    </Flag>
+  ) : (
+    itemLayout
+  );
+
+  return (
+    <Pressable flexDirection="row" {...props}>
+      {content}
+    </Pressable>
   );
 }
+
+function Chevron() {
+  return <ChevronRightIcon variant="small" />;
+}
+
+function Switch(props: SwitchProps) {
+  return <UISwitch {...props} />;
+}
+
+function Radio(props: RadioButtonProps) {
+  return <RadioButton disabled {...props} />;
+}
+
+export const Cell = {
+  Root,
+  Chevron,
+  Switch,
+  Radio,
+};
