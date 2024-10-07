@@ -509,7 +509,7 @@ msgstr ""
 msgid "Ledger, Trezor, Ryder and more"
 msgstr ""
 
-#: src/app/(home)/settings/index.tsx:125
+#: src/app/(home)/settings/index.tsx:126
 msgid "Lock app"
 msgstr ""
 
