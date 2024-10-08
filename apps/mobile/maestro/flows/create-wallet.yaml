@@ -1,0 +1,5 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow: ../shared/add-wallet.yaml

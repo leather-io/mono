@@ -3,6 +3,7 @@ import { Button, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { WalletList } from '@/components/wallet-manager';
+import { TestId } from '@/shared/test-id';
 import { useKeyStore } from '@/store/key-store';
 import { useSettings } from '@/store/settings/settings';
 import { clearAllPersistedStorage } from '@/store/utils';
@@ -33,6 +34,7 @@ export default function WalletManager() {
           <Button
             title={t`Clear`}
             onPress={() => clearAllPersistedStorage(wallets.list.map(wallet => wallet.fingerprint))}
+            testID={TestId.walletManagementClearButton}
           />
           <Button
             title={generatingWallet ? t`Generating…` : t`Create wallet`}

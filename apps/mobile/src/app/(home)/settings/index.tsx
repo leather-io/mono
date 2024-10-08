@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Divider } from '@/components/divider';
 import { NotifyUserSheet } from '@/components/sheets/notify-user-sheet.layout';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Application from 'expo-application';
@@ -45,6 +46,7 @@ export default function SettingsScreen() {
               caption={t`Add, configure and remove`}
               icon={<WalletIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsWallet)}
+              testID={TestId.settingsWalletAndAccountsButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -57,6 +59,7 @@ export default function SettingsScreen() {
               caption={t`Theme, bitcoin unit and more`}
               icon={<SquareLinesBottomIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsDisplay)}
+              testID={TestId.settingsDisplayButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -66,6 +69,7 @@ export default function SettingsScreen() {
               caption={t`Analytics and app authentication`}
               icon={<ShieldIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsSecurity)}
+              testID={TestId.settingsSecurityButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -75,6 +79,7 @@ export default function SettingsScreen() {
               caption={t`Mainnet, testnet or signet`}
               icon={<GlobeTiltedIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
+              testID={TestId.settingsNetworkButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -85,6 +90,7 @@ export default function SettingsScreen() {
               caption={t`Push and email notifications`}
               icon={<BellIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsNotifications)}
+              testID={TestId.settingsNotificationsButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -95,11 +101,13 @@ export default function SettingsScreen() {
               caption={t`Support, guides and articles`}
               icon={<SupportIcon />}
               onPress={() => router.navigate(AppRoutes.SettingsHelp)}
+              testID={TestId.settingsHelpButton}
             >
               <Cell.Chevron />
             </Cell.Root>
             <Accordion
               label={t`More options`}
+              testID={TestId.settingsMoreOptionsButton}
               content={
                 <>
                   <Cell.Root
@@ -109,6 +117,7 @@ export default function SettingsScreen() {
                     onPress={() => {
                       contactsSheetRef.current?.present();
                     }}
+                    testID={TestId.settingsContactsButton}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
@@ -119,6 +128,7 @@ export default function SettingsScreen() {
                     onPress={() => {
                       feesSheetRef.current?.present();
                     }}
+                    testID={TestId.settingsFeesButton}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
@@ -143,7 +153,12 @@ export default function SettingsScreen() {
                 {Application.nativeBuildVersion}
               </Text>
             </Box>
-            <Button onPress={() => {}} buttonState="outline" title={t`Lock app`} />
+            <Button
+              onPress={() => {}}
+              buttonState="outline"
+              title={t`Lock app`}
+              testID={TestId.settingsLockAppButton}
+            />
           </Box>
         </ScrollView>
       </Box>

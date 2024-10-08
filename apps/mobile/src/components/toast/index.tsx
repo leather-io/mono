@@ -2,6 +2,7 @@ import { useImperativeHandle, useRef, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import { TestId } from '@/shared/test-id';
 import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
 import {
@@ -101,6 +102,7 @@ export function Toast({ toastRef }: ToastProps) {
         zIndex={9999}
         justifyContent="center"
         alignItems="center"
+        testID={TestId.toastContainer}
       >
         {getIcon(toastData.type, theme)}
         <Text variant="label02" color="ink.background-primary">

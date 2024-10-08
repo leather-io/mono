@@ -5,6 +5,7 @@ import { getAvatarIcon } from '@/components/avatar-icon';
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { getMockAccounts } from '@/mocks/account.mocks';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { AccountStore } from '@/store/accounts/accounts.write';
 import { WalletStore } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
@@ -58,6 +59,7 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
             key={account.id}
             label={<Balance balance={account.balance} />}
             caption={account.name || ''}
+            testID={TestId.homeAccountCard}
             onPress={() => {
               router.navigate({
                 pathname: AppRoutes.Account,

@@ -7,6 +7,7 @@ import { SimpleHeader } from '@/components/headers/containers/simple-header';
 import { LeatherLogoHeader } from '@/components/headers/leather-logo';
 import { OptionsHeader } from '@/components/headers/options';
 import { TitleHeader } from '@/components/headers/title';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { Stack, useRouter } from 'expo-router';
@@ -84,7 +85,7 @@ export default function StackLayout() {
   const NavigationDeveloperConsole = (
     <SimpleHeader
       insets={insets}
-      left={<BackButtonHeader onPress={() => router.back()} />}
+      left={<BackButtonHeader onPress={() => router.back()} testID={TestId.backButton} />}
       center={<TitleHeader title={t`Developer tools`} />}
     />
   );

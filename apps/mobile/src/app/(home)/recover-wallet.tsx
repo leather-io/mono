@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
 import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
+import { TestId } from '@/shared/test-id';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -153,6 +154,7 @@ export default function RecoverWallet() {
               blurOnSubmit
               autoCapitalize="none"
               autoCorrect
+              testID={TestId.restoreWalletTextInput}
             />
           </Box>
           <TouchableOpacity
@@ -201,6 +203,7 @@ export default function RecoverWallet() {
           disabled={isButtonDisabled}
           buttonState={isButtonDisabled ? 'disabled' : 'default'}
           title={t`Continue`}
+          testID={TestId.restoreWalletContinue}
         />
       </Box>
       <RecoverWalletSheet

@@ -1,0 +1,10 @@
+appId: io.leather.mobilewallet
+---
+- tapOn:
+    text: 'Add Wallet'
+- tapOn:
+    text: 'Create new wallet Create a new Bitcoin and Stacks wallet'
+- tapOn:
+    text: "I've backed it up"
+- assertVisible:
+    id: 'homeAccountCard'

@@ -7,6 +7,7 @@ import { Divider } from '@/components/divider';
 import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
 import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
 import { useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -85,6 +86,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                   params: { fingerprint: wallet.fingerprint },
                 });
               }}
+              testID={TestId.walletSettingsViewSecretKeyButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -94,6 +96,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               onPress={() => {
                 walletNameSheetRef.current?.present();
               }}
+              testID={TestId.walletSettingsRenameWalletButton}
             >
               <Cell.Chevron />
             </Cell.Root>
@@ -103,6 +106,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               onPress={() => {
                 removeWalletSheetRef.current?.present();
               }}
+              testID={TestId.walletSettingsRemoveWalletButton}
             >
               <Cell.Chevron />
             </Cell.Root>

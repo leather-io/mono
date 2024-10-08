@@ -4,8 +4,14 @@ import { useTheme } from '@shopify/restyle';
 
 import { ChevronDownIcon, ChevronUpIcon, Text, Theme, TouchableOpacity } from '../../../native';
 
+interface AccordionProps {
+  content: ReactNode;
+  label: string;
+  testID?: string;
+}
+
 // TODO: This should use the Cell component?
-export function Accordion({ content, label }: { content: ReactNode; label: string }) {
+export function Accordion({ content, label, testID }: AccordionProps) {
   const [showMore, setShowMore] = useState(false);
   const theme = useTheme<Theme>();
   return (
@@ -14,6 +20,7 @@ export function Accordion({ content, label }: { content: ReactNode; label: strin
         flexDirection="row"
         justifyContent="space-between"
         onPress={() => setShowMore(!showMore)}
+        testID={testID}
       >
         <Text variant="label02">{label}</Text>
         {showMore ? (

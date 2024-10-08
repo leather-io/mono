@@ -1,4 +1,5 @@
 import { ReactNode, forwardRef } from 'react';
+import { Platform } from 'react-native';
 import { SharedValue, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -73,6 +74,12 @@ export const Sheet = forwardRef<
             <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
           </Box>
         )}
+        // maestro can't find bottom sheet component without this:
+        // https://github.com/mobile-dev-inc/maestro/issues/1493#issuecomment-1966447805
+        accessible={Platform.select({
+          // setting it to false on Android seems to cause issues with TalkBack instead
+          ios: false,
+        })}
       >
         {shouldHaveContainer && (
           <BottomSheetComponent
