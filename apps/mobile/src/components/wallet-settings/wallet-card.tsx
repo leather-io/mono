@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { WalletId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { t } from '@lingui/macro';
@@ -68,6 +69,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             py="3"
             flex={1}
             alignItems="flex-end"
+            testID={TestId.walletListSettingsButton}
           >
             <SettingsGearIcon color={theme.colors['ink.text-primary']} />
           </TouchableOpacity>

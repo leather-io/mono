@@ -15,8 +15,11 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
+      "bundleIdentifier": "io.leather.mobilewallet",
       "supportsTablet": false
     },
     "android": {
@@ -41,11 +44,12 @@
       ],
       "expo-router",
       "expo-secure-store",
-      "@config-plugins/detox",
       [
         "expo-asset",
         {
-          "assets": ["src/assets/scripts/injected-provider.js"]
+          "assets": [
+            "src/scripts/injected-provider.js"
+          ]
         }
       ],
       [

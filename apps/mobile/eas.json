@@ -67,6 +67,21 @@
       "ios": {
         "cocoapods": "1.15.2"
       }
+    },
+    "build-and-maestro-test": {
+      "node": "20.11.0",
+      "pnpm": "9.11.0",
+      "withoutCredentials": true,
+      "config": "build-and-maestro-test.yml",
+      "android": {
+        "buildType": "apk",
+        "image": "latest"
+      },
+      "ios": {
+        "simulator": true,
+        "image": "latest",
+        "cocoapods": "1.15.2"
+      }
     }
   },
   "submit": {

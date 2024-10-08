@@ -1,0 +1,19 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- tapOn:
+    text: 'Add Wallet'
+- tapOn:
+    text: 'Restore wallet Import existing accounts'
+- tapOn:
+    text: 'Type your recovery phrase'
+- eraseText
+- inputText: "abandon abandon abandon abandon abandon abandon abandon abandon abandon\
+    \ abandon abandon cactus"
+- tapOn:
+    id: 'Return'
+- tapOn:
+    text: 'Continue'
+- assertVisible:
+    id: 'homeAccountCard'

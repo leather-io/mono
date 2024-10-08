@@ -3,15 +3,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { ApproverSheet } from '@/components/browser/approval-ux-sheet';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem } from '@/components/developer-console/list-items';
 import { useToastContext } from '@/components/toast/toast-context';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { LOCALES } from '@/locales';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
-import { WalletLoader, useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
@@ -24,9 +23,7 @@ export default function DeveloperConsoleScreen() {
   const theme = useTheme<Theme>();
   const { i18n } = useLingui();
 
-  const wallets = useWallets();
-
-  const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
+  const [_, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
   const toast = useToastContext();
   const {
@@ -87,6 +84,7 @@ export default function DeveloperConsoleScreen() {
         <PressableListItem
           title={t`Wallet management`}
           onPress={() => router.navigate(AppRoutes.DeveloperConsoleWalletManager)}
+          testID={TestId.developerToolsWalletManagementButton}
         />
         <PressableListItem
           title={t`Bitcoin Scrach Pad`}
@@ -119,18 +117,19 @@ export default function DeveloperConsoleScreen() {
         <PressableListItem title={t`Drawer`} />
         <PressableListItem title={t`Page`} />
       </ScrollView>
-      {wallets.list[0]?.fingerprint && (
-        <WalletLoader fingerprint={wallets.list[0].fingerprint}>
-          {wallet => (
-            <ApproverSheet
-              fingerprint={wallet.fingerprint}
-              accountIndex={0}
-              message={getAddressesMessage}
-              sendResult={() => setGetAddressesMessage(null)}
-            />
-          )}
-        </WalletLoader>
-      )}
+      {/* TODO: this causes crash when trying to clear the store. */}
+      {/* {wallets.list[0]?.fingerprint && ( */}
+      {/*   <WalletLoader fingerprint={wallets.list[0].fingerprint}> */}
+      {/*     {wallet => ( */}
+      {/*       <ApproverSheet */}
+      {/*         fingerprint={wallet.fingerprint} */}
+      {/*         accountIndex={0} */}
+      {/*         message={getAddressesMessage} */}
+      {/*         sendResult={() => setGetAddressesMessage(null)} */}
+      {/*       /> */}
+      {/*     )} */}
+      {/*   </WalletLoader> */}
+      {/* )} */}
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </Box>
   );

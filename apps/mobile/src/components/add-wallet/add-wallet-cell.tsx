@@ -5,10 +5,19 @@ interface AddWalletCellProps {
   title: string;
   subtitle?: string;
   onPress(): void;
+  testID?: string;
 }
-export function AddWalletCell({ icon, title, subtitle, onPress }: AddWalletCellProps) {
+
+export function AddWalletCell({ icon, title, subtitle, onPress, testID }: AddWalletCellProps) {
   return (
-    <TouchableOpacity onPress={onPress} py="3" flexDirection="row" gap="4" alignItems="center">
+    <TouchableOpacity
+      onPress={onPress}
+      py="3"
+      flexDirection="row"
+      gap="4"
+      alignItems="center"
+      testID={testID}
+    >
       {icon && (
         <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
           {icon}

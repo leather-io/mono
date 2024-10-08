@@ -40,7 +40,4 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
-// @generated begin detox-import - expo prebuild (DO NOT MODIFY) sync-1c7ed0e9d1c19e4a2b5b79bb7ec877ac879fce8d
-def detoxMavenPath = new File(["node", "--print", "require.resolve('detox/package.json')"].execute(null, rootDir).text.trim(), "../Detox-android")
-allprojects { repositories { maven { url(detoxMavenPath) } } }
-// @generated end detox-import
+

@@ -12,6 +12,7 @@ export interface AccountCardLayoutProps {
   onPress(): void;
   type?: WalletStore['type'];
   width?: number;
+  testID?: string;
 }
 
 export function AccountCardLayout({
@@ -21,6 +22,7 @@ export function AccountCardLayout({
   label,
   caption,
   width = 200,
+  testID,
 }: AccountCardLayoutProps) {
   const isLedger = type === 'ledger';
   const theme = useTheme();
@@ -35,6 +37,7 @@ export function AccountCardLayout({
       borderWidth={1}
       alignItems="flex-start"
       justifyContent="space-between"
+      testID={testID}
     >
       {isLedger && <LedgerBadge />}
 

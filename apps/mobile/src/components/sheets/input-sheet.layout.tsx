@@ -1,5 +1,6 @@
 import { RefObject, useState } from 'react';
 
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 
 import {
@@ -62,9 +63,15 @@ export function InputSheet({
             autoFocus
             autoCapitalize="none"
             TextInputComponent={UIBottomSheetTextInput}
+            testID={TestId.walletChangenameSheetInput}
           />
         </Box>
-        <Button onPress={() => onSubmit(internalValue)} buttonState="default" title={submitTitle} />
+        <Button
+          onPress={() => onSubmit(internalValue)}
+          buttonState="default"
+          title={submitTitle}
+          testID={TestId.walletChangeNameSheetSaveButton}
+        />
       </Box>
     </Sheet>
   );

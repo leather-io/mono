@@ -1,6 +1,12 @@
 import { Box, ChevronRightIcon, Text, TouchableOpacity } from '@leather.io/ui/native';
 
-export function PressableListItem({ onPress, title }: { onPress?(): void; title: string }) {
+interface PressableListItemProps {
+  onPress?(): void;
+  title: string;
+  testID?: string;
+}
+
+export function PressableListItem({ onPress, title, testID }: PressableListItemProps) {
   const isDisabled = !onPress;
   return (
     <TouchableOpacity
@@ -10,6 +16,7 @@ export function PressableListItem({ onPress, title }: { onPress?(): void; title:
       flexDirection="row"
       alignItems="center"
       p="3"
+      testID={testID}
     >
       <Text variant="label01" color={isDisabled ? 'ink.text-subdued' : 'ink.text-primary'}>
         {title}

@@ -1,8 +1,13 @@
 import { ArrowLeftIcon, TouchableOpacity } from '@leather.io/ui/native';
 
-export function BackButtonHeader({ onPress }: { onPress?(): void }) {
+interface BackButtonHeaderProps {
+  onPress?(): void;
+  testID?: string;
+}
+
+export function BackButtonHeader({ onPress, testID }: BackButtonHeaderProps) {
   return (
-    <TouchableOpacity onPress={onPress} p="3">
+    <TouchableOpacity onPress={onPress} p="3" testID={testID}>
       <ArrowLeftIcon />
     </TouchableOpacity>
   );

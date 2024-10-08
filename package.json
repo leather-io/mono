@@ -200,11 +200,6 @@
           "expo-font": "*"
         }
       },
-      "detox@*": {
-        "dependencies": {
-          "react-native": "*"
-        }
-      },
       "expo-keep-awake@*": {
         "dependencies": {
           "expo-modules-core": "*"

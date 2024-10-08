@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
@@ -87,12 +88,14 @@ export function AddWalletSheetLayout({
               onPress={createWallet}
               title={t`Create new wallet`}
               subtitle={t`Create a new Bitcoin and Stacks wallet`}
+              testID={TestId.createNewWalletSheetButton}
               icon={<PlusIcon />}
             />
             <AddWalletCell
               onPress={restoreWallet}
               title={t`Restore wallet`}
               subtitle={t`Import existing accounts`}
+              testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
             />
             <AddWalletCell

@@ -10,10 +10,18 @@ export interface AccountCardProps {
   label: React.ReactNode;
   Icon: React.FC<IconProps>;
   type: WalletStore['type'];
+  testID?: string;
 }
 
-export function AccountCard({ onPress, caption, label, Icon, type }: AccountCardProps) {
+export function AccountCard({ onPress, caption, label, Icon, type, testID }: AccountCardProps) {
   return (
-    <AccountCardLayout Icon={Icon} label={label} caption={caption} onPress={onPress} type={type} />
+    <AccountCardLayout
+      Icon={Icon}
+      label={label}
+      caption={caption}
+      onPress={onPress}
+      type={type}
+      testID={testID}
+    />
   );
 }

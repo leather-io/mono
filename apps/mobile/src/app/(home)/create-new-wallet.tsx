@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { useCreateWallet } from '@/hooks/create-wallet';
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';
@@ -110,6 +111,7 @@ export default function CreateNewWallet() {
           }}
           buttonState="default"
           title={t`I've backed it up`}
+          testID={TestId.walletCreationBackedUpButton}
         />
       </Box>
     </Box>
