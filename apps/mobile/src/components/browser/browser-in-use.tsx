@@ -5,7 +5,7 @@ import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-we
 
 import injectedProvider from '@/scripts/dist/injected-provider';
 import { useSettings } from '@/store/settings/settings';
-import { useWallets } from '@/store/wallets/wallets.read';
+import { WalletFingerprintLoader, WalletLoader } from '@/store/wallets/wallets.read';
 import { useTheme } from '@shopify/restyle';
 
 import {
@@ -22,7 +22,7 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
-import { ApproverSheet } from './approval-ux-sheet';
+import { ApproverSheet } from './approver-sheet';
 
 interface BrowserInUseProp {
   textURL: string;
@@ -43,7 +43,6 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
   const settingsSheetRef = useRef<SheetRef>(null);
   const { themeDerivedFromThemePreference } = useSettings();
-  const wallets = useWallets();
 
   function closeBrowser() {
     goToInactiveBrowser();
@@ -144,20 +143,20 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
       <Sheet ref={settingsSheetRef} themeVariant={themeDerivedFromThemePreference}>
         <Box p="5" />
       </Sheet>
-      <ApproverSheet
-        fingerprint={wallets.list[0] ? wallets.list[0].fingerprint : ''}
-        accountIndex={0}
-        sendResult={result => {
-          webViewRef?.current?.postMessage(
-            JSON.stringify({
-              id: message?.id,
-              result,
-            })
-          );
-          setMessage(null);
-        }}
-        message={message}
-      />
+      <WalletFingerprintLoader>
+        {fingerprints => (
+          <WalletLoader fingerprint={fingerprints[0]}>
+            {wallet => (
+              <ApproverSheet
+                fingerprint={wallet.fingerprint}
+                accountIndex={0}
+                message={message}
+                sendResult={() => setMessage(null)}
+              />
+            )}
+          </WalletLoader>
+        )}
+      </WalletFingerprintLoader>
     </View>
   );
 }

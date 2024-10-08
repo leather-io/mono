@@ -40,3 +40,12 @@ export function WalletLoader({ fingerprint, fallback, children }: WalletLoaderPr
   if (!wallet) return fallback ?? null;
   return children({ ...wallet, accounts });
 }
+
+interface WalletFingerprintLoaderProps {
+  children(fingerprints: [string, ...string[]]): React.ReactNode;
+}
+export function WalletFingerprintLoader({ children }: WalletFingerprintLoaderProps) {
+  const fingerprints = useWallets().list.map(wallet => wallet.fingerprint);
+  if (fingerprints.length === 0) return null;
+  return children(fingerprints as [string, ...string[]]);
+}
