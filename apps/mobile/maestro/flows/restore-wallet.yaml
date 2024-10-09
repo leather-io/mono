@@ -5,14 +5,19 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Add Wallet'
 - tapOn:
+    text: 'Create new wallet Create a new Bitcoin and Stacks wallet'
+- tapOn:
+    id: 'walletCreationTapToReveal'
+- tapOn:
+    text: 'Copy'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    text: 'Add Wallet'
+- tapOn:
     text: 'Restore wallet Import existing accounts'
 - tapOn:
-    text: 'Type your recovery phrase'
-- eraseText
-- inputText: "abandon abandon abandon abandon abandon abandon abandon abandon abandon\
-    \ abandon abandon cactus"
-- tapOn:
-    id: 'Return'
+    text: 'Paste'
 - tapOn:
     text: 'Continue'
 - assertVisible:

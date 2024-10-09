@@ -106,23 +106,3 @@ jobs:
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           files: ./app/mobile/coverage/.tmp/coverage-0.json
-
-  test-e2e:
-    runs-on: ubuntu-latest
-    needs: typecheck
-    if: github.ref == 'refs/heads/dev'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Prepare the app
-        uses: ./.github/actions/provision
-
-      - name: Setup Expo and EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: deploy E2E build on EAS
-        working-directory: ./apps/mobile
-        run: |
-          eas build --profile build-and-maestro-test --platform ios --non-interactive

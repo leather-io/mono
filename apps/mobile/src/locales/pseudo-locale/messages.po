@@ -372,7 +372,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:89
+#: src/app/(home)/_layout.tsx:92
 msgid "Developer tools"
 msgstr ""
 
@@ -383,7 +383,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:113
+#: src/app/(home)/_layout.tsx:116
 #: src/app/(home)/settings/index.tsx:58
 msgid "Display"
 msgstr ""
@@ -442,7 +442,7 @@ msgstr ""
 msgid "Fireblocks"
 msgstr ""
 
-#: src/app/(home)/create-new-wallet.tsx:98
+#: src/app/(home)/create-new-wallet.tsx:99
 msgid "For your eyes only"
 msgstr ""
 
@@ -462,7 +462,7 @@ msgstr ""
 msgid "Guides"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:126
+#: src/app/(home)/_layout.tsx:129
 #: src/app/(home)/settings/index.tsx:100
 msgid "Help"
 msgstr ""
@@ -483,7 +483,7 @@ msgstr ""
 msgid "Hide home balance"
 msgstr ""
 
-#: src/app/(home)/create-new-wallet.tsx:113
+#: src/app/(home)/create-new-wallet.tsx:114
 #: src/app/(home)/settings/wallet/configure/[wallet]/view-secret-key.tsx:65
 msgid "I've backed it up"
 msgstr ""
@@ -557,7 +557,7 @@ msgstr ""
 msgid "Network changed"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:121
+#: src/app/(home)/_layout.tsx:124
 #: src/app/(home)/settings/index.tsx:78
 msgid "Networks"
 msgstr ""
@@ -701,7 +701,7 @@ msgstr ""
 msgid "SECRET KEY"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:117
+#: src/app/(home)/_layout.tsx:120
 #: src/app/(home)/settings/index.tsx:68
 msgid "Security"
 msgstr ""
@@ -715,8 +715,8 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:44
-#: src/app/(home)/_layout.tsx:54
+#: src/app/(home)/_layout.tsx:47
+#: src/app/(home)/_layout.tsx:57
 msgid "Settings"
 msgstr ""
 
@@ -800,7 +800,7 @@ msgstr ""
 msgid "Swap 🔄"
 msgstr ""
 
-#: src/app/(home)/create-new-wallet.tsx:96
+#: src/app/(home)/create-new-wallet.tsx:97
 msgid "Tap to view Secret Key"
 msgstr ""
 
@@ -808,7 +808,7 @@ msgstr ""
 msgid "Tap your balance to quickly toggle this setting"
 msgstr ""
 
-#: src/app/(home)/_layout.tsx:76
+#: src/app/(home)/_layout.tsx:79
 msgid "Testnet"
 msgstr ""
 

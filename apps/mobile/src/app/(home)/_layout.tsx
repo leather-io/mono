@@ -38,7 +38,10 @@ export default function StackLayout() {
   );
 
   const NavigationBackSimple = (
-    <SimpleHeader insets={insets} left={<BackButtonHeader onPress={() => router.back()} />} />
+    <SimpleHeader
+      insets={insets}
+      left={<BackButtonHeader onPress={() => router.back()} testID={TestId.backButton} />}
+    />
   );
 
   function NavigationSettings(title: string = t`Settings`) {
