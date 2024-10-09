@@ -12,8 +12,9 @@ export function filterObjectKeys(object: object, keys: string[]) {
 }
 
 export async function clearAllPersistedStorage(fingerprints: string[]) {
-  void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);
+  await deleteAllMnemonics(fingerprints);
   store.dispatch(resetWallet());
+  await AsyncStorage.clear();
 }
 
 export type AppThunk<ReturnType = void> = ThunkAction<

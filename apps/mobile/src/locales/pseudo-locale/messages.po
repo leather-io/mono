@@ -195,7 +195,7 @@ msgstr ""
 msgid "Bitcoin blockchain"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:93
+#: src/app/(home)/developer-console/index.tsx:90
 msgid "Bitcoin Scrach Pad"
 msgstr ""
 
@@ -318,7 +318,7 @@ msgstr ""
 msgid "Create or restore wallet"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:85
+#: src/app/(home)/developer-console/index.tsx:82
 #: src/app/(home)/developer-console/wallet-manager.tsx:40
 msgid "Create wallet"
 msgstr ""
@@ -388,7 +388,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:120
+#: src/app/(home)/developer-console/index.tsx:117
 msgid "Drawer"
 msgstr ""
 
@@ -454,7 +454,7 @@ msgstr ""
 msgid "Generating…"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:97
+#: src/app/(home)/developer-console/index.tsx:94
 msgid "getAddresses"
 msgstr ""
 
@@ -587,7 +587,7 @@ msgstr ""
 msgid "Or choose one of your collectibles"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:121
+#: src/app/(home)/developer-console/index.tsx:118
 msgid "Page"
 msgstr ""
 
@@ -662,7 +662,7 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:107
+#: src/app/(home)/developer-console/index.tsx:104
 msgid "register for Push notifications"
 msgstr ""
 
@@ -693,7 +693,7 @@ msgstr ""
 msgid "Save to..."
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:111
+#: src/app/(home)/developer-console/index.tsx:108
 msgid "schedule dummy notifications in 3s"
 msgstr ""
 
@@ -706,7 +706,7 @@ msgstr ""
 msgid "Security"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:81
+#: src/app/(home)/developer-console/index.tsx:78
 msgid "securityLevelPreference:"
 msgstr ""
 
@@ -724,11 +724,11 @@ msgstr ""
 msgid "Sign"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:115
+#: src/app/(home)/developer-console/index.tsx:112
 msgid "signMessage"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:117
+#: src/app/(home)/developer-console/index.tsx:114
 msgid "signPsbt"
 msgstr ""
 
@@ -760,15 +760,15 @@ msgstr ""
 msgid "Stacks L2"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:119
+#: src/app/(home)/developer-console/index.tsx:116
 msgid "stx_signMessage"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:118
+#: src/app/(home)/developer-console/index.tsx:115
 msgid "stx_signTransaction"
 msgstr ""
 
-#: src/components/browser/approver-sheet.tsx:63
+#: src/components/browser/approval-ux-sheet.tsx:63
 msgid "Submit"
 msgstr ""
 
@@ -869,7 +869,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:114
+#: src/app/(home)/developer-console/index.tsx:111
 msgid "toggle localization: {locale}"
 msgstr ""
 
@@ -877,7 +877,7 @@ msgstr ""
 msgid "Toggle network"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:116
+#: src/app/(home)/developer-console/index.tsx:113
 msgid "transferBtc"
 msgstr ""
 
@@ -925,7 +925,7 @@ msgstr ""
 msgid "Wallet already exists"
 msgstr ""
 
-#: src/app/(home)/developer-console/index.tsx:88
+#: src/app/(home)/developer-console/index.tsx:85
 msgid "Wallet management"
 msgstr ""
 
