@@ -20,6 +20,7 @@ export enum TestId {
   settingsSecurityButton = 'settingsSecurityButton',
   settingsWalletAndAccountsButton = 'settingsWalletAndAccountsButton',
   walletCreationBackedUpButton = 'walletCreationBackedUpButton',
+  walletCreationTapToReveal = 'walletCreationTapToReveal',
   walletManagementClearButton = 'walletManagementClearButton',
   walletListSettingsButton = 'walletListSettingsButton',
   walletSettingsViewSecretKeyButton = 'walletSettingsViewSecretKeyButton',

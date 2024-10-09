@@ -90,6 +90,7 @@ export default function CreateNewWallet() {
                 justifyContent="center"
                 alignItems="center"
                 gap="2"
+                testID={TestId.walletCreationTapToReveal}
               >
                 <PointerHandIcon />
                 <Box>
