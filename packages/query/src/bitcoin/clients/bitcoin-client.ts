@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import axios from 'axios';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
@@ -158,9 +160,13 @@ export function useBitcoinClient() {
     testnet: BESTINSLOT_API_BASE_URL_TESTNET,
   });
 
-  return bitcoinClient({
-    networkName: network.chain.bitcoin.bitcoinNetwork,
-    basePath: network.chain.bitcoin.bitcoinUrl,
-    bestInSlotPath,
-  });
+  return useMemo(
+    () =>
+      bitcoinClient({
+        networkName: network.chain.bitcoin.bitcoinNetwork,
+        basePath: network.chain.bitcoin.bitcoinUrl,
+        bestInSlotPath,
+      }),
+    [bestInSlotPath, network.chain.bitcoin.bitcoinNetwork, network.chain.bitcoin.bitcoinUrl]
+  );
 }

@@ -8,7 +8,7 @@ import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/create-wallet';
 import { TestId } from '@/shared/test-id';
 import { tempMnemonicStore } from '@/store/storage-persistors';
-import { Trans, t } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
@@ -124,12 +124,13 @@ export default function RecoverWallet() {
             >
               <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
-            <Box>
+            {/* Commented out this title, causes text must be in <Text> error */}
+            {/* <Box>
               <Trans id="recover_wallet.title">
                 <Text variant="heading03">ENTER YOUR</Text>
                 <Text variant="heading03">SECRET KEY</Text>
               </Trans>
-            </Box>
+            </Box> */}
             <Text variant="label01">
               {t({
                 id: 'recover_wallet.subtitle',
