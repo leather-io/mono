@@ -44,9 +44,17 @@ build:
     # end ios-simulator-build
 
     # - eas/build
+    # Enable these 2 flows when maestro gets another release.
+    # maestro/flows/rename-account.yaml
+    # maestro/flows/rename-wallet.yaml
+    # We are currently hitting an issue of "Error: BlockingCoroutine is cancelling"
+    # and it seems like that this generic error message blocks the actual error message
+    # PR fixing that is already merged and we are waiting for it to get into the next maestro version
     - eas/maestro_test:
         inputs:
           flow_path: |
+            maestro/flows/change-account-icon.yaml
             maestro/flows/create-wallet.yaml
-            maestro/flows/rename-wallet.yaml
+            maestro/flows/delete-wallet.yaml
+            maestro/flows/hide-account.yaml 
             maestro/flows/restore-wallet.yaml

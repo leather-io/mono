@@ -1,3 +1,4 @@
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { PlusIcon } from '@leather.io/ui/native';
@@ -19,6 +20,7 @@ export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
         id: 'create_wallet_card.caption',
         message: 'Create, Import or connect instantly',
       })}
+      testID={TestId.homeCreateWalletCard}
     />
   );
 }

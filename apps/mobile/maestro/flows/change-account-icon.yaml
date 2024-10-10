@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow: ../shared/add-wallet.yaml
+- assertNotVisible:
+    id: 'toastContainer'
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    text: 'Wallets and accounts Add, configure and remove'
+- tapOn:
+    id: 'walletListAccountCard'
+- tapOn:
+    text: 'Avatar'
+- tapOn:
+    id: 'defaultAccountIcon_alien'
+- tapOn:
+    id: 'backButton'
+- assertVisible:
+    id: 'defaultAccountIcon_sparkles'
+- tapOn:
+    text: 'Avatar'
+- tapOn:
+    id: 'defaultAccountIcon_alien'
+- tapOn:
+    text: 'Confirm'
+- assertVisible:
+    id: 'defaultAccountIcon_alien'
+- tapOn:
+    id: 'backButton'
+- assertVisible:
+    id: 'defaultAccountIcon_alien'

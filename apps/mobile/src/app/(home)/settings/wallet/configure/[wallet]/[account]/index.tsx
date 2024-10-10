@@ -10,6 +10,7 @@ import { AppRoutes } from '@/routes';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
@@ -67,7 +68,12 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           }}
         >
           <Box px="5" gap="6">
-            <AccountCard Icon={getAvatarIcon(account.icon)} name={account.name} key={account.id} />
+            <AccountCard
+              Icon={getAvatarIcon(account.icon)}
+              name={account.name}
+              key={account.id}
+              iconTestID={defaultIconTestId(account.icon)}
+            />
             <Cell.Root
               title={t({
                 id: 'configure_account.name.cell_title',

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-10-09 16:05-0400\n"
+"POT-Creation-Date: 2024-10-10 20:29+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,7 +34,7 @@ msgid "display.account_identifier.cell_caption"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:76
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:82
 msgid "configure_account.name.cell_caption"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgid "Account 1"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/wallet-card.tsx:100
+#: src/components/wallet-settings/wallet-card.tsx:103
 msgid "wallet.add_account.toast_title"
 msgstr ""
 
@@ -162,7 +162,7 @@ msgid "account_identifier.toast_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/account-name-sheet.tsx:19
+#: src/components/wallet-settings/account-name-sheet.tsx:20
 msgid "account_name.header_title"
 msgstr ""
 
@@ -172,7 +172,7 @@ msgid "choose_avatar.toast_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/wallet-card.tsx:108
+#: src/components/wallet-settings/wallet-card.tsx:111
 msgid "wallet.add_account.button"
 msgstr ""
 
@@ -306,7 +306,7 @@ msgid "app_auth.toast_title_success"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:89
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:95
 msgid "configure_account.avatar.cell_title"
 msgstr ""
 
@@ -383,7 +383,7 @@ msgid "mpc_wallets.capsule"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/wallet-name-sheet.tsx:19
+#: src/components/wallet-settings/wallet-name-sheet.tsx:20
 msgid "wallet_name.header_title"
 msgstr ""
 
@@ -507,7 +507,7 @@ msgid "email_wallet.header_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:17
+#: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:18
 msgid "create_wallet_card.title"
 msgstr ""
 
@@ -527,7 +527,7 @@ msgid "notify_user.watch_only_wallet.header_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:18
+#: src/components/widgets/accounts/components/cards/create-wallet-card.tsx:19
 msgid "create_wallet_card.caption"
 msgstr ""
 
@@ -723,7 +723,7 @@ msgid "wallet.hidden_accounts.cell_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:104
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:110
 msgid "configure_account.hide_account.cell_title"
 msgstr ""
 
@@ -827,17 +827,17 @@ msgid "tokens.header_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:72
+#: src/app/(home)/settings/wallet/configure/[wallet]/[account]/index.tsx:78
 msgid "configure_account.name.cell_title"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/account-name-sheet.tsx:21
+#: src/components/wallet-settings/account-name-sheet.tsx:22
 msgid "account_name.input_placeholder"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/wallet-name-sheet.tsx:21
+#: src/components/wallet-settings/wallet-name-sheet.tsx:22
 msgid "wallet_name.input_placeholder"
 msgstr ""
 
@@ -950,7 +950,7 @@ msgstr ""
 msgid "app_auth.cell_caption"
 msgstr ""
 
-#: src/components/wallet-settings/account-card.tsx:45
+#: src/components/wallet-settings/account-card.tsx:57
 msgid "Placeholder for address"
 msgstr ""
 
@@ -1044,12 +1044,12 @@ msgid "hardware_wallets.ryder"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/account-name-sheet.tsx:22
+#: src/components/wallet-settings/account-name-sheet.tsx:23
 msgid "account_name.button"
 msgstr ""
 
 #. js-lingui-explicit-id
-#: src/components/wallet-settings/wallet-name-sheet.tsx:22
+#: src/components/wallet-settings/wallet-name-sheet.tsx:23
 msgid "wallet_name.button"
 msgstr ""
 

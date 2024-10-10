@@ -10,6 +10,7 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useSettings } from '@/store/settings/settings';
 import { destructAccountIdentifier, useAppDispatch } from '@/store/utils';
+import { defaultIconTestId } from '@/utils/testing-utils';
 import { useRouter } from 'expo-router';
 
 import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
@@ -75,7 +76,11 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
             onCardPress={onAccountPress}
             swapCardIndexes={swapAccountIndexes}
           >
-            <AccountCard Icon={getAvatarIcon(account.icon)} name={account.name} />
+            <AccountCard
+              Icon={getAvatarIcon(account.icon)}
+              name={account.name}
+              iconTestID={defaultIconTestId(account.icon)}
+            />
           </Draggable>
         ))}
       </Box>

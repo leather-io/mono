@@ -18,12 +18,15 @@ appId: io.leather.mobilewallet
 # # It's known issue and they are on it.
 # # https://maestro.mobile.dev/api-reference/commands/erasetext
 # - longPressOn:
-#     id: 'walletChangenameSheetInput'
+#     id: 'walletChangeNameSheetInput'
 # - tapOn: 'Select All'
 - tapOn:
-    id: 'walletChangenameSheetInput'
+    id: 'walletChangeNameSheetInput'
 - eraseText
 
 - inputText: 'testWallet'
 - tapOn:
     text: 'Save'
+- assertVisible:
+    id: 'settingsTitle'
+    text: 'testWallet'

@@ -53,7 +53,7 @@ export default function StackLayout() {
     return (
       <SimpleHeader
         insets={insets}
-        left={<BackButtonHeader onPress={() => router.back()} />}
+        left={<BackButtonHeader onPress={() => router.back()} testID={TestId.backButton} />}
         center={<TitleHeader title={title} />}
       />
     );
@@ -68,8 +68,8 @@ export default function StackLayout() {
     return (
       <SimpleHeader
         insets={insets}
-        left={<BackButtonHeader onPress={() => router.back()} />}
-        center={<TitleHeader title={title} />}
+        left={<BackButtonHeader onPress={() => router.back()} testID={TestId.backButton} />}
+        center={<TitleHeader title={title} testID={TestId.settingsTitle} />}
         right={
           <TouchableOpacity
             px="3"

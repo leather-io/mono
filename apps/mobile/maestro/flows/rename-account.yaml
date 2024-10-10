@@ -1,0 +1,24 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow: ../shared/add-wallet.yaml
+- assertNotVisible:
+    id: 'toastContainer'
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    text: 'Wallets and accounts Add, configure and remove'
+- tapOn:
+    id: 'walletListAccountCard'
+- tapOn:
+    text: 'Name Account 0'
+- tapOn:
+    id: 'accountChangeNameSheetInput'
+- eraseText
+- inputText: 'testAccount'
+- tapOn:
+    text: 'Save'
+- assertVisible:
+    id: 'settingsTitle'
+    text: 'testAccount'

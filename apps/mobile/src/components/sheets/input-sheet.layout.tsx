@@ -1,6 +1,5 @@
 import { RefObject, useState } from 'react';
 
-import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 
 import {
@@ -25,6 +24,8 @@ interface InputSheetProps {
   submitTitle: string;
   onSubmit(newVal: string): void;
   onDismiss?(): void;
+  inputTestId?: string;
+  submitTestId?: string;
 }
 export function InputSheet({
   sheetRef,
@@ -35,6 +36,8 @@ export function InputSheet({
   submitTitle,
   onSubmit,
   onDismiss,
+  inputTestId,
+  submitTestId,
 }: InputSheetProps) {
   const [internalValue, setInternalValue] = useState(initialValue);
   const { themeDerivedFromThemePreference } = useSettings();
@@ -63,14 +66,14 @@ export function InputSheet({
             autoFocus
             autoCapitalize="none"
             TextInputComponent={UIBottomSheetTextInput}
-            testID={TestId.walletChangenameSheetInput}
+            testID={inputTestId}
           />
         </Box>
         <Button
           onPress={() => onSubmit(internalValue)}
           buttonState="default"
           title={submitTitle}
-          testID={TestId.walletChangeNameSheetSaveButton}
+          testID={submitTestId}
         />
       </Box>
     </Sheet>

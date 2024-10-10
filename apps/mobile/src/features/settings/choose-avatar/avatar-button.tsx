@@ -1,4 +1,5 @@
 import { getAvatarIcon } from '@/components/avatar-icon';
+import { defaultIconTestId } from '@/utils/testing-utils';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
@@ -25,6 +26,7 @@ export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {
         />
       )}
       <TouchableOpacity
+        testID={defaultIconTestId(icon)}
         borderWidth={2}
         borderColor="ink.background-primary"
         onPress={onPress}
