@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { PassportIcon, SheetRef } from '@leather.io/ui/native';
@@ -24,6 +25,8 @@ export function AccountNameSheet({ sheetRef, name, setName }: AccountNameSheetPr
         sheetRef.current?.close();
         setName(newName);
       }}
+      inputTestId={TestId.accountChangeNameSheetInput}
+      submitTestId={TestId.accountChangeNameSheetSaveButton}
     />
   );
 }

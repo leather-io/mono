@@ -5,6 +5,7 @@ import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
+import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -89,6 +90,8 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                   });
                 }}
                 key={account.id}
+                testID={TestId.walletListAccountCard}
+                iconTestID={defaultIconTestId(account.icon)}
               />
             );
           })}

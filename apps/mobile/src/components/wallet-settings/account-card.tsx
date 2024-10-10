@@ -11,12 +11,16 @@ export function AccountCard({
   onPress,
   onLongPress,
   onLayout,
+  testID,
+  iconTestID,
 }: {
   Icon: React.FC<IconProps>;
   name: string;
   onPress?(): void;
   onLongPress?(): void;
   onLayout?(e: LayoutChangeEvent): void;
+  testID?: string;
+  iconTestID?: string;
 }) {
   const theme = useTheme<Theme>();
 
@@ -33,8 +37,16 @@ export function AccountCard({
       borderColor="ink.border-transparent"
       backgroundColor="ink.background-primary"
       onLayout={onLayout}
+      testID={testID}
     >
-      <Box mb="6" p="2" alignSelf="flex-start" borderRadius="round" bg="ink.text-primary">
+      <Box
+        mb="6"
+        p="2"
+        alignSelf="flex-start"
+        borderRadius="round"
+        bg="ink.text-primary"
+        testID={iconTestID}
+      >
         <Icon color={theme.colors['ink.background-primary']} />
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
