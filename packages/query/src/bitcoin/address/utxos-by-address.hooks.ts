@@ -28,9 +28,7 @@ export function filterUtxosWithInscriptions(
 
 export function filterUtxosWithRunes(runes: RunesOutputsByAddress[], utxos: UtxoResponseItem[]) {
   return utxos.filter(utxo => {
-    const hasRuneOutput = runes.find(rune => {
-      return rune.output === `${utxo.txid}:${utxo.vout}`;
-    });
+    const hasRuneOutput = runes.find(rune => rune.output === `${utxo.txid}:${utxo.vout}`);
 
     return !hasRuneOutput;
   });

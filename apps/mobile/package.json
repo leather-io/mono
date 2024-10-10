@@ -43,6 +43,7 @@
     "@leather.io/tokens": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
+    "@leather.io/query": "workspace:*",
     "@lingui/core": "4.11.1",
     "@lingui/react": "4.11.1",
     "@mgcrea/react-native-dnd": "2.2.0",
