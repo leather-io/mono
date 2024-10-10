@@ -4,7 +4,6 @@ import { HDKey } from '@scure/bip32';
 
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
-import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { filterUtxosWithInscriptions } from '../address/utxos-by-address.hooks';
 import { useGetTaprootUtxosByAddressQuery } from '../address/utxos-by-address.query';
 import { createBestInSlotInscription } from '../ordinals/inscription.utils';
@@ -40,7 +39,7 @@ export function useCurrentTaprootAccountUninscribedUtxos({
       .filter(utxo => utxo.status.confirmed)
       .filter(utxo => utxo.value > RETRIEVE_UTXO_DUST_AMOUNT);
 
-    return filterUtxosWithInscriptions(inscriptions, filteredUtxosList) as UtxoWithDerivationPath[];
+    return filteredUtxosList.filter(filterUtxosWithInscriptions(inscriptions));
   }, [query.data?.pages, utxos]);
 }
 
