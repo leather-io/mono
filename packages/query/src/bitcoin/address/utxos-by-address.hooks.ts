@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Inscription } from '@leather.io/models';
 
-import { UtxoResponseItem, UtxoWithDerivationPath } from '../../../types/utxo';
+import { UtxoResponseItem } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../clients/best-in-slot';
 import { useBitcoinClient } from '../clients/bitcoin-client';
 import { createBestInSlotInscription } from '../ordinals/inscription.utils';
@@ -13,27 +13,19 @@ import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks'
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
 import { createGetUtxosByAddressQueryOptions } from './utxos-by-address.query';
 
-export function filterUtxosWithInscriptions(
-  inscriptions: Inscription[],
-  utxos: UtxoWithDerivationPath[] | UtxoResponseItem[]
-) {
-  return utxos.filter(
-    utxo =>
-      !inscriptions?.some(
-        inscription =>
-          `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
-      )
-  );
+export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
+  return <T extends { txid: string; vout: number }>(utxo: T) => {
+    return !inscriptions.some(
+      inscription =>
+        `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
+    );
+  };
 }
 
-export function filterUtxosWithRunes(runes: RunesOutputsByAddress[], utxos: UtxoResponseItem[]) {
-  return utxos.filter(utxo => {
-    const hasRuneOutput = runes.find(rune => {
-      return rune.output === `${utxo.txid}:${utxo.vout}`;
-    });
-
-    return !hasRuneOutput;
-  });
+export function filterUtxosWithRunes(runes: RunesOutputsByAddress[]) {
+  return <T extends { txid: string; vout: number }>(utxo: T) => {
+    return !runes.some(rune => rune.output === `${utxo.txid}:${utxo.vout}`);
+  };
 }
 
 const defaultArgs = {
@@ -64,14 +56,12 @@ interface UseFilterUtxosByAddressArgs {
   filterRunesUtxos: boolean;
 }
 
-type filterUtxoFunctionType = (utxos: UtxoResponseItem[]) => UtxoResponseItem[];
+type FilterUtxoFunctionType = (utxos: UtxoResponseItem[]) => UtxoResponseItem[];
 
 function useUtxosByAddressQuery(address: string) {
   const client = useBitcoinClient();
 
-  return useQuery({
-    ...createGetUtxosByAddressQueryOptions({ address, client }),
-  });
+  return useQuery(createGetUtxosByAddressQueryOptions({ address, client }));
 }
 
 export function useNativeSegwitUtxosByAddress({
@@ -107,8 +97,7 @@ export function useNativeSegwitUtxosByAddress({
       }
 
       return filters.reduce(
-        (filteredUtxos: UtxoResponseItem[], filterFunc: filterUtxoFunctionType) =>
-          filterFunc(filteredUtxos),
+        (filteredUtxos: any, filterFunc: FilterUtxoFunctionType) => filterFunc(filteredUtxos),
         utxos
       );
     },
@@ -139,7 +128,7 @@ function useFilterInscriptionsByAddress(address: string) {
     (utxos: UtxoResponseItem[]) => {
       const inscriptionResponses = inscriptionsList?.pages.flatMap(page => page.data) ?? [];
       const inscriptions = inscriptionResponses.map(createBestInSlotInscription);
-      return filterUtxosWithInscriptions(inscriptions, utxos);
+      return utxos.filter(filterUtxosWithInscriptions(inscriptions));
     },
     [inscriptionsList?.pages]
   );
@@ -162,7 +151,7 @@ function useFilterRuneUtxosByAddress(address: string) {
         return utxos;
       }
 
-      return filterUtxosWithRunes(data, utxos);
+      return utxos.filter(filterUtxosWithRunes(data));
     },
     [data, runesEnabled]
   );

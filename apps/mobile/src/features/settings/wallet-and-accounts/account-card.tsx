@@ -4,6 +4,15 @@ import { t } from '@lingui/macro';
 
 import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
+interface AccountCardProps {
+  icon: React.ReactNode;
+  name: string;
+  onPress?(): void;
+  onLongPress?(): void;
+  onLayout?(e: LayoutChangeEvent): void;
+  testID?: string;
+  iconTestID?: string;
+}
 export function AccountCard({
   icon,
   name,
@@ -12,15 +21,7 @@ export function AccountCard({
   onLayout,
   testID,
   iconTestID,
-}: {
-  icon: React.ReactNode;
-  name: string;
-  onPress?(): void;
-  onLongPress?(): void;
-  onLayout?(e: LayoutChangeEvent): void;
-  testID?: string;
-  iconTestID?: string;
-}) {
+}: AccountCardProps) {
   const Container = onPress ? TouchableOpacity : Box;
 
   return (

@@ -40,6 +40,7 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
+    "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/tokens": "workspace:*",
@@ -62,6 +63,7 @@
     "@stacks/common": "6.13.0",
     "@stacks/transactions": "6.15.0",
     "@stacks/wallet-sdk": "6.15.0",
+    "@tanstack/query-core": "5.59.13",
     "@tanstack/react-query": "5.51.23",
     "bignumber.js": "9.1.2",
     "buffer": "6.0.3",
@@ -112,6 +114,7 @@
     "react-redux": "9.1.2",
     "readable-stream": "4.5.2",
     "redux-persist": "6.0.0",
+    "rxjs": "7.8.1",
     "zod": "3.23.6"
   },
   "devDependencies": {

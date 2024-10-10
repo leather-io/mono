@@ -11,6 +11,10 @@ import { useRunesEnabled } from './runes.hooks';
 
 const queryOptions = { staleTime: 5 * 60 * 1000 } as const;
 
+export function createGetRuneOutputsByAddressCacheKey(address: string) {
+  return [BitcoinQueryPrefixes.GetRunesOutputsByAddress, address];
+}
+
 interface CreateGetRunesOutputsByAddressQueryOptionsArgs {
   address: string;
   client: BitcoinClient;
@@ -27,7 +31,7 @@ export function createGetRunesOutputsByAddressQueryOptions({
 }: CreateGetRunesOutputsByAddressQueryOptionsArgs) {
   return {
     enabled: !!address && runesEnabled,
-    queryKey: [BitcoinQueryPrefixes.GetRunesOutputsByAddress, address],
+    queryKey: createGetRuneOutputsByAddressCacheKey(address),
     queryFn: ({ signal }: QueryFunctionContext) =>
       limiter.add(
         () =>
