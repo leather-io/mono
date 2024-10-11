@@ -55,6 +55,7 @@ build:
           flow_path: |
             maestro/flows/change-account-icon.yaml
             maestro/flows/create-wallet.yaml
+            maestro/flows/create-wallet-without-security.yaml
             maestro/flows/delete-wallet.yaml
             maestro/flows/hide-account.yaml 
             maestro/flows/restore-wallet.yaml

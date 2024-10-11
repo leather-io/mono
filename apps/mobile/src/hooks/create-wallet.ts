@@ -59,7 +59,7 @@ export function useCreateWallet() {
 
   async function navigateAndCreateWallet() {
     switch (securityLevelPreference) {
-      case 'undefined':
+      case 'not-selected':
         router.navigate(AppRoutes.SecureYourWallet);
         return;
       case 'secure':
