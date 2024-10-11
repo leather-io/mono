@@ -15,16 +15,6 @@ jobs:
       - name: Lint Prettier
         run: pnpm format:check
 
-  check-translation-strings:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/provision
-      - name: Check translation strings extraction
-        run: pnpm --dir ./apps/mobile run lingui:extract
-      - name: Fail if there are uncommited translations
-        run: git diff-index --quiet HEAD --
-
   lint-syncpack:
     runs-on: ubuntu-latest
     steps:

@@ -1,37 +1,22 @@
+import OtaClient from '@crowdin/ota-client';
 import { i18n } from '@lingui/core';
 
-import { messages as english } from './en/messages';
-import { messages as pseudo } from './pseudo-locale/messages';
-
-export const LOCALES = [
-  {
-    /* eslint-disable-next-line lingui/no-unlocalized-strings  */
-    label: 'English',
-    locale: 'en',
-    messages: english,
-  },
-  {
-    /* eslint-disable-next-line lingui/no-unlocalized-strings  */
-    label: 'Spanish',
-    locale: 'es',
-    messages: english,
-  },
-  {
-    /* eslint-disable-next-line lingui/no-unlocalized-strings  */
-    label: 'PseudoEnglish',
-    locale: 'pseudo-locale',
-    messages: pseudo,
-  },
-];
-
-export const LOCALE_CODES = LOCALES.map(({ locale }) => locale);
+const otaClient = new OtaClient('fa04f606d6ca277403b4e49twcj');
 
 export const DEFAULT_LOCALE = 'en';
+let LOCALES: string[] = [];
+export function getAvailableLocales() {
+  return LOCALES;
+}
 
-export function initiateI18n() {
-  for (const { locale, messages } of LOCALES) {
-    i18n.load(locale, messages);
-  }
+export async function initiateI18n() {
+  const content = await otaClient.getStrings();
+
+  LOCALES = Object.keys(content);
+
+  Object.keys(content).map(locale => {
+    i18n.load(locale, content[locale]);
+  });
 
   i18n.activate(DEFAULT_LOCALE);
 }
