@@ -74,6 +74,12 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === 'axios') {
     return context.resolveRequest(context, moduleName, platform);
   }
+  if (moduleName === '@stacks/connect') {
+    return context.resolveRequest(context, moduleName, platform);
+  }
+  if (moduleName === '@stacks/connect-ui') {
+    return context.resolveRequest(context, moduleName, platform);
+  }
   debounce(updateInjectedProvider);
 
   return symlinkResolver(context, moduleName, platform);

@@ -4,10 +4,11 @@ import { AccountLoader } from '@/store/accounts/accounts';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
-// import {
-//   useCryptoCurrencyMarketDataMeanAverage,
-//   useStxCryptoAssetBalance,
-// } from '@leather.io/query';
+import {
+  // useCryptoCurrencyMarketDataMeanAverage,
+  useStxCryptoAssetBalance,
+} from '@leather.io/query';
+
 // import { baseCurrencyAmountInQuote, createMoney, i18nFormatCurrency } from '@leather.io/utils';
 import { AccountLayout } from './account.layout';
 
@@ -20,8 +21,10 @@ export default function AccountScreen() {
   const params = useLocalSearchParams();
   const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
   // get stx balance
-  // const { filteredBalanceQuery, isLoadingAdditionalData: isLoadingAdditionalDataStxBalance } =
-  //   useStxCryptoAssetBalance(fingerprint);
+  const { filteredBalanceQuery, isLoadingAdditionalData: isLoadingAdditionalDataStxBalance } =
+    useStxCryptoAssetBalance('SP2417H88DQFN7FNDMSKM9N0B3Q6GNGEM40W7ZAZW');
+
+  console.log(filteredBalanceQuery, isLoadingAdditionalDataStxBalance);
 
   // const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
   // const {
