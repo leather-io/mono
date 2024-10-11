@@ -3,7 +3,7 @@ name: Crowdin Action
 on:
   push:
     branches:
-      - dev
+      - feat/crowdin-ota
 
 jobs:
   synchronize-with-crowdin:
@@ -12,6 +12,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Provision
+        uses: ./.github/actions/provision
+
+      - name: Extract lingui strings
+        working-directory: ./apps/mobile
+        run: |
+          pnpm lingui
 
       - name: crowdin action
         uses: crowdin/github-action@v2
