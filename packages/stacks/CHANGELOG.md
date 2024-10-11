@@ -62,6 +62,21 @@
     * @leather.io/models bumped to 0.17.0
     * @leather.io/utils bumped to 0.16.2
 
+## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.1.5...@leather.io/stacks-v1.2.0) (2024-10-11)
+
+
+### Features
+
+* add get stacks burn address ([2d3b844](https://github.com/leather-io/mono/commit/2d3b844eab21677cbc74a8e662c8fd1b674ce58f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.3
+    * @leather.io/utils bumped to 0.16.3
+
 ## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.0.3...@leather.io/stacks-v1.1.0) (2024-09-06)
 
 

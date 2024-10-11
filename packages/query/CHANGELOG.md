@@ -159,6 +159,23 @@
     * @leather.io/rpc bumped to 2.1.10
     * @leather.io/utils bumped to 0.16.2
 
+## [2.14.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.13.1...@leather.io/query-v2.14.0) (2024-10-11)
+
+
+### Features
+
+* add tokens enabled config hook ([6ed99df](https://github.com/leather-io/mono/commit/6ed99df11cc2736517fb2ed48640ecf230d7df4f))
+* increase stx balance request priority ([37b50c8](https://github.com/leather-io/mono/commit/37b50c8835240d231ba4e4f0083bd4b39437ce94))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.13.3
+    * @leather.io/constants bumped to 0.12.2
+    * @leather.io/utils bumped to 0.16.3
+
 ## [2.13.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.12.0...@leather.io/query-v2.13.0) (2024-09-24)
 
 
