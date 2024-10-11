@@ -13,18 +13,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Provision
+        uses: ./.github/actions/provision
+
+      - name: Extract lingui strings
+        working-directory: ./apps/mobile
+        run: |
+          pnpm lingui
+
       - name: crowdin action
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: false
-          download_translations: true
-          localization_branch_name: chore/l10n_crowdin_translations
-          commit_message: chore/crowdin-translations
-          create_pull_request: true
-          pull_request_title: 'chore: crowdin translations'
-          pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
-          pull_request_base_branch_name: 'dev'
+          download_translations: false
+          create_pull_request: false
           config: apps/mobile/crowdin.yml
         env:
           # A classic GitHub Personal Access Token with the 'repo' scope selected (the user should have write access to the repository).
