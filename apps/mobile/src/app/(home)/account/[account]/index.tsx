@@ -5,11 +5,12 @@ import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
 import {
-  // useCryptoCurrencyMarketDataMeanAverage,
+  useCryptoCurrencyMarketDataMeanAverage,
+  useStacksAccountBalanceFungibleTokens,
   useStxCryptoAssetBalance,
 } from '@leather.io/query';
+import { baseCurrencyAmountInQuote, createMoney, i18nFormatCurrency } from '@leather.io/utils';
 
-// import { baseCurrencyAmountInQuote, createMoney, i18nFormatCurrency } from '@leather.io/utils';
 import { AccountLayout } from './account.layout';
 
 const configureAccountParamsSchema = z.object({
@@ -23,24 +24,33 @@ export default function AccountScreen() {
   // get stx balance
   const { filteredBalanceQuery, isLoadingAdditionalData: isLoadingAdditionalDataStxBalance } =
     useStxCryptoAssetBalance('SP2417H88DQFN7FNDMSKM9N0B3Q6GNGEM40W7ZAZW');
+  const { data: tokens = {} } = useStacksAccountBalanceFungibleTokens(
+    'SP2417H88DQFN7FNDMSKM9N0B3Q6GNGEM40W7ZAZW'
+  );
 
-  console.log(filteredBalanceQuery, isLoadingAdditionalDataStxBalance);
+  console.log(
+    '***************************************',
+    filteredBalanceQuery,
+    isLoadingAdditionalDataStxBalance,
+    tokens
+  );
 
-  // const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
-  // const {
-  //   data: balance,
-  //   isFetching: isFetchingStxBalance,
-  //   isLoading: isLoadingStxBalance,
-  //   isPending: isPendingStxBalance,
-  // } = filteredBalanceQuery;
+  const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const {
+    data: balance,
+    isFetching: isFetchingStxBalance,
+    isLoading: isLoadingStxBalance,
+    isPending: isPendingStxBalance,
+  } = filteredBalanceQuery;
 
-  // const stxBalance = balance ? balance.totalBalance : createMoney(0, 'STX');
+  const stxBalance = balance ? balance.totalBalance : createMoney(0, 'STX');
 
-  // const stxUsdAmount = baseCurrencyAmountInQuote(stxBalance, stxMarketData);
+  const stxUsdAmount = baseCurrencyAmountInQuote(stxBalance, stxMarketData);
+  console.log('***************************************', balance);
 
   return (
     <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
-      {account => <AccountLayout balance={mockTotalBalance} account={account as MockedAccount} />}
+      {account => <AccountLayout balance={stxUsdAmount} account={account as MockedAccount} />}
     </AccountLoader>
   );
 }
