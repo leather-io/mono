@@ -6,6 +6,7 @@ import { deriveBip39SeedFromMnemonic } from '@leather.io/crypto';
 import { testMnemonic } from '../../../config/test-helpers';
 import {
   deriveStxPrivateKey,
+  getStacksBurnAddress,
   stacksRootKeychainToAccountDescriptor,
   whenStacksChainId,
 } from './stacks.utils';
@@ -55,5 +56,22 @@ describe(stacksRootKeychainToAccountDescriptor.name, () => {
     expect(descriptor).toEqual(
       "[24682ead/44'/5757'/0'/0/0]025b2c58cbf22ad02e1a53041189ace847192834e0664cab4ed1a39676e8a8ddf8"
     );
+  });
+});
+
+describe(getStacksBurnAddress.name, () => {
+  it('should return the correct burn address for Mainnet', () => {
+    const result = getStacksBurnAddress(ChainID.Mainnet);
+    expect(result).toBe('SP00000000000003SCNSJTCSE62ZF4MSE');
+  });
+
+  it('should return the correct burn address for Testnet', () => {
+    const result = getStacksBurnAddress(ChainID.Testnet);
+    expect(result).toBe('ST000000000000000000002AMW42H');
+  });
+
+  it('should return the Testnet address for an unknown chainId', () => {
+    const result = getStacksBurnAddress(9999 as ChainID); // Simulate an unknown chainId
+    expect(result).toBe('ST000000000000000000002AMW42H');
   });
 });

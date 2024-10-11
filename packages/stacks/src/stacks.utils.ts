@@ -61,3 +61,13 @@ export function stacksRootKeychainToAccountDescriptor(keychain: HDKey, accountIn
     bytesToHex(publicKey.data)
   );
 }
+
+export function getStacksBurnAddress(chainId: ChainID): string {
+  switch (chainId) {
+    case ChainID.Mainnet:
+      return 'SP00000000000003SCNSJTCSE62ZF4MSE';
+    case ChainID.Testnet:
+    default:
+      return 'ST000000000000000000002AMW42H';
+  }
+}
