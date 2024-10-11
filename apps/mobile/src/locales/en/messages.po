@@ -1212,7 +1212,8 @@ msgstr "Testnet"
 #. js-lingui-explicit-id
 #: src/components/wallet-settings/remove-wallet-sheet.tsx:20
 msgid "remove_wallet.warning_caption"
-msgstr "The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet.\n"
+msgstr ""
+"The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet.\n"
 "Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
 
 #. js-lingui-explicit-id
@@ -1361,4 +1362,3 @@ msgstr "Your Secret Key grants you access to your wallet and its assets."
 #: src/app/(home)/create-new-wallet.tsx:68
 msgid "create_new_wallet.subtitle"
 msgstr "Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager."
-
