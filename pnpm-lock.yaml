@@ -90,6 +90,9 @@ importers:
       '@leather.io/models':
         specifier: workspace:*
         version: link:../../packages/models
+      '@leather.io/query':
+        specifier: workspace:*
+        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc

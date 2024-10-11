@@ -1,8 +1,14 @@
 import { MockedAccount } from '@/mocks/account.mocks';
+import { mockTotalBalance } from '@/mocks/balance.mocks';
 import { AccountLoader } from '@/store/accounts/accounts';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
+// import {
+//   useCryptoCurrencyMarketDataMeanAverage,
+//   useStxCryptoAssetBalance,
+// } from '@leather.io/query';
+// import { baseCurrencyAmountInQuote, createMoney, i18nFormatCurrency } from '@leather.io/utils';
 import { AccountLayout } from './account.layout';
 
 const configureAccountParamsSchema = z.object({
@@ -13,10 +19,25 @@ const configureAccountParamsSchema = z.object({
 export default function AccountScreen() {
   const params = useLocalSearchParams();
   const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
+  // get stx balance
+  // const { filteredBalanceQuery, isLoadingAdditionalData: isLoadingAdditionalDataStxBalance } =
+  //   useStxCryptoAssetBalance(fingerprint);
+
+  // const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  // const {
+  //   data: balance,
+  //   isFetching: isFetchingStxBalance,
+  //   isLoading: isLoadingStxBalance,
+  //   isPending: isPendingStxBalance,
+  // } = filteredBalanceQuery;
+
+  // const stxBalance = balance ? balance.totalBalance : createMoney(0, 'STX');
+
+  // const stxUsdAmount = baseCurrencyAmountInQuote(stxBalance, stxMarketData);
 
   return (
     <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
-      {account => <AccountLayout account={account as MockedAccount} />}
+      {account => <AccountLayout balance={mockTotalBalance} account={account as MockedAccount} />}
     </AccountLoader>
   );
 }

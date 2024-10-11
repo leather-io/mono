@@ -11,18 +11,21 @@ import { MockedAccount } from '@/mocks/account.mocks';
 import { mockTotalBalance } from '@/mocks/balance.mocks';
 import { getMockTokens } from '@/mocks/tokens.mocks';
 
+import { Money } from '@leather.io/models';
+
 import { AccountOverview } from './account-overview-card';
 
 interface AccountLayoutProps {
   account: MockedAccount;
+  balance: Money;
 }
 
-export function AccountLayout({ account }: AccountLayoutProps) {
+export function AccountLayout({ account, balance }: AccountLayoutProps) {
   return (
     <PageLayout>
       <AccountOverview
         Icon={getAvatarIcon(account.icon)}
-        heading={<Balance balance={mockTotalBalance} variant="heading02" />}
+        heading={<Balance balance={balance} variant="heading02" />}
         caption={account.name}
       />
       <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />

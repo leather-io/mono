@@ -39,6 +39,7 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
+    "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/tokens": "workspace:*",
