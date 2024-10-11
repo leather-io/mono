@@ -103,6 +103,25 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.28.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.27.1...@leather.io/ui-v1.28.0) (2024-10-11)
+
+
+### Features
+
+* delete detox, install maestro, run E2E tests on dev, add a few flows ([8aae54f](https://github.com/leather-io/mono/commit/8aae54f135a4d89d05c3d62f92a94911de4e599b))
+
+
+### Bug Fixes
+
+* use Cell instead of ItemLayout ([d3408c8](https://github.com/leather-io/mono/commit/d3408c86d9ec0436a4d93b02c525654e639a635c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.3
+
 ## [1.27.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.27.0...@leather.io/ui-v1.27.1) (2024-10-04)
 
 

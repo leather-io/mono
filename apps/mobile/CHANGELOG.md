@@ -202,6 +202,39 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.41.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.40.0...@leather.io/mobile-v1.41.0) (2024-10-11)
+
+
+### Features
+
+* application version ([a8ec932](https://github.com/leather-io/mono/commit/a8ec93262463cc675e32a9df3856e5fa70811ad0))
+* crowdin ota ([7eb7f53](https://github.com/leather-io/mono/commit/7eb7f534df9a4cf7399663d9803e0599a171669d))
+* delete detox, install maestro, run E2E tests on dev, add a few flows ([8aae54f](https://github.com/leather-io/mono/commit/8aae54f135a4d89d05c3d62f92a94911de4e599b))
+* settings upcoming features ([521efac](https://github.com/leather-io/mono/commit/521efac2525c3d7f15f419fed43c83b2dc6ebddf))
+* update locales ([791713b](https://github.com/leather-io/mono/commit/791713b675fe82277874632ac7d517e0dfe4142d))
+* use lingui custom ids, closes leather-io/issues[#332](https://github.com/leather-io/mono/issues/332) ([22cea4f](https://github.com/leather-io/mono/commit/22cea4f68593d262644a85ad65c0b3f7e49c74a5))
+
+
+### Bug Fixes
+
+* build script without lingui ([96bd2f9](https://github.com/leather-io/mono/commit/96bd2f981e711c8806fbffa09ebfa447650ec001))
+* **mobile:** clearing store race condition, closes LEA-1497 ([41c6b0e](https://github.com/leather-io/mono/commit/41c6b0e29595d38eceee2d401424688130899b2b))
+* use Cell instead of ItemLayout ([d3408c8](https://github.com/leather-io/mono/commit/d3408c86d9ec0436a4d93b02c525654e639a635c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.13.3
+    * @leather.io/constants bumped to 0.12.2
+    * @leather.io/crypto bumped to 1.6.3
+    * @leather.io/stacks bumped to 1.2.0
+    * @leather.io/ui bumped to 1.28.0
+    * @leather.io/utils bumped to 0.16.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.13.3
+
 ## [1.40.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.39.1...@leather.io/mobile-v1.40.0) (2024-10-07)
 
 

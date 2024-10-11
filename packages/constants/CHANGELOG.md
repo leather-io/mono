@@ -31,6 +31,13 @@
   * dependencies
     * @leather.io/models bumped to 0.17.0
 
+## [0.12.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.12.1...@leather.io/constants-v0.12.2) (2024-10-11)
+
+
+### Bug Fixes
+
+* use Cell instead of ItemLayout ([d3408c8](https://github.com/leather-io/mono/commit/d3408c86d9ec0436a4d93b02c525654e639a635c))
+
 ## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.11.0...@leather.io/constants-v0.12.0) (2024-09-24)
 
 
