@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "android": "expo run:android",
-    "build": "tsc --build && pnpm lingui",
-    "build:watch": "concurrently \"tsc --build --watch --preserveWatchOutput\"  \"pnpm lingui:watch\" ",
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch --preserveWatchOutput",
     "crowdin": "crowdin",
     "crowdin:sync": "crowdin push && crowdin pull",
     "crowdin:sync:sources": "crowdin push",
