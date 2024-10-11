@@ -8,7 +8,7 @@ import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem } from '@/components/developer-console/list-items';
 import { useToastContext } from '@/components/toast/toast-context';
 import { usePushNotifications } from '@/hooks/use-push-notifications';
-import { LOCALES } from '@/locales';
+import { getAvailableLocales } from '@/locales';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
@@ -55,14 +55,15 @@ export default function DeveloperConsoleScreen() {
   }, []);
 
   function toggleLocalization() {
-    const locIdx = LOCALES.findIndex(loc => loc.locale === i18n.locale);
-    const isLastItem = locIdx === LOCALES.length - 1;
+    const locales = getAvailableLocales();
+    const locIdx = locales.findIndex(loc => loc === i18n.locale);
+    const isLastItem = locIdx === locales.length - 1;
     const nextIdx = isLastItem ? 0 : locIdx + 1;
-    const nextLocale = LOCALES[nextIdx];
+    const nextLocale = locales[nextIdx];
     if (!nextLocale) {
       throw new Error("Didn't find next locale for some reason");
     }
-    i18n.activate(nextLocale.locale);
+    i18n.activate(nextLocale);
   }
 
   const locale = i18n.locale;

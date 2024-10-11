@@ -33,6 +33,7 @@
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {
+    "@crowdin/ota-client": "2.0.0",
     "@expo/vector-icons": "14.0.0",
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/constants": "workspace:*",
