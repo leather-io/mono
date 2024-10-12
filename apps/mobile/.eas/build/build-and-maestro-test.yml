@@ -43,6 +43,11 @@ build:
     - eas/find_and_upload_build_artifacts
     # end ios-simulator-build
 
+    # Increase timeout so maestro doesn't stall in low-performance environments (CI)
+    # https://github.com/mobile-dev-inc/maestro-docs/blob/main/advanced/configuring-maestro-driver-timeout.md
+    - run:
+        name: Increase driver startup timeout
+        command: export MAESTRO_DRIVER_STARTUP_TIMEOUT=90000
     # - eas/build
     # Enable these 2 flows when maestro gets another release.
     # maestro/flows/rename-account.yaml
