@@ -11,10 +11,10 @@ export function useCreateWallet() {
   const router = useRouter();
   const toastContext = useToastContext();
   const keyStore = useKeyStore();
-  const { changeSecurityLevelPreference, securityLevelPreference } = useSettings();
+  const { walletSecurityLevelPreference, changeWalletSecurityLevelPreference } = useSettings();
 
   async function createWallet({ biometrics }: { biometrics: boolean }) {
-    changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
+    changeWalletSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
       router.navigate(AppRoutes.GeneratingWallet);
@@ -58,7 +58,7 @@ export function useCreateWallet() {
   }
 
   async function navigateAndCreateWallet() {
-    switch (securityLevelPreference) {
+    switch (walletSecurityLevelPreference) {
       case 'not-selected':
         router.navigate(AppRoutes.SecureYourWallet);
         return;
@@ -71,7 +71,7 @@ export function useCreateWallet() {
       default:
         /* eslint-disable-next-line no-console  */
         console.warn(
-          "securityLevelPreference is undefined. That shouldn't happen in a newly created store"
+          "appSecurityLevelPreference is undefined. That shouldn't happen in a newly created store"
         );
         router.navigate(AppRoutes.SecureYourWallet);
     }

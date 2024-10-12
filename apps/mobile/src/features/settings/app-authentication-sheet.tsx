@@ -20,8 +20,8 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
     LocalAuthentication.authenticateAsync()
       .then(result => {
         if (result.success) {
-          settings.changeSecurityLevelPreference(
-            settings.securityLevelPreference === 'secure' ? 'insecure' : 'secure'
+          settings.changeAppSecurityLevelPreference(
+            settings.appSecurityLevelPreference === 'secure' ? 'insecure' : 'secure'
           );
           displayToast({
             title: t({
@@ -72,7 +72,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         onPress={() => onUpdateAppAuth()}
       >
         <Cell.Switch
-          value={settings.securityLevelPreference === 'secure'}
+          value={settings.appSecurityLevelPreference === 'secure'}
           onValueChange={() => onUpdateAppAuth()}
         />
       </Cell.Root>

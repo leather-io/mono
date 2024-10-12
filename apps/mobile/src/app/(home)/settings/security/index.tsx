@@ -2,22 +2,20 @@ import { useRef } from 'react';
 
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
-import { SecurityLevelPreference, useSettings } from '@/store/settings/settings';
+import { AppSecurityLevelPreference, useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
 import { Cell, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
 
 import SettingsScreenLayout from '../settings-screen.layout';
 
-function getCaption(securityLevelPreference: SecurityLevelPreference) {
-  switch (securityLevelPreference) {
+function getCaption(appSecurityLevelPreference: AppSecurityLevelPreference) {
+  switch (appSecurityLevelPreference) {
     case 'secure':
       return t({
         id: 'security.app_auth.cell_caption_enabled',
         message: 'Enabled',
       });
-    // Show not-selected state as disabled for now
-    case 'not-selected':
     case 'insecure':
       return t({
         id: 'security.app_auth.cell_caption_disabled',
@@ -62,7 +60,7 @@ export default function SettingsSecurityScreen() {
             id: 'security.app_auth.cell_title',
             message: 'App authentication',
           })}
-          caption={getCaption(settings.securityLevelPreference)}
+          caption={getCaption(settings.appSecurityLevelPreference)}
           icon={<KeyholeIcon />}
           onPress={() => {
             appAuthenticationSheetRef.current?.present();

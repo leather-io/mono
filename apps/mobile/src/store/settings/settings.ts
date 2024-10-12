@@ -17,24 +17,26 @@ import { useAppDispatch } from '../utils';
 import {
   selectAccountDisplayPreference,
   selectAnalyticsPreference,
+  selectAppSecurityLevelPreference,
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
   selectEmailAddressPreference,
   selectNetworkPreference,
   selectPrivacyModePreference,
-  selectSecurityLevelPreference,
   selectThemePreference,
+  selectWalletSecurityLevelPreference,
 } from './settings.read';
 import {
   userChangedAccountDisplayPreference,
   userChangedAnalyticsPreference,
+  userChangedAppSecurityLevelPreference,
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
-  userChangedSecurityLevelPreference,
   userChangedThemePreference,
+  userChangedWalletSecurityLevelPreference,
 } from './settings.write';
 
 export const defaultNetworkPreferences = ['mainnet', 'testnet', 'signet'] as const;
@@ -42,7 +44,8 @@ export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
 
 export type ThemePreference = (typeof defaultThemePreferences)[number];
 export type Theme = Exclude<ThemePreference, 'system'>;
-export type SecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
+export type AppSecurityLevelPreference = 'insecure' | 'secure';
+export type WalletSecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
 export type PrivacyModePreference = 'hidden' | 'visible';
 
 export interface SettingsState {
@@ -55,7 +58,8 @@ export interface SettingsState {
   networkPreference: DefaultNetworkConfigurations;
   privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;
-  securityLevelPreference: SecurityLevelPreference;
+  appSecurityLevelPreference: AppSecurityLevelPreference;
+  walletSecurityLevelPreference: WalletSecurityLevelPreference;
 }
 
 export const initialState: SettingsState = {
@@ -67,7 +71,8 @@ export const initialState: SettingsState = {
   fiatCurrencyPreference: 'USD',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
-  securityLevelPreference: 'not-selected',
+  appSecurityLevelPreference: 'insecure',
+  walletSecurityLevelPreference: 'not-selected',
   themePreference: 'system',
 };
 
@@ -82,7 +87,8 @@ export function useSettings() {
   const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
   const privacyModePreference = useSelector(selectPrivacyModePreference);
   const networkPreference = useSelector(selectNetworkPreference);
-  const securityLevelPreference = useSelector(selectSecurityLevelPreference);
+  const appSecurityLevelPreference = useSelector(selectAppSecurityLevelPreference);
+  const walletSecurityLevelPreference = useSelector(selectWalletSecurityLevelPreference);
   const themePreference = useSelector(selectThemePreference);
 
   const themeDerivedFromThemePreference =
@@ -98,7 +104,8 @@ export function useSettings() {
     privacyModePreference,
     themeDerivedFromThemePreference,
     themePreference,
-    securityLevelPreference,
+    appSecurityLevelPreference,
+    walletSecurityLevelPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
@@ -121,8 +128,11 @@ export function useSettings() {
     changePrivacyModePreference(mode: PrivacyModePreference) {
       dispatch(userChangedPrivacyModePreference(mode));
     },
-    changeSecurityLevelPreference(level: SecurityLevelPreference) {
-      dispatch(userChangedSecurityLevelPreference(level));
+    changeAppSecurityLevelPreference(level: AppSecurityLevelPreference) {
+      dispatch(userChangedAppSecurityLevelPreference(level));
+    },
+    changeWalletSecurityLevelPreference(level: AppSecurityLevelPreference) {
+      dispatch(userChangedWalletSecurityLevelPreference(level));
     },
     changeThemePreference(theme: ThemePreference) {
       dispatch(userChangedThemePreference(theme));

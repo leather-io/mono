@@ -79,7 +79,10 @@ export default function DeveloperConsoleScreen() {
         }}
       >
         <PressableListItem
-          title={t`securityLevelPreference:` + ' ' + settings.securityLevelPreference}
+          title={t`appSecurityLevelPreference:` + ' ' + settings.appSecurityLevelPreference}
+        />
+        <PressableListItem
+          title={t`walletSecurityLevelPreference:` + ' ' + settings.walletSecurityLevelPreference}
         />
         <PressableListItem
           onPress={() => addWalletSheetRef.current?.present()}

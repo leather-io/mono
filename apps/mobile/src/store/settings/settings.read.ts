@@ -47,9 +47,14 @@ export const selectPrivacyModePreference = createSelector(
   state => state.privacyModePreference
 );
 
-export const selectSecurityLevelPreference = createSelector(
+export const selectAppSecurityLevelPreference = createSelector(
   selectSettings,
-  state => state.securityLevelPreference
+  state => state.appSecurityLevelPreference
+);
+
+export const selectWalletSecurityLevelPreference = createSelector(
+  selectSettings,
+  state => state.walletSecurityLevelPreference
 );
 
 export const selectThemePreference = createSelector(selectSettings, state => state.themePreference);

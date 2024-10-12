@@ -10,9 +10,10 @@ import {
 
 import { handleAppResetWithState } from '../global-action';
 import {
+  AppSecurityLevelPreference,
   PrivacyModePreference,
-  SecurityLevelPreference,
   ThemePreference,
+  WalletSecurityLevelPreference,
   initialState,
 } from './settings';
 
@@ -41,8 +42,17 @@ export const settingsSlice = createSlice({
     userChangedPrivacyModePreference(state, action: PayloadAction<PrivacyModePreference>) {
       state.privacyModePreference = action.payload;
     },
-    userChangedSecurityLevelPreference(state, action: PayloadAction<SecurityLevelPreference>) {
-      state.securityLevelPreference = action.payload;
+    userChangedAppSecurityLevelPreference(
+      state,
+      action: PayloadAction<AppSecurityLevelPreference>
+    ) {
+      state.appSecurityLevelPreference = action.payload;
+    },
+    userChangedWalletSecurityLevelPreference(
+      state,
+      action: PayloadAction<WalletSecurityLevelPreference>
+    ) {
+      state.walletSecurityLevelPreference = action.payload;
     },
     userChangedThemePreference(state, action: PayloadAction<ThemePreference>) {
       state.themePreference = action.payload;
@@ -59,6 +69,7 @@ export const {
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
-  userChangedSecurityLevelPreference,
+  userChangedAppSecurityLevelPreference,
+  userChangedWalletSecurityLevelPreference,
   userChangedThemePreference,
 } = settingsSlice.actions;
