@@ -45,4 +45,5 @@ export interface RemoteConfig {
     mainnetApiUrl: string;
     signetApiUrl: string;
   };
+  tokensEnabledByDefault: string[];
 }
