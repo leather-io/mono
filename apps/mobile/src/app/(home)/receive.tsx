@@ -1,17 +1,16 @@
-import { HeaderAvoidingContainer } from '@/components/headers/containers/header-avoiding-container';
 import { t } from '@lingui/macro';
 
-import { Text } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 export default function ReceiveScreen() {
   return (
-    <HeaderAvoidingContainer justifyContent="center" alignItems="center">
+    <Box alignItems="center" bg="ink.background-primary" flex={1} justifyContent="center">
       <Text>
         {t({
           id: 'receive.header_title',
           message: 'Receive 💰',
         })}
       </Text>
-    </HeaderAvoidingContainer>
+    </Box>
   );
 }

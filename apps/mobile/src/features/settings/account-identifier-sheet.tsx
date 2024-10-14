@@ -40,29 +40,25 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
         message: 'Account identifier',
       })}
     >
-      {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => {
-        const blockchain = capitalize(i18n._(accountDisplayPref.blockchain));
-        return (
-          <>
-            <Cell.Root
-              title={i18n._({
-                id: 'account_identifier.cell_title',
-                message: '{name}',
-                values: { name: accountDisplayPref.name },
-              })}
-              caption={t({
-                id: 'account_identifier.cell_caption',
-                message: `${blockchain} blockchain`,
-              })}
-              onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
-            >
-              <Cell.Radio
-                isSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}
-              />
-            </Cell.Root>
-          </>
-        );
-      })}
+      {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => (
+        <Cell.Root
+          key={accountDisplayPref.name}
+          title={i18n._({
+            id: 'account_identifier.cell_title',
+            message: '{name}',
+            values: { name: accountDisplayPref.name },
+          })}
+          caption={t({
+            id: 'account_identifier.cell_caption',
+            message: `${capitalize(i18n._(accountDisplayPref.blockchain))} blockchain`,
+          })}
+          onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
+        >
+          <Cell.Radio
+            isSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}
+          />
+        </Cell.Root>
+      ))}
     </SettingsSheetLayout>
   );
 }

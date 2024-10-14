@@ -1,6 +1,4 @@
-import { ReactElement, ReactNode, cloneElement } from 'react';
-
-import { useTheme } from '@shopify/restyle';
+import { ReactElement, ReactNode } from 'react';
 
 import {
   Avatar,
@@ -24,25 +22,9 @@ interface CellProps extends PressableProps<Theme> {
 }
 
 export function Root({ caption, icon, title, children, ...props }: CellProps) {
-  const theme = useTheme<Theme>();
   const itemLayout = <ItemLayout actionIcon={children} captionLeft={caption} titleLeft={title} />;
-  const defaultColor: string = theme.colors['ink.text-primary'];
 
-  const content = icon ? (
-    <Flag
-      img={
-        <Avatar>
-          {cloneElement<IconProps>(icon, {
-            color: icon.props.color ?? defaultColor,
-          })}
-        </Avatar>
-      }
-    >
-      {itemLayout}
-    </Flag>
-  ) : (
-    itemLayout
-  );
+  const content = icon ? <Flag img={<Avatar>{icon}</Avatar>}>{itemLayout}</Flag> : itemLayout;
 
   return (
     <Pressable flexDirection="row" {...props}>

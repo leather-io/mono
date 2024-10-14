@@ -8,10 +8,10 @@ function getBorderColor(isActive: boolean) {
 function getTextColor(isActive: boolean) {
   return isActive ? 'ink.text-primary' : 'ink.text-subdued';
 }
-interface Tab {
+export interface Tab {
+  isActive: boolean;
   onPress(): void;
   title: string;
-  isActive: boolean;
 }
 interface TabBarProps {
   tabs: Tab[];
