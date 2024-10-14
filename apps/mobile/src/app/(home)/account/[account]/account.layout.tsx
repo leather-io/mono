@@ -18,9 +18,10 @@ import { AccountOverview } from './account-overview-card';
 interface AccountLayoutProps {
   account: MockedAccount;
   balance: Money;
+  children: React.ReactNode;
 }
 
-export function AccountLayout({ account, balance }: AccountLayoutProps) {
+export function AccountLayout({ account, balance, children }: AccountLayoutProps) {
   return (
     <PageLayout>
       <AccountOverview
@@ -33,6 +34,7 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
         collectibles={serializeCollectibles(mockCollectibles)}
         totalBalance={mockTotalBalance}
       /> */}
+      {children}
     </PageLayout>
   );
 }

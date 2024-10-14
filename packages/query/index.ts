@@ -3,8 +3,6 @@ export * from './src/bitcoin/address/transactions-by-address.hooks';
 export * from './src/bitcoin/address/transactions-by-address.query';
 export * from './src/bitcoin/address/utxos-by-address.hooks';
 export * from './src/bitcoin/address/utxos-by-address.query';
-export * from './src/bitcoin/balance/btc-balance.hooks';
-export * from './src/bitcoin/balance/btc-native-segwit-balance.hooks';
 export * from './src/bitcoin/balance/btc-taproot-balance.hooks';
 export * from './src/bitcoin/clients/bitcoin-client';
 export * from './src/bitcoin/fees/fee-estimates.hooks';
