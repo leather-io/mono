@@ -159,6 +159,13 @@
     * @leather.io/rpc bumped to 2.1.10
     * @leather.io/utils bumped to 0.16.2
 
+## [2.14.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.14.0...@leather.io/query-v2.14.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* tokens enabled config hook type ([ee6a769](https://github.com/leather-io/mono/commit/ee6a769ec4f7a89b018b39c957f2113129498e00))
+
 ## [2.14.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.13.1...@leather.io/query-v2.14.0) (2024-10-11)
 
 
