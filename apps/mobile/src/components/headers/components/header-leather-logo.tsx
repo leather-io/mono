@@ -1,6 +1,6 @@
 import { Box, LeatherLogomarkIcon } from '@leather.io/ui/native';
 
-export function LeatherLogoHeader() {
+export function HeaderLeatherLogo() {
   return (
     <Box p="3">
       <LeatherLogomarkIcon />

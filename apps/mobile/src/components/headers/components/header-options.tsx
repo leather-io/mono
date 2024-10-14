@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import { Box, SettingsGearIcon, TerminalIcon, TouchableOpacity } from '@leather.io/ui/native';
 
-export function OptionsHeader() {
+export function HeaderOptions() {
   const router = useRouter();
 
   return (
