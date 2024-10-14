@@ -202,6 +202,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.41.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.41.0...@leather.io/mobile-v1.41.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* secure store biometrics ([f7fbef1](https://github.com/leather-io/mono/commit/f7fbef1a8f039b96b276888f008f0b2333472422))
+
 ## [1.41.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.40.0...@leather.io/mobile-v1.41.0) (2024-10-11)
 
 
