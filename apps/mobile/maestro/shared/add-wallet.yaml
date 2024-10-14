@@ -6,5 +6,19 @@ appId: io.leather.mobilewallet
     text: 'Create new wallet Create a new Bitcoin and Stacks wallet'
 - tapOn:
     text: "I've backed it up"
+- runFlow:
+    when:
+      true: ${SECURE == "yes"}
+    commands:
+      - tapOn:
+          text: 'Enable device security'
+- runFlow:
+    when:
+      true: ${SECURE == "no"}
+    commands:
+      - tapOn:
+          text: 'Skip for now'
+      - tapOn:
+          text: 'Proceed'
 - assertVisible:
     id: 'homeAccountCard'

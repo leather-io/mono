@@ -42,7 +42,7 @@ export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
 
 export type ThemePreference = (typeof defaultThemePreferences)[number];
 export type Theme = Exclude<ThemePreference, 'system'>;
-export type SecurityLevelPreference = 'insecure' | 'secure' | 'undefined';
+export type SecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
 export type PrivacyModePreference = 'hidden' | 'visible';
 
 export interface SettingsState {
@@ -67,7 +67,7 @@ export const initialState: SettingsState = {
   fiatCurrencyPreference: 'USD',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
-  securityLevelPreference: 'insecure',
+  securityLevelPreference: 'not-selected',
   themePreference: 'system',
 };
 
