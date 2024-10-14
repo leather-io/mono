@@ -121,7 +121,7 @@ export function useConfigSwapsEnabled() {
   return get(config, 'swapsEnabled', false);
 }
 
-export function useConfigTokensEnabledByDefault() {
+export function useConfigTokensEnabledByDefault(): string[] {
   const config = useRemoteConfig();
-  return get(config, 'tokensEnabledByDefault', false);
+  return get(config, 'tokensEnabledByDefault', []);
 }
