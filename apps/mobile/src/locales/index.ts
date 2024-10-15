@@ -10,6 +10,10 @@ export function getAvailableLocales() {
 }
 
 export async function initiateI18n() {
+  // run load and activate so the I18nProvider doesn't block the render
+  i18n.load('en', {});
+  i18n.activate(DEFAULT_LOCALE);
+
   const content = await otaClient.getStrings();
 
   LOCALES = Object.keys(content);
@@ -17,6 +21,4 @@ export async function initiateI18n() {
   Object.keys(content).map(locale => {
     i18n.load(locale, content[locale]);
   });
-
-  i18n.activate(DEFAULT_LOCALE);
 }

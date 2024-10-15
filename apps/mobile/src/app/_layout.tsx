@@ -30,8 +30,6 @@ export const unstable_settings = { initialRouteName: '/' };
 initiateI18n();
 
 export default function RootLayout() {
-  void SplashScreen.hideAsync();
-
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -66,7 +64,6 @@ function ThemeProvider({ children }: HasChildren) {
 
 function AppRouter() {
   const { whenTheme } = useSettings();
-
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
       <StatusBar barStyle={whenTheme({ dark: 'light-content', light: 'dark-content' } as const)} />
