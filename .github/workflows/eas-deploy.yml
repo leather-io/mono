@@ -1,25 +1,32 @@
+name: Trigger EAS deploy for iOS and Android
 on:
   pull_request:
     types:
       - synchronize
       - labeled
-
 permissions:
   contents: write
   pull-requests: write
-
-name: trigger EAS deploy
-
 jobs:
-  deploy-eas:
+  deploy-eas-ios:
     if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy
+      - uses: ./.github/actions/eas-deploy-ios
         with:
           EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
+  deploy-eas-android:
+    if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/eas-deploy-android
+        with:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
