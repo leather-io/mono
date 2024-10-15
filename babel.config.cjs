@@ -1,7 +1,7 @@
 module.exports = function (api) {
   api.cache(false);
   return {
-    plugins: ['macros', '@babel/plugin-transform-class-static-block'],
+    plugins: ['macros'],
     presets: ['babel-preset-expo'],
   };
 };
