@@ -40,6 +40,7 @@
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/rpc": "workspace:*",
+    "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/ui": "workspace:*",
@@ -115,6 +116,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
+    "@babel/plugin-transform-class-static-block": "7.25.8",
     "@babel/runtime": "7.25.0",
     "@crowdin/cli": "4.1.1",
     "@leather.io/bitcoin": "workspace:*",

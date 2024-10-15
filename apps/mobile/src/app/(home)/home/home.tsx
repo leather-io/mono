@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import {
@@ -8,19 +10,43 @@ import {
 import { TokensWidget } from '@/components/widgets/tokens';
 import { mockTotalBalance } from '@/mocks/balance.mocks';
 import { getMockTokens } from '@/mocks/tokens.mocks';
+import { useBitcoinBalanceQuery } from '@/queries/balance/bitcoin-balance.query';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
+
+import { getBtcBalanceService } from '@leather.io/services';
+import { createMoney } from '@leather.io/utils';
 
 export function Home() {
   useLingui();
   const wallets = useWallets();
   const accounts = useAccounts();
+  const { networkPreference } = useSettings();
+  const { data: balance } = useBitcoinBalanceQuery();
+  useEffect(() => {
+    console.log(balance);
+    getBtcBalanceService()
+      .getBtcBalance(
+        'xpub6CxzM41aUbKigFCifZxs9wkX37SMm5qRFqYjk1VdUZtwK3a5YoNnqZuNe29xycKLLThEEXDaKLLhke2Kwi2xKhrj14mwCCyzBGChGcaJH9L'
+      )
+      .then(bal => {
+        console.log('current balance: ' + bal.availableBalance.amount);
+      });
+    getBtcBalanceService('testnet')
+      .getBtcBalance(
+        'xpub6CxzM41aUbKigFCifZxs9wkX37SMm5qRFqYjk1VdUZtwK3a5YoNnqZuNe29xycKLLThEEXDaKLLhke2Kwi2xKhrj14mwCCyzBGChGcaJH9L'
+      )
+      .then(bal => {
+        console.log('testnet balance: ' + bal.availableBalance.amount);
+      });
+  }, [networkPreference.id]);
 
   return (
     <PageLayout>
       <AccountsWidget accounts={accounts.list} wallets={wallets.list} />
-      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
+      <TokensWidget tokens={getMockTokens()} totalBalance={createMoney(0, 'USD')} />
       <CollectiblesWidget
         collectibles={serializeCollectibles(mockCollectibles)}
         totalBalance={mockTotalBalance}
