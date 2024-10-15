@@ -1,4 +1,4 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
 import { StacksClient, useStacksClient } from '../stacks-client';
@@ -14,8 +14,7 @@ export function createGetAddressMempoolTransactionsQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetAddressMempoolTransactions, address],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      client.getAddressMempoolTransactions(address, signal),
+    queryFn: () => client.getAddressMempoolTransactions(address),
   } as const;
 }
 

@@ -70,23 +70,30 @@ export const hiroApiRequestsPriorityLevels = {
 
 export function stacksClient(basePath: string) {
   const rateLimiter = getHiroApiRateLimiter(basePath);
+  const controller = new AbortController();
+  const signal = controller.signal;
 
   return {
-    async getAccountBalance(address: string, signal: AbortSignal) {
+    async getAccountBalance(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressBalanceResponse>(`${basePath}/extended/v1/address/${address}/balances`, {
-            signal,
+            signal: controller.signal,
           }),
         {
           priority: hiroApiRequestsPriorityLevels.getAccountBalance,
-          signal,
+          signal: controller.signal,
           throwOnTimeout: true,
         }
       );
+
+      // still hitting React Query error  [TypeError: options.signal?.throwIfAborted is not a function (it is undefined)]
+      // take a slight break to gather thoughts and organise project milestonges
+
+      console.log('============ getAccountBalance', address, resp);
       return resp.data;
     },
-    async getAccountNonces(address: string, signal: AbortSignal) {
+    async getAccountNonces(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressNonces>(`${basePath}/extended/v1/address/${address}/nonces`, { signal }),
@@ -99,7 +106,7 @@ export function stacksClient(basePath: string) {
       return resp.data;
     },
     // TODO: Need to replace, this endpoint has been deprecated
-    async getAccountTransactionsWithTransfers(address: string, signal: AbortSignal) {
+    async getAccountTransactionsWithTransfers(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressTransactionsWithTransfersListResponse>(
@@ -133,7 +140,7 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getNamesOwnedByAddress(address: string, signal: AbortSignal) {
+    async getNamesOwnedByAddress(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<BnsNamesOwnByAddressResponse>(`${basePath}/v1/addresses/stacks/${address}`, {
@@ -164,7 +171,7 @@ export function stacksClient(basePath: string) {
       });
       return resp.data;
     },
-    async getNftHoldings(address: string, signal: AbortSignal) {
+    async getNftHoldings(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<NonFungibleTokenHoldingsResponse>(
@@ -179,7 +186,7 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getAddressMempoolTransactions(address: string, signal: AbortSignal) {
+    async getAddressMempoolTransactions(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<MempoolTransactionListResponse>(
@@ -194,7 +201,7 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getRawTransactionById(txid: string, signal: AbortSignal) {
+    async getRawTransactionById(txid: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<GetRawTransactionResult>(`${basePath}/extended/v1/tx/${txid}/raw`, { signal }),
@@ -206,7 +213,7 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getTransactionById(txid: string, signal: AbortSignal) {
+    async getTransactionById(txid: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<MempoolTransaction | Transaction>(`${basePath}/extended/v1/tx/${txid}`, {
@@ -220,14 +227,14 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getFtMetadata(address: string, signal: AbortSignal) {
+    async getFtMetadata(address: string) {
       const resp = await rateLimiter.add(
         () => axios.get<FtMetadataResponse>(`${basePath}/metadata/v1/ft/${address}`, { signal }),
         { priority: hiroApiRequestsPriorityLevels.getFtMetadata, signal, throwOnTimeout: true }
       );
       return resp.data;
     },
-    async getNftMetadata(address: string, tokenId: number, signal: AbortSignal) {
+    async getNftMetadata(address: string, tokenId: number) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<NftMetadataResponse>(`${basePath}/metadata/v1/nft/${address}/${tokenId}`, {
@@ -285,7 +292,7 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
-    async getStx20Balances(address: string, signal: AbortSignal) {
+    async getStx20Balances(address: string) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<Stx20BalanceResponse>(`${STX20_API_BASE_URL_MAINNET}/balance/${address}`, {

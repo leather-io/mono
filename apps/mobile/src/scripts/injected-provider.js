@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 function createEventListeners() {
   const eventListeners = {};
   return {
@@ -24,7 +26,8 @@ const provider = {
     // window.ReactNativeWebView.postMessage('getURL');
   },
   async request(method, params) {
-    const id = crypto.randomUUID();
+    // const id = crypto.randomUUID();
+    const id = uuidv4();
     const rpcRequest = {
       jsonrpc: '2.0',
       id,

@@ -1,4 +1,4 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { oneMonthInMs, oneWeekInMs } from '@leather.io/utils';
@@ -31,9 +31,9 @@ export function createGetFungibleTokenMetadataQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetFtMetadata, address, network],
-    queryFn: async ({ signal }: QueryFunctionContext) => {
+    queryFn: async () => {
       try {
-        const res = await client.getFtMetadata(address, signal);
+        const res = await client.getFtMetadata(address);
         return res as unknown as FtAssetResponse;
       } catch (error) {
         const status = (error as AxiosError).request?.status;

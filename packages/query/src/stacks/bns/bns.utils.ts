@@ -18,10 +18,9 @@ export async function fetchNamesForAddress({
   client,
   address,
   isTestnet,
-  signal,
 }: FetchNamesForAddressArgs): Promise<BnsNamesOwnByAddressResponse> {
   const fetchFromApi = async () => {
-    return client.getNamesOwnedByAddress(address, signal);
+    return client.getNamesOwnedByAddress(address);
   };
   if (isTestnet) {
     return fetchFromApi();

@@ -1,5 +1,5 @@
 import { hexToCV } from '@stacks/transactions';
-import { QueryFunctionContext, type UseQueryResult, useQueries } from '@tanstack/react-query';
+import { type UseQueryResult, useQueries } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { getPrincipalFromContractId, oneMonthInMs, oneWeekInMs } from '@leather.io/utils';
@@ -40,9 +40,9 @@ export function createGetNonFungibleTokenMetadataQueryOptions({
   return {
     enabled: !!tokenId,
     queryKey,
-    queryFn: async ({ signal }: QueryFunctionContext) => {
+    queryFn: async () => {
       try {
-        return await client.getNftMetadata(address, tokenId, signal);
+        return await client.getNftMetadata(address, tokenId);
       } catch (error) {
         if (statusCodeNotFoundOrNotProcessable((error as AxiosError).request.status)) {
           return null;

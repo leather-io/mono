@@ -1,4 +1,4 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
 import { StacksClient, useStacksClient } from '../stacks-client';
@@ -13,7 +13,7 @@ export function createGetRawTransactionByIdQueryOptions({
 }: CreateGetRawTransactionByIdQueryOptionsArgs) {
   return {
     queryKey: [StacksQueryPrefixes.GetRawTransactionById, txid],
-    queryFn: ({ signal }: QueryFunctionContext) => client.getRawTransactionById(txid, signal),
+    queryFn: () => client.getRawTransactionById(txid),
   } as const;
 }
 

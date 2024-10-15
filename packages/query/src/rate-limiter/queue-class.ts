@@ -1,4 +1,5 @@
 import { Queue, QueueAddOptions } from 'p-queue';
+import { v4 as uuidv4 } from 'uuid';
 
 type RunFunction = () => Promise<unknown>;
 
@@ -29,11 +30,16 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
   readonly queue: (PriorityQueueOptions & { run: RunFunction; id: string })[] = [];
 
   enqueue(run: RunFunction, options?: Partial<PriorityQueueOptions>): void {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     options = {
       priority: 0,
+      signal,
       ...options,
     };
-    const id = crypto.randomUUID();
+    // const id = crypto.randomUUID();
+    const id = uuidv4();
 
     const element = {
       priority: options.priority,
@@ -41,7 +47,12 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
       id,
     };
 
+    // seems to not find this signal, maybe its set globally in extension via software-key actions?
+    // some weird code in there, why does it care about balances?
+    // maybe try just fetch balances using same code as in software-key.actions
+
     options.signal?.addEventListener('abort', () => {
+      console.log('----------- aborting');
       const task = this.queue.find(task => task.id === id);
 
       if (task) {

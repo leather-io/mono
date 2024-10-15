@@ -1,5 +1,3 @@
-import { QueryFunctionContext } from '@tanstack/react-query';
-
 import { oneWeekInMs } from '@leather.io/utils';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
@@ -26,7 +24,7 @@ export function createGetStacksAccountBalanceQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetAccountBalance, address, network],
-    queryFn: ({ signal }: QueryFunctionContext) => client.getAccountBalance(address, signal),
+    queryFn: () => client.getAccountBalance(address),
     ...queryOptions,
   } as const;
 }

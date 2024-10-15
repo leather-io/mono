@@ -1,4 +1,4 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../../query-prefixes';
@@ -21,7 +21,7 @@ export function createGetNonFungibleTokenHoldingsQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetNftHoldings, address, network],
-    queryFn: ({ signal }: QueryFunctionContext) => client.getNftHoldings(address, signal),
+    queryFn: () => client.getNftHoldings(address),
     ...queryOptions,
   } as const;
 }

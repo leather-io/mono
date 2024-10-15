@@ -1,4 +1,4 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useCurrentNetworkState } from '../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../query-prefixes';
@@ -25,8 +25,7 @@ export function createGetAccountTransactionsWithTransfersQueryOptions({
   return {
     enabled: !!address && !!network,
     queryKey: [StacksQueryPrefixes.GetAccountTxsWithTransfers, address, network],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      client.getAccountTransactionsWithTransfers(address, signal),
+    queryFn: () => client.getAccountTransactionsWithTransfers(address),
     ...queryOptions,
   } as const;
 }

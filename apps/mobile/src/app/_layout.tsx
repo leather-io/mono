@@ -15,7 +15,7 @@ import { HasChildren } from '@/utils/types';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -85,8 +85,6 @@ export default function RootLayout() {
                 </ThemeProvider>
                 {/* <ReactQueryDevtools initialIsOpen /> */}
                 {/* Maybe try  https://github.com/expo/dev-plugins/tree/main/packages/react-query ?  */}
-                // get back to trying to fix the totalBalance migration first as this is faffing but
-                useful to check
               </LeatherQueryProvider>
             </QueryClientProvider>
           </SafeAreaProvider>

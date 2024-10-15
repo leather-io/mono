@@ -1,5 +1,3 @@
-import { QueryFunctionContext } from '@tanstack/react-query';
-
 import { ChainID } from '@leather.io/models';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
@@ -18,6 +16,6 @@ export function createGetStx20BalancesQueryOptions({
   return {
     enabled: chainId === ChainID.Mainnet,
     queryKey: [StacksQueryPrefixes.GetStx20Balances, address],
-    queryFn: ({ signal }: QueryFunctionContext) => client.getStx20Balances(address, signal),
+    queryFn: () => client.getStx20Balances(address),
   } as const;
 }

@@ -1,5 +1,3 @@
-import { QueryFunctionContext } from '@tanstack/react-query';
-
 import { StacksQueryPrefixes } from '../../query-prefixes';
 import { type StacksClient } from '../stacks-client';
 
@@ -22,7 +20,7 @@ export function createGetAccountNoncesQueryOptions({
   return {
     enabled: !!address,
     queryKey: [StacksQueryPrefixes.GetAccountNonces, address, network],
-    queryFn: ({ signal }: QueryFunctionContext) => client.getAccountNonces(address, signal),
+    queryFn: () => client.getAccountNonces(address),
     ...queryOptions,
   } as const;
 }
