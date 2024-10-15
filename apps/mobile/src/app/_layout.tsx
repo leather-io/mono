@@ -19,6 +19,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { Box, ThemeProvider as LeatherThemeProvider, SheetProvider } from '@leather.io/ui/native';
 
+import { AppServicesProvider } from './app-services.context';
+
 void SplashScreen.preventAutoHideAsync();
 
 // Catch any errors thrown by the Layout component
@@ -38,17 +40,19 @@ export default function RootLayout() {
         <I18nProvider i18n={i18n}>
           <SafeAreaProvider>
             <QueryClientProvider client={queryClient}>
-              <ThemeProvider>
-                <SplashScreenGuard>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <SheetProvider>
-                      <ToastWrapper>
-                        <AppRouter />
-                      </ToastWrapper>
-                    </SheetProvider>
-                  </GestureHandlerRootView>
-                </SplashScreenGuard>
-              </ThemeProvider>
+              <AppServicesProvider>
+                <ThemeProvider>
+                  <SplashScreenGuard>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                      <SheetProvider>
+                        <ToastWrapper>
+                          <AppRouter />
+                        </ToastWrapper>
+                      </SheetProvider>
+                    </GestureHandlerRootView>
+                  </SplashScreenGuard>
+                </ThemeProvider>
+              </AppServicesProvider>
             </QueryClientProvider>
           </SafeAreaProvider>
         </I18nProvider>

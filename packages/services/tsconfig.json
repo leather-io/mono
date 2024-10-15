@@ -1,0 +1,12 @@
+{
+  "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
+  "include": ["**/*", "../../babel.config.cjs"],
+  "exclude": ["./dist"],
+  "compilerOptions": {
+    "baseUrl": "src",
+    "types": ["vitest/globals", "reflect-metadata"],
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
