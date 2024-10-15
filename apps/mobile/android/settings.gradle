@@ -1,4 +1,4 @@
-rootProject.name = '@leather.iomobile'
+rootProject.name = 'Leather'
 
 dependencyResolutionManagement {
   versionCatalogs {

@@ -28,9 +28,10 @@
       }
     },
     "android": {
+      "icon": "./src/assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#12100F"
       },
       "package": "io.leather.mobilewallet",
       "splash": {
