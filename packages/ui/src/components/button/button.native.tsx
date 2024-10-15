@@ -1,5 +1,5 @@
 import { ComponentPropsWithoutRef, forwardRef } from 'react';
-import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
+import { TouchableOpacity as RNTouchableOpacity, StyleProp, TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import {
@@ -72,11 +72,13 @@ export const Button = forwardRef(
       title,
       buttonState,
       icon,
+      textStyle,
       ...rest
     }: Props & {
       title?: string;
       buttonState: ButtonState;
       icon?: React.ReactNode;
+      textStyle?: StyleProp<TextStyle>;
     },
     ref
   ) => {
@@ -134,7 +136,7 @@ export const Button = forwardRef(
         {...props}
       >
         {icon}
-        <Text variant={textVariant} color={textColor}>
+        <Text variant={textVariant} color={textColor} style={textStyle}>
           {title}
         </Text>
       </TouchableOpacity>

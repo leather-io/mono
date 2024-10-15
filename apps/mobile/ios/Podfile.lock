@@ -271,7 +271,7 @@ PODS:
     - Yoga
   - ExpoSecureStore (13.0.1):
     - ExpoModulesCore
-  - ExpoSystemUI (3.0.4):
+  - ExpoSystemUI (3.0.7):
     - ExpoModulesCore
   - ExpoWebBrowser (13.0.3):
     - ExpoModulesCore
@@ -1635,7 +1635,7 @@ DEPENDENCIES:
   - "ExpoLocalAuthentication (from `../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@ba_sm2etrnnkq7ieiwdngeqeuqkfq/node_modules/expo-local-authentication/ios`)"
   - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@13.0.1_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.26_@babel+core@7.24._nrrxp5mwwsf5yp6tlwa4vw36hi/node_modules/expo-secure-store/ios`)"
-  - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.4_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_uipvbpbo46fysle2i5oj7v6ogy/node_modules/expo-system-ui/ios`)"
+  - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_pxqdt32nduqgzjzhw4rtt6i3fi/node_modules/expo-system-ui/ios`)"
   - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@_u7hnocqw65hqqgquiq5tbos7l4/node_modules/expo-web-browser/ios`)"
   - "EXSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.26_@babel+core@7.24.6_@ba_v5ohsh25f77rxtqhfhjnjh47xu/node_modules/expo-splash-screen/ios`)"
   - "EXUpdatesInterface (from `../../../node_modules/.pnpm/expo-updates-interface@0.16.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel_cubabp64y4ahor54bavvt466lm/node_modules/expo-updates-interface/ios`)"
@@ -1767,7 +1767,7 @@ EXTERNAL SOURCES:
   ExpoSecureStore:
     :path: "../../../node_modules/.pnpm/expo-secure-store@13.0.1_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.26_@babel+core@7.24._nrrxp5mwwsf5yp6tlwa4vw36hi/node_modules/expo-secure-store/ios"
   ExpoSystemUI:
-    :path: "../../../node_modules/.pnpm/expo-system-ui@3.0.4_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_uipvbpbo46fysle2i5oj7v6ogy/node_modules/expo-system-ui/ios"
+    :path: "../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@7.2_pxqdt32nduqgzjzhw4rtt6i3fi/node_modules/expo-system-ui/ios"
   ExpoWebBrowser:
     :path: "../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.4_@babel+core@_u7hnocqw65hqqgquiq5tbos7l4/node_modules/expo-web-browser/ios"
   EXSplashScreen:
@@ -1924,7 +1924,7 @@ SPEC CHECKSUMS:
   ExpoLocalAuthentication: 9e02a56a4cf9868f0052656a93d4c94101a42ed7
   ExpoModulesCore: 5440e96a8ee014f4fd88e77264985fd0a65f5f8c
   ExpoSecureStore: 5f6b712785986b54d95a92bd365aabb82a52088e
-  ExpoSystemUI: b5ecc4b6781b6369fb8b3a0903bea36fae3dd090
+  ExpoSystemUI: d4f065a016cae6721b324eb659cdee4d4cf0cb26
   ExpoWebBrowser: 7595ccac6938eb65b076385fd23d035db9ecdc8e
   EXSplashScreen: d439ca817211886dc80a00f3761e3b6d861d7205
   EXUpdatesInterface: 996527fd7d1a5d271eb523258d603f8f92038f24

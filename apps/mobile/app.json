@@ -1,17 +1,12 @@
 {
   "expo": {
-    "name": "Leather BTC",
+    "name": "Leather",
     "slug": "leather-wallet-mobile",
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./src/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -20,14 +15,34 @@
     ],
     "ios": {
       "bundleIdentifier": "io.leather.mobilewallet",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "splash": {
+        "image": "./src/assets/light-mode-splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#12100F",
+        "dark": {
+          "image": "./src/assets/dark-mode-splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#716A60"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "io.leather.mobilewallet"
+      "package": "io.leather.mobilewallet",
+      "splash": {
+        "image": "./src/assets/light-mode-splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#12100F",
+        "dark": {
+          "image": "./src/assets/dark-mode-splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#716A60"
+        }
+      }
     },
     "plugins": [
       [
