@@ -1,17 +1,8 @@
-name: EAS deploy
-description: Run EAS deploy
+name: EAS deploy Android
+description: Run EAS Android deployments
 inputs:
   EXPO_TOKEN: # id of input
     description: 'Expo token'
-    required: true
-  APPLE_ID:
-    description: 'Apple ID'
-    required: true
-  ASC_APP_ID:
-    description: 'ASC App ID'
-    required: true
-  EXPO_APPLE_APP_SPECIFIC_PASSWORD:
-    description: 'Expo Apple app specific password'
     required: true
   LEATHER_BOT:
     description: 'GH bot token'
@@ -39,24 +30,15 @@ runs:
         sudo apt-get install jq
       shell: bash
 
-    - name: Setup eas credentials
-      run: |
-        echo $(jq --arg APPLE_ID "$APPLE_ID" '.submit.production.ios.appleId = $APPLE_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
-        echo $(jq --arg ASC_APP_ID "$ASC_APP_ID" '.submit.production.ios.ascAppId = $ASC_APP_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
-      shell: bash
-      env:
-        APPLE_ID: ${{ inputs.APPLE_ID }}
-        ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
-
     # Wait for build to either succeed or fail
-    - name: 🛫 Build for simulator 🛫
-      id: simulator_build
+    - name: 🛫 Build for Android Emulator 🛫
+      id: android_simulator_build
       run: |
         cd apps/mobile
         if [[ "$BRANCH_NAME" == "dev" ]]
         then
           # No wait on simulator version build of the app if we are on a dev branch
-          eas build --platform ios --profile=simulator-dev --non-interactive --no-wait
+          eas build --platform android --profile=simulator-dev --non-interactive --no-wait
         else
           # set temporary command output 
           setTmpOutput () { tee /tmp/capture.out; }
@@ -64,7 +46,7 @@ runs:
           # get temporary command output 
           getTmpOutput () { cat /tmp/capture.out; }
           
-          eas build --platform ios --profile=simulator-pr --non-interactive | setTmpOutput 
+          eas build --platform android --profile=simulator-pr --non-interactive | setTmpOutput 
 
           # Last line of the build output is the link to the expo build
           UNSAFE_BUILD_LINK=$(getTmpOutput | tail -n 1)
@@ -79,14 +61,13 @@ runs:
         fi
       shell: bash
       env:
-        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
 
-    - name: Publish simulator expo link in PR
+    - name: Publish Android expo build link in PR
       if: ${{ steps.extract_branch.outputs.branch != 'dev' }}
       uses: actions/github-script@v7
       env:
-        BUILD_LINK: ${{ steps.simulator_build.outputs.BUILD_LINK }}
+        BUILD_LINK: ${{ steps.android_simulator_build.outputs.BUILD_LINK }}
       with:
         github-token: ${{ inputs.LEATHER_BOT }}
         script: |
@@ -96,7 +77,7 @@ runs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Expo simulator build link: " + BUILD_LINK
+              body: "Expo Android build link: " + BUILD_LINK
             })
           }
 
@@ -105,7 +86,5 @@ runs:
       run: |
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
-        eas build --platform ios --profile=production --non-interactive --auto-submit
+        eas build --platform android --profile=production --non-interactive --auto-submit
       shell: bash
-      env:
-        EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}

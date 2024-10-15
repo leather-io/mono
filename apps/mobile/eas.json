@@ -22,6 +22,9 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2"
+      },
+      "android": {
+        "image": "latest"
       }
     },
     "simulator-pr": {
@@ -31,6 +34,9 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2"
+      },
+      "android": {
+        "image": "latest"
       }
     },
     "development": {
@@ -66,6 +72,9 @@
       "autoIncrement": true,
       "ios": {
         "cocoapods": "1.15.2"
+      },
+      "android": {
+        "image": "latest"
       }
     },
     "build-and-maestro-test": {
@@ -85,6 +94,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "track": "internal"
+      }
+    }
   }
 }
