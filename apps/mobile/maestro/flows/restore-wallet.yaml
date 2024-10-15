@@ -20,5 +20,7 @@ appId: io.leather.mobilewallet
     text: 'Paste'
 - tapOn:
     text: 'Continue'
+- tapOn:
+    text: 'Enable device security'
 - assertVisible:
     id: 'homeAccountCard'
