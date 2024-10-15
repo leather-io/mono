@@ -64,6 +64,10 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     return context.resolveRequest(context, moduleName, platform);
   }
 
+  if (moduleName === 'axios') {
+    return context.resolveRequest(context, moduleName, platform);
+  }
+
   // Ensures resolution of the browser version of `@noble/hashes`s exports.
   // Without this the node export is resolved, resulting in
   // `crypto.getRandomValues` exceptions
