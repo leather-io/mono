@@ -19,6 +19,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { Box, ThemeProvider as LeatherThemeProvider, SheetProvider } from '@leather.io/ui/native';
 
+import { initAppServices } from './init-app-services';
+
 void SplashScreen.preventAutoHideAsync();
 
 // Catch any errors thrown by the Layout component
@@ -28,6 +30,7 @@ export { ErrorBoundary } from 'expo-router';
 export const unstable_settings = { initialRouteName: '/' };
 
 initiateI18n();
+initAppServices();
 
 export default function RootLayout() {
   return (
