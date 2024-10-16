@@ -2,18 +2,12 @@ import {
   BitcoinBalance,
   BitcoinBalanceByAccount,
 } from '@/features/balances/bitcoin/bitcoin-balance';
-import { TokenBalance } from '@/features/balances/token-balance';
+import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { AccountId } from '@/models/domain.model';
 import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
-import { getMockTokens } from '../../../mocks/tokens.mocks';
 import { Widget, WidgetHeader } from '../components/widget';
-
-export function showChain(chain: string) {
-  if (chain === 'Stacks blockchain' || chain === 'Bitcoin blockchain') return;
-  return chain;
-}
 
 export function TokensWidget({ children }: HasChildren) {
   return (
@@ -29,32 +23,16 @@ export function AllAccountBalances() {
   return (
     <>
       <BitcoinBalance />
-
-      {getMockTokens().map(
-        ({
-          availableBalance: { availableBalance },
-          icon,
-          tokenName,
-          ticker,
-          chain,
-          fiatBalance,
-        }) => (
-          <TokenBalance
-            key={ticker}
-            availableBalance={availableBalance}
-            icon={icon}
-            ticker={ticker}
-            tokenName={tokenName}
-            chain={chain}
-            fiatBalance={fiatBalance}
-            showChain={showChain}
-          />
-        )
-      )}
+      <StacksBalance />
     </>
   );
 }
 
 export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
-  return <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />;
+  return (
+    <>
+      <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+      <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+    </>
+  );
 }

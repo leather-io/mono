@@ -1,4 +1,4 @@
-import { showChain } from '@/components/widgets/tokens/tokens-widget';
+import { TokensIcon } from '@/components/widgets/tokens/tokens-icon';
 import { AccountId } from '@/models/domain.model';
 import {
   useBitcoinAccountTotalBitcoinBalance,
@@ -7,7 +7,6 @@ import {
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
-import { BtcAvatarIcon } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
@@ -19,11 +18,11 @@ export function BitcoinTokenBalance({ availableBalance, fiatBalance }: BitcoinTo
   return (
     <TokenBalance
       ticker="BTC"
-      icon={<BtcAvatarIcon />}
+      icon={<TokensIcon ticker="BTC" />}
       tokenName={t`Bitcoin`}
       chain={t`Bitcoin blockchain`}
       fiatBalance={fiatBalance}
-      showChain={showChain}
+      showChain={false}
       availableBalance={availableBalance}
     />
   );

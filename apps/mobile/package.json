@@ -61,6 +61,7 @@
     "@scure/btc-signer": "1.4.0",
     "@shopify/restyle": "2.4.2",
     "@stacks/common": "6.13.0",
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
     "@stacks/transactions": "6.15.0",
     "@stacks/wallet-sdk": "6.15.0",
     "@tanstack/react-query": "5.59.16",
@@ -113,6 +114,7 @@
     "react-redux": "9.1.2",
     "readable-stream": "4.5.2",
     "redux-persist": "6.0.0",
+    "uuid": "10.0.0",
     "zod": "3.23.8"
   },
   "devDependencies": {

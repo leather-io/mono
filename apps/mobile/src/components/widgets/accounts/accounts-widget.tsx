@@ -1,19 +1,16 @@
 import { useRef } from 'react';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { AvatarIcon } from '@/components/avatar-icon';
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
-import { getMockAccounts } from '@/mocks/account.mocks';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { AccountStore } from '@/store/accounts/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
-import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, SheetRef, Theme } from '@leather.io/ui/native';
+import { Money } from '@leather.io/models';
+import { Box, SheetRef } from '@leather.io/ui/native';
 
 import { Balance } from '../../balance/balance';
 import { Widget, WidgetHeader } from '../components/widget';
@@ -25,20 +22,17 @@ import { AddAccountSheet } from './sheets/add-account-sheet';
 interface AccountsWidgetProps {
   accounts: AccountStore[];
   wallets: WalletStore[];
+  totalBalance: Money;
 }
 
-export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
+export function AccountsWidget({ accounts, wallets, totalBalance }: AccountsWidgetProps) {
   const sheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const { i18n } = useLingui();
   const router = useRouter();
-  const theme = useTheme<Theme>();
 
   const hasWallets = wallets.length > 0;
   const hasAccounts = accounts.length > 0;
-
-  const { accounts: mockAccounts, balance } = getMockAccounts(accounts);
 
   return (
     <>
@@ -54,35 +48,20 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
               sheetRef={sheetRef}
               sheet={<AccountSelectorSheet sheetRef={sheetRef} />}
             />
-            {hasWallets && <Balance balance={balance} variant="heading03" />}
+            {hasWallets && <Balance balance={totalBalance} variant="heading03" />}
           </Box>
         }
       >
-        {mockAccounts.map(account => (
+        {accounts.map(account => (
           <AccountCard
-            type={account.type}
-            icon={
-              <AvatarIcon
-                color={theme.colors['ink.background-primary']}
-                icon={account.icon}
-                width={32}
-                height={32}
-              />
-            }
+            account={account}
             key={account.id}
-            label={<Balance balance={account.balance} />}
-            caption={i18n._({
-              id: 'accounts.account.cell_caption',
-              message: '{name}',
-              values: { name: account.name || '' },
-            })}
             testID={TestId.homeAccountCard}
             onPress={() => {
               router.navigate({
                 pathname: AppRoutes.Account,
                 params: {
-                  fingerprint: account.fingerprint,
-                  account: account.accountIndex,
+                  accountId: account.id,
                 },
               });
             }}

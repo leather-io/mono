@@ -12,7 +12,7 @@ interface TokenBalanceProps {
   availableBalance?: Money;
   chain: string;
   fiatBalance: Money;
-  showChain: (chain: string) => React.ReactNode;
+  showChain: boolean; // true for all tokens except BTC and STX
 }
 export function TokenBalance({
   ticker,
@@ -28,7 +28,7 @@ export function TokenBalance({
       <ItemLayout
         titleLeft={tokenName}
         titleRight={availableBalance && <Balance balance={availableBalance} />}
-        captionLeft={showChain(chain)}
+        captionLeft={showChain ? chain : ''}
         captionRight={<Balance balance={fiatBalance} color="ink.text-subdued" />}
       />
     </Flag>

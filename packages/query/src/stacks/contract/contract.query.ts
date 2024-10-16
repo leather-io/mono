@@ -1,4 +1,4 @@
-import type { ContractCallPayload, TransactionPayload } from '@stacks/connect';
+import { type ContractCallPayload, TransactionPayload } from '@stacks/connect';
 import { useQuery } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';

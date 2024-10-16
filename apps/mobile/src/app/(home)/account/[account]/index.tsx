@@ -1,22 +1,24 @@
-import { MockedAccount } from '@/mocks/account.mocks';
-import { AccountLoader } from '@/store/accounts/accounts';
+import { useAccountTotalBalance } from '@/queries/balance/use-total-balance';
+import { AccountLoader, deserializeAccountId } from '@/store/accounts/accounts';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
 import { AccountLayout } from './account.layout';
 
 const configureAccountParamsSchema = z.object({
-  fingerprint: z.string(),
-  account: z.string().transform(value => Number(value)),
+  accountId: z.string(),
 });
 
 export default function AccountScreen() {
   const params = useLocalSearchParams();
-  const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
+
+  const { accountId } = configureAccountParamsSchema.parse(params);
+  const { fingerprint, accountIndex } = deserializeAccountId(accountId);
+  const { totalBalance } = useAccountTotalBalance({ fingerprint, accountIndex });
 
   return (
     <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
-      {account => <AccountLayout account={account as MockedAccount} />}
+      {account => <AccountLayout balance={totalBalance} account={account} />}
     </AccountLoader>
   );
 }

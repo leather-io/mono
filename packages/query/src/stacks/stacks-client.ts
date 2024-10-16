@@ -11,6 +11,7 @@ import type {
   ReadOnlyFunctionArgs,
   ReadOnlyFunctionSuccessResponse,
   Transaction,
+  TransactionEventsResponse,
 } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
 
@@ -71,12 +72,45 @@ export function stacksClient(basePath: string) {
       );
       return resp.data;
     },
+
     // TODO: Need to replace, this endpoint has been deprecated
+    /** @deprecated use getEventsForAddressTransaction
+     * https://docs.hiro.so/stacks/api/transactions/events-for-an-address-transaction */
     async getAccountTransactionsWithTransfers(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
           axios.get<AddressTransactionsWithTransfersListResponse>(
             `${basePath}/extended/v1/address/${address}/transactions_with_transfers?limit=${DEFAULT_LIST_LIMIT}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactionsWithTransfers,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return resp.data;
+    },
+    async getEventsForAddressTransaction(address: string, txId: string, signal: AbortSignal) {
+      const resp = await rateLimiter.add(
+        () =>
+          axios.get<TransactionEventsResponse>(
+            `${basePath}/extended/v2/addresses/${address}/transactions/${txId}/events`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactionsWithTransfers,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return resp.data;
+    },
+    async getAddressTransactions(address: string, signal: AbortSignal) {
+      const resp = await rateLimiter.add(
+        () =>
+          axios.get<MempoolTransactionListResponse>(
+            `${basePath}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`,
             { signal }
           ),
         {
