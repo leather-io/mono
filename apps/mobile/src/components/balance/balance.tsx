@@ -39,7 +39,12 @@ export function Balance({
 
   if (!lockedBalance) {
     return (
-      <PrivateText customPrivateText={privateText} color={color} variant={variant}>
+      <PrivateText
+        customPrivateText={privateText}
+        color={color}
+        privacyToggleDisabled
+        variant={variant}
+      >
         {formattedBalance}
       </PrivateText>
     );
@@ -47,7 +52,12 @@ export function Balance({
 
   return (
     <BulletSeparator color={color}>
-      <PrivateText customPrivateText={privateText} color={color} variant={variant}>
+      <PrivateText
+        customPrivateText={privateText}
+        color={color}
+        privacyToggleDisabled
+        variant={variant}
+      >
         {formattedBalance}
       </PrivateText>
       {!isPrivate ? (

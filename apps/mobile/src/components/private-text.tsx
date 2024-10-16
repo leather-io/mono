@@ -10,10 +10,12 @@ const defaultPrivateText = '***';
 
 interface PrivateTextProps extends HasChildren {
   customPrivateText?: string;
+  privacyToggleDisabled?: boolean;
 }
 export function PrivateText({
   children,
   customPrivateText,
+  privacyToggleDisabled,
   ...props
 }: PrivateTextProps & TextProps) {
   const { changePrivacyModePreference, privacyModePreference } = useSettings();
@@ -24,7 +26,7 @@ export function PrivateText({
   }
 
   return (
-    <Pressable onPress={() => onTogglePrivacyMode()}>
+    <Pressable disabled={privacyToggleDisabled} onPress={() => onTogglePrivacyMode()}>
       {isPrivate ? (
         <Text {...props}>{customPrivateText ?? defaultPrivateText}</Text>
       ) : (
