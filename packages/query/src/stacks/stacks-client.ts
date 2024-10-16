@@ -87,10 +87,17 @@ export function stacksClient(basePath: string) {
         }
       );
 
-      // still hitting React Query error  [TypeError: options.signal?.throwIfAborted is not a function (it is undefined)]
-      // take a slight break to gather thoughts and organise project milestonges
+      // avoid using priority queue to bypass options.signal?.throwIfAborted error
+      // const resp = await axios.get<AddressBalanceResponse>(
+      //   `${basePath}/extended/v1/address/${address}/balances`,
+      //   {
+      //     signal: controller.signal,
+      //   }
+      // );
 
-      console.log('============ getAccountBalance', address, resp);
+      // still hitting React Query error  [TypeError: options.signal?.throwIfAborted is not a function (it is undefined)]
+
+      // console.log('============ getAccountBalance', address, resp);
       return resp.data;
     },
     async getAccountNonces(address: string) {

@@ -63,6 +63,7 @@
     "@stacks/transactions": "6.15.0",
     "@stacks/wallet-sdk": "6.15.0",
     "@tanstack/react-query": "5.51.23",
+    "abort-controller": "3.0.0",
     "axios": "1.7.4",
     "bignumber.js": "9.1.2",
     "buffer": "6.0.3",
