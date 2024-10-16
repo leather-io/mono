@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08C9598C54FA4F959A4FFBC0 /* marche-super-pro.otf in Resources */ = {isa = PBXBuildFile; fileRef = CFE8092428C64AA0AFE1A346 /* marche-super-pro.otf */; };
+		08C9598C54FA4F959A4FFBC0 /* MarchePro-Super.otf in Resources */ = {isa = PBXBuildFile; fileRef = CFE8092428C64AA0AFE1A346 /* MarchePro-Super.otf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -39,7 +39,7 @@
 		A6CFA460F0F340ED95800EF2 /* ABCDiatype-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Light.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Light.otf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = leatherwalletmobile/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		CFE8092428C64AA0AFE1A346 /* marche-super-pro.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "marche-super-pro.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/marche-super-pro.otf"; sourceTree = "<group>"; };
+		CFE8092428C64AA0AFE1A346 /* MarchePro-Super.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MarchePro-Super.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/MarchePro-Super.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F520EA8A657049D4A3392B8B /* ABCDiatype-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Regular.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Regular.otf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-leatherwalletmobile/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -80,7 +80,7 @@
 				F520EA8A657049D4A3392B8B /* ABCDiatype-Regular.otf */,
 				A6CFA460F0F340ED95800EF2 /* ABCDiatype-Light.otf */,
 				6B54D2785B5E48D281A8E3C8 /* ABCDiatype-Medium.otf */,
-				CFE8092428C64AA0AFE1A346 /* marche-super-pro.otf */,
+				CFE8092428C64AA0AFE1A346 /* MarchePro-Super.otf */,
 			);
 			name = Resources;
 			path = "";
@@ -229,7 +229,7 @@
 				297A611EBADB4ED0B158576E /* ABCDiatype-Regular.otf in Resources */,
 				3319885B547C452A9C635C5C /* ABCDiatype-Light.otf in Resources */,
 				322D7CDF54DE4002AED225F1 /* ABCDiatype-Medium.otf in Resources */,
-				08C9598C54FA4F959A4FFBC0 /* marche-super-pro.otf in Resources */,
+				08C9598C54FA4F959A4FFBC0 /* MarchePro-Super.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,11 +401,11 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.leather.mobilewallet;
-				PRODUCT_NAME = Leather;
+				PRODUCT_NAME = "Leather";
 				SWIFT_OBJC_BRIDGING_HEADER = "leatherwalletmobile/leatherwalletmobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -435,10 +435,10 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = io.leather.mobilewallet;
-				PRODUCT_NAME = Leather;
+				PRODUCT_NAME = "Leather";
 				SWIFT_OBJC_BRIDGING_HEADER = "leatherwalletmobile/leatherwalletmobile-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

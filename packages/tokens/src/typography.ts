@@ -5,9 +5,12 @@ const fontMap = {
     marchePro: 'Marche',
   },
   mobile: {
-    firaCode: 'Fira Code',
-    diatype: 'DiatypeRegular',
-    marchePro: 'MarcheSuperPro',
+    // please, remember to use PostScript name of the font on mobile
+    // Ref: https://docs.expo.dev/develop/user-interface/fonts/#what-is-postscript-name-of-a-font
+    firaCode: '<Need to use PostScript name here> Fira Code',
+    diatype: 'ABCDiatype-Regular',
+    spaceMono: 'SpaceMono-Regular',
+    marchePro: 'MarchePro-Super',
   },
 };
 
