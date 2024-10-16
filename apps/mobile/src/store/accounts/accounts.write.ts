@@ -116,7 +116,10 @@ export const accountsSlice = createSlice({
       .addCase(...handleAppResetWithState(initialState)),
 });
 
-type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
+type PartialAccountStore = Optional<
+  AccountStore,
+  'icon' | 'name' | 'status' | 'fingerprint' | 'accountIndex'
+>;
 
 interface AddAccountPayload {
   account: PartialAccountStore;
