@@ -1,1 +1,1 @@
-export { TokensWidget } from './tokens-widget';
+export { type Token, TokensWidget } from './tokens-widget';

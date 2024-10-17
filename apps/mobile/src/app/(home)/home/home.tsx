@@ -17,6 +17,8 @@ export function Home() {
   const wallets = useWallets();
   const accounts = useAccounts();
 
+  console.log(accounts);
+
   return (
     <PageLayout>
       <AccountsWidget accounts={accounts.list} wallets={wallets.list} />

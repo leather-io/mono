@@ -6,21 +6,21 @@ import { PageLayout } from '@/components/page/page.layout';
 //   mockCollectibles,
 //   serializeCollectibles,
 // } from '@/components/widgets/collectibles';
-// import { TokensWidget } from '@/components/widgets/tokens';
-import { MockedAccount } from '@/mocks/account.mocks';
-import { mockTotalBalance } from '@/mocks/balance.mocks';
+import { type Token, TokensWidget } from '@/components/widgets/tokens';
+import { Account } from '@/store/accounts/accounts';
 
+// import { mockTotalBalance } from '@/mocks/balance.mocks';
 import { Money } from '@leather.io/models';
 
-// import { getMockTokens } from '@/mocks/tokens.mocks';
 import { AccountOverview } from './account-overview-card';
 
 interface AccountLayoutProps {
-  account: MockedAccount;
+  account: Account;
   balance: Money;
+  tokens: Token[];
 }
 
-export function AccountLayout({ account, balance }: AccountLayoutProps) {
+export function AccountLayout({ account, balance, tokens }: AccountLayoutProps) {
   return (
     <PageLayout>
       <AccountOverview
@@ -28,8 +28,9 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
         heading={<Balance balance={balance} variant="heading02" />}
         caption={account.name}
       />
+      <TokensWidget tokens={tokens} totalBalance={balance} />
       {/* TODO - re-enable widgets when real data available */}
-      {/* <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
+      {/* 
       <CollectiblesWidget
         collectibles={serializeCollectibles(mockCollectibles)}
         totalBalance={mockTotalBalance}
