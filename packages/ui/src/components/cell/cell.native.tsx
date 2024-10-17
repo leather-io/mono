@@ -27,7 +27,7 @@ export function Root({ caption, icon, title, children, ...props }: CellProps) {
   const content = icon ? <Flag img={<Avatar>{icon}</Avatar>}>{itemLayout}</Flag> : itemLayout;
 
   return (
-    <Pressable flexDirection="row" {...props}>
+    <Pressable flexDirection="row" py="3" {...props}>
       {content}
     </Pressable>
   );

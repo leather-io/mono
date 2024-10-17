@@ -1,14 +1,15 @@
 import { useRef, useState } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AnimatedHeaderScreenWithKeyboardLayout } from '@/components/headers/animated-header/animated-header-screen-with-keyboard.layout';
+import { MoreInfoIcon } from '@/components/more-info-icon';
 import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
 import { InputState, TextInput } from '@/components/text-input';
-import { useCreateWallet } from '@/hooks/create-wallet';
+import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
 import { tempMnemonicStore } from '@/store/storage-persistors';
-import { Trans, t } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
@@ -21,7 +22,6 @@ import {
   ChevronUpIcon,
   LockIcon,
   NoteEmptyIcon,
-  QuestionCircleIcon,
   SheetRef,
   Text,
   Theme,
@@ -106,30 +106,15 @@ export default function RecoverWallet() {
   return (
     <>
       <Box
+        bg="ink.background-primary"
         flex={1}
-        backgroundColor="ink.background-primary"
-        style={{ paddingBottom: bottom + theme.spacing['5'] }}
+        style={{ paddingBottom: bottom + theme.spacing[5] }}
       >
-        <KeyboardAwareScrollView contentContainerStyle={{ paddingHorizontal: theme.spacing['5'] }}>
-          <Box gap="3" pt="5">
-            <TouchableOpacity
-              onPress={() => {
-                // TODO: show some kind of a helper here
-              }}
-              p="5"
-              position="absolute"
-              right={-theme.spacing['5']}
-              zIndex={10}
-              top={theme.spacing['1']}
-            >
-              <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
-            </TouchableOpacity>
-            <Box>
-              <Trans id="recover_wallet.title">
-                <Text variant="heading03">ENTER YOUR</Text>
-                <Text variant="heading03">SECRET KEY</Text>
-              </Trans>
-            </Box>
+        <AnimatedHeaderScreenWithKeyboardLayout
+          rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
+          title={t({ id: 'recover_wallet.title', message: 'Enter your secret key' })}
+        >
+          <Box gap="3">
             <Text variant="label01">
               {t({
                 id: 'recover_wallet.subtitle',
@@ -190,7 +175,7 @@ export default function RecoverWallet() {
               <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
             )}
           </TouchableOpacity>
-          {!showAdvancedOptions ? null : (
+          {showAdvancedOptions && (
             <TouchableOpacity
               onPress={() => {
                 recoverWalletSheetRef.current?.present();
@@ -228,7 +213,7 @@ export default function RecoverWallet() {
               <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
             </TouchableOpacity>
           )}
-        </KeyboardAwareScrollView>
+        </AnimatedHeaderScreenWithKeyboardLayout>
         <Button
           mx="5"
           onPress={onSubmit}

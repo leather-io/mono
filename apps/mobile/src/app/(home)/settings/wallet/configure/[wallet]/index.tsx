@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useRef, useState } from 'react';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
 import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
@@ -17,7 +17,7 @@ import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
 import {
@@ -45,14 +45,9 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const addWalletSheetRef = useRef<SheetRef>(null);
   const walletNameSheetRef = useRef<SheetRef>(null);
   const removeWalletSheetRef = useRef<SheetRef>(null);
-  const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
   const { displayToast } = useToastContext();
-
-  useEffect(() => {
-    navigation.setOptions({ title: wallet.name });
-  }, [navigation, wallet.name]);
 
   function setName(name: string) {
     if (name === '') {
@@ -71,7 +66,6 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
         name,
       })
     );
-    navigation.setOptions({ title: name });
     return { success: true };
   }
 
@@ -110,132 +104,130 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     id: 'configure_wallet.export_key.cell_title',
     message: 'Export key',
   });
+
   return (
     <>
-      <Box flex={1} backgroundColor="ink.background-primary">
-        <ScrollView
-          contentContainerStyle={{
-            paddingTop: theme.spacing['5'],
-            paddingBottom: theme.spacing['5'],
-            gap: theme.spacing[5],
-          }}
-        >
-          <Box px="5" gap="6">
-            <Text variant="heading05">{wallet.name}</Text>
-            <Cell.Root
-              title={t({
-                id: 'configure_wallet.view_key.cell_title',
-                message: 'View Secret Key',
+      <AnimatedHeaderScreenLayout
+        title={t({
+          id: 'configure_wallet.header_title',
+          message: 'Configure wallet',
+        })}
+      >
+        <Box gap="3">
+          <Text variant="heading05">{wallet.name}</Text>
+          <Cell.Root
+            title={t({
+              id: 'configure_wallet.view_key.cell_title',
+              message: 'View Secret Key',
+            })}
+            icon={<Eye1ClosedIcon />}
+            onPress={() => {
+              router.navigate({
+                pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
+                params: { fingerprint: wallet.fingerprint },
+              });
+            }}
+            testID={TestId.walletSettingsViewSecretKeyButton}
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+          <Cell.Root
+            title={t({
+              id: 'configure_wallet.rename_wallet.cell_title',
+              message: 'Rename wallet',
+            })}
+            icon={<SquareLinesBottomIcon />}
+            onPress={() => {
+              walletNameSheetRef.current?.present();
+            }}
+            testID={TestId.walletSettingsRenameWalletButton}
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+          <Cell.Root
+            title={t({
+              id: 'configure_wallet.remove_wallet.cell_title',
+              message: 'Remove wallet',
+            })}
+            icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
+            onPress={() => {
+              removeWalletSheetRef.current?.present();
+            }}
+            testID={TestId.walletSettingsRemoveWalletButton}
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+          <Accordion
+            label={t({
+              id: 'configure_wallet.accordion_label',
+              message: 'More options',
+            })}
+            content={
+              <>
+                <Cell.Root
+                  title={addressReuseTitle}
+                  icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={onOpenSheet({
+                    title: addressReuseTitle,
+                  })}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+                <Cell.Root
+                  title={addressScanRangeTitle}
+                  icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={onOpenSheet({
+                    title: addressScanRangeTitle,
+                  })}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+                <Cell.Root
+                  title={addressTypesTitle}
+                  icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={onOpenSheet({
+                    title: addressTypesTitle,
+                  })}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+                <Cell.Root
+                  title={exportXpubTitle}
+                  icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={onOpenSheet({
+                    title: exportXpubTitle,
+                  })}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+                <Cell.Root
+                  title={exportKeyTitle}
+                  icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                  onPress={onOpenSheet({
+                    title: exportKeyTitle,
+                  })}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+              </>
+            }
+          />
+        </Box>
+        <Box mb="7">
+          <Divider />
+          <Box py="5">
+            <Text variant="caption01">
+              {t({
+                id: 'configure_wallet.creation_label',
+                message: 'Creation date',
               })}
-              icon={<Eye1ClosedIcon />}
-              onPress={() => {
-                router.navigate({
-                  pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
-                  params: { fingerprint: wallet.fingerprint },
-                });
-              }}
-              testID={TestId.walletSettingsViewSecretKeyButton}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Cell.Root
-              title={t({
-                id: 'configure_wallet.rename_wallet.cell_title',
-                message: 'Rename wallet',
-              })}
-              icon={<SquareLinesBottomIcon />}
-              onPress={() => {
-                walletNameSheetRef.current?.present();
-              }}
-              testID={TestId.walletSettingsRenameWalletButton}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Cell.Root
-              title={t({
-                id: 'configure_wallet.remove_wallet.cell_title',
-                message: 'Remove wallet',
-              })}
-              icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
-              onPress={() => {
-                removeWalletSheetRef.current?.present();
-              }}
-              testID={TestId.walletSettingsRemoveWalletButton}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Accordion
-              label={t({
-                id: 'configure_wallet.accordion_label',
-                message: 'Advanced options',
-              })}
-              content={
-                <>
-                  <Cell.Root
-                    title={addressReuseTitle}
-                    icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressReuseTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={addressScanRangeTitle}
-                    icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressScanRangeTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={addressTypesTitle}
-                    icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressTypesTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={exportXpubTitle}
-                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: exportXpubTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={exportKeyTitle}
-                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: exportKeyTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                </>
-              }
-            />
+            </Text>
+            <Text variant="caption01" color="ink.text-subdued">
+              {dayjs(wallet.createdOn).format('D MMM YYYY')}
+            </Text>
           </Box>
-          <Box mb="7">
-            <Divider />
-            <Box p="5">
-              <Text variant="caption01">
-                {t({
-                  id: 'configure_wallet.creation_label',
-                  message: 'Creation date',
-                })}
-              </Text>
-              <Text variant="caption01" color="ink.text-subdued">
-                {dayjs(wallet.createdOn).format('D MMM YYYY')}
-              </Text>
-            </Box>
-          </Box>
-        </ScrollView>
-      </Box>
+        </Box>
+      </AnimatedHeaderScreenLayout>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={removeWallet} sheetRef={removeWalletSheetRef} />

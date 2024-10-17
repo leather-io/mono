@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { NetworkBadge } from '@/components/network-badge';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
@@ -18,8 +20,6 @@ import {
   SunInCloudIcon,
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
-
-import SettingsScreenLayout from '../settings-screen.layout';
 
 export default function SettingsDisplayScreen() {
   const themeSheetRef = useRef<SheetRef>(null);
@@ -42,7 +42,13 @@ export default function SettingsDisplayScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
+      <AnimatedHeaderScreenLayout
+        rightHeaderElement={<NetworkBadge />}
+        title={t({
+          id: 'display.header_title',
+          message: 'Display',
+        })}
+      >
         <Cell.Root
           title={t({
             id: 'display.theme.cell_title',
@@ -60,7 +66,6 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
           title={t({
             id: 'display.bitcoin_unit.cell_title',
@@ -78,7 +83,6 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
           title={t({
             id: 'display.conversion_unit.cell_title',
@@ -96,7 +100,6 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
           title={t({
             id: 'display.account_identifier.cell_title',
@@ -114,7 +117,6 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
           title={t({
             id: 'display.privacy_mode.cell_title',
@@ -132,7 +134,7 @@ export default function SettingsDisplayScreen() {
             value={privacyModePreference === 'hidden'}
           />
         </Cell.Root>
-      </SettingsScreenLayout>
+      </AnimatedHeaderScreenLayout>
       <ThemeSheet sheetRef={themeSheetRef} />
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />

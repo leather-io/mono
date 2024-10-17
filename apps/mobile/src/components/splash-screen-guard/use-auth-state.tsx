@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { useAppState } from '@/hooks/app-state';
+import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
 import * as LocalAuthentication from 'expo-local-authentication';
 

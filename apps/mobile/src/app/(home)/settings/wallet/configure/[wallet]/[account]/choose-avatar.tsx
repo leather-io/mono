@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useToastContext } from '@/components/toast/toast-context';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
+import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 import { AccountId } from '@/models/domain.model';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
@@ -20,6 +21,7 @@ interface ChooseAvatarProps extends AccountId {
   account: Account;
 }
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {
+  const defaultStyles = useScrollViewStyles();
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const dispatch = useAppDispatch();
@@ -54,32 +56,20 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
   }
 
   return (
-    <Box flex={1} backgroundColor="ink.background-primary" justifyContent="space-between">
-      <ScrollView
-        contentContainerStyle={{
-          paddingTop: theme.spacing['5'],
-          paddingBottom: theme.spacing['5'] + bottom,
-          gap: theme.spacing[5],
-        }}
-      >
-        <Box px="5" gap="6">
-          <Text variant="heading03">
-            {t({
-              id: 'choose_avatar.title',
-              message: 'Choose account avatar',
-            })}
-          </Text>
-          <Text variant="heading05">
+    <Box bg="ink.background-primary" flex={1}>
+      <ScrollView contentContainerStyle={defaultStyles}>
+        <Box gap="6">
+          <Text variant="label02">
             {t({
               id: 'choose_avatar.images.subtitle',
-              message: 'Choose an image',
+              message: 'Icons',
             })}
           </Text>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
-          <Text variant="heading05">
+          <Text variant="label02">
             {t({
               id: 'choose_avatar.collectibles.subtitle',
-              message: 'Or choose one of your collectibles',
+              message: 'Your collectibles',
             })}
           </Text>
         </Box>
@@ -96,7 +86,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
           buttonState={isSubmitDisabled ? 'disabled' : 'default'}
           title={t({
             id: 'choose_avatar.button',
-            message: 'Confirm',
+            message: 'Save',
           })}
         />
       </Box>

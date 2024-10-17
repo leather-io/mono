@@ -1,21 +1,14 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { MoreInfoIcon } from '@/components/more-info-icon';
 import { SkipSecureWalletSheet } from '@/components/secure-your-wallet/skip-secure-wallet-sheet';
-import { useCreateWallet } from '@/hooks/create-wallet';
-import { Trans, t } from '@lingui/macro';
+import { useCreateWallet } from '@/hooks/use-create-wallet';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import {
-  Box,
-  Button,
-  LockIcon,
-  QuestionCircleIcon,
-  SheetRef,
-  Text,
-  Theme,
-  TouchableOpacity,
-} from '@leather.io/ui/native';
+import { Box, Button, LockIcon, SheetRef, Text, Theme } from '@leather.io/ui/native';
 
 export default function SecureYourWalletScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -26,42 +19,30 @@ export default function SecureYourWalletScreen() {
   return (
     <>
       <Box
+        bg="ink.background-primary"
         flex={1}
-        backgroundColor="ink.background-primary"
-        px="5"
-        justifyContent="space-between"
-        style={{ paddingBottom: bottom + theme.spacing['5'] }}
+        style={{ paddingBottom: bottom + theme.spacing[5] }}
       >
-        <Box gap="3" pt="5">
-          <TouchableOpacity
-            onPress={() => {
-              // TODO: show some kind of a helper here
-            }}
-            p="5"
-            position="absolute"
-            right={-theme.spacing['5']}
-            zIndex={10}
-            top={theme.spacing['1']}
-          >
-            <QuestionCircleIcon variant="small" />
-          </TouchableOpacity>
-          <Box>
-            <Trans id="secure_your_wallet.title">
-              <Text variant="heading03">SECURE</Text>
-              <Text variant="heading03">YOUR WALLET</Text>
-            </Trans>
+        <AnimatedHeaderScreenLayout
+          rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
+          title={t({
+            id: 'secure_your_wallet.title',
+            message: 'Secure your wallet',
+          })}
+        >
+          <Box gap="3">
+            <Text variant="label01">
+              {t({
+                id: 'secure_your_wallet.caption',
+                message: `Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`,
+              })}
+            </Text>
           </Box>
-          <Text variant="label01">
-            {t({
-              id: 'secure_your_wallet.caption',
-              message: `Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`,
-            })}
-          </Text>
-        </Box>
-        <Box justifyContent="center" alignItems="center">
-          <LockIcon height={204} width={204} />
-        </Box>
-        <Box>
+          <Box justifyContent="center" alignItems="center">
+            <LockIcon height={204} width={204} />
+          </Box>
+        </AnimatedHeaderScreenLayout>
+        <Box px="5">
           <Button
             onPress={async () => {
               sheetRef.current?.present();
