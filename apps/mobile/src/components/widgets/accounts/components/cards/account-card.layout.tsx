@@ -1,4 +1,4 @@
-import { WalletStore } from '@/store/wallets/wallets.write';
+import { WalletStore } from '@/store/wallets/utils';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, IconProps, Text, TouchableOpacity } from '@leather.io/ui/native';

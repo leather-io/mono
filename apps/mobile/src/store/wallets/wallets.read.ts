@@ -6,7 +6,8 @@ import { useAccountsByFingerprint } from '../accounts/accounts.read';
 import { AddWalletAction, userAddsWallet, userRemovesWallet } from '../global-action';
 import { mnemonicStore } from '../storage-persistors';
 import { useAppDispatch, useAppSelector } from '../utils';
-import { WalletStore, walletAdapter } from './wallets.write';
+import { WalletStore } from './utils';
+import { walletAdapter } from './wallets.write';
 
 const selectors = walletAdapter.getSelectors((state: RootState) => state.wallets);
 

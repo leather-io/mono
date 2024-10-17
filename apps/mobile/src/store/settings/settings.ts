@@ -8,7 +8,6 @@ import {
   AnalyticsPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
-  EmailAddress,
   FiatCurrency,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
@@ -36,27 +35,12 @@ import {
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
 } from './settings.write';
-
-export const defaultNetworkPreferences = ['mainnet', 'testnet', 'signet'] as const;
-export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
-
-export type ThemePreference = (typeof defaultThemePreferences)[number];
-export type Theme = Exclude<ThemePreference, 'system'>;
-export type SecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
-export type PrivacyModePreference = 'hidden' | 'visible';
-
-export interface SettingsState {
-  accountDisplayPreference: AccountDisplayPreference;
-  analyticsPreference: AnalyticsPreference;
-  bitcoinUnitPreference: BitcoinUnit;
-  createdOn: string;
-  emailAddressPreference: EmailAddress;
-  fiatCurrencyPreference: FiatCurrency;
-  networkPreference: DefaultNetworkConfigurations;
-  privacyModePreference: PrivacyModePreference;
-  themePreference: ThemePreference;
-  securityLevelPreference: SecurityLevelPreference;
-}
+import {
+  PrivacyModePreference,
+  SecurityLevelPreference,
+  SettingsState,
+  ThemePreference,
+} from './utils';
 
 export const initialState: SettingsState = {
   accountDisplayPreference: 'native-segwit',

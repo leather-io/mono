@@ -6,11 +6,9 @@ import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 
 import { handleEntityActionWith } from '../../utils';
 import { filterKeychainsToRemove } from '../keychains';
+import { BitcoinKeychain } from './utils';
 
-export interface BitcoinKeychainStore {
-  descriptor: string;
-}
-const adapter = createEntityAdapter<BitcoinKeychainStore, string>({
+const adapter = createEntityAdapter<BitcoinKeychain, string>({
   selectId: keychain => extractKeyOriginPathFromDescriptor(keychain.descriptor),
 });
 

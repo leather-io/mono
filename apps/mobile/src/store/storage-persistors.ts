@@ -7,11 +7,22 @@ import { PersistConfig } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { z } from 'zod';
 
-import { RootState } from '.';
+import { RootState, stateSchema } from '.';
 
 export const persistConfig: PersistConfig<RootState> = {
   key: 'root',
-  stateReconciler: autoMergeLevel2,
+  stateReconciler: (inboundState, originalState, reducedState, config) => {
+    try {
+      // continue with automerge if state passes zod validation
+      stateSchema.parse(inboundState);
+      return autoMergeLevel2(inboundState, originalState, reducedState, config);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(e);
+      // set state on fire if zod doesn't pass (until release, we would need to implement migrations afterwards)
+      return originalState;
+    }
+  },
   version: 0,
   storage: AsyncStorage,
   whitelist: ['wallets', 'accounts', 'keychains', 'settings'],

@@ -9,12 +9,8 @@ import {
 } from '@leather.io/models';
 
 import { handleAppResetWithState } from '../global-action';
-import {
-  PrivacyModePreference,
-  SecurityLevelPreference,
-  ThemePreference,
-  initialState,
-} from './settings';
+import { initialState } from './settings';
+import { PrivacyModePreference, SecurityLevelPreference, ThemePreference } from './utils';
 
 export const settingsSlice = createSlice({
   name: 'settings',

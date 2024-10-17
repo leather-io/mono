@@ -22,7 +22,8 @@ import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 
 import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../keychains';
-import { BitcoinKeychainStore, bitcoinKeychainAdapter } from './bitcoin-keychains.write';
+import { bitcoinKeychainAdapter } from './bitcoin-keychains.write';
+import { BitcoinKeychain } from './utils';
 
 export const bitcoinKeychainSelectors = bitcoinKeychainAdapter.getSelectors(
   (state: RootState) => state.keychains.bitcoin
@@ -35,10 +36,7 @@ const memoizedDriveBitcoinPayerFromAccount = memoize(
     deriveBitcoinPayerFromAccount(descriptor, network)({ addressIndex })
 );
 
-function deriveBitcoinPayersFromStore(
-  keychains: BitcoinKeychainStore[],
-  network: BitcoinNetworkModes
-) {
+function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: BitcoinNetworkModes) {
   return keychains
     .filter(
       keychain =>

@@ -1,26 +1,18 @@
-import { AvatarIcon } from '@/components/avatar-icon';
 import { AccountId } from '@/models/domain.model';
 import { t } from '@lingui/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
-import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.write';
-import { StacksKeychainStore } from '../keychains/stacks/stacks-keychains.write';
-import { Optional, handleEntityActionWith, makeAccountIdentifer } from '../utils';
-
-export type AccountStatus = 'active' | 'hidden';
-
-export interface AccountStore {
-  id: string;
-  icon: string | AvatarIcon;
-  name: string;
-  status: AccountStatus;
-}
+import { BitcoinKeychain } from '../keychains/bitcoin/utils';
+import { StacksKeychain } from '../keychains/stacks/utils';
+import { Optional, entitySchema, handleEntityActionWith, makeAccountIdentifer } from '../utils';
+import { AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
   selectId: account => account.id,
 });
+export const accountEntitySchema = entitySchema(accountStoreSchema);
 
 function addAccountDefaults({
   account,
@@ -121,8 +113,8 @@ type PartialAccountStore = Optional<AccountStore, 'icon' | 'name' | 'status'>;
 interface AddAccountPayload {
   account: PartialAccountStore;
   withKeychains: {
-    bitcoin: BitcoinKeychainStore[];
-    stacks: StacksKeychainStore[];
+    bitcoin: BitcoinKeychain[];
+    stacks: StacksKeychain[];
   };
 }
 export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');

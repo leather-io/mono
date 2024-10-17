@@ -6,16 +6,9 @@ import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
 
 import { handleEntityActionWith } from '../../utils';
 import { filterKeychainsToRemove } from '../keychains';
+import { StacksKeychain } from './utils';
 
-export interface StacksKeychainStore {
-  // Stacks doesn't use the concept of BIP-380 Descriptors the same way Bitcoin
-  // does. However, we need to store the same data. Reusing this structure
-  // provides a consistent interface between keychain stores. The `descriptor`
-  // field here is used to store the derivation path and public key, rather than
-  // extended public key (xpub) used in Bitcoin store.
-  descriptor: string;
-}
-export const adapter = createEntityAdapter<StacksKeychainStore, string>({
+export const adapter = createEntityAdapter<StacksKeychain, string>({
   selectId: keychain => extractKeyOriginPathFromDescriptor(keychain.descriptor),
 });
 

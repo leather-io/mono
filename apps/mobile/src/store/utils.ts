@@ -2,6 +2,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
+import z from 'zod';
 
 import { resetWallet } from './global-action';
 import { RootState, store } from './index';
@@ -64,3 +65,10 @@ export function handleEntityActionWith<State, Payload, R extends AdapterMethod<S
 }
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+export function entitySchema<T extends z.ZodTypeAny>(genericEntitySchema: T) {
+  return z.object({
+    ids: z.array(z.string()),
+    entities: z.record(z.string(), genericEntitySchema),
+  });
+}

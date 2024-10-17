@@ -2,7 +2,8 @@ import { useRef } from 'react';
 
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
-import { SecurityLevelPreference, useSettings } from '@/store/settings/settings';
+import { useSettings } from '@/store/settings/settings';
+import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
 
 import { Cell, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
