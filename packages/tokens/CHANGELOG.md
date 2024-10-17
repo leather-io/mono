@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.0...@leather.io/tokens-v0.9.1) (2024-10-17)
+
+
+### Bug Fixes
+
+* fonts ([beec4ac](https://github.com/leather-io/mono/commit/beec4ac091f32a26dc3b49b628a25ec35b2688d3))
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.8.1...@leather.io/tokens-v0.9.0) (2024-08-23)
 
 
