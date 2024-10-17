@@ -2,17 +2,17 @@
 
 The extension will heavily rely on monorepo packages. Soon, we will need to apply changes to these packages as part of the work on the extension repository, thus necessitating a way to test changes made to the monorepo within the extension.
 
-### Hard Linking
+## Hard Linking
 
-#### Initialization
+### Initialization
 
 One method to achieve this is through hard linking. Here is a step-by-step guide to help you set it up correctly:
 
 1. Clone the repositories:
 
-   ```
-   $ git clone https://github.com/leather-io/mono
-   $ git clone https://github.com/leather-io/extension
+   ```git
+   git clone https://github.com/leather-io/mono
+   git clone https://github.com/leather-io/extension
    ```
 
    For simplicity, do this in the same folder so that `mono` and `extension` are sibling directories.
@@ -57,7 +57,7 @@ That's it; the setup should now be fully functional.
 
 Now, when we update a package in the `mono` repo, it doesn't automatically move the changes to the `extension`'s `node_modules`. To do this, run the following command in the extension each time you update a package in the monorepo:
 
-```
+```sh
 pnpm i
 ```
 
