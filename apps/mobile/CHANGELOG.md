@@ -202,6 +202,37 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.42.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.41.1...@leather.io/mobile-v1.42.0) (2024-10-17)
+
+
+### Features
+
+* locked screen + updated splashscreens ([143f3ab](https://github.com/leather-io/mono/commit/143f3abb35d79f03f601d3305674600052edbbde))
+
+
+### Bug Fixes
+
+* account sheet animation ([a14255c](https://github.com/leather-io/mono/commit/a14255ccadf2a5e2334bfa824d083d54ee24b147))
+* add launcher icons to Android build, closes LEA-1521 ([9aeea7e](https://github.com/leather-io/mono/commit/9aeea7e9e62ca0c684cc0362ce65f9c60881dfc6))
+* ensure Android builds and runs locally, closes LEA-1522 ([9aeea7e](https://github.com/leather-io/mono/commit/9aeea7e9e62ca0c684cc0362ce65f9c60881dfc6))
+* mobile headers, closes LEA-628 ([cbce2a8](https://github.com/leather-io/mono/commit/cbce2a85416e29e1f6ad8312e1e446ffe473390b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.14.0
+    * @leather.io/constants bumped to 0.12.3
+    * @leather.io/crypto bumped to 1.6.4
+    * @leather.io/models bumped to 0.18.0
+    * @leather.io/rpc bumped to 2.1.11
+    * @leather.io/stacks bumped to 1.2.1
+    * @leather.io/ui bumped to 1.29.0
+    * @leather.io/utils bumped to 0.16.4
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.14.0
+
 ## [1.41.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.41.0...@leather.io/mobile-v1.41.1) (2024-10-14)
 
 

@@ -103,6 +103,28 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.29.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.28.0...@leather.io/ui-v1.29.0) (2024-10-17)
+
+
+### Features
+
+* add all icons story ([279953d](https://github.com/leather-io/mono/commit/279953d39411a0453d6572b29d16557385b7008e))
+* locked screen + updated splashscreens ([143f3ab](https://github.com/leather-io/mono/commit/143f3abb35d79f03f601d3305674600052edbbde))
+
+
+### Bug Fixes
+
+* mobile headers, closes LEA-628 ([cbce2a8](https://github.com/leather-io/mono/commit/cbce2a85416e29e1f6ad8312e1e446ffe473390b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.4
+  * devDependencies
+    * @leather.io/models bumped to 0.18.0
+
 ## [1.28.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.27.1...@leather.io/ui-v1.28.0) (2024-10-11)
 
 

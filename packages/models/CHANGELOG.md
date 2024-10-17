@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.17.0...@leather.io/models-v0.18.0) (2024-10-17)
+
+
+### Features
+
+* add testnet4 config, ref LEA-1406 ([208bd97](https://github.com/leather-io/mono/commit/208bd976e98a4b1b3f13587b799d5f4b48451a32))
+
 ## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.16.0...@leather.io/models-v0.17.0) (2024-09-27)
 
 

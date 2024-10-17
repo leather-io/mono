@@ -159,6 +159,24 @@
     * @leather.io/rpc bumped to 2.1.10
     * @leather.io/utils bumped to 0.16.2
 
+## [2.15.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.14.1...@leather.io/query-v2.15.0) (2024-10-17)
+
+
+### Features
+
+* add testnet4 config, ref LEA-1406 ([208bd97](https://github.com/leather-io/mono/commit/208bd976e98a4b1b3f13587b799d5f4b48451a32))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.14.0
+    * @leather.io/constants bumped to 0.12.3
+    * @leather.io/models bumped to 0.18.0
+    * @leather.io/rpc bumped to 2.1.11
+    * @leather.io/utils bumped to 0.16.4
+
 ## [2.14.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.14.0...@leather.io/query-v2.14.1) (2024-10-14)
 
 
