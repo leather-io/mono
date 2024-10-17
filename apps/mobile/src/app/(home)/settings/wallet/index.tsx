@@ -22,7 +22,7 @@ export default function SettingsWalletScreen() {
   const hiddenAccountsLength = hiddenAccounts.list.length;
   return (
     <>
-      <Box justifyContent="space-between" flex={1} backgroundColor="ink.background-primary">
+      <Box flex={1} backgroundColor="ink.background-primary">
         <ScrollView
           contentContainerStyle={{
             paddingTop: theme.spacing['5'],
@@ -33,40 +33,40 @@ export default function SettingsWalletScreen() {
           <Box px="5">
             <WalletsList variant="active" />
           </Box>
-        </ScrollView>
-        <Box>
-          <Divider />
-          <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }} gap="6">
-            <Cell.Root
-              title={t({
-                id: 'wallet.hidden_accounts.cell_title',
-                message: 'Hidden accounts',
-              })}
-              caption={t({
-                id: 'wallet.hidden_accounts.cell_caption',
-                message: `${hiddenAccountsLength} hidden accounts`,
-              })}
-              icon={<Eye1ClosedIcon />}
-              onPress={() => {
-                router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
-              }}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Cell.Root
-              title={t({
-                id: 'wallet.add_wallet.cell_title',
-                message: 'Add wallet',
-              })}
-              icon={<PlusIcon />}
-              onPress={() => {
-                addWalletSheetRef.current?.present();
-              }}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
+          <Box>
+            <Divider />
+            <Box p="5" gap="6">
+              <Cell.Root
+                title={t({
+                  id: 'wallet.hidden_accounts.cell_title',
+                  message: 'Hidden accounts',
+                })}
+                caption={t({
+                  id: 'wallet.hidden_accounts.cell_caption',
+                  message: `${hiddenAccountsLength} hidden accounts`,
+                })}
+                icon={<Eye1ClosedIcon />}
+                onPress={() => {
+                  router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
+                }}
+              >
+                <Cell.Chevron />
+              </Cell.Root>
+              <Cell.Root
+                title={t({
+                  id: 'wallet.add_wallet.cell_title',
+                  message: 'Add wallet',
+                })}
+                icon={<PlusIcon />}
+                onPress={() => {
+                  addWalletSheetRef.current?.present();
+                }}
+              >
+                <Cell.Chevron />
+              </Cell.Root>
+            </Box>
           </Box>
-        </Box>
+        </ScrollView>
       </Box>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>

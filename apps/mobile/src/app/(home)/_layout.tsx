@@ -130,10 +130,31 @@ export default function StackLayout() {
           ),
         }}
       />
-      <Stack.Screen name="settings/wallet/index" options={{ header: () => <SettingsHeader /> }} />
+      <Stack.Screen
+        name="settings/wallet/index"
+        options={{
+          header: () => (
+            <SettingsHeader
+              title={t({
+                id: 'wallets.header_title',
+                message: 'Wallets',
+              })}
+            />
+          ),
+        }}
+      />
       <Stack.Screen
         name="settings/wallet/hidden-accounts"
-        options={{ header: () => <SettingsHeader /> }}
+        options={{
+          header: () => (
+            <SettingsHeader
+              title={t({
+                id: 'hidden_accounts.header_title',
+                message: 'Hidden accounts',
+              })}
+            />
+          ),
+        }}
       />
       <Stack.Screen
         name="settings/wallet/configure/[wallet]/[account]/index"
