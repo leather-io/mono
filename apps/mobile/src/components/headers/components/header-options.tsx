@@ -25,7 +25,7 @@ export function HeaderOptions() {
       <TouchableOpacity
         p="2"
         onPress={() => onUpdatePrivacyMode()}
-        testID={TestId.homeSettingsButton}
+        testID={TestId.homePrivacyButton}
       >
         {privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
       </TouchableOpacity>
