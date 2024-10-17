@@ -1,3 +1,4 @@
+import { useTotalBalance } from '@/hooks/balances/use-total-balance';
 import { AccountLoader } from '@/store/accounts/accounts';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
@@ -23,22 +24,20 @@ export default function AccountScreen() {
 
   const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
   const signers = useStacksSigners().fromAccountIndex(fingerprint, accountIndex);
+
+  // Pete - consider fetching this a level above and passing just addresses down here!
   // seems weird that this is an array? [] ask about it. As it will always have 1 entry when going by account index?
   // do I need to create a different selector here?
-  // Pete - consider fetching this a level above and passing just addresses down here!
   const stxAddress = signers[0]?.address;
-  const { filteredBalanceQuery } = useStxCryptoAssetBalance(stxAddress || '');
 
-  // Logic is coming from useTotalBalance in extension which needs to be shared
-  // BUT when digging into BTC balances sends you down a loop of hooks using redux and the account store
+  const { filteredBalanceQuery } = useStxCryptoAssetBalance(stxAddress || '');
   const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
 
   const balance = filteredBalanceQuery.data;
   const stxBalance = balance ? balance.totalBalance : createMoney(0, 'STX');
 
   const stxUsdAmount = baseCurrencyAmountInQuote(stxBalance, stxMarketData);
-  // PETE show stxBalance in tokens widget!
-  // get STX address from account data
+
   return (
     <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
       {account => (

@@ -1,5 +1,6 @@
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
+import { MockedAccount } from '@/mocks/account.mocks';
 // import {
 //   CollectiblesWidget,
 //   mockCollectibles,
@@ -17,11 +18,9 @@ export function Home() {
   const wallets = useWallets();
   const accounts = useAccounts();
 
-  console.log(accounts);
-
   return (
     <PageLayout>
-      <AccountsWidget accounts={accounts.list} wallets={wallets.list} />
+      <AccountsWidget accounts={accounts.list as MockedAccount[]} wallets={wallets.list} />
 
       {/* TODO - re-enable widgets when real data available */}
       {/* <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
