@@ -1,5 +1,9 @@
 appId: io.leather.mobilewallet
 ---
+- runFlow:
+    file: ./unlock.yaml
+    when:
+      visible: Passcode field
 - tapOn:
     id: 'homeDeveloperToolsButton'
 - tapOn:
