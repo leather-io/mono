@@ -202,6 +202,28 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.42.1...@leather.io/mobile-v1.43.0) (2024-10-17)
+
+
+### Features
+
+* header privacy toggle, closes LEA-611 ([7680a53](https://github.com/leather-io/mono/commit/7680a53745049917db7f144f054d5b0aaa57bdd2))
+* reset store if zod validation fails ([1024a2c](https://github.com/leather-io/mono/commit/1024a2c75120942a351713352ff153aece9a7129))
+
+
+### Bug Fixes
+
+* prebuild ([f251ac4](https://github.com/leather-io/mono/commit/f251ac409deb706630c7ac7329a70aa5bb226907))
+* settings design qa ([040de50](https://github.com/leather-io/mono/commit/040de50d46a4bcc2b654b0812cf72e1ef86c0e33))
+* wallet sheet icon colors ([66e605e](https://github.com/leather-io/mono/commit/66e605e9f7cf4a834c91d24047976b35c984e816))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.30.0
+
 ## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.42.0...@leather.io/mobile-v1.42.1) (2024-10-17)
 
 
