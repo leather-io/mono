@@ -50,6 +50,13 @@ export function bitcoinNetworkModeToCoreNetworkMode(mode: BitcoinNetworkModes) {
   return bitcoinNetworkToCoreNetworkMap[mode];
 }
 
+type BitcoinNetworkMap<T> = Record<BitcoinNetworkModes, T>;
+
+export function whenBitcoinNetwork(mode: BitcoinNetworkModes) {
+  return <T extends BitcoinNetworkMap<unknown>>(networkMap: T) =>
+    networkMap[mode] as T[BitcoinNetworkModes];
+}
+
 /**
  * Map representing the "Coin Type" section of a derivation path.
  * Consider example below, Coin type is one, thus testnet
