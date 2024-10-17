@@ -12,7 +12,8 @@ export const HIRO_API_BASE_URL_MAINNET_EXTENDED = 'https://api.hiro.so/extended/
 export const HIRO_API_BASE_URL_TESTNET_EXTENDED = 'https://api.testnet.hiro.so/extended';
 
 export const BITCOIN_API_BASE_URL_MAINNET = 'https://leather.mempool.space/api';
-export const BITCOIN_API_BASE_URL_TESTNET = 'https://leather.mempool.space/testnet/api';
+export const BITCOIN_API_BASE_URL_TESTNET3 = 'https://leather.mempool.space/testnet/api';
+export const BITCOIN_API_BASE_URL_TESTNET4 = 'https://leather.mempool.space/testnet4/api';
 export const BITCOIN_API_BASE_URL_SIGNET = 'https://mempool.space/signet/api';
 
 export const BESTINSLOT_API_BASE_URL_MAINNET = 'https://leatherapi.bestinslot.xyz/v3';
@@ -29,6 +30,7 @@ export enum ChainID {
 export enum WalletDefaultNetworkConfigurationIds {
   mainnet = 'mainnet',
   testnet = 'testnet',
+  testnet4 = 'testnet4',
   signet = 'signet',
   sbtcDevenv = 'sbtcDevenv',
   devnet = 'devnet',
@@ -42,6 +44,9 @@ export type SupportedBlockchains = (typeof supportedBlockchains)[number];
 
 export const networkModes = ['mainnet', 'testnet'] as const;
 export const testnetModes = ['testnet', 'regtest', 'signet'] as const;
+
+export const bitcoinNetworks = ['mainnet', 'testnet3', 'testnet4', 'regtest', 'signet'] as const;
+export type BitcoinNetwork = (typeof bitcoinNetworks)[number];
 
 export type NetworkModes = (typeof networkModes)[number];
 type BitcoinTestnetModes = (typeof testnetModes)[number];
@@ -88,7 +93,7 @@ const networkMainnet: NetworkConfiguration = {
 
 const networkTestnet: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds.testnet,
-  name: 'Testnet',
+  name: 'Testnet3',
   chain: {
     stacks: {
       blockchain: 'stacks',
@@ -98,7 +103,24 @@ const networkTestnet: NetworkConfiguration = {
     bitcoin: {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'testnet',
-      bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET,
+      bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
+    },
+  },
+};
+
+const networkTestnet4: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.testnet,
+  name: 'Testnet4',
+  chain: {
+    stacks: {
+      blockchain: 'stacks',
+      chainId: ChainID.Testnet,
+      url: HIRO_API_BASE_URL_TESTNET,
+    },
+    bitcoin: {
+      blockchain: 'bitcoin',
+      bitcoinNetwork: 'testnet',
+      bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET4,
     },
   },
 };
@@ -162,6 +184,7 @@ export const defaultNetworksKeyedById: Record<
 > = {
   [WalletDefaultNetworkConfigurationIds.mainnet]: networkMainnet,
   [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
+  [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,

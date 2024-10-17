@@ -1,6 +1,6 @@
 import PQueue from 'p-queue';
 
-import { BITCOIN_API_BASE_URL_TESTNET } from '@leather.io/models';
+import { BITCOIN_API_BASE_URL_TESTNET3 } from '@leather.io/models';
 
 const bitcoinMainnetApiLimiter = new PQueue({
   interval: 5000,
@@ -13,6 +13,6 @@ const bitcoinTestnetApiLimiter = new PQueue({
 });
 
 export function getBitcoinRatelimiter(url: string): PQueue {
-  if (url.includes(BITCOIN_API_BASE_URL_TESTNET)) return bitcoinTestnetApiLimiter;
+  if (url.includes(BITCOIN_API_BASE_URL_TESTNET3)) return bitcoinTestnetApiLimiter;
   return bitcoinMainnetApiLimiter;
 }
