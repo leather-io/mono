@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { NetworkBadge } from '@/components/network-badge';
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
 import { useSettings } from '@/store/settings/settings';
@@ -7,8 +9,6 @@ import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
 
 import { Cell, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
-
-import SettingsScreenLayout from '../settings-screen.layout';
 
 function getCaption(securityLevelPreference: SecurityLevelPreference) {
   switch (securityLevelPreference) {
@@ -34,7 +34,13 @@ export default function SettingsSecurityScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
+      <AnimatedHeaderScreenLayout
+        rightHeaderElement={<NetworkBadge />}
+        title={t({
+          id: 'security.header_title',
+          message: 'Security',
+        })}
+      >
         <Cell.Root
           title={t({
             id: 'security.analytics.cell_title',
@@ -71,7 +77,7 @@ export default function SettingsSecurityScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-      </SettingsScreenLayout>
+      </AnimatedHeaderScreenLayout>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />
       <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />
     </>

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { formatAddressesForGetAddresses } from '@/hooks/get-addresses';
+import { formatAddressesForGetAddresses } from '@/components/browser/get-addresses';
 import { AccountId } from '@/models/domain.model';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';

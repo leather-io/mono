@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { HardwareWalletListLayout } from '@/components/hardware-wallet/hardware-wallet-list.layout';
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { t } from '@lingui/macro';
 
@@ -78,8 +78,13 @@ export default function HardwareWalletListScreen() {
 
   return (
     <>
-      <HardwareWalletListLayout>
-        <Box gap="1" pt="5">
+      <AnimatedHeaderScreenLayout
+        title={t({
+          id: 'hardware_wallets.title',
+          message: 'Connect device',
+        })}
+      >
+        <Box gap="3">
           {Object.entries(getUnavailableFeatures()).map(featureEntry => {
             const [featureKey, feature] = featureEntry;
             const hardwareWalletName = feature.title;
@@ -93,7 +98,6 @@ export default function HardwareWalletListScreen() {
             }
             return (
               <Cell.Root
-                py="4"
                 key={featureKey}
                 title={feature.title}
                 icon={feature.icon}
@@ -104,7 +108,7 @@ export default function HardwareWalletListScreen() {
             );
           })}
         </Box>
-      </HardwareWalletListLayout>
+      </AnimatedHeaderScreenLayout>
       <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
     </>
   );

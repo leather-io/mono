@@ -21,10 +21,9 @@ export function SettingsSheetLayout({ children, icon, sheetRef, title }: Setting
     <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box
         style={{
-          gap: theme.spacing[5],
-          paddingBottom: theme.spacing['5'] + bottom,
-          paddingHorizontal: theme.spacing['5'],
-          paddingTop: theme.spacing['4'],
+          paddingBottom: theme.spacing[5] + bottom,
+          paddingHorizontal: theme.spacing[5],
+          paddingTop: theme.spacing[4],
         }}
       >
         <SheetHeader icon={<Avatar>{icon}</Avatar>} onPressSupport={() => {}} title={title} />

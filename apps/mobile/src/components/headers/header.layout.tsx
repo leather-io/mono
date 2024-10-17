@@ -23,8 +23,8 @@ export function HeaderLayout({
       bg="ink.background-primary"
       style={{
         justifyContent: 'center',
-        width: '100%',
         paddingTop: insets.top,
+        width: '100%',
       }}
     >
       <Box
@@ -36,13 +36,27 @@ export function HeaderLayout({
         py="3"
         px="3"
       >
-        <Box alignItems="flex-start" flex={1} height="100%" justifyContent="center">
+        <Box
+          alignItems="flex-start"
+          flexGrow={1}
+          height="100%"
+          justifyContent="center"
+          zIndex={100}
+        >
           {leftElement}
         </Box>
-        <Box alignItems="center" flex={2} height="100%" justifyContent="center">
+        <Box
+          alignItems="center"
+          bottom={0}
+          justifyContent="center"
+          left={0}
+          position="absolute"
+          right={0}
+          top={0}
+        >
           {centerElement}
         </Box>
-        <Box alignItems="flex-end" flex={1} height="100%" justifyContent="center">
+        <Box alignItems="flex-end" flexGrow={1} height="100%" justifyContent="center" zIndex={100}>
           {rightElement}
         </Box>
       </Box>

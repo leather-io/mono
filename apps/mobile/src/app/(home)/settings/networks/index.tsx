@@ -1,3 +1,5 @@
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { NetworkBadge } from '@/components/network-badge';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
@@ -16,8 +18,6 @@ import {
   TestTubeIcon,
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
-
-import SettingsScreenLayout from '../settings-screen.layout';
 
 function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
@@ -49,7 +49,13 @@ export default function SettingsNetworksScreen() {
   }
 
   return (
-    <SettingsScreenLayout>
+    <AnimatedHeaderScreenLayout
+      rightHeaderElement={<NetworkBadge />}
+      title={t({
+        id: 'networks.header_title',
+        message: 'Networks',
+      })}
+    >
       {defaultNetworkPreferences.map(network => (
         <Cell.Root
           icon={getNetworkIcon(network)}
@@ -75,6 +81,6 @@ export default function SettingsNetworksScreen() {
           <Cell.Radio isSelected={settings.networkPreference.id === network} />
         </Cell.Root>
       ))}
-    </SettingsScreenLayout>
+    </AnimatedHeaderScreenLayout>
   );
 }
