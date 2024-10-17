@@ -2,6 +2,7 @@ import { RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
+import { useTheme } from '@shopify/restyle';
 
 import {
   Box,
@@ -11,6 +12,7 @@ import {
   SheetHeader,
   SheetRef,
   Text,
+  Theme,
 } from '@leather.io/ui/native';
 
 import { WarningSheetVariant } from './types';
@@ -32,6 +34,7 @@ export function WarningSheet({
   variant = 'normal',
 }: WarningSheetProps) {
   const { themeDerivedFromThemePreference } = useSettings();
+  const theme = useTheme<Theme>();
   return (
     <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5" justifyContent="space-between" gap="5">
@@ -50,7 +53,9 @@ export function WarningSheet({
                 >
                   <ErrorTriangleIcon
                     color={
-                      variant === 'critical' ? 'red.action-primary-default' : 'ink.text-primary'
+                      theme.colors[
+                        variant === 'critical' ? 'red.action-primary-default' : 'ink.text-primary'
+                      ]
                     }
                   />
                 </Box>
