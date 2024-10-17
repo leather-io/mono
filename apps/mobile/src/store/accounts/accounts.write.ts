@@ -7,7 +7,12 @@ import { produce } from 'immer';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychainStore } from '../keychains/bitcoin/bitcoin-keychains.write';
 import { StacksKeychainStore } from '../keychains/stacks/stacks-keychains.write';
-import { Optional, handleEntityActionWith, makeAccountIdentifer } from '../utils';
+import {
+  Optional,
+  destructAccountIdentifier,
+  handleEntityActionWith,
+  makeAccountIdentifer,
+} from '../utils';
 
 export type AccountStatus = 'active' | 'hidden';
 
@@ -60,10 +65,7 @@ export const accountsSlice = createSlice({
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
 
-        accountsAdapter.addOne(
-          state,
-          addAccountDefaults({ account: { id }, accountIdx: state.ids.length })
-        );
+        accountsAdapter.addOne(state, addAccountDefaults({ account: { id }, accountIdx: 1 }));
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -73,9 +75,24 @@ export const accountsSlice = createSlice({
       })
 
       .addCase(userAddsAccount, (state, action) => {
+        const { fingerprint: thisWalletFingerprint } = destructAccountIdentifier(
+          action.payload.account.id
+        );
+
+        const thisWalletsAccounts = state.ids.filter(id => {
+          if (state.entities[id]?.id) {
+            const { fingerprint } = destructAccountIdentifier(state.entities[id].id);
+            return fingerprint === thisWalletFingerprint;
+          }
+          return false;
+        });
+
         return accountsAdapter.addOne(
           state,
-          addAccountDefaults({ account: action.payload.account, accountIdx: state.ids.length })
+          addAccountDefaults({
+            account: action.payload.account,
+            accountIdx: thisWalletsAccounts.length + 1,
+          })
         );
       })
 
