@@ -1,13 +1,21 @@
-import React from 'react';
+import { ReactNode } from 'react';
 
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 import { Flag, ItemLayout } from '@leather.io/ui/native';
 
-import { type Token } from '../../../mocks/tokens.mocks';
 import { Balance } from '../../balance/balance';
 import { Widget, WidgetHeader } from '../components/widget';
+
+export interface Token {
+  availableBalance: Record<string, Money>;
+  ticker: string;
+  fiatBalance: Money;
+  icon: ReactNode;
+  tokenName: string;
+  chain: string;
+}
 
 interface TokensWidgetProps {
   tokens: Token[];
