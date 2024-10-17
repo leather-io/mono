@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
+import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
 import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
 import { AppRoutes } from '@/routes';
@@ -38,7 +38,6 @@ interface ConfigureWalletProps {
   wallet: WalletStore;
 }
 function ConfigureWallet({ wallet }: ConfigureWalletProps) {
-  const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const router = useRouter();
   const addWalletSheetRef = useRef<SheetRef>(null);
@@ -65,9 +64,39 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
   }
 
+  const notifySheetRef = useRef<SheetRef>(null);
+  const [notifySheetData, setNotifySheetData] = useState<NotifyUserSheetData | null>(null);
+
+  function onOpenSheet(option: NotifyUserSheetData) {
+    return () => {
+      setNotifySheetData(option);
+      notifySheetRef.current?.present();
+    };
+  }
+
+  const addressReuseTitle = t({
+    id: 'configure_wallet.address_reuse.cell_title',
+    message: 'Address reuse',
+  });
+  const addressScanRangeTitle = t({
+    id: 'configure_wallet.address_scan_range.cell_title',
+    message: 'Address scan range',
+  });
+  const addressTypesTitle = t({
+    id: 'configure_wallet.address_types.cell_title',
+    message: 'Address types',
+  });
+  const exportXpubTitle = t({
+    id: 'configure_wallet.export_xpub.cell_title',
+    message: 'Export xPub',
+  });
+  const exportKeyTitle = t({
+    id: 'configure_wallet.export_key.cell_title',
+    message: 'Export key',
+  });
   return (
     <>
-      <Box flex={1} justifyContent="space-between" backgroundColor="ink.background-primary">
+      <Box flex={1} backgroundColor="ink.background-primary">
         <ScrollView
           contentContainerStyle={{
             paddingTop: theme.spacing['5'],
@@ -127,47 +156,47 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               content={
                 <>
                   <Cell.Root
-                    title={t({
-                      id: 'configure_wallet.address_reuse.cell_title',
-                      message: 'Address reuse',
-                    })}
+                    title={addressReuseTitle}
                     icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: addressReuseTitle,
+                    })}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t({
-                      id: 'configure_wallet.address_scan_range.cell_title',
-                      message: 'Address scan range',
-                    })}
+                    title={addressScanRangeTitle}
                     icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: addressScanRangeTitle,
+                    })}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t({
-                      id: 'configure_wallet.address_types.cell_title',
-                      message: 'Address types',
-                    })}
+                    title={addressTypesTitle}
                     icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: addressTypesTitle,
+                    })}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t({
-                      id: 'configure_wallet.export_xpub.cell_title',
-                      message: 'Export xPub',
-                    })}
+                    title={exportXpubTitle}
                     icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: exportXpubTitle,
+                    })}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
                   <Cell.Root
-                    title={t({
-                      id: 'configure_wallet.export_key.cell_title',
-                      message: 'Export key',
-                    })}
+                    title={exportKeyTitle}
                     icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: exportKeyTitle,
+                    })}
                   >
                     <Cell.Chevron />
                   </Cell.Root>
@@ -175,25 +204,26 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               }
             />
           </Box>
-        </ScrollView>
-        <Box mb="7">
-          <Divider />
-          <Box px="5" pt="5" style={{ paddingBottom: theme.spacing['5'] + bottom }}>
-            <Text variant="caption01">
-              {t({
-                id: 'configure_wallet.creation_label',
-                message: 'Creation date',
-              })}
-            </Text>
-            <Text variant="caption01" color="ink.text-subdued">
-              {dayjs(wallet.createdOn).format('D MMM YYYY')}
-            </Text>
+          <Box mb="7">
+            <Divider />
+            <Box p="5">
+              <Text variant="caption01">
+                {t({
+                  id: 'configure_wallet.creation_label',
+                  message: 'Creation date',
+                })}
+              </Text>
+              <Text variant="caption01" color="ink.text-subdued">
+                {dayjs(wallet.createdOn).format('D MMM YYYY')}
+              </Text>
+            </Box>
           </Box>
-        </Box>
+        </ScrollView>
       </Box>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={removeWallet} sheetRef={removeWalletSheetRef} />
+      <NotifyUserSheet sheetData={notifySheetData} sheetRef={notifySheetRef} />
     </>
   );
 }
