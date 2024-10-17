@@ -10,13 +10,28 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
+import z from 'zod';
 
-import { accountsSlice } from './accounts/accounts.write';
+import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
 import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.write';
+import { bitcoinKeychainStoreSchema } from './keychains/bitcoin/utils';
 import { stacksKeychainSlice } from './keychains/stacks/stacks-keychains.write';
+import { stacksKeychainStoreSchema } from './keychains/stacks/utils';
 import { settingsSlice } from './settings/settings.write';
+import { settingsSchema } from './settings/utils';
 import { persistConfig } from './storage-persistors';
+import { walletEntitySchema } from './wallets/utils';
 import { walletSlice } from './wallets/wallets.write';
+
+export const stateSchema = z.object({
+  wallets: walletEntitySchema,
+  accounts: accountEntitySchema,
+  keychains: z.object({
+    bitcoin: bitcoinKeychainStoreSchema,
+    stacks: stacksKeychainStoreSchema,
+  }),
+  settings: settingsSchema,
+});
 
 const reducer = combineReducers({
   wallets: walletSlice.reducer,

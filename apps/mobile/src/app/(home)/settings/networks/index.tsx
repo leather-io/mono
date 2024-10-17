@@ -1,5 +1,6 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { defaultNetworkPreferences, useSettings } from '@/store/settings/settings';
+import { useSettings } from '@/store/settings/settings';
+import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 

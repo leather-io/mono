@@ -1,4 +1,4 @@
-import type { Theme } from '@/store/settings/settings';
+import type { Theme } from '@/store/settings/utils';
 
 type ThemeMap<T> = Record<Theme, T>;
 

@@ -1,5 +1,5 @@
-import { AccountStore } from '@/store/accounts/accounts.write';
-import { WalletStore } from '@/store/wallets/wallets.write';
+import { AccountStore } from '@/store/accounts/utils';
+import { WalletStore } from '@/store/wallets/utils';
 import BigNumber from 'bignumber.js';
 
 import { Money } from '@leather.io/models';

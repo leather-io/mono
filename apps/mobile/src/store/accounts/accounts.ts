@@ -1,7 +1,7 @@
 import { AccountId } from '@/models/domain.model';
 
 import { useAccountByIndex } from './accounts.read';
-import { type AccountStore } from './accounts.write';
+import { AccountStore } from './utils';
 
 export function deserializeAccountId(accountId: string) {
   const [fingerprint, accountIndex] = accountId.split('/');

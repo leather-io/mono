@@ -4,25 +4,8 @@ import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit
 import { produce } from 'immer';
 
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
-import { Optional, handleEntityActionWith } from '../utils';
-
-export interface AbstractWalletStore {
-  fingerprint: string;
-  createdOn: string;
-  name: string;
-}
-
-export interface SoftwareWalletStore extends AbstractWalletStore {
-  type: 'software';
-}
-
-export interface LedgerWalletStore extends AbstractWalletStore {
-  type: 'ledger';
-}
-
-export type WalletStore = SoftwareWalletStore | LedgerWalletStore; // Next HardwareWallet;
-
-export type PartialWalletStore = Optional<WalletStore, 'name'>;
+import { handleEntityActionWith } from '../utils';
+import { PartialWalletStore, WalletStore } from './utils';
 
 function addWalletDefaults({
   wallet,

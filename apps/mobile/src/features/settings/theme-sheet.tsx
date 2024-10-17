@@ -1,7 +1,8 @@
 import { RefObject } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { ThemePreference, defaultThemePreferences, useSettings } from '@/store/settings/settings';
+import { useSettings } from '@/store/settings/settings';
+import { ThemePreference, defaultThemePreferences } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 

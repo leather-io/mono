@@ -1,4 +1,4 @@
-import { WalletStore } from '@/store/wallets/wallets.write';
+import { WalletStore } from '@/store/wallets/utils';
 
 import { IconProps } from '@leather.io/ui/native';
 

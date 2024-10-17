@@ -4,7 +4,8 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState } from '..';
 import { initalizeAccount } from './accounts';
-import { AccountStatus, accountsAdapter } from './accounts.write';
+import { accountsAdapter } from './accounts.write';
+import { AccountStatus } from './utils';
 
 const selectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
 

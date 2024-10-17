@@ -1,9 +1,9 @@
 import { WalletId } from '@/models/domain.model';
 import { createAction } from '@reduxjs/toolkit';
 
-import { BitcoinKeychainStore } from './keychains/bitcoin/bitcoin-keychains.write';
-import { StacksKeychainStore } from './keychains/stacks/stacks-keychains.write';
-import { PartialWalletStore } from './wallets/wallets.write';
+import { BitcoinKeychain } from './keychains/bitcoin/utils';
+import { StacksKeychain } from './keychains/stacks/utils';
+import { PartialWalletStore } from './wallets/utils';
 
 export const resetWallet = createAction('global/resetWallet');
 
@@ -15,8 +15,8 @@ export function handleAppResetWithState<T>(state: T) {
 export interface AddWalletAction {
   wallet: PartialWalletStore;
   withKeychains: {
-    bitcoin: BitcoinKeychainStore[];
-    stacks: StacksKeychainStore[];
+    bitcoin: BitcoinKeychain[];
+    stacks: StacksKeychain[];
   };
 }
 export const userAddsWallet = createAction<AddWalletAction>('global/userAddsWallet');
