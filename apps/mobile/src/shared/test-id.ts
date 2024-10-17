@@ -9,6 +9,7 @@ export enum TestId {
   homeAddWalletButton = 'homeAddWalletButton',
   homeCreateWalletCard = 'homeCreateWalletCard',
   homeDeveloperToolsButton = 'homeDeveloperToolsButton',
+  homePrivacyButton = 'homePrivacyButton',
   homeSettingsButton = 'homeSettingsButton',
   restoreWalletContinue = 'restoreWalletContinue',
   restoreWalletSheetButton = 'restoreWalletSheetButton',
