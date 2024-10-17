@@ -202,6 +202,31 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.42.0...@leather.io/mobile-v1.42.1) (2024-10-17)
+
+
+### Bug Fixes
+
+* fonts ([beec4ac](https://github.com/leather-io/mono/commit/beec4ac091f32a26dc3b49b628a25ec35b2688d3))
+* network badge, closes LEA-1531 ([46c1f2d](https://github.com/leather-io/mono/commit/46c1f2dd9e27f5cb83bdb5f12840156c88a247ca))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.14.1
+    * @leather.io/constants bumped to 0.12.4
+    * @leather.io/crypto bumped to 1.6.5
+    * @leather.io/models bumped to 0.18.1
+    * @leather.io/rpc bumped to 2.1.12
+    * @leather.io/stacks bumped to 1.2.2
+    * @leather.io/tokens bumped to 0.9.1
+    * @leather.io/ui bumped to 1.29.1
+    * @leather.io/utils bumped to 0.16.5
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.14.1
+
 ## [1.42.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.41.1...@leather.io/mobile-v1.42.0) (2024-10-17)
 
 

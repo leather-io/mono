@@ -103,6 +103,24 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.29.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.29.0...@leather.io/ui-v1.29.1) (2024-10-17)
+
+
+### Bug Fixes
+
+* fonts ([beec4ac](https://github.com/leather-io/mono/commit/beec4ac091f32a26dc3b49b628a25ec35b2688d3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.9.1
+    * @leather.io/utils bumped to 0.16.5
+  * devDependencies
+    * @leather.io/models bumped to 0.18.1
+    * @leather.io/panda-preset bumped to 0.4.1
+
 ## [1.29.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.28.0...@leather.io/ui-v1.29.0) (2024-10-17)
 
 
