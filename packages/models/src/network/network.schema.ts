@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
-import { networkModes, testnetModes } from './network.model';
+import { bitcoinNetworks, networkModes, testnetModes } from './network.model';
 
 export const bitcoinNetworkModesSchema = z.enum([...networkModes, ...testnetModes]);
+
+export const bitcoinNetworkSchema = z.enum([...bitcoinNetworks]);
 
 export const networkConfigurationSchema = z.object({
   name: z.string(),

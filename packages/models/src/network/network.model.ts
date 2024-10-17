@@ -51,6 +51,21 @@ export type BitcoinNetwork = (typeof bitcoinNetworks)[number];
 export type NetworkModes = (typeof networkModes)[number];
 type BitcoinTestnetModes = (typeof testnetModes)[number];
 
+export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNetworkModes {
+  switch (network) {
+    case 'mainnet':
+      return 'mainnet';
+    case 'testnet3':
+      return 'testnet';
+    case 'testnet4':
+      return 'testnet';
+    case 'regtest':
+      return 'regtest';
+    case 'signet':
+      return 'signet';
+  }
+}
+
 export type BitcoinNetworkModes = NetworkModes | BitcoinTestnetModes;
 
 interface BaseChainConfig {
@@ -109,7 +124,7 @@ const networkTestnet: NetworkConfiguration = {
 };
 
 const networkTestnet4: NetworkConfiguration = {
-  id: WalletDefaultNetworkConfigurationIds.testnet,
+  id: WalletDefaultNetworkConfigurationIds.testnet4,
   name: 'Testnet4',
   chain: {
     stacks: {
