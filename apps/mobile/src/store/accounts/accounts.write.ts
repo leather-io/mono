@@ -6,7 +6,13 @@ import { produce } from 'immer';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychain } from '../keychains/bitcoin/utils';
 import { StacksKeychain } from '../keychains/stacks/utils';
-import { Optional, entitySchema, handleEntityActionWith, makeAccountIdentifer } from '../utils';
+import {
+  Optional,
+  entitySchema,
+  getWalletAccountsByAccountId,
+  handleEntityActionWith,
+  makeAccountIdentifer,
+} from '../utils';
 import { AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
@@ -52,10 +58,7 @@ export const accountsSlice = createSlice({
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
 
-        accountsAdapter.addOne(
-          state,
-          addAccountDefaults({ account: { id }, accountIdx: state.ids.length })
-        );
+        accountsAdapter.addOne(state, addAccountDefaults({ account: { id }, accountIdx: 1 }));
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -65,9 +68,14 @@ export const accountsSlice = createSlice({
       })
 
       .addCase(userAddsAccount, (state, action) => {
+        const thisWalletsAccounts = getWalletAccountsByAccountId(state, action.payload.account.id);
+
         return accountsAdapter.addOne(
           state,
-          addAccountDefaults({ account: action.payload.account, accountIdx: state.ids.length })
+          addAccountDefaults({
+            account: action.payload.account,
+            accountIdx: thisWalletsAccounts.length + 1,
+          })
         );
       })
 

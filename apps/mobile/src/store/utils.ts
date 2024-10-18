@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import z from 'zod';
 
+import { AccountStore } from './accounts/utils';
 import { resetWallet } from './global-action';
 import { RootState, store } from './index';
 import { deleteAllMnemonics } from './storage-persistors';
@@ -45,6 +46,21 @@ export function destructAccountIdentifier(accountId: string) {
   }
 
   return { fingerprint, accountIndex: +accountIndex };
+}
+
+export function getWalletAccountsByAccountId(
+  state: EntityState<AccountStore, string>,
+  accountId: string
+) {
+  const { fingerprint: thisWalletFingerprint } = destructAccountIdentifier(accountId);
+
+  return state.ids.filter(id => {
+    if (state.entities[id]?.id) {
+      const { fingerprint } = destructAccountIdentifier(state.entities[id].id);
+      return fingerprint === thisWalletFingerprint;
+    }
+    return false;
+  });
 }
 
 type AdapterMethod<T> = (state: EntityState<T, string>, args: any) => void;
