@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { isDefined } from '@leather.io/utils';
 
 import { useConfigRunesEnabled } from '../../common/remote-config/remote-config.query';
@@ -12,7 +13,9 @@ export function useRunesEnabled() {
   const runesEnabled = useConfigRunesEnabled();
   const network = useLeatherNetwork();
 
-  return runesEnabled || network.chain.bitcoin.bitcoinNetwork === 'testnet';
+  return (
+    runesEnabled || bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork) === 'testnet'
+  );
 }
 
 export function useRuneTokens(addresses: string[]) {

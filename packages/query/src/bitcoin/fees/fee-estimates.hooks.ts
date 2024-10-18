@@ -13,7 +13,7 @@ export function useAverageBitcoinFeeRates() {
   return useQuery({
     ...createGetBitcoinFeeEstimatesQueryOptions({
       client,
-      network: network.chain.bitcoin.bitcoinNetwork,
+      network: network.chain.bitcoin.mode,
     }),
     select(feeEstimates) {
       if (feeEstimates.every(isRejected)) {

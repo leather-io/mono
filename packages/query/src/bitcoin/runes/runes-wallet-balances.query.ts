@@ -26,7 +26,7 @@ export function createGetRunesWalletBalancesByAddressesQueryOptions({
   limiter,
 }: CreateGetRunesWalletBalancesByAddressesQueryOptionsArgs) {
   return {
-    enabled: !!address && (network.chain.bitcoin.bitcoinNetwork === 'testnet' || runesEnabled),
+    enabled: !!address && (network.chain.bitcoin.mode === 'testnet' || runesEnabled),
     queryKey: [BitcoinQueryPrefixes.GetRunesWalletBalances, address],
     queryFn: () =>
       limiter.add(() => client.BestInSlotApi.getRunesWalletBalances(address), {

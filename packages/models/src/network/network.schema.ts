@@ -13,7 +13,8 @@ export const networkConfigurationSchema = z.object({
     bitcoin: z.object({
       blockchain: z.literal('bitcoin'),
       bitcoinUrl: z.string(),
-      bitcoinNetwork: bitcoinNetworkModesSchema,
+      bitcoinNetwork: bitcoinNetworkSchema,
+      mode: bitcoinNetworkModesSchema,
     }),
     stacks: z.object({
       blockchain: z.literal('stacks'),

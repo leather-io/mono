@@ -17,7 +17,7 @@ export function createGetBitcoinTransactionsByAddressQueryOptions({
 }: CreateGetBitcoinTransactionsByAddressQueryOptionsArgs) {
   return {
     enabled: !!address,
-    queryKey: [BitcoinQueryPrefixes.GetTransactionsByAddress, address],
+    queryKey: [BitcoinQueryPrefixes.GetTransactionsByAddress, client.networkName, address],
     queryFn: async ({ signal }: QueryFunctionContext) =>
       client.addressApi.getTransactionsByAddress(address, signal),
     ...queryOptions,

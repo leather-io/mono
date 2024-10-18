@@ -122,6 +122,7 @@ function TransactionsApi(basePath: string) {
 }
 
 export interface BitcoinClient {
+  networkName: string;
   addressApi: ReturnType<typeof AddressApi>;
   feeEstimatesApi: ReturnType<typeof FeeEstimatesApi>;
   transactionsApi: ReturnType<typeof TransactionsApi>;
@@ -129,12 +130,18 @@ export interface BitcoinClient {
 }
 
 interface BitcoinClientArgs {
+  networkName: string;
   basePath: string;
   bestInSlotPath: string;
 }
 
-export function bitcoinClient({ basePath, bestInSlotPath }: BitcoinClientArgs): BitcoinClient {
+export function bitcoinClient({
+  networkName,
+  basePath,
+  bestInSlotPath,
+}: BitcoinClientArgs): BitcoinClient {
   return {
+    networkName,
     addressApi: AddressApi(basePath),
     feeEstimatesApi: FeeEstimatesApi(),
     transactionsApi: TransactionsApi(basePath),
@@ -145,11 +152,15 @@ export function bitcoinClient({ basePath, bestInSlotPath }: BitcoinClientArgs): 
 export function useBitcoinClient() {
   const network = useLeatherNetwork();
   const bestInSlotPath = whenNetwork(
-    bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.bitcoinNetwork)
+    bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
   )({
     mainnet: BESTINSLOT_API_BASE_URL_MAINNET,
     testnet: BESTINSLOT_API_BASE_URL_TESTNET,
   });
 
-  return bitcoinClient({ basePath: network.chain.bitcoin.bitcoinUrl, bestInSlotPath });
+  return bitcoinClient({
+    networkName: network.chain.bitcoin.bitcoinNetwork,
+    basePath: network.chain.bitcoin.bitcoinUrl,
+    bestInSlotPath,
+  });
 }
