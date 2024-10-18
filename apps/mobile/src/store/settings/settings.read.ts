@@ -54,6 +54,8 @@ export const selectSecurityLevelPreference = createSelector(
 
 export const selectThemePreference = createSelector(selectSettings, state => state.themePreference);
 
+export const selectLastUnlocked = createSelector(selectSettings, state => state.lastUnlocked);
+
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';
