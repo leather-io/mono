@@ -33,7 +33,7 @@ export function useBestInSlotGetInscriptionsInfiniteQuery({
           const address = getTaprootAddress({
             index: i,
             keychain: taprootKeychain,
-            network: network.chain.bitcoin.bitcoinNetwork,
+            network: network.chain.bitcoin.mode,
           });
           acc[address] = i;
           return acc;
@@ -41,7 +41,7 @@ export function useBestInSlotGetInscriptionsInfiniteQuery({
         {}
       );
     },
-    [taprootKeychain, network.chain.bitcoin.bitcoinNetwork]
+    [taprootKeychain, network.chain.bitcoin.mode]
   );
 
   const query = useInfiniteQuery({

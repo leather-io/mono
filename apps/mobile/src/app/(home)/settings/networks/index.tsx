@@ -23,7 +23,7 @@ function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
     case WalletDefaultNetworkConfigurationIds.mainnet:
       return <GlobeIcon />;
-    case WalletDefaultNetworkConfigurationIds.testnet:
+    case WalletDefaultNetworkConfigurationIds.testnet4:
       return <TestTubeIcon />;
     case WalletDefaultNetworkConfigurationIds.signet:
       return <PlaygroundFormsIcon />;

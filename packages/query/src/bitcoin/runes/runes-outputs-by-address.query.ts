@@ -53,7 +53,7 @@ export function useGetRunesOutputsByAddressQuery(address: string) {
       address,
       client,
       limiter,
-      network: network.chain.bitcoin.bitcoinNetwork,
+      network: network.chain.bitcoin.mode,
       runesEnabled,
     })
   );

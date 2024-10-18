@@ -75,7 +75,8 @@ interface BaseChainConfig {
 export interface BitcoinChainConfig extends BaseChainConfig {
   blockchain: 'bitcoin';
   bitcoinUrl: string;
-  bitcoinNetwork: BitcoinNetworkModes;
+  bitcoinNetwork: BitcoinNetwork;
+  mode: BitcoinNetworkModes;
 }
 
 export interface StacksChainConfig extends BaseChainConfig {
@@ -101,6 +102,7 @@ const networkMainnet: NetworkConfiguration = {
     bitcoin: {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'mainnet',
+      mode: 'mainnet',
       bitcoinUrl: BITCOIN_API_BASE_URL_MAINNET,
     },
   },
@@ -117,7 +119,8 @@ const networkTestnet: NetworkConfiguration = {
     },
     bitcoin: {
       blockchain: 'bitcoin',
-      bitcoinNetwork: 'testnet',
+      bitcoinNetwork: 'testnet3',
+      mode: 'testnet',
       bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET3,
     },
   },
@@ -134,7 +137,8 @@ const networkTestnet4: NetworkConfiguration = {
     },
     bitcoin: {
       blockchain: 'bitcoin',
-      bitcoinNetwork: 'testnet',
+      bitcoinNetwork: 'testnet4',
+      mode: 'testnet',
       bitcoinUrl: BITCOIN_API_BASE_URL_TESTNET4,
     },
   },
@@ -152,6 +156,7 @@ const networkSignet: NetworkConfiguration = {
     bitcoin: {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'signet',
+      mode: 'signet',
       bitcoinUrl: BITCOIN_API_BASE_URL_SIGNET,
     },
   },
@@ -169,6 +174,7 @@ const networkSbtcDevenv: NetworkConfiguration = {
     bitcoin: {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'regtest',
+      mode: 'regtest',
       bitcoinUrl: 'http://localhost:8999/api',
     },
   },
@@ -186,6 +192,7 @@ const networkDevnet: NetworkConfiguration = {
     bitcoin: {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'regtest',
+      mode: 'regtest',
       bitcoinUrl: 'http://localhost:18443',
     },
   },

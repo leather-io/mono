@@ -1,7 +1,7 @@
 import { HDKey } from '@scure/bip32';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { getNativeSegwitAddressIndexDerivationPath, getTaprootAddress } from '@leather.io/bitcoin';
+import { getTaprootAddress, makeNativeSegwitAddressIndexDerivationPath } from '@leather.io/bitcoin';
 import { NetworkConfiguration } from '@leather.io/models';
 import { createCounter, oneWeekInMs } from '@leather.io/utils';
 
@@ -25,7 +25,7 @@ export function createGetUtxosByAddressQueryOptions({
 }: CreateGetUtxosByAddressQueryOptionsArgs) {
   return {
     enabled: !!address,
-    queryKey: [BitcoinQueryPrefixes.GetUtxosByAddress, address],
+    queryKey: [BitcoinQueryPrefixes.GetUtxosByAddress, client.networkName, address],
     queryFn: ({ signal }: QueryFunctionContext) =>
       client.addressApi.getUtxosByAddress(address, signal),
     ...queryOptions,
@@ -52,7 +52,12 @@ export function createGetTaprootUtxosByAddressQueryOptions({
   taprootKeychain,
 }: CreateGetTaprootUtxosByAddressQueryOptionsArgs) {
   return {
-    queryKey: [BitcoinQueryPrefixes.GetTaprootUtxosByAddress, currentAccountIndex, network.id],
+    queryKey: [
+      BitcoinQueryPrefixes.GetTaprootUtxosByAddress,
+      client.networkName,
+      currentAccountIndex,
+      network.id,
+    ],
     queryFn: async () => {
       let currentNumberOfAddressesWithoutUtxos = 0;
       const addressIndexCounter = createCounter(0);
@@ -61,7 +66,7 @@ export function createGetTaprootUtxosByAddressQueryOptions({
         const address = getTaprootAddress({
           index: addressIndexCounter.getValue(),
           keychain: taprootKeychain,
-          network: network.chain.bitcoin.bitcoinNetwork,
+          network: network.chain.bitcoin.mode,
         });
 
         const unspentTransactions = await client.addressApi.getUtxosByAddress(address);
@@ -79,8 +84,8 @@ export function createGetTaprootUtxosByAddressQueryOptions({
               // adds addresss index of which utxo belongs
               ...utxo,
               addressIndex,
-              derivationPath: getNativeSegwitAddressIndexDerivationPath(
-                network.chain.bitcoin.bitcoinNetwork,
+              derivationPath: makeNativeSegwitAddressIndexDerivationPath(
+                network.chain.bitcoin.mode,
                 currentAccountIndex,
                 addressIndex
               ),

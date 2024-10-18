@@ -19,7 +19,7 @@ import {
   initializeBitcoinAccountKeychainFromDescriptor,
 } from '@leather.io/bitcoin';
 import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 
 import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../keychains';
 import { bitcoinKeychainAdapter } from './bitcoin-keychains.write';
@@ -56,7 +56,10 @@ const bitcoinKeychains = createSelector(
   bitcoinKeychainSelectors.selectAll,
   selectNetworkPreference,
   (keychains, network) =>
-    deriveBitcoinPayersFromStore(keychains, network.chain.bitcoin.bitcoinNetwork)
+    deriveBitcoinPayersFromStore(
+      keychains,
+      bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork)
+    )
 );
 
 interface SplitByPaymentTypesReturn {
