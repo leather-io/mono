@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
 import { InputState, TextInput } from '@/components/text-input';
-import { useCreateWallet } from '@/hooks/create-wallet';
+import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { Trans, t } from '@lingui/macro';

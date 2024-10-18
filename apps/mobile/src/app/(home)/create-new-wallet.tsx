@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
-import { useCreateWallet } from '@/hooks/create-wallet';
+import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';

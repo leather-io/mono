@@ -2,12 +2,17 @@ import { t } from '@lingui/macro';
 
 import { Cell, PlaceholderIcon } from '@leather.io/ui/native';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { SettingsScreenLayout } from '../settings-screen.layout';
 
 // TODO: Hook up to notifications service when available or use Expo?
 export default function SettingsNotificationsScreen() {
   return (
-    <SettingsScreenLayout>
+    <SettingsScreenLayout
+      title={t({
+        id: 'notifications.header_title',
+        message: 'Notifications',
+      })}
+    >
       <Cell.Root
         title={t({
           id: 'notifications.push.cell_title',

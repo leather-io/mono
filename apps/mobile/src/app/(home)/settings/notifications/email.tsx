@@ -5,7 +5,7 @@ import { t } from '@lingui/macro';
 
 import { Cell, EmailIcon, SheetRef } from '@leather.io/ui/native';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { SettingsScreenLayout } from '../settings-screen.layout';
 
 // TODO: Hook up to email service when available
 export default function SettingsNotificationsEmailScreen() {
@@ -13,7 +13,12 @@ export default function SettingsNotificationsEmailScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
+      <SettingsScreenLayout
+        title={t({
+          id: 'notifications.header_title',
+          message: 'Notifications',
+        })}
+      >
         <Cell.Root
           title={t({
             id: 'notifications.email.cell_title',

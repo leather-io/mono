@@ -19,7 +19,7 @@ import {
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { SettingsScreenLayout } from '../settings-screen.layout';
 
 export default function SettingsDisplayScreen() {
   const themeSheetRef = useRef<SheetRef>(null);
@@ -42,7 +42,12 @@ export default function SettingsDisplayScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
+      <SettingsScreenLayout
+        title={t({
+          id: 'display.header_title',
+          message: 'Display',
+        })}
+      >
         <Cell.Root
           title={t({
             id: 'display.theme.cell_title',
