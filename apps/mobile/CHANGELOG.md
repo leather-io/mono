@@ -202,6 +202,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.43.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.43.0...@leather.io/mobile-v1.43.1) (2024-10-18)
+
+
+### Bug Fixes
+
+* numbering of wallets and accounts ([713bdbe](https://github.com/leather-io/mono/commit/713bdbe413caa252ba372a2021deb24677275c7b))
+
 ## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.42.1...@leather.io/mobile-v1.43.0) (2024-10-18)
 
 
