@@ -46,7 +46,7 @@ export const walletSlice = createSlice({
       .addCase(userAddsWallet, (state, action) =>
         walletAdapter.addOne(
           state,
-          addWalletDefaults({ wallet: action.payload.wallet, walletIdx: state.ids.length })
+          addWalletDefaults({ wallet: action.payload.wallet, walletIdx: state.ids.length + 1 })
         )
       )
 
