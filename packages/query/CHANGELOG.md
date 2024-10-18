@@ -169,6 +169,24 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.15.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.15.1...@leather.io/query-v2.15.2) (2024-10-18)
+
+
+### Bug Fixes
+
+* **models:** testnet4 schema updates ([e607680](https://github.com/leather-io/mono/commit/e60768079308999182b8d14a542ea8e2e206a0a2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.14.2
+    * @leather.io/constants bumped to 0.12.5
+    * @leather.io/models bumped to 0.18.2
+    * @leather.io/rpc bumped to 2.1.13
+    * @leather.io/utils bumped to 0.16.6
+
 ## [2.15.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.14.1...@leather.io/query-v2.15.0) (2024-10-17)
 
 

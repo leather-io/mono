@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.18.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.1...@leather.io/models-v0.18.2) (2024-10-18)
+
+
+### Bug Fixes
+
+* **models:** testnet4 schema updates ([e607680](https://github.com/leather-io/mono/commit/e60768079308999182b8d14a542ea8e2e206a0a2))
+
 ## [0.18.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.0...@leather.io/models-v0.18.1) (2024-10-17)
 
 

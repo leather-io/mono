@@ -103,6 +103,22 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.30.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.29.1...@leather.io/ui-v1.30.0) (2024-10-18)
+
+
+### Features
+
+* header privacy toggle, closes LEA-611 ([7680a53](https://github.com/leather-io/mono/commit/7680a53745049917db7f144f054d5b0aaa57bdd2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.6
+  * devDependencies
+    * @leather.io/models bumped to 0.18.2
+
 ## [1.29.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.29.0...@leather.io/ui-v1.29.1) (2024-10-17)
 
 
