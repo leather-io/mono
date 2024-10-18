@@ -1,5 +1,8 @@
+import { useGetTokensList } from '@/components/widgets/tokens/use-get-tokens-list';
+import { useTotalBalance } from '@/hooks/balances/use-total-balance';
 import { MockedAccount } from '@/mocks/account.mocks';
 import { AccountLoader } from '@/store/accounts/accounts';
+import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
@@ -12,11 +15,16 @@ const configureAccountParamsSchema = z.object({
 
 export default function AccountScreen() {
   const params = useLocalSearchParams();
+
   const { fingerprint, account: accountIndex } = configureAccountParamsSchema.parse(params);
+  const account = useAccountByIndex(fingerprint, accountIndex);
+
+  const { totalBalance } = useTotalBalance([account as MockedAccount]);
+  const tokens = useGetTokensList([account as MockedAccount]);
 
   return (
     <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
-      {account => <AccountLayout account={account as MockedAccount} />}
+      {account => <AccountLayout balance={totalBalance} account={account} tokens={tokens} />}
     </AccountLoader>
   );
 }

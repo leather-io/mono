@@ -1,17 +1,15 @@
 import { useRef } from 'react';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { getAvatarIcon } from '@/components/avatar-icon';
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
-import { getMockAccounts } from '@/mocks/account.mocks';
+import { MockedAccount, getMockAccounts } from '@/mocks/account.mocks';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
-import { AccountStore } from '@/store/accounts/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { useRouter } from 'expo-router';
 
+import { Money } from '@leather.io/models';
 import { Box, SheetRef } from '@leather.io/ui/native';
 
 import { Balance } from '../../balance/balance';
@@ -22,22 +20,23 @@ import { CreateWalletCard } from './components/cards/create-wallet-card';
 import { AddAccountSheet } from './sheets/add-account-sheet';
 
 interface AccountsWidgetProps {
-  accounts: AccountStore[];
+  accounts: MockedAccount[];
   wallets: WalletStore[];
+  totalBalance: Money;
 }
 
-export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
+export function AccountsWidget({ accounts, wallets, totalBalance }: AccountsWidgetProps) {
   const sheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const { i18n } = useLingui();
-
   const router = useRouter();
 
   const hasWallets = wallets.length > 0;
   const hasAccounts = accounts.length > 0;
 
-  const { accounts: mockAccounts, balance } = getMockAccounts(accounts);
+  if (!hasAccounts) return null;
+
+  const { accounts: mockAccounts } = getMockAccounts(accounts);
 
   return (
     <>
@@ -53,21 +52,15 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
               sheetRef={sheetRef}
               sheet={<AccountSelectorSheet sheetRef={sheetRef} />}
             />
-            {hasWallets && <Balance balance={balance} variant="heading03" />}
+            {hasWallets && <Balance balance={totalBalance} variant="heading03" />}
           </Box>
         }
       >
+        {/* FIXME  stop using mock accounts and use the real ones. Should I add fingerprint and account index to the AccountStore type?? */}
         {mockAccounts.map(account => (
           <AccountCard
-            type={account.type}
-            Icon={getAvatarIcon(account.icon)}
+            account={account}
             key={account.id}
-            label={<Balance balance={account.balance} />}
-            caption={i18n._({
-              id: 'accounts.account.cell_caption',
-              message: '{name}',
-              values: { name: account.name || '' },
-            })}
             testID={TestId.homeAccountCard}
             onPress={() => {
               router.navigate({
