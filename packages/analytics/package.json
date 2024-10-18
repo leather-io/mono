@@ -22,7 +22,7 @@
   },
   "exports": {
     ".": {
-      "types": "./index.web.d.ts",
+      "types": "./index.d.ts",
       "import": "./index.js",
       "require": "./index.js"
     }
@@ -39,8 +39,7 @@
     "vitest": "2.0.5"
   },
   "files": [
-    "dist-web",
-    "dist-native"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
