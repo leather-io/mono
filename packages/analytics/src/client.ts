@@ -20,6 +20,9 @@ export function AnalyticsClient<T extends ExternalAnalyticsClientInterface>(
     },
 
     async untypedTrack(event: string, properties?: Json) {
+      if (event.match(/^[a-zA-Z0-9\s][a-zA-Z0-9\s]*$/)) {
+        throw new Error('Event must be snake_case');
+      }
       return client.track(event as any, { ...properties, ...options.defaultProperties });
     },
 

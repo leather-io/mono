@@ -12,7 +12,7 @@ export interface ExternalAnalyticsClientInterface {
 export interface AnalyticsClientConfig {
   writeKey: string;
   client: ExternalAnalyticsClientInterface;
-  defaultProperties: DefaultProperties;
+  defaultProperties?: DefaultProperties;
   defaultTraits?: Record<string, Json>;
 }
 
