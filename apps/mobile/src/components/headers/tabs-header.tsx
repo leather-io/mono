@@ -7,13 +7,13 @@ interface TabsHeaderProps {
   onGoBack(): void;
   rightElement?: React.ReactNode;
   tabs: Tab[];
-  title: string;
+  title?: string;
 }
 export function TabsHeader({ onGoBack, rightElement, tabs, title }: TabsHeaderProps) {
   return (
     <HeaderLayout
       leftElement={<HeaderBackButton onPress={onGoBack} />}
-      centerElement={<HeaderTitle title={title} />}
+      centerElement={title ? <HeaderTitle title={title} /> : null}
       rightElement={rightElement}
       bottomElement={<TabBar tabs={tabs} />}
     />

@@ -76,73 +76,13 @@ export default function StackLayout() {
       />
 
       {/* Settings */}
-      <Stack.Screen name="settings/index" options={{ header: () => <SettingsHeader /> }} />
-      <Stack.Screen
-        name="settings/display/index"
-        options={{
-          header: () => (
-            <SettingsHeader
-              title={t({
-                id: 'display.header_title',
-                message: 'Display',
-              })}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="settings/security/index"
-        options={{
-          header: () => (
-            <SettingsHeader
-              title={t({
-                id: 'security.header_title',
-                message: 'Security',
-              })}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="settings/networks/index"
-        options={{
-          header: () => (
-            <SettingsHeader
-              title={t({
-                id: 'networks.header_title',
-                message: 'Networks',
-              })}
-            />
-          ),
-        }}
-      />
+      <Stack.Screen name="settings/index" options={{ headerShown: false }} />
+      <Stack.Screen name="settings/display/index" options={{ headerShown: false }} />
+      <Stack.Screen name="settings/security/index" options={{ headerShown: false }} />
+      <Stack.Screen name="settings/networks/index" options={{ headerShown: false }} />
       <Stack.Screen name="settings/notifications" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="settings/help/index"
-        options={{
-          header: () => (
-            <SettingsHeader
-              title={t({
-                id: 'help.header_title',
-                message: 'Help',
-              })}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="settings/wallet/index"
-        options={{
-          header: () => (
-            <SettingsHeader
-              title={t({
-                id: 'wallets.header_title',
-                message: 'Wallets',
-              })}
-            />
-          ),
-        }}
-      />
+      <Stack.Screen name="settings/help/index" options={{ headerShown: false }} />
+      <Stack.Screen name="settings/wallet/index" options={{ headerShown: false }} />
       <Stack.Screen
         name="settings/wallet/hidden-accounts"
         options={{
@@ -166,9 +106,7 @@ export default function StackLayout() {
       />
       <Stack.Screen
         name="settings/wallet/configure/[wallet]/index"
-        options={{
-          header: props => <SettingsHeader title={props.options.title} />,
-        }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="settings/wallet/configure/[wallet]/view-secret-key"

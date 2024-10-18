@@ -17,7 +17,7 @@ import {
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { AnimatedSettingsScreenLayout } from '../animated-settings-screen.layout';
 
 function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
@@ -49,7 +49,12 @@ export default function SettingsNetworksScreen() {
   }
 
   return (
-    <SettingsScreenLayout>
+    <AnimatedSettingsScreenLayout
+      title={t({
+        id: 'networks.header_title',
+        message: 'Networks',
+      })}
+    >
       {defaultNetworkPreferences.map(network => (
         <Cell.Root
           icon={getNetworkIcon(network)}
@@ -75,6 +80,6 @@ export default function SettingsNetworksScreen() {
           <Cell.Radio isSelected={settings.networkPreference.id === network} />
         </Cell.Root>
       ))}
-    </SettingsScreenLayout>
+    </AnimatedSettingsScreenLayout>
   );
 }

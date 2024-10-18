@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SkipSecureWalletSheet } from '@/components/secure-your-wallet/skip-secure-wallet-sheet';
-import { useCreateWallet } from '@/hooks/create-wallet';
+import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { Trans, t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 

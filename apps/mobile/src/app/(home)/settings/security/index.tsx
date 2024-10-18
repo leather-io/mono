@@ -8,7 +8,7 @@ import { t } from '@lingui/macro';
 
 import { Cell, CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { AnimatedSettingsScreenLayout } from '../animated-settings-screen.layout';
 
 function getCaption(securityLevelPreference: SecurityLevelPreference) {
   switch (securityLevelPreference) {
@@ -34,8 +34,14 @@ export default function SettingsSecurityScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
+      <AnimatedSettingsScreenLayout
+        title={t({
+          id: 'security.header_title',
+          message: 'Security',
+        })}
+      >
         <Cell.Root
+          py="3"
           title={t({
             id: 'security.analytics.cell_title',
             message: 'Analytics',
@@ -59,6 +65,7 @@ export default function SettingsSecurityScreen() {
           <Cell.Chevron />
         </Cell.Root>
         <Cell.Root
+          py="3"
           title={t({
             id: 'security.app_auth.cell_title',
             message: 'App authentication',
@@ -71,7 +78,7 @@ export default function SettingsSecurityScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-      </SettingsScreenLayout>
+      </AnimatedSettingsScreenLayout>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />
       <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />
     </>

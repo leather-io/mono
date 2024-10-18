@@ -9,8 +9,6 @@ interface AccordionProps {
   label: string;
   testID?: string;
 }
-
-// TODO: This should use the Cell component?
 export function Accordion({ content, label, testID }: AccordionProps) {
   const [showMore, setShowMore] = useState(false);
   const theme = useTheme<Theme>();
@@ -20,6 +18,7 @@ export function Accordion({ content, label, testID }: AccordionProps) {
         flexDirection="row"
         justifyContent="space-between"
         onPress={() => setShowMore(!showMore)}
+        py="3"
         testID={testID}
       >
         <Text variant="label02">{label}</Text>

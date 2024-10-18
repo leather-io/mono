@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useAppState } from '@/hooks/app-state';
+import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
 import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';

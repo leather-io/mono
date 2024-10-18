@@ -19,7 +19,7 @@ import {
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { AnimatedSettingsScreenLayout } from '../animated-settings-screen.layout';
 
 export default function SettingsDisplayScreen() {
   const themeSheetRef = useRef<SheetRef>(null);
@@ -42,8 +42,14 @@ export default function SettingsDisplayScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
+      <AnimatedSettingsScreenLayout
+        title={t({
+          id: 'display.header_title',
+          message: 'Display',
+        })}
+      >
         <Cell.Root
+          py="3"
           title={t({
             id: 'display.theme.cell_title',
             message: 'Theme',
@@ -60,8 +66,8 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
+          py="3"
           title={t({
             id: 'display.bitcoin_unit.cell_title',
             message: 'Bitcoin unit',
@@ -78,8 +84,8 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
+          py="3"
           title={t({
             id: 'display.conversion_unit.cell_title',
             message: 'Conversion unit',
@@ -96,8 +102,8 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
+          py="3"
           title={t({
             id: 'display.account_identifier.cell_title',
             message: 'Account identifier',
@@ -114,8 +120,8 @@ export default function SettingsDisplayScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-
         <Cell.Root
+          py="3"
           title={t({
             id: 'display.privacy_mode.cell_title',
             message: 'Hide home balance',
@@ -132,7 +138,7 @@ export default function SettingsDisplayScreen() {
             value={privacyModePreference === 'hidden'}
           />
         </Cell.Root>
-      </SettingsScreenLayout>
+      </AnimatedSettingsScreenLayout>
       <ThemeSheet sheetRef={themeSheetRef} />
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />

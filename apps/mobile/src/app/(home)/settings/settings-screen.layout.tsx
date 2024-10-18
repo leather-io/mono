@@ -1,27 +1,13 @@
-import { ScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { HasChildren } from '@/utils/types';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box } from '@leather.io/ui/native';
 
-export default function SettingsScreenLayout({ children }: HasChildren) {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
-
+export function SettingsScreenLayout({ children }: HasChildren) {
   return (
-    <Box backgroundColor="ink.background-primary" flex={1}>
-      <ScrollView
-        contentContainerStyle={{
-          gap: theme.spacing[5],
-          paddingBottom: theme.spacing['5'] + bottom,
-          paddingHorizontal: theme.spacing['5'],
-          paddingTop: theme.spacing['5'],
-        }}
-      >
+    <Box bg="ink.background-primary" flex={1}>
+      <Box flex={1} gap="3" paddingHorizontal="5" paddingTop="5">
         {children}
-      </ScrollView>
+      </Box>
     </Box>
   );
 }

@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 
 import { Cell, PlaceholderIcon } from '@leather.io/ui/native';
 
-import SettingsScreenLayout from '../settings-screen.layout';
+import { SettingsScreenLayout } from '../settings-screen.layout';
 
 // TODO: Hook up to notifications service when available or use Expo?
 export default function SettingsNotificationsScreen() {
