@@ -18,15 +18,16 @@ import { Box, Button, Theme } from '@leather.io/ui/native';
 import { LeatherLockedSplash } from '../animations/leather-locked-splash';
 import { LeatherSplash } from '../animations/leather-splash';
 
-const DEFAULT_ANIMATION_FINISHED = __DEV__;
-type AuthState = 'started' | 'failed' | 'passedOnFirst' | 'passedAfterwards';
+const DEFAULT_ANIMATION_FINISHED = false;
+const UNLOCK_TIMEOUT = 60 * 1000;
+type AuthState = 'cold-start' | 'started' | 'failed' | 'passedOnFirst' | 'passedAfterwards';
 
 export function SplashScreenGuard({ children }: HasChildren) {
   const [animationFinished, setAnimationFinished] = useState(DEFAULT_ANIMATION_FINISHED);
   const splashRef = useRef<LottieView>(null);
   const lockedSplashRef = useRef<LottieView>(null);
-  const { securityLevelPreference, whenTheme } = useSettings();
-  const [authState, setAuthState] = useState<AuthState>('started');
+  const { securityLevelPreference, whenTheme, changeLastUnlocked, lastUnlocked } = useSettings();
+  const [authState, setAuthState] = useState<AuthState>('cold-start');
   const insets = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const colorScheme = useColorScheme();
@@ -41,9 +42,22 @@ export function SplashScreenGuard({ children }: HasChildren) {
     void SplashScreen.hideAsync();
   }, [colorScheme, theme.colors]);
 
+  const checkUnlockTime = useCallback(() => {
+    return !!lastUnlocked && lastUnlocked > +new Date() - UNLOCK_TIMEOUT;
+  }, [lastUnlocked]);
+
   const tryAuthentication = useCallback(
     async ({ firstTry }: { firstTry: boolean }) => {
+      // if in insecure mode - just proceed with a splash
       if (securityLevelPreference !== 'secure') {
+        playSplash();
+        return;
+      }
+      // if in secure mode, skip checks only if unlock time is not exceeding the timeout
+      // and this is not a cold start of the app
+      if (securityLevelPreference === 'secure' && authState !== 'cold-start' && checkUnlockTime()) {
+        setAuthState('passedOnFirst');
+        setAnimationFinished(true);
         playSplash();
         return;
       }
@@ -60,7 +74,7 @@ export function SplashScreenGuard({ children }: HasChildren) {
         setAuthState('failed');
       }
     },
-    [securityLevelPreference]
+    [securityLevelPreference, checkUnlockTime, authState]
   );
 
   const onAppForeground = useCallback(() => {
@@ -71,8 +85,9 @@ export function SplashScreenGuard({ children }: HasChildren) {
     if (securityLevelPreference === 'secure') {
       setAnimationFinished(false);
       setAuthState('started');
+      changeLastUnlocked(+new Date());
     }
-  }, [securityLevelPreference]);
+  }, [securityLevelPreference, changeLastUnlocked]);
 
   useAppState({
     onAppForeground,
@@ -95,7 +110,7 @@ export function SplashScreenGuard({ children }: HasChildren) {
   }
 
   const splash =
-    authState === 'started' || authState === 'passedOnFirst' ? (
+    authState === 'cold-start' || authState === 'started' || authState === 'passedOnFirst' ? (
       <LeatherSplash
         ref={splashRef}
         onAnimationEnd={() => setAnimationFinished(true)}
