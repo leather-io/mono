@@ -44,7 +44,7 @@ export function destructAccountIdentifier(accountId: string) {
   ) {
     throw new Error('Incorrect accountId is passed to destructAccountIdentifier function');
   }
-
+  // make sure this finds the right account as now using +accountIndex
   return { fingerprint, accountIndex: +accountIndex };
 }
 
