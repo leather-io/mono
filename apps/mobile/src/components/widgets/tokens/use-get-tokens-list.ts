@@ -1,10 +1,10 @@
 import { useTotalBalance } from '@/hooks/balances/use-total-balance';
-import { MockedAccount } from '@/mocks/account.mocks';
+import { AccountStore } from '@/store/accounts/utils';
 import { t } from '@lingui/macro';
 
 import { Token } from './types';
 
-export function useGetTokensList(accounts: MockedAccount[]): Token[] {
+export function useGetTokensList(accounts: AccountStore[]): Token[] {
   const { btcBalance, btcBalanceUsd, stxBalance, stxBalanceUsd } = useTotalBalance(accounts);
   return [
     {

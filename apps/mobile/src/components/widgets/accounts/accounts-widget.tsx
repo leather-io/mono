@@ -2,9 +2,9 @@ import { useRef } from 'react';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
-import { MockedAccount, getMockAccounts } from '@/mocks/account.mocks';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
+import { AccountStore } from '@/store/accounts/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
@@ -20,7 +20,7 @@ import { CreateWalletCard } from './components/cards/create-wallet-card';
 import { AddAccountSheet } from './sheets/add-account-sheet';
 
 interface AccountsWidgetProps {
-  accounts: MockedAccount[];
+  accounts: AccountStore[];
   wallets: WalletStore[];
   totalBalance: Money;
 }
@@ -35,8 +35,6 @@ export function AccountsWidget({ accounts, wallets, totalBalance }: AccountsWidg
   const hasAccounts = accounts.length > 0;
 
   if (!hasAccounts) return null;
-
-  const { accounts: mockAccounts } = getMockAccounts(accounts);
 
   return (
     <>
@@ -56,8 +54,7 @@ export function AccountsWidget({ accounts, wallets, totalBalance }: AccountsWidg
           </Box>
         }
       >
-        {/* FIXME  stop using mock accounts and use the real ones. Should I add fingerprint and account index to the AccountStore type?? */}
-        {mockAccounts.map(account => (
+        {accounts.map(account => (
           <AccountCard
             account={account}
             key={account.id}
@@ -66,8 +63,7 @@ export function AccountsWidget({ accounts, wallets, totalBalance }: AccountsWidg
               router.navigate({
                 pathname: AppRoutes.Account,
                 params: {
-                  fingerprint: account.fingerprint,
-                  account: account.accountIndex,
+                  accountId: account.id,
                 },
               });
             }}

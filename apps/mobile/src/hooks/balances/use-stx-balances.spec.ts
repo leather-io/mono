@@ -1,4 +1,4 @@
-import { MockedAccount } from '@/mocks/account.mocks';
+import { AccountStore } from '@/store/accounts/utils';
 
 import { createMoney } from '@leather.io/utils';
 
@@ -8,10 +8,10 @@ import { useStxBalance } from './use-stx-balances';
 jest.mock('@leather.io/query');
 
 describe('useStxBalance', () => {
-  const mockAccounts: MockedAccount[] = [
-    { id: '1', name: 'Account 1' },
-    { id: '2', name: 'Account 2' },
-  ] as MockedAccount[];
+  const mockAccounts: AccountStore[] = [
+    { id: '1', name: 'Account 1', icon: 'icon', status: 'active' },
+    { id: '2', name: 'Account 2', icon: 'icon', status: 'active' },
+  ];
 
   beforeEach(() => {
     jest.resetAllMocks();

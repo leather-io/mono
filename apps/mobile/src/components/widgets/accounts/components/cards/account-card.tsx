@@ -1,13 +1,13 @@
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { Balance } from '@/components/balance/balance';
 import { useTotalBalance } from '@/hooks/balances/use-total-balance';
-import { MockedAccount } from '@/mocks/account.mocks';
+import { AccountStore } from '@/store/accounts/utils';
 import { useLingui } from '@lingui/react';
 
 import { AccountCardLayout } from './account-card.layout';
 
 export interface AccountCardProps {
-  account: MockedAccount;
+  account: AccountStore;
   onPress(): void;
   testID?: string;
 }

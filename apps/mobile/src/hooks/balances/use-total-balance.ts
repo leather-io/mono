@@ -1,4 +1,4 @@
-import { MockedAccount } from '@/mocks/account.mocks';
+import { AccountStore } from '@/store/accounts/utils';
 
 import { Money } from '@leather.io/models';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@leather.io/query';
@@ -13,7 +13,7 @@ interface TotalBalance {
   stxBalanceUsd: Money;
   totalBalance: Money;
 }
-export function useTotalBalance(accounts: MockedAccount[]): TotalBalance {
+export function useTotalBalance(accounts: AccountStore[]): TotalBalance {
   const { stxBalance } = useStxBalance(accounts);
   // FIXME - add real BTC balance
   const btcBalance = createMoney(0, 'BTC');
