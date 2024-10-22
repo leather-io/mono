@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getAvatarIcon } from '@/components/avatar-icon';
+import { useToastContext } from '@/components/toast/toast-context';
 import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameSheet } from '@/components/wallet-settings/account-name-sheet';
 import { AccountId } from '@/models/domain.model';
@@ -39,11 +40,23 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   const router = useRouter();
   const { i18n } = useLingui();
 
+  const { displayToast } = useToastContext();
+
   useEffect(() => {
     navigation.setOptions({ title: account.name });
   }, [account.name, navigation]);
 
   function setName(name: string) {
+    if (name === '') {
+      displayToast({
+        title: t({
+          id: 'configure_account.account_name.empty_name_error',
+          message: 'Account name cannot be empty',
+        }),
+        type: 'error',
+      });
+      return { success: false };
+    }
     dispatch(
       userRenamesAccount({
         accountId: makeAccountIdentifer(fingerprint, accountIndex),
@@ -51,6 +64,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
       })
     );
     navigation.setOptions({ title: name });
+    return { success: true };
   }
 
   function toggleHideAccount() {
