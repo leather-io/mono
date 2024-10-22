@@ -19,6 +19,7 @@ import {
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
   selectEmailAddressPreference,
+  selectLastActive,
   selectNetworkPreference,
   selectPrivacyModePreference,
   selectSecurityLevelPreference,
@@ -30,12 +31,14 @@ import {
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
+  userChangedLastActive,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
 } from './settings.write';
 import {
+  LastActiveTimestamp,
   PrivacyModePreference,
   SecurityLevelPreference,
   SettingsState,
@@ -53,6 +56,7 @@ export const initialState: SettingsState = {
   privacyModePreference: 'visible',
   securityLevelPreference: 'not-selected',
   themePreference: 'system',
+  lastActive: null,
 };
 
 export function useSettings() {
@@ -68,6 +72,7 @@ export function useSettings() {
   const networkPreference = useSelector(selectNetworkPreference);
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
   const themePreference = useSelector(selectThemePreference);
+  const lastActive = useSelector(selectLastActive);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -83,6 +88,7 @@ export function useSettings() {
     themeDerivedFromThemePreference,
     themePreference,
     securityLevelPreference,
+    lastActive,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
@@ -110,6 +116,9 @@ export function useSettings() {
     },
     changeThemePreference(theme: ThemePreference) {
       dispatch(userChangedThemePreference(theme));
+    },
+    userLeavesApp(timestamp: LastActiveTimestamp) {
+      dispatch(userChangedLastActive(timestamp));
     },
 
     // TODO: Remove when live, debug only

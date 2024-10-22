@@ -16,6 +16,7 @@ export type ThemePreference = (typeof defaultThemePreferences)[number];
 export type Theme = Exclude<ThemePreference, 'system'>;
 export type SecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
 export type PrivacyModePreference = 'hidden' | 'visible';
+export type LastActiveTimestamp = number | null;
 
 export interface SettingsState {
   accountDisplayPreference: AccountDisplayPreference;
@@ -28,6 +29,8 @@ export interface SettingsState {
   privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;
   securityLevelPreference: SecurityLevelPreference;
+  // timestamp
+  lastActive: LastActiveTimestamp;
 }
 
 // lose schema definition, we don't infer SettingsState type from it to keep it simple
@@ -42,4 +45,5 @@ export const settingsSchema = z.object({
   privacyModePreference: z.string(),
   themePreference: z.string(),
   securityLevelPreference: z.string(),
+  lastActive: z.union([z.number(), z.null()]),
 });
