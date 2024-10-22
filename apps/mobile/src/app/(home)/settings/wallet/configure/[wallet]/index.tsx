@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
+import { useToastContext } from '@/components/toast/toast-context';
 import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
 import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
 import { AppRoutes } from '@/routes';
@@ -46,11 +47,24 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const removeWalletSheetRef = useRef<SheetRef>(null);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
+
+  const { displayToast } = useToastContext();
+
   useEffect(() => {
     navigation.setOptions({ title: wallet.name });
   }, [navigation, wallet.name]);
 
   function setName(name: string) {
+    if (name === '') {
+      displayToast({
+        title: t({
+          id: 'configure_wallet.wallet_name.empty_name_error',
+          message: 'Wallet name cannot be empty',
+        }),
+        type: 'error',
+      });
+      return { success: false };
+    }
     dispatch(
       userRenamesWallet({
         fingerprint: wallet.fingerprint,
@@ -58,6 +72,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
       })
     );
     navigation.setOptions({ title: name });
+    return { success: true };
   }
 
   function removeWallet() {

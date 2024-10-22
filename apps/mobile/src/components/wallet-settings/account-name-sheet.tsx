@@ -10,7 +10,7 @@ import { InputSheet } from '../sheets/input-sheet.layout';
 interface AccountNameSheetProps {
   sheetRef: RefObject<SheetRef>;
   name: string;
-  setName(name: string): unknown;
+  setName(name: string): { success: boolean };
 }
 export function AccountNameSheet({ sheetRef, name, setName }: AccountNameSheetProps) {
   return (
@@ -22,8 +22,10 @@ export function AccountNameSheet({ sheetRef, name, setName }: AccountNameSheetPr
       placeholder={t({ id: 'account_name.input_placeholder', message: 'Name' })}
       submitTitle={t({ id: 'account_name.button', message: 'Save' })}
       onSubmit={newName => {
-        sheetRef.current?.close();
-        setName(newName);
+        const { success } = setName(newName);
+        if (success) {
+          sheetRef.current?.close();
+        }
       }}
       inputTestId={TestId.accountChangeNameSheetInput}
       submitTestId={TestId.accountChangeNameSheetSaveButton}
