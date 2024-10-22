@@ -17,10 +17,11 @@ interface StxBalance {
 function GetAccountStxBalance(accountId: string): Money {
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const signers = useStacksSigners().fromAccountIndex(fingerprint, accountIndex);
-  const stxAddress = signers[0]?.address;
+  const [stacksSigner] = signers;
+  const stacksAddress = stacksSigner?.address;
   const {
     filteredBalanceQuery: { data: balance },
-  } = useStxCryptoAssetBalance(stxAddress ?? '');
+  } = useStxCryptoAssetBalance(stacksAddress ?? '');
 
   return balance ? balance.totalBalance : createMoney(0, 'STX');
 }
