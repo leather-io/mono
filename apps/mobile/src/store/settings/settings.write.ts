@@ -10,7 +10,12 @@ import {
 
 import { handleAppResetWithState } from '../global-action';
 import { initialState } from './settings';
-import { PrivacyModePreference, SecurityLevelPreference, ThemePreference } from './utils';
+import {
+  LastActiveTimestamp,
+  PrivacyModePreference,
+  SecurityLevelPreference,
+  ThemePreference,
+} from './utils';
 
 export const settingsSlice = createSlice({
   name: 'settings',
@@ -43,6 +48,9 @@ export const settingsSlice = createSlice({
     userChangedThemePreference(state, action: PayloadAction<ThemePreference>) {
       state.themePreference = action.payload;
     },
+    userChangedLastActive(state, action: PayloadAction<LastActiveTimestamp>) {
+      state.lastActive = action.payload;
+    },
   },
   extraReducers: builder => builder.addCase(...handleAppResetWithState(initialState)),
 });
@@ -57,4 +65,5 @@ export const {
   userChangedPrivacyModePreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
+  userChangedLastActive,
 } = settingsSlice.actions;
