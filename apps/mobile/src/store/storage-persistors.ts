@@ -95,7 +95,6 @@ export const tempMnemonicStore = {
       TEMPORARY_MNEMONIC_KEY_PASSPHRASE,
       getBasicSecureStoreConfig()
     );
-    await this.deleteTemporaryMnemonic();
     return { mnemonic, passphrase };
   },
   async deleteTemporaryMnemonic() {

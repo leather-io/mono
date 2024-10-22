@@ -33,6 +33,8 @@ export function useCreateWallet() {
           }),
         });
         router.navigate(AppRoutes.Home);
+        // be sure to always delete temporary mnemonic if we eventually use it as a wallet
+        await tempMnemonicStore.deleteTemporaryMnemonic();
       } catch (e) {
         if (keychainErrorHandlers.isKeyExistsError(e)) {
           toastContext.displayToast({
