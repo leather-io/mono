@@ -17,6 +17,7 @@
     "native.ts",
     "**/theme-native/**/*",
     "**/*.shared.tsx",
+    "**/*.shared.ts",
     "global.d.ts"
   ],
   "exclude": [
