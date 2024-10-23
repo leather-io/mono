@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useQueries, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
@@ -52,32 +54,34 @@ export function useStxBalancesQueries(addresses: string[]) {
   const inboundBalance = createMoney(0, 'STX');
   const outboundBalance = createMoney(0, 'STX');
 
-  return useQueries({
+  const queries = useQueries({
     queries: addresses.map(address => ({
       ...createGetStacksAccountBalanceQueryOptions({
         address,
         client,
         network: network.chain.stacks.url,
       }),
-      // select: (resp: AddressBalanceResponse) => createStxMoney(resp),
       select: (resp: AddressBalanceResponse) => {
         const initialBalance = createStxMoney(resp);
         return createStxCryptoAssetBalance(initialBalance, inboundBalance, outboundBalance);
       },
     })),
-    // inline combine will rerun on each rerender so optimise it
-    combine: results => {
-      return {
-        totalData: results
-          .map(result => result.data)
-          .reduce(
-            (total, data) => sumMoney([total, data?.totalBalance ?? createMoney(0, 'STX')]),
-            createMoney(0, 'STX')
-          ),
-        pending: results.some(result => result.isPending),
-      };
-    },
   });
+
+  const combinedResult = useCallback(
+    () => ({
+      totalData: queries
+        .map(result => result.data)
+        .reduce(
+          (total, data) => sumMoney([total, data?.totalBalance ?? createMoney(0, 'STX')]),
+          createMoney(0, 'STX')
+        ),
+      pending: queries.some(result => result.isPending),
+    }),
+    [queries]
+  );
+
+  return combinedResult;
 }
 
 // I am just returning the raw data now but I need
