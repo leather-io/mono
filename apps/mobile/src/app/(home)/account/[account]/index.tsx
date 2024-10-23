@@ -18,9 +18,10 @@ export default function AccountScreen() {
   const { fingerprint, accountIndex } = configureAccountParamsSchema.parse(params);
   const account = useAccountByIndex(fingerprint, accountIndex);
 
-  const { totalBalance } = useTotalBalance(account ? [account] : []);
+  const { totalBalance, combinedBalances } = useTotalBalance(account ? [account] : []);
   const tokens = useGetTokensList(account ? [account] : []);
 
+  console.log('combinedBalances', combinedBalances);
   return (
     <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
       {account => <AccountLayout balance={totalBalance} account={account} tokens={tokens} />}
