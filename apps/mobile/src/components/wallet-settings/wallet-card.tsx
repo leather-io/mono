@@ -23,6 +23,7 @@ import {
 } from '@leather.io/ui/native';
 
 import { getAvatarIcon } from '../avatar-icon';
+import { SpinnerIcon } from '../spinner-icon';
 import { useToastContext } from '../toast/toast-context';
 import { AccountCard } from './account-card';
 import { WalletViewVariant } from './types';
@@ -38,6 +39,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const keys = useKeyStore();
   const { displayToast } = useToastContext();
   const router = useRouter();
+  const [isAddingAccount, setIsAddingAccount] = useState(false);
 
   return (
     <Box flexDirection="column">
@@ -98,6 +100,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           {variant === 'active' && (
             <Button
               onPress={async () => {
+                setIsAddingAccount(true);
                 await keys.createNewAccountOfWallet(fingerprint);
                 displayToast({
                   title: t({
@@ -106,13 +109,22 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                   }),
                   type: 'success',
                 });
+                setIsAddingAccount(false);
               }}
               buttonState="ghost"
-              title={t({
-                id: 'wallet.add_account.button',
-                message: `Add account`,
-              })}
-              icon={<PlusIcon />}
+              disabled={isAddingAccount}
+              title={
+                isAddingAccount
+                  ? t({
+                      id: 'wallet.adding_account.button',
+                      message: `Adding account`,
+                    })
+                  : t({
+                      id: 'wallet.add_account.button',
+                      message: `Add account`,
+                    })
+              }
+              icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon />}
             />
           )}
         </Box>

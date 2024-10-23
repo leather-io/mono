@@ -11,7 +11,7 @@ import * as SystemUI from 'expo-system-ui';
 import LottieView from 'lottie-react-native';
 
 import { colorThemes } from '@leather.io/tokens';
-import { Box, Button, Theme } from '@leather.io/ui/native';
+import { Box, Button, Theme, useOnMount } from '@leather.io/ui/native';
 
 import { LeatherLockedSplash } from '../animations/leather-locked-splash';
 import { LeatherSplash } from '../animations/leather-splash';
@@ -48,12 +48,10 @@ export function SplashScreenGuard({ children }: HasChildren) {
     void SplashScreen.hideAsync();
   }, [colorScheme, theme.colors]);
 
-  useEffect(() => {
+  useOnMount(() => {
     // try authenticating when we first open the app
     void tryAuthentication({ firstTry: true });
-    // We need to run this only once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   async function onUnlock() {
     return tryAuthentication({ firstTry: false });
