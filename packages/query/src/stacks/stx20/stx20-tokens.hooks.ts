@@ -9,9 +9,11 @@ import { useStacksClient } from '../stacks-client';
 import { Stx20Balance } from '../stx20-api-types';
 import { createGetStx20BalancesQueryOptions } from './stx20-tokens.query';
 
-function createStx20CryptoAssetInfo(stx20Balance: Stx20Balance): Stx20CryptoAssetInfo {
+function createStx20CryptoAssetInfo(stx20Balance: Stx20Balance): Partial<Stx20CryptoAssetInfo> {
   return {
-    name: 'stx-20',
+    chain: 'stacks',
+    category: 'fungible',
+    protocol: 'stx20',
     symbol: stx20Balance.ticker,
   };
 }

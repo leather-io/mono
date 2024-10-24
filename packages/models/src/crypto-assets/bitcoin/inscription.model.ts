@@ -1,5 +1,10 @@
 import { HIRO_INSCRIPTIONS_API_URL } from '../../network/network.model';
-import { InscriptionCryptoAssetInfo } from '../crypto-asset-info.model';
+import {
+  CryptoAssetCategories,
+  CryptoAssetChains,
+  CryptoAssetProtocols,
+  InscriptionCryptoAssetInfo,
+} from '../crypto-asset-info.model';
 
 /**
  * Inscriptions contain arbitrary data. When retrieving an inscription, it should be
@@ -91,6 +96,9 @@ export function createInscription(inscription: RawInscription): Inscription {
   const title = `Inscription ${inscription.number}`;
 
   const sharedInfo = {
+    chain: CryptoAssetChains.bitcoin,
+    category: CryptoAssetCategories.nft,
+    protocol: CryptoAssetProtocols.inscription,
     id: inscription.id,
     number: inscription.number,
     output: inscription.output,

@@ -6,8 +6,10 @@ import { useSettings } from '@/store/settings/settings';
 import { UseQueryResult, useQueries } from '@tanstack/react-query';
 
 import { inferPaymentTypeFromPath } from '@leather.io/bitcoin';
-import { createUtxoQueryOptions, useCalculateBitcoinFiatValue } from '@leather.io/query';
-import { createMoney, isDefined, sumNumbers } from '@leather.io/utils';
+import { createUtxoQueryOptions } from '@leather.io/query';
+import { baseCurrencyAmountInQuote, createMoney, isDefined, sumNumbers } from '@leather.io/utils';
+
+import { useBtcMarketDataQuery } from '../market-data/btc-market-data.query';
 
 function getDescriptorFromKeychain<T extends { keyOrigin: string; xpub: string }>(
   accountKeychain: T
@@ -54,7 +56,7 @@ type TotalBalanceCombineFn = UseQueryResult<
 
 export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
   const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);
-  const calcUsdAmount = useCalculateBitcoinFiatValue();
+  const { data: btcMarketData } = useBtcMarketDataQuery();
 
   const combine = useCallback(
     (results: TotalBalanceCombineFn) => {
@@ -66,11 +68,13 @@ export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
       );
 
       const availableBalance = createMoney(amount, 'BTC');
-      const fiatBalance = calcUsdAmount(availableBalance);
+      const fiatBalance = btcMarketData
+        ? baseCurrencyAmountInQuote(availableBalance, btcMarketData)
+        : createMoney(0, 'USD');
 
       return { availableBalance, fiatBalance };
     },
-    [calcUsdAmount]
+    [btcMarketData]
   );
 
   return useQueries({ queries, combine });

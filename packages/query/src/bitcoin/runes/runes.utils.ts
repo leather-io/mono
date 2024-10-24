@@ -13,9 +13,11 @@ const defaultRunesSymbol = '¤';
 
 function createRuneCryptoAssetInfo(tickerInfo: RuneTickerInfo): RuneCryptoAssetInfo {
   return {
+    chain: 'bitcoin',
+    category: 'fungible',
+    protocol: 'rune',
     decimals: tickerInfo.decimals,
     hasMemo: false,
-    name: 'rune',
     runeName: tickerInfo.rune_name,
     spacedRuneName: tickerInfo.spaced_rune_name,
     symbol: tickerInfo.symbol ?? defaultRunesSymbol,
