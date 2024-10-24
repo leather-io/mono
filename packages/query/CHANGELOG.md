@@ -169,6 +169,13 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.16.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.15.2...@leather.io/query-v2.16.0) (2024-10-24)
+
+
+### Features
+
+* export priority levels ([ac87cab](https://github.com/leather-io/mono/commit/ac87cabf77d294dbbda3fea034c7ed3618edf1a2))
+
 ## [2.15.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.15.1...@leather.io/query-v2.15.2) (2024-10-18)
 
 
