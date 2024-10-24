@@ -103,6 +103,18 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.31.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.30.0...@leather.io/ui-v1.31.0) (2024-10-24)
+
+
+### Features
+
+* header title animation, closes LEA-647 and LEA-1547 ([973e427](https://github.com/leather-io/mono/commit/973e42793f4dd37b6a1d0b59b057fa59e7ff5de3))
+
+
+### Bug Fixes
+
+* spinner on add account button ([7d78f9f](https://github.com/leather-io/mono/commit/7d78f9ff2857e187233fc790721912d16853ff53))
+
 ## [1.30.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.29.1...@leather.io/ui-v1.30.0) (2024-10-18)
 
 

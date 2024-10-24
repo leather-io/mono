@@ -202,6 +202,31 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.44.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.43.0...@leather.io/mobile-v1.44.0) (2024-10-24)
+
+
+### Features
+
+* header title animation, closes LEA-647 and LEA-1547 ([973e427](https://github.com/leather-io/mono/commit/973e42793f4dd37b6a1d0b59b057fa59e7ff5de3))
+* lock app button ([396124e](https://github.com/leather-io/mono/commit/396124e8c28f2a712d8dfbcc6038cf43b93ba525))
+
+
+### Bug Fixes
+
+* add lock timeout ([810df72](https://github.com/leather-io/mono/commit/810df7248d01f77e7f89020bf118049f8641795d))
+* delete temp wallet after successful creation ([a4030f2](https://github.com/leather-io/mono/commit/a4030f2021aa6f763d9590fde214527b496a5a94))
+* lock files ([7fc7668](https://github.com/leather-io/mono/commit/7fc766858c580c702f90b495bc4bc6ddc22515e1))
+* no empty names on wallet and account ([b0dff04](https://github.com/leather-io/mono/commit/b0dff0492ad458394e7faddd4139b671950865b1))
+* numbering of wallets and accounts ([713bdbe](https://github.com/leather-io/mono/commit/713bdbe413caa252ba372a2021deb24677275c7b))
+* spinner on add account button ([7d78f9f](https://github.com/leather-io/mono/commit/7d78f9ff2857e187233fc790721912d16853ff53))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.31.0
+
 ## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.42.1...@leather.io/mobile-v1.43.0) (2024-10-18)
 
 
