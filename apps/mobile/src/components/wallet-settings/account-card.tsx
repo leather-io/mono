@@ -5,6 +5,15 @@ import { useTheme } from '@shopify/restyle';
 
 import { Box, IconProps, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
+interface AccountCardProps {
+  Icon: React.FC<IconProps>;
+  name: string;
+  onPress?(): void;
+  onLongPress?(): void;
+  onLayout?(e: LayoutChangeEvent): void;
+  testID?: string;
+  iconTestID?: string;
+}
 export function AccountCard({
   Icon,
   name,
@@ -13,15 +22,7 @@ export function AccountCard({
   onLayout,
   testID,
   iconTestID,
-}: {
-  Icon: React.FC<IconProps>;
-  name: string;
-  onPress?(): void;
-  onLongPress?(): void;
-  onLayout?(e: LayoutChangeEvent): void;
-  testID?: string;
-  iconTestID?: string;
-}) {
+}: AccountCardProps) {
   const theme = useTheme<Theme>();
 
   const Container = onPress ? TouchableOpacity : Box;
