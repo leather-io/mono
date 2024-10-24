@@ -15,6 +15,7 @@ import { Box, Button, Theme, useOnMount } from '@leather.io/ui/native';
 
 import { LeatherLockedSplash } from '../animations/leather-locked-splash';
 import { LeatherSplash } from '../animations/leather-splash';
+import { AuthContext } from './use-auth-context';
 import { useAuthState } from './use-auth-state';
 
 const DEFAULT_ANIMATION_FINISHED = false;
@@ -33,7 +34,7 @@ export function SplashScreenGuard({ children }: HasChildren) {
     lockedSplashRef.current?.play();
   }, []);
 
-  const { tryAuthentication, authState } = useAuthState({
+  const { tryAuthentication, authState, lockApp } = useAuthState({
     playSplash,
     setAnimationFinished,
   });
@@ -58,7 +59,7 @@ export function SplashScreenGuard({ children }: HasChildren) {
   }
 
   if (animationFinished) {
-    return children; // to their parents
+    return <AuthContext.Provider value={{ lockApp }}>{children}</AuthContext.Provider>;
   }
 
   const splash =

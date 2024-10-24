@@ -60,9 +60,20 @@ export function useAuthState({
     if (securityLevelPreference === 'secure') {
       setAnimationFinished(false);
       setAuthState('started');
-      userLeavesApp(+new Date());
+
+      // add latest active timestamp only if the app was actually unlocked
+      const appUnlocked = authState === 'passed-on-first' || authState === 'passed-afterwards';
+      if (appUnlocked) {
+        userLeavesApp(+new Date());
+      }
     }
-  }, [securityLevelPreference, userLeavesApp, setAnimationFinished]);
+  }, [securityLevelPreference, userLeavesApp, setAnimationFinished, authState]);
+
+  const lockApp = useCallback(() => {
+    setAnimationFinished(false);
+    setAuthState('failed');
+    userLeavesApp(null);
+  }, [setAnimationFinished, setAuthState, userLeavesApp]);
 
   useAppState({
     onAppForeground,
@@ -72,5 +83,6 @@ export function useAuthState({
   return {
     tryAuthentication,
     authState,
+    lockApp,
   };
 }
