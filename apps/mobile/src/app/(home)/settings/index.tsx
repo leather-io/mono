@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Divider } from '@/components/divider';
 import { NotifyUserSheet } from '@/components/sheets/notify-user-sheet.layout';
+import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
@@ -35,6 +36,7 @@ export default function SettingsScreen() {
   const feesSheetRef = useRef<SheetRef>(null);
   const theme = useTheme<Theme>();
   const router = useRouter();
+  const { lockApp } = useAuthContext();
 
   return (
     <>
@@ -204,7 +206,7 @@ export default function SettingsScreen() {
               </Text>
             </Box>
             <Button
-              onPress={() => {}}
+              onPress={lockApp}
               buttonState="outline"
               title={t({
                 id: 'settings.lock_button',
