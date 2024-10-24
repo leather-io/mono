@@ -76,6 +76,7 @@ export default function CreateNewWallet() {
         <Box my="5">
           {isHidden && (
             <BlurView
+              experimentalBlurMethod="dimezisBlurView"
               themeVariant={themeDerivedFromThemePreference}
               intensity={isHidden ? 30 : 0}
               style={{
