@@ -10,6 +10,7 @@ import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet'
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
+import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -17,6 +18,7 @@ import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { z } from 'zod';
 
@@ -47,6 +49,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const removeWalletSheetRef = useRef<SheetRef>(null);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
+  const { securityLevelPreference } = useSettings();
 
   const { displayToast } = useToastContext();
 
@@ -75,9 +78,34 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     return { success: true };
   }
 
-  function removeWallet() {
+  function removeWalletImpl() {
     router.back();
     dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
+  }
+
+  async function secureRemoveWallet() {
+    if (securityLevelPreference === 'secure') {
+      const result = await LocalAuthentication.authenticateAsync();
+      if (result.success) {
+        removeWalletImpl();
+      } else {
+        displayToast({
+          title: t({
+            id: 'configure_wallet.delete_wallet.authentication_failed',
+            message: 'Authentication failed',
+          }),
+          type: 'error',
+        });
+      }
+    }
+  }
+
+  async function removeWallet() {
+    if (securityLevelPreference === 'secure') {
+      await secureRemoveWallet();
+    } else {
+      removeWalletImpl();
+    }
   }
 
   const notifySheetRef = useRef<SheetRef>(null);
