@@ -1,6 +1,7 @@
 export * from './bitcoin-unit.model';
 export * from './crypto-assets/crypto-asset-balance.model';
 export * from './crypto-assets/crypto-asset-info.model';
+export * from './crypto-assets/crypto-asset.model';
 export * from './crypto-assets/bitcoin/inscription.model';
 export * from './currencies.model';
 export * from './fees/bitcoin-fees.model';
