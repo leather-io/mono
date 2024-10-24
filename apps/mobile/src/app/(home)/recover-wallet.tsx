@@ -152,6 +152,7 @@ export default function RecoverWallet() {
               multiline
               blurOnSubmit
               autoCapitalize="none"
+              textAlignVertical="top"
               autoCorrect
               testID={TestId.restoreWalletTextInput}
             />
