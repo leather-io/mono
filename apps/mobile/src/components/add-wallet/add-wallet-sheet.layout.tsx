@@ -9,6 +9,7 @@ import Animated, {
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -56,6 +57,7 @@ export function AddWalletSheetLayout({
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const router = useRouter();
+  const { whenTheme } = useSettings();
 
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
@@ -77,7 +79,14 @@ export function AddWalletSheetLayout({
       }}
     >
       <AnimatedBox style={animatedStyle}>
-        <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
+        <Box
+          width="100%"
+          style={{ height: 200, overflow: 'hidden' }}
+          bg={whenTheme({
+            dark: 'ink.background-secondary' as const,
+            light: 'ink.text-primary' as const,
+          })}
+        >
           <Image
             style={{ height: '100%' }}
             contentFit="cover"
