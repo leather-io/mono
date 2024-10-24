@@ -2,7 +2,7 @@ import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import { TokensWidget } from '@/components/widgets/tokens/tokens-widget';
 import { useGetTokensList } from '@/components/widgets/tokens/use-get-tokens-list';
-import { useTotalBalance } from '@/hooks/balances/use-total-balance';
+import { useTotalBalance } from '@/features/accounts/balances/hooks/use-total-balance';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';

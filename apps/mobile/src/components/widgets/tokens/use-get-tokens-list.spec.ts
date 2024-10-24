@@ -1,4 +1,4 @@
-import { useTotalBalance } from '@/hooks/balances/use-total-balance';
+import { useTotalBalance } from '@/features/accounts/balances/hooks/use-total-balance';
 import { AccountStore } from '@/store/accounts/utils';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 

@@ -1,5 +1,5 @@
 import { useGetTokensList } from '@/components/widgets/tokens/use-get-tokens-list';
-import { useTotalBalance } from '@/hooks/balances/use-total-balance';
+import { useTotalBalance } from '@/features/accounts/balances/hooks/use-total-balance';
 import { AccountLoader } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useLocalSearchParams } from 'expo-router';

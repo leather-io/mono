@@ -1,6 +1,6 @@
 import { getAvatarIcon } from '@/components/avatar-icon';
 import { Balance } from '@/components/balance/balance';
-import { useTotalBalance } from '@/hooks/balances/use-total-balance';
+import { useTotalBalance } from '@/features/accounts/balances/hooks/use-total-balance';
 import { AccountStore } from '@/store/accounts/utils';
 import { useLingui } from '@lingui/react';
 
