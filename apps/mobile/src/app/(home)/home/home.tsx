@@ -12,6 +12,8 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
 
+import { createMoney } from '@leather.io/utils';
+
 export function Home() {
   useLingui();
   const wallets = useWallets();
@@ -20,7 +22,7 @@ export function Home() {
   return (
     <PageLayout>
       <AccountsWidget accounts={accounts.list} wallets={wallets.list} />
-      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
+      <TokensWidget tokens={getMockTokens()} totalBalance={createMoney(0, 'USD')} />
       <CollectiblesWidget
         collectibles={serializeCollectibles(mockCollectibles)}
         totalBalance={mockTotalBalance}
