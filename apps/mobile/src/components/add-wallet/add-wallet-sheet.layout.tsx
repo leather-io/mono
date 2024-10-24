@@ -44,6 +44,7 @@ interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   restoreWallet(): unknown;
   onOpenSheet(option: NotifyUserSheetData): unknown;
   themeVariant: ThemeVariant;
+  opensFully?: boolean;
 }
 export function AddWalletSheetLayout({
   addWalletSheetRef,
@@ -51,8 +52,9 @@ export function AddWalletSheetLayout({
   restoreWallet,
   onOpenSheet,
   themeVariant,
+  opensFully,
 }: AddWalletSheetLayoutProps) {
-  const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
+  const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
   const router = useRouter();
@@ -72,6 +74,9 @@ export function AddWalletSheetLayout({
       animatedIndex={animatedIndex}
       ref={addWalletSheetRef}
       themeVariant={themeVariant}
+      onDismiss={() => {
+        setMoreOptionsVisible(!!opensFully);
+      }}
     >
       <AnimatedBox style={animatedStyle}>
         <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
