@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { describe, expect, it } from 'vitest';
 
+import { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { AccountBalanceStxKeys } from '../hiro-api-types';
@@ -19,9 +20,9 @@ describe('createStxCryptoAssetBalance', () => {
     return Object.fromEntries(
       Object.entries({ ...defaultValues, ...values }).map(([key, value]) => [
         key,
-        { amount: new BigNumber(value), symbol: 'STX' },
+        { amount: new BigNumber(value), symbol: 'STX' } as Money, // Cast to Money
       ])
-    ) as Record<AccountBalanceStxKeys, { amount: BigNumber; symbol: 'STX' }>;
+    ) as Record<AccountBalanceStxKeys, Money>; // Ensure the return type is correct
   };
 
   it('should calculate balances correctly', () => {

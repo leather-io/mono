@@ -1,4 +1,3 @@
-import { AccountStore } from '@/store/accounts/utils';
 import { vi } from 'vitest';
 
 import { useCryptoCurrencyMarketDataMeanAverage } from '@leather.io/query';
@@ -12,25 +11,6 @@ vi.mock('./use-stx-balances');
 vi.mock('@leather.io/query');
 
 describe('useTotalBalance', () => {
-  const mockAccounts: AccountStore[] = [
-    {
-      id: '1',
-      name: 'Account 1',
-      icon: 'icon',
-      status: 'active',
-      fingerprint: 'fingerprint',
-      accountIndex: 0,
-    },
-    {
-      id: '2',
-      name: 'Account 2',
-      icon: 'icon',
-      status: 'active',
-      fingerprint: 'fingerprint',
-      accountIndex: 0,
-    },
-  ];
-
   beforeEach(() => {
     (useStxBalance as jest.Mock).mockReturnValue({
       stxBalance: createMoney(1000000, 'STX'),
@@ -43,7 +23,7 @@ describe('useTotalBalance', () => {
   });
 
   it('should calculate total balance correctly', () => {
-    const result = useTotalBalance(mockAccounts);
+    const result = useTotalBalance();
 
     expect(result.stxBalance).toEqual(createMoney(1000000, 'STX'));
     expect(result.btcBalance).toEqual(createMoney(0, 'BTC'));
@@ -53,12 +33,12 @@ describe('useTotalBalance', () => {
   });
 
   it('should call useStxBalance with the provided accounts', () => {
-    useTotalBalance(mockAccounts);
-    expect(useStxBalance).toHaveBeenCalledWith(mockAccounts);
+    useTotalBalance();
+    expect(useStxBalance).toHaveBeenCalledWith();
   });
 
   it('should use correct market data for STX and BTC', () => {
-    useTotalBalance(mockAccounts);
+    useTotalBalance();
     expect(useCryptoCurrencyMarketDataMeanAverage).toHaveBeenCalledWith('STX');
     expect(useCryptoCurrencyMarketDataMeanAverage).toHaveBeenCalledWith('BTC');
   });
@@ -68,7 +48,7 @@ describe('useTotalBalance', () => {
       stxBalance: createMoney(0, 'STX'),
     });
 
-    const result = useTotalBalance(mockAccounts);
+    const result = useTotalBalance();
 
     expect(result.stxBalance).toEqual(createMoney(0, 'STX'));
     expect(result.btcBalance).toEqual(createMoney(0, 'BTC'));

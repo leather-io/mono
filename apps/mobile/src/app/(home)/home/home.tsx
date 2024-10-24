@@ -13,10 +13,9 @@ export function Home() {
   const accounts = useAccounts();
 
   const tokens = useGetTokensList(accounts.list);
-  const { totalBalance, combinedBalancesUsd } = useTotalBalance(accounts.list);
+  const { totalBalance } = useTotalBalance();
 
   console.log('totalBalance', totalBalance);
-  console.log('combinedBalancesUsd', combinedBalancesUsd);
   return (
     <PageLayout>
       <AccountsWidget totalBalance={totalBalance} accounts={accounts.list} wallets={wallets.list} />

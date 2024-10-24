@@ -1,5 +1,4 @@
 import { useTotalBalance } from '@/features/accounts/balances/hooks/use-total-balance';
-import { AccountStore } from '@/store/accounts/utils';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
@@ -11,17 +10,6 @@ import { useGetTokensList } from './use-get-tokens-list';
 vi.mock('@/hooks/balances/use-total-balance');
 
 describe('useGetTokensList', () => {
-  const mockAccounts: AccountStore[] = [
-    {
-      id: '1',
-      name: 'Account 1',
-      icon: 'icon',
-      status: 'active',
-      fingerprint: 'fingerprint',
-      accountIndex: 0,
-    },
-  ];
-
   const mockBalances = {
     btcBalance: createMoney(100000, 'BTC'),
     btcBalanceUsd: createMoney(5000, 'USD'),
@@ -34,14 +22,13 @@ describe('useGetTokensList', () => {
   });
 
   it('should return an array of tokens', () => {
-    const result = useGetTokensList(mockAccounts);
+    const result = useGetTokensList();
 
     expect(result).toHaveLength(2);
-    expect(useTotalBalance).toHaveBeenCalledWith(mockAccounts);
   });
 
   it('should return Stacks token with correct properties', () => {
-    const result = useGetTokensList(mockAccounts);
+    const result = useGetTokensList();
 
     const stxToken = result.find((token: Token) => token.ticker === 'stx');
     expect(stxToken).toBeDefined();
@@ -52,7 +39,7 @@ describe('useGetTokensList', () => {
   });
 
   it('should return Bitcoin token with correct properties', () => {
-    const result = useGetTokensList(mockAccounts);
+    const result = useGetTokensList();
 
     const btcToken = result.find((token: Token) => token.ticker === 'btc');
     expect(btcToken).toBeDefined();

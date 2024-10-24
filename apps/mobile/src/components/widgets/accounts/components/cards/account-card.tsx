@@ -16,7 +16,8 @@ export function AccountCard({ account, onPress, testID }: AccountCardProps) {
   const { i18n } = useLingui();
   const { type, icon } = account;
 
-  const { totalBalance } = useTotalBalance([account]);
+  // TODO - fix this as it will always fetch for multiple accounts after keychain refactor
+  const { totalBalance } = useTotalBalance();
   return (
     <AccountCardLayout
       Icon={getAvatarIcon(icon)}
