@@ -88,3 +88,4 @@ export * from './test/mock-utxos';
 export * from './test/mock-btc-txs';
 export * from './src/stacks/stacks-client';
 export * from './src/bitcoin/clients/best-in-slot';
+export * from './src/stacks/hiro-requests-priorities';
