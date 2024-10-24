@@ -8,6 +8,7 @@ import Animated, {
 
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
@@ -56,6 +57,7 @@ export function AddWalletSheetLayout({
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const theme = useTheme<Theme>();
   const router = useRouter();
+  const { whenTheme } = useSettings();
 
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
@@ -74,7 +76,14 @@ export function AddWalletSheetLayout({
       themeVariant={themeVariant}
     >
       <AnimatedBox style={animatedStyle}>
-        <Box width="100%" style={{ height: 200, overflow: 'hidden' }} bg="ink.text-primary">
+        <Box
+          width="100%"
+          style={{ height: 200, overflow: 'hidden' }}
+          bg={whenTheme({
+            dark: 'ink.background-secondary' as const,
+            light: 'ink.text-primary' as const,
+          })}
+        >
           <Image
             style={{ height: '100%' }}
             contentFit="cover"
