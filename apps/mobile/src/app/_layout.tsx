@@ -23,6 +23,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { Box, ThemeProvider as LeatherThemeProvider, SheetProvider } from '@leather.io/ui/native';
 
+import { initAppServices } from '../services/init-app-services';
+
 void SplashScreen.preventAutoHideAsync();
 
 // Catch any errors thrown by the Layout component
@@ -31,6 +33,7 @@ export { ErrorBoundary } from 'expo-router';
 // Ensure that reloading on `/modal` keeps a back button present
 export const unstable_settings = { initialRouteName: '/' };
 
+initAppServices();
 initiateI18n();
 
 export default function RootLayout() {

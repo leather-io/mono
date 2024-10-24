@@ -1,4 +1,11 @@
-import { Inscription, createInscription, whenInscriptionMimeType } from '@leather.io/models';
+import {
+  CryptoAssetCategories,
+  CryptoAssetChains,
+  CryptoAssetProtocols,
+  Inscription,
+  createInscription,
+  whenInscriptionMimeType,
+} from '@leather.io/models';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import {
@@ -59,6 +66,9 @@ export function createBestInSlotInscription(
   const genesisTimestamp = new Date(inscription.genesis_ts).getTime();
 
   const sharedInfo = {
+    chain: CryptoAssetChains.bitcoin,
+    category: CryptoAssetCategories.nft,
+    protocol: CryptoAssetProtocols.inscription,
     id: inscription.inscription_id,
     number: inscription.inscription_number,
     output,
@@ -77,7 +87,6 @@ export function createBestInSlotInscription(
     return {
       ...sharedInfo,
       mimeType: 'other',
-      name: 'inscription',
       src: '',
     };
   }

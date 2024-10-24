@@ -1,6 +1,12 @@
 import type { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
 
-import type { CryptoAssetBalance, Sip10CryptoAssetInfo } from '@leather.io/models';
+import {
+  type CryptoAssetBalance,
+  CryptoAssetCategories,
+  CryptoAssetChains,
+  CryptoAssetProtocols,
+  type Sip10CryptoAssetInfo,
+} from '@leather.io/models';
 import { getPrincipalFromContractId, getTicker, isUndefined } from '@leather.io/utils';
 
 import { SwapAsset } from '../../common/alex-sdk/alex-sdk.hooks';
@@ -18,6 +24,9 @@ export function createSip10CryptoAssetInfo(
   const name = ftAsset.name || contractAssetName;
 
   return {
+    chain: CryptoAssetChains.stacks,
+    category: CryptoAssetCategories.fungible,
+    protocol: CryptoAssetProtocols.sip10,
     canTransfer: isTransferableSip10Token(ftAsset),
     contractId: key,
     decimals: ftAsset.decimals ?? 0,
