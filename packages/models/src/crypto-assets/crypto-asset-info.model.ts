@@ -66,3 +66,15 @@ export interface Stx20CryptoAssetInfo {
   readonly name: 'stx-20';
   readonly symbol: string;
 }
+
+export type CryptoAssetInfo =
+  | BtcCryptoAssetInfo
+  | StxCryptoAssetInfo
+  | Brc20CryptoAssetInfo
+  | InscriptionCryptoAssetInfo
+  | RuneCryptoAssetInfo
+  | StampCryptoAssetInfo
+  | Src20CryptoAssetInfo
+  | Sip9CryptoAssetInfo
+  | Sip10CryptoAssetInfo
+  | Stx20CryptoAssetInfo;
