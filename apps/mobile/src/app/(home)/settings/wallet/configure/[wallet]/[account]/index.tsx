@@ -8,6 +8,7 @@ import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AccountNameSheet } from '@/components/wallet-settings/account-name-sheet';
 import { AccountId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
@@ -85,6 +86,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           onPress={() => {
             accountNameSheetRef.current?.present();
           }}
+          testID={TestId.walletSettingsAccountNameCell}
         >
           <Cell.Chevron />
         </Cell.Root>

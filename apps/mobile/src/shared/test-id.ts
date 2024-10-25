@@ -36,4 +36,5 @@ export enum TestId {
   walletSettingsRemoveWalletButton = 'walletSettingsRemoveWalletButton',
   walletSettingsRenameWalletButton = 'walletSettingsRenameWalletButton',
   walletSettingsViewSecretKeyButton = 'walletSettingsViewSecretKeyButton',
+  walletSettingsAccountNameCell = 'walletSettingsAccountNameCell',
 }

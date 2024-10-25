@@ -5,7 +5,7 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Add Wallet'
 - tapOn:
-    text: 'Create new wallet Create a new Bitcoin and Stacks wallet'
+    id: 'createNewWalletSheetButton'
 - tapOn:
     id: 'walletCreationTapToReveal'
 - tapOn:
@@ -15,12 +15,14 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Add Wallet'
 - tapOn:
-    text: 'Restore wallet Import existing accounts'
+    id: 'restoreWalletSheetButton'
 - tapOn:
     text: 'Paste'
 - tapOn:
     text: 'Continue'
 - tapOn:
-    text: 'Enable device security'
+    text: 'Skip for now'
+- tapOn:
+    text: 'Proceed'
 - assertVisible:
     id: 'homeAccountCard'
