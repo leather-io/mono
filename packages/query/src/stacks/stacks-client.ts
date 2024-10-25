@@ -27,6 +27,7 @@ import type {
   StacksTxFeeEstimation,
 } from './hiro-api-types';
 import { hiroApiRequestsPriorityLevels } from './hiro-requests-priorities';
+import './leather-headers';
 import type { Stx20BalanceResponse } from './stx20-api-types';
 
 type NonFungibleTokenHoldingsResponse = Paginated<NonFungibleTokenHoldingListResult[]>;
