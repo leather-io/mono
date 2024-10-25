@@ -169,6 +169,13 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.17.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.16.0...@leather.io/query-v2.17.0) (2024-10-25)
+
+
+### Features
+
+* increase hiro api rpm ([3731dfd](https://github.com/leather-io/mono/commit/3731dfd5ea302b83013fa54ea2b2a43b8a24a35c))
+
 ## [2.16.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.15.2...@leather.io/query-v2.16.0) (2024-10-24)
 
 

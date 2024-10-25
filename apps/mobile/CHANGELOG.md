@@ -202,6 +202,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.44.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.44.0...@leather.io/mobile-v1.44.1) (2024-10-25)
+
+
+### Bug Fixes
+
+* vertical alignment of text set to top, closes lea-1582 ([361e3fb](https://github.com/leather-io/mono/commit/361e3fb17772edd3e627b0e8c2e7468a34f76756))
+
 ## [1.44.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.43.0...@leather.io/mobile-v1.44.0) (2024-10-24)
 
 
