@@ -10,6 +10,7 @@ import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet'
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
+import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -17,6 +18,7 @@ import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
@@ -46,6 +48,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const walletNameSheetRef = useRef<SheetRef>(null);
   const removeWalletSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
+  const { securityLevelPreference } = useSettings();
 
   const { displayToast } = useToastContext();
 
@@ -72,6 +75,31 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   function removeWallet() {
     router.back();
     dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
+  }
+
+  async function secureRemoveWallet() {
+    if (securityLevelPreference === 'secure') {
+      const result = await LocalAuthentication.authenticateAsync();
+      if (result.success) {
+        removeWallet();
+      } else {
+        displayToast({
+          title: t({
+            id: 'configure_wallet.delete_wallet.authentication_failed',
+            message: 'Authentication failed',
+          }),
+          type: 'error',
+        });
+      }
+    }
+  }
+
+  async function onRemoveWallet() {
+    if (securityLevelPreference === 'secure') {
+      await secureRemoveWallet();
+      return;
+    }
+    removeWallet();
   }
 
   const notifySheetRef = useRef<SheetRef>(null);
@@ -230,7 +258,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
       </AnimatedHeaderScreenLayout>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
-      <RemoveWalletSheet onSubmit={removeWallet} sheetRef={removeWalletSheetRef} />
+      <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
       <NotifyUserSheet sheetData={notifySheetData} sheetRef={notifySheetRef} />
     </>
   );
