@@ -22,12 +22,16 @@ export interface NotifyUserSheetData {
   title: string;
 }
 
-interface NotifyUserSheetProps {
+interface NotifyUserSheetLayoutProps {
   onCloseSheet?(): unknown;
   sheetData: NotifyUserSheetData | null;
   sheetRef: RefObject<SheetRef>;
 }
-export function NotifyUserSheet({ onCloseSheet, sheetData, sheetRef }: NotifyUserSheetProps) {
+export function NotifyUserSheetLayout({
+  onCloseSheet,
+  sheetData,
+  sheetRef,
+}: NotifyUserSheetLayoutProps) {
   const theme = useTheme<Theme>();
   const { themeDerivedFromThemePreference } = useSettings();
   const { registerPushNotifications } = usePushNotifications();

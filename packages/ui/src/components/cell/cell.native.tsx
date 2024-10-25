@@ -18,9 +18,8 @@ interface CellProps extends PressableProps<Theme> {
   caption?: string;
   icon?: ReactElement<IconProps>;
   title: string;
-  children: NonNullable<ReactNode>;
+  children?: ReactNode;
 }
-
 export function Root({ caption, icon, title, children, ...props }: CellProps) {
   const itemLayout = <ItemLayout actionIcon={children} captionLeft={caption} titleLeft={title} />;
 

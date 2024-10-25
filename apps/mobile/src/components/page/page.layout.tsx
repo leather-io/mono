@@ -6,12 +6,12 @@ import {
   ActionBarContainer,
   ActionBarContext,
   createOnScrollHandler,
-} from '@/components/action-bar/container';
+} from '@/components/action-bar/action-bar-container';
 import { HasChildren } from '@/utils/types';
 
 import { Box } from '@leather.io/ui/native';
 
-import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar';
+import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar/action-bar';
 
 export function PageLayout({ children }: HasChildren) {
   const { bottom, top } = useSafeAreaInsets();

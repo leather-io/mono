@@ -1,7 +1,8 @@
 import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
-import { ActionBar, ActionBarMethods } from '@/components/action-bar';
+import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
+import { SendSheet } from '@/features/send/send-sheet';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -19,7 +20,7 @@ import {
 } from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
 
-import { AddWalletSheet } from '../add-wallet/';
+import { AddWalletSheet } from '../add-wallet';
 
 const scrollUntilClosed = 50;
 const scrollPaddingBottom = 50;
@@ -149,6 +150,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const router = useRouter();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
+  const sendSheetRef = useRef<SheetRef>(null);
 
   const actionBar = isEmptyArray(wallets.list) ? (
     <ActionBar
@@ -170,7 +172,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       ref={ref}
       left={
         <ActionBarButton
-          onPress={() => router.navigate(AppRoutes.Send)}
+          onPress={() => sendSheetRef.current?.present()}
           icon={<PaperPlaneIcon />}
           label={t({
             id: 'action_bar.send_label',
@@ -205,6 +207,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
     <>
       {actionBar}
       <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
+      <SendSheet sheetRef={sendSheetRef} />
     </>
   );
 });

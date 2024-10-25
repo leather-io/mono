@@ -1,10 +1,12 @@
+import { Component, forwardRef } from 'react';
+
 import LogoMpcPrivyLogo from '../../assets/icons/logos/logo-mpc-privy-24-24.svg';
 import { Icon, IconProps } from '../icon/icon.native';
 
-export function LogoMpcPrivy({ variant, ...props }: IconProps) {
+export const LogoMpcPrivy = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   return (
-    <Icon {...props}>
+    <Icon ref={ref} {...props}>
       <LogoMpcPrivyLogo />
     </Icon>
   );
-}
+});

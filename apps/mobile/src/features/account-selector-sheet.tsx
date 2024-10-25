@@ -2,18 +2,20 @@ import { RefObject, useCallback, useMemo, useRef } from 'react';
 import { ScrollView } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
-import { getAvatarIcon } from '@/components/avatar-icon';
+import { AvatarIcon } from '@/components/avatar-icon';
 import { Draggable } from '@/components/draggable';
-import { AccountCard } from '@/components/wallet-settings/account-card';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useSettings } from '@/store/settings/settings';
 import { destructAccountIdentifier, useAppDispatch } from '@/store/utils';
 import { defaultIconTestId } from '@/utils/testing-utils';
+import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
+
+import { AccountCard } from './settings/wallet-and-accounts/account-card';
 
 export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRef> }) {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -21,6 +23,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
   const accounts = useAccounts().list;
   const direction = useSharedValue<'down' | 'up'>('down');
   const router = useRouter();
+  const theme = useTheme<Theme>();
   const dispatch = useAppDispatch();
   const { themeDerivedFromThemePreference } = useSettings();
   const checkIdxWithinBounds = useCallback(
@@ -77,7 +80,9 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
             swapCardIndexes={swapAccountIndexes}
           >
             <AccountCard
-              Icon={getAvatarIcon(account.icon)}
+              icon={
+                <AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />
+              }
               name={account.name}
               iconTestID={defaultIconTestId(account.icon)}
             />

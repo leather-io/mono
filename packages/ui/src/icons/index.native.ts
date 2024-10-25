@@ -1,3 +1,6 @@
+export type { IconProps } from './icon/icon.native';
+
+// Icons
 export * from './arrow-left-icon.native';
 export * from './arrow-out-of-box-icon.native';
 export * from './arrows-repeat-left-right-icon.native';
@@ -22,7 +25,6 @@ export * from './email-notification-icon.native';
 export * from './eye-1-icon.native';
 export * from './eye-1-closed-icon.native';
 export * from './eye-2-icon.native';
-export * from './emoji-smile-icon.native';
 export * from './ellipsis-h-icon.native';
 export * from './error-triangle-icon.native';
 export * from './globe-icon.native';
@@ -63,6 +65,30 @@ export * from './support-icon.native';
 export * from './test-tube-icon.native';
 export * from './terminal-icon.native';
 export * from './users-two-icon.native';
+export * from './wallet-plus-icon.native';
+
+// Account avatars
+export * from './account-avatars/alien.native';
+export * from './account-avatars/bank.native';
+export * from './account-avatars/box.native';
+export * from './account-avatars/car.native';
+export * from './account-avatars/code.native';
+export * from './account-avatars/color-palette.native';
+export * from './account-avatars/flag.native';
+export * from './account-avatars/folder.native';
+export * from './account-avatars/gift.native';
+export * from './account-avatars/heart.native';
+export * from './account-avatars/home.native';
+export * from './account-avatars/piggybank.native';
+export * from './account-avatars/pizza.native';
+export * from './account-avatars/rocket.native';
+export * from './account-avatars/saturn.native';
+export * from './account-avatars/smile.native';
+export * from './account-avatars/space.native';
+export * from './account-avatars/sparkles.native';
+export * from './account-avatars/zap.native';
+
+// Logos
 export * from './logos/logo-mpc-bitgo.native';
 export * from './logos/logo-mpc-privy.native';
 export * from './logos/logo-mpc-qredo.native';
@@ -77,5 +103,3 @@ export * from './logos/logo-hardware-ledger.native';
 export * from './logos/logo-hardware-onekey.native';
 export * from './logos/logo-hardware-trezor.native';
 export * from './logos/logo-hardware-foundation.native';
-export * from './wallet-plus-icon.native';
-export type { IconProps } from './icon/icon.native';

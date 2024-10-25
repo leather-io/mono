@@ -15,9 +15,9 @@ import {
   Theme,
 } from '@leather.io/ui/native';
 
-import { WarningSheetVariant } from './types';
+export type WarningSheetVariant = 'normal' | 'critical';
 
-interface WarningSheetProps {
+interface WarningSheetLayoutProps {
   sheetRef: RefObject<SheetRef>;
   title: string;
   description: string;
@@ -25,14 +25,13 @@ interface WarningSheetProps {
   onPressSupport?(): unknown;
   variant?: WarningSheetVariant;
 }
-
-export function WarningSheet({
+export function WarningSheetLayout({
   sheetRef,
   title,
   description,
   onSubmit,
   variant = 'normal',
-}: WarningSheetProps) {
+}: WarningSheetLayoutProps) {
   const { themeDerivedFromThemePreference } = useSettings();
   const theme = useTheme<Theme>();
   return (

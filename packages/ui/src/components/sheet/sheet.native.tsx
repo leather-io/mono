@@ -26,6 +26,7 @@ export const Sheet = forwardRef<
   BottomSheetModal,
   {
     shouldHaveContainer?: boolean;
+    isFullHeight?: boolean;
     isScrollView?: boolean;
     children: ReactNode;
     animatedPosition?: SharedValue<number>;
@@ -37,6 +38,7 @@ export const Sheet = forwardRef<
   (
     {
       shouldHaveContainer = true,
+      isFullHeight,
       isScrollView,
       children,
       animatedPosition,
@@ -46,19 +48,21 @@ export const Sheet = forwardRef<
     },
     ref
   ) => {
+    const { bottom, top } = useSafeAreaInsets();
+    const theme = useTheme<Theme>();
     const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
     const defaultAnimatedIndex = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
-    const { bottom } = useSafeAreaInsets();
-    const theme = useTheme<Theme>();
     const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
     const internalAnimatedIndex = animatedIndex ?? defaultAnimatedIndex;
     const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
+    const snapPoints = isFullHeight ? ['100%'] : undefined;
     return (
       <BottomSheetModal
         animatedIndex={internalAnimatedIndex}
         stackBehavior="push"
         onDismiss={onDismiss}
-        enableDynamicSizing
+        enableDynamicSizing={!isFullHeight}
+        snapPoints={snapPoints}
         ref={ref}
         enablePanDownToClose
         backdropComponent={() => (
@@ -69,11 +73,17 @@ export const Sheet = forwardRef<
           />
         )}
         animatedPosition={internalAnimatedPosition}
-        handleComponent={() => (
-          <Box position="absolute" top={-12} width="100%" alignItems="center">
-            <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
-          </Box>
-        )}
+        handleComponent={() =>
+          isFullHeight ? (
+            <Box alignItems="center" padding="2" position="absolute" top={top} width="100%">
+              <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
+            </Box>
+          ) : (
+            <Box alignItems="center" position="absolute" top={-12} width="100%">
+              <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
+            </Box>
+          )
+        }
         // maestro can't find bottom sheet component without this:
         // https://github.com/mobile-dev-inc/maestro/issues/1493#issuecomment-1966447805
         accessible={Platform.select({

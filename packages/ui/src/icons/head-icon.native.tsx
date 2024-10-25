@@ -1,17 +1,19 @@
+import { Component, forwardRef } from 'react';
+
 import HeadSmall from '../assets/icons/head-16-16.svg';
 import Head from '../assets/icons/head-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
-export function HeadIcon({ variant, ...props }: IconProps) {
+export const HeadIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   if (variant === 'small')
     return (
-      <Icon {...props}>
+      <Icon ref={ref} {...props}>
         <HeadSmall />
       </Icon>
     );
   return (
-    <Icon {...props}>
+    <Icon ref={ref} {...props}>
       <Head />
     </Icon>
   );
-}
+});

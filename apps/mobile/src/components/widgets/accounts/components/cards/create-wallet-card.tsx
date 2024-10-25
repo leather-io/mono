@@ -14,7 +14,7 @@ export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
     <AccountCardLayout
       onPress={onPress}
       width={300}
-      Icon={PlusIcon}
+      icon={<PlusIcon />}
       label={t({ id: 'create_wallet_card.title', message: 'Create or restore wallet' })}
       caption={t({
         id: 'create_wallet_card.caption',

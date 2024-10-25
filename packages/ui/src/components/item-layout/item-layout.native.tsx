@@ -15,7 +15,7 @@ export interface ItemLayoutProps {
 }
 export function ItemLayout({
   actionIcon,
-  captionLeft,
+  captionLeft = ' ',
   captionRight,
   titleLeft,
   titleRight,
@@ -34,7 +34,7 @@ export function ItemLayout({
         )}
       </Stack>
       {hasRightElement && (
-        <Stack flex={1} alignItems="flex-end">
+        <Stack flex={2} alignItems="flex-end">
           {isValidElement(titleRight) ? titleRight : <Text variant="label02">{titleRight}</Text>}
           {captionRight && isValidElement(captionRight) && captionRight}
           {captionRight && isString(captionRight) && (

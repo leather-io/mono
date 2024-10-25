@@ -1,37 +1,38 @@
-import AlienIcon from '@/assets/avatar-icons/alien.svg';
-import BankIcon from '@/assets/avatar-icons/bank.svg';
-import CarIcon from '@/assets/avatar-icons/car.svg';
-import CodeIcon from '@/assets/avatar-icons/code.svg';
-import FlagIcon from '@/assets/avatar-icons/flag.svg';
-import FolderIcon from '@/assets/avatar-icons/folder.svg';
-import GiftIcon from '@/assets/avatar-icons/gift.svg';
-import HeartIcon from '@/assets/avatar-icons/heart.svg';
-import HomeIcon from '@/assets/avatar-icons/home.svg';
-import InboxIcon from '@/assets/avatar-icons/inbox.svg';
-import PaletteIcon from '@/assets/avatar-icons/palette.svg';
-import PiggybankIcon from '@/assets/avatar-icons/piggybank.svg';
-import PizzaIcon from '@/assets/avatar-icons/pizza.svg';
-import RocketIcon from '@/assets/avatar-icons/rocket.svg';
-import SaturnIcon from '@/assets/avatar-icons/saturn.svg';
-import SmileIcon from '@/assets/avatar-icons/smile.svg';
-import SpaceIcon from '@/assets/avatar-icons/space.svg';
-import SparklesIcon from '@/assets/avatar-icons/sparkles.svg';
-import ZapIcon from '@/assets/avatar-icons/zap.svg';
-
-import { IconProps } from '@leather.io/ui/native';
+import {
+  AlienIcon,
+  BankIcon,
+  BoxIcon,
+  CarIcon,
+  CodeIcon,
+  ColorPaletteIcon,
+  FlagIcon,
+  FolderIcon,
+  GiftIcon,
+  HeartIcon,
+  HomeIcon,
+  IconProps,
+  PiggybankIcon,
+  PizzaIcon,
+  RocketIcon,
+  SaturnIcon,
+  SmileIcon,
+  SpaceIcon,
+  SparklesIcon,
+  ZapIcon,
+} from '@leather.io/ui/native';
 
 export const iconNames = [
   'alien',
   'bank',
+  'box',
   'car',
   'code',
+  'color-palette',
   'flag',
   'folder',
   'gift',
   'heart',
   'home',
-  'inbox',
-  'palette',
   'piggybank',
   'pizza',
   'rocket',
@@ -42,50 +43,52 @@ export const iconNames = [
   'zap',
 ] as const;
 
-export type AvatarIcon = (typeof iconNames)[number];
+export type AvatarIconName = (typeof iconNames)[number];
 
-export function getAvatarIcon(icon: AvatarIcon | string): React.FC<IconProps> {
+interface AvatarIconProps extends IconProps {
+  icon: AvatarIconName;
+}
+export function AvatarIcon({ icon, ...props }: AvatarIconProps) {
   switch (icon) {
     case 'alien':
-      return AlienIcon;
+      return <AlienIcon {...props} />;
     case 'bank':
-      return BankIcon;
+      return <BankIcon {...props} />;
+    case 'box':
+      return <BoxIcon {...props} />;
     case 'car':
-      return CarIcon;
+      return <CarIcon {...props} />;
     case 'code':
-      return CodeIcon;
+      return <CodeIcon {...props} />;
+    case 'color-palette':
+      return <ColorPaletteIcon {...props} />;
     case 'flag':
-      return FlagIcon;
+      return <FlagIcon {...props} />;
     case 'folder':
-      return FolderIcon;
+      return <FolderIcon {...props} />;
     case 'gift':
-      return GiftIcon;
+      return <GiftIcon {...props} />;
     case 'heart':
-      return HeartIcon;
+      return <HeartIcon {...props} />;
     case 'home':
-      return HomeIcon;
-    case 'inbox':
-      return InboxIcon;
-    case 'palette':
-      return PaletteIcon;
+      return <HomeIcon {...props} />;
     case 'piggybank':
-      return PiggybankIcon;
+      return <PiggybankIcon {...props} />;
     case 'pizza':
-      return PizzaIcon;
+      return <PizzaIcon {...props} />;
     case 'rocket':
-      return RocketIcon;
+      return <RocketIcon {...props} />;
     case 'saturn':
-      return SaturnIcon;
+      return <SaturnIcon {...props} />;
     case 'smile':
-      return SmileIcon;
+      return <SmileIcon {...props} />;
     case 'space':
-      return SpaceIcon;
+      return <SpaceIcon {...props} />;
     case 'sparkles':
-      return SparklesIcon;
+      return <SparklesIcon {...props} />;
     case 'zap':
-      return ZapIcon;
+      return <ZapIcon {...props} />;
     default:
-      // TODO: think of default icon here.
-      return SparklesIcon;
+      return <SparklesIcon {...props} />;
   }
 }

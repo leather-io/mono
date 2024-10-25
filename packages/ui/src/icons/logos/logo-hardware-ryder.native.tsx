@@ -1,10 +1,12 @@
+import { Component, forwardRef } from 'react';
+
 import LogoHardwareRyderLogo from '../../assets/icons/logos/logo-hardware-ryder-24-24.svg';
 import { Icon, IconProps } from '../icon/icon.native';
 
-export function LogoHardwareRyder({ variant, ...props }: IconProps) {
+export const LogoHardwareRyder = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   return (
-    <Icon {...props}>
+    <Icon ref={ref} {...props}>
       <LogoHardwareRyderLogo />
     </Icon>
   );
-}
+});

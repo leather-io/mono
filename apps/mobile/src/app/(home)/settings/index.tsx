@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { NetworkBadge } from '@/components/network-badge';
-import { NotifyUserSheet } from '@/components/sheets/notify-user-sheet.layout';
+import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
@@ -194,7 +194,7 @@ export default function SettingsScreen() {
           testID={TestId.settingsLockAppButton}
         />
       </AnimatedHeaderScreenLayout>
-      <NotifyUserSheet
+      <NotifyUserSheetLayout
         sheetData={{
           title: t({
             id: 'contacts.header_title',
@@ -203,7 +203,7 @@ export default function SettingsScreen() {
         }}
         sheetRef={contactsSheetRef}
       />
-      <NotifyUserSheet
+      <NotifyUserSheetLayout
         sheetData={{
           title: t({
             id: 'fees.header_title',

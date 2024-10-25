@@ -1,17 +1,19 @@
+import { Component, forwardRef } from 'react';
+
 import ChevronDownSmall from '../assets/icons/chevron-down-16-16.svg';
 import ChevronDown from '../assets/icons/chevron-down-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
-export function ChevronDownIcon({ variant, ...props }: IconProps) {
+export const ChevronDownIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   if (variant === 'small')
     return (
-      <Icon {...props}>
+      <Icon ref={ref} {...props}>
         <ChevronDownSmall />
       </Icon>
     );
   return (
-    <Icon {...props}>
+    <Icon ref={ref} {...props}>
       <ChevronDown />
     </Icon>
   );
-}
+});

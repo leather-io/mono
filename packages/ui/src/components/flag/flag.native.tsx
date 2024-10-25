@@ -1,6 +1,4 @@
-import { ViewStyle } from 'react-native';
-
-import { ResponsiveValue } from '@shopify/restyle';
+import { BoxProps, ResponsiveValue } from '@shopify/restyle';
 
 import { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
@@ -17,9 +15,8 @@ const getFlagAlignment = (align: FlagAlignment) => {
   }
 };
 
-export interface FlagProps {
+export interface FlagProps extends BoxProps<Theme> {
   align?: FlagAlignment;
-  boxProps?: ViewStyle;
   children: React.ReactNode;
   img?: React.ReactNode;
   reverse?: boolean;
@@ -27,18 +24,18 @@ export interface FlagProps {
 }
 export function Flag({
   align = 'middle',
-  boxProps = {},
   children,
   img,
   reverse = false,
   spacing = '3',
+  ...props
 }: FlagProps) {
   return (
     <Box
       flex={1}
       flexDirection={reverse ? 'row-reverse' : 'row'}
       alignItems={getFlagAlignment(align)}
-      style={[boxProps]}
+      {...props}
     >
       <Box marginLeft={reverse ? spacing : '0'} marginRight={!reverse ? spacing : '0'}>
         {img}

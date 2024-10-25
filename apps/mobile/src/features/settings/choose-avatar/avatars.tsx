@@ -12,15 +12,15 @@ interface AvatarProps {
 export function Avatars({ setNewIcon, currentIcon }: AvatarProps) {
   return (
     <Box flexDirection="row" gap="5" flexWrap="wrap">
-      {iconNames.map(icon => {
+      {iconNames.map(iconName => {
         return (
           <AvatarButton
-            isSelected={currentIcon === icon}
+            isSelected={currentIcon === iconName}
             onPress={() => {
-              setNewIcon(icon);
+              setNewIcon(iconName);
             }}
-            key={icon}
-            icon={icon}
+            key={iconName}
+            iconName={iconName}
           />
         );
       })}

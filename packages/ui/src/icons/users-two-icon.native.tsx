@@ -1,17 +1,19 @@
+import { Component, forwardRef } from 'react';
+
 import UsersTwoSmall from '../assets/icons/users-two-16-16.svg';
 import UsersTwo from '../assets/icons/users-two-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
-export function UsersTwoIcon({ variant, ...props }: IconProps) {
+export const UsersTwoIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   if (variant === 'small')
     return (
-      <Icon {...props}>
+      <Icon ref={ref} {...props}>
         <UsersTwoSmall />
       </Icon>
     );
   return (
-    <Icon {...props}>
+    <Icon ref={ref} {...props}>
       <UsersTwo />
     </Icon>
   );
-}
+});

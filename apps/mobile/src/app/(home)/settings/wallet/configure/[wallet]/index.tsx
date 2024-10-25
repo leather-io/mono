@@ -3,10 +3,13 @@ import { useRef, useState } from 'react';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
+import {
+  NotifyUserSheetData,
+  NotifyUserSheetLayout,
+} from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
-import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
-import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
+import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
+import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
@@ -259,7 +262,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
-      <NotifyUserSheet sheetData={notifySheetData} sheetRef={notifySheetRef} />
+      <NotifyUserSheetLayout sheetData={notifySheetData} sheetRef={notifySheetRef} />
     </>
   );
 }

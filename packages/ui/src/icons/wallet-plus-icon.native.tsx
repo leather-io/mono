@@ -1,17 +1,19 @@
+import { Component, forwardRef } from 'react';
+
 import WalletPlusSmall from '../assets/icons/wallet-plus-16-16.svg';
 import WalletPlus from '../assets/icons/wallet-plus-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
-export function WalletPlusIcon({ variant, ...props }: IconProps) {
+export const WalletPlusIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   if (variant === 'small')
     return (
-      <Icon {...props}>
+      <Icon ref={ref} {...props}>
         <WalletPlusSmall />
       </Icon>
     );
   return (
-    <Icon {...props}>
+    <Icon ref={ref} {...props}>
       <WalletPlus />
     </Icon>
   );
-}
+});

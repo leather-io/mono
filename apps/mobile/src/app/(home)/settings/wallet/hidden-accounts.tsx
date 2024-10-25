@@ -1,5 +1,5 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { WalletsList } from '@/components/wallet-settings/wallets-list';
+import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { t } from '@lingui/macro';
 
 export default function HiddenAccountsScreen() {
