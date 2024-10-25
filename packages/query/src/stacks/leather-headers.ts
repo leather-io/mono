@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const leatherHeaders: HeadersInit = {
-  'x-hiro-product': 'leather',
+  'x-hiro-product': 'Leather',
 };
 
 axios.interceptors.request.use(request => {

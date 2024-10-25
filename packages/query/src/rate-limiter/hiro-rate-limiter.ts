@@ -7,14 +7,14 @@ import { PriorityQueue } from './queue-class';
 
 const hiroStacksMainnetApiLimiter = new PQueue({
   interval: 1200,
-  intervalCap: 2,
+  intervalCap: 6,
   timeout: 60000,
   queueClass: PriorityQueue,
 });
 
 const hiroStacksTestnetApiLimiter = new PQueue({
   interval: 1200,
-  intervalCap: 2,
+  intervalCap: 6,
   timeout: 60000,
   queueClass: PriorityQueue,
 });
