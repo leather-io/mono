@@ -4,5 +4,3 @@ appId: io.leather.mobilewallet
 - runFlow: ../shared/clean-up.yaml
 - runFlow:
     file: ../shared/add-wallet.yaml
-    env:
-      SECURE: no

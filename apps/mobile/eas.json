@@ -77,19 +77,25 @@
         "image": "latest"
       }
     },
-    "build-and-maestro-test": {
+    "maestro-test-ios": {
       "node": "20.11.0",
       "pnpm": "9.11.0",
       "withoutCredentials": true,
-      "config": "build-and-maestro-test.yml",
-      "android": {
-        "buildType": "apk",
-        "image": "latest"
-      },
+      "config": "maestro-test-ios.yml",
       "ios": {
         "simulator": true,
         "image": "latest",
         "cocoapods": "1.15.2"
+      }
+    },
+    "maestro-test-android": {
+      "node": "20.11.0",
+      "pnpm": "9.11.0",
+      "withoutCredentials": true,
+      "config": "maestro-test-android.yml",
+      "android": {
+        "buildType": "apk",
+        "image": "latest"
       }
     }
   },

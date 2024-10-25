@@ -1,9 +1,9 @@
 appId: io.leather.mobilewallet
 ---
 - launchApp
-- runFlow: ../shared/clean-up.yaml
+- runFlow: ../../shared/clean-up.yaml
 - runFlow:
-    file: ../shared/add-wallet.yaml
+    file: ../../shared/add-wallet.yaml
     env:
       SECURE: yes
 - assertNotVisible:

@@ -1,0 +1,30 @@
+functions:
+  set_maestro_driver_timeout:
+    - run:
+        name: Increase driver startup timeout
+        command: export MAESTRO_DRIVER_STARTUP_TIMEOUT=90000
+  run_maestro_tests:
+    - set_maestro_driver_timeout
+    # We are currently hitting an issue of "Error: BlockingCoroutine is cancelling"
+    # and it seems like that this generic error message blocks the actual error message
+    # PR fixing that is already merged and we are waiting for it to get into the next maestro version
+    # TODO: Enable these 2 flows when maestro gets another release.
+    # maestro/flows/rename-wallet.yaml
+    # maestro/flows/rename-account.yaml
+    - eas/maestro_test:
+        inputs:
+          flow_path: |
+            maestro/flows/change-account-icon.yaml
+            maestro/flows/create-wallet.yaml
+            maestro/flows/create-wallet-without-security.yaml
+            maestro/flows/delete-wallet.yaml
+            maestro/flows/hide-account.yaml 
+            maestro/flows/restore-wallet.yaml
+
+  run_secure_maestro_tests:
+    - set_maestro_driver_timeout
+    - eas/maestro_test:
+        inputs:
+          flow_path: |
+            maestro/flows/secure/create-wallet.yaml
+            maestro/flows/secure/delete-wallet.yaml

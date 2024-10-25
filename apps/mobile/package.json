@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "android": "expo run:android",
+    "android:release": "expo run:android --variant release",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch --preserveWatchOutput",
     "crowdin": "crowdin",
@@ -79,7 +80,7 @@
     "expo-local-authentication": "14.0.1",
     "expo-notifications": "0.28.14",
     "expo-router": "3.5.14",
-    "expo-secure-store": "13.0.1",
+    "expo-secure-store": "13.0.2",
     "expo-splash-screen": "0.27.4",
     "expo-standard-web-crypto": "1.8.1",
     "expo-status-bar": "1.12.1",

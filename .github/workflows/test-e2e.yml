@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  test-e2e:
+  test-e2e-ios:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +19,25 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: deploy E2E build on EAS
+      - name: iOS E2E build on EAS
         working-directory: ./apps/mobile
         run: |
-          eas build --profile build-and-maestro-test --platform ios --non-interactive
+          eas build --profile maestro-test-ios --platform ios --non-interactive
+
+  test-e2e-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the app
+        uses: ./.github/actions/provision
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Android E2E build on EAS
+        working-directory: ./apps/mobile
+        run: |
+          eas build --profile maestro-test-android --platform android --non-interactive

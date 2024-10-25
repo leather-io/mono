@@ -3,9 +3,9 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Add Wallet'
 - tapOn:
-    text: 'Create new wallet Create a new Bitcoin and Stacks wallet'
+    id: 'createNewWalletSheetButton'
 - tapOn:
-    text: "I've backed it up"
+    id: 'walletCreationBackedUpButton'
 - runFlow:
     when:
       true: ${SECURE == "yes"}
@@ -14,7 +14,7 @@ appId: io.leather.mobilewallet
           text: 'Enable device security'
 - runFlow:
     when:
-      true: ${SECURE == "no"}
+      true: ${SECURE != "yes"}
     commands:
       - tapOn:
           text: 'Skip for now'

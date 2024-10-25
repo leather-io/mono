@@ -4,14 +4,12 @@ appId: io.leather.mobilewallet
 - runFlow: ../shared/clean-up.yaml
 - runFlow:
     file: ../shared/add-wallet.yaml
-    env:
-      SECURE: yes
 - assertNotVisible:
     id: 'toastContainer'
 - tapOn:
     id: 'homeSettingsButton'
 - tapOn:
-    text: 'Wallets and accounts Add, configure and remove'
+    id: 'settingsWalletAndAccountsButton'
 - tapOn:
     id: 'walletListAccountCard'
 - tapOn:

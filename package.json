@@ -212,7 +212,7 @@
       }
     },
     "patchedDependencies": {
-      "expo-secure-store@13.0.1": "patches/expo-secure-store@13.0.1.patch"
+      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch"
     }
   }
 }
