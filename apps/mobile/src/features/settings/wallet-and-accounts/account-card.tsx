@@ -1,12 +1,11 @@
 import { LayoutChangeEvent } from 'react-native';
 
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, IconProps, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 export function AccountCard({
-  Icon,
+  icon,
   name,
   onPress,
   onLongPress,
@@ -14,7 +13,7 @@ export function AccountCard({
   testID,
   iconTestID,
 }: {
-  Icon: React.FC<IconProps>;
+  icon: React.ReactNode;
   name: string;
   onPress?(): void;
   onLongPress?(): void;
@@ -22,8 +21,6 @@ export function AccountCard({
   testID?: string;
   iconTestID?: string;
 }) {
-  const theme = useTheme<Theme>();
-
   const Container = onPress ? TouchableOpacity : Box;
 
   return (
@@ -47,7 +44,7 @@ export function AccountCard({
         bg="ink.text-primary"
         testID={iconTestID}
       >
-        <Icon color={theme.colors['ink.background-primary']} />
+        {icon}
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
         <Text variant="label01">{name}</Text>

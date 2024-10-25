@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 
-import { getAvatarIcon } from '@/components/avatar-icon';
+import { AvatarIcon } from '@/components/avatar-icon';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { NetworkBadge } from '@/components/network-badge';
 import { useToastContext } from '@/components/toast/toast-context';
-import { AccountCard } from '@/components/wallet-settings/account-card';
-import { AccountNameSheet } from '@/components/wallet-settings/account-name-sheet';
+import { AccountCard } from '@/features/settings/wallet-and-accounts/account-card';
+import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { AccountId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
@@ -15,10 +15,19 @@ import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
-import { Box, Cell, Eye1ClosedIcon, HeadIcon, PassportIcon, SheetRef } from '@leather.io/ui/native';
+import {
+  Box,
+  Cell,
+  Eye1ClosedIcon,
+  HeadIcon,
+  PassportIcon,
+  SheetRef,
+  Theme,
+} from '@leather.io/ui/native';
 
 interface ConfigureAccountProps extends AccountId {
   account: Account;
@@ -27,6 +36,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   const accountNameSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const theme = useTheme<Theme>();
   const { i18n } = useLingui();
 
   const { displayToast } = useToastContext();
@@ -66,7 +76,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
       >
         <Box pb="3">
           <AccountCard
-            Icon={getAvatarIcon(account.icon)}
+            icon={<AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />}
             name={account.name}
             key={account.id}
             iconTestID={defaultIconTestId(account.icon)}

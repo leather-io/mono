@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 
-import { WarningSheet } from '@/components/sheets/warning-sheet.layout';
+import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
 import { t } from '@lingui/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
@@ -11,7 +11,7 @@ interface RemoveWalletSheetProps {
 }
 export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps) {
   return (
-    <WarningSheet
+    <WarningSheetLayout
       sheetRef={sheetRef}
       title={t({
         id: 'remove_wallet.header_title',

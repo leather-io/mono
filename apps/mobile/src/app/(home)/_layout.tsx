@@ -1,6 +1,6 @@
 import { RefObject, createContext } from 'react';
 
-import { ActionBarMethods } from '@/components/action-bar';
+import { ActionBarMethods } from '@/components/action-bar/action-bar';
 import { HomeHeader } from '@/components/headers/home-header';
 import { NakedHeader } from '@/components/headers/naked-header';
 import { TitleHeader } from '@/components/headers/title-header';

@@ -15,7 +15,7 @@ interface TokensWidgetProps {
 }
 
 function showChain(chain: string) {
-  if (chain === 'Stacks blockchain' || chain === 'Bitcoin blockchain') return '';
+  if (chain === 'Stacks blockchain' || chain === 'Bitcoin blockchain') return;
   return chain;
 }
 

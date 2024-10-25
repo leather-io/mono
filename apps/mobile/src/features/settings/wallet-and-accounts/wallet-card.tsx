@@ -1,11 +1,13 @@
 import { useState } from 'react';
 
+import { SpinnerIcon } from '@/components/spinner-icon';
+import { useToastContext } from '@/components/toast/toast-context';
+import { AccountList } from '@/features/account-list/account-list';
 import { WalletId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
-import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -22,10 +24,6 @@ import {
   TouchableOpacity,
 } from '@leather.io/ui/native';
 
-import { getAvatarIcon } from '../avatar-icon';
-import { SpinnerIcon } from '../spinner-icon';
-import { useToastContext } from '../toast/toast-context';
-import { AccountCard } from './account-card';
 import { WalletViewVariant } from './types';
 
 interface WalletCardProps extends WalletId {
@@ -33,7 +31,7 @@ interface WalletCardProps extends WalletId {
   name: string;
 }
 export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
-  const { list: accountsList } = useAccountsByFingerprint(fingerprint, variant);
+  const { list: accounts } = useAccountsByFingerprint(fingerprint, variant);
   const [showAccounts, setShowAccounts] = useState(true);
   const theme = useTheme<Theme>();
   const keys = useKeyStore();
@@ -80,23 +78,11 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
       </Box>
       {showAccounts && (
         <Box flexDirection="column" gap="3">
-          {accountsList.map(account => {
-            return (
-              <AccountCard
-                Icon={getAvatarIcon(account.icon)}
-                name={account.name}
-                onPress={() => {
-                  router.navigate({
-                    pathname: AppRoutes.SettingsWalletConfigureAccount,
-                    params: { fingerprint, account: account.accountIndex },
-                  });
-                }}
-                key={account.id}
-                testID={TestId.walletListAccountCard}
-                iconTestID={defaultIconTestId(account.icon)}
-              />
-            );
-          })}
+          <AccountList
+            accounts={accounts}
+            navigateToPath={AppRoutes.SettingsWalletConfigureAccount}
+            walletFingerprint={fingerprint}
+          />
           {variant === 'active' && (
             <Button
               onPress={async () => {

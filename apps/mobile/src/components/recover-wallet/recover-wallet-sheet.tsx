@@ -4,7 +4,7 @@ import { t } from '@lingui/macro';
 
 import { LockIcon, SheetRef } from '@leather.io/ui/native';
 
-import { InputSheet } from '../sheets/input-sheet.layout';
+import { InputSheetLayout } from '../sheets/input-sheet.layout';
 
 interface RecoverWalletSheetProps {
   recoverWalletSheetRef: RefObject<SheetRef>;
@@ -17,14 +17,14 @@ export function RecoverWalletSheet({
   setPassphrase,
 }: RecoverWalletSheetProps) {
   return (
-    <InputSheet
+    <InputSheetLayout
       sheetRef={recoverWalletSheetRef}
       initialValue={passphrase}
       title={t({
         id: 'recover_wallet.passphrase.header_title',
         message: `BIP39 passphrase`,
       })}
-      TitleIcon={LockIcon}
+      icon={<LockIcon />}
       placeholder={t({
         id: 'recover_wallet.passphrase.input_placeholder',
         message: `Passphrase`,

@@ -1,7 +1,10 @@
 import { useRef, useState } from 'react';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
+import {
+  NotifyUserSheetData,
+  NotifyUserSheetLayout,
+} from '@/components/sheets/notify-user-sheet.layout';
 import { t } from '@lingui/macro';
 
 import {
@@ -109,7 +112,11 @@ export default function HardwareWalletListScreen() {
           })}
         </Box>
       </AnimatedHeaderScreenLayout>
-      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
+      <NotifyUserSheetLayout
+        onCloseSheet={onCloseSheet}
+        sheetData={sheetData}
+        sheetRef={sheetRef}
+      />
     </>
   );
 }

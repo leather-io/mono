@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { getAvatarIcon } from '@/components/avatar-icon';
+import { AvatarIcon } from '@/components/avatar-icon';
 import { AccountSelectorSheet } from '@/features/account-selector-sheet';
 import { getMockAccounts } from '@/mocks/account.mocks';
 import { AppRoutes } from '@/routes';
@@ -10,9 +10,10 @@ import { AccountStore } from '@/store/accounts/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, SheetRef } from '@leather.io/ui/native';
+import { Box, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { Balance } from '../../balance/balance';
 import { Widget, WidgetHeader } from '../components/widget';
@@ -31,8 +32,8 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
   const { i18n } = useLingui();
-
   const router = useRouter();
+  const theme = useTheme<Theme>();
 
   const hasWallets = wallets.length > 0;
   const hasAccounts = accounts.length > 0;
@@ -60,7 +61,14 @@ export function AccountsWidget({ accounts, wallets }: AccountsWidgetProps) {
         {mockAccounts.map(account => (
           <AccountCard
             type={account.type}
-            Icon={getAvatarIcon(account.icon)}
+            icon={
+              <AvatarIcon
+                color={theme.colors['ink.background-primary']}
+                icon={account.icon}
+                width={32}
+                height={32}
+              />
+            }
             key={account.id}
             label={<Balance balance={account.balance} />}
             caption={i18n._({

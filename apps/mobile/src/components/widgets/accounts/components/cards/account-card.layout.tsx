@@ -1,12 +1,11 @@
 import { WalletStore } from '@/store/wallets/utils';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, IconProps, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 import { LedgerBadge } from '../../ledger-badge';
 
 export interface AccountCardLayoutProps {
-  Icon: React.FC<IconProps>;
+  icon: React.ReactNode;
   label: React.ReactNode;
   caption: string;
   onPress(): void;
@@ -14,18 +13,17 @@ export interface AccountCardLayoutProps {
   width?: number;
   testID?: string;
 }
-
 export function AccountCardLayout({
   onPress,
   type,
-  Icon,
+  icon,
   label,
   caption,
   width = 200,
   testID,
 }: AccountCardLayoutProps) {
   const isLedger = type === 'ledger';
-  const theme = useTheme();
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -42,7 +40,7 @@ export function AccountCardLayout({
       {isLedger && <LedgerBadge />}
 
       <Box p="2" borderRadius="round" backgroundColor="ink.text-primary">
-        <Icon color={theme.colors['ink.background-primary']} width={32} height={32} />
+        {icon}
       </Box>
       <Box gap="1">
         <Text variant="label01">{label}</Text>

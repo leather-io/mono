@@ -4,7 +4,7 @@ import { t } from '@lingui/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { WarningSheet } from '../sheets/warning-sheet.layout';
+import { WarningSheetLayout } from '../sheets/warning-sheet.layout';
 
 interface SkipSecureWalletSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -12,7 +12,7 @@ interface SkipSecureWalletSheetProps {
 }
 export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSheetProps) {
   return (
-    <WarningSheet
+    <WarningSheetLayout
       sheetRef={sheetRef}
       title={t({
         id: 'skip_secure_wallet.header_title',

@@ -4,7 +4,7 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { NetworkBadge } from '@/components/network-badge';
-import { WalletsList } from '@/components/wallet-settings/wallets-list';
+import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';

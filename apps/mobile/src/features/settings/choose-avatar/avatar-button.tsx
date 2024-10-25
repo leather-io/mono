@@ -1,17 +1,16 @@
-import { getAvatarIcon } from '@/components/avatar-icon';
+import { AvatarIcon, AvatarIconName } from '@/components/avatar-icon';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
 
 interface AvatarButtonProps {
-  icon: string;
+  iconName: AvatarIconName;
   onPress(): void;
   isSelected: boolean;
 }
-export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {
+export function AvatarButton({ iconName, onPress, isSelected }: AvatarButtonProps) {
   const theme = useTheme<Theme>();
-  const Icon = getAvatarIcon(icon);
   return (
     <Box>
       {isSelected && (
@@ -26,7 +25,7 @@ export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {
         />
       )}
       <TouchableOpacity
-        testID={defaultIconTestId(icon)}
+        testID={defaultIconTestId(iconName)}
         borderWidth={2}
         borderColor="ink.background-primary"
         onPress={onPress}
@@ -34,7 +33,12 @@ export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {
         borderRadius="round"
         bg="ink.text-primary"
       >
-        <Icon width={32} height={32} color={theme.colors['ink.background-primary']} />
+        <AvatarIcon
+          color={theme.colors['ink.background-primary']}
+          icon={iconName}
+          width={32}
+          height={32}
+        />
       </TouchableOpacity>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ReactNode, RefObject } from 'react';
+import { ComponentPropsWithoutRef, RefObject } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
 import { t } from '@lingui/macro';
@@ -48,7 +48,6 @@ function whenInputState<T>(inputState: InputState, match: Record<InputState, T>)
 
 export function TextInput({
   inputState,
-  Icon,
   ref,
   errorMessage,
   textVariant,
@@ -56,7 +55,6 @@ export function TextInput({
   ...rest
 }: Props & {
   inputState: InputState;
-  Icon?: ReactNode;
   ref?: RefObject<RNTextInput>;
   errorMessage?: string;
   textVariant?: TextInputProps<Theme>['textVariant'];

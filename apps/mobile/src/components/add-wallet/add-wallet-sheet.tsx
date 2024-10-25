@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
 
-import { NotifyUserSheet, NotifyUserSheetData } from '../sheets/notify-user-sheet.layout';
+import { NotifyUserSheetData, NotifyUserSheetLayout } from '../sheets/notify-user-sheet.layout';
 import { AddWalletSheetLayout } from './add-wallet-sheet.layout';
 
 interface AddWalletSheetBaseProps {
@@ -49,7 +49,11 @@ export function AddWalletSheet({ addWalletSheetRef, opensFully }: AddWalletSheet
         opensFully={opensFully}
       />
 
-      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
+      <NotifyUserSheetLayout
+        onCloseSheet={onCloseSheet}
+        sheetData={sheetData}
+        sheetRef={sheetRef}
+      />
     </>
   );
 }
