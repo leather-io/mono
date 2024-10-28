@@ -44,7 +44,7 @@ export function deriveNativeSegwitAccountFromRootKeychain(
   });
 }
 
-export function getNativeSegWitPaymentFromAddressIndex(
+export function getNativeSegwitPaymentFromAddressIndex(
   keychain: HDKey,
   network: BitcoinNetworkModes
 ) {
@@ -67,6 +67,6 @@ export function deriveNativeSegwitReceiveAddressIndexZero({
   const zeroAddressIndex = deriveAddressIndexZeroFromAccount(keychain);
   return {
     keychain: zeroAddressIndex,
-    payment: getNativeSegWitPaymentFromAddressIndex(zeroAddressIndex, network),
+    payment: getNativeSegwitPaymentFromAddressIndex(zeroAddressIndex, network),
   };
 }

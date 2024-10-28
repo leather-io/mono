@@ -22,7 +22,7 @@ import {
   whenSupportedPaymentType,
 } from './bitcoin.utils';
 import { getTaprootPaymentFromAddressIndex } from './p2tr-address-gen';
-import { getNativeSegWitPaymentFromAddressIndex } from './p2wpkh-address-gen';
+import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
 
 export type AllowedSighashTypes = SignatureHash | SigHash;
 
@@ -98,7 +98,7 @@ export function deriveBitcoinPayerFromAccount(descriptor: string, network: Bitco
 
     const derivePayerFromAccount = whenSupportedPaymentType(paymentType)({
       p2tr: getTaprootPaymentFromAddressIndex,
-      p2wpkh: getNativeSegWitPaymentFromAddressIndex,
+      p2wpkh: getNativeSegwitPaymentFromAddressIndex,
     });
 
     const payment = derivePayerFromAccount(childKeychain, network);
