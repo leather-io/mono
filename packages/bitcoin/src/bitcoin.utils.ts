@@ -15,6 +15,7 @@ import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
 import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 import { getTaprootPayment } from './p2tr-address-gen';
+import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
 
 export interface BitcoinAccount {
   type: PaymentTypes;
@@ -256,12 +257,13 @@ export function lookUpLedgerKeysByPath(
     };
 }
 
-export interface GetTaprootAddressArgs {
+interface GetAddressArgs {
   index: number;
   keychain?: HDKey;
   network: BitcoinNetworkModes;
 }
-export function getTaprootAddress({ index, keychain, network }: GetTaprootAddressArgs) {
+
+export function getTaprootAddress({ index, keychain, network }: GetAddressArgs) {
   if (!keychain) throw new Error('Expected keychain to be provided');
 
   if (keychain.depth !== DerivationPathDepth.Account)
@@ -272,6 +274,22 @@ export function getTaprootAddress({ index, keychain, network }: GetTaprootAddres
   if (!addressIndex.publicKey) throw new Error('Expected publicKey to be defined');
 
   const payment = getTaprootPayment(addressIndex.publicKey, network);
+
+  if (!payment.address) throw new Error('Expected address to be defined');
+  return payment.address;
+}
+
+export function getNativeSegwitAddress({ index, keychain, network }: GetAddressArgs) {
+  if (!keychain) throw new Error('Expected keychain to be provided');
+
+  if (keychain.depth !== DerivationPathDepth.Account)
+    throw new Error('Expects keychain to be on the account index');
+
+  const addressIndex = deriveAddressIndexKeychainFromAccount(keychain)(index);
+
+  if (!addressIndex.publicKey) throw new Error('Expected publicKey to be defined');
+
+  const payment = getNativeSegwitPaymentFromAddressIndex(addressIndex, network);
 
   if (!payment.address) throw new Error('Expected address to be defined');
   return payment.address;
@@ -298,4 +316,28 @@ export function getPsbtTxOutputs(psbtTx: btc.Transaction): TransactionOutput[] {
   const outputs: TransactionOutput[] = [];
   for (let i = 0; i < outputsLength; i++) outputs.push(psbtTx.getOutput(i));
   return outputs;
+}
+
+export function inferNetworkFromAddress(address: string): BitcoinNetworkModes {
+  if (address.startsWith('bc1')) return 'mainnet';
+  if (address.startsWith('tb1')) return 'testnet';
+  if (address.startsWith('bcrt1')) return 'regtest';
+
+  const firstChar = address[0];
+
+  if (firstChar === '1' || firstChar === '3') return 'mainnet';
+  if (firstChar === 'm' || firstChar === 'n') return 'testnet';
+  if (firstChar === '2') return 'testnet';
+
+  throw new Error('Invalid or unsupported Bitcoin address format');
+}
+
+export function inferPaymentTypeFromAddress(address: string): SupportedPaymentType {
+  if (address.startsWith('bc1q') || address.startsWith('tb1q') || address.startsWith('bcrt1q'))
+    return 'p2wpkh';
+
+  if (address.startsWith('bc1p') || address.startsWith('tb1p') || address.startsWith('bcrt1p'))
+    return 'p2tr';
+
+  throw new Error('Unable to infer payment type from address');
 }

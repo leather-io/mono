@@ -88,7 +88,7 @@ export const accountDisplayPreferencesKeyedByType: Record<
   [AccountDisplayPreferenceType.NativeSegwit]: {
     type: 'native-segwit',
     blockchain: 'bitcoin',
-    name: 'Native SegWit address',
+    name: 'Native Segwit address',
   },
   [AccountDisplayPreferenceType.Taproot]: {
     type: 'taproot',
