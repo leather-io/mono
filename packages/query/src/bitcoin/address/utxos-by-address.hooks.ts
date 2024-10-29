@@ -13,8 +13,13 @@ import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks'
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
 import { createGetUtxosByAddressQueryOptions } from './utxos-by-address.query';
 
+interface UtxoIdentifier {
+  txid: string;
+  vout: number;
+}
+
 export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
-  return <T extends { txid: string; vout: number }>(utxo: T) => {
+  return <T extends UtxoIdentifier>(utxo: T) => {
     return !inscriptions.some(
       inscription =>
         `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
@@ -23,7 +28,7 @@ export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
 }
 
 export function filterUtxosWithRunes(runes: RunesOutputsByAddress[]) {
-  return <T extends { txid: string; vout: number }>(utxo: T) => {
+  return <T extends UtxoIdentifier>(utxo: T) => {
     return !runes.some(rune => rune.output === `${utxo.txid}:${utxo.vout}`);
   };
 }
