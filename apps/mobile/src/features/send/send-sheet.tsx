@@ -1,28 +1,20 @@
-import { RefObject } from 'react';
+import { useWindowDimensions } from 'react-native';
 
-import { FullHeightSheetHeader } from '@/components/headers/full-height-sheet-header';
-import { NetworkBadge } from '@/components/network-badge';
-import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet.layout';
-import { t } from '@lingui/macro';
+import { FullHeightSheet } from '@/components/sheets/full-height-sheet';
+import { useSendSheetContext } from '@/features/send/send-sheet-context';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { Box } from '@leather.io/ui/native';
 
-interface SendSheetProps {
-  sheetRef: RefObject<SheetRef>;
-}
-export function SendSheet({ sheetRef }: SendSheetProps) {
+import { SendSheetNavigator } from './send-sheet-navigator';
+
+export function SendSheet() {
+  const { height } = useWindowDimensions();
+  const { sendSheetRef } = useSendSheetContext();
   return (
-    <FullHeightSheetLayout
-      header={
-        <FullHeightSheetHeader
-          title={t`Placeholder`}
-          subtitle={t`Placeholder`}
-          rightElement={<NetworkBadge />}
-        />
-      }
-      sheetRef={sheetRef}
-    >
-      <></>
-    </FullHeightSheetLayout>
+    <FullHeightSheet sheetRef={sendSheetRef}>
+      <Box flex={1} height={height}>
+        <SendSheetNavigator />
+      </Box>
+    </FullHeightSheet>
   );
 }

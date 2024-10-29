@@ -6,6 +6,7 @@ import { AccountList } from '@/features/account-list/account-list';
 import { WalletId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
+import { Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { t } from '@lingui/macro';
@@ -38,6 +39,13 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { displayToast } = useToastContext();
   const router = useRouter();
   const [isAddingAccount, setIsAddingAccount] = useState(false);
+
+  function onSelectAccount(account: Account) {
+    router.navigate({
+      pathname: AppRoutes.SettingsWalletConfigureAccount,
+      params: { fingerprint, account: account.accountIndex },
+    });
+  }
 
   return (
     <Box flexDirection="column">
@@ -78,11 +86,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
       </Box>
       {showAccounts && (
         <Box flexDirection="column" gap="3">
-          <AccountList
-            accounts={accounts}
-            navigateToPath={AppRoutes.SettingsWalletConfigureAccount}
-            walletFingerprint={fingerprint}
-          />
+          <AccountList accounts={accounts} onPress={onSelectAccount} />
           {variant === 'active' && (
             <Button
               onPress={async () => {

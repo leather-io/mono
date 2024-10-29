@@ -21,7 +21,7 @@ export function AccountListItem({
   walletName,
 }: AccountListItemProps) {
   return (
-    <Pressable disabled={!onPress} onPress={onPress} py="3" testID={testID}>
+    <Pressable flexDirection="row" disabled={!onPress} onPress={onPress} py="3" testID={testID}>
       <Flag
         img={
           <Avatar bg="ink.text-primary" testID={iconTestID}>
