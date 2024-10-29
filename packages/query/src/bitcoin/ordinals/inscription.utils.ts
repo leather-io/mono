@@ -68,7 +68,6 @@ export function createBestInSlotInscription(
     preview,
     title,
     genesisBlockHeight: inscription.genesis_height,
-
     genesisBlockHash: inscription.genesis_block_hash,
     genesisTimestamp: Math.floor(genesisTimestamp / 1000),
     value: inscription.output_value.toString(),

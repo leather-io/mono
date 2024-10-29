@@ -39,30 +39,25 @@ function useCreateBitcoinAccountUtxoQueryOptions(descriptors: string[]) {
   );
 }
 
-// export function useBitcoinAccountUtxos() {
-//   const queries = useCreateBitcoinAccountUtxoQueryOptions();
-//   return useQueries({ queries });
-// }
+type TotalBalanceCombineFn = UseQueryResult<
+  {
+    value: string;
+    path: string;
+    address: string;
+    txid: string;
+    confirmations: number;
+    vout: number;
+    height?: number | undefined;
+  }[],
+  Error
+>[];
 
 export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
   const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);
   const calcUsdAmount = useCalculateBitcoinFiatValue();
 
   const combine = useCallback(
-    (
-      results: UseQueryResult<
-        {
-          value: string;
-          path: string;
-          address: string;
-          txid: string;
-          confirmations: number;
-          vout: number;
-          height?: number | undefined;
-        }[],
-        Error
-      >[]
-    ) => {
+    (results: TotalBalanceCombineFn) => {
       const amount = sumNumbers(
         results
           .map(data => data.data)
