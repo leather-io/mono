@@ -60,7 +60,8 @@ const stampsByAdressSchema = z.object({
       unconfirmedBalance: z.number(),
       unconfirmedTxCount: z.number(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
   data: z.object({
     stamps: z.array(stampSchema),
     src20: z.array(src20TokenSchema),
