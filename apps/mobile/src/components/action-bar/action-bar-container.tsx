@@ -2,7 +2,7 @@ import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } f
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
-import { SendSheet } from '@/features/send/send-sheet';
+import { useSendSheetContext } from '@/features/send/send-sheet-context';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -150,7 +150,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const router = useRouter();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const sendSheetRef = useRef<SheetRef>(null);
+  const { sendSheetRef } = useSendSheetContext();
 
   const actionBar = isEmptyArray(wallets.list) ? (
     <ActionBar
@@ -207,7 +207,6 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
     <>
       {actionBar}
       <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
-      <SendSheet sheetRef={sendSheetRef} />
     </>
   );
 });

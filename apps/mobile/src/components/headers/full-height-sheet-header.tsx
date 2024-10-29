@@ -5,7 +5,7 @@ import { HeaderLayout } from './header.layout';
 
 interface FullHeightSheetHeaderProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   rightElement?: ReactNode;
 }
 export function FullHeightSheetHeader({
