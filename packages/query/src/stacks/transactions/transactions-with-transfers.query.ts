@@ -1,3 +1,4 @@
+import { AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { useCurrentNetworkState } from '../../leather-query-provider';
@@ -12,6 +13,26 @@ const queryOptions = {
   refetchOnWindowFocus: true,
 } as const;
 
+export function filterVerboseUnusedTransactionWithTransferData(
+  resp: AddressTransactionsWithTransfersListResponse
+) {
+  const parsedResults = resp.results.map(result => {
+    if (result.tx.tx_type === 'smart_contract')
+      result.tx.smart_contract = { ...result.tx.smart_contract, source_code: 'redacted' };
+
+    if (result.tx.tx_type === 'contract_call' && result.tx.contract_call.function_args) {
+      result.tx.contract_call.function_args = result.tx.contract_call.function_args.map(fnArgs => ({
+        ...fnArgs,
+        hex: 'redacted',
+        repr: 'redacted',
+      }));
+      result.tx.tx_result = { ...result.tx.tx_result, hex: 'redacted', repr: 'redacted' };
+    }
+    return result;
+  });
+  return { ...resp, results: parsedResults };
+}
+
 interface CreateGetAccountTransactionsWithTransfersQueryOptionsArgs {
   address: string;
   client: StacksClient;
@@ -25,8 +46,12 @@ export function createGetAccountTransactionsWithTransfersQueryOptions({
   return {
     enabled: !!address && !!network,
     queryKey: [StacksQueryPrefixes.GetAccountTxsWithTransfers, address, network],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      client.getAccountTransactionsWithTransfers(address, signal),
+    queryFn: async ({ signal }: QueryFunctionContext) => {
+      const resp = await client.getAccountTransactionsWithTransfers(address, signal);
+      // transactions_with_transfers is deprecated. When removing this **make
+      // sure that the filtering is used on the new endpoints**
+      return filterVerboseUnusedTransactionWithTransferData(resp);
+    },
     ...queryOptions,
   } as const;
 }
