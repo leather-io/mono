@@ -103,6 +103,23 @@
   * dependencies
     * @leather.io/utils bumped to 0.15.0
 
+## [1.31.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.31.0...@leather.io/ui-v1.31.1) (2024-10-30)
+
+
+### Bug Fixes
+
+* add experimental support for blur view on android ([c2380d1](https://github.com/leather-io/mono/commit/c2380d178296a4a8fb5585465258b643af470f90))
+* prep refactoring for send flow, closes LEA-1641 ([d9bfe28](https://github.com/leather-io/mono/commit/d9bfe287b01fb88c780c5925a9e28a0789eca9dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.16.7
+  * devDependencies
+    * @leather.io/models bumped to 0.18.3
+
 ## [1.31.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.30.0...@leather.io/ui-v1.31.0) (2024-10-24)
 
 

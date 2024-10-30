@@ -248,6 +248,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.1.13
 
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.14.2...@leather.io/bitcoin-v0.15.0) (2024-10-30)
+
+
+### Features
+
+* **bitcoin:** recursive address look up helper ([7f3d11c](https://github.com/leather-io/mono/commit/7f3d11c9e62c11492b9a88b18b7011d9cd6b4a98))
+* integrate bitcoin balances ([0023ac5](https://github.com/leather-io/mono/commit/0023ac5bfd81fb721dc8fb3603194929db8a814c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.13.0
+    * @leather.io/crypto bumped to 1.6.7
+    * @leather.io/models bumped to 0.18.3
+    * @leather.io/utils bumped to 0.16.7
+  * devDependencies
+    * @leather.io/rpc bumped to 2.1.14
+
 ## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.13.3...@leather.io/bitcoin-v0.14.0) (2024-10-17)
 
 
