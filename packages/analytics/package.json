@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/analytics",
-  "author": "leather.io",
+  "author": "Leather.io contact@leather.io",
   "description": "Analytics package for Leather using Segment",
   "version": "0.0.1",
   "license": "MIT",
@@ -18,13 +18,13 @@
     "format:check": "prettier . --check \"src/**/*.ts\" --ignore-path ../../.prettierignore",
     "lint": "eslint . --ignore-path ../../.eslintignore",
     "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
-    "typecheck": "tsc --noEmit --project ./tsconfig.json"
+    "typecheck": "tsc --noEmit"
   },
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js",
-      "require": "./index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     }
   },
   "devDependencies": {
@@ -40,6 +40,11 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "bitcoin",
+    "leather",
+    "leather wallet"
   ],
   "publishConfig": {
     "access": "public"
