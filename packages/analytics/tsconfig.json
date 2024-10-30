@@ -6,5 +6,6 @@
     "baseUrl": "src",
     "types": ["vitest/globals"],
     "outDir": "./dist"
-  }
+  },
+  "types": ["segment-analytics"]
 }
