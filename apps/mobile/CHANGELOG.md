@@ -202,6 +202,39 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.45.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.44.1...@leather.io/mobile-v1.45.0) (2024-10-30)
+
+
+### Features
+
+* auth before deleting wallet ([b770181](https://github.com/leather-io/mono/commit/b770181f49b67048786304c285bebe94a9eed0e4))
+* integrate bitcoin balances ([0023ac5](https://github.com/leather-io/mono/commit/0023ac5bfd81fb721dc8fb3603194929db8a814c))
+
+
+### Bug Fixes
+
+* add experimental support for blur view on android ([c2380d1](https://github.com/leather-io/mono/commit/c2380d178296a4a8fb5585465258b643af470f90))
+* fully opened sheet for Add Wallet button ([792df24](https://github.com/leather-io/mono/commit/792df240fa4ba6fcbd717b1a14665aa4e3ce2b36))
+* prep refactoring for send flow, closes LEA-1641 ([d9bfe28](https://github.com/leather-io/mono/commit/d9bfe287b01fb88c780c5925a9e28a0789eca9dd))
+* **query:** gcTime using too big of a number for javascript ([b7975f9](https://github.com/leather-io/mono/commit/b7975f9a4acf4b5898e92247c170b664c796d3c7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.15.0
+    * @leather.io/constants bumped to 0.13.0
+    * @leather.io/crypto bumped to 1.6.7
+    * @leather.io/models bumped to 0.18.3
+    * @leather.io/query bumped to 2.18.0
+    * @leather.io/rpc bumped to 2.1.14
+    * @leather.io/stacks bumped to 1.2.4
+    * @leather.io/ui bumped to 1.31.1
+    * @leather.io/utils bumped to 0.16.7
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.15.0
+
 ## [1.44.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.44.0...@leather.io/mobile-v1.44.1) (2024-10-25)
 
 

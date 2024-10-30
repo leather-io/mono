@@ -49,6 +49,20 @@
   * dependencies
     * @leather.io/models bumped to 0.18.2
 
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.12.5...@leather.io/constants-v0.13.0) (2024-10-30)
+
+
+### Features
+
+* **bitcoin:** recursive address look up helper ([7f3d11c](https://github.com/leather-io/mono/commit/7f3d11c9e62c11492b9a88b18b7011d9cd6b4a98))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.18.3
+
 ## [0.12.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.12.1...@leather.io/constants-v0.12.2) (2024-10-11)
 
 
