@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "secure-store-utils": ["../src/index"],
+      "secure-store-utils/*": ["../src/*"]
+    }
+  }
+}

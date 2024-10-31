@@ -47,7 +47,7 @@ function getBiometricsSecureStoreConfig() {
   return secureStoreConfigWithBiometrics;
 }
 
-function getSecureStoreConfig(biometrics: boolean) {
+export function getSecureStoreConfig(biometrics: boolean) {
   if (biometrics) {
     return getBiometricsSecureStoreConfig();
   }

@@ -212,7 +212,8 @@
       }
     },
     "patchedDependencies": {
-      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch"
+      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch",
+      "expo-module-scripts@3.5.2": "patches/expo-module-scripts@3.5.2.patch"
     }
   }
 }

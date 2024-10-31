@@ -1,0 +1,38 @@
+{
+  "name": "@leather.io/secure-store-utils",
+  "author": "leather-wallet",
+  "description": "Utils for expo-secure-store",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/leather-io/mono/tree/dev/packages/secure-store-utils",
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "expo-module": "expo-module",
+    "lint": "expo-module lint",
+    "open:android": "open -a \"Android Studio\" example/android",
+    "open:ios": "xed example/ios",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "test": "expo-module test"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.79",
+    "expo-module-scripts": "3.5.2",
+    "expo-modules-core": "1.12.24",
+    "expo-secure-store": "13.0.2"
+  },
+  "keywords": [
+    "expo",
+    "react-native",
+    "secure-store-utils",
+    "SecureStoreUtils"
+  ],
+  "main": "build/index.js",
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "types": "build/index.d.ts"
+}

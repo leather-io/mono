@@ -1,0 +1,44 @@
+diff --git a/bin/expo-module-build b/bin/expo-module-build
+index 7c556d528ecb92351da7aa4bcaefe665d7b59cc3..9c0bbf8b42cc6845359f1ed51615c2978795ff44 100755
+--- a/bin/expo-module-build
++++ b/bin/expo-module-build
+@@ -9,8 +9,7 @@ args=("$@")
+ # If the command is used like `yarn build plugin`, set the --build option to point to
+ # plugin/tsconfig.json
+ extra_module_build_types=("plugin" "cli" "utils" "scripts")
+-for i in "${extra_module_build_types[@]}"
+-do
++for i in "${extra_module_build_types[@]}"; do
+   if [ "$1" == "$i" ]; then
+     # Check if tsconfig.json exists in the directory
+     if [ -f "$(pwd)/$i/tsconfig.json" ]; then
+@@ -27,8 +26,8 @@ do
+   fi
+ done
+ 
+-if [[ -t 1 && (-z "$CI" && -z "$EXPO_NONINTERACTIVE") ]]; then
+-  args+=("--watch")
+-fi
++# if [[ -t 1 && (-z "$CI" && -z "$EXPO_NONINTERACTIVE") ]]; then
++#   args+=("--watch")
++# fi
+ 
+ "$script_dir/expo-module-tsc" "${args[@]}"
+diff --git a/bin/npx b/bin/npx
+index 30c3df13b7d40712e122d4d8291666bba1b0982e..c5b1b3768e03a1d56f85bc51a41d0a7d3b9c6bb4 100755
+--- a/bin/npx
++++ b/bin/npx
+@@ -4,8 +4,8 @@
+ # Yarn and npm.
+ 
+ # shellcheck disable=SC2154
+-if [[ ! "$npm_config_user_agent" =~ yarn ]] && [ -x "$(command -v yarn)" ]; then
+-  yarn exec -- npx "$@"
+-else
+-  npx "$@"
+-fi
++# if [[ ! "$npm_config_user_agent" =~ yarn ]] && [ -x "$(command -v yarn)" ]; then
++#   yarn exec -- npx "$@"
++# else
++npx "$@"
++# fi

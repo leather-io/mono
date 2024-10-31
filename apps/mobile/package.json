@@ -41,6 +41,7 @@
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/rpc": "workspace:*",
+    "@leather.io/secure-store-utils": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/ui": "workspace:*",
