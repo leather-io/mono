@@ -16,10 +16,12 @@
     "prepublishOnly": "expo-module prepublishOnly",
     "test": "expo-module test"
   },
+  "dependencies": {
+    "expo-modules-core": "1.12.24"
+  },
   "devDependencies": {
     "@types/react": "18.2.79",
     "expo-module-scripts": "3.5.2",
-    "expo-modules-core": "1.12.24",
     "expo-secure-store": "13.0.2"
   },
   "keywords": [
