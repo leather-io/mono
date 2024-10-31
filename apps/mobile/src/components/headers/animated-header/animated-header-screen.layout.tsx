@@ -45,9 +45,7 @@ export function AnimatedHeaderScreenLayout({
         >
           <Box flexDirection="row" justifyContent="space-between" paddingBottom="5">
             <Box alignItems="flex-start" flex={1} maxWidth={320}>
-              <Text fontWeight={800} variant="heading03">
-                {title}
-              </Text>
+              <Text variant="heading03">{title}</Text>
             </Box>
             <Box alignItems="flex-end">{rightTitleElement}</Box>
           </Box>
