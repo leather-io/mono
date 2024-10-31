@@ -14,7 +14,7 @@ describe('AnalyticsClient', () => {
       defaultProperties: { platform: 'web' },
     });
 
-    await client.track('background_analytics_schema_fail', undefined);
+    await client.track('background_analytics_schema_fail');
     await client.screen('/home/screen', undefined);
 
     expect(mockExternalAnalyticsClient.track).toHaveBeenCalledWith(
@@ -34,8 +34,8 @@ describe('AnalyticsClient', () => {
       defaultTraits: { user: 'test' },
     });
 
-    await client.identify('1df3_34j3', undefined);
-    await client.group('1df3_34j3', undefined);
+    await client.identify('1df3_34j3');
+    await client.group('1df3_34j3');
 
     expect(mockExternalAnalyticsClient.identify).toHaveBeenCalledWith('1df3_34j3', {
       user: 'test',

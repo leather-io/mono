@@ -5,7 +5,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "types": ["vitest/globals"],
-    "outDir": "./dist"
-  },
-  "types": ["segment-analytics"]
+    "outDir": "./dist",
+    "skipLibCheck": true
+  }
 }
