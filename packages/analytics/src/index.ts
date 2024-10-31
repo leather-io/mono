@@ -1,19 +1,15 @@
-import { AnalyticsClientConfig, ExternalAnalyticsClientInterface } from 'types';
-
 import { AnalyticsClient } from './client';
+import { AnalyticsClientInterface, DefaultProperties, JsonMap } from './types';
 
-export type AnalyticsClientType = ReturnType<
-  typeof AnalyticsClient<ExternalAnalyticsClientInterface>
->;
-
-/**
- * Configures the analytics client for the web environment. Must be called before any analytics functions are used.
- * @param {AnalyticsClientConfig} config - The configuration for the analytics client.
- * @returns {AnalyticsClient<AnalyticsClientInterface>} The configured analytics client.
- */
-export function configureAnalyticsClient({
+export * from './types';
+export function configureAnalyticsClient<T extends AnalyticsClientInterface>({
   client,
   defaultProperties,
-}: AnalyticsClientConfig): AnalyticsClientType {
-  return AnalyticsClient(client, { defaultProperties });
+  defaultTraits,
+}: {
+  client: T;
+  defaultProperties: DefaultProperties;
+  defaultTraits?: JsonMap;
+}) {
+  return AnalyticsClient<T>(client, { defaultProperties, defaultTraits }); // No need to pass EventProperties
 }

@@ -1,5 +1,6 @@
 {
   "apps/mobile": "1.45.0",
+  "packages/analytics": "0.0.1",
   "packages/bitcoin": "0.15.0",
   "packages/constants": "0.13.0",
   "packages/eslint-config": "0.7.0",
