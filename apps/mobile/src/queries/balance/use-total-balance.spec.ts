@@ -1,6 +1,7 @@
 import { useStxBalance } from '@/queries/balance/stacks-balance.query';
 import { vi } from 'vitest';
 
+import { CryptoCurrency, createMarketPair } from '@leather.io/models';
 import { useCryptoCurrencyMarketDataMeanAverage } from '@leather.io/query';
 import { createMoney } from '@leather.io/utils';
 
@@ -10,16 +11,23 @@ import { useAccountTotalBalance, useWalletTotalBalance } from './use-total-balan
 vi.mock('./stacks-balance.query');
 vi.mock('@leather.io/query');
 
+function getPrice(currency: CryptoCurrency) {
+  if (currency === 'STX') return 0.5;
+  if (currency === 'BTC') return 30000;
+  return 0;
+}
+
 describe('useWalletTotalBalance', () => {
   beforeEach(() => {
-    (useStxBalance as jest.Mock).mockReturnValue({
-      stxBalance: createMoney(1000000, 'STX'),
+    vi.mocked(useStxBalance).mockReturnValue({
+      availableBalance: createMoney(1000000, 'STX'),
+      fiatBalance: createMoney(500, 'USD'),
     });
-    (useCryptoCurrencyMarketDataMeanAverage as jest.Mock).mockImplementation(currency => {
-      if (currency === 'STX') return 0.5;
-      if (currency === 'BTC') return 30000;
-      return 0;
-    });
+    vi.mocked(useCryptoCurrencyMarketDataMeanAverage).mockImplementation(currency => ({
+      price: createMoney(getPrice(currency), currency),
+      percentChange24h: 0,
+      pair: createMarketPair(currency, 'USD'),
+    }));
   });
 
   it('should calculate total balance correctly', () => {
@@ -38,8 +46,9 @@ describe('useWalletTotalBalance', () => {
   });
 
   it('should handle zero balances correctly', () => {
-    (useStxBalance as jest.Mock).mockReturnValue({
-      stxBalance: createMoney(0, 'STX'),
+    vi.mocked(useStxBalance).mockReturnValue({
+      availableBalance: createMoney(0, 'STX'),
+      fiatBalance: createMoney(0, 'USD'),
     });
 
     const result = useWalletTotalBalance();
@@ -55,14 +64,16 @@ describe('useWalletTotalBalance', () => {
 describe('useAccountTotalBalance', () => {
   const accountId = { fingerprint: '123', accountIndex: 0 };
   beforeEach(() => {
-    (useStxBalance as jest.Mock).mockReturnValue({
-      stxBalance: createMoney(1000000, 'STX'),
+    vi.mocked(useStxBalance).mockReturnValue({
+      availableBalance: createMoney(1000000, 'STX'),
+      fiatBalance: createMoney(0, 'USD'),
     });
-    (useCryptoCurrencyMarketDataMeanAverage as jest.Mock).mockImplementation(currency => {
-      if (currency === 'STX') return 0.5;
-      if (currency === 'BTC') return 30000;
-      return 0;
-    });
+
+    vi.mocked(useCryptoCurrencyMarketDataMeanAverage).mockImplementation(currency => ({
+      price: createMoney(getPrice(currency), currency),
+      percentChange24h: 0,
+      pair: createMarketPair(currency, 'USD'),
+    }));
   });
 
   it('should calculate total balance correctly', () => {
@@ -81,8 +92,9 @@ describe('useAccountTotalBalance', () => {
   });
 
   it('should handle zero balances correctly', () => {
-    (useStxBalance as jest.Mock).mockReturnValue({
-      stxBalance: createMoney(0, 'STX'),
+    vi.mocked(useStxBalance).mockReturnValue({
+      availableBalance: createMoney(0, 'STX'),
+      fiatBalance: createMoney(0, 'USD'),
     });
 
     const result = useAccountTotalBalance(accountId);

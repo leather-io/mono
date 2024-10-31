@@ -49,7 +49,7 @@ export * from './src/stacks/balance/account-balance.hooks';
 export * from './src/stacks/balance/account-balance.query';
 export * from './src/stacks/balance/create-stx-crypto-asset-balance';
 export * from './src/stacks/balance/create-stx-money';
-export * from './src/stacks/balance/use-stx-balance-query.hooks';
+export * from './src/stacks/balance/use-stx-balance.query';
 export * from './src/stacks/bns/bns.query';
 export * from './src/stacks/bns/bns.utils';
 export * from './src/stacks/contract/contract.hooks';

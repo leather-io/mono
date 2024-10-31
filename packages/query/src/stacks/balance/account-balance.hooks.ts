@@ -11,7 +11,7 @@ import { useStacksClient } from '../stacks-client';
 import { createGetStacksAccountBalanceQueryOptions } from './account-balance.query';
 import { createStxCryptoAssetBalance } from './create-stx-crypto-asset-balance';
 import { createStxMoney } from './create-stx-money';
-import { useStxBalanceQuery } from './use-stx-balance-query.hooks';
+import { useStxBalanceQuery } from './use-stx-balance.query';
 
 export function useStxCryptoAssetBalance(address: string) {
   const client = useStacksClient();
