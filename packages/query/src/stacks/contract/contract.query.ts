@@ -1,8 +1,14 @@
-import { type ContractCallPayload, TransactionPayload, TransactionTypes } from '@stacks/connect';
+import type { ContractCallPayload, TransactionPayload } from '@stacks/connect';
 import { useQuery } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
 import { StacksClient, useStacksClient } from '../stacks-client';
+
+enum TransactionTypes {
+  ContractCall = 'contract_call',
+  ContractDeploy = 'smart_contract',
+  STXTransfer = 'token_transfer',
+}
 
 const queryOptions = {
   staleTime: 30 * 60 * 1000,

@@ -6,10 +6,9 @@ import {
   mockCollectibles,
   serializeCollectibles,
 } from '@/components/widgets/collectibles';
-import { TokensWidget } from '@/components/widgets/tokens';
+import { AccountBalances, TokensWidget } from '@/components/widgets/tokens/tokens-widget';
 import { MockedAccount } from '@/mocks/account.mocks';
 import { mockTotalBalance } from '@/mocks/balance.mocks';
-import { getMockTokens } from '@/mocks/tokens.mocks';
 import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
@@ -19,7 +18,6 @@ import { AccountOverview } from './account-overview-card';
 interface AccountLayoutProps {
   account: MockedAccount;
 }
-
 export function AccountLayout({ account }: AccountLayoutProps) {
   const theme = useTheme<Theme>();
   return (
@@ -36,7 +34,9 @@ export function AccountLayout({ account }: AccountLayoutProps) {
         heading={<Balance balance={mockTotalBalance} variant="heading02" />}
         caption={account.name}
       />
-      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
+      <TokensWidget>
+        <AccountBalances fingerprint={account.fingerprint} accountIndex={account.accountIndex} />
+      </TokensWidget>
       <CollectiblesWidget
         collectibles={serializeCollectibles(mockCollectibles)}
         totalBalance={mockTotalBalance}

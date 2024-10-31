@@ -17,12 +17,10 @@ export function useBitcoinPendingTransactions(addresses: string[]) {
   const client = useBitcoinClient();
 
   return useQueries({
-    queries: addresses.map(address => {
-      return {
-        ...createGetBitcoinTransactionsByAddressQueryOptions({ address, client }),
-        select: (resp: BitcoinTx[]) => filterPendingTransactions(resp),
-      };
-    }),
+    queries: addresses.map(address => ({
+      ...createGetBitcoinTransactionsByAddressQueryOptions({ address, client }),
+      select: (resp: BitcoinTx[]) => filterPendingTransactions(resp),
+    })),
   });
 }
 

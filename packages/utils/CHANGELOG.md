@@ -131,6 +131,22 @@
     * @leather.io/models bumped to 0.18.2
     * @leather.io/rpc bumped to 2.1.13
 
+## [0.16.7](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.16.6...@leather.io/utils-v0.16.7) (2024-10-30)
+
+
+### Bug Fixes
+
+* **query:** gcTime using too big of a number for javascript ([b7975f9](https://github.com/leather-io/mono/commit/b7975f9a4acf4b5898e92247c170b664c796d3c7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.13.0
+    * @leather.io/models bumped to 0.18.3
+    * @leather.io/rpc bumped to 2.1.14
+
 ## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.15.0...@leather.io/utils-v0.16.0) (2024-09-20)
 
 

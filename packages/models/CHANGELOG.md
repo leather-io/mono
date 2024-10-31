@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.18.3](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.2...@leather.io/models-v0.18.3) (2024-10-30)
+
+
+### Bug Fixes
+
+* **query:** gcTime using too big of a number for javascript ([b7975f9](https://github.com/leather-io/mono/commit/b7975f9a4acf4b5898e92247c170b664c796d3c7))
+
 ## [0.18.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.1...@leather.io/models-v0.18.2) (2024-10-18)
 
 

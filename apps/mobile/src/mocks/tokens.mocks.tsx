@@ -18,22 +18,6 @@ export interface Token {
 
 export const getMockTokens = (): Token[] => [
   {
-    chain: t`Bitcoin blockchain`,
-    availableBalance: {
-      availableBalance: {
-        amount: new BigNumber('215005'),
-        symbol: 'BTC',
-        decimals: 8,
-      },
-    },
-    formattedBalance: { isAbbreviated: false, value: '0.00215005' },
-    fiatBalance: mockTotalBalance,
-    icon: <BtcAvatarIcon />,
-    // currently hardcoded in crypto-asset-item.layout.utils.ts
-    ticker: 'btc',
-    tokenName: t`Bitcoin`,
-  },
-  {
     chain: t`Stacks blockchain`,
     availableBalance: {
       availableBalance: {

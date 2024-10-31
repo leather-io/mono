@@ -2,7 +2,7 @@
   "name": "@leather.io/rpc",
   "author": "leather-wallet",
   "description": "RPC types package for Leather",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@leather.io/models": "workspace:*",
-    "zod": "3.23.6"
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "tsup": "8.1.0"

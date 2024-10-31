@@ -1,66 +1,54 @@
-import { useMemo } from 'react';
+import { UseQueryResult } from '@tanstack/react-query';
 
-import { HDKey } from '@scure/bip32';
-
-import { createMoney, sumNumbers } from '@leather.io/utils';
+import { Inscription } from '@leather.io/models';
+import { createMoney, isDefined, sumNumbers } from '@leather.io/utils';
 
 import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { filterUtxosWithInscriptions } from '../address/utxos-by-address.hooks';
-import { useGetTaprootUtxosByAddressQuery } from '../address/utxos-by-address.query';
+import { BestInSlotInscriptionByXpubResponse } from '../clients/best-in-slot';
 import { createBestInSlotInscription } from '../ordinals/inscription.utils';
-import { useBestInSlotGetInscriptionsInfiniteQuery } from '../ordinals/inscriptions-infinite.query';
+import { findInscriptionsOnUtxo } from '../ordinals/inscriptions.hooks';
 
 const RETRIEVE_UTXO_DUST_AMOUNT = 10000;
 
-export function useCurrentTaprootAccountUninscribedUtxos({
-  taprootKeychain,
-  currentAccountIndex,
-  nativeSegwitAddress,
-}: {
-  taprootKeychain: HDKey | undefined;
-  currentAccountIndex: number;
-  nativeSegwitAddress: string;
-}) {
-  const { data: utxos = [] } = useGetTaprootUtxosByAddressQuery({
-    taprootKeychain: taprootKeychain,
-    currentAccountIndex,
-  });
+export function filterUninscribedUtxosToRecoverFromTaproot(
+  utxos: UtxoWithDerivationPath[],
+  inscriptions: Inscription[]
+) {
+  const filteredUtxosList = utxos
+    .filter(utxo => utxo.status.confirmed)
+    .filter(utxo => utxo.value > RETRIEVE_UTXO_DUST_AMOUNT);
 
-  const query = useBestInSlotGetInscriptionsInfiniteQuery({
-    taprootKeychain,
-    nativeSegwitAddress,
-  });
-
-  return useMemo(() => {
-    const inscriptionsResponse = query.data?.pages?.flatMap(page => page.inscriptions) ?? [];
-
-    const inscriptions = inscriptionsResponse.map(createBestInSlotInscription);
-
-    const filteredUtxosList = utxos
-      .filter(utxo => utxo.status.confirmed)
-      .filter(utxo => utxo.value > RETRIEVE_UTXO_DUST_AMOUNT);
-
-    return filterUtxosWithInscriptions(inscriptions, filteredUtxosList) as UtxoWithDerivationPath[];
-  }, [query.data?.pages, utxos]);
+  return filteredUtxosList.filter(filterUtxosWithInscriptions(inscriptions));
 }
 
-export function useCurrentTaprootAccountBalance({
-  taprootKeychain,
-  currentAccountIndex,
-  nativeSegwitAddress,
-}: {
-  taprootKeychain: HDKey | undefined;
-  currentAccountIndex: number;
-  nativeSegwitAddress: string;
-}) {
-  const uninscribedUtxos = useCurrentTaprootAccountUninscribedUtxos({
-    taprootKeychain,
-    currentAccountIndex,
-    nativeSegwitAddress,
-  });
+export function utxosToBalance(utxos: UtxoWithDerivationPath[]) {
+  return createMoney(sumNumbers(utxos.map(utxo => Number(utxo.value))), 'BTC');
+}
 
-  return useMemo(
-    () => createMoney(sumNumbers(uninscribedUtxos.map(utxo => Number(utxo.value))), 'BTC'),
-    [uninscribedUtxos]
-  );
+export function combineInscriptionResults(
+  queries: UseQueryResult<BestInSlotInscriptionByXpubResponse, Error>[]
+) {
+  if (queries.some(resp => resp.isLoading)) return { queries, isLoading: true } as const;
+
+  const inscriptions = queries
+    .map(resp => resp.data?.data)
+    .flatMap(inscription => inscription)
+    .filter(isDefined)
+    .map(inscription => createBestInSlotInscription(inscription));
+
+  return { queries, inscriptions, isLoading: false } as const;
+}
+
+export function createNumberOfInscriptionsFn(
+  queryResult: ReturnType<typeof combineInscriptionResults>
+) {
+  return (txid: string, vout: number) => {
+    if (queryResult.isLoading) return 0;
+    return findInscriptionsOnUtxo({
+      inscriptions: queryResult.inscriptions,
+      txId: txid,
+      index: vout,
+    }).length;
+  };
 }

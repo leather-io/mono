@@ -12,7 +12,7 @@ function NotificationsHeader() {
   return (
     <>
       <Box bg="ink.background-primary" paddingBottom="5" paddingHorizontal="5">
-        <Text fontWeight={800} variant="heading03">
+        <Text variant="heading03">
           {t({
             id: 'notifications.header_title',
             message: 'Notifications',

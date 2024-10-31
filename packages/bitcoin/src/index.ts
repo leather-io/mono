@@ -6,3 +6,4 @@ export * from './bitcoin.utils';
 export * from './p2tr-address-gen';
 export * from './p2wpkh-address-gen';
 export * from './p2wsh-p2sh-address-gen';
+export * from './lookup-derivation-by-address';

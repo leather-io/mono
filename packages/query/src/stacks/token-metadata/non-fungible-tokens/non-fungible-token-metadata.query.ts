@@ -2,7 +2,7 @@ import { hexToCV } from '@stacks/transactions';
 import { QueryFunctionContext, type UseQueryResult, useQueries } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-import { getPrincipalFromContractId, oneMonthInMs, oneWeekInMs } from '@leather.io/utils';
+import { getPrincipalFromContractId, oneWeekInMs } from '@leather.io/utils';
 
 import { StacksQueryPrefixes } from '../../../query-prefixes';
 import { StacksClient, useStacksClient } from '../../stacks-client';
@@ -13,7 +13,7 @@ const queryOptions = {
   refetchOnWindowFocus: false,
   refetchOnMount: false,
   staleTime: oneWeekInMs,
-  gcTime: oneMonthInMs,
+  gcTime: Infinity,
 } as const;
 
 function getTokenId(hex: string) {
@@ -44,9 +44,8 @@ export function createGetNonFungibleTokenMetadataQueryOptions({
       try {
         return await client.getNftMetadata(address, tokenId, signal);
       } catch (error) {
-        if (statusCodeNotFoundOrNotProcessable((error as AxiosError).request.status)) {
-          return null;
-        }
+        if (statusCodeNotFoundOrNotProcessable((error as AxiosError).request.status)) return null;
+
         throw error;
       }
     },

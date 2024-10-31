@@ -169,6 +169,31 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.18.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.17.0...@leather.io/query-v2.18.0) (2024-10-30)
+
+
+### Features
+
+* integrate bitcoin balances ([0023ac5](https://github.com/leather-io/mono/commit/0023ac5bfd81fb721dc8fb3603194929db8a814c))
+
+
+### Bug Fixes
+
+* **query:** gcTime using too big of a number for javascript ([b7975f9](https://github.com/leather-io/mono/commit/b7975f9a4acf4b5898e92247c170b664c796d3c7))
+* remove redundant, verbose in query cache ([d4af92f](https://github.com/leather-io/mono/commit/d4af92fd69a8c955fc80c185d6d00e7b9c81f3ce))
+* schema fails btc obj null ([775e7b5](https://github.com/leather-io/mono/commit/775e7b55ea02f98c83463b8f4cc01ee3d662d3fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.15.0
+    * @leather.io/constants bumped to 0.13.0
+    * @leather.io/models bumped to 0.18.3
+    * @leather.io/rpc bumped to 2.1.14
+    * @leather.io/utils bumped to 0.16.7
+
 ## [2.17.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.16.0...@leather.io/query-v2.17.0) (2024-10-25)
 
 

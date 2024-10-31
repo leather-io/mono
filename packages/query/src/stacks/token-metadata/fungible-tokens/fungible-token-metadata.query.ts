@@ -1,7 +1,7 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-import { oneMonthInMs, oneWeekInMs } from '@leather.io/utils';
+import { oneWeekInMs } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../../query-prefixes';
@@ -13,9 +13,9 @@ const queryOptions = {
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,
   staleTime: oneWeekInMs,
-  gcTime: oneMonthInMs,
+  gcTime: Infinity,
   retry: 0,
-} as const;
+} satisfies Partial<UseQueryOptions>;
 
 interface CreateGetFungibleTokenMetadataQueryOptionsArgs {
   address: string;
@@ -37,9 +37,7 @@ export function createGetFungibleTokenMetadataQueryOptions({
         return res as unknown as FtAssetResponse;
       } catch (error) {
         const status = (error as AxiosError).request?.status;
-        if (status === 404 || status === 422) {
-          return null;
-        }
+        if (status === 404 || status === 422) return null;
         throw error;
       }
     },
