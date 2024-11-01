@@ -162,6 +162,9 @@ importers:
       '@stacks/common':
         specifier: 6.13.0
         version: 6.13.0
+      '@stacks/stacks-blockchain-api-types':
+        specifier: 7.8.2
+        version: 7.8.2
       '@stacks/transactions':
         specifier: 6.15.0
         version: 6.15.0

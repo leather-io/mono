@@ -44,6 +44,7 @@ export function useAccountsByFingerprint(fingerprint: string, status?: AccountSt
 export function useAccounts(status?: AccountStatus) {
   return {
     list: useSelector(selectAccounts(status)),
+    hasAccounts: useSelector(selectAccounts(status)).length > 0,
   };
 }
 
