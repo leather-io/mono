@@ -202,6 +202,27 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.46.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.45.0...@leather.io/mobile-v1.46.0) (2024-11-01)
+
+
+### Features
+
+* **mobile:** add leather-io/analytics package ([26c438a](https://github.com/leather-io/mono/commit/26c438a48c32b11ff3e8b626f3b71c9f19025319))
+
+
+### Bug Fixes
+
+* **mobile:** remove fontWeight from MarchePro font, closes LEA-1584 ([e36f098](https://github.com/leather-io/mono/commit/e36f098eec5fe757d3b788eb849fe59e58f48c91))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 1.0.0
+    * @leather.io/tokens bumped to 0.9.2
+    * @leather.io/ui bumped to 1.31.2
+
 ## [1.45.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.44.1...@leather.io/mobile-v1.45.0) (2024-10-30)
 
 

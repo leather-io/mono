@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.9.2](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.1...@leather.io/tokens-v0.9.2) (2024-11-01)
+
+
+### Bug Fixes
+
+* **mobile:** remove fontWeight from MarchePro font, closes LEA-1584 ([e36f098](https://github.com/leather-io/mono/commit/e36f098eec5fe757d3b788eb849fe59e58f48c91))
+
 ## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.0...@leather.io/tokens-v0.9.1) (2024-10-17)
 
 
