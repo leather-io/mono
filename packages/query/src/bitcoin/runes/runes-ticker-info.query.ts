@@ -49,7 +49,10 @@ export function useGetRunesTickerInfoQuery(runesBalances: RuneBalance[]) {
         ...createGetRunesTickerInfoQueryOptions({ client, runeBalance, runesEnabled, limiter }),
         select: (resp: RuneTickerInfo) => {
           const fiatPrice = baseCurrencyAmountInQuote(
-            createMoney(new BigNumber(resp.min_listed_unit_price_in_sats ?? 0), 'BTC'),
+            createMoney(
+              new BigNumber(resp.avg_unit_price_in_sats ?? resp.min_listed_unit_price_in_sats ?? 0),
+              'BTC'
+            ),
             btcMarketData
           );
           return createRuneCryptoAssetDetails(runeBalance, resp, fiatPrice);
