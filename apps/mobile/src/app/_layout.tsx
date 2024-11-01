@@ -3,6 +3,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
+import { LeatherQueryProvider } from '@/common/leather-query-provider';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { ToastWrapper } from '@/components/toast/toast-context';
 import { initiateI18n } from '@/locales';
@@ -36,17 +37,19 @@ export default function RootLayout() {
         <I18nProvider i18n={i18n}>
           <SafeAreaProvider>
             <QueryClientProvider client={queryClient}>
-              <ThemeProvider>
-                <SplashScreenGuard>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <SheetProvider>
-                      <ToastWrapper>
-                        <AppRouter />
-                      </ToastWrapper>
-                    </SheetProvider>
-                  </GestureHandlerRootView>
-                </SplashScreenGuard>
-              </ThemeProvider>
+              <LeatherQueryProvider>
+                <ThemeProvider>
+                  <SplashScreenGuard>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                      <SheetProvider>
+                        <ToastWrapper>
+                          <AppRouter />
+                        </ToastWrapper>
+                      </SheetProvider>
+                    </GestureHandlerRootView>
+                  </SplashScreenGuard>
+                </ThemeProvider>
+              </LeatherQueryProvider>
             </QueryClientProvider>
           </SafeAreaProvider>
         </I18nProvider>

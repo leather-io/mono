@@ -1,4 +1,3 @@
-import { showChain } from '@/components/widgets/tokens/tokens-widget';
 import { AccountId } from '@/models/domain.model';
 import {
   useBitcoinAccountTotalBitcoinBalance,
@@ -23,7 +22,7 @@ export function BitcoinTokenBalance({ availableBalance, fiatBalance }: BitcoinTo
       tokenName={t`Bitcoin`}
       chain={t`Bitcoin blockchain`}
       fiatBalance={fiatBalance}
-      showChain={showChain}
+      showChain={false}
       availableBalance={availableBalance}
     />
   );
