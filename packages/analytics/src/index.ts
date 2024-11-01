@@ -2,6 +2,7 @@ import { AnalyticsClient } from './client';
 import { AnalyticsClientInterface, DefaultProperties, JsonMap } from './types';
 
 export * from './types';
+
 export function configureAnalyticsClient<T extends AnalyticsClientInterface>({
   client,
   defaultProperties,
@@ -11,5 +12,5 @@ export function configureAnalyticsClient<T extends AnalyticsClientInterface>({
   defaultProperties: DefaultProperties;
   defaultTraits?: JsonMap;
 }) {
-  return AnalyticsClient<T>(client, { defaultProperties, defaultTraits }); // No need to pass EventProperties
+  return AnalyticsClient<T>(client, { defaultProperties, defaultTraits });
 }
