@@ -1,5 +1,5 @@
 import { Queue, QueueAddOptions } from 'p-queue';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 type RunFunction = () => Promise<unknown>;
 
@@ -34,7 +34,7 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
       priority: 0,
       ...options,
     };
-    const id = uuidv4();
+    const id = uuid();
 
     const element = {
       priority: options.priority,
