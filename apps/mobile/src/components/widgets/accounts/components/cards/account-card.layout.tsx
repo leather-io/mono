@@ -1,29 +1,21 @@
-import { WalletStore } from '@/store/wallets/utils';
-
 import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
-
-import { LedgerBadge } from '../../ledger-badge';
 
 export interface AccountCardLayoutProps {
   icon: React.ReactNode;
   label: React.ReactNode;
   caption: string;
   onPress(): void;
-  type?: WalletStore['type'];
   width?: number;
   testID?: string;
 }
 export function AccountCardLayout({
   onPress,
-  type,
   icon,
   label,
   caption,
   width = 200,
   testID,
 }: AccountCardLayoutProps) {
-  const isLedger = type === 'ledger';
-
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -37,8 +29,6 @@ export function AccountCardLayout({
       justifyContent="space-between"
       testID={testID}
     >
-      {isLedger && <LedgerBadge />}
-
       <Box p="2" borderRadius="round" backgroundColor="ink.text-primary">
         {icon}
       </Box>

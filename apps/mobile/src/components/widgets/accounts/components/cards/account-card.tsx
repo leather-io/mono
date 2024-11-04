@@ -14,12 +14,10 @@ import { AccountCardLayout } from './account-card.layout';
 export interface AccountCardProps {
   account: AccountStore;
   onPress(): void;
-
-  testID?: string;
 }
-export function AccountCard({ account, onPress }: AccountCardProps) {
+
+export function AccountCard({ account: { id: accountId, icon, name }, onPress }: AccountCardProps) {
   const { i18n } = useLingui();
-  const { id: accountId, type } = account;
   const theme = useTheme<Theme>();
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
 
@@ -30,7 +28,7 @@ export function AccountCard({ account, onPress }: AccountCardProps) {
       icon={
         <AvatarIcon
           color={theme.colors['ink.background-primary']}
-          icon={account.icon}
+          icon={icon}
           width={32}
           height={32}
         />
@@ -39,10 +37,9 @@ export function AccountCard({ account, onPress }: AccountCardProps) {
       caption={i18n._({
         id: 'accounts.account.cell_caption',
         message: '{name}',
-        values: { name: account.name || '' },
+        values: { name: name || '' },
       })}
       onPress={onPress}
-      type={type}
       testID={TestId.homeAccountCard}
     />
   );
