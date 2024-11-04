@@ -1,7 +1,9 @@
 name: Publish Architecture Diagram
-
 on:
   push:
+    branches:
+      - dev
+      - main
     paths:
       - architecture/**
 
@@ -13,7 +15,7 @@ jobs:
 
       - run: curl -fsSL https://d2lang.com/install.sh | sh -s --
 
-      - run: d2 --font-regular="font-regular.ttf" --font-italic="font-italic.ttf" leather-architecture.d2 dist/leather-architecture.svg
+      - run: d2 --dark-theme 200 --font-regular="font-regular.ttf" --font-italic="font-italic.ttf" leather-architecture.d2 dist/leather-architecture.svg
         working-directory: architecture
 
       - name: Write architecture diagram to `architecture` branch
