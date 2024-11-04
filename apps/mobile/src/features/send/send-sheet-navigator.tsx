@@ -1,5 +1,5 @@
 import { Account } from '@/store/accounts/accounts';
-import { NavigationContainer, ParamListBase } from '@react-navigation/native';
+import { ParamListBase } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@shopify/restyle';
 
@@ -18,20 +18,18 @@ const Stack = createStackNavigator<SendSheetNavigatorParamList>();
 export function SendSheetNavigator() {
   const theme = useTheme<Theme>();
   return (
-    <NavigationContainer independent>
-      <Stack.Navigator
-        initialRouteName="send-select-account"
-        screenOptions={{
-          headerShown: false,
-          cardStyle: {
-            backgroundColor: theme.colors['ink.background-primary'],
-            overflow: 'visible',
-          },
-        }}
-      >
-        <Stack.Screen name="send-select-account" component={SelectAccount} />
-        <Stack.Screen name="send-select-asset" component={SelectAsset} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      initialRouteName="send-select-account"
+      screenOptions={{
+        headerShown: false,
+        cardStyle: {
+          backgroundColor: theme.colors['ink.background-primary'],
+          overflow: 'visible',
+        },
+      }}
+    >
+      <Stack.Screen name="send-select-account" component={SelectAccount} />
+      <Stack.Screen name="send-select-asset" component={SelectAsset} />
+    </Stack.Navigator>
   );
 }

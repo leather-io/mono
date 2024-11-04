@@ -1,8 +1,8 @@
 import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
+import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
-import { useSendSheetContext } from '@/features/send/send-sheet-context';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -147,10 +147,10 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
 }
 
 export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
+  const { sendSheetRef, receiveSheetRef } = useSheetNavigatorContext();
   const router = useRouter();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const { sendSheetRef } = useSendSheetContext();
 
   const actionBar = isEmptyArray(wallets.list) ? (
     <ActionBar
@@ -182,7 +182,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       }
       center={
         <ActionBarButton
-          onPress={() => router.navigate(AppRoutes.Receive)}
+          onPress={() => receiveSheetRef.current?.present()}
           icon={<InboxIcon />}
           label={t({
             id: 'action_bar.receive_label',

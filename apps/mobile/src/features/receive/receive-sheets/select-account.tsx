@@ -7,14 +7,14 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
-import { SendSheetNavigatorParamList } from '../send-sheet-navigator';
+import { ReceiveSheetNavigatorParamList } from '../receive-sheet-navigator';
 
 export function SelectAccount() {
-  const navigation = useNavigation<NavigationProp<SendSheetNavigatorParamList>>();
+  const navigation = useNavigation<NavigationProp<ReceiveSheetNavigatorParamList>>();
   const accounts = useAccounts();
 
   function onSelectAccount(account: Account) {
-    navigation.navigate('send-select-asset', { account });
+    navigation.navigate('receive-select-asset', { account });
   }
 
   return (

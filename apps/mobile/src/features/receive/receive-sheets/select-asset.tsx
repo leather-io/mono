@@ -7,9 +7,9 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 
 import { Text } from '@leather.io/ui/native';
 
-import { SendSheetNavigatorParamList } from '../send-sheet-navigator';
+import { ReceiveSheetNavigatorParamList } from '../receive-sheet-navigator';
 
-type SelectAssetScreenRouteProp = RouteProp<SendSheetNavigatorParamList, 'send-select-asset'>;
+type SelectAssetScreenRouteProp = RouteProp<ReceiveSheetNavigatorParamList, 'receive-select-asset'>;
 
 export function SelectAsset() {
   const { i18n } = useLingui();

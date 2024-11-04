@@ -1,14 +1,14 @@
-import { useRef } from 'react';
 import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { LeatherQueryProvider } from '@/common/leather-query-provider';
+import SheetNavigatorWrapper from '@/common/sheet-navigator/sheet-navigator-wrapper';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { ToastWrapper } from '@/components/toast/toast-context';
+import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
-import { SendSheetProvider } from '@/features/send/send-sheet-context';
 import { initiateI18n } from '@/locales';
 import { queryClient } from '@/queries/query';
 import { persistor, store } from '@/store';
@@ -21,12 +21,7 @@ import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import {
-  Box,
-  ThemeProvider as LeatherThemeProvider,
-  SheetProvider,
-  SheetRef,
-} from '@leather.io/ui/native';
+import { Box, ThemeProvider as LeatherThemeProvider, SheetProvider } from '@leather.io/ui/native';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -39,7 +34,6 @@ export const unstable_settings = { initialRouteName: '/' };
 initiateI18n();
 
 export default function RootLayout() {
-  const sendSheetRef = useRef<SheetRef>(null);
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -51,12 +45,13 @@ export default function RootLayout() {
                   <SplashScreenGuard>
                     <GestureHandlerRootView style={{ flex: 1 }}>
                       <SheetProvider>
-                        <SendSheetProvider value={{ sendSheetRef }}>
+                        <SheetNavigatorWrapper>
                           <ToastWrapper>
                             <AppRouter />
                             <SendSheet />
+                            <ReceiveSheet />
                           </ToastWrapper>
-                        </SendSheetProvider>
+                        </SheetNavigatorWrapper>
                       </SheetProvider>
                     </GestureHandlerRootView>
                   </SplashScreenGuard>
