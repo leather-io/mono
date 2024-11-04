@@ -39,7 +39,7 @@
     "@scure/bip39": "1.4.0",
     "@scure/btc-signer": "1.4.0",
     "@stacks/common": "6.13.0",
-    "@stacks/transactions": "6.15.0",
+    "@stacks/transactions": "6.17.0",
     "bip32": "4.0.0",
     "bitcoinjs-lib": "6.1.5",
     "ecpair": "2.1.0",
