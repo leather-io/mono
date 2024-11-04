@@ -1,0 +1,25 @@
+name: Publish Architecture Diagram
+
+on:
+  push:
+    paths:
+      - architecture/**
+
+jobs:
+  publish-architecture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: curl -fsSL https://d2lang.com/install.sh | sh -s --
+
+      - run: d2 --font-regular="font-regular.ttf" --font-italic="font-italic.ttf" leather-architecture.d2 dist/leather-architecture.svg
+        working-directory: architecture
+
+      - name: Write architecture diagram to `architecture` branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.LEATHER_BOT }}
+          folder: architecture/dist
+          branch: architecture
+          commit-message: 'feat: update architecture diagram'

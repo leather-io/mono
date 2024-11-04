@@ -1,17 +1,15 @@
-# Mono
+# Leather Mono
 
-## Basic Setup
+The purpose of this monorepo is to provide a single home for core Leather functionality. The monorepo uses [`pnpm` workspaces](https://pnpm.io/workspaces) and [Turborepo](https://turbo.build/repo/docs). Packages are found under `packages/*`. Apps are found under `apps/*`.
 
-To run applications and packages in the monorepo ensure you first run:
+## Installation
 
-1. `pnpm i` at the `mono` root.
-2. Run `pnpm build` to ensure all relevant packages are correctly built.
+1. `pnpm i` at the `mono` root
+2. Run `pnpm build`
 
-## About
+## Architecture
 
-The purpose of this monorepo configuration is to ensure strict coding standards and facilitate code sharing. The monorepo uses `pnpm workspaces` at its core and provides several shared packages to be found under the `packages` folder.
-
-### Monorepo Documentation
+![Leather architecture diagram](https://raw.githubusercontent.com/leather-io/mono/refs/heads/architecture/leather-architecture.svg)
 
 - [Architecture](docs/core/ARCHITECTURE.md)
 - [Monorepo](docs/core/MONOREPO.md)
@@ -20,15 +18,9 @@ Coding standards are enforced through the use of
 
 - `eslint`
 - `prettier`
-- `typescripts`
+- `typescript`
 
 Shared configuration files for these tools exist in `packages` and the same base configurations are used in the monorepo itself.
-
-Some other configured tools are:
-
-- [Husky](docs/tools/HUSKY.md): run code checks and enforce standards locally as a first prevention
-- [LintStaged](docs/tools/LINTSTAGED.md): only run checks on staged files
-- [CommitLint](docs/tools/COMMITLINT.md) enforce [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) standard
 
 ### Monorepo core packages
 
