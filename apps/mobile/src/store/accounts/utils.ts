@@ -1,5 +1,4 @@
 import { AvatarIconName } from '@/components/avatar-icon';
-import { WalletStore } from '@/store/wallets/utils';
 import z from 'zod';
 
 export type AccountStatus = 'active' | 'hidden';
@@ -15,5 +14,4 @@ export interface AccountStore {
   icon: AvatarIconName;
   name: string;
   status: AccountStatus;
-  type?: WalletStore['type'];
 }
