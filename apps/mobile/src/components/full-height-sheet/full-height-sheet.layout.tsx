@@ -6,10 +6,10 @@ import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
-interface SendSheetLayoutProps extends HasChildren {
+interface FullHeightSheetLayoutProps extends HasChildren {
   header: React.ReactNode;
 }
-export function SendSheetLayout({ children, header }: SendSheetLayoutProps) {
+export function FullHeightSheetLayout({ children, header }: FullHeightSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
 

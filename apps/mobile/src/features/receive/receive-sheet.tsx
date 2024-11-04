@@ -2,14 +2,14 @@ import { SheetNavigationContainer } from '@/common/sheet-navigator/sheet-navigat
 import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
 import { FullHeightSheet } from '@/components/full-height-sheet/full-height-sheet';
 
-import { SendSheetNavigator } from './send-sheet-navigator';
+import { ReceiveSheetNavigator } from './receive-sheet-navigator';
 
-export function SendSheet() {
-  const { sendSheetRef } = useSheetNavigatorContext();
+export function ReceiveSheet() {
+  const { receiveSheetRef } = useSheetNavigatorContext();
   return (
-    <FullHeightSheet sheetRef={sendSheetRef}>
+    <FullHeightSheet sheetRef={receiveSheetRef}>
       <SheetNavigationContainer>
-        <SendSheetNavigator />
+        <ReceiveSheetNavigator />
       </SheetNavigationContainer>
     </FullHeightSheet>
   );
