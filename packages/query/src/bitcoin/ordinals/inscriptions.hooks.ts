@@ -14,7 +14,7 @@ export function findInscriptionsOnUtxo({ index, inscriptions, txId }: FindInscri
 }
 
 export function createInscriptionByXpubQueryKey(xpub: string) {
-  return ['inscriptions', xpub.substring(0, 12)];
+  return ['inscriptions', xpub.substring(0, 32)];
 }
 
 export function createInscriptionByXpubQuery(client: BitcoinClient, xpub: string) {
