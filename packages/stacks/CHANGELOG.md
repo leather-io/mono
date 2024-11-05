@@ -94,6 +94,13 @@
     * @leather.io/models bumped to 0.18.3
     * @leather.io/utils bumped to 0.16.7
 
+## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.2.4...@leather.io/stacks-v1.3.0) (2024-11-05)
+
+
+### Features
+
+* upgrade stacks/transactions to v6.17 for non-seq multisig support ([4433cb2](https://github.com/leather-io/mono/commit/4433cb2ced8e00999fedfcdd00120f1e240800de))
+
 ## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.1.5...@leather.io/stacks-v1.2.0) (2024-10-11)
 
 

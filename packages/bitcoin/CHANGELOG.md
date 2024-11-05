@@ -248,6 +248,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.1.13
 
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.15.0...@leather.io/bitcoin-v0.16.0) (2024-11-05)
+
+
+### Features
+
+* upgrade stacks/transactions to v6.17 for non-seq multisig support ([4433cb2](https://github.com/leather-io/mono/commit/4433cb2ced8e00999fedfcdd00120f1e240800de))
+
 ## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.14.2...@leather.io/bitcoin-v0.15.0) (2024-10-30)
 
 

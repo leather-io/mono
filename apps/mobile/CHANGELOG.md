@@ -202,6 +202,27 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.47.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.46.0...@leather.io/mobile-v1.47.0) (2024-11-05)
+
+
+### Features
+
+* integrate stacks total balances, ref LEA-1500 ([93c7a79](https://github.com/leather-io/mono/commit/93c7a795643058f3cf8bf052f7df2019ff00c03a))
+* send context and select account, closes #LEA-1642 ([73cbcd5](https://github.com/leather-io/mono/commit/73cbcd5e96e8eb7811d79a782c3b23c5bd66e0f4))
+* upgrade stacks/transactions to v6.17 for non-seq multisig support ([4433cb2](https://github.com/leather-io/mono/commit/4433cb2ced8e00999fedfcdd00120f1e240800de))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.0
+    * @leather.io/query bumped to 2.19.0
+    * @leather.io/stacks bumped to 1.3.0
+    * @leather.io/ui bumped to 1.32.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.16.0
+
 ## [1.46.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.45.0...@leather.io/mobile-v1.46.0) (2024-11-01)
 
 

@@ -169,6 +169,25 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.19.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.18.0...@leather.io/query-v2.19.0) (2024-11-05)
+
+
+### Features
+
+* upgrade stacks/transactions to v6.17 for non-seq multisig support ([4433cb2](https://github.com/leather-io/mono/commit/4433cb2ced8e00999fedfcdd00120f1e240800de))
+
+
+### Bug Fixes
+
+* **query:** too short key identifier ([2de3598](https://github.com/leather-io/mono/commit/2de35986bde86dfb5c151fa6a0226832f11a6a2e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.0
+
 ## [2.18.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.17.0...@leather.io/query-v2.18.0) (2024-10-30)
 
 
