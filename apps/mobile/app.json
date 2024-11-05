@@ -50,11 +50,12 @@
         "expo-font",
         {
           "fonts": [
-            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/SpaceMono-Regular.ttf",
-            "node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Regular.otf",
-            "node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Light.otf",
-            "node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Medium.otf",
-            "node_modules/@leather.io/ui/src/assets-native/fonts/MarchePro-Super.otf"
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Regular.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Light.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Medium.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/MarchePro-Super.otf"
           ]
         }
       ],
