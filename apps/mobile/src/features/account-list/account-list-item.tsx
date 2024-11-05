@@ -2,8 +2,8 @@ import { Avatar, Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 interface AccountListItemProps {
   accountName: string;
-  address: string;
-  balance: string;
+  address: React.ReactNode;
+  balance: React.ReactNode;
   icon: React.ReactNode;
   iconTestID?: string;
   onPress?(): void;

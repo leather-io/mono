@@ -1,5 +1,8 @@
 import { useSelector } from 'react-redux';
 
+import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
+import { useSettings } from '@/store/settings/settings';
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
@@ -59,4 +62,31 @@ export const selectLastActive = createSelector(selectSettings, state => state.la
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';
+}
+
+// TODO: Needs BNS name support
+export function useAccountDisplayAddress(fingerprint: string, accountIndex: number) {
+  const { accountDisplayPreference } = useSettings();
+
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+
+  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+
+  const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
+
+  switch (accountDisplayPreference.type) {
+    case 'native-segwit':
+      return nativeSegwitPayer.address;
+    case 'taproot':
+      return taprootPayer.address;
+    case 'bns':
+      return '';
+    case 'stacks':
+    default:
+      return stxAddress;
+  }
 }

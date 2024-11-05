@@ -1,5 +1,4 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
-import { AccountId } from '@/models/domain.model';
 import { useStxBalance } from '@/queries/balance/stacks-balance.query';
 import { t } from '@lingui/macro';
 
@@ -11,17 +10,22 @@ import { useGetStacksAddresses } from './use-get-stacks-addresses';
 interface StacksTokenBalanceProps {
   availableBalance: Money;
   fiatBalance: Money;
+  onPress?(): void;
 }
-export function StacksTokenBalance({ availableBalance, fiatBalance }: StacksTokenBalanceProps) {
+export function StacksTokenBalance({
+  availableBalance,
+  fiatBalance,
+  onPress,
+}: StacksTokenBalanceProps) {
   return (
     <TokenBalance
       ticker="STX"
       icon={<TokenIcon ticker="STX" />}
       tokenName={t`Stacks`}
-      chain={t`Stacks blockchain`}
+      chain={t`Layer 1`}
       fiatBalance={fiatBalance}
-      showChain={false}
       availableBalance={availableBalance}
+      onPress={onPress}
     />
   );
 }
@@ -32,8 +36,23 @@ export function StacksBalance() {
   return <StacksTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
 }
 
-export function StacksBalanceByAccount(props: AccountId) {
-  const addresses = useGetStacksAddresses(props);
+interface StacksBalanceByAccountProps {
+  accountIndex: number;
+  fingerprint: string;
+  onPress?(): void;
+}
+export function StacksBalanceByAccount({
+  accountIndex,
+  fingerprint,
+  onPress,
+}: StacksBalanceByAccountProps) {
+  const addresses = useGetStacksAddresses({ accountIndex, fingerprint });
   const { availableBalance, fiatBalance } = useStxBalance(addresses);
-  return <StacksTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
+  return (
+    <StacksTokenBalance
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
+      onPress={onPress}
+    />
+  );
 }

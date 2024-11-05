@@ -4,7 +4,7 @@ import { Avatar } from './avatar.native';
 
 export function BtcAvatarIcon() {
   return (
-    <Avatar bg="ink.background-primary">
+    <Avatar bg="ink.background-primary" p="0">
       <Icon>
         <BtcIcon />
       </Icon>

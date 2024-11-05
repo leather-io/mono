@@ -12,9 +12,11 @@ export interface ToastContextType {
 export const ToastContext = createContext<ToastContextType>({
   displayToast: () => {},
 });
+
 export function useToastContext() {
   return useContext(ToastContext);
 }
+
 export function ToastWrapper({ children }: HasChildren) {
   const toastRef = useRef<ToastMethods>(null);
 
@@ -24,6 +26,7 @@ export function ToastWrapper({ children }: HasChildren) {
     },
     [toastRef.current]
   );
+
   return (
     <ToastContext.Provider value={{ displayToast }}>
       {children}
