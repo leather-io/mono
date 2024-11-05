@@ -7,11 +7,8 @@ export interface AnalyticsClientInterface {
   screen: (name: string, ...args: any[]) => Promise<any>;
   track: (event: string, ...args: any[]) => Promise<any>;
   group: (groupId: string, traits?: any, ...args: any[]) => Promise<any>;
-  identify: (
-    userId?: string | undefined,
-    traits?: any,
-    ...args: any[]
-  ) => Promise<any> | ((traits?: object) => Promise<any>);
+  identify: (...args: any[]) => Promise<any>;
+  page?: (name: string, ...args: any[]) => Promise<any>;
 }
 
 export interface AnalyticsClientConfig<T extends AnalyticsClientInterface> {

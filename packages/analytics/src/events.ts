@@ -12,10 +12,10 @@ interface HistoricalEvents {
   broadcast_ordinal_error: { error: any };
   broadcast_transaction: {
     symbol: string;
-    amount: number;
-    fee: number;
-    inputs: number;
-    outputs: number;
+    amount?: number;
+    fee?: number;
+    inputs?: number;
+    outputs?: number;
   };
   broadcast_btc_error: { error: any };
   copy_btc_address_to_clipboard: { type: string };
@@ -34,7 +34,7 @@ interface HistoricalEvents {
   request_update_profile_submit: undefined;
   request_update_profile_cancel: undefined;
   request_signature_cancel: undefined;
-  requesting_origin_tab_closed_with_pending_action: { status: 'action_pending' };
+  requesting_origin_tab_closed_with_pending_action: undefined;
   select_add_new_collectible: undefined;
   select_buy_option: { provider: string };
   select_theme: { theme: string };
@@ -46,6 +46,8 @@ interface HistoricalEvents {
   user_approved_send_transfer: { origin: string };
   user_approved_sign_and_broadcast_psbt: { origin: string };
   user_clicked_feedback_button: undefined;
+  unable_to_read_fee_in_stx_validator: undefined;
+  unable_to_read_available_balance_in_stx_validator: undefined;
   view_bitcoin_transaction: undefined;
   view_transaction: undefined;
   view_collectibles: { ordinals_count?: number; stamps_count?: number; stacks_nfts_count?: number };
@@ -70,14 +72,18 @@ interface HistoricalEvents {
     hash: string;
     error: string;
   };
+  request_signature_cannot_sign_message_no_account: undefined;
+  request_signature_sign: { type: 'software' | 'ledger' };
   switch_account: { index: number; hasStxBalance: boolean };
-  non_compliant_entity_detected: { address: string };
+  non_compliant_entity_detected: { address: string | string[] };
   ledger_transaction_publish_error: { error: { message: string; error: any } };
   native_segwit_tx_hex_to_ledger_tx: { success: boolean };
-  psbt_sign_request: { status: 'missing_taproot_internal_key' };
+  psbt_sign_request_p2tr_missing_taproot_internal_key: undefined;
   ledger_nativesegwit_add_nonwitnessutxo: {
     action: 'add_nonwitness_utxo' | 'skip_add_nonwitness_utxo';
   };
+  submit_invalid_secret_key: undefined;
+  submit_valid_secret_key: undefined;
   increase_fee_transaction: { symbol: string; txid: string };
   finalize_tx_signature_error_thrown: { data: unknown };
   auth_response_with_illegal_redirect_uri: undefined;
@@ -89,6 +95,9 @@ interface HistoricalEvents {
   ledger_message_signed_approved: undefined;
   ledger_message_signed_rejected: undefined;
   ledger_public_keys_pulled_from_device: undefined;
+  user_clicked_requested_by_link: { endpoint: string };
+  user_approved_get_addresses: { origin: string };
+  user_approved_message_signing: { origin: string };
 }
 
 export type EventName = keyof Events;

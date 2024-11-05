@@ -17,17 +17,10 @@ export function AnalyticsClient<T extends AnalyticsClientInterface>(
       }
       return analyticsClient.track(event as any, { ...properties, ...options.defaultProperties });
     },
-
-    async screen(name: string, properties?: JsonMap) {
-      return analyticsClient.screen(name, { ...properties, ...options.defaultProperties });
-    },
-
-    async group(groupId: string, traits?: JsonMap) {
-      return analyticsClient.group(groupId, { ...traits, ...options.defaultTraits });
-    },
-
-    async identify(userId: string, traits?: JsonMap) {
-      return analyticsClient.identify(userId, { ...traits, ...options.defaultTraits });
-    },
+    screen: analyticsClient.screen,
+    group: analyticsClient.group,
+    identify: analyticsClient.identify,
+    page: analyticsClient.page ? analyticsClient.page : () => Promise.resolve(),
+    client: analyticsClient,
   };
 }
