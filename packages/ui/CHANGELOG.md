@@ -111,6 +111,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.4.2
 
+## [1.32.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.31.2...@leather.io/ui-v1.32.0) (2024-11-05)
+
+
+### Features
+
+* add numpad component ([b5b9507](https://github.com/leather-io/mono/commit/b5b95072f2ec6f362a878f51871d77c155d66a44))
+
 ## [1.31.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.31.0...@leather.io/ui-v1.31.1) (2024-10-30)
 
 
