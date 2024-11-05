@@ -15,7 +15,7 @@ export interface ItemLayoutProps {
 }
 export function ItemLayout({
   actionIcon,
-  captionLeft = ' ',
+  captionLeft,
   captionRight,
   titleLeft,
   titleRight,

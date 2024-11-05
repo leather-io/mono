@@ -3,12 +3,13 @@ import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
 
 import { AccountListItem } from './account-list-item';
+import { AccountAddress } from './components/account-address';
+import { AccountBalance } from './components/account-balance';
 
 interface AccountListProps {
   accounts: Account[];
@@ -23,13 +24,17 @@ export function AccountList({ accounts, onPress, showWalletInfo }: AccountListPr
       {wallet => (
         <AccountListItem
           accountName={account.name}
-          address={t`Address`}
-          balance={t`$1234`}
+          address={
+            <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
+          }
+          balance={
+            <AccountBalance accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
+          }
           icon={<AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />}
           iconTestID={defaultIconTestId(account.icon)}
           onPress={() => onPress(account)}
           testID={TestId.walletListAccountCard}
-          walletName={showWalletInfo ? wallet.name : undefined}
+          walletName={showWalletInfo ? wallet.name : ' '}
         />
       )}
     </WalletLoader>

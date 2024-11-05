@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Balance } from '@/components/balance/balance';
 
 import { Money } from '@leather.io/models';
-import { Flag, ItemLayout } from '@leather.io/ui/native';
+import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 interface TokenBalanceProps {
   ticker: string;
@@ -12,7 +12,7 @@ interface TokenBalanceProps {
   availableBalance?: Money;
   chain: string;
   fiatBalance: Money;
-  showChain: boolean; // true except for BTC and STX
+  onPress?(): void;
 }
 export function TokenBalance({
   ticker,
@@ -21,16 +21,18 @@ export function TokenBalance({
   availableBalance,
   chain,
   fiatBalance,
-  showChain,
+  onPress,
 }: TokenBalanceProps) {
   return (
-    <Flag key={ticker} img={icon} align="middle" spacing="1" reverse={false}>
-      <ItemLayout
-        titleLeft={tokenName}
-        titleRight={availableBalance && <Balance balance={availableBalance} />}
-        captionLeft={showChain ? chain : ''}
-        captionRight={<Balance balance={fiatBalance} color="ink.text-subdued" />}
-      />
-    </Flag>
+    <Pressable flexDirection="row" disabled={!onPress} onPress={onPress}>
+      <Flag key={ticker} img={icon}>
+        <ItemLayout
+          titleLeft={tokenName}
+          titleRight={availableBalance && <Balance balance={availableBalance} />}
+          captionLeft={chain}
+          captionRight={<Balance balance={fiatBalance} color="ink.text-subdued" />}
+        />
+      </Flag>
+    </Pressable>
   );
 }

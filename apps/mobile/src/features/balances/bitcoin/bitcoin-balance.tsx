@@ -1,4 +1,3 @@
-import { AccountId } from '@/models/domain.model';
 import {
   useBitcoinAccountTotalBitcoinBalance,
   useWalletTotalBitcoinBalance,
@@ -13,17 +12,22 @@ import { TokenBalance } from '../token-balance';
 interface BitcoinTokenBalanceProps {
   availableBalance: Money;
   fiatBalance: Money;
+  onPress?(): void;
 }
-export function BitcoinTokenBalance({ availableBalance, fiatBalance }: BitcoinTokenBalanceProps) {
+export function BitcoinTokenBalance({
+  availableBalance,
+  fiatBalance,
+  onPress,
+}: BitcoinTokenBalanceProps) {
   return (
     <TokenBalance
       ticker="BTC"
       icon={<BtcAvatarIcon />}
       tokenName={t`Bitcoin`}
-      chain={t`Bitcoin blockchain`}
+      chain={t`Layer 1`}
       fiatBalance={fiatBalance}
-      showChain={false}
       availableBalance={availableBalance}
+      onPress={onPress}
     />
   );
 }
@@ -33,7 +37,25 @@ export function BitcoinBalance() {
   return <BitcoinTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
 }
 
-export function BitcoinBalanceByAccount(props: AccountId) {
-  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance(props);
-  return <BitcoinTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
+interface BitcoinBalanceByAccountProps {
+  accountIndex: number;
+  fingerprint: string;
+  onPress?(): void;
+}
+export function BitcoinBalanceByAccount({
+  accountIndex,
+  fingerprint,
+  onPress,
+}: BitcoinBalanceByAccountProps) {
+  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance({
+    accountIndex,
+    fingerprint,
+  });
+  return (
+    <BitcoinTokenBalance
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
+      onPress={onPress}
+    />
+  );
 }

@@ -93,3 +93,15 @@ export function useBitcoinAccounts() {
     };
   }, [list]);
 }
+
+export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+
+  const taprootPayerAddress = taproot.derivePayer({ addressIndex: 0 }).address;
+  const nativeSegwitPayerAddress = nativeSegwit.derivePayer({ addressIndex: 0 }).address;
+
+  return { taprootPayerAddress, nativeSegwitPayerAddress };
+}

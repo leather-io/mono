@@ -42,3 +42,4 @@ export * from './src/components/collectibles/index.native';
 export * from './src/utils/use-on-mount.shared';
 export { Pressable } from './src/components/button/pressable.native';
 export { Numpad } from './src/components/numpad/numpad.native';
+export { IconButton } from './src/components/icon-button/icon-button.native';
