@@ -32,16 +32,19 @@
       "favicon": "./src/assets-native/favicon.png"
     },
     "plugins": [
-      "expo-font",
-      {
-        "fonts": [
-          "../assets-native/fonts/SpaceMono-Regular.ttf",
-          "../assets-native/fonts/ABCDiatype-Regular.otf",
-          "../assets-native/fonts/ABCDiatype-Light.otf",
-          "../assets-native/fonts/ABCDiatype-Medium.otf",
-          "../assets-native/fonts/MarchePro-Super.otf"
-        ]
-      }
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./src/assets-native/fonts/FiraCode-Retina.otf",
+            "./src/assets-native/fonts/FiraCode-Medium.otf",
+            "./src/assets-native/fonts/ABCDiatype-Regular.otf",
+            "./src/assets-native/fonts/ABCDiatype-Light.otf",
+            "./src/assets-native/fonts/ABCDiatype-Medium.otf",
+            "./src/assets-native/fonts/MarchePro-Super.otf"
+          ]
+        }
+      ]
     ]
   }
 }
