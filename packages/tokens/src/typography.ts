@@ -133,6 +133,13 @@ function getTextVariants({ platform }: { platform: Platform }) {
     fontWeight: transformWeight(450),
   };
 
+  const address = {
+    ...commonFiracodeStyles,
+    fontSize: transformSize(14),
+    lineHeight: transformSize(24),
+    fontWeight: transformWeight(500),
+  };
+
   const textVariants = {
     display01,
     display02,
@@ -148,6 +155,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
     body02,
     caption01,
     code,
+    address,
     defaults: body01,
   };
 
@@ -218,6 +226,11 @@ export function getWebTextVariants() {
     code: {
       description: 'code',
       value: textVariants.code,
+    },
+
+    address: {
+      description: 'address',
+      value: textVariants.address,
     },
   } as const;
 }
