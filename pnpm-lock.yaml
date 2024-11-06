@@ -181,8 +181,8 @@ importers:
         specifier: 6.17.0
         version: 6.17.0
       '@stacks/wallet-sdk':
-        specifier: 6.15.0
-        version: 6.15.0
+        specifier: 7.0.0
+        version: 7.0.0
       '@tanstack/react-query':
         specifier: 5.59.16
         version: 5.59.16(react@18.2.0)
@@ -2607,6 +2607,10 @@ packages:
     resolution: {integrity: sha512-m4DVN9ZqskZoLU5GlWZadwDnYo3vAEydiUayB9widCl9ffWx2IvPnp6n3on5rJmziJSw9Bv+Z3ChDVdMwXCY8Q==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
+  '@eslint-community/regexpp@4.12.1':
+    resolution: {integrity: sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+
   '@eslint/eslintrc@2.1.4':
     resolution: {integrity: sha512-269Z39MS6wVJtsoUl10L60WdkhJVdPG24Q4eZTH3nnF6lpvSShEK3wQjDX9JRWAUPvPh7COouPpU9IrqaZFvtQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -4299,6 +4303,9 @@ packages:
   '@stacks/auth@6.17.0':
     resolution: {integrity: sha512-SaxB6ULkYLRd5WZotymlPzroBn5/28KgJOTY0nKDcwCqxSkYjPZepweA30LK5eUOmePuGILaMTagj1ibZRnvUg==}
 
+  '@stacks/auth@7.0.0':
+    resolution: {integrity: sha512-p0/FJy5jRRgtsVzGpWDgNE0fi/ioPCL3S1tZHRsvdKO7moquHWnTlBV/9yVkGbd+V0kD95Sd0euX5pwWA82MhA==}
+
   '@stacks/common@6.13.0':
     resolution: {integrity: sha512-wwzyihjaSdmL6NxKvDeayy3dqM0L0Q2sawmdNtzJDi0FnXuJGm5PeapJj7bEfcI9XwI7Bw5jZoC6mCn9nc5YIw==}
 
@@ -4320,6 +4327,9 @@ packages:
   '@stacks/encryption@6.17.0':
     resolution: {integrity: sha512-c0+ZOjrAiB1fDCjXO6XqHdYgpeBeMYyeH+dWahpD1VQUDor2PE5Q47qyuibWmx36rLWt1M6wlaLdeVm6HlKGzw==}
 
+  '@stacks/encryption@7.0.0':
+    resolution: {integrity: sha512-kQhiurn8s0DV6OALqEy2Aqwp2DNJUD41S1bnD/+UESyEDD5XRqL84MEo7mCL8pTPr+FVdhT+diEIPeAfEtbTPQ==}
+
   '@stacks/network@6.13.0':
     resolution: {integrity: sha512-Ss/Da4BNyPBBj1OieM981fJ7SkevKqLPkzoI1+Yo7cYR2df+0FipIN++Z4RfpJpc8ne60vgcx7nJZXQsiGhKBQ==}
 
@@ -4332,14 +4342,17 @@ packages:
   '@stacks/profile@6.17.0':
     resolution: {integrity: sha512-EoYe0NapFc6bgA+vyCVY2sYYRHk3pbsbRnm3eaSp8y9Drfy8dBqsM10W1jjTwOn0R+IMmDT52lojdW7Pw3c7Mw==}
 
+  '@stacks/profile@7.0.0':
+    resolution: {integrity: sha512-E9RDodVgcLBs6ZiV88lVQyDjA8ZDVPswbPpLNHeAA+evJ2GwRKMJrNnirjydMI37aWm3ZpYOEMLMbqdi38VR7w==}
+
   '@stacks/rpc-client@1.0.3':
     resolution: {integrity: sha512-lao7MKCq39VA86v2rJzmgjHKG5bg9LWdLSzvktuEy3lfatVki/hRm6sitkmNhYVcdUVp3YV9gyW6mvu7U9weWw==}
 
   '@stacks/stacks-blockchain-api-types@7.8.2':
     resolution: {integrity: sha512-wcDSdgIZx/ttQfUTPtGJOIyEkTOjmCsC79TaIyxTIiihSgrGppqTuzkwHD/DyuQkcJtUZvDTxMsAXkBKShE1kw==}
 
-  '@stacks/storage@6.17.0':
-    resolution: {integrity: sha512-vhgV8C+1UahSWrafOHh/ZnTVYs8JadLsh5OZCVgtxWXV7z8ruQzVN24eeXbR+C7Vme2YpDP210ly7Wyqxd755Q==}
+  '@stacks/storage@7.0.0':
+    resolution: {integrity: sha512-yOR16ItzKDn0cl7jKZpO1LBCm+CIAUZgBRbWFPTqVMU5tzMTWnDt8gqM/ZrYYcCZs07VOUl2VyAaCqvEH2ZrVg==}
 
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
@@ -4347,8 +4360,8 @@ packages:
   '@stacks/transactions@7.0.0':
     resolution: {integrity: sha512-9kGTnJLwRQPugLzbdJ8MmFED+eRhlJKIXpz2mshyy238hvBc4T0jynsoJMi4qGqvJYzsiRYCLDPJVkkUde85vA==}
 
-  '@stacks/wallet-sdk@6.15.0':
-    resolution: {integrity: sha512-VBMiWe5UAyDnvc2w8/XN7QuSkbXTnAJ5rvtzedb7yXKgIBMSjE+gQnUm0XasbNDRHc58Ag76IAMAIKh4ZAMC4w==}
+  '@stacks/wallet-sdk@7.0.0':
+    resolution: {integrity: sha512-OX1rtaKQ85IAI2oL8pBf3RLTnCvvWs9FLxiTE+OCyngXTS+x5Zzqc4qiTqj+WHo7xNF1/LTPx6DAzZ5LG+TOFw==}
 
   '@stdlib/array-float32@0.0.6':
     resolution: {integrity: sha512-QgKT5UaE92Rv7cxfn7wBKZAlwFFHPla8eXsMFsTGt5BiL4yUy36lwinPUh4hzybZ11rw1vifS3VAPuk6JP413Q==}
@@ -5930,8 +5943,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  acorn@8.13.0:
-    resolution: {integrity: sha512-8zSiw54Oxrdym50NlZ9sUusyO1Z1ZchgRLWRaK6c86XJFClyCgFKetdowBg5bKxyp/u+CDBJG4Mpp0m3HLZl9w==}
+  acorn@8.14.0:
+    resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -8333,15 +8346,6 @@ packages:
   hyphenate-style-name@1.1.0:
     resolution: {integrity: sha512-WDC/ui2VVRrz3jOVi+XtjqkDjiVjTtFaAGiW37k6b+ohyQ5wYDOGkvCZa8+H0nx3gyvv0+BST9xuOgIyGQ00gw==}
 
-  iced-error@0.0.13:
-    resolution: {integrity: sha512-yEEaG8QfyyRL0SsbNNDw3rVgTyqwHFMCuV6jDvD43f/2shmdaFXkqvFLGhDlsYNSolzYHwVLM/CrXt9GygYopA==}
-
-  iced-lock@1.1.0:
-    resolution: {integrity: sha512-J9UMVitgTMYrkUil5EB9/Q4BPWiMpFH156yjDlmMoMRKs3s3PnXj/6G0UlzIOGnNi5JVNk/zVYLXVnuo+1QnqQ==}
-
-  iced-runtime@1.0.4:
-    resolution: {integrity: sha512-rgiJXNF6ZgF2Clh/TKUlBDW3q51YPDJUXmxGQXx1b8tbZpVpTn+1RX9q1sjNkujXIIaVxZByQzPHHORg7KV51g==}
-
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -9762,9 +9766,6 @@ packages:
   moo@0.5.2:
     resolution: {integrity: sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==}
 
-  more-entropy@0.0.7:
-    resolution: {integrity: sha512-e0TxQtU1F6/ZA8WnEA2JLQwwDqBTtZFLJSW7rWgUsQou35wx1IOL0g2O7q7oGoMgIJto+jHMnNGHLfSiylHRrw==}
-
   mrmime@1.0.1:
     resolution: {integrity: sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==}
     engines: {node: '>=10'}
@@ -10563,10 +10564,6 @@ packages:
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-
-  progress@1.1.8:
-    resolution: {integrity: sha512-UdA8mJ4weIkUBO224tIarHzuHs4HuYiJvsuGT7j/SPQiUJVjYvNDBIPa0hAorduOfjGohB/qHWRa/lrrWX/mXw==}
-    engines: {node: '>=0.4.0'}
 
   progress@2.0.3:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
@@ -11834,9 +11831,6 @@ packages:
   trim-right@1.0.1:
     resolution: {integrity: sha512-WZGXGstmCWgeevgTL54hrCuw1dyMQIzWy7ZfqRJfSmJZBwklI15egmQytFP6bPidmw3M8d5yEowl1niq4vmqZw==}
     engines: {node: '>=0.10.0'}
-
-  triplesec@4.0.3:
-    resolution: {integrity: sha512-fug70e1nJoCMxsXQJlETisAALohm84vl++IiTTHEqM7Lgqwz62jrlwqOC/gJEAJjO/ByN127sEcioB56HW3wIw==}
 
   ts-api-utils@1.3.0:
     resolution: {integrity: sha512-UQMIo7pb8WRomKR1/+MFVLTroIvDVtMX3K6OUir8ynLyzB8Jeriont2bTAtmNPa1ekAgN7YPDyf6V+ygrdU+eQ==}
@@ -14358,6 +14352,8 @@ snapshots:
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.11.1': {}
+
+  '@eslint-community/regexpp@4.12.1': {}
 
   '@eslint/eslintrc@2.1.4':
     dependencies:
@@ -17349,6 +17345,18 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/auth@7.0.0':
+    dependencies:
+      '@noble/secp256k1': 1.7.1
+      '@stacks/common': 7.0.0
+      '@stacks/encryption': 7.0.0
+      '@stacks/network': 7.0.0
+      '@stacks/profile': 7.0.0
+      cross-fetch: 3.1.8
+      jsontokens: 4.0.1
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/common@6.13.0':
     dependencies:
       '@types/bn.js': 5.1.6
@@ -17400,6 +17408,17 @@ snapshots:
       ripemd160-min: 0.0.6
       varuint-bitcoin: 1.1.2
 
+  '@stacks/encryption@7.0.0':
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@noble/secp256k1': 1.7.1
+      '@scure/bip39': 1.1.0
+      '@stacks/common': 7.0.0
+      base64-js: 1.5.1
+      bs58: 5.0.0
+      ripemd160-min: 0.0.6
+      varuint-bitcoin: 1.1.2
+
   '@stacks/network@6.13.0':
     dependencies:
       '@stacks/common': 6.13.0
@@ -17432,6 +17451,17 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/profile@7.0.0':
+    dependencies:
+      '@stacks/common': 7.0.0
+      '@stacks/network': 7.0.0
+      '@stacks/transactions': 7.0.0
+      jsontokens: 4.0.1
+      schema-inspector: 2.1.0
+      zone-file: 2.0.0-beta.3
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/rpc-client@1.0.3':
     dependencies:
       '@blockstack/stacks-transactions': 0.7.0
@@ -17441,12 +17471,12 @@ snapshots:
 
   '@stacks/stacks-blockchain-api-types@7.8.2': {}
 
-  '@stacks/storage@6.17.0':
+  '@stacks/storage@7.0.0':
     dependencies:
-      '@stacks/auth': 6.17.0
-      '@stacks/common': 6.16.0
-      '@stacks/encryption': 6.17.0
-      '@stacks/network': 6.17.0
+      '@stacks/auth': 7.0.0
+      '@stacks/common': 7.0.0
+      '@stacks/encryption': 7.0.0
+      '@stacks/network': 7.0.0
       base64-js: 1.5.1
       jsontokens: 4.0.1
     transitivePeerDependencies:
@@ -17474,21 +17504,19 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/wallet-sdk@6.15.0':
+  '@stacks/wallet-sdk@7.0.0':
     dependencies:
       '@scure/bip32': 1.1.3
       '@scure/bip39': 1.1.0
-      '@stacks/auth': 6.17.0
-      '@stacks/common': 6.13.0
-      '@stacks/encryption': 6.16.1
-      '@stacks/network': 6.17.0
-      '@stacks/profile': 6.17.0
-      '@stacks/storage': 6.17.0
-      '@stacks/transactions': 6.17.0
-      buffer: 6.0.3
+      '@stacks/auth': 7.0.0
+      '@stacks/common': 7.0.0
+      '@stacks/encryption': 7.0.0
+      '@stacks/network': 7.0.0
+      '@stacks/profile': 7.0.0
+      '@stacks/storage': 7.0.0
+      '@stacks/transactions': 7.0.0
       c32check: 2.0.0
       jsontokens: 4.0.1
-      triplesec: 4.0.3
       zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
       - encoding
@@ -19671,9 +19699,9 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  acorn-import-attributes@1.9.5(acorn@8.13.0):
+  acorn-import-attributes@1.9.5(acorn@8.14.0):
     dependencies:
-      acorn: 8.13.0
+      acorn: 8.14.0
 
   acorn-jsx-walk@2.0.0: {}
 
@@ -19685,9 +19713,9 @@ snapshots:
     dependencies:
       acorn: 8.12.1
 
-  acorn-jsx@5.3.2(acorn@8.13.0):
+  acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
-      acorn: 8.13.0
+      acorn: 8.14.0
 
   acorn-loose@8.4.0:
     dependencies:
@@ -19703,7 +19731,7 @@ snapshots:
 
   acorn@8.12.1: {}
 
-  acorn@8.13.0: {}
+  acorn@8.14.0: {}
 
   agent-base@6.0.2:
     dependencies:
@@ -21598,7 +21626,7 @@ snapshots:
   eslint@8.53.0:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.53.0)
-      '@eslint-community/regexpp': 4.11.1
+      '@eslint-community/regexpp': 4.12.1
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.53.0
       '@humanwhocodes/config-array': 0.11.14
@@ -21640,8 +21668,8 @@ snapshots:
 
   espree@9.6.1:
     dependencies:
-      acorn: 8.13.0
-      acorn-jsx: 5.3.2(acorn@8.13.0)
+      acorn: 8.14.0
+      acorn-jsx: 5.3.2(acorn@8.14.0)
       eslint-visitor-keys: 3.4.3
 
   esprima@4.0.1: {}
@@ -22698,14 +22726,6 @@ snapshots:
   husky@9.1.4: {}
 
   hyphenate-style-name@1.1.0: {}
-
-  iced-error@0.0.13: {}
-
-  iced-lock@1.1.0:
-    dependencies:
-      iced-runtime: 1.0.4
-
-  iced-runtime@1.0.4: {}
 
   iconv-lite@0.4.24:
     dependencies:
@@ -24562,16 +24582,12 @@ snapshots:
 
   mlly@1.7.2:
     dependencies:
-      acorn: 8.13.0
+      acorn: 8.14.0
       pathe: 1.1.2
       pkg-types: 1.2.1
       ufo: 1.5.4
 
   moo@0.5.2: {}
-
-  more-entropy@0.0.7:
-    dependencies:
-      iced-runtime: 1.0.4
 
   mrmime@1.0.1: {}
 
@@ -25386,8 +25402,6 @@ snapshots:
   process-nextick-args@2.0.1: {}
 
   process@0.11.10: {}
-
-  progress@1.1.8: {}
 
   progress@2.0.3: {}
 
@@ -26712,7 +26726,7 @@ snapshots:
   terser@5.36.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.13.0
+      acorn: 8.14.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -26817,15 +26831,6 @@ snapshots:
   trim-newlines@3.0.1: {}
 
   trim-right@1.0.1: {}
-
-  triplesec@4.0.3:
-    dependencies:
-      iced-error: 0.0.13
-      iced-lock: 1.1.0
-      iced-runtime: 1.0.4
-      more-entropy: 0.0.7
-      progress: 1.1.8
-      uglify-js: 3.19.3
 
   ts-api-utils@1.3.0(typescript@5.5.4):
     dependencies:
@@ -27080,7 +27085,8 @@ snapshots:
 
   ufo@1.5.4: {}
 
-  uglify-js@3.19.3: {}
+  uglify-js@3.19.3:
+    optional: true
 
   unbox-primitive@1.0.2:
     dependencies:
@@ -27151,7 +27157,7 @@ snapshots:
 
   unplugin@1.14.1(webpack-sources@3.2.3):
     dependencies:
-      acorn: 8.13.0
+      acorn: 8.14.0
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
       webpack-sources: 3.2.3
@@ -27460,8 +27466,8 @@ snapshots:
       '@webassemblyjs/ast': 1.12.1
       '@webassemblyjs/wasm-edit': 1.12.1
       '@webassemblyjs/wasm-parser': 1.12.1
-      acorn: 8.13.0
-      acorn-import-attributes: 1.9.5(acorn@8.13.0)
+      acorn: 8.14.0
+      acorn-import-attributes: 1.9.5(acorn@8.14.0)
       browserslist: 4.24.2
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.17.1
