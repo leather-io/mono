@@ -30,7 +30,7 @@ export const Stacks: Story = {
   },
 };
 
-export const WithBTCIcon: Story = {
+export const WithBtcIcon: Story = {
   args: {
     address: 'bc1pmzfrwwndsqmk5yh69yjr5lfgfg4ev8c0tsc06e',
   },
@@ -43,7 +43,7 @@ export const WithBTCIcon: Story = {
   ),
 };
 
-export const WithSTXIcon: Story = {
+export const WithStxIcon: Story = {
   args: {
     address: 'SP3XKZE32KZ925AAAGWPG1W66YP5BM2RD73T6AJHS',
   },
