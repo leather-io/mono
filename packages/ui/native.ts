@@ -8,6 +8,7 @@ export { BlurView } from './src/components/blur-view/blur-view.native';
 export { Chip } from './src/components/chip/chip.native';
 export { HStack } from './src/components/box/hstack.native';
 export { Stack } from './src/components/box/stack.native';
+export { AddressDisplayer } from './src/components/address-displayer/address-displayer.native';
 export {
   AnimatedButton,
   Button,
