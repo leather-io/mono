@@ -131,6 +131,22 @@
     * @leather.io/models bumped to 0.18.2
     * @leather.io/rpc bumped to 2.1.13
 
+## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.16.7...@leather.io/utils-v0.17.0) (2024-11-06)
+
+
+### Features
+
+* market data service ([58fc169](https://github.com/leather-io/mono/commit/58fc169aafdbb65b519c3e10db71034e1470bc59))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.13.1
+    * @leather.io/models bumped to 0.19.0
+    * @leather.io/rpc bumped to 2.1.15
+
 ## [0.16.7](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.16.6...@leather.io/utils-v0.16.7) (2024-10-30)
 
 
