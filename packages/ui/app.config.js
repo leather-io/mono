@@ -7,11 +7,11 @@ export default ({ config }) => ({
   },
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './src/assets-native/icon.png',
+  icon: './src/assets-native/images/icon.png',
   scheme: 'myapp',
   userInterfaceStyle: 'automatic',
   splash: {
-    image: './src/assets-native/splash.png',
+    image: './src/assets-native/images/splash.png',
     resizeMode: 'contain',
     backgroundColor: '#ffffff',
   },
@@ -26,13 +26,13 @@ export default ({ config }) => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: './src/assets-native/adaptive-icon.png',
+      foregroundImage: './src/assets-native/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
     package: 'io.leather.mobilewallet',
   },
   web: {
-    favicon: './src/assets-native/favicon.png',
+    favicon: './src/assets-native/images/favicon.png',
   },
   plugins: ['expo-font'],
 });
