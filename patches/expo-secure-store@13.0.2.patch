@@ -19,7 +19,7 @@ index 3a12dc996a27c1d97ac110d808f1cdf98e5379b9..50fac69587534f81f6730b91c4d26866
        .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
        .setUserAuthenticationRequired(options.requireAuthentication)
-+      .setUserAuthenticationParameters(5, KeyProperties.AUTH_DEVICE_CREDENTIAL + KeyProperties.AUTH_BIOMETRIC_STRONG)
++      .setUserAuthenticationParameters(5, KeyProperties.AUTH_DEVICE_CREDENTIAL or KeyProperties.AUTH_BIOMETRIC_STRONG)
        .build()
  
      val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, keyStore.provider)
