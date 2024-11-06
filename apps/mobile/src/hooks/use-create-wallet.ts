@@ -5,6 +5,7 @@ import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/macro';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { useRouter } from 'expo-router';
 
 export function useCreateWallet() {
@@ -16,7 +17,13 @@ export function useCreateWallet() {
   async function createWallet({ biometrics }: { biometrics: boolean }) {
     changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
-    if (mnemonic) {
+    const enrolled = await LocalAuthentication.isEnrolledAsync();
+    console.log('is enrolled in Biometric auth?', { enrolled });
+    const level = await LocalAuthentication.getEnrolledLevelAsync();
+    console.log('Biometric auth level', { level });
+    const result = await LocalAuthentication.authenticateAsync();
+    console.log('auth result', { result });
+    if (result.success && mnemonic) {
       router.navigate(AppRoutes.GeneratingWallet);
       await nextAnimationFrame();
       try {
@@ -47,6 +54,8 @@ export function useCreateWallet() {
           router.back();
           return;
         }
+        console.log({ error: e });
+
         toastContext.displayToast({
           type: 'error',
           title: t({

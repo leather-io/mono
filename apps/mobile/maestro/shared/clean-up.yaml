@@ -1,9 +1,16 @@
 appId: io.leather.mobilewallet
 ---
 - runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible: Authenticate
+          timeout: 30000
+- runFlow:
     file: ./unlock.yaml
     when:
-      visible: Passcode field
+      visible: Passcode field|Authenticate
 - tapOn:
     id: 'homeDeveloperToolsButton'
 - tapOn:

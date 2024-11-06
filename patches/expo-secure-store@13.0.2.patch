@@ -1,3 +1,28 @@
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+index 62a9908e1f70620d9e721ae681de43696c0c5395..642912db6f0c8ade5122ea9d846f34b465f95584 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+@@ -59,7 +59,7 @@ class AuthenticationHelper(
+   fun assertBiometricsSupport() {
+     val biometricManager = BiometricManager.from(context)
+     @SuppressLint("SwitchIntDef") // BiometricManager.BIOMETRIC_SUCCESS shouldn't do anything
+-    when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
++    when (biometricManager.canAuthenticate(BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+       BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+         throw AuthenticationException("No hardware available for biometric authentication. Use expo-local-authentication to check if the device supports it")
+       }
+diff --git a/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt b/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
+index 3a12dc996a27c1d97ac110d808f1cdf98e5379b9..50fac69587534f81f6730b91c4d26866147417a2 100644
+--- a/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
++++ b/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
+@@ -61,6 +61,7 @@ class AESEncryptor : KeyBasedEncryptor<KeyStore.SecretKeyEntry> {
+       .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+       .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+       .setUserAuthenticationRequired(options.requireAuthentication)
++      .setUserAuthenticationParameters(5, KeyProperties.AUTH_DEVICE_CREDENTIAL + KeyProperties.AUTH_BIOMETRIC_STRONG)
+       .build()
+ 
+     val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, keyStore.provider)
 diff --git a/ios/SecureStoreModule.swift b/ios/SecureStoreModule.swift
 index 7af7fe54431edbdf4be6ffecaa5b17f90deebbf8..2a55fc26393e85ebc773be11d77bcc802de59579 100644
 --- a/ios/SecureStoreModule.swift

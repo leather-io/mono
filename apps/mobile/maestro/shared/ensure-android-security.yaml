@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+---
+- pressKey: home
+- swipe:
+    direction: DOWN
+- swipe:
+    direction: DOWN
+- tapOn:
+    id: .*settings.*
+- waitForAnimationToEnd
+- scroll
+- tapOn: .*security.*
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      visible: Set a screen lock
+    commands:
+      - tapOn: Set screen lock
+      - tapOn: password
+      - inputText: hello
+      - pressKey: enter
+      - inputText: hello
+      - pressKey: enter
+      - pressKey: home
+- pressKey: home

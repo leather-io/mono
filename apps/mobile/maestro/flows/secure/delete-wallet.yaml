@@ -1,5 +1,9 @@
 appId: io.leather.mobilewallet
 ---
+- runFlow:
+  when:
+    platform: Android
+    file: ../../shared/ensure-android-security.yaml
 - launchApp
 - runFlow: ../../shared/clean-up.yaml
 - runFlow:

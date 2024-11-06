@@ -1,0 +1,24 @@
+appId: io.leather.mobilewallet
+---
+- tapOn:
+    text: 'Add Wallet'
+- tapOn:
+    id: 'createNewWalletSheetButton'
+- tapOn:
+    id: 'walletCreationBackedUpButton'
+- runFlow:
+    when:
+      true: ${SECURE == "yes"}
+    commands:
+      - tapOn:
+          text: 'Enable device security'
+- runFlow:
+    when:
+      true: ${SECURE != "yes"}
+    commands:
+      - tapOn:
+          text: 'Skip for now'
+      - tapOn:
+          text: 'Proceed'
+- assertVisible:
+    id: 'homeAccountCard'

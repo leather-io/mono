@@ -132,7 +132,11 @@ export function mnemonicStore(fingerprint: string): MnemonicStore {
     },
     async setMnemonic({ mnemonic, passphrase, biometrics }) {
       if (passphrase)
-        await SecureStore.setItemAsync(passphraseKey, passphrase, getSecureStoreConfig(biometrics));
+        return await SecureStore.setItemAsync(
+          passphraseKey,
+          passphrase,
+          getSecureStoreConfig(biometrics)
+        );
       return SecureStore.setItemAsync(fingerprint, mnemonic, getSecureStoreConfig(biometrics));
     },
     async deleteMnemonic() {
