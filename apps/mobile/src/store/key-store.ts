@@ -1,4 +1,11 @@
+// useStacksClient should be in the query package
+import { useStacksClient } from '@/hooks/api-clients.hooks';
+import { AddressVersion } from '@stacks/transactions';
+
 import {
+  deriveAddressIndexZeroFromAccount,
+  deriveNativeSegwitAccountFromRootKeychain,
+  getNativeSegwitPaymentFromAddressIndex,
   makeNativeSegwitAccountDerivationPath,
   makeTaprootAccountDerivationPath,
 } from '@leather.io/bitcoin';
@@ -8,12 +15,19 @@ import {
   deriveRootBip32Keychain,
   generateMnemonic,
   getMnemonicRootKeyFingerprint,
+  recurseAccountsForActivity,
 } from '@leather.io/crypto';
+import { useBitcoinClient } from '@leather.io/query';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
-import { userAddsAccount, userTogglesHideAccount } from './accounts/accounts.write';
+import {
+  userAddsAccount,
+  userAddsAccounts,
+  userTogglesHideAccount,
+} from './accounts/accounts.write';
 import { useBitcoinAccounts } from './keychains/bitcoin/bitcoin-keychains.read';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
+import { getStacksAddressByIndex } from './keychains/stacks/utils';
 import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.read';
@@ -36,6 +50,9 @@ export function useKeyStore() {
   const wallets = useWallets();
   const bitcoinKeychains = useBitcoinAccounts();
 
+  const stxClient = useStacksClient();
+  const btcClient = useBitcoinClient();
+
   return {
     async createTemporarySoftwareWallet() {
       const mnemonic = generateMnemonic();
@@ -50,7 +67,6 @@ export function useKeyStore() {
     async isWalletInKeychain({ fingerprint }: { fingerprint: string }) {
       return !!wallets.list.find(wallet => wallet.fingerprint === fingerprint);
     },
-
     async restoreWalletFromMnemonic({
       biometrics,
       mnemonic,
@@ -61,6 +77,8 @@ export function useKeyStore() {
       passphrase?: string;
     }) {
       const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
+
+      // checks if the wallet exists
       if (await this.isWalletInKeychain({ fingerprint })) {
         keychainErrorHandlers.throwKeyExistsError();
         return;
@@ -74,7 +92,6 @@ export function useKeyStore() {
         withKeychains: { bitcoin: bitcoinKeychains, stacks: stacksKeychains },
       });
     },
-
     async createNewAccountOfWallet(fingerprint: string) {
       const { accountIndex, bitcoinKeychains, stacksKeychains } =
         await this.deriveNextAccountKeychainsFrom(fingerprint);
@@ -87,6 +104,24 @@ export function useKeyStore() {
             stacks: stacksKeychains,
           },
         })
+      );
+    },
+    async createNewAccountsOfWallet(fingerprint: string, activeAccounts: number) {
+      const { bitcoinKeychains, stacksKeychains } =
+        await this.deriveNextAccountKeychainsFrom(fingerprint);
+
+      dispatch(
+        userAddsAccounts(
+          Array.from({ length: activeAccounts }, (_, i) => ({
+            account: {
+              id: makeAccountIdentifer(fingerprint, i),
+            },
+            withKeychains: {
+              bitcoin: bitcoinKeychains,
+              stacks: stacksKeychains,
+            },
+          }))
+        )
       );
     },
 
@@ -108,6 +143,54 @@ export function useKeyStore() {
 
       const nextAccountIndex =
         fingerprintAccounts.length === 0 ? 0 : highestKeychainAccountIndex + 1;
+
+      // in extension secretKey is the mnemonic
+      const secretKey = mnemonic;
+
+      async function doesStacksAddressHaveBalance(address: string) {
+        const controller = new AbortController();
+        const resp = await stxClient.getAccountBalance(address, controller.signal);
+        return Number(resp.stx.balance) > 0;
+      }
+      async function doesBitcoinAddressHaveBalance(address: string) {
+        const resp = await btcClient.addressApi.getUtxosByAddress(address);
+        return resp.length > 0;
+      }
+
+      function getNativeSegwitMainnetAddressFromMnemonic() {
+        return (accountIndex: number) => {
+          const account = deriveNativeSegwitAccountFromRootKeychain(
+            rootKeychain,
+            'mainnet'
+          )(accountIndex);
+
+          return getNativeSegwitPaymentFromAddressIndex(
+            deriveAddressIndexZeroFromAccount(account.keychain),
+            'mainnet'
+          );
+        };
+      }
+
+      try {
+        void recurseAccountsForActivity({
+          async doesAddressHaveActivityFn(index: number) {
+            // seems like it could be better to do this with useQueries for batches of accountIndexes
+            const stxAddress = getStacksAddressByIndex(
+              secretKey,
+              AddressVersion.MainnetSingleSig
+            )(index);
+            // here we call doesStacksAddressHaveBalance which calls stacks client directly not using react query
+            const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
+
+            // TODO - refactor this to use new queries
+            const btcAddress = getNativeSegwitMainnetAddressFromMnemonic()(index);
+            const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
+            return hasStxBalance || hasBtcBalance;
+          },
+        }).then((activeAccounts: number) => {
+          this.createNewAccountsOfWallet(fingerprint, activeAccounts);
+        });
+      } catch {}
 
       const stacksKeychainDescriptors = [
         { descriptor: stacksRootKeychainToAccountDescriptor(rootKeychain, nextAccountIndex) },

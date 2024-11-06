@@ -79,6 +79,15 @@ export const accountsSlice = createSlice({
           })
         );
       })
+      .addCase(userAddsAccounts, (state, action) => {
+        const accounts = action.payload.map((payload, index) =>
+          addAccountDefaults({
+            account: payload.account,
+            accountIdx: index + 1,
+          })
+        );
+        return accountsAdapter.addMany(state, accounts);
+      })
 
       .addCase(
         userTogglesHideAccount,
@@ -127,6 +136,7 @@ interface AddAccountPayload {
   };
 }
 export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
+export const userAddsAccounts = createAction<AddAccountPayload[]>('accounts/userAddsAccounts');
 
 interface ToggleHideAccountPayload {
   accountId: string;
