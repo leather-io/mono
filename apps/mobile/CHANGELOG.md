@@ -202,6 +202,31 @@
   * dependencies
     * @leather.io/ui bumped to 1.27.1
 
+## [1.48.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.47.0...@leather.io/mobile-v1.48.0) (2024-11-06)
+
+
+### Features
+
+* market data service ([58fc169](https://github.com/leather-io/mono/commit/58fc169aafdbb65b519c3e10db71034e1470bc59))
+* receive sheet navigator, closes LEA-1699 ([2c573e9](https://github.com/leather-io/mono/commit/2c573e9f3b822e1bbc6cbcc4c8de6bbccef92801))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.1
+    * @leather.io/constants bumped to 0.13.1
+    * @leather.io/crypto bumped to 1.6.8
+    * @leather.io/models bumped to 0.19.0
+    * @leather.io/query bumped to 2.20.0
+    * @leather.io/rpc bumped to 2.1.15
+    * @leather.io/stacks bumped to 1.3.1
+    * @leather.io/ui bumped to 1.32.1
+    * @leather.io/utils bumped to 0.17.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.16.1
+
 ## [1.47.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.46.0...@leather.io/mobile-v1.47.0) (2024-11-05)
 
 
