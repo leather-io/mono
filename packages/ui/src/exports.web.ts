@@ -1,5 +1,8 @@
 export { Accordion } from './components/accordion/accordion.web';
-export { AddressDisplayer } from './components/address-displayer/address-displayer.web';
+export {
+  AddressDisplayer,
+  type AddressDisplayerProps,
+} from './components/address-displayer/address-displayer.web';
 export * from './components/avatar';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
