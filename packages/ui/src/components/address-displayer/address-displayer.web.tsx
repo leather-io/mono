@@ -5,7 +5,7 @@ import { isEven } from '@leather.io/utils';
 import { AddressDisplayerBaseProps } from './address-displayer.types.shared';
 import { groupByFour } from './address-displayer.utils.shared';
 
-type AddressDisplayerProps = AddressDisplayerBaseProps & FlexProps;
+export type AddressDisplayerProps = AddressDisplayerBaseProps & FlexProps;
 
 export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
   return (

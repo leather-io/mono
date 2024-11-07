@@ -5,7 +5,7 @@ import { Text } from '../text/text.native';
 import { AddressDisplayerBaseProps } from './address-displayer.types.shared';
 import { groupByFour } from './address-displayer.utils.shared';
 
-type AddressDisplayerProps = AddressDisplayerBaseProps & BoxProps;
+export type AddressDisplayerProps = AddressDisplayerBaseProps & BoxProps;
 
 export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
   return (
