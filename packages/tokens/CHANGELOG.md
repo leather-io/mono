@@ -24,6 +24,19 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.2...@leather.io/tokens-v0.10.0) (2024-11-08)
+
+
+### Features
+
+* add address text style token ([4e6613c](https://github.com/leather-io/mono/commit/4e6613c74c659f32ca78bd99fddd0fd741347fea))
+
+
+### Bug Fixes
+
+* add Fira Code for mobile, use correct weights for web ([6ea653e](https://github.com/leather-io/mono/commit/6ea653ef3686a255f36347bed4c6b15d3492d55b))
+* export address displayer types ([70c81d7](https://github.com/leather-io/mono/commit/70c81d7ca40e23125ca7ad95116982a48b462af4))
+
 ## [0.9.2](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.1...@leather.io/tokens-v0.9.2) (2024-11-01)
 
 
