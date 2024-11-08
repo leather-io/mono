@@ -4,6 +4,7 @@ export interface Events extends HistoricalEvents {
   test_event_submitted: undefined;
 }
 
+// These are historical events that we'll maintain but that do not follow the object-action framework.
 interface HistoricalEvents {
   add_network: undefined;
   bitcoin_rbf_fee_increase_error: { outputDiff: number };
