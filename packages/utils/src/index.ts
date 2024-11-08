@@ -8,6 +8,7 @@ export * from './math';
 export * from './money';
 export * from './assets/sort-assets';
 export * from './assets/asset-display-name';
+export * from './assets/balance-helpers';
 export * from './truncate-middle';
 export * from './time';
 

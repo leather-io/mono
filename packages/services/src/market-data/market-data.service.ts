@@ -1,3 +1,4 @@
+import { currencyDecimalsMap } from '@leather.io/constants';
 import {
   Brc20CryptoAssetInfo,
   CryptoCurrency,
@@ -75,13 +76,13 @@ export function createMarketDataService(
       ])
     )
       .filter(isFulfilled)
-      .map(r => r.value)
-      .filter(isDefined);
+      .map(result => result.value)
+      .filter(isDefined)
+      .map(val => initBigNumber(val))
+      .map(val => convertAmountToFractionalUnit(val, currencyDecimalsMap.USD));
     if (prices.length === 0) throw new Error('Unable to fetch price data: ' + currency);
-    return createMarketData(
-      createMarketPair(currency, 'USD'),
-      createMoney(calculateMeanAverage(prices.filter(isDefined)), 'USD')
-    );
+    const meanPrice = calculateMeanAverage(prices);
+    return createMarketData(createMarketPair(currency, 'USD'), createMoney(meanPrice, 'USD'));
   }
 
   async function getSip10MarketData(asset: Sip10CryptoAssetInfo) {

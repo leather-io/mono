@@ -1,8 +1,12 @@
 import { useQueries } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import { createCryptoAssetBalance } from '@leather.io/models';
-import { createMoney, getPrincipalFromContractId, getTicker } from '@leather.io/utils';
+import {
+  createBaseCryptoAssetBalance,
+  createMoney,
+  getPrincipalFromContractId,
+  getTicker,
+} from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { AddressBalanceResponse } from '../../hiro-api-types';
@@ -34,7 +38,7 @@ export function useStacksFungibleTokensBalance(
           const symbol = resp.symbol || getTicker(name);
           return {
             contractId: key,
-            balance: createCryptoAssetBalance(
+            balance: createBaseCryptoAssetBalance(
               createMoney(new BigNumber(value.balance), symbol, resp.decimals ?? 0)
             ),
           };

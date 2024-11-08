@@ -1,4 +1,6 @@
 export const HttpCacheTimeMs = {
+  oneSecond: 1000,
+  fiveSeconds: 5 * 1000,
   tenSeconds: 10 * 1000,
   thirtySeconds: 30 * 1000,
   oneMinute: 1 * 60 * 1000,

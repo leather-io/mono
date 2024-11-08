@@ -1,11 +1,10 @@
 import {
   Money,
   type RuneCryptoAssetInfo,
-  createCryptoAssetBalance,
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import { createBaseCryptoAssetBalance, createMoney } from '@leather.io/utils';
 
 import { RuneBalance, RuneTickerInfo } from '../clients/best-in-slot';
 
@@ -30,7 +29,7 @@ export function createRuneCryptoAssetDetails(
   fiatPrice: Money
 ) {
   return {
-    balance: createCryptoAssetBalance(
+    balance: createBaseCryptoAssetBalance(
       createMoney(Number(runeBalance.total_balance), tickerInfo.rune_name, tickerInfo.decimals)
     ),
     info: createRuneCryptoAssetInfo(tickerInfo),
