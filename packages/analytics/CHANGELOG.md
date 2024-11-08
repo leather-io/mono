@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v1.0.0...@leather.io/analytics-v2.0.0) (2024-11-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* document historical events and trigger build
+
+### Code Refactoring
+
+* document historical events and trigger build ([c41084f](https://github.com/leather-io/mono/commit/c41084f01eaa8217ed99845220c6b251549c11b4))
+
 ## [1.0.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v0.0.1...@leather.io/analytics-v1.0.0) (2024-11-01)
 
 
