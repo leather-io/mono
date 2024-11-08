@@ -6,9 +6,8 @@ import {
   CryptoAssetChains,
   CryptoAssetProtocols,
   Src20CryptoAssetInfo,
-  createCryptoAssetBalance,
 } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import { createBaseCryptoAssetBalance, createMoney } from '@leather.io/utils';
 
 import { Src20Token, createGetStampsByAddressQueryOptions } from './stamps-by-address.query';
 
@@ -36,7 +35,7 @@ export function useSrc20TokensByAddress(address: string) {
     ...createGetStampsByAddressQueryOptions(address),
     select: resp =>
       resp.data.src20.map(token => ({
-        balance: createCryptoAssetBalance(
+        balance: createBaseCryptoAssetBalance(
           createMoney(new BigNumber(token.amt ?? 0), token.tick, 0)
         ),
         info: createSrc20CryptoAssetInfo(token),

@@ -28,6 +28,7 @@
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
     "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "alex-sdk": "2.1.4",
@@ -41,6 +42,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
     "eslint": "8.53.0",
     "prettier": "3.3.3",
     "tslib": "2.6.2",

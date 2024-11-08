@@ -1,5 +1,9 @@
 import { Container } from 'inversify';
 
+import {
+  BitcoinBalancesService,
+  createBitcoinBalancesService,
+} from './balances/bitcoin-balances.service';
 import { AlexSdkClient, createAlexSdkClient } from './infrastructure/api/alex-sdk/alex-sdk.client';
 import {
   BestInSlotApiClient,
@@ -17,6 +21,10 @@ import {
   CoinGeckoApiClient,
   createCoinGeckoApiClient,
 } from './infrastructure/api/coingecko/coingecko-api.client';
+import {
+  LeatherApiClient,
+  createLeatherApiClient,
+} from './infrastructure/api/leather/leather-api.client';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import {
   RateLimiterService,
@@ -49,15 +57,20 @@ export function getContainer(): Container {
   Register & Bind Services to DI Container
  */
 export const Services = {
+  // Infrastructure
   NetworkSettingsService: Symbol.for('NetworkSettingsService'),
   HttpCacheService: Symbol.for('HttpCacheService'),
   RateLimiterService: Symbol.for('RateLimiterService'),
+  // API clients
   AlexSdkClient: Symbol.for('AlexSdkClient'),
   CoinGeckoApiClient: Symbol.for('CoinGeckoApiClient'),
   CoincapApiClient: Symbol.for('CoincapApiClient'),
   BinanceApiClient: Symbol.for('BinanceApiClient'),
   BestInSlotApiClient: Symbol.for('BestInSlotApiClient'),
+  LeatherApiClient: Symbol.for('LeatherApiClient'),
+  // Application Services
   MarketDataService: Symbol.for('MarketDataService'),
+  BitcoinBalancesService: Symbol.for('BitcoinBalancesService'),
 };
 
 function registerDependencies(
@@ -77,6 +90,11 @@ function registerDependencies(
       )
     )
     .inSingletonScope();
+  registerApiClients(container);
+  registerApplicationServices(container);
+}
+
+function registerApiClients(container: Container) {
   container
     .bind<CoinGeckoApiClient>(Services.CoinGeckoApiClient)
     .toDynamicValue(c =>
@@ -112,6 +130,18 @@ function registerDependencies(
     )
     .inSingletonScope();
   container
+    .bind<LeatherApiClient>(Services.LeatherApiClient)
+    .toDynamicValue(c =>
+      createLeatherApiClient(
+        c.container.get<HttpCacheService>(Services.HttpCacheService),
+        c.container.get<NetworkSettingsService>(Services.NetworkSettingsService)
+      )
+    )
+    .inSingletonScope();
+}
+
+function registerApplicationServices(container: Container) {
+  container
     .bind<MarketDataService>(Services.MarketDataService)
     .toDynamicValue(c =>
       createMarketDataService(
@@ -123,11 +153,23 @@ function registerDependencies(
       )
     )
     .inSingletonScope();
+  container
+    .bind<BitcoinBalancesService>(Services.BitcoinBalancesService)
+    .toDynamicValue(c =>
+      createBitcoinBalancesService(
+        c.container.get<LeatherApiClient>(Services.LeatherApiClient),
+        c.container.get<MarketDataService>(Services.MarketDataService)
+      )
+    )
+    .inSingletonScope();
 }
 
 /* 
-  Export service instances intended to be consumed by client components
+  Export app service instances intended to be consumed by client components
 */
 export function getMarketDataService() {
   return getContainer().get<MarketDataService>(Services.MarketDataService);
+}
+export function getBitcoinBalancesService() {
+  return getContainer().get<BitcoinBalancesService>(Services.BitcoinBalancesService);
 }

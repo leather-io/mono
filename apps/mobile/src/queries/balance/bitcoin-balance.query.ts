@@ -1,15 +1,12 @@
-import { useCallback } from 'react';
-
 import { AccountId } from '@/models/domain.model';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useSettings } from '@/store/settings/settings';
-import { UseQueryResult, useQueries } from '@tanstack/react-query';
+import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
 
 import { inferPaymentTypeFromPath } from '@leather.io/bitcoin';
 import { Utxo, createUtxoQueryOptions } from '@leather.io/query';
-import { baseCurrencyAmountInQuote, createMoney, isDefined, sumNumbers } from '@leather.io/utils';
-
-import { useBtcMarketDataQuery } from '../market-data/btc-market-data.query';
+import { getBitcoinBalancesService } from '@leather.io/services';
+import { createMoney, isDefined } from '@leather.io/utils';
 
 function getDescriptorFromKeychain<T extends { keyOrigin: string; xpub: string }>(
   accountKeychain: T
@@ -57,32 +54,12 @@ export function useBitcoinAccountUtxos({ fingerprint, accountIndex }: AccountId)
   });
 }
 
-type TotalBalanceCombineFn = UseQueryResult<Utxo[], Error>[];
-
 export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
-  const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);
-  const { data: btcMarketData } = useBtcMarketDataQuery();
-
-  const combine = useCallback(
-    (results: TotalBalanceCombineFn) => {
-      const amount = sumNumbers(
-        results
-          .map(data => data.data)
-          .filter(isDefined)
-          .map(data => sumNumbers(data.map(utxo => Number(utxo.value))).toNumber())
-      );
-
-      const availableBalance = createMoney(amount, 'BTC');
-      const fiatBalance = btcMarketData
-        ? baseCurrencyAmountInQuote(availableBalance, btcMarketData)
-        : createMoney(0, 'USD');
-
-      return { availableBalance, fiatBalance };
-    },
-    [btcMarketData]
-  );
-
-  return useQueries({ queries, combine });
+  const { isLoading, data } = useBtcBalanceQuery(descriptors);
+  return {
+    availableBalance: !isLoading && data ? data.balanceBtc.availableBalance : createMoney(0, 'BTC'),
+    fiatBalance: !isLoading && data ? data.balanceUsd.availableBalance : createMoney(0, 'USD'),
+  };
 }
 
 export function useWalletTotalBitcoinBalance() {
@@ -93,4 +70,18 @@ export function useWalletTotalBitcoinBalance() {
 export function useBitcoinAccountTotalBitcoinBalance({ fingerprint, accountIndex }: AccountId) {
   const descriptors = useBitcoinDescriptorsByAcccount(fingerprint, accountIndex);
   return useTotalBitcoinBalanceOfDescriptors(descriptors);
+}
+
+export function useBtcBalanceQuery(descriptors: string[]) {
+  return useQuery({
+    queryKey: ['bitcoin-balance-service-get-btc-balance', descriptors],
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getBitcoinBalancesService().getBtcBalance(descriptors, signal),
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    retryOnMount: false,
+    staleTime: 1 * 1000,
+    gcTime: 1 * 1000,
+  });
 }
