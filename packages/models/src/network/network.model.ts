@@ -21,6 +21,8 @@ export const BESTINSLOT_API_BASE_URL_TESTNET = 'https://leatherapi_testnet.besti
 
 export const STX20_API_BASE_URL_MAINNET = 'https://api.stx20.com/api/v1';
 
+export const BNS_V2_API_BASE_URL = 'https://api.bnsv2.com';
+
 // Copied from @stacks/transactions to avoid dependencies
 export enum ChainID {
   Testnet = 2147483648,

@@ -1,37 +1,63 @@
 import { parseZoneFile } from '@fungible-systems/zone-file';
 import { BnsNamesOwnByAddressResponse } from '@stacks/stacks-blockchain-api-types';
+import axios from 'axios';
+import { getPrimaryName } from 'bns-v2-sdk';
+import { z } from 'zod';
 
+import { BNS_V2_API_BASE_URL, NetworkModes } from '@leather.io/models';
 import { isString, isUndefined } from '@leather.io/utils';
 
 import { StacksClient } from '../stacks-client';
+import { bnsV2NamesByAddressSchema } from './bns.schemas';
 
 /**
  * Fetch names owned by an address.
  */
 interface FetchNamesForAddressArgs {
-  client: StacksClient;
   address: string;
-  isTestnet: boolean;
+  network: NetworkModes;
   signal: AbortSignal;
 }
+
+type BnsV2NamesByAddressResponse = z.infer<typeof bnsV2NamesByAddressSchema>;
+
+async function fetchPrimaryName(address: string, network: NetworkModes) {
+  try {
+    const res = await getPrimaryName({ address, network });
+    return `${res?.name}.${res?.namespace}`;
+  } catch (error) {
+    // Ignore error
+    return undefined;
+  }
+}
+
 export async function fetchNamesForAddress({
-  client,
   address,
-  isTestnet,
   signal,
+  network,
 }: FetchNamesForAddressArgs): Promise<BnsNamesOwnByAddressResponse> {
-  const fetchFromApi = async () => {
-    return client.getNamesOwnedByAddress(address, signal);
-  };
-  if (isTestnet) {
-    return fetchFromApi();
+  const res = await axios.get<BnsV2NamesByAddressResponse>(
+    `${BNS_V2_API_BASE_URL}/names/address/${address}/valid`,
+    { signal }
+  );
+
+  const namesResponse = res.data.names.map(name => name.full_name);
+
+  // If the address owns multiple names, we need to fetch the primary name from SDK
+  let primaryName: string | undefined;
+  if (namesResponse.length > 1) {
+    primaryName = await fetchPrimaryName(address, network);
   }
 
-  const bnsNames = await fetchFromApi();
+  const names = [];
 
-  const bnsName = 'names' in bnsNames ? bnsNames.names[0] : null;
-  const names: string[] = [];
-  if (bnsName) names.push(bnsName);
+  // Put the primary name first
+  if (primaryName) {
+    names.push(primaryName);
+  }
+
+  // Add the rest of the names and filter out the primary name
+  names.push(...namesResponse.filter(name => name !== primaryName));
 
   return { names };
 }
