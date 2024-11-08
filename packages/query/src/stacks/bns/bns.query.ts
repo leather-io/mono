@@ -1,8 +1,9 @@
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
+import { NetworkModes } from '@leather.io/models';
+
 import { useCurrentNetworkState } from '../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient, useStacksClient } from '../stacks-client';
 import { fetchNamesForAddress } from './bns.utils';
 
 const staleTime = 24 * 60 * 60 * 1000; // 24 hours
@@ -17,26 +18,23 @@ const queryOptions = {
 
 interface CreateGetBnsNamesOwnedByAddressQueryOptionsArgs {
   address: string;
-  client: StacksClient;
-  isTestnet: boolean;
+  network: NetworkModes;
 }
 export function createGetBnsNamesOwnedByAddressQueryOptions({
   address,
-  client,
-  isTestnet,
+  network,
 }: CreateGetBnsNamesOwnedByAddressQueryOptionsArgs) {
   return {
     enabled: address !== '',
     queryKey: [StacksQueryPrefixes.GetBnsNamesByAddress, address],
     queryFn: async ({ signal }: QueryFunctionContext) =>
-      fetchNamesForAddress({ client, address, isTestnet, signal }),
+      fetchNamesForAddress({ address, network, signal }),
     ...queryOptions,
   } as const;
 }
 
 export function useGetBnsNamesOwnedByAddressQuery(address: string) {
-  const client = useStacksClient();
-  const { isTestnet } = useCurrentNetworkState();
+  const { mode } = useCurrentNetworkState();
 
-  return useQuery(createGetBnsNamesOwnedByAddressQueryOptions({ address, client, isTestnet }));
+  return useQuery(createGetBnsNamesOwnedByAddressQueryOptions({ address, network: mode }));
 }
