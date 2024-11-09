@@ -7,14 +7,13 @@ import {
   IconProps,
   ItemLayout,
   RadioButton,
-  Theme,
   Switch as UISwitch,
 } from '../../../native';
-import { Pressable, PressableProps } from '../button/pressable.native';
+import { Pressable, PressableProps } from '../pressable/pressable.native';
 import { RadioButtonProps } from '../radio-button/radio-button.native';
 import { SwitchProps } from '../switch/switch.native';
 
-interface CellProps extends PressableProps<Theme> {
+interface CellProps extends PressableProps {
   caption?: string;
   icon?: ReactElement<IconProps>;
   title: string;

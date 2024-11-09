@@ -27,6 +27,8 @@ export function generateTheme(colorScheme: ColorSchemeName) {
       round: 9999,
     },
     textVariants,
+    // Temporary workaround for type errors. TODO: Add a zIndex scale.
+    zIndices: undefined,
     breakpoints: {},
   });
 }

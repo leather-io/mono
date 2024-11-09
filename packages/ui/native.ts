@@ -44,6 +44,7 @@ export { RadioButton } from './src/components/radio-button/radio-button.native';
 export { Switch } from './src/components/switch/switch.native';
 export * from './src/components/collectibles/index.native';
 export * from './src/utils/use-on-mount.shared';
-export { Pressable } from './src/components/button/pressable.native';
+export { Pressable } from './src/components/pressable/pressable.native';
 export { Numpad } from './src/components/numpad/numpad.native';
 export { IconButton } from './src/components/icon-button/icon-button.native';
+export { usePressedState } from './src/hooks/use-pressed-state.native';
