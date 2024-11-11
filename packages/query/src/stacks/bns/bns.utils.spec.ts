@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { getPrimaryName } from 'bns-v2-sdk';
 import { describe, expect, it, vi } from 'vitest';
 
+import { getPrimaryName } from './bns-v2-sdk';
 import { fetchNamesForAddress } from './bns.utils';
 
 vi.mock('axios');
-vi.mock('bns-v2-sdk');
+vi.mock('./bns-v2-sdk');
 
 describe('bns.utils', () => {
   describe('fetchNamesForAddress', () => {
