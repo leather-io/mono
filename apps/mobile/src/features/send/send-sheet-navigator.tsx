@@ -3,17 +3,18 @@ import { ParamListBase } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@shopify/restyle';
 
-import { CryptoCurrency } from '@leather.io/models';
 import { Theme } from '@leather.io/ui/native';
 
-import { SelectAccount } from './send-sheets/select-account';
-import { SelectAsset } from './send-sheets/select-asset';
-import { SendForm } from './send-sheets/send-form';
+import { SelectAccountSheet } from './send-sheets/select-account-sheet';
+import { SelectAssetSheet } from './send-sheets/select-asset-sheet';
+import { SendFormBtcSheet } from './send-sheets/send-form-btc-sheet';
+import { SendFormStxSheet } from './send-sheets/send-form-stx-sheet';
 
 export interface SendSheetNavigatorParamList extends ParamListBase {
   'send-select-account': undefined;
   'send-select-asset': { account: Account };
-  'send-form': { account: Account; asset: CryptoCurrency };
+  'send-form-btc': { account: Account };
+  'send-form-stx': { account: Account };
 }
 
 const Stack = createStackNavigator<SendSheetNavigatorParamList>();
@@ -31,9 +32,10 @@ export function SendSheetNavigator() {
         },
       }}
     >
-      <Stack.Screen name="send-select-account" component={SelectAccount} />
-      <Stack.Screen name="send-select-asset" component={SelectAsset} />
-      <Stack.Screen name="send-form" component={SendForm} />
+      <Stack.Screen name="send-select-account" component={SelectAccountSheet} />
+      <Stack.Screen name="send-select-asset" component={SelectAssetSheet} />
+      <Stack.Screen name="send-form-btc" component={SendFormBtcSheet} />
+      <Stack.Screen name="send-form-stx" component={SendFormStxSheet} />
     </Stack.Navigator>
   );
 }

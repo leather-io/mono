@@ -17,6 +17,7 @@ export function FullHeightSheetLayout({ children, header }: FullHeightSheetLayou
     <>
       <Box paddingTop="4">{header}</Box>
       <Box
+        flex={1}
         style={{
           paddingBottom: theme.spacing[5] + bottom,
           paddingHorizontal: theme.spacing[5],

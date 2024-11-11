@@ -12,7 +12,12 @@ export function FullHeightSheet({ children, sheetRef }: FullHeightSheetProps) {
   const { themeDerivedFromThemePreference } = useSettings();
 
   return (
-    <Sheet isFullHeight isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
+    <Sheet
+      isFullHeight
+      ref={sheetRef}
+      shouldHaveContainer={false}
+      themeVariant={themeDerivedFromThemePreference}
+    >
       {children}
     </Sheet>
   );
