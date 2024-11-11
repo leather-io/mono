@@ -40,6 +40,7 @@ export * from './leather-lettermark-icon.native';
 export * from './leather-logomark-icon.native';
 export * from './magic-book-icon.native';
 export * from './note-empty-icon.native';
+export * from './note-text-icon.native';
 export * from './package-security-icon.native';
 export * from './palette-icon.native';
 export * from './paper-plane-icon.native';
@@ -64,6 +65,7 @@ export * from './sun-in-cloud-icon.native';
 export * from './support-icon.native';
 export * from './test-tube-icon.native';
 export * from './terminal-icon.native';
+export * from './user-icon.native';
 export * from './users-two-icon.native';
 export * from './wallet-plus-icon.native';
 

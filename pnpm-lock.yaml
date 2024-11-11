@@ -78,6 +78,9 @@ importers:
       '@expo/vector-icons':
         specifier: 14.0.0
         version: 14.0.0
+      '@hookform/resolvers':
+        specifier: 3.9.1
+        version: 3.9.1(react-hook-form@7.53.2(react@18.2.0))
       '@leather.io/analytics':
         specifier: workspace:*
         version: link:../../packages/analytics
@@ -282,6 +285,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: 7.53.2
+        version: 7.53.2(react@18.2.0)
       react-native:
         specifier: 0.74.1
         version: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(react@18.2.0)
@@ -2742,6 +2748,11 @@ packages:
 
   '@hirosystems/token-metadata-api-client@1.2.0':
     resolution: {integrity: sha512-voIhvGV4yCOEE2BWbQeGV4S395OLTKg5VsV4HJBM4Ekf/hiu5fktF8R0T24JcZc06resf94hH6L9ybiLz6tpGQ==}
+
+  '@hookform/resolvers@3.9.1':
+    resolution: {integrity: sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -10670,6 +10681,12 @@ packages:
     peerDependencies:
       react: '>=17.0.0'
 
+  react-hook-form@7.53.2:
+    resolution: {integrity: sha512-YVel6fW5sOeedd1524pltpHX+jgU2u3DSDtXEaBORNdqiNrsX/nUI/iGXONegttg0mJVnfrIkiV0cmTU6Oo2xw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -14916,6 +14933,10 @@ snapshots:
       isomorphic-fetch: 3.0.0
     transitivePeerDependencies:
       - encoding
+
+  '@hookform/resolvers@3.9.1(react-hook-form@7.53.2(react@18.2.0))':
+    dependencies:
+      react-hook-form: 7.53.2(react@18.2.0)
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -25475,6 +25496,10 @@ snapshots:
   react-fast-compare@3.2.2: {}
 
   react-freeze@1.0.4(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
+  react-hook-form@7.53.2(react@18.2.0):
     dependencies:
       react: 18.2.0
 

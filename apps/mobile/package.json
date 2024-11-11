@@ -36,6 +36,7 @@
   "dependencies": {
     "@crowdin/ota-client": "2.0.0",
     "@expo/vector-icons": "14.0.0",
+    "@hookform/resolvers": "3.9.1",
     "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/constants": "workspace:*",
@@ -104,6 +105,7 @@
     "metro-resolver": "0.80.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "7.53.2",
     "react-native": "0.74.1",
     "react-native-draggable-flatlist": "4.0.1",
     "react-native-gesture-handler": "2.16.1",

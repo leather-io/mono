@@ -1,5 +1,6 @@
 import { RefObject, useState } from 'react';
 
+import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
@@ -8,8 +9,6 @@ import { z } from 'zod';
 
 import { emailAddressSchema } from '@leather.io/models';
 import { Button, EmailIcon, SheetRef, Text, UIBottomSheetTextInput } from '@leather.io/ui/native';
-
-import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface EmailAddressSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -47,7 +46,7 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
   }
 
   return (
-    <SettingsSheetLayout
+    <SheetLayout
       icon={<EmailIcon />}
       sheetRef={sheetRef}
       title={t({
@@ -76,6 +75,7 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
         value={emailAddress}
       />
       <Button
+        mt="3"
         buttonState="default"
         onPress={() => onSaveEmailAddress(emailAddress)}
         title={t({
@@ -83,6 +83,6 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
           message: 'Save',
         })}
       />
-    </SettingsSheetLayout>
+    </SheetLayout>
   );
 }

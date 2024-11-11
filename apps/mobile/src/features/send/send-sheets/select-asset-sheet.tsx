@@ -5,20 +5,18 @@ import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-heigh
 import { NetworkBadge } from '@/components/network-badge';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
-import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '@shopify/restyle';
 
-import { CryptoCurrency } from '@leather.io/models';
 import { Theme } from '@leather.io/ui/native';
 
 import { SendSheetNavigatorParamList } from '../send-sheet-navigator';
 
-type SelectAssetRouteProp = RouteProp<SendSheetNavigatorParamList, 'send-select-asset'>;
+export type SelectAssetRouteProp = RouteProp<SendSheetNavigatorParamList, 'send-select-asset'>;
 
-export function SelectAsset() {
+export function SelectAssetSheet() {
   const { i18n } = useLingui();
   const route = useRoute<SelectAssetRouteProp>();
   const navigation = useNavigation<NavigationProp<SendSheetNavigatorParamList>>();
@@ -26,10 +24,6 @@ export function SelectAsset() {
 
   const account = route.params.account;
   const { accountIndex, fingerprint, name } = account;
-
-  function onSelectAsset(account: Account, asset: CryptoCurrency) {
-    navigation.navigate('send-form', { account, asset });
-  }
 
   return (
     <FullHeightSheetLayout
@@ -52,12 +46,12 @@ export function SelectAsset() {
         <BitcoinBalanceByAccount
           accountIndex={accountIndex}
           fingerprint={fingerprint}
-          onPress={() => onSelectAsset(account, 'BTC')}
+          onPress={() => navigation.navigate('send-form-btc', { account })}
         />
         <StacksBalanceByAccount
           accountIndex={accountIndex}
           fingerprint={fingerprint}
-          onPress={() => onSelectAsset(account, 'STX')}
+          onPress={() => navigation.navigate('send-form-stx', { account })}
         />
       </ScrollView>
     </FullHeightSheetLayout>

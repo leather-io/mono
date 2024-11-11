@@ -9,7 +9,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { SendSheetNavigatorParamList } from '../send-sheet-navigator';
 
-export function SelectAccount() {
+export function SelectAccountSheet() {
   const navigation = useNavigation<NavigationProp<SendSheetNavigatorParamList>>();
   const accounts = useAccounts();
 
