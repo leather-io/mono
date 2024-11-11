@@ -1,13 +1,13 @@
 import { parseZoneFile } from '@fungible-systems/zone-file';
 import { BnsNamesOwnByAddressResponse } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
-import { getPrimaryName } from 'bns-v2-sdk';
 import { z } from 'zod';
 
 import { BNS_V2_API_BASE_URL, NetworkModes } from '@leather.io/models';
 import { isString, isUndefined } from '@leather.io/utils';
 
 import { StacksClient } from '../stacks-client';
+import { getPrimaryName } from './bns-v2-sdk';
 import { bnsV2NamesByAddressSchema } from './bns.schemas';
 
 /**
