@@ -18,3 +18,20 @@ export const bnsV2NamesByAddressSchema = z.object({
   offset: z.number(),
   names: z.array(bnsV2NameSchema),
 });
+
+export type BnsV2NamesByAddressResponse = z.infer<typeof bnsV2NamesByAddressSchema>;
+
+export const bnsV2ZoneFileDataSchema = z.object({
+  owner: z.string(),
+  general: z.string(),
+  twitter: z.string(),
+  url: z.string(),
+  nostr: z.string(),
+  lightning: z.string(),
+  btc: z.string(),
+  subdomains: z.array(z.string()),
+});
+
+export interface BnsV2ZoneFileDataResponse {
+  zonefile: z.infer<typeof bnsV2ZoneFileDataSchema>;
+}

@@ -1,14 +1,11 @@
-import { parseZoneFile } from '@fungible-systems/zone-file';
 import { BnsNamesOwnByAddressResponse } from '@stacks/stacks-blockchain-api-types';
-import axios from 'axios';
-import { z } from 'zod';
 
-import { BNS_V2_API_BASE_URL, NetworkModes } from '@leather.io/models';
+import { NetworkModes } from '@leather.io/models';
 import { isString, isUndefined } from '@leather.io/utils';
 
 import { StacksClient } from '../stacks-client';
+import { BnsV2Client } from './bns-v2-client';
 import { getPrimaryName } from './bns-v2-sdk';
-import { bnsV2NamesByAddressSchema } from './bns.schemas';
 
 /**
  * Fetch names owned by an address.
@@ -17,9 +14,8 @@ interface FetchNamesForAddressArgs {
   address: string;
   network: NetworkModes;
   signal: AbortSignal;
+  client: BnsV2Client;
 }
-
-type BnsV2NamesByAddressResponse = z.infer<typeof bnsV2NamesByAddressSchema>;
 
 async function fetchPrimaryName(address: string, network: NetworkModes) {
   try {
@@ -35,13 +31,11 @@ export async function fetchNamesForAddress({
   address,
   signal,
   network,
+  client,
 }: FetchNamesForAddressArgs): Promise<BnsNamesOwnByAddressResponse> {
-  const res = await axios.get<BnsV2NamesByAddressResponse>(
-    `${BNS_V2_API_BASE_URL}/names/address/${address}/valid`,
-    { signal }
-  );
+  const res = await client.getNamesByAddress(address, signal);
 
-  const namesResponse = res.data.names.map(name => name.full_name);
+  const namesResponse = res.names.map(name => name.full_name);
 
   // If the address owns multiple names, we need to fetch the primary name from SDK
   let primaryName: string | undefined;
@@ -80,25 +74,26 @@ export async function fetchNameOwner(client: StacksClient, name: string, isTestn
   return fetchFromApi();
 }
 
-/**
- * Fetch the zonefile-based BTC address for a specific name.
- * The BTC address is found via the `_btc._addr` TXT record,
- * as specified in https://www.newinternetlabs.com/blog/standardizing-names-for-bitcoin-addresses/
- *
- * The value returned from this function is not validated.
- */
 export async function fetchBtcNameOwner(
-  client: StacksClient,
-  name: string
+  client: BnsV2Client,
+  bnsName: string
 ): Promise<string | null> {
   try {
-    const nameResponse = await client.getNameInfo(name);
-    const zonefile = parseZoneFile(nameResponse.zonefile);
-    if (!zonefile.txt) return null;
-    const btcRecord = zonefile.txt.find(record => record.name === '_btc._addr');
-    if (isUndefined(btcRecord)) return null;
-    const txtValue = btcRecord.txt;
-    return isString(txtValue) ? txtValue : (txtValue[0] ?? null);
+    const zoneFileData = await client.getZoneFileData(bnsName);
+    return zoneFileData.btc ?? null;
+  } catch (error) {
+    // Name not found or invalid zonefile
+    return null;
+  }
+}
+
+export async function fetchStacksNameOwner(
+  client: BnsV2Client,
+  bnsName: string
+): Promise<string | null> {
+  try {
+    const zoneFileData = await client.getZoneFileData(bnsName);
+    return zoneFileData.owner ?? null;
   } catch (error) {
     // Name not found or invalid zonefile
     return null;

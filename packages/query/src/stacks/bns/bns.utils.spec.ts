@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
 import { getPrimaryName } from './bns-v2-sdk';
@@ -11,16 +10,25 @@ describe('bns.utils', () => {
   describe('fetchNamesForAddress', () => {
     const mockAddress = 'ST123';
     const mockSignal = new AbortController().signal;
+    const mockClient = {
+      getNamesByAddress: vi.fn(),
+      getZoneFileData: vi.fn(),
+    };
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
 
     it('returns single name without fetching primary name', async () => {
-      vi.mocked(axios.get).mockResolvedValueOnce({
-        data: { names: [{ full_name: 'test.btc' }] },
+      mockClient.getNamesByAddress.mockResolvedValueOnce({
+        names: [{ full_name: 'test.btc' }],
       });
 
       const result = await fetchNamesForAddress({
         address: mockAddress,
         signal: mockSignal,
         network: 'mainnet',
+        client: mockClient,
       });
 
       expect(result).toEqual({ names: ['test.btc'] });
@@ -28,14 +36,12 @@ describe('bns.utils', () => {
     });
 
     it('orders primary name first when multiple names exist', async () => {
-      vi.mocked(axios.get).mockResolvedValueOnce({
-        data: {
-          names: [
-            { full_name: 'secondary.btc' },
-            { full_name: 'primary.btc' },
-            { full_name: 'another.btc' },
-          ],
-        },
+      mockClient.getNamesByAddress.mockResolvedValueOnce({
+        names: [
+          { full_name: 'secondary.btc' },
+          { full_name: 'primary.btc' },
+          { full_name: 'another.btc' },
+        ],
       });
 
       vi.mocked(getPrimaryName).mockResolvedValueOnce({
@@ -47,6 +53,7 @@ describe('bns.utils', () => {
         address: mockAddress,
         signal: mockSignal,
         network: 'mainnet',
+        client: mockClient,
       });
 
       expect(result).toEqual({
