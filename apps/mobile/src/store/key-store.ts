@@ -78,7 +78,6 @@ export function useKeyStore() {
     }) {
       const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
 
-      // checks if the wallet exists
       if (await this.isWalletInKeychain({ fingerprint })) {
         keychainErrorHandlers.throwKeyExistsError();
         return;
@@ -106,26 +105,30 @@ export function useKeyStore() {
         })
       );
     },
-    async createNewAccountsOfWallet(fingerprint: string, activeAccounts: number) {
-      const { bitcoinKeychains, stacksKeychains } =
-        await this.deriveNextAccountKeychainsFrom(fingerprint);
-
-      dispatch(
-        userAddsAccounts(
-          Array.from({ length: activeAccounts }, (_, i) => ({
-            account: {
-              id: makeAccountIdentifer(fingerprint, i),
-            },
-            withKeychains: {
-              bitcoin: bitcoinKeychains,
-              stacks: stacksKeychains,
-            },
-          }))
-        )
+    async deriveKeychainsForNextAccount(fingerprint: string, nextAccountIndex: number) {
+      const { bitcoinKeychains, stacksKeychains } = await this.deriveNextAccountKeychainsFrom(
+        fingerprint,
+        nextAccountIndex
       );
+      return {
+        bitcoin: bitcoinKeychains,
+        stacks: stacksKeychains,
+      };
+    },
+    async createNewAccountsOfWallet(fingerprint: string, activeAccounts: number) {
+      const accountsWithKeychains = await Promise.all(
+        Array.from({ length: activeAccounts }, async (_, i) => ({
+          account: {
+            id: makeAccountIdentifer(fingerprint, i),
+          },
+          withKeychains: await this.deriveKeychainsForNextAccount(fingerprint, i),
+        }))
+      );
+
+      dispatch(userAddsAccounts(accountsWithKeychains));
     },
 
-    async deriveNextAccountKeychainsFrom(fingerprint: string) {
+    async deriveNextAccountKeychainsFrom(fingerprint: string, nextAccountInd?: number) {
       const { mnemonic, passphrase } = await mnemonicStore(fingerprint).getMnemonic();
 
       if (!mnemonic) throw new Error('No mnemonic found for fingerprint ' + fingerprint);
@@ -142,11 +145,11 @@ export function useKeyStore() {
       );
 
       const nextAccountIndex =
-        fingerprintAccounts.length === 0 ? 0 : highestKeychainAccountIndex + 1;
+        nextAccountInd ?? (fingerprintAccounts.length === 0 ? 0 : highestKeychainAccountIndex + 1);
 
       // in extension secretKey is the mnemonic
       const secretKey = mnemonic;
-
+      // FIXME move these to queries and get them out of this function which is called often
       async function doesStacksAddressHaveBalance(address: string) {
         const controller = new AbortController();
         const resp = await stxClient.getAccountBalance(address, controller.signal);
@@ -170,7 +173,7 @@ export function useKeyStore() {
           );
         };
       }
-
+      // FIXME This should be run in restoreWalletFromMnemonic instead as we often need to call deriveNextAccountKeychainsFrom
       try {
         void recurseAccountsForActivity({
           async doesAddressHaveActivityFn(index: number) {
@@ -179,17 +182,18 @@ export function useKeyStore() {
               secretKey,
               AddressVersion.MainnetSingleSig
             )(index);
-            // here we call doesStacksAddressHaveBalance which calls stacks client directly not using react query
+            // FIXME: we call doesStacksAddressHaveBalance which calls stacks client directly not using react query
             const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
 
-            // TODO - refactor this to use new queries
+            // FIXME: - refactor this to use new queries
             const btcAddress = getNativeSegwitMainnetAddressFromMnemonic()(index);
             const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
             return hasStxBalance || hasBtcBalance;
           },
-        }).then((activeAccounts: number) => {
-          this.createNewAccountsOfWallet(fingerprint, activeAccounts);
-        });
+        }).then(
+          (activeAccounts: number) =>
+            void this.createNewAccountsOfWallet(fingerprint, activeAccounts)
+        );
       } catch {}
 
       const stacksKeychainDescriptors = [

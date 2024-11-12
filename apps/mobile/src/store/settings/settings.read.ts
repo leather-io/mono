@@ -64,7 +64,7 @@ export function usePrivacyMode() {
   return privacyMode === 'hidden';
 }
 
-// TODO: Needs BNS name support
+// FIXME: Needs BNS name support
 export function useAccountDisplayAddress(fingerprint: string, accountIndex: number) {
   const { accountDisplayPreference } = useSettings();
 
@@ -75,7 +75,6 @@ export function useAccountDisplayAddress(fingerprint: string, accountIndex: numb
 
   const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
   const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
-
   const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
 
   switch (accountDisplayPreference.type) {
