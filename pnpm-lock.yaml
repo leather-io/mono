@@ -821,6 +821,9 @@ importers:
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.7.8))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.5.4)
+      vitest:
+        specifier: 2.0.5
+        version: 2.0.5(@types/node@22.7.8)(jsdom@22.1.0)(lightningcss@1.25.1)(terser@5.36.0)
 
   packages/services:
     dependencies:

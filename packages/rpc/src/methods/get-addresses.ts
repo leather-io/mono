@@ -1,6 +1,6 @@
 import { AllowAdditionalProperties } from '@leather.io/models';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 
 export type PaymentTypes = 'p2pkh' | 'p2sh' | 'p2wpkh-p2sh' | 'p2wpkh' | 'p2tr';
 
