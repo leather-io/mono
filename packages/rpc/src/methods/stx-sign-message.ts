@@ -1,6 +1,8 @@
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 
-export type StxSignMessageTypes = 'utf8' | 'structured';
+export const stxMessageSigningTypes = ['utf8', 'structured'] as const;
+
+export type StxSignMessageTypes = (typeof stxMessageSigningTypes)[number];
 
 export interface StxSignMessageRequestParamsBase {
   type: StxSignMessageTypes;

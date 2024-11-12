@@ -1,6 +1,6 @@
 import { AllowAdditionalProperties } from '@leather.io/models';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 import { PaymentTypes } from './get-addresses';
 
 // Implements BIP-322

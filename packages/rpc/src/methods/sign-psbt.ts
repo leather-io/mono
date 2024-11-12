@@ -1,6 +1,6 @@
 import { DefaultNetworkConfigurations } from '@leather.io/models';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 
 /**
  * DEFAULT       -- all inputs, all outputs

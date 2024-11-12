@@ -1,4 +1,4 @@
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 
 interface GetInfoResponseBody {
   version: string;
