@@ -8,7 +8,7 @@ import {
 import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 import z from 'zod';
 
-// todo fix this deprecated import
+// FIXME fix this deprecated import
 import { mnemonicToRootNode } from '@leather.io/bitcoin';
 
 const stacksKeychainSchema = z.object({

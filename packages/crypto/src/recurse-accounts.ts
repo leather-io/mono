@@ -71,7 +71,5 @@ export async function recurseAccountsForActivity({
     }
     return returnHighestIndex(activity);
   }
-  const mostRecentAccount = await recurseUntilGeneratorDone(checkForMostRecentAccount());
-  const accountsToRestore = mostRecentAccount;
-  return accountsToRestore;
+  return recurseUntilGeneratorDone(checkForMostRecentAccount());
 }

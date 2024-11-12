@@ -37,6 +37,7 @@ const memoizedDriveBitcoinPayerFromAccount = memoize(
 );
 
 function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: BitcoinNetworkModes) {
+  console.log('deriveBitcoinPayersFromStore', keychains, network);
   return keychains
     .filter(
       keychain =>
@@ -72,7 +73,6 @@ function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
   );
 
   const taproot = accounts.find(account => inferPaymentTypeFromPath(account.keyOrigin) === 'p2tr');
-
   if (!nativeSegwit || !taproot)
     throw new Error('It is always expected an account has both Taproot and Native Segwit');
 
