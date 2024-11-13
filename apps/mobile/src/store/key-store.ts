@@ -20,11 +20,7 @@ import {
 import { useBitcoinClient } from '@leather.io/query';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
-import {
-  userAddsAccount,
-  userAddsAccounts,
-  userTogglesHideAccount,
-} from './accounts/accounts.write';
+import { userAddsAccounts, userTogglesHideAccount } from './accounts/accounts.write';
 import { useBitcoinAccounts } from './keychains/bitcoin/bitcoin-keychains.read';
 import { findHighestAccountIndexOfFingerprint } from './keychains/keychains';
 import { getStacksAddressByIndex } from './keychains/stacks/utils';
@@ -96,13 +92,15 @@ export function useKeyStore() {
         await this.deriveNextAccountKeychainsFrom(fingerprint);
 
       dispatch(
-        userAddsAccount({
-          account: { id: makeAccountIdentifer(fingerprint, accountIndex) },
-          withKeychains: {
-            bitcoin: bitcoinKeychains,
-            stacks: stacksKeychains,
+        userAddsAccounts([
+          {
+            account: { id: makeAccountIdentifer(fingerprint, accountIndex) },
+            withKeychains: {
+              bitcoin: bitcoinKeychains,
+              stacks: stacksKeychains,
+            },
           },
-        })
+        ])
       );
     },
     async deriveKeychainsForNextAccount(fingerprint: string, nextAccountIndex: number) {
