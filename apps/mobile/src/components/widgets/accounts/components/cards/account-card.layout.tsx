@@ -1,4 +1,6 @@
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+
+import { Box, Pressable, Text, usePressedState } from '@leather.io/ui/native';
 
 export interface AccountCardLayoutProps {
   icon: React.ReactNode;
@@ -16,9 +18,16 @@ export function AccountCardLayout({
   width = 200,
   testID,
 }: AccountCardLayoutProps) {
+  const { pressed, onPressIn, onPressOut } = usePressedState();
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: withSpring(pressed ? 0.95 : 1) }],
+  }));
+
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       width={width}
       height={180}
       p="5"
@@ -27,6 +36,7 @@ export function AccountCardLayout({
       borderWidth={1}
       alignItems="flex-start"
       justifyContent="space-between"
+      style={animatedStyle}
       testID={testID}
     >
       <Box p="2" borderRadius="round" backgroundColor="ink.text-primary">
@@ -38,6 +48,6 @@ export function AccountCardLayout({
           {caption}
         </Text>
       </Box>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
