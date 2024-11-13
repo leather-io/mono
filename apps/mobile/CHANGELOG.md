@@ -210,6 +210,22 @@
     * @leather.io/tokens bumped to 0.10.0
     * @leather.io/ui bumped to 1.32.2
 
+## [1.49.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.48.1...@leather.io/mobile-v1.49.0) (2024-11-13)
+
+
+### Features
+
+* add account card press animation ([b61f008](https://github.com/leather-io/mono/commit/b61f008ee1735e95a55887a2fa02e53f9b6fc66e))
+* send select asset sheet, closes LEA-1643 and LEA-1628 ([4937d9b](https://github.com/leather-io/mono/commit/4937d9b8c4d7c9036716790f716c9201d1c6ac14))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.21.0
+    * @leather.io/ui bumped to 1.33.0
+
 ## [1.48.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.47.0...@leather.io/mobile-v1.48.0) (2024-11-06)
 
 

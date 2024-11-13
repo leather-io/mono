@@ -169,6 +169,18 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.21.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.20.0...@leather.io/query-v2.21.0) (2024-11-13)
+
+
+### Features
+
+* add bns v2 client and zonefile request ([b4ec0e5](https://github.com/leather-io/mono/commit/b4ec0e50ec52944004469710a66128750985bc6b))
+
+
+### Bug Fixes
+
+* bns-v2-sdk patch ([9b342af](https://github.com/leather-io/mono/commit/9b342afc8257b27204f26362adf17357bbb37ddd))
+
 ## [2.20.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.19.0...@leather.io/query-v2.20.0) (2024-11-06)
 
 
