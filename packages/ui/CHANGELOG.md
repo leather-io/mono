@@ -127,6 +127,19 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.4.3
 
+## [1.33.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.32.2...@leather.io/ui-v1.33.0) (2024-11-13)
+
+
+### Features
+
+* add account card press animation ([b61f008](https://github.com/leather-io/mono/commit/b61f008ee1735e95a55887a2fa02e53f9b6fc66e))
+* send select asset sheet, closes LEA-1643 and LEA-1628 ([4937d9b](https://github.com/leather-io/mono/commit/4937d9b8c4d7c9036716790f716c9201d1c6ac14))
+
+
+### Bug Fixes
+
+* improve mobile Pressable ([5b66d72](https://github.com/leather-io/mono/commit/5b66d7235b521262e927ce980b60d08795e22f95))
+
 ## [1.32.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.31.2...@leather.io/ui-v1.32.0) (2024-11-05)
 
 
