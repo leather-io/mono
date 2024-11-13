@@ -210,6 +210,12 @@
     * @leather.io/tokens bumped to 0.10.0
     * @leather.io/ui bumped to 1.32.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.21.1
+
 ## [1.49.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.48.1...@leather.io/mobile-v1.49.0) (2024-11-13)
 
 
