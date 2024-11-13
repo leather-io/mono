@@ -169,6 +169,13 @@
     * @leather.io/rpc bumped to 2.1.12
     * @leather.io/utils bumped to 0.16.5
 
+## [2.21.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.21.0...@leather.io/query-v2.21.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* **query:** bns schemas, exports ([52fd74d](https://github.com/leather-io/mono/commit/52fd74d460c1dcef08d092587ab88a5b17bf6ca6))
+
 ## [2.21.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.20.0...@leather.io/query-v2.21.0) (2024-11-13)
 
 
