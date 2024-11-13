@@ -37,7 +37,6 @@ const memoizedDriveBitcoinPayerFromAccount = memoize(
 );
 
 function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: BitcoinNetworkModes) {
-  console.log('deriveBitcoinPayersFromStore', keychains, network);
   return keychains
     .filter(
       keychain =>

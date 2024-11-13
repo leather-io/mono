@@ -1,4 +1,4 @@
-import { userAddsAccount, userAddsAccounts } from '@/store/accounts/accounts.write';
+import { userAddsAccounts } from '@/store/accounts/accounts.write';
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '@/store/global-action';
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
@@ -25,14 +25,8 @@ export const bitcoinKeychainSlice = createSlice({
       .addCase(
         userAddsWallet,
         handleEntityActionWith(adapter.addMany, payload => {
-          console.log('userAddsWallet', payload);
           return payload.withKeychains.bitcoin;
         })
-      )
-
-      .addCase(
-        userAddsAccount,
-        handleEntityActionWith(adapter.addMany, payload => payload.withKeychains.bitcoin)
       )
 
       .addCase(

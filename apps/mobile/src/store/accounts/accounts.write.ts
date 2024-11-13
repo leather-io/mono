@@ -68,22 +68,17 @@ export const accountsSlice = createSlice({
         accountsAdapter.removeMany(state, accountIds);
       })
 
-      .addCase(userAddsAccount, (state, action) => {
-        const thisWalletsAccounts = getWalletAccountsByAccountId(state, action.payload.account.id);
-
-        return accountsAdapter.addOne(
-          state,
-          addAccountDefaults({
-            account: action.payload.account,
-            accountIdx: thisWalletsAccounts.length + 1,
-          })
-        );
-      })
       .addCase(userAddsAccounts, (state, action) => {
+        if (!action.payload[0]?.account.id) {
+          throw new Error('No account id found');
+        }
+        const accountId = action.payload[0]?.account.id;
+        const thisWalletsAccounts = getWalletAccountsByAccountId(state, accountId);
+
         const accounts = action.payload.map((payload, index) =>
           addAccountDefaults({
             account: payload.account,
-            accountIdx: index + 1,
+            accountIdx: thisWalletsAccounts.length + index + 1,
           })
         );
         return accountsAdapter.addMany(state, accounts);
@@ -135,7 +130,6 @@ interface AddAccountPayload {
     stacks: StacksKeychain[];
   };
 }
-export const userAddsAccount = createAction<AddAccountPayload>('accounts/userAddsAccount');
 export const userAddsAccounts = createAction<AddAccountPayload[]>('accounts/userAddsAccounts');
 
 interface ToggleHideAccountPayload {
