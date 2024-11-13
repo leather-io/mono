@@ -20,7 +20,6 @@ export enum BitcoinQueryPrefixes {
 }
 
 export enum StacksQueryPrefixes {
-  GetBnsNamesByAddress = 'get-bns-names-by-address',
   GetNftMetadata = 'get-nft-metadata',
   GetNftHoldings = 'get-nft-holdings',
   GetFtMetadata = 'get-ft-metadata',
