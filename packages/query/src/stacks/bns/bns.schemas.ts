@@ -11,7 +11,7 @@ const bnsV2NameSchema = z.object({
   revoked: z.boolean(),
 });
 
-export const bnsV2NamesByAddressSchema = z.object({
+export const bnsV2NamesByAddressResponseSchema = z.object({
   total: z.number(),
   current_burn_block: z.number(),
   limit: z.number(),
@@ -19,7 +19,7 @@ export const bnsV2NamesByAddressSchema = z.object({
   names: z.array(bnsV2NameSchema),
 });
 
-export type BnsV2NamesByAddressResponse = z.infer<typeof bnsV2NamesByAddressSchema>;
+export type BnsV2NamesByAddressResponse = z.infer<typeof bnsV2NamesByAddressResponseSchema>;
 
 export const bnsV2ZoneFileDataSchema = z.object({
   owner: z.string(),
@@ -32,6 +32,10 @@ export const bnsV2ZoneFileDataSchema = z.object({
   subdomains: z.array(z.string()),
 });
 
-export interface BnsV2ZoneFileDataResponse {
-  zonefile: z.infer<typeof bnsV2ZoneFileDataSchema>;
-}
+export type BnsV2ZoneFileData = z.infer<typeof bnsV2ZoneFileDataSchema>;
+
+export const bnsV2ZoneFileResponseSchema = z.object({
+  zonefile: bnsV2ZoneFileDataSchema,
+});
+
+export type BnsV2ZoneFileDataResponse = z.infer<typeof bnsV2ZoneFileResponseSchema>;
