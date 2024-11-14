@@ -59,6 +59,8 @@ export async function recurseAccountsForActivity({
   }
 
   const knownActivityAtIndex = await recurseUntilGeneratorDone(findHighestAddressIndexExponent());
+
+  // this part seems to take ages
   async function* checkForMostRecentAccount() {
     const indexCounter = createCounter(knownActivityAtIndex + 1);
     const activity: AccountIndexActivityCheckHistory[] = [];
