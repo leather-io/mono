@@ -20,7 +20,7 @@ export function SheetHeader({ title, icon, onPressSupport }: SheetHeaderProps) {
         </Box>
       </Box>
       <Box alignItems="flex-end" flex={1}>
-        <TouchableOpacity onPress={onPressSupport} zIndex={10}>
+        <TouchableOpacity onPress={onPressSupport} zIndex="10">
           <QuestionCircleIcon variant="small" />
         </TouchableOpacity>
       </Box>

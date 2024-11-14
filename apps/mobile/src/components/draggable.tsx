@@ -48,7 +48,7 @@ export function Draggable({
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ translateY: translationY.value }, { scale: zoom.value }],
     position: isAnimatedShared.value ? 'absolute' : 'relative',
-    zIndex: isAnimatedShared.value ? 100 : 1,
+    zIndex: isAnimatedShared.value ? 20 : 1,
     width: '100%',
     top: isAnimatedShared.value ? thisItemPosition.value.y : 0,
     left: isAnimatedShared.value ? thisItemPosition.value.x : 0,

@@ -126,7 +126,7 @@ export default function RecoverWallet() {
             {!hidePasteButton && (
               <Button
                 onPress={pasteFromClipboard}
-                style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 100 }}
+                style={{ position: 'absolute', bottom: 12, right: 12, zIndex: 20 }}
                 buttonState="default"
                 title={t({
                   id: 'recover_wallet.paste_button',

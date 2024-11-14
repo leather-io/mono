@@ -36,13 +36,7 @@ export function HeaderLayout({
         py="3"
         px="3"
       >
-        <Box
-          alignItems="flex-start"
-          flexGrow={1}
-          height="100%"
-          justifyContent="center"
-          zIndex={100}
-        >
+        <Box alignItems="flex-start" flexGrow={1} height="100%" justifyContent="center" zIndex="20">
           {leftElement}
         </Box>
         <Box
@@ -56,7 +50,7 @@ export function HeaderLayout({
         >
           {centerElement}
         </Box>
-        <Box alignItems="flex-end" flexGrow={1} height="100%" justifyContent="center" zIndex={100}>
+        <Box alignItems="flex-end" flexGrow={1} height="100%" justifyContent="center" zIndex="20">
           {rightElement}
         </Box>
       </Box>

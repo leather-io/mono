@@ -99,7 +99,7 @@ export function Toast({ toastRef }: ToastProps) {
         alignSelf="center"
         gap="3"
         flexDirection="row"
-        zIndex={9999}
+        zIndex="100"
         justifyContent="center"
         alignItems="center"
         testID={TestId.toastContainer}
