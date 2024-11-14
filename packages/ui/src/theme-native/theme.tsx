@@ -2,7 +2,7 @@ import { ColorSchemeName } from 'react-native';
 
 import { ThemeProvider as ThemeProviderRestyle, createTheme } from '@shopify/restyle';
 
-import { colorThemes, getMobileTextVariants } from '@leather.io/tokens';
+import { colorThemes, getMobileTextVariants, zIndices } from '@leather.io/tokens';
 
 const textVariants = getMobileTextVariants();
 
@@ -27,8 +27,7 @@ export function generateTheme(colorScheme: ColorSchemeName) {
       round: 9999,
     },
     textVariants,
-    // Temporary workaround for type errors. TODO: Add a zIndex scale.
-    zIndices: undefined,
+    zIndices: zIndices,
     breakpoints: {},
   });
 }

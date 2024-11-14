@@ -9,6 +9,7 @@ import { tokens } from './tokens';
 import { textStyles } from './typography';
 
 export default definePreset({
+  name: 'leather',
   theme: {
     extend: {
       semanticTokens,
