@@ -173,8 +173,10 @@ export function useKeyStore() {
       }
       // FIXME This should be run in restoreWalletFromMnemonic instead as we often need to call deriveNextAccountKeychainsFrom
       try {
+        console.log('START: recurseAccountsForActivity', new Date().toISOString());
         void recurseAccountsForActivity({
           async doesAddressHaveActivityFn(index: number) {
+            console.log('doesAddressHaveActivityFn', index, new Date().toISOString());
             // seems like it could be better to do this with useQueries for batches of accountIndexes
             const stxAddress = getStacksAddressByIndex(
               secretKey,
@@ -182,16 +184,19 @@ export function useKeyStore() {
             )(index);
             // FIXME: we call doesStacksAddressHaveBalance which calls stacks client directly not using react query
             const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
+            // PETE - roll this back then apply stash and leave it run again to see if it does update
 
+            // leave for like 10 minutes
             // FIXME: - refactor this to use new queries
             const btcAddress = getNativeSegwitMainnetAddressFromMnemonic()(index);
             const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
             return hasStxBalance || hasBtcBalance;
           },
-        }).then(
-          (activeAccounts: number) =>
-            void this.createNewAccountsOfWallet(fingerprint, activeAccounts)
-        );
+        }).then((activeAccounts: number) => {
+          console.log('End: recurseAccountsForActivity', new Date().toISOString());
+
+          return void this.createNewAccountsOfWallet(fingerprint, activeAccounts);
+        });
       } catch {}
 
       const stacksKeychainDescriptors = [

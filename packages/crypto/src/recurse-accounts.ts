@@ -49,9 +49,12 @@ export async function recurseAccountsForActivity({
     while (activity.length === 0 || activity[activity.length - 1]?.hasActivity) {
       const index = fibonacci.next().value;
       const hasActivity = await doesAddressHaveActivityFn(index);
+      console.log('doesAddressHaveActivityFn', index, hasActivity, new Date().toISOString());
       activity.push({ index, hasActivity });
       yield;
     }
+
+    console.log('returnHighestIndex', returnHighestIndex(activity), new Date().toISOString());
     return returnHighestIndex(activity);
   }
 
@@ -67,8 +70,20 @@ export async function recurseAccountsForActivity({
       const hasActivity = await doesAddressHaveActivityFn(indexCounter.getValue());
       activity.push({ index: indexCounter.getValue(), hasActivity });
       indexCounter.increment();
+      console.log(
+        'checkForMostRecentAccount',
+        indexCounter.getValue(),
+        hasActivity,
+        new Date().toISOString()
+      );
       yield;
     }
+    console.log(
+      'checkForMostRecentAccount indexCounter',
+      returnHighestIndex(activity),
+      new Date().toISOString()
+    );
+
     return returnHighestIndex(activity);
   }
   return recurseUntilGeneratorDone(checkForMostRecentAccount());
