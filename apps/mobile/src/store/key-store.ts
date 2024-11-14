@@ -146,7 +146,7 @@ export function useKeyStore() {
           },
         }).then((activeAccounts: number) => {
           console.log('End: recurseAccountsForActivity', new Date().toISOString());
-
+          // maybe this void is wrong?
           return void this.createNewAccountsOfWallet(fingerprint, activeAccounts);
         });
       } catch {}
@@ -178,6 +178,7 @@ export function useKeyStore() {
       };
     },
     async createNewAccountsOfWallet(fingerprint: string, activeAccounts: number) {
+      // console.log('createNewAccountsOfWallet', new Date().toISOString());
       const accountsWithKeychains = await Promise.all(
         Array.from({ length: activeAccounts }, async (_, i) => ({
           account: {
