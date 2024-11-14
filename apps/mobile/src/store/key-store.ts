@@ -1,5 +1,4 @@
-// useStacksClient should be in the query package
-import { useStacksClient } from '@/hooks/api-clients.hooks';
+import { useStxBalance } from '@/queries/balance/stacks-balance.query';
 import { AddressVersion } from '@stacks/transactions';
 
 import {
@@ -46,7 +45,6 @@ export function useKeyStore() {
   const wallets = useWallets();
   const bitcoinKeychains = useBitcoinAccounts();
 
-  const stxClient = useStacksClient();
   const btcClient = useBitcoinClient();
 
   return {
@@ -93,13 +91,9 @@ export function useKeyStore() {
       mnemonic: string,
       passphrase?: string
     ) {
-      // in extension secretKey is the mnemonic
-      const secretKey = mnemonic;
-      // FIXME move these to queries and get them out of this function which is called often
       async function doesStacksAddressHaveBalance(address: string) {
-        const controller = new AbortController();
-        const resp = await stxClient.getAccountBalance(address, controller.signal);
-        return Number(resp.stx.balance) > 0;
+        const { availableBalance } = useStxBalance([address]);
+        return Number(availableBalance) > 0;
       }
       async function doesBitcoinAddressHaveBalance(address: string) {
         const resp = await btcClient.addressApi.getUtxosByAddress(address);
@@ -123,32 +117,31 @@ export function useKeyStore() {
           );
         };
       }
-      // FIXME This should be run in restoreWalletFromMnemonic instead as we often need to call deriveNextAccountKeychainsFrom
       try {
-        console.log('START: recurseAccountsForActivity', new Date().toISOString());
         void recurseAccountsForActivity({
           async doesAddressHaveActivityFn(index: number) {
-            console.log('doesAddressHaveActivityFn', index, new Date().toISOString());
             // seems like it could be better to do this with useQueries for batches of accountIndexes
+            const rootKeychain = deriveRootBip32Keychain(
+              await deriveBip39SeedFromMnemonic(mnemonic, passphrase)
+            );
+
             const stxAddress = getStacksAddressByIndex(
-              secretKey,
+              rootKeychain,
               AddressVersion.MainnetSingleSig
             )(index);
-            // FIXME: we call doesStacksAddressHaveBalance which calls stacks client directly not using react query
-            const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
-            // PETE - roll this back then apply stash and leave it run again to see if it does update
 
-            // leave for like 10 minutes
-            // FIXME: - refactor this to use new queries
+            const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
+            // FIXME: new BTC balance query works off account not address
             const btcAddress = getNativeSegwitMainnetAddressFromMnemonic()(index);
             const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
+            // TODO: add new BNS checks here
             return hasStxBalance || hasBtcBalance;
           },
-        }).then((activeAccounts: number) => {
-          console.log('End: recurseAccountsForActivity', new Date().toISOString());
-          // maybe this void is wrong?
-          return void this.createNewAccountsOfWallet(fingerprint, activeAccounts);
-        });
+        }).then(
+          // TODO: Actual account creation is slow so maybe we can limit it to 10 accounts at a time?
+          (activeAccounts: number) =>
+            void this.createNewAccountsOfWallet(fingerprint, activeAccounts)
+        );
       } catch {}
     },
     async createNewAccountOfWallet(fingerprint: string) {

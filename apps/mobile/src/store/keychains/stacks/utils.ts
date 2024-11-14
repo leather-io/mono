@@ -1,15 +1,14 @@
 import { entitySchema } from '@/store/utils';
+import { HDKey } from '@scure/bip32';
 import {
   AddressVersion,
   createStacksPrivateKey,
   getPublicKey,
   publicKeyToAddress,
 } from '@stacks/transactions';
-import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 import z from 'zod';
 
-// FIXME fix this deprecated import
-import { mnemonicToRootNode } from '@leather.io/bitcoin';
+import { deriveStxPrivateKey } from '@leather.io/stacks';
 
 const stacksKeychainSchema = z.object({
   // Stacks doesn't use the concept of BIP-380 Descriptors the same way Bitcoin
@@ -24,10 +23,10 @@ export const stacksKeychainStoreSchema = entitySchema(stacksKeychainSchema);
 export type StacksKeychainStore = z.infer<typeof stacksKeychainStoreSchema>;
 
 // seems like secretKey is the mnemonic in this code??
-export function getStacksAddressByIndex(secretKey: string, addressVersion: AddressVersion) {
+export function getStacksAddressByIndex(rootKeychain: HDKey, addressVersion: AddressVersion) {
   return (index: number) => {
     const accountPrivateKey = createStacksPrivateKey(
-      deriveStxPrivateKey({ rootNode: mnemonicToRootNode(secretKey) as any, index })
+      deriveStxPrivateKey({ keychain: rootKeychain, index })
     );
     const pubKey = getPublicKey(accountPrivateKey);
     return publicKeyToAddress(addressVersion, pubKey);
