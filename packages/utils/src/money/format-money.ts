@@ -59,6 +59,20 @@ export function formatMoneyWithoutSymbol({ amount, decimals }: Money) {
   return `${amount.shiftedBy(-decimals).toString()}`;
 }
 
+export function formatMoneyToFixedDecimal(
+  { amount, symbol, decimals }: Money,
+  fixedDecimals: number
+) {
+  return `${amount.shiftedBy(-decimals).toFixed(fixedDecimals)} ${symbol}`;
+}
+
+export function formatMoneyToFixedDecimalWithoutSymbol(
+  { amount, decimals }: Money,
+  fixedDecimals: number
+) {
+  return `${amount.shiftedBy(-decimals).toFixed(fixedDecimals)}`;
+}
+
 export function formatMoneyPadded({ amount, symbol, decimals }: Money) {
   return `${amount.shiftedBy(-decimals).toFormat(decimals)} ${symbol}`;
 }

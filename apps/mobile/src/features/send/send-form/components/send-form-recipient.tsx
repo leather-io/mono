@@ -49,7 +49,7 @@ export function SendFormRecipient() {
           ) : (
             <Text color="ink.text-subdued" variant="label02">
               {t({
-                id: 'send-form.recipient.input.label',
+                id: 'send_form.recipient.input.label',
                 message: 'Enter recipient',
               })}
             </Text>

@@ -38,7 +38,6 @@ export function convertToMoneyTypeWithDefaultOfZero(
   return createMoney(initBigNumber(num ?? 0), symbol.toUpperCase(), decimals);
 }
 
-// ts-unused-exports:disable-next-line
 export function convertAmountToBaseUnit(num: Money | BigNumber, decimals?: number) {
   if (isMoney(num)) return num.amount.shiftedBy(-num.decimals);
   if (!isNumber(decimals)) throw new Error('Must define decimal of given currency');
