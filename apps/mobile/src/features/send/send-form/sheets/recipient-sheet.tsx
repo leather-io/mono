@@ -38,15 +38,10 @@ export function RecipientSheet({ sheetRef }: RecipientSheetProps) {
                 message: 'Enter recipient',
               })}
               TextInputComponent={UIBottomSheetTextInput}
+              textVariant="caption01"
               value={value}
             />
           )}
-          rules={{
-            required: t({
-              id: 'recipient-sheet.recipient.error.recipient_required',
-              message: 'Recipient is required',
-            }),
-          }}
         />
       </Box>
     </Sheet>

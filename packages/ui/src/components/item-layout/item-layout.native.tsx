@@ -33,7 +33,7 @@ export function ItemLayout({
         )}
       </Box>
       {hasRightElement && (
-        <Box flex={2} alignItems="flex-end" style={{ gap: 2 }}>
+        <Box flex={1} alignItems="flex-end" style={{ gap: 2 }}>
           {isValidElement(titleRight) ? titleRight : <Text variant="label02">{titleRight}</Text>}
           {captionRight && isValidElement(captionRight) && captionRight}
           {captionRight && isString(captionRight) && (

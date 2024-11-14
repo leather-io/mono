@@ -10,27 +10,26 @@ import { useSendFormContext } from '../send-form-context';
 
 export function SendFormButton() {
   const { displayToast } = useToastContext();
-  const { schema } = useSendFormContext();
+  const { schema, onInitSendTransfer } = useSendFormContext();
   const {
     formState: { isDirty, isValid },
     handleSubmit,
   } = useFormContext<z.infer<typeof schema>>();
 
-  function onSubmit(data: z.infer<typeof schema>) {
+  function onSubmitForm(values: z.infer<typeof schema>) {
+    onInitSendTransfer(values);
     // Temporary toast for testing
     displayToast({
       title: t`Form submitted`,
       type: 'success',
     });
-    // eslint-disable-next-line no-console
-    console.log(t`submit data:`, data);
   }
 
   return (
     <Button
       mt="3"
       buttonState={isDirty && isValid ? 'default' : 'disabled'}
-      onPress={handleSubmit(onSubmit)}
+      onPress={handleSubmit(onSubmitForm)}
       title={t({
         id: 'send_form.review_button',
         message: 'Review',

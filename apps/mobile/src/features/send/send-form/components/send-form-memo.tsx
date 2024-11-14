@@ -21,7 +21,7 @@ export function SendFormMemo() {
         <NoteEmptyIcon />
         <Text variant="label02">
           {t({
-            id: 'send-form.memo.input.label',
+            id: 'send_form.memo.input.label',
             message: 'Add memo',
           })}
         </Text>

@@ -1,16 +1,29 @@
 import { ReactNode } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { t } from '@lingui/macro';
 
-import { Money } from '@leather.io/models';
+import { CryptoAssetProtocol, Money } from '@leather.io/models';
 import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
+
+export function getChainLayerFromAssetProtocol(protocol: CryptoAssetProtocol) {
+  switch (protocol) {
+    case 'nativeBtc':
+    case 'nativeStx':
+      return t({ id: 'account_balance.caption_left.native', message: 'Layer 1' });
+    case 'sip10':
+      return t({ id: 'account_balance.caption_left.sip10', message: 'Layer 2 · Stacks' });
+    default:
+      return '';
+  }
+}
 
 interface TokenBalanceProps {
   ticker: string;
   icon: ReactNode;
   tokenName: string;
   availableBalance?: Money;
-  chain: string;
+  protocol: CryptoAssetProtocol;
   fiatBalance: Money;
   onPress?(): void;
 }
@@ -19,7 +32,7 @@ export function TokenBalance({
   icon,
   tokenName,
   availableBalance,
-  chain,
+  protocol,
   fiatBalance,
   onPress,
 }: TokenBalanceProps) {
@@ -29,7 +42,7 @@ export function TokenBalance({
         <ItemLayout
           titleLeft={tokenName}
           titleRight={availableBalance && <Balance balance={availableBalance} variant="label02" />}
-          captionLeft={chain}
+          captionLeft={getChainLayerFromAssetProtocol(protocol)}
           captionRight={
             <Balance balance={fiatBalance} variant="label02" color="ink.text-subdued" />
           }

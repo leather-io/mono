@@ -27,10 +27,7 @@ export function BitcoinTokenBalance({
         id: 'asset_name.bitcoin',
         message: 'Bitcoin',
       })}
-      chain={t({
-        id: 'asset_name.layer_1',
-        message: 'Layer 1',
-      })}
+      protocol="nativeBtc"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}

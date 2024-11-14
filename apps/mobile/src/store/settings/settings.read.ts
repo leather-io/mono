@@ -1,15 +1,19 @@
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { createSelector } from '@reduxjs/toolkit';
+import { StacksNetwork } from '@stacks/network';
+import { ChainID, TransactionVersion } from '@stacks/transactions';
 
 import {
   accountDisplayPreferencesKeyedByType,
   bitcoinUnitsKeyedByName,
 } from '@leather.io/constants';
 import { defaultNetworksKeyedById } from '@leather.io/models';
+import { whenStacksChainId } from '@leather.io/stacks';
 
 import type { RootState } from '..';
 
@@ -94,4 +98,22 @@ export function useAccountDisplayAddress(fingerprint: string, accountIndex: numb
     default:
       return stxAddress;
   }
+}
+
+export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
+  const { networkPreference } = useSettings();
+
+  return useMemo(() => {
+    const stacksNetwork = new StacksNetwork({ url: networkPreference.chain.stacks.url });
+
+    stacksNetwork.version = whenStacksChainId(networkPreference.chain.stacks.chainId)({
+      [ChainID.Mainnet]: TransactionVersion.Mainnet,
+      [ChainID.Testnet]: TransactionVersion.Testnet,
+    });
+    stacksNetwork.chainId =
+      networkPreference.chain.stacks.subnetChainId ?? networkPreference.chain.stacks.chainId;
+    stacksNetwork.bnsLookupUrl = networkPreference.chain.stacks.url || '';
+
+    return stacksNetwork;
+  }, [networkPreference]);
 }

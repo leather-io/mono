@@ -6,7 +6,7 @@ import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 
-import { CreateCurrentSendRoute, useSendSheetNavigation } from '../utils';
+import { CreateCurrentSendRoute, useSendSheetNavigation } from '../send-form.utils';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-select-account'>;
 

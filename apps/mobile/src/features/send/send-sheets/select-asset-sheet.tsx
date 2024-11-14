@@ -5,10 +5,16 @@ import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-heigh
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { StacksSignerLoader } from '@/store/keychains/keychains';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+import { bytesToHex } from '@noble/hashes/utils';
 
-import { CreateCurrentSendRoute, useSendSheetNavigation, useSendSheetRoute } from '../utils';
+import {
+  CreateCurrentSendRoute,
+  useSendSheetNavigation,
+  useSendSheetRoute,
+} from '../send-form.utils';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-select-asset'>;
 
@@ -42,11 +48,21 @@ export function SelectAssetSheet() {
           fingerprint={fingerprint}
           onPress={() => navigation.navigate('send-form-btc', { account })}
         />
-        <StacksBalanceByAccount
-          accountIndex={accountIndex}
-          fingerprint={fingerprint}
-          onPress={() => navigation.navigate('send-form-stx', { account })}
-        />
+        <StacksSignerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
+          {({ stxSigner }) => (
+            <StacksBalanceByAccount
+              accountIndex={accountIndex}
+              fingerprint={fingerprint}
+              onPress={() =>
+                navigation.navigate('send-form-stx', {
+                  account,
+                  address: stxSigner.address,
+                  publicKey: bytesToHex(stxSigner.publicKey),
+                })
+              }
+            />
+          )}
+        </StacksSignerLoader>
       </ScrollView>
     </FullHeightSheetLayout>
   );

@@ -1,38 +1,22 @@
-import { FormProvider, useForm } from 'react-hook-form';
-
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { useBitcoinAccountTotalBitcoinBalance } from '@/queries/balance/bitcoin-balance.query';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import { BtcAvatarIcon } from '@leather.io/ui/native';
 
-import {
-  SendFormBtcSchema,
-  defaultSendFormBtcValues,
-  sendFormBtcSchema,
-} from '../send-form/schemas/send-form-btc.schema';
+import { CreateCurrentSendRoute, useSendSheetRoute } from '../send-form.utils';
+import { useSendFormBtc } from '../send-form/hooks/use-send-form-btc';
+import { SendFormBtcProvider } from '../send-form/providers/send-form-btc-provider';
 import { SendForm } from '../send-form/send-form';
-import { CreateCurrentSendRoute, useSendSheetNavigation, useSendSheetRoute } from '../utils';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
 export function SendFormBtcSheet() {
   const { i18n } = useLingui();
   const route = useSendSheetRoute<CurrentRoute>();
-  const navigation = useSendSheetNavigation<CurrentRoute>();
 
-  const formMethods = useForm<SendFormBtcSchema>({
-    defaultValues: defaultSendFormBtcValues,
-    resolver: zodResolver(sendFormBtcSchema),
-  });
-
-  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance({
-    accountIndex: route.params.account.accountIndex,
-    fingerprint: route.params.account.fingerprint,
-  });
+  const { onGoBack } = useSendFormBtc();
 
   return (
     <FullHeightSheetLayout
@@ -51,29 +35,9 @@ export function SendFormBtcSheet() {
         />
       }
     >
-      <FormProvider {...formMethods}>
-        <SendForm
-          symbol="BTC"
-          protocol="nativeBtc"
-          availableBalance={availableBalance}
-          fiatBalance={fiatBalance}
-          defaultValues={defaultSendFormBtcValues}
-          schema={sendFormBtcSchema}
-        >
-          <SendForm.Asset
-            onPress={() =>
-              navigation.navigate('send-select-asset', { account: route.params.account })
-            }
-            icon={<BtcAvatarIcon />}
-            assetName={t({
-              id: 'asset_name.bitcoin',
-              message: 'Bitcoin',
-            })}
-            chain={t({
-              id: 'asset_name.layer_1',
-              message: 'Layer 1',
-            })}
-          />
+      <SendFormBtcProvider>
+        <SendForm>
+          <SendForm.Asset icon={<BtcAvatarIcon />} onPress={onGoBack} />
           <SendForm.AmountField />
           <SendForm.RecipientField />
           <SendForm.Memo />
@@ -82,7 +46,7 @@ export function SendFormBtcSheet() {
             <SendForm.Button />
           </SendForm.Footer>
         </SendForm>
-      </FormProvider>
+      </SendFormBtcProvider>
     </FullHeightSheetLayout>
   );
 }

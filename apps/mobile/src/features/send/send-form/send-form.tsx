@@ -1,4 +1,8 @@
+import { FormProvider, useForm } from 'react-hook-form';
+
 import { HasChildren } from '@/utils/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 import { SendFormAmountField } from './components/send-form-amount-field';
 import { SendFormAsset } from './components/send-form-asset';
@@ -8,25 +12,20 @@ import { SendFormFooterLayout } from './components/send-form-footer.layout';
 import { SendFormMemo } from './components/send-form-memo';
 import { SendFormNumpad } from './components/send-form-numpad';
 import { SendFormRecipient } from './components/send-form-recipient';
-import { SendFormContext, SendFormProvider } from './send-form-context';
+import { useSendFormContext } from './send-form-context';
 
-type SendFormProps = SendFormContext;
+function SendForm({ ...props }: HasChildren) {
+  const { defaultValues, schema } = useSendFormContext();
+  const formMethods = useForm<z.infer<typeof schema>>({
+    mode: 'onChange',
+    defaultValues,
+    resolver: zodResolver(schema),
+  });
 
-function SendForm({
-  protocol,
-  symbol,
-  availableBalance,
-  fiatBalance,
-  defaultValues,
-  schema,
-  ...props
-}: SendFormProps & HasChildren) {
   return (
-    <SendFormProvider
-      value={{ protocol, symbol, availableBalance, fiatBalance, defaultValues, schema }}
-    >
+    <FormProvider {...formMethods}>
       <SendFormContainer {...props} />
-    </SendFormProvider>
+    </FormProvider>
   );
 }
 

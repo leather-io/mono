@@ -4,12 +4,12 @@ import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
 
+import { SendSheetNavigatorParamList } from './send-form.utils';
 import { SelectAccountSheet } from './send-sheets/select-account-sheet';
 import { SelectAssetSheet } from './send-sheets/select-asset-sheet';
 import { SendFormBtcSheet } from './send-sheets/send-form-btc-sheet';
 import { SendFormStxSheet } from './send-sheets/send-form-stx-sheet';
 import { SignPsbt } from './send-sheets/sign-psbt';
-import { SendSheetNavigatorParamList } from './utils';
 
 const Stack = createStackNavigator<SendSheetNavigatorParamList & ParamListBase>();
 

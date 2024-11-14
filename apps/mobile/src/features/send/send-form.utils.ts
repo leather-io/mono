@@ -11,7 +11,7 @@ export interface SendSheetNavigatorParamList {
   'send-select-account': undefined;
   'send-select-asset': { account: Account };
   'send-form-btc': { account: Account };
-  'send-form-stx': { account: Account };
+  'send-form-stx': { account: Account; address: string; publicKey: string };
   'sign-psbt': { psbtHex: string };
 }
 

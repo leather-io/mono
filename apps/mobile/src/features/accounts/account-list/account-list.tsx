@@ -34,7 +34,7 @@ export function AccountList({ accounts, onPress, showWalletInfo }: AccountListPr
           iconTestID={defaultIconTestId(account.icon)}
           onPress={() => onPress(account)}
           testID={TestId.walletListAccountCard}
-          walletName={showWalletInfo ? wallet.name : ' '}
+          walletName={showWalletInfo ? wallet.name : undefined}
         />
       )}
     </WalletLoader>

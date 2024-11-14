@@ -5,8 +5,12 @@ import { deriveBip39SeedFromMnemonic } from '@leather.io/crypto';
 
 import { testMnemonic } from '../../../config/test-helpers';
 import {
+  cleanHex,
   deriveStxPrivateKey,
   getStacksBurnAddress,
+  getStacksContractAssetName,
+  getStacksContractIdStringParts,
+  getStacksContractName,
   stacksRootKeychainToAccountDescriptor,
   whenStacksChainId,
 } from './stacks.utils';
@@ -73,5 +77,63 @@ describe(getStacksBurnAddress.name, () => {
   it('should return the Testnet address for an unknown chainId', () => {
     const result = getStacksBurnAddress(9999 as ChainID); // Simulate an unknown chainId
     expect(result).toBe('ST000000000000000000002AMW42H');
+  });
+});
+
+describe(cleanHex.name, () => {
+  test('should return the same string if it is not a hex string', () => {
+    expect(cleanHex('not-a-hex')).toBe('not-a-hex');
+  });
+
+  test('should remove 0x prefix from hex string', () => {
+    expect(cleanHex('0xabcdef')).toBe('abcdef');
+  });
+
+  test('should return the same hex string if it does not have 0x prefix', () => {
+    expect(cleanHex('abcdef')).toBe('abcdef');
+  });
+});
+
+describe(getStacksContractName.name, () => {
+  test('should return contract name from fully qualified name', () => {
+    expect(getStacksContractName('SP1234.contract-name')).toBe('contract-name');
+  });
+
+  test('should return contract name from fully qualified name with asset', () => {
+    expect(getStacksContractName('SP1234.contract-name::asset-name')).toBe('contract-name');
+  });
+
+  test('should return the same string if it does not contain a dot', () => {
+    expect(getStacksContractName('contract-name')).toBe('contract-name');
+  });
+});
+
+describe('getStacksContractAssetName', () => {
+  test('should return asset name from fully qualified name', () => {
+    expect(getStacksContractAssetName('SP1234.contract-name::asset-name')).toBe('asset-name');
+  });
+
+  test('should return the same string if it does not contain ::', () => {
+    expect(getStacksContractAssetName('contract-name')).toBe('contract-name');
+  });
+});
+
+describe(getStacksContractIdStringParts.name, () => {
+  test('should return parts of a fully qualified name', () => {
+    const result = getStacksContractIdStringParts('SP1234.contract-name::asset-name');
+    expect(result).toEqual({
+      contractAddress: 'SP1234',
+      contractAssetName: 'asset-name',
+      contractName: 'contract-name',
+    });
+  });
+
+  test('should return the same string for all parts if it does not contain . or ::', () => {
+    const result = getStacksContractIdStringParts('contract-name');
+    expect(result).toEqual({
+      contractAddress: 'contract-name',
+      contractAssetName: 'contract-name',
+      contractName: 'contract-name',
+    });
   });
 });

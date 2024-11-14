@@ -1,7 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { TextInput } from '@/components/text-input';
-import { t } from '@lingui/macro';
 import { z } from 'zod';
 
 import { useSendFormContext } from '../send-form-context';
@@ -29,12 +28,6 @@ export function SendFormAmountField() {
           value={value}
         />
       )}
-      rules={{
-        required: t({
-          id: 'send-form.amount-field.error.amount-required',
-          message: 'Amount is required',
-        }),
-      }}
     />
   );
 }

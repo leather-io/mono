@@ -10,7 +10,7 @@ import {
   extractAddressIndexFromPath,
 } from '@leather.io/crypto';
 import type { NetworkModes } from '@leather.io/models';
-import { assertIsTruthy, toHexString } from '@leather.io/utils';
+import { assertIsTruthy, isString, toHexString } from '@leather.io/utils';
 
 export const stxDerivationWithAccount = `m/44'/5757'/0'/0/{account}`;
 
@@ -70,4 +70,66 @@ export function getStacksBurnAddress(chainId: ChainID): string {
     default:
       return 'ST000000000000000000002AMW42H';
   }
+}
+
+export function cleanHex(hexWithMaybePrefix: string): string {
+  if (!isString(hexWithMaybePrefix)) return hexWithMaybePrefix;
+  return hexWithMaybePrefix.startsWith('0x')
+    ? hexWithMaybePrefix.replace('0x', '')
+    : hexWithMaybePrefix;
+}
+
+/**
+ * Gets the contract name of a fully qualified name of an asset.
+ *
+ * @param contractId - the source string: [principal].[contract-name] or [principal].[contract-name]::[asset-name]
+ */
+export function getStacksContractName(contractId: string): string {
+  if (contractId.includes('.')) {
+    const parts = contractId?.split('.');
+    if (contractId.includes('::')) {
+      return parts[1].split('::')[0];
+    }
+    return parts[1];
+  }
+  return contractId;
+}
+
+/**
+ * Gets the asset name from a a fully qualified name of an asset.
+ *
+ * @param contractId - the fully qualified name of the asset: [principal].[contract-name]::[asset-name]
+ */
+export function getStacksContractAssetName(contractId: string): string {
+  if (!contractId.includes('::')) return contractId;
+  return contractId.split('::')[1];
+}
+
+/**
+ * Gets the parts that make up a fully qualified name of an asset.
+ *
+ * @param contractId - the fully qualified name of the asset: [principal].[contract-name]::[asset-name]
+ */
+export function getStacksContractIdStringParts(contractId: string): {
+  contractAddress: string;
+  contractAssetName: string;
+  contractName: string;
+} {
+  if (!contractId.includes('.') || !contractId.includes('::')) {
+    return {
+      contractAddress: contractId,
+      contractAssetName: contractId,
+      contractName: contractId,
+    };
+  }
+
+  const contractAddress = contractId.split('.')[0];
+  const contractAssetName = getStacksContractAssetName(contractId);
+  const contractName = getStacksContractName(contractId);
+
+  return {
+    contractAddress,
+    contractAssetName,
+    contractName,
+  };
 }

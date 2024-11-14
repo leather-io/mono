@@ -6,6 +6,7 @@ export const sendFormStxSchema = z.object({
   }),
   recipient: z.string(),
   memo: z.string().optional(),
+  nonce: z.number().or(z.string()),
   fee: z.string(),
 });
 
@@ -15,5 +16,6 @@ export const defaultSendFormStxValues: SendFormStxSchema = {
   amount: '',
   recipient: '',
   memo: '',
+  nonce: '',
   fee: '',
 };
