@@ -177,7 +177,7 @@ const networkSbtcDevenv: NetworkConfiguration = {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'regtest',
       mode: 'regtest',
-      bitcoinUrl: 'http://localhost:8999/api',
+      bitcoinUrl: 'http://localhost:8083/api',
     },
   },
 };
