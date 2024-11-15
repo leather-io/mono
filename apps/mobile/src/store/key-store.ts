@@ -128,7 +128,7 @@ export function useKeyStore() {
         console.log('START: recurseAccountsForActivity', new Date().toISOString());
         void recurseAccountsForActivity({
           async doesAddressHaveActivityFn(index: number) {
-            console.log('doesAddressHaveActivityFn', index, new Date().toISOString());
+            // console.log('doesAddressHaveActivityFn', index, new Date().toISOString());
             // seems like it could be better to do this with useQueries for batches of accountIndexes
             const stxAddress = getStacksAddressByIndex(
               secretKey,

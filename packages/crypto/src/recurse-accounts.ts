@@ -1,7 +1,8 @@
 // from extension src/app/common/account-restoration/account-restore.ts
 import { createCounter, fibonacciGenerator } from '@leather.io/utils';
 
-const numOfEmptyAccountsToCheck = 20;
+const numOfEmptyAccountsToCheck = 5;
+const accountsToRecover = 5;
 
 interface AccountIndexActivityCheckHistory {
   index: number;
@@ -45,22 +46,28 @@ export async function recurseAccountsForActivity({
   async function* findHighestAddressIndexExponent() {
     const fibonacci = fibonacciGenerator(2);
     const activity: AccountIndexActivityCheckHistory[] = [];
+    console.log('START: findHighestAddressIndexExponent', new Date().toISOString());
 
-    while (activity.length === 0 || activity[activity.length - 1]?.hasActivity) {
+    while (
+      (activity.length === 0 || activity[activity.length - 1]?.hasActivity) &&
+      activity.length <= accountsToRecover
+    ) {
       const index = fibonacci.next().value;
+      const keepGoing = index <= accountsToRecover;
+      console.log('findHighestAddressIndexExponent', index, new Date().toISOString());
+      if (!keepGoing) break;
       const hasActivity = await doesAddressHaveActivityFn(index);
-      console.log('doesAddressHaveActivityFn', index, hasActivity, new Date().toISOString());
       activity.push({ index, hasActivity });
       yield;
     }
 
-    console.log('returnHighestIndex', returnHighestIndex(activity), new Date().toISOString());
+    console.log('END: findHighestAddressIndexExponent', new Date().toISOString());
     return returnHighestIndex(activity);
   }
 
   const knownActivityAtIndex = await recurseUntilGeneratorDone(findHighestAddressIndexExponent());
+  console.log('START: knownActivityAtIndex', new Date().toISOString());
 
-  // this part seems to take ages
   async function* checkForMostRecentAccount() {
     const indexCounter = createCounter(knownActivityAtIndex + 1);
     const activity: AccountIndexActivityCheckHistory[] = [];
@@ -75,17 +82,15 @@ export async function recurseAccountsForActivity({
       console.log(
         'checkForMostRecentAccount',
         indexCounter.getValue(),
-        hasActivity,
+        numOfEmptyAccountsToCheck,
         new Date().toISOString()
       );
+      if (indexCounter.getValue() > numOfEmptyAccountsToCheck) break;
+
       yield;
     }
-    console.log(
-      'checkForMostRecentAccount indexCounter',
-      returnHighestIndex(activity),
-      new Date().toISOString()
-    );
 
+    console.log('END: knownActivityAtIndex', new Date().toISOString());
     return returnHighestIndex(activity);
   }
   return recurseUntilGeneratorDone(checkForMostRecentAccount());
