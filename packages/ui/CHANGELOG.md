@@ -127,6 +127,23 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.4.3
 
+## [1.34.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.33.0...@leather.io/ui-v1.34.0) (2024-11-15)
+
+
+### Features
+
+* add z-index scale ([7361358](https://github.com/leather-io/mono/commit/73613585e4e01939a688ab56a291be5bf3d0347b))
+* send form, closes LEA-1649 and LEA-1651 ([253dc13](https://github.com/leather-io/mono/commit/253dc134d002b7b2fabcfceb41940df7fb3a901a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.11.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.5.0
+
 ## [1.33.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.32.2...@leather.io/ui-v1.33.0) (2024-11-13)
 
 

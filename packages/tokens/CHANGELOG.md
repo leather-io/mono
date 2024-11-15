@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.10.0...@leather.io/tokens-v0.11.0) (2024-11-15)
+
+
+### Features
+
+* add z-index scale ([7361358](https://github.com/leather-io/mono/commit/73613585e4e01939a688ab56a291be5bf3d0347b))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.2...@leather.io/tokens-v0.10.0) (2024-11-08)
 
 
