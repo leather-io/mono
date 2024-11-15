@@ -135,6 +135,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.19.1
 
+## [1.35.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.34.1...@leather.io/ui-v1.35.0) (2024-11-15)
+
+
+### Features
+
+* approver ux ui ([ac5231b](https://github.com/leather-io/mono/commit/ac5231b15c5df3d1067c0ae7f15ac201d412dc72))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.12.0
+    * @leather.io/utils bumped to 0.18.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.5.1
+
 ## [1.34.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.33.0...@leather.io/ui-v1.34.0) (2024-11-15)
 
 

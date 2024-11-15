@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.11.0...@leather.io/tokens-v0.12.0) (2024-11-15)
+
+
+### Features
+
+* approver ux ui ([ac5231b](https://github.com/leather-io/mono/commit/ac5231b15c5df3d1067c0ae7f15ac201d412dc72))
+
 ## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.10.0...@leather.io/tokens-v0.11.0) (2024-11-15)
 
 
