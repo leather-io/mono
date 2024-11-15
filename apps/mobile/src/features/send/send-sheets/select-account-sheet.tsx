@@ -1,16 +1,17 @@
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { AccountList } from '@/features/account-list/account-list';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 
-import { SendSheetNavigatorParamList } from '../send-sheet-navigator';
+import { CreateCurrentSendRoute, useSendSheetNavigation } from '../utils';
+
+type CurrentRoute = CreateCurrentSendRoute<'send-select-account'>;
 
 export function SelectAccountSheet() {
-  const navigation = useNavigation<NavigationProp<SendSheetNavigatorParamList>>();
+  const navigation = useSendSheetNavigation<CurrentRoute>();
   const accounts = useAccounts();
 
   function onSelectAccount(account: Account) {

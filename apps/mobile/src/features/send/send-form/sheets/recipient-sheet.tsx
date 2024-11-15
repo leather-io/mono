@@ -33,12 +33,20 @@ export function RecipientSheet({ sheetRef }: RecipientSheetProps) {
               inputState="focused"
               onBlur={onBlur}
               onChangeText={value => onChange(value)}
-              placeholder={t`Enter recipient`}
+              placeholder={t({
+                id: 'recipient-sheet.recipient.input.placeholder',
+                message: 'Enter recipient',
+              })}
               TextInputComponent={UIBottomSheetTextInput}
               value={value}
             />
           )}
-          rules={{ required: t`Recipient is required` }}
+          rules={{
+            required: t({
+              id: 'recipient-sheet.recipient.error.recipient_required',
+              message: 'Recipient is required',
+            }),
+          }}
         />
       </Box>
     </Sheet>

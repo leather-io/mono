@@ -212,3 +212,9 @@ export function capitalize(val: string) {
 export function uniqueArray<T>(arr: T[]) {
   return Array.from(new Set(arr));
 }
+
+export function match<Variant extends string | number>() {
+  return function matchVariant<T>(variant: Variant, match: Record<Variant, T>) {
+    return match[variant];
+  };
+}

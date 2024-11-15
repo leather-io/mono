@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
 import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/macro';

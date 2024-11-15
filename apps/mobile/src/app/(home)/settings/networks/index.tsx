@@ -1,6 +1,6 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { useToastContext } from '@/components/toast/toast-context';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/macro';

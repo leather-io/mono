@@ -19,7 +19,12 @@ export function SendFormMemo() {
         p="2"
       >
         <NoteEmptyIcon />
-        <Text variant="label02">{t`Add memo`}</Text>
+        <Text variant="label02">
+          {t({
+            id: 'send-form.memo.input.label',
+            message: 'Add memo',
+          })}
+        </Text>
       </TouchableOpacity>
       <MemoSheet sheetRef={memoSheetRef} />
     </>

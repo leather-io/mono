@@ -2,9 +2,9 @@ import { useRef } from 'react';
 
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';

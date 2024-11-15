@@ -21,8 +21,14 @@ export function StacksTokenBalance({
     <TokenBalance
       ticker="STX"
       icon={<TokenIcon ticker="STX" />}
-      tokenName={t`Stacks`}
-      chain={t`Layer 1`}
+      tokenName={t({
+        id: 'asset_name.stacks',
+        message: 'Stacks',
+      })}
+      chain={t({
+        id: 'asset_name.layer_1',
+        message: 'Layer 1',
+      })}
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}

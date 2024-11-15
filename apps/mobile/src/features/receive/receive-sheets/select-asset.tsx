@@ -3,28 +3,27 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { useToastContext } from '@/components/toast/toast-context';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { RouteProp, useRoute } from '@react-navigation/native';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
 import { BtcAvatarIcon, SheetRef, StxAvatarIcon, Theme } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
-import { ReceiveSheetNavigatorParamList } from '../receive-sheet-navigator';
+import { CreateCurrentReceiveRoute, useReceiveSheetRoute } from '../utils';
 import { ReceiveAssetItem } from './receive-asset-item';
 import { ReceiveAssetSheet } from './receive-asset-sheet';
 
-type SelectAssetScreenRouteProp = RouteProp<ReceiveSheetNavigatorParamList, 'receive-select-asset'>;
+type CurrentRoute = CreateCurrentReceiveRoute<'receive-select-asset'>;
 
 export function SelectAsset() {
   const { i18n } = useLingui();
-  const route = useRoute<SelectAssetScreenRouteProp>();
+  const route = useReceiveSheetRoute<CurrentRoute>();
   const theme = useTheme<Theme>();
   const { displayToast } = useToastContext();
   const receiveSheetRef = useRef<SheetRef>(null);
@@ -69,8 +68,14 @@ export function SelectAsset() {
         <ScrollView contentContainerStyle={{ gap: theme.spacing['5'] }}>
           <ReceiveAssetItem
             address={truncateMiddle(nativeSegwitPayerAddress)}
-            addressType={t`Native Segwit`}
-            assetName={t`Bitcoin`}
+            addressType={t({
+              id: 'address_type.native_segwit',
+              message: 'Native Segwit',
+            })}
+            assetName={t({
+              id: 'asset_name.bitcoin',
+              message: 'Bitcoin',
+            })}
             assetSymbol="BTC"
             icon={<BtcAvatarIcon />}
             onCopy={() => onCopyAddress(nativeSegwitPayerAddress)}
@@ -78,8 +83,14 @@ export function SelectAsset() {
           />
           <ReceiveAssetItem
             address={truncateMiddle(taprootPayerAddress)}
-            addressType={t`Taproot`}
-            assetName={t`Bitcoin`}
+            addressType={t({
+              id: 'address_type.taproot',
+              message: 'Taproot',
+            })}
+            assetName={t({
+              id: 'asset_name.bitcoin',
+              message: 'Bitcoin',
+            })}
             assetSymbol="BTC"
             icon={<BtcAvatarIcon />}
             onCopy={() => onCopyAddress(taprootPayerAddress)}
@@ -87,7 +98,10 @@ export function SelectAsset() {
           />
           <ReceiveAssetItem
             address={truncateMiddle(stxAddress)}
-            assetName={t`Stacks`}
+            assetName={t({
+              id: 'asset_name.stacks',
+              message: 'Stacks',
+            })}
             assetSymbol="STX"
             icon={<StxAvatarIcon />}
             onCopy={() => onCopyAddress(stxAddress)}

@@ -47,7 +47,12 @@ export function SendFormRecipient() {
               <AddressDisplayer address={recipient} />
             </Flag>
           ) : (
-            <Text color="ink.text-subdued" variant="label02">{t`Enter recipient`}</Text>
+            <Text color="ink.text-subdued" variant="label02">
+              {t({
+                id: 'send-form.recipient.input.label',
+                message: 'Enter recipient',
+              })}
+            </Text>
           )}
         </Box>
       </Pressable>

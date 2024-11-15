@@ -1,5 +1,5 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NetworkBadge } from '@/components/network-badge';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
 
 import { Cell, GraduateCapIcon, MagicBookIcon, SupportIcon } from '@leather.io/ui/native';

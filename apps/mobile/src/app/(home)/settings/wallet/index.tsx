@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NetworkBadge } from '@/components/network-badge';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';

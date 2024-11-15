@@ -130,7 +130,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
     ...commonFiracodeStyles,
     fontSize: transformSize(13),
     lineHeight: transformSize(18),
-    fontWeight: transformWeight(450),
+    fontWeight: transformWeight(400),
   };
 
   const address = {

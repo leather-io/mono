@@ -23,8 +23,14 @@ export function BitcoinTokenBalance({
     <TokenBalance
       ticker="BTC"
       icon={<BtcAvatarIcon />}
-      tokenName={t`Bitcoin`}
-      chain={t`Layer 1`}
+      tokenName={t({
+        id: 'asset_name.bitcoin',
+        message: 'Bitcoin',
+      })}
+      chain={t({
+        id: 'asset_name.layer_1',
+        message: 'Layer 1',
+      })}
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}
