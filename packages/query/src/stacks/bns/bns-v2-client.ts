@@ -6,8 +6,10 @@ import { whenNetwork } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
 import {
+  BnsV2NameDataByNameResponse,
   BnsV2NamesByAddressResponse,
   BnsV2ZoneFileDataResponse,
+  bnsV2NameDataByNameResponseSchema,
   bnsV2NamesByAddressResponseSchema,
   bnsV2ZoneFileDataSchema,
 } from './bns.schemas';
@@ -32,6 +34,12 @@ export function bnsV2Client(basePath = BNS_V2_API_BASE_URL) {
         { signal }
       );
       return bnsV2ZoneFileDataSchema.parse(resp.data.zonefile);
+    },
+    async getBnsNameDataByName(bnsName: string, signal?: AbortSignal) {
+      const resp = await axios.get<BnsV2NameDataByNameResponse>(`${basePath}/names/${bnsName}`, {
+        signal,
+      });
+      return bnsV2NameDataByNameResponseSchema.parse(resp.data);
     },
   };
 }

@@ -13,6 +13,7 @@ describe('bns.utils', () => {
     const mockClient = {
       getNamesByAddress: vi.fn(),
       getZoneFileData: vi.fn(),
+      getBnsNameDataByName: vi.fn(),
     };
 
     beforeEach(() => {

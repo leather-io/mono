@@ -39,3 +39,22 @@ export const bnsV2ZoneFileResponseSchema = z.object({
 });
 
 export type BnsV2ZoneFileDataResponse = z.infer<typeof bnsV2ZoneFileResponseSchema>;
+
+export const bnsV2NameDataByNameResponseSchema = z.object({
+  current_burn_block: z.number(),
+  status: z.string(),
+  data: z.object({
+    name_string: z.string(),
+    namespace_string: z.string(),
+    full_name: z.string(),
+    owner: z.string(),
+    registered_at: z.string(),
+    renewal_height: z.string(),
+    stx_burn: z.string(),
+    revoked: z.boolean(),
+    imported_at: z.string().nullable(),
+    is_valid: z.boolean(),
+  }),
+});
+
+export type BnsV2NameDataByNameResponse = z.infer<typeof bnsV2NameDataByNameResponseSchema>;
