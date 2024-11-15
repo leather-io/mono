@@ -55,6 +55,12 @@
   * dependencies
     * @leather.io/models bumped to 0.19.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.19.1
+
 ## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.12.5...@leather.io/constants-v0.13.0) (2024-10-30)
 
 

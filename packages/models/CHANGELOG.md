@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.19.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.19.0...@leather.io/models-v0.19.1) (2024-11-15)
+
+
+### Bug Fixes
+
+* incorrect port on sbtc dev env mempool.space instance ([9c24dfb](https://github.com/leather-io/mono/commit/9c24dfb62e62b40e9e7baa47907f09dedeb06005))
+
 ## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.3...@leather.io/models-v0.19.0) (2024-11-06)
 
 
