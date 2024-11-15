@@ -216,6 +216,23 @@
   * dependencies
     * @leather.io/query bumped to 2.21.1
 
+## [1.50.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.49.1...@leather.io/mobile-v1.50.0) (2024-11-15)
+
+
+### Features
+
+* add z-index scale ([7361358](https://github.com/leather-io/mono/commit/73613585e4e01939a688ab56a291be5bf3d0347b))
+* send form, closes LEA-1649 and LEA-1651 ([253dc13](https://github.com/leather-io/mono/commit/253dc134d002b7b2fabcfceb41940df7fb3a901a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.22.0
+    * @leather.io/tokens bumped to 0.11.0
+    * @leather.io/ui bumped to 1.34.0
+
 ## [1.49.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.48.1...@leather.io/mobile-v1.49.0) (2024-11-13)
 
 
