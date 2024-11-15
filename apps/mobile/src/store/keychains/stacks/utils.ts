@@ -22,7 +22,8 @@ export type StacksKeychain = z.infer<typeof stacksKeychainSchema>;
 export const stacksKeychainStoreSchema = entitySchema(stacksKeychainSchema);
 export type StacksKeychainStore = z.infer<typeof stacksKeychainStoreSchema>;
 
-// seems like secretKey is the mnemonic in this code??
+// lots of changes here from the original code so not sure it will work
+// checking deriveStxPrivateKey and it says we want to avoid that stacks package
 export function getStacksAddressByIndex(rootKeychain: HDKey, addressVersion: AddressVersion) {
   return (index: number) => {
     const accountPrivateKey = createStacksPrivateKey(

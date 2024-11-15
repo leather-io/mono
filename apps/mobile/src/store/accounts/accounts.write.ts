@@ -69,6 +69,7 @@ export const accountsSlice = createSlice({
       })
 
       .addCase(userAddsAccounts, (state, action) => {
+        console.log('userAddsAccounts', action.payload);
         if (!action.payload[0]?.account.id) {
           throw new Error('No account id found');
         }

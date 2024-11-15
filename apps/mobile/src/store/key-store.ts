@@ -1,4 +1,6 @@
-import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useMemo } from 'react';
+
+// import { useStxBalance } from '@/queries/balance/stacks-balance.query';
 import { AddressVersion } from '@stacks/transactions';
 
 import {
@@ -16,7 +18,7 @@ import {
   getMnemonicRootKeyFingerprint,
   recurseAccountsForActivity,
 } from '@leather.io/crypto';
-import { useBitcoinClient } from '@leather.io/query';
+import { stacksClient, useBitcoinClient, useCurrentNetworkState } from '@leather.io/query';
 import { stacksRootKeychainToAccountDescriptor } from '@leather.io/stacks';
 
 import { userAddsAccounts, userTogglesHideAccount } from './accounts/accounts.write';
@@ -40,12 +42,21 @@ export const keychainErrorHandlers = {
   },
 };
 
+function useStacksClient(): ReturnType<typeof stacksClient> {
+  const network = useCurrentNetworkState();
+
+  return useMemo(() => {
+    return stacksClient(network.chain.stacks.url);
+  }, [network.chain.stacks.url]);
+}
+
 export function useKeyStore() {
   const dispatch = useAppDispatch();
   const wallets = useWallets();
   const bitcoinKeychains = useBitcoinAccounts();
 
   const btcClient = useBitcoinClient();
+  const stxClient = useStacksClient();
 
   return {
     async createTemporarySoftwareWallet() {
@@ -92,8 +103,11 @@ export function useKeyStore() {
       passphrase?: string
     ) {
       async function doesStacksAddressHaveBalance(address: string) {
-        const { availableBalance } = useStxBalance([address]);
-        return Number(availableBalance) > 0;
+        // const { availableBalance } = useStxBalance([address]);
+        // return Number(availableBalance) > 0;
+        const controller = new AbortController();
+        const resp = await stxClient.getAccountBalance(address, controller.signal);
+        return Number(resp.stx.balance) > 0;
       }
       async function doesBitcoinAddressHaveBalance(address: string) {
         const resp = await btcClient.addressApi.getUtxosByAddress(address);
@@ -118,6 +132,8 @@ export function useKeyStore() {
         };
       }
       try {
+        console.log('Start: recurseAccountsForActivity', new Date().toISOString());
+
         void recurseAccountsForActivity({
           async doesAddressHaveActivityFn(index: number) {
             // seems like it could be better to do this with useQueries for batches of accountIndexes
@@ -129,18 +145,36 @@ export function useKeyStore() {
               rootKeychain,
               AddressVersion.MainnetSingleSig
             )(index);
+            // crumbs this failed now :(
+
+            //  chore/restore-account-log-speed_14112024
+            // // need to get this working and prep analyis report with timings
+            // Still no accounts in app at 11:01
+
+            // 11:04 they showed up so new code works
+
+            // UI very laggy though
 
             const hasStxBalance = await doesStacksAddressHaveBalance(stxAddress);
             // FIXME: new BTC balance query works off account not address
             const btcAddress = getNativeSegwitMainnetAddressFromMnemonic()(index);
             const hasBtcBalance = await doesBitcoinAddressHaveBalance(btcAddress.address!);
             // TODO: add new BNS checks here
+            console.log('hasStxBalance', hasStxBalance);
+            console.log('hasBtcBalance', hasBtcBalance);
             return hasStxBalance || hasBtcBalance;
           },
         }).then(
           // TODO: Actual account creation is slow so maybe we can limit it to 10 accounts at a time?
-          (activeAccounts: number) =>
-            void this.createNewAccountsOfWallet(fingerprint, activeAccounts)
+          (activeAccounts: number) => {
+            console.log(
+              'End: recurseAccountsForActivity',
+              activeAccounts,
+              new Date().toISOString()
+            );
+
+            void this.createNewAccountsOfWallet(fingerprint, activeAccounts);
+          }
         );
       } catch {}
     },
@@ -171,7 +205,7 @@ export function useKeyStore() {
       };
     },
     async createNewAccountsOfWallet(fingerprint: string, activeAccounts: number) {
-      // console.log('createNewAccountsOfWallet', new Date().toISOString());
+      console.log('createNewAccountsOfWallet', activeAccounts, new Date().toISOString());
       const accountsWithKeychains = await Promise.all(
         Array.from({ length: activeAccounts }, async (_, i) => ({
           account: {
@@ -181,6 +215,7 @@ export function useKeyStore() {
         }))
       );
 
+      console.log('accountsWithKeychains', accountsWithKeychains);
       dispatch(userAddsAccounts(accountsWithKeychains));
     },
 
