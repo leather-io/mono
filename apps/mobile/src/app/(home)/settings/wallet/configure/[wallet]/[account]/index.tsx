@@ -2,8 +2,8 @@ import { useRef } from 'react';
 
 import { AvatarIcon } from '@/components/avatar-icon';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { useToastContext } from '@/components/toast/toast-context';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { AccountCard } from '@/features/settings/wallet-and-accounts/account-card';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { AccountId } from '@/models/domain.model';

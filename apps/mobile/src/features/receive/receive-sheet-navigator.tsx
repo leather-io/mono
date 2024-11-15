@@ -1,4 +1,3 @@
-import { Account } from '@/store/accounts/accounts';
 import { ParamListBase } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@shopify/restyle';
@@ -7,13 +6,9 @@ import { Theme } from '@leather.io/ui/native';
 
 import { SelectAccount } from './receive-sheets/select-account';
 import { SelectAsset } from './receive-sheets/select-asset';
+import { ReceiveSheetNavigatorParamList } from './utils';
 
-export interface ReceiveSheetNavigatorParamList extends ParamListBase {
-  'receive-select-account': undefined;
-  'receive-select-asset': { account: Account };
-}
-
-const Stack = createStackNavigator<ReceiveSheetNavigatorParamList>();
+const Stack = createStackNavigator<ReceiveSheetNavigatorParamList & ParamListBase>();
 
 export function ReceiveSheetNavigator() {
   const theme = useTheme<Theme>();

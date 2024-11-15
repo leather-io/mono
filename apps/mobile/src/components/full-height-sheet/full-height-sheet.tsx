@@ -13,8 +13,8 @@ export function FullHeightSheet({ children, sheetRef }: FullHeightSheetProps) {
 
   return (
     <Sheet
-      isFullHeight
       ref={sheetRef}
+      isFullHeight
       shouldHaveContainer={false}
       themeVariant={themeDerivedFromThemePreference}
     >

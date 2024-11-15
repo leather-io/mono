@@ -1,6 +1,5 @@
-import { ComponentPropsWithoutRef } from 'react';
 import { Pressable as RNPressable, type PressableProps as RNPressableProps } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedProps } from 'react-native-reanimated';
 
 import {
   BackgroundColorShorthandProps,
@@ -47,7 +46,7 @@ const PressableBase = createRestyleComponent<PressableBaseProps, Theme>(
 );
 
 export const Pressable = Animated.createAnimatedComponent(PressableBase);
-export interface PressableProps extends ComponentPropsWithoutRef<typeof Pressable> {
+export interface PressableProps extends AnimatedProps<PressableBaseProps> {
   // Incorrect typings in: https://github.com/software-mansion/react-native-reanimated/blob/main/packages/react-native-reanimated/src/helperTypes.ts#L48
   // resulting in inferred key prop of createAnimatedComponent(X) to be incompatible with itself.
   // TODO: Needs further investigation/raising an issue.

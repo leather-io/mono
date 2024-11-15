@@ -4,7 +4,7 @@ import { ActionBarMethods } from '@/components/action-bar/action-bar';
 import { HomeHeader } from '@/components/headers/home-header';
 import { NakedHeader } from '@/components/headers/naked-header';
 import { TitleHeader } from '@/components/headers/title-header';
-import { NetworkBadge } from '@/components/network-badge';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { AppRoutes } from '@/routes';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';

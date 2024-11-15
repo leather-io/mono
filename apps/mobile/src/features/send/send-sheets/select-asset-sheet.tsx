@@ -2,26 +2,24 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
-import { NetworkBadge } from '@/components/network-badge';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
 
-import { SendSheetNavigatorParamList } from '../send-sheet-navigator';
+import { CreateCurrentSendRoute, useSendSheetNavigation, useSendSheetRoute } from '../utils';
 
-export type SelectAssetRouteProp = RouteProp<SendSheetNavigatorParamList, 'send-select-asset'>;
+type CurrentRoute = CreateCurrentSendRoute<'send-select-asset'>;
 
 export function SelectAssetSheet() {
   const { i18n } = useLingui();
-  const route = useRoute<SelectAssetRouteProp>();
-  const navigation = useNavigation<NavigationProp<SendSheetNavigatorParamList>>();
+  const route = useSendSheetRoute<CurrentRoute>();
+  const navigation = useSendSheetNavigation<CurrentRoute>();
   const theme = useTheme<Theme>();
-
   const account = route.params.account;
   const { accountIndex, fingerprint, name } = account;
 

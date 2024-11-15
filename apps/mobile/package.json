@@ -36,6 +36,7 @@
   "dependencies": {
     "@crowdin/ota-client": "2.0.0",
     "@expo/vector-icons": "14.0.0",
+    "@gorhom/bottom-sheet": "4.6.3",
     "@hookform/resolvers": "3.9.1",
     "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",
@@ -103,6 +104,7 @@
     "metro-cache": "0.80.5",
     "metro-config": "0.80.5",
     "metro-resolver": "0.80.5",
+    "prism-react-renderer": "2.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.53.2",

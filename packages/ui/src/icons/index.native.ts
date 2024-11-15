@@ -36,6 +36,7 @@ export * from './info-circle-icon.native';
 export * from './key-icon.native';
 export * from './keyhole-icon.native';
 export * from './lock-icon.native';
+export * from './unlock-icon.native';
 export * from './leather-lettermark-icon.native';
 export * from './leather-logomark-icon.native';
 export * from './magic-book-icon.native';
@@ -105,3 +106,9 @@ export * from './logos/logo-hardware-ledger.native';
 export * from './logos/logo-hardware-onekey.native';
 export * from './logos/logo-hardware-trezor.native';
 export * from './logos/logo-hardware-foundation.native';
+
+// Animal Fees
+export * from './fee-animals/animal-eagle.native';
+export * from './fee-animals/animal-snail.native';
+export * from './fee-animals/animal-rabbit.native';
+export * from './fee-animals/animal-chameleon.native';

@@ -29,7 +29,12 @@ export function SendFormAmountField() {
           value={value}
         />
       )}
-      rules={{ required: t`Amount is required` }}
+      rules={{
+        required: t({
+          id: 'send-form.amount-field.error.amount-required',
+          message: 'Amount is required',
+        }),
+      }}
     />
   );
 }
