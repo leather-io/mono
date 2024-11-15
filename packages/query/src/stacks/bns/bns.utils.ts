@@ -87,13 +87,14 @@ export async function fetchBtcNameOwner(
   }
 }
 
+// For stacks names we don't need to fetch the zonefile
 export async function fetchStacksNameOwner(
   client: BnsV2Client,
   bnsName: string
 ): Promise<string | null> {
   try {
-    const zoneFileData = await client.getZoneFileData(bnsName);
-    return zoneFileData.owner ?? null;
+    const zoneFileData = await client.getBnsNameDataByName(bnsName);
+    return zoneFileData.data.owner ?? null;
   } catch (error) {
     // Name not found or invalid zonefile
     return null;
