@@ -139,6 +139,13 @@
     * @leather.io/models bumped to 0.19.1
     * @leather.io/rpc bumped to 2.1.16
 
+## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.17.1...@leather.io/utils-v0.18.0) (2024-11-15)
+
+
+### Features
+
+* approver ux ui ([ac5231b](https://github.com/leather-io/mono/commit/ac5231b15c5df3d1067c0ae7f15ac201d412dc72))
+
 ## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.16.7...@leather.io/utils-v0.17.0) (2024-11-06)
 
 

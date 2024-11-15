@@ -232,6 +232,28 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.2
 
+## [1.51.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.50.1...@leather.io/mobile-v1.51.0) (2024-11-15)
+
+
+### Features
+
+* approver ux ui ([ac5231b](https://github.com/leather-io/mono/commit/ac5231b15c5df3d1067c0ae7f15ac201d412dc72))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.3
+    * @leather.io/crypto bumped to 1.6.10
+    * @leather.io/query bumped to 2.22.2
+    * @leather.io/stacks bumped to 1.3.3
+    * @leather.io/tokens bumped to 0.12.0
+    * @leather.io/ui bumped to 1.35.0
+    * @leather.io/utils bumped to 0.18.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.16.3
+
 ## [1.50.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.49.1...@leather.io/mobile-v1.50.0) (2024-11-15)
 
 
