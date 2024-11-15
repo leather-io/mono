@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 
 import type { Meta } from '@storybook/react';
 import { Box, Flex } from 'leather-styles/jsx';
@@ -23,14 +23,17 @@ const meta: Meta<typeof Component> = {
 export default meta;
 
 export function Sheet() {
-  const [isShowing, setIsShowing] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   return (
     <>
-      <Button onClick={() => setIsShowing(!isShowing)}>Open</Button>
+      <Button onClick={() => triggerRef.current?.click()}>Open</Button>
       <Component
-        header={<SheetHeader title="Leather" />}
-        isShowing={isShowing}
-        onClose={() => setIsShowing(false)}
+        onClose={() => closeRef.current?.click()}
+        header={<SheetHeader title="Leather" onClose={() => closeRef.current?.click()} />}
+        triggerRef={triggerRef}
+        closeRef={closeRef}
       >
         <Box textAlign="center" height="60vh">
           Let's start talk sheet.
@@ -41,16 +44,19 @@ export function Sheet() {
 }
 
 export function SheetWithFooter() {
-  const [isShowing, setIsShowing] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   return (
     <>
-      <Button onClick={() => setIsShowing(!isShowing)}>Open</Button>
+      <Button onClick={() => triggerRef.current?.click()}>Open</Button>
       <Component
         header={<SheetHeader title="Send" />}
-        isShowing={isShowing}
-        onClose={() => setIsShowing(false)}
+        onClose={() => closeRef.current?.click()}
+        triggerRef={triggerRef}
+        closeRef={closeRef}
         footer={
-          <Button fullWidth onClick={() => setIsShowing(false)}>
+          <Button fullWidth onClick={() => closeRef.current?.click()}>
             Close
           </Button>
         }
@@ -64,20 +70,23 @@ export function SheetWithFooter() {
 }
 
 export function SheetWithButtonsFooter() {
-  const [isShowing, setIsShowing] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   return (
     <>
-      <Button onClick={() => setIsShowing(!isShowing)}>Open</Button>
+      <Button onClick={() => triggerRef.current?.click()}>Open</Button>
       <Component
         header={<SheetHeader title="Send" />}
-        isShowing={isShowing}
-        onClose={() => setIsShowing(false)}
+        onClose={() => closeRef.current?.click()}
+        triggerRef={triggerRef}
+        closeRef={closeRef}
         footer={
           <Flex flexDirection="row" gap="space.04" width="100%">
-            <Button flexGrow={1} variant="outline" onClick={() => setIsShowing(false)}>
+            <Button flexGrow={1} variant="outline" onClick={() => closeRef.current?.click()}>
               Cancel
             </Button>
-            <Button flexGrow={1} onClick={() => setIsShowing(false)}>
+            <Button flexGrow={1} onClick={() => closeRef.current?.click()}>
               Send
             </Button>
           </Flex>

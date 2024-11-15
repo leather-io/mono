@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, ReactNode, cloneElement } from 'react';
+import { JSXElementConstructor, ReactElement, ReactNode, RefObject, cloneElement } from 'react';
 
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { css } from 'leather-styles/css';
@@ -10,8 +10,10 @@ import { pxStringToNumber } from '@leather.io/utils';
 import { SheetFooter } from './components/sheet-footer.web';
 
 export interface SheetProps {
-  isShowing: boolean;
   onClose?(): void;
+  triggerRef?: RefObject<HTMLButtonElement>;
+  closeRef?: RefObject<HTMLButtonElement>;
+  isDefaultOpen?: boolean;
 }
 interface RadixDialogProps extends SheetProps {
   children: ReactNode;
@@ -38,65 +40,90 @@ export function Sheet({
   footer,
   header,
   onClose,
-  isShowing,
   wrapChildren = true,
+  triggerRef,
+  closeRef,
+  isDefaultOpen = false,
 }: RadixDialogProps) {
   const maxHeightOffset = getHeightOffset(header, footer);
   const contentMaxHeight = getContentMaxHeight(maxHeightOffset);
 
   return (
-    <RadixDialog.Root open={isShowing}>
-      <RadixDialog.Portal>
-        <RadixDialog.Overlay
-          className={css({
-            bg: 'overlay',
-            position: 'fixed',
-            inset: 0,
-            animation: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
-            zIndex: 999,
-          })}
-        >
-          <RadixDialog.Content
-            onPointerDownOutside={onClose}
-            className={css({
-              bg: 'ink.background-primary',
-              // remove borderRadius on small to give impression of full page
-              borderRadius: { base: '0', md: 'md' },
-              boxShadow:
-                'hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px',
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: { base: '100vw', md: '90vw' },
-              height: { base: '100%', md: 'auto' },
-              maxWidth: { base: '100vw', md: 'pageWidth' },
-              maxHeight: { base: '100vh', md: '90vh' },
-              '&[data-state=open]': {
-                animation: { base: '', md: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
-              },
-            })}
-          >
-            {header && cloneElement(header, { onClose })}
+    <RadixDialog.Root defaultOpen={isDefaultOpen}>
+      <RadixDialog.Trigger ref={triggerRef} />
+      <RadixDialog.Close ref={closeRef} />
+      <RadixDialog.Overlay
+        className={css({
+          display: { base: 'none', md: 'block' },
+          bg: 'overlay',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 999,
+          '&[data-state=open]': {
+            animation: {
+              base: '',
+              md: 'fadein 50ms',
+            },
+          },
+          '&[data-state=closed]': {
+            animation: {
+              base: '',
+              md: 'fadeout 50ms',
+            },
+          },
+        })}
+      />
+      <RadixDialog.Content
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
+        className={css({
+          bg: 'ink.background-primary',
+          // remove borderRadius on small to give impression of full page
+          borderRadius: { base: '0', md: 'md' },
+          boxShadow:
+            'hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { base: '100vw', md: '90vw' },
+          height: { base: '100%', md: 'auto' },
+          maxWidth: { base: '100vw', md: 'pageWidth' },
+          maxHeight: { base: '100vh', md: '90vh' },
+          zIndex: 999,
 
-            {wrapChildren ? (
-              <Box
-                style={{
-                  height: '100%',
-                  maxHeight: contentMaxHeight,
-                  marginBottom: footer ? token('sizes.footerHeight') : token('spacing.space.04'),
-                  overflowY: 'auto',
-                }}
-              >
-                {children}
-              </Box>
-            ) : (
-              children
-            )}
-            {footer && <SheetFooter>{footer}</SheetFooter>}
-          </RadixDialog.Content>
-        </RadixDialog.Overlay>
-      </RadixDialog.Portal>
+          '&[data-state=open]': {
+            animation: {
+              base: 'slideUpSheet 70ms',
+              md: 'contentShow 70ms',
+            },
+          },
+          '&[data-state=closed]': {
+            animation: {
+              base: 'slideDownSheet 70ms',
+              md: 'contentHide 70ms',
+            },
+          },
+        })}
+      >
+        {header && cloneElement(header, { onClose })}
+
+        {wrapChildren ? (
+          <Box
+            style={{
+              height: '100%',
+              maxHeight: contentMaxHeight,
+              marginBottom: footer ? token('sizes.footerHeight') : token('spacing.space.04'),
+              overflowY: 'auto',
+            }}
+          >
+            {children}
+          </Box>
+        ) : (
+          children
+        )}
+        {footer && <SheetFooter>{footer}</SheetFooter>}
+      </RadixDialog.Content>
     </RadixDialog.Root>
   );
 }
