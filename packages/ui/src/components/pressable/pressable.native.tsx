@@ -1,4 +1,9 @@
-import { Pressable as RNPressable, type PressableProps as RNPressableProps } from 'react-native';
+import { ElementRef, forwardRef } from 'react';
+import {
+  type GestureResponderEvent,
+  Pressable as RNPressable,
+  type PressableProps as RNPressableProps,
+} from 'react-native';
 import Animated, { type AnimatedProps } from 'react-native-reanimated';
 
 import {
@@ -11,18 +16,28 @@ import {
   VisibleProps,
   backgroundColorShorthand,
   border,
-  createRestyleComponent,
+  composeRestyleFunctions,
   layout,
   opacity,
   position,
   spacingShorthand,
+  useRestyle,
   visible,
 } from '@shopify/restyle';
 
+import { isString } from '@leather.io/utils';
+
+import { useHaptics } from '../../hooks/use-haptics.native';
 import { Theme } from '../../theme-native';
 
-export type PressableBaseProps = RNPressableProps &
-  OpacityProps<Theme> &
+type PressableHapticFeedbackType = 'soft' | 'light' | 'medium' | 'heavy' | 'rigid';
+
+interface HapticConfig {
+  onPress?: PressableHapticFeedbackType;
+  onLongPress?: PressableHapticFeedbackType;
+}
+
+type RestyleProps = OpacityProps<Theme> &
   VisibleProps<Theme> &
   SpacingShorthandProps<Theme> &
   BorderProps<Theme> &
@@ -30,7 +45,23 @@ export type PressableBaseProps = RNPressableProps &
   LayoutProps<Theme> &
   PositionProps<Theme>;
 
-export const buttonRestyleFunctions = [
+type PressableElement = ElementRef<typeof RNPressable>;
+
+interface PressableBaseProps extends RNPressableProps, RestyleProps {
+  /**
+   * Configure haptic feedback
+   *
+   * @example
+   * // Provide a single string value to apply feedback to `onPress`.
+   * <Pressable haptics="soft" />
+   *
+   * // Use an object to specify feedback type for press, long press, or both
+   * <Pressable haptics={{ onPress: 'light', onLongPress: 'rigid' }} />
+   */
+  haptics?: PressableHapticFeedbackType | HapticConfig;
+}
+
+export const buttonRestyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
   opacity,
   visible,
   spacingShorthand,
@@ -38,17 +69,31 @@ export const buttonRestyleFunctions = [
   backgroundColorShorthand,
   layout,
   position,
-];
+]);
 
-const PressableBase = createRestyleComponent<PressableBaseProps, Theme>(
-  buttonRestyleFunctions,
-  RNPressable
+const PressableBase = forwardRef<PressableElement, PressableBaseProps>(
+  ({ onPress, onLongPress, haptics = {}, ...rest }, ref) => {
+    const props = useRestyle(buttonRestyleFunctions, rest);
+    const triggerHaptics = useHaptics();
+    const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
+
+    function handlePress(event: GestureResponderEvent) {
+      if (hapticConfig.onPress) {
+        triggerHaptics(hapticConfig.onPress);
+      }
+      onPress?.(event);
+    }
+
+    function handleLongPress(event: GestureResponderEvent) {
+      if (hapticConfig.onLongPress) {
+        triggerHaptics(hapticConfig.onLongPress);
+      }
+      onLongPress?.(event);
+    }
+
+    return <RNPressable ref={ref} onPress={handlePress} onLongPress={handleLongPress} {...props} />;
+  }
 );
 
 export const Pressable = Animated.createAnimatedComponent(PressableBase);
-export interface PressableProps extends AnimatedProps<PressableBaseProps> {
-  // Incorrect typings in: https://github.com/software-mansion/react-native-reanimated/blob/main/packages/react-native-reanimated/src/helperTypes.ts#L48
-  // resulting in inferred key prop of createAnimatedComponent(X) to be incompatible with itself.
-  // TODO: Needs further investigation/raising an issue.
-  key?: any;
-}
+export type PressableProps = AnimatedProps<PressableBaseProps>;
