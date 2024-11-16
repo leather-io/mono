@@ -32,20 +32,20 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = leatherwalletmobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = leatherwalletmobile/main.m; sourceTree = "<group>"; };
 		17F703D94F4B4BAE9007DC30 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "leatherwalletmobile/noop-file.swift"; sourceTree = "<group>"; };
-		3F6687E7CB2942B0929D7833 /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
+		3F6687E7CB2942B0929D7833 /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-leatherwalletmobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-leatherwalletmobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B54D2785B5E48D281A8E3C8 /* ABCDiatype-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Medium.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Medium.otf"; sourceTree = "<group>"; };
+		6B54D2785B5E48D281A8E3C8 /* ABCDiatype-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Medium.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Medium.otf"; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-leatherwalletmobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-leatherwalletmobile.debug.xcconfig"; path = "Target Support Files/Pods-leatherwalletmobile/Pods-leatherwalletmobile.debug.xcconfig"; sourceTree = "<group>"; };
 		70C1354B3AEE44B3B957C23B /* leatherwalletmobile-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "leatherwalletmobile-Bridging-Header.h"; path = "leatherwalletmobile/leatherwalletmobile-Bridging-Header.h"; sourceTree = "<group>"; };
-		76B2513BA2D94EB6BA0D6194 /* FiraCode-Retina.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraCode-Retina.otf"; path = "../node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf"; sourceTree = "<group>"; };
+		76B2513BA2D94EB6BA0D6194 /* FiraCode-Retina.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraCode-Retina.otf"; path = "../node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-leatherwalletmobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-leatherwalletmobile.release.xcconfig"; path = "Target Support Files/Pods-leatherwalletmobile/Pods-leatherwalletmobile.release.xcconfig"; sourceTree = "<group>"; };
-		A6CFA460F0F340ED95800EF2 /* ABCDiatype-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Light.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Light.otf"; sourceTree = "<group>"; };
+		A6CFA460F0F340ED95800EF2 /* ABCDiatype-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Light.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Light.otf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = leatherwalletmobile/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B66C2888E3BB47F7A5A88DEB /* FiraCode-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraCode-Medium.otf"; path = "../node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf"; sourceTree = "<group>"; };
+		B66C2888E3BB47F7A5A88DEB /* FiraCode-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraCode-Medium.otf"; path = "../node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		CFE8092428C64AA0AFE1A346 /* MarchePro-Super.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MarchePro-Super.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/MarchePro-Super.otf"; sourceTree = "<group>"; };
+		CFE8092428C64AA0AFE1A346 /* MarchePro-Super.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "MarchePro-Super.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/MarchePro-Super.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F520EA8A657049D4A3392B8B /* ABCDiatype-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Regular.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Regular.otf"; sourceTree = "<group>"; };
+		F520EA8A657049D4A3392B8B /* ABCDiatype-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ABCDiatype-Regular.otf"; path = "../node_modules/@leather.io/ui/src/assets-native/fonts/ABCDiatype-Regular.otf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-leatherwalletmobile/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,7 +89,6 @@
 				B66C2888E3BB47F7A5A88DEB /* FiraCode-Medium.otf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -389,7 +388,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X2Z9U538M9;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -428,7 +427,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X2Z9U538M9;
 				INFOPLIST_FILE = leatherwalletmobile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
