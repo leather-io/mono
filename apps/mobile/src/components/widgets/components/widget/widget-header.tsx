@@ -1,35 +1,26 @@
-import { Money } from '@leather.io/models';
-import { Box, SheetRef, TouchableOpacity } from '@leather.io/ui/native';
+import { ReactNode } from 'react';
 
-import { WidgetTitle } from './widget-title';
+import { Box, TouchableOpacity } from '@leather.io/ui/native';
 
 interface WidgetHeaderProps {
-  title: string;
-  sheetRef?: React.RefObject<SheetRef>;
-  sheet?: React.ReactNode;
-  totalBalance?: Money;
+  children: ReactNode;
+  onPress?(): void;
 }
 
-export function WidgetHeader({ title, totalBalance, sheetRef, sheet }: WidgetHeaderProps) {
-  if (sheet && sheetRef) {
+export function WidgetHeader({ children, onPress }: WidgetHeaderProps) {
+  if (onPress) {
     return (
-      <>
-        <TouchableOpacity
-          onPress={() => sheetRef.current?.present()}
-          flexDirection="row"
-          gap="1"
-          alignItems="center"
-        >
-          <WidgetTitle title={title} totalBalance={totalBalance} />
-        </TouchableOpacity>
-
-        {sheet}
-      </>
+      <TouchableOpacity onPress={onPress}>
+        <Box flexDirection="row" gap="1" alignItems="center" px="5">
+          {children}
+        </Box>
+      </TouchableOpacity>
     );
   }
+
   return (
-    <Box flexDirection="row" gap="1" alignItems="center" marginHorizontal="5">
-      <WidgetTitle title={title} totalBalance={totalBalance} />
+    <Box flexDirection="row" gap="1" alignItems="center" px="5">
+      {children}
     </Box>
   );
 }
