@@ -7,9 +7,6 @@ import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balanc
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { useTheme } from '@shopify/restyle';
-
-import { Theme } from '@leather.io/ui/native';
 
 import { CreateCurrentSendRoute, useSendSheetNavigation, useSendSheetRoute } from '../utils';
 
@@ -19,7 +16,6 @@ export function SelectAssetSheet() {
   const { i18n } = useLingui();
   const route = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
-  const theme = useTheme<Theme>();
   const account = route.params.account;
   const { accountIndex, fingerprint, name } = account;
 
@@ -40,7 +36,7 @@ export function SelectAssetSheet() {
         />
       }
     >
-      <ScrollView contentContainerStyle={{ gap: theme.spacing['3'] }}>
+      <ScrollView>
         <BitcoinBalanceByAccount
           accountIndex={accountIndex}
           fingerprint={fingerprint}

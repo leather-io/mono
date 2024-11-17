@@ -15,7 +15,7 @@ export function SendFormAsset({ assetName, chain, icon, onPress }: SendFormAsset
 
   return (
     <Pressable onPress={onPress}>
-      <Box borderColor="ink.border-default" borderRadius="sm" borderWidth={1} p="4" mb="0">
+      <Box borderColor="ink.border-default" borderRadius="sm" borderWidth={1}>
         <TokenBalance
           availableBalance={availableBalance}
           chain={chain}

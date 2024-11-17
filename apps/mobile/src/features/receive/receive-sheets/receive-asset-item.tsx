@@ -29,7 +29,7 @@ export function ReceiveAssetItem({
   onPress,
 }: ReceiveAssetItemProps) {
   return (
-    <Pressable flexDirection="row" onPress={onPress}>
+    <Pressable flexDirection="row" onPress={onPress} py="3" px="5">
       <Flag key={assetSymbol} img={icon}>
         <ItemLayout
           titleLeft={
