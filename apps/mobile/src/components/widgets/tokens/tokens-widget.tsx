@@ -7,14 +7,15 @@ import { AccountId } from '@/models/domain.model';
 import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
-import { Widget, WidgetHeader } from '../components/widget';
+import { Widget } from '../components/widget';
 
 export function TokensWidget({ children }: HasChildren) {
   return (
-    <Widget
-      header={<WidgetHeader title={t({ id: 'tokens.header_title', message: 'My tokens' })} />}
-    >
-      {children}
+    <Widget>
+      <Widget.Header>
+        <Widget.Title title={t({ id: 'tokens.header_title', message: 'My tokens' })} />
+      </Widget.Header>
+      <Widget.Body>{children}</Widget.Body>
     </Widget>
   );
 }
