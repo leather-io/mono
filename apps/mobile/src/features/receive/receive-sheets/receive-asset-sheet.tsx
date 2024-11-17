@@ -20,7 +20,6 @@ export function ReceiveAssetSheet({ sheetRef }: ReceiveAssetSheetProps) {
       <Box
         style={{
           paddingBottom: theme.spacing[5] + bottom,
-          paddingHorizontal: theme.spacing[5],
           paddingTop: theme.spacing[4],
         }}
       >

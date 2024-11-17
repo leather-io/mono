@@ -3,7 +3,6 @@ import { ReactNode, isValidElement } from 'react';
 import { isString } from '@leather.io/utils';
 
 import { Box } from '../box/box.native';
-import { Stack } from '../box/stack.native';
 import { Text } from '../text/text.native';
 
 export interface ItemLayoutProps {
@@ -24,7 +23,7 @@ export function ItemLayout({
 
   return (
     <Box flex={1} alignItems="center" flexDirection="row" justifyContent="space-between">
-      <Stack alignItems="flex-start" flex={1} mr="3" overflow="hidden">
+      <Box alignItems="flex-start" flex={1} mr="3" overflow="hidden" style={{ gap: 2 }}>
         {isValidElement(titleLeft) ? titleLeft : <Text variant="label02">{titleLeft}</Text>}
         {captionLeft && isValidElement(captionLeft) && captionLeft}
         {captionLeft && isString(captionLeft) && (
@@ -32,9 +31,9 @@ export function ItemLayout({
             {captionLeft}
           </Text>
         )}
-      </Stack>
+      </Box>
       {hasRightElement && (
-        <Stack flex={2} alignItems="flex-end">
+        <Box flex={2} alignItems="flex-end" style={{ gap: 2 }}>
           {isValidElement(titleRight) ? titleRight : <Text variant="label02">{titleRight}</Text>}
           {captionRight && isValidElement(captionRight) && captionRight}
           {captionRight && isString(captionRight) && (
@@ -42,7 +41,7 @@ export function ItemLayout({
               {captionRight}
             </Text>
           )}
-        </Stack>
+        </Box>
       )}
       {actionIcon}
     </Box>

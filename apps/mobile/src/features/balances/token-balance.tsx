@@ -25,12 +25,14 @@ export function TokenBalance({
 }: TokenBalanceProps) {
   return (
     <Pressable flexDirection="row" disabled={!onPress} onPress={onPress}>
-      <Flag key={ticker} img={icon}>
+      <Flag key={ticker} img={icon} px="5" py="3">
         <ItemLayout
           titleLeft={tokenName}
-          titleRight={availableBalance && <Balance balance={availableBalance} />}
+          titleRight={availableBalance && <Balance balance={availableBalance} variant="label02" />}
           captionLeft={chain}
-          captionRight={<Balance balance={fiatBalance} color="ink.text-subdued" />}
+          captionRight={
+            <Balance balance={fiatBalance} variant="label02" color="ink.text-subdued" />
+          }
         />
       </Flag>
     </Pressable>

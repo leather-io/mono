@@ -9,10 +9,9 @@ import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoi
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
-import { BtcAvatarIcon, SheetRef, StxAvatarIcon, Theme } from '@leather.io/ui/native';
+import { BtcAvatarIcon, SheetRef, StxAvatarIcon } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { CreateCurrentReceiveRoute, useReceiveSheetRoute } from '../utils';
@@ -24,7 +23,6 @@ type CurrentRoute = CreateCurrentReceiveRoute<'receive-select-asset'>;
 export function SelectAsset() {
   const { i18n } = useLingui();
   const route = useReceiveSheetRoute<CurrentRoute>();
-  const theme = useTheme<Theme>();
   const { displayToast } = useToastContext();
   const receiveSheetRef = useRef<SheetRef>(null);
 
@@ -65,7 +63,7 @@ export function SelectAsset() {
           />
         }
       >
-        <ScrollView contentContainerStyle={{ gap: theme.spacing['5'] }}>
+        <ScrollView>
           <ReceiveAssetItem
             address={truncateMiddle(nativeSegwitPayerAddress)}
             addressType={t({

@@ -90,7 +90,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
   };
   const label01 = {
     ...commonDiatypeStyles,
-    fontSize: transformSize(16),
+    fontSize: transformSize(17),
     fontWeight: transformWeight(500),
     lineHeight: transformSize(24),
     letterSpacing: 0.16,

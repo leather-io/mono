@@ -9,11 +9,10 @@ import { useSendFormContext } from '../send-form-context';
 export function SendFormNumpad() {
   const { schema } = useSendFormContext();
   const { setValue, watch } = useFormContext<z.infer<typeof schema>>();
-
   const amount = watch('amount');
 
   return (
-    <Box mt="4">
+    <Box mx="-5">
       <Numpad value={amount} onChange={(value: string) => setValue('amount', value)} />
     </Box>
   );

@@ -20,7 +20,6 @@ export function FullHeightSheetLayout({ children, header }: FullHeightSheetLayou
         flex={1}
         style={{
           paddingBottom: theme.spacing[5] + bottom,
-          paddingHorizontal: theme.spacing[5],
           paddingTop: theme.spacing[4],
         }}
       >
