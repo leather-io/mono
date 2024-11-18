@@ -130,7 +130,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
-    "@babel/runtime": "7.25.0",
+    "@babel/runtime": "7.26.0",
     "@crowdin/cli": "4.1.1",
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/eslint-config": "workspace:*",
@@ -157,7 +157,7 @@
     "ts-jest": "29.1.4",
     "tslib": "2.6.2",
     "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "vitest": "2.1.5"
   },
   "private": true,
   "publishConfig": {

@@ -30,23 +30,22 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@babel/runtime": "7.25.0",
-    "@changesets/cli": "2.26.2",
-    "@commitlint/cli": "18.0.0",
-    "@commitlint/config-conventional": "18.0.0",
+    "@babel/runtime": "7.26.0",
+    "@commitlint/cli": "19.5.0",
+    "@commitlint/config-conventional": "19.5.0",
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@ls-lint/ls-lint": "2.2.3",
-    "@vitest/coverage-v8": "2.0.5",
-    "dependency-cruiser": "16.3.10",
+    "@vitest/coverage-v8": "2.1.5",
+    "dependency-cruiser": "16.6.0",
     "eslint": "8.53.0",
     "husky": "9.1.4",
     "prettier": "3.3.3",
-    "syncpack": "12.4.0",
-    "turbo": "2.0.13",
+    "syncpack": "13.0.0",
+    "turbo": "2.3.0",
     "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "vitest": "2.1.5"
   },
   "engines": {
     "node": ">=20.11.0",
@@ -55,10 +54,11 @@
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.13.2",
   "pnpm": {
     "overrides": {
-      "esbuild": "0.21.5"
+      "esbuild": "0.21.5",
+      "cross-spawn": "7.0.5"
     },
     "packageExtensions": {
       "eslint-config-next@*": {
