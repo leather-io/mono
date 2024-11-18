@@ -5,6 +5,7 @@ import { useLingui } from '@lingui/react';
 
 export function Home() {
   useLingui();
+  console.log('Welcome Home', new Date().toISOString());
   return (
     <PageLayout>
       <AccountsWidget />

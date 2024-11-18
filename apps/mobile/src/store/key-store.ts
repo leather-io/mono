@@ -126,9 +126,18 @@ export function useKeyStore() {
       // FIXME This should be run in restoreWalletFromMnemonic instead as we often need to call deriveNextAccountKeychainsFrom
       try {
         console.log('START: recurseAccountsForActivity', new Date().toISOString());
+
+        // here we just want to check balances for 5 addresses
+        // then create the accounts
+        // PETE even take a look at activity query instead?
+        // maybe thats better now
+        // check 5 BTC + STX accounts for activity
+        // then create the accounts we need
+        // use the same style as recurseAccountsForActivity accepting a callback
+        // have it also accept a limit for how many accounts to check
         void recurseAccountsForActivity({
           async doesAddressHaveActivityFn(index: number) {
-            // console.log('doesAddressHaveActivityFn', index, new Date().toISOString());
+            console.log('doesAddressHaveActivityFn', index, new Date().toISOString());
             // seems like it could be better to do this with useQueries for batches of accountIndexes
             const stxAddress = getStacksAddressByIndex(
               secretKey,
@@ -147,7 +156,8 @@ export function useKeyStore() {
         }).then((activeAccounts: number) => {
           console.log('End: recurseAccountsForActivity', new Date().toISOString());
           // maybe this void is wrong?
-          return void this.createNewAccountsOfWallet(fingerprint, activeAccounts);
+          // > re add the awaits here
+          return this.createNewAccountsOfWallet(fingerprint, activeAccounts);
         });
       } catch {}
     },
@@ -178,7 +188,6 @@ export function useKeyStore() {
       };
     },
     async createNewAccountsOfWallet(fingerprint: string, activeAccounts: number) {
-      // console.log('createNewAccountsOfWallet', new Date().toISOString());
       const accountsWithKeychains = await Promise.all(
         Array.from({ length: activeAccounts }, async (_, i) => ({
           account: {

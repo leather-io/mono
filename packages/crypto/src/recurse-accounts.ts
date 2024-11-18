@@ -2,7 +2,7 @@
 import { createCounter, fibonacciGenerator } from '@leather.io/utils';
 
 const numOfEmptyAccountsToCheck = 5;
-const accountsToRecover = 5;
+const accountsToRecover = 3;
 
 interface AccountIndexActivityCheckHistory {
   index: number;
@@ -43,6 +43,13 @@ interface RecurseAccountsForActivityArgs {
 export async function recurseAccountsForActivity({
   doesAddressHaveActivityFn,
 }: RecurseAccountsForActivityArgs): Promise<number> {
+  console.log('===============================================');
+  console.log(
+    'TEST: accountsToRecover',
+    accountsToRecover,
+    'numOfEmptyAccountsToCheck',
+    numOfEmptyAccountsToCheck
+  );
   async function* findHighestAddressIndexExponent() {
     const fibonacci = fibonacciGenerator(2);
     const activity: AccountIndexActivityCheckHistory[] = [];
