@@ -1,7 +1,7 @@
 import type { TransactionPayload } from '@stacks/connect';
-import { ContractInterfaceFunction } from '@stacks/rpc-client';
 import { useQuery } from '@tanstack/react-query';
 
+import { ContractInterfaceFunction } from '../hiro-api-types';
 import { useStacksClient } from '../stacks-client';
 import { createGetContractInterfaceQueryOptions } from './contract.query';
 

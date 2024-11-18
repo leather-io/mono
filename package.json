@@ -31,8 +31,8 @@
   },
   "devDependencies": {
     "@babel/runtime": "7.26.0",
-    "@commitlint/cli": "19.5.0",
-    "@commitlint/config-conventional": "19.5.0",
+    "@commitlint/cli": "19.6.0",
+    "@commitlint/config-conventional": "19.6.0",
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
