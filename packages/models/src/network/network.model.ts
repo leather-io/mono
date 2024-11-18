@@ -34,6 +34,7 @@ export enum WalletDefaultNetworkConfigurationIds {
   testnet = 'testnet',
   testnet4 = 'testnet4',
   signet = 'signet',
+  sbtcTestnet = 'sbtcTestnet',
   sbtcDevenv = 'sbtcDevenv',
   devnet = 'devnet',
 }
@@ -164,6 +165,24 @@ const networkSignet: NetworkConfiguration = {
   },
 };
 
+const networkSbtcTestnet: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.sbtcTestnet,
+  name: 'sBTC Testnet',
+  chain: {
+    stacks: {
+      blockchain: 'stacks',
+      chainId: ChainID.Testnet,
+      url: HIRO_API_BASE_URL_TESTNET,
+    },
+    bitcoin: {
+      blockchain: 'bitcoin',
+      bitcoinNetwork: 'regtest',
+      mode: 'regtest',
+      bitcoinUrl: 'https://beta.sbtc-mempool.tech/api/proxy',
+    },
+  },
+};
+
 const networkSbtcDevenv: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds.sbtcDevenv,
   name: 'sBTC Devenv',
@@ -177,7 +196,7 @@ const networkSbtcDevenv: NetworkConfiguration = {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'regtest',
       mode: 'regtest',
-      bitcoinUrl: 'http://localhost:8083/api',
+      bitcoinUrl: 'http://localhost:3000/api/proxy',
     },
   },
 };
@@ -210,6 +229,7 @@ export const defaultNetworksKeyedById: Record<
   [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
   [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
+  [WalletDefaultNetworkConfigurationIds.sbtcTestnet]: networkSbtcTestnet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,
 };
