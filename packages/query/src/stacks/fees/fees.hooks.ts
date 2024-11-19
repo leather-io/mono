@@ -8,6 +8,7 @@ import {
   useConfigFeeEstimationsMaxValues,
   useConfigFeeEstimationsMinEnabled,
   useConfigFeeEstimationsMinValues,
+  useConfigTokenTransferFeeEstimations,
 } from '../../common/remote-config/remote-config.query';
 import { useStacksClient } from '../stacks-client';
 import { createPostStacksFeeTransactionQueryOptions } from './fees.query';
@@ -39,6 +40,7 @@ export function useCalculateStacksTxFees(unsignedTx?: StacksTransaction) {
   const client = useStacksClient();
   const feeEstimationsMaxValues = useFeeEstimationsMaxValues();
   const feeEstimationsMinValues = useFeeEstimationsMinValues();
+  const tokenTransferFeeEstimations = useConfigTokenTransferFeeEstimations();
 
   const { txByteLength, txPayload } = useMemo(() => {
     if (!unsignedTx) return { txByteLength: null, txPayload: '' };
@@ -58,9 +60,11 @@ export function useCalculateStacksTxFees(unsignedTx?: StacksTransaction) {
     select: resp =>
       parseStacksTxFeeEstimationResponse({
         feeEstimation: resp,
+        payloadType: unsignedTx?.payload.payloadType,
         maxValues: feeEstimationsMaxValues,
         minValues: feeEstimationsMinValues,
         txByteLength,
+        tokenTransferFeeEstimations,
       }),
   });
 }

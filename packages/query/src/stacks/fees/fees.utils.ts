@@ -1,5 +1,5 @@
 import { bytesToHex } from '@stacks/common';
-import { StacksTransaction, serializePayload } from '@stacks/transactions';
+import { PayloadType, StacksTransaction, serializePayload } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
 import { DEFAULT_FEE_RATE } from '@leather.io/constants';
@@ -8,31 +8,29 @@ import { createMoney } from '@leather.io/utils';
 
 import { FeeEstimation, StacksTxFeeEstimation } from '../hiro-api-types';
 
-const defaultFeesMaxValues = [500000, 750000, 2000000];
-const defaultFeesMinValues = [2500, 3000, 3500];
+function initStxAmount(amount: number) {
+  return createMoney(amount, 'STX');
+}
 
-export const defaultFeesMaxValuesAsMoney = [
-  createMoney(defaultFeesMaxValues[0], 'STX'),
-  createMoney(defaultFeesMaxValues[1], 'STX'),
-  createMoney(defaultFeesMaxValues[2], 'STX'),
-];
-export const defaultFeesMinValuesAsMoney = [
-  createMoney(defaultFeesMinValues[0], 'STX'),
-  createMoney(defaultFeesMinValues[1], 'STX'),
-  createMoney(defaultFeesMinValues[2], 'STX'),
-];
+const defaultFeesMaxAmounts = [500000, 750000, 2000000];
+export const defaultFeesMaxValuesAsMoney = defaultFeesMaxAmounts.map(initStxAmount);
 
-export const defaultApiFeeEstimations: FeeEstimation[] = [
-  { fee: defaultFeesMinValues[0], fee_rate: 0 },
-  { fee: defaultFeesMinValues[1], fee_rate: 0 },
-  { fee: defaultFeesMinValues[2], fee_rate: 0 },
-];
+const defaultFeesMinAmounts = [2500, 3000, 3500];
+export const defaultFeesMinValuesAsMoney = defaultFeesMinAmounts.map(initStxAmount);
 
-const defaultStacksFeeEstimates: StacksFeeEstimate[] = [
-  { fee: defaultFeesMinValuesAsMoney[0], feeRate: 0 },
-  { fee: defaultFeesMinValuesAsMoney[1], feeRate: 0 },
-  { fee: defaultFeesMinValuesAsMoney[2], feeRate: 0 },
-];
+export const defaultApiFeeEstimations: FeeEstimation[] = defaultFeesMinAmounts.map(amount => ({
+  fee: amount,
+  fee_rate: 0,
+}));
+
+const defaultStacksFeeEstimates: StacksFeeEstimate[] = defaultFeesMinValuesAsMoney.map(fee => ({
+  fee,
+  feeRate: 0,
+}));
+
+export function getTokenTransferSpecificFeeEstimations(amounts: number[]) {
+  return amounts.map(initStxAmount).map(fee => ({ fee, feeRate: 0 }));
+}
 
 export const defaultStacksFees: Fees = {
   blockchain: 'stacks',
@@ -98,17 +96,30 @@ export function getDefaultSimulatedFeeEstimations(
 
 interface ParseStacksTxFeeEstimationResponseArgs {
   feeEstimation: StacksTxFeeEstimation;
+  payloadType: PayloadType | undefined;
   maxValues?: Money[];
   minValues?: Money[];
   txByteLength: number | null;
+  tokenTransferFeeEstimations: number[];
 }
 export function parseStacksTxFeeEstimationResponse({
   feeEstimation,
+  payloadType,
   maxValues,
   minValues,
   txByteLength,
+  tokenTransferFeeEstimations,
 }: ParseStacksTxFeeEstimationResponseArgs): Fees {
   if (feeEstimation.error) return defaultStacksFees;
+
+  if (payloadType === PayloadType.TokenTransfer) {
+    return {
+      blockchain: 'stacks',
+      estimates: getTokenTransferSpecificFeeEstimations(tokenTransferFeeEstimations),
+      calculation: FeeCalculationTypes.TokenTransferSpecific,
+    };
+  }
+
   if (txByteLength && feeEstimationQueryFailedSilently(feeEstimation)) {
     return {
       blockchain: 'stacks',
