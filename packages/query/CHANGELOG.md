@@ -186,6 +186,23 @@
     * @leather.io/bitcoin bumped to 0.16.3
     * @leather.io/utils bumped to 0.18.0
 
+## [2.22.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.22.2...@leather.io/query-v2.22.3) (2024-11-19)
+
+
+### Bug Fixes
+
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.4
+    * @leather.io/rpc bumped to 2.1.17
+    * @leather.io/utils bumped to 0.19.0
+
 ## [2.22.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.21.1...@leather.io/query-v2.22.0) (2024-11-15)
 
 

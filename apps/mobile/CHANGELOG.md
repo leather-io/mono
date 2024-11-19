@@ -232,6 +232,38 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.2
 
+## [1.52.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.51.0...@leather.io/mobile-v1.52.0) (2024-11-19)
+
+
+### Features
+
+* add a setting to disable haptics in the app ([c232939](https://github.com/leather-io/mono/commit/c23293957e3509ff12ba23b5a1530a64ee651b08))
+* add haptics support to Pressable ([9551ed6](https://github.com/leather-io/mono/commit/9551ed6f53f1c92121f31660f5d4dbd1bca3e59b))
+
+
+### Bug Fixes
+
+* make ItemLayout full-width and match designs ([8bb0059](https://github.com/leather-io/mono/commit/8bb00594a16805d201a37016390bab70de1a5bae))
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 2.0.1
+    * @leather.io/bitcoin bumped to 0.16.4
+    * @leather.io/crypto bumped to 1.6.11
+    * @leather.io/query bumped to 2.22.3
+    * @leather.io/rpc bumped to 2.1.17
+    * @leather.io/stacks bumped to 1.3.4
+    * @leather.io/tokens bumped to 0.12.1
+    * @leather.io/ui bumped to 1.36.0
+    * @leather.io/utils bumped to 0.19.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.16.4
+
 ## [1.51.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.50.1...@leather.io/mobile-v1.51.0) (2024-11-15)
 
 

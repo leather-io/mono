@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v2.0.0...@leather.io/analytics-v2.0.1) (2024-11-19)
+
+
+### Bug Fixes
+
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
 ## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v1.0.0...@leather.io/analytics-v2.0.0) (2024-11-08)
 
 

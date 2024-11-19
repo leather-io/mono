@@ -135,6 +135,31 @@
   * devDependencies
     * @leather.io/models bumped to 0.19.1
 
+## [1.36.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.35.0...@leather.io/ui-v1.36.0) (2024-11-19)
+
+
+### Features
+
+* add a setting to disable haptics in the app ([c232939](https://github.com/leather-io/mono/commit/c23293957e3509ff12ba23b5a1530a64ee651b08))
+* add haptics support to Pressable ([9551ed6](https://github.com/leather-io/mono/commit/9551ed6f53f1c92121f31660f5d4dbd1bca3e59b))
+
+
+### Bug Fixes
+
+* make ItemLayout full-width and match designs ([8bb0059](https://github.com/leather-io/mono/commit/8bb00594a16805d201a37016390bab70de1a5bae))
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.12.1
+    * @leather.io/utils bumped to 0.19.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.5.2
+
 ## [1.35.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.34.1...@leather.io/ui-v1.35.0) (2024-11-15)
 
 
