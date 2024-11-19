@@ -19,6 +19,7 @@ import {
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
   selectEmailAddressPreference,
+  selectHapticsPreference,
   selectLastActive,
   selectNetworkPreference,
   selectPrivacyModePreference,
@@ -31,6 +32,7 @@ import {
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
+  userChangedHapticsPreference,
   userChangedLastActive,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
@@ -38,6 +40,7 @@ import {
   userChangedThemePreference,
 } from './settings.write';
 import {
+  HapticsPreference,
   LastActiveTimestamp,
   PrivacyModePreference,
   SecurityLevelPreference,
@@ -54,6 +57,7 @@ export const initialState: SettingsState = {
   fiatCurrencyPreference: 'USD',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
+  hapticsPreference: 'enabled',
   securityLevelPreference: 'not-selected',
   themePreference: 'system',
   lastActive: null,
@@ -69,6 +73,7 @@ export function useSettings() {
   const emailAddressPreference = useSelector(selectEmailAddressPreference);
   const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
   const privacyModePreference = useSelector(selectPrivacyModePreference);
+  const hapticsPreference = useSelector(selectHapticsPreference);
   const networkPreference = useSelector(selectNetworkPreference);
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
   const themePreference = useSelector(selectThemePreference);
@@ -85,6 +90,7 @@ export function useSettings() {
     fiatCurrencyPreference,
     networkPreference,
     privacyModePreference,
+    hapticsPreference,
     themeDerivedFromThemePreference,
     themePreference,
     securityLevelPreference,
@@ -110,6 +116,9 @@ export function useSettings() {
     },
     changePrivacyModePreference(mode: PrivacyModePreference) {
       dispatch(userChangedPrivacyModePreference(mode));
+    },
+    changeHapticsPreference(state: HapticsPreference) {
+      dispatch(userChangedHapticsPreference(state));
     },
     changeSecurityLevelPreference(level: SecurityLevelPreference) {
       dispatch(userChangedSecurityLevelPreference(level));

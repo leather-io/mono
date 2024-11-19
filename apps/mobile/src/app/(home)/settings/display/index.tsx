@@ -30,14 +30,20 @@ export default function SettingsDisplayScreen() {
     accountDisplayPreference,
     bitcoinUnitPreference,
     changePrivacyModePreference,
+    changeHapticsPreference,
     fiatCurrencyPreference,
     privacyModePreference,
+    hapticsPreference,
     themePreference,
   } = useSettings();
   const { i18n } = useLingui();
 
   function onUpdatePrivacyMode() {
     changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
+  }
+
+  function onUpdateHapticsPreference() {
+    changeHapticsPreference(hapticsPreference === 'enabled' ? 'disabled' : 'enabled');
   }
 
   return (
@@ -132,6 +138,23 @@ export default function SettingsDisplayScreen() {
           <Cell.Switch
             onValueChange={() => onUpdatePrivacyMode()}
             value={privacyModePreference === 'hidden'}
+          />
+        </Cell.Root>
+        <Cell.Root
+          title={t({
+            id: 'display.haptics.cell_title',
+            message: 'Haptics',
+          })}
+          caption={t({
+            id: 'display.haptics.cell_caption',
+            message: 'Toggle tactile feedback for touch interactions',
+          })}
+          icon={<Eye1Icon />}
+          onPress={() => onUpdatePrivacyMode()}
+        >
+          <Cell.Switch
+            onValueChange={() => onUpdateHapticsPreference()}
+            value={hapticsPreference === 'enabled'}
           />
         </Cell.Root>
       </AnimatedHeaderScreenLayout>

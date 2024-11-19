@@ -11,6 +11,7 @@ import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { initiateI18n } from '@/locales';
 import { queryClient } from '@/queries/query';
+import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
 import { useSettings } from '@/store/settings/settings';
 import { HasChildren } from '@/utils/types';
@@ -21,9 +22,12 @@ import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { Box, ThemeProvider as LeatherThemeProvider, SheetProvider } from '@leather.io/ui/native';
-
-import { initAppServices } from '../services/init-app-services';
+import {
+  Box,
+  HapticsProvider as LeatherHapticsProvider,
+  ThemeProvider as LeatherThemeProvider,
+  SheetProvider,
+} from '@leather.io/ui/native';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -46,17 +50,19 @@ export default function RootLayout() {
               <LeatherQueryProvider>
                 <ThemeProvider>
                   <SplashScreenGuard>
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                      <SheetProvider>
-                        <SheetNavigatorWrapper>
-                          <ToastWrapper>
-                            <AppRouter />
-                            <SendSheet />
-                            <ReceiveSheet />
-                          </ToastWrapper>
-                        </SheetNavigatorWrapper>
-                      </SheetProvider>
-                    </GestureHandlerRootView>
+                    <HapticsProvider>
+                      <GestureHandlerRootView style={{ flex: 1 }}>
+                        <SheetProvider>
+                          <SheetNavigatorWrapper>
+                            <ToastWrapper>
+                              <AppRouter />
+                              <SendSheet />
+                              <ReceiveSheet />
+                            </ToastWrapper>
+                          </SheetNavigatorWrapper>
+                        </SheetProvider>
+                      </GestureHandlerRootView>
+                    </HapticsProvider>
                   </SplashScreenGuard>
                 </ThemeProvider>
               </LeatherQueryProvider>
@@ -65,6 +71,16 @@ export default function RootLayout() {
         </I18nProvider>
       </PersistGate>
     </ReduxProvider>
+  );
+}
+
+function HapticsProvider({ children }: HasChildren) {
+  const { hapticsPreference } = useSettings();
+
+  return (
+    <LeatherHapticsProvider enabled={hapticsPreference === 'enabled'}>
+      {children}
+    </LeatherHapticsProvider>
   );
 }
 
