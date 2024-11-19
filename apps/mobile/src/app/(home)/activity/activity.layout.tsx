@@ -1,18 +1,10 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { PageLayout } from '@/components/page/page.layout';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
-import { Pressable, Text } from '@leather.io/ui/native';
-
-export function ActivityLayout() {
+export function ActivityLayout({ children }: HasChildren) {
   return (
-    // <PageLayout>
-    //   <Pressable>
-    //     <Text>Activity</Text>
-    //   </Pressable>
-    // </PageLayout>
-
     <AnimatedHeaderScreenLayout
       rightHeaderElement={<NetworkBadge />}
       title={t({
@@ -20,7 +12,7 @@ export function ActivityLayout() {
         message: 'Activity',
       })}
     >
-      <Text>Activity</Text>
+      {children}
     </AnimatedHeaderScreenLayout>
   );
 }
