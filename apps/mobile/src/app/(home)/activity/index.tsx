@@ -1,19 +1,20 @@
-import { useAccountTotalBalance } from '@/queries/balance/total-balance.query';
-import { AccountLoader, deserializeAccountId } from '@/store/accounts/accounts';
-import { useLocalSearchParams } from 'expo-router';
-import { z } from 'zod';
-
 import { ActivityLayout } from './activity.layout';
+import { StacksActivity } from './stacks-activity';
 
 export default function ActivityScreen() {
-  //   const params = useLocalSearchParams();
-  //   const { accountId } = configureAccountParamsSchema.parse(params);
-  //   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
-  //   const { totalBalance } = useAccountTotalBalance({ fingerprint, accountIndex });
-
   return (
-    // <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
-    <ActivityLayout />
-    // </AccountLoader>
+    <ActivityLayout>
+      <StacksActivity />
+    </ActivityLayout>
   );
 }
+/**
+ * Every step I take:
+ *  1. Add the activity screen to the routes page
+ *  2. Add fetch of STX activity for all wallets
+ *  3. Add fetch of BTC activity for all wallets
+ *  4. Add UI components
+ *
+ *
+ *
+ */
