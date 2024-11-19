@@ -11,6 +11,7 @@ import {
 import { handleAppResetWithState } from '../global-action';
 import { initialState } from './settings';
 import {
+  HapticsPreference,
   LastActiveTimestamp,
   PrivacyModePreference,
   SecurityLevelPreference,
@@ -42,6 +43,9 @@ export const settingsSlice = createSlice({
     userChangedPrivacyModePreference(state, action: PayloadAction<PrivacyModePreference>) {
       state.privacyModePreference = action.payload;
     },
+    userChangedHapticsPreference(state, action: PayloadAction<HapticsPreference>) {
+      state.hapticsPreference = action.payload;
+    },
     userChangedSecurityLevelPreference(state, action: PayloadAction<SecurityLevelPreference>) {
       state.securityLevelPreference = action.payload;
     },
@@ -63,6 +67,7 @@ export const {
   userChangedFiatCurrencyPreference,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
+  userChangedHapticsPreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
   userChangedLastActive,

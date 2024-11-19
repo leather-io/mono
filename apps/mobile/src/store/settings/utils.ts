@@ -16,6 +16,7 @@ export type ThemePreference = (typeof defaultThemePreferences)[number];
 export type Theme = Exclude<ThemePreference, 'system'>;
 export type SecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
 export type PrivacyModePreference = 'hidden' | 'visible';
+export type HapticsPreference = 'disabled' | 'enabled';
 export type LastActiveTimestamp = number | null;
 
 export interface SettingsState {
@@ -29,7 +30,7 @@ export interface SettingsState {
   privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;
   securityLevelPreference: SecurityLevelPreference;
-  // timestamp
+  hapticsPreference: HapticsPreference;
   lastActive: LastActiveTimestamp;
 }
 

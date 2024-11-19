@@ -50,6 +50,11 @@ export const selectPrivacyModePreference = createSelector(
   state => state.privacyModePreference
 );
 
+export const selectHapticsPreference = createSelector(
+  selectSettings,
+  state => state.hapticsPreference
+);
+
 export const selectSecurityLevelPreference = createSelector(
   selectSettings,
   state => state.securityLevelPreference

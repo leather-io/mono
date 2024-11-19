@@ -1,3 +1,5 @@
+import { ReactNode, createContext, useContext } from 'react';
+
 import {
   ImpactFeedbackStyle,
   NotificationFeedbackType,
@@ -7,6 +9,25 @@ import {
 } from 'expo-haptics';
 
 import { assertUnreachable } from '@leather.io/utils';
+
+interface HapticsContextValue {
+  enabled: boolean;
+}
+
+const HapticsContext = createContext<HapticsContextValue>({ enabled: true });
+
+interface HapticsProviderProps {
+  enabled: boolean;
+  children: ReactNode;
+}
+
+export function HapticsProvider({ children, enabled }: HapticsProviderProps) {
+  return <HapticsContext.Provider value={{ enabled }}>{children}</HapticsContext.Provider>;
+}
+
+function useHapticsContext(): HapticsContextValue {
+  return useContext(HapticsContext);
+}
 
 export type HapticFeedbackType =
   | 'soft'
@@ -20,7 +41,13 @@ export type HapticFeedbackType =
   | 'error';
 
 export function useHaptics() {
+  const { enabled } = useHapticsContext();
+
   return function triggerHaptics(hapticFeedbackType: HapticFeedbackType) {
+    if (!enabled) {
+      return;
+    }
+
     try {
       switch (hapticFeedbackType) {
         case 'soft':
