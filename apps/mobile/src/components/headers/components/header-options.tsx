@@ -1,7 +1,6 @@
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
-import { isFeatureEnabled } from '@/utils/feature-flag';
 import { useRouter } from 'expo-router';
 
 import {
@@ -40,16 +39,13 @@ export function HeaderOptions() {
       >
         <SettingsGearIcon />
       </Pressable>
-      {isFeatureEnabled() && (
-        <Pressable
-          p="2"
-          onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
-          testID={TestId.homeDeveloperToolsButton}
-          pressEffects={legacyTouchablePressEffect}
-        >
-          <PulseIcon />
-        </Pressable>
-      )}
+      <Pressable
+        p="2"
+        onPress={() => router.navigate(AppRoutes.Activity)}
+        testID={TestId.homeActivityButton}
+      >
+        <PulseIcon />
+      </Pressable>
     </Box>
   );
 }
