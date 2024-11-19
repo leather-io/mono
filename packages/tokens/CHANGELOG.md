@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.12.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.12.0...@leather.io/tokens-v0.12.1) (2024-11-19)
+
+
+### Bug Fixes
+
+* make ItemLayout full-width and match designs ([8bb0059](https://github.com/leather-io/mono/commit/8bb00594a16805d201a37016390bab70de1a5bae))
+
 ## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.11.0...@leather.io/tokens-v0.12.0) (2024-11-15)
 
 

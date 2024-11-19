@@ -138,6 +138,14 @@
   * dependencies
     * @leather.io/models bumped to 0.19.1
 
+## [2.1.17](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.16...@leather.io/rpc-v2.1.17) (2024-11-19)
+
+
+### Bug Fixes
+
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
 ## [2.1.14](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.13...@leather.io/rpc-v2.1.14) (2024-10-30)
 
 

@@ -277,6 +277,24 @@
     * @leather.io/crypto bumped to 1.6.10
     * @leather.io/utils bumped to 0.18.0
 
+## [0.16.4](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.16.3...@leather.io/bitcoin-v0.16.4) (2024-11-19)
+
+
+### Bug Fixes
+
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.11
+    * @leather.io/utils bumped to 0.19.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.1.17
+
 ## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.15.0...@leather.io/bitcoin-v0.16.0) (2024-11-05)
 
 

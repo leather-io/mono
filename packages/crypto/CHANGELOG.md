@@ -96,6 +96,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.18.0
 
+## [1.6.11](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.10...@leather.io/crypto-v1.6.11) (2024-11-19)
+
+
+### Bug Fixes
+
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.19.0
+
 ## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.5.2...@leather.io/crypto-v1.6.0) (2024-09-20)
 
 

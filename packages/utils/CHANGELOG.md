@@ -139,6 +139,27 @@
     * @leather.io/models bumped to 0.19.1
     * @leather.io/rpc bumped to 2.1.16
 
+## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.18.0...@leather.io/utils-v0.19.0) (2024-11-19)
+
+
+### Features
+
+* add a setting to disable haptics in the app ([c232939](https://github.com/leather-io/mono/commit/c23293957e3509ff12ba23b5a1530a64ee651b08))
+* add haptics support to Pressable ([9551ed6](https://github.com/leather-io/mono/commit/9551ed6f53f1c92121f31660f5d4dbd1bca3e59b))
+
+
+### Bug Fixes
+
+* update dependencies ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+* upgrade pnpm to version 9.13.2 ([10b876f](https://github.com/leather-io/mono/commit/10b876f0fdb1ebcb49eb02add0b8d42a6e0aeae6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.1.17
+
 ## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.17.1...@leather.io/utils-v0.18.0) (2024-11-15)
 
 
