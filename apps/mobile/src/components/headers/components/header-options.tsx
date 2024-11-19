@@ -38,8 +38,8 @@ export function HeaderOptions() {
       </TouchableOpacity>
       <TouchableOpacity
         p="2"
-        onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
-        testID={TestId.homeDeveloperToolsButton}
+        onPress={() => router.navigate(AppRoutes.Activity)}
+        testID={TestId.homeActivityButton}
       >
         <PulseIcon />
       </TouchableOpacity>
