@@ -14,6 +14,7 @@ export enum FeeCalculationTypes {
   Default = 'default',
   DefaultSimulated = 'default-simulated',
   FeesCapped = 'fees-capped',
+  TokenTransferSpecific = 'token-transfer-specific',
 }
 
 export interface Fees {

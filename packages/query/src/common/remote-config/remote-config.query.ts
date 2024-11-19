@@ -125,3 +125,8 @@ export function useConfigTokensEnabledByDefault(): string[] {
   const config = useRemoteConfig();
   return get(config, 'tokensEnabledByDefault', []);
 }
+
+export function useConfigTokenTransferFeeEstimations() {
+  const config = useRemoteConfig();
+  return get(config, 'tokenTransferFeeEstimations', []);
+}
