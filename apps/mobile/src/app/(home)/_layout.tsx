@@ -39,6 +39,8 @@ export default function StackLayout() {
 
       {/* Account */}
       <Stack.Screen name="account/[account]/index" options={{ header: () => <NakedHeader /> }} />
+      {/* Activity */}
+      <Stack.Screen name="activity/index" options={{ headerShown: false }} />
 
       {/* Developer Console */}
       <Stack.Screen
