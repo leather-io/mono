@@ -1,0 +1,37 @@
+name: Publish Storybook
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'storybook-deploy'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - run: pnpm turbo run build --filter="@leather.io/ui"
+
+      - run: pnpm build-storybook:web
+        working-directory: packages/ui
+
+      - name: Deploy storybook.leather.io
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.LEATHER_BOT }}
+          external_repository: leather-io/storybook
+          publish_branch: main
+          publish_dir: ./packages/ui/storybook-static
+          cname: storybook.leather.io
