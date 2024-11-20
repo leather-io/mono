@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.19.1...@leather.io/models-v0.20.0) (2024-11-20)
+
+
+### Features
+
+* **models:** sbtc testnet network ([1be2972](https://github.com/leather-io/mono/commit/1be29726360bf0e9a7477fa96c1c3947f39f1d62))
+
 ## [0.19.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.19.0...@leather.io/models-v0.19.1) (2024-11-15)
 
 
