@@ -31,6 +31,8 @@ export function AccountsWidget() {
 
   const { totalBalance } = useTotalBalance();
 
+  console.log('AccountList', accounts);
+  // seems like signers accountIndex is not updated when a new account is created
   return (
     <>
       <Widget>

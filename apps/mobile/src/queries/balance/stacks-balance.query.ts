@@ -67,7 +67,10 @@ function useStxBalancesQueries(addresses: string[]) {
 }
 
 export function useStxBalance(addresses: string[]) {
+  if (addresses.length === 0)
+    return { availableBalance: createMoney(0, 'STX'), fiatBalance: createMoney(0, 'USD') };
   const { totalStxBalance } = useGetStxBalanceByAddresses(addresses);
+  console.log('useStxBalance', addresses, 'totalStxBalance', totalStxBalance);
 
   const { data: stxMarketData } = useStxMarketDataQuery();
   const stxBalanceUsd = stxMarketData

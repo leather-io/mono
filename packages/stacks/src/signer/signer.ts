@@ -57,7 +57,9 @@ interface InitalizeStacksSignerArgs {
   signFn: StacksSignerFn;
 }
 export function initalizeStacksSigner(args: InitalizeStacksSignerArgs): StacksSigner {
+  // do we need to have the addressIndex here?
   const { descriptor, network, signFn } = args;
+  console.log('initalizeStacksSigner', args);
 
   const publicKey = createStacksPublicKey(extractKeyFromDescriptor(descriptor));
 

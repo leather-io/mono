@@ -36,6 +36,18 @@ export function useTotalBalance(): TotalBalance {
 
 export function useAccountTotalBalance(accountId: AccountId): TotalBalance {
   const stacksAddresses = useGetStacksAddresses(accountId);
+  // this is wrong as always sending all addresses in account
+  console.log('useAccountTotalBalance', accountId, 'stacksAddresses', stacksAddresses);
+
+  // this is more coreect but I think market data is wrong for stacks as off by decimal
+  // maybe  as stx is 6 decimals and btc is 8?
+  // const { accountIndex } = accountId;
+  // const stxAddresses =
+  //   accountIndex === 0
+  //     ? ['SP2417H88DQFN7FNDMSKM9N0B3Q6GNGEM40W7ZAZW']
+  //     : ['SPY0682ZM7VGPMVGQP99Z05J3QWMVV83RA6N42SA'];
+
+  console.log('useAccountTotalBalance', accountId, 'stacksAddresses', stacksAddresses);
   const { availableBalance: stxBalance, fiatBalance: stxBalanceUsd } =
     useStxBalance(stacksAddresses);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =

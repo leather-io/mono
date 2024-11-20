@@ -18,7 +18,6 @@ interface AccountListProps {
 }
 export function AccountList({ accounts, onPress, showWalletInfo }: AccountListProps) {
   const theme = useTheme<Theme>();
-
   return accounts.map(account => (
     <WalletLoader fingerprint={account.fingerprint} key={account.id}>
       {wallet => (
