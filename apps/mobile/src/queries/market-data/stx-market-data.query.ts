@@ -16,6 +16,7 @@ export function createStxMarketDataQueryOptions() {
   } as const;
 }
 
+// LEA-1761 FIXME: this query returns the wrong precision - price in dollars rather than cents
 export function useStxMarketDataQuery() {
   return useQuery(createStxMarketDataQueryOptions());
 }
