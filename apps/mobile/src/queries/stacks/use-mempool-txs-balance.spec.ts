@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
 
-import { useMempoolTxsBalance } from './use-mempool-txs-balance';
+import { useMempoolTxs } from './use-mempool-txs-balance';
 import { useStacksConfirmedTransactions } from './use-stacks-confirmed-transactions';
 import { useStacksPendingTransactions } from './use-stacks-pending-transactions';
 
@@ -35,7 +35,7 @@ const mockPendingTx = {
   },
 } as MempoolTokenTransferTransaction;
 
-describe('useMempoolTxsBalance', () => {
+describe('useMempoolTxs', () => {
   it('calculates inbound balance correctly', () => {
     vi.mocked(useStacksPendingTransactions).mockReturnValue({
       transactions: [mockPendingTx],
@@ -44,7 +44,7 @@ describe('useMempoolTxsBalance', () => {
 
     vi.mocked(useStacksConfirmedTransactions).mockReturnValue([]);
 
-    const result = useMempoolTxsBalance(mockAddresses);
+    const result = useMempoolTxs(mockAddresses);
     expect(result.inboundBalance).toEqual(createMoney(1002500, 'STX'));
     expect(result.outboundBalance).toEqual(createMoney(0, 'STX'));
   });
@@ -66,7 +66,7 @@ describe('useMempoolTxsBalance', () => {
 
     vi.mocked(useStacksConfirmedTransactions).mockReturnValue([]);
 
-    const result = useMempoolTxsBalance(mockAddresses);
+    const result = useMempoolTxs(mockAddresses);
     expect(result.inboundBalance).toEqual(createMoney(0, 'STX'));
     expect(result.outboundBalance).toEqual(createMoney(1002500, 'STX'));
   });
@@ -84,7 +84,7 @@ describe('useMempoolTxsBalance', () => {
 
     vi.mocked(useStacksConfirmedTransactions).mockReturnValue([confirmedTx]);
 
-    const result = useMempoolTxsBalance(mockAddresses);
+    const result = useMempoolTxs(mockAddresses);
     expect(result.inboundBalance).toEqual(createMoney(0, 'STX'));
     expect(result.outboundBalance).toEqual(createMoney(0, 'STX'));
   });

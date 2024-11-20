@@ -29,7 +29,7 @@ export function StacksActivityCell({ onPress }: StacksActivityCellProps) {
 export function StacksActivity() {
   const addresses = useGetStacksAddresses();
   const { activity } = useStacksActivity(addresses);
-  console.log(activity);
+  //   console.log('StacksActivity activity', activity);
   return <StacksActivityCell onPress={() => {}} />;
 }
 
@@ -45,6 +45,6 @@ export function StacksActivityByAccount({
 }: StacksActivityByAccountProps) {
   const addresses = useGetStacksAddresses({ accountIndex, fingerprint });
   const { activity } = useStacksActivity(addresses);
-  console.log(activity);
+  //   console.log('StacksActivityByAccount activity', activity);
   return <StacksActivityCell onPress={onPress} />;
 }
