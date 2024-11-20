@@ -9,12 +9,13 @@ import {
   createGetStacksAccountBalanceQueryOptions,
   createStxCryptoAssetBalance,
   createStxMoney,
+  useCryptoCurrencyMarketDataMeanAverage,
   useCurrentNetworkState,
   useStacksClient,
 } from '@leather.io/query';
 import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
 
-import { useStxMarketDataQuery } from '../market-data/stx-market-data.query';
+// import { useStxMarketDataQuery } from '../market-data/stx-market-data.query';
 
 interface StxBalances {
   totalStxBalance: Money;
@@ -70,11 +71,13 @@ export function useStxBalance(addresses: string[]) {
   if (addresses.length === 0)
     return { availableBalance: createMoney(0, 'STX'), fiatBalance: createMoney(0, 'USD') };
   const { totalStxBalance } = useGetStxBalanceByAddresses(addresses);
+  const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const stxBalanceUsd = baseCurrencyAmountInQuote(totalStxBalance, stxMarketData);
   console.log('useStxBalance', addresses, 'totalStxBalance', totalStxBalance);
 
-  const { data: stxMarketData } = useStxMarketDataQuery();
-  const stxBalanceUsd = stxMarketData
-    ? baseCurrencyAmountInQuote(totalStxBalance, stxMarketData)
-    : createMoney(0, 'USD');
+  // const { data: stxMarketData } = useStxMarketDataQuery();
+  // const stxBalanceUsd = stxMarketData
+  //   ? baseCurrencyAmountInQuote(totalStxBalance, stxMarketData)
+  //   : createMoney(0, 'USD');
   return { availableBalance: totalStxBalance, fiatBalance: stxBalanceUsd };
 }
