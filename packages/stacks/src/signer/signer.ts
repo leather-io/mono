@@ -59,7 +59,7 @@ interface InitalizeStacksSignerArgs {
 export function initalizeStacksSigner(args: InitalizeStacksSignerArgs): StacksSigner {
   const { descriptor, network, signFn } = args;
   const publicKey = createStacksPublicKey(extractKeyFromDescriptor(descriptor));
-
+  console.log('initalizeStacksSigner', extractStacksDerivationPathAccountIndex(descriptor));
   return {
     ...decomposeDescriptor(descriptor),
     // here we overwrite the accountIndex with the derivation path account index for stx

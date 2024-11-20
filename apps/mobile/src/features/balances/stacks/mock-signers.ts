@@ -128,7 +128,7 @@ const signT = [
     sign: null,
   },
   {
-    accountIndex: 0,
+    accountIndex: 1,
     address: 'SPY0682ZM7VGPMVGQP99Z05J3QWMVV83RA6N42SA',
     derivationPath: "m/44'/5757'/0'/0/1",
     descriptor:
@@ -143,17 +143,17 @@ const signT = [
     sign: null,
   },
   {
-    accountIndex: 0,
-    address: 'SPGGMJXPWPA0B7KPF9W78BNY9BSHYA12GV2QQG4R',
-    derivationPath: "m/44'/5757'/0'/0/0",
+    accountIndex: 2,
+    address: 'SP243F5TQQF7QS7KJC0G53EYJBQB1TTPA4SFZVF70',
+    derivationPath: "m/44'/5757'/0'/0/2",
     descriptor:
-      "[80c1c6ca/44'/5757'/0'/0/0]03be588345ce0001dabd9a69e95647b2c14f4e90b8c11a4abf8234005109ca9d61",
-    fingerprint: '80c1c6ca',
-    keyOrigin: "80c1c6ca/44'/5757'/0'/0/0",
+      "[efd01538/44'/5757'/0'/0/2]02da25a1d0ec58489af14edb0cea358ba2a647ba44a5e96326af9e79ca2e37bf77",
+    fingerprint: 'efd01538',
+    keyOrigin: "efd01538/44'/5757'/0'/0/2",
     network: 'mainnet',
     publicKey: [
-      3, 190, 88, 131, 69, 206, 0, 1, 218, 189, 154, 105, 233, 86, 71, 178, 193, 79, 78, 144, 184,
-      193, 26, 74, 191, 130, 52, 0, 81, 9, 202, 157, 97,
+      2, 218, 37, 161, 208, 236, 88, 72, 154, 241, 78, 219, 12, 234, 53, 139, 162, 166, 71, 186, 68,
+      165, 233, 99, 38, 175, 158, 121, 202, 46, 55, 191, 119,
     ],
     sign: null,
   },
