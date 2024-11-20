@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useMempoolTxsBalance } from '@/queries/stacks/use-mempool-txs-balance';
+import { useMempoolTxs } from '@/queries/stacks/use-mempool-txs-balance';
 import { useQueries } from '@tanstack/react-query';
 
 import {
@@ -26,11 +26,21 @@ function useGetStacksActivityByAddresses(addresses: string[]): StacksActivity {
   };
 }
 
+/**
+ * In extension activity list
+ * transactionListStacksTxs =
+ * stacksTransactionsWithTransfers = useGetAccountTransactionsWithTransfersQuery
+ *
+ */
+
 function useStacksActivityQueries(addresses: string[]) {
   const client = useStacksClient();
   const network = useCurrentNetworkState();
 
-  const { inboundBalance, outboundBalance } = useMempoolTxsBalance(addresses);
+  const { query, pendingTxs, confirmedTxs } = useMempoolTxs(addresses);
+  console.log('useMempoolTxs query', query);
+  console.log('useMempoolTxs pendingTxs', pendingTxs);
+  console.log('useMempoolTxs confirmedTxs', confirmedTxs);
   const queries = useQueries({
     queries: addresses.map(address => ({
       ...createGetStacksAccountBalanceQueryOptions({
@@ -39,8 +49,10 @@ function useStacksActivityQueries(addresses: string[]) {
         network: network.chain.stacks.url,
       }),
       select: (resp: AddressBalanceResponse) => {
-        const initialBalance = createStxMoney(resp);
-        return createStxCryptoAssetBalance(initialBalance, inboundBalance, outboundBalance);
+        // const initialBalance = createStxMoney(resp);
+        // return createStxCryptoAssetBalance(initialBalance, inboundBalance, outboundBalance);
+        // console.log('selected', resp);
+        return resp;
       },
     })),
   });
