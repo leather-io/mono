@@ -77,6 +77,8 @@ export function createMarketDataService(
       .filter(isFulfilled)
       .map(r => r.value)
       .filter(isDefined);
+
+    console.log('getNativeAssetMarketData', currency, prices);
     if (prices.length === 0) throw new Error('Unable to fetch price data: ' + currency);
     return createMarketData(
       createMarketPair(currency, 'USD'),

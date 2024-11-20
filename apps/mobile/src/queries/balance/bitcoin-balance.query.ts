@@ -68,6 +68,7 @@ export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
       );
 
       const availableBalance = createMoney(amount, 'BTC');
+      console.log('BTC availableBalance', availableBalance); // {"amount": "353643", "decimals": 8, "symbol": "BTC"}
       const fiatBalance = btcMarketData
         ? baseCurrencyAmountInQuote(availableBalance, btcMarketData)
         : createMoney(0, 'USD');
