@@ -9,10 +9,10 @@ export function useGetStacksAddresses(accountId?: AccountId) {
   }
 
   const { accountIndex, fingerprint } = accountId;
-  console.log('signers.list', signers.list);
 
-  const addresses = signers.list.filter(signer => signer.descriptor.includes(fingerprint));
-  const address = addresses[accountIndex]?.address ?? '';
+  const address = signers.list.filter(
+    signer => signer.descriptor.includes(fingerprint) && signer.accountIndex === accountIndex
+  );
 
   return [address];
 }
