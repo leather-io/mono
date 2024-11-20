@@ -63,6 +63,8 @@ export function initalizeStacksSigner(args: InitalizeStacksSignerArgs): StacksSi
 
   return {
     ...decomposeDescriptor(descriptor),
+    // here we overwrite the accountIndex with the derivation path account index for stx
+    accountIndex: extractStacksDerivationPathAccountIndex(descriptor),
     publicKey: publicKey.data,
     network,
     address: publicKeyToAddress(
