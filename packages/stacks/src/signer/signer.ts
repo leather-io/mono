@@ -57,14 +57,13 @@ interface InitalizeStacksSignerArgs {
   signFn: StacksSignerFn;
 }
 export function initalizeStacksSigner(args: InitalizeStacksSignerArgs): StacksSigner {
-  // do we need to have the addressIndex here?
   const { descriptor, network, signFn } = args;
-  console.log('initalizeStacksSigner', args);
-
   const publicKey = createStacksPublicKey(extractKeyFromDescriptor(descriptor));
 
   return {
     ...decomposeDescriptor(descriptor),
+    // here we overwrite the accountIndex with the derivation path account index for stx
+    accountIndex: extractStacksDerivationPathAccountIndex(descriptor),
     publicKey: publicKey.data,
     network,
     address: publicKeyToAddress(
