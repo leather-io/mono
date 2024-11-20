@@ -28,12 +28,14 @@ function getPendingTxs(confirmedTxs: Transaction[], pendingTxs: MempoolTransacti
   }) as unknown as MempoolTokenTransferTransaction[];
 }
 
-export function useMempoolTxsBalance(addresses: string[]) {
+export function useMempoolTxs(addresses: string[]) {
   const { transactions: pendingTransactions, query } = useStacksPendingTransactions(addresses);
   const confirmedTxs = useStacksConfirmedTransactions(addresses);
   const pendingTxs = getPendingTxs(confirmedTxs, pendingTransactions);
   return {
     query,
+    confirmedTxs,
+    pendingTxs,
     inboundBalance: calculatePendingTxsMoneyBalance({
       txs: pendingTxs.filter(tx => addresses.includes(tx.token_transfer.recipient_address)),
     }),

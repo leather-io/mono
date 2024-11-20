@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useMempoolTxsBalance } from '@/queries/stacks/use-mempool-txs-balance';
+import { useMempoolTxs } from '@/queries/stacks/use-mempool-txs-balance';
 import { useQueries } from '@tanstack/react-query';
 
 import { Money } from '@leather.io/models';
@@ -33,7 +33,7 @@ function useStxBalancesQueries(addresses: string[]) {
   const client = useStacksClient();
   const network = useCurrentNetworkState();
 
-  const { inboundBalance, outboundBalance } = useMempoolTxsBalance(addresses);
+  const { inboundBalance, outboundBalance } = useMempoolTxs(addresses);
   const queries = useQueries({
     queries: addresses.map(address => ({
       ...createGetStacksAccountBalanceQueryOptions({
