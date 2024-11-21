@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.20.0...@leather.io/models-v0.21.0) (2024-11-21)
+
+
+### Features
+
+* add stx transfer fees default values ([262efd1](https://github.com/leather-io/mono/commit/262efd1f0d1f0c4b450bf3dd3f998f7598e2c337))
+
 ## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.19.1...@leather.io/models-v0.20.0) (2024-11-20)
 
 
