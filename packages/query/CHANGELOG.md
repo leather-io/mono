@@ -196,6 +196,24 @@
     * @leather.io/rpc bumped to 2.1.18
     * @leather.io/utils bumped to 0.19.1
 
+## [2.23.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.22.4...@leather.io/query-v2.23.0) (2024-11-21)
+
+
+### Features
+
+* add stx transfer fees default values ([262efd1](https://github.com/leather-io/mono/commit/262efd1f0d1f0c4b450bf3dd3f998f7598e2c337))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.6
+    * @leather.io/constants bumped to 0.13.4
+    * @leather.io/models bumped to 0.21.0
+    * @leather.io/rpc bumped to 2.1.19
+    * @leather.io/utils bumped to 0.19.2
+
 ## [2.22.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.22.2...@leather.io/query-v2.22.3) (2024-11-19)
 
 
