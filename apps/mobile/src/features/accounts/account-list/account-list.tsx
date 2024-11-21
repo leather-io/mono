@@ -7,9 +7,9 @@ import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
 
+import { AccountAddress } from '../components/account-address';
+import { AccountBalance } from '../components/account-balance';
 import { AccountListItem } from './account-list-item';
-import { AccountAddress } from './components/account-address';
-import { AccountBalance } from './components/account-balance';
 
 interface AccountListProps {
   accounts: Account[];

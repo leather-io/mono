@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { AccountSelectorSheet } from '@/features/account-selector-sheet';
+import { AccountSelectorSheet } from '@/features/accounts/account-selector/account-selector-sheet';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';

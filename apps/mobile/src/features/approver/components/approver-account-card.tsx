@@ -1,7 +1,7 @@
 import { AvatarIcon } from '@/components/avatar-icon';
-import { AccountListItem } from '@/features/account-list/account-list-item';
-import { AccountAddress } from '@/features/account-list/components/account-address';
-import { AccountBalance } from '@/features/account-list/components/account-balance';
+import { AccountListItem } from '@/features/accounts/account-list/account-list-item';
+import { AccountAddress } from '@/features/accounts/components/account-address';
+import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';

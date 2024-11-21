@@ -1,10 +1,10 @@
 import { LayoutChangeEvent } from 'react-native';
 
-import { t } from '@lingui/macro';
-
 import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
 
 interface AccountCardProps {
+  address: React.ReactNode;
+  balance: React.ReactNode;
   icon: React.ReactNode;
   name: string;
   onPress?(): void;
@@ -14,6 +14,8 @@ interface AccountCardProps {
   iconTestID?: string;
 }
 export function AccountCard({
+  address,
+  balance,
   icon,
   name,
   onPress,
@@ -50,10 +52,8 @@ export function AccountCard({
       <Box flexDirection="row" justifyContent="space-between">
         <Text variant="label01">{name}</Text>
         <Box>
-          <Text variant="label01">$1231</Text>
-          <Text variant="caption01" color="ink.text-subdued">
-            {t`Placeholder for address`}
-          </Text>
+          {balance}
+          {address}
         </Box>
       </Box>
     </Container>
