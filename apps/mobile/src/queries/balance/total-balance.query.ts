@@ -1,10 +1,13 @@
-import { useGetStacksAddresses } from '@/features/balances/stacks/use-get-stacks-addresses';
 import { AccountId } from '@/models/domain.model';
 import {
   useBitcoinAccountTotalBitcoinBalance,
   useWalletTotalBitcoinBalance,
 } from '@/queries/balance/bitcoin-balance.query';
 import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import {
+  useStacksSignerAddressFromAccountIndex,
+  useStacksSignerAddresses,
+} from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { Money } from '@leather.io/models';
 import { sumMoney } from '@leather.io/utils';
@@ -18,7 +21,7 @@ interface TotalBalance {
 }
 
 export function useTotalBalance(): TotalBalance {
-  const stacksAddresses = useGetStacksAddresses();
+  const stacksAddresses = useStacksSignerAddresses();
   const { availableBalance: stxBalance, fiatBalance: stxBalanceUsd } =
     useStxBalance(stacksAddresses);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =
@@ -35,9 +38,14 @@ export function useTotalBalance(): TotalBalance {
 }
 
 export function useAccountTotalBalance(accountId: AccountId): TotalBalance {
-  const stacksAddresses = useGetStacksAddresses(accountId);
-  const { availableBalance: stxBalance, fiatBalance: stxBalanceUsd } =
-    useStxBalance(stacksAddresses);
+  const { fingerprint, accountIndex } = accountId;
+  const stacksAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
+  if (!stacksAddress) {
+    throw new Error('Stacks address not found');
+  }
+  const { availableBalance: stxBalance, fiatBalance: stxBalanceUsd } = useStxBalance([
+    stacksAddress,
+  ]);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =
     useBitcoinAccountTotalBitcoinBalance(accountId);
 
