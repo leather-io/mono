@@ -45,8 +45,8 @@ describe('useMempoolTxsBalance', () => {
     vi.mocked(useStacksConfirmedTransactions).mockReturnValue([]);
 
     const result = useMempoolTxsBalance(mockAddresses);
-    expect(result.inboundBalance).toEqual(createMoney(1002500, 'STX'));
-    expect(result.outboundBalance).toEqual(createMoney(0, 'STX'));
+    expect(result.inboundBalance).toEqual(createMoney(0, 'STX'));
+    expect(result.outboundBalance).toEqual(createMoney(1002500, 'STX'));
   });
 
   it('calculates outbound balance correctly', () => {

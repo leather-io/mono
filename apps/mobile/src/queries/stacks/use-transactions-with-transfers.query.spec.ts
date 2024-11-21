@@ -2,6 +2,7 @@ import {
   AddressTransactionsWithTransfersListResponse,
   Transaction,
 } from '@stacks/stacks-blockchain-api-types';
+import { QueryClient } from '@tanstack/react-query';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -11,6 +12,14 @@ import {
 
 import { useGetAccountTransactionsWithTransfersQueries } from './use-transactions-with-transfers.query';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 vi.mock('@leather.io/query', () => ({
   createGetAccountTransactionsWithTransfersQueryOptions: vi.fn(),
   useCurrentNetworkState: () => ({
@@ -18,6 +27,12 @@ vi.mock('@leather.io/query', () => ({
       stacks: {
         url: 'https://test-api.com',
       },
+      useQueries: vi.fn().mockReturnValue([
+        {
+          data: mockTransactionData,
+          isPending: false,
+        },
+      ]),
     },
   }),
   useStacksClient: () => ({}),
