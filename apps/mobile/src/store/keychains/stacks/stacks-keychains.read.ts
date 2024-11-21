@@ -46,6 +46,10 @@ export function useStacksSigners() {
   );
 }
 
+export function useStacksSignerAddresses() {
+  return useStacksSigners().list.map(signer => signer.address);
+}
+
 export function useStacksSignerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
   const signers = useStacksSigners().fromAccountIndex(fingerprint, accountIndex);
   return signers.map(signer => signer.address)[0];

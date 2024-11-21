@@ -1,11 +1,14 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import {
+  useStacksSignerAddressFromAccountIndex,
+  useStacksSignerAddresses,
+} from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 
 import { TokenBalance } from '../token-balance';
-import { useGetStacksAddresses } from './use-get-stacks-addresses';
 
 interface StacksTokenBalanceProps {
   availableBalance: Money;
@@ -37,7 +40,7 @@ export function StacksTokenBalance({
 }
 
 export function StacksBalance() {
-  const addresses = useGetStacksAddresses();
+  const addresses = useStacksSignerAddresses();
   const { availableBalance, fiatBalance } = useStxBalance(addresses);
   return <StacksTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
 }
@@ -52,8 +55,11 @@ export function StacksBalanceByAccount({
   fingerprint,
   onPress,
 }: StacksBalanceByAccountProps) {
-  const addresses = useGetStacksAddresses({ accountIndex, fingerprint });
-  const { availableBalance, fiatBalance } = useStxBalance(addresses);
+  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
+  if (!address) {
+    throw new Error('Stacks address not found');
+  }
+  const { availableBalance, fiatBalance } = useStxBalance([address]);
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}

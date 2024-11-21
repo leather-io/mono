@@ -2,9 +2,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
-import { useGetStacksAddresses } from '@/features/balances/stacks/use-get-stacks-addresses';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -30,11 +30,14 @@ export function SendFormStxSheet() {
     resolver: zodResolver(sendFormStxSchema),
   });
 
-  const addresses = useGetStacksAddresses({
-    accountIndex: route.params.account.accountIndex,
-    fingerprint: route.params.account.fingerprint,
-  });
-  const { availableBalance, fiatBalance } = useStxBalance(addresses);
+  const address = useStacksSignerAddressFromAccountIndex(
+    route.params.account.fingerprint,
+    route.params.account.accountIndex
+  );
+  if (!address) {
+    throw new Error('Stacks address not found');
+  }
+  const { availableBalance, fiatBalance } = useStxBalance([address]);
 
   return (
     <FullHeightSheetLayout
