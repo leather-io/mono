@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { useToastContext } from '@/components/toast/toast-context';
-import { AccountList } from '@/features/account-list/account-list';
+import { AccountList } from '@/features/accounts/account-list/account-list';
 import { WalletId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';

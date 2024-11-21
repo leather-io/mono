@@ -3,8 +3,10 @@ import { useRef } from 'react';
 import { AvatarIcon } from '@/components/avatar-icon';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { useToastContext } from '@/components/toast/toast-context';
+import { AccountAddress } from '@/features/accounts/components/account-address';
+import { AccountBalance } from '@/features/accounts/components/account-balance';
+import { AccountCard } from '@/features/accounts/components/account-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { AccountCard } from '@/features/settings/wallet-and-accounts/account-card';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { AccountId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
@@ -70,12 +72,14 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
       <AnimatedHeaderScreenLayout
         rightHeaderElement={<NetworkBadge />}
         title={t({
-          id: 'account.header_title',
+          id: 'configure_account.header_title',
           message: 'Configure account',
         })}
       >
         <Box pb="3">
           <AccountCard
+            address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
+            balance={<AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />}
             icon={<AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />}
             name={account.name}
             key={account.id}

@@ -1,6 +1,6 @@
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
-import { AccountList } from '@/features/account-list/account-list';
+import { AccountList } from '@/features/accounts/account-list/account-list';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
