@@ -54,6 +54,11 @@ export function BitcoinBalanceByAccount({
     accountIndex,
     fingerprint,
   });
+  // entering an account this runs 3 times, sometimes 4 times!
+  // first time is the wallet balance?????
+  // second time is the account balance
+  // third time is the account balance with the available balance
+  console.log('BitcoinBalanceByAccount', fingerprint, accountIndex, availableBalance, fiatBalance);
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}

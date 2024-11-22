@@ -53,10 +53,12 @@ export function StacksBalanceByAccount({
   onPress,
 }: StacksBalanceByAccountProps) {
   const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
+  // TODO use loader pattern here https://github.com/leather-io/mono/pull/640#discussion_r1851957125
   if (!address) {
     throw new Error('Stacks address not found');
   }
   const { availableBalance, fiatBalance } = useStxBalance([address]);
+  console.log('StacksBalanceByAccount', fingerprint, accountIndex, availableBalance, fiatBalance);
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}

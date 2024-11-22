@@ -16,6 +16,7 @@ interface AccountLayoutProps {
 }
 export function AccountLayout({ account, balance }: AccountLayoutProps) {
   const theme = useTheme<Theme>();
+  console.log('AccountLayout rendered');
   return (
     <PageLayout>
       <AccountOverview

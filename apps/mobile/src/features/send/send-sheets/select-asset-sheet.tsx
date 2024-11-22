@@ -25,6 +25,7 @@ export function SelectAssetSheet() {
   const account = route.params.account;
   const { accountIndex, fingerprint, name } = account;
 
+  console.log('AccountBalances SelectAssetSheet');
   return (
     <FullHeightSheetLayout
       header={
