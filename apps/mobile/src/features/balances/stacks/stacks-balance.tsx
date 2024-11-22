@@ -52,6 +52,7 @@ export function StacksBalanceByAccount({
   fingerprint,
   onPress,
 }: StacksBalanceByAccountProps) {
+  // better to add a loader here https://github.com/leather-io/mono/pull/640#discussion_r1851957125
   const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
   if (!address) {
     throw new Error('Stacks address not found');

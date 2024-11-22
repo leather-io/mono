@@ -33,13 +33,13 @@
 // useGetAccountTransactionsWithTransfersQuery => useGetAccountTransactionsWithTransfersQueries in mobile already
 // useStacksPendingTransactions => useStacksPendingTransactions in mobile already
 // useSubmittedTransactions => is a selector of state.submittedTransactions which is maybe as yet unconfirmed transactions?
-import { useGetStacksAddresses } from '@/features/balances/stacks/use-get-stacks-addresses';
 import { AccountId } from '@/models/domain.model';
 import {
   useBitcoinAccountTotalBitcoinBalance,
   useWalletTotalBitcoinBalance,
 } from '@/queries/balance/bitcoin-balance.query';
 import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStacksSignerAddresses } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { Money } from '@leather.io/models';
 import { BitcoinTx, StacksTx } from '@leather.io/models';
@@ -70,7 +70,7 @@ interface GetAccountActivityProps {
 }
 
 export function useAccountActivity(accountId: GetAccountActivityProps): [BitcoinTx[], StacksTx[]] {
-  const stacksAddresses = useGetStacksAddresses(accountId);
+  const stacksAddresses = useStacksSignerAddresses(accountId);
   const { availableBalance: stxBalance, fiatBalance: stxBalanceUsd } =
     useStxBalance(stacksAddresses);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =
