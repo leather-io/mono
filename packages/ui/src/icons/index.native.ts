@@ -2,6 +2,7 @@ export type { IconProps } from './icon/icon.native';
 
 // Icons
 export * from './arrow-left-icon.native';
+export * from './arrow-top-bottom-icon.native';
 export * from './arrow-out-of-box-icon.native';
 export * from './arrows-repeat-left-right-icon.native';
 export * from './arrow-rotate-clockwise-icon.native';
