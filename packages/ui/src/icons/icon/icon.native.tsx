@@ -16,7 +16,7 @@ export const Icon = forwardRef<Component, IconProps>(({ children, ...props }, re
   return (
     <>
       {React.cloneElement(child, {
-        color: theme.colors['ink.action-primary-default'],
+        color: props.color ?? theme.colors['ink.action-primary-default'],
         ref,
         ...props,
       })}

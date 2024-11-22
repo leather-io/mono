@@ -7,7 +7,7 @@
     "build": "pnpm panda && pnpm build:native && pnpm build:web",
     "build-storybook:web": "storybook build -c ./src/.storybook-web",
     "build:native": "tsup --config tsup.config.native.ts",
-    "build:watch": "concurrently  \"pnpm panda:watch\"  \"pnpm build:native --watch --preserveWatchOutput\"  \"pnpm build:web --watch\" ",
+    "build:watch": "concurrently  \"pnpm panda --watch\"  \"pnpm build:native --watch\"  \"pnpm build:web --watch\" ",
     "build:web": "panda && tsup --config tsup.config.web.ts",
     "format": "prettier . --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",

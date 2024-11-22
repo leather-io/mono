@@ -2,16 +2,16 @@ import { Component, forwardRef } from 'react';
 
 import { IconVariantMap } from 'src/icons/types.shared';
 
-import PlusSmall from '../assets/icons/plus-16-16.svg';
-import Plus from '../assets/icons/plus-24-24.svg';
+import ArrowUpSmall from '../assets/icons/arrow-up-16-16.svg';
+import ArrowUp from '../assets/icons/arrow-up-24-24.svg';
 import { Icon, IconProps } from './icon/icon.native';
 
 const variants: IconVariantMap = {
-  small: <PlusSmall />,
-  default: <Plus />,
+  small: <ArrowUpSmall />,
+  default: <ArrowUp />,
 };
 
-export const PlusIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
+export const ArrowUpIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
   return (
     <Icon ref={ref} {...props}>
       {variants[variant ?? 'default']}

@@ -1,6 +1,13 @@
 export type { IconProps } from './icon/icon.native';
+export type { ActivityIconType } from './activity-icons/types.shared';
+
+// Activity Icons
+export * from './activity-icons/activity-icon.native';
+export * from './icon/icon-with-activity.native';
 
 // Icons
+export * from './arrow-down-icon.native';
+export * from './arrow-up-icon.native';
 export * from './arrow-left-icon.native';
 export * from './arrow-out-of-box-icon.native';
 export * from './arrows-repeat-left-right-icon.native';
