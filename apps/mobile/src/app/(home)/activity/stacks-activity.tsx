@@ -1,6 +1,6 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
-import { useGetStacksAddresses } from '@/features/balances/stacks/use-get-stacks-addresses';
 import { useStacksActivity } from '@/queries/activity/stacks-activity.query';
+import { useStacksSignerAddresses } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
 
 import { ActivityCell } from './activity-cell';
@@ -27,7 +27,7 @@ export function StacksActivityCell({ onPress }: StacksActivityCellProps) {
 }
 
 export function StacksActivity() {
-  const addresses = useGetStacksAddresses();
+  const addresses = useStacksSignerAddresses();
   const { activity } = useStacksActivity(addresses);
   //   console.log('StacksActivity activity', activity);
   return <StacksActivityCell onPress={() => {}} />;
@@ -43,7 +43,7 @@ export function StacksActivityByAccount({
   fingerprint,
   onPress,
 }: StacksActivityByAccountProps) {
-  const addresses = useGetStacksAddresses({ accountIndex, fingerprint });
+  const addresses = useStacksSignerAddresses({ accountIndex, fingerprint });
   const { activity } = useStacksActivity(addresses);
   //   console.log('StacksActivityByAccount activity', activity);
   return <StacksActivityCell onPress={onPress} />;
