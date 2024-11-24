@@ -15,12 +15,12 @@ import {
   UserIcon,
 } from '@leather.io/ui/native';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 import { RecipientSheet } from '../sheets/recipient-sheet';
 
-export function SendFormRecipient() {
-  const { schema } = useSendFormContext();
-  const { watch } = useFormContext<z.infer<typeof schema>>();
+export function SendFormRecipient<T extends SendFormBaseContext<T>>() {
+  const { formData } = useSendFormContext<T>();
+  const { watch } = useFormContext<z.infer<typeof formData.schema>>();
   const recipientSheetRef = useRef<SheetRef>(null);
 
   const recipient = watch('recipient');

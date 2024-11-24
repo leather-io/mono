@@ -2,34 +2,33 @@ import BigNumber from 'bignumber.js';
 import { validate } from 'bitcoin-address-validation';
 
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import { sumMoney, sumNumbers } from '@leather.io/utils';
+import { Money } from '@leather.io/models';
+import { createMoney, sumMoney } from '@leather.io/utils';
 
-import {
-  TransferRecipient,
-  Utxo,
-  filterUneconomicalUtxos,
-  getSizeInfo,
-} from './coin-selection.utils';
+import { BitcoinError, BitcoinErrorMessage } from '../bitcoin-error';
+import { filterUneconomicalUtxos, getSizeInfo, getUtxoTotal } from './coin-selection.utils';
 
-export class InsufficientFundsError extends Error {
-  constructor() {
-    super('Insufficient funds');
-  }
-}
-
-interface Output {
+export interface CoinSelectionOutput {
   value: bigint;
   address?: string;
 }
 
-export interface DetermineUtxosForSpendArgs {
-  feeRate: number;
-  recipients: TransferRecipient[];
-  utxos: Utxo[];
+export interface CoinSelectionUtxo {
+  address: string;
+  txid: string;
+  value: number;
+  vout: number;
 }
 
-function getUtxoTotal(utxos: Utxo[]) {
-  return sumNumbers(utxos.map(utxo => utxo.value));
+export interface CoinSelectionRecipient {
+  address: string;
+  amount: Money;
+}
+
+export interface DetermineUtxosForSpendArgs {
+  feeRate: number;
+  recipients: CoinSelectionRecipient[];
+  utxos: CoinSelectionUtxo[];
 }
 
 export function determineUtxosForSpendAll({
@@ -61,7 +60,7 @@ export function determineUtxosForSpendAll({
     inputs: filteredUtxos,
     outputs,
     size: sizeInfo.txVBytes,
-    fee,
+    fee: createMoney(new BigNumber(fee), 'BTC'),
   };
 }
 
@@ -75,12 +74,12 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
     feeRate,
     recipients,
   });
-  if (!filteredUtxos.length) throw new InsufficientFundsError();
+  if (!filteredUtxos.length) throw new BitcoinError(BitcoinErrorMessage.InsufficientFunds);
 
   const amount = sumMoney(recipients.map(recipient => recipient.amount));
 
-  // Prepopulate with first UTXO, at least one is needed
-  const neededUtxos: Utxo[] = [filteredUtxos[0]];
+  // Prepopulate with first utxo, at least one is needed
+  const neededUtxos: CoinSelectionUtxo[] = [filteredUtxos[0]];
 
   function estimateTransactionSize() {
     return getSizeInfo({
@@ -101,7 +100,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
 
   while (!hasSufficientUtxosForTx()) {
     const [nextUtxo] = getRemainingUnspentUtxos();
-    if (!nextUtxo) throw new InsufficientFundsError();
+    if (!nextUtxo) throw new BitcoinError(BitcoinErrorMessage.InsufficientFunds);
     neededUtxos.push(nextUtxo);
   }
 
@@ -112,7 +111,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
   const changeAmount =
     BigInt(getUtxoTotal(neededUtxos).toString()) - BigInt(amount.amount.toNumber()) - BigInt(fee);
 
-  const changeUtxos: Output[] =
+  const changeUtxos: CoinSelectionOutput[] =
     changeAmount > BTC_P2WPKH_DUST_AMOUNT
       ? [
           {
@@ -121,7 +120,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
         ]
       : [];
 
-  const outputs: Output[] = [
+  const outputs: CoinSelectionOutput[] = [
     ...recipients.map(({ address, amount }) => ({
       value: BigInt(amount.amount.toNumber()),
       address,
@@ -134,7 +133,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
     inputs: neededUtxos,
     outputs,
     size: estimateTransactionSize().txVBytes,
-    fee,
+    fee: createMoney(new BigNumber(fee), 'BTC'),
     ...estimateTransactionSize(),
   };
 }

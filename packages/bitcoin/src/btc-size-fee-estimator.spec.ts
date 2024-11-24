@@ -3,7 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { BtcSizeFeeEstimator } from './btc-size-fee-estimator';
 
 describe('BtcSizeFeeEstimator', () => {
-  const estimator = new BtcSizeFeeEstimator();
+  let estimator: BtcSizeFeeEstimator;
+
+  beforeEach(() => {
+    estimator = new BtcSizeFeeEstimator();
+  });
 
   describe('getSizeOfScriptLengthElement', () => {
     it('should return the correct size for small lengths', () => {

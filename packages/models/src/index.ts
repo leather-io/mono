@@ -15,4 +15,3 @@ export * from './network/network.schema';
 export * from './settings.model';
 export * from './transactions/bitcoin-transaction.model';
 export * from './transactions/stacks-transaction.model';
-export * from './utxo.model';

@@ -3,15 +3,15 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { TextInput } from '@/components/text-input';
 import { z } from 'zod';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
-export function SendFormAmountField() {
-  const { schema } = useSendFormContext();
+export function SendFormAmountField<T extends SendFormBaseContext<T>>() {
+  const { formData } = useSendFormContext<T>();
   const {
     control,
     // TODO: Handle errors
     // formState: { errors },
-  } = useFormContext<z.infer<typeof schema>>();
+  } = useFormContext<z.infer<typeof formData.schema>>();
 
   return (
     <Controller

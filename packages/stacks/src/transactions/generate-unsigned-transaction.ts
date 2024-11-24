@@ -61,7 +61,7 @@ export function generateUnsignedStxTokenTransfer(options: StacksUnsignedTokenTra
   return makeUnsignedSTXTokenTransfer({ ...options, ...parsedOptions });
 }
 
-export async function generateUnsignedTransaction(options: StacksUnsignedTransactionOptions) {
+export async function generateStacksUnsignedTransaction(options: StacksUnsignedTransactionOptions) {
   const isValid = isTransactionTypeSupported(options.txType);
 
   if (!isValid) throw new Error(`Invalid Transaction Type: ${options.txType}`);

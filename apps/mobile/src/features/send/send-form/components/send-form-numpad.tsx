@@ -4,11 +4,11 @@ import { z } from 'zod';
 
 import { Box, Numpad } from '@leather.io/ui/native';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
-export function SendFormNumpad() {
-  const { schema } = useSendFormContext();
-  const { setValue, watch } = useFormContext<z.infer<typeof schema>>();
+export function SendFormNumpad<T extends SendFormBaseContext<T>>() {
+  const { formData } = useSendFormContext<T>();
+  const { setValue, watch } = useFormContext<z.infer<typeof formData.schema>>();
   const amount = watch('amount');
 
   return (

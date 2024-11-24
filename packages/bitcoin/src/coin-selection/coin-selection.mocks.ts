@@ -2,7 +2,7 @@ import { sha256 } from '@noble/hashes/sha256';
 import { hexToBytes } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
-import { Utxo } from './coin-selection.utils';
+import { CoinSelectionUtxo } from './coin-selection';
 
 function generateMockHex() {
   return Math.floor(Math.random() * 0xffffff)
@@ -10,22 +10,17 @@ function generateMockHex() {
     .padEnd(6, '0');
 }
 
-function generateMockTxId(value: number): Utxo {
+function generateMockUtxo(value: number): CoinSelectionUtxo {
   return {
+    address: 'tb1qxy5r9rlmpcxgwp92x2594q3gg026y4kdv2rsl8',
     txid: sha256(sha256(hexToBytes(generateMockHex()))).toString(),
-    vout: 0,
-    status: {
-      confirmed: true,
-      block_height: 2568495,
-      block_hash: '000000000000008622fafce4a5388861b252d534f819d0f7cb5d4f2c5f9c1638',
-      block_time: 1703787327,
-    },
     value,
+    vout: 0,
   };
 }
 
 export function generateMockTransactions(values: number[]) {
-  return values.map(val => generateMockTxId(val));
+  return values.map(val => generateMockUtxo(val));
 }
 
 export function generateMockAverageFee(value: number) {

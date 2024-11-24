@@ -6,7 +6,7 @@ import { filterUneconomicalUtxos } from './coin-selection.utils';
 describe(filterUneconomicalUtxos.name, () => {
   const recipients = [
     {
-      address: '',
+      address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
       amount: createMoney(0, 'BTC'),
     },
   ];

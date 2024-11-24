@@ -6,18 +6,19 @@ import { z } from 'zod';
 
 import { Button } from '@leather.io/ui/native';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
-export function SendFormButton() {
+export function SendFormButton<T extends SendFormBaseContext<T>>() {
   const { displayToast } = useToastContext();
-  const { schema, onInitSendTransfer } = useSendFormContext();
+  const { formData } = useSendFormContext<T>();
+  const { onInitSendTransfer, schema } = formData;
   const {
     formState: { isDirty, isValid },
     handleSubmit,
   } = useFormContext<z.infer<typeof schema>>();
 
   function onSubmitForm(values: z.infer<typeof schema>) {
-    onInitSendTransfer(values);
+    onInitSendTransfer(formData, values);
     // Temporary toast for testing
     displayToast({
       title: t`Form submitted`,

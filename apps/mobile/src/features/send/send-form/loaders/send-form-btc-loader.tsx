@@ -1,29 +1,31 @@
 import { AccountId } from '@/models/domain.model';
-import { useBitcoinAccountTotalBitcoinBalance } from '@/queries/balance/bitcoin-balance.query';
-import BigNumber from 'bignumber.js';
+import {
+  useBitcoinAccountTotalBitcoinBalance,
+  useBitcoinAccountUtxos,
+} from '@/queries/balance/bitcoin-balance.query';
 
-import { Money } from '@leather.io/models';
-import { useAverageBitcoinFeeRates } from '@leather.io/query';
+import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
+import { Utxo, useAverageBitcoinFeeRates } from '@leather.io/query';
 
 interface SendFormBtcData {
   availableBalance: Money;
   fiatBalance: Money;
-  feeRates: Record<string, BigNumber>;
+  feeRates: AverageBitcoinFeeRates;
+  utxos: Utxo[];
 }
 
 interface SendFormBtcLoaderProps {
   account: AccountId;
-  children({ availableBalance, fiatBalance, feeRates }: SendFormBtcData): React.ReactNode;
+  children({ availableBalance, fiatBalance, feeRates, utxos }: SendFormBtcData): React.ReactNode;
 }
 export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps) {
-  // Not sure if we need to load feeRates here?
+  const accountId = { fingerprint: account.fingerprint, accountIndex: account.accountIndex };
   const { data: feeRates } = useAverageBitcoinFeeRates();
-  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance({
-    accountIndex: account.accountIndex,
-    fingerprint: account.fingerprint,
-  });
+  const { data: utxos = [] } = useBitcoinAccountUtxos(accountId);
+  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance(accountId);
 
-  if (!feeRates) return null;
+  // Handle loading and error states
+  if (!utxos.length || !feeRates) return null;
 
-  return children({ availableBalance, fiatBalance, feeRates });
+  return children({ availableBalance, fiatBalance, feeRates, utxos });
 }

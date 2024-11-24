@@ -5,7 +5,7 @@ import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-heigh
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { StacksSignerLoader } from '@/store/keychains/keychains';
+import { BitcoinPayerLoader, StacksSignerLoader } from '@/store/keychains/keychains';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -43,11 +43,21 @@ export function SelectAssetSheet() {
       }
     >
       <ScrollView>
-        <BitcoinBalanceByAccount
-          accountIndex={accountIndex}
-          fingerprint={fingerprint}
-          onPress={() => navigation.navigate('send-form-btc', { account })}
-        />
+        <BitcoinPayerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
+          {({ nativeSegwitPayer }) => (
+            <BitcoinBalanceByAccount
+              accountIndex={accountIndex}
+              fingerprint={fingerprint}
+              onPress={() =>
+                navigation.navigate('send-form-btc', {
+                  account,
+                  address: nativeSegwitPayer.address,
+                  publicKey: bytesToHex(nativeSegwitPayer.publicKey),
+                })
+              }
+            />
+          )}
+        </BitcoinPayerLoader>
         <StacksSignerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
           {({ stxSigner }) => (
             <StacksBalanceByAccount

@@ -5,24 +5,26 @@ import { ZodTypeAny } from 'zod';
 
 import { CryptoAssetProtocol, CryptoCurrency, Money } from '@leather.io/models';
 
-export interface SendFormContext {
+export interface SendFormBaseContext<T> {
   name: string;
   protocol: CryptoAssetProtocol;
   symbol: CryptoCurrency;
   availableBalance: Money;
-  fees: Record<string, any>;
   fiatBalance: Money;
   defaultValues: FieldValues;
   schema: ZodTypeAny;
-  onInitSendTransfer(data: any): void;
+  onInitSendTransfer(data: T, values: any): void;
 }
 
-const sendFormContext = createContext<SendFormContext | null>(null);
+export interface SendFormContext<T> {
+  formData: T;
+  onSetFormData(key: keyof T, value: T[keyof T]): void;
+}
 
-export const SendFormProvider = sendFormContext.Provider;
+export const sendFormContext = createContext<SendFormContext<any> | null>(null);
 
-export function useSendFormContext() {
-  const context = useContext(sendFormContext);
+export function useSendFormContext<T>() {
+  const context = useContext(sendFormContext) as SendFormContext<T>;
   if (!context) throw new Error('`useSendFormContext` must be used within a `SendFormProvider`');
   return context;
 }

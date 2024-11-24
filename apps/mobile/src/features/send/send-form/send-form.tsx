@@ -12,10 +12,11 @@ import { SendFormFooterLayout } from './components/send-form-footer.layout';
 import { SendFormMemo } from './components/send-form-memo';
 import { SendFormNumpad } from './components/send-form-numpad';
 import { SendFormRecipient } from './components/send-form-recipient';
-import { useSendFormContext } from './send-form-context';
+import { SendFormBaseContext, useSendFormContext } from './send-form-context';
 
-function SendForm({ ...props }: HasChildren) {
-  const { defaultValues, schema } = useSendFormContext();
+function SendForm<T extends SendFormBaseContext<T>>({ ...props }: HasChildren) {
+  const { formData } = useSendFormContext<T>();
+  const { defaultValues, schema } = formData;
   const formMethods = useForm<z.infer<typeof schema>>({
     mode: 'onChange',
     defaultValues,

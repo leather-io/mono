@@ -1,16 +1,17 @@
+import { useCallback } from 'react';
+
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { AnchorMode } from '@stacks/transactions';
 
 import {
   StacksUnsignedTokenTransferOptions,
   TransactionTypes,
-  generateUnsignedTransaction,
+  generateStacksUnsignedTransaction,
 } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
 export function useStxAccountTransferDetails(address: string, publicKey: string) {
   const network = useNetworkPreferenceStacksNetwork();
-
   return {
     network,
     publicKey,
@@ -26,14 +27,17 @@ const defaultRequiredStxTokenTransferOptions = {
   nonce: '',
 };
 
-export function useGenerateStxTokenTransferUnsignedTransaction(
-  stxAccountDetails: ReturnType<typeof useStxAccountTransferDetails>
-) {
-  return (values: Partial<StacksUnsignedTokenTransferOptions>) =>
-    generateUnsignedTransaction({
-      txType: TransactionTypes.StxTokenTransfer,
-      ...defaultRequiredStxTokenTransferOptions,
-      ...stxAccountDetails,
-      ...values,
-    });
+export function useGenerateStxTokenTransferUnsignedTransaction(address: string, publicKey: string) {
+  const stxAccountDetails = useStxAccountTransferDetails(address, publicKey);
+
+  return useCallback(
+    (values: Partial<StacksUnsignedTokenTransferOptions>) =>
+      generateStacksUnsignedTransaction({
+        txType: TransactionTypes.StxTokenTransfer,
+        ...defaultRequiredStxTokenTransferOptions,
+        ...stxAccountDetails,
+        ...values,
+      }),
+    [stxAccountDetails]
+  );
 }
