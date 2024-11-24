@@ -59,6 +59,8 @@ export function Sheet({
           <RadixDialog.Content
             onPointerDownOutside={onClose}
             className={css({
+              display: 'flex',
+              flexDirection: 'column',
               bg: 'ink.background-primary',
               // remove borderRadius on small to give impression of full page
               borderRadius: { base: '0', md: 'md' },
