@@ -9,14 +9,14 @@ import { z } from 'zod';
 
 import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 interface MemoSheetProps {
   sheetRef: RefObject<SheetRef>;
 }
-export function MemoSheet({ sheetRef }: MemoSheetProps) {
-  const { schema } = useSendFormContext();
-  const { control } = useFormContext<z.infer<typeof schema>>();
+export function MemoSheet<T extends SendFormBaseContext<T>>({ sheetRef }: MemoSheetProps) {
+  const { formData } = useSendFormContext<T>();
+  const { control } = useFormContext<z.infer<typeof formData.schema>>();
   const { displayToast } = useToastContext();
 
   function onAddMemo() {

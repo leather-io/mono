@@ -8,6 +8,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { StacksNetwork } from '@stacks/network';
 import { ChainID, TransactionVersion } from '@stacks/transactions';
 
+import { getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
   accountDisplayPreferencesKeyedByType,
   bitcoinUnitsKeyedByName,
@@ -116,4 +117,9 @@ export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
 
     return stacksNetwork;
   }, [networkPreference]);
+}
+
+export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {
+  const { networkPreference } = useSettings();
+  return getBtcSignerLibNetworkConfigByMode(networkPreference.chain.bitcoin.mode);
 }

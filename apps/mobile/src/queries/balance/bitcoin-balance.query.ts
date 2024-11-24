@@ -6,7 +6,7 @@ import { useSettings } from '@/store/settings/settings';
 import { UseQueryResult, useQueries } from '@tanstack/react-query';
 
 import { inferPaymentTypeFromPath } from '@leather.io/bitcoin';
-import { createUtxoQueryOptions } from '@leather.io/query';
+import { Utxo, createUtxoQueryOptions } from '@leather.io/query';
 import { baseCurrencyAmountInQuote, createMoney, isDefined, sumNumbers } from '@leather.io/utils';
 
 import { useBtcMarketDataQuery } from '../market-data/btc-market-data.query';
@@ -41,18 +41,23 @@ function useCreateBitcoinAccountUtxoQueryOptions(descriptors: string[]) {
   );
 }
 
-type TotalBalanceCombineFn = UseQueryResult<
-  {
-    value: string;
-    path: string;
-    address: string;
-    txid: string;
-    confirmations: number;
-    vout: number;
-    height?: number | undefined;
-  }[],
-  Error
->[];
+export function useBitcoinAccountUtxos({ fingerprint, accountIndex }: AccountId) {
+  const descriptors = useBitcoinDescriptorsByAcccount(fingerprint, accountIndex);
+  const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);
+  return useQueries({
+    queries,
+    combine: results => {
+      return {
+        data: results.flatMap(result => result.data).filter(isDefined) as Utxo[],
+        isLoading: results.some(result => result.isLoading),
+        isPending: results.some(result => result.isPending),
+        isError: results.some(result => result.isError),
+      };
+    },
+  });
+}
+
+type TotalBalanceCombineFn = UseQueryResult<Utxo[], Error>[];
 
 export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
   const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);

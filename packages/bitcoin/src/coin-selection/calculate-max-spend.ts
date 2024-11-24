@@ -3,11 +3,12 @@ import BigNumber from 'bignumber.js';
 import type { AverageBitcoinFeeRates } from '@leather.io/models';
 import { createMoney, satToBtc } from '@leather.io/utils';
 
-import { Utxo, filterUneconomicalUtxos, getSpendableAmount } from './coin-selection.utils';
+import { CoinSelectionUtxo } from './coin-selection';
+import { filterUneconomicalUtxos, getSpendableAmount } from './coin-selection.utils';
 
 interface CalculateMaxBitcoinSpend {
   address: string;
-  utxos: Utxo[];
+  utxos: CoinSelectionUtxo[];
   fetchedFeeRates?: AverageBitcoinFeeRates;
   feeRate?: number;
 }

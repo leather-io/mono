@@ -123,13 +123,13 @@ describe(determineUtxosForSpend.name, () => {
   test('that given a set of utxos, legacy is more expensive', () => {
     const legacy = generate10kSpendWithDummyUtxoSet('15PyZveQd28E2SHZu2ugkWZBp6iER41vXj');
     const segwit = generate10kSpendWithDummyUtxoSet('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH');
-    expect(legacy.fee).toBeGreaterThan(segwit.fee);
+    expect(legacy.fee.amount.isGreaterThan(segwit.fee.amount)).toBeTruthy();
   });
 
   test('that given a set of utxos, wrapped segwit is more expensive than native', () => {
     const segwit = generate10kSpendWithDummyUtxoSet('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH');
     const native = generate10kSpendWithDummyUtxoSet('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
-    expect(segwit.fee).toBeGreaterThan(native.fee);
+    expect(segwit.fee.amount.isGreaterThan(native.fee.amount)).toBeTruthy();
   });
 
   test('that given a set of utxos, taproot is more expensive than native segwit', () => {
@@ -140,7 +140,7 @@ describe(determineUtxosForSpend.name, () => {
     const taproot = generate10kSpendWithDummyUtxoSet(
       'tb1parwmj7533de3k2fw2kntyqacspvhm67qnjcmpqnnpfvzu05l69nsczdywd'
     );
-    expect(taproot.fee).toBeGreaterThan(native.fee);
+    expect(taproot.fee.amount.isGreaterThan(native.fee.amount)).toBeTruthy();
   });
 
   test('against a random set of generated utxos', () => {
@@ -162,7 +162,7 @@ describe(determineUtxosForSpend.name, () => {
 
     expect(result.outputs[1].value.toString()).toEqual(
       sumNumbers(result.inputs.map(i => i.value))
-        .minus(result.fee)
+        .minus(result.fee.amount)
         .minus(amount.toString())
         .toString()
     );
@@ -173,7 +173,7 @@ describe(determineUtxosForSpend.name, () => {
     const recipients = [
       {
         address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
-        amount: createMoney(Number(1), 'BTC'),
+        amount: createMoney(1, 'BTC'),
       },
     ];
     const filteredUtxos = filterUneconomicalUtxos({
@@ -182,21 +182,21 @@ describe(determineUtxosForSpend.name, () => {
       recipients,
     });
     const amount = filteredUtxos.reduce((total, utxo) => total + utxo.value, 0) - 2251;
-    recipients[0].amount = createMoney(Number(amount), 'BTC');
+    recipients[0].amount = createMoney(amount, 'BTC');
 
     const result = determineUtxosForSpend({
       utxos: filteredUtxos as any,
       recipients: [
         {
           address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
-          amount: createMoney(Number(amount), 'BTC'),
+          amount: createMoney(amount, 'BTC'),
         },
       ],
       feeRate,
     });
     expect(result.inputs.length).toEqual(10);
     expect(result.outputs.length).toEqual(1);
-    expect(result.fee).toEqual(2251);
+    expect(result.fee.amount.isEqualTo(2251)).toBeTruthy();
   });
 
   test('that spending all utxos with sendMax does not result in dust utxos', () => {
@@ -215,7 +215,7 @@ describe(determineUtxosForSpend.name, () => {
     const feeRate = 3;
     const fee = Math.floor(sizeInfo.txVBytes * feeRate);
     const amount = utxos.reduce((total, utxo) => total + utxo.value, 0) - fee;
-    recipients[0].amount = createMoney(Number(amount), 'BTC');
+    recipients[0].amount = createMoney(amount, 'BTC');
 
     const result = determineUtxosForSpendAll({
       utxos: utxos as any,
@@ -224,7 +224,7 @@ describe(determineUtxosForSpend.name, () => {
     });
     expect(result.inputs.length).toEqual(utxos.length);
     expect(result.outputs.length).toEqual(1);
-    expect(result.fee).toEqual(735);
+    expect(result.fee.amount.isEqualTo(735)).toBeTruthy();
     expect(fee).toEqual(735);
   });
 });

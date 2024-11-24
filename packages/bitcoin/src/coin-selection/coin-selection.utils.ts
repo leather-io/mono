@@ -2,23 +2,18 @@ import BigNumber from 'bignumber.js';
 import validate, { AddressInfo, AddressType, getAddressInfo } from 'bitcoin-address-validation';
 
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { sumNumbers } from '@leather.io/utils';
 
 import { BtcSizeFeeEstimator } from '../btc-size-fee-estimator';
+import { CoinSelectionRecipient, CoinSelectionUtxo } from './coin-selection';
 
-export interface TransferRecipient {
-  address: string;
-  amount: Money;
-}
-
-export interface Utxo extends Record<string, any> {
-  txid: string;
-  value: number;
+export function getUtxoTotal(utxos: CoinSelectionUtxo[]) {
+  return sumNumbers(utxos.map(utxo => utxo.value));
 }
 
 export function getSizeInfo(payload: {
   inputLength: number;
-  recipients: TransferRecipient[];
+  recipients: CoinSelectionRecipient[];
   isSendMax?: boolean;
 }) {
   const { inputLength, recipients, isSendMax } = payload;
@@ -68,11 +63,13 @@ export function getSpendableAmount({
   feeRate,
   recipients,
 }: {
-  utxos: Utxo[];
+  utxos: CoinSelectionUtxo[];
   feeRate: number;
-  recipients: TransferRecipient[];
+  recipients: CoinSelectionRecipient[];
 }) {
-  const balance = utxos.map(utxo => utxo.value).reduce((prevVal, curVal) => prevVal + curVal, 0);
+  const balance = utxos
+    .map(utxo => Number(utxo.value))
+    .reduce((prevVal, curVal) => prevVal + curVal, 0);
 
   const size = getSizeInfo({
     inputLength: utxos.length,
@@ -92,9 +89,9 @@ export function filterUneconomicalUtxos({
   feeRate,
   recipients,
 }: {
-  utxos: Utxo[];
+  utxos: CoinSelectionUtxo[];
   feeRate: number;
-  recipients: TransferRecipient[];
+  recipients: CoinSelectionRecipient[];
 }) {
   const { spendableAmount: fullSpendableAmount } = getSpendableAmount({
     utxos,
@@ -111,7 +108,7 @@ export function filterUneconomicalUtxos({
         feeRate,
         recipients,
       });
-      // If fullSpendableAmount is greater, do not use that utxo
+      // If fullSpendableAmount is greater, do not use utxo
       return spendableAmount.toNumber() < fullSpendableAmount.toNumber();
     });
   return filteredUtxos;

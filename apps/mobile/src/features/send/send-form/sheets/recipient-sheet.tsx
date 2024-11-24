@@ -8,14 +8,16 @@ import { z } from 'zod';
 
 import { Box, Sheet, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 interface RecipientSheetProps {
   sheetRef: RefObject<SheetRef>;
 }
-export function RecipientSheet({ sheetRef }: RecipientSheetProps) {
-  const { schema } = useSendFormContext();
-  const { control } = useFormContext<z.infer<typeof schema>>();
+export function RecipientSheet<T extends SendFormBaseContext<T>>({
+  sheetRef,
+}: RecipientSheetProps) {
+  const { formData } = useSendFormContext<T>();
+  const { control } = useFormContext<z.infer<typeof formData.schema>>();
   const { themeDerivedFromThemePreference } = useSettings();
 
   return (

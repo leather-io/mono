@@ -1,6 +1,10 @@
 import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
 
-import { BitcoinAccountKeychain } from '@leather.io/bitcoin';
+import {
+  BitcoinAccountKeychain,
+  BitcoinNativeSegwitPayer,
+  BitcoinTaprootPayer,
+} from '@leather.io/bitcoin';
 import {
   extractAccountIndexFromDescriptor,
   extractAccountIndexFromPath,
@@ -114,6 +118,36 @@ export function BitcoinAccountLoader({
   );
   if (!nativeSegwit || !taproot) return fallback ?? null;
   return children({ nativeSegwit, taproot });
+}
+
+interface BitcoinPayerLoaderProps {
+  fingerprint: string;
+  accountIndex: number;
+  fallback?: React.ReactNode;
+  children({
+    nativeSegwitPayer,
+    taprootPayer,
+  }: {
+    nativeSegwitPayer: BitcoinNativeSegwitPayer;
+    taprootPayer: BitcoinTaprootPayer;
+  }): React.ReactNode;
+}
+export function BitcoinPayerLoader({
+  fingerprint,
+  accountIndex,
+  fallback,
+  children,
+}: BitcoinPayerLoaderProps) {
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+  if (!nativeSegwit || !taproot) return fallback ?? null;
+
+  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+
+  return children({ nativeSegwitPayer, taprootPayer });
 }
 
 interface StacksSignerLoaderProps {

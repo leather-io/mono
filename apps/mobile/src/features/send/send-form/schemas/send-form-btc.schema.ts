@@ -6,7 +6,7 @@ export const sendFormBtcSchema = z.object({
   }),
   recipient: z.string(),
   memo: z.string().optional(),
-  fee: z.string(),
+  feeRate: z.string(),
 });
 
 export type SendFormBtcSchema = z.infer<typeof sendFormBtcSchema>;
@@ -15,5 +15,5 @@ export const defaultSendFormBtcValues: SendFormBtcSchema = {
   amount: '',
   recipient: '',
   memo: '',
-  fee: '',
+  feeRate: '',
 };

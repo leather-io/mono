@@ -2,14 +2,18 @@ import { TokenBalance } from '@/features/balances/token-balance';
 
 import { Box, Pressable } from '@leather.io/ui/native';
 
-import { useSendFormContext } from '../send-form-context';
+import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 interface SendFormAssetProps {
   icon: React.ReactNode;
   onPress(): void;
 }
-export function SendFormAsset({ icon, onPress }: SendFormAssetProps) {
-  const { name, protocol, availableBalance, fiatBalance, symbol } = useSendFormContext();
+export function SendFormAsset<T extends SendFormBaseContext<T>>({
+  icon,
+  onPress,
+}: SendFormAssetProps) {
+  const { formData } = useSendFormContext<T>();
+  const { availableBalance, fiatBalance, protocol, symbol, name } = formData;
 
   return (
     <Pressable onPress={onPress}>

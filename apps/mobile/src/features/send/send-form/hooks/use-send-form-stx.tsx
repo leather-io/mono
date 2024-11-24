@@ -1,7 +1,4 @@
-import {
-  useGenerateStxTokenTransferUnsignedTransaction,
-  useStxAccountTransferDetails,
-} from '@/common/transactions/stacks-transactions.hooks';
+import { useGenerateStxTokenTransferUnsignedTransaction } from '@/common/transactions/stacks-transactions.hooks';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
@@ -12,6 +9,7 @@ import {
   useSendSheetNavigation,
   useSendSheetRoute,
 } from '../../send-form.utils';
+import { SendFormStxContext } from '../providers/send-form-stx-provider';
 import { SendFormStxSchema } from '../schemas/send-form-stx.schema';
 
 export type CurrentRoute = CreateCurrentSendRoute<'send-form-stx'>;
@@ -29,19 +27,18 @@ function parseSendFormValues(values: SendFormStxSchema) {
 export function useSendFormStx() {
   const route = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
-  const stxAccountDetails = useStxAccountTransferDetails(
+
+  const generateTx = useGenerateStxTokenTransferUnsignedTransaction(
     route.params.address,
     route.params.publicKey
   );
-
-  const generateTx = useGenerateStxTokenTransferUnsignedTransaction(stxAccountDetails);
 
   return {
     onGoBack() {
       navigation.navigate('send-select-asset', { account: route.params.account });
     },
     // Temporary logs until we can hook up to approver flow
-    async onInitSendTransfer(values: SendFormStxSchema) {
+    async onInitSendTransfer(data: SendFormStxContext, values: SendFormStxSchema) {
       // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
       console.log('Send form data:', values);
       const tx = await generateTx(parseSendFormValues(values));
@@ -52,6 +49,8 @@ export function useSendFormStx() {
       const txHex = bytesToHex(tx.serialize());
       // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
       console.log('tx hex:', txHex);
+      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      console.log('fees:', data.fees);
     },
   };
 }
