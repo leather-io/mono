@@ -19,7 +19,7 @@ export function StacksActivity() {
     // activity.map(activity => activity.data)
   );
   console.log('=====================================');
-  return confirmedTxs.map(tx => <StacksActivityCell key={tx.tx_id} tx={tx} onPress={() => {}} />);
+  return confirmedTxs.map(tx => <StacksActivityCell key={tx.tx_id} tx={tx} />);
 }
 
 interface StacksActivityByAccountProps {
@@ -38,5 +38,5 @@ export function StacksActivityByAccount({
   }
   const { confirmedTxs } = useStacksActivity([address]);
   //   console.log('StacksActivityByAccount activity', activity);
-  return confirmedTxs.map(tx => <StacksActivityCell tx={tx} onPress={onPress} />);
+  return confirmedTxs.map(tx => <StacksActivityCell tx={tx} />);
 }
