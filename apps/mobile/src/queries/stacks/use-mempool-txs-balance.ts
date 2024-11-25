@@ -29,9 +29,10 @@ function getPendingTxs(confirmedTxs: Transaction[], pendingTxs: MempoolTransacti
 }
 
 export function useMempoolTxs(addresses: string[]) {
+  // Probably need to use combined query here
   const { transactions: pendingTransactions, query } = useStacksPendingTransactions(addresses);
   const confirmedTxs = useStacksConfirmedTransactions(addresses);
-  const pendingTxs = getPendingTxs(confirmedTxs, pendingTransactions);
+  const pendingTxs = getPendingTxs(confirmedTxs, pendingTransactions); // do and cache this filter in query
   return {
     query,
     confirmedTxs,

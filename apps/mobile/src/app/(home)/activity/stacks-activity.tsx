@@ -1,36 +1,25 @@
-import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import { useStacksActivity } from '@/queries/activity/stacks-activity.query';
-import { useStacksSignerAddresses } from '@/store/keychains/stacks/stacks-keychains.read';
-import { t } from '@lingui/macro';
+import {
+  useStacksSignerAddressFromAccountIndex,
+  useStacksSignerAddresses,
+} from '@/store/keychains/stacks/stacks-keychains.read';
 
-import { ActivityCell } from './activity-cell';
-
-interface StacksActivityCellProps {
-  onPress?(): void;
-}
-export function StacksActivityCell({ onPress }: StacksActivityCellProps) {
-  return (
-    <ActivityCell
-      ticker="STX"
-      icon={<TokenIcon ticker="STX" />}
-      tokenName={t({
-        id: 'asset_name.stacks',
-        message: 'Stacks',
-      })}
-      chain={t({
-        id: 'asset_name.layer_1',
-        message: 'Layer 1',
-      })}
-      onPress={onPress}
-    />
-  );
-}
+import { StacksActivityCell } from './stacks-activity-cell';
 
 export function StacksActivity() {
   const addresses = useStacksSignerAddresses();
-  const { activity } = useStacksActivity(addresses);
-  //   console.log('StacksActivity activity', activity);
-  return <StacksActivityCell onPress={() => {}} />;
+  const { query, pendingTxs, confirmedTxs } = useStacksActivity(addresses);
+  console.log('=====================================');
+  // actually all balance stuff
+  console.log(
+    'StacksActivity activity',
+    // query // {"isPending": false, "totalData": []}
+    pendingTxs,
+    confirmedTxs
+    // activity.map(activity => activity.data)
+  );
+  console.log('=====================================');
+  return confirmedTxs.map(tx => <StacksActivityCell key={tx.tx_id} tx={tx} onPress={() => {}} />);
 }
 
 interface StacksActivityByAccountProps {
@@ -43,8 +32,11 @@ export function StacksActivityByAccount({
   fingerprint,
   onPress,
 }: StacksActivityByAccountProps) {
-  const addresses = useStacksSignerAddresses({ accountIndex, fingerprint });
-  const { activity } = useStacksActivity(addresses);
+  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
+  if (!address) {
+    throw new Error('Stacks address not found');
+  }
+  const { confirmedTxs } = useStacksActivity([address]);
   //   console.log('StacksActivityByAccount activity', activity);
-  return <StacksActivityCell onPress={onPress} />;
+  return confirmedTxs.map(tx => <StacksActivityCell tx={tx} onPress={onPress} />);
 }
