@@ -1,6 +1,6 @@
 export const marketDataQueryOptions = {
   staleTime: 1000 * 60,
-  refetchOnMount: false,
+  refetchOnMount: true,
   refetchInterval: false,
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,

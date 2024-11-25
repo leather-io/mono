@@ -9,7 +9,7 @@ export function createBtcMarketDataQueryOptions() {
     queryFn: ({ signal }: QueryFunctionContext) => getMarketDataService().getBtcMarketData(signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     retryOnMount: false,
     staleTime: oneMinInMs,
     gcTime: oneMinInMs,

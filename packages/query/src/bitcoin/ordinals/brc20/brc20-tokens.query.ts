@@ -108,7 +108,7 @@ export function useGetBrc20TokensQuery({
         fromIndex: fromIndex + addressesSimultaneousFetchLimit,
       };
     },
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: true,
     staleTime: 5 * 60 * 1000,
