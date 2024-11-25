@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.21.0...@leather.io/models-v0.22.0) (2024-11-25)
+
+
+### Features
+
+* migrate stacks generate txs, closes LEA-1732 ([95a00fd](https://github.com/leather-io/mono/commit/95a00fd0a9f54718146a08a4fe50c92455e86961))
+
 ## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.20.0...@leather.io/models-v0.21.0) (2024-11-21)
 
 

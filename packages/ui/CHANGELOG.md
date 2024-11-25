@@ -151,6 +151,27 @@
   * devDependencies
     * @leather.io/models bumped to 0.21.0
 
+## [1.37.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.36.2...@leather.io/ui-v1.37.0) (2024-11-25)
+
+
+### Features
+
+* migrate stacks generate txs, closes LEA-1732 ([95a00fd](https://github.com/leather-io/mono/commit/95a00fd0a9f54718146a08a4fe50c92455e86961))
+
+
+### Bug Fixes
+
+* sheet content style ([7639093](https://github.com/leather-io/mono/commit/7639093d245fe11e482794cb61aa7672a4fbc5d8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.20.0
+  * devDependencies
+    * @leather.io/models bumped to 0.22.0
+
 ## [1.36.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.35.0...@leather.io/ui-v1.36.0) (2024-11-19)
 
 

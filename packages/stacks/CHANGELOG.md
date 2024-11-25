@@ -140,6 +140,29 @@
     * @leather.io/models bumped to 0.21.0
     * @leather.io/utils bumped to 0.19.2
 
+## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.3.6...@leather.io/stacks-v1.4.0) (2024-11-25)
+
+
+### Features
+
+* migrate stacks generate txs, closes LEA-1732 ([95a00fd](https://github.com/leather-io/mono/commit/95a00fd0a9f54718146a08a4fe50c92455e86961))
+
+
+### Bug Fixes
+
+* ensure correct accountIndex is added to stacks signers ([9d21126](https://github.com/leather-io/mono/commit/9d2112614c6378da18737f1860f0875c8cb577fd))
+* refactor to cleanup accessing stacks signeraddresses ([8d0b3dd](https://github.com/leather-io/mono/commit/8d0b3dd24b935dc9c398db48466b773c528b32ca))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.13.5
+    * @leather.io/crypto bumped to 1.6.14
+    * @leather.io/models bumped to 0.22.0
+    * @leather.io/utils bumped to 0.20.0
+
 ## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.2.4...@leather.io/stacks-v1.3.0) (2024-11-05)
 
 
