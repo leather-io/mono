@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { alex } from './alex-sdk.hooks';
 
 const queryOptions = {
-  refetchOnMount: false,
+  refetchOnMount: true,
   refetchOnReconnect: false,
   refetchOnWindowFocus: false,
   retryDelay: 1000 * 60,
