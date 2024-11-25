@@ -264,6 +264,39 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.53.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.52.2...@leather.io/mobile-v1.53.0) (2024-11-25)
+
+
+### Features
+
+* migrate stacks generate txs, closes LEA-1732 ([95a00fd](https://github.com/leather-io/mono/commit/95a00fd0a9f54718146a08a4fe50c92455e86961))
+
+
+### Bug Fixes
+
+* ensure correct accountIndex is added to stacks signers ([59af396](https://github.com/leather-io/mono/commit/59af39642d123a28aa6186609285f3700cb3b3ba))
+* filter signers by account index to obtain address ([5ff5a98](https://github.com/leather-io/mono/commit/5ff5a98f3c397c8f5158bab856ca3adc42408f1b))
+* go to account from accountsheet, add real balances and address ref LEA-1552 ([5abb340](https://github.com/leather-io/mono/commit/5abb34039c66c69d651307280f05e46c6413816b))
+* refactor to cleanup accessing stacks signeraddresses ([8d0b3dd](https://github.com/leather-io/mono/commit/8d0b3dd24b935dc9c398db48466b773c528b32ca))
+* roll back STX market data service to ensure price accuracy ([165e1cc](https://github.com/leather-io/mono/commit/165e1cc62fd54f517c1295de41ed2b47a747d3f9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.16.7
+    * @leather.io/constants bumped to 0.13.5
+    * @leather.io/crypto bumped to 1.6.14
+    * @leather.io/models bumped to 0.22.0
+    * @leather.io/query bumped to 2.23.1
+    * @leather.io/rpc bumped to 2.1.20
+    * @leather.io/stacks bumped to 1.4.0
+    * @leather.io/ui bumped to 1.37.0
+    * @leather.io/utils bumped to 0.20.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.16.7
+
 ## [1.52.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.51.0...@leather.io/mobile-v1.52.0) (2024-11-19)
 
 

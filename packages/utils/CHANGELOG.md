@@ -155,6 +155,22 @@
     * @leather.io/models bumped to 0.21.0
     * @leather.io/rpc bumped to 2.1.19
 
+## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.19.2...@leather.io/utils-v0.20.0) (2024-11-25)
+
+
+### Features
+
+* migrate stacks generate txs, closes LEA-1732 ([95a00fd](https://github.com/leather-io/mono/commit/95a00fd0a9f54718146a08a4fe50c92455e86961))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.13.5
+    * @leather.io/models bumped to 0.22.0
+    * @leather.io/rpc bumped to 2.1.20
+
 ## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.18.0...@leather.io/utils-v0.19.0) (2024-11-19)
 
 
