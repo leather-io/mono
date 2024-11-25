@@ -61,3 +61,7 @@ export * from './arrow-out-of-box-icon.web';
 export * from './square-lines-bottom-icon.web';
 export * from './passport-icon.web';
 export * from './head-icon.web';
+export * from './fee-animals/animal-chameleon.web';
+export * from './fee-animals/animal-eagle.web';
+export * from './fee-animals/animal-rabbit.web';
+export * from './fee-animals/animal-snail.web';
