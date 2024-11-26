@@ -65,3 +65,4 @@ export * from './fee-animals/animal-chameleon.web';
 export * from './fee-animals/animal-eagle.web';
 export * from './fee-animals/animal-rabbit.web';
 export * from './fee-animals/animal-snail.web';
+export * from './user-icon.web';
