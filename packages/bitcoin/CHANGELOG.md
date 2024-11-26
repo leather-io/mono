@@ -310,6 +310,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.1.20
 
+## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.16.7...@leather.io/bitcoin-v0.17.0) (2024-11-26)
+
+
+### Features
+
+* migrate btc coin selection, closes LEA-1734 ([0cad7aa](https://github.com/leather-io/mono/commit/0cad7aaa35fbc8704d959a16d12965502757fe89))
+
 ## [0.16.4](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.16.3...@leather.io/bitcoin-v0.16.4) (2024-11-19)
 
 

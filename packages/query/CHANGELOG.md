@@ -206,6 +206,20 @@
     * @leather.io/rpc bumped to 2.1.20
     * @leather.io/utils bumped to 0.20.0
 
+## [2.23.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.23.1...@leather.io/query-v2.23.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* **query:** fetch on mounts ([1df5fca](https://github.com/leather-io/mono/commit/1df5fca0cc92971da283453c3af2d88e81b552b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.17.0
+
 ## [2.23.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.22.4...@leather.io/query-v2.23.0) (2024-11-21)
 
 

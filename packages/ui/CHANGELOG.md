@@ -151,6 +151,15 @@
   * devDependencies
     * @leather.io/models bumped to 0.21.0
 
+## [1.38.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.37.0...@leather.io/ui-v1.38.0) (2024-11-26)
+
+
+### Features
+
+* add amount field component ([c81acb1](https://github.com/leather-io/mono/commit/c81acb1712c4434ee20c0b96a5bd230ded549b14))
+* add slider component ([d61f889](https://github.com/leather-io/mono/commit/d61f8896f2317a5e636e298c35ba674727759085))
+* add web animal icons ([5b44a9f](https://github.com/leather-io/mono/commit/5b44a9f6f60e1b74132d58ae60b1dcc4f30649cd))
+
 ## [1.37.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.36.2...@leather.io/ui-v1.37.0) (2024-11-25)
 
 
