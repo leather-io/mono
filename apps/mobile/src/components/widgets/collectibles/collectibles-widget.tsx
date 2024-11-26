@@ -31,7 +31,7 @@ export function CollectiblesWidget({ collectibles, totalBalance }: CollectiblesW
       <Widget.Body>
         <ScrollView
           horizontal
-          showsHorizontalScrollIndicator
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             gap: theme.spacing['3'],
             paddingHorizontal: theme.spacing['5'],
