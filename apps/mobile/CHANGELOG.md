@@ -264,6 +264,29 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.54.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.53.0...@leather.io/mobile-v1.54.0) (2024-11-26)
+
+
+### Features
+
+* add amount field component ([c81acb1](https://github.com/leather-io/mono/commit/c81acb1712c4434ee20c0b96a5bd230ded549b14))
+
+
+### Bug Fixes
+
+* **query:** fetch on mounts ([1df5fca](https://github.com/leather-io/mono/commit/1df5fca0cc92971da283453c3af2d88e81b552b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.17.0
+    * @leather.io/query bumped to 2.23.2
+    * @leather.io/ui bumped to 1.38.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.17.0
+
 ## [1.53.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.52.2...@leather.io/mobile-v1.53.0) (2024-11-25)
 
 
