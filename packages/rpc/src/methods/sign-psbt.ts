@@ -1,6 +1,14 @@
-import { DefaultNetworkConfigurations } from '@leather.io/models';
+import { SigHash } from '@scure/btc-signer/transaction';
+import { z } from 'zod';
 
+import { testIsNumberOrArrayOfNumbers } from '../rpc/helpers';
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { baseNetworkSchema } from '../schemas/network-schemas';
+import {
+  formatValidationErrors,
+  getRpcParamErrors,
+  validateRpcParams,
+} from '../schemas/validators';
 
 /**
  * DEFAULT       -- all inputs, all outputs
@@ -21,15 +29,41 @@ export enum SignatureHash {
   SINGLE_ANYONECANPAY = 0x83,
 }
 
-export interface SignPsbtRequestParams {
-  account?: number;
-  allowedSighash?: SignatureHash[];
-  broadcast: boolean;
-  hex: string;
-  network: DefaultNetworkConfigurations;
-  signAtIndex?: number | number[];
-  [x: string]: unknown;
+export type AllowedSighashTypes = SignatureHash | SigHash;
+
+// Pass all sighashTypes through as allowed to btc-signer
+export const allSighashTypes = [
+  SigHash.DEFAULT,
+  SignatureHash.ALL,
+  SignatureHash.NONE,
+  SignatureHash.SINGLE,
+  SigHash.ALL_ANYONECANPAY,
+  SignatureHash.ALL_ANYONECANPAY,
+  SignatureHash.NONE_ANYONECANPAY,
+  SignatureHash.SINGLE_ANYONECANPAY,
+];
+
+export const rpcSignPsbtParamsSchema = z.object({
+  account: z.number().int().optional(),
+  allowedSighash: z.array(z.any()).optional(),
+  broadcast: z.boolean().optional(),
+  hex: z.string(),
+  network: baseNetworkSchema.optional(),
+  signAtIndex: z
+    .union([z.number(), z.array(z.number())])
+    .optional()
+    .refine(testIsNumberOrArrayOfNumbers),
+});
+
+export function validateRpcSignPsbtParams(obj: unknown) {
+  return validateRpcParams(obj, rpcSignPsbtParamsSchema);
 }
+
+export function getRpcSignPsbtParamErrors(obj: unknown) {
+  return formatValidationErrors(getRpcParamErrors(obj, rpcSignPsbtParamsSchema));
+}
+
+export type SignPsbtRequestParams = z.infer<typeof rpcSignPsbtParamsSchema>;
 
 export interface SignPsbtResponseBody {
   hex: string;

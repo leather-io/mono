@@ -18,7 +18,10 @@
   },
   "dependencies": {
     "@leather.io/models": "workspace:*",
-    "zod": "3.23.8"
+    "@leather.io/utils": "workspace:*",
+    "@scure/btc-signer": "1.4.0",
+    "zod": "3.23.8",
+    "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
     "tsup": "8.1.0",

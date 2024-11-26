@@ -29,7 +29,6 @@
   "dependencies": {
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
-    "@leather.io/rpc": "workspace:*",
     "bignumber.js": "9.1.2"
   },
   "devDependencies": {

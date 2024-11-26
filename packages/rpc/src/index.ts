@@ -17,6 +17,9 @@ export * from './methods/send-transfer';
 export * from './methods/sign-message';
 export * from './methods/stx-sign-message';
 
+export * from './schemas/network-schemas';
+export * from './schemas/validators';
+
 export type LeatherRpcMethodMap = DefineGetInfoMethod &
   DefineGetAddressesMethod &
   DefineSignPsbtMethod &
