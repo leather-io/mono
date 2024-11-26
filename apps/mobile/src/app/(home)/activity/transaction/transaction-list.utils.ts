@@ -1,6 +1,8 @@
 // TODO: refactor out of extension
 import dayjs from 'dayjs';
 
+import { StacksTx } from '@leather.io/models';
+
 // import { isUndefined } from '@leather.io/utils';
 // import { displayDate, isoDateToLocalDateSafe, todaysIsoDate } from '@app/common/date-utils';
 import {
@@ -21,7 +23,7 @@ import {
 // }
 
 // maybe blockchain should now be protocol ?
-export function getTransactionTime({ blockchain, transaction }: TransactionListTxs) {
+export function getTransactionTime({ blockchain, transaction }: TransactionListTxs | StacksTx) {
   switch (blockchain) {
     case 'bitcoin':
       if (!transaction.status.block_time) return;

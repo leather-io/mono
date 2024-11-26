@@ -1,9 +1,9 @@
 import { Linking } from 'react-native';
 
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
-import { AddressTransactionWithTransfers } from '@stacks/stacks-blockchain-api-types';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
+import { StacksTx, StacksTxStatus } from '@leather.io/models';
 import { useCurrentNetworkState } from '@leather.io/query';
 
 import { ActivityCell } from './activity-cell';
@@ -12,9 +12,9 @@ import { getTransactionTime } from './transaction/transaction-list.utils';
 import { makeStacksTxExplorerLink } from './utils/explorer-link';
 
 interface StacksActivityCellProps {
-  tx: AddressTransactionWithTransfers;
+  tx: StacksTx;
 }
-async function goToExplorer(tx: AddressTransactionWithTransfers, mode: BitcoinNetworkModes) {
+async function goToExplorer(tx: StacksTx, mode: BitcoinNetworkModes) {
   const url = makeStacksTxExplorerLink({
     mode,
     searchParams: undefined,
@@ -24,6 +24,17 @@ async function goToExplorer(tx: AddressTransactionWithTransfers, mode: BitcoinNe
   return await Linking.openURL(url);
 }
 
+// from Extension
+export const statusFromTx = (tx: StacksTx): StacksTxStatus => {
+  const { tx_status } = tx;
+  if (tx_status === 'pending') return 'pending';
+  if (tx_status === 'success') return 'success';
+  return 'failed';
+};
+
+export function isPendingTx(tx: StacksTx) {
+  return tx.tx_status === 'pending';
+}
 export function StacksActivityCell({ tx }: StacksActivityCellProps) {
   // need to show:
   // protocol
@@ -34,6 +45,15 @@ export function StacksActivityCell({ tx }: StacksActivityCellProps) {
   const txTime = getTransactionTime({ blockchain: 'stacks', transaction: tx });
   const date = displayDate(txTime);
   const { mode } = useCurrentNetworkState();
+
+  const value = `${isOriginator ? '-' : ''}${stacksValue({
+    value: stxTransfer.amount,
+    withTicker: false,
+  })}`;
+  >>> focus on transaction value now 
+  // need to add code to determine if originator also using lookup to addresses 
+  // probably need to move all of this up to the query level and just map over txs and output final data
+
   return (
     <ActivityCell
       title="failed to send"
