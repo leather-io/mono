@@ -13,7 +13,7 @@ export function IconWithActivity({
   return (
     <View style={{ position: 'relative' }}>
       {avatar}
-      <ActivityIcon activity={activity ?? 'send'} />
+      {activity && <ActivityIcon activity={activity} />}
     </View>
   );
 }
