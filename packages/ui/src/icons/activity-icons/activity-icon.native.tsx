@@ -8,13 +8,24 @@ import { Theme } from 'src/theme-native';
 import { Icon } from '../icon/icon.native';
 import { ActivityIconType } from './types.shared';
 
-interface Props {
+interface ActivityIconProps {
   activity: ActivityIconType;
 }
 
-export function ActivityIcon({ activity }: Props) {
+const useBackgroundColor = (activity: ActivityIconType) => {
+  const theme = useTheme<Theme>();
+  switch (activity) {
+    case 'error':
+      return theme.colors['red.action-primary-default'];
+    default:
+      return theme.colors['ink.text-primary'];
+  }
+};
+
+export function ActivityIcon({ activity }: ActivityIconProps) {
   const theme = useTheme<Theme>();
   const Component = activityIconMap[activity];
+  const backgroundColor = useBackgroundColor(activity);
   return (
     <View
       style={{
@@ -23,7 +34,7 @@ export function ActivityIcon({ activity }: Props) {
         right: -6,
         height: 24,
         width: 24,
-        backgroundColor: theme.colors['ink.text-primary'],
+        backgroundColor,
         borderColor: theme.colors['ink.background-primary'],
         borderWidth: 3,
         borderRadius: 1000,
