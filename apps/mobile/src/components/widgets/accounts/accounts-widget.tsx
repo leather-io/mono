@@ -47,7 +47,7 @@ export function AccountsWidget() {
         <Widget.Body>
           <ScrollView
             horizontal
-            showsHorizontalScrollIndicator
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               gap: theme.spacing['3'],
               paddingHorizontal: theme.spacing['5'],
