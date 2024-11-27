@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@leather.io/eslint-config": "workspace:*",
+    "@leather.io/models": "workspace:*",
     "@types/node": "20.14.0",
     "concurrently": "8.2.2",
     "eslint": "8.53.0",

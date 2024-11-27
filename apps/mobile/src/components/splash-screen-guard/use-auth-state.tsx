@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 const unlockTimeout = 60 * 1000;
@@ -42,8 +43,10 @@ export function useAuthState({
         playSplash();
         if (firstTry) {
           setAuthState('passed-on-first');
+          analytics.track('app_unlocked');
         } else {
           setAuthState('passed-afterwards');
+          analytics.track('app_unlocked');
         }
       } else {
         setAuthState('failed');
@@ -73,6 +76,7 @@ export function useAuthState({
     setAnimationFinished(false);
     setAuthState('failed');
     userLeavesApp(null);
+    analytics.track('app_locked');
   }, [setAnimationFinished, setAuthState, userLeavesApp]);
 
   useAppState({
