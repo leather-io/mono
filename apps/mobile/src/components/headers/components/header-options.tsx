@@ -36,13 +36,15 @@ export function HeaderOptions() {
       >
         <SettingsGearIcon />
       </TouchableOpacity>
-      <TouchableOpacity
-        p="2"
-        onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
-        testID={TestId.homeDeveloperToolsButton}
-      >
-        <PulseIcon />
-      </TouchableOpacity>
+      {process.env.NODE_ENV === 'development' && (
+        <TouchableOpacity
+          p="2"
+          onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
+          testID={TestId.homeDeveloperToolsButton}
+        >
+          <PulseIcon />
+        </TouchableOpacity>
+      )}
     </Box>
   );
 }
