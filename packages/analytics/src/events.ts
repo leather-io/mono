@@ -1,7 +1,13 @@
 // All new events should use the object-action framework.
+import { DefaultNetworkConfigurations } from '@leather.io/models';
+
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
-  test_event_submitted: undefined;
+  user_setting_updated: UserSettingValue;
+  wallet_created: WalletCreatedValue;
+  wallet_restored: WalletCreatedValue;
+  app_unlocked: undefined;
+  app_locked: undefined;
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
@@ -102,3 +108,21 @@ interface HistoricalEvents {
 }
 
 export type EventName = keyof Events;
+
+type UserSettingValue =
+  | { account_display: 'stacks' | 'native-segwit' | 'taproot' | 'bns' }
+  | { analytics: 'consent-given' | 'rejects-tracking' }
+  | { bitcoin_unit: 'bitcoin' | 'satoshi' }
+  | { email_address: string }
+  | { fiat_currency: string }
+  | {
+      network: DefaultNetworkConfigurations;
+    }
+  | { privacy_mode: 'hidden' | 'visible' }
+  | { haptics: 'disabled' | 'enabled' }
+  | { theme: 'light' | 'dark' | 'system' }
+  | { security_level: 'insecure' | 'secure' | 'not-selected' };
+
+interface WalletCreatedValue {
+  type: 'software' | 'ledger';
+}

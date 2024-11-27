@@ -446,6 +446,9 @@ importers:
       '@leather.io/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@leather.io/models':
+        specifier: workspace:*
+        version: link:../models
       '@types/node':
         specifier: 20.14.0
         version: 20.14.0
