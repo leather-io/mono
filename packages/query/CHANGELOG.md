@@ -206,6 +206,13 @@
     * @leather.io/rpc bumped to 2.1.20
     * @leather.io/utils bumped to 0.20.0
 
+## [2.23.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.23.2...@leather.io/query-v2.23.3) (2024-11-27)
+
+
+### Bug Fixes
+
+* add sbtc config to wallet config ([2ff7961](https://github.com/leather-io/mono/commit/2ff7961e9d9b25d7814054675adf73cfee392d51))
+
 ## [2.23.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.23.1...@leather.io/query-v2.23.2) (2024-11-26)
 
 

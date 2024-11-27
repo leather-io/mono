@@ -264,6 +264,25 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.54.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.54.0...@leather.io/mobile-v1.54.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* adjust width of create account card, ref LEA-1786 ([79ebbac](https://github.com/leather-io/mono/commit/79ebbac923b9922fdcfde814d6b5e327fb917983))
+* disable click of My Accounts if no accounts created ref LEA-1783 ([1c898ae](https://github.com/leather-io/mono/commit/1c898aec65dd436bcb40652859571155471ec500))
+* hide developer menu for non production builds, ref LEA-1796 ([36f4e88](https://github.com/leather-io/mono/commit/36f4e886391644a541f44b7768ca05435e39197f))
+* hide the scrollbar on accounts and collectibles widgets ([489b500](https://github.com/leather-io/mono/commit/489b5009318412786fdd98f19b9fc2921b504c1c))
+* only show tokenlist if the user has wallets, ref #LEA-1787 ([8faf418](https://github.com/leather-io/mono/commit/8faf4186f2363d6e93a90967085fa8f3ceb428ea))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.23.3
+    * @leather.io/ui bumped to 1.39.0
+
 ## [1.54.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.53.0...@leather.io/mobile-v1.54.0) (2024-11-26)
 
 
