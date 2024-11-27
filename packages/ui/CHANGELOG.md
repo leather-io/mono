@@ -151,6 +151,26 @@
   * devDependencies
     * @leather.io/models bumped to 0.21.0
 
+## [1.39.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.38.0...@leather.io/ui-v1.39.0) (2024-11-27)
+
+
+### Features
+
+* add user icon ([1484830](https://github.com/leather-io/mono/commit/1484830fc8c176886fff88fb34f905281bda0c03))
+* export slider ([9df7fbd](https://github.com/leather-io/mono/commit/9df7fbda64d67286ac4f2fe0bd56fb75f8cd0774))
+
+
+### Bug Fixes
+
+* button spinner color ([3d1d6f8](https://github.com/leather-io/mono/commit/3d1d6f86a913d83cabeca4a99665294b6cee7de7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.5.3
+
 ## [1.38.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.37.0...@leather.io/ui-v1.38.0) (2024-11-26)
 
 

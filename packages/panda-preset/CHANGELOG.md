@@ -84,6 +84,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.12.1
 
+## [0.5.3](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.5.2...@leather.io/panda-preset-v0.5.3) (2024-11-27)
+
+
+### Bug Fixes
+
+* button spinner color ([3d1d6f8](https://github.com/leather-io/mono/commit/3d1d6f86a913d83cabeca4a99665294b6cee7de7))
+
 ## [0.5.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.4.3...@leather.io/panda-preset-v0.5.0) (2024-11-15)
 
 
