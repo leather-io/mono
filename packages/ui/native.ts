@@ -53,3 +53,4 @@ export { usePressedState } from './src/hooks/use-pressed-state.native';
 export { useHaptics, HapticsProvider } from './src/hooks/use-haptics.native';
 export { Approver } from './src/components/approver/approver.native';
 export { Badge, type BadgeVariant } from './src/components/badge/badge.native';
+export { Banner, type BannerProps } from './src/components/banner/banner.native';
