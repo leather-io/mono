@@ -6,7 +6,7 @@ import { BitcoinNetwork } from '@leather.io/models';
 
 // E.g.
 // mainnet/wpkh(xpub6CxzM41aUbKigFCifZxs9wkX37SMm5qRFqYjk1VdUZtwK3a5YoNnqZuNe29xycKLLThEEXDaKLLhke2Kwi2xKhrj14mwCCyzBGChGcaJH9L)
-const balanceApi = 'https://leather-bitcoin-balances.kyran-093.workers.dev/{network}/{descriptor}';
+const balanceApi = 'https://leather-bitcoin-balances.wallet-6d1.workers.dev/{network}/{descriptor}';
 
 function makeBalanceApiUrl(network: BitcoinNetwork, descriptor: string) {
   return balanceApi.replace('{network}', network).replace('{descriptor}', descriptor);
@@ -14,7 +14,7 @@ function makeBalanceApiUrl(network: BitcoinNetwork, descriptor: string) {
 
 const utxoSchema = z.object({
   address: z.string(),
-  confirmations: z.number(),
+  confirmations: z.number().optional(),
   // Unconfirmed utxos appear in this response. Height omitted when unconfirmed.
   height: z.number().optional(),
   path: z.string(),
