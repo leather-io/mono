@@ -206,6 +206,29 @@
     * @leather.io/rpc bumped to 2.1.20
     * @leather.io/utils bumped to 0.20.0
 
+## [2.24.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.23.3...@leather.io/query-v2.24.0) (2024-11-29)
+
+
+### Features
+
+* migrate bitcoin generate txs, closes LEA-1735 ([44fd6cf](https://github.com/leather-io/mono/commit/44fd6cfd29a2016b38d96b4e80e377ae7eae81df))
+
+
+### Bug Fixes
+
+* update btc balance api url and zod schema ([851d250](https://github.com/leather-io/mono/commit/851d250366976423c622dfe5f63956e3232ae66e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.18.0
+    * @leather.io/constants bumped to 0.13.6
+    * @leather.io/models bumped to 0.23.0
+    * @leather.io/rpc bumped to 2.1.21
+    * @leather.io/utils bumped to 0.20.1
+
 ## [2.23.3](https://github.com/leather-io/mono/compare/@leather.io/query-v2.23.2...@leather.io/query-v2.23.3) (2024-11-27)
 
 

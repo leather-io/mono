@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.22.0...@leather.io/models-v0.23.0) (2024-11-29)
+
+
+### Features
+
+* migrate bitcoin generate txs, closes LEA-1735 ([44fd6cf](https://github.com/leather-io/mono/commit/44fd6cfd29a2016b38d96b4e80e377ae7eae81df))
+
 ## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.21.0...@leather.io/models-v0.22.0) (2024-11-25)
 
 
