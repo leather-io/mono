@@ -264,6 +264,30 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.55.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.54.1...@leather.io/mobile-v1.55.0) (2024-11-29)
+
+
+### Features
+
+* migrate bitcoin generate txs, closes LEA-1735 ([44fd6cf](https://github.com/leather-io/mono/commit/44fd6cfd29a2016b38d96b4e80e377ae7eae81df))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.18.0
+    * @leather.io/constants bumped to 0.13.6
+    * @leather.io/crypto bumped to 1.6.15
+    * @leather.io/models bumped to 0.23.0
+    * @leather.io/query bumped to 2.24.0
+    * @leather.io/rpc bumped to 2.1.21
+    * @leather.io/stacks bumped to 1.5.0
+    * @leather.io/ui bumped to 1.39.1
+    * @leather.io/utils bumped to 0.20.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.18.0
+
 ## [1.54.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.54.0...@leather.io/mobile-v1.54.1) (2024-11-27)
 
 
