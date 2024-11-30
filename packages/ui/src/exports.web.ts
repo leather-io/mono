@@ -6,7 +6,7 @@ export {
 export * from './components/avatar';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
-export { Callout } from './components/callout/callout.web';
+export { Callout, type CalloutProps } from './components/callout/callout.web';
 export * from './components/sheet';
 export { DropdownMenu } from './components/dropdown-menu/dropdown-menu.web';
 export { Flag, type FlagProps } from './components/flag/flag.web';
