@@ -18,6 +18,7 @@ export * from './chevron-left-icon.native';
 export * from './chevron-right-icon.native';
 export * from './chevron-up-icon.native';
 export * from './close-icon.native';
+export * from './cloud-off-icon.native';
 export * from './cookie-icon.native';
 export * from './copy-icon.native';
 export * from './dollar-circle-icon.native';

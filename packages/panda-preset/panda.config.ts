@@ -6,4 +6,13 @@ export default defineConfig({
   exclude: [],
   prefix: 'leather',
   outdir: 'leather-styles',
+  staticCss: {
+    css: [
+      {
+        properties: {
+          maxContentWidth: ['*'],
+        },
+      },
+    ],
+  },
 });
