@@ -5,6 +5,7 @@ export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
 export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.native';
 export { Box } from './src/components/box/box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
+export { Callout, type CalloutProps } from './src/components/callout/callout.native';
 export { Chip } from './src/components/chip/chip.native';
 export { HStack } from './src/components/box/hstack.native';
 export { Stack } from './src/components/box/stack.native';

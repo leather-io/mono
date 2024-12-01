@@ -17,16 +17,6 @@ export default defineConfig({
 
   strictTokens: false,
 
-  staticCss: {
-    css: [
-      {
-        properties: {
-          maxContentWidth: ['*'],
-        },
-      },
-    ],
-  },
-
   outdir: 'leather-styles',
   outExtension: 'js',
   minify: true,
