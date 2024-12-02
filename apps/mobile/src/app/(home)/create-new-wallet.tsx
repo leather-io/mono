@@ -37,6 +37,12 @@ export default function CreateNewWallet() {
     void tempMnemonicStore.setTemporaryMnemonic(tempMnemonic);
   }, []);
 
+  // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
+  /* eslint-disable-next-line lingui/no-unlocalized-strings  */
+  const view_secret_key_label_a = 'Tap to view Secret Key';
+  /* eslint-disable-next-line lingui/no-unlocalized-strings  */
+  const view_secret_key_label_b = 'For your eyes only';
+
   return (
     <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
       <AnimatedHeaderScreenLayout
@@ -82,17 +88,9 @@ export default function CreateNewWallet() {
               >
                 <PointerHandIcon />
                 <Box>
-                  <Text variant="label02">
-                    {t({
-                      id: 'create_new_wallet.view_secret_key_label_a',
-                      message: 'Tap to view Secret Key',
-                    })}
-                  </Text>
+                  <Text variant="label02">{view_secret_key_label_a}</Text>
                   <Text variant="label02" color="red.action-primary-default">
-                    {t({
-                      id: 'create_new_wallet.view_secret_key_label_b',
-                      message: 'For your eyes only',
-                    })}
+                    {view_secret_key_label_b}
                   </Text>
                 </Box>
               </TouchableOpacity>
