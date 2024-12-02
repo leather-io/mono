@@ -4,7 +4,6 @@ import {
   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,
 } from '@/store/keychains/stacks/stacks-keychains.read';
-import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 
@@ -24,10 +23,13 @@ export function StacksTokenBalance({
     <TokenBalance
       ticker="STX"
       icon={<TokenIcon ticker="STX" />}
-      tokenName={t({
-        id: 'asset_name.stacks',
-        message: 'Stacks',
-      })}
+      // tokenName={t({
+      //   id: 'asset_name.stacks',
+      //   message: 'Stacks',
+      // })}
+      // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
+      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      tokenName="Stacks"
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}

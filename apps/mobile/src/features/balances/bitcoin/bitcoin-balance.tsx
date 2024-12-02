@@ -2,7 +2,6 @@ import {
   useBitcoinAccountTotalBitcoinBalance,
   useWalletTotalBitcoinBalance,
 } from '@/queries/balance/bitcoin-balance.query';
-import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 import { BtcAvatarIcon } from '@leather.io/ui/native';
@@ -23,10 +22,13 @@ export function BitcoinTokenBalance({
     <TokenBalance
       ticker="BTC"
       icon={<BtcAvatarIcon />}
-      tokenName={t({
-        id: 'asset_name.bitcoin',
-        message: 'Bitcoin',
-      })}
+      // tokenName={t({
+      //   id: 'asset_name.bitcoin',
+      //   message: 'Bitcoin',
+      // })}
+      // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
+      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      tokenName="Bitcoin"
       protocol="nativeBtc"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
