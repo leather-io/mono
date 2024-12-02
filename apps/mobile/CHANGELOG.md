@@ -264,6 +264,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.55.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.55.0...@leather.io/mobile-v1.55.1) (2024-12-02)
+
+
+### Bug Fixes
+
+* fix appstore connect deployment to bypass manual approval ([b87299e](https://github.com/leather-io/mono/commit/b87299efb58e748a143f034d4c87ca9d306be450))
+
 ## [1.55.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.54.1...@leather.io/mobile-v1.55.0) (2024-11-29)
 
 
