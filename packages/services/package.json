@@ -16,8 +16,6 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
-    "lint": "eslint . --fix --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
@@ -38,12 +36,10 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@stacks/stacks-blockchain-api-types": "7.8.2",
-    "eslint": "8.53.0",
     "prettier": "3.3.3",
     "tslib": "2.6.2",
     "tsup": "8.1.0",

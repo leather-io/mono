@@ -16,10 +16,10 @@
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
-    "lint": "turbo run lint",
+    "lint": "eslint --max-warnings 0",
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
-    "lint:fix": "turbo run lint:fix",
+    "lint:fix": "pnpm lint --fix",
     "prepare": "husky",
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
@@ -37,10 +37,12 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@ls-lint/ls-lint": "2.2.3",
+    "@tanstack/eslint-plugin-query": "5.62.1",
     "@vitest/coverage-v8": "2.1.5",
     "dependency-cruiser": "16.6.0",
-    "eslint": "8.53.0",
-    "husky": "9.1.4",
+    "eslint-plugin-lingui": "0.4.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.2.10",
     "prettier": "3.3.3",
     "syncpack": "13.0.0",
     "turbo": "2.3.0",
@@ -61,11 +63,6 @@
       "cross-spawn": "7.0.5"
     },
     "packageExtensions": {
-      "eslint-config-next@*": {
-        "dependencies": {
-          "next": "*"
-        }
-      },
       "@expo/cli@*": {
         "dependencies": {
           "metro": "*",
