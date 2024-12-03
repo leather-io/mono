@@ -163,6 +163,22 @@
     * @leather.io/models bumped to 0.23.0
     * @leather.io/rpc bumped to 2.1.21
 
+## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.20.1...@leather.io/utils-v0.21.0) (2024-12-03)
+
+
+### Features
+
+* balances service ([85e13f0](https://github.com/leather-io/mono/commit/85e13f052142d9a26aed3a84c22c36207efa91de))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.13.7
+    * @leather.io/models bumped to 0.24.0
+    * @leather.io/rpc bumped to 2.1.22
+
 ## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.19.2...@leather.io/utils-v0.20.0) (2024-11-25)
 
 

@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.23.0...@leather.io/models-v0.24.0) (2024-12-03)
+
+
+### Features
+
+* balances service ([85e13f0](https://github.com/leather-io/mono/commit/85e13f052142d9a26aed3a84c22c36207efa91de))
+
 ## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.22.0...@leather.io/models-v0.23.0) (2024-11-29)
 
 
