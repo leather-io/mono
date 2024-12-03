@@ -16,8 +16,6 @@
     "build:watch": "concurrently  \"tsc --build --watch --preserveWatchOutput --emitDeclarationOnly\"  \"tsup index.ts --format esm --watch \"  ",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
@@ -59,16 +57,13 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "@tanstack/eslint-plugin-query": "5.51.15",
     "@types/jsdom": "21.1.3",
     "@types/lodash.get": "4.4.9",
     "@types/react": "18.2.79",
     "@types/uuid": "10.0.0",
     "concurrently": "8.2.2",
-    "eslint": "8.53.0",
     "jsdom": "22.1.0",
     "prettier": "3.3.3",
     "tsup": "8.1.0",
