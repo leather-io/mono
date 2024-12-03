@@ -264,6 +264,35 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.56.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.55.1...@leather.io/mobile-v1.56.0) (2024-12-03)
+
+
+### Features
+
+* balances service ([85e13f0](https://github.com/leather-io/mono/commit/85e13f052142d9a26aed3a84c22c36207efa91de))
+
+
+### Bug Fixes
+
+* hardcode broken translations for leatherhood release, ref LEA-1780 ([c61be86](https://github.com/leather-io/mono/commit/c61be86e9802fe63716fc51c9bceb1d80d7808f3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.18.1
+    * @leather.io/constants bumped to 0.13.7
+    * @leather.io/crypto bumped to 1.6.16
+    * @leather.io/models bumped to 0.24.0
+    * @leather.io/query bumped to 2.25.0
+    * @leather.io/rpc bumped to 2.1.22
+    * @leather.io/stacks bumped to 1.5.1
+    * @leather.io/ui bumped to 1.39.2
+    * @leather.io/utils bumped to 0.21.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.18.1
+
 ## [1.55.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.55.0...@leather.io/mobile-v1.55.1) (2024-12-02)
 
 

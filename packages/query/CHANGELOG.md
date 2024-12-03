@@ -206,6 +206,24 @@
     * @leather.io/rpc bumped to 2.1.20
     * @leather.io/utils bumped to 0.20.0
 
+## [2.25.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.24.0...@leather.io/query-v2.25.0) (2024-12-03)
+
+
+### Features
+
+* balances service ([85e13f0](https://github.com/leather-io/mono/commit/85e13f052142d9a26aed3a84c22c36207efa91de))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.18.1
+    * @leather.io/constants bumped to 0.13.7
+    * @leather.io/models bumped to 0.24.0
+    * @leather.io/rpc bumped to 2.1.22
+    * @leather.io/utils bumped to 0.21.0
+
 ## [2.24.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.23.3...@leather.io/query-v2.24.0) (2024-11-29)
 
 
