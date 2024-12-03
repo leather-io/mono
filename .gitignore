@@ -4,6 +4,7 @@ tsconfig.tsbuildinfo
 .turbo/
 .tsup/
 .idea
+.eslintcache
 # macOS
 .DS_Store
 leather-styles

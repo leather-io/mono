@@ -16,8 +16,6 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write \"src/**/*.ts\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.ts\" --ignore-path ../../.prettierignore",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -28,12 +26,9 @@
     }
   },
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@types/node": "20.14.0",
     "concurrently": "8.2.2",
-    "eslint": "8.53.0",
-    "eslint-config-universe": "12.0.0",
     "prettier": "3.3.3",
     "tsup": "8.1.0",
     "typescript": "5.5.4",

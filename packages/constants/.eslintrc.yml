@@ -1,4 +1,0 @@
-extends: '@leather.io/eslint-config'
-parserOptions:
-  project: ./tsconfig.json
-ignorePatterns: .eslintrc.js

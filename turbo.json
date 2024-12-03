@@ -13,21 +13,10 @@
     "build:watch": {},
     "format": {},
     "format:check": {},
-    "lint": {
-      "inputs": [
-        "src/**"
-      ],
-      "outputs": [],
-      "outputLogs": "new-only"
-    },
-    "lint:fix": {
-      "outputs": []
-    },
     "typecheck": {},
     "check:all": {
       "dependsOn": [
         "build",
-        "lint",
         "format",
         "typecheck"
       ]
