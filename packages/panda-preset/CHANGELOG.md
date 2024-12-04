@@ -84,6 +84,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.12.1
 
+## [0.6.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.5.3...@leather.io/panda-preset-v0.6.0) (2024-12-04)
+
+
+### Features
+
+* add mobile version of Callout ([8ef8c97](https://github.com/leather-io/mono/commit/8ef8c97b05c257db1cc82bf6f3fc374e9d393a9e))
+
 ## [0.5.3](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.5.2...@leather.io/panda-preset-v0.5.3) (2024-11-27)
 
 

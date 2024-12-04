@@ -264,6 +264,28 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.16.6
 
+## [1.57.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.56.0...@leather.io/mobile-v1.57.0) (2024-12-04)
+
+
+### Features
+
+* add psbt functionality ([6b676a9](https://github.com/leather-io/mono/commit/6b676a971fbd7497e6c285a818374f13745b032c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.0
+    * @leather.io/constants bumped to 0.14.0
+    * @leather.io/crypto bumped to 1.6.17
+    * @leather.io/query bumped to 2.26.0
+    * @leather.io/stacks bumped to 1.5.2
+    * @leather.io/ui bumped to 1.40.0
+    * @leather.io/utils bumped to 0.21.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.0
+
 ## [1.56.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.55.1...@leather.io/mobile-v1.56.0) (2024-12-03)
 
 

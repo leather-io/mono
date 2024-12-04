@@ -167,6 +167,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.0
 
+## [1.40.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.39.2...@leather.io/ui-v1.40.0) (2024-12-04)
+
+
+### Features
+
+* add mobile version of Callout ([8ef8c97](https://github.com/leather-io/mono/commit/8ef8c97b05c257db1cc82bf6f3fc374e9d393a9e))
+* add psbt functionality ([6b676a9](https://github.com/leather-io/mono/commit/6b676a971fbd7497e6c285a818374f13745b032c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.21.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.6.0
+
 ## [1.39.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.38.0...@leather.io/ui-v1.39.0) (2024-11-27)
 
 
