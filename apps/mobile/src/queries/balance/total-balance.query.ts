@@ -48,7 +48,6 @@ export function useAccountTotalBalance(accountId: AccountId): TotalBalance {
   ]);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =
     useBitcoinAccountTotalBitcoinBalance(accountId);
-
   const totalBalance = sumMoney([btcBalanceUsd, stxBalanceUsd]);
   return {
     btcBalance,

@@ -59,7 +59,7 @@ export function getButtonTextColor(buttonState: ButtonState) {
       default: 'ink.background-primary',
       critical: 'ink.background-primary',
       disabled: 'ink.text-non-interactive',
-      success: 'green.action-primary-default',
+      success: 'ink.background-primary',
       outline: 'ink.action-primary-default',
       ghost: 'ink.text-primary',
     }
@@ -90,7 +90,7 @@ export const Button = forwardRef(
       default: 'ink.text-primary',
       critical: 'red.action-primary-default',
       disabled: 'ink.background-secondary',
-      success: 'green.background-primary',
+      success: 'green.action-primary-default',
       outline: 'ink.background-primary',
       ghost: undefined,
     });

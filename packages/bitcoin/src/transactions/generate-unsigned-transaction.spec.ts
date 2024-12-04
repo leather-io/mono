@@ -1,3 +1,4 @@
+import { hexToBytes } from '@noble/hashes/utils';
 import { describe, expect, it } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
@@ -27,6 +28,12 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     network: getBtcSignerLibNetworkConfigByMode('testnet'),
     payerAddress: 'tb1qxy5r9rlmpcxgwp92x2594q3gg026y4kdv2rsl8',
     payerPublicKey: '0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af',
+    bip32Derivation: [
+      [
+        hexToBytes('0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af'),
+        { fingerprint: 400738063, path: [2147483732, 2147483649, 2147483648, 0, 0] },
+      ],
+    ],
     recipients: [
       {
         address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',

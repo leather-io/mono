@@ -35,6 +35,8 @@ export function AccountList({ accounts, onPress, showWalletInfo }: AccountListPr
           onPress={() => onPress(account)}
           testID={TestId.walletListAccountCard}
           walletName={showWalletInfo ? wallet.name : undefined}
+          px="5"
+          py="3"
         />
       )}
     </WalletLoader>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TextInput } from 'react-native';
 
-import { usePsbtSigner } from '@/features/psbt-signer/psbt-signer';
+import { usePsbtSigner } from '@/features/psbt-signer/use-psbt-signer';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { BitcoinAccountLoader } from '@/store/keychains/keychains';
 import { t } from '@lingui/macro';

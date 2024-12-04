@@ -81,6 +81,7 @@ export function createMarketDataService(
       .map(val => initBigNumber(val))
       .map(val => convertAmountToFractionalUnit(val, currencyDecimalsMap.USD));
     if (prices.length === 0) throw new Error('Unable to fetch price data: ' + currency);
+
     const meanPrice = calculateMeanAverage(prices);
     return createMarketData(createMarketPair(currency, 'USD'), createMoney(meanPrice, 'USD'));
   }

@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Balance } from '@/components/balance/balance';
 
 import { CryptoAssetProtocol, Money } from '@leather.io/models';
-import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { Flag, ItemLayout, Pressable, type PressableProps } from '@leather.io/ui/native';
 
 export function getChainLayerFromAssetProtocol(protocol: CryptoAssetProtocol) {
   switch (protocol) {
@@ -23,14 +23,13 @@ export function getChainLayerFromAssetProtocol(protocol: CryptoAssetProtocol) {
   }
 }
 
-interface TokenBalanceProps {
+interface TokenBalanceProps extends PressableProps {
   ticker: string;
   icon: ReactNode;
   tokenName: string;
   availableBalance?: Money;
   protocol: CryptoAssetProtocol;
   fiatBalance: Money;
-  onPress?(): void;
 }
 export function TokenBalance({
   ticker,
@@ -40,10 +39,11 @@ export function TokenBalance({
   protocol,
   fiatBalance,
   onPress,
+  ...rest
 }: TokenBalanceProps) {
   return (
-    <Pressable flexDirection="row" disabled={!onPress} onPress={onPress}>
-      <Flag key={ticker} img={icon} px="5" py="3">
+    <Pressable flexDirection="row" disabled={!onPress} onPress={onPress} {...rest}>
+      <Flag key={ticker} img={icon}>
         <ItemLayout
           titleLeft={tokenName}
           titleRight={availableBalance && <Balance balance={availableBalance} variant="label02" />}

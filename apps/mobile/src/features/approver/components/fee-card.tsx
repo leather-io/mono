@@ -1,9 +1,11 @@
 import { ReactNode } from 'react';
 
+import { Balance } from '@/components/balance/balance';
 import { FeeBadge } from '@/features/send/fee-badge';
+import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { t } from '@lingui/macro';
 
-import { FeeTypes } from '@leather.io/models';
+import { FeeTypes, Money } from '@leather.io/models';
 import {
   AnimalChameleonIcon,
   AnimalEagleIcon,
@@ -17,9 +19,14 @@ import {
   Pressable,
   Text,
 } from '@leather.io/ui/native';
-import { match } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney, match } from '@leather.io/utils';
 
-export function FeeCard({ feeType }: { feeType: FeeTypes }) {
+interface FeeCardProps {
+  feeType: FeeTypes;
+  amount: Money;
+}
+
+export function FeeCard({ feeType, amount }: FeeCardProps) {
   const matchFeeType = match<FeeTypes>();
   const feeIcon = matchFeeType<ReactNode>(feeType, {
     [FeeTypes.Low]: <AnimalSnailIcon />,
@@ -28,6 +35,12 @@ export function FeeCard({ feeType }: { feeType: FeeTypes }) {
     [FeeTypes.Custom]: <AnimalChameleonIcon />,
     [FeeTypes.Unknown]: <AnimalChameleonIcon />,
   });
+
+  const { data: btcMarketData } = useBtcMarketDataQuery();
+
+  const fiatBalance = btcMarketData
+    ? baseCurrencyAmountInQuote(amount, btcMarketData)
+    : createMoney(0, 'USD');
   return (
     <>
       <Box flexDirection="row">
@@ -56,8 +69,10 @@ export function FeeCard({ feeType }: { feeType: FeeTypes }) {
               id: 'approver.fee.speed.normal',
               message: '~20 mins',
             })}
-            titleRight="0.000034 BTC"
-            captionRight="$ 1.65"
+            titleRight={<Balance balance={amount} variant="label02" />}
+            captionRight={
+              <Balance balance={fiatBalance} variant="label02" color="ink.text-subdued" />
+            }
             actionIcon={<ChevronRightIcon />}
           />
         </Flag>

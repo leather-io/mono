@@ -28,7 +28,7 @@ const accountUtxoResponseSchema = z.array(utxoSchema);
 export type Utxo = z.infer<typeof utxoSchema>;
 
 export function createUtxoAccountCacheKey(network: string, descriptor: string) {
-  return ['btc-utxos', network, descriptor.substring(0, 10)];
+  return ['btc-utxos', network, descriptor.substring(0, 35)];
 }
 
 export async function fetchAccountDescriptorUtxos(network: BitcoinNetwork, descriptor: string) {
