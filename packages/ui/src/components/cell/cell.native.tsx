@@ -1,51 +1,68 @@
-import { ReactElement, ReactNode } from 'react';
+import { ElementRef, forwardRef } from 'react';
+import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
-import {
-  Avatar,
-  ChevronRightIcon,
-  Flag,
-  IconProps,
-  ItemLayout,
-  RadioButton,
-  Switch as UISwitch,
-} from '../../../native';
+import { useTheme } from '@shopify/restyle';
+
+import { usePressedState } from '../../hooks/use-pressed-state.native';
+import { Theme } from '../../theme-native';
+import { Box, BoxProps } from '../box/box.native';
 import { Pressable, PressableProps } from '../pressable/pressable.native';
-import { RadioButtonProps } from '../radio-button/radio-button.native';
-import { SwitchProps } from '../switch/switch.native';
+import { CellAsideNative } from './components/cell-aside.native';
+import { CellContent } from './components/cell-content.native';
+import { CellIcon } from './components/cell-icon.native';
+import { CellLabelNative } from './components/cell-label.native';
 
-interface CellProps extends PressableProps {
-  caption?: string;
-  icon?: ReactElement<IconProps>;
-  title: string;
-  children?: ReactNode;
-}
-export function Root({ caption, icon, title, children, ...props }: CellProps) {
-  const itemLayout = <ItemLayout actionIcon={children} captionLeft={caption} titleLeft={title} />;
+type PressableRootProps = {
+  pressable: true;
+} & PressableProps;
 
-  const content = icon ? <Flag img={<Avatar>{icon}</Avatar>}>{itemLayout}</Flag> : itemLayout;
+type NonPressableRootProps = {
+  pressable: false;
+} & BoxProps;
 
-  return (
-    <Pressable flexDirection="row" py="3" {...props}>
-      {content}
-    </Pressable>
-  );
-}
+type CellElement = ElementRef<typeof Pressable>;
+export type CellProps = PressableRootProps | NonPressableRootProps;
 
-function Chevron() {
-  return <ChevronRightIcon variant="small" />;
-}
+const cellRootStyles: BoxProps = {
+  flexDirection: 'row',
+  gap: '3',
+  px: '5',
+  py: '3',
+  alignItems: 'center',
+};
 
-function Switch(props: SwitchProps) {
-  return <UISwitch {...props} />;
-}
+export const CellRoot = forwardRef<CellElement, CellProps>((props, ref) => {
+  const { pressed, onPressIn, onPressOut } = usePressedState();
+  const theme = useTheme<Theme>();
 
-function Radio(props: RadioButtonProps) {
-  return <RadioButton disabled {...props} />;
-}
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: withSpring(
+        pressed ? theme.colors['ink.background-secondary'] : theme.colors['ink.background-primary']
+      ),
+    };
+  });
+
+  if (props.pressable) {
+    return (
+      <Pressable
+        ref={ref}
+        {...cellRootStyles}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        style={animatedStyle}
+        {...props}
+      />
+    );
+  }
+
+  return <Box ref={ref} {...cellRootStyles} {...props} />;
+});
 
 export const Cell = {
-  Root,
-  Chevron,
-  Switch,
-  Radio,
+  Root: CellRoot,
+  Label: CellLabelNative,
+  Icon: CellIcon,
+  Content: CellContent,
+  Aside: CellAsideNative,
 };

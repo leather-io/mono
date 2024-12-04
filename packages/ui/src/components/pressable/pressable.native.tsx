@@ -12,6 +12,7 @@ import {
   LayoutProps,
   OpacityProps,
   PositionProps,
+  SpacingProps,
   SpacingShorthandProps,
   VisibleProps,
   backgroundColorShorthand,
@@ -20,6 +21,7 @@ import {
   layout,
   opacity,
   position,
+  spacing,
   spacingShorthand,
   useRestyle,
   visible,
@@ -40,6 +42,7 @@ interface HapticConfig {
 type RestyleProps = OpacityProps<Theme> &
   VisibleProps<Theme> &
   SpacingShorthandProps<Theme> &
+  SpacingProps<Theme> &
   BorderProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
   LayoutProps<Theme> &
@@ -65,6 +68,7 @@ export const buttonRestyleFunctions = composeRestyleFunctions<Theme, RestyleProp
   opacity,
   visible,
   spacingShorthand,
+  spacing,
   border,
   backgroundColorShorthand,
   layout,

@@ -11,6 +11,7 @@ export function generateTheme(colorScheme: ColorSchemeName) {
     colors: colorScheme === 'dark' ? colorThemes.dark : colorThemes.base,
     spacing: {
       '0': 0,
+      '0.5': 2,
       '1': 4,
       '2': 8,
       '3': 12,
@@ -19,6 +20,7 @@ export function generateTheme(colorScheme: ColorSchemeName) {
       '6': 32,
       '7': 40,
       '-0': -0,
+      '-0.5': -2,
       '-1': -4,
       '-2': -8,
       '-3': -12,
