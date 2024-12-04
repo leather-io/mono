@@ -248,7 +248,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalAuthentication (14.0.1):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.20):
+  - ExpoModulesCore (1.12.26):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1643,7 +1643,7 @@ DEPENDENCIES:
   - "ExpoImage (from `../../../node_modules/.pnpm/expo-image@1.12.9_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.24.6_pqycbzooiimpwcftmzylw6b6ue/node_modules/expo-image/ios`)"
   - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7_w5fcokd4xqykouihhq65zfvhwu/node_modules/expo-keep-awake/ios`)"
   - "ExpoLocalAuthentication (from `../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@ba_bcvjridgatxs26fiu2o33lgbby/node_modules/expo-local-authentication/ios`)"
-  - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core`)"
+  - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.26/node_modules/expo-modules-core`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.26_@babel+core@7.24._qblhklgyytdrqryzqbjo45ylay/node_modules/expo-secure-store/ios`)"
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.2_36opljfl2csscygkp6xjaz2hv4/node_modules/expo-system-ui/ios`)"
   - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@_rn7tpmwskp4kjoe2dtluysnlry/node_modules/expo-web-browser/ios`)"
@@ -1778,7 +1778,7 @@ EXTERNAL SOURCES:
   ExpoLocalAuthentication:
     :path: "../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@ba_bcvjridgatxs26fiu2o33lgbby/node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
-    :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core"
+    :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.26/node_modules/expo-modules-core"
   ExpoSecureStore:
     :path: "../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.26_@babel+core@7.24._qblhklgyytdrqryzqbjo45ylay/node_modules/expo-secure-store/ios"
   ExpoSystemUI:
@@ -1944,7 +1944,7 @@ SPEC CHECKSUMS:
   ExpoImage: eab004b9363e388d3f6a118f18716de6dcfb8e8d
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
   ExpoLocalAuthentication: 9e02a56a4cf9868f0052656a93d4c94101a42ed7
-  ExpoModulesCore: 5440e96a8ee014f4fd88e77264985fd0a65f5f8c
+  ExpoModulesCore: 831ece8311a489418746925820bbffdda587d6f4
   ExpoSecureStore: 060cebcb956b80ddae09821610ac1aa9e1ac74cd
   ExpoSystemUI: d4f065a016cae6721b324eb659cdee4d4cf0cb26
   ExpoWebBrowser: 7595ccac6938eb65b076385fd23d035db9ecdc8e

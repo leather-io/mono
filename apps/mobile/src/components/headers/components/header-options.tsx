@@ -1,6 +1,7 @@
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import { useRouter } from 'expo-router';
 
 import {
@@ -36,7 +37,7 @@ export function HeaderOptions() {
       >
         <SettingsGearIcon />
       </TouchableOpacity>
-      {process.env.NODE_ENV === 'development' && (
+      {isFeatureEnabled() && (
         <TouchableOpacity
           p="2"
           onPress={() => router.navigate(AppRoutes.DeveloperConsole)}

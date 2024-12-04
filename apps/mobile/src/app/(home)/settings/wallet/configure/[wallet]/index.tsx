@@ -18,6 +18,7 @@ import { useAppDispatch } from '@/store/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { userRenamesWallet } from '@/store/wallets/wallets.write';
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
@@ -188,61 +189,63 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           >
             <Cell.Chevron />
           </Cell.Root>
-          <Accordion
-            label={t({
-              id: 'configure_wallet.accordion_label',
-              message: 'More options',
-            })}
-            content={
-              <>
-                <Cell.Root
-                  title={addressReuseTitle}
-                  icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
-                  onPress={onOpenSheet({
-                    title: addressReuseTitle,
-                  })}
-                >
-                  <Cell.Chevron />
-                </Cell.Root>
-                <Cell.Root
-                  title={addressScanRangeTitle}
-                  icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
-                  onPress={onOpenSheet({
-                    title: addressScanRangeTitle,
-                  })}
-                >
-                  <Cell.Chevron />
-                </Cell.Root>
-                <Cell.Root
-                  title={addressTypesTitle}
-                  icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
-                  onPress={onOpenSheet({
-                    title: addressTypesTitle,
-                  })}
-                >
-                  <Cell.Chevron />
-                </Cell.Root>
-                <Cell.Root
-                  title={exportXpubTitle}
-                  icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                  onPress={onOpenSheet({
-                    title: exportXpubTitle,
-                  })}
-                >
-                  <Cell.Chevron />
-                </Cell.Root>
-                <Cell.Root
-                  title={exportKeyTitle}
-                  icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                  onPress={onOpenSheet({
-                    title: exportKeyTitle,
-                  })}
-                >
-                  <Cell.Chevron />
-                </Cell.Root>
-              </>
-            }
-          />
+          {isFeatureEnabled() && (
+            <Accordion
+              label={t({
+                id: 'configure_wallet.accordion_label',
+                message: 'More options',
+              })}
+              content={
+                <>
+                  <Cell.Root
+                    title={addressReuseTitle}
+                    icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: addressReuseTitle,
+                    })}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={addressScanRangeTitle}
+                    icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: addressScanRangeTitle,
+                    })}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={addressTypesTitle}
+                    icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: addressTypesTitle,
+                    })}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={exportXpubTitle}
+                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: exportXpubTitle,
+                    })}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                  <Cell.Root
+                    title={exportKeyTitle}
+                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
+                    onPress={onOpenSheet({
+                      title: exportKeyTitle,
+                    })}
+                  >
+                    <Cell.Chevron />
+                  </Cell.Root>
+                </>
+              }
+            />
+          )}
         </Box>
         <Box mb="7">
           <Divider />
