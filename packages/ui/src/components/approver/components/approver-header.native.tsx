@@ -1,5 +1,5 @@
-import { Box, Text } from 'native';
-
+import { Box } from '../../box/box.native';
+import { Text } from '../../text/text.native';
 import { useRegisterApproverChild } from '../approver-context.shared';
 
 export function ApproverHeader({ title }: { title: string }) {

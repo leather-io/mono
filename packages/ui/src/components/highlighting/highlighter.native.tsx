@@ -2,9 +2,10 @@ import { memo } from 'react';
 import { View } from 'react-native';
 
 import { useTheme } from '@shopify/restyle';
-import { Text, Theme } from 'native';
 import { Highlight, PrismTheme } from 'prism-react-renderer';
 
+import { Theme } from '../../theme-native';
+import { Text } from '../text/text.native';
 import { Prism, type PrismType } from './clarity-prism.shared';
 import { Language, RenderProps } from './utils.shared';
 
