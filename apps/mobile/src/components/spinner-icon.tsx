@@ -14,7 +14,7 @@ import { Box, useOnMount } from '@leather.io/ui/native';
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const duration = 1000;
 const easing = Easing.linear;
-export function SpinnerIcon() {
+export function SpinnerIcon({ invertColors }: { invertColors?: boolean }) {
   const { whenTheme } = useSettings();
   const spin = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => ({
@@ -35,14 +35,22 @@ export function SpinnerIcon() {
             }}
             style={{ height: 24, width: 24 }}
             contentFit="cover"
-            source={require('@/assets/spinner-light.png')}
+            source={
+              invertColors
+                ? require('@/assets/spinner-dark.png')
+                : require('@/assets/spinner-light.png')
+            }
           />
         ),
         dark: (
           <Image
             style={{ height: 24, width: 24 }}
             contentFit="cover"
-            source={require('@/assets/spinner-dark.png')}
+            source={
+              invertColors
+                ? require('@/assets/spinner-light.png')
+                : require('@/assets/spinner-dark.png')
+            }
           />
         ),
       })}

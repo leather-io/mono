@@ -23,6 +23,7 @@ export const PERSISTENCE_CACHE_TIME = 1000 * 60 * 60 * 12; // 12 hours
 
 export const BTC_DECIMALS = 8;
 export const STX_DECIMALS = 6;
+export const SATS_IN_BTC = 100_000_000;
 
 // Units of `Money` should be declared in their smallest unit. Similar to
 // Rosetta, we model currencies with their respective resolution

@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useNetworkPreferenceBitcoinScureLibNetworkConfig } from '@/store/settings/settings.read';
 
 import {
+  BtcSignerDefaultBip32Derivation,
   CoinSelectionRecipient,
   CoinSelectionUtxo,
   generateBitcoinUnsignedTransactionNativeSegwit,
@@ -19,17 +20,25 @@ interface GenerateBtcUnsignedTransactionCallbackArgs {
   isSendingMax: boolean;
   utxos: CoinSelectionUtxo[];
   values: BtcTransactionValues;
+  bip32Derivation: BtcSignerDefaultBip32Derivation[];
 }
 
 export function useGenerateBtcUnsignedTransactionNativeSegwit(address: string, publicKey: string) {
   const network = useNetworkPreferenceBitcoinScureLibNetworkConfig();
 
   return useCallback(
-    ({ feeRate, isSendingMax, values, utxos }: GenerateBtcUnsignedTransactionCallbackArgs) =>
+    ({
+      feeRate,
+      isSendingMax,
+      values,
+      utxos,
+      bip32Derivation,
+    }: GenerateBtcUnsignedTransactionCallbackArgs) =>
       generateBitcoinUnsignedTransactionNativeSegwit({
         feeRate,
         isSendingMax,
         network,
+        bip32Derivation,
         payerAddress: address,
         payerPublicKey: publicKey,
         recipients: values.recipients,

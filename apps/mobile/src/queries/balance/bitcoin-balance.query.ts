@@ -1,10 +1,13 @@
+import { useCallback } from 'react';
+
 import { AccountId } from '@/models/domain.model';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 
 import { inferPaymentTypeFromPath } from '@leather.io/bitcoin';
 import { Utxo, createUtxoQueryOptions } from '@leather.io/query';
+import { PaymentTypes } from '@leather.io/rpc';
 import { getBitcoinBalancesService } from '@leather.io/services';
 import { createMoney, isDefined } from '@leather.io/utils';
 
@@ -31,6 +34,18 @@ function useBitcoinDescriptorsByAcccount(fingerprint: string, accountIndex: numb
   return keychains.map(getDescriptorFromKeychain).filter(isDefined);
 }
 
+function useBitcoinDescriptorsByAcccountAndPaymentType(
+  fingerprint: string,
+  accountIndex: number,
+  paymentType: PaymentTypes
+) {
+  const keychains = useBitcoinAccounts().fromAccountIndex(fingerprint, accountIndex);
+  return keychains
+    .filter(keychain => inferPaymentTypeFromPath(keychain.keyOrigin) === paymentType)
+    .map(getDescriptorFromKeychain)
+    .filter(isDefined);
+}
+
 function useCreateBitcoinAccountUtxoQueryOptions(descriptors: string[]) {
   const { networkPreference } = useSettings();
   return descriptors.map(key =>
@@ -38,6 +53,18 @@ function useCreateBitcoinAccountUtxoQueryOptions(descriptors: string[]) {
   );
 }
 
+type TotalBalanceCombineFn = UseQueryResult<
+  {
+    value: string;
+    path: string;
+    address: string;
+    txid: string;
+    confirmations?: number | undefined;
+    vout: number;
+    height?: number | undefined;
+  }[],
+  Error
+>[];
 export function useBitcoinAccountUtxos({ fingerprint, accountIndex }: AccountId) {
   const descriptors = useBitcoinDescriptorsByAcccount(fingerprint, accountIndex);
   const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);
@@ -65,6 +92,33 @@ export function useTotalBitcoinBalanceOfDescriptors(descriptors: string[]) {
 export function useWalletTotalBitcoinBalance() {
   const descriptors = useBitcoinDescriptors();
   return useTotalBitcoinBalanceOfDescriptors(descriptors);
+}
+
+export function useUtxosOfDescriptors(descriptors: string[]) {
+  const queries = useCreateBitcoinAccountUtxoQueryOptions(descriptors);
+
+  const combine = useCallback((results: TotalBalanceCombineFn) => {
+    const utxos = results
+      .map(data => data.data)
+      .filter(isDefined)
+      .flat();
+    return { utxos };
+  }, []);
+
+  return useQueries({ queries, combine });
+}
+
+export function useAccountUtxosByPaymentType({
+  fingerprint,
+  accountIndex,
+  paymentType,
+}: AccountId & { paymentType: PaymentTypes }) {
+  const descriptors = useBitcoinDescriptorsByAcccountAndPaymentType(
+    fingerprint,
+    accountIndex,
+    paymentType
+  );
+  return useUtxosOfDescriptors(descriptors);
 }
 
 export function useBitcoinAccountTotalBitcoinBalance({ fingerprint, accountIndex }: AccountId) {

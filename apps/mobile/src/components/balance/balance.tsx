@@ -14,7 +14,7 @@ interface BalanceProps extends TextProps {
   lockedBalance?: string;
 }
 
-function formatBalance(balance: Money, isFiat: boolean) {
+export function formatBalance(balance: Money, isFiat: boolean) {
   if (isFiat) {
     const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
     // i18nFormatCurrency is hardcoded to only accept USD

@@ -25,6 +25,8 @@ export function SendFormAsset<T extends SendFormBaseContext<T>>({
           icon={icon}
           ticker={symbol}
           tokenName={name}
+          px="3"
+          py="3"
         />
       </Box>
     </Pressable>

@@ -66,12 +66,19 @@ interface SplitByPaymentTypesReturn {
   nativeSegwit: WithDerivePayer<BitcoinAccountKeychain, BitcoinNativeSegwitPayer>;
   taproot: WithDerivePayer<BitcoinAccountKeychain, BitcoinTaprootPayer>;
 }
-function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
-  const nativeSegwit = accounts.find(
-    account => inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh'
-  );
 
-  const taproot = accounts.find(account => inferPaymentTypeFromPath(account.keyOrigin) === 'p2tr');
+function isTaprootAccount(account: BitcoinAccountKeychain) {
+  return inferPaymentTypeFromPath(account.keyOrigin) === 'p2tr';
+}
+
+function isNativeSegwitAccount(account: BitcoinAccountKeychain) {
+  return inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh';
+}
+
+function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
+  const nativeSegwit = accounts.find(isNativeSegwitAccount);
+
+  const taproot = accounts.find(isTaprootAccount);
 
   if (!nativeSegwit || !taproot)
     throw new Error('It is always expected an account has both Taproot and Native Segwit');

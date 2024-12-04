@@ -52,15 +52,15 @@ export default function RootLayout() {
                   <SplashScreenGuard>
                     <HapticsProvider>
                       <GestureHandlerRootView style={{ flex: 1 }}>
-                        <SheetProvider>
-                          <SheetNavigatorWrapper>
+                        <SheetNavigatorWrapper>
+                          <SheetProvider>
                             <ToastWrapper>
                               <AppRouter />
                               <SendSheet />
                               <ReceiveSheet />
                             </ToastWrapper>
-                          </SheetNavigatorWrapper>
-                        </SheetProvider>
+                          </SheetProvider>
+                        </SheetNavigatorWrapper>
                       </GestureHandlerRootView>
                     </HapticsProvider>
                   </SplashScreenGuard>

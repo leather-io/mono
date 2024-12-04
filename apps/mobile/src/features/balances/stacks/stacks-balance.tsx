@@ -6,18 +6,18 @@ import {
 } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { Money } from '@leather.io/models';
+import { PressableProps } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
-interface StacksTokenBalanceProps {
+interface StacksTokenBalanceProps extends PressableProps {
   availableBalance: Money;
   fiatBalance: Money;
-  onPress?(): void;
 }
 export function StacksTokenBalance({
   availableBalance,
   fiatBalance,
-  onPress,
+  ...rest
 }: StacksTokenBalanceProps) {
   return (
     <TokenBalance
@@ -33,7 +33,7 @@ export function StacksTokenBalance({
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
-      onPress={onPress}
+      {...rest}
     />
   );
 }
@@ -41,7 +41,14 @@ export function StacksTokenBalance({
 export function StacksBalance() {
   const addresses = useStacksSignerAddresses();
   const { availableBalance, fiatBalance } = useStxBalance(addresses);
-  return <StacksTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
+  return (
+    <StacksTokenBalance
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
+      px="5"
+      py="3"
+    />
+  );
 }
 
 interface StacksBalanceByAccountProps {
@@ -64,6 +71,8 @@ export function StacksBalanceByAccount({
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
       onPress={onPress}
+      px="5"
+      py="3"
     />
   );
 }

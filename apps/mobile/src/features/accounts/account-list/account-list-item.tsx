@@ -1,12 +1,11 @@
-import { Avatar, Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { Avatar, Flag, ItemLayout, Pressable, PressableProps } from '@leather.io/ui/native';
 
-interface AccountListItemProps {
+interface AccountListItemProps extends PressableProps {
   accountName: string;
   address: React.ReactNode;
   balance: React.ReactNode;
   icon: React.ReactNode;
   iconTestID?: string;
-  onPress?(): void;
   testID?: string;
   walletName?: string;
 }
@@ -19,16 +18,10 @@ export function AccountListItem({
   onPress,
   testID,
   walletName,
+  ...rest
 }: AccountListItemProps) {
   return (
-    <Pressable
-      flexDirection="row"
-      disabled={!onPress}
-      onPress={onPress}
-      px="5"
-      py="3"
-      testID={testID}
-    >
+    <Pressable flexDirection="row" disabled={!onPress} onPress={onPress} testID={testID} {...rest}>
       <Flag
         img={
           <Avatar bg="ink.text-primary" testID={iconTestID}>

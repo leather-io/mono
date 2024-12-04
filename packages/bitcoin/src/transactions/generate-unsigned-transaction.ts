@@ -1,5 +1,6 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
+import { BtcSignerDefaultBip32Derivation } from 'bitcoin-signer';
 
 import { BitcoinError, BitcoinErrorMessage } from '../bitcoin-error';
 import { BtcSignerNetwork } from '../bitcoin.network';
@@ -15,6 +16,7 @@ export interface GenerateBitcoinUnsignedTransactionArgs {
   isSendingMax?: boolean;
   payerAddress: string;
   payerPublicKey: string;
+  bip32Derivation: BtcSignerDefaultBip32Derivation[];
   network: BtcSignerNetwork;
   recipients: CoinSelectionRecipient[];
   utxos: CoinSelectionUtxo[];
@@ -25,6 +27,7 @@ export async function generateBitcoinUnsignedTransactionNativeSegwit({
   isSendingMax,
   payerAddress,
   payerPublicKey,
+  bip32Derivation,
   network,
   recipients,
   utxos,
@@ -46,6 +49,7 @@ export async function generateBitcoinUnsignedTransactionNativeSegwit({
         txid: input.txid,
         index: input.vout,
         sequence: 0,
+        bip32Derivation,
         witnessUtxo: {
           // script = 0014 + pubKeyHash
           script: p2wpkh.script,

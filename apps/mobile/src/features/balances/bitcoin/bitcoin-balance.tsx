@@ -4,11 +4,11 @@ import {
 } from '@/queries/balance/bitcoin-balance.query';
 
 import { Money } from '@leather.io/models';
-import { BtcAvatarIcon } from '@leather.io/ui/native';
+import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
-interface BitcoinTokenBalanceProps {
+interface BitcoinTokenBalanceProps extends PressableProps {
   availableBalance: Money;
   fiatBalance: Money;
   onPress?(): void;
@@ -17,6 +17,7 @@ export function BitcoinTokenBalance({
   availableBalance,
   fiatBalance,
   onPress,
+  ...rest
 }: BitcoinTokenBalanceProps) {
   return (
     <TokenBalance
@@ -33,13 +34,21 @@ export function BitcoinTokenBalance({
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}
+      {...rest}
     />
   );
 }
 
 export function BitcoinBalance() {
   const { availableBalance, fiatBalance } = useWalletTotalBitcoinBalance();
-  return <BitcoinTokenBalance availableBalance={availableBalance} fiatBalance={fiatBalance} />;
+  return (
+    <BitcoinTokenBalance
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
+      px="5"
+      py="3"
+    />
+  );
 }
 
 interface BitcoinBalanceByAccountProps {
@@ -61,6 +70,8 @@ export function BitcoinBalanceByAccount({
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
       onPress={onPress}
+      px="5"
+      py="3"
     />
   );
 }
