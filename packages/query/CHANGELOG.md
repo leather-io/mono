@@ -206,6 +206,13 @@
     * @leather.io/rpc bumped to 2.1.20
     * @leather.io/utils bumped to 0.20.0
 
+## [2.26.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.0...@leather.io/query-v2.26.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* swap asset type ([1625ee3](https://github.com/leather-io/mono/commit/1625ee3589474a89509123f69bee4a112a2d3512))
+
 ## [2.26.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.25.0...@leather.io/query-v2.26.0) (2024-12-04)
 
 
