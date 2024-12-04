@@ -1,5 +1,5 @@
 {
-  "apps/mobile": "1.57.0",
+  "apps/mobile": "1.57.1",
   "packages/analytics": "2.0.1",
   "packages/bitcoin": "0.19.0",
   "packages/constants": "0.14.0",
@@ -7,11 +7,11 @@
   "packages/models": "0.24.0",
   "packages/prettier-config": "0.6.0",
   "packages/panda-preset": "0.6.0",
-  "packages/query": "2.26.0",
+  "packages/query": "2.26.1",
   "packages/tokens": "0.12.1",
   "packages/tsconfig-config": "0.6.0",
   "packages/rpc": "2.1.22",
-  "packages/ui": "1.40.0",
+  "packages/ui": "1.40.1",
   "packages/utils": "0.21.1",
   "packages/crypto": "1.6.17",
   "packages/stacks": "1.5.2"

@@ -167,6 +167,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.0
 
+## [1.40.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.40.0...@leather.io/ui-v1.40.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* replace barrel imports with relative paths ([68571c0](https://github.com/leather-io/mono/commit/68571c0472a2a841cbf93fb4342ef10cf2b574ff))
+
 ## [1.40.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.39.2...@leather.io/ui-v1.40.0) (2024-12-04)
 
 
