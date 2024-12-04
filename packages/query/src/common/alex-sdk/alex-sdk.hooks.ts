@@ -1,10 +1,16 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { AlexSDK, Currency, type TokenInfo } from 'alex-sdk';
+import { AlexSDK, Currency as TokenId, type TokenInfo } from 'alex-sdk';
 import BigNumber from 'bignumber.js';
 
-import { MarketData, Money, createMarketData, createMarketPair } from '@leather.io/models';
+import {
+  Currency,
+  MarketData,
+  Money,
+  createMarketData,
+  createMarketPair,
+} from '@leather.io/models';
 import {
   convertAmountToFractionalUnit,
   createMoney,
@@ -26,10 +32,10 @@ export const alex = new AlexSDK();
 export interface SwapAsset {
   address?: string;
   balance: Money;
-  currency: Currency;
+  tokenId: Currency;
   displayName?: string;
   fallback: string;
-  icon: string;
+  icon: React.ReactNode;
   name: string;
   marketData: MarketData | null;
   principal: string;
@@ -67,7 +73,6 @@ function useCreateSwapAsset(address: string) {
       if (!prices) return;
       if (!tokenInfo) return;
 
-      const currency = tokenInfo.id;
       const principal = getPrincipalFromContractId(tokenInfo.underlyingToken);
 
       const availableBalance = sip10Tokens.find(
@@ -75,14 +80,14 @@ function useCreateSwapAsset(address: string) {
       )?.balance.availableBalance;
 
       const swapAsset = {
-        currency,
+        tokenId: tokenInfo.id,
         fallback: tokenInfo.name.slice(0, 2),
         icon: tokenInfo.icon,
         name: tokenInfo.name,
         principal,
       };
 
-      if (currency === Currency.STX) {
+      if (tokenInfo.id === TokenId.STX) {
         return {
           ...swapAsset,
           balance: availableUnlockedBalance,
