@@ -8,6 +8,7 @@ import Animated, {
 
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
@@ -120,14 +121,16 @@ export function AddWalletSheetLayout({
               testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
             />
-            <AddWalletCell
-              onPress={openOptions}
-              title={t({
-                id: 'add_wallet.options.cell_title',
-                message: 'More options',
-              })}
-              icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
-            />
+            {isFeatureEnabled() && (
+              <AddWalletCell
+                onPress={openOptions}
+                title={t({
+                  id: 'add_wallet.options.cell_title',
+                  message: 'More options',
+                })}
+                icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
+              />
+            )}
             {moreOptionsVisible && (
               <>
                 <AddWalletCell

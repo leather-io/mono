@@ -7,6 +7,7 @@ import { useAuthContext } from '@/components/splash-screen-guard/use-auth-contex
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import * as Application from 'expo-application';
 import { useRouter } from 'expo-router';
@@ -64,10 +65,14 @@ export default function SettingsScreen() {
             id: 'settings.display.cell_title',
             message: 'Display',
           })}
-          caption={t({
-            id: 'settings.display.cell_caption',
-            message: 'Theme, bitcoin unit and more',
-          })}
+          caption={
+            isFeatureEnabled()
+              ? t({
+                  id: 'settings.display.cell_caption',
+                  message: 'Theme, bitcoin unit and more',
+                })
+              : undefined
+          }
           icon={<SquareLinesBottomIcon />}
           onPress={() => router.navigate(AppRoutes.SettingsDisplay)}
           testID={TestId.settingsDisplayButton}
@@ -104,74 +109,81 @@ export default function SettingsScreen() {
         >
           <Cell.Chevron />
         </Cell.Root>
-        <Cell.Root
-          py="3"
-          title={t({
-            id: 'settings.notifications.cell_title',
-            message: 'Notifications',
-          })}
-          caption={t({
-            id: 'settings.notifications.cell_caption',
-            message: 'Push and email notifications',
-          })}
-          icon={<BellIcon />}
-          onPress={() => router.navigate(AppRoutes.SettingsNotifications)}
-          testID={TestId.settingsNotificationsButton}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-        <Cell.Root
-          title={t({
-            id: 'settings.help.cell_title',
-            message: 'Help',
-          })}
-          caption={t({
-            id: 'settings.help.cell_caption',
-            message: 'Support, guides and articles',
-          })}
-          icon={<SupportIcon />}
-          onPress={() => router.navigate(AppRoutes.SettingsHelp)}
-          testID={TestId.settingsHelpButton}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-        <Accordion
-          label={t({
-            id: 'settings.accordion_label',
-            message: 'More options',
-          })}
-          testID={TestId.settingsMoreOptionsButton}
-          content={
-            <>
-              <Cell.Root
-                title={t({
-                  id: 'settings.contacts.cell_title',
-                  message: 'Contacts',
-                })}
-                icon={<UsersTwoIcon />}
-                onPress={() => {
-                  contactsSheetRef.current?.present();
-                }}
-                testID={TestId.settingsContactsButton}
-              >
-                <Cell.Chevron />
-              </Cell.Root>
-              <Cell.Root
-                title={t({
-                  id: 'settings.fees.cell_title',
-                  message: 'Fees',
-                })}
-                icon={<SettingsGearIcon />}
-                onPress={() => {
-                  feesSheetRef.current?.present();
-                }}
-                testID={TestId.settingsFeesButton}
-              >
-                <Cell.Chevron />
-              </Cell.Root>
-            </>
-          }
-        />
+        {isFeatureEnabled() && (
+          <Cell.Root
+            py="3"
+            title={t({
+              id: 'settings.notifications.cell_title',
+              message: 'Notifications',
+            })}
+            caption={t({
+              id: 'settings.notifications.cell_caption',
+              message: 'Push and email notifications',
+            })}
+            icon={<BellIcon />}
+            onPress={() => router.navigate(AppRoutes.SettingsNotifications)}
+            testID={TestId.settingsNotificationsButton}
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+        )}
+
+        {isFeatureEnabled() && (
+          <Cell.Root
+            title={t({
+              id: 'settings.help.cell_title',
+              message: 'Help',
+            })}
+            caption={t({
+              id: 'settings.help.cell_caption',
+              message: 'Support, guides and articles',
+            })}
+            icon={<SupportIcon />}
+            onPress={() => router.navigate(AppRoutes.SettingsHelp)}
+            testID={TestId.settingsHelpButton}
+          >
+            <Cell.Chevron />
+          </Cell.Root>
+        )}
+        {isFeatureEnabled() && (
+          <Accordion
+            label={t({
+              id: 'settings.accordion_label',
+              message: 'More options',
+            })}
+            testID={TestId.settingsMoreOptionsButton}
+            content={
+              <>
+                <Cell.Root
+                  title={t({
+                    id: 'settings.contacts.cell_title',
+                    message: 'Contacts',
+                  })}
+                  icon={<UsersTwoIcon />}
+                  onPress={() => {
+                    contactsSheetRef.current?.present();
+                  }}
+                  testID={TestId.settingsContactsButton}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+                <Cell.Root
+                  title={t({
+                    id: 'settings.fees.cell_title',
+                    message: 'Fees',
+                  })}
+                  icon={<SettingsGearIcon />}
+                  onPress={() => {
+                    feesSheetRef.current?.present();
+                  }}
+                  testID={TestId.settingsFeesButton}
+                >
+                  <Cell.Chevron />
+                </Cell.Root>
+              </>
+            }
+          />
+        )}
         <Divider />
         <Box py="3">
           <Text variant="label01">
