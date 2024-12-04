@@ -206,6 +206,22 @@
     * @leather.io/rpc bumped to 2.1.20
     * @leather.io/utils bumped to 0.20.0
 
+## [2.26.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.25.0...@leather.io/query-v2.26.0) (2024-12-04)
+
+
+### Features
+
+* add psbt functionality ([6b676a9](https://github.com/leather-io/mono/commit/6b676a971fbd7497e6c285a818374f13745b032c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.0
+    * @leather.io/constants bumped to 0.14.0
+    * @leather.io/utils bumped to 0.21.1
+
 ## [2.25.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.24.0...@leather.io/query-v2.25.0) (2024-12-03)
 
 

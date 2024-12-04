@@ -321,6 +321,22 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.1.22
 
+## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.18.1...@leather.io/bitcoin-v0.19.0) (2024-12-04)
+
+
+### Features
+
+* add psbt functionality ([6b676a9](https://github.com/leather-io/mono/commit/6b676a971fbd7497e6c285a818374f13745b032c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.14.0
+    * @leather.io/crypto bumped to 1.6.17
+    * @leather.io/utils bumped to 0.21.1
+
 ## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.17.0...@leather.io/bitcoin-v0.18.0) (2024-11-29)
 
 
