@@ -1,19 +1,15 @@
-import { createText as createRestyleText } from '@shopify/restyle';
+import { type ElementRef, forwardRef } from 'react';
+import { type TextProps as RNTexProps } from 'react-native';
+
+import { type TextProps as RestyleTextProps, createText } from '@shopify/restyle';
 
 import { Theme } from '../../theme-native';
 
-function createLeatherText() {
-  const RestyleText = createRestyleText<Theme>();
-  type TextProps = Parameters<typeof RestyleText>['0'];
+const RestyleText = createText<Theme>();
 
-  const defaults = {
-    color: 'ink.text-primary',
-  } satisfies Partial<TextProps>;
+type TextElement = ElementRef<typeof RestyleText>;
+export type TextProps = RNTexProps & RestyleTextProps<Theme>;
 
-  return function Text(props: TextProps) {
-    return <RestyleText {...defaults} {...props} />;
-  };
-}
-
-export const Text = createLeatherText();
-export type TextProps = Parameters<typeof Text>['0'];
+export const Text = forwardRef<TextElement, TextProps>((props, ref) => {
+  return <RestyleText ref={ref} color="ink.text-primary" {...props} />;
+});

@@ -3,7 +3,7 @@ export { Avatar } from './src/components/avatar/avatar.native';
 export { BulletSeparator } from './src/components/bullet-separator/bullet-separator.native';
 export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
 export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.native';
-export { Box } from './src/components/box/box.native';
+export { Box, type BoxProps } from './src/components/box/box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
 export { Callout, type CalloutProps } from './src/components/callout/callout.native';
 export { Chip } from './src/components/chip/chip.native';
@@ -32,7 +32,7 @@ export { Icon } from './src/icons/icon/icon.native';
 export * from './src/icons/index.native';
 export { Flag } from './src/components/flag/flag.native';
 export { ItemLayout } from './src/components/item-layout/item-layout.native';
-export { Cell } from './src/components/cell/cell.native';
+export { Cell, type CellProps } from './src/components/cell/cell.native';
 export {
   Sheet,
   type SheetRef,
