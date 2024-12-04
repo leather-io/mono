@@ -1,5 +1,6 @@
-import { Box } from 'native';
 import { HasChildren } from 'src/utils/has-children.shared';
+
+import { Box } from '../../box/box.native';
 
 export function ApproverActions({ children }: HasChildren) {
   return (

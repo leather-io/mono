@@ -1,7 +1,11 @@
 import { ResponsiveValue } from '@shopify/restyle';
-import { Box, Pressable, type PressableProps, Text, Theme } from 'native';
 
 import { match } from '@leather.io/utils';
+
+import { Theme } from '../../theme-native';
+import { Box } from '../box/box.native';
+import { Pressable, PressableProps } from '../pressable/pressable.native';
+import { Text } from '../text/text.native';
 
 export type BadgeVariant = 'success' | 'warning' | 'error' | 'default' | 'info';
 

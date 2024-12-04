@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
 
 import { BoxProps } from '@shopify/restyle';
-import { Box, Theme } from 'native';
 
+import { Theme } from '../../../theme-native';
+import { Box } from '../../box/box.native';
 import { useRegisterApproverChild } from '../approver-context.shared';
 
 export function ApproverSection(

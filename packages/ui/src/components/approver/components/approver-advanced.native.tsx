@@ -1,6 +1,9 @@
-import { ChevronDownIcon, ChevronUpIcon, Pressable, Text } from 'native';
 import { HasChildren } from 'src/utils/has-children.shared';
 
+import { ChevronDownIcon } from '../../../icons/chevron-down-icon.native';
+import { ChevronUpIcon } from '../../../icons/chevron-up-icon.native';
+import { Pressable } from '../../pressable/pressable.native';
+import { Text } from '../../text/text.native';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
 interface ApproverAdvancedProps extends HasChildren {

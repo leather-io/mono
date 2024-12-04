@@ -1,9 +1,10 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@shopify/restyle';
-import { Box, Theme } from 'native';
 import { HasChildren } from 'src/utils/has-children.shared';
 
+import { Theme } from '../../../theme-native';
+import { Box } from '../../box/box.native';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
 export function ApproverFooter({ children }: HasChildren) {
