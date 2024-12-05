@@ -271,6 +271,16 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [1.57.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.57.1...@leather.io/mobile-v1.57.2) (2024-12-05)
+
+
+### Bug Fixes
+
+* add correct color to add account card icon ([4b82028](https://github.com/leather-io/mono/commit/4b82028f1f868067e8199321719f4e9694b72da1))
+* add network badge to home screen if not mainnet, ref LEA-1815 ([b3951bb](https://github.com/leather-io/mono/commit/b3951bb6037d22070a7eabff9622649337883536))
+* gate features not ready for production release ([a1a4417](https://github.com/leather-io/mono/commit/a1a441796a772d5facaddb5bba36c98cb02f484c))
+* keep action bar enabled to all users ([aaf2c9e](https://github.com/leather-io/mono/commit/aaf2c9eebd15dc81ce54a1820a8d20c384e4c98e))
+
 ## [1.57.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.56.0...@leather.io/mobile-v1.57.0) (2024-12-04)
 
 
