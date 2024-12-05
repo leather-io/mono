@@ -6,7 +6,6 @@ import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar'
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
@@ -206,7 +205,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
 
   return (
     <>
-      {isFeatureEnabled() && actionBar}
+      {actionBar}
       <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
     </>
   );
