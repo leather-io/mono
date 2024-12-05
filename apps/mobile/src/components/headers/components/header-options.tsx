@@ -1,3 +1,4 @@
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
@@ -13,6 +14,7 @@ import {
 } from '@leather.io/ui/native';
 
 export function HeaderOptions() {
+  const { networkPreference } = useSettings();
   const router = useRouter();
   const { changePrivacyModePreference, privacyModePreference } = useSettings();
 
@@ -22,6 +24,7 @@ export function HeaderOptions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
+      {networkPreference.id !== 'mainnet' && <NetworkBadge />}
       <TouchableOpacity
         p="2"
         onPress={() => onUpdatePrivacyMode()}
