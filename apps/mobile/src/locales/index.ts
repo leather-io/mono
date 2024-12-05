@@ -1,7 +1,11 @@
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import OtaClient from '@crowdin/ota-client';
 import { i18n } from '@lingui/core';
 
-const otaClient = new OtaClient('fa04f606d6ca277403b4e49twcj');
+const prodHash = 'a14ceb253620ee8933d9539twcj';
+const devHash = 'fa04f606d6ca277403b4e49twcj';
+
+const otaClient = new OtaClient(isFeatureEnabled() ? devHash : prodHash);
 
 export const DEFAULT_LOCALE = 'en';
 let LOCALES: string[] = [];
