@@ -271,6 +271,13 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [1.58.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.58.1...@leather.io/mobile-v1.58.2) (2024-12-06)
+
+
+### Bug Fixes
+
+* hardcode haptics text temporarily, ref LEA-1780 ([96d5cbb](https://github.com/leather-io/mono/commit/96d5cbb0cf6113108516733926cfe38361dcf7f7))
+
 ## [1.58.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.58.0...@leather.io/mobile-v1.58.1) (2024-12-06)
 
 
