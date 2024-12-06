@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
   NotifyUserSheetData,
   NotifyUserSheetLayout,
@@ -8,8 +10,6 @@ import {
 import { t } from '@lingui/macro';
 
 import {
-  Box,
-  Cell,
   LogoHardwareBitkey,
   LogoHardwareFoundation,
   LogoHardwareLedger,
@@ -87,7 +87,7 @@ export default function HardwareWalletListScreen() {
           message: 'Connect device',
         })}
       >
-        <Box gap="3">
+        <SettingsList>
           {Object.entries(getUnavailableFeatures()).map(featureEntry => {
             const [featureKey, feature] = featureEntry;
             const hardwareWalletName = feature.title;
@@ -100,17 +100,15 @@ export default function HardwareWalletListScreen() {
               });
             }
             return (
-              <Cell.Root
+              <SettingsListItem
                 key={featureKey}
                 title={feature.title}
                 icon={feature.icon}
                 onPress={onPress}
-              >
-                <Cell.Chevron />
-              </Cell.Root>
+              />
             );
           })}
-        </Box>
+        </SettingsList>
       </AnimatedHeaderScreenLayout>
       <NotifyUserSheetLayout
         onCloseSheet={onCloseSheet}

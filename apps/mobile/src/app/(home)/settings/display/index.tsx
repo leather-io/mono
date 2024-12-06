@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
@@ -13,7 +15,6 @@ import { useLingui } from '@lingui/react';
 
 import {
   BitcoinCircleIcon,
-  Cell,
   DollarCircleIcon,
   Eye1Icon,
   PackageSecurityIcon,
@@ -56,122 +57,104 @@ export default function SettingsDisplayScreen() {
           message: 'Display',
         })}
       >
-        <Cell.Root
-          title={t({
-            id: 'display.theme.cell_title',
-            message: 'Theme',
-          })}
-          caption={i18n._({
-            id: 'display.theme.cell_caption',
-            message: '{theme}',
-            values: { theme: capitalize(themePreference) },
-          })}
-          icon={<SunInCloudIcon />}
-          onPress={() => {
-            themeSheetRef.current?.present();
-          }}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-        {isFeatureEnabled() && (
-          <>
-            <Cell.Root
-              title={t({
-                id: 'display.bitcoin_unit.cell_title',
-                message: 'Bitcoin unit',
-              })}
-              caption={i18n._({
-                id: 'display.bitcoin_unit.cell_caption',
-                message: '{symbol}',
-                values: { symbol: bitcoinUnitPreference.symbol },
-              })}
-              icon={<BitcoinCircleIcon />}
-              onPress={() => {
-                bitcoinUnitSheetRef.current?.present();
-              }}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Cell.Root
-              title={t({
-                id: 'display.conversion_unit.cell_title',
-                message: 'Conversion unit',
-              })}
-              caption={i18n._({
-                id: 'display.conversion_unit.cell_caption',
-                message: '{currency}',
-                values: { currency: fiatCurrencyPreference },
-              })}
-              icon={<DollarCircleIcon />}
-              onPress={() => {
-                conversionUnitSheetRef.current?.present();
-              }}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-          </>
-        )}
-
-        <Cell.Root
-          title={t({
-            id: 'display.account_identifier.cell_title',
-            message: 'Account identifier',
-          })}
-          caption={i18n._({
-            id: 'display.account_identifier.cell_caption',
-            message: '{name}',
-            values: { name: accountDisplayPreference.name },
-          })}
-          icon={<PackageSecurityIcon />}
-          onPress={() => {
-            accountIdentifierSheetRef.current?.present();
-          }}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-
-        {isFeatureEnabled() && (
-          <Cell.Root
+        <SettingsList>
+          <SettingsListItem
             title={t({
-              id: 'display.privacy_mode.cell_title',
-              message: 'Hide home balance',
+              id: 'display.theme.cell_title',
+              message: 'Theme',
             })}
-            caption={t({
-              id: 'display.privacy_mode.cell_caption',
-              message: 'Tap your balance to quickly toggle this setting',
+            caption={i18n._({
+              id: 'display.theme.cell_caption',
+              message: '{theme}',
+              values: { theme: capitalize(themePreference) },
             })}
-            icon={<Eye1Icon />}
-            onPress={() => onUpdatePrivacyMode()}
-          >
-            <Cell.Switch
-              onValueChange={() => onUpdatePrivacyMode()}
-              value={privacyModePreference === 'hidden'}
-            />
-          </Cell.Root>
-        )}
-        <Cell.Root
-          // title={t({
-          //   id: 'display.haptics.cell_title',
-          //   message: 'Haptics',
-          // })}
-          // caption={t({
-          //   id: 'display.haptics.cell_caption',
-          //   message: 'Toggle tactile feedback for touch interactions',
-          // })}
-          // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
-          // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
-          title="Haptics"
-          // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
-          // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
-          caption="Toggle tactile feedback for touch interactions"
-          icon={<Eye1Icon />}
-          onPress={() => onUpdatePrivacyMode()}
-        >
-          <Cell.Switch
-            onValueChange={() => onUpdateHapticsPreference()}
-            value={hapticsPreference === 'enabled'}
+            icon={<SunInCloudIcon />}
+            onPress={() => {
+              themeSheetRef.current?.present();
+            }}
           />
-        </Cell.Root>
+          {isFeatureEnabled() && (
+            <>
+              <SettingsListItem
+                title={t({
+                  id: 'display.bitcoin_unit.cell_title',
+                  message: 'Bitcoin unit',
+                })}
+                caption={i18n._({
+                  id: 'display.bitcoin_unit.cell_caption',
+                  message: '{symbol}',
+                  values: { symbol: bitcoinUnitPreference.symbol },
+                })}
+                icon={<BitcoinCircleIcon />}
+                onPress={() => {
+                  bitcoinUnitSheetRef.current?.present();
+                }}
+              />
+              <SettingsListItem
+                title={t({
+                  id: 'display.conversion_unit.cell_title',
+                  message: 'Conversion unit',
+                })}
+                caption={i18n._({
+                  id: 'display.conversion_unit.cell_caption',
+                  message: '{currency}',
+                  values: { currency: fiatCurrencyPreference },
+                })}
+                icon={<DollarCircleIcon />}
+                onPress={() => {
+                  conversionUnitSheetRef.current?.present();
+                }}
+              />
+            </>
+          )}
+          <SettingsListItem
+            title={t({
+              id: 'display.account_identifier.cell_title',
+              message: 'Account identifier',
+            })}
+            caption={i18n._({
+              id: 'display.account_identifier.cell_caption',
+              message: '{name}',
+              values: { name: accountDisplayPreference.name },
+            })}
+            icon={<PackageSecurityIcon />}
+            onPress={() => {
+              accountIdentifierSheetRef.current?.present();
+            }}
+          />
+          {isFeatureEnabled() && (
+            <SettingsListItem
+              title={t({
+                id: 'display.privacy_mode.cell_title',
+                message: 'Hide home balance',
+              })}
+              caption={t({
+                id: 'display.privacy_mode.cell_caption',
+                message: 'Tap your balance to quickly toggle this setting',
+              })}
+              icon={<Eye1Icon />}
+              type="switch"
+              onSwitchValueChange={() => onUpdatePrivacyMode()}
+              switchValue={privacyModePreference === 'hidden'}
+            />
+          )}
+          {isFeatureEnabled() && (
+            <SettingsListItem
+              title={t({
+                id: 'display.haptics.cell_title',
+                message: 'Haptics',
+              })}
+              caption={t({
+                id: 'display.haptics.cell_caption',
+                message: 'Toggle tactile feedback for touch interactions',
+              })}
+              icon={<Eye1Icon />}
+              type="switch"
+              onSwitchValueChange={() => onUpdateHapticsPreference()}
+              switchValue={hapticsPreference === 'enabled'}
+            />
+          )}
+        </SettingsList>
       </AnimatedHeaderScreenLayout>
       <ThemeSheet sheetRef={themeSheetRef} />
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />

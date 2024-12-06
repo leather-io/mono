@@ -2,6 +2,8 @@ import { useRef } from 'react';
 
 import { AvatarIcon } from '@/components/avatar-icon';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/accounts/components/account-address';
 import { AccountBalance } from '@/features/accounts/components/account-balance';
@@ -24,7 +26,6 @@ import { z } from 'zod';
 
 import {
   Box,
-  Cell,
   Eye1ClosedIcon,
   HeadIcon,
   PassportIcon,
@@ -93,49 +94,45 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
             )}
           </WalletLoader>
         </Box>
-        <Cell.Root
-          title={t({
-            id: 'configure_account.name.cell_title',
-            message: 'Name',
-          })}
-          caption={i18n._({
-            id: 'configure_account.name.cell_caption',
-            message: '{name}',
-            values: { name: account.name },
-          })}
-          icon={<PassportIcon />}
-          onPress={() => {
-            accountNameSheetRef.current?.present();
-          }}
-          testID={TestId.walletSettingsAccountNameCell}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-        <Cell.Root
-          title={t({
-            id: 'configure_account.avatar.cell_title',
-            message: 'Avatar',
-          })}
-          icon={<HeadIcon />}
-          onPress={() => {
-            router.navigate({
-              pathname: AppRoutes.SettingsWalletConfigureAccountAvatar,
-              params: { wallet: fingerprint, account: accountIndex },
-            });
-          }}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-        <Cell.Root
-          title={t({
-            id: 'configure_account.hide_account.cell_title',
-            message: 'Hide account',
-          })}
-          icon={<Eye1ClosedIcon />}
-          onPress={toggleHideAccount}
-        >
-          <Cell.Switch value={account.status === 'hidden'} onValueChange={toggleHideAccount} />
-        </Cell.Root>
+        <SettingsList>
+          <SettingsListItem
+            title={t({
+              id: 'configure_account.name.cell_title',
+              message: 'Name',
+            })}
+            caption={i18n._({
+              id: 'configure_account.name.cell_caption',
+              message: '{name}',
+              values: { name: account.name },
+            })}
+            icon={<PassportIcon />}
+            onPress={() => {
+              accountNameSheetRef.current?.present();
+            }}
+            testID={TestId.walletSettingsAccountNameCell}
+          />
+          <SettingsListItem
+            title={t({
+              id: 'configure_account.avatar.cell_title',
+              message: 'Avatar',
+            })}
+            icon={<HeadIcon />}
+            onPress={() => {
+              router.navigate({
+                pathname: AppRoutes.SettingsWalletConfigureAccountAvatar,
+                params: { wallet: fingerprint, account: accountIndex },
+              });
+            }}
+          />
+          <SettingsListItem
+            title={t({
+              id: 'configure_account.hide_account.cell_title',
+              message: 'Hide account',
+            })}
+            icon={<Eye1ClosedIcon />}
+            onPress={toggleHideAccount}
+          />
+        </SettingsList>
       </AnimatedHeaderScreenLayout>
       <AccountNameSheet name={account.name} setName={setName} sheetRef={accountNameSheetRef} />
     </>

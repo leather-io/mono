@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
   NotifyUserSheetData,
   NotifyUserSheetLayout,
@@ -32,7 +34,6 @@ import {
   ArrowsRepeatLeftRightIcon,
   BarcodeIcon,
   Box,
-  Cell,
   Eye1ClosedIcon,
   InboxIcon,
   SheetRef,
@@ -147,48 +148,44 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
       >
         <Box gap="3">
           <Text variant="heading05">{wallet.name}</Text>
-          <Cell.Root
-            title={t({
-              id: 'configure_wallet.view_key.cell_title',
-              message: 'View Secret Key',
-            })}
-            icon={<Eye1ClosedIcon />}
-            onPress={() => {
-              router.navigate({
-                pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
-                params: { fingerprint: wallet.fingerprint },
-              });
-            }}
-            testID={TestId.walletSettingsViewSecretKeyButton}
-          >
-            <Cell.Chevron />
-          </Cell.Root>
-          <Cell.Root
-            title={t({
-              id: 'configure_wallet.rename_wallet.cell_title',
-              message: 'Rename wallet',
-            })}
-            icon={<SquareLinesBottomIcon />}
-            onPress={() => {
-              walletNameSheetRef.current?.present();
-            }}
-            testID={TestId.walletSettingsRenameWalletButton}
-          >
-            <Cell.Chevron />
-          </Cell.Root>
-          <Cell.Root
-            title={t({
-              id: 'configure_wallet.remove_wallet.cell_title',
-              message: 'Remove wallet',
-            })}
-            icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
-            onPress={() => {
-              removeWalletSheetRef.current?.present();
-            }}
-            testID={TestId.walletSettingsRemoveWalletButton}
-          >
-            <Cell.Chevron />
-          </Cell.Root>
+          <SettingsList>
+            <SettingsListItem
+              title={t({
+                id: 'configure_wallet.view_key.cell_title',
+                message: 'View Secret Key',
+              })}
+              icon={<Eye1ClosedIcon />}
+              onPress={() => {
+                router.navigate({
+                  pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
+                  params: { fingerprint: wallet.fingerprint },
+                });
+              }}
+              testID={TestId.walletSettingsViewSecretKeyButton}
+            />
+            <SettingsListItem
+              title={t({
+                id: 'configure_wallet.rename_wallet.cell_title',
+                message: 'Rename wallet',
+              })}
+              icon={<SquareLinesBottomIcon />}
+              onPress={() => {
+                walletNameSheetRef.current?.present();
+              }}
+              testID={TestId.walletSettingsRenameWalletButton}
+            />
+            <SettingsListItem
+              title={t({
+                id: 'configure_wallet.remove_wallet.cell_title',
+                message: 'Remove wallet',
+              })}
+              icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
+              onPress={() => {
+                removeWalletSheetRef.current?.present();
+              }}
+              testID={TestId.walletSettingsRemoveWalletButton}
+            />
+          </SettingsList>
           {isFeatureEnabled() && (
             <Accordion
               label={t({
@@ -196,53 +193,43 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                 message: 'More options',
               })}
               content={
-                <>
-                  <Cell.Root
+                <SettingsList>
+                  <SettingsListItem
                     title={addressReuseTitle}
                     icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
                     onPress={onOpenSheet({
                       title: addressReuseTitle,
                     })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
+                  />
+                  <SettingsListItem
                     title={addressScanRangeTitle}
                     icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
                     onPress={onOpenSheet({
                       title: addressScanRangeTitle,
                     })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
+                  />
+                  <SettingsListItem
                     title={addressTypesTitle}
                     icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
                     onPress={onOpenSheet({
                       title: addressTypesTitle,
                     })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
+                  />
+                  <SettingsListItem
                     title={exportXpubTitle}
                     icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
                     onPress={onOpenSheet({
                       title: exportXpubTitle,
                     })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
+                  />
+                  <SettingsListItem
                     title={exportKeyTitle}
                     icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
                     onPress={onOpenSheet({
                       title: exportKeyTitle,
                     })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                </>
+                  />
+                </SettingsList>
               }
             />
           )}

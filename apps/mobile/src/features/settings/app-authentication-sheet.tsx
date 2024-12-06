@@ -1,11 +1,13 @@
 import { RefObject } from 'react';
 
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import * as LocalAuthentication from 'expo-local-authentication';
 
-import { Cell, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+import { KeyholeIcon, SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -60,22 +62,21 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         message: 'App authentication',
       })}
     >
-      <Cell.Root
-        title={t({
-          id: 'app_auth.cell_title',
-          message: 'Allow authentication',
-        })}
-        caption={t({
-          id: 'app_auth.cell_caption',
-          message: 'Placeholder',
-        })}
-        onPress={() => onUpdateAppAuth()}
-      >
-        <Cell.Switch
-          value={settings.securityLevelPreference === 'secure'}
-          onValueChange={() => onUpdateAppAuth()}
+      <SettingsList>
+        <SettingsListItem
+          title={t({
+            id: 'app_auth.cell_title',
+            message: 'Allow authentication',
+          })}
+          caption={t({
+            id: 'app_auth.cell_caption',
+            message: 'Placeholder',
+          })}
+          type="switch"
+          switchValue={settings.securityLevelPreference === 'secure'}
+          onSwitchValueChange={() => onUpdateAppAuth()}
         />
-      </Cell.Root>
+      </SettingsList>
     </SettingsSheetLayout>
   );
 }

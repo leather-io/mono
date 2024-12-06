@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
   NotifyUserSheetData,
   NotifyUserSheetLayout,
@@ -8,8 +10,6 @@ import {
 import { t } from '@lingui/macro';
 
 import {
-  Box,
-  Cell,
   LogoMpcBitgo,
   LogoMpcCapsule,
   LogoMpcCopper,
@@ -103,7 +103,7 @@ export default function MpcWalletListScreen() {
           message: 'Connect mpc wallet',
         })}
       >
-        <Box gap="3">
+        <SettingsList>
           {Object.entries(getUnavailableFeatures()).map(featureEntry => {
             const [featureKey, feature] = featureEntry;
             const mpcWalletName = feature.title;
@@ -118,17 +118,15 @@ export default function MpcWalletListScreen() {
             }
 
             return (
-              <Cell.Root
+              <SettingsListItem
                 key={featureKey}
                 onPress={onPress}
                 title={feature.title}
                 icon={feature.icon}
-              >
-                <Cell.Chevron />
-              </Cell.Root>
+              />
             );
           })}
-        </Box>
+        </SettingsList>
       </AnimatedHeaderScreenLayout>
       <NotifyUserSheetLayout
         onCloseSheet={onCloseSheet}
