@@ -98,7 +98,7 @@ export function PsbtSigner({ psbtHex, onEdit, onSuccess }: PsbtSignerProps) {
             message: 'Show advanced options',
           })}
           titleOpened={t({
-            id: 'approver.advanced.show',
+            id: 'approver.advanced.hide',
             message: 'Hide advanced options',
           })}
         >

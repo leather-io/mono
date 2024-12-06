@@ -138,6 +138,8 @@
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@lingui/cli": "4.11.1",
+    "@lingui/conf": "5.0.0",
+    "@lingui/format-po": "5.0.0",
     "@lingui/macro": "4.11.1",
     "@types/jest": "29.5.12",
     "@types/lodash.groupby": "4.6.9",

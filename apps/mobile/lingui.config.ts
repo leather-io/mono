@@ -1,5 +1,7 @@
-/** @type {import('@lingui/conf').LinguiConfig} */
-module.exports = {
+import { LinguiConfig } from '@lingui/conf';
+import { formatter } from '@lingui/format-po';
+
+const config: LinguiConfig = {
   locales: ['en', 'pseudo-locale'],
   pseudoLocale: 'pseudo-locale',
   sourceLocale: 'en',
@@ -12,5 +14,7 @@ module.exports = {
       include: ['src'],
     },
   ],
-  format: 'po',
+  format: formatter({ explicitIdAsDefault: true, printLinguiId: true }),
 };
+
+export default config;
