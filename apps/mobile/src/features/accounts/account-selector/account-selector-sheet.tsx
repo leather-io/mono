@@ -53,7 +53,7 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
 
   return (
     <AccountSelectorSheetLayout
-      accounts={accounts}
+      accounts={accounts.filter(account => account.status !== 'hidden')}
       onAccountPress={onAccountPress}
       swapAccountIndexes={swapAccountIndexes}
       sheetRef={sheetRef}
