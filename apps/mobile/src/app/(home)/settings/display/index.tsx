@@ -150,14 +150,20 @@ export default function SettingsDisplayScreen() {
           </Cell.Root>
         )}
         <Cell.Root
-          title={t({
-            id: 'display.haptics.cell_title',
-            message: 'Haptics',
-          })}
-          caption={t({
-            id: 'display.haptics.cell_caption',
-            message: 'Toggle tactile feedback for touch interactions',
-          })}
+          // title={t({
+          //   id: 'display.haptics.cell_title',
+          //   message: 'Haptics',
+          // })}
+          // caption={t({
+          //   id: 'display.haptics.cell_caption',
+          //   message: 'Toggle tactile feedback for touch interactions',
+          // })}
+          // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
+          // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+          title="Haptics"
+          // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
+          // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+          caption="Toggle tactile feedback for touch interactions"
           icon={<Eye1Icon />}
           onPress={() => onUpdatePrivacyMode()}
         >
