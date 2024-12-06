@@ -57,20 +57,22 @@ export function AccountsWidget() {
               paddingHorizontal: theme.spacing['5'],
             }}
           >
-            {accounts.list.map(account => (
-              <AccountCard
-                account={account}
-                key={account.id}
-                onPress={() => {
-                  router.navigate({
-                    pathname: AppRoutes.Account,
-                    params: {
-                      accountId: account.id,
-                    },
-                  });
-                }}
-              />
-            ))}
+            {accounts.list
+              .filter(account => account.status !== 'hidden')
+              .map(account => (
+                <AccountCard
+                  account={account}
+                  key={account.id}
+                  onPress={() => {
+                    router.navigate({
+                      pathname: AppRoutes.Account,
+                      params: {
+                        accountId: account.id,
+                      },
+                    });
+                  }}
+                />
+              ))}
 
             {accounts.hasAccounts ? (
               <AddAccountCard onPress={() => addAccountSheetRef.current?.present()} />
