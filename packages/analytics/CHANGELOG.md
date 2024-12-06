@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v2.0.1...@leather.io/analytics-v3.0.0) (2024-12-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* track pages views, closes LEA-1799
+
+### Features
+
+* track pages views, closes LEA-1799 ([5b76e36](https://github.com/leather-io/mono/commit/5b76e36e2f53230caa4e208880cb686154d68250))
+
 ## [2.0.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v2.0.0...@leather.io/analytics-v2.0.1) (2024-11-19)
 
 
