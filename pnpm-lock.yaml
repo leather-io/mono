@@ -14,6 +14,9 @@ patchedDependencies:
   expo-secure-store@13.0.2:
     hash: hl63v2r5dtztyuge4wydprmp6u
     path: patches/expo-secure-store@13.0.2.patch
+  pofile@1.1.4:
+    hash: z6c5tlq34mk5vg56blphtschuu
+    path: patches/pofile@1.1.4.patch
 
 importers:
 
@@ -374,6 +377,12 @@ importers:
       '@lingui/cli':
         specifier: 4.11.1
         version: 4.11.1(typescript@5.5.4)
+      '@lingui/conf':
+        specifier: 5.0.0
+        version: 5.0.0(typescript@5.5.4)
+      '@lingui/format-po':
+        specifier: 5.0.0
+        version: 5.0.0(typescript@5.5.4)
       '@lingui/macro':
         specifier: 4.11.1
         version: 4.11.1(@lingui/react@4.11.1(react@18.2.0))(babel-plugin-macros@3.1.0)(typescript@5.5.4)
@@ -2904,6 +2913,10 @@ packages:
     resolution: {integrity: sha512-rjMoHl80QhLIo+Zfs1s04Uh+Twpy9CZN01la48oti0g+zAniLk9RN8KlIGC4hyruVh1CsIwjabjLAdwj3cOKKQ==}
     engines: {node: '>=16.0.0'}
 
+  '@lingui/conf@5.0.0':
+    resolution: {integrity: sha512-m+2WxU4SG+vL8L5i/wdQ8/H0u5LQt6ZqIhxonyA2y7+llxRzjmr6GOikYaCiHPPWKG4gUUk+wXGsz9ZJyFB7tA==}
+    engines: {node: '>=20.0.0'}
+
   '@lingui/core@4.11.1':
     resolution: {integrity: sha512-iG8Oz46kuYFugWFlCH/SRvnsMqhD2zc3csPUVD7RZN/374v6Djd6EzlQEla307J3qFrhfJDrhhZrIH8v0GANCw==}
     engines: {node: '>=16.0.0'}
@@ -2911,6 +2924,10 @@ packages:
   '@lingui/format-po@4.11.1':
     resolution: {integrity: sha512-8qeiL8tXkGjW9kjUFzO00ZibpP5S6fJHdvTprm7wMAjpLtUYbMlSn/XQi2uLpG+ZB+9/EPTKGhNOaa9Fktq53Q==}
     engines: {node: '>=16.0.0'}
+
+  '@lingui/format-po@5.0.0':
+    resolution: {integrity: sha512-RAanAPS/IYfbHvSoi5b3Sefwd8otmika0sqfsZRtkynGa8f8JHAmGXWY+ChPqQlnWOa68h+fKGKDnCl/8CHKww==}
+    engines: {node: '>=20.0.0'}
 
   '@lingui/macro@4.11.1':
     resolution: {integrity: sha512-CwZNfI00ad4jmXkd/0cBM05pNALw96Xu9EmqRubQzqsN7FON9d48ZYUyK1lBnfZNkQjS82ack8tjkW1o3X725Q==}
@@ -2922,6 +2939,10 @@ packages:
   '@lingui/message-utils@4.11.1':
     resolution: {integrity: sha512-6dufjX9YdGZftgnzmrakvgiE0srp83GhrbK32dz33hASgAbF5vGHkxyOZLmnL3xYO5RgsrCJ5HGyiB/oQKlc9w==}
     engines: {node: '>=16.0.0'}
+
+  '@lingui/message-utils@5.0.0':
+    resolution: {integrity: sha512-Y1EwezciY7BL4dVIEhJA+eyp0ZVxXxT2U0tlnvrHDXEqJZchlVdjYosdsuuKcvZbbTXUEkwyR0wXQ9dKxAlXrg==}
+    engines: {node: '>=20.0.0'}
 
   '@lingui/react@4.11.1':
     resolution: {integrity: sha512-pqnAhp1gYJKz7dgDAIb1G1oaBq7OcuQJrXDq/ekrLqSBLozlpPskY5bmv20ygtjgoUiVOlD0+32UWDLafasc4w==}
@@ -5874,6 +5895,7 @@ packages:
   '@xmldom/xmldom@0.7.13':
     resolution: {integrity: sha512-lm2GW5PkosIzccsaZIz7tp8cPADSIlIHWDFTR1N0SzfinhhYgeIQjFMz4rYzanCScr3DqQLeomUDArp6MWKm+g==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version is no longer supported, please update to at least 0.8.*
 
   '@xmldom/xmldom@0.8.10':
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
@@ -14809,7 +14831,7 @@ snapshots:
       ora: 5.4.1
       pathe: 1.1.2
       pkg-up: 3.1.0
-      pofile: 1.1.4
+      pofile: 1.1.4(patch_hash=z6c5tlq34mk5vg56blphtschuu)
       pseudolocale: 2.1.0
       ramda: 0.27.2
       source-map: 0.8.0-beta.0
@@ -14818,6 +14840,17 @@ snapshots:
       - typescript
 
   '@lingui/conf@4.11.1(typescript@5.5.4)':
+    dependencies:
+      '@babel/runtime': 7.26.0
+      chalk: 4.1.2
+      cosmiconfig: 8.3.6(typescript@5.5.4)
+      jest-validate: 29.7.0
+      jiti: 1.21.6
+      lodash.get: 4.4.2
+    transitivePeerDependencies:
+      - typescript
+
+  '@lingui/conf@5.0.0(typescript@5.5.4)':
     dependencies:
       '@babel/runtime': 7.26.0
       chalk: 4.1.2
@@ -14839,7 +14872,16 @@ snapshots:
       '@lingui/conf': 4.11.1(typescript@5.5.4)
       '@lingui/message-utils': 4.11.1
       date-fns: 3.6.0
-      pofile: 1.1.4
+      pofile: 1.1.4(patch_hash=z6c5tlq34mk5vg56blphtschuu)
+    transitivePeerDependencies:
+      - typescript
+
+  '@lingui/format-po@5.0.0(typescript@5.5.4)':
+    dependencies:
+      '@lingui/conf': 5.0.0(typescript@5.5.4)
+      '@lingui/message-utils': 5.0.0
+      date-fns: 3.6.0
+      pofile: 1.1.4(patch_hash=z6c5tlq34mk5vg56blphtschuu)
     transitivePeerDependencies:
       - typescript
 
@@ -14856,6 +14898,11 @@ snapshots:
       - typescript
 
   '@lingui/message-utils@4.11.1':
+    dependencies:
+      '@messageformat/parser': 5.1.0
+      js-sha256: 0.10.1
+
+  '@lingui/message-utils@5.0.0':
     dependencies:
       '@messageformat/parser': 5.1.0
       js-sha256: 0.10.1
@@ -24413,7 +24460,7 @@ snapshots:
 
   pngjs@3.4.0: {}
 
-  pofile@1.1.4: {}
+  pofile@1.1.4(patch_hash=z6c5tlq34mk5vg56blphtschuu): {}
 
   polished@4.3.1:
     dependencies:

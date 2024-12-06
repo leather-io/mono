@@ -1,0 +1,30 @@
+diff --git a/lib/po.js b/lib/po.js
+index 0e2e35d8ffb4d1119a02714c684ae45200ab0a7d..bb9f1a434b2080212d41e65f7e434e0e4560462d 100644
+--- a/lib/po.js
++++ b/lib/po.js
+@@ -11,7 +11,9 @@ var PO = function () {
+ };
+ 
+ PO.prototype.save = function (filename, callback) {
++  try {
+     require('fs').writeFile(filename, this.toString(), callback);
++  } catch(e) {console.log('error on po file load (expected in RN)')} 
+ };
+ 
+ PO.prototype.toString = function () {
+@@ -63,6 +65,7 @@ PO.prototype.toString = function () {
+ };
+ 
+ PO.load = function (filename, callback) {
++  try {
+     require('fs').readFile(filename, 'utf-8', function (err, data) {
+         if (err) {
+             return callback(err);
+@@ -70,6 +73,7 @@ PO.load = function (filename, callback) {
+         var po = PO.parse(data);
+         callback(null, po);
+     });
++  } catch(e) {console.log('error on po file load (expected in RN)')} 
+ };
+ 
+ PO.parse = function (data) {

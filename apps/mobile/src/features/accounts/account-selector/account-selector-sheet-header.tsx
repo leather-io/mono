@@ -17,7 +17,7 @@ export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) 
       <Box alignItems="center" justifyContent="center" left={0} position="absolute" right={0}>
         <Text variant="heading05">
           {t({
-            id: 'select_account.header_title',
+            id: 'account_selector.header_title',
             message: 'Accounts',
           })}
         </Text>
