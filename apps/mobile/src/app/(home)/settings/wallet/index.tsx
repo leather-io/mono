@@ -3,6 +3,8 @@ import { useRef } from 'react';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { AppRoutes } from '@/routes';
@@ -10,7 +12,7 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
-import { Box, Cell, Eye1ClosedIcon, PlusIcon, SheetRef } from '@leather.io/ui/native';
+import { Eye1ClosedIcon, PlusIcon, SheetRef } from '@leather.io/ui/native';
 
 export default function SettingsWalletScreen() {
   const router = useRouter();
@@ -28,8 +30,8 @@ export default function SettingsWalletScreen() {
       >
         <WalletsList variant="active" />
         <Divider />
-        <Box gap="3" paddingTop="3">
-          <Cell.Root
+        <SettingsList paddingTop="3">
+          <SettingsListItem
             title={t({
               id: 'wallet.hidden_accounts.cell_title',
               message: 'Hidden accounts',
@@ -42,10 +44,8 @@ export default function SettingsWalletScreen() {
             onPress={() => {
               router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
             }}
-          >
-            <Cell.Chevron />
-          </Cell.Root>
-          <Cell.Root
+          />
+          <SettingsListItem
             title={t({
               id: 'wallet.add_wallet.cell_title',
               message: 'Add wallet',
@@ -54,10 +54,8 @@ export default function SettingsWalletScreen() {
             onPress={() => {
               addWalletSheetRef.current?.present();
             }}
-          >
-            <Cell.Chevron />
-          </Cell.Root>
-        </Box>
+          />
+        </SettingsList>
       </AnimatedHeaderScreenLayout>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>

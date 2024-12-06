@@ -1,5 +1,7 @@
 import { RefObject } from 'react';
 
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -7,7 +9,7 @@ import { useLingui } from '@lingui/react';
 
 import { accountDisplayPreferencesKeyedByType } from '@leather.io/constants';
 import { AccountDisplayPreference } from '@leather.io/models';
-import { Cell, PackageSecurityIcon, SheetRef } from '@leather.io/ui/native';
+import { PackageSecurityIcon, SheetRef } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
@@ -40,25 +42,25 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
         message: 'Account identifier',
       })}
     >
-      {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => (
-        <Cell.Root
-          key={accountDisplayPref.name}
-          title={i18n._({
-            id: 'account_identifier.cell_title',
-            message: '{name}',
-            values: { name: accountDisplayPref.name },
-          })}
-          caption={t({
-            id: 'account_identifier.cell_caption',
-            message: `${capitalize(i18n._(accountDisplayPref.blockchain))} blockchain`,
-          })}
-          onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
-        >
-          <Cell.Radio
-            isSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}
+      <SettingsList gap="0">
+        {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => (
+          <SettingsListItem
+            key={accountDisplayPref.name}
+            title={i18n._({
+              id: 'account_identifier.cell_title',
+              message: '{name}',
+              values: { name: accountDisplayPref.name },
+            })}
+            caption={t({
+              id: 'account_identifier.cell_caption',
+              message: `${capitalize(i18n._(accountDisplayPref.blockchain))} blockchain`,
+            })}
+            onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
+            type="radio"
+            isRadioSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}
           />
-        </Cell.Root>
-      ))}
+        ))}
+      </SettingsList>
     </SettingsSheetLayout>
   );
 }

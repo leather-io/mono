@@ -1,12 +1,13 @@
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { t } from '@lingui/macro';
 
-import { Box, Cell, PlaceholderIcon } from '@leather.io/ui/native';
+import { Box, PlaceholderIcon } from '@leather.io/ui/native';
 
 export default function SettingsNotificationsScreen() {
   return (
     <Box bg="ink.background-primary" flex={1}>
-      <Box flex={1} gap="3" paddingHorizontal="5" paddingTop="5">
-        <Cell.Root
+      <Box flex={1} gap="3" paddingTop="5">
+        <SettingsListItem
           title={t({
             id: 'notifications.push.cell_title',
             message: 'Notification',
@@ -16,10 +17,10 @@ export default function SettingsNotificationsScreen() {
             message: 'Placeholder',
           })}
           icon={<PlaceholderIcon />}
-          onPress={() => {}}
-        >
-          <Cell.Switch value={false} />
-        </Cell.Root>
+          type="switch"
+          switchValue={false}
+          onSwitchValueChange={() => {}}
+        />
       </Box>
     </Box>
   );

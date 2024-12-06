@@ -85,7 +85,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
         )}
       </Box>
       {showAccounts && (
-        <Box flexDirection="column" gap="3">
+        <Box flexDirection="column" gap="3" mx="-5">
           <AccountList accounts={accounts} onPress={onSelectAccount} />
           {variant === 'active' && (
             <Button
