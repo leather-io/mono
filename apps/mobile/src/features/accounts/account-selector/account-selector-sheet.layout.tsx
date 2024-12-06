@@ -4,16 +4,30 @@ import { useSharedValue } from 'react-native-reanimated';
 
 import { AvatarIcon } from '@/components/avatar-icon';
 import { Draggable } from '@/components/draggable';
+import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
+import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
+import { router } from 'expo-router';
 
-import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
+import {
+  Box,
+  SettingsGearIcon,
+  Sheet,
+  SheetRef,
+  Text,
+  Theme,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountBalance } from '../components/account-balance';
 import { AccountCard } from '../components/account-card';
+import { AccountSelectorHeader } from './account-selector-sheet-header';
 
 interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
@@ -37,6 +51,7 @@ export function AccountSelectorSheetLayout({
   return (
     <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5" gap="5">
+        <AccountSelectorHeader sheetRef={sheetRef} />
         {accounts.map((account, idx) => (
           <Draggable
             idx={idx}
@@ -49,25 +64,33 @@ export function AccountSelectorSheetLayout({
             onCardPress={() => onAccountPress(account.id)}
             swapCardIndexes={swapAccountIndexes}
           >
-            <AccountCard
-              address={
-                <AccountAddress
-                  accountIndex={account.accountIndex}
-                  fingerprint={account.fingerprint}
+            <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+              {wallet => (
+                <AccountCard
+                  address={
+                    <AccountAddress
+                      accountIndex={account.accountIndex}
+                      fingerprint={account.fingerprint}
+                    />
+                  }
+                  balance={
+                    <AccountBalance
+                      accountIndex={account.accountIndex}
+                      fingerprint={account.fingerprint}
+                    />
+                  }
+                  icon={
+                    <AvatarIcon
+                      color={theme.colors['ink.background-primary']}
+                      icon={account.icon}
+                    />
+                  }
+                  name={account.name}
+                  walletName={wallet.name}
+                  iconTestID={defaultIconTestId(account.icon)}
                 />
-              }
-              balance={
-                <AccountBalance
-                  accountIndex={account.accountIndex}
-                  fingerprint={account.fingerprint}
-                />
-              }
-              icon={
-                <AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />
-              }
-              name={account.name}
-              iconTestID={defaultIconTestId(account.icon)}
-            />
+              )}
+            </WalletLoader>
           </Draggable>
         ))}
       </Box>

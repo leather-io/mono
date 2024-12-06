@@ -7,6 +7,7 @@ interface AccountCardProps {
   balance: React.ReactNode;
   icon: React.ReactNode;
   name: string;
+  walletName: string;
   onPress?(): void;
   onLongPress?(): void;
   onLayout?(e: LayoutChangeEvent): void;
@@ -18,6 +19,7 @@ export function AccountCard({
   balance,
   icon,
   name,
+  walletName,
   onPress,
   onLongPress,
   onLayout,
@@ -50,7 +52,12 @@ export function AccountCard({
         {icon}
       </Box>
       <Box flexDirection="row" justifyContent="space-between">
-        <Text variant="label01">{name}</Text>
+        <Box>
+          <Text variant="label01">{name}</Text>
+          <Text variant="caption01" color="ink.text-subdued">
+            {walletName}
+          </Text>
+        </Box>
         <Box>
           {balance}
           {address}
