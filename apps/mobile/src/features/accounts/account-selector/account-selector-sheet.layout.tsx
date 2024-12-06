@@ -4,25 +4,13 @@ import { useSharedValue } from 'react-native-reanimated';
 
 import { AvatarIcon } from '@/components/avatar-icon';
 import { Draggable } from '@/components/draggable';
-import { AppRoutes } from '@/routes';
-import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import { router } from 'expo-router';
 
-import {
-  Box,
-  SettingsGearIcon,
-  Sheet,
-  SheetRef,
-  Text,
-  Theme,
-  TouchableOpacity,
-} from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountBalance } from '../components/account-balance';

@@ -14,6 +14,7 @@ import { TestId } from '@/shared/test-id';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -77,14 +78,20 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
         })}
       >
         <Box pb="3">
-          <AccountCard
-            address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
-            balance={<AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />}
-            icon={<AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />}
-            name={account.name}
-            key={account.id}
-            iconTestID={defaultIconTestId(account.icon)}
-          />
+          <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+            {wallet => (
+              <AccountCard
+                address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
+                balance={<AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />}
+                icon={
+                  <AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />
+                }
+                name={account.name}
+                iconTestID={defaultIconTestId(account.icon)}
+                walletName={wallet.name}
+              />
+            )}
+          </WalletLoader>
         </Box>
         <Cell.Root
           title={t({
