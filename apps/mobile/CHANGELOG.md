@@ -271,6 +271,29 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.58.2...@leather.io/mobile-v2.0.0) (2024-12-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* track pages views, closes LEA-1799
+
+### Features
+
+* track pages views, closes LEA-1799 ([5b76e36](https://github.com/leather-io/mono/commit/5b76e36e2f53230caa4e208880cb686154d68250))
+
+
+### Bug Fixes
+
+* lingui explicit ids ([9eed0d4](https://github.com/leather-io/mono/commit/9eed0d4576e21f2257677f3c4af39ed9aaf31da4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.0.0
+
 ## [1.58.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.58.1...@leather.io/mobile-v1.58.2) (2024-12-06)
 
 
