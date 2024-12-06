@@ -8,15 +8,15 @@ export interface AccountOverviewProps {
 
 export function AccountOverview({ caption, icon, heading }: AccountOverviewProps) {
   return (
-    <Box
-      alignItems="flex-start"
-      alignContent="flex-start"
-      alignSelf="stretch"
-      mx="5"
-      flexWrap="wrap"
-    >
-      <Box width={342} height={180} flexDirection="column" alignItems="center" gap="3" flex={1}>
-        <Box p="2" borderRadius="round" backgroundColor="ink.text-primary">
+    <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
+      <Box height={180} mx="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
+        <Box
+          p="3"
+          borderRadius="round"
+          backgroundColor="ink.text-primary"
+          justifyContent="center"
+          alignItems="center"
+        >
           {icon}
         </Box>
         <Box gap="1" flexDirection="column" alignItems="center">
