@@ -271,6 +271,23 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [1.58.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.57.2...@leather.io/mobile-v1.58.0) (2024-12-06)
+
+
+### Features
+
+* prod crowdin hash ([96fda70](https://github.com/leather-io/mono/commit/96fda700258bf5036e9b47e2b23af6513a378ec9))
+
+
+### Bug Fixes
+
+* add wallet name and header to account selector, ref #LEA-1828 ([a8b8854](https://github.com/leather-io/mono/commit/a8b8854e6ac1e0a495a93bf71b9d62f0d0ec3695))
+* add wallet name to configure account card, ref #LEA-1828 ([be62d39](https://github.com/leather-io/mono/commit/be62d393ca1592386993eb73bd25ea059130ad09))
+* adjust horizontal alignment of account page, ref [#1820](https://github.com/leather-io/mono/issues/1820) ([c571e56](https://github.com/leather-io/mono/commit/c571e56d7e00a2f02f2adaff058754ba1798ed2e))
+* filter hidden accounts, ref #LEA-1823 ([082a197](https://github.com/leather-io/mono/commit/082a197747dfb698f9a52cda786d16d07dbebb4e))
+* reenable account identifier setting ([3e6de4a](https://github.com/leather-io/mono/commit/3e6de4a89e1b0eb8c00c92c2fd5152d0ebc27dd9))
+* remove your collectibles, ref #LEA-1822 ([33c61cc](https://github.com/leather-io/mono/commit/33c61cc8224f25db8ab76eeaa61f2c02134e2be2))
+
 ## [1.57.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.57.1...@leather.io/mobile-v1.57.2) (2024-12-05)
 
 
