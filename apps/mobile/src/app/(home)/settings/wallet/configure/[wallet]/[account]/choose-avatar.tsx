@@ -66,12 +66,6 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             })}
           </Text>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
-          <Text variant="label02">
-            {t({
-              id: 'choose_avatar.collectibles.subtitle',
-              message: 'Your collectibles',
-            })}
-          </Text>
         </Box>
       </ScrollView>
       <Box
