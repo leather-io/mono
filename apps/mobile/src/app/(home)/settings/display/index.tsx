@@ -7,11 +7,7 @@ import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { useSettings } from '@/store/settings/settings';
-<<<<<<< HEAD
 import { isFeatureEnabled } from '@/utils/feature-flag';
-=======
-import { isFeatureEnabled } from '@/utils/feature-flags';
->>>>>>> 70064db3 (fix: reenable account identifier setting)
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
