@@ -271,6 +271,13 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [1.58.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.58.0...@leather.io/mobile-v1.58.1) (2024-12-06)
+
+
+### Bug Fixes
+
+* add pull to refresh to home and accounts, ref LEA-1814 ([010c91b](https://github.com/leather-io/mono/commit/010c91bd8af470810be748ed4ecfbf9f866b15e3))
+
 ## [1.58.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.57.2...@leather.io/mobile-v1.58.0) (2024-12-06)
 
 
