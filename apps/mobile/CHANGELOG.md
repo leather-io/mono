@@ -271,6 +271,13 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [2.0.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.0...@leather.io/mobile-v2.0.1) (2024-12-07)
+
+
+### Bug Fixes
+
+* strings with placeholders ([61eca4a](https://github.com/leather-io/mono/commit/61eca4aa6ddd36b83fada10b2184bea741018a7a))
+
 ## [2.0.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v1.58.2...@leather.io/mobile-v2.0.0) (2024-12-06)
 
 
