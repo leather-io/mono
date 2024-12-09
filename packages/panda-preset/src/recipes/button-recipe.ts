@@ -33,11 +33,11 @@ export const buttonRecipe = defineRecipe({
     size: {
       sm: {
         px: 'space.02',
-        height: '40px',
+        py: 'space.01',
       },
       md: {
         px: 'space.04',
-        height: '48px',
+        py: 'space.03',
       },
     },
     variant: {
@@ -108,6 +108,9 @@ export const buttonRecipe = defineRecipe({
       },
 
       success: {
+        _disabled: {
+          cursor: 'not-allowed',
+        },
         bg: 'green.action-primary-default',
         color: 'ink.background-primary',
       },
@@ -146,6 +149,22 @@ export const buttonRecipe = defineRecipe({
     },
     {
       css: {
+        height: '40px',
+        py: 'unset',
+      },
+      size: 'sm',
+      variant: 'solid',
+    },
+    {
+      css: {
+        height: '48px',
+        py: 'unset',
+      },
+      size: 'md',
+      variant: 'solid',
+    },
+    {
+      css: {
         _active: {
           bg: 'ink.text-primary',
         },
@@ -172,6 +191,17 @@ export const buttonRecipe = defineRecipe({
       },
       trigger: true,
       variant: 'ghost',
+    },
+    {
+      css: {
+        _disabled: {
+          cursor: 'not-allowed',
+        },
+        bg: 'green.action-primary-default',
+        color: 'ink.text-primary',
+      },
+      invert: true,
+      variant: 'success',
     },
   ],
 });
