@@ -297,6 +297,21 @@
     * @leather.io/analytics bumped to 3.0.2
     * @leather.io/ui bumped to 1.42.0
 
+## [2.0.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.8...@leather.io/mobile-v2.0.9) (2024-12-09)
+
+
+### Bug Fixes
+
+* allow for opting out of analytics, closes LEA-1841 ([31b0648](https://github.com/leather-io/mono/commit/31b064841c7419db3484ab3db48f5280cc3d04f2))
+* type errors ([aa08e80](https://github.com/leather-io/mono/commit/aa08e80426e7b17497b7a6bdc64b492ed747ada3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.42.1
+
 ## [2.0.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.7...@leather.io/mobile-v2.0.8) (2024-12-09)
 
 

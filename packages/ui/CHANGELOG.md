@@ -173,6 +173,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.21.3
 
+## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.42.0...@leather.io/ui-v1.42.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* allow for opting out of analytics, closes LEA-1841 ([31b0648](https://github.com/leather-io/mono/commit/31b064841c7419db3484ab3db48f5280cc3d04f2))
+* type errors ([aa08e80](https://github.com/leather-io/mono/commit/aa08e80426e7b17497b7a6bdc64b492ed747ada3))
+
 ## [1.42.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.41.2...@leather.io/ui-v1.42.0) (2024-12-09)
 
 
