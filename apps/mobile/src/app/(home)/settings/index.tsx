@@ -66,14 +66,10 @@ export default function SettingsScreen() {
               id: 'settings.display.cell_title',
               message: 'Display',
             })}
-            caption={
-              isFeatureEnabled()
-                ? t({
-                    id: 'settings.display.cell_caption',
-                    message: 'Theme, bitcoin unit and more',
-                  })
-                : undefined
-            }
+            caption={t({
+              id: 'settings.display.cell_caption',
+              message: 'Theme and account identifier',
+            })}
             icon={<SquareLinesBottomIcon />}
             onPress={() => router.navigate(AppRoutes.SettingsDisplay)}
             testID={TestId.settingsDisplayButton}
