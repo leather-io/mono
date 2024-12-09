@@ -17,10 +17,12 @@ export function AnalyticsClient<T extends AnalyticsClientInterface>(
       }
       return analyticsClient.track(event as any, { ...properties, ...options.defaultProperties });
     },
-    screen: analyticsClient.screen,
-    group: analyticsClient.group,
-    identify: analyticsClient.identify,
-    page: analyticsClient.page ? analyticsClient.page : () => Promise.resolve(),
+    screen: (name: string, ...args: any[]) => analyticsClient.screen(name, ...args),
+    group: (groupId: string, traits?: any, ...args: any[]) =>
+      analyticsClient.group(groupId, traits, ...args),
+    identify: (...args: any[]) => analyticsClient.identify(...args),
+    page: (name: string, ...args: any[]) =>
+      analyticsClient.page ? analyticsClient.page(name, ...args) : Promise.resolve(),
     client: analyticsClient,
   };
 }
