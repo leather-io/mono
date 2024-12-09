@@ -38,7 +38,7 @@ function TextMeasurementProxy({ value, textProps, onFontSizeChange }: TextMeasur
       onTextLayout={handleLayout}
       adjustsFontSizeToFit
       numberOfLines={1}
-      aria-hidden={true}
+      aria-hidden
       style={{
         flexGrow: 1,
         opacity: 0,

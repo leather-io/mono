@@ -47,7 +47,7 @@ export default function RootLayout() {
   const params = useGlobalSearchParams();
 
   useEffect(() => {
-    analytics.screen(pathname, {
+    analytics?.screen(pathname, {
       params,
     });
   }, [pathname, params]);
