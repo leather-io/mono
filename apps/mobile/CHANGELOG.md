@@ -277,6 +277,29 @@
   * dependencies
     * @leather.io/ui bumped to 1.41.0
 
+## [2.0.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.3...@leather.io/mobile-v2.0.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* add support links and text updates, ref #LEA-1835 ([8103cac](https://github.com/leather-io/mono/commit/8103cac687c2df10a8df81d511c43e38bb11c92b))
+* only show support links if they go somewhere, ref #LEA-1835 ([83caa84](https://github.com/leather-io/mono/commit/83caa84a7f247c4438719e6cd3625b200ab203fd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.1
+    * @leather.io/constants bumped to 0.14.1
+    * @leather.io/crypto bumped to 1.6.18
+    * @leather.io/query bumped to 2.26.2
+    * @leather.io/stacks bumped to 1.5.3
+    * @leather.io/ui bumped to 1.41.1
+    * @leather.io/utils bumped to 0.21.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.1
+
 ## [2.0.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.1...@leather.io/mobile-v2.0.2) (2024-12-09)
 
 

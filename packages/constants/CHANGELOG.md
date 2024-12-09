@@ -91,6 +91,14 @@
   * dependencies
     * @leather.io/models bumped to 0.24.0
 
+## [0.14.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.14.0...@leather.io/constants-v0.14.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* add support links and text updates, ref #LEA-1835 ([8103cac](https://github.com/leather-io/mono/commit/8103cac687c2df10a8df81d511c43e38bb11c92b))
+* only show support links if they go somewhere, ref #LEA-1835 ([83caa84](https://github.com/leather-io/mono/commit/83caa84a7f247c4438719e6cd3625b200ab203fd))
+
 ## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.13.7...@leather.io/constants-v0.14.0) (2024-12-04)
 
 

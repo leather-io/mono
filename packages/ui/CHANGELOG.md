@@ -167,6 +167,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.0
 
+## [1.41.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.41.0...@leather.io/ui-v1.41.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* only show support links if they go somewhere, ref #LEA-1835 ([83caa84](https://github.com/leather-io/mono/commit/83caa84a7f247c4438719e6cd3625b200ab203fd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.21.2
+
 ## [1.41.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.40.1...@leather.io/ui-v1.41.0) (2024-12-09)
 
 
