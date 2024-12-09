@@ -22,7 +22,7 @@ interface WarningSheetLayoutProps {
   title: string;
   description: string;
   onSubmit(): unknown;
-  onPressSupport?(): unknown;
+  onPressSupport?: () => void;
   variant?: WarningSheetVariant;
 }
 export function WarningSheetLayout({
@@ -31,6 +31,7 @@ export function WarningSheetLayout({
   description,
   onSubmit,
   variant = 'normal',
+  onPressSupport,
 }: WarningSheetLayoutProps) {
   const { themeDerivedFromThemePreference } = useSettings();
   const theme = useTheme<Theme>();
@@ -40,6 +41,7 @@ export function WarningSheetLayout({
         <Box gap="5">
           <Box>
             <SheetHeader
+              onPressSupport={onPressSupport ? onPressSupport : undefined}
               title={title}
               icon={
                 <Box
@@ -59,9 +61,6 @@ export function WarningSheetLayout({
                   />
                 </Box>
               }
-              onPressSupport={() => {
-                // TODO: add support link
-              }}
             />
           </Box>
           <Text>{description}</Text>

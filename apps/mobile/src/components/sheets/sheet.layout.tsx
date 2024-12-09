@@ -16,7 +16,7 @@ export function SheetLayout({ children, icon, sheetRef, title }: SheetLayoutProp
   return (
     <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box gap="3" pt="4" px="5">
-        <SheetHeader icon={<Avatar>{icon}</Avatar>} onPressSupport={() => {}} title={title} />
+        <SheetHeader icon={<Avatar>{icon}</Avatar>} title={title} />
         {children}
       </Box>
     </Sheet>
