@@ -175,6 +175,13 @@
   * dependencies
     * @leather.io/constants bumped to 0.14.1
 
+## [0.21.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.21.2...@leather.io/utils-v0.21.3) (2024-12-09)
+
+
+### Bug Fixes
+
+* remove number conversion in sumMoney utility ([2193733](https://github.com/leather-io/mono/commit/2193733cccaf6ebc3eb87d1bcf84a35ac54dfa12))
+
 ## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.20.1...@leather.io/utils-v0.21.0) (2024-12-03)
 
 
