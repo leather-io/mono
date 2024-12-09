@@ -271,6 +271,14 @@
     * @leather.io/query bumped to 2.26.1
     * @leather.io/ui bumped to 1.40.1
 
+## [2.0.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.1...@leather.io/mobile-v2.0.2) (2024-12-09)
+
+
+### Bug Fixes
+
+* hide actionbar for beta releae ([ef8134f](https://github.com/leather-io/mono/commit/ef8134fc97dc67dcaa4fc2e1bf25da7b6e976029))
+* only show network badge for non mainnet, adjust home position, ref LEA-1815 ([4d9918c](https://github.com/leather-io/mono/commit/4d9918cf3ec817271b1a73221087da2d6bd08887))
+
 ## [2.0.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.0...@leather.io/mobile-v2.0.1) (2024-12-07)
 
 
