@@ -3,6 +3,7 @@ import { Pressable as RNPressable, type PressableProps as RNPressableProps } fro
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 
 import {
+  type BackgroundColorProps,
   type BackgroundColorShorthandProps,
   type BorderProps,
   type LayoutProps,
@@ -29,6 +30,7 @@ export type PressableRestyleProps = OpacityProps<Theme> &
   SpacingShorthandProps<Theme> &
   SpacingProps<Theme> &
   BorderProps<Theme> &
+  BackgroundColorProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
   LayoutProps<Theme> &
   PositionProps<Theme>;

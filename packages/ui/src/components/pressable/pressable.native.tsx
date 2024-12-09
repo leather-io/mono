@@ -4,7 +4,10 @@ import { type GestureResponderEvent, Pressable as RNPressable } from 'react-nati
 import { isString } from '@leather.io/utils';
 
 import { useHaptics } from '../../hooks/use-haptics.native';
-import { PressableCore, PressableCoreProps, PressableRestyleProps } from './pressable-core.native';
+import { usePressedState } from '../../hooks/use-pressed-state.native';
+import { PressableCore, PressableCoreProps } from './pressable-core.native';
+import { PressEffects } from './pressable.types.native';
+import { usePressEffectStyle } from './pressable.utils.native';
 
 type PressableHapticFeedbackType = 'soft' | 'light' | 'medium' | 'heavy' | 'rigid';
 
@@ -14,6 +17,7 @@ interface HapticConfig {
 }
 
 type PressableElement = ElementRef<typeof RNPressable>;
+
 interface PressableOwnProps {
   /**
    * Configure haptic feedback
@@ -26,20 +30,41 @@ interface PressableOwnProps {
    * <Pressable haptics={{ onPress: 'light', onLongPress: 'rigid' }} />
    */
   haptics?: PressableHapticFeedbackType | HapticConfig;
-  pressTransitions?: {
-    [K in keyof PressableRestyleProps]: {
-      from: PressableRestyleProps[K];
-      to: PressableRestyleProps[K];
-    };
-  };
+  /**
+   * Specify animations for pressed state
+   *
+   * @example
+   * // Basic property transition
+   * <Pressable pressEffects={{ opacity: { from: 1, to: 0.5 } }} />
+   *
+   * @example
+   * // Multiple properties
+   * <Pressable
+   *   pressEffects={{
+   *     opacity: { from: 1, to: 0.5 },
+   *     backgroundColor: { from: 'ink.background-primary', to: 'ink.background-secondary' },
+   *   }}
+   * />
+   *
+   * @example
+   * // Delay the transition
+   * <Pressable pressEffects={{ opacity: { from: 1, to: 0.5 }, settings: { delay: 150 } }} />
+   *
+   * @example
+   * // Specify react-native-reanimated configuration
+   * <Pressable pressEffects={{ opacity: { from: 1, to: 0.5, settings: { type: 'spring', config: { duration: 300 } } } }} />
+   */
+  pressEffects?: PressEffects;
 }
 
 export type PressableProps = PressableOwnProps & PressableCoreProps;
 
 export const Pressable = forwardRef<PressableElement, PressableProps>(
-  ({ haptics = {}, onPress, onLongPress, pressTransitions, ...rest }, ref) => {
+  ({ haptics = {}, pressEffects = {}, onPress, onLongPress, style, ...rest }, ref) => {
     const triggerHaptics = useHaptics();
     const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
+    const { onPressIn, onPressOut, pressed } = usePressedState(rest);
+    const pressEffectStyle = usePressEffectStyle({ pressed, pressEffects });
 
     function handlePress(event: GestureResponderEvent) {
       if (hapticConfig.onPress) {
@@ -56,7 +81,35 @@ export const Pressable = forwardRef<PressableElement, PressableProps>(
     }
 
     return (
-      <PressableCore ref={ref} onPress={handlePress} onLongPress={handleLongPress} {...rest} />
+      <PressableCore
+        ref={ref}
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        style={[pressEffectStyle, style]}
+        {...rest}
+      />
     );
   }
 );
+
+Pressable.displayName = 'Pressable';
+
+/**
+ * https://linear.app/leather-io/issue/LEA-1859
+ * Press effect preset to mimic react-native Touchable transition.
+ * This preset is up for removal. It's only used for components that previously used Touchable, and require a new design for the pressed state.
+ * */
+export const legacyTouchablePressEffect = {
+  opacity: {
+    from: 1,
+    to: 0.5,
+    settings: {
+      type: 'spring',
+      config: {
+        duration: 200,
+      },
+    },
+  },
+} as const;

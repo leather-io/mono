@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { GestureResponderEvent } from 'react-native';
 
 interface UsePressedStateInputProps {
-  onPressIn?: (event: GestureResponderEvent) => void;
-  onPressOut?: (event: GestureResponderEvent) => void;
+  onPressIn?: ((event: GestureResponderEvent) => void) | null;
+  onPressOut?: ((event: GestureResponderEvent) => void) | null;
 }
 
 /**
@@ -18,22 +18,22 @@ interface UsePressedStateInputProps {
  *   return <Pressable onPressIn={onPressIn} onPressOut={onPressOut}/>
  * }
  * */
-export function usePressedState(props: UsePressedStateInputProps = {}) {
+export function usePressedState({ onPressIn, onPressOut }: UsePressedStateInputProps = {}) {
   const [pressed, setPressed] = useState(false);
 
-  function onPressIn(event: GestureResponderEvent) {
+  function handlePressIn(event: GestureResponderEvent) {
     setPressed(true);
-    props.onPressIn?.(event);
+    onPressIn?.(event);
   }
 
-  function onPressOut(event: GestureResponderEvent) {
+  function handlePressOut(event: GestureResponderEvent) {
     setPressed(false);
-    props.onPressOut?.(event);
+    onPressOut?.(event);
   }
 
   return {
-    onPressIn,
-    onPressOut,
+    onPressIn: useCallback(handlePressIn, [onPressIn]),
+    onPressOut: useCallback(handlePressOut, [onPressOut]),
     pressed,
   };
 }
