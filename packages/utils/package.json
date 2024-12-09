@@ -2,7 +2,7 @@
   "name": "@leather.io/utils",
   "author": "Leather.io contact@leather.io",
   "description": "Shared bitcoin utilities",
-  "version": "0.21.2",
+  "version": "0.21.3",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/utils",
   "repository": {
