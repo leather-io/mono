@@ -7,7 +7,6 @@ import { configureAnalyticsClient } from '@leather.io/analytics';
 const segmentClient = createClient({
   writeKey: process.env.EXPO_PUBLIC_SEGMENT_WRITE_KEY || '',
   trackAppLifecycleEvents: true,
-  debug: true,
 });
 
 const leatherAnalyticsClient = configureAnalyticsClient<SegmentClient>({
