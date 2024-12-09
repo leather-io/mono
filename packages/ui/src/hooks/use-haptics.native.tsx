@@ -71,6 +71,8 @@ export function useHaptics() {
         default:
           return assertUnreachable(hapticFeedbackType);
       }
-    } catch {}
+    } catch {
+      return;
+    }
   };
 }
