@@ -167,6 +167,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.0
 
+## [1.41.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.40.1...@leather.io/ui-v1.41.0) (2024-12-09)
+
+
+### Features
+
+* add new version of the Cell ([46fa026](https://github.com/leather-io/mono/commit/46fa0264852c9a8c5531dd25d8d67d4b2ff6b2a7))
+
 ## [1.40.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.40.0...@leather.io/ui-v1.40.1) (2024-12-04)
 
 
