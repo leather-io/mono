@@ -33,11 +33,11 @@ export const buttonRecipe = defineRecipe({
     size: {
       sm: {
         px: 'space.02',
-        py: 'space.01',
+        height: '40px',
       },
       md: {
         px: 'space.04',
-        py: 'space.03',
+        height: '48px',
       },
     },
     variant: {
@@ -105,6 +105,11 @@ export const buttonRecipe = defineRecipe({
           bg: 'ink.component-background-hover',
         },
         ...loadingStyles,
+      },
+
+      success: {
+        bg: 'green.action-primary-default',
+        color: 'ink.background-primary',
       },
     },
 
