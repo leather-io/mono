@@ -297,6 +297,13 @@
     * @leather.io/analytics bumped to 3.0.2
     * @leather.io/ui bumped to 1.42.0
 
+## [2.0.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.7...@leather.io/mobile-v2.0.8) (2024-12-09)
+
+
+### Bug Fixes
+
+* localization strings ([cb7e555](https://github.com/leather-io/mono/commit/cb7e5557b199d9b7f8933cdeb30ebbfbbb3473b8))
+
 ## [2.0.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.5...@leather.io/mobile-v2.0.6) (2024-12-09)
 
 
