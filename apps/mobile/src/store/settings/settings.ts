@@ -1,7 +1,7 @@
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { analytics } from '@/utils/analytics';
+import { useAnalytics } from '@/utils/analytics';
 import { whenTheme } from '@/utils/when-theme';
 
 import {
@@ -68,6 +68,7 @@ export function useSettings() {
   const dispatch = useAppDispatch();
   const systemTheme = useColorScheme();
 
+  const analytics = useAnalytics();
   const accountDisplayPreference = useSelector(selectAccountDisplayPreference);
   const analyticsPreference = useSelector(selectAnalyticsPreference);
   const bitcoinUnitPreference = useSelector(selectBitcoinUnitPreference);

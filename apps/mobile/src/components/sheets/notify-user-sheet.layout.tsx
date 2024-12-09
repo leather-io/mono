@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
-import { analytics } from '@/utils/analytics';
+import { useAnalytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { Image } from 'expo-image';
@@ -25,7 +25,7 @@ export function NotifyUserSheetLayout({
 }: NotifyUserSheetLayoutProps) {
   const { themeDerivedFromThemePreference } = useSettings();
   const { i18n } = useLingui();
-
+  const analytics = useAnalytics();
   async function onNotify() {
     if (sheetData) {
       analytics.track('submit_feature_waitlist', {

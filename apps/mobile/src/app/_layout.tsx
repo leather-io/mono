@@ -15,7 +15,7 @@ import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
 import { useSettings } from '@/store/settings/settings';
-import { analytics } from '@/utils/analytics';
+import { useAnalytics } from '@/utils/analytics';
 import { HasChildren } from '@/utils/types';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
@@ -45,7 +45,7 @@ initiateI18n();
 export default function RootLayout() {
   const pathname = usePathname();
   const params = useGlobalSearchParams();
-
+  const analytics = useAnalytics();
   useEffect(() => {
     analytics.screen(pathname, {
       params,

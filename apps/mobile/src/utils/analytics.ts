@@ -1,3 +1,4 @@
+import { useSettings } from '@/store/settings/settings';
 import { SegmentClient, createClient } from '@segment/analytics-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
@@ -13,3 +14,19 @@ export const analytics = configureAnalyticsClient<SegmentClient>({
     platform: 'mobile',
   },
 });
+export function useAnalytics() {
+  const { analyticsPreference } = useSettings();
+
+  const isEnabled = analyticsPreference === 'consent-given';
+
+  if (isEnabled) {
+    return analytics;
+  }
+  return {
+    ...analytics,
+    track: () => {},
+    page: () => {},
+    identify: () => {},
+    screen: () => {},
+  };
+}

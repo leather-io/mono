@@ -1,14 +1,14 @@
 import { useRef } from 'react';
 
 import { ToastWrapper } from '@/components/toast/toast-context';
-import { analytics } from '@/utils/analytics';
+import { useAnalytics } from '@/utils/analytics';
 import { HasChildren } from '@/utils/types';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 
 export function SheetNavigationContainer({ children }: HasChildren) {
   const navigationRef = useNavigationContainerRef();
   const routeNameRef = useRef<string | undefined>();
-
+  const analytics = useAnalytics();
   return (
     <ToastWrapper>
       <NavigationContainer

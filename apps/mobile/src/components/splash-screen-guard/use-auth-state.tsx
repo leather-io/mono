@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
-import { analytics } from '@/utils/analytics';
+import { useAnalytics } from '@/utils/analytics';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 const unlockTimeout = 60 * 1000;
@@ -17,7 +17,7 @@ export function useAuthState({
 }) {
   const { securityLevelPreference, userLeavesApp, lastActive } = useSettings();
   const [authState, setAuthState] = useState<AuthState>('cold-start');
-
+  const analytics = useAnalytics();
   const checkUnlockTime = useCallback(() => {
     return !!lastActive && lastActive > +new Date() - unlockTimeout;
   }, [lastActive]);
