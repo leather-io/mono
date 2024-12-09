@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { type MarketData, type Money, type NumType, formatMarketPair } from '@leather.io/models';
 
 import { isNumber } from '..';
-import { initBigNumber, sumNumbers } from '../math/helpers';
+import { initBigNumber } from '../math/helpers';
 import { createMoney, formatMoney } from './format-money';
 import { isMoney } from './is-money';
 
@@ -53,6 +53,6 @@ export function sumMoney(moneysArr: Money[]) {
   if (moneysArr.some(item => item.symbol !== moneysArr[0].symbol))
     throw new Error('Cannot sum different currencies');
 
-  const sum = sumNumbers(moneysArr.map(item => item.amount.toNumber()));
+  const sum = moneysArr.reduce((acc, item) => acc.plus(item.amount), new BigNumber(0));
   return createMoney(sum, moneysArr[0].symbol, moneysArr[0].decimals);
 }
