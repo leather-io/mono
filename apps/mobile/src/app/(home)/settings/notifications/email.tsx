@@ -19,10 +19,6 @@ export default function SettingsNotificationsEmailScreen() {
               id: 'notifications.email.cell_title',
               message: 'Email address',
             })}
-            caption={t({
-              id: 'notifications.email.cell_caption',
-              message: 'Placeholder',
-            })}
             icon={<EmailIcon />}
             onPress={() => {
               emailAddressSheetRef.current?.present();

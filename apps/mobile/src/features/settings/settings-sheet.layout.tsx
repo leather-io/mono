@@ -11,8 +11,15 @@ interface SettingsSheetLayoutProps extends HasChildren {
   icon: ReactNode;
   sheetRef: RefObject<SheetRef>;
   title: string;
+  onPressSupport?: () => void;
 }
-export function SettingsSheetLayout({ children, icon, sheetRef, title }: SettingsSheetLayoutProps) {
+export function SettingsSheetLayout({
+  children,
+  icon,
+  sheetRef,
+  title,
+  onPressSupport,
+}: SettingsSheetLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   const { themeDerivedFromThemePreference } = useSettings();
   const theme = useTheme<Theme>();
@@ -26,7 +33,7 @@ export function SettingsSheetLayout({ children, icon, sheetRef, title }: Setting
           paddingTop: theme.spacing[4],
         }}
       >
-        <SheetHeader icon={<Avatar>{icon}</Avatar>} onPressSupport={() => {}} title={title} />
+        <SheetHeader icon={<Avatar>{icon}</Avatar>} onPressSupport={onPressSupport} title={title} />
         {children}
       </Box>
     </Sheet>

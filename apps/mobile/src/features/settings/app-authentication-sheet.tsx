@@ -1,8 +1,10 @@
 import { RefObject } from 'react';
+import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -61,16 +63,19 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         id: 'app_auth.header_title',
         message: 'App authentication',
       })}
+      onPressSupport={() => {
+        Linking.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION);
+      }}
     >
       <SettingsList>
         <SettingsListItem
           title={t({
             id: 'app_auth.cell_title',
-            message: 'Allow authentication',
+            message: 'App authentication',
           })}
           caption={t({
             id: 'app_auth.cell_caption',
-            message: 'Placeholder',
+            message: 'Require biometrics or PIN',
           })}
           type="switch"
           switchValue={settings.securityLevelPreference === 'secure'}

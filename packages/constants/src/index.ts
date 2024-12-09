@@ -62,6 +62,9 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
+export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
+
+export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   bitcoin: {
     name: 'bitcoin',

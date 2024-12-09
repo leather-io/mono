@@ -1,8 +1,10 @@
 import { RefObject } from 'react';
+import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { LEATHER_GUIDES_MOBILE_ANALYTICS } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
@@ -38,6 +40,9 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
         id: 'analytics.header_title',
         message: 'Analytics',
       })}
+      onPressSupport={() => {
+        Linking.openURL(LEATHER_GUIDES_MOBILE_ANALYTICS);
+      }}
     >
       <SettingsList>
         <SettingsListItem
@@ -47,7 +52,7 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
           })}
           caption={t({
             id: 'analytics.cell_caption',
-            message: 'Placeholder',
+            message: 'Share anonymous usage details',
           })}
           type="switch"
           onSwitchValueChange={() => onUpdateAnalytics()}

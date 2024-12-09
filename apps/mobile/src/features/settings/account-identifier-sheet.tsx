@@ -1,8 +1,10 @@
 import { RefObject } from 'react';
+import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -41,6 +43,9 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
         id: 'account_identifier.header_title',
         message: 'Account identifier',
       })}
+      onPressSupport={() => {
+        Linking.openURL(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
+      }}
     >
       <SettingsList gap="0">
         {Object.values(accountDisplayPreferencesKeyedByType).map(accountDisplayPref => (
