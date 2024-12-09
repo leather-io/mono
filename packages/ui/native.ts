@@ -45,7 +45,11 @@ export { RadioButton } from './src/components/radio-button/radio-button.native';
 export { Switch } from './src/components/switch/switch.native';
 export * from './src/components/collectibles/index.native';
 export * from './src/utils/use-on-mount.shared';
-export { Pressable, type PressableProps } from './src/components/pressable/pressable.native';
+export {
+  Pressable,
+  type PressableProps,
+  legacyTouchablePressEffect,
+} from './src/components/pressable/pressable.native';
 export { Numpad } from './src/components/numpad/numpad.native';
 export { Highlighter } from './src/components/highlighting/highlighter.native';
 export { Prism, type PrismType } from './src/components/highlighting/clarity-prism.shared';
