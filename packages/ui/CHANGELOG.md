@@ -173,6 +173,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.21.3
 
+## [1.42.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.41.2...@leather.io/ui-v1.42.0) (2024-12-09)
+
+
+### Features
+
+* add success btn recipe ([b14cf16](https://github.com/leather-io/mono/commit/b14cf163199072913132650e5f0b3f640fc8be7a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.7.0
+
 ## [1.41.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.41.0...@leather.io/ui-v1.41.1) (2024-12-09)
 
 

@@ -84,6 +84,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.12.1
 
+## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.6.0...@leather.io/panda-preset-v0.7.0) (2024-12-09)
+
+
+### Features
+
+* add success btn recipe ([b14cf16](https://github.com/leather-io/mono/commit/b14cf163199072913132650e5f0b3f640fc8be7a))
+
 ## [0.6.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.5.3...@leather.io/panda-preset-v0.6.0) (2024-12-04)
 
 
