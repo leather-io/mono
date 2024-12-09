@@ -7,6 +7,7 @@ import {
   NotifyUserSheetData,
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 
 import {
@@ -27,6 +28,7 @@ function getUnavailableFeatures() {
         message: 'Bitkey',
       }),
       icon: <LogoHardwareBitkey />,
+      id: WaitlistIds.bitkey,
     },
     capsule: {
       title: t({
@@ -34,6 +36,7 @@ function getUnavailableFeatures() {
         message: 'Ledger',
       }),
       icon: <LogoHardwareLedger />,
+      id: WaitlistIds.capsule,
     },
     copper: {
       title: t({
@@ -41,6 +44,7 @@ function getUnavailableFeatures() {
         message: 'OneKey',
       }),
       icon: <LogoHardwareOnekey />,
+      id: WaitlistIds.copper,
     },
     fireblocks: {
       title: t({
@@ -48,6 +52,7 @@ function getUnavailableFeatures() {
         message: 'Passport',
       }),
       icon: <LogoHardwareFoundation />,
+      id: WaitlistIds.fireblocks,
     },
     foredefi: {
       title: t({
@@ -55,6 +60,7 @@ function getUnavailableFeatures() {
         message: 'Ryder',
       }),
       icon: <LogoHardwareRyder />,
+      id: WaitlistIds.foredefi,
     },
     portal: {
       title: t({
@@ -62,6 +68,7 @@ function getUnavailableFeatures() {
         message: 'Trezor',
       }),
       icon: <LogoHardwareTrezor />,
+      id: WaitlistIds.portal,
     },
   };
 }
@@ -88,8 +95,7 @@ export default function HardwareWalletListScreen() {
         })}
       >
         <SettingsList>
-          {Object.entries(getUnavailableFeatures()).map(featureEntry => {
-            const [featureKey, feature] = featureEntry;
+          {Object.values(getUnavailableFeatures()).map(feature => {
             const hardwareWalletName = feature.title;
             function onPress() {
               onOpenSheet({
@@ -97,11 +103,12 @@ export default function HardwareWalletListScreen() {
                   id: 'notify_user.hardware_wallets.header_title',
                   message: `Connect hardware wallet: ${hardwareWalletName}`,
                 }),
+                id: feature.id,
               });
             }
             return (
               <SettingsListItem
-                key={featureKey}
+                key={feature.id}
                 title={feature.title}
                 icon={feature.icon}
                 onPress={onPress}

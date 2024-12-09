@@ -7,6 +7,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { isFeatureEnabled } from '@/utils/feature-flag';
@@ -119,57 +120,53 @@ export default function SettingsScreen() {
               testID={TestId.settingsNotificationsButton}
             />
           )}
-          {isFeatureEnabled() && (
-            <SettingsListItem
-              title={t({
-                id: 'settings.help.cell_title',
-                message: 'Help',
-              })}
-              caption={t({
-                id: 'settings.help.cell_caption',
-                message: 'Support, guides and articles',
-              })}
-              icon={<SupportIcon />}
-              onPress={() => router.navigate(AppRoutes.SettingsHelp)}
-              testID={TestId.settingsHelpButton}
-            />
-          )}
-        </SettingsList>
-        {isFeatureEnabled() && (
-          <Accordion
-            label={t({
-              id: 'settings.accordion_label',
-              message: 'More options',
+          <SettingsListItem
+            title={t({
+              id: 'settings.help.cell_title',
+              message: 'Help',
             })}
-            testID={TestId.settingsMoreOptionsButton}
-            content={
-              <SettingsList>
-                <SettingsListItem
-                  title={t({
-                    id: 'settings.contacts.cell_title',
-                    message: 'Contacts',
-                  })}
-                  icon={<UsersTwoIcon />}
-                  onPress={() => {
-                    contactsSheetRef.current?.present();
-                  }}
-                  testID={TestId.settingsContactsButton}
-                />
-                <SettingsListItem
-                  title={t({
-                    id: 'settings.fees.cell_title',
-                    message: 'Fees',
-                  })}
-                  icon={<SettingsGearIcon />}
-                  onPress={() => {
-                    feesSheetRef.current?.present();
-                  }}
-                  testID={TestId.settingsFeesButton}
-                />
-              </SettingsList>
-            }
+            caption={t({
+              id: 'settings.help.cell_caption',
+              message: 'Support, guides and articles',
+            })}
+            icon={<SupportIcon />}
+            onPress={() => router.navigate(AppRoutes.SettingsHelp)}
+            testID={TestId.settingsHelpButton}
           />
-        )}
+        </SettingsList>
+        <Accordion
+          label={t({
+            id: 'settings.accordion_label',
+            message: 'More options',
+          })}
+          testID={TestId.settingsMoreOptionsButton}
+          content={
+            <SettingsList>
+              <SettingsListItem
+                title={t({
+                  id: 'settings.contacts.cell_title',
+                  message: 'Contacts',
+                })}
+                icon={<UsersTwoIcon />}
+                onPress={() => {
+                  contactsSheetRef.current?.present();
+                }}
+                testID={TestId.settingsContactsButton}
+              />
+              <SettingsListItem
+                title={t({
+                  id: 'settings.fees.cell_title',
+                  message: 'Fees',
+                })}
+                icon={<SettingsGearIcon />}
+                onPress={() => {
+                  feesSheetRef.current?.present();
+                }}
+                testID={TestId.settingsFeesButton}
+              />
+            </SettingsList>
+          }
+        />
         <Divider />
         <Box py="3">
           <Text variant="label01">
@@ -198,6 +195,7 @@ export default function SettingsScreen() {
             id: 'contacts.header_title',
             message: 'Contacts',
           }),
+          id: WaitlistIds.contacts,
         }}
         sheetRef={contactsSheetRef}
       />
@@ -207,6 +205,7 @@ export default function SettingsScreen() {
             id: 'fees.header_title',
             message: 'Custom fees',
           }),
+          id: WaitlistIds.fees,
         }}
         sheetRef={feesSheetRef}
       />

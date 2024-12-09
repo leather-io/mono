@@ -8,6 +8,7 @@ export interface Events extends HistoricalEvents {
   wallet_restored: WalletCreatedValue;
   app_unlocked: undefined;
   app_locked: undefined;
+  submit_feature_waitlist: SubmitWaitlist;
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
@@ -125,4 +126,8 @@ type UserSettingValue =
 
 interface WalletCreatedValue {
   type: 'software' | 'ledger';
+}
+
+interface SubmitWaitlist {
+  feature: string;
 }

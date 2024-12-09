@@ -6,9 +6,9 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
-import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
@@ -121,16 +121,14 @@ export function AddWalletSheetLayout({
               testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
             />
-            {isFeatureEnabled() && (
-              <AddWalletCell
-                onPress={openOptions}
-                title={t({
-                  id: 'add_wallet.options.cell_title',
-                  message: 'More options',
-                })}
-                icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
-              />
-            )}
+            <AddWalletCell
+              onPress={openOptions}
+              title={t({
+                id: 'add_wallet.options.cell_title',
+                message: 'More options',
+              })}
+              icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
+            />
             {moreOptionsVisible && (
               <>
                 <AddWalletCell
@@ -164,6 +162,7 @@ export function AddWalletSheetLayout({
                         id: 'email_wallet.header_title',
                         message: 'Create or restore via email',
                       }),
+                      id: WaitlistIds.restoreViaEmail,
                     });
                   }}
                 />
@@ -198,6 +197,7 @@ export function AddWalletSheetLayout({
                         id: 'notify_user.watch_only_wallet.header_title',
                         message: 'Create watch-only wallet',
                       }),
+                      id: WaitlistIds.watchOnlyWallet,
                     });
                   }}
                 />
