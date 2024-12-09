@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.0.1...@leather.io/analytics-v3.0.2) (2024-12-09)
+
+
+### Bug Fixes
+
+* fix bound function call context, closes LEA-1478 ([f56eeba](https://github.com/leather-io/mono/commit/f56eeba192c192a2cd61d279adea41572117d61f))
+
 ## [3.0.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.0.0...@leather.io/analytics-v3.0.1) (2024-12-09)
 
 
