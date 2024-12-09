@@ -12,6 +12,7 @@ import {
 import { useToastContext } from '@/components/toast/toast-context';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
@@ -20,7 +21,6 @@ import { useAppDispatch } from '@/store/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { userRenamesWallet } from '@/store/wallets/wallets.write';
-import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
@@ -42,6 +42,56 @@ import {
   Theme,
   TrashIcon,
 } from '@leather.io/ui/native';
+
+function getUnavailableFeatures({ iconColor }: { iconColor: string }) {
+  const addressReuseTitle = t({
+    id: 'configure_wallet.address_reuse.cell_title',
+    message: 'Address reuse',
+  });
+  const addressScanRangeTitle = t({
+    id: 'configure_wallet.address_scan_range.cell_title',
+    message: 'Address scan range',
+  });
+  const addressTypesTitle = t({
+    id: 'configure_wallet.address_types.cell_title',
+    message: 'Address types',
+  });
+  const exportXpubTitle = t({
+    id: 'configure_wallet.export_xpub.cell_title',
+    message: 'Export xPub',
+  });
+  const exportKeyTitle = t({
+    id: 'configure_wallet.export_key.cell_title',
+    message: 'Export key',
+  });
+  return {
+    addressReuse: {
+      title: addressReuseTitle,
+      icon: <ArrowsRepeatLeftRightIcon color={iconColor} />,
+      id: WaitlistIds.addressReuse,
+    },
+    addressScanRange: {
+      title: addressScanRangeTitle,
+      icon: <BarcodeIcon color={iconColor} />,
+      id: WaitlistIds.capsule,
+    },
+    addressTypes: {
+      title: addressTypesTitle,
+      icon: <InboxIcon color={iconColor} />,
+      id: WaitlistIds.addressTypes,
+    },
+    exportXpub: {
+      title: exportXpubTitle,
+      icon: <ArrowOutOfBoxIcon color={iconColor} />,
+      id: WaitlistIds.exportXpub,
+    },
+    exportKey: {
+      title: exportKeyTitle,
+      icon: <ArrowOutOfBoxIcon color={iconColor} />,
+      id: WaitlistIds.exportKey,
+    },
+  };
+}
 
 interface ConfigureWalletProps {
   wallet: WalletStore;
@@ -117,27 +167,6 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     };
   }
 
-  const addressReuseTitle = t({
-    id: 'configure_wallet.address_reuse.cell_title',
-    message: 'Address reuse',
-  });
-  const addressScanRangeTitle = t({
-    id: 'configure_wallet.address_scan_range.cell_title',
-    message: 'Address scan range',
-  });
-  const addressTypesTitle = t({
-    id: 'configure_wallet.address_types.cell_title',
-    message: 'Address types',
-  });
-  const exportXpubTitle = t({
-    id: 'configure_wallet.export_xpub.cell_title',
-    message: 'Export xPub',
-  });
-  const exportKeyTitle = t({
-    id: 'configure_wallet.export_key.cell_title',
-    message: 'Export key',
-  });
-
   return (
     <>
       <AnimatedHeaderScreenLayout
@@ -186,53 +215,31 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               testID={TestId.walletSettingsRemoveWalletButton}
             />
           </SettingsList>
-          {isFeatureEnabled() && (
-            <Accordion
-              label={t({
-                id: 'configure_wallet.accordion_label',
-                message: 'More options',
-              })}
-              content={
-                <SettingsList>
-                  <SettingsListItem
-                    title={addressReuseTitle}
-                    icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressReuseTitle,
-                    })}
-                  />
-                  <SettingsListItem
-                    title={addressScanRangeTitle}
-                    icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressScanRangeTitle,
-                    })}
-                  />
-                  <SettingsListItem
-                    title={addressTypesTitle}
-                    icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressTypesTitle,
-                    })}
-                  />
-                  <SettingsListItem
-                    title={exportXpubTitle}
-                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: exportXpubTitle,
-                    })}
-                  />
-                  <SettingsListItem
-                    title={exportKeyTitle}
-                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: exportKeyTitle,
-                    })}
-                  />
-                </SettingsList>
-              }
-            />
-          )}
+          <Accordion
+            label={t({
+              id: 'configure_wallet.accordion_label',
+              message: 'More options',
+            })}
+            content={
+              <SettingsList>
+                {Object.values(
+                  getUnavailableFeatures({ iconColor: theme.colors['ink.text-subdued'] })
+                ).map(feature => {
+                  return (
+                    <SettingsListItem
+                      key={feature.id}
+                      title={feature.title}
+                      icon={feature.icon}
+                      onPress={onOpenSheet({
+                        title: feature.title,
+                        id: feature.id,
+                      })}
+                    />
+                  );
+                })}
+              </SettingsList>
+            }
+          />
         </Box>
         <Box mb="7">
           <Divider />

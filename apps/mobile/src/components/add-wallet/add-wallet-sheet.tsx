@@ -48,7 +48,6 @@ export function AddWalletSheet({ addWalletSheetRef, opensFully }: AddWalletSheet
         themeVariant={themeDerivedFromThemePreference}
         opensFully={opensFully}
       />
-
       <NotifyUserSheetLayout
         onCloseSheet={onCloseSheet}
         sheetData={sheetData}

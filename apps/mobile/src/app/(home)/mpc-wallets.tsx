@@ -7,6 +7,7 @@ import {
   NotifyUserSheetData,
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 
 import {
@@ -29,6 +30,7 @@ function getUnavailableFeatures() {
         message: 'BitGo',
       }),
       icon: <LogoMpcBitgo />,
+      id: WaitlistIds.bitgo,
     },
     capsule: {
       title: t({
@@ -36,6 +38,7 @@ function getUnavailableFeatures() {
         message: 'Capsule',
       }),
       icon: <LogoMpcCapsule />,
+      id: WaitlistIds.capsule,
     },
     copper: {
       title: t({
@@ -43,6 +46,7 @@ function getUnavailableFeatures() {
         message: 'Copper',
       }),
       icon: <LogoMpcCopper />,
+      id: WaitlistIds.copper,
     },
     fireblocks: {
       title: t({
@@ -50,6 +54,7 @@ function getUnavailableFeatures() {
         message: 'Fireblocks',
       }),
       icon: <LogoMpcFireblocks />,
+      id: WaitlistIds.fireblocks,
     },
     foredefi: {
       title: t({
@@ -57,6 +62,8 @@ function getUnavailableFeatures() {
         message: 'Fordefi',
       }),
       icon: <LogoMpcFordefi />,
+
+      id: WaitlistIds.foredefi,
     },
     portal: {
       title: t({
@@ -64,6 +71,7 @@ function getUnavailableFeatures() {
         message: 'Portal',
       }),
       icon: <LogoMpcPortal />,
+      id: WaitlistIds.portal,
     },
     privy: {
       title: t({
@@ -71,6 +79,7 @@ function getUnavailableFeatures() {
         message: 'Privy',
       }),
       icon: <LogoMpcPrivy />,
+      id: WaitlistIds.privy,
     },
     qredo: {
       title: t({
@@ -78,6 +87,7 @@ function getUnavailableFeatures() {
         message: 'Qredo',
       }),
       icon: <LogoMpcQredo />,
+      id: WaitlistIds.qredo,
     },
   };
 }
@@ -104,12 +114,12 @@ export default function MpcWalletListScreen() {
         })}
       >
         <SettingsList>
-          {Object.entries(getUnavailableFeatures()).map(featureEntry => {
-            const [featureKey, feature] = featureEntry;
+          {Object.values(getUnavailableFeatures()).map(feature => {
             const mpcWalletName = feature.title;
 
             function onPress() {
               onOpenSheet({
+                id: feature.id,
                 title: t({
                   id: 'notify_user.mpc_wallet.header_title',
                   message: `Connect Mpc wallet: ${mpcWalletName}`,
@@ -119,7 +129,7 @@ export default function MpcWalletListScreen() {
 
             return (
               <SettingsListItem
-                key={featureKey}
+                key={feature.id}
                 onPress={onPress}
                 title={feature.title}
                 icon={feature.icon}
