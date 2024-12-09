@@ -51,6 +51,8 @@ export function AccountSelectorSheetLayout({
             cardId={account.id}
             onCardPress={() => onAccountPress(account.id)}
             swapCardIndexes={swapAccountIndexes}
+            //FIXME: disabled until fixed
+            disableReorder
           >
             <WalletLoader fingerprint={account.fingerprint} key={account.id}>
               {wallet => (
