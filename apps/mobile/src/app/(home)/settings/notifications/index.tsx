@@ -12,10 +12,6 @@ export default function SettingsNotificationsScreen() {
             id: 'notifications.push.cell_title',
             message: 'Notification',
           })}
-          caption={t({
-            id: 'notifications.push.cell_caption',
-            message: 'Placeholder',
-          })}
           icon={<PlaceholderIcon />}
           type="switch"
           switchValue={false}

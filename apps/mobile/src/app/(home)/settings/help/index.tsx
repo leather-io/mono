@@ -1,9 +1,12 @@
+import { Linking } from 'react-native';
+
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
 
+import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@leather.io/constants';
 import { GraduateCapIcon, MagicBookIcon, SupportIcon } from '@leather.io/ui/native';
 
 export default function SettingsHelpScreen() {
@@ -23,10 +26,12 @@ export default function SettingsHelpScreen() {
           })}
           caption={t({
             id: 'help.support.cell_caption',
-            message: 'Placeholder',
+            message: 'Contact our support team',
           })}
           icon={<SupportIcon />}
-          onPress={() => {}}
+          onPress={() => {
+            Linking.openURL(LEATHER_SUPPORT_URL);
+          }}
         />
         <SettingsListItem
           title={t({
@@ -35,10 +40,12 @@ export default function SettingsHelpScreen() {
           })}
           caption={t({
             id: 'help.guides.cell_caption',
-            message: 'Placeholder',
+            message: 'Dive into feature details',
           })}
           icon={<MagicBookIcon />}
-          onPress={() => {}}
+          onPress={() => {
+            Linking.openURL(LEATHER_GUIDES_URL);
+          }}
         />
         <SettingsListItem
           title={t({
@@ -47,10 +54,12 @@ export default function SettingsHelpScreen() {
           })}
           caption={t({
             id: 'help.learn.cell_caption',
-            message: 'Placeholder',
+            message: 'Expand your knowledge',
           })}
           icon={<GraduateCapIcon />}
-          onPress={() => {}}
+          onPress={() => {
+            Linking.openURL(LEATHER_LEARN_URL);
+          }}
         />
       </SettingsList>
     </AnimatedHeaderScreenLayout>
