@@ -54,7 +54,7 @@ export function SettingsListItem({
   ...rest
 }: SettingsListItemProps) {
   return (
-    <Cell.Root pressable={true} onPress={onPress} {...rest}>
+    <Cell.Root pressable onPress={onPress} {...rest}>
       {icon && (
         <Cell.Icon>
           <Avatar>{icon}</Avatar>

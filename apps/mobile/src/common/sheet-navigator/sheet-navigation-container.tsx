@@ -19,7 +19,7 @@ export function SheetNavigationContainer({ children }: HasChildren) {
           if (previousRouteName !== currentRouteName) {
             // Replace the line below to add the tracker from a mobile analytics SDK
             if (currentRouteName) {
-              await analytics.screen(currentRouteName);
+              await analytics?.screen(currentRouteName);
             }
           }
 

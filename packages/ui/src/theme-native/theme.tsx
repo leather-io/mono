@@ -37,7 +37,7 @@ export function generateTheme(colorScheme: ColorSchemeName) {
       round: 9999,
     },
     textVariants,
-    zIndices: zIndices,
+    zIndices,
     breakpoints: {},
   });
 }
