@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.0.0...@leather.io/analytics-v3.0.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* waitlist with segment ([5d06887](https://github.com/leather-io/mono/commit/5d0688736eaad07f0ae30433b5b572e15587b0f5))
+
 ## [3.0.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v2.0.1...@leather.io/analytics-v3.0.0) (2024-12-06)
 
 

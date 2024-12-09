@@ -290,6 +290,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.2
 
+## [2.0.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.5...@leather.io/mobile-v2.0.6) (2024-12-09)
+
+
+### Bug Fixes
+
+* disable reoder ([7c762ef](https://github.com/leather-io/mono/commit/7c762ef198af87ee627e8c8d249ecc236b449031))
+* waitlist with segment ([5d06887](https://github.com/leather-io/mono/commit/5d0688736eaad07f0ae30433b5b572e15587b0f5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.0.1
+
 ## [2.0.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.3...@leather.io/mobile-v2.0.4) (2024-12-09)
 
 
