@@ -1,36 +1,10 @@
 import { ElementRef, forwardRef } from 'react';
-import {
-  type GestureResponderEvent,
-  Pressable as RNPressable,
-  type PressableProps as RNPressableProps,
-} from 'react-native';
-import Animated, { type AnimatedProps } from 'react-native-reanimated';
-
-import {
-  BackgroundColorShorthandProps,
-  BorderProps,
-  LayoutProps,
-  OpacityProps,
-  PositionProps,
-  SpacingProps,
-  SpacingShorthandProps,
-  VisibleProps,
-  backgroundColorShorthand,
-  border,
-  composeRestyleFunctions,
-  layout,
-  opacity,
-  position,
-  spacing,
-  spacingShorthand,
-  useRestyle,
-  visible,
-} from '@shopify/restyle';
+import { type GestureResponderEvent, Pressable as RNPressable } from 'react-native';
 
 import { isString } from '@leather.io/utils';
 
 import { useHaptics } from '../../hooks/use-haptics.native';
-import { Theme } from '../../theme-native';
+import { PressableCore, PressableCoreProps, PressableRestyleProps } from './pressable-core.native';
 
 type PressableHapticFeedbackType = 'soft' | 'light' | 'medium' | 'heavy' | 'rigid';
 
@@ -39,18 +13,8 @@ interface HapticConfig {
   onLongPress?: PressableHapticFeedbackType;
 }
 
-type RestyleProps = OpacityProps<Theme> &
-  VisibleProps<Theme> &
-  SpacingShorthandProps<Theme> &
-  SpacingProps<Theme> &
-  BorderProps<Theme> &
-  BackgroundColorShorthandProps<Theme> &
-  LayoutProps<Theme> &
-  PositionProps<Theme>;
-
 type PressableElement = ElementRef<typeof RNPressable>;
-
-interface PressableBaseProps extends RNPressableProps, RestyleProps {
+interface PressableOwnProps {
   /**
    * Configure haptic feedback
    *
@@ -62,22 +26,18 @@ interface PressableBaseProps extends RNPressableProps, RestyleProps {
    * <Pressable haptics={{ onPress: 'light', onLongPress: 'rigid' }} />
    */
   haptics?: PressableHapticFeedbackType | HapticConfig;
+  pressTransitions?: {
+    [K in keyof PressableRestyleProps]: {
+      from: PressableRestyleProps[K];
+      to: PressableRestyleProps[K];
+    };
+  };
 }
 
-export const buttonRestyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
-  opacity,
-  visible,
-  spacingShorthand,
-  spacing,
-  border,
-  backgroundColorShorthand,
-  layout,
-  position,
-]);
+export type PressableProps = PressableOwnProps & PressableCoreProps;
 
-const PressableBase = forwardRef<PressableElement, PressableBaseProps>(
-  ({ onPress, onLongPress, haptics = {}, ...rest }, ref) => {
-    const props = useRestyle(buttonRestyleFunctions, rest);
+export const Pressable = forwardRef<PressableElement, PressableProps>(
+  ({ haptics = {}, onPress, onLongPress, pressTransitions, ...rest }, ref) => {
     const triggerHaptics = useHaptics();
     const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
 
@@ -95,9 +55,8 @@ const PressableBase = forwardRef<PressableElement, PressableBaseProps>(
       onLongPress?.(event);
     }
 
-    return <RNPressable ref={ref} onPress={handlePress} onLongPress={handleLongPress} {...props} />;
+    return (
+      <PressableCore ref={ref} onPress={handlePress} onLongPress={handleLongPress} {...rest} />
+    );
   }
 );
-
-export const Pressable = Animated.createAnimatedComponent(PressableBase);
-export type PressableProps = AnimatedProps<PressableBaseProps>;
