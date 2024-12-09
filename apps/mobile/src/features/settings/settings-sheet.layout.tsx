@@ -33,7 +33,11 @@ export function SettingsSheetLayout({
           paddingTop: theme.spacing[4],
         }}
       >
-        <SheetHeader icon={<Avatar>{icon}</Avatar>} onPressSupport={onPressSupport} title={title} />
+        <SheetHeader
+          icon={<Avatar>{icon}</Avatar>}
+          onPressSupport={onPressSupport ? onPressSupport : undefined}
+          title={title}
+        />
         {children}
       </Box>
     </Sheet>
