@@ -50,6 +50,17 @@ export const Disabled: Story = {
   },
 };
 
+export const Success: Story = {
+  parameters: {
+    controls: { include: ['size', 'variant'] },
+  },
+  args: {
+    children: 'Button',
+    size: 'md',
+    variant: 'success',
+  },
+};
+
 export const WithIcons: Story = {
   parameters: {
     controls: { include: ['size', 'variant'] },
