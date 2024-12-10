@@ -54,7 +54,7 @@ export function createBestInSlotApiClient(
   cache: HttpCacheService
 ): BestInSlotApiClient {
   async function fetchBrc20TickerInfo(ticker: string, signal?: AbortSignal) {
-    const response = await cache.fetchWithCache<BestInSlotApiResponse<BestInSlotBrc20TickerInfo>>(
+    const response = await cache.fetchWithCache(
       [
         'best-in-slot-brc20-ticker-info',
         bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
@@ -64,7 +64,7 @@ export function createBestInSlotApiClient(
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
-            axios.get(
+            axios.get<BestInSlotApiResponse<BestInSlotBrc20TickerInfo>>(
               `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/brc20/ticker_info?ticker=${ticker}`,
               { signal }
             ),
@@ -78,7 +78,7 @@ export function createBestInSlotApiClient(
   }
 
   async function fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal) {
-    const response = await cache.fetchWithCache<BestInSlotApiResponse<BestInSlotBrc20MarketInfo>>(
+    const response = await cache.fetchWithCache(
       [
         'best-in-slot-brc20-market-info',
         bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
@@ -88,7 +88,7 @@ export function createBestInSlotApiClient(
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
-            axios.get(
+            axios.get<BestInSlotApiResponse<BestInSlotBrc20MarketInfo>>(
               `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/brc20/market_info?ticker=${ticker}`,
               { signal }
             ),
@@ -102,7 +102,7 @@ export function createBestInSlotApiClient(
   }
 
   async function fetchRuneTickerInfo(runeName: string, signal?: AbortSignal) {
-    const response = await cache.fetchWithCache<BestInSlotApiResponse<BestInSlotRuneTickerInfo>>(
+    const response = await cache.fetchWithCache(
       [
         'best-in-slot-rune-ticker-info',
         bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
@@ -112,7 +112,7 @@ export function createBestInSlotApiClient(
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
-            axios.get(
+            axios.get<BestInSlotApiResponse<BestInSlotRuneTickerInfo>>(
               `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/runes/ticker_info?rune_name=${runeName}`,
               { signal }
             ),

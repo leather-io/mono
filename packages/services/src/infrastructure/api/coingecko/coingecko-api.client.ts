@@ -24,10 +24,10 @@ export function createCoinGeckoApiClient(cacheService: HttpCacheService) {
   }
 
   async function fetchMarketData(currency: CryptoCurrency, signal?: AbortSignal) {
-    return await cacheService.fetchWithCache<CoinGeckoMarketData>(
+    return await cacheService.fetchWithCache(
       ['coin-gecko-market-data', currency],
       async () => {
-        const res = await axios.get(
+        const res = await axios.get<CoinGeckoMarketData>(
           `https://api.coingecko.com/api/v3/simple/price?ids=${mapToCoinGeckoCurrency(currency)}&vs_currencies=usd`,
           { signal }
         );

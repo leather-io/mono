@@ -1,0 +1,94 @@
+import { CryptoAssetBalance, Sip10CryptoAssetInfo } from '@leather.io/models';
+import {
+  aggregateBaseCryptoAssetBalances,
+  baseCurrencyAmountInQuote,
+  createBaseCryptoAssetBalance,
+  createMoney,
+} from '@leather.io/utils';
+
+import { Sip10TokensService } from '../assets/sip10-tokens.service';
+import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { MarketDataService } from '../market-data/market-data.service';
+
+export interface Sip10TokenBalance {
+  info: Sip10CryptoAssetInfo;
+  sip10: CryptoAssetBalance;
+  usd: CryptoAssetBalance;
+}
+
+export interface Sip10AddressBalance {
+  address: string;
+  usd: CryptoAssetBalance;
+  balances: Sip10TokenBalance[];
+}
+
+export interface Sip10AggregateBalance {
+  usd: CryptoAssetBalance;
+  balances: Sip10AddressBalance[];
+}
+
+export interface Sip10BalancesService {
+  getSip10AddressBalance(address: string, signal?: AbortSignal): Promise<Sip10AddressBalance>;
+  getSip10AggregateBalance(
+    addresses: string[],
+    signal?: AbortSignal
+  ): Promise<Sip10AggregateBalance>;
+}
+
+export function createSip10BalancesService(
+  stacksApiClient: HiroStacksApiClient,
+  marketDataService: MarketDataService,
+  sip10TokensService: Sip10TokensService
+): Sip10BalancesService {
+  /**
+   * Gets the cumulative SIP10 balance (denominated in USD) of a list of Stacks addresses. Includes full balance information for each individual address.
+   */
+  async function getSip10AggregateBalance(addresses: string[], signal?: AbortSignal) {
+    const addressResults = await Promise.all(
+      addresses.map(address => getSip10AddressBalance(address, signal))
+    );
+    const totalBalance = aggregateBaseCryptoAssetBalances(addressResults.map(r => r.usd));
+    return {
+      usd: totalBalance,
+      balances: addressResults,
+    };
+  }
+
+  /**
+   * Gets all SIP10 balances for given address. Includes both cumulative and individual USD values.
+   */
+  async function getSip10AddressBalance(address: string, signal?: AbortSignal) {
+    const fungibleTokens = (await stacksApiClient.getAddressBalances(address, signal))
+      .fungible_tokens;
+    const balances = await Promise.all(
+      Object.keys(fungibleTokens).map(tokenId => {
+        return getSip10TokenBalance(tokenId, Number(fungibleTokens[tokenId]?.balance ?? 0), signal);
+      })
+    );
+    return {
+      address,
+      usd: aggregateBaseCryptoAssetBalances(balances.map(b => b.usd)),
+      balances,
+    };
+  }
+
+  async function getSip10TokenBalance(
+    tokenId: string,
+    amount: number,
+    signal?: AbortSignal
+  ): Promise<Sip10TokenBalance> {
+    const tokenInfo = await sip10TokensService.getInfo(tokenId, signal);
+    const totalBalance = createMoney(amount, tokenInfo.symbol, tokenInfo.decimals);
+    const marketData = await marketDataService.getSip10MarketData(tokenInfo);
+    return {
+      info: tokenInfo,
+      sip10: createBaseCryptoAssetBalance(totalBalance),
+      usd: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
+    };
+  }
+
+  return {
+    getSip10AddressBalance,
+    getSip10AggregateBalance,
+  };
+}

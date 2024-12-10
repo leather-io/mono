@@ -1,5 +1,5 @@
 import { AccountId } from '@/models/domain.model';
-import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStxBalance } from '@/queries/balance/stx-balance.query';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { Money } from '@leather.io/models';

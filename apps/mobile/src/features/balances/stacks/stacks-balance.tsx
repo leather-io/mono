@@ -1,5 +1,5 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
-import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStxBalance } from '@/queries/balance/stx-balance.query';
 import {
   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,

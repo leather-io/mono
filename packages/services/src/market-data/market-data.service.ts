@@ -14,7 +14,6 @@ import {
   calculateMeanAverage,
   convertAmountToFractionalUnit,
   createMoney,
-  getPrincipalFromContractId,
   initBigNumber,
   isDefined,
   isFulfilled,
@@ -42,6 +41,9 @@ export function createMarketDataService(
   binanceApiClient: BinanceApiClient,
   alexSdkClient: AlexSdkClient
 ): MarketDataService {
+  /**
+   * Retrieves current market data for asset.
+   */
   async function getMarketData(asset: FungibleCryptoAssetInfo, signal?: AbortSignal) {
     switch (asset.protocol) {
       case 'nativeBtc':
@@ -49,7 +51,7 @@ export function createMarketDataService(
       case 'nativeStx':
         return await getStxMarketData(signal);
       case 'sip10':
-        return getSip10MarketData(asset);
+        return getSip10MarketData(asset, signal);
       case 'rune':
         return getRuneMarketData(asset, signal);
       case 'brc20':
@@ -59,10 +61,16 @@ export function createMarketDataService(
     }
   }
 
+  /**
+   * Get current BTC Market Data.
+   */
   async function getBtcMarketData(signal?: AbortSignal) {
     return await getNativeAssetMarketData('BTC', signal);
   }
 
+  /**
+   * Get current STX Market Data.
+   */
   async function getStxMarketData(signal?: AbortSignal) {
     return await getNativeAssetMarketData('STX', signal);
   }
@@ -86,25 +94,24 @@ export function createMarketDataService(
     return createMarketData(createMarketPair(currency, 'USD'), createMoney(meanPrice, 'USD'));
   }
 
-  async function getSip10MarketData(asset: Sip10CryptoAssetInfo) {
-    const alexSdkCurrencies = await alexSdkClient.getSwappableCurrencies();
-    const alexSdkPrices = await alexSdkClient.getLatestPrices();
-    const alexSdkAssetMatch = alexSdkCurrencies
-      .filter(isDefined)
-      .find(
-        token =>
-          getPrincipalFromContractId(token.underlyingToken) ===
-          getPrincipalFromContractId(asset.contractId)
-      );
-    if (!alexSdkPrices || !alexSdkAssetMatch)
+  /**
+   * Get current market data for SIP10 Asset.
+   */
+  async function getSip10MarketData(asset: Sip10CryptoAssetInfo, signal?: AbortSignal) {
+    const tokenPrices = await alexSdkClient.getApiTokenPrices(signal);
+    const tokenPriceMatch = tokenPrices.find(price => price.contract_id === asset.contractId);
+    if (!tokenPriceMatch)
       return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(0, 'USD'));
     const assetPrice = convertAmountToFractionalUnit(
-      initBigNumber(alexSdkPrices[alexSdkAssetMatch.id] ?? 0),
+      initBigNumber(tokenPriceMatch.last_price_usd),
       2
     );
     return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(assetPrice, 'USD'));
   }
 
+  /**
+   * Get current market data for Rune Asset.
+   */
   async function getRuneMarketData(asset: RuneCryptoAssetInfo, signal?: AbortSignal) {
     const btcMarketData = await getNativeAssetMarketData('BTC', signal);
     const runeTickerInfo = await bestInSlotApiClient.fetchRuneTickerInfo(asset.symbol, signal);
@@ -118,6 +125,9 @@ export function createMarketDataService(
     );
   }
 
+  /**
+   * Get current market data for BRC20 Asset.
+   */
   async function getBrc20MarketData(asset: Brc20CryptoAssetInfo, signal?: AbortSignal) {
     const btcMarketData = await getNativeAssetMarketData('BTC', signal);
     const bisMarketInfo = await bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal);

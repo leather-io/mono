@@ -24,10 +24,10 @@ export function createLeatherApiClient(
 ) {
   async function fetchUtxos(descriptor: string, signal?: AbortSignal) {
     const network = networkService.getConfig().chain.bitcoin.bitcoinNetwork;
-    return await cacheService.fetchWithCache<LeatherApiUtxo[]>(
+    return await cacheService.fetchWithCache(
       ['leather-utxos', network, descriptor],
       async () => {
-        const res = await axios.get(
+        const res = await axios.get<LeatherApiUtxo[]>(
           `https://leather-bitcoin-balances.wallet-6d1.workers.dev/${network}/${descriptor}`,
           { signal }
         );

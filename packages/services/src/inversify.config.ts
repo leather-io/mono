@@ -1,9 +1,12 @@
 import { Container } from 'inversify';
 
+import { Sip10TokensService, createSip10TokensService } from './assets/sip10-tokens.service';
+import { BtcBalancesService, createBtcBalancesService } from './balances/btc-balances.service';
 import {
-  BitcoinBalancesService,
-  createBitcoinBalancesService,
-} from './balances/bitcoin-balances.service';
+  Sip10BalancesService,
+  createSip10BalancesService,
+} from './balances/sip10-balances.service';
+import { StxBalancesService, createStxBalancesService } from './balances/stx-balances.service';
 import { AlexSdkClient, createAlexSdkClient } from './infrastructure/api/alex-sdk/alex-sdk.client';
 import {
   BestInSlotApiClient,
@@ -22,6 +25,10 @@ import {
   createCoinGeckoApiClient,
 } from './infrastructure/api/coingecko/coingecko-api.client';
 import {
+  HiroStacksApiClient,
+  createHiroStacksApiClient,
+} from './infrastructure/api/hiro/hiro-stacks-api.client';
+import {
   LeatherApiClient,
   createLeatherApiClient,
 } from './infrastructure/api/leather/leather-api.client';
@@ -32,6 +39,10 @@ import {
 } from './infrastructure/rate-limiter/rate-limiter.service';
 import { NetworkSettingsService } from './infrastructure/settings/network-settings.service';
 import { MarketDataService, createMarketDataService } from './market-data/market-data.service';
+import {
+  StacksTransactionsService,
+  createStacksTransactionsService,
+} from './transactions/stacks-transactions.service';
 
 let servicesContainer: Container;
 
@@ -68,9 +79,14 @@ export const Services = {
   BinanceApiClient: Symbol.for('BinanceApiClient'),
   BestInSlotApiClient: Symbol.for('BestInSlotApiClient'),
   LeatherApiClient: Symbol.for('LeatherApiClient'),
+  HiroStacksApiClient: Symbol.for('HiroStacksApiClient'),
   // Application Services
   MarketDataService: Symbol.for('MarketDataService'),
-  BitcoinBalancesService: Symbol.for('BitcoinBalancesService'),
+  BtcBalancesService: Symbol.for('BtcBalancesService'),
+  StxBalancesService: Symbol.for('StxBalancesService'),
+  Sip10BalancesService: Symbol.for('Sip10BalancesService'),
+  StacksTransactionsService: Symbol.for('StacksTransactionsService'),
+  Sip10TokensService: Symbol.for('Sip10TokensService'),
 };
 
 function registerDependencies(
@@ -138,6 +154,16 @@ function registerApiClients(container: Container) {
       )
     )
     .inSingletonScope();
+  container
+    .bind<HiroStacksApiClient>(Services.HiroStacksApiClient)
+    .toDynamicValue(c =>
+      createHiroStacksApiClient(
+        c.container.get<HttpCacheService>(Services.HttpCacheService),
+        c.container.get<NetworkSettingsService>(Services.NetworkSettingsService),
+        c.container.get<RateLimiterService>(Services.RateLimiterService)
+      )
+    )
+    .inSingletonScope();
 }
 
 function registerApplicationServices(container: Container) {
@@ -154,22 +180,68 @@ function registerApplicationServices(container: Container) {
     )
     .inSingletonScope();
   container
-    .bind<BitcoinBalancesService>(Services.BitcoinBalancesService)
+    .bind<Sip10TokensService>(Services.Sip10TokensService)
     .toDynamicValue(c =>
-      createBitcoinBalancesService(
+      createSip10TokensService(c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient))
+    )
+    .inSingletonScope();
+  container
+    .bind<StacksTransactionsService>(Services.StacksTransactionsService)
+    .toDynamicValue(c =>
+      createStacksTransactionsService(
+        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient)
+      )
+    )
+    .inSingletonScope();
+  container
+    .bind<BtcBalancesService>(Services.BtcBalancesService)
+    .toDynamicValue(c =>
+      createBtcBalancesService(
         c.container.get<LeatherApiClient>(Services.LeatherApiClient),
         c.container.get<MarketDataService>(Services.MarketDataService)
+      )
+    )
+    .inSingletonScope();
+  container
+    .bind<StxBalancesService>(Services.StxBalancesService)
+    .toDynamicValue(c =>
+      createStxBalancesService(
+        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
+        c.container.get<MarketDataService>(Services.MarketDataService),
+        c.container.get<StacksTransactionsService>(Services.StacksTransactionsService)
+      )
+    )
+    .inSingletonScope();
+  container
+    .bind<Sip10BalancesService>(Services.Sip10BalancesService)
+    .toDynamicValue(c =>
+      createSip10BalancesService(
+        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
+        c.container.get<MarketDataService>(Services.MarketDataService),
+        c.container.get<Sip10TokensService>(Services.Sip10TokensService)
       )
     )
     .inSingletonScope();
 }
 
 /* 
-  Export app service instances intended to be consumed by client components
+  Services API - Export service resolvers for use in client application components
 */
 export function getMarketDataService() {
   return getContainer().get<MarketDataService>(Services.MarketDataService);
 }
-export function getBitcoinBalancesService() {
-  return getContainer().get<BitcoinBalancesService>(Services.BitcoinBalancesService);
+export function getBtcBalancesService() {
+  return getContainer().get<BtcBalancesService>(Services.BtcBalancesService);
+}
+export function getStxBalancesService() {
+  return getContainer().get<StxBalancesService>(Services.StxBalancesService);
+}
+export function getSip10BalancesService() {
+  return getContainer().get<Sip10BalancesService>(Services.Sip10BalancesService);
+}
+export function getSip10TokensService() {
+  return getContainer().get<Sip10TokensService>(Services.Sip10TokensService);
+}
+export function getStacksTransactionsService() {
+  return getContainer().get<StacksTransactionsService>(Services.StacksTransactionsService);
 }

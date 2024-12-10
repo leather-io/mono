@@ -68,3 +68,24 @@ export function createStxCryptoAssetBalance(
     availableUnlockedBalance: subtractMoney(availableBalance, lockedBalance),
   };
 }
+
+export function aggregateBaseCryptoAssetBalances(
+  balances: BaseCryptoAssetBalance[]
+): BaseCryptoAssetBalance {
+  return createBaseCryptoAssetBalance(
+    sumMoney(balances.map(b => b.totalBalance)),
+    sumMoney(balances.map(b => b.inboundBalance)),
+    sumMoney(balances.map(b => b.outboundBalance))
+  );
+}
+
+export function aggregateStxCryptoAssetBalances(
+  balances: StxCryptoAssetBalance[]
+): StxCryptoAssetBalance {
+  return createStxCryptoAssetBalance(
+    sumMoney(balances.map(b => b.totalBalance)),
+    sumMoney(balances.map(b => b.inboundBalance)),
+    sumMoney(balances.map(b => b.outboundBalance)),
+    sumMoney(balances.map(b => b.lockedBalance))
+  );
+}

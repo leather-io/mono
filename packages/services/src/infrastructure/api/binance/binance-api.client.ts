@@ -23,10 +23,10 @@ export function createBinanceApiClient(cacheService: HttpCacheService) {
   }
 
   async function fetchMarketData(currency: CryptoCurrency, signal?: AbortSignal) {
-    return await cacheService.fetchWithCache<BinanceMarketData>(
+    return await cacheService.fetchWithCache(
       ['binance-market-data', currency],
       async () => {
-        const res = await axios.get(
+        const res = await axios.get<BinanceMarketData>(
           `https://api1.binance.com/api/v3/ticker/price?symbol=${currency}USDT`,
           { signal }
         );
