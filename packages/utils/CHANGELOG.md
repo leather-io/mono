@@ -175,6 +175,20 @@
   * dependencies
     * @leather.io/constants bumped to 0.14.1
 
+## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.21.3...@leather.io/utils-v0.22.0) (2024-12-10)
+
+
+### Features
+
+* stacks approver ([c5075ff](https://github.com/leather-io/mono/commit/c5075ff46b84422ff4ddf13f3f24ce5f7b684bfb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.2.0
+
 ## [0.21.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.21.2...@leather.io/utils-v0.21.3) (2024-12-09)
 
 

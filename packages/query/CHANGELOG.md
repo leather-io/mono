@@ -221,6 +221,14 @@
     * @leather.io/bitcoin bumped to 0.19.2
     * @leather.io/utils bumped to 0.21.3
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.3
+    * @leather.io/rpc bumped to 2.2.0
+    * @leather.io/utils bumped to 0.22.0
+
 ## [2.26.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.0...@leather.io/query-v2.26.1) (2024-12-04)
 
 

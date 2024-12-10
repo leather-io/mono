@@ -303,6 +303,34 @@
   * dependencies
     * @leather.io/ui bumped to 1.42.2
 
+## [2.1.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.10...@leather.io/mobile-v2.1.0) (2024-12-10)
+
+
+### Features
+
+* stacks approver ([c5075ff](https://github.com/leather-io/mono/commit/c5075ff46b84422ff4ddf13f3f24ce5f7b684bfb))
+
+
+### Bug Fixes
+
+* reenable action bar ([7b725a7](https://github.com/leather-io/mono/commit/7b725a725bd175a441101074853fc3bc6189e09f))
+* reverse hardcoding of text, ref LEA-1780 ([cd5d478](https://github.com/leather-io/mono/commit/cd5d478cb414fc75035d6c09beff38078f822e76))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.3
+    * @leather.io/crypto bumped to 1.6.20
+    * @leather.io/query bumped to 2.26.4
+    * @leather.io/rpc bumped to 2.2.0
+    * @leather.io/stacks bumped to 1.5.5
+    * @leather.io/ui bumped to 1.42.3
+    * @leather.io/utils bumped to 0.22.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.3
+
 ## [2.0.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.8...@leather.io/mobile-v2.0.9) (2024-12-09)
 
 

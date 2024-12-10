@@ -168,6 +168,13 @@
   * dependencies
     * @leather.io/models bumped to 0.24.0
 
+## [2.2.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.22...@leather.io/rpc-v2.2.0) (2024-12-10)
+
+
+### Features
+
+* stacks approver ([c5075ff](https://github.com/leather-io/mono/commit/c5075ff46b84422ff4ddf13f3f24ce5f7b684bfb))
+
 ## [2.1.17](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.16...@leather.io/rpc-v2.1.17) (2024-11-19)
 
 
