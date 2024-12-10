@@ -84,6 +84,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.12.1
 
+## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.7.0...@leather.io/panda-preset-v0.8.0) (2024-12-10)
+
+
+### Features
+
+* add invert btn success variant ([dfdb2fa](https://github.com/leather-io/mono/commit/dfdb2fa844b53eaa81bede8dd0cd95665742d3a3))
+
 ## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.6.0...@leather.io/panda-preset-v0.7.0) (2024-12-09)
 
 

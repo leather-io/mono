@@ -297,6 +297,12 @@
     * @leather.io/analytics bumped to 3.0.2
     * @leather.io/ui bumped to 1.42.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.42.2
+
 ## [2.0.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.8...@leather.io/mobile-v2.0.9) (2024-12-09)
 
 
