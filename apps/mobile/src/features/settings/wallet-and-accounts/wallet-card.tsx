@@ -19,10 +19,11 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   PlusIcon,
+  Pressable,
   SettingsGearIcon,
   Text,
   Theme,
-  TouchableOpacity,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 import { WalletViewVariant } from './types';
@@ -50,7 +51,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   return (
     <Box flexDirection="column">
       <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-        <TouchableOpacity
+        <Pressable
           py="3"
           flex={1}
           flexDirection="row"
@@ -59,6 +60,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           onPress={() => {
             setShowAccounts(!showAccounts);
           }}
+          pressEffects={legacyTouchablePressEffect}
         >
           <Text variant="label02">{name}</Text>
           {showAccounts ? (
@@ -66,9 +68,9 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           ) : (
             <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
           )}
-        </TouchableOpacity>
+        </Pressable>
         {variant === 'active' && (
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               router.navigate({
                 pathname: AppRoutes.SettingsWalletConfigureWallet,
@@ -79,9 +81,10 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             flex={1}
             alignItems="flex-end"
             testID={TestId.walletListSettingsButton}
+            pressEffects={legacyTouchablePressEffect}
           >
             <SettingsGearIcon color={theme.colors['ink.text-primary']} />
-          </TouchableOpacity>
+          </Pressable>
         )}
       </Box>
       {showAccounts && (

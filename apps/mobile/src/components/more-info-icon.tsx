@@ -1,14 +1,12 @@
-import { TouchableOpacity } from 'react-native';
-
-import { QuestionCircleIcon } from '@leather.io/ui/native';
+import { Pressable, QuestionCircleIcon, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
 interface MoreInfoIconProps {
   onPress(): void;
 }
 export function MoreInfoIcon({ onPress }: MoreInfoIconProps) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <Pressable onPress={onPress} pressEffects={legacyTouchablePressEffect} hitSlop={12}>
       <QuestionCircleIcon variant="small" />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

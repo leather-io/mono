@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, TouchableOpacity } from '@leather.io/ui/native';
+import { ArrowLeftIcon, Pressable, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
 interface HeaderBackButtonProps {
   onPress?(): void;
@@ -6,8 +6,8 @@ interface HeaderBackButtonProps {
 }
 export function HeaderBackButton({ onPress, testID }: HeaderBackButtonProps) {
   return (
-    <TouchableOpacity onPress={onPress} p="3" testID={testID}>
+    <Pressable onPress={onPress} p="3" testID={testID} pressEffects={legacyTouchablePressEffect}>
       <ArrowLeftIcon />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

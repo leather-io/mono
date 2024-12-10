@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { Box, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Pressable, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
 interface WidgetHeaderProps {
   children: ReactNode;
@@ -10,11 +10,11 @@ interface WidgetHeaderProps {
 export function WidgetHeader({ children, onPress }: WidgetHeaderProps) {
   if (onPress) {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <Pressable onPress={onPress} pressEffects={legacyTouchablePressEffect}>
         <Box flexDirection="row" gap="1" alignItems="center" px="5">
           {children}
         </Box>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 

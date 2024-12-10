@@ -2,7 +2,13 @@ import { useRef } from 'react';
 
 import { t } from '@lingui/macro';
 
-import { NoteEmptyIcon, SheetRef, Text, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  NoteEmptyIcon,
+  Pressable,
+  SheetRef,
+  Text,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
 
 import { SendFormBaseContext } from '../send-form-context';
 import { MemoSheet } from '../sheets/memo-sheet';
@@ -11,13 +17,14 @@ export function SendFormMemo<T extends SendFormBaseContext<T>>() {
   const memoSheetRef = useRef<SheetRef>(null);
   return (
     <>
-      <TouchableOpacity
+      <Pressable
         gap="1"
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
         onPress={() => memoSheetRef.current?.present()}
         p="2"
+        pressEffects={legacyTouchablePressEffect}
       >
         <NoteEmptyIcon />
         <Text variant="label02">
@@ -26,7 +33,7 @@ export function SendFormMemo<T extends SendFormBaseContext<T>>() {
             message: 'Add memo',
           })}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       <MemoSheet sheetRef={memoSheetRef} />
     </>
   );

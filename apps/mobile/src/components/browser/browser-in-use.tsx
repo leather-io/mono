@@ -15,11 +15,12 @@ import {
   ChevronRightIcon,
   CloseIcon,
   EllipsisHIcon,
+  Pressable,
   Sheet,
   SheetRef,
   Text,
   Theme,
-  TouchableOpacity,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 import { ApproverSheet } from './approver-sheet';
@@ -79,15 +80,16 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
   return (
     <View style={{ flex: 1, paddingTop: top }}>
       <Box flexDirection="row">
-        <TouchableOpacity
+        <Pressable
           onPress={closeBrowser}
           flex={1}
           p="5"
           justifyContent="center"
           alignItems="flex-start"
+          pressEffects={legacyTouchablePressEffect}
         >
           <CloseIcon />
-        </TouchableOpacity>
+        </Pressable>
         <Box flex={999} p="5" justifyContent="center" alignItems="center">
           <Text variant="label02" color="ink.text-primary" numberOfLines={1}>
             {navState?.title}
@@ -117,28 +119,30 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
         bg="ink.background-primary"
         justifyContent="space-between"
       >
-        <TouchableOpacity
+        <Pressable
           p="3"
           onPress={goBack}
           opacity={navState?.canGoBack ? 1 : 0.3}
           disabled={!navState?.canGoBack}
+          pressEffects={legacyTouchablePressEffect}
         >
           <ChevronLeftIcon />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Pressable>
+        <Pressable
           p="3"
           onPress={goForward}
           opacity={navState?.canGoForward ? 1 : 0.3}
           disabled={!navState?.canGoForward}
+          pressEffects={legacyTouchablePressEffect}
         >
           <ChevronRightIcon />
-        </TouchableOpacity>
-        <TouchableOpacity p="3" onPress={reload}>
+        </Pressable>
+        <Pressable p="3" onPress={reload} pressEffects={legacyTouchablePressEffect}>
           <ArrowRotateClockwiseIcon />
-        </TouchableOpacity>
-        <TouchableOpacity p="3" onPress={openSettings}>
+        </Pressable>
+        <Pressable p="3" onPress={openSettings} pressEffects={legacyTouchablePressEffect}>
           <EllipsisHIcon />
-        </TouchableOpacity>
+        </Pressable>
       </Box>
       <Sheet ref={settingsSheetRef} themeVariant={themeDerivedFromThemePreference}>
         <Box p="5" />
