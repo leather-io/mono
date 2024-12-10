@@ -13,6 +13,7 @@ export interface SendSheetNavigatorParamList {
   'send-form-btc': { account: Account; address: string; publicKey: string };
   'send-form-stx': { account: Account; address: string; publicKey: string };
   'sign-psbt': { psbtHex: string };
+  'sign-stacks-tx': { txHex: string; accountId: string };
 }
 
 export type SendSheetRouteKeys = keyof SendSheetNavigatorParamList;

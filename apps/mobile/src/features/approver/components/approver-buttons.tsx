@@ -4,15 +4,15 @@ import { useTheme } from '@shopify/restyle';
 
 import { Button, CheckmarkCircleIcon, Theme } from '@leather.io/ui/native';
 
-import { type PsbtApproverState } from '../utils';
+import { ApproverState } from '../utils';
 
-interface PsbtButtonsProps {
-  approverState: PsbtApproverState;
+interface ApproverButtonsProps {
+  approverState: ApproverState;
   onEdit(): void;
   onApprove(): void;
 }
 
-export function PsbtButtons({ approverState, onEdit, onApprove }: PsbtButtonsProps) {
+export function ApproverButtons({ approverState, onEdit, onApprove }: ApproverButtonsProps) {
   const theme = useTheme<Theme>();
   switch (approverState) {
     case 'start':

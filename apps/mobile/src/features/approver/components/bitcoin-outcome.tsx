@@ -4,14 +4,12 @@ import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 import { Text } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 export function BitcoinOutcome({ amount }: { amount: Money }) {
   const { data: btcMarketData } = useBtcMarketDataQuery();
 
-  const fiatBalance = btcMarketData
-    ? baseCurrencyAmountInQuote(amount, btcMarketData)
-    : createMoney(0, 'USD');
+  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, btcMarketData);
 
   return (
     <>

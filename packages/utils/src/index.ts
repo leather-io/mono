@@ -229,3 +229,7 @@ export function match<Variant extends string | number>() {
     return match[variant];
   };
 }
+
+export function removeTrailingNullCharacters(s: string) {
+  return s.replace(/\0*$/g, '');
+}

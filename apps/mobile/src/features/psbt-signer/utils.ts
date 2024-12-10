@@ -9,8 +9,6 @@ import {
 import { decomposeDescriptor } from '@leather.io/crypto';
 import { isDefined } from '@leather.io/utils';
 
-export type PsbtApproverState = 'start' | 'submitting' | 'submitted';
-
 function getPsbtDerivationPath(input: TransactionInput | TransactionOutput) {
   const inputDescriptor = extractRequiredKeyOrigins(
     input.bip32Derivation ?? input.tapBip32Derivation ?? []

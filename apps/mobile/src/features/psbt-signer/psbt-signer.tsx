@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 
 import { formatBalance } from '@/components/balance/balance';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
+import { BitcoinFeeCard } from '@/features/approver/components/bitcoin-fee-card';
 import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
-import { FeeCard } from '@/features/approver/components/fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
@@ -13,13 +13,13 @@ import { getPsbtAsTransaction, getPsbtDetails } from '@leather.io/bitcoin';
 import { FeeTypes } from '@leather.io/models';
 import { useBitcoinBroadcastTransaction, useCurrentNetworkState } from '@leather.io/query';
 import { Approver, Box, Text } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback, sumMoney } from '@leather.io/utils';
 
-import { PsbtButtons } from './components/psbt-buttons';
+import { ApproverButtons } from '../approver/components/approver-buttons';
+import { ApproverState } from '../approver/utils';
 import { usePsbtAccounts } from './use-psbt-accounts';
 import { usePsbtPayers } from './use-psbt-payers';
 import { usePsbtSigner } from './use-psbt-signer';
-import { type PsbtApproverState } from './utils';
 
 interface PsbtSignerProps {
   psbtHex: string;
@@ -34,7 +34,7 @@ export function PsbtSigner({ psbtHex, onEdit, onSuccess }: PsbtSignerProps) {
   const psbtAddresses = psbtPayers.map(payer => payer.address);
   const { sign } = usePsbtSigner();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
-  const [approverState, setApproverState] = useState<PsbtApproverState>('start');
+  const [approverState, setApproverState] = useState<ApproverState>('start');
   const { data: btcMarketData } = useBtcMarketDataQuery();
 
   const psbtDetails = useMemo(
@@ -51,9 +51,7 @@ export function PsbtSigner({ psbtHex, onEdit, onSuccess }: PsbtSignerProps) {
     psbtDetails.addressTaprootTotal,
   ]);
 
-  const totalSpend = btcMarketData
-    ? baseCurrencyAmountInQuote(totalBtc, btcMarketData)
-    : createMoney(0, 'USD');
+  const totalSpend = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
   async function onSubmitTransaction() {
     setApproverState('submitting');
     const psbt = getPsbtAsTransaction(psbtHex);
@@ -90,7 +88,7 @@ export function PsbtSigner({ psbtHex, onEdit, onSuccess }: PsbtSignerProps) {
           <OutcomeAddressesCard addresses={psbtDetails.psbtOutputs.map(o => o.address)} />
         </Approver.Section>
         <Approver.Section>
-          <FeeCard feeType={FeeTypes.Middle} amount={psbtDetails.fee} />
+          <BitcoinFeeCard feeType={FeeTypes.Middle} amount={psbtDetails.fee} />
         </Approver.Section>
         <Approver.Advanced
           titleClosed={t({
@@ -121,7 +119,7 @@ export function PsbtSigner({ psbtHex, onEdit, onSuccess }: PsbtSignerProps) {
           <Text variant="label02">{formatBalance(totalSpend, true)}</Text>
         </Box>
         <Approver.Actions>
-          <PsbtButtons
+          <ApproverButtons
             approverState={approverState}
             onEdit={onEdit}
             onApprove={onSubmitTransaction}

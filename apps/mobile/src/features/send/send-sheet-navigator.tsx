@@ -10,6 +10,7 @@ import { SelectAssetSheet } from './send-sheets/select-asset-sheet';
 import { SendFormBtcSheet } from './send-sheets/send-form-btc-sheet';
 import { SendFormStxSheet } from './send-sheets/send-form-stx-sheet';
 import { SendSheetSignPsbt } from './send-sheets/sign-psbt';
+import { SendSheetSignStacksTx } from './send-sheets/sign-stacks-tx';
 
 const Stack = createStackNavigator<SendSheetNavigatorParamList & ParamListBase>();
 
@@ -31,6 +32,7 @@ export function SendSheetNavigator() {
       <Stack.Screen name="send-form-btc" component={SendFormBtcSheet} />
       <Stack.Screen name="send-form-stx" component={SendFormStxSheet} />
       <Stack.Screen name="sign-psbt" component={SendSheetSignPsbt} />
+      <Stack.Screen name="sign-stacks-tx" component={SendSheetSignStacksTx} />
     </Stack.Navigator>
   );
 }
