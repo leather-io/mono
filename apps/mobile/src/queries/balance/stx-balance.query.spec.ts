@@ -1,4 +1,4 @@
-import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStxBalance } from '@/queries/balance/stx-balance.query';
 import { vi } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';

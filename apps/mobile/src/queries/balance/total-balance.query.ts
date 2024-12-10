@@ -3,7 +3,7 @@ import {
   useBitcoinAccountTotalBitcoinBalance,
   useWalletTotalBitcoinBalance,
 } from '@/queries/balance/bitcoin-balance.query';
-import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStxBalance } from '@/queries/balance/stx-balance.query';
 import {
   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,
@@ -11,6 +11,8 @@ import {
 
 import { Money } from '@leather.io/models';
 import { sumMoney } from '@leather.io/utils';
+
+import { useSip10AggregateAvailableBalance } from './sip10-balance.query';
 
 interface TotalBalance {
   btcBalance: Money;
@@ -26,8 +28,9 @@ export function useTotalBalance(): TotalBalance {
     useStxBalance(stacksAddresses);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =
     useWalletTotalBitcoinBalance();
+  const sip10BalanceUsd = useSip10AggregateAvailableBalance(stacksAddresses);
 
-  const totalBalance = sumMoney([btcBalanceUsd, stxBalanceUsd]);
+  const totalBalance = sumMoney([btcBalanceUsd, stxBalanceUsd, sip10BalanceUsd]);
   return {
     btcBalance,
     btcBalanceUsd,
@@ -48,7 +51,8 @@ export function useAccountTotalBalance(accountId: AccountId): TotalBalance {
   ]);
   const { availableBalance: btcBalance, fiatBalance: btcBalanceUsd } =
     useBitcoinAccountTotalBitcoinBalance(accountId);
-  const totalBalance = sumMoney([btcBalanceUsd, stxBalanceUsd]);
+  const sip10BalanceUsd = useSip10AggregateAvailableBalance([stacksAddress]);
+  const totalBalance = sumMoney([btcBalanceUsd, stxBalanceUsd, sip10BalanceUsd]);
   return {
     btcBalance,
     btcBalanceUsd,

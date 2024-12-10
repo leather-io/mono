@@ -8,7 +8,7 @@ import { QueryFunctionContext, UseQueryResult, useQueries, useQuery } from '@tan
 import { inferPaymentTypeFromPath } from '@leather.io/bitcoin';
 import { Utxo, createUtxoQueryOptions } from '@leather.io/query';
 import { PaymentTypes } from '@leather.io/rpc';
-import { getBitcoinBalancesService } from '@leather.io/services';
+import { getBtcBalancesService } from '@leather.io/services';
 import { createMoney, isDefined } from '@leather.io/utils';
 
 function getDescriptorFromKeychain<T extends { keyOrigin: string; xpub: string }>(
@@ -128,9 +128,9 @@ export function useBitcoinAccountTotalBitcoinBalance({ fingerprint, accountIndex
 
 export function useBtcBalanceQuery(descriptors: string[]) {
   return useQuery({
-    queryKey: ['bitcoin-balance-service-get-btc-balance', descriptors],
+    queryKey: ['btc-balance-service-get-btc-balance', descriptors],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getBitcoinBalancesService().getBtcBalance(descriptors, signal),
+      getBtcBalancesService().getBtcBalance(descriptors, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

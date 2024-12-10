@@ -9,25 +9,23 @@ import {
 
 import { LeatherApiClient, LeatherApiUtxo } from '../infrastructure/api/leather/leather-api.client';
 import { MarketDataService } from '../market-data/market-data.service';
-import { hasUneconomicalBalance, removeExistingUtxos } from './bitcoin-balances.utils';
+import { hasUneconomicalBalance, removeExistingUtxos } from './btc-balances.utils';
 
 export interface BtcBalance {
   balanceBtc: BtcCryptoAssetBalance;
   balanceUsd: BtcCryptoAssetBalance;
 }
 
-export interface BitcoinBalancesService {
+export interface BtcBalancesService {
   getBtcBalance(descriptors: string[], signal?: AbortSignal): Promise<BtcBalance>;
 }
 
-export function createBitcoinBalancesService(
+export function createBtcBalancesService(
   leatherApiClient: LeatherApiClient,
   marketDataService: MarketDataService
-): BitcoinBalancesService {
+): BtcBalancesService {
   /**
-   * Retrieves total BTC balance for listed descriptors. Includes all sub-balances (inbound, outbound, protected, uneconomical).
-   *
-   * @returns {BtcBalance} BTC balance denominanted in both in BTC and fiat (USD).
+   * Retrieves cumulative BTC balance of a list of descriptors (denominated in both BTC and USD).
    */
   async function getBtcBalance(descriptors: string[], signal?: AbortSignal) {
     const utxoPromises = descriptors.map(descriptor =>

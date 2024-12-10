@@ -35,10 +35,10 @@ export function createCoincapApiClient(cacheService: HttpCacheService) {
   }
 
   async function fetchAsset(currency: CryptoCurrency, signal?: AbortSignal) {
-    return await cacheService.fetchWithCache<CoincapAssetResponse>(
+    return await cacheService.fetchWithCache(
       ['coincap-asset', currency],
       async () => {
-        const res = await axios.get(
+        const res = await axios.get<CoincapAssetResponse>(
           `https://api.coincap.io/v2/assets/${mapToCoincapCurrency(currency)}`,
           { signal }
         );

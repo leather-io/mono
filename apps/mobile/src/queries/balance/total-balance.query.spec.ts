@@ -1,4 +1,4 @@
-import { useStxBalance } from '@/queries/balance/stacks-balance.query';
+import { useStxBalance } from '@/queries/balance/stx-balance.query';
 import { vi } from 'vitest';
 
 import { CryptoCurrency, createMarketPair } from '@leather.io/models';
@@ -8,7 +8,7 @@ import { createMoney } from '@leather.io/utils';
 import { useAccountTotalBalance, useTotalBalance } from './total-balance.query';
 
 // Mock the dependencies
-vi.mock('./stacks-balance.query');
+vi.mock('./stx-balance.query');
 vi.mock('@leather.io/query');
 
 function getPrice(currency: CryptoCurrency) {
