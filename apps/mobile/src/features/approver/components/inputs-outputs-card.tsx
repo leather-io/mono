@@ -29,48 +29,52 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
 
   const outputsWithBalance = outputs.map(addBalance);
   return (
-    <>
-      <Text variant="label01">
+    <Box gap="5">
+      <Text variant="label02">
         {t({
           id: 'approver.inputs-outputs.title',
           message: 'Inputs and Outputs',
         })}
       </Text>
-      <Text variant="label01">
-        {t({
-          id: 'approver.inputs-outputs.input.title',
-          message: 'Input',
-        })}
-      </Text>
-      <Box gap="4">
-        {inputsWithBalance.map(input => (
-          <UtxoRow
-            key={input.txid + input.address + input.btcBalance.amount}
-            txid={input.txid}
-            address={input.address}
-            btcBalance={input.btcBalance}
-            usdBalance={input.usdBalance}
-            isLocked
-          />
-        ))}
+      <Box gap="1">
+        <Text variant="label02">
+          {t({
+            id: 'approver.inputs-outputs.input.title',
+            message: 'Input',
+          })}
+        </Text>
+        <Box mx="-5">
+          {inputsWithBalance.map(input => (
+            <UtxoRow
+              key={input.txid + input.address + input.btcBalance.amount}
+              txid={input.txid}
+              address={input.address}
+              btcBalance={input.btcBalance}
+              usdBalance={input.usdBalance}
+              isLocked
+            />
+          ))}
+        </Box>
       </Box>
-      <Text variant="label01">
-        {t({
-          id: 'approver.inputs-outputs.output.title',
-          message: 'Output',
-        })}
-      </Text>
-      <Box gap="4">
-        {outputsWithBalance.map(output => (
-          <UtxoRow
-            key={output.address + output.btcBalance.amount}
-            address={output.address}
-            btcBalance={output.btcBalance}
-            usdBalance={output.usdBalance}
-            isLocked
-          />
-        ))}
+      <Box gap="1">
+        <Text variant="label02">
+          {t({
+            id: 'approver.inputs-outputs.output.title',
+            message: 'Output',
+          })}
+        </Text>
+        <Box mx="-5">
+          {outputsWithBalance.map(output => (
+            <UtxoRow
+              key={output.address + output.btcBalance.amount}
+              address={output.address}
+              btcBalance={output.btcBalance}
+              usdBalance={output.usdBalance}
+              isLocked
+            />
+          ))}
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 }

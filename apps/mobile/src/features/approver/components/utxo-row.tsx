@@ -1,7 +1,7 @@
 import { Balance } from '@/components/balance/balance';
 
 import { Money } from '@leather.io/models';
-import { Avatar, Flag, ItemLayout, LockIcon, UnlockIcon } from '@leather.io/ui/native';
+import { Avatar, Cell, LockIcon, UnlockIcon } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 interface UtxoRowProps {
@@ -16,13 +16,18 @@ export function UtxoRow({ isLocked, address, btcBalance, usdBalance, txid }: Utx
   const icon = isLocked ? <LockIcon /> : <UnlockIcon color="red" />;
 
   return (
-    <Flag img={<Avatar bg="ink.background-secondary">{icon}</Avatar>}>
-      <ItemLayout
-        titleLeft={truncateMiddle(address)}
-        captionLeft={txid ? truncateMiddle(txid) : undefined}
-        titleRight={<Balance balance={btcBalance} variant="label02" />}
-        captionRight={<Balance balance={usdBalance} variant="label02" color="ink.text-subdued" />}
-      />
-    </Flag>
+    <Cell.Root pressable={false}>
+      <Cell.Icon>
+        <Avatar bg="ink.background-secondary">{icon}</Avatar>
+      </Cell.Icon>
+      <Cell.Content>
+        <Cell.Label variant="primary">{truncateMiddle(address)}</Cell.Label>
+        {txid && <Cell.Label variant="primary">{truncateMiddle(txid)}</Cell.Label>}
+      </Cell.Content>
+      <Cell.Aside>
+        <Balance balance={btcBalance} variant="label02" />
+        <Balance balance={usdBalance} variant="label02" color="ink.text-subdued" />
+      </Cell.Aside>
+    </Cell.Root>
   );
 }

@@ -13,10 +13,8 @@ import {
   AnimalSnailIcon,
   Avatar,
   Box,
+  Cell,
   ChevronRightIcon,
-  Flag,
-  ItemLayout,
-  Pressable,
   Text,
 } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, match } from '@leather.io/utils';
@@ -50,31 +48,39 @@ export function BitcoinFeeCard({ feeType, amount }: FeeCardProps) {
         </Text>
         <FeeBadge type="normal" />
       </Box>
-      <Pressable flexDirection="row" onPress={() => {}} py="3">
-        <Flag
-          img={
-            <Avatar bg="ink.background-secondary" p="1">
+
+      <Box mx="-5">
+        <Cell.Root pressable={true} onPress={() => {}}>
+          <Cell.Icon>
+            <Avatar bg="ink.background-secondary" p="2">
               {feeIcon}
             </Avatar>
-          }
-        >
-          <ItemLayout
-            titleLeft={t({
-              id: 'approver.fee.type.normal',
-              message: 'Normal',
-            })}
-            captionLeft={t({
-              id: 'approver.fee.speed.normal',
-              message: '~20 mins',
-            })}
-            titleRight={<Balance balance={amount} variant="label02" />}
-            captionRight={
-              <Balance balance={fiatBalance} variant="label02" color="ink.text-subdued" />
-            }
-            actionIcon={<ChevronRightIcon />}
-          />
-        </Flag>
-      </Pressable>
+          </Cell.Icon>
+          <Cell.Content>
+            <Cell.Label variant="primary">
+              {t({
+                id: 'approver.fee.type.normal',
+                message: 'Normal',
+              })}
+            </Cell.Label>
+            <Cell.Label variant="secondary">
+              {t({
+                id: 'approver.fee.speed.normal',
+                message: '~20 mins',
+              })}
+            </Cell.Label>
+          </Cell.Content>
+          <Cell.Aside>
+            <Box flexDirection="row" alignItems="center" gap="2">
+              <Box alignItems="flex-end">
+                <Balance balance={amount} variant="label02" />
+                <Balance balance={fiatBalance} variant="label02" color="ink.text-subdued" />
+              </Box>
+              <ChevronRightIcon variant="small" />
+            </Box>
+          </Cell.Aside>
+        </Cell.Root>
+      </Box>
     </>
   );
 }
