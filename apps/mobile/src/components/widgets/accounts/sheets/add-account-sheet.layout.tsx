@@ -31,11 +31,11 @@ export function AddAccountSheetLayout({
 }: AddAccountSheetLayoutProps) {
   return (
     <Sheet isScrollView ref={addAccountSheetRef} themeVariant={themeVariant}>
-      <Box p="5">
-        <Text pb="5" variant="heading05">
+      <Box gap="1">
+        <Text p="5" variant="heading05">
           {t({ id: 'add_account.header_title', message: 'Add account' })}
         </Text>
-        <Box flexDirection="column" gap="1">
+        <Box flexDirection="column" pb="7">
           <AddWalletCell
             onPress={addToWallet}
             title={t({

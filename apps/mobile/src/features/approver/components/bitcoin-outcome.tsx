@@ -3,7 +3,7 @@ import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.que
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
-import { Text } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 export function BitcoinOutcome({ amount }: { amount: Money }) {
@@ -19,7 +19,9 @@ export function BitcoinOutcome({ amount }: { amount: Money }) {
           message: "You'll send",
         })}
       </Text>
-      <BitcoinTokenBalance availableBalance={amount} fiatBalance={fiatBalance} py="3" />
+      <Box mx="-5">
+        <BitcoinTokenBalance availableBalance={amount} fiatBalance={fiatBalance} />
+      </Box>
     </>
   );
 }

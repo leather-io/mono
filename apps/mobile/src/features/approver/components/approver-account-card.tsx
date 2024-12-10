@@ -9,7 +9,7 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Text, Theme } from '@leather.io/ui/native';
+import { Box, Text, Theme } from '@leather.io/ui/native';
 
 function AccountItem({ account }: { account: Account }) {
   const { list: walletsList } = useWallets();
@@ -46,9 +46,11 @@ export function ApproverAccountCard({ accounts }: { accounts: Account[] }) {
           message: 'With account',
         })}
       </Text>
-      {accounts.map(account => (
-        <AccountItem key={account.id} account={account} />
-      ))}
+      <Box mx="-5">
+        {accounts.map(account => (
+          <AccountItem key={account.id} account={account} />
+        ))}
+      </Box>
     </>
   );
 }

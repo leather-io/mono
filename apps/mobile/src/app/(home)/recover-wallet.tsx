@@ -15,17 +15,16 @@ import * as Clipboard from 'expo-clipboard';
 
 import { isValidMnemonic, isValidMnemonicWord } from '@leather.io/crypto';
 import {
+  Accordion,
   Box,
   Button,
-  ChevronDownIcon,
+  Cell,
   ChevronRightIcon,
-  ChevronUpIcon,
   LockIcon,
   NoteEmptyIcon,
   SheetRef,
   Text,
   Theme,
-  TouchableOpacity,
 } from '@leather.io/ui/native';
 
 function constructErrorMessage(invalidWords: string[]) {
@@ -51,7 +50,6 @@ export default function RecoverWallet() {
   const [inputState, setInputState] = useState<InputState>('default');
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const recoverWalletSheetRef = useRef<SheetRef>(null);
   const [passphrase, setPassphrase] = useState('');
   const { navigateAndCreateWallet } = useCreateWallet();
@@ -97,10 +95,6 @@ export default function RecoverWallet() {
     setRecoveryMnemonic(copiedString);
     checkMnemonic(copiedString);
     inputRef.current?.focus();
-  }
-
-  function toggleAdvancedOptions() {
-    setShowAdvancedOptions(!showAdvancedOptions);
   }
 
   return (
@@ -157,63 +151,56 @@ export default function RecoverWallet() {
               testID={TestId.restoreWalletTextInput}
             />
           </Box>
-          <TouchableOpacity
-            onPress={toggleAdvancedOptions}
-            pt="5"
-            pb="3"
-            flexDirection="row"
-            justifyContent="space-between"
-          >
-            <Text variant="label02">
-              {t({
-                id: 'recover_wallet.accordion_label',
-                message: 'Advanced options',
-              })}
-            </Text>
-            {showAdvancedOptions ? (
-              <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
-            ) : (
-              <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
-            )}
-          </TouchableOpacity>
-          {showAdvancedOptions && (
-            <TouchableOpacity
-              onPress={() => {
-                recoverWalletSheetRef.current?.present();
-              }}
-              pt="3"
-              pb="5"
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box flexDirection="row" gap="4">
-                <Box flexDirection="row" p="2" bg="ink.background-secondary" borderRadius="round">
-                  <LockIcon color={theme.colors['ink.text-primary']} />
-                </Box>
-                <Box flexDirection="column">
-                  <Text variant="label02">
-                    {t({
-                      id: 'recover_wallet.passphrase_label',
-                      message: 'BIP39 passphrase',
-                    })}
-                  </Text>
-                  <Text color="ink.text-subdued" variant="label03">
-                    {passphrase
-                      ? t({
-                          id: 'recover_wallet.passphrase_enabled',
-                          message: 'Enabled',
-                        })
-                      : t({
-                          id: 'recover_wallet.passphrase_disabled',
-                          message: 'Disabled',
-                        })}
-                  </Text>
-                </Box>
+
+          <Accordion
+            label={t({
+              id: 'recover_wallet.accordion_label',
+              message: 'Advanced options',
+            })}
+            content={
+              <Box mx="-5">
+                <Cell.Root
+                  pressable
+                  onPress={() => {
+                    recoverWalletSheetRef.current?.present();
+                  }}
+                >
+                  <Cell.Icon>
+                    <Box
+                      flexDirection="row"
+                      p="3"
+                      bg="ink.background-secondary"
+                      borderRadius="round"
+                    >
+                      <LockIcon color={theme.colors['ink.text-primary']} />
+                    </Box>
+                  </Cell.Icon>
+                  <Cell.Content>
+                    <Cell.Label variant="primary">
+                      {t({
+                        id: 'recover_wallet.passphrase_label',
+                        message: 'BIP39 passphrase',
+                      })}
+                    </Cell.Label>
+                    <Cell.Label variant="primary">
+                      {passphrase
+                        ? t({
+                            id: 'recover_wallet.passphrase_enabled',
+                            message: 'Enabled',
+                          })
+                        : t({
+                            id: 'recover_wallet.passphrase_disabled',
+                            message: 'Disabled',
+                          })}
+                    </Cell.Label>
+                  </Cell.Content>
+                  <Cell.Aside>
+                    <ChevronRightIcon variant="small" />
+                  </Cell.Aside>
+                </Cell.Root>
               </Box>
-              <ChevronRightIcon color={theme.colors['ink.text-primary']} variant="small" />
-            </TouchableOpacity>
-          )}
+            }
+          />
         </AnimatedHeaderScreenWithKeyboardLayout>
         <Button
           mx="5"

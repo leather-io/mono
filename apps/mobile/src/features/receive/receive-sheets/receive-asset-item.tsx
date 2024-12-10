@@ -1,14 +1,6 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
 
-import {
-  Box,
-  CopyIcon,
-  Flag,
-  IconButton,
-  ItemLayout,
-  Pressable,
-  Text,
-} from '@leather.io/ui/native';
+import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
 
 interface ReceiveAssetItemProps {
   address: string;
@@ -23,25 +15,27 @@ export function ReceiveAssetItem({
   address,
   addressType,
   assetName,
-  assetSymbol,
   icon,
   onCopy,
   onPress,
 }: ReceiveAssetItemProps) {
   return (
-    <Pressable flexDirection="row" onPress={onPress} py="3" px="5">
-      <Flag key={assetSymbol} img={icon}>
-        <ItemLayout
-          titleLeft={
+    <Cell.Root pressable={true} disabled={!onPress} onPress={onPress}>
+      <Cell.Icon>{icon}</Cell.Icon>
+      <Cell.Content>
+        <Cell.Label variant="primary">
+          {
             <Box alignItems="center" flexDirection="row" gap="1">
               <Text variant="label02">{assetName}</Text>
               {addressType && <AddressTypeBadge type={addressType} />}
             </Box>
           }
-          actionIcon={<IconButton icon={<CopyIcon />} onPress={onCopy} />}
-          captionLeft={address}
-        />
-      </Flag>
-    </Pressable>
+        </Cell.Label>
+        <Cell.Label variant="secondary">{address}</Cell.Label>
+      </Cell.Content>
+      <Cell.Aside>
+        <IconButton icon={<CopyIcon />} onPress={onCopy} />
+      </Cell.Aside>
+    </Cell.Root>
   );
 }

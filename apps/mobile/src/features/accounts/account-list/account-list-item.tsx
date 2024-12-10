@@ -1,4 +1,4 @@
-import { Avatar, Flag, ItemLayout, Pressable, PressableProps } from '@leather.io/ui/native';
+import { Avatar, Cell, type PressableProps } from '@leather.io/ui/native';
 
 interface AccountListItemProps extends PressableProps {
   accountName: string;
@@ -21,21 +21,20 @@ export function AccountListItem({
   ...rest
 }: AccountListItemProps) {
   return (
-    <Pressable flexDirection="row" disabled={!onPress} onPress={onPress} testID={testID} {...rest}>
-      <Flag
-        img={
-          <Avatar bg="ink.text-primary" testID={iconTestID}>
-            {icon}
-          </Avatar>
-        }
-      >
-        <ItemLayout
-          titleLeft={accountName}
-          captionLeft={walletName}
-          titleRight={balance}
-          captionRight={address}
-        />
-      </Flag>
-    </Pressable>
+    <Cell.Root pressable={true} disabled={!onPress} onPress={onPress} testID={testID} {...rest}>
+      <Cell.Icon>
+        <Avatar bg="ink.text-primary" testID={iconTestID}>
+          {icon}
+        </Avatar>
+      </Cell.Icon>
+      <Cell.Content>
+        <Cell.Label variant="primary">{accountName}</Cell.Label>
+        <Cell.Label variant="secondary">{walletName}</Cell.Label>
+      </Cell.Content>
+      <Cell.Aside>
+        <Cell.Label variant="primary">{balance}</Cell.Label>
+        <Cell.Label variant="secondary">{address}</Cell.Label>
+      </Cell.Aside>
+    </Cell.Root>
   );
 }

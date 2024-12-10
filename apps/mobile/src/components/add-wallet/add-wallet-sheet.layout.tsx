@@ -87,14 +87,16 @@ export function AddWalletSheetLayout({
             source={require('@/assets/create-wallet-image.png')}
           />
         </Box>
-        <Box p="5">
-          <Text pb="5" variant="heading03">
-            {t({
-              id: 'add_wallet.header_title',
-              message: 'Add wallet',
-            })}
-          </Text>
-          <Box flexDirection="column" gap="1">
+        <Box>
+          <Box p="5">
+            <Text variant="heading03">
+              {t({
+                id: 'add_wallet.header_title',
+                message: 'Add wallet',
+              })}
+            </Text>
+          </Box>
+          <Box gap="1" pb="5">
             <AddWalletCell
               onPress={createWallet}
               title={t({
