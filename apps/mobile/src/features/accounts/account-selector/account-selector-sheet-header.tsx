@@ -5,7 +5,14 @@ import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { router } from 'expo-router';
 
-import { Box, SettingsGearIcon, SheetRef, Text, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  Pressable,
+  SettingsGearIcon,
+  SheetRef,
+  Text,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
 
 interface AccountSelectorHeaderProps {
   sheetRef: RefObject<SheetRef>;
@@ -23,16 +30,17 @@ export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) 
         </Text>
       </Box>
       <Box alignItems="flex-end" flexGrow={1} justifyContent="center" zIndex="20">
-        <TouchableOpacity
+        <Pressable
           p="2"
           onPress={() => {
             sheetRef.current?.close();
             router.navigate(AppRoutes.SettingsWallet);
           }}
           testID={TestId.settingsWalletAndAccountsButton}
+          pressEffects={legacyTouchablePressEffect}
         >
           <SettingsGearIcon />
-        </TouchableOpacity>
+        </Pressable>
       </Box>
     </Box>
   );

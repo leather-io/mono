@@ -1,4 +1,4 @@
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
 export const tabBarHeight = 56;
 
@@ -20,7 +20,7 @@ export function TabBar({ tabs }: TabBarProps) {
   return (
     <Box alignItems="center" bg="ink.background-primary" flexDirection="row" height={tabBarHeight}>
       {tabs.map(tab => (
-        <TouchableOpacity
+        <Pressable
           alignItems="center"
           borderBottomWidth={4}
           borderColor={getBorderColor(tab.isActive)}
@@ -29,11 +29,12 @@ export function TabBar({ tabs }: TabBarProps) {
           flex={1}
           height="100%"
           justifyContent="center"
+          pressEffects={legacyTouchablePressEffect}
         >
           <Text color={getTextColor(tab.isActive)} variant="label01">
             {tab.title}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </Box>
   );

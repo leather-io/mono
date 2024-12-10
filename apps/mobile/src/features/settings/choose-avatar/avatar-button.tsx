@@ -2,7 +2,7 @@ import { AvatarIcon, AvatarIconName } from '@/components/avatar-icon';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Box, Pressable, Theme, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
 interface AvatarButtonProps {
   iconName: AvatarIconName;
@@ -24,7 +24,7 @@ export function AvatarButton({ iconName, onPress, isSelected }: AvatarButtonProp
           position="absolute"
         />
       )}
-      <TouchableOpacity
+      <Pressable
         testID={defaultIconTestId(iconName)}
         borderWidth={2}
         borderColor="ink.background-primary"
@@ -32,6 +32,7 @@ export function AvatarButton({ iconName, onPress, isSelected }: AvatarButtonProp
         style={{ padding: 6 }}
         borderRadius="round"
         bg="ink.text-primary"
+        pressEffects={legacyTouchablePressEffect}
       >
         <AvatarIcon
           color={theme.colors['ink.background-primary']}
@@ -39,7 +40,7 @@ export function AvatarButton({ iconName, onPress, isSelected }: AvatarButtonProp
           width={32}
           height={32}
         />
-      </TouchableOpacity>
+      </Pressable>
     </Box>
   );
 }

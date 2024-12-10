@@ -17,9 +17,10 @@ import {
   Box,
   Button,
   PointerHandIcon,
+  Pressable,
   Text,
   Theme,
-  TouchableOpacity,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 export default function CreateNewWallet() {
@@ -71,13 +72,14 @@ export default function CreateNewWallet() {
                 zIndex: 10,
               }}
             >
-              <TouchableOpacity
+              <Pressable
                 onPress={() => setIsHidden(false)}
                 height="100%"
                 flexDirection="row"
                 justifyContent="center"
                 alignItems="center"
                 gap="2"
+                pressEffects={legacyTouchablePressEffect}
                 testID={TestId.walletCreationTapToReveal}
               >
                 <PointerHandIcon />
@@ -95,7 +97,7 @@ export default function CreateNewWallet() {
                     })}
                   </Text>
                 </Box>
-              </TouchableOpacity>
+              </Pressable>
             </BlurView>
           )}
           <MnemonicDisplay mnemonic={mnemonic} />

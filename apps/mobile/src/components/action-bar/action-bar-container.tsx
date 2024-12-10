@@ -14,9 +14,10 @@ import {
   InboxIcon,
   PaperPlaneIcon,
   PlusIcon,
+  Pressable,
   SheetRef,
   Text,
-  TouchableOpacity,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
 
@@ -130,7 +131,7 @@ interface ActionBarButtonProps {
 }
 function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps) {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       justifyContent="center"
       alignItems="center"
@@ -138,11 +139,12 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
       height="100%"
       flexDirection="row"
       gap="2"
+      pressEffects={legacyTouchablePressEffect}
       testID={testID}
     >
       {icon}
       <Text variant="label02">{label}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
