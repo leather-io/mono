@@ -103,20 +103,17 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               }}
               buttonState="ghost"
               disabled={isAddingAccount}
-              // title={
-              //   isAddingAccount
-              //     ? t({
-              //         id: 'wallet.adding_account.button',
-              //         message: `Adding account`,
-              //       })
-              //     : t({
-              //         id: 'wallet.add_account.button',
-              //         message: `Add account`,
-              //       })
-              // }
-              // FIXME: LEA-1780 Re-enable this when Crowdin issues solved
-              // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
-              title={isAddingAccount ? 'Adding account' : 'Add account'}
+              title={
+                isAddingAccount
+                  ? t({
+                      id: 'wallet.adding_account.button',
+                      message: `Adding account`,
+                    })
+                  : t({
+                      id: 'wallet.add_account.button',
+                      message: `Add account`,
+                    })
+              }
               icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon />}
             />
           )}
