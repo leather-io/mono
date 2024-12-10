@@ -3,7 +3,7 @@ import { t } from '@lingui/macro';
 
 import { PsbtInput, PsbtOutput } from '@leather.io/bitcoin';
 import { Box, Text } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 import { UtxoRow } from './utxo-row';
 
@@ -17,9 +17,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
 
   function addBalance<T extends PsbtInput | PsbtOutput>(inputOutput: T) {
     const btcBalance = createMoney(Number(inputOutput.value), 'BTC');
-    const usdBalance = btcMarketData
-      ? baseCurrencyAmountInQuote(btcBalance, btcMarketData)
-      : createMoney(0, 'USD');
+    const usdBalance = baseCurrencyAmountInQuoteWithFallback(btcBalance, btcMarketData);
     return {
       ...inputOutput,
       btcBalance,

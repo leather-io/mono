@@ -8,6 +8,7 @@ const stxSignTransactionRequestParamsSchema = z.object({
   txHex: z.string(),
   stxAddress: z.string().optional(),
   attachment: z.string().optional(),
+  accountIndex: z.string().optional(),
 });
 
 export type StxSignTransactionRequestParams = z.infer<typeof stxSignTransactionRequestParamsSchema>;

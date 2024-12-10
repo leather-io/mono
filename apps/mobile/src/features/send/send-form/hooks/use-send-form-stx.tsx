@@ -33,6 +33,8 @@ export function useSendFormStx() {
     route.params.publicKey
   );
 
+  const { account } = route.params;
+
   return {
     onGoBack() {
       navigation.navigate('send-select-asset', { account: route.params.account });
@@ -47,6 +49,7 @@ export function useSendFormStx() {
       // Show an error toast here?
       if (!tx) throw new Error('Attempted to generate unsigned tx, but tx is undefined');
       const txHex = bytesToHex(tx.serialize());
+      navigation.navigate('sign-stacks-tx', { txHex, accountId: account.id });
       // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
       console.log('tx hex:', txHex);
       // eslint-disable-next-line no-console, lingui/no-unlocalized-strings

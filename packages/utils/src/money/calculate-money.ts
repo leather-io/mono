@@ -7,6 +7,10 @@ import { initBigNumber } from '../math/helpers';
 import { createMoney, formatMoney } from './format-money';
 import { isMoney } from './is-money';
 
+export function baseCurrencyAmountInQuoteWithFallback(quantity: Money, marketData?: MarketData) {
+  return marketData ? baseCurrencyAmountInQuote(quantity, marketData) : createMoney(0, 'USD');
+}
+
 export function baseCurrencyAmountInQuote(quantity: Money, { pair, price }: MarketData) {
   if (quantity.symbol !== pair.base)
     throw new Error(

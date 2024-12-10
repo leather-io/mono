@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { Balance } from '@/components/balance/balance';
 import { FeeBadge } from '@/features/send/fee-badge';
-import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
+import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { t } from '@lingui/macro';
 
 import { FeeTypes, Money } from '@leather.io/models';
@@ -19,14 +19,14 @@ import {
   Pressable,
   Text,
 } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuote, createMoney, match } from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback, match } from '@leather.io/utils';
 
 interface FeeCardProps {
   feeType: FeeTypes;
   amount: Money;
 }
 
-export function FeeCard({ feeType, amount }: FeeCardProps) {
+export function StacksFeeCard({ feeType, amount }: FeeCardProps) {
   const matchFeeType = match<FeeTypes>();
   const feeIcon = matchFeeType<ReactNode>(feeType, {
     [FeeTypes.Low]: <AnimalSnailIcon />,
@@ -36,11 +36,9 @@ export function FeeCard({ feeType, amount }: FeeCardProps) {
     [FeeTypes.Unknown]: <AnimalChameleonIcon />,
   });
 
-  const { data: btcMarketData } = useBtcMarketDataQuery();
+  const { data: stxMarketData } = useStxMarketDataQuery();
 
-  const fiatBalance = btcMarketData
-    ? baseCurrencyAmountInQuote(amount, btcMarketData)
-    : createMoney(0, 'USD');
+  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, stxMarketData);
   return (
     <>
       <Box flexDirection="row">
