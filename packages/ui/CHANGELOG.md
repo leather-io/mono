@@ -179,6 +179,12 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.8.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.22.0
+
 ## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.42.0...@leather.io/ui-v1.42.1) (2024-12-09)
 
 
