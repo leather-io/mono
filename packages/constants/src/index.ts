@@ -64,6 +64,8 @@ export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
 export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
 
+export const LEATHER_GUIDES_CONNECT_DAPPS = `${LEATHER_GUIDES_URL}/connect-dapps`;
+
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   bitcoin: {
