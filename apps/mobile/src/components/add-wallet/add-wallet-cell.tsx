@@ -10,7 +10,7 @@ interface AddWalletCellProps {
 
 export function AddWalletCell({ icon, title, caption, onPress, testID }: AddWalletCellProps) {
   return (
-    <Cell.Root pressable={true} onPress={onPress} testID={testID}>
+    <Cell.Root pressable={true} onPress={onPress} testID={testID} haptics="soft">
       <Cell.Icon>
         <Box p="3" bg="ink.background-secondary" borderRadius="round">
           {icon}
