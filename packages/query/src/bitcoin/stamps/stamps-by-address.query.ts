@@ -42,6 +42,8 @@ const src20TokenSchema = z.object({
   amt: z.string().optional(),
   block_time: z.string(),
   last_update: z.number(),
+  deploy_tx: z.string(),
+  deploy_img: z.string(),
 });
 
 export type Src20Token = z.infer<typeof src20TokenSchema>;
@@ -55,10 +57,6 @@ const stampsByAdressSchema = z.object({
   btc: z
     .object({
       address: z.string(),
-      balance: z.number(),
-      txCount: z.number(),
-      unconfirmedBalance: z.number(),
-      unconfirmedTxCount: z.number(),
     })
     .optional()
     .nullable(),
