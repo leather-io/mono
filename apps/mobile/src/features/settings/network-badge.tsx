@@ -1,4 +1,5 @@
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useLingui } from '@lingui/react';
 import { useRouter } from 'expo-router';
@@ -16,6 +17,7 @@ export function NetworkBadge(props: NetworkBadgeProps) {
       variant="default"
       px="3"
       onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
+      dataTestId={TestId.networkBadge}
       title={i18n._({
         id: 'settings.header_network',
         message: '{network}',

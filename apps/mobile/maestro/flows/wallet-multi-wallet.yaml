@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow:
+    file: ../shared/add-wallet.yaml
+# add a second wallet - TODO move into flow
+- tapOn: 'Add account All accounts in one'
+- tapOn: 'Add to new wallet Create new wallet'
+- tapOn: 'Create new wallet Create a new Bitcoin and Stacks wallet'
+- assertVisible: 'BACK UP YOUR SECRET KEY'
+- tapOn: "I've backed it up"
+- assertVisible: 'Wallet added successfully'
+- assertVisible:
+    id: homeAccountCard
+    index: 0
+- assertVisible:
+    id: homeAccountCard
+    index: 1
+- tapOn: 'My accounts'
+- assertVisible: 'Wallet 1'
+- assertVisible: 'Wallet 2'
