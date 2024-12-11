@@ -140,6 +140,7 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
       flexDirection="row"
       gap="2"
       pressEffects={legacyTouchablePressEffect}
+      haptics="soft"
       testID={testID}
     >
       {icon}

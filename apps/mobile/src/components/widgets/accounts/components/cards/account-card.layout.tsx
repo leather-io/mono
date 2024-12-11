@@ -28,6 +28,7 @@ export function AccountCardLayout({
       onPress={onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
+      haptics="soft"
       width={width}
       height={180}
       p="5"

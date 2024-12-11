@@ -7,9 +7,12 @@ import { nextAnimationFrame } from '@/utils/next-animation-frame';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
+import { useHaptics } from '@leather.io/ui/native';
+
 export function useCreateWallet() {
   const router = useRouter();
   const toastContext = useToastContext();
+  const triggerHapticFeedback = useHaptics();
   const keyStore = useKeyStore();
   const { changeSecurityLevelPreference, securityLevelPreference } = useSettings();
 
@@ -25,6 +28,7 @@ export function useCreateWallet() {
           biometrics,
           passphrase: passphrase ?? undefined,
         });
+        triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'success',
           title: t({
@@ -47,6 +51,7 @@ export function useCreateWallet() {
           router.back();
           return;
         }
+        triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'error',
           title: t({

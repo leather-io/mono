@@ -18,6 +18,7 @@ import {
   DollarCircleIcon,
   Eye1Icon,
   PackageSecurityIcon,
+  PointerHandIcon,
   SheetRef,
   SunInCloudIcon,
 } from '@leather.io/ui/native';
@@ -148,7 +149,7 @@ export default function SettingsDisplayScreen() {
                 id: 'display.haptics.cell_caption',
                 message: 'Toggle tactile feedback for touch interactions',
               })}
-              icon={<Eye1Icon />}
+              icon={<PointerHandIcon />}
               type="switch"
               onSwitchValueChange={() => onUpdateHapticsPreference()}
               switchValue={hapticsPreference === 'enabled'}
