@@ -1,0 +1,18 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow:
+    file: ../shared/add-wallet.yaml
+- tapOn:
+    id: 'homeAccountCard'
+- assertVisible: '$0.00 Account 1'
+- assertVisible: 'Bitcoin Layer 1 0 BTC $0.00'
+- assertVisible: 'Stacks Layer 1 0 STX $0.00'
+- assertVisible: 'Send'
+- assertVisible: 'Receive'
+- assertVisible: 'Swap'
+- tapOn:
+    id: 'backButton'
+- assertNotVisible:
+    id: 'backButton'

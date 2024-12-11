@@ -12,6 +12,7 @@ export type BadgeVariant = 'success' | 'warning' | 'error' | 'default' | 'info';
 interface BadgeProps extends PressableProps {
   title: string;
   variant: BadgeVariant;
+  dataTestId?: string;
 }
 
 export function Badge(props: BadgeProps) {
@@ -51,7 +52,7 @@ export function Badge(props: BadgeProps) {
   return (
     <Pressable {...props}>
       <Box bg={backgroundColor} borderColor={borderColor} borderRadius="xs" borderWidth={1} p="1">
-        <Text variant="label03" color={textColor}>
+        <Text variant="label03" color={textColor} data-testid={props.dataTestId}>
           {props.title}
         </Text>
       </Box>
