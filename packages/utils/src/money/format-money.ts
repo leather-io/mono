@@ -77,7 +77,7 @@ export function formatMoneyPadded({ amount, symbol, decimals }: Money) {
   return `${amount.shiftedBy(-decimals).toFormat(decimals)} ${symbol}`;
 }
 
-export function i18nFormatCurrency(quantity: Money, decimals: number = 2) {
+export function i18nFormatCurrency(quantity: Money, decimals = 2) {
   if (quantity.symbol !== 'USD') throw new Error('Cannot format non-USD amounts');
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',

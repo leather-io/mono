@@ -11,7 +11,7 @@ async function executeReadOnlyCall(
   contractAddress: string,
   contractName: string,
   network: StacksMainnet | StacksTestnet,
-  isZonefile: boolean = false
+  isZonefile = false
 ): Promise<ClarityValue> {
   const networkType = network instanceof StacksMainnet ? 'mainnet' : 'testnet';
   const fallbackUrl = getFallbackUrl(networkType);

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 
-export const stxSignTransactionMethodName = 'stx_signTransaction' as const;
+export const stxSignTransactionMethodName = 'stx_signTransaction';
 
 export const stxSignTransactionRequestParamsSchema = z.object({
   stxAddress: z.string().optional(),

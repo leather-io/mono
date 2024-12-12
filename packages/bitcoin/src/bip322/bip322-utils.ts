@@ -63,7 +63,7 @@ function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
 
 export function tweakSigner(signer: bitcoin.Signer, opts: any = {}): bitcoin.Signer {
   // @ts-expect-error privateKey exists on signer
-  let privateKey: Uint8Array | undefined = signer.privateKey!;
+  let privateKey: Uint8Array | undefined = signer.privateKey;
   if (!privateKey) {
     throw new Error('Private key is required for tweaking signer!');
   }

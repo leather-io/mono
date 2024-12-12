@@ -98,7 +98,7 @@ export function useSendFormBtc() {
 
         // Show an error toast here?
         if (!tx) throw new Error('Attempted to generate raw tx, but no tx exists');
-        // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+        // eslint-disable-next-line no-console
         console.log('fees:', fees);
 
         const psbtHex = bytesToHex(tx.psbt);
