@@ -1,10 +1,10 @@
-import { forwardRef } from 'react';
+import { SVGProps, forwardRef } from 'react';
 
 import LeatherLogomark from '../assets/icons/leather-logomark.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import { Icon } from './icon/icon.web';
 
-export const LeatherLogomarkIcon = forwardRef<SVGSVGElement, IconProps>(
-  ({ variant, ...props }, ref) => {
+export const LeatherLogomarkIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+  (props, ref) => {
     return (
       <Icon ref={ref} {...props}>
         <LeatherLogomark />

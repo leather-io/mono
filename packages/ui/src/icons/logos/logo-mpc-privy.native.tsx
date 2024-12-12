@@ -1,9 +1,10 @@
 import { Component, forwardRef } from 'react';
+import { SvgProps } from 'react-native-svg';
 
 import LogoMpcPrivyLogo from '../../assets/icons/logos/logo-mpc-privy-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { Icon } from '../icon/icon.native';
 
-export const LogoMpcPrivy = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
+export const LogoMpcPrivy = forwardRef<Component, SvgProps>((props, ref) => {
   return (
     <Icon ref={ref} {...props}>
       <LogoMpcPrivyLogo />
