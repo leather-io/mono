@@ -27,6 +27,7 @@ import { z } from 'zod';
 import {
   Box,
   Eye1ClosedIcon,
+  Eye1Icon,
   HeadIcon,
   PassportIcon,
   SheetRef,
@@ -124,14 +125,25 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               });
             }}
           />
-          <SettingsListItem
-            title={t({
-              id: 'configure_account.hide_account.cell_title',
-              message: 'Hide account',
-            })}
-            icon={<Eye1ClosedIcon />}
-            onPress={toggleHideAccount}
-          />
+          {account.status === 'active' ? (
+            <SettingsListItem
+              title={t({
+                id: 'configure_account.hide_account.cell_title',
+                message: 'Hide account',
+              })}
+              icon={<Eye1ClosedIcon />}
+              onPress={toggleHideAccount}
+            />
+          ) : (
+            <SettingsListItem
+              title={t({
+                id: 'configure_account.unhide_account.cell_title',
+                message: 'Unhide account',
+              })}
+              icon={<Eye1Icon />}
+              onPress={toggleHideAccount}
+            />
+          )}
         </SettingsList>
       </AnimatedHeaderScreenLayout>
       <AccountNameSheet name={account.name} setName={setName} sheetRef={accountNameSheetRef} />
