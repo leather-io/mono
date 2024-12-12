@@ -20,12 +20,9 @@ export function useToastContext() {
 export function ToastWrapper({ children }: HasChildren) {
   const toastRef = useRef<ToastMethods>(null);
 
-  const displayToast = useCallback(
-    (toastData: ToastData) => {
-      toastRef.current?.display(toastData);
-    },
-    [toastRef.current]
-  );
+  const displayToast = useCallback((toastData: ToastData) => {
+    toastRef.current?.display(toastData);
+  }, []);
 
   return (
     <ToastContext.Provider value={{ displayToast }}>

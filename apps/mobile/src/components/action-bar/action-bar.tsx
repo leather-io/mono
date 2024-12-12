@@ -70,6 +70,7 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
         easing: Easing.out(Easing.poly(6)),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isShown]);
 
   return (
