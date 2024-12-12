@@ -1,9 +1,10 @@
 import { Component, forwardRef } from 'react';
+import { SvgProps } from 'react-native-svg';
 
 import LogoHardwareBitkeyLogo from '../../assets/icons/logos/logo-hardware-bitkey-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { Icon } from '../icon/icon.native';
 
-export const LogoHardwareBitkey = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
+export const LogoHardwareBitkey = forwardRef<Component, SvgProps>((props, ref) => {
   return (
     <Icon ref={ref} {...props}>
       <LogoHardwareBitkeyLogo />
