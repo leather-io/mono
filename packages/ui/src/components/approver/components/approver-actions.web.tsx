@@ -29,7 +29,7 @@ export function ApproverActions({ children, actions }: ApproverActionsProps) {
     });
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, []);
+  }, [setActionBarHeight]);
 
   return (
     <styled.footer
