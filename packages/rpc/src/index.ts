@@ -2,6 +2,8 @@ import { ValueOf } from '@leather.io/models';
 
 import { DefineGetAddressesMethod } from './methods/get-addresses';
 import { DefineGetInfoMethod } from './methods/get-info';
+import { DefineOpenMethod } from './methods/open';
+import { DefineOpenSwapMethod } from './methods/open-swap';
 import { DefineSendTransferMethod } from './methods/send-transfer';
 import { DefineSignMessageMethod } from './methods/sign-message';
 import { DefineSignPsbtMethod } from './methods/sign-psbt';
@@ -23,7 +25,9 @@ export type LeatherRpcMethodMap = DefineGetInfoMethod &
   DefineSignMessageMethod &
   DefineSendTransferMethod &
   DefineStxSignMessageMethod &
-  DefineStxSignTransactionMethod;
+  DefineStxSignTransactionMethod &
+  DefineOpenSwapMethod &
+  DefineOpenMethod;
 
 export type RpcRequests = ValueOf<LeatherRpcMethodMap>['request'];
 

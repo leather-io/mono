@@ -1,10 +1,9 @@
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../rpc/schemas';
 
-export interface SendTransferRequestParams {
+export interface SendTransferRequestParams extends RpcParameterByName {
   account?: number;
   address: string;
   amount: string;
-  [x: string]: unknown;
 }
 
 export interface SendTransferResponseBody {
