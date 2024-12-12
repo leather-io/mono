@@ -21,7 +21,7 @@ export function readCoinGeckoMarketDataPrice(
 ): number | undefined {
   try {
     return marketData[mapToCoinGeckoCurrency(currency)]['usd'];
-  } catch (ignored) {
+  } catch {
     return;
   }
 }

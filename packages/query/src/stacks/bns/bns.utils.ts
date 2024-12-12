@@ -21,9 +21,8 @@ async function fetchPrimaryName(address: string, network: NetworkModes) {
   try {
     const res = await getPrimaryName({ address, network });
     return `${res?.name}.${res?.namespace}`;
-  } catch (error) {
-    // Ignore error
-    return undefined;
+  } catch {
+    return;
   }
 }
 
@@ -81,7 +80,7 @@ export async function fetchBtcNameOwner(
   try {
     const zoneFileData = await client.getZoneFileData(bnsName);
     return zoneFileData.btc ?? null;
-  } catch (error) {
+  } catch {
     // Name not found or invalid zonefile
     return null;
   }
@@ -95,7 +94,7 @@ export async function fetchStacksNameOwner(
   try {
     const zoneFileData = await client.getBnsNameDataByName(bnsName);
     return zoneFileData.data.owner ?? null;
-  } catch (error) {
+  } catch {
     // Name not found or invalid zonefile
     return null;
   }

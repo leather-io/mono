@@ -83,14 +83,17 @@ export function createBitcoinBalancesService(
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/require-await
   async function getInboundUtxos(_descriptors: string[]): Promise<LeatherApiUtxo[]> {
     return [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/require-await
   async function getOutboundUtxos(_descriptors: string[]): Promise<LeatherApiUtxo[]> {
     return [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/require-await
   async function getProtectedUtxos(_descriptors: string[]): Promise<LeatherApiUtxo[]> {
     return [];
   }

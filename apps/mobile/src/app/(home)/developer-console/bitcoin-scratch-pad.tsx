@@ -28,6 +28,8 @@ export default function BitcoinScratchPad() {
         {({ nativeSegwit, taproot }) => (
           <Text fontSize={6} lineHeight={8}>
             {JSON.stringify(
+              // TODO: Use `omit` instead.
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               [nativeSegwit, taproot].map(({ keychain, ...rest }) => rest),
               null,
               2

@@ -12,7 +12,7 @@ import {
  * appropriately and securely. Inscriptions of types not ready to be handled by the
  * app should be classified as "other".
  */
-const inscriptionMimeTypes = [
+export const inscriptionMimeTypes = [
   'audio',
   'gltf',
   'html',
