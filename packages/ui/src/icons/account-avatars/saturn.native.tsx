@@ -1,9 +1,10 @@
 import { Component, forwardRef } from 'react';
+import { SvgProps } from 'react-native-svg';
 
 import Saturn from '../../assets/icons/account-avatars/saturn-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { Icon } from '../icon/icon.native';
 
-export const SaturnIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
+export const SaturnIcon = forwardRef<Component, SvgProps>((props, ref) => {
   return (
     <Icon ref={ref} {...props}>
       <Saturn />

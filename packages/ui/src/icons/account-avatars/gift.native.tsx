@@ -1,9 +1,10 @@
 import { Component, forwardRef } from 'react';
+import { SvgProps } from 'react-native-svg';
 
 import Gift from '../../assets/icons/account-avatars/gift-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { Icon } from '../icon/icon.native';
 
-export const GiftIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
+export const GiftIcon = forwardRef<Component, SvgProps>((props, ref) => {
   return (
     <Icon ref={ref} {...props}>
       <Gift />

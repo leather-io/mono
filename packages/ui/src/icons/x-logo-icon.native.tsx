@@ -1,9 +1,10 @@
 import { Component, forwardRef } from 'react';
+import { SvgProps } from 'react-native-svg';
 
 import XLogo from '../assets/icons/x-logo.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import { Icon } from './icon/icon.native';
 
-export const XLogoIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
+export const XLogoIcon = forwardRef<Component, SvgProps>((props, ref) => {
   return (
     <Icon ref={ref} {...props}>
       <XLogo />
