@@ -169,6 +169,7 @@ export function useMnemonic({
     if (shouldLoadOnInit) {
       void getMnemonic();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { mnemonic, passphrase };
 }

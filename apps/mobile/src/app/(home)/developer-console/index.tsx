@@ -28,7 +28,7 @@ export default function DeveloperConsoleScreen() {
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
 
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const toast = useToastContext();
+  const { displayToast } = useToastContext();
   const {
     registerPushNotifications,
     _scheduleTestNotification,
@@ -43,7 +43,7 @@ export default function DeveloperConsoleScreen() {
       const notificationText =
         notification.request.content.title ?? notification.request.content.body;
       if (notificationText) {
-        toast.displayToast({
+        displayToast({
           title: notificationText,
           type: 'success',
         });
@@ -52,7 +52,7 @@ export default function DeveloperConsoleScreen() {
     return () => {
       cleanupNotificationReceivedListener();
     };
-  }, []);
+  }, [cleanupNotificationReceivedListener, setNotificationReceivedListener, displayToast]);
 
   function toggleLocalization() {
     const locales = getAvailableLocales();
