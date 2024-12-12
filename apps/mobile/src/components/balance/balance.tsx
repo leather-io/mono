@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PrivateText } from '@/components/private-text';
 import { usePrivacyMode } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';

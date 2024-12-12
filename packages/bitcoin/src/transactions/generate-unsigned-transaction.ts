@@ -69,7 +69,7 @@ export async function generateBitcoinUnsignedTransactionNativeSegwit({
     });
 
     return { tx, hex: tx.hex, psbt: tx.toPSBT(), inputs, fee };
-  } catch (e) {
+  } catch {
     return null;
   }
 }

@@ -19,6 +19,7 @@ import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 import { RecipientSheet } from '../sheets/recipient-sheet';
 
 export function SendFormRecipient<T extends SendFormBaseContext<T>>() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { formData } = useSendFormContext<T>();
   const { watch } = useFormContext<z.infer<typeof formData.schema>>();
   const recipientSheetRef = useRef<SheetRef>(null);

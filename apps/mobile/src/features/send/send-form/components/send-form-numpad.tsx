@@ -7,6 +7,7 @@ import { Box, Numpad } from '@leather.io/ui/native';
 import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 export function SendFormNumpad<T extends SendFormBaseContext<T>>() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { formData } = useSendFormContext<T>();
   const { setValue, watch } = useFormContext<z.infer<typeof formData.schema>>();
   const amount = watch('amount');

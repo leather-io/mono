@@ -41,7 +41,7 @@ export enum WalletDefaultNetworkConfigurationIds {
 
 export type DefaultNetworkConfigurations = keyof typeof WalletDefaultNetworkConfigurationIds;
 
-const supportedBlockchains = ['stacks', 'bitcoin'] as const;
+export const supportedBlockchains = ['stacks', 'bitcoin'] as const;
 
 export type SupportedBlockchains = (typeof supportedBlockchains)[number];
 

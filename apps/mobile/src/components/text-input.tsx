@@ -83,6 +83,7 @@ export function TextInput({
   return (
     <Box>
       <_TextInput
+        ref={ref}
         textVariant={textVariant}
         placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}
