@@ -51,7 +51,7 @@ export function useIsLeatherTestingEnv() {
   return leatherEnv.env === 'testing';
 }
 
-export function useLeatherNetwork() {
+export function useLeatherNetwork(): NetworkConfiguration {
   const leatherNetwork = useContext(LeatherNetworkContext);
 
   if (!leatherNetwork) {
@@ -61,12 +61,17 @@ export function useLeatherNetwork() {
   return leatherNetwork;
 }
 
-export function useCurrentNetworkState() {
+interface NetworkState extends NetworkConfiguration {
+  isTestnet: boolean;
+  mode: NetworkModes;
+}
+
+export function useCurrentNetworkState(): NetworkState {
   const currentNetwork = useLeatherNetwork();
 
   return useMemo(() => {
     const isTestnet = currentNetwork.chain.stacks.chainId === ChainID.Testnet;
-    const mode = (isTestnet ? 'testnet' : 'mainnet') as NetworkModes;
+    const mode = isTestnet ? 'testnet' : 'mainnet';
     return { ...currentNetwork, isTestnet, mode };
   }, [currentNetwork]);
 }

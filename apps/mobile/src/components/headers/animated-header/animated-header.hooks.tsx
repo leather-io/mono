@@ -9,7 +9,7 @@ import {
 
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 
-export function useAnimatedHeader(triggerAnimationYValue: number = 68) {
+export function useAnimatedHeader(triggerAnimationYValue = 68) {
   const defaultStyles = useScrollViewStyles();
   const [contentHeight, setContentHeight] = useState(0);
   const [viewHeight, setViewHeight] = useState(0);

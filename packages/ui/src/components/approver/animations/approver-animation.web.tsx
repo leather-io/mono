@@ -27,6 +27,7 @@ export function useApproverChildrenEntryAnimation() {
           ease: 'easeOut',
         }
       );
+      // eslint-disable-next-line no-empty
     } catch (_e) {}
   });
 

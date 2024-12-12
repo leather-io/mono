@@ -20,6 +20,7 @@ export function CollectibleText({ src }: CollectibleTextProps) {
         }
         const data = await response.json();
         setContent(JSON.stringify(data, null, 2));
+        // eslint-disable-next-line no-empty
       } catch (err) {}
     };
 
@@ -29,7 +30,7 @@ export function CollectibleText({ src }: CollectibleTextProps) {
   return (
     <CollectibleCardLayout bg="ink.text-primary" p="4">
       <Text color="ink.background-secondary" textAlign="left">
-        {/* FIXME 
+        {/* FIXME
         - implement alternative for dompurify in native
         - I tried using jsdom as a polyfill but then hit an error Can't resolve 'vm' in jsdom
         - maybe we should write our own sanitizer?
