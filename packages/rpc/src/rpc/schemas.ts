@@ -8,7 +8,7 @@ export type RpcParameterByPosition = z.infer<typeof rpcParameterByPositionSchema
 const rpcParameterByNameSchema = z.record(z.string(), z.unknown());
 export type RpcParameterByName = z.infer<typeof rpcParameterByNameSchema>;
 
-const rpcParameterSchema = z.union([rpcParameterByPositionSchema, rpcParameterByNameSchema]);
+export const rpcParameterSchema = z.union([rpcParameterByPositionSchema, rpcParameterByNameSchema]);
 export type RpcParameter = z.infer<typeof rpcParameterSchema>;
 
 export const rpcBasePropsSchema = z.object({

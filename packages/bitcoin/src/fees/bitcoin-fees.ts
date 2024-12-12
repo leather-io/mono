@@ -18,7 +18,7 @@ export function getBitcoinTransactionFee({ isSendingMax, ...props }: GetBitcoinT
       ? determineUtxosForSpendAll({ ...props })
       : determineUtxosForSpend({ ...props });
     return fee;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

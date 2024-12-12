@@ -9,6 +9,7 @@ import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 export function SendFormButton<T extends SendFormBaseContext<T>>() {
   const { formData } = useSendFormContext<T>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { onInitSendTransfer, schema } = formData;
   const {
     formState: { isDirty, isValid },

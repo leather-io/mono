@@ -21,7 +21,7 @@ export function CollectibleText({ src }: CollectibleTextProps) {
         const data = await response.json();
         setContent(JSON.stringify(data, null, 2));
         // eslint-disable-next-line no-empty
-      } catch (err) {}
+      } catch {}
     };
 
     void fetchContent();

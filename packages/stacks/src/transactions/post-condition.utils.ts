@@ -7,7 +7,7 @@ export function getPostConditionFromString(postCondition: string): PostCondition
   try {
     const reader = new BytesReader(hexToBytes(postCondition));
     return deserializePostCondition(reader);
-  } catch (err) {
+  } catch {
     throw new Error('Not a serialized post condition');
   }
 }

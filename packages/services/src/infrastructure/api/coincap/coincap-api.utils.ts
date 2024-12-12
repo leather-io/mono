@@ -17,7 +17,7 @@ export function readCoincapAssetPrice(assetResponse: CoincapAssetResponse): numb
     const price = parseFloat(priceUsd);
     if (isNaN(price)) return;
     return price;
-  } catch (ignored) {
+  } catch {
     return;
   }
 }

@@ -12,13 +12,14 @@ export function Spinner({
   size = 'sm',
   label = 'Loading...',
   thickness = '2px',
-  speed = '0.85s',
+  speed = '1s',
   color = 'ink.text-subdued',
   ...props
 }: SpinnerProps) {
   return (
     <Square
       animation="spin"
+      animationDuration={speed}
       borderBottomColor={emptyColor}
       borderColor="currentColor"
       borderLeftColor={emptyColor}

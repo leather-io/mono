@@ -16,6 +16,7 @@ interface RecipientSheetProps {
 export function RecipientSheet<T extends SendFormBaseContext<T>>({
   sheetRef,
 }: RecipientSheetProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { formData } = useSendFormContext<T>();
   const { control } = useFormContext<z.infer<typeof formData.schema>>();
   const { themeDerivedFromThemePreference } = useSettings();

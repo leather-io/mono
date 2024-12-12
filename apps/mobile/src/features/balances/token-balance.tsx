@@ -27,7 +27,6 @@ interface TokenBalanceProps extends PressableProps {
   fiatBalance: Money;
 }
 export function TokenBalance({
-  ticker,
   icon,
   tokenName,
   availableBalance,

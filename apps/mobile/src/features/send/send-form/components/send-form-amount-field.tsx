@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 export function SendFormAmountField<T extends SendFormBaseContext<T>>() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { formData } = useSendFormContext<T>();
   const {
     control,
