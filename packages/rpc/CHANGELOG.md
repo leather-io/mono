@@ -168,6 +168,13 @@
   * dependencies
     * @leather.io/models bumped to 0.24.0
 
+## [2.3.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.2.0...@leather.io/rpc-v2.3.0) (2024-12-12)
+
+
+### Features
+
+* add swap/open methods ([e39252a](https://github.com/leather-io/mono/commit/e39252a226d9300817e6d5cc69bf307e0730a12c))
+
 ## [2.2.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.1.22...@leather.io/rpc-v2.2.0) (2024-12-10)
 
 
