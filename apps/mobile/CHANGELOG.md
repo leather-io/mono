@@ -317,6 +317,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.4
 
+## [2.1.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.1.1...@leather.io/mobile-v2.1.2) (2024-12-12)
+
+
+### Bug Fixes
+
+* toggle text and icon when hiding account ([63cab41](https://github.com/leather-io/mono/commit/63cab41cdf1fe0ae637d5f2c3cc42d1bb0b47215))
+
 ## [2.1.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.0.10...@leather.io/mobile-v2.1.0) (2024-12-10)
 
 
