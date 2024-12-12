@@ -11,7 +11,7 @@ function handleRegistrationError(errorMessage: string) {
   throw new Error(errorMessage);
 }
 
-async function _scheduleTestNotification(delaySeconds: number = 2) {
+async function _scheduleTestNotification(delaySeconds = 2) {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: t`You've got mail! 📬`,

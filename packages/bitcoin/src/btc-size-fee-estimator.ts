@@ -245,6 +245,7 @@ export class BtcSizeFeeEstimator {
           this.params.input_n * (1 + this.PUBKEY_SIZE) + // OP_PUSH33 <pubkey>
           1 + // OP_N
           1; // OP_CHECKMULTISIG
+        // eslint-disable-next-line no-case-declarations
         const scriptSigSize =
           1 + // size(0)
           this.params.input_m * (1 + this.SIGNATURE_SIZE) + // size(SIGNATURE_SIZE) + signature

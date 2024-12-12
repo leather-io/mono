@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { DefineRpcMethod, RpcRequest, RpcSuccessResponse } from '../rpc/schemas';
 
-export const supportedMethodsMethodName = 'supportedMethods' as const;
+export const supportedMethodsMethodName = 'supportedMethods';
 
 export type SupportedMethodsRequest = RpcRequest<typeof supportedMethodsMethodName>;
 

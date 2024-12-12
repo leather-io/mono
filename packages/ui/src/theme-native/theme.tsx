@@ -45,7 +45,7 @@ export function generateTheme(colorScheme: ColorSchemeName) {
 const lightTheme = generateTheme('light');
 const darkTheme = generateTheme('dark');
 
-export type Theme = typeof lightTheme & typeof darkTheme;
+export type Theme = typeof lightTheme;
 
 export type ThemeVariant = 'light' | 'dark';
 

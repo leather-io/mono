@@ -72,11 +72,11 @@ export default function BitcoinScratchPad() {
           try {
             signedTx.finalize();
           } catch (e) {
-            // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+            // eslint-disable-next-line no-console
             console.log('ERROR Finalising', e);
           }
 
-          // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+          // eslint-disable-next-line no-console
           console.log('Tx payload', signedTx.hex);
         }}
       />

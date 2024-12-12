@@ -30,7 +30,6 @@ const shouldForwardProp = (prop: string, variantKeys: string[], options: Options
 export const createStyleContext = <R extends Recipe>(recipe: R) => {
   const StyleContext = createContext<Record<Slot<R>, string> | null>(null);
 
-  // eslint-disable-next-line
   const withRootProvider = <P extends {}>(Component: ElementType) => {
     function StyledComponent(props: P) {
       const [variantProps, otherProps] = recipe.splitVariantProps(props);

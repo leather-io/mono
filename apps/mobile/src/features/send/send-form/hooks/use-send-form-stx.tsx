@@ -41,18 +41,18 @@ export function useSendFormStx() {
     },
     // Temporary logs until we can hook up to approver flow
     async onInitSendTransfer(data: SendFormStxContext, values: SendFormStxSchema) {
-      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      // eslint-disable-next-line no-console
       console.log('Send form data:', values);
       const tx = await generateTx(parseSendFormValues(values));
-      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      // eslint-disable-next-line no-console
       console.log('Unsigned tx:', tx);
       // Show an error toast here?
       if (!tx) throw new Error('Attempted to generate unsigned tx, but tx is undefined');
       const txHex = bytesToHex(tx.serialize());
       navigation.navigate('sign-stacks-tx', { txHex, accountId: account.id });
-      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      // eslint-disable-next-line no-console
       console.log('tx hex:', txHex);
-      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+      // eslint-disable-next-line no-console
       console.log('fees:', data.fees);
     },
   };
