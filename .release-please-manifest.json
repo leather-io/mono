@@ -1,5 +1,5 @@
 {
-  "apps/mobile": "2.1.1",
+  "apps/mobile": "2.1.2",
   "packages/analytics": "3.0.2",
   "packages/bitcoin": "0.19.4",
   "packages/constants": "0.15.0",
