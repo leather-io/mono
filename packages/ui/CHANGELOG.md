@@ -185,6 +185,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.22.0
 
+## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.42.3...@leather.io/ui-v1.43.0) (2024-12-12)
+
+
+### Features
+
+* add styling props to section ([8119454](https://github.com/leather-io/mono/commit/8119454715e8e228c7bd5f948932630b39a1ce12))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.22.1
+
 ## [1.42.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.42.0...@leather.io/ui-v1.42.1) (2024-12-09)
 
 
