@@ -91,6 +91,13 @@
   * dependencies
     * @leather.io/models bumped to 0.24.0
 
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.14.1...@leather.io/constants-v0.15.0) (2024-12-12)
+
+
+### Features
+
+* add connect dapps const ([173f703](https://github.com/leather-io/mono/commit/173f7032f3943191f2b0ecfbf2becfc25aef660f))
+
 ## [0.14.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.14.0...@leather.io/constants-v0.14.1) (2024-12-09)
 
 

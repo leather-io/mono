@@ -2,7 +2,7 @@
   "name": "@leather.io/stacks",
   "author": "leather.io",
   "description": "Stacks package for Leather",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "license": "MIT",
   "type": "module",
   "scripts": {
