@@ -46,7 +46,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
         <Box mx="-5">
           {inputsWithBalance.map(input => (
             <UtxoRow
-              key={input.txid + input.address + input.btcBalance.amount}
+              key={input.txid + input.address + input.btcBalance.amount.valueOf()}
               txid={input.txid}
               address={input.address}
               btcBalance={input.btcBalance}
@@ -66,7 +66,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
         <Box mx="-5">
           {outputsWithBalance.map(output => (
             <UtxoRow
-              key={output.address + output.btcBalance.amount}
+              key={output.address + output.btcBalance.amount.valueOf()}
               address={output.address}
               btcBalance={output.btcBalance}
               usdBalance={output.usdBalance}
