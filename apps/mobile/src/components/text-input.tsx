@@ -48,14 +48,14 @@ function whenInputState<T>(inputState: InputState, match: Record<InputState, T>)
 
 export function TextInput({
   inputState,
-  ref,
+  inputRef,
   errorMessage,
   textVariant,
   TextInputComponent,
   ...rest
 }: Props & {
   inputState: InputState;
-  ref?: RefObject<RNTextInput>;
+  inputRef?: RefObject<RNTextInput>;
   errorMessage?: string;
   textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;
@@ -83,7 +83,7 @@ export function TextInput({
   return (
     <Box>
       <_TextInput
-        ref={ref}
+        ref={inputRef}
         textVariant={textVariant}
         placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}
