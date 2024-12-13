@@ -331,6 +331,36 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.5
 
+## [2.2.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.1.3...@leather.io/mobile-v2.2.0) (2024-12-13)
+
+
+### Features
+
+* add haptics to account cards & wallet creation flow ([6e6d795](https://github.com/leather-io/mono/commit/6e6d795ee94eb38547cad880be16c64afa115147))
+
+
+### Bug Fixes
+
+* dismiss keyboard onPaste if text change matches clipboard, ref LEA-1789 ([bf5950f](https://github.com/leather-io/mono/commit/bf5950fcfed60e9cb8580a62a4a75488da6ab21a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.0.3
+    * @leather.io/bitcoin bumped to 0.19.6
+    * @leather.io/constants bumped to 0.15.1
+    * @leather.io/crypto bumped to 1.6.23
+    * @leather.io/models bumped to 0.24.1
+    * @leather.io/query bumped to 2.26.7
+    * @leather.io/rpc bumped to 2.3.1
+    * @leather.io/stacks bumped to 1.5.8
+    * @leather.io/ui bumped to 1.44.0
+    * @leather.io/utils bumped to 0.22.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.6
+
 ## [2.1.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.1.1...@leather.io/mobile-v2.1.2) (2024-12-12)
 
 
