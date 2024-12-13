@@ -42,9 +42,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
         id: 'bitcoin_unit.header_title',
         message: 'Bitcoin unit',
       })}
-      onPressSupport={() => {
-        Linking.openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT);
-      }}
+      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
     >
       <SettingsList gap="0">
         {Object.values(bitcoinUnitsKeyedByName).map(unit => (

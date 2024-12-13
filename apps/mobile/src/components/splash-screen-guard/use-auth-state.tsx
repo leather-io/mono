@@ -43,10 +43,10 @@ export function useAuthState({
         playSplash();
         if (firstTry) {
           setAuthState('passed-on-first');
-          analytics?.track('app_unlocked');
+          void analytics?.track('app_unlocked');
         } else {
           setAuthState('passed-afterwards');
-          analytics?.track('app_unlocked');
+          void analytics?.track('app_unlocked');
         }
       } else {
         setAuthState('failed');
@@ -75,7 +75,7 @@ export function useAuthState({
     setAnimationFinished(false);
     setAuthState('failed');
     userLeavesApp(null);
-    analytics?.track('app_locked');
+    void analytics?.track('app_locked');
   }, [setAnimationFinished, setAuthState, userLeavesApp]);
 
   useAppState({

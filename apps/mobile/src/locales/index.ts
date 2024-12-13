@@ -47,6 +47,7 @@ export async function initiateI18n() {
   const form = formatter({ explicitIdAsDefault: true, printLinguiId: true });
   LOCALES = Object.keys(translations);
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   Object.keys(translations).map(async locale => {
     const contentFile = translations[locale]?.filter(translation =>
       translation.file.includes('messages.po')

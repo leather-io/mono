@@ -29,9 +29,7 @@ export default function SettingsHelpScreen() {
             message: 'Contact our support team',
           })}
           icon={<SupportIcon />}
-          onPress={() => {
-            Linking.openURL(LEATHER_SUPPORT_URL);
-          }}
+          onPress={() => void Linking.openURL(LEATHER_SUPPORT_URL)}
         />
         <SettingsListItem
           title={t({
@@ -43,9 +41,7 @@ export default function SettingsHelpScreen() {
             message: 'Dive into feature details',
           })}
           icon={<MagicBookIcon />}
-          onPress={() => {
-            Linking.openURL(LEATHER_GUIDES_URL);
-          }}
+          onPress={() => void Linking.openURL(LEATHER_GUIDES_URL)}
         />
         <SettingsListItem
           title={t({
@@ -57,9 +53,7 @@ export default function SettingsHelpScreen() {
             message: 'Expand your knowledge',
           })}
           icon={<GraduateCapIcon />}
-          onPress={() => {
-            Linking.openURL(LEATHER_LEARN_URL);
-          }}
+          onPress={() => void Linking.openURL(LEATHER_LEARN_URL)}
         />
       </SettingsList>
     </AnimatedHeaderScreenLayout>

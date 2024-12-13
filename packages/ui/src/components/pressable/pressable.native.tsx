@@ -69,14 +69,14 @@ export const Pressable = forwardRef<PressableElement, PressableProps>(
 
     function handlePress(event: GestureResponderEvent) {
       if (hapticConfig.onPress) {
-        triggerHaptics(hapticConfig.onPress);
+        void triggerHaptics(hapticConfig.onPress);
       }
       onPress?.(event);
     }
 
     function handleLongPress(event: GestureResponderEvent) {
       if (hapticConfig.onLongPress) {
-        triggerHaptics(hapticConfig.onLongPress);
+        void triggerHaptics(hapticConfig.onLongPress);
       }
       onLongPress?.(event);
     }

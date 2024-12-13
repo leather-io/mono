@@ -40,14 +40,14 @@ export { ErrorBoundary } from 'expo-router';
 export const unstable_settings = { initialRouteName: '/' };
 
 initAppServices();
-initiateI18n();
+void initiateI18n();
 
 export default function RootLayout() {
   const pathname = usePathname();
   const params = useGlobalSearchParams();
 
   useEffect(() => {
-    analytics?.screen(pathname, {
+    void analytics?.screen(pathname, {
       params,
     });
   }, [pathname, params]);
