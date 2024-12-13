@@ -60,7 +60,6 @@ export function useBitcoinBroadcastTransaction() {
       } finally {
         setIsBroadcasting(false);
         onFinally?.();
-        return;
       }
     },
     [checkIfUtxosListIncludesInscribed, client]
