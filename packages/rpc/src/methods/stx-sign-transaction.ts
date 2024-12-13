@@ -1,14 +1,16 @@
+import { StacksNetworks } from '@stacks/network';
 import { z } from 'zod';
 
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
 
 export const stxSignTransactionMethodName = 'stx_signTransaction' as const;
 
-const stxSignTransactionRequestParamsSchema = z.object({
-  txHex: z.string(),
+export const stxSignTransactionRequestParamsSchema = z.object({
   stxAddress: z.string().optional(),
+  txHex: z.string(),
   attachment: z.string().optional(),
   accountIndex: z.string().optional(),
+  network: z.enum(StacksNetworks).optional(),
 });
 
 export type StxSignTransactionRequestParams = z.infer<typeof stxSignTransactionRequestParamsSchema>;
