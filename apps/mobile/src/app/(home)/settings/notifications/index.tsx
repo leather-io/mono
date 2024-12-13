@@ -15,7 +15,9 @@ export default function SettingsNotificationsScreen() {
           icon={<PlaceholderIcon />}
           type="switch"
           switchValue={false}
-          onSwitchValueChange={() => {}}
+          onSwitchValueChange={() => {
+            // TODO: re-enable when ready.
+          }}
         />
       </Box>
     </Box>
