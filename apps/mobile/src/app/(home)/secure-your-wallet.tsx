@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { MoreInfoIcon } from '@/components/more-info-icon';
 import { SkipSecureWalletSheet } from '@/components/secure-your-wallet/skip-secure-wallet-sheet';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/macro';
@@ -24,7 +23,8 @@ export default function SecureYourWalletScreen() {
         style={{ paddingBottom: bottom + theme.spacing[5] }}
       >
         <AnimatedHeaderScreenLayout
-          rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
+          // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
+          // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
           title={t({
             id: 'secure_your_wallet.title',
             message: 'Secure your wallet',
