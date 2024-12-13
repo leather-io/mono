@@ -28,7 +28,7 @@ export function NotifyUserSheetLayout({
 
   async function onNotify() {
     if (sheetData) {
-      analytics?.track('submit_feature_waitlist', {
+      void analytics?.track('submit_feature_waitlist', {
         feature: sheetData.id,
       });
     }

@@ -24,7 +24,7 @@ export function PageLayout({ children }: HasChildren) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    queryClient.invalidateQueries();
+    void queryClient.invalidateQueries();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);

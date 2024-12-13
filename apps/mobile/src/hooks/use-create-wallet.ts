@@ -28,7 +28,7 @@ export function useCreateWallet() {
           biometrics,
           passphrase: passphrase ?? undefined,
         });
-        triggerHapticFeedback('success');
+        void triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'success',
           title: t({
@@ -51,7 +51,7 @@ export function useCreateWallet() {
           router.back();
           return;
         }
-        triggerHapticFeedback('success');
+        void triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'error',
           title: t({

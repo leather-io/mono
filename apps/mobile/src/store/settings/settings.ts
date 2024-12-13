@@ -99,67 +99,67 @@ export function useSettings() {
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         account_display: type,
       });
     },
     changeAnalyticsPreference(pref: AnalyticsPreference) {
       dispatch(userChangedAnalyticsPreference(pref));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         analytics: pref,
       });
-      analytics?.identify({
+      void analytics?.identify({
         analytics_preference: pref,
       });
     },
     changeBitcoinUnitPreference(unit: BitcoinUnit) {
       dispatch(userChangedBitcoinUnitPreference(unit));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         bitcoin_unit: unit,
       });
     },
     changeEmailAddressPreference(address: string) {
       dispatch(userChangedEmailAddressPreference(address));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         email_address: address,
       });
-      analytics?.identify({
+      void analytics?.identify({
         has_email_address: !!address,
       });
     },
     changeFiatCurrencyPreference(unit: FiatCurrency) {
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         fiat_currency: unit,
       });
       dispatch(userChangedFiatCurrencyPreference(unit));
     },
     changeNetworkPreference(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetworkPreference(network));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         network,
       });
     },
     changePrivacyModePreference(mode: PrivacyModePreference) {
       dispatch(userChangedPrivacyModePreference(mode));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         privacy_mode: mode,
       });
     },
     changeHapticsPreference(state: HapticsPreference) {
       dispatch(userChangedHapticsPreference(state));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         haptics: state,
       });
     },
     changeSecurityLevelPreference(level: SecurityLevelPreference) {
       dispatch(userChangedSecurityLevelPreference(level));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         security_level: level,
       });
     },
     changeThemePreference(theme: ThemePreference) {
       dispatch(userChangedThemePreference(theme));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         theme,
       });
     },
@@ -172,20 +172,20 @@ export function useSettings() {
       const network =
         networkPreference.chain.bitcoin.bitcoinNetwork === 'mainnet' ? 'testnet' : 'mainnet';
       dispatch(userChangedNetworkPreference(network));
-      analytics?.identify({
+      void analytics?.identify({
         active_network: network,
       });
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         network,
       });
     },
     toggleTheme() {
       const theme = themeDerivedFromThemePreference === 'light' ? 'dark' : 'light';
       dispatch(userChangedThemePreference(theme));
-      analytics?.track('user_setting_updated', {
+      void analytics?.track('user_setting_updated', {
         theme,
       });
-      analytics?.identify({
+      void analytics?.identify({
         active_theme: theme,
       });
     },
