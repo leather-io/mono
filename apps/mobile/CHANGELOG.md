@@ -331,6 +331,17 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.5
 
+## [2.2.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.0...@leather.io/mobile-v2.2.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* add empty states for wallet config and hidden accounts, ref LEA-1496 ([e616e17](https://github.com/leather-io/mono/commit/e616e170bfb2d90352415289a6dbcfacc58bf4b0))
+* don't open receive sheet on prod - copy instead, ref LEA-1633 ([f620941](https://github.com/leather-io/mono/commit/f620941778e2e792d06a9448c9aa55308c47dd49))
+* handle empty states and don't show wallet list if none hidden ref LEA-1496, LEA-1824 ([3674861](https://github.com/leather-io/mono/commit/3674861932b9f263b008fd195ac505aee400c83e))
+* hide swap in actionbar for beta release ([49f91de](https://github.com/leather-io/mono/commit/49f91de23f8ca987cb5391b3e6f77ff7a295c467))
+* hide wallet pressable on hidden accounts if none hidden, ref LEA-1824 ([63e17df](https://github.com/leather-io/mono/commit/63e17df540cc6ac404389a8afc7c8a9b6a92b491))
+
 ## [2.2.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.1.3...@leather.io/mobile-v2.2.0) (2024-12-13)
 
 
