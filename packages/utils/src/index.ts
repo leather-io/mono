@@ -212,7 +212,7 @@ export function assertIsTruthy<T>(val: T): asserts val is NonNullable<T> {
  * TypeScript's type checking will catch unhandled cases at compile time.
  */
 export function assertUnreachable(value: never): never {
-  throw new Error('Unexpected value: ' + value);
+  throw new Error(`Unexpected value: ${JSON.stringify(value)}`);
 }
 
 export function capitalize(val: string) {
