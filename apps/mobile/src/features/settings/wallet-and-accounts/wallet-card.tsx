@@ -34,6 +34,7 @@ interface WalletCardProps extends WalletId {
 }
 export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { list: accounts } = useAccountsByFingerprint(fingerprint, variant);
+  const hasAccounts = accounts.length > 0;
   const [showAccounts, setShowAccounts] = useState(true);
   const theme = useTheme<Theme>();
   const keys = useKeyStore();
@@ -50,43 +51,46 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
 
   return (
     <Box flexDirection="column">
-      <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Pressable
-          py="3"
-          flex={1}
-          flexDirection="row"
-          alignItems="center"
-          gap="1"
-          onPress={() => {
-            setShowAccounts(!showAccounts);
-          }}
-          pressEffects={legacyTouchablePressEffect}
-        >
-          <Text variant="label02">{name}</Text>
-          {showAccounts ? (
-            <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
-          ) : (
-            <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
-          )}
-        </Pressable>
-        {variant === 'active' && (
+      {variant === 'hidden' && !hasAccounts ? null : (
+        <Box flexDirection="row" alignItems="center" justifyContent="space-between">
           <Pressable
-            onPress={() => {
-              router.navigate({
-                pathname: AppRoutes.SettingsWalletConfigureWallet,
-                params: { fingerprint },
-              });
-            }}
             py="3"
             flex={1}
-            alignItems="flex-end"
-            testID={TestId.walletListSettingsButton}
+            flexDirection="row"
+            alignItems="center"
+            gap="1"
+            onPress={() => {
+              setShowAccounts(!showAccounts);
+            }}
             pressEffects={legacyTouchablePressEffect}
           >
-            <SettingsGearIcon color={theme.colors['ink.text-primary']} />
+            <Text variant="label02">{name}</Text>
+            {showAccounts ? (
+              <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
+            ) : (
+              <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
+            )}
           </Pressable>
-        )}
-      </Box>
+          {variant === 'active' && (
+            <Pressable
+              onPress={() => {
+                router.navigate({
+                  pathname: AppRoutes.SettingsWalletConfigureWallet,
+                  params: { fingerprint },
+                });
+              }}
+              py="3"
+              flex={1}
+              alignItems="flex-end"
+              testID={TestId.walletListSettingsButton}
+              pressEffects={legacyTouchablePressEffect}
+            >
+              <SettingsGearIcon color={theme.colors['ink.text-primary']} />
+            </Pressable>
+          )}
+        </Box>
+      )}
+
       {showAccounts && (
         <Box flexDirection="column" gap="3" mx="-5">
           <AccountList accounts={accounts} onPress={onSelectAccount} />
