@@ -39,6 +39,8 @@ export function ApproverActions({ children, actions }: ApproverActionsProps) {
       width="100%"
       maxW="640px"
       className="skip-animation"
+      borderTop="1px solid"
+      borderColor="ink.border-default"
     >
       <ApproverActionsAnimationContainer>
         <styled.div background="ink.background-primary" p="space.05">
