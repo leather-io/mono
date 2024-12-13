@@ -226,8 +226,8 @@ export const defaultNetworksKeyedById: Record<
   NetworkConfiguration
 > = {
   [WalletDefaultNetworkConfigurationIds.mainnet]: networkMainnet,
-  [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
   [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
+  [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
   [WalletDefaultNetworkConfigurationIds.sbtcTestnet]: networkSbtcTestnet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
