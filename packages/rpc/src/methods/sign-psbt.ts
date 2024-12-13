@@ -1,6 +1,6 @@
 import { DefaultNetworkConfigurations } from '@leather.io/models';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../rpc/schemas';
 
 /**
  * DEFAULT       -- all inputs, all outputs
@@ -21,14 +21,13 @@ export enum SignatureHash {
   SINGLE_ANYONECANPAY = 0x83,
 }
 
-export interface SignPsbtRequestParams {
+export interface SignPsbtRequestParams extends RpcParameterByName {
   account?: number;
   allowedSighash?: SignatureHash[];
   broadcast: boolean;
   hex: string;
   network: DefaultNetworkConfigurations;
   signAtIndex?: number | number[];
-  [x: string]: unknown;
 }
 
 export interface SignPsbtResponseBody {

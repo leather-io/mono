@@ -9,6 +9,7 @@ import { DefineSignMessageMethod } from './methods/sign-message';
 import { DefineSignPsbtMethod } from './methods/sign-psbt';
 import { DefineStxSignMessageMethod } from './methods/stx-sign-message';
 import { DefineStxSignTransactionMethod } from './methods/stx-sign-transaction';
+import { DefineSupportedMethods } from './methods/supported-methods';
 import { ExtractErrorResponse, ExtractSuccessResponse } from './rpc/schemas';
 
 export * from './rpc/schemas';
@@ -18,6 +19,10 @@ export * from './methods/get-addresses';
 export * from './methods/send-transfer';
 export * from './methods/sign-message';
 export * from './methods/stx-sign-message';
+export * from './methods/stx-sign-transaction';
+export * from './methods/supported-methods';
+export * from './methods/open';
+export * from './methods/open-swap';
 
 export type LeatherRpcMethodMap = DefineGetInfoMethod &
   DefineGetAddressesMethod &
@@ -27,7 +32,8 @@ export type LeatherRpcMethodMap = DefineGetInfoMethod &
   DefineStxSignMessageMethod &
   DefineStxSignTransactionMethod &
   DefineOpenSwapMethod &
-  DefineOpenMethod;
+  DefineOpenMethod &
+  DefineSupportedMethods;
 
 export type RpcRequests = ValueOf<LeatherRpcMethodMap>['request'];
 
