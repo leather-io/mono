@@ -136,7 +136,7 @@ export default function RecoverWallet() {
             <TextInput
               textVariant="label01"
               onBlur={validateMnemonicOnBlur}
-              ref={inputRef}
+              inputRef={inputRef}
               mt="5"
               value={recoveryMnemonic}
               errorMessage={errorMessage}
