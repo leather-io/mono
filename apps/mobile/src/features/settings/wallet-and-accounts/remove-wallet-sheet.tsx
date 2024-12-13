@@ -26,9 +26,7 @@ export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps
       })}
       variant="critical"
       onSubmit={onSubmit}
-      onPressSupport={() => {
-        Linking.openURL(LEATHER_GUIDES_MOBILE_REMOVE_WALLET);
-      }}
+      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}
     />
   );
 }

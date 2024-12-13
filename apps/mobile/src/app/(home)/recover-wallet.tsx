@@ -89,7 +89,7 @@ export default function RecoverWallet() {
     const isValid = isValidMnemonic(recoveryMnemonic);
     if (isValid) {
       await tempMnemonicStore.setTemporaryMnemonic(recoveryMnemonic, passphrase);
-      navigateAndCreateWallet();
+      void navigateAndCreateWallet();
     }
   }
 

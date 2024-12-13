@@ -40,9 +40,7 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
         id: 'analytics.header_title',
         message: 'Analytics',
       })}
-      onPressSupport={() => {
-        Linking.openURL(LEATHER_GUIDES_MOBILE_ANALYTICS);
-      }}
+      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_ANALYTICS)}
     >
       <SettingsList>
         <SettingsListItem

@@ -63,9 +63,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         id: 'app_auth.header_title',
         message: 'App authentication',
       })}
-      onPressSupport={() => {
-        Linking.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION);
-      }}
+      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
     >
       <SettingsList>
         <SettingsListItem

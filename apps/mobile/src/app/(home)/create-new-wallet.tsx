@@ -105,9 +105,7 @@ export default function CreateNewWallet() {
       </AnimatedHeaderScreenLayout>
       <Box px="5" gap="4">
         <Button
-          onPress={() => {
-            navigateAndCreateWallet();
-          }}
+          onPress={() => void navigateAndCreateWallet()}
           buttonState="default"
           title={t({
             id: 'create_new_wallet.button',
