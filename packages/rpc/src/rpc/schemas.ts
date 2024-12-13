@@ -30,6 +30,7 @@ export function createRpcRequestSchema<TMethod extends z.ZodTypeAny, TParam exte
 type RpcRequestSchema<TMethod, TParam extends RpcParameter = RpcParameter> = ReturnType<
   typeof createRpcRequestSchema<z.ZodType<TMethod>, z.ZodType<TParam>>
 >;
+
 export type RpcRequest<TMethod, TParam extends RpcParameter = RpcParameter> = z.infer<
   RpcRequestSchema<TMethod, TParam>
 >;
