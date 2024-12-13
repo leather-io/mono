@@ -1,7 +1,11 @@
 import { CryptoAssetInfo } from '@leather.io/models';
 
+import { assertUnreachable } from '../index';
+
 export function getAssetDisplayName(asset: CryptoAssetInfo) {
-  switch (asset.protocol) {
+  const { protocol } = asset;
+
+  switch (protocol) {
     case 'nativeBtc':
       return 'bitcoin';
     case 'nativeStx':
@@ -22,5 +26,7 @@ export function getAssetDisplayName(asset: CryptoAssetInfo) {
       return 'src-20';
     case 'stx20':
       return 'stx-20';
+    default:
+      assertUnreachable(protocol);
   }
 }

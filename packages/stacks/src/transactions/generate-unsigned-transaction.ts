@@ -7,6 +7,8 @@ import {
 } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 import { cleanHex } from '../stacks.utils';
 import { getPostConditions } from './post-condition.utils';
 import {
@@ -62,16 +64,20 @@ export function generateUnsignedStxTokenTransfer(options: StacksUnsignedTokenTra
 }
 
 export async function generateStacksUnsignedTransaction(options: StacksUnsignedTransactionOptions) {
-  const isValid = isTransactionTypeSupported(options.txType);
+  const { txType } = options;
 
-  if (!isValid) throw new Error(`Invalid Transaction Type: ${options.txType}`);
+  const isValid = isTransactionTypeSupported(txType);
 
-  switch (options.txType) {
+  if (!isValid) throw new Error(`Invalid Transaction Type: ${txType}`);
+
+  switch (txType) {
     case TransactionTypes.StxTokenTransfer:
       return generateUnsignedStxTokenTransfer(options);
     case TransactionTypes.ContractCall:
       return generateUnsignedContractCall(options);
     case TransactionTypes.ContractDeploy:
       return generateUnsignedContractDeploy(options);
+    default:
+      assertUnreachable(txType);
   }
 }

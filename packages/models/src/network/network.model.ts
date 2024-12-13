@@ -66,6 +66,10 @@ export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNet
       return 'regtest';
     case 'signet':
       return 'signet';
+    default:
+      // TODO: Needs exhaustive check. Cannot import 'assertUnreachable' since 'utils' package depends on 'models'.
+      //       Ideally this function should live in utils, but it's currently widely used in the extension.
+      throw new Error(`Unhandled case: ${network}`);
   }
 }
 

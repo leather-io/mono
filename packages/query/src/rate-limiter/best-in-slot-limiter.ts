@@ -1,6 +1,7 @@
 import PQueue from 'p-queue';
 
 import { BESTINSLOT_API_BASE_URL_TESTNET } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../leather-query-provider';
 import { PriorityQueue } from './queue-class';
@@ -27,6 +28,8 @@ export function useBestInSlotApiRateLimiter(): PQueue {
       return bestInSlotMainnetApiLimiter;
     case 'testnet':
       return bestInSlotTestnetApiLimiter;
+    default:
+      assertUnreachable(currentNetwork.mode);
   }
 }
 

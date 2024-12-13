@@ -20,6 +20,8 @@ import {
   visible,
 } from '@shopify/restyle';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 import { Text, Theme, TouchableOpacity } from '../../../native';
 
 const buttonRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
@@ -49,6 +51,8 @@ function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState,
       return match.outline;
     case 'ghost':
       return match.ghost;
+    default:
+      assertUnreachable(buttonState);
   }
 }
 

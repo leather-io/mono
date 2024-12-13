@@ -923,6 +923,9 @@ importers:
       '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
+      '@leather.io/utils':
+        specifier: workspace:*
+        version: link:../utils
       prettier:
         specifier: 3.3.3
         version: 3.3.3

@@ -1,3 +1,5 @@
+import { assertUnreachable } from '@leather.io/utils';
+
 const fontMap = {
   web: {
     firaCode: 'Fira Code',
@@ -37,6 +39,8 @@ function getTextVariants({ platform }: { platform: Platform }) {
         return `${(size / 16).toFixed(4)}rem` as const;
       case 'mobile':
         return size;
+      default:
+        assertUnreachable(platform);
     }
   }
 
@@ -46,6 +50,8 @@ function getTextVariants({ platform }: { platform: Platform }) {
         return weight;
       case 'mobile':
         return weight.toString();
+      default:
+        assertUnreachable(platform);
     }
   }
 

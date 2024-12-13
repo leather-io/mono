@@ -21,6 +21,7 @@ import {
 } from '@shopify/restyle';
 
 import { Box, Text, TextInputProps, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 
@@ -43,6 +44,8 @@ function whenInputState<T>(inputState: InputState, match: Record<InputState, T>)
       return match.focused;
     case 'error':
       return match.error;
+    default:
+      assertUnreachable(inputState);
   }
 }
 
