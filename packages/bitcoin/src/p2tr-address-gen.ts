@@ -48,7 +48,8 @@ export function getTaprootPayment(publicKey: Uint8Array, network: BitcoinNetwork
   return btc.p2tr(
     ecdsaPublicKeyToSchnorr(publicKey),
     undefined,
-    getBtcSignerLibNetworkConfigByMode(network)
+    getBtcSignerLibNetworkConfigByMode(network),
+    true // allow unknown outputs
   );
 }
 
