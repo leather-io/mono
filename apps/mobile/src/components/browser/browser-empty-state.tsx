@@ -14,6 +14,7 @@ import {
   Theme,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { TabBar } from '../tab-bar';
 import { formatURL } from './utils';
@@ -78,6 +79,8 @@ function getCurrentArray(currentTab: CurrentTab) {
       return RECENT;
     case 'suggested':
       return SUGGESTED;
+    default:
+      assertUnreachable(currentTab);
   }
 }
 

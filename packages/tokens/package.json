@@ -23,6 +23,7 @@
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
+    "@leather.io/utils": "workspace:*",
     "prettier": "3.3.3",
     "tsup": "8.1.0"
   },

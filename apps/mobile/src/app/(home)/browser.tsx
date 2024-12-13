@@ -4,6 +4,8 @@ import { BrowserEmptyState } from '@/components/browser/browser-empty-state';
 import { BrowerInUse } from '@/components/browser/browser-in-use';
 import { BrowserType } from '@/components/browser/utils';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 export default function BrowserScreen() {
   const [textURL, setTextURL] = useState('');
   const [browserType, setBrowserType] = useState(BrowserType.inactive);
@@ -28,5 +30,7 @@ export default function BrowserScreen() {
           }}
         />
       );
+    default:
+      assertUnreachable(browserType);
   }
 }

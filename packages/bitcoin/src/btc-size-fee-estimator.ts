@@ -1,6 +1,8 @@
 // https://github.com/argvil19/bitcoin-transaction-size-calculator/blob/master/index.js
 import BigNumber from 'bignumber.js';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 export type InputScriptType =
   | 'p2pkh'
   | 'p2sh'
@@ -272,6 +274,9 @@ export class BtcSizeFeeEstimator {
         if (this.params.input_script === 'p2sh-p2wsh') {
           inputSize += 32 + 3; // P2SH wrapper (redeemscript hash) + overhead?
         }
+        break;
+      default:
+        assertUnreachable(this.params.input_script);
     }
 
     return {

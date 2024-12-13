@@ -1,6 +1,7 @@
 import PQueue from 'p-queue';
 
 import { HIRO_API_BASE_URL_TESTNET } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../leather-query-provider';
 import { PriorityQueue } from './queue-class';
@@ -27,6 +28,8 @@ export function useHiroApiRateLimiter(): PQueue {
       return hiroStacksMainnetApiLimiter;
     case 'testnet':
       return hiroStacksTestnetApiLimiter;
+    default:
+      assertUnreachable(currentNetwork.mode);
   }
 }
 
