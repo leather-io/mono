@@ -7,6 +7,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import * as Clipboard from 'expo-clipboard';
@@ -77,7 +78,11 @@ export function SelectAsset() {
             assetSymbol="BTC"
             icon={<BtcAvatarIcon />}
             onCopy={() => onCopyAddress(nativeSegwitPayerAddress)}
-            onPress={() => receiveSheetRef.current?.present()}
+            onPress={() =>
+              isFeatureEnabled()
+                ? receiveSheetRef.current?.present()
+                : onCopyAddress(nativeSegwitPayerAddress)
+            }
           />
           <ReceiveAssetItem
             address={truncateMiddle(taprootPayerAddress)}
@@ -92,7 +97,11 @@ export function SelectAsset() {
             assetSymbol="BTC"
             icon={<BtcAvatarIcon />}
             onCopy={() => onCopyAddress(taprootPayerAddress)}
-            onPress={() => receiveSheetRef.current?.present()}
+            onPress={() =>
+              isFeatureEnabled()
+                ? receiveSheetRef.current?.present()
+                : onCopyAddress(taprootPayerAddress)
+            }
           />
           <ReceiveAssetItem
             address={truncateMiddle(stxAddress)}
@@ -103,10 +112,13 @@ export function SelectAsset() {
             assetSymbol="STX"
             icon={<StxAvatarIcon />}
             onCopy={() => onCopyAddress(stxAddress)}
-            onPress={() => receiveSheetRef.current?.present()}
+            onPress={() =>
+              isFeatureEnabled() ? receiveSheetRef.current?.present() : onCopyAddress(stxAddress)
+            }
           />
         </ScrollView>
       </FullHeightSheetLayout>
+      {/* TODO: LEA-1633 implement receive sheet */}
       <ReceiveAssetSheet sheetRef={receiveSheetRef} />
     </>
   );
