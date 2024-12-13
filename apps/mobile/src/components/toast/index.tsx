@@ -3,7 +3,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { TestId } from '@/shared/test-id';
-import { ResponsiveValue, useTheme } from '@shopify/restyle';
+import { useTheme } from '@shopify/restyle';
 
 import {
   Box,
@@ -38,16 +38,6 @@ function getIcon(type: ToastType, theme: Theme) {
   }
 }
 
-function getBackground(
-  type: ToastType
-): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
-  switch (type) {
-    case 'error':
-    case 'info':
-    case 'success':
-      return 'ink.text-primary';
-  }
-}
 export function Toast({ toastRef }: ToastProps) {
   const theme = useTheme<Theme>();
   const [toastData, setToastData] = useState<ToastData | null>(null);
@@ -93,7 +83,7 @@ export function Toast({ toastRef }: ToastProps) {
       <AnimatedBox
         style={animatedStyle}
         position="absolute"
-        bg={getBackground(toastData.type)}
+        bg="ink.text-primary"
         borderRadius="xs"
         p="3"
         alignSelf="center"

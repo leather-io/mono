@@ -11,6 +11,7 @@ import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
 
 import { CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
 function getCaption(securityLevelPreference: SecurityLevelPreference) {
   switch (securityLevelPreference) {
@@ -26,6 +27,8 @@ function getCaption(securityLevelPreference: SecurityLevelPreference) {
         id: 'security.app_auth.cell_caption_disabled',
         message: 'Disabled',
       });
+    default:
+      assertUnreachable(securityLevelPreference);
   }
 }
 

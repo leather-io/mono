@@ -1,5 +1,7 @@
 import { BoxProps, ResponsiveValue } from '@shopify/restyle';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 import { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
 import type { FlagAlignment } from './flag.shared';
@@ -12,6 +14,8 @@ const getFlagAlignment = (align: FlagAlignment) => {
       return 'center';
     case 'bottom':
       return 'flex-end';
+    default:
+      assertUnreachable(align);
   }
 };
 

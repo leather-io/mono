@@ -3,6 +3,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Button, CheckmarkCircleIcon, Theme } from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { ApproverState } from '../utils';
 
@@ -63,5 +64,7 @@ export function ApproverButtons({ approverState, onEdit, onApprove }: ApproverBu
           icon={<CheckmarkCircleIcon color={theme.colors['ink.background-primary']} />}
         />
       );
+    default:
+      assertUnreachable(approverState);
   }
 }
