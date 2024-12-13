@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.24.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.0...@leather.io/models-v0.24.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* testnet ordering ([c98c69f](https://github.com/leather-io/mono/commit/c98c69f0db00449232adcb2775ebb4a3d7c7fbc4))
+
 ## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.23.0...@leather.io/models-v0.24.0) (2024-12-03)
 
 

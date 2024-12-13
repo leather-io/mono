@@ -191,6 +191,28 @@
   * dependencies
     * @leather.io/utils bumped to 0.22.2
 
+## [1.44.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.43.1...@leather.io/ui-v1.44.0) (2024-12-13)
+
+
+### Features
+
+* add border to approver footer ([45a1f12](https://github.com/leather-io/mono/commit/45a1f1259741f00b1255e54061544099b9ef284d))
+* add haptics to account cards & wallet creation flow ([6e6d795](https://github.com/leather-io/mono/commit/6e6d795ee94eb38547cad880be16c64afa115147))
+
+
+### Bug Fixes
+
+* chevron in item layout ([7952755](https://github.com/leather-io/mono/commit/795275585e495a39a2ef83054ce624cd794462bd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.22.3
+  * devDependencies
+    * @leather.io/models bumped to 0.24.1
+
 ## [1.43.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.42.3...@leather.io/ui-v1.43.0) (2024-12-12)
 
 
