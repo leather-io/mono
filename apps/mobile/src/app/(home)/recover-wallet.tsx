@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { TextInput as RNTextInput } from 'react-native';
+import { Keyboard, TextInput as RNTextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedHeaderScreenWithKeyboardLayout } from '@/components/headers/animated-header/animated-header-screen-with-keyboard.layout';
@@ -76,10 +76,14 @@ export default function RecoverWallet() {
     }
   }
 
-  function onChangeText(text: string) {
+  async function onChangeText(text: string) {
     checkMnemonic(text);
     setRecoveryMnemonic(text);
     setInputState('default');
+    const copiedString = await Clipboard.getStringAsync();
+    if (text === copiedString) {
+      Keyboard.dismiss();
+    }
   }
 
   async function onSubmit() {
@@ -142,7 +146,7 @@ export default function RecoverWallet() {
                 message: 'Type your recovery phrase',
               })}
               inputState={inputState}
-              height={220}
+              height={172}
               multiline
               blurOnSubmit
               autoCapitalize="none"
