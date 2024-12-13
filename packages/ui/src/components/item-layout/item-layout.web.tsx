@@ -8,7 +8,7 @@ import {
   pressableChevronStyles,
 } from '../../components/pressable/pressable.web';
 import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
-import { ChevronUpIcon } from '../../icons/chevron-up-icon.web';
+import { ChevronRightIcon } from '../../icons/chevron-right-icon.web';
 
 interface ItemLayoutProps {
   captionLeft: ReactNode;
@@ -82,7 +82,11 @@ export function ItemLayout({
           )}
         </Stack>
         {showChevron && (
-          <ChevronUpIcon color={pressableChevronStyles} transform="rotate(90deg)" variant="small" />
+          <ChevronRightIcon
+            color={pressableChevronStyles}
+            transform="rotate(90deg)"
+            variant="small"
+          />
         )}
       </HStack>
     </Flex>
