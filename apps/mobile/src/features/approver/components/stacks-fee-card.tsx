@@ -50,7 +50,7 @@ export function StacksFeeCard({ feeType, amount }: FeeCardProps) {
         </Text>
         <FeeBadge type="normal" />
       </Box>
-      <Pressable flexDirection="row" onPress={() => {}} py="3">
+      <Pressable flexDirection="row" py="3">
         <Flag
           img={
             <Avatar bg="ink.background-secondary" p="1">

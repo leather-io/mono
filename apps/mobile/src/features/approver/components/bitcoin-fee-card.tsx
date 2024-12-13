@@ -50,7 +50,7 @@ export function BitcoinFeeCard({ feeType, amount }: FeeCardProps) {
       </Box>
 
       <Box mx="-5">
-        <Cell.Root pressable={true} onPress={() => {}}>
+        <Cell.Root pressable={true}>
           <Cell.Icon>
             <Avatar bg="ink.background-secondary" p="2">
               {feeIcon}

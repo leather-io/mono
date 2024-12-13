@@ -3,7 +3,6 @@ import { Keyboard, TextInput as RNTextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedHeaderScreenWithKeyboardLayout } from '@/components/headers/animated-header/animated-header-screen-with-keyboard.layout';
-import { MoreInfoIcon } from '@/components/more-info-icon';
 import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
 import { InputState, TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
@@ -109,7 +108,8 @@ export default function RecoverWallet() {
         style={{ paddingBottom: bottom + theme.spacing[5] }}
       >
         <AnimatedHeaderScreenWithKeyboardLayout
-          rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
+          // Hidden until linked
+          // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
           title={t({ id: 'recover_wallet.title', message: 'Enter your secret key' })}
         >
           <Box gap="3">

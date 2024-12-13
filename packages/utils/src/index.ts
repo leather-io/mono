@@ -67,6 +67,7 @@ export function isTypedArray(val: unknown): val is Uint8Array {
   return val instanceof TypedArray;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export function noop() {}
 
 export function ensureArray<T>(value: T | T[]): T[] {
