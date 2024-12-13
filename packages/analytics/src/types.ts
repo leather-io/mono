@@ -19,16 +19,7 @@ export interface AnalyticsClientConfig<T extends AnalyticsClientInterface> {
   defaultTraits?: JsonMap;
 }
 export type JsonList = JsonValue[];
-export type JsonValue =
-  | boolean
-  | number
-  | string
-  | null
-  | JsonList
-  | JsonMap
-  | undefined
-  | unknown
-  | Error;
+export type JsonValue = boolean | number | string | undefined | null | JsonList | JsonMap | Error;
 export interface JsonMap {
   [key: string]: JsonValue;
   [index: number]: JsonValue;
