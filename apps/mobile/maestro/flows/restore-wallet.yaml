@@ -5,6 +5,31 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Add Wallet'
 - tapOn:
+    id: 'restoreWalletSheetButton'
+# verify advanced options appear
+- tapOn: 'Advanced options'
+- tapOn: 'BIP39 passphrase Disabled'
+- assertVisible: 'Passphrase'
+- assertVisible: 'Confirm'
+- tapOn: 'Confirm'
+- assertVisible: 'BIP39 passphrase Disabled'
+- tapOn: 'Advanced options'
+- assertNotVisible: 'BIP39 passphrase Disabled'
+# check validation of invalid mnemonic
+- tapOn:
+    id: 'restoreWalletTextInput'
+- inputText: 'definitely not a mnemonic'
+- pressKey: Enter
+- assertVisible: 'Invalid words: definitely, not, a, mnemonic'
+- tapOn:
+    id: 'restoreWalletTextInput'
+- eraseText: 26
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    text: 'Add Wallet'
+# verify validation of valid mnemonic
+- tapOn:
     id: 'createNewWalletSheetButton'
 - tapOn:
     id: 'walletCreationTapToReveal'
@@ -16,6 +41,7 @@ appId: io.leather.mobilewallet
     text: 'Add Wallet'
 - tapOn:
     id: 'restoreWalletSheetButton'
+- assertNotVisible: 'Invalid words: definitely, not, a, mnemonic'
 - tapOn:
     text: 'Paste'
 - tapOn:
