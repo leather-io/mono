@@ -79,7 +79,7 @@ export function useSendFormBtc() {
     },
     // Temporary logs until we can hook up to approver flow
 
-    async onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
+    onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
       const parsedSendFormValues = parseSendFormValues(values);
       const coinSelectionUtxos = createCoinSelectionUtxos(data.utxos);
 

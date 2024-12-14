@@ -26,6 +26,7 @@ export function createGetBitcoinFeeEstimatesQueryOptions({
   network,
 }: CreateGetBitcoinFeeEstimatesQueryOptionsArgs) {
   return {
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [BitcoinQueryPrefixes.GetBitcoinFeeEstimates, network],
     queryFn: () => fetchBitcoinFeeEstimates(client, network),
     refetchInterval: 2000 * 60,
