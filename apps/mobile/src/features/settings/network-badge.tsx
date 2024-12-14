@@ -6,7 +6,8 @@ import { useRouter } from 'expo-router';
 
 import { Badge, PressableProps } from '@leather.io/ui/native';
 
-interface NetworkBadgeProps extends PressableProps {}
+type NetworkBadgeProps = PressableProps;
+
 export function NetworkBadge(props: NetworkBadgeProps) {
   const router = useRouter();
   const { i18n } = useLingui();
