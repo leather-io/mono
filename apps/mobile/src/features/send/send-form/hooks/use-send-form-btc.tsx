@@ -85,7 +85,7 @@ export function useSendFormBtc() {
 
       const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
 
-      const tx = await generateTx({
+      const tx = generateTx({
         feeRate: Number(values.feeRate),
         isSendingMax: false,
         values: parsedSendFormValues,

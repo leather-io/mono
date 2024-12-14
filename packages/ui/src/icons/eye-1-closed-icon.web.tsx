@@ -17,3 +17,5 @@ export const Eye1ClosedIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, .
     </Icon>
   );
 });
+
+Eye1ClosedIcon.displayName = 'Eye1ClosedIcon';

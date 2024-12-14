@@ -17,3 +17,5 @@ export const BellIcon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+BellIcon.displayName = 'BellIcon';

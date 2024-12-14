@@ -19,3 +19,5 @@ export const QuestionCircleIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+QuestionCircleIcon.displayName = 'QuestionCircleIcon';

@@ -11,3 +11,5 @@ export const BankIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+BankIcon.displayName = 'BankIcon';

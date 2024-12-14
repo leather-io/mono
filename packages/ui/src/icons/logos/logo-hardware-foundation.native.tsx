@@ -11,3 +11,5 @@ export const LogoHardwareFoundation = forwardRef<Component, SvgProps>((props, re
     </Icon>
   );
 });
+
+LogoHardwareFoundation.displayName = 'LogoHardwareFoundation';

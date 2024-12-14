@@ -17,3 +17,5 @@ export const CloseIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+CloseIcon.displayName = 'CloseIcon';

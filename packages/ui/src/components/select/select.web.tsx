@@ -33,6 +33,8 @@ const Trigger: typeof RadixSelect.Trigger = forwardRef((props, ref) => (
   <RadixSelect.Trigger className={selectTriggerStyles} ref={ref} {...props} />
 ));
 
+Trigger.displayName = 'Select.Trigger';
+
 const selectContentStyles = css({
   alignItems: 'center',
   animationDuration: '400ms',
@@ -55,12 +57,16 @@ const Content: typeof RadixSelect.Content = forwardRef((props, ref) => (
   <RadixSelect.Content className={selectContentStyles} ref={ref} {...props} />
 ));
 
+Content.displayName = 'Select.Content';
+
 const selectViewportStyles = css({
   width: '100%',
 });
 const Viewport: typeof RadixSelect.Viewport = forwardRef((props, ref) => (
   <RadixSelect.Viewport className={selectViewportStyles} ref={ref} {...props} />
 ));
+
+Viewport.displayName = 'Select.Viewport';
 
 const selectLabelStyles = css({
   color: 'ink.text-subdued',
@@ -70,9 +76,12 @@ const selectLabelStyles = css({
   textStyle: 'body.02',
   width: '100%',
 });
+
 const Label: typeof RadixSelect.Label = forwardRef((props, ref) => (
   <RadixSelect.Label className={selectLabelStyles} ref={ref} {...props} />
 ));
+
+Label.displayName = 'Select.Label';
 
 const selectItemStyles = css({ p: 'space.03' });
 
@@ -82,15 +91,20 @@ const Item: typeof RadixSelect.Item = forwardRef((props, ref) => (
   </styled.div>
 ));
 
+Item.displayName = 'Select.Item';
+
 const selectSeparatorStyles = css({
   bg: 'ink.background-primary',
   color: 'ink.border-default',
   mx: '0px',
   my: 'space.03',
 });
+
 const Separator: typeof RadixSelect.Separator = forwardRef((props, ref) => (
   <RadixSelect.Separator className={selectSeparatorStyles} ref={ref} {...props} />
 ));
+
+Separator.displayName = 'Select.Separator';
 
 export const Select = {
   Root: RadixSelect.Root,

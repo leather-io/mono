@@ -17,3 +17,5 @@ export const SignalIcon = forwardRef<Component, IconProps>(({ variant, ...props 
     </Icon>
   );
 });
+
+SignalIcon.displayName = 'SignalIcon';

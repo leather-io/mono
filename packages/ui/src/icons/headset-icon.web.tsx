@@ -17,3 +17,5 @@ export const HeadsetIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+HeadsetIcon.displayName = 'HeadsetIcon';

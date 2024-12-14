@@ -17,3 +17,5 @@ export const ArrowUpIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+ArrowUpIcon.displayName = 'ArrowUpIcon';

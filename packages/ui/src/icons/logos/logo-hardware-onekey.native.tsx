@@ -11,3 +11,5 @@ export const LogoHardwareOnekey = forwardRef<Component, SvgProps>((props, ref) =
     </Icon>
   );
 });
+
+LogoHardwareOnekey.displayName = 'LogoHardwareOnekey';

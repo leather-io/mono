@@ -16,3 +16,5 @@ export const Title = forwardRef<HTMLSpanElement, HTMLStyledProps<'span'>>(
     </styled.span>
   )
 );
+
+Title.displayName = 'Title';

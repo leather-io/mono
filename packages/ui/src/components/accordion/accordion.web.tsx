@@ -37,6 +37,8 @@ const Trigger: typeof RadixAccordion.Trigger = forwardRef((props, ref) => (
   </RadixAccordion.Header>
 ));
 
+Trigger.displayName = 'Accordion.Trigger';
+
 const accordionContentStyles = css({
   willChange: 'max-height',
   py: 'space.03',
@@ -57,9 +59,13 @@ const Content: typeof RadixAccordion.Content = forwardRef(({ className, ...props
   />
 ));
 
+Content.displayName = 'Accordion.Content';
+
 const Item: typeof RadixAccordion.Item = forwardRef((props, ref) => (
   <RadixAccordion.Item {...props} ref={ref} />
 ));
+
+Item.displayName = 'Accordion.Item';
 
 export const Accordion = {
   Root: RadixAccordion.Root,

@@ -19,3 +19,5 @@ export const PackageSecurityIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+PackageSecurityIcon.displayName = 'PackageSecurityIcon';

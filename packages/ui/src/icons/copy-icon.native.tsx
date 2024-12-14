@@ -17,3 +17,5 @@ export const CopyIcon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+CopyIcon.displayName = 'CopyIcon';

@@ -17,3 +17,5 @@ export const UnlockIcon = forwardRef<Component, IconProps>(({ variant, ...props 
     </Icon>
   );
 });
+
+UnlockIcon.displayName = 'UnlockIcon';

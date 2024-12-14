@@ -11,3 +11,5 @@ export const CodeIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+CodeIcon.displayName = 'CodeIcon';

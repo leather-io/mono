@@ -12,3 +12,5 @@ export const AnimalChameleonIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElem
     );
   }
 );
+
+AnimalChameleonIcon.displayName = 'AnimalChameleonIcon';

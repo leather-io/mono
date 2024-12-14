@@ -17,3 +17,5 @@ export const HeadIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+HeadIcon.displayName = 'HeadIcon';

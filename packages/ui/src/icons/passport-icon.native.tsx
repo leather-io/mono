@@ -17,3 +17,5 @@ export const PassportIcon = forwardRef<Component, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+PassportIcon.displayName = 'PassportIcon';

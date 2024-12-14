@@ -208,6 +208,8 @@ const Field = forwardRef(({ type, ...props }: ComponentProps<'input'>, ref) => {
   );
 });
 
+Field.displayName = 'Input.Field';
+
 const LabelBase = withContext('label', 'label');
 
 const Label = forwardRef((props: ComponentProps<'label'>, ref: LegacyRef<HTMLLabelElement>) => {
@@ -215,5 +217,7 @@ const Label = forwardRef((props: ComponentProps<'label'>, ref: LegacyRef<HTMLLab
   useOnMount(() => registerChild('label'));
   return <LabelBase ref={ref} {...props} />;
 });
+
+Label.displayName = 'Input.Label';
 
 export const Input = { Root, Field, Label };

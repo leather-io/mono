@@ -17,3 +17,5 @@ export const UsersTwoIcon = forwardRef<Component, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+UsersTwoIcon.displayName = 'UsersTwoIcon';

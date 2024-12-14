@@ -11,3 +11,5 @@ export const LogoMpcFordefi = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcFordefi.displayName = 'LogoMpcFordefi';

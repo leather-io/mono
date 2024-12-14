@@ -32,8 +32,12 @@ const Root: typeof RadixSwitch.Root = forwardRef((props, ref) => (
   <RadixSwitch.Root className={switchRootStyles} ref={ref} {...props} />
 ));
 
+Root.displayName = 'Switch.Root';
+
 const Thumb: typeof RadixSwitch.Thumb = forwardRef((props, ref) => (
   <RadixSwitch.Thumb className={switchThumbStyles} ref={ref} {...props} />
 ));
+
+Thumb.displayName = 'Switch.Thumb';
 
 export const Switch = { Root, Thumb };

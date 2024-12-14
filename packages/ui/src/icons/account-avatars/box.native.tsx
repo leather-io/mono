@@ -11,3 +11,5 @@ export const BoxIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+BoxIcon.displayName = 'BoxIcon';

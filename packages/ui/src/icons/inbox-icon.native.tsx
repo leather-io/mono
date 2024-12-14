@@ -17,3 +17,5 @@ export const InboxIcon = forwardRef<Component, IconProps>(({ variant, ...props }
     </Icon>
   );
 });
+
+InboxIcon.displayName = 'InboxIcon';

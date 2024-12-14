@@ -19,3 +19,5 @@ export const EmailNotificationIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+EmailNotificationIcon.displayName = 'EmailNotificationIcon';

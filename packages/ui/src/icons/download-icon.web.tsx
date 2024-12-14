@@ -17,3 +17,5 @@ export const DownloadIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+DownloadIcon.displayName = 'DownloadIcon';

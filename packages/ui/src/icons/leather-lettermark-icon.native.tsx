@@ -11,3 +11,5 @@ export const LeatherLettermarkIcon = forwardRef<Component, SvgProps>((props, ref
     </Icon>
   );
 });
+
+LeatherLettermarkIcon.displayName = 'LeatherLettermarkIcon';

@@ -17,3 +17,5 @@ export const SupportIcon = forwardRef<Component, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+SupportIcon.displayName = 'SupportIcon';

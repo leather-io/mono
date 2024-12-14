@@ -11,3 +11,5 @@ export const LogoHardwareRyder = forwardRef<Component, SvgProps>((props, ref) =>
     </Icon>
   );
 });
+
+LogoHardwareRyder.displayName = 'LogoHardwareRyder';

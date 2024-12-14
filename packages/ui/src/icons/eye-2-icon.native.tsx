@@ -17,3 +17,5 @@ export const Eye2Icon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+Eye2Icon.displayName = 'Eye2Icon';

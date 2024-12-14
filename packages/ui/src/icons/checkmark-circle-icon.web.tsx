@@ -19,3 +19,5 @@ export const CheckmarkCircleIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+CheckmarkCircleIcon.displayName = 'CheckmarkCircleIcon';

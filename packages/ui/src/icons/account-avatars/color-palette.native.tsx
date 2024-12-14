@@ -11,3 +11,5 @@ export const ColorPaletteIcon = forwardRef<Component, SvgProps>((props, ref) => 
     </Icon>
   );
 });
+
+ColorPaletteIcon.displayName = 'ColorPaletteIcon';

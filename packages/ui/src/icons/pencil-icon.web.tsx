@@ -17,3 +17,5 @@ export const PencilIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+PencilIcon.displayName = 'PencilIcon';

@@ -11,3 +11,5 @@ export const AlienIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+AlienIcon.displayName = 'AlienIcon';

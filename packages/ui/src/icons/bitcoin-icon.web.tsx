@@ -17,3 +17,5 @@ export const BitcoinIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+BitcoinIcon.displayName = 'BitcoinIcon';

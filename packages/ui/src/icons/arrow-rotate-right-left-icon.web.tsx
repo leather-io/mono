@@ -19,3 +19,5 @@ export const ArrowRotateRightLeftIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ArrowRotateRightLeftIcon.displayName = 'ArrowRotateRightLeftIcon';

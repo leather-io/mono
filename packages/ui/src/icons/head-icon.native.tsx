@@ -17,3 +17,5 @@ export const HeadIcon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+HeadIcon.displayName = 'HeadIcon';

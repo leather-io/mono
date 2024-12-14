@@ -11,3 +11,5 @@ export const LogoHardwareLedger = forwardRef<Component, SvgProps>((props, ref) =
     </Icon>
   );
 });
+
+LogoHardwareLedger.displayName = 'LogoHardwareLedger';

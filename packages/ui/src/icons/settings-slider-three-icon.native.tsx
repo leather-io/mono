@@ -19,3 +19,5 @@ export const SettingsSliderThreeIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+SettingsSliderThreeIcon.displayName = 'SettingsSliderThreeIcon';

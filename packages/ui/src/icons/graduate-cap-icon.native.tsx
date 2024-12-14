@@ -17,3 +17,5 @@ export const GraduateCapIcon = forwardRef<Component, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+GraduateCapIcon.displayName = 'GraduateCapIcon';

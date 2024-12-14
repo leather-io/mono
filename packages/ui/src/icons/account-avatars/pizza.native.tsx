@@ -11,3 +11,5 @@ export const PizzaIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+PizzaIcon.displayName = 'PizzaIcon';

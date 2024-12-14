@@ -17,3 +17,5 @@ export const ArrowDownIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+ArrowDownIcon.displayName = 'ArrowDownIcon';

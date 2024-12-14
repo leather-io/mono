@@ -11,3 +11,5 @@ export const LogoMpcBitgo = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcBitgo.displayName = 'LogoMpcBitgo';

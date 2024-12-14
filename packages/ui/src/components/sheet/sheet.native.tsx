@@ -109,3 +109,5 @@ export const Sheet = forwardRef<
     );
   }
 );
+
+Sheet.displayName = 'Sheet';

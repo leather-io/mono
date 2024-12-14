@@ -11,3 +11,5 @@ export const XLogoIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+XLogoIcon.displayName = 'XLogoIcon';

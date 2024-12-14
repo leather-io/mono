@@ -19,3 +19,5 @@ export const SquareLinesBottomIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+SquareLinesBottomIcon.displayName = 'SquareLinesBottomIcon';

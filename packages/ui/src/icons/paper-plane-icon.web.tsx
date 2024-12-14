@@ -17,3 +17,5 @@ export const PaperPlaneIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, .
     </Icon>
   );
 });
+
+PaperPlaneIcon.displayName = 'PaperPlaneIcon';

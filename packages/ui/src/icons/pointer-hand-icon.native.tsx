@@ -17,3 +17,5 @@ export const PointerHandIcon = forwardRef<Component, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+PointerHandIcon.displayName = 'PointerHandIcon';
