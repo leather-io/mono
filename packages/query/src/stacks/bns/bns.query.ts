@@ -30,6 +30,7 @@ export function createGetBnsNamesOwnedByAddressQueryOptions({
 }: CreateGetBnsNamesOwnedByAddressQueryOptionsArgs) {
   return {
     enabled: address !== '',
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [BnsV2QueryPrefixes.GetBnsNamesByAddress, address],
     queryFn: async ({ signal }: QueryFunctionContext) =>
       fetchNamesForAddress({ address, network, signal, client }),

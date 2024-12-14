@@ -120,6 +120,7 @@ export function useGetBrc20TokensQuery({
     if (query.hasNextPage) {
       void query.fetchNextPage();
     }
+    // eslint-disable-next-line @tanstack/query/no-unstable-deps
   }, [query, query.data]);
 
   return query;
