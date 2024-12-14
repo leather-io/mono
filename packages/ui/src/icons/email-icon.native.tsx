@@ -17,3 +17,5 @@ export const EmailIcon = forwardRef<Component, IconProps>(({ variant, ...props }
     </Icon>
   );
 });
+
+EmailIcon.displayName = 'EmailIcon';

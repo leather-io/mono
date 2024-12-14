@@ -17,3 +17,5 @@ export const ExpandIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+ExpandIcon.displayName = 'ExpandIcon';

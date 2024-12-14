@@ -17,3 +17,5 @@ export const WalletIcon = forwardRef<Component, IconProps>(({ variant, ...props 
     </Icon>
   );
 });
+
+WalletIcon.displayName = 'WalletIcon';

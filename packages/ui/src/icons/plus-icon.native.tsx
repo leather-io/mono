@@ -17,3 +17,5 @@ export const PlusIcon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+PlusIcon.displayName = 'PlusIcon';

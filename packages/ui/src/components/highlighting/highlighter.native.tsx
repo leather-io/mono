@@ -90,3 +90,5 @@ export const Highlighter = memo(({ code, language = 'clarity' }: HighlighterProp
     </Highlight>
   );
 });
+
+Highlighter.displayName = 'Highlighter';

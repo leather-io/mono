@@ -10,3 +10,5 @@ export const AnimalSnailIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>
     </Icon>
   );
 });
+
+AnimalSnailIcon.displayName = 'AnimalSnailIcon';

@@ -17,3 +17,5 @@ export const EllipsisHIcon = forwardRef<Component, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+EllipsisHIcon.displayName = 'EllipsisHIcon';

@@ -19,3 +19,5 @@ export const ArrowsRepeatLeftRightIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+ArrowsRepeatLeftRightIcon.displayName = 'ArrowsRepeatLeftRightIcon';

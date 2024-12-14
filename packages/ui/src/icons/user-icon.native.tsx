@@ -17,3 +17,5 @@ export const UserIcon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+UserIcon.displayName = 'UserIcon';

@@ -17,3 +17,5 @@ export const SettingsGearIcon = forwardRef<Component, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+SettingsGearIcon.displayName = 'SettingsGearIcon';

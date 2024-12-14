@@ -11,3 +11,5 @@ export const AnimalEagleIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+AnimalEagleIcon.displayName = 'AnimalEagleIcon';

@@ -17,3 +17,5 @@ export const InboxIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+InboxIcon.displayName = 'InboxIcon';

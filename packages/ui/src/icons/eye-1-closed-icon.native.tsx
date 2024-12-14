@@ -17,3 +17,5 @@ export const Eye1ClosedIcon = forwardRef<Component, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+Eye1ClosedIcon.displayName = 'Eye1ClosedIcon';

@@ -11,3 +11,5 @@ export const LogoMpcCopper = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcCopper.displayName = 'LogoMpcCopper';

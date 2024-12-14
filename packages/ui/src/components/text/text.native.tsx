@@ -36,3 +36,5 @@ export const Text = forwardRef<TextElement, TextProps>(({ style, ...rest }, ref)
     <RestyleText ref={ref} color="ink.text-primary" style={[adjustmentStyle, style]} {...rest} />
   );
 });
+
+Text.displayName = 'Text';

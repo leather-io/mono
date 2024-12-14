@@ -11,3 +11,5 @@ export const LogoMpcCapsule = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcCapsule.displayName = 'LogoMpcCapsule';

@@ -11,3 +11,5 @@ export const LogoHardwareBitkey = forwardRef<Component, SvgProps>((props, ref) =
     </Icon>
   );
 });
+
+LogoHardwareBitkey.displayName = 'LogoHardwareBitkey';

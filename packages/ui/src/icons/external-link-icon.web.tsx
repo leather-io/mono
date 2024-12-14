@@ -19,3 +19,5 @@ export const ExternalLinkIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ExternalLinkIcon.displayName = 'ExternalLinkIcon';

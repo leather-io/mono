@@ -27,3 +27,5 @@ export const BlurView = forwardRef((props: BlurViewProps, ref: LegacyRef<ExpoBlu
     />
   );
 });
+
+BlurView.displayName = 'BlurView';

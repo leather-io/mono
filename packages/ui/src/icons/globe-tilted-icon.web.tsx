@@ -19,3 +19,5 @@ export const GlobeTiltedIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+GlobeTiltedIcon.displayName = 'GlobeTiltedIcon';

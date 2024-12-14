@@ -11,3 +11,5 @@ export const CarIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+CarIcon.displayName = 'CarIcon';

@@ -17,3 +17,5 @@ export const MagicBookIcon = forwardRef<Component, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+MagicBookIcon.displayName = 'MagicBookIcon';

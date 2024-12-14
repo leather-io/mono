@@ -51,17 +51,25 @@ const Root = forwardRef<HTMLDivElement, RadixSlider.SliderProps>((props, ref) =>
   <RadixSlider.Root className={sliderRootStyles} ref={ref} {...props} />
 ));
 
+Root.displayName = 'Slider.Root';
+
 const Track = forwardRef<HTMLDivElement, RadixSlider.SliderTrackProps>((props, ref) => (
   <RadixSlider.Track className={sliderTrackStyles} ref={ref} {...props} />
 ));
+
+Track.displayName = 'Slider.Track';
 
 const Range = forwardRef<HTMLDivElement, RadixSlider.SliderRangeProps>((props, ref) => (
   <RadixSlider.Range className={sliderRangeStyles} ref={ref} {...props} />
 ));
 
+Range.displayName = 'Slider.Range';
+
 const Thumb = forwardRef<HTMLDivElement, RadixSlider.SliderThumbProps>((props, ref) => (
   <RadixSlider.Thumb className={sliderThumbStyles} ref={ref} {...props} />
 ));
+
+Thumb.displayName = 'Slider.Thumb';
 
 export const Slider = {
   Root,

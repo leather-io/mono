@@ -17,3 +17,5 @@ export const KeyholeIcon = forwardRef<Component, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+KeyholeIcon.displayName = 'KeyholeIcon';

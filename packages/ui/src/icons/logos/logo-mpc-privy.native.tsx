@@ -11,3 +11,5 @@ export const LogoMpcPrivy = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcPrivy.displayName = 'LogoMpcPrivy';

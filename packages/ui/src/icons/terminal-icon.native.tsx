@@ -17,3 +17,5 @@ export const TerminalIcon = forwardRef<Component, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+TerminalIcon.displayName = 'TerminalIcon';

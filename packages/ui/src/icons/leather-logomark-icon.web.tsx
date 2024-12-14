@@ -12,3 +12,5 @@ export const LeatherLogomarkIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElem
     );
   }
 );
+
+LeatherLogomarkIcon.displayName = 'LeatherLogomarkIcon';

@@ -11,3 +11,5 @@ export const HeartIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+HeartIcon.displayName = 'HeartIcon';

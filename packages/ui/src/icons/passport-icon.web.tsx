@@ -17,3 +17,5 @@ export const PassportIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+PassportIcon.displayName = 'PassportIcon';

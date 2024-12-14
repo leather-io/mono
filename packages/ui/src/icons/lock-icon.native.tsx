@@ -17,3 +17,5 @@ export const LockIcon = forwardRef<Component, IconProps>(({ variant, ...props },
     </Icon>
   );
 });
+
+LockIcon.displayName = 'LockIcon';

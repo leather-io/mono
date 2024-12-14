@@ -17,3 +17,5 @@ export const NoteEmptyIcon = forwardRef<Component, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+NoteEmptyIcon.displayName = 'NoteEmptyIcon';

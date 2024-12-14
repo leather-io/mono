@@ -11,3 +11,5 @@ export const LogoMpcQredo = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcQredo.displayName = 'LogoMpcQredo';

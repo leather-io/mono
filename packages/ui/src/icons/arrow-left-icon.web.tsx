@@ -17,3 +17,5 @@ export const ArrowLeftIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+ArrowLeftIcon.displayName = 'ArrowLeftIcon';

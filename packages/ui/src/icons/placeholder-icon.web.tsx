@@ -19,3 +19,5 @@ export const PlaceholderIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+PlaceholderIcon.displayName = 'PlaceholderIcon';

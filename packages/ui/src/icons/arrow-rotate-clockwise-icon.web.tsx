@@ -19,3 +19,5 @@ export const ArrowRotateClockwiseIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ArrowRotateClockwiseIcon.displayName = 'ArrowRotateClockwiseIcon';

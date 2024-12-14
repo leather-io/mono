@@ -17,3 +17,5 @@ export const ArrowTopBottomIcon = forwardRef<Component, IconProps>(({ variant, .
     </Icon>
   );
 });
+
+ArrowTopBottomIcon.displayName = 'ArrowTopBottomIcon';

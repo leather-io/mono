@@ -148,4 +148,6 @@ export const Button = forwardRef(
   }
 );
 
+Button.displayName = 'Button';
+
 export const AnimatedButton = Animated.createAnimatedComponent(Button);

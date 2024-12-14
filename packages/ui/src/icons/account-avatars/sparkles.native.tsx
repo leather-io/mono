@@ -11,3 +11,5 @@ export const SparklesIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+SparklesIcon.displayName = 'SparklesIcon';

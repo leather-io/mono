@@ -19,3 +19,5 @@ export const SettingsGearIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+SettingsGearIcon.displayName = 'SettingsGearIcon';

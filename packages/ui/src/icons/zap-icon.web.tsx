@@ -17,3 +17,5 @@ export const ZapIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+ZapIcon.displayName = 'ZapIcon';

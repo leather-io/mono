@@ -17,3 +17,5 @@ export const WalletIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+WalletIcon.displayName = 'WalletIcon';

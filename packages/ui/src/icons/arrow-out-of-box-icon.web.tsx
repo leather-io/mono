@@ -19,3 +19,5 @@ export const ArrowOutOfBoxIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ArrowOutOfBoxIcon.displayName = 'ArrowOutOfBoxIcon';

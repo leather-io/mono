@@ -17,3 +17,5 @@ export const GlobeIcon = forwardRef<Component, IconProps>(({ variant, ...props }
     </Icon>
   );
 });
+
+GlobeIcon.displayName = 'GlobeIcon';

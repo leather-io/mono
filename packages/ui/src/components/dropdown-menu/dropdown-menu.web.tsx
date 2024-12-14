@@ -47,6 +47,8 @@ const IconButton: typeof RadixDropdownMenu.Trigger = forwardRef((props, ref) => 
   <RadixDropdownMenu.Trigger className={dropdownIconButtonStyles} ref={ref} {...props} />
 ));
 
+IconButton.displayName = 'DropdownMenu.IconButton';
+
 const dropdownTriggerStyles = css({
   _focus: { outline: 'none' },
 });
@@ -54,6 +56,8 @@ const dropdownTriggerStyles = css({
 const Trigger: typeof RadixDropdownMenu.Trigger = forwardRef((props, ref) => (
   <RadixDropdownMenu.Trigger className={dropdownTriggerStyles} ref={ref} {...props} />
 ));
+
+Trigger.displayName = 'DropdownMenu.Trigger';
 
 const dropdownContentStyles = css({
   alignItems: 'center',
@@ -77,6 +81,8 @@ const Content: typeof RadixDropdownMenu.Content = forwardRef(({ className, ...pr
   />
 ));
 
+Content.displayName = 'DropdownMenu.Content';
+
 const dropdownMenuLabelStyles = css({
   color: 'ink.text-subdued',
   height: 'auto',
@@ -89,6 +95,8 @@ const Label: typeof RadixDropdownMenu.Label = forwardRef((props, ref) => (
   <RadixDropdownMenu.Label className={dropdownMenuLabelStyles} ref={ref} {...props} />
 ));
 
+Label.displayName = 'DropdownMenu.Label';
+
 const dropdownItemStyles = css({ p: 'space.03' });
 const Item: typeof RadixDropdownMenu.Item = forwardRef((props, ref) => (
   <styled.div className={dropdownItemStyles}>
@@ -100,6 +108,8 @@ const Item: typeof RadixDropdownMenu.Item = forwardRef((props, ref) => (
   </styled.div>
 ));
 
+Item.displayName = 'DropdownMenu.Item';
+
 const dropdownMenuSeparatorStyles = css({
   bg: 'ink.background-primary',
   color: 'ink.border-default',
@@ -109,12 +119,18 @@ const dropdownMenuSeparatorStyles = css({
 const Separator: typeof RadixDropdownMenu.Separator = forwardRef((props, ref) => (
   <RadixDropdownMenu.Separator className={dropdownMenuSeparatorStyles} ref={ref} {...props} />
 ));
+
+Separator.displayName = 'DropdownMenu.Separator';
+
 const dropdownMenuGroupStyles = css({
   p: 'space.02',
 });
+
 const Group: typeof RadixDropdownMenu.Group = forwardRef((props, ref) => (
   <RadixDropdownMenu.Separator className={dropdownMenuGroupStyles} ref={ref} {...props} />
 ));
+
+Group.displayName = 'DropdownMenu.Group';
 
 export const DropdownMenu = {
   Root: RadixDropdownMenu.Root,

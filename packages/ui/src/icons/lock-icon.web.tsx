@@ -17,3 +17,5 @@ export const LockIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+LockIcon.displayName = 'LockIcon';

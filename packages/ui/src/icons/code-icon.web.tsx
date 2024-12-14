@@ -17,3 +17,5 @@ export const CodeIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+CodeIcon.displayName = 'CodeIcon';

@@ -17,3 +17,5 @@ export const CloudOffIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+CloudOffIcon.displayName = 'CloudOffIcon';

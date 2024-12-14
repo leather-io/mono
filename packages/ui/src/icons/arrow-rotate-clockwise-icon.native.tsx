@@ -19,3 +19,5 @@ export const ArrowRotateClockwiseIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+ArrowRotateClockwiseIcon.displayName = 'ArrowRotateClockwiseIcon';

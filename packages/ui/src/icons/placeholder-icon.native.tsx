@@ -17,3 +17,5 @@ export const PlaceholderIcon = forwardRef<Component, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+PlaceholderIcon.displayName = 'PlaceholderIcon';

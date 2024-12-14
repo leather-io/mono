@@ -17,3 +17,5 @@ export const KeyIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+KeyIcon.displayName = 'KeyIcon';

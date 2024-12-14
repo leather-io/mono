@@ -17,3 +17,5 @@ export const TrashIcon = forwardRef<Component, IconProps>(({ variant, ...props }
     </Icon>
   );
 });
+
+TrashIcon.displayName = 'TrashIcon';

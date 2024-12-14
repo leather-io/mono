@@ -11,3 +11,5 @@ export const SmileIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+SmileIcon.displayName = 'SmileIcon';

@@ -17,3 +17,5 @@ export const CheckmarkIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+CheckmarkIcon.displayName = 'CheckmarkIcon';

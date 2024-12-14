@@ -17,3 +17,5 @@ export const SunIcon = forwardRef<Component, IconProps>(({ variant, ...props }, 
     </Icon>
   );
 });
+
+SunIcon.displayName = 'SunIcon';

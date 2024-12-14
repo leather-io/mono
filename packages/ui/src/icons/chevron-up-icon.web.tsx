@@ -17,3 +17,5 @@ export const ChevronUpIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+ChevronUpIcon.displayName = 'ChevronUpIcon';

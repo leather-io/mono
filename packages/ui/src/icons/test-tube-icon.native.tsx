@@ -17,3 +17,5 @@ export const TestTubeIcon = forwardRef<Component, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+TestTubeIcon.displayName = 'TestTubeIcon';

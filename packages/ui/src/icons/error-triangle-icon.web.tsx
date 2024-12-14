@@ -19,3 +19,5 @@ export const ErrorTriangleIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ErrorTriangleIcon.displayName = 'ErrorTriangleIcon';
