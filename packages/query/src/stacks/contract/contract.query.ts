@@ -25,6 +25,7 @@ export function createGetContractInterfaceQueryOptions({
 }: CreateGetContractInterfaceQueryOptionsArgs) {
   return {
     enabled: !!transactionRequest && transactionRequest.txType === TransactionTypes.ContractCall,
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       StacksQueryPrefixes.GetContractInterface,
       (transactionRequest as ContractCallPayload)?.contractName,

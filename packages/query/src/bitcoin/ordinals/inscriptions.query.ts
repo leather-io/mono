@@ -58,6 +58,7 @@ export function useGetInscriptionsByAddressQuery(address: string) {
   useEffect(() => {
     if (!address) return;
     void query.fetchNextPage();
+    // eslint-disable-next-line @tanstack/query/no-unstable-deps
   }, [address, query, query.data]);
 
   return query;
