@@ -13,7 +13,7 @@ export function filterObjectKeys(object: object, keys: string[]) {
   return Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
 }
 
-export async function clearAllPersistedStorage(fingerprints: string[]) {
+export function clearAllPersistedStorage(fingerprints: string[]) {
   void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);
   store.dispatch(resetWallet());
 }

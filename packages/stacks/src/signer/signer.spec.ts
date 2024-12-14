@@ -15,7 +15,7 @@ describe(initalizeStacksSigner.name, () => {
     const account = initalizeStacksSigner({
       descriptor,
       network: 'mainnet',
-      signFn: async tx => tx,
+      signFn: tx => Promise.resolve(tx),
     });
     expect(account.address).toEqual('SP148VBW07WJ81V6B1FM0QP4AKB14QSRQQXERFRRV');
   });
@@ -24,7 +24,7 @@ describe(initalizeStacksSigner.name, () => {
     const account = initalizeStacksSigner({
       descriptor,
       network: 'testnet',
-      signFn: async tx => tx,
+      signFn: tx => Promise.resolve(tx),
     });
     expect(account.address).toEqual('ST148VBW07WJ81V6B1FM0QP4AKB14QSRQQZ717SWG');
   });

@@ -155,7 +155,7 @@ export function BasePsbtSigner({
     bytesToHex(psbtPayers[0].publicKey)
   );
 
-  async function onChangeFee(feeType: FeeTypes) {
+  function onChangeFee(feeType: FeeTypes) {
     const feeRate = match()(feeType, {
       [FeeTypes.Low]: feeRates.hourFee.toNumber(),
       [FeeTypes.Middle]: feeRates.halfHourFee.toNumber(),
@@ -166,7 +166,7 @@ export function BasePsbtSigner({
       psbtDetails.addressTaprootTotal.amount.toNumber() -
       psbtDetails.fee.amount.toNumber();
     if (psbtPayers[0]) {
-      const tx = await generateTx({
+      const tx = generateTx({
         feeRate: Number(feeRate),
         isSendingMax: false,
         values: { amount: createMoney(totalSendValue, 'BTC'), recipients },
