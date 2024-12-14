@@ -56,8 +56,8 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     ],
   };
 
-  it('should generate an unsigned transaction with correct inputs and outputs', async () => {
-    const result = await generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
+  it('should generate an unsigned transaction with correct inputs and outputs', () => {
+    const result = generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
     if (result) {
       expect(result.inputs).toEqual(mockResult.inputs);
       expect(result.fee).toEqual(mockResult.fee);
@@ -66,8 +66,8 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     }
   });
 
-  it('should add change address to output correctly', async () => {
-    const result = await generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
+  it('should add change address to output correctly', () => {
+    const result = generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
 
     if (result) {
       expect(result.tx.outputsLength).toBe(2);
@@ -75,13 +75,13 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     }
   });
 
-  it('should throw an error if inputs are empty', async () => {
+  it('should throw an error if inputs are empty', () => {
     const argsWithNoInputs: GenerateBitcoinUnsignedTransactionArgs = {
       ...mockArgs,
       utxos: [],
     };
 
-    const result = await generateBitcoinUnsignedTransactionNativeSegwit(argsWithNoInputs);
+    const result = generateBitcoinUnsignedTransactionNativeSegwit(argsWithNoInputs);
 
     if (result) {
       expect(result.inputs.length).toBe(0);

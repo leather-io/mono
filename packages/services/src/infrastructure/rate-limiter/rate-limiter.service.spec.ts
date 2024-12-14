@@ -22,7 +22,7 @@ describe('RateLimiterService', () => {
     const callCount = bestInSlotApiLimiterSettings.intervalCap + 1;
     const promises = Array(callCount)
       .fill(null)
-      .map(() => service.add(RateLimiterType.BestInSlot, async () => 'result'));
+      .map(() => service.add(RateLimiterType.BestInSlot, () => Promise.resolve('result')));
 
     await Promise.all(promises);
     const duration = Date.now() - startTime;
@@ -37,18 +37,24 @@ describe('RateLimiterService', () => {
     // first need to hit rate limit
     const fillerCalls = Array(bestInSlotApiLimiterSettings.intervalCap)
       .fill(null)
-      .map(() =>
-        service.add(RateLimiterType.BestInSlot, async () => {
-          return 'result';
-        })
-      );
+      .map(() => service.add(RateLimiterType.BestInSlot, () => Promise.resolve('result')));
     // subsequent calls should be queued in priority order
     const priorityPromises = [
-      service.add(RateLimiterType.BestInSlot, async () => results.push(3), { priority: 3 }),
-      service.add(RateLimiterType.BestInSlot, async () => results.push(5), { priority: 5 }),
-      service.add(RateLimiterType.BestInSlot, async () => results.push(1), { priority: 1 }),
-      service.add(RateLimiterType.BestInSlot, async () => results.push(4), { priority: 4 }),
-      service.add(RateLimiterType.BestInSlot, async () => results.push(2), { priority: 2 }),
+      service.add(RateLimiterType.BestInSlot, () => Promise.resolve(results.push(3)), {
+        priority: 3,
+      }),
+      service.add(RateLimiterType.BestInSlot, () => Promise.resolve(results.push(5)), {
+        priority: 5,
+      }),
+      service.add(RateLimiterType.BestInSlot, () => Promise.resolve(results.push(1)), {
+        priority: 1,
+      }),
+      service.add(RateLimiterType.BestInSlot, () => Promise.resolve(results.push(4)), {
+        priority: 4,
+      }),
+      service.add(RateLimiterType.BestInSlot, () => Promise.resolve(results.push(2)), {
+        priority: 2,
+      }),
     ];
 
     await Promise.all([...fillerCalls, ...priorityPromises]);

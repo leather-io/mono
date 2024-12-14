@@ -44,7 +44,7 @@ export default function SecureYourWalletScreen() {
         </AnimatedHeaderScreenLayout>
         <Box px="5">
           <Button
-            onPress={async () => {
+            onPress={() => {
               sheetRef.current?.present();
             }}
             pb="4"
