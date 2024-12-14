@@ -77,10 +77,13 @@ export function usePushNotifications() {
 
   useEffect(() => {
     return () => {
-      notificationListener.current &&
+      if (notificationListener.current) {
         Notifications.removeNotificationSubscription(notificationListener.current);
-      responseListener.current &&
+      }
+
+      if (responseListener.current) {
         Notifications.removeNotificationSubscription(responseListener.current);
+      }
     };
   }, []);
 
@@ -103,9 +106,10 @@ export function usePushNotifications() {
   }
 
   function cleanupNotificationReceivedListener() {
-    notificationListener.current &&
+    if (notificationListener.current) {
       Notifications.removeNotificationSubscription(notificationListener.current);
-    notificationListener.current = undefined;
+      notificationListener.current = undefined;
+    }
   }
 
   function setNotificationInteractionListener(
@@ -117,9 +121,10 @@ export function usePushNotifications() {
   }
 
   function cleanupNotificationInteractionListener() {
-    responseListener.current &&
+    if (responseListener.current) {
       Notifications.removeNotificationSubscription(responseListener.current);
-    responseListener.current = undefined;
+      responseListener.current = undefined;
+    }
   }
 
   function cleanupAllListeners() {
