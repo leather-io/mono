@@ -36,9 +36,9 @@ describe(signBip322MessageSimple.name, () => {
     const nativeSegwitAddress = btc.getAddress('wpkh', testVectorKey);
     const payment = btc.p2wpkh(secp.getPublicKey(testVectorKey, true));
 
-    async function signPsbt(psbt: bitcoin.Psbt) {
+    function signPsbt(psbt: bitcoin.Psbt) {
       psbt.signAllInputs(createNativeSegwitBitcoinJsSigner(Buffer.from(testVectorKey)));
-      return btc.Transaction.fromPSBT(psbt.toBuffer());
+      return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
     }
 
     if (!nativeSegwitAddress) throw new Error('nativeSegwitAddress is undefined');
@@ -121,12 +121,12 @@ describe(signBip322MessageSimple.name, () => {
       ecdsaPublicKeyToSchnorr(secp.getPublicKey(Buffer.from(testVectorKey), true))
     );
 
-    async function signPsbt(psbt: bitcoin.Psbt) {
+    function signPsbt(psbt: bitcoin.Psbt) {
       psbt.data.inputs.forEach(
         input => (input.tapInternalKey = Buffer.from(payment.tapInternalKey))
       );
       psbt.signAllInputs(createTaprootBitcoinJsSigner(Buffer.from(testVectorKey)));
-      return btc.Transaction.fromPSBT(psbt.toBuffer());
+      return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
     }
 
     test('Addresses against taproot test vectors', () => {

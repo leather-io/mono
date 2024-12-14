@@ -26,7 +26,7 @@ export function NotifyUserSheetLayout({
   const { themeDerivedFromThemePreference } = useSettings();
   const { i18n } = useLingui();
 
-  async function onNotify() {
+  function onNotify() {
     if (sheetData) {
       void analytics?.track('submit_feature_waitlist', {
         feature: sheetData.id,

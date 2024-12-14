@@ -22,7 +22,7 @@ export interface GenerateBitcoinUnsignedTransactionArgs {
   utxos: CoinSelectionUtxo[];
 }
 
-export async function generateBitcoinUnsignedTransactionNativeSegwit({
+export function generateBitcoinUnsignedTransactionNativeSegwit({
   feeRate,
   isSendingMax,
   payerAddress,

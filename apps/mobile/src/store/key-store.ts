@@ -37,17 +37,17 @@ export function useKeyStore() {
   const bitcoinKeychains = useBitcoinAccounts();
 
   return {
-    async createTemporarySoftwareWallet() {
+    createTemporarySoftwareWallet() {
       const mnemonic = generateMnemonic();
       return mnemonic;
     },
 
-    async createNewSoftwareWallet() {
+    createNewSoftwareWallet() {
       const mnemonic = generateMnemonic();
       return this.restoreWalletFromMnemonic({ mnemonic, biometrics: true });
     },
 
-    async isWalletInKeychain({ fingerprint }: { fingerprint: string }) {
+    isWalletInKeychain({ fingerprint }: { fingerprint: string }) {
       return !!wallets.list.find(wallet => wallet.fingerprint === fingerprint);
     },
 
@@ -61,7 +61,7 @@ export function useKeyStore() {
       passphrase?: string;
     }) {
       const fingerprint = await getMnemonicRootKeyFingerprint(mnemonic, passphrase);
-      if (await this.isWalletInKeychain({ fingerprint })) {
+      if (this.isWalletInKeychain({ fingerprint })) {
         keychainErrorHandlers.throwKeyExistsError();
         return;
       }

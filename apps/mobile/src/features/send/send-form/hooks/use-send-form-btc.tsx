@@ -75,14 +75,14 @@ export function useSendFormBtc() {
     },
     // Temporary logs until we can hook up to approver flow
 
-    async onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
+    onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
       try {
         const parsedSendFormValues = parseSendFormValues(values);
         const coinSelectionUtxos = createCoinSelectionUtxos(data.utxos);
 
         const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
 
-        const tx = await generateTx({
+        const tx = generateTx({
           feeRate: Number(values.feeRate),
           isSendingMax: false,
           values: parsedSendFormValues,
