@@ -1,6 +1,6 @@
 import { Box, BoxProps } from '../../box/box.native';
 
-export interface CellAsideProps extends BoxProps {}
+export type CellAsideProps = BoxProps;
 
 export function CellAsideNative({ style, ...asideProps }: CellAsideProps) {
   return (
