@@ -17,3 +17,5 @@ export const TerminalIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+TerminalIcon.displayName = 'TerminalIcon';

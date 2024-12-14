@@ -17,3 +17,5 @@ export const ChevronRightIcon = forwardRef<Component, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+ChevronRightIcon.displayName = 'ChevronRightIcon';

@@ -23,3 +23,5 @@ export const Icon = forwardRef<Component, IconProps>(({ children, ...props }, re
     </>
   );
 });
+
+Icon.displayName = 'Icon';

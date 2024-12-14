@@ -11,3 +11,5 @@ export const SpaceIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+SpaceIcon.displayName = 'SpaceIcon';

@@ -147,3 +147,5 @@ export const Highlighter = memo(
     );
   }
 );
+
+Highlighter.displayName = 'Highlighter';

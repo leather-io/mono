@@ -17,3 +17,5 @@ export const PulseIcon = forwardRef<Component, IconProps>(({ variant, ...props }
     </Icon>
   );
 });
+
+PulseIcon.displayName = 'PulseIcon';

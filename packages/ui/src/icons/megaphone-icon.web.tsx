@@ -17,3 +17,5 @@ export const MegaphoneIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+MegaphoneIcon.displayName = 'MegaphoneIcon';

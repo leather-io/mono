@@ -31,3 +31,5 @@ export const LeatherLockedSplash = forwardRef<
     />
   );
 });
+
+LeatherLockedSplash.displayName = 'LeatherLockedSplash';

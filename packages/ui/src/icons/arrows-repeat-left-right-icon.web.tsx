@@ -19,3 +19,5 @@ export const ArrowsRepeatLeftRightIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ArrowsRepeatLeftRightIcon.displayName = 'ArrowsRepeatLeftRightIcon';

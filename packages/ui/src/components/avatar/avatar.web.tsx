@@ -56,6 +56,8 @@ const Image: typeof RadixAvatar.Image = forwardRef((props, ref) => (
   <RadixAvatar.Image className={avatarImageStyles} ref={ref} {...props} />
 ));
 
+Image.displayName = 'Avatar.Image';
+
 const avatarFallbackStyles = css({
   alignItems: 'center',
   bg: 'inherit',
@@ -73,6 +75,8 @@ const avatarFallbackStyles = css({
 const Fallback: typeof RadixAvatar.Fallback = forwardRef((props, ref) => (
   <RadixAvatar.Fallback className={avatarFallbackStyles} ref={ref} {...props} />
 ));
+
+Fallback.displayName = 'Avatar.Fallback';
 
 const avatarIconStyles = css({
   alignItems: 'center',

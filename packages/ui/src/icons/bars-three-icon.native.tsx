@@ -17,3 +17,5 @@ export const BarsThreeIcon = forwardRef<Component, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+BarsThreeIcon.displayName = 'BarsThreeIcon';

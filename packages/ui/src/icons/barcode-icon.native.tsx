@@ -17,3 +17,5 @@ export const BarcodeIcon = forwardRef<Component, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+BarcodeIcon.displayName = 'BarcodeIcon';

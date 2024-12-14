@@ -17,3 +17,5 @@ export const BarcodeIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+BarcodeIcon.displayName = 'BarcodeIcon';

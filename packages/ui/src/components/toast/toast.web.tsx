@@ -32,6 +32,8 @@ const Root: typeof RadixToast.Root = forwardRef((props, ref) => (
   <RadixToast.Root className={toastRootStyles} ref={ref} {...props} />
 ));
 
+Root.displayName = 'Toast.Root';
+
 const toastViewportStyles = css({
   alignItems: 'center',
   display: 'flex',
@@ -52,6 +54,8 @@ const toastViewportStyles = css({
 const Viewport: typeof RadixToast.Viewport = forwardRef((props, ref) => (
   <RadixToast.Viewport className={toastViewportStyles} ref={ref} {...props} />
 ));
+
+Viewport.displayName = 'Toast.Viewport';
 
 export const Toast = {
   Provider: RadixToast.Provider,

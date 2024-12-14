@@ -15,9 +15,13 @@ const Trigger: typeof RadixTooltip.Trigger = forwardRef((props, ref) => (
   <RadixTooltip.Trigger ref={ref} {...props} />
 ));
 
+Trigger.displayName = 'Tooltip.Trigger';
+
 const Content: typeof RadixTooltip.Content = forwardRef(({ className, ...props }, ref) => (
   <RadixTooltip.Content className={`${defaultContentStyles} ${className}`} ref={ref} {...props} />
 ));
+
+Content.displayName = 'Tooltip.Content';
 
 const Arrow: typeof RadixTooltip.Arrow = forwardRef(({ className, ...props }, ref) => (
   <RadixTooltip.Arrow
@@ -26,6 +30,8 @@ const Arrow: typeof RadixTooltip.Arrow = forwardRef(({ className, ...props }, re
     {...props}
   />
 ));
+
+Arrow.displayName = 'Tooltip.Arrow';
 
 export const Tooltip = {
   Root,

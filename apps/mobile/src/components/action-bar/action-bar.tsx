@@ -122,3 +122,5 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
     </Animated.View>
   );
 });
+
+ActionBar.displayName = 'ActionBar';

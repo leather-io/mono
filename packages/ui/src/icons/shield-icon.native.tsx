@@ -17,3 +17,5 @@ export const ShieldIcon = forwardRef<Component, IconProps>(({ variant, ...props 
     </Icon>
   );
 });
+
+ShieldIcon.displayName = 'ShieldIcon';

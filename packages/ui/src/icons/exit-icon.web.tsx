@@ -17,3 +17,5 @@ export const ExitIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+ExitIcon.displayName = 'ExitIcon';

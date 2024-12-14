@@ -11,3 +11,5 @@ export const RocketIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+RocketIcon.displayName = 'RocketIcon';

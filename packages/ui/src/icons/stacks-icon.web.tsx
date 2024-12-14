@@ -17,3 +17,5 @@ export const StacksIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+StacksIcon.displayName = 'StacksIcon';

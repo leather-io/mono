@@ -17,3 +17,5 @@ export const QrCodeIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+QrCodeIcon.displayName = 'QrCodeIcon';

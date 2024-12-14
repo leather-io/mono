@@ -17,3 +17,5 @@ export const SunInCloudIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, .
     </Icon>
   );
 });
+
+SunInCloudIcon.displayName = 'SunInCloudIcon';

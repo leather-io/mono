@@ -17,3 +17,5 @@ export const BitcoinCircleIcon = forwardRef<Component, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+BitcoinCircleIcon.displayName = 'BitcoinCircleIcon';

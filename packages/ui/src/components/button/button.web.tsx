@@ -38,3 +38,5 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
     </StyledButton>
   );
 });
+
+Button.displayName = 'Button';

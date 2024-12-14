@@ -17,3 +17,5 @@ export const FunctionIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+FunctionIcon.displayName = 'FunctionIcon';

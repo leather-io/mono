@@ -11,3 +11,5 @@ export const SaturnIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+SaturnIcon.displayName = 'SaturnIcon';

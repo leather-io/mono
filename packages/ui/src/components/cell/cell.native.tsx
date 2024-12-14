@@ -59,6 +59,8 @@ export const CellRoot = forwardRef<CellElement, CellProps>((props, ref) => {
   return <Box ref={ref} {...cellRootStyles} {...props} />;
 });
 
+CellRoot.displayName = 'Cell.Root';
+
 export const Cell = {
   Root: CellRoot,
   Label: CellLabelNative,

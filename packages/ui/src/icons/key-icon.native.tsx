@@ -17,3 +17,5 @@ export const KeyIcon = forwardRef<Component, IconProps>(({ variant, ...props }, 
     </Icon>
   );
 });
+
+KeyIcon.displayName = 'KeyIcon';

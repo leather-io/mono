@@ -17,3 +17,5 @@ export const CreditCardIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, .
     </Icon>
   );
 });
+
+CreditCardIcon.displayName = 'CreditCardIcon';

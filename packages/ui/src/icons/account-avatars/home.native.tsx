@@ -11,3 +11,5 @@ export const HomeIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+HomeIcon.displayName = 'HomeIcon';

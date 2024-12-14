@@ -19,3 +19,5 @@ export const ChevronRightIcon = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
+
+ChevronRightIcon.displayName = 'ChevronRightIcon';

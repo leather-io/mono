@@ -11,3 +11,5 @@ export const FolderIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+FolderIcon.displayName = 'FolderIcon';

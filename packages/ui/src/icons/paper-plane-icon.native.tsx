@@ -17,3 +17,5 @@ export const PaperPlaneIcon = forwardRef<Component, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+PaperPlaneIcon.displayName = 'PaperPlaneIcon';

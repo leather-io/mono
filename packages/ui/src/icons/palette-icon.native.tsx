@@ -17,3 +17,5 @@ export const PaletteIcon = forwardRef<Component, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+PaletteIcon.displayName = 'PaletteIcon';

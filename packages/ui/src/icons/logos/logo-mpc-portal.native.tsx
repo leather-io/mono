@@ -11,3 +11,5 @@ export const LogoMpcPortal = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+LogoMpcPortal.displayName = 'LogoMpcPortal';

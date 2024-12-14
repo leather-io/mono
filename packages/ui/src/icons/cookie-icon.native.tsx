@@ -17,3 +17,5 @@ export const CookieIcon = forwardRef<Component, IconProps>(({ variant, ...props 
     </Icon>
   );
 });
+
+CookieIcon.displayName = 'CookieIcon';

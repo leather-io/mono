@@ -17,3 +17,5 @@ export const StarIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+StarIcon.displayName = 'StarIcon';

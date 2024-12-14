@@ -17,3 +17,5 @@ export const CloseIcon = forwardRef<Component, IconProps>(({ variant, ...props }
     </Icon>
   );
 });
+
+CloseIcon.displayName = 'CloseIcon';

@@ -17,3 +17,5 @@ export const DollarCircleIcon = forwardRef<Component, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+DollarCircleIcon.displayName = 'DollarCircleIcon';

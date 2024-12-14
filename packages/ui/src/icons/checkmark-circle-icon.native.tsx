@@ -19,3 +19,5 @@ export const CheckmarkCircleIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+CheckmarkCircleIcon.displayName = 'CheckmarkCircleIcon';

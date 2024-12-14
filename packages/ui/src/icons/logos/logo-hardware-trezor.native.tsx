@@ -11,3 +11,5 @@ export const LogoHardwareTrezor = forwardRef<Component, SvgProps>((props, ref) =
     </Icon>
   );
 });
+
+LogoHardwareTrezor.displayName = 'LogoHardwareTrezor';

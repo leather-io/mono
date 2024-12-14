@@ -17,3 +17,5 @@ export const UnlockIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+UnlockIcon.displayName = 'UnlockIcon';

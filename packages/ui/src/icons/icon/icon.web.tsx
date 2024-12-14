@@ -20,3 +20,5 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(({ children, ...props }
     </>
   );
 });
+
+Icon.displayName = 'Icon';

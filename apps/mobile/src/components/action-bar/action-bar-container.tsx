@@ -216,3 +216,5 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
     </>
   );
 });
+
+ActionBarContainer.displayName = 'ActionBarContainer';

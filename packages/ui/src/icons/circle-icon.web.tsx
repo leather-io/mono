@@ -17,3 +17,5 @@ export const CircleIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+CircleIcon.displayName = 'CircleIcon';

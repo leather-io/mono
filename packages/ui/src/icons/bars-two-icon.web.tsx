@@ -17,3 +17,5 @@ export const BarsTwoIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+BarsTwoIcon.displayName = 'BarsTwoIcon';

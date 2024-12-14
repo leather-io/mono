@@ -11,3 +11,5 @@ export const LogoMpcFireblocks = forwardRef<Component, SvgProps>((props, ref) =>
     </Icon>
   );
 });
+
+LogoMpcFireblocks.displayName = 'LogoMpcFireblocks';

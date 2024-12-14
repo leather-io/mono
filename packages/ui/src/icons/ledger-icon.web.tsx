@@ -17,3 +17,5 @@ export const LedgerIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pr
     </Icon>
   );
 });
+
+LedgerIcon.displayName = 'LedgerIcon';

@@ -17,3 +17,5 @@ export const BellAlarmIcon = forwardRef<Component, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+BellAlarmIcon.displayName = 'BellAlarmIcon';

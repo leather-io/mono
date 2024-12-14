@@ -17,3 +17,5 @@ export const MoonIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+MoonIcon.displayName = 'MoonIcon';

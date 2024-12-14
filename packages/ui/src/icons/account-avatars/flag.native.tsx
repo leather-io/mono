@@ -11,3 +11,5 @@ export const FlagIcon = forwardRef<Component, SvgProps>((props, ref) => {
     </Icon>
   );
 });
+
+FlagIcon.displayName = 'FlagIcon';

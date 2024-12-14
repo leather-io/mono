@@ -19,3 +19,5 @@ export const SquareLinesBottomIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+SquareLinesBottomIcon.displayName = 'SquareLinesBottomIcon';

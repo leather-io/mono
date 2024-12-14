@@ -19,3 +19,5 @@ export const PlaygroundFormsIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+PlaygroundFormsIcon.displayName = 'PlaygroundFormsIcon';

@@ -17,3 +17,5 @@ export const SupportIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+SupportIcon.displayName = 'SupportIcon';

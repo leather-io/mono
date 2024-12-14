@@ -10,3 +10,5 @@ export const AnimalEagleIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>
     </Icon>
   );
 });
+
+AnimalEagleIcon.displayName = 'AnimalEagleIcon';

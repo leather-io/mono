@@ -11,3 +11,5 @@ export const AnimalChameleonIcon = forwardRef<Component, SvgProps>((props, ref) 
     </Icon>
   );
 });
+
+AnimalChameleonIcon.displayName = 'AnimalChameleonIcon';

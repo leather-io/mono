@@ -17,3 +17,5 @@ export const TrashIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+TrashIcon.displayName = 'TrashIcon';

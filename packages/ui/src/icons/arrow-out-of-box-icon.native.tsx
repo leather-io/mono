@@ -17,3 +17,5 @@ export const ArrowOutOfBoxIcon = forwardRef<Component, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+ArrowOutOfBoxIcon.displayName = 'ArrowOutOfBoxIcon';

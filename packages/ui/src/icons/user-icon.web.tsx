@@ -17,3 +17,5 @@ export const UserIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+UserIcon.displayName = 'UserIcon';

@@ -17,3 +17,5 @@ export const ErrorTriangleIcon = forwardRef<Component, IconProps>(({ variant, ..
     </Icon>
   );
 });
+
+ErrorTriangleIcon.displayName = 'ErrorTriangleIcon';

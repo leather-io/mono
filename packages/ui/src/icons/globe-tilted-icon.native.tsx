@@ -17,3 +17,5 @@ export const GlobeTiltedIcon = forwardRef<Component, IconProps>(({ variant, ...p
     </Icon>
   );
 });
+
+GlobeTiltedIcon.displayName = 'GlobeTiltedIcon';

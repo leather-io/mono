@@ -17,3 +17,5 @@ export const HeadsetIcon = forwardRef<Component, IconProps>(({ variant, ...props
     </Icon>
   );
 });
+
+HeadsetIcon.displayName = 'HeadsetIcon';

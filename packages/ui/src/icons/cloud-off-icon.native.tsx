@@ -17,3 +17,5 @@ export const CloudOffIcon = forwardRef<Component, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+CloudOffIcon.displayName = 'CloudOffIcon';

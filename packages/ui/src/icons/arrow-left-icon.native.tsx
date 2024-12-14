@@ -17,3 +17,5 @@ export const ArrowLeftIcon = forwardRef<Component, IconProps>(({ variant, ...pro
     </Icon>
   );
 });
+
+ArrowLeftIcon.displayName = 'ArrowLeftIcon';

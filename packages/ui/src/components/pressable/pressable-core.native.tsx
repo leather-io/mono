@@ -66,3 +66,5 @@ export type PressableCoreProps = RNPressableProps &
 export const PressableCore = forwardRef<ElementRef<typeof RNPressable>, PressableCoreProps>(
   (props, ref) => <AnimatedRestylePressable ref={ref} {...props} />
 );
+
+PressableCore.displayName = 'PressableCore';

@@ -19,3 +19,5 @@ export const SquareNotificationIcon = forwardRef<Component, IconProps>(
     );
   }
 );
+
+SquareNotificationIcon.displayName = 'SquareNotificationIcon';

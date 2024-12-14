@@ -17,3 +17,5 @@ export const Eye1Icon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...prop
     </Icon>
   );
 });
+
+Eye1Icon.displayName = 'Eye1Icon';

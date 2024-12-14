@@ -17,3 +17,5 @@ export const QuestionCircleIcon = forwardRef<Component, IconProps>(({ variant, .
     </Icon>
   );
 });
+
+QuestionCircleIcon.displayName = 'QuestionCircleIcon';
