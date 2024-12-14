@@ -161,8 +161,7 @@ export function parseKnownPaymentType(payment: BtcSignerLibPaymentTypeIdentifers
 
 export type PaymentTypeMap<T> = Record<PaymentTypes, T>;
 export function whenPaymentType(mode: PaymentTypes | BtcSignerLibPaymentTypeIdentifers) {
-  return <T extends unknown>(paymentMap: PaymentTypeMap<T>): T =>
-    paymentMap[parseKnownPaymentType(mode)];
+  return <T>(paymentMap: PaymentTypeMap<T>): T => paymentMap[parseKnownPaymentType(mode)];
 }
 
 export type SupportedPaymentType = 'p2wpkh' | 'p2tr';
