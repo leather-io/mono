@@ -1,13 +1,16 @@
-import { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
-import { TouchableOpacity, TouchableOpacityProps } from '../button/touchable-opacity.native';
+import {
+  Pressable,
+  PressableProps,
+  legacyTouchablePressEffect,
+} from '../pressable/pressable.native';
 
-export interface RadioButtonProps extends TouchableOpacityProps<Theme> {
+export interface RadioButtonProps extends PressableProps {
   isSelected: boolean;
 }
 export function RadioButton({ isSelected, ...props }: RadioButtonProps) {
   return (
-    <TouchableOpacity {...props}>
+    <Pressable {...props} pressEffects={legacyTouchablePressEffect} role="radio">
       <Box
         alignItems="center"
         borderRadius="round"
@@ -25,6 +28,6 @@ export function RadioButton({ isSelected, ...props }: RadioButtonProps) {
           width={10}
         />
       </Box>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

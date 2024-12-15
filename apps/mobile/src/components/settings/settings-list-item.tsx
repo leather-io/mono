@@ -67,7 +67,7 @@ export function SettingsListItem({
       <Cell.Aside>
         {(!type || type === 'simple') && <ChevronRightIcon variant="small" />}
         {type === 'switch' && <Switch value={switchValue} onValueChange={onSwitchValueChange} />}
-        {type === 'radio' && <RadioButton isSelected={isRadioSelected} />}
+        {type === 'radio' && <RadioButton isSelected={isRadioSelected} onPress={onPress} />}
       </Cell.Aside>
     </Cell.Root>
   );
