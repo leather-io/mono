@@ -174,6 +174,13 @@
   * dependencies
     * @leather.io/models bumped to 0.24.1
 
+## [2.4.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.3.1...@leather.io/rpc-v2.4.0) (2024-12-16)
+
+
+### Features
+
+* udpate types to conform with extension provider ([c8f80a8](https://github.com/leather-io/mono/commit/c8f80a85169b595fb76de3fa7db7fff1fda6321c))
+
 ## [2.3.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.2.0...@leather.io/rpc-v2.3.0) (2024-12-12)
 
 
