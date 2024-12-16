@@ -3,6 +3,7 @@ import {
   useBitcoinAccountTotalBitcoinBalance,
   useBitcoinAccountUtxos,
 } from '@/queries/balance/bitcoin-balance.query';
+import BigNumber from 'bignumber.js';
 
 import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
 import { Utxo, useAverageBitcoinFeeRates } from '@leather.io/query';
@@ -25,7 +26,19 @@ export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps)
   const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance(accountId);
 
   // Handle loading and error states
-  if (!utxos.length || !feeRates) return null;
+  // if (!utxos.length || !feeRates) return null;
 
-  return children({ availableBalance, fiatBalance, feeRates, utxos });
+  const bigZero = new BigNumber(0);
+  const zeroFees = {
+    fastestFee: bigZero,
+    halfHourFee: bigZero,
+    hourFee: bigZero,
+  };
+
+  return children({
+    availableBalance,
+    fiatBalance,
+    feeRates: feeRates || zeroFees,
+    utxos,
+  });
 }
