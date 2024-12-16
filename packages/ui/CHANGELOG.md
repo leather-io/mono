@@ -191,6 +191,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.22.2
 
+## [1.44.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.1...@leather.io/ui-v1.44.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* animal icons svg code ([9936498](https://github.com/leather-io/mono/commit/9936498e84d6c3327f60c190719e30a81d59a559))
+
 ## [1.44.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.0...@leather.io/ui-v1.44.1) (2024-12-16)
 
 
