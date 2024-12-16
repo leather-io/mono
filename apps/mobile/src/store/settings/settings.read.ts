@@ -5,8 +5,13 @@ import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { createSelector } from '@reduxjs/toolkit';
-import { StacksNetwork } from '@stacks/network';
-import { ChainID, TransactionVersion } from '@stacks/transactions';
+import {
+  ChainId,
+  STACKS_MAINNET,
+  STACKS_TESTNET,
+  StacksNetwork,
+  TransactionVersion,
+} from '@stacks/network';
 
 import { getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
@@ -111,19 +116,25 @@ export function useAccountDisplayAddress(fingerprint: string, accountIndex: numb
 export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
   const { networkPreference } = useSettings();
 
-  return useMemo(() => {
-    const stacksNetwork = new StacksNetwork({ url: networkPreference.chain.stacks.url });
+  function getNetworkFromChainId(chainId: number) {
+    if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
+    if (chainId === ChainId.Testnet) return STACKS_TESTNET;
+    throw new Error(`Unknown chain ID: ${chainId}`);
+  }
 
-    stacksNetwork.version = whenStacksChainId(networkPreference.chain.stacks.chainId)({
-      [ChainID.Mainnet]: TransactionVersion.Mainnet,
-      [ChainID.Testnet]: TransactionVersion.Testnet,
-    });
-    stacksNetwork.chainId =
-      networkPreference.chain.stacks.subnetChainId ?? networkPreference.chain.stacks.chainId;
-    stacksNetwork.bnsLookupUrl = networkPreference.chain.stacks.url || '';
-
-    return stacksNetwork;
-  }, [networkPreference]);
+  return useMemo(
+    () => ({
+      ...getNetworkFromChainId(networkPreference.chain.stacks.chainId),
+      transactionVersion: whenStacksChainId(networkPreference.chain.stacks.chainId)({
+        [ChainId.Mainnet]: TransactionVersion.Mainnet,
+        [ChainId.Testnet]: TransactionVersion.Testnet,
+      }),
+      chainId:
+        networkPreference.chain.stacks.subnetChainId ?? networkPreference.chain.stacks.chainId,
+      bnsLookupUrl: networkPreference.chain.stacks.url || '',
+    }),
+    [networkPreference]
+  );
 }
 
 export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {

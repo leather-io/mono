@@ -2,7 +2,8 @@ import { hexToCV } from '@stacks/transactions';
 import { QueryFunctionContext, type UseQueryResult, useQueries } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-import { getPrincipalFromContractId, oneWeekInMs } from '@leather.io/utils';
+import { getPrincipalFromAssetString } from '@leather.io/stacks';
+import { oneWeekInMs } from '@leather.io/utils';
 
 import { StacksQueryPrefixes } from '../../../query-prefixes';
 import { StacksClient, useStacksClient } from '../../stacks-client';
@@ -18,7 +19,7 @@ const queryOptions = {
 
 function getTokenId(hex: string) {
   const clarityValue = hexToCV(hex);
-  return clarityValue.type === 1 ? Number(clarityValue.value) : 0;
+  return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
 }
 
 function statusCodeNotFoundOrNotProcessable(status: number) {
@@ -65,7 +66,7 @@ export function useGetNonFungibleTokenMetadataListQuery(
 
   return useQueries({
     queries: (nftHoldings.data?.results ?? []).map(nft => {
-      const address = getPrincipalFromContractId(nft.asset_identifier);
+      const address = getPrincipalFromAssetString(nft.asset_identifier);
       const tokenId = getTokenId(nft.value.hex);
 
       return {

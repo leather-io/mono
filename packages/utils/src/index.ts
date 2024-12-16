@@ -126,16 +126,6 @@ export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedR
   return p.status === 'rejected';
 }
 
-// TODO: Move to @leather.io/stacks
-export function getPrincipalFromContractId(identifier: string) {
-  return identifier.split('::')[0];
-}
-
-// TODO: Move to @leather.io/stacks
-export function formatContractId(address: string, name: string) {
-  return `${address}.${name}`;
-}
-
 export function createNullArrayOfLength(length: number) {
   return new Array(length).fill(null);
 }

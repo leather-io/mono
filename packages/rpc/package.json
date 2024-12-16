@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@leather.io/models": "workspace:*",
-    "@stacks/network": "6.13.0",
-    "@stacks/transactions-v7": "npm:@stacks/transactions@7.0.2",
+    "@stacks/network": "7.0.2",
+    "@stacks/transactions": "7.0.2",
     "zod": "3.24.1"
   },
   "devDependencies": {

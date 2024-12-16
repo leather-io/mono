@@ -24,7 +24,7 @@ export const STX20_API_BASE_URL_MAINNET = 'https://api.stx20.com/api/v1';
 export const BNS_V2_API_BASE_URL = 'https://api.bnsv2.com';
 
 // Copied from @stacks/transactions to avoid dependencies
-export enum ChainID {
+export enum ChainId {
   Testnet = 2147483648,
   Mainnet = 1,
 }
@@ -90,9 +90,9 @@ export interface StacksChainConfig extends BaseChainConfig {
   blockchain: 'stacks';
   url: string;
   /** The chainId of the network (or parent network if this is a subnet) */
-  chainId: ChainID;
+  chainId: ChainId;
   /** An additional chainId for subnets. Indicated a subnet if defined and is mainly used for signing. */
-  subnetChainId?: ChainID;
+  subnetChainId?: ChainId;
 }
 
 export type NetworkConfiguration = z.infer<typeof networkConfigurationSchema>;
@@ -103,7 +103,7 @@ const networkMainnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Mainnet,
+      chainId: ChainId.Mainnet,
       url: HIRO_API_BASE_URL_MAINNET,
     },
     bitcoin: {
@@ -121,7 +121,7 @@ const networkTestnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -139,7 +139,7 @@ const networkTestnet4: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -157,7 +157,7 @@ const networkSignet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -175,7 +175,7 @@ const networkSbtcTestnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -193,7 +193,7 @@ const networkSbtcDevenv: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: 'http://localhost:3999',
     },
     bitcoin: {
@@ -211,7 +211,7 @@ const networkDevnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: 'http://localhost:3999',
     },
     bitcoin: {

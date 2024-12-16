@@ -49,8 +49,6 @@ export * from './src/stacks/balance/account-balance.hooks';
 export * from './src/stacks/balance/account-balance.query';
 export * from './src/stacks/bns/bns.query';
 export * from './src/stacks/bns/bns.utils';
-export * from './src/stacks/contract/contract.hooks';
-export * from './src/stacks/contract/contract.query';
 export * from './src/stacks/fees/fees.hooks';
 export * from './src/stacks/fees/fees.query';
 export * from './src/stacks/fees/fees.utils';

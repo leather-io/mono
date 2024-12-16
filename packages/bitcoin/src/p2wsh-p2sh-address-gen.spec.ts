@@ -1,9 +1,10 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex, concatBytes } from '@noble/hashes/utils';
 import { base58check } from '@scure/base';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
-import { hashP2WPKH } from '@stacks/transactions';
+import { hash160 } from '@scure/btc-signer/utils';
 import { BIP32Factory } from 'bip32';
 import * as bitcoin from 'bitcoinjs-lib';
 
@@ -17,6 +18,17 @@ import {
   payToScriptHashTestnetPrefix,
   publicKeyToPayToScriptHashAddress,
 } from './p2wsh-p2sh-address-gen';
+
+// Internally, the Stacks blockchain encodes address the same as Bitcoin
+// single-sig address over p2sh (p2h-p2wpkh)
+// Copied from stacksjs as it's not exported anymore
+/** @internal */
+export function hashP2WPKH(input: Uint8Array): string {
+  const keyHash = hash160(input);
+  const redeemScript = concatBytes(new Uint8Array([0]), new Uint8Array([keyHash.length]), keyHash);
+  const redeemScriptHash = hash160(redeemScript);
+  return bytesToHex(redeemScriptHash);
+}
 
 describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
   const bip32 = BIP32Factory(ecc);

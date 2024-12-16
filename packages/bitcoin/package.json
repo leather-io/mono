@@ -36,8 +36,6 @@
     "@scure/bip32": "1.5.0",
     "@scure/bip39": "1.4.0",
     "@scure/btc-signer": "1.4.0",
-    "@stacks/common": "6.13.0",
-    "@stacks/transactions": "6.17.0",
     "bignumber.js": "9.1.2",
     "bip32": "4.0.0",
     "bitcoin-address-validation": "2.2.3",

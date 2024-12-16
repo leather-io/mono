@@ -1,7 +1,9 @@
-import { StacksMainnet, StacksTestnet } from '@stacks/network';
-import { ClarityValue, callReadOnlyFunction } from '@stacks/transactions';
+import { ChainId, StacksNetwork } from '@stacks/network';
+import { ClarityValue, fetchCallReadOnlyFunction } from '@stacks/transactions';
 
-import { BnsContractName, NetworkType, getBnsContractAddress } from './config';
+import { NetworkModes } from '@leather.io/models';
+
+import { BnsContractName, getBnsContractAddress } from './config';
 import { debug } from './debug';
 import { BnsReadOnlyOptions } from './interfaces';
 import { getFallbackUrl, getNetwork } from './network';
@@ -10,10 +12,10 @@ async function executeReadOnlyCall(
   options: BnsReadOnlyOptions,
   contractAddress: string,
   contractName: string,
-  network: StacksMainnet | StacksTestnet,
+  network: StacksNetwork,
   isZonefile = false
 ): Promise<ClarityValue> {
-  const networkType = network instanceof StacksMainnet ? 'mainnet' : 'testnet';
+  const networkType = network.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
   const fallbackUrl = getFallbackUrl(networkType);
 
   debug.log('executeReadOnlyCall initiated:', {
@@ -21,29 +23,25 @@ async function executeReadOnlyCall(
     contractAddress,
     contractName,
     functionName: options.functionName,
-    coreApiUrl: network.coreApiUrl,
+    coreApiUrl: network.client.baseUrl,
     fallbackUrl,
     isZonefile,
   });
 
   async function attemptCall(url: string): Promise<ClarityValue> {
-    const currentNetwork =
-      networkType === 'mainnet' ? new StacksMainnet({ url }) : new StacksTestnet({ url });
-
     debug.log('Attempting call with:', {
       url,
       networkType: networkType,
-      currentNetworkType: currentNetwork instanceof StacksMainnet ? 'mainnet' : 'testnet',
     });
 
     try {
-      const response = await callReadOnlyFunction({
+      const response = await fetchCallReadOnlyFunction({
         contractAddress,
         contractName,
         functionName: options.functionName,
         functionArgs: options.functionArgs,
         senderAddress: options.senderAddress,
-        network: currentNetwork,
+        network,
       });
 
       if ((response as any).error) {
@@ -76,15 +74,15 @@ async function executeReadOnlyCall(
 
   // For non-zonefile calls or if no fallback URL, try primary first then fallback
   try {
-    return await attemptCall(network.coreApiUrl);
+    return await attemptCall(network.client.baseUrl);
   } catch (error) {
     debug.log('Primary URL failed, checking fallback availability:', {
       hasFallback: !!fallbackUrl,
       fallbackUrl,
-      isSameAsPrimary: fallbackUrl === network.coreApiUrl,
+      isSameAsPrimary: fallbackUrl === network.client.baseUrl,
     });
 
-    if (fallbackUrl && fallbackUrl !== network.coreApiUrl) {
+    if (fallbackUrl && fallbackUrl !== network.client.baseUrl) {
       try {
         return await attemptCall(fallbackUrl);
       } catch (fallbackError) {
@@ -98,7 +96,7 @@ async function executeReadOnlyCall(
 }
 
 export async function bnsV2ReadOnlyCall(
-  options: Omit<BnsReadOnlyOptions, 'network'> & { network: NetworkType }
+  options: Omit<BnsReadOnlyOptions, 'network'> & { network: NetworkModes }
 ): Promise<ClarityValue> {
   debug.log('bnsV2ReadOnlyCall initiated:', {
     network: options.network,
@@ -111,8 +109,8 @@ export async function bnsV2ReadOnlyCall(
   debug.log('Network configuration:', {
     networkType: options.network,
     contractAddress,
-    isMainnet: network instanceof StacksMainnet,
-    apiUrl: network.coreApiUrl,
+    isMainnet: network.chainId === ChainId.Mainnet,
+    apiUrl: network.client.baseUrl,
   });
 
   return executeReadOnlyCall(options, contractAddress, BnsContractName, network, false);
