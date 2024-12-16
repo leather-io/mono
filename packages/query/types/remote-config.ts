@@ -36,6 +36,8 @@ interface FeeEstimationsConfig {
 interface SbtcConfig {
   enabled: boolean;
   contracts: Record<'mainnet' | 'testnet', { address: string }>;
+  emilyApiUrl: string;
+  swapsEnabled: boolean;
 }
 
 export interface RemoteConfig {

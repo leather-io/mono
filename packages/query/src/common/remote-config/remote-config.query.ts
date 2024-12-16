@@ -1,11 +1,18 @@
+import { useMemo } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import get from 'lodash.get';
 
-import { createMoney, isUndefined } from '@leather.io/utils';
+import { createMoney, getPrincipalFromContractId, isUndefined } from '@leather.io/utils';
 
 import type { ActiveFiatProvider, HiroMessage, RemoteConfig } from '../../../types/remote-config';
-import { LeatherEnvironment, useLeatherEnv, useLeatherGithub } from '../../leather-query-provider';
+import {
+  LeatherEnvironment,
+  useLeatherEnv,
+  useLeatherGithub,
+  useLeatherNetwork,
+} from '../../leather-query-provider';
 
 function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github']) {
   const IS_DEV_ENV = env === 'development';
@@ -129,4 +136,30 @@ export function useConfigTokensEnabledByDefault(): string[] {
 export function useConfigTokenTransferFeeEstimations() {
   const config = useRemoteConfig();
   return get(config, 'tokenTransferFeeEstimations', []);
+}
+
+export function useConfigSbtc() {
+  const config = useRemoteConfig();
+  const network = useLeatherNetwork();
+  const sbtc = config?.sbtc;
+
+  return useMemo(() => {
+    const displayPromoCardOnNetworks = (sbtc as any)?.showPromoLinkOnNetworks ?? [];
+    const contractIdMainnet = sbtc?.contracts.mainnet.address ?? '';
+    const contractIdTestnet = sbtc?.contracts.testnet.address ?? '';
+
+    return {
+      isSbtcEnabled: sbtc?.enabled ?? false,
+      isSbtcSwapsEnabled: (sbtc?.enabled && sbtc?.swapsEnabled) ?? false,
+      emilyApiUrl: sbtc?.emilyApiUrl ?? '',
+      contractId: network.chain.bitcoin.mode === 'mainnet' ? contractIdMainnet : contractIdTestnet,
+      isSbtcContract(contract: string) {
+        return (
+          contract === getPrincipalFromContractId(contractIdMainnet) ||
+          contract === getPrincipalFromContractId(contractIdTestnet)
+        );
+      },
+      shouldDisplayPromoCard: displayPromoCardOnNetworks.includes(network.id),
+    };
+  }, [network.chain.bitcoin.mode, network.id, sbtc]);
 }

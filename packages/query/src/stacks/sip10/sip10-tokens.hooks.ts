@@ -4,6 +4,7 @@ import type { BaseCryptoAssetBalance, Sip10CryptoAssetInfo } from '@leather.io/m
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { useAlexSwappableAssets } from '../../common/alex-sdk/alex-sdk.hooks';
+import { useConfigSbtc } from '../../common/remote-config/remote-config.query';
 import { useStacksAccountBalanceFungibleTokens } from '../balance/account-balance.hooks';
 import {
   useStacksFungibleTokensBalance,
@@ -32,6 +33,7 @@ function useSip10Tokens(address: string): {
 } {
   const balancesResults = useSip10TokensCryptoAssetBalance(address);
   const infoResults = useSip10TokensCryptoAssetInfo(address);
+  const { contractId: sBtcContractId } = useConfigSbtc();
 
   return useMemo(() => {
     const isLoading =
@@ -39,7 +41,11 @@ function useSip10Tokens(address: string): {
     const tokenBalances = balancesResults
       .map(query => query.data)
       .filter(isDefined)
-      .filter(token => token.balance.availableBalance.amount.isGreaterThan(0));
+      .filter(
+        token =>
+          token.contractId === sBtcContractId ||
+          token.balance.availableBalance.amount.isGreaterThan(0)
+      );
     const tokenInfo = infoResults.map(query => query.data).filter(isDefined);
     const tokens = tokenInfo.map(info => {
       const tokenBalance = tokenBalances.find(
@@ -56,7 +62,7 @@ function useSip10Tokens(address: string): {
       isLoading,
       tokens: tokens.filter(isDefined),
     };
-  }, [balancesResults, infoResults]);
+  }, [balancesResults, infoResults, sBtcContractId]);
 }
 
 export function useSip10Token(address: string, contractId: string) {
