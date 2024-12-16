@@ -191,6 +191,14 @@
   * dependencies
     * @leather.io/utils bumped to 0.22.2
 
+## [1.44.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.0...@leather.io/ui-v1.44.1) (2024-12-16)
+
+
+### Bug Fixes
+
+* add onPress handlers to radio in setting list items ([eea70f1](https://github.com/leather-io/mono/commit/eea70f1895a5e6d4832280e18f991976fb0745d3))
+* adjust vertical centering of incorrectly rendered text ([3b19fcc](https://github.com/leather-io/mono/commit/3b19fcc61b963f974c959a5062b4e0037c980648))
+
 ## [1.44.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.43.1...@leather.io/ui-v1.44.0) (2024-12-13)
 
 

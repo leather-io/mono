@@ -331,6 +331,20 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.5
 
+## [2.2.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.2...@leather.io/mobile-v2.2.3) (2024-12-16)
+
+
+### Bug Fixes
+
+* add onPress handlers to radio in setting list items ([eea70f1](https://github.com/leather-io/mono/commit/eea70f1895a5e6d4832280e18f991976fb0745d3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.44.1
+
 ## [2.2.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.1...@leather.io/mobile-v2.2.2) (2024-12-16)
 
 
