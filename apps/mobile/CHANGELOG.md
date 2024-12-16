@@ -331,6 +331,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.5
 
+## [2.2.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.1...@leather.io/mobile-v2.2.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* remove animation reset that also resets app when switching apps, ref LEA-1792 ([70db183](https://github.com/leather-io/mono/commit/70db183bbae6a8c8153db06826fcc05ae765ef60))
+
 ## [2.2.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.0...@leather.io/mobile-v2.2.1) (2024-12-13)
 
 
