@@ -1,3 +1,4 @@
+import { postConditionToWire } from '@stacks/transactions';
 import { describe, expect, it, vi } from 'vitest';
 
 import { isString } from '@leather.io/utils';
@@ -9,9 +10,7 @@ import {
   mockStxPostCondition,
 } from './transaction.mocks';
 
-vi.mock('@leather.io/utils', () => ({
-  isString: vi.fn(),
-}));
+vi.mock('@leather.io/utils', () => ({ isString: vi.fn() }));
 
 describe('getPostConditionFromString', () => {
   it('should return post condition if it is a valid pc hex string', () => {
@@ -53,7 +52,6 @@ describe('getPostCondition', () => {
   it('should return post condition directly if already a PostCondition object', () => {
     (isString as unknown as ReturnType<typeof vi.fn>).mockReturnValue(false);
     const result = PostConditionModule.getPostCondition(mockStxPostCondition);
-    expect(isString).toHaveBeenCalledWith(mockStxPostCondition);
-    expect(result).toBe(mockStxPostCondition);
+    expect(result).toStrictEqual(postConditionToWire(mockStxPostCondition));
   });
 });

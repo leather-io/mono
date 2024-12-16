@@ -11,10 +11,10 @@ import {
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
+import { getPrincipalFromAssetString } from '@leather.io/stacks';
 import {
   convertAmountToFractionalUnit,
   createMoney,
-  getPrincipalFromContractId,
   isDefined,
   sortAssetsByName,
 } from '@leather.io/utils';
@@ -51,7 +51,7 @@ export function useAlexCurrencyPriceAsMarketData() {
     (principal: string, symbol: string) => {
       const tokenInfo = supportedCurrencies
         .filter(isDefined)
-        .find(token => getPrincipalFromContractId(token.underlyingToken) === principal);
+        .find(token => getPrincipalFromAssetString(token.underlyingToken) === principal);
       if (!prices || !tokenInfo)
         return createMarketData(createMarketPair(symbol, 'USD'), createMoney(0, 'USD'));
       const currency = tokenInfo.id;
@@ -73,7 +73,7 @@ function useCreateSwapAsset(address: string) {
       if (!prices) return;
       if (!tokenInfo) return;
 
-      const principal = getPrincipalFromContractId(tokenInfo.underlyingToken);
+      const principal = getPrincipalFromAssetString(tokenInfo.underlyingToken);
 
       const availableBalance = sip10Tokens.find(
         token => token.info.contractId === tokenInfo.underlyingToken
