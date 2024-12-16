@@ -61,7 +61,6 @@ export function useAuthState({
 
   const onAppBackground = useCallback(() => {
     if (securityLevelPreference === 'secure') {
-      setAnimationFinished(false);
       setAuthState('started');
 
       // add latest active timestamp only if the app was actually unlocked
@@ -70,7 +69,7 @@ export function useAuthState({
         userLeavesApp(+new Date());
       }
     }
-  }, [securityLevelPreference, userLeavesApp, setAnimationFinished, authState]);
+  }, [securityLevelPreference, userLeavesApp, authState]);
 
   const lockApp = useCallback(() => {
     setAnimationFinished(false);
