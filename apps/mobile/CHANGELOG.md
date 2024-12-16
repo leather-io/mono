@@ -337,6 +337,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.44.2
 
+## [2.2.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.4...@leather.io/mobile-v2.2.5) (2024-12-16)
+
+
+### Bug Fixes
+
+* still show BTC send form for zero balance accounts, ref #LEA-1889 ([458f697](https://github.com/leather-io/mono/commit/458f6977447e40ede173a3b9e0dff3d59a79aa2f))
+
 ## [2.2.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.2...@leather.io/mobile-v2.2.3) (2024-12-16)
 
 
