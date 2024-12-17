@@ -16,14 +16,18 @@ import { createGetUtxosByAddressQueryOptions } from './utxos-by-address.query';
 interface UtxoIdentifier {
   txid: string;
   vout: number;
+  value: number;
 }
 
 export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
   return <T extends UtxoIdentifier>(utxo: T) => {
-    return !inscriptions.some(
-      inscription =>
-        `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
-    );
+    return !inscriptions.some(inscription => {
+      // TODO: This is a temporary fix to avoid blocking people from spending large amounts that contain inscriptions.
+      return (
+        `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}` &&
+        utxo.value < 1
+      );
+    });
   };
 }
 
