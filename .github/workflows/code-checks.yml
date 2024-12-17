@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
       - name: Lint Eslint
-        run: pnpm lint
+        run: pnpm build && pnpm lint
 
   typecheck:
     runs-on: ubuntu-latest
