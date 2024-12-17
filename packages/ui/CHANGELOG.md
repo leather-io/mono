@@ -197,6 +197,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.22.4
 
+## [1.44.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.3...@leather.io/ui-v1.44.4) (2024-12-17)
+
+
+### Bug Fixes
+
+* animal icon color ([406ae72](https://github.com/leather-io/mono/commit/406ae727997d09484e984a24fee6c6b4582ff4ef))
+
 ## [1.44.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.1...@leather.io/ui-v1.44.2) (2024-12-16)
 
 
