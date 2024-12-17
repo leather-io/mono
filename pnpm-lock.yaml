@@ -49,9 +49,15 @@ importers:
       '@vitest/coverage-v8':
         specifier: 2.1.5
         version: 2.1.5(vitest@2.1.5(@types/node@22.7.8)(jsdom@22.1.0)(lightningcss@1.25.1)(terser@5.36.0))
+      chalk:
+        specifier: 5.3.0
+        version: 5.3.0
       dependency-cruiser:
         specifier: 16.6.0
         version: 16.6.0
+      dotenv:
+        specifier: 16.4.5
+        version: 16.4.5
       eslint-plugin-lingui:
         specifier: 0.4.0
         version: 0.4.0(eslint@9.16.0(jiti@1.21.6))(typescript@5.5.4)
@@ -18856,14 +18862,6 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.5(vite@5.4.9(@types/node@20.14.0)(lightningcss@1.25.1)(terser@5.36.0))':
-    dependencies:
-      '@vitest/spy': 2.1.5
-      estree-walker: 3.0.3
-      magic-string: 0.30.12
-    optionalDependencies:
-      vite: 5.4.9(@types/node@20.14.0)(lightningcss@1.25.1)(terser@5.36.0)
-
   '@vitest/mocker@2.1.5(vite@5.4.9(@types/node@22.7.8)(lightningcss@1.25.1)(terser@5.36.0))':
     dependencies:
       '@vitest/spy': 2.1.5
@@ -26382,7 +26380,7 @@ snapshots:
   vitest@2.1.5(@types/node@20.14.0)(jsdom@22.1.0)(lightningcss@1.25.1)(terser@5.36.0):
     dependencies:
       '@vitest/expect': 2.1.5
-      '@vitest/mocker': 2.1.5(vite@5.4.9(@types/node@20.14.0)(lightningcss@1.25.1)(terser@5.36.0))
+      '@vitest/mocker': 2.1.5(vite@5.4.9(@types/node@22.7.8)(lightningcss@1.25.1)(terser@5.36.0))
       '@vitest/pretty-format': 2.1.6
       '@vitest/runner': 2.1.5
       '@vitest/snapshot': 2.1.5
