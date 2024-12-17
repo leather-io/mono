@@ -10,11 +10,10 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "io.leather.mobilewallet",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": false,
       "splash": {
         "image": "./src/assets/light-mode-splash.png",
@@ -29,6 +28,7 @@
     },
     "android": {
       "icon": "./src/assets/icon.png",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#12100F"
@@ -64,15 +64,22 @@
       [
         "expo-asset",
         {
-          "assets": [
-            "src/scripts/injected-provider.js"
-          ]
+          "assets": ["src/scripts/injected-provider.js"]
         }
       ],
       [
         "expo-dev-client",
         {
           "launchMode": "most-recent"
+        }
+      ],
+      "@react-native-firebase/app",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ],

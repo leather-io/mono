@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "915379517791",
+    "project_id": "leather-b5081",
+    "storage_bucket": "leather-b5081.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915379517791:android:d4e7cb446a612f8c789eea",
+        "android_client_info": {
+          "package_name": "io.leather.mobilewallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "REDACTED"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
