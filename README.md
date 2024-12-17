@@ -19,8 +19,8 @@ Coding standards are enforced through the use of
 - `eslint`
 - `prettier`
 - `typescript`
-
-Shared configuration files for these tools exist in `packages` and the same base configurations are used in the monorepo itself.
+- `syncpack`
+- `ls-lint`
 
 ### Monorepo core packages
 
@@ -30,11 +30,30 @@ The current packages are listed below
 - [Prettier](packages/prettier-config/README.md)
 - [TSconfig](packages/tsconfig-config/README.md)
 
-### Git Actions
+## Running code quality checks with git hooks
 
-Basic CI actions to run code quality checks have been setup in
+You can configure code checks to run during pre-commit and/or pre-push hooks. Available checks 
+include:
 
-- [Code checks](.github/workflows/code-checks.yml)
+- lint: runs ESLint.
+- format: formats code with prettier
+- syncpack: ensures consistent dependency versions across packages.
+- test: runs the test suite.
+- typecheck: validates TypeScript types.
+
+### Set up local checks
+
+1. Copy `.env.example` to `.env`.
+2. Define the checks for each hook (default settings shown below):
+
+PRE_COMMIT=format,lint
+PRE_PUSH=syncpack,typecheck,lint:filenames
+
+In most cases, setting PRE_COMMIT is sufficient, as syncpack and file name linting errors are
+uncommon, and typechecking is handles by editors.
+
+Local checks are optional and configurable to suit developer preferences. On GitHub, these 
+checks run automatically on every push through [Code checks](.github/workflows/code-checks.yml), as part of the CI workflow.
 
 ### Documentation
 
