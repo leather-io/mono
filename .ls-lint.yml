@@ -6,8 +6,14 @@ ls:
 
 ignore:
   - .git
+  - .idea
+  - .vscode
   - dist
   - apps/mobile/.expo/*
+  - packages/*/.tsup
+  - packages/ui/ios
+  - packages/ui/android
+  - packages/ui/dist-native
   - packages/ui/dist-web
   - node_modules
   - packages/*/node_modules
