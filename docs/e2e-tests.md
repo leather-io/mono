@@ -1,4 +1,4 @@
-# E2E tests with Maestro
+# Mobile App E2E tests with Maestro
 
 ## To get started
 
@@ -18,10 +18,10 @@ Writing tests is fairly simple. Here’s the step-by-step on how to do that:
 1. Create a yaml file in `maestro/flows`
 2. Set appId on top, and start the flow with `launchApp`
 
-    ``` appId: io.leather.mobilewallet
-    ---
-    - launchApp
-    ```
+   ``` appId: io.leather.mobilewallet
+   ---
+   - launchApp
+   ```
 
 3. Run some shared flows to get the app to the clean state, stuff like `runFlow: ../shared/clean-up.yaml` for cleaning up state and `runFlow: ../shared/add-wallet.yaml` to set wallet in your flow
 
@@ -38,6 +38,10 @@ To run all of the flows locally, you can run `maestro test maestro/flows`.
 Whenever you create a new flow don't forget to add it in expo build [maestro-flows.yaml](../apps/mobile/.eas/functions/maestro-flows.yaml):
 
 You want a recording of your new changes? Simply create an E2E test for you changes and run `maestro record maestro/flows/your-amazing-flow.yaml` and it will create an mp4 for you!
+
+### Add test to CI
+
+To add test to CI, you need to add it to the `run_maestro_tests` function in [maestro.yml](../apps/mobile/.eas/common/maestro.yml)
 
 Refs:
 

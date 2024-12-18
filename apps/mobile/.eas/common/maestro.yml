@@ -14,12 +14,22 @@ functions:
     - eas/maestro_test:
         inputs:
           flow_path: |
-            maestro/flows/change-account-icon.yaml
-            maestro/flows/create-wallet.yaml
+            maestro/flows/accounts-drawer.yaml
+            maestro/flows/accounts-drawer.yaml
+            maestro/flows/change-account-icon.yaml  
+            maestro/flows/change-network.yaml
+            maestro/flows/change-theme.yaml      
             maestro/flows/create-wallet-without-security.yaml
-            maestro/flows/delete-wallet.yaml
             maestro/flows/hide-account.yaml 
-            maestro/flows/restore-wallet.yaml
+            maestro/flows/receive.yaml
+            maestro/flows/restore-wallet.yaml    
+            maestro/flows/send.yaml
+            maestro/flows/settings-guides.yaml
+            maestro/flows/settings-learn.yaml
+            maestro/flows/settings-support.yaml
+            maestro/flows/wallet-add-account.yaml
+            maestro/flows/wallet-management.yaml
+            maestro/flows/wallet-multi-wallet.yaml
 
   run_secure_maestro_tests:
     - set_maestro_driver_timeout
