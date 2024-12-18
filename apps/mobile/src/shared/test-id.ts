@@ -12,6 +12,7 @@ export enum TestId {
   homePrivacyButton = 'homePrivacyButton',
   homeSettingsButton = 'homeSettingsButton',
   networkBadge = 'networkBadge',
+  receiveAssetItem = 'receiveAssetItem',
   restoreWalletContinue = 'restoreWalletContinue',
   restoreWalletSheetButton = 'restoreWalletSheetButton',
   restoreWalletTextInput = 'restoreWalletTextInput',
