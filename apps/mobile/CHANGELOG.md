@@ -357,6 +357,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.44.4
 
+## [2.2.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.7...@leather.io/mobile-v2.2.8) (2024-12-18)
+
+
+### Bug Fixes
+
+* add dark mode animation, ref LEA-1607 ([7e3bbdf](https://github.com/leather-io/mono/commit/7e3bbdf96e09bd383aafab9bdffc3d40b1a98964))
+
 ## [2.2.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.4...@leather.io/mobile-v2.2.5) (2024-12-16)
 
 
