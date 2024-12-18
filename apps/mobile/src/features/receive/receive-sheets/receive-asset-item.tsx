@@ -1,4 +1,5 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
+import { TestId } from '@/shared/test-id';
 
 import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
 
@@ -20,7 +21,12 @@ export function ReceiveAssetItem({
   onPress,
 }: ReceiveAssetItemProps) {
   return (
-    <Cell.Root pressable={true} disabled={!onPress} onPress={onPress}>
+    <Cell.Root
+      pressable={true}
+      disabled={!onPress}
+      onPress={onPress}
+      testID={TestId.receiveAssetItem}
+    >
       <Cell.Icon>{icon}</Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">
