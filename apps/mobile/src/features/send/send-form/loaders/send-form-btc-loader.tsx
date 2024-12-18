@@ -21,12 +21,12 @@ interface SendFormBtcLoaderProps {
 }
 export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps) {
   const accountId = { fingerprint: account.fingerprint, accountIndex: account.accountIndex };
-  const { data: feeRates } = useAverageBitcoinFeeRates();
-  const { data: utxos = [] } = useBitcoinAccountUtxos(accountId);
+  const { data: feeRates, isLoading: isFeeRatesLoading } = useAverageBitcoinFeeRates();
+  const { data: utxos = [], isLoading: isUtxosLoading } = useBitcoinAccountUtxos(accountId);
   const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance(accountId);
 
   // Handle loading and error states
-  // if (!utxos.length || !feeRates) return null;
+  if (isUtxosLoading || isFeeRatesLoading) return null;
 
   const bigZero = new BigNumber(0);
   const zeroFees = {
