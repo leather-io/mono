@@ -16,7 +16,6 @@ import { useLingui } from '@lingui/react';
 import {
   BitcoinCircleIcon,
   DollarCircleIcon,
-  Eye1Icon,
   PackageSecurityIcon,
   PointerHandIcon,
   SheetRef,
@@ -32,18 +31,12 @@ export default function SettingsDisplayScreen() {
   const {
     accountDisplayPreference,
     bitcoinUnitPreference,
-    changePrivacyModePreference,
     changeHapticsPreference,
     fiatCurrencyPreference,
-    privacyModePreference,
     hapticsPreference,
     themePreference,
   } = useSettings();
   const { i18n } = useLingui();
-
-  function onUpdatePrivacyMode() {
-    changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
-  }
 
   function onUpdateHapticsPreference() {
     changeHapticsPreference(hapticsPreference === 'enabled' ? 'disabled' : 'enabled');
@@ -123,22 +116,7 @@ export default function SettingsDisplayScreen() {
               accountIdentifierSheetRef.current?.present();
             }}
           />
-          {isFeatureEnabled() && (
-            <SettingsListItem
-              title={t({
-                id: 'display.privacy_mode.cell_title',
-                message: 'Hide home balance',
-              })}
-              caption={t({
-                id: 'display.privacy_mode.cell_caption',
-                message: 'Tap your balance to quickly toggle this setting',
-              })}
-              icon={<Eye1Icon />}
-              type="switch"
-              onSwitchValueChange={() => onUpdatePrivacyMode()}
-              switchValue={privacyModePreference === 'hidden'}
-            />
-          )}
+
           {isFeatureEnabled() && (
             <SettingsListItem
               title={t({
