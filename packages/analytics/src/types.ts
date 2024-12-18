@@ -1,6 +1,8 @@
 export * from './events';
+
 export interface DefaultProperties {
-  platform: 'web' | 'extension' | 'mobile';
+  platform: 'web' | 'extension' | 'mobile' | 'earn';
+  [key: string]: string | number | boolean | undefined;
 }
 
 export interface AnalyticsClientInterface {
