@@ -357,6 +357,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.44.4
 
+## [2.2.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.8...@leather.io/mobile-v2.2.9) (2024-12-18)
+
+
+### Bug Fixes
+
+* remove hide balances from settings, ref LEA-1753 ([7180f9a](https://github.com/leather-io/mono/commit/7180f9a729ae242672a768e12a0f0a54d9addd0b))
+
 ## [2.2.8](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.7...@leather.io/mobile-v2.2.8) (2024-12-18)
 
 
