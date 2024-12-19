@@ -34,7 +34,6 @@ export default function StackLayout() {
       <Stack.Screen name="index" options={{ header: () => <HomeHeader /> }} />
       <Stack.Screen name="browser" options={{ headerShown: false }} />
       <Stack.Screen name="generating-wallet" options={{ headerShown: false }} />
-      <Stack.Screen name="receive" options={{ header: () => <NakedHeader /> }} />
       <Stack.Screen name="swap" options={{ header: () => <NakedHeader /> }} />
 
       {/* Account */}
