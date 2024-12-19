@@ -6,7 +6,7 @@ interface ActivityCellProps {
   icon: ReactNode;
   title: string;
   date: string;
-  amount: string;
+  amount: string | number | null;
   fiatAmount: string;
   onPress?(): void;
 }

@@ -1,15 +1,19 @@
 import { Linking } from 'react-native';
 
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
+import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
-import { StacksTx, StacksTxStatus } from '@leather.io/models';
+import { StacksTx } from '@leather.io/models';
 import { useCurrentNetworkState } from '@leather.io/query';
+import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
+import { i18nFormatCurrency } from '@leather.io/utils';
 
-import { ActivityCell } from './activity-cell';
-import { displayDate } from './transaction/date-utils';
-import { getTransactionTime } from './transaction/transaction-list.utils';
-import { makeStacksTxExplorerLink } from './utils/explorer-link';
+import { ActivityCell } from '../activity-cell';
+import { displayDate } from '../transaction/date-utils';
+import { getTransactionTime } from '../transaction/transaction-list.utils';
+import { makeStacksTxExplorerLink } from '../utils/explorer-link';
+import { getTxValue, stacksValue, statusFromTx } from './legacy-extension';
 
 interface StacksActivityCellProps {
   tx: StacksTx;
@@ -24,18 +28,7 @@ async function goToExplorer(tx: StacksTx, mode: BitcoinNetworkModes) {
   return await Linking.openURL(url);
 }
 
-// from Extension
-export const statusFromTx = (tx: StacksTx): StacksTxStatus => {
-  const { tx_status } = tx;
-  if (tx_status === 'pending') return 'pending';
-  if (tx_status === 'success') return 'success';
-  return 'failed';
-};
-
-export function isPendingTx(tx: StacksTx) {
-  return tx.tx_status === 'pending';
-}
-export function StacksActivityCell({ tx }: StacksActivityCellProps) {
+export function StacksActivityCell({ tx, currentAddress }: StacksActivityCellProps) {
   // need to show:
   // protocol
   // tx_status - mapped to our states - Sending, Sent, Confirmed, Received etc.
@@ -46,21 +39,35 @@ export function StacksActivityCell({ tx }: StacksActivityCellProps) {
   const date = displayDate(txTime);
   const { mode } = useCurrentNetworkState();
 
-  const value = `${isOriginator ? '-' : ''}${stacksValue({
-    value: stxTransfer.amount,
-    withTicker: false,
-  })}`;
-  >>> focus on transaction value now 
-  // need to add code to determine if originator also using lookup to addresses 
+  const { data: stxMarketData } = useStxMarketDataQuery();
+
+  // const value = `${isOriginator ? '-' : ''}${stacksValue({
+  //   value: stxTransfer.amount,
+  //   withTicker: false,
+  // })}`;
+  // >>> focus on transaction value now
+  // need to add code to determine if originator also using lookup to addresses
   // probably need to move all of this up to the query level and just map over txs and output final data
+
+  // TODO: extension uses currentAccount?.address to determine if originator - need to change this to support multiple accounts
+  // const isOriginator = transaction?.sender_address === currentAccount?.address;
+  const isOriginator = tx?.sender_address === 'ALWAYS_FALSE';
+
+  // TODO: in extenstion this defaults to 'value' but I need to find what that actually is
+  const txValue = tx ? getTxValue(tx, isOriginator) : '';
+  const txValueMoney = txValue ? createMoney(txValue, 'STX') : createMoney(0, 'STX');
+  console.log('txValueMoney', txValueMoney, stxMarketData);
+  const fiatAmount = stxMarketData
+    ? baseCurrencyAmountInQuote(txValueMoney, stxMarketData)
+    : createMoney(0, 'USD');
 
   return (
     <ActivityCell
-      title="failed to send"
+      title={statusFromTx(tx)}
       icon={<TokenIcon ticker="STX" />}
       date={date || ''}
-      amount="1"
-      fiatAmount="$10,000"
+      amount={txValue}
+      fiatAmount={i18nFormatCurrency(fiatAmount, 2)}
       onPress={() => goToExplorer(tx, mode)}
     />
   );

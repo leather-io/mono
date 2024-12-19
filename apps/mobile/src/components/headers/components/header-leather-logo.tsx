@@ -1,6 +1,6 @@
 import { AppRoutes } from '@/routes';
-import { isFeatureEnabled } from '@/shared/feature-flags';
 import { TestId } from '@/shared/test-id';
+import { isFeatureEnabled } from '@/utils/feature-flag';
 import { useRouter } from 'expo-router';
 
 import { Box, LeatherLogomarkIcon } from '@leather.io/ui/native';

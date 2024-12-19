@@ -45,7 +45,7 @@ function useStacksActivityQueries(addresses: string[]) {
   //   const client = useStacksClient();
   //   const network = useCurrentNetworkState();
   // this is too much data - hardcode one address to check format of each query
-  const address = addresses[0];
+  const address = addresses[1];
   const { query, pendingTxs, confirmedTxs } = useMempoolTxs([address ?? '']);
   console.log('******************************************  ');
   console.log('useMempoolTxs query', query);
