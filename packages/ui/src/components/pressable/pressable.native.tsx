@@ -1,7 +1,7 @@
 import { ElementRef, forwardRef } from 'react';
 import { type GestureResponderEvent, Pressable as RNPressable } from 'react-native';
 
-import { isString } from '@leather.io/utils';
+import { isDefined, isString } from '@leather.io/utils';
 
 import { useHaptics } from '../../hooks/use-haptics.native';
 import { usePressedState } from '../../hooks/use-pressed-state.native';
@@ -65,6 +65,7 @@ export const Pressable = forwardRef<PressableElement, PressableProps>(
     const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
     const { onPressIn, onPressOut, pressed } = usePressedState(rest);
     const pressEffectStyle = usePressEffectStyle({ pressed, pressEffects });
+    const shouldPassLongPress = isDefined(onLongPress) || isDefined(hapticConfig.onLongPress);
 
     function handlePress(event: GestureResponderEvent) {
       if (hapticConfig.onPress) {
@@ -84,7 +85,7 @@ export const Pressable = forwardRef<PressableElement, PressableProps>(
       <PressableCore
         ref={ref}
         onPress={handlePress}
-        onLongPress={handleLongPress}
+        onLongPress={shouldPassLongPress ? handleLongPress : undefined}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         style={[pressEffectStyle, style]}
