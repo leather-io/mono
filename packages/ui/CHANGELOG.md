@@ -197,6 +197,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.22.4
 
+## [1.44.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.4...@leather.io/ui-v1.44.5) (2024-12-19)
+
+
+### Bug Fixes
+
+* add conditional handling for onLongPress in Pressable ([1a53e85](https://github.com/leather-io/mono/commit/1a53e855f9bff6da465beef99cebd251f37a03ce))
+
 ## [1.44.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.3...@leather.io/ui-v1.44.4) (2024-12-17)
 
 

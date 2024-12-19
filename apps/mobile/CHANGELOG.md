@@ -357,6 +357,24 @@
   * dependencies
     * @leather.io/ui bumped to 1.44.4
 
+## [2.2.10](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.9...@leather.io/mobile-v2.2.10) (2024-12-19)
+
+
+### Bug Fixes
+
+* add background to action bar ([a18c18b](https://github.com/leather-io/mono/commit/a18c18b04f46ee4b718b588457516b7e3d4f0e5b))
+* add receive sheet UI, ref LEA-1633 ([e69cae2](https://github.com/leather-io/mono/commit/e69cae210918dd977daddb749ecf9da06f8bd4c9))
+* disable segment client console logging ([95f4905](https://github.com/leather-io/mono/commit/95f4905bd2c19db872577721a2ebcd293ae8f293))
+* remove unused 'receive' route ([1661795](https://github.com/leather-io/mono/commit/166179594fe22753e7033fb9dd97cf36a5b247ff))
+* wait for utxos to load before creating context ([5a4f947](https://github.com/leather-io/mono/commit/5a4f9470abd8f829c511ff29bf006e048714cea0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.44.5
+
 ## [2.2.9](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.8...@leather.io/mobile-v2.2.9) (2024-12-18)
 
 
