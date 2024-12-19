@@ -1,4 +1,5 @@
 import { AppRoutes } from '@/routes';
+import { isFeatureEnabled } from '@/shared/feature-flags';
 import { TestId } from '@/shared/test-id';
 import { useRouter } from 'expo-router';
 
@@ -9,7 +10,7 @@ export function HeaderLeatherLogo() {
   return (
     <Box p="3">
       <LeatherLogomarkIcon
-        onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
+        onPress={isFeatureEnabled() ? () => router.navigate(AppRoutes.DeveloperConsole) : undefined}
         testID={TestId.homeDeveloperToolsButton}
       />
     </Box>
