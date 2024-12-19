@@ -2,7 +2,7 @@
   "name": "@leather.io/models",
   "author": "Leather.io contact@leather.io",
   "description": "Leather models and types",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/models",
   "repository": {

@@ -255,6 +255,24 @@
     * @leather.io/rpc bumped to 2.4.0
     * @leather.io/utils bumped to 0.22.4
 
+## [2.26.9](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.8...@leather.io/query-v2.26.9) (2024-12-19)
+
+
+### Bug Fixes
+
+* add src20 image types, ref leather-io/mono[#724](https://github.com/leather-io/mono/issues/724) ([7404ae6](https://github.com/leather-io/mono/commit/7404ae643d0495703e9b1699e302a968a4afeee0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.8
+    * @leather.io/constants bumped to 0.15.2
+    * @leather.io/models bumped to 0.24.2
+    * @leather.io/rpc bumped to 2.4.1
+    * @leather.io/utils bumped to 0.22.5
+
 ## [2.26.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.4...@leather.io/query-v2.26.5) (2024-12-12)
 
 

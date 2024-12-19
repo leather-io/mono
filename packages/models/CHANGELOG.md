@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.24.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.1...@leather.io/models-v0.24.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* add src20 image types, ref leather-io/mono[#724](https://github.com/leather-io/mono/issues/724) ([7404ae6](https://github.com/leather-io/mono/commit/7404ae643d0495703e9b1699e302a968a4afeee0))
+
 ## [0.24.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.0...@leather.io/models-v0.24.1) (2024-12-13)
 
 
