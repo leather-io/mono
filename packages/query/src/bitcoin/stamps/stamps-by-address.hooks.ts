@@ -27,6 +27,8 @@ function createSrc20CryptoAssetInfo(src20: Src20Token): Src20CryptoAssetInfo {
     hasMemo: false,
     id: src20.id ?? '',
     symbol: src20.tick,
+    deploy_tx: src20.deploy_tx,
+    deploy_img: src20.deploy_img,
   };
 }
 
