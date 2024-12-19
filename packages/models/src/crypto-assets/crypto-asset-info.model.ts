@@ -58,6 +58,8 @@ export interface Src20CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
   readonly protocol: 'src20';
   readonly id: string;
   readonly symbol: string;
+  readonly deploy_tx: string;
+  readonly deploy_img: string;
 }
 export interface RuneCryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
   readonly chain: 'bitcoin';
