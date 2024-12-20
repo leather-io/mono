@@ -50,7 +50,7 @@ export function SelectAsset() {
     useStacksSignerAddressFromAccountIndex(account.fingerprint, account.accountIndex) ?? '';
 
   const assets = getAssets({ nativeSegwitPayerAddress, taprootPayerAddress, stxAddress });
-
+  console.log('test me');
   async function onCopyAddress(address: string) {
     await Clipboard.setStringAsync(address);
     return displayToast({
