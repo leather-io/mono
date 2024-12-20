@@ -93,7 +93,7 @@ export function SelectAsset() {
           />
         }
       >
-        <ScrollView>
+        <ScrollView scrollEnabled={assets.length > 9}>
           {assets.map(asset => (
             <ReceiveAssetItem
               key={asset.address}

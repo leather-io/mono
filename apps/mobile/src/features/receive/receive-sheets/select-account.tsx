@@ -1,3 +1,5 @@
+import { ScrollView } from 'react-native-gesture-handler';
+
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { AccountList } from '@/features/accounts/account-list/account-list';
@@ -30,7 +32,9 @@ export function SelectAccount() {
         />
       }
     >
-      <AccountList accounts={accounts.list} onPress={onSelectAccount} showWalletInfo />
+      <ScrollView>
+        <AccountList accounts={accounts.list} onPress={onSelectAccount} showWalletInfo />
+      </ScrollView>
     </FullHeightSheetLayout>
   );
 }
