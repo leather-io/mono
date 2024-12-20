@@ -1,0 +1,24 @@
+default_platform(:ios)
+
+desc "Build iOS app"
+lane :build_ios do
+  if is_ci  
+    setup_ci
+  end
+  match(type: "appstore", readonly: true)
+  build_app(
+    scheme: "leatherwalletmobile"
+  )
+end
+
+lane :distribute_ios_beta do
+  build_ios
+  release = firebase_app_distribution(
+    app: "1:915379517791:ios:ecfa47ab5ee5f256789eea",
+    groups: "leatherhood",
+    release_notes: "New iOS build available",
+  )
+  notify_slack_of_firebase_build(
+    firebase_release: release
+  )
+end

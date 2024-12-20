@@ -10,7 +10,7 @@ import BigNumber from 'bignumber.js';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { cleanHex } from '../stacks.utils';
-import { getPostConditions } from './post-condition.utils';
+import { ensurePostConditionWireFormat, getPostConditions } from './post-condition.utils';
 import {
   StacksUnsignedContractCallOptions,
   StacksUnsignedContractDeployOptions,
@@ -33,7 +33,7 @@ export function generateUnsignedContractCall(options: StacksUnsignedContractCall
     fee: fee.amount.toString(),
     functionArgs: fnArgs,
     nonce: initNonce(nonce).toString(),
-    postConditions: getPostConditions(postConditions),
+    postConditions,
   };
 
   return makeUnsignedContractCall({ ...options, ...parsedOptions });
@@ -45,7 +45,7 @@ export function generateUnsignedContractDeploy(options: StacksUnsignedContractDe
   const parsedOptions = {
     fee: fee.amount.toString(),
     nonce: initNonce(nonce).toString(),
-    postConditions: getPostConditions(postConditions),
+    postConditions: getPostConditions(postConditions?.map(pc => ensurePostConditionWireFormat(pc))),
   };
 
   return makeUnsignedContractDeploy({ ...options, ...parsedOptions });

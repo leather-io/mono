@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Sun16 from '../assets/icons/sun-16-16.svg';
+import Sun24 from '../assets/icons/sun-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import SunSmall from '../assets/icons/sun-16-16.svg';
-import Sun from '../assets/icons/sun-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const SunIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <SunSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Sun />
-    </Icon>
-  );
+export const SunIcon = createWebIcon({
+  icon: {
+    small: Sun16,
+    medium: Sun24,
+  },
+  displayName: 'Sun',
 });
-
-SunIcon.displayName = 'SunIcon';

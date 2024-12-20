@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { StacksTransaction } from '@stacks/transactions';
+import { StacksTransactionWire } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -36,7 +36,7 @@ function useFeeEstimationsMinValues() {
   return configFeeEstimationsMinValues || defaultFeesMinValuesAsMoney;
 }
 
-export function useCalculateStacksTxFees(unsignedTx?: StacksTransaction) {
+export function useCalculateStacksTxFees(unsignedTx?: StacksTransactionWire) {
   const client = useStacksClient();
   const feeEstimationsMaxValues = useFeeEstimationsMaxValues();
   const feeEstimationsMinValues = useFeeEstimationsMinValues();

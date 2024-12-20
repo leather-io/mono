@@ -41,7 +41,7 @@ export function BitcoinBalance() {
   return (
     <BitcoinTokenBalance
       availableBalance={balance.value.btc.availableBalance}
-      fiatBalance={balance.value.usd.availableBalance}
+      fiatBalance={balance.value.fiat.availableBalance}
       px="5"
       py="3"
     />
@@ -64,7 +64,7 @@ export function BitcoinBalanceByAccount({
   return (
     <BitcoinTokenBalance
       availableBalance={balance.value.btc.availableBalance}
-      fiatBalance={balance.value.usd.availableBalance}
+      fiatBalance={balance.value.fiat.availableBalance}
       onPress={onPress}
       px="5"
       py="3"

@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import LogoHardwareOnekeyLogo from '../../assets/icons/logos/logo-hardware-onekey-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const LogoHardwareOnekey = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <LogoHardwareOnekeyLogo />
-    </Icon>
-  );
+export const LogoHardwareOnekey = createNativeIcon({
+  icon: {
+    medium: LogoHardwareOnekeyLogo,
+  },
+  displayName: 'LogoHardwareOnekey',
 });
-
-LogoHardwareOnekey.displayName = 'LogoHardwareOnekey';

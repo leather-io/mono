@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Stacks16 from '../assets/icons/stacks-16-16.svg';
+import Stacks24 from '../assets/icons/stacks-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import StacksSmall from '../assets/icons/stacks-16-16.svg';
-import Stacks from '../assets/icons/stacks-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const StacksIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <StacksSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Stacks />
-    </Icon>
-  );
+export const StacksIcon = createWebIcon({
+  icon: {
+    small: Stacks16,
+    medium: Stacks24,
+  },
+  displayName: 'Stacks',
 });
-
-StacksIcon.displayName = 'StacksIcon';

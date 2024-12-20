@@ -3,7 +3,7 @@ import PQueue from 'p-queue';
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 import { NetworkModes } from '@leather.io/models';
 
-import { NetworkSettingsService } from '../settings/network-settings.service';
+import { SettingsService } from '../settings/settings.service';
 import { bestInSlotMainnetApiLimiter, bestInSlotTestnetApiLimiter } from './best-in-slot-limiter';
 import { hiroStacksMainnetApiLimiter, hiroStacksTestnetApiLimiter } from './hiro-rate-limiter';
 
@@ -37,9 +37,7 @@ export interface RateLimiterService {
   add<T>(type: RateLimiterType, fn: () => Promise<T>, options?: RateLimiterCallOptions): Promise<T>;
 }
 
-export function createRateLimiterService(
-  networkSettings: NetworkSettingsService
-): RateLimiterService {
+export function createRateLimiterService(settingsService: SettingsService): RateLimiterService {
   const limiters = new Map<string, PQueue>([
     [getLimiterKey(RateLimiterType.BestInSlot, 'mainnet'), bestInSlotMainnetApiLimiter],
     [getLimiterKey(RateLimiterType.BestInSlot, 'testnet'), bestInSlotTestnetApiLimiter],
@@ -63,7 +61,7 @@ export function createRateLimiterService(
   ): Promise<T> {
     const limiter = getLimiter(
       type,
-      bitcoinNetworkModeToCoreNetworkMode(networkSettings.getConfig().chain.bitcoin.mode)
+      bitcoinNetworkModeToCoreNetworkMode(settingsService.getSettings().network.chain.bitcoin.mode)
     );
     const result = await limiter.add(fn, options);
     if (result === undefined) {

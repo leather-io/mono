@@ -12,8 +12,10 @@ export default meta;
 type Story = StoryObj<typeof Icon>;
 
 export const ExampleIcon: Story = {
+  args: {
+    variant: 'small',
+  },
   parameters: {
     controls: { include: ['variant'] },
   },
-  args: { width: 'default' },
 };

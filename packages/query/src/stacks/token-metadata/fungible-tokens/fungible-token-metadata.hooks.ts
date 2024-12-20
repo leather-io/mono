@@ -1,18 +1,13 @@
 import { useQueries } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import {
-  createBaseCryptoAssetBalance,
-  createMoney,
-  getPrincipalFromContractId,
-  getTicker,
-} from '@leather.io/utils';
+import { getPrincipalFromAssetString, getStacksAssetStringParts } from '@leather.io/stacks';
+import { createBaseCryptoAssetBalance, createMoney, getTicker } from '@leather.io/utils';
 
 import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { AddressBalanceResponse } from '../../hiro-api-types';
 import { createSip10CryptoAssetInfo } from '../../sip10/sip10-tokens.utils';
 import { useStacksClient } from '../../stacks-client';
-import { getStacksContractIdStringParts } from '../../temp-utils';
 import { FtAssetResponse, isFtAsset } from '../token-metadata.utils';
 import { createGetFungibleTokenMetadataQueryOptions } from './fungible-token-metadata.query';
 
@@ -24,7 +19,7 @@ export function useStacksFungibleTokensBalance(
 
   return useQueries({
     queries: Object.entries(ftBalances).map(([key, value]) => {
-      const address = getPrincipalFromContractId(key);
+      const address = getPrincipalFromAssetString(key);
       return {
         ...createGetFungibleTokenMetadataQueryOptions({
           address,
@@ -33,7 +28,7 @@ export function useStacksFungibleTokensBalance(
         }),
         select: (resp: FtAssetResponse | null) => {
           if (!(resp && isFtAsset(resp))) return;
-          const { contractAssetName } = getStacksContractIdStringParts(key);
+          const { contractAssetName } = getStacksAssetStringParts(key);
           const name = resp.name || contractAssetName;
           const symbol = resp.symbol || getTicker(name);
           return {
@@ -54,7 +49,7 @@ export function useStacksFungibleTokensMetadata(keys: string[]) {
 
   return useQueries({
     queries: keys.map(key => {
-      const address = getPrincipalFromContractId(key);
+      const address = getPrincipalFromAssetString(key);
       return {
         ...createGetFungibleTokenMetadataQueryOptions({
           address,

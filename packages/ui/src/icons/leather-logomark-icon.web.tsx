@@ -1,14 +1,13 @@
 import { SVGProps, forwardRef } from 'react';
 
+import { token } from 'leather-styles/tokens';
+
 import LeatherLogomark from '../assets/icons/leather-logomark.svg';
-import { Icon } from './icon/icon.web';
 
 export const LeatherLogomarkIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   (props, ref) => {
     return (
-      <Icon ref={ref} {...props}>
-        <LeatherLogomark />
-      </Icon>
+      <LeatherLogomark ref={ref} color={token('colors.ink.action-primary-default')} {...props} />
     );
   }
 );

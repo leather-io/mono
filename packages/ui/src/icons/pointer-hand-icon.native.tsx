@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import PointerHand16 from '../assets/icons/pointer-hand-16-16.svg';
+import PointerHand24 from '../assets/icons/pointer-hand-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import PointerHandSmall from '../assets/icons/pointer-hand-16-16.svg';
-import PointerHand from '../assets/icons/pointer-hand-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const PointerHandIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <PointerHandSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <PointerHand />
-    </Icon>
-  );
+export const PointerHandIcon = createNativeIcon({
+  icon: {
+    small: PointerHand16,
+    medium: PointerHand24,
+  },
+  displayName: 'PointerHand',
 });
-
-PointerHandIcon.displayName = 'PointerHandIcon';

@@ -39,7 +39,7 @@ export function StacksBalance() {
   return (
     <StacksTokenBalance
       availableBalance={balance.value.stx.availableBalance}
-      fiatBalance={balance.value.usd.availableBalance}
+      fiatBalance={balance.value.fiat.availableBalance}
       px="5"
       py="3"
     />
@@ -62,7 +62,7 @@ export function StacksBalanceByAccount({
   return (
     <StacksTokenBalance
       availableBalance={balance.value.stx.availableBalance}
-      fiatBalance={balance.value.usd.availableBalance}
+      fiatBalance={balance.value.fiat.availableBalance}
       onPress={onPress}
       px="5"
       py="3"

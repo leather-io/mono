@@ -1,10 +1,8 @@
 import {
-  AddressVersion,
-  StacksTransaction,
+  StacksTransactionWire,
   TransactionSigner,
-  createStacksPrivateKey,
   createStacksPublicKey,
-  publicKeyToAddress,
+  publicKeyToAddressSingleSig,
 } from '@stacks/transactions';
 
 import {
@@ -14,18 +12,17 @@ import {
   extractKeyFromDescriptor,
 } from '@leather.io/crypto';
 import { NetworkModes } from '@leather.io/models';
-import { whenNetwork } from '@leather.io/utils';
 
 import { deriveStxPrivateKey, extractStacksDerivationPathAccountIndex } from '../stacks.utils';
 
 // Warning: mutatitive. Ideally there would be a tx.clone() method
-export function signStacksTransaction(tx: StacksTransaction, privateKey: string) {
+export function signStacksTransaction(tx: StacksTransactionWire, privateKey: string) {
   const signer = new TransactionSigner(tx);
-  signer.signOrigin(createStacksPrivateKey(privateKey));
+  signer.signOrigin(privateKey);
   return tx;
 }
 
-export type StacksSignerFn = (tx: StacksTransaction) => Promise<StacksTransaction>;
+export type StacksSignerFn = (tx: StacksTransactionWire) => Promise<StacksTransactionWire>;
 
 export interface StacksSigner extends Signer {
   descriptor: string;
@@ -40,7 +37,7 @@ export function createSignFnFromMnemonic(
   keyOrigin: string,
   getMnemonicFn: () => Promise<{ mnemonic: string; passphrase?: string }>
 ) {
-  return async (tx: StacksTransaction) => {
+  return async (tx: StacksTransactionWire) => {
     const { mnemonic, passphrase } = await getMnemonicFn();
     const keychain = await deriveRootKeychainFromMnemonic(mnemonic, passphrase);
     const privateKey = deriveStxPrivateKey({
@@ -59,21 +56,15 @@ interface InitalizeStacksSignerArgs {
 export function initalizeStacksSigner(args: InitalizeStacksSignerArgs): StacksSigner {
   const { descriptor, network, signFn } = args;
 
-  const publicKey = createStacksPublicKey(extractKeyFromDescriptor(descriptor));
+  const publicKey = createStacksPublicKey(extractKeyFromDescriptor(descriptor)).data;
 
   return {
     ...decomposeDescriptor(descriptor),
     // here we overwrite the accountIndex with the derivation path account index for stx
     accountIndex: extractStacksDerivationPathAccountIndex(descriptor),
-    publicKey: publicKey.data,
+    publicKey: publicKey,
     network,
-    address: publicKeyToAddress(
-      whenNetwork(network)({
-        mainnet: AddressVersion.MainnetSingleSig,
-        testnet: AddressVersion.TestnetSingleSig,
-      }),
-      publicKey
-    ),
+    address: publicKeyToAddressSingleSig(publicKey, network),
     sign: signFn,
   };
 }

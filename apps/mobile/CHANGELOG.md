@@ -456,6 +456,113 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.17
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.26.20
+    * @leather.io/services bumped to 1.0.4
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.20
+    * @leather.io/crypto bumped to 1.6.36
+    * @leather.io/query bumped to 2.26.22
+    * @leather.io/rpc bumped to 2.5.7
+    * @leather.io/services bumped to 1.1.1
+    * @leather.io/stacks bumped to 1.5.21
+    * @leather.io/tokens bumped to 0.12.12
+    * @leather.io/ui bumped to 1.48.4
+    * @leather.io/utils bumped to 0.25.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.20
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.21
+    * @leather.io/crypto bumped to 1.6.37
+    * @leather.io/query bumped to 2.26.23
+    * @leather.io/rpc bumped to 2.5.8
+    * @leather.io/services bumped to 1.1.2
+    * @leather.io/stacks bumped to 1.5.22
+    * @leather.io/tokens bumped to 0.12.13
+    * @leather.io/ui bumped to 1.48.5
+    * @leather.io/utils bumped to 0.25.4
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.21
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.22
+    * @leather.io/crypto bumped to 1.6.38
+    * @leather.io/query bumped to 2.26.24
+    * @leather.io/rpc bumped to 2.5.9
+    * @leather.io/services bumped to 1.1.3
+    * @leather.io/stacks bumped to 1.5.23
+    * @leather.io/tokens bumped to 0.12.14
+    * @leather.io/ui bumped to 1.48.6
+    * @leather.io/utils bumped to 0.25.5
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.22
+
+## [2.9.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.8.2...@leather.io/mobile-v2.9.0) (2025-02-07)
+
+
+### Features
+
+* runes balances service ([b2084b7](https://github.com/leather-io/mono/commit/b2084b76ccc0bef363aa11899a4f56a8d52a7f43))
+* support fiat currency setting, ref LEA-2032 ([3ccdf24](https://github.com/leather-io/mono/commit/3ccdf24c3c43d59091c96c9b6cb26aadcae0679c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.19
+    * @leather.io/crypto bumped to 1.6.35
+    * @leather.io/query bumped to 2.26.21
+    * @leather.io/rpc bumped to 2.5.6
+    * @leather.io/services bumped to 1.1.0
+    * @leather.io/stacks bumped to 1.5.20
+    * @leather.io/tokens bumped to 0.12.11
+    * @leather.io/ui bumped to 1.48.3
+    * @leather.io/utils bumped to 0.25.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.19
+
+## [2.8.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.8.0...@leather.io/mobile-v2.8.1) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.1.3
+    * @leather.io/bitcoin bumped to 0.19.18
+    * @leather.io/constants bumped to 0.15.5
+    * @leather.io/crypto bumped to 1.6.34
+    * @leather.io/models bumped to 0.25.1
+    * @leather.io/query bumped to 2.26.19
+    * @leather.io/rpc bumped to 2.5.5
+    * @leather.io/services bumped to 1.0.3
+    * @leather.io/stacks bumped to 1.5.19
+    * @leather.io/tokens bumped to 0.12.10
+    * @leather.io/ui bumped to 1.48.2
+    * @leather.io/utils bumped to 0.25.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.18
+
 ## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.3...@leather.io/mobile-v2.8.0) (2025-01-28)
 
 

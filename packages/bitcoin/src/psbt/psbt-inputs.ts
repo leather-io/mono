@@ -1,5 +1,5 @@
+import { bytesToHex } from '@noble/hashes/utils';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
-import { bytesToHex } from '@stacks/common';
 import { getBtcSignerLibNetworkConfigByMode } from 'bitcoin.network';
 import { getBitcoinInputAddress, getBitcoinInputValue } from 'bitcoin.utils';
 

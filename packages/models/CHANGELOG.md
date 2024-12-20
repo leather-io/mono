@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.25.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.25.0...@leather.io/models-v0.25.1) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
 ## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.3...@leather.io/models-v0.25.0) (2025-01-15)
 
 

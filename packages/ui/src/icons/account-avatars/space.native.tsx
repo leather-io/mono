@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import Space from '../../assets/icons/account-avatars/space-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const SpaceIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <Space />
-    </Icon>
-  );
+export const SpaceIcon = createNativeIcon({
+  icon: {
+    medium: Space,
+  },
+  displayName: 'SpaceIcon',
 });
-
-SpaceIcon.displayName = 'SpaceIcon';

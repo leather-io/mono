@@ -1,3 +1,4 @@
+import { bytesToUtf8, hexToBytes } from '@stacks/common';
 import {
   BufferCV,
   ClarityType,
@@ -25,20 +26,20 @@ export async function getPrimaryName({
   }).then((responseCV: ClarityValue) => {
     if (responseCV.type === ClarityType.ResponseOk) {
       if (responseCV.value.type === ClarityType.Tuple) {
-        const nameCV = responseCV.value.data['name'] as BufferCV;
-        const namespaceCV = responseCV.value.data['namespace'] as BufferCV;
+        const nameCV = responseCV.value.value['name'] as BufferCV;
+        const namespaceCV = responseCV.value.value['namespace'] as BufferCV;
         return {
-          name: Buffer.from(nameCV.buffer).toString(),
-          namespace: Buffer.from(namespaceCV.buffer).toString(),
+          name: bytesToUtf8(hexToBytes(nameCV.value)),
+          namespace: bytesToUtf8(hexToBytes(namespaceCV.value)),
         };
       } else if (responseCV.value.type === ClarityType.OptionalSome) {
         const innerValue = responseCV.value.value;
         if (innerValue.type === ClarityType.Tuple) {
-          const nameCV = innerValue.data['name'] as BufferCV;
-          const namespaceCV = innerValue.data['namespace'] as BufferCV;
+          const nameCV = innerValue.value['name'] as BufferCV;
+          const namespaceCV = innerValue.value['namespace'] as BufferCV;
           return {
-            name: Buffer.from(nameCV.buffer).toString(),
-            namespace: Buffer.from(namespaceCV.buffer).toString(),
+            name: bytesToUtf8(hexToBytes(nameCV.value)),
+            namespace: bytesToUtf8(hexToBytes(namespaceCV.value)),
           };
         }
       }

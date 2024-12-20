@@ -1,0 +1,2 @@
+app_identifier("leatherwalletmobile")
+apple_id(ENV['APPLE_ID'])

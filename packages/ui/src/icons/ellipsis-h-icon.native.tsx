@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import EllipsisH16 from '../assets/icons/ellipsis-h-16-16.svg';
+import EllipsisH24 from '../assets/icons/ellipsis-h-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import EllipsisHSmall from '../assets/icons/ellipsis-h-16-16.svg';
-import EllipsisH from '../assets/icons/ellipsis-h-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const EllipsisHIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <EllipsisHSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <EllipsisH />
-    </Icon>
-  );
+export const EllipsisHIcon = createNativeIcon({
+  icon: {
+    small: EllipsisH16,
+    medium: EllipsisH24,
+  },
+  displayName: 'EllipsisH',
 });
-
-EllipsisHIcon.displayName = 'EllipsisHIcon';

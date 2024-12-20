@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import { currencyDecimalsMap } from '@leather.io/constants';
 import {
   Brc20CryptoAssetInfo,
@@ -24,6 +26,8 @@ import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-
 import { BinanceApiClient } from '../infrastructure/api/binance/binance-api.client';
 import { CoincapApiClient } from '../infrastructure/api/coincap/coincap-api.client';
 import { CoinGeckoApiClient } from '../infrastructure/api/coingecko/coingecko-api.client';
+import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import { SettingsService } from '../infrastructure/settings/settings.service';
 
 export interface MarketDataService {
   getMarketData(asset: FungibleCryptoAssetInfo, signal?: AbortSignal): Promise<MarketData>;
@@ -35,6 +39,8 @@ export interface MarketDataService {
 }
 
 export function createMarketDataService(
+  settingsService: SettingsService,
+  leatherApiClient: LeatherApiClient,
   bestInSlotApiClient: BestInSlotApiClient,
   coinGeckoApiClient: CoinGeckoApiClient,
   coincapApiClient: CoincapApiClient,
@@ -91,7 +97,8 @@ export function createMarketDataService(
     if (prices.length === 0) throw new Error('Unable to fetch price data: ' + currency);
 
     const meanPrice = calculateMeanAverage(prices);
-    return createMarketData(createMarketPair(currency, 'USD'), createMoney(meanPrice, 'USD'));
+
+    return await buildFiatCurrencyPreferenceMarketData(currency, meanPrice);
   }
 
   /**
@@ -101,12 +108,17 @@ export function createMarketDataService(
     const tokenPrices = await alexSdkClient.getApiTokenPrices(signal);
     const tokenPriceMatch = tokenPrices.find(price => price.contract_id === asset.contractId);
     if (!tokenPriceMatch)
-      return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(0, 'USD'));
+      return createMarketData(
+        createMarketPair(asset.symbol, settingsService.getSettings().fiatCurrency),
+        createMoney(0, settingsService.getSettings().fiatCurrency)
+      );
+
     const assetPrice = convertAmountToFractionalUnit(
       initBigNumber(tokenPriceMatch.last_price_usd),
       2
     );
-    return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(assetPrice, 'USD'));
+
+    return await buildFiatCurrencyPreferenceMarketData(asset.symbol, assetPrice);
   }
 
   /**
@@ -114,14 +126,15 @@ export function createMarketDataService(
    */
   async function getRuneMarketData(asset: RuneCryptoAssetInfo, signal?: AbortSignal) {
     const btcMarketData = await getNativeAssetMarketData('BTC', signal);
-    const runeTickerInfo = await bestInSlotApiClient.fetchRuneTickerInfo(asset.symbol, signal);
+    const runeTickerInfo = await bestInSlotApiClient.fetchRuneTickerInfo(asset.runeName, signal);
     const runeFiatPrice = baseCurrencyAmountInQuote(
       createMoney(initBigNumber(runeTickerInfo.avg_unit_price_in_sats ?? 0), 'BTC'),
       btcMarketData
     );
-    return createMarketData(
-      createMarketPair(runeTickerInfo.rune_name, 'USD'),
-      createMoney(runeFiatPrice.amount, 'USD')
+
+    return await buildFiatCurrencyPreferenceMarketData(
+      runeTickerInfo.rune_name,
+      runeFiatPrice.amount
     );
   }
 
@@ -135,10 +148,28 @@ export function createMarketDataService(
       createMoney(initBigNumber(bisMarketInfo.min_listed_unit_price ?? 0), 'BTC'),
       btcMarketData
     );
+
+    return await buildFiatCurrencyPreferenceMarketData(asset.symbol, brc20FiatPrice.amount);
+  }
+
+  async function buildFiatCurrencyPreferenceMarketData(
+    assetSymbol: string,
+    assetPriceUsd: BigNumber
+  ) {
     return createMarketData(
-      createMarketPair(asset.symbol, 'USD'),
-      createMoney(brc20FiatPrice.amount, 'USD')
+      createMarketPair(assetSymbol, settingsService.getSettings().fiatCurrency),
+      createMoney(
+        settingsService.getSettings().fiatCurrency === 'USD'
+          ? assetPriceUsd
+          : assetPriceUsd.times(await readFiatCurrencyPreferenceExchangeRate()),
+        settingsService.getSettings().fiatCurrency
+      )
     );
+  }
+
+  async function readFiatCurrencyPreferenceExchangeRate() {
+    const exchangeRates = await leatherApiClient.fetchFiatExchangeRates();
+    return initBigNumber(exchangeRates[settingsService.getSettings().fiatCurrency]);
   }
 
   return {

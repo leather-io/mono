@@ -1,13 +1,6 @@
-import {
-  getAddressFromPrivateKey,
-  makeRandomPrivKey,
-  privateKeyToString,
-} from '@stacks/transactions';
+import { getAddressFromPrivateKey, randomPrivateKey } from '@stacks/transactions';
 
 export function generateRandomAddress() {
-  const randomPrivateKey = makeRandomPrivKey();
-  const privateKeyString = privateKeyToString(randomPrivateKey);
-  const randomAddress = getAddressFromPrivateKey(privateKeyString);
-
-  return randomAddress;
+  const privateKey = randomPrivateKey();
+  return getAddressFromPrivateKey(privateKey);
 }

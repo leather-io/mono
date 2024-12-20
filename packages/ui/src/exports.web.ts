@@ -29,7 +29,6 @@ export { Logo } from './components/logo.web';
 export { LoadingSpinner, Spinner } from './components/spinner';
 export { shimmerStyles } from './components/skeleton-loader/shimmer.styles.web';
 export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';
-export { Icon } from './icons/icon/icon.web';
 export * from './icons/index.web';
 export * from './components/approver/approver.web';
 export * from './components/favicon/favicon.web';

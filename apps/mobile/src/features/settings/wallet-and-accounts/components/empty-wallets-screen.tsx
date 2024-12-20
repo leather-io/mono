@@ -1,15 +1,13 @@
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
 
-import { Box, Button, PlusIcon, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, PlusIcon, Text } from '@leather.io/ui/native';
 
 interface EmptyWalletsScreenProps {
   onPressCreateWallet: () => void;
 }
 
 export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenProps) {
-  const theme = useTheme<Theme>();
   return (
     <Box width="100%" alignItems="center" justifyContent="center" gap="4">
       <Image
@@ -24,7 +22,7 @@ export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenPr
       </Text>
       <Button
         onPress={onPressCreateWallet}
-        icon={<PlusIcon color={theme.colors['ink.background-primary']} />}
+        icon={<PlusIcon color="ink.background-primary" />}
         buttonState="default"
         title={t({
           id: 'add_or_create_new_wallet.button',

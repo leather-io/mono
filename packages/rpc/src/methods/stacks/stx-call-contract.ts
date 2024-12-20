@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
-import { clarityValueSchema } from './_clarity-values';
+import {
+  DefineRpcMethod,
+  RpcRequest,
+  createRpcResponseSchema,
+  defaultErrorSchema,
+} from '../../rpc/schemas';
 import {
   baseStacksTransactionConfigSchema,
   stacksTransactionDetailsSchema,
@@ -16,7 +20,7 @@ export const stxCallContractRequestParamsSchema = z.intersection(
   z.object({
     contract: z.string(),
     functionName: z.string(),
-    functionArgs: z.array(clarityValueSchema).optional(),
+    functionArgs: z.array(z.string()).optional(),
   }),
   baseStacksTransactionConfigSchema
 );
@@ -31,7 +35,12 @@ export type StxCallContractRequest = RpcRequest<
 // Result
 export const stxCallContractResponseBodySchema = stacksTransactionDetailsSchema;
 
-export type StxCallContractResponse = RpcResponse<typeof stxCallContractResponseBodySchema>;
+export const stxCallContractResponseSchema = createRpcResponseSchema(
+  stxCallContractResponseBodySchema,
+  defaultErrorSchema
+);
+
+export type StxCallContractResponse = z.infer<typeof stxCallContractResponseSchema>;
 
 export type DefineStxCallContractMethod = DefineRpcMethod<
   StxCallContractRequest,

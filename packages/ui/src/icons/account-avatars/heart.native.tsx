@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import Heart from '../../assets/icons/account-avatars/heart-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const HeartIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <Heart />
-    </Icon>
-  );
+export const HeartIcon = createNativeIcon({
+  icon: {
+    medium: Heart,
+  },
+  displayName: 'HeartIcon',
 });
-
-HeartIcon.displayName = 'HeartIcon';

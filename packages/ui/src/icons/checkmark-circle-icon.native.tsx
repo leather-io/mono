@@ -1,23 +1,11 @@
-import { Component, forwardRef } from 'react';
+import CheckmarkCircle16 from '../assets/icons/checkmark-circle-16-16.svg';
+import CheckmarkCircle24 from '../assets/icons/checkmark-circle-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import CheckmarkCircleSmall from '../assets/icons/checkmark-circle-16-16.svg';
-import CheckmarkCircle from '../assets/icons/checkmark-circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const CheckmarkCircleIcon = forwardRef<Component, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <CheckmarkCircleSmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <CheckmarkCircle />
-      </Icon>
-    );
-  }
-);
-
-CheckmarkCircleIcon.displayName = 'CheckmarkCircleIcon';
+export const CheckmarkCircleIcon = createNativeIcon({
+  icon: {
+    small: CheckmarkCircle16,
+    medium: CheckmarkCircle24,
+  },
+  displayName: 'CheckmarkCircle',
+});

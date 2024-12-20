@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import Passport16 from '../assets/icons/passport-16-16.svg';
+import Passport24 from '../assets/icons/passport-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import PassportSmall from '../assets/icons/passport-16-16.svg';
-import Passport from '../assets/icons/passport-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const PassportIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <PassportSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Passport />
-    </Icon>
-  );
+export const PassportIcon = createNativeIcon({
+  icon: {
+    small: Passport16,
+    medium: Passport24,
+  },
+  displayName: 'Passport',
 });
-
-PassportIcon.displayName = 'PassportIcon';

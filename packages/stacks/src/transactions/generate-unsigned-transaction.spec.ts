@@ -1,9 +1,4 @@
-import {
-  AnchorMode,
-  PayloadType,
-  TokenTransferPayload,
-  principalToString,
-} from '@stacks/transactions';
+import { PayloadType, TokenTransferPayloadWire } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
 import { describe, expect, it } from 'vitest';
 
@@ -37,7 +32,6 @@ describe('generateUnsignedContractCall', () => {
   it('should generate unsigned contract call', async () => {
     const options: StacksUnsignedContractCallOptions = {
       txType: TransactionTypes.ContractCall,
-      anchorMode: AnchorMode.Any,
       contractAddress: 'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH',
       contractName: 'hello-world',
       functionName: 'print',
@@ -60,7 +54,6 @@ describe('generateUnsignedContractDeploy', () => {
   it('should generate unsigned contract deploy', async () => {
     const options: StacksUnsignedContractDeployOptions = {
       txType: TransactionTypes.ContractDeploy,
-      anchorMode: AnchorMode.Any,
       codeBody: 'code',
       contractName: 'hello-world',
       fee: createMoney(new BigNumber(1000), 'STX'),
@@ -80,7 +73,6 @@ describe('generateUnsignedStxTokenTransfer', () => {
   it('should generate unsigned STX token transfer', async () => {
     const options: StacksUnsignedTokenTransferOptions = {
       txType: TransactionTypes.StxTokenTransfer,
-      anchorMode: AnchorMode.Any,
       fee: createMoney(new BigNumber(1000), 'STX'),
       nonce: '1',
       recipient: 'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH',
@@ -93,9 +85,9 @@ describe('generateUnsignedStxTokenTransfer', () => {
     expect(result.payload.payloadType).toEqual(PayloadType.TokenTransfer);
     expect(result.auth.spendingCondition.fee).toBe(BigInt('1000'));
     expect(result.auth.spendingCondition.nonce).toBe(BigInt('1'));
-    expect(principalToString((result.payload as TokenTransferPayload).recipient)).toBe(
+    expect((result.payload as TokenTransferPayloadWire).recipient.value).toBe(
       'ST1EXHZSN8MJSJ9DSG994G1V8CNKYXGMK7Z4SA6DH'
     );
-    expect((result.payload as TokenTransferPayload).amount).toBe(BigInt('100'));
+    expect((result.payload as TokenTransferPayloadWire).amount).toBe(BigInt('100'));
   });
 });

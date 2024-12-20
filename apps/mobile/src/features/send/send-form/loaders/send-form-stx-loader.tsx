@@ -31,7 +31,7 @@ export function SendFormStxLoader({ account, children }: SendFormStxLoaderProps)
 
   return children({
     availableBalance: balance!.stx.availableBalance,
-    fiatBalance: balance!.usd.availableBalance,
+    fiatBalance: balance!.fiat.availableBalance,
     nonce: nextNonce?.nonce ?? '',
   });
 }

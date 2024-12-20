@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import PaperPlane16 from '../assets/icons/paper-plane-16-16.svg';
+import PaperPlane24 from '../assets/icons/paper-plane-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import PaperPlaneSmall from '../assets/icons/paper-plane-16-16.svg';
-import PaperPlane from '../assets/icons/paper-plane-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const PaperPlaneIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <PaperPlaneSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <PaperPlane />
-    </Icon>
-  );
+export const PaperPlaneIcon = createNativeIcon({
+  icon: {
+    small: PaperPlane16,
+    medium: PaperPlane24,
+  },
+  displayName: 'PaperPlane',
 });
-
-PaperPlaneIcon.displayName = 'PaperPlaneIcon';

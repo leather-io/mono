@@ -186,6 +186,49 @@
   * dependencies
     * @leather.io/models bumped to 0.25.0
 
+## [2.5.9](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.8...@leather.io/rpc-v2.5.9) (2025-02-10)
+
+
+### Bug Fixes
+
+* remove clarity value from sip30 types ([d0fc303](https://github.com/leather-io/mono/commit/d0fc303c76d3295f411f48cfbee5028c77cf5cbb))
+
+## [2.5.8](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.7...@leather.io/rpc-v2.5.8) (2025-02-10)
+
+
+### Bug Fixes
+
+* update stx deploy contract types ([9adf8ce](https://github.com/leather-io/mono/commit/9adf8cec5ff88dcbd7bb268b09ad0bd37f87b713))
+
+## [2.5.7](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.6...@leather.io/rpc-v2.5.7) (2025-02-10)
+
+
+### Bug Fixes
+
+* **rpc:** export types ([0680dd8](https://github.com/leather-io/mono/commit/0680dd8c758fa446d874d32a5e5998d67c26fc56))
+
+## [2.5.6](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.5...@leather.io/rpc-v2.5.6) (2025-02-07)
+
+
+### Bug Fixes
+
+* **rpc:** refactor msg signing types, add publicKey param in response ([2dfe6b2](https://github.com/leather-io/mono/commit/2dfe6b2fc007b6d9ff9184d35bc5cad02496182d))
+* stx call contract types ([c159b40](https://github.com/leather-io/mono/commit/c159b402633eb7ccdbbfa4eec144f2e5ec3e8cc7))
+
+## [2.5.5](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.4...@leather.io/rpc-v2.5.5) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.25.1
+
 ## [2.5.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.2...@leather.io/rpc-v2.5.3) (2025-01-15)
 
 

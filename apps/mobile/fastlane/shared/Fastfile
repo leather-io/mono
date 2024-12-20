@@ -1,0 +1,8 @@
+lane :notify_slack do
+  Dotenv.load('./.env')
+  slack(
+    message: "Build completed successfully!",
+    channel: "#leather-mobile",
+    slack_url: ENV["SLACK_WEBHOOK_URL"]
+  )
+end

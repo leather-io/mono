@@ -1,5 +1,5 @@
 import { HDKey } from '@scure/bip32';
-import { ChainID } from '@stacks/transactions';
+import { ChainId } from '@stacks/network';
 
 import { deriveBip39SeedFromMnemonic } from '@leather.io/crypto';
 
@@ -7,9 +7,9 @@ import { testMnemonic } from '../../../config/test-helpers';
 import {
   cleanHex,
   deriveStxPrivateKey,
+  getStacksAssetStringParts,
   getStacksBurnAddress,
   getStacksContractAssetName,
-  getStacksContractIdStringParts,
   getStacksContractName,
   stacksRootKeychainToAccountDescriptor,
   whenStacksChainId,
@@ -21,18 +21,18 @@ describe(whenStacksChainId.name, () => {
   const expectedResult = 'should be this value';
   test('that it returns testnet when given a testnet chain id', () => {
     expect(
-      whenStacksChainId(ChainID.Testnet)({
-        [ChainID.Testnet]: expectedResult,
-        [ChainID.Mainnet]: 'One plus one equals two.',
+      whenStacksChainId(ChainId.Testnet)({
+        [ChainId.Testnet]: expectedResult,
+        [ChainId.Mainnet]: 'One plus one equals two.',
       })
     ).toEqual(expectedResult);
   });
   test('that it returns mainnet when given a mainnet chain id', () => {
     const expectedResult = 'should be this value';
     expect(
-      whenStacksChainId(ChainID.Mainnet)({
-        [ChainID.Testnet]: 'The capital city of Mongolia is Ulaanbaatar.',
-        [ChainID.Mainnet]: expectedResult,
+      whenStacksChainId(ChainId.Mainnet)({
+        [ChainId.Testnet]: 'The capital city of Mongolia is Ulaanbaatar.',
+        [ChainId.Mainnet]: expectedResult,
       })
     ).toEqual(expectedResult);
   });
@@ -65,17 +65,17 @@ describe(stacksRootKeychainToAccountDescriptor.name, () => {
 
 describe(getStacksBurnAddress.name, () => {
   it('should return the correct burn address for Mainnet', () => {
-    const result = getStacksBurnAddress(ChainID.Mainnet);
+    const result = getStacksBurnAddress(ChainId.Mainnet);
     expect(result).toBe('SP00000000000003SCNSJTCSE62ZF4MSE');
   });
 
   it('should return the correct burn address for Testnet', () => {
-    const result = getStacksBurnAddress(ChainID.Testnet);
+    const result = getStacksBurnAddress(ChainId.Testnet);
     expect(result).toBe('ST000000000000000000002AMW42H');
   });
 
   it('should return the Testnet address for an unknown chainId', () => {
-    const result = getStacksBurnAddress(9999 as ChainID); // Simulate an unknown chainId
+    const result = getStacksBurnAddress(9999 as ChainId); // Simulate an unknown chainId
     expect(result).toBe('ST000000000000000000002AMW42H');
   });
 });
@@ -118,9 +118,9 @@ describe('getStacksContractAssetName', () => {
   });
 });
 
-describe(getStacksContractIdStringParts.name, () => {
+describe(getStacksAssetStringParts.name, () => {
   test('should return parts of a fully qualified name', () => {
-    const result = getStacksContractIdStringParts('SP1234.contract-name::asset-name');
+    const result = getStacksAssetStringParts('SP1234.contract-name::asset-name');
     expect(result).toEqual({
       contractAddress: 'SP1234',
       contractAssetName: 'asset-name',
@@ -129,7 +129,7 @@ describe(getStacksContractIdStringParts.name, () => {
   });
 
   test('should return the same string for all parts if it does not contain . or ::', () => {
-    const result = getStacksContractIdStringParts('contract-name');
+    const result = getStacksAssetStringParts('contract-name');
     expect(result).toEqual({
       contractAddress: 'contract-name',
       contractAssetName: 'contract-name',

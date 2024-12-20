@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import Alien from '../../assets/icons/account-avatars/alien-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const AlienIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <Alien />
-    </Icon>
-  );
+export const AlienIcon = createNativeIcon({
+  icon: {
+    medium: Alien,
+  },
+  displayName: 'AlienIcon',
 });
-
-AlienIcon.displayName = 'AlienIcon';

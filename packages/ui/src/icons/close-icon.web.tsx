@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Close16 from '../assets/icons/close-16-16.svg';
+import Close24 from '../assets/icons/close-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import CloseSmall from '../assets/icons/close-16-16.svg';
-import Close from '../assets/icons/close-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const CloseIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <CloseSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Close />
-    </Icon>
-  );
+export const CloseIcon = createWebIcon({
+  icon: {
+    small: Close16,
+    medium: Close24,
+  },
+  displayName: 'Close',
 });
-
-CloseIcon.displayName = 'CloseIcon';

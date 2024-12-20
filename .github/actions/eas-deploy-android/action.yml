@@ -7,6 +7,9 @@ inputs:
   LEATHER_BOT:
     description: 'GH bot token'
     required: true
+  FIREBASE_TOKEN:
+    description: 'Firebase token'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -28,6 +31,18 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install jq
+      shell: bash
+
+    - name: Install fastlane
+      run: |
+        sudo apt-get update
+        sudo gem install fastlane
+      shell: bash
+
+    - name: Install fastlane
+      run: |
+        sudo apt-get update
+        sudo gem install fastlane
       shell: bash
 
     # Wait for build to either succeed or fail
@@ -87,4 +102,6 @@ runs:
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
         eas build --platform android --profile=production --non-interactive --auto-submit
+        cd android
+        bundle exec fastlane android distribute_android
       shell: bash

@@ -13,7 +13,7 @@ interface UtxoRowProps {
 }
 
 export function UtxoRow({ isLocked, address, btcBalance, usdBalance, txid }: UtxoRowProps) {
-  const icon = isLocked ? <LockIcon /> : <UnlockIcon color="red" />;
+  const icon = isLocked ? <LockIcon /> : <UnlockIcon color="red.action-primary-default" />;
 
   return (
     <Cell.Root pressable={false}>

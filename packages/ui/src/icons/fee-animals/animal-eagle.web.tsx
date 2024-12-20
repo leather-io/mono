@@ -1,14 +1,10 @@
-import { SVGProps, forwardRef } from 'react';
-
 import AnimalEagle from '../../assets/icons/fee-animals/animal-eagle-32-32.svg';
-import { Icon } from '../icon/icon.web';
+import { createWebIcon } from '../icon/create-icon.web';
 
-export const AnimalEagleIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <AnimalEagle />
-    </Icon>
-  );
+export const AnimalEagleIcon = createWebIcon({
+  icon: {
+    large: AnimalEagle,
+  },
+  defaultVariant: 'large',
+  displayName: 'AnimalEagleIcon',
 });
-
-AnimalEagleIcon.displayName = 'AnimalEagleIcon';
