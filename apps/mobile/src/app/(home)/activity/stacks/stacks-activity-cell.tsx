@@ -2,6 +2,7 @@ import { Linking } from 'react-native';
 
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
+import { useStacksSignerAddresses } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { StacksTx } from '@leather.io/models';
@@ -17,18 +18,18 @@ import { getTxValue, stacksValue, statusFromTx } from './legacy-extension';
 
 interface StacksActivityCellProps {
   tx: StacksTx;
+  isOriginator: boolean;
 }
 async function goToExplorer(tx: StacksTx, mode: BitcoinNetworkModes) {
   const url = makeStacksTxExplorerLink({
     mode,
     searchParams: undefined,
-    // isNakamoto: false,
     txid: tx.tx_id,
   });
   return await Linking.openURL(url);
 }
 
-export function StacksActivityCell({ tx, currentAddress }: StacksActivityCellProps) {
+export function StacksActivityCell({ tx, isOriginator }: StacksActivityCellProps) {
   // need to show:
   // protocol
   // tx_status - mapped to our states - Sending, Sent, Confirmed, Received etc.
@@ -41,25 +42,13 @@ export function StacksActivityCell({ tx, currentAddress }: StacksActivityCellPro
 
   const { data: stxMarketData } = useStxMarketDataQuery();
 
-  // const value = `${isOriginator ? '-' : ''}${stacksValue({
-  //   value: stxTransfer.amount,
-  //   withTicker: false,
-  // })}`;
-  // >>> focus on transaction value now
-  // need to add code to determine if originator also using lookup to addresses
-  // probably need to move all of this up to the query level and just map over txs and output final data
-
-  // TODO: extension uses currentAccount?.address to determine if originator - need to change this to support multiple accounts
-  // const isOriginator = transaction?.sender_address === currentAccount?.address;
-  const isOriginator = tx?.sender_address === 'ALWAYS_FALSE';
-
-  // TODO: in extenstion this defaults to 'value' but I need to find what that actually is
+  // TODO: in extension this defaults to 'value' but I need to find what that actually is
   const txValue = tx ? getTxValue(tx, isOriginator) : '';
   const txValueMoney = txValue ? createMoney(txValue, 'STX') : createMoney(0, 'STX');
-  console.log('txValueMoney', txValueMoney, stxMarketData);
   const fiatAmount = stxMarketData
     ? baseCurrencyAmountInQuote(txValueMoney, stxMarketData)
     : createMoney(0, 'USD');
+  console.log('fiatAmount: txValueMoney', txValueMoney, stxMarketData, fiatAmount);
 
   return (
     <ActivityCell

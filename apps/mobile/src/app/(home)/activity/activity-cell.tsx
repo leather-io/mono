@@ -22,7 +22,7 @@ export function ActivityCell({
     <Pressable flexDirection="row" disabled={!onPress} onPress={onPress}>
       <Flag img={icon} px="5" py="3">
         <ItemLayout
-          titleLeft={title}
+          titleLeft={<Text textTransform="capitalize">{title}</Text>}
           titleRight={<Text>{amount}</Text>}
           captionLeft={date}
           captionRight={<Text>{fiatAmount}</Text>}
