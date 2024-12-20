@@ -5,8 +5,8 @@ platform :ios do
       scheme: "YourAppScheme" # Specify your app's scheme
     )
     firebase_app_distribution(
-      app: "1:1234567890:ios:your-ios-app-id",
-      testers: "test@example.com",
+      app: "1:915379517791:ios:ecfa47ab5ee5f256789eea",
+      testers: "pete@trustmachines.co, edgar@trustmachines.co, will@trustmachines.co",
       release_notes: "New build available"
     )
   end
@@ -19,8 +19,8 @@ platform :android do
       task: "assembleRelease"
     )
     firebase_app_distribution(
-      app: "1:1234567890:android:your-android-app-id",
-      testers: "test@example.com",
+      app: "1:915379517791:android:d4e7cb446a612f8c789eea",
+      testers: "pete@trustmachines.co, edgar@trustmachines.co, will@trustmachines.co",
       release_notes: "New build available"
     )
   end
