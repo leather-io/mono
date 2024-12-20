@@ -24,10 +24,11 @@ runs:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
 
-    - name: Install jq tool
+    - name: Install jq tool and fastlane
       run: |
         sudo apt-get update
         sudo apt-get install jq
+        sudo gem install fastlane
       shell: bash
 
     # Wait for build to either succeed or fail
@@ -87,4 +88,10 @@ runs:
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
         eas build --platform android --profile=production --non-interactive --auto-submit
+        fastlane run distribute_android
       shell: bash
+
+    - name: Firebase App Distribution
+      run: |
+        echo "${{ secrets.FIREBASE_TOKEN }}" > $HOME/.firebase_token
+        firebase appdistribution:distribute my_app.apks --app "1:915379517791:android:d4e7cb446a612f8c789eea" --groups "testers"
