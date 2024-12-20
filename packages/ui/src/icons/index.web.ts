@@ -7,6 +7,8 @@ export * from './arrow-up-icon.web';
 export * from './bars-three-icon.web';
 export * from './bars-two-icon.web';
 export * from './bitcoin-icon.web';
+export * from './boxed-cat-locked-icon.web';
+export * from './boxed-cat-unlocked-icon.web';
 export * from './checkmark-circle-icon.web';
 export * from './checkmark-icon.web';
 export * from './chevron-down-icon.web';

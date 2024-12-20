@@ -12,6 +12,8 @@ export * from './bars-two-icon.native';
 export * from './bell-icon.native';
 export * from './bell-alarm-icon.native';
 export * from './bitcoin-circle-icon.native';
+export * from './boxed-cat-locked-icon.native';
+export * from './boxed-cat-unlocked-icon.native';
 export * from './checkmark-circle-icon.native';
 export * from './chevron-down-icon.native';
 export * from './chevron-left-icon.native';
