@@ -205,6 +205,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.2
 
+## [1.45.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.6...@leather.io/ui-v1.45.0) (2024-12-20)
+
+
+### Features
+
+* add boxed cat icons ([3068cea](https://github.com/leather-io/mono/commit/3068cea3905eae77aafbe890d802aee60d3ef919))
+
 ## [1.44.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.4...@leather.io/ui-v1.44.5) (2024-12-19)
 
 

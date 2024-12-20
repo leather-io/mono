@@ -12,6 +12,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.2
 
+## [3.1.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.0.4...@leather.io/analytics-v3.1.0) (2024-12-20)
+
+
+### Features
+
+* additional platform and more flexible default params ([17c4bb4](https://github.com/leather-io/mono/commit/17c4bb42e5566387e70312249667698af3433687))
+
 ## [3.0.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.0.1...@leather.io/analytics-v3.0.2) (2024-12-09)
 
 
