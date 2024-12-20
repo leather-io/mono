@@ -1,23 +1,27 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
-default_platform(:ios)
-
 platform :ios do
-  desc "Description of what the lane does"
-  lane :custom_lane do
-    # add actions here: https://docs.fastlane.tools/actions
+  desc "Build and distribute iOS app"
+  lane :distribute_ios do
+    build_app(
+      scheme: "YourAppScheme" # Specify your app's scheme
+    )
+    firebase_app_distribution(
+      app: "1:1234567890:ios:your-ios-app-id",
+      testers: "test@example.com",
+      release_notes: "New build available"
+    )
+  end
+end
+
+platform :android do
+  desc "Build and distribute Android app"
+  lane :distribute_android do
+    gradle(
+      task: "assembleRelease"
+    )
+    firebase_app_distribution(
+      app: "1:1234567890:android:your-android-app-id",
+      testers: "test@example.com",
+      release_notes: "New build available"
+    )
   end
 end
