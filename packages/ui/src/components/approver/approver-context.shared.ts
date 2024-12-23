@@ -20,8 +20,11 @@ export const ApproverProvider = approverContext.Provider;
 export function useApproverContext() {
   const context = useContext(approverContext);
   if (!context) throw new Error('`useApproverContext` must be used within a `ApproverProvider`');
-  const url = new URL(context?.requester ?? '');
-  return { ...context, hostname: url.hostname };
+  let hostname: string | undefined = undefined;
+  if (context.requester) {
+    hostname = new URL(context.requester).hostname;
+  }
+  return { ...context, hostname };
 }
 
 export function useRegisterApproverChildren() {
