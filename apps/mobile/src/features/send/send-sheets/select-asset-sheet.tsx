@@ -1,5 +1,3 @@
-import { ScrollView } from 'react-native-gesture-handler';
-
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance';
@@ -42,38 +40,36 @@ export function SelectAssetSheet() {
         />
       }
     >
-      <ScrollView>
-        <BitcoinPayerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
-          {({ nativeSegwitPayer }) => (
-            <BitcoinBalanceByAccount
-              accountIndex={accountIndex}
-              fingerprint={fingerprint}
-              onPress={() =>
-                navigation.navigate('send-form-btc', {
-                  account,
-                  address: nativeSegwitPayer.address,
-                  publicKey: bytesToHex(nativeSegwitPayer.publicKey),
-                })
-              }
-            />
-          )}
-        </BitcoinPayerLoader>
-        <StacksSignerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
-          {({ stxSigner }) => (
-            <StacksBalanceByAccount
-              accountIndex={accountIndex}
-              fingerprint={fingerprint}
-              onPress={() =>
-                navigation.navigate('send-form-stx', {
-                  account,
-                  address: stxSigner.address,
-                  publicKey: bytesToHex(stxSigner.publicKey),
-                })
-              }
-            />
-          )}
-        </StacksSignerLoader>
-      </ScrollView>
+      <BitcoinPayerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
+        {({ nativeSegwitPayer }) => (
+          <BitcoinBalanceByAccount
+            accountIndex={accountIndex}
+            fingerprint={fingerprint}
+            onPress={() =>
+              navigation.navigate('send-form-btc', {
+                account,
+                address: nativeSegwitPayer.address,
+                publicKey: bytesToHex(nativeSegwitPayer.publicKey),
+              })
+            }
+          />
+        )}
+      </BitcoinPayerLoader>
+      <StacksSignerLoader fingerprint={account.fingerprint} accountIndex={account.accountIndex}>
+        {({ stxSigner }) => (
+          <StacksBalanceByAccount
+            accountIndex={accountIndex}
+            fingerprint={fingerprint}
+            onPress={() =>
+              navigation.navigate('send-form-stx', {
+                account,
+                address: stxSigner.address,
+                publicKey: bytesToHex(stxSigner.publicKey),
+              })
+            }
+          />
+        )}
+      </StacksSignerLoader>
     </FullHeightSheetLayout>
   );
 }
