@@ -4,6 +4,7 @@ import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
 
+import { ReceiveAssetDetails } from './receive-sheets/receive-asset-details';
 import { SelectAccount } from './receive-sheets/select-account';
 import { SelectAsset } from './receive-sheets/select-asset';
 import { ReceiveSheetNavigatorParamList } from './utils';
@@ -25,6 +26,7 @@ export function ReceiveSheetNavigator() {
     >
       <Stack.Screen name="receive-select-account" component={SelectAccount} />
       <Stack.Screen name="receive-select-asset" component={SelectAsset} />
+      <Stack.Screen name="receive-asset-details" component={ReceiveAssetDetails} />
     </Stack.Navigator>
   );
 }
