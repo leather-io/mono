@@ -1,5 +1,3 @@
-import { ScrollView } from 'react-native-gesture-handler';
-
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
@@ -71,20 +69,18 @@ export function SelectAsset() {
           />
         }
       >
-        <ScrollView>
-          {assets.map(asset => (
-            <ReceiveAssetItem
-              key={asset.address}
-              address={truncateMiddle(asset.address)}
-              addressType={asset.addressType}
-              assetName={asset.assetName}
-              assetSymbol={asset.assetSymbol}
-              icon={<TokenIcon ticker={asset.assetSymbol} />}
-              onCopy={() => onCopyAddress(asset.address)}
-              onPress={() => onSelectAccount(asset)}
-            />
-          ))}
-        </ScrollView>
+        {assets.map(asset => (
+          <ReceiveAssetItem
+            key={asset.address}
+            address={truncateMiddle(asset.address)}
+            addressType={asset.addressType}
+            assetName={asset.assetName}
+            assetSymbol={asset.assetSymbol}
+            icon={<TokenIcon ticker={asset.assetSymbol} />}
+            onCopy={() => onCopyAddress(asset.address)}
+            onPress={() => onSelectAccount(asset)}
+          />
+        ))}
       </FullHeightSheetLayout>
     </>
   );
