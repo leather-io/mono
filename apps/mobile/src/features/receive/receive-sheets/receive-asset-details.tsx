@@ -19,22 +19,23 @@ import {
   Text,
 } from '@leather.io/ui/native';
 
-import { SelectedAsset } from './select-asset';
+import {
+  CreateCurrentReceiveRoute,
+  useCopyAddress,
+  useReceiveSheetNavigation,
+  useReceiveSheetRoute,
+} from '../utils';
 
-interface ReceiveAssetSheetProps {
-  accountName: string;
-  selectedAsset: SelectedAsset;
-  onCopy: () => void;
-  onGoBack: () => void;
-}
-export function ReceiveAssetSheet({
-  accountName,
-  selectedAsset,
-  onCopy,
-  onGoBack,
-}: ReceiveAssetSheetProps) {
+type CurrentRoute = CreateCurrentReceiveRoute<'receive-asset-details'>;
+
+export function ReceiveAssetDetails() {
   const { i18n } = useLingui();
-  const { assetName, address, addressType, assetDescription } = selectedAsset;
+  const route = useReceiveSheetRoute<CurrentRoute>();
+  const navigation = useReceiveSheetNavigation<CurrentRoute>();
+  const asset = route.params.asset;
+  const accountName = route.params.accountName;
+  const { assetName, address, addressType, assetDescription } = asset;
+  const onCopyAddress = useCopyAddress();
 
   return (
     <FullHeightSheetLayout
@@ -49,7 +50,7 @@ export function ReceiveAssetSheet({
             message: '{subtitle}',
             values: { subtitle: accountName },
           })}
-          leftElement={<HeaderBackButton onPress={onGoBack} testID={TestId.backButton} />}
+          leftElement={<HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />}
           rightElement={<NetworkBadge />}
         />
       }
@@ -78,7 +79,7 @@ export function ReceiveAssetSheet({
               <AddressDisplayer address={address} />
             </Cell.Content>
             <Cell.Aside>
-              <IconButton icon={<CopyIcon />} onPress={onCopy} />
+              <IconButton icon={<CopyIcon />} onPress={() => onCopyAddress(address)} />
             </Cell.Aside>
           </Cell.Root>
         </Box>
