@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
@@ -18,6 +18,9 @@ export function MemoSheet<T extends SendFormBaseContext<T>>({ sheetRef }: MemoSh
   const { formData } = useSendFormContext<T>();
   const { control } = useFormContext<z.infer<typeof formData.schema>>();
   const { displayToast } = useToastContext();
+  const {
+    field: { onChange, onBlur, value },
+  } = useController({ name: 'memo', control });
 
   function onAddMemo() {
     // Check errors here before toast?
@@ -41,26 +44,20 @@ export function MemoSheet<T extends SendFormBaseContext<T>>({ sheetRef }: MemoSh
         message: 'Add memo',
       })}
     >
-      <Controller
-        control={control}
-        name="memo"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-            autoFocus
-            inputState="focused"
-            onBlur={onBlur}
-            onChangeText={value => onChange(value)}
-            placeholder={t({
-              id: 'add_memo.input_placeholder',
-              message: 'Memo',
-            })}
-            TextInputComponent={UIBottomSheetTextInput}
-            value={value}
-          />
-        )}
+      <TextInput
+        autoCapitalize="none"
+        autoComplete="off"
+        autoCorrect={false}
+        autoFocus
+        inputState="focused"
+        onBlur={onBlur}
+        onChangeText={value => onChange(value)}
+        placeholder={t({
+          id: 'add_memo.input_placeholder',
+          message: 'Memo',
+        })}
+        TextInputComponent={UIBottomSheetTextInput}
+        value={value}
       />
       <Button
         mt="3"

@@ -1,11 +1,14 @@
 import { useCallback } from 'react';
 
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
+import { useToastContext } from '@/components/toast/toast-context';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
 import {
+  BitcoinError,
   CoinSelectionRecipient,
   CoinSelectionUtxo,
   getBitcoinFees,
@@ -17,6 +20,7 @@ import { createMoneyFromDecimal } from '@leather.io/utils';
 import {
   CreateCurrentSendRoute,
   createCoinSelectionUtxos,
+  formatBitcoinError,
   useSendSheetNavigation,
   useSendSheetRoute,
 } from '../../send-form.utils';
@@ -47,6 +51,7 @@ export function useSendFormBtc() {
   const route = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
   const { account } = route.params;
+  const { displayToast } = useToastContext();
 
   const bitcoinKeychain = useBitcoinAccounts().accountIndexByPaymentType(
     account.fingerprint,
@@ -71,33 +76,42 @@ export function useSendFormBtc() {
     // Temporary logs until we can hook up to approver flow
 
     async onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
-      const parsedSendFormValues = parseSendFormValues(values);
-      const coinSelectionUtxos = createCoinSelectionUtxos(data.utxos);
+      try {
+        const parsedSendFormValues = parseSendFormValues(values);
+        const coinSelectionUtxos = createCoinSelectionUtxos(data.utxos);
 
-      const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
+        const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
 
-      const tx = await generateTx({
-        feeRate: Number(values.feeRate),
-        isSendingMax: false,
-        values: parsedSendFormValues,
-        utxos: coinSelectionUtxos,
-        bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
-      });
+        const tx = await generateTx({
+          feeRate: Number(values.feeRate),
+          isSendingMax: false,
+          values: parsedSendFormValues,
+          utxos: coinSelectionUtxos,
+          bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
+        });
 
-      const fees = getTxFees({
-        feeRates: data.feeRates,
-        recipients: parsedSendFormValues.recipients,
-        utxos: coinSelectionUtxos,
-      });
+        const fees = getTxFees({
+          feeRates: data.feeRates,
+          recipients: parsedSendFormValues.recipients,
+          utxos: coinSelectionUtxos,
+        });
 
-      // Show an error toast here?
-      if (!tx) throw new Error('Attempted to generate raw tx, but no tx exists');
-      // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
-      console.log('fees:', fees);
+        // Show an error toast here?
+        if (!tx) throw new Error('Attempted to generate raw tx, but no tx exists');
+        // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+        console.log('fees:', fees);
 
-      const psbtHex = bytesToHex(tx.psbt);
+        const psbtHex = bytesToHex(tx.psbt);
 
-      navigation.navigate('sign-psbt', { psbtHex });
+        navigation.navigate('sign-psbt', { psbtHex });
+      } catch (e) {
+        const message =
+          e instanceof BitcoinError
+            ? formatBitcoinError(e.message)
+            : t({ id: 'something-went-wrong', message: 'Something went wrong' });
+
+        displayToast({ title: message, type: 'error' });
+      }
     },
   };
 }

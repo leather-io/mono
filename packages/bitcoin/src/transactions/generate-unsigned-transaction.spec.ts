@@ -81,10 +81,8 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
       utxos: [],
     };
 
-    const result = await generateBitcoinUnsignedTransactionNativeSegwit(argsWithNoInputs);
-
-    if (result) {
-      expect(result.inputs.length).toBe(0);
-    }
+    await expect(() =>
+      generateBitcoinUnsignedTransactionNativeSegwit(argsWithNoInputs)
+    ).rejects.toThrowError('InsufficientFunds');
   });
 });
