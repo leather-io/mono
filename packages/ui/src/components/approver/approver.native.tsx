@@ -11,7 +11,7 @@ import { ApproverHeader } from './components/approver-header.native';
 import { ApproverSection } from './components/approver-section.native';
 
 interface ApproverProps extends HasChildren {
-  requester: string;
+  requester?: string;
 }
 function Approver({ requester, children }: ApproverProps) {
   const [isDisplayingAdvancedView, setIsDisplayingAdvancedView] = useState(false);

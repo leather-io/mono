@@ -12,11 +12,11 @@ import {
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
 import { AverageBitcoinFeeRates } from '@leather.io/models';
-import { Utxo } from '@leather.io/query';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
 import {
   CreateCurrentSendRoute,
+  createCoinSelectionUtxos,
   useSendSheetNavigation,
   useSendSheetRoute,
 } from '../../send-form.utils';
@@ -35,15 +35,6 @@ function parseSendFormValues(values: SendFormBtcSchema) {
       },
     ],
   };
-}
-
-function createCoinSelectionUtxos(utxos: Utxo[]): CoinSelectionUtxo[] {
-  return utxos.map(utxo => ({
-    address: utxo.address,
-    txid: utxo.txid,
-    value: Number(utxo.value),
-    vout: utxo.vout,
-  }));
 }
 
 interface GetTxFeesArgs {

@@ -22,7 +22,7 @@ export function UtxoRow({ isLocked, address, btcBalance, usdBalance, txid }: Utx
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">{truncateMiddle(address)}</Cell.Label>
-        {txid && <Cell.Label variant="primary">{truncateMiddle(txid)}</Cell.Label>}
+        {txid && <Cell.Label variant="secondary">{truncateMiddle(txid)}</Cell.Label>}
       </Cell.Content>
       <Cell.Aside>
         <Balance balance={btcBalance} variant="label02" />

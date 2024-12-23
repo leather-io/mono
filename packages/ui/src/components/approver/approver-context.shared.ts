@@ -6,7 +6,7 @@ import { ChildRegister, useRegisterChildren } from '../../utils/use-register-chi
 type ApproverChildren = 'header' | 'actions' | 'advanced' | 'section' | 'subheader' | 'requester';
 
 interface ApproverContext extends ChildRegister<ApproverChildren> {
-  requester: string;
+  requester?: string;
   isDisplayingAdvancedView: boolean;
   actionBarHeight: number;
   setActionBarHeight(val: number): void;
@@ -20,7 +20,7 @@ export const ApproverProvider = approverContext.Provider;
 export function useApproverContext() {
   const context = useContext(approverContext);
   if (!context) throw new Error('`useApproverContext` must be used within a `ApproverProvider`');
-  const url = new URL(context.requester);
+  const url = new URL(context?.requester ?? '');
   return { ...context, hostname: url.hostname };
 }
 

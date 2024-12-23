@@ -7,6 +7,9 @@ import {
   useRoute,
 } from '@react-navigation/native';
 
+import { CoinSelectionUtxo } from '@leather.io/bitcoin';
+import { Utxo } from '@leather.io/query';
+
 export interface SendSheetNavigatorParamList {
   'send-select-account': undefined;
   'send-select-asset': { account: Account };
@@ -31,3 +34,12 @@ export function useSendSheetNavigation<RouteKey extends SendSheetRouteKeys>() {
 }
 
 export type CreateCurrentSendRoute<RouteKey extends SendSheetRouteKeys> = RouteKey;
+
+export function createCoinSelectionUtxos(utxos: Utxo[]): CoinSelectionUtxo[] {
+  return utxos.map(utxo => ({
+    address: utxo.address,
+    txid: utxo.txid,
+    value: Number(utxo.value),
+    vout: utxo.vout,
+  }));
+}
