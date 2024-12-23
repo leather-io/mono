@@ -2,7 +2,7 @@ import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 import { BtcSignerDefaultBip32Derivation } from 'bitcoin-signer';
 
-import { BitcoinError, BitcoinErrorMessage } from '../bitcoin-error';
+import { BitcoinError } from '../bitcoin-error';
 import { BtcSignerNetwork } from '../bitcoin.network';
 import {
   CoinSelectionRecipient,
@@ -32,44 +32,40 @@ export async function generateBitcoinUnsignedTransactionNativeSegwit({
   recipients,
   utxos,
 }: GenerateBitcoinUnsignedTransactionArgs) {
-  try {
-    const determineUtxosArgs = { feeRate, recipients, utxos };
-    const { inputs, outputs, fee } = isSendingMax
-      ? determineUtxosForSpendAll(determineUtxosArgs)
-      : determineUtxosForSpend(determineUtxosArgs);
+  const determineUtxosArgs = { feeRate, recipients, utxos };
+  const { inputs, outputs, fee } = isSendingMax
+    ? determineUtxosForSpendAll(determineUtxosArgs)
+    : determineUtxosForSpend(determineUtxosArgs);
 
-    if (!inputs.length) throw new BitcoinError(BitcoinErrorMessage.NoInputsToSign);
-    if (!outputs.length) throw new BitcoinError(BitcoinErrorMessage.NoOutputsToSign);
+  if (!inputs.length) throw new BitcoinError('NoInputsToSign');
+  if (!outputs.length) throw new BitcoinError('NoOutputsToSign');
 
-    const tx = new btc.Transaction();
-    const p2wpkh = btc.p2wpkh(hexToBytes(payerPublicKey), network);
+  const tx = new btc.Transaction();
+  const p2wpkh = btc.p2wpkh(hexToBytes(payerPublicKey), network);
 
-    for (const input of inputs) {
-      tx.addInput({
-        txid: input.txid,
-        index: input.vout,
-        sequence: 0,
-        bip32Derivation,
-        witnessUtxo: {
-          // script = 0014 + pubKeyHash
-          script: p2wpkh.script,
-          amount: BigInt(input.value),
-        },
-      });
-    }
-
-    outputs.forEach(output => {
-      // When coin selection returns an output with no address,
-      // we assume it is a change output
-      if (!output.address) {
-        tx.addOutputAddress(payerAddress, BigInt(output.value), network);
-        return;
-      }
-      tx.addOutputAddress(output.address, BigInt(output.value), network);
+  for (const input of inputs) {
+    tx.addInput({
+      txid: input.txid,
+      index: input.vout,
+      sequence: 0,
+      bip32Derivation,
+      witnessUtxo: {
+        // script = 0014 + pubKeyHash
+        script: p2wpkh.script,
+        amount: BigInt(input.value),
+      },
     });
-
-    return { tx, hex: tx.hex, psbt: tx.toPSBT(), inputs, fee };
-  } catch (e) {
-    return null;
   }
+
+  outputs.forEach(output => {
+    // When coin selection returns an output with no address,
+    // we assume it is a change output
+    if (!output.address) {
+      tx.addOutputAddress(payerAddress, BigInt(output.value), network);
+      return;
+    }
+    tx.addOutputAddress(output.address, BigInt(output.value), network);
+  });
+
+  return { tx, hex: tx.hex, psbt: tx.toPSBT(), inputs, fee };
 }

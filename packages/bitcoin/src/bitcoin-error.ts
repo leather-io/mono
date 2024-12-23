@@ -1,15 +1,17 @@
-export enum BitcoinErrorMessage {
-  InsufficientFunds = 'Insufficient funds',
-  NoInputsToSign = 'No inputs to sign',
-  NoOutputsToSign = 'No outputs to sign',
-}
-
 export class BitcoinError extends Error {
-  constructor(message: string) {
+  public message: BitcoinErrorKey;
+  constructor(message: BitcoinErrorKey) {
     super(message);
     this.name = 'BitcoinError';
+    this.message = message;
 
     // Fix the prototype chain
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
+export type BitcoinErrorKey =
+  | 'InvalidAddress'
+  | 'InsufficientFunds'
+  | 'NoInputsToSign'
+  | 'NoOutputsToSign';

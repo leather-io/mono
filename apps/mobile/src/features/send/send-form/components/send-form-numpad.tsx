@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { z } from 'zod';
 
@@ -8,12 +8,15 @@ import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 
 export function SendFormNumpad<T extends SendFormBaseContext<T>>() {
   const { formData } = useSendFormContext<T>();
-  const { setValue, watch } = useFormContext<z.infer<typeof formData.schema>>();
-  const amount = watch('amount');
+  // TODO: fix implicit any-s
+  const { control } = useFormContext<z.infer<typeof formData.schema>>();
+  const {
+    field: { onChange, value },
+  } = useController({ name: 'amount', control });
 
   return (
     <Box mx="-5">
-      <Numpad value={amount} onChange={(value: string) => setValue('amount', value)} />
+      <Numpad value={value} onChange={value => onChange(value)} />
     </Box>
   );
 }

@@ -5,7 +5,7 @@ import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
-import { BitcoinError, BitcoinErrorMessage } from '../bitcoin-error';
+import { BitcoinError } from '../bitcoin-error';
 import { filterUneconomicalUtxos, getSizeInfo, getUtxoTotal } from './coin-selection.utils';
 
 export interface CoinSelectionOutput {
@@ -37,8 +37,7 @@ export function determineUtxosForSpendAll({
   utxos,
 }: DetermineUtxosForSpendArgs) {
   recipients.forEach(recipient => {
-    if (!validate(recipient.address))
-      throw new Error('Cannot calculate spend of invalid address type');
+    if (!validate(recipient.address)) throw new BitcoinError('InvalidAddress');
   });
   const filteredUtxos = filterUneconomicalUtxos({ utxos, feeRate, recipients });
 
@@ -66,15 +65,14 @@ export function determineUtxosForSpendAll({
 
 export function determineUtxosForSpend({ feeRate, recipients, utxos }: DetermineUtxosForSpendArgs) {
   recipients.forEach(recipient => {
-    if (!validate(recipient.address))
-      throw new Error('Cannot calculate spend of invalid address type');
+    if (!validate(recipient.address)) throw new BitcoinError('InvalidAddress');
   });
   const filteredUtxos = filterUneconomicalUtxos({
     utxos: utxos.sort((a, b) => b.value - a.value),
     feeRate,
     recipients,
   });
-  if (!filteredUtxos.length) throw new BitcoinError(BitcoinErrorMessage.InsufficientFunds);
+  if (!filteredUtxos.length) throw new BitcoinError('InsufficientFunds');
 
   const amount = sumMoney(recipients.map(recipient => recipient.amount));
 
@@ -100,7 +98,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
 
   while (!hasSufficientUtxosForTx()) {
     const [nextUtxo] = getRemainingUnspentUtxos();
-    if (!nextUtxo) throw new BitcoinError(BitcoinErrorMessage.InsufficientFunds);
+    if (!nextUtxo) throw new BitcoinError('InsufficientFunds');
     neededUtxos.push(nextUtxo);
   }
 

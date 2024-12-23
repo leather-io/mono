@@ -1,4 +1,5 @@
 import { Account } from '@/store/accounts/accounts';
+import { t } from '@lingui/macro';
 import {
   NavigationProp,
   ParamListBase,
@@ -7,8 +8,9 @@ import {
   useRoute,
 } from '@react-navigation/native';
 
-import { CoinSelectionUtxo } from '@leather.io/bitcoin';
+import { BitcoinErrorKey, CoinSelectionUtxo } from '@leather.io/bitcoin';
 import { Utxo } from '@leather.io/query';
+import { match } from '@leather.io/utils';
 
 export interface SendSheetNavigatorParamList {
   'send-select-account': undefined;
@@ -42,4 +44,25 @@ export function createCoinSelectionUtxos(utxos: Utxo[]): CoinSelectionUtxo[] {
     value: Number(utxo.value),
     vout: utxo.vout,
   }));
+}
+
+export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
+  return match<BitcoinErrorKey>()(errorMessage, {
+    InvalidAddress: t({
+      id: 'bitcoin-error.invalid-address',
+      message: 'Invalid address',
+    }),
+    NoInputsToSign: t({
+      id: 'bitcoin-error.no-inputs-to-sign',
+      message: 'No inputs to sign',
+    }),
+    NoOutputsToSign: t({
+      id: 'bitcoin-error.no-outputs-to-sign',
+      message: 'No outputs to sign',
+    }),
+    InsufficientFunds: t({
+      id: 'bitcoin-error.insufficient-funds',
+      message: 'Insufficient funds',
+    }),
+  });
 }

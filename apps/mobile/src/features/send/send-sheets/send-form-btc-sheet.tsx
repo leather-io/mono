@@ -40,7 +40,6 @@ export function SendFormBtcSheet() {
           <SendForm.Asset icon={<BtcAvatarIcon />} onPress={onGoBack} />
           <SendForm.AmountField />
           <SendForm.RecipientField />
-          <SendForm.Memo />
           <SendForm.Footer>
             <SendForm.Numpad />
             <SendForm.Button />
