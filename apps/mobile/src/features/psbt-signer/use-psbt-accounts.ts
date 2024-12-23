@@ -1,5 +1,7 @@
 import { useSelectByAccountIds } from '@/store/accounts/accounts.read';
 
+import { uniqueArray } from '@leather.io/utils';
+
 import { getPsbtInputDerivationPaths, getPsbtOutputDerivationPaths } from './utils';
 
 export function usePsbtAccounts({ psbtHex }: { psbtHex: string }) {
@@ -8,8 +10,8 @@ export function usePsbtAccounts({ psbtHex }: { psbtHex: string }) {
     ...getPsbtOutputDerivationPaths({ psbtHex }),
   ];
 
-  const accountIds = descriptors.map(
-    descriptor => `${descriptor.fingerprint}/${descriptor.accountIndex}`
+  const accountIds = uniqueArray(
+    descriptors.map(descriptor => `${descriptor.fingerprint}/${descriptor.accountIndex}`)
   );
 
   const accounts = useSelectByAccountIds(accountIds);
