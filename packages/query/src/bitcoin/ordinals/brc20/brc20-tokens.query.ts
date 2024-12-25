@@ -83,7 +83,8 @@ export function useGetBrc20TokensQuery({
         console.log('Error fetching BRC-20 tokens:', error);
         return [];
       });
-      addressesWithoutTokens += brc20Tokens.filter(tokens => tokens.length === 0).length;
+      addressesWithoutTokens +=
+        brc20Tokens.filter(tokens => tokens.length === 0).length || addressesSimultaneousFetchLimit;
 
       return {
         addressesWithoutTokens,
