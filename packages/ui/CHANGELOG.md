@@ -205,6 +205,18 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.2
 
+## [1.46.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.45.0...@leather.io/ui-v1.46.0) (2024-12-25)
+
+
+### Features
+
+* btc fee modal ([a401ecf](https://github.com/leather-io/mono/commit/a401ecf7d89fe0040ce1f4b9a3186e9222f04983))
+
+
+### Bug Fixes
+
+* approver bug ([25f0bb9](https://github.com/leather-io/mono/commit/25f0bb9a9dd89a0d3504dea27f76fdc68a985117))
+
 ## [1.45.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.44.6...@leather.io/ui-v1.45.0) (2024-12-20)
 
 
