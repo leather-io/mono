@@ -382,6 +382,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.4.1
 
+## [0.19.9](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.8...@leather.io/bitcoin-v0.19.9) (2024-12-25)
+
+
+### Bug Fixes
+
+* psbt error and controller handling ([34b9287](https://github.com/leather-io/mono/commit/34b9287bfadb16fee8bdcb8444243a8737017965))
+
 ## [0.19.6](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.5...@leather.io/bitcoin-v0.19.6) (2024-12-13)
 
 

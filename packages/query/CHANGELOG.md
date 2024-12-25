@@ -255,6 +255,20 @@
     * @leather.io/rpc bumped to 2.4.0
     * @leather.io/utils bumped to 0.22.4
 
+## [2.26.10](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.9...@leather.io/query-v2.26.10) (2024-12-25)
+
+
+### Bug Fixes
+
+* brc20 query logic ([d2021f9](https://github.com/leather-io/mono/commit/d2021f9de854b35dbaa59fc8cc010d74fc0c262e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.9
+
 ## [2.26.9](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.8...@leather.io/query-v2.26.9) (2024-12-19)
 
 

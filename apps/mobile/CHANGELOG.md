@@ -381,6 +381,31 @@
     * @leather.io/analytics bumped to 3.1.0
     * @leather.io/ui bumped to 1.45.0
 
+## [2.3.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.12...@leather.io/mobile-v2.3.0) (2024-12-25)
+
+
+### Features
+
+* btc fee modal ([a401ecf](https://github.com/leather-io/mono/commit/a401ecf7d89fe0040ce1f4b9a3186e9222f04983))
+
+
+### Bug Fixes
+
+* psbt error and controller handling ([34b9287](https://github.com/leather-io/mono/commit/34b9287bfadb16fee8bdcb8444243a8737017965))
+* receive navigation animation ([4fad817](https://github.com/leather-io/mono/commit/4fad817d7440d2769fb264c14a04afe6826482f0))
+* select asset animation ([fda7be0](https://github.com/leather-io/mono/commit/fda7be08a1f75c5975391e5151ad9b44f32dd298))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.9
+    * @leather.io/query bumped to 2.26.10
+    * @leather.io/ui bumped to 1.46.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.9
+
 ## [2.2.10](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.9...@leather.io/mobile-v2.2.10) (2024-12-19)
 
 
