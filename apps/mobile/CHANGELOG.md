@@ -381,6 +381,20 @@
     * @leather.io/analytics bumped to 3.1.0
     * @leather.io/ui bumped to 1.45.0
 
+## [2.4.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.3.0...@leather.io/mobile-v2.4.0) (2024-12-27)
+
+
+### Features
+
+* stacks fee selection ([bf44c50](https://github.com/leather-io/mono/commit/bf44c5063009d1e031c5c60b84f80c2b1b980a2b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.47.0
+
 ## [2.3.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.2.12...@leather.io/mobile-v2.3.0) (2024-12-25)
 
 

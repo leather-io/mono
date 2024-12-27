@@ -205,6 +205,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.2
 
+## [1.47.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.46.0...@leather.io/ui-v1.47.0) (2024-12-27)
+
+
+### Features
+
+* stacks fee selection ([bf44c50](https://github.com/leather-io/mono/commit/bf44c5063009d1e031c5c60b84f80c2b1b980a2b))
+
 ## [1.46.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.45.0...@leather.io/ui-v1.46.0) (2024-12-25)
 
 
