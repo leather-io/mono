@@ -3,7 +3,7 @@ import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.que
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
-import { Text } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 export function StacksOutcome({ amount }: { amount: Money }) {
@@ -18,7 +18,9 @@ export function StacksOutcome({ amount }: { amount: Money }) {
           message: "You'll send",
         })}
       </Text>
-      <StacksTokenBalance availableBalance={amount} fiatBalance={fiatBalance} py="3" />
+      <Box mx="-5">
+        <StacksTokenBalance availableBalance={amount} fiatBalance={fiatBalance} py="3" />
+      </Box>
     </>
   );
 }

@@ -3,12 +3,10 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { isFeatureEnabled } from '@/utils/feature-flag';
 import { t } from '@lingui/macro';
-import { useRouter } from 'expo-router';
 
 import {
   ArrowsRepeatLeftRightIcon,
@@ -152,7 +150,6 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
 
 export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const { sendSheetRef, receiveSheetRef } = useSheetNavigatorContext();
-  const router = useRouter();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
 
@@ -197,7 +194,10 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
       right={
         isFeatureEnabled() && (
           <ActionBarButton
-            onPress={() => router.navigate(AppRoutes.Swap)}
+            onPress={() => {
+              // TODO: do nothing for now
+              //router.navigate(AppRoutes.Swap)
+            }}
             icon={<ArrowsRepeatLeftRightIcon />}
             label={t({
               id: 'action_bar.swap_label',

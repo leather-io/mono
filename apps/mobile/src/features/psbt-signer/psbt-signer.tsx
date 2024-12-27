@@ -2,9 +2,10 @@ import { useMemo, useRef, useState } from 'react';
 
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { formatBalance } from '@/components/balance/balance';
+import { useToastContext } from '@/components/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
-import { BitcoinFeeCard } from '@/features/approver/components/bitcoin-fee-card';
 import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
+import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
 import { useBitcoinAccountUtxos } from '@/queries/balance/bitcoin-balance.query';
@@ -35,7 +36,7 @@ import {
 } from '@leather.io/utils';
 
 import { ApproverButtons } from '../approver/components/approver-buttons';
-import { FeesSheet } from '../approver/components/fees-sheet';
+import { FeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
 import { createCoinSelectionUtxos } from '../send/send-form.utils';
 import { usePsbtAccounts } from './use-psbt-accounts';
@@ -91,6 +92,7 @@ export function BasePsbtSigner({
   const psbtPayers = usePsbtPayers({ psbtHex });
   const psbtAddresses = psbtPayers.map(payer => payer.address);
 
+  const { displayToast } = useToastContext();
   if (!psbtAccounts[0]) throw new Error('No psbt accounts');
   if (psbtAccounts.length > 1)
     throw new Error('Only one psbt account as input is supported right now');
@@ -180,20 +182,42 @@ export function BasePsbtSigner({
 
   async function onSubmitTransaction() {
     setApproverState('submitting');
-    const psbt = getPsbtAsTransaction(psbtHex);
-    const signedTx = await sign(psbt.toPSBT());
-    signedTx.finalize();
-    await broadcastTx({
-      // TODO: for now
-      skipSpendableCheckUtxoIds: 'all',
-      onSuccess() {
-        setApproverState('submitted');
-        setTimeout(() => {
-          onSuccess();
-        }, 1000);
-      },
-      tx: signedTx.hex,
-    });
+    try {
+      const psbt = getPsbtAsTransaction(psbtHex);
+      const signedTx = await sign(psbt.toPSBT());
+      signedTx.finalize();
+
+      await broadcastTx({
+        // TODO: for now
+        skipSpendableCheckUtxoIds: 'all',
+        tx: signedTx.hex,
+        onSuccess() {
+          setApproverState('submitted');
+          setTimeout(() => {
+            onSuccess();
+          }, 1000);
+        },
+        onError() {
+          displayToast({
+            title: t({
+              id: 'approver.send.btc.error.broadcast',
+              message: 'Failed to broadcast transaction',
+            }),
+            type: 'error',
+          });
+          setApproverState('start');
+        },
+      });
+    } catch {
+      displayToast({
+        title: t({
+          id: 'approver.send.btc.error.broadcast',
+          message: 'Failed to broadcast transaction',
+        }),
+        type: 'error',
+      });
+      setApproverState('start');
+    }
   }
 
   return (

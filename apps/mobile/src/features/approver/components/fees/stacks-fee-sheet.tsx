@@ -1,0 +1,59 @@
+import { RefObject } from 'react';
+
+import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
+
+import { FeeTypes, Money } from '@leather.io/models';
+import { SheetRef } from '@leather.io/ui/native';
+import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
+
+import { FeeSheetLayout } from './fee-sheet.layout';
+import { StacksFeeOption } from './stacks-fee-option';
+
+const feeTypeArr = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
+
+interface FeesSheetProps {
+  sheetRef: RefObject<SheetRef>;
+  selectedFeeType: FeeTypes;
+  setSelectedFeeType(feeType: FeeTypes): void;
+  fees: Record<FeeTypes, Money>;
+  currentFee: Money;
+  onChangeFee(feeType: FeeTypes): void;
+}
+
+export function StacksFeesSheet({
+  sheetRef,
+  selectedFeeType,
+  setSelectedFeeType,
+  fees,
+  currentFee,
+  onChangeFee,
+}: FeesSheetProps) {
+  const { data: stxMarketData } = useStxMarketDataQuery();
+
+  function getUsd(fee: Money) {
+    const usdBalance = baseCurrencyAmountInQuoteWithFallback(fee, stxMarketData);
+    return usdBalance;
+  }
+
+  return (
+    <FeeSheetLayout sheetRef={sheetRef}>
+      {feeTypeArr.map(feeType => {
+        const fee = feeType !== FeeTypes.Custom ? fees[feeType] : currentFee;
+        return (
+          <StacksFeeOption
+            isSelected={selectedFeeType === feeType}
+            disabled={feeType === FeeTypes.Custom}
+            onPress={() => {
+              setSelectedFeeType(feeType);
+              onChangeFee(feeType);
+            }}
+            key={feeType}
+            feeType={feeType}
+            fee={fee}
+            usd={getUsd(fee)}
+          />
+        );
+      })}
+    </FeeSheetLayout>
+  );
+}

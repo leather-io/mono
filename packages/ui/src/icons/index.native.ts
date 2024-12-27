@@ -73,6 +73,7 @@ export * from './terminal-icon.native';
 export * from './user-icon.native';
 export * from './users-two-icon.native';
 export * from './wallet-plus-icon.native';
+export * from './numbered-list-icon.native';
 
 // Account avatars
 export * from './account-avatars/alien.native';
