@@ -11,7 +11,7 @@ import { match } from '@leather.io/utils';
 
 export type ApproverState = 'start' | 'submitting' | 'submitted';
 
-export function getFeeData(feeType: FeeTypes) {
+function getBaseFeeData(feeType: FeeTypes) {
   const feeMatcher = match<FeeTypes>();
   const icon = feeMatcher(feeType, {
     [FeeTypes.Low]: <AnimalSnailIcon />,
@@ -20,6 +20,7 @@ export function getFeeData(feeType: FeeTypes) {
     [FeeTypes.Custom]: <AnimalChameleonIcon />,
     [FeeTypes.Unknown]: <AnimalChameleonIcon />,
   });
+
   const title = feeMatcher(feeType, {
     [FeeTypes.Low]: t({
       id: 'approver.fee.type.low',
@@ -42,17 +43,55 @@ export function getFeeData(feeType: FeeTypes) {
       message: 'Unknown',
     }),
   });
+  return { icon, title };
+}
+
+export function getBitcoinFeeData(feeType: FeeTypes) {
+  const feeMatcher = match<FeeTypes>();
+  const { icon, title } = getBaseFeeData(feeType);
   const time = feeMatcher(feeType, {
     [FeeTypes.Low]: t({
-      id: 'approver.fee.speed.low',
+      id: 'approver.bitcoin.fee.speed.low',
       message: '~40 mins',
     }),
     [FeeTypes.Middle]: t({
-      id: 'approver.fee.speed.middle',
+      id: 'approver.bitcoin.fee.speed.middle',
       message: '~20 mins',
     }),
     [FeeTypes.High]: t({
-      id: 'approver.fee.speed.high',
+      id: 'approver.bitcoin.fee.speed.high',
+      message: '~10 mins',
+    }),
+    [FeeTypes.Custom]: t({
+      id: 'approver.fee.speed.custom',
+      message: 'Custom',
+    }),
+    [FeeTypes.Unknown]: t({
+      id: 'approver.fee.speed.unknown',
+      message: 'Unknown',
+    }),
+  });
+  return {
+    icon,
+    title,
+    time,
+  };
+}
+
+export function getStacksFeeData(feeType: FeeTypes) {
+  const feeMatcher = match<FeeTypes>();
+  const { icon, title } = getBaseFeeData(feeType);
+  const time = feeMatcher(feeType, {
+    [FeeTypes.Low]: t({
+      id: 'approver.stacks.fee.speed.low',
+      message: '~40 mins',
+    }),
+    [FeeTypes.Middle]: t({
+      id: 'approver.stacks.fee.speed.middle',
+      message: '~20 mins',
+    }),
+    [FeeTypes.High]: t({
+      id: 'approver.stacks.fee.speed.high',
       message: '~10 mins',
     }),
     [FeeTypes.Custom]: t({

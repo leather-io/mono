@@ -1,25 +1,25 @@
+import { ReactNode } from 'react';
+
 import { Balance } from '@/components/balance/balance';
 import { FeeBadge } from '@/features/send/fee-badge';
-import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { t } from '@lingui/macro';
 
-import { FeeTypes, Money } from '@leather.io/models';
+import { MarketData, Money } from '@leather.io/models';
 import { Avatar, Box, Cell, ChevronRightIcon, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
-import { getFeeData } from '../utils';
-
-interface FeeCardProps {
-  feeType: FeeTypes;
+interface BaseFeeCardProps {
   amount: Money;
   onPress(): void;
+  marketData: MarketData | undefined;
+  icon: ReactNode;
+  title: string;
+  time: string;
 }
 
-export function BitcoinFeeCard({ feeType, amount, onPress }: FeeCardProps) {
-  const { data: btcMarketData } = useBtcMarketDataQuery();
-  const { icon, title, time } = getFeeData(feeType);
+export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: BaseFeeCardProps) {
+  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
 
-  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, btcMarketData);
   return (
     <>
       <Box flexDirection="row">
