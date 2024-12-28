@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
+import { useToastContext } from '@/components/toast/toast-context';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';

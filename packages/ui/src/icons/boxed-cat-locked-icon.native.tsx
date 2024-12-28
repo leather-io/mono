@@ -8,3 +8,5 @@ export const BoxedCatLockedIcon = forwardRef<Component, IconProps>((props, ref) 
     <BoxedCatLocked />
   </Icon>
 ));
+
+BoxedCatLockedIcon.displayName = 'BoxedCatLockedIcon';

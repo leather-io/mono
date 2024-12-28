@@ -8,3 +8,5 @@ export const BoxedCatLockedIcon = forwardRef<SVGSVGElement, IconProps>((props, r
     <BoxedCatLocked />
   </Icon>
 ));
+
+BoxedCatLockedIcon.displayName = 'BoxedCatLockedIcon';
