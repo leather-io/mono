@@ -17,3 +17,5 @@ export const NumberedListIcon = forwardRef<Component, IconProps>(({ variant, ...
     </Icon>
   );
 });
+
+NumberedListIcon.displayName = 'NumberedListIcon';

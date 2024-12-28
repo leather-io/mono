@@ -217,7 +217,7 @@ export function StacksTxSigner({
           },
         }
       );
-    } catch (e) {
+    } catch {
       displayToast({
         title: t({
           id: 'approver.send.stx.error.broadcast',
