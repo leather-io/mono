@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { MoreInfoIcon } from '@/components/more-info-icon';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
+import { GuideLinks } from '@/shared/constants';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
@@ -40,8 +43,9 @@ export default function CreateNewWallet() {
   return (
     <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
       <AnimatedHeaderScreenLayout
-        // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
-        // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
+        rightTitleElement={
+          <MoreInfoIcon onPress={() => void Linking.openURL(GuideLinks.AddWallet)} />
+        }
         title={t({
           id: 'create_new_wallet.title',
           message: 'Back up your secret key',
