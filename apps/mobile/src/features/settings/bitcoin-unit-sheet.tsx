@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { LEATHER_GUIDES_MOBILE_BITCOIN_UNIT } from '@/shared/constants';
+import { GuideLinks } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -42,7 +42,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
         id: 'bitcoin_unit.header_title',
         message: 'Bitcoin unit',
       })}
-      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
+      onPressSupport={() => void Linking.openURL(GuideLinks.BitcoinUnit)}
     >
       <SettingsList gap="0">
         {Object.values(bitcoinUnitsKeyedByName).map(unit => (

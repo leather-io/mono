@@ -5,7 +5,7 @@ import { getAccountDisplayPreferencesKeyedByType } from '@/common/display-prefer
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER } from '@/shared/constants';
+import { GuideLinks } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
@@ -58,7 +58,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
         message: 'Account identifier',
       })}
       onPressSupport={() => {
-        void Linking.openURL(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
+        void Linking.openURL(GuideLinks.AccountIdentifier);
       }}
     >
       <SettingsList gap="0">

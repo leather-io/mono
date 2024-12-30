@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
+import { GuideLinks } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -63,7 +63,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         id: 'app_auth.header_title',
         message: 'App authentication',
       })}
-      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
+      onPressSupport={() => void Linking.openURL(GuideLinks.AppAuthentication)}
     >
       <SettingsList>
         <SettingsListItem
