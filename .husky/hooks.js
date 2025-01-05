@@ -77,7 +77,7 @@ try {
     const lintStagedCommands = scripts
       .filter(script => ['lint', 'format'].includes(script))
       .map(script => {
-        if (script === 'lint') return 'eslint --cache --max-warnings 0 --fix';
+        if (script === 'lint') return 'eslint --cache --max-warnings 0 --no-warn-ignored --fix';
         if (script === 'format') return 'prettier --write';
       });
 
