@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react';
 
-import { Badge, BadgeVariant } from '@leather.io/ui/native';
+import { Badge, BadgeProps } from '@leather.io/ui/native';
 import { match } from '@leather.io/utils';
 
 type FeeType = 'low' | 'normal' | 'high' | 'extremely-high';
@@ -13,7 +13,7 @@ export function FeeBadge(props: FeeBadgeProps) {
   const { i18n } = useLingui();
   const matchVariant = match<FeeType>();
 
-  const variant = matchVariant<BadgeVariant>(props.type, {
+  const variant = matchVariant<BadgeProps['variant']>(props.type, {
     low: 'success',
     normal: 'default',
     high: 'error',
@@ -39,5 +39,5 @@ export function FeeBadge(props: FeeBadgeProps) {
     }),
   });
 
-  return <Badge variant={variant} px="1" title={title} />;
+  return <Badge variant={variant} px="1" label={title} />;
 }

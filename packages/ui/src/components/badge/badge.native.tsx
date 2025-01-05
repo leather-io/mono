@@ -1,61 +1,67 @@
 import { ResponsiveValue } from '@shopify/restyle';
 
-import { match } from '@leather.io/utils';
-
 import { Theme } from '../../theme-native';
-import { Box } from '../box/box.native';
-import { Pressable, PressableProps } from '../pressable/pressable.native';
+import { Box, BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 
-export type BadgeVariant = 'success' | 'warning' | 'error' | 'default' | 'info';
+export type BadgeVariant = 'default' | 'info' | 'success' | 'warning' | 'error';
 
-interface BadgeProps extends PressableProps {
-  title: string;
-  variant: BadgeVariant;
-  dataTestId?: string;
+interface VariantProps {
+  bg: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
+  borderColor: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
+  color: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
 }
 
-export function Badge(props: BadgeProps) {
-  const matchBadgeVariant = match<BadgeVariant>();
+const badgeVariants: Record<BadgeVariant, VariantProps> = {
+  default: {
+    bg: 'ink.background-secondary',
+    borderColor: 'ink.border-transparent',
+    color: 'ink.text-subdued',
+  },
+  info: {
+    bg: 'blue.background-primary',
+    borderColor: 'blue.border',
+    color: 'blue.action-primary-default',
+  },
+  success: {
+    bg: 'green.background-primary',
+    borderColor: 'green.border',
+    color: 'green.action-primary-default',
+  },
+  warning: {
+    bg: 'yellow.background-primary',
+    borderColor: 'yellow.border',
+    color: 'yellow.action-primary-default',
+  },
+  error: {
+    bg: 'red.background-primary',
+    borderColor: 'red.border',
+    color: 'red.action-primary-default',
+  },
+};
 
-  const backgroundColor = matchBadgeVariant<
-    ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>
-  >(props.variant, {
-    success: 'green.background-primary',
-    warning: 'yellow.background-primary',
-    error: 'red.background-primary',
-    default: 'ink.background-secondary',
-    info: 'blue.background-primary',
-  });
+export interface BadgeProps extends BoxProps {
+  label: string;
+  variant?: BadgeVariant;
+  outlined?: boolean;
+}
 
-  const borderColor = matchBadgeVariant<
-    ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>
-  >(props.variant, {
-    success: 'green.border',
-    warning: 'yellow.border',
-    error: 'red.border',
-    default: 'ink.border-transparent',
-    info: 'blue.border',
-  });
-
-  const textColor = matchBadgeVariant<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
-    props.variant,
-    {
-      success: 'green.action-primary-default',
-      warning: 'yellow.action-primary-default',
-      error: 'red.action-primary-default',
-      default: 'ink.text-subdued',
-      info: 'blue.action-primary-default',
-    }
-  );
+export function Badge({ variant = 'default', outlined, ...props }: BadgeProps) {
+  const styles = badgeVariants[variant];
 
   return (
-    <Pressable {...props}>
-      <Box bg={backgroundColor} borderColor={borderColor} borderRadius="xs" borderWidth={1} p="1">
-        <Text variant="label03" color={textColor} data-testid={props.dataTestId}>
-          {props.title}
-        </Text>
-      </Box>
-    </Pressable>
+    <Box
+      bg={outlined ? undefined : styles.bg}
+      borderColor={styles.borderColor}
+      borderRadius="xs"
+      borderWidth={1}
+      height={24}
+      p="1"
+      {...props}
+    >
+      <Text variant="label03" color={styles.color}>
+        {props.label}
+      </Text>
+    </Box>
   );
 }
