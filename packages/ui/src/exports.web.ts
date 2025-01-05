@@ -21,7 +21,7 @@ export * from './components/select';
 export { Tabs } from './components/tabs/tabs.web';
 export * from './components/toast';
 export * from './components/tooltip';
-export { Tag, type TagProps, type TagVariants } from './components/tag/tag.web';
+export { Badge, type BadgeProps } from './components/badge/badge.web';
 export * from './components/typography/index.web';
 export { DynamicColorCircle } from './components/dynamic-color-circle.web';
 export { Hr, DashedHr, type HrProps } from './components/hr.web';

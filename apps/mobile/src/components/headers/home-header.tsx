@@ -12,7 +12,7 @@ export function HomeHeader() {
       leftElement={
         <Box flexDirection="row" alignItems="center">
           <HeaderLeatherLogo />
-          <NetworkBadge px="0" ml="-1" />
+          <NetworkBadge ml="-1" />
         </Box>
       }
       rightElement={<HeaderOptions />}

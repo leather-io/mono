@@ -1,6 +1,6 @@
 import { Flex } from 'leather-styles/jsx';
 
-import { Tag } from '../tag/tag.web';
+import { Badge } from '../badge/badge.web';
 
 interface NetworkBadge {
   isTestnetChain: boolean;
@@ -12,7 +12,7 @@ export function NetworkModeBadge({ isTestnetChain, name }: NetworkBadge) {
 
   return (
     <Flex position="relative" zIndex={999}>
-      <Tag label={name} transparent />
+      <Badge label={name} outlined />
     </Flex>
   );
 }

@@ -1,14 +1,16 @@
 import type { ReactNode } from 'react';
 
 import { type RecipeVariantProps, cva } from 'leather-styles/css';
-import { HStack, type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
-const tagRecipe = cva({
+const badgeRecipe = cva({
   base: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 'space.01',
     borderRadius: 'xs',
-    fontWeight: 500,
     maxWidth: 'fit-content',
-    maxHeight: 'fit-content',
+    maxHeight: 24,
     p: 'space.01',
     textStyle: 'label.03',
   },
@@ -41,26 +43,27 @@ const tagRecipe = cva({
       },
     },
 
-    transparent: { true: { bg: 'transparent' } },
+    outlined: { true: { bg: 'transparent' } },
   },
   defaultVariants: {
     variant: 'default',
   },
 });
 
-export type TagVariants = RecipeVariantProps<typeof tagRecipe>;
+type BadgeVariants = RecipeVariantProps<typeof badgeRecipe>;
 
-export interface TagProps extends HTMLStyledProps<'div'> {
+interface BadgeOwnProps {
   icon?: ReactNode;
   label: string;
 }
-export function Tag({ icon, label, transparent, variant, ...props }: TagProps & TagVariants) {
+
+export type BadgeProps = BadgeOwnProps & BadgeVariants & HTMLStyledProps<'div'>;
+
+export function Badge({ icon, label, outlined, variant, ...props }: BadgeProps) {
   return (
-    <styled.div className={tagRecipe({ transparent, variant })} {...props}>
-      <HStack gap="space.01">
-        {icon && icon}
-        {label}
-      </HStack>
+    <styled.div className={badgeRecipe({ outlined, variant })} {...props}>
+      {icon}
+      {label}
     </styled.div>
   );
 }

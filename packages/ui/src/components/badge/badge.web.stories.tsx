@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { ErrorCircleIcon } from '../../icons/index.web';
-import { Tag as Component } from './tag.web';
+import { Badge as Component } from './badge.web';
 
 const meta: Meta<typeof Component> = {
   component: Component,
   tags: ['autodocs'],
-  title: 'Tag',
+  title: 'Badge',
   parameters: {
-    controls: { include: ['transparent', 'variant'] },
+    controls: { include: ['outlined', 'variant'] },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Component>;
 
-export const Tag: Story = {
+export const Badge: Story = {
   args: {
     label: 'Label',
     variant: 'default',

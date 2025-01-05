@@ -4,27 +4,27 @@ import { useSettings } from '@/store/settings/settings';
 import { useLingui } from '@lingui/react';
 import { useRouter } from 'expo-router';
 
-import { Badge, PressableProps } from '@leather.io/ui/native';
+import { Badge, type BadgeProps, Pressable } from '@leather.io/ui/native';
 
-type NetworkBadgeProps = PressableProps;
+type NetworkBadgeProps = Omit<BadgeProps, 'label'>;
 
 export function NetworkBadge(props: NetworkBadgeProps) {
   const router = useRouter();
   const { i18n } = useLingui();
   const { networkPreference } = useSettings();
   if (networkPreference.id === 'mainnet') return null;
+
   return (
-    <Badge
-      variant="default"
-      px="3"
-      onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
-      dataTestId={TestId.networkBadge}
-      title={i18n._({
-        id: 'settings.header_network',
-        message: '{network}',
-        values: { network: networkPreference.name },
-      })}
-      {...props}
-    />
+    <Pressable onPress={() => router.navigate(AppRoutes.SettingsNetworks)}>
+      <Badge
+        testID={TestId.networkBadge}
+        label={i18n._({
+          id: 'settings.header_network',
+          message: '{network}',
+          values: { network: networkPreference.name },
+        })}
+        {...props}
+      />
+    </Pressable>
   );
 }
