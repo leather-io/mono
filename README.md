@@ -37,8 +37,10 @@ Configure code checks to run during pre-commit and/or pre-push hooks. Each check
 1. Copy `.env.example` to `.env`.
 2. Enable specific checks for each hook::
 
+```
 PRE_COMMIT=format,lint
 PRE_PUSH=syncpack:lint,typecheck,lint:filenames
+```
 
 In most cases, setting PRE_COMMIT is sufficient, as errors from remaining checks are
 uncommon, and typechecking is handled by editors.
