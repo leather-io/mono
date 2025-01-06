@@ -4,6 +4,7 @@ export { BulletSeparator } from './src/components/bullet-separator/bullet-separa
 export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
 export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.native';
 export { Box, type BoxProps } from './src/components/box/box.native';
+export { SquircleBox, type SquircleBoxProps } from './src/components/box/squircle-box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
 export { Callout, type CalloutProps } from './src/components/callout/callout.native';
 export { Chip } from './src/components/chip/chip.native';

@@ -52,6 +52,7 @@
     "expo-haptics": "13.0.1",
     "expo-linear-gradient": "13.0.2",
     "expo-splash-screen": "0.27.4",
+    "expo-squircle-view": "1.1.0",
     "framer-motion": "11.5.5",
     "metro-cache": "0.80.5",
     "metro-config": "0.80.5",
