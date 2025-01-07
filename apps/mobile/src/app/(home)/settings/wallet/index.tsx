@@ -37,20 +37,22 @@ export default function SettingsWalletScreen() {
             <WalletsList variant="active" />
             <Divider />
             <SettingsList paddingTop="3">
-              <SettingsListItem
-                title={t({
-                  id: 'wallet.hidden_accounts.cell_title',
-                  message: 'Hidden accounts',
-                })}
-                caption={t({
-                  id: 'wallet.hidden_accounts.cell_caption',
-                  message: `${hiddenAccountsLength} hidden accounts`,
-                })}
-                icon={<Eye1ClosedIcon />}
-                onPress={() => {
-                  router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
-                }}
-              />
+              {hiddenAccountsLength > 0 && (
+                <SettingsListItem
+                  title={t({
+                    id: 'wallet.hidden_accounts.cell_title',
+                    message: 'Hidden accounts',
+                  })}
+                  caption={t({
+                    id: 'wallet.hidden_accounts.cell_caption',
+                    message: `${hiddenAccountsLength} hidden accounts`,
+                  })}
+                  icon={<Eye1ClosedIcon />}
+                  onPress={() => {
+                    router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
+                  }}
+                />
+              )}
               <SettingsListItem
                 title={t({
                   id: 'wallet.add_wallet.cell_title',

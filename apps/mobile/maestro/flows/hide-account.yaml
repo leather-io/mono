@@ -14,7 +14,7 @@ appId: io.leather.mobilewallet
     id: 'walletListAccountCard'
 - tapOn:
     text: 'Hide account'
-- assertVisible: 'Unhide account'
+- assertVisible: 'Un-hide account'
 - tapOn:
     id: 'backButton'
 - assertNotVisible:
@@ -23,9 +23,9 @@ appId: io.leather.mobilewallet
     text: 'Hidden accounts 1 hidden accounts'
 - tapOn:
     id: 'walletListAccountCard'
-- tapOn: Unhide account
+- tapOn: Un-hide account
 - tapOn:
     id: 'backButton'
 - tapOn:
     id: 'backButton'
-- assertVisible: Hidden accounts 0 hidden accounts
+- assertNotVisible: Hidden accounts 0 hidden accounts
