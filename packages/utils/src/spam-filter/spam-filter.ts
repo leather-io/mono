@@ -8,7 +8,9 @@ function spamUrlFilter(input: string) {
 }
 
 function spamWordFilter(input: string): boolean {
-  const containsSpam = (element: string) => input.toLowerCase().includes(element);
+  function containsSpam(element: string) {
+    return input.toLowerCase().includes(element);
+  }
   return spamWords.some(containsSpam);
 }
 

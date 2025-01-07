@@ -32,6 +32,7 @@ export default tseslint.config(
       '@typescript-eslint/no-inferrable-types': 'error',
       '@typescript-eslint/no-require-imports': 'off', // valid use-case: expo-image
       '@typescript-eslint/no-deprecated': 'off', // Needs decision. We can't have deprecated usages block the integration since we disallow warnings, but we do want to somehow track them.
+      'func-style': ['error', 'declaration'],
     },
   },
   {

@@ -7,21 +7,19 @@ export interface PrismType {
   [key: string]: any;
 }
 
-const clarity = (Prism: PrismType) => {
+function clarity(Prism: PrismType) {
   // Functions to construct regular expressions
   // simple form
   // e.g. (interactive ... or (interactive)
   // function simple_form(name) {
   //   return RegExp('(\\()' + name + '(?=[\\s\\)])');
   // }
-
   // booleans and numbers
   function primitive(pattern: string) {
     return RegExp(`([\\s([])${pattern}(?=[\\s)])`);
   }
 
   // Patterns in regular expressions
-
   // Open parenthesis for look-behind
   const par = '(\\()';
   // const endpar = '(?=\\))';
@@ -119,7 +117,7 @@ buff|hash160|sha256|sha512|sha512/256|keccak256|true|false|none)' +
   };
 
   Prism.languages.clarity = language;
-};
+}
 
 clarity(PrismLib);
 

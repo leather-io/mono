@@ -14,7 +14,9 @@ import {
 } from './utils.shared';
 
 const lineNumberWidth = 60;
-const getLineNumber = (n: number, length: number) => startPad(n + 1, length.toString().length);
+function getLineNumber(n: number, length: number) {
+  return startPad(n + 1, length.toString().length);
+}
 
 function Tokens({
   tokens,

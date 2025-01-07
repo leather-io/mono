@@ -33,16 +33,16 @@ const scrollPaddingTop = 20;
  * @param nativeEvent
  * @returns boolean
  */
-const isCloseToBottom = (
+function isCloseToBottom(
   { layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent,
   contentOffsetBottom: number
-) => {
+) {
   const paddingToBottom = scrollPaddingBottom;
   return (
     layoutMeasurement.height + contentOffset.y - contentOffsetBottom >=
     contentSize.height - paddingToBottom
   );
-};
+}
 
 /**
  *
@@ -51,11 +51,11 @@ const isCloseToBottom = (
  * @param nativeEvent
  * @returns boolean
  */
-const isCloseToTop = ({ contentOffset }: NativeScrollEvent, contentOffsetTop: number) => {
+function isCloseToTop({ contentOffset }: NativeScrollEvent, contentOffsetTop: number) {
   const paddingToTop = scrollPaddingTop;
 
   return contentOffset.y <= -contentOffsetTop + paddingToTop;
-};
+}
 
 export function createOnScrollHandler({
   actionBarRef,

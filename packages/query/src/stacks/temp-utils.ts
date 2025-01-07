@@ -7,7 +7,7 @@
  *
  * @param contractId - the source string: [principal].[contract-name] or [principal].[contract-name]::[asset-name]
  */
-export const getStacksContractName = (contractId: string): string => {
+export function getStacksContractName(contractId: string): string {
   if (contractId.includes('.')) {
     const parts = contractId?.split('.');
     if (contractId.includes('::')) {
@@ -20,14 +20,14 @@ export const getStacksContractName = (contractId: string): string => {
   //   contractId
   // );
   return contractId;
-};
+}
 
 /**
  * Gets the asset name from a a fully qualified name of an asset.
  *
  * @param contractId - the fully qualified name of the asset: [principal].[contract-name]::[asset-name]
  */
-const getStacksContractAssetName = (contractId: string): string => {
+function getStacksContractAssetName(contractId: string): string {
   if (!contractId.includes('::')) {
     // logger.warn(
     //   'getStacksContractAssetName: does not contain "::", does not appear to be a fully qualified name of an asset.',
@@ -36,20 +36,18 @@ const getStacksContractAssetName = (contractId: string): string => {
     return contractId;
   }
   return contractId.split('::')[1];
-};
+}
 
 /**
  * Gets the parts that make up a fully qualified name of an asset.
  *
  * @param contractId - the fully qualified name of the asset: [principal].[contract-name]::[asset-name]
  */
-export const getStacksContractIdStringParts = (
-  contractId: string
-): {
+export function getStacksContractIdStringParts(contractId: string): {
   contractAddress: string;
   contractAssetName: string;
   contractName: string;
-} => {
+} {
   if (!contractId.includes('.') || !contractId.includes('::')) {
     // logger.warn(
     //   'getStacksContractIdStringParts: does not contain a period or "::", does not appear to be a fully qualified name of an asset.',
@@ -71,4 +69,4 @@ export const getStacksContractIdStringParts = (
     contractAssetName,
     contractName,
   };
-};
+}
