@@ -29,7 +29,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>myapp</string>
+          <string>leather</string>
           <string>io.leather.mobilewallet</string>
         </array>
       </dict>
