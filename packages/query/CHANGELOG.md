@@ -255,6 +255,26 @@
     * @leather.io/rpc bumped to 2.4.0
     * @leather.io/utils bumped to 0.22.4
 
+## [2.26.11](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.10...@leather.io/query-v2.26.11) (2025-01-07)
+
+
+### Bug Fixes
+
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+* remove a return statement from finally block ([474c5cb](https://github.com/leather-io/mono/commit/474c5cb9f084deab2cf2c33640c02dd9a99faf48))
+* safely fix or silence few surfaced eslint errors until addressed ([f0bb35b](https://github.com/leather-io/mono/commit/f0bb35bdfe97486bebca94d5cd3451872dae5a3d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.10
+    * @leather.io/constants bumped to 0.15.3
+    * @leather.io/models bumped to 0.24.3
+    * @leather.io/rpc bumped to 2.4.2
+    * @leather.io/utils bumped to 0.22.6
+
 ## [2.26.10](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.9...@leather.io/query-v2.26.10) (2024-12-25)
 
 

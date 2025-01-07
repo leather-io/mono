@@ -382,6 +382,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.4.1
 
+## [0.19.10](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.9...@leather.io/bitcoin-v0.19.10) (2025-01-07)
+
+
+### Bug Fixes
+
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+* safely fix or silence few surfaced eslint errors until addressed ([f0bb35b](https://github.com/leather-io/mono/commit/f0bb35bdfe97486bebca94d5cd3451872dae5a3d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.15.3
+    * @leather.io/crypto bumped to 1.6.26
+    * @leather.io/models bumped to 0.24.3
+    * @leather.io/utils bumped to 0.22.6
+  * devDependencies
+    * @leather.io/rpc bumped to 2.4.2
+
 ## [0.19.9](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.8...@leather.io/bitcoin-v0.19.9) (2024-12-25)
 
 
