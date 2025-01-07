@@ -23,12 +23,12 @@ interface TextMeasurementProxyProps {
 // Use an invisible placeholder to extract the dynamic font size set by `adjustFontSizeToFit`
 // as the text changes during typing.
 function TextMeasurementProxy({ value, textProps, onFontSizeChange }: TextMeasurementProxyProps) {
-  const handleLayout = (event: NativeSyntheticEvent<TextLayoutEventData>) => {
+  function handleLayout(event: NativeSyntheticEvent<TextLayoutEventData>) {
     const line = event.nativeEvent.lines[0];
     if (line) {
       onFontSizeChange(line.ascender);
     }
-  };
+  }
 
   return (
     <Text

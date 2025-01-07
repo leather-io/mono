@@ -6,8 +6,8 @@ interface AuthContextValue {
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
-export const useAuthContext = () => {
+export function useAuthContext() {
   const context = useContext(AuthContext);
   if (!context) throw new Error("'useAuthContext' must be used within an 'AuthContext.Provider'");
   return context;
-};
+}

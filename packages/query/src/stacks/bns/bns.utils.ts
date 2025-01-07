@@ -59,12 +59,12 @@ export async function fetchNamesForAddress({
  * Fetch the owner of a name.
  */
 export async function fetchNameOwner(client: StacksClient, name: string, isTestnet: boolean) {
-  const fetchFromApi = async () => {
+  async function fetchFromApi() {
     const res = await client.getNameInfo(name);
     if (isUndefined(res.address)) return null;
     if (!isString(res.address) || res.address.length === 0) return null;
     return res.address;
-  };
+  }
 
   if (isTestnet) {
     return fetchFromApi();

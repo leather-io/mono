@@ -18,7 +18,9 @@ import { whenStacksChainId } from '@leather.io/stacks';
 
 import type { RootState } from '..';
 
-const selectSettings = (state: RootState) => state.settings;
+function selectSettings(state: RootState) {
+  return state.settings;
+}
 
 export const selectAccountDisplayPreference = createSelector(
   selectSettings,

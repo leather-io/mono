@@ -6,7 +6,7 @@ import { Theme } from '../../theme-native';
 import { Box } from '../box/box.native';
 import type { FlagAlignment } from './flag.shared';
 
-const getFlagAlignment = (align: FlagAlignment) => {
+function getFlagAlignment(align: FlagAlignment) {
   switch (align) {
     case 'top':
       return 'flex-start';
@@ -17,7 +17,7 @@ const getFlagAlignment = (align: FlagAlignment) => {
     default:
       assertUnreachable(align);
   }
-};
+}
 
 export interface FlagProps extends BoxProps<Theme> {
   align?: FlagAlignment;

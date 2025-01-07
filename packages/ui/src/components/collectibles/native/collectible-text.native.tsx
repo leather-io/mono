@@ -12,7 +12,7 @@ export function CollectibleText({ src }: CollectibleTextProps) {
   const [content, setContent] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchContent = async () => {
+    async function fetchContent() {
       try {
         const response = await fetch(src);
         if (!response.ok) {
@@ -22,7 +22,7 @@ export function CollectibleText({ src }: CollectibleTextProps) {
         setContent(JSON.stringify(data, null, 2));
         // eslint-disable-next-line no-empty
       } catch {}
-    };
+    }
 
     void fetchContent();
   }, [src]);
