@@ -381,6 +381,38 @@
     * @leather.io/analytics bumped to 3.1.0
     * @leather.io/ui bumped to 1.45.0
 
+## [2.4.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.4.0...@leather.io/mobile-v2.4.1) (2025-01-07)
+
+
+### Bug Fixes
+
+* account reorder ([1e6ee9c](https://github.com/leather-io/mono/commit/1e6ee9cbe56d50340b3e380ddc058646b45c75d6))
+* add few more displayNames ([2abef30](https://github.com/leather-io/mono/commit/2abef306e3a3203b32354a27021e5fb7fee04874))
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+* only show hidden accounts if accounts hidden, ref LEA-1913 ([a5ef522](https://github.com/leather-io/mono/commit/a5ef5220445cc13c226a41d57c711279afacd604))
+* safely fix or silence few surfaced eslint errors until addressed ([f0bb35b](https://github.com/leather-io/mono/commit/f0bb35bdfe97486bebca94d5cd3451872dae5a3d))
+* safely fix or silence hook dependency errors until addressed ([a53341c](https://github.com/leather-io/mono/commit/a53341c1d188bac4a42313da1f4205ed8bbf508b))
+* text input not focusing on paste in Restore Wallet ([d1310b9](https://github.com/leather-io/mono/commit/d1310b9369c985ee4d249e031af32dc31fb305eb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.1.1
+    * @leather.io/bitcoin bumped to 0.19.10
+    * @leather.io/constants bumped to 0.15.3
+    * @leather.io/crypto bumped to 1.6.26
+    * @leather.io/models bumped to 0.24.3
+    * @leather.io/query bumped to 2.26.11
+    * @leather.io/rpc bumped to 2.4.2
+    * @leather.io/stacks bumped to 1.5.11
+    * @leather.io/tokens bumped to 0.12.2
+    * @leather.io/ui bumped to 1.47.1
+    * @leather.io/utils bumped to 0.22.6
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.10
+
 ## [2.4.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.3.0...@leather.io/mobile-v2.4.0) (2024-12-27)
 
 

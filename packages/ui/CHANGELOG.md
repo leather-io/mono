@@ -205,6 +205,28 @@
   * devDependencies
     * @leather.io/models bumped to 0.24.2
 
+## [1.47.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.47.0...@leather.io/ui-v1.47.1) (2025-01-07)
+
+
+### Bug Fixes
+
+* add few more displayNames ([2abef30](https://github.com/leather-io/mono/commit/2abef306e3a3203b32354a27021e5fb7fee04874))
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+* remove variant prop from icons that don't yet need it ([f59b9cb](https://github.com/leather-io/mono/commit/f59b9cbfe032d76a12f920dd24973cc11a4574ab))
+* safely fix or silence few surfaced eslint errors until addressed ([f0bb35b](https://github.com/leather-io/mono/commit/f0bb35bdfe97486bebca94d5cd3451872dae5a3d))
+* safely fix or silence hook dependency errors until addressed ([a53341c](https://github.com/leather-io/mono/commit/a53341c1d188bac4a42313da1f4205ed8bbf508b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.12.2
+    * @leather.io/utils bumped to 0.22.6
+  * devDependencies
+    * @leather.io/models bumped to 0.24.3
+    * @leather.io/panda-preset bumped to 0.8.1
+
 ## [1.47.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.46.0...@leather.io/ui-v1.47.0) (2024-12-27)
 
 

@@ -219,6 +219,23 @@
     * @leather.io/models bumped to 0.24.2
     * @leather.io/utils bumped to 0.22.5
 
+## [1.5.11](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.5.10...@leather.io/stacks-v1.5.11) (2025-01-07)
+
+
+### Bug Fixes
+
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.15.3
+    * @leather.io/crypto bumped to 1.6.26
+    * @leather.io/models bumped to 0.24.3
+    * @leather.io/utils bumped to 0.22.6
+
 ## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.4.0...@leather.io/stacks-v1.5.0) (2024-11-29)
 
 

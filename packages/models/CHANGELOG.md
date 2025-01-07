@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.24.3](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.2...@leather.io/models-v0.24.3) (2025-01-07)
+
+
+### Bug Fixes
+
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+
 ## [0.24.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.1...@leather.io/models-v0.24.2) (2024-12-19)
 
 

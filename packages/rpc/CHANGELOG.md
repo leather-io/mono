@@ -180,6 +180,21 @@
   * dependencies
     * @leather.io/models bumped to 0.24.2
 
+## [2.4.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.4.1...@leather.io/rpc-v2.4.2) (2025-01-07)
+
+
+### Bug Fixes
+
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+* safely fix or silence few surfaced eslint errors until addressed ([f0bb35b](https://github.com/leather-io/mono/commit/f0bb35bdfe97486bebca94d5cd3451872dae5a3d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.24.3
+
 ## [2.4.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.3.1...@leather.io/rpc-v2.4.0) (2024-12-16)
 
 

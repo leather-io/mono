@@ -209,6 +209,22 @@
     * @leather.io/models bumped to 0.24.2
     * @leather.io/rpc bumped to 2.4.1
 
+## [0.22.6](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.22.5...@leather.io/utils-v0.22.6) (2025-01-07)
+
+
+### Bug Fixes
+
+* safely fix or silence few surfaced eslint errors until addressed ([f0bb35b](https://github.com/leather-io/mono/commit/f0bb35bdfe97486bebca94d5cd3451872dae5a3d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.15.3
+    * @leather.io/models bumped to 0.24.3
+    * @leather.io/rpc bumped to 2.4.2
+
 ## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.21.3...@leather.io/utils-v0.22.0) (2024-12-10)
 
 
