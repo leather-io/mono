@@ -7,6 +7,9 @@ inputs:
   LEATHER_BOT:
     description: 'GH bot token'
     required: true
+  FIREBASE_TOKEN:
+    description: 'Firebase token'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -24,10 +27,15 @@ runs:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
 
-    - name: Install jq tool and fastlane
+    - name: Install jq tool
       run: |
         sudo apt-get update
         sudo apt-get install jq
+      shell: bash
+
+    - name: Install fastlane
+      run: |
+        sudo apt-get update
         sudo gem install fastlane
       shell: bash
 
@@ -93,5 +101,8 @@ runs:
 
     - name: Firebase App Distribution
       run: |
-        echo "${{ secrets.FIREBASE_TOKEN }}" > $HOME/.firebase_token
-        firebase appdistribution:distribute my_app.apks --app "1:915379517791:android:d4e7cb446a612f8c789eea" --groups "testers"
+        echo "${{ inputs.FIREBASE_TOKEN }}" > $HOME/.firebase_token
+        firebase appdistribution:distribute leather.apks --app "1:915379517791:android:d4e7cb446a612f8c789eea" --groups "leatherhood"
+      shell: bash
+      env:
+        FIREBASE_TOKEN: ${{ inputs.FIREBASE_TOKEN }}
