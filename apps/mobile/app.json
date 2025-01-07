@@ -5,14 +5,12 @@
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
-    "scheme": "myapp",
+    "scheme": "leather",
     "userInterfaceStyle": "automatic",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "io.leather.mobilewallet",
       "supportsTablet": false,
@@ -64,9 +62,7 @@
       [
         "expo-asset",
         {
-          "assets": [
-            "src/scripts/injected-provider.js"
-          ]
+          "assets": ["src/scripts/injected-provider.js"]
         }
       ],
       [

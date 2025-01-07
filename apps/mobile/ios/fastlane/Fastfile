@@ -2,26 +2,13 @@ platform :ios do
   desc "Build and distribute iOS app"
   lane :distribute_ios do
     build_app(
-      scheme: "YourAppScheme" # Specify your app's scheme
+      scheme: "io.leather.mobilewallet"
     )
     firebase_app_distribution(
       app: "1:915379517791:ios:ecfa47ab5ee5f256789eea",
-      testers: "pete@trustmachines.co, edgar@trustmachines.co, will@trustmachines.co",
+      groups: "leatherhood",
       release_notes: "New build available"
     )
   end
 end
 
-platform :android do
-  desc "Build and distribute Android app"
-  lane :distribute_android do
-    gradle(
-      task: "assembleRelease"
-    )
-    firebase_app_distribution(
-      app: "1:915379517791:android:d4e7cb446a612f8c789eea",
-      testers: "pete@trustmachines.co, edgar@trustmachines.co, will@trustmachines.co",
-      release_notes: "New build available"
-    )
-  end
-end

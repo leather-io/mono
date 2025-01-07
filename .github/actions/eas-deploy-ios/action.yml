@@ -16,6 +16,9 @@ inputs:
   LEATHER_BOT:
     description: 'GH bot token'
     required: true
+  FIREBASE_TOKEN:
+    description: 'Firebase token'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -33,10 +36,15 @@ runs:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
 
-    - name: Install jq tool and fastlane
+    - name: Install jq tool
       run: |
         sudo apt-get update
         sudo apt-get install jq
+      shell: bash
+
+    - name: Install fastlane
+      run: |
+        sudo apt-get update
         sudo gem install fastlane
       shell: bash
 
@@ -111,8 +119,17 @@ runs:
       shell: bash
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+        APPLE_ID: ${{ inputs.APPLE_ID }}
 
     - name: Firebase App Distribution
       run: |
-        echo "${{ secrets.FIREBASE_TOKEN }}" > $HOME/.firebase_token
-        firebase appdistribution:distribute my_app.apks --app "1:915379517791:ios:ecfa47ab5ee5f256789eea" --groups "testers"
+        echo "${{ inputs.FIREBASE_TOKEN }}" > $HOME/.firebase_token
+        firebase appdistribution:distribute leather.apks --app "1:915379517791:ios:ecfa47ab5ee5f256789eea" --groups "leatherhood"
+      shell: bash
+      env:
+        FIREBASE_TOKEN: ${{ inputs.FIREBASE_TOKEN }}
+# TODO - maybe we can skip fastlane and just re-run expo build here and release to firebase?
+# OR we could try adding an EAS EXPO workflow to release to firebase?
+
+#  it starts  Uploading to EAS Build
+#  maybe we can push what it uploads to firebase?
