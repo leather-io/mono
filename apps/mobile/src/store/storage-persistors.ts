@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 import { t } from '@lingui/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,7 +43,8 @@ function getBasicSecureStoreConfig() {
 function getBiometricsSecureStoreConfig() {
   const secureStoreConfigWithBiometrics = {
     ...getBasicSecureStoreConfig(),
-    requireAuthentication: true,
+    requireAuthentication:
+      Platform.OS === 'android' ? SecureStore.canUseBiometricAuthentication() : true,
   };
   return secureStoreConfigWithBiometrics;
 }
