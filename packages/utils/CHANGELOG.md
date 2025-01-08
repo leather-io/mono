@@ -209,6 +209,13 @@
     * @leather.io/models bumped to 0.24.2
     * @leather.io/rpc bumped to 2.4.1
 
+## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.22.6...@leather.io/utils-v0.23.0) (2025-01-08)
+
+
+### Features
+
+* stacks balances service ([32e577d](https://github.com/leather-io/mono/commit/32e577dd5477e6c3a649b1eeda8451d56ebd0d44))
+
 ## [0.22.6](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.22.5...@leather.io/utils-v0.22.6) (2025-01-07)
 
 
