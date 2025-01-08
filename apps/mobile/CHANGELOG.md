@@ -381,6 +381,28 @@
     * @leather.io/analytics bumped to 3.1.0
     * @leather.io/ui bumped to 1.45.0
 
+## [2.5.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.4.1...@leather.io/mobile-v2.5.0) (2025-01-08)
+
+
+### Features
+
+* stacks balances service ([32e577d](https://github.com/leather-io/mono/commit/32e577dd5477e6c3a649b1eeda8451d56ebd0d44))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.11
+    * @leather.io/crypto bumped to 1.6.27
+    * @leather.io/query bumped to 2.26.12
+    * @leather.io/stacks bumped to 1.5.12
+    * @leather.io/tokens bumped to 0.12.3
+    * @leather.io/ui bumped to 1.47.2
+    * @leather.io/utils bumped to 0.23.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.11
+
 ## [2.4.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.4.0...@leather.io/mobile-v2.4.1) (2025-01-07)
 
 
