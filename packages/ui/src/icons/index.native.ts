@@ -87,6 +87,7 @@ export * from './account-avatars/folder.native';
 export * from './account-avatars/gift.native';
 export * from './account-avatars/heart.native';
 export * from './account-avatars/home.native';
+export * from './account-avatars/orange.native';
 export * from './account-avatars/piggybank.native';
 export * from './account-avatars/pizza.native';
 export * from './account-avatars/rocket.native';

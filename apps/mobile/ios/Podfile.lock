@@ -273,6 +273,9 @@ PODS:
     - Yoga
   - ExpoSecureStore (13.0.2):
     - ExpoModulesCore
+  - ExpoSquircleView (1.1.0):
+    - ExpoModulesCore
+    - PocketSVG (~> 2.7.3)
   - ExpoSystemUI (3.0.7):
     - ExpoModulesCore
   - ExpoWebBrowser (13.0.3):
@@ -347,6 +350,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - PocketSVG (2.7.3)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1645,6 +1649,7 @@ DEPENDENCIES:
   - "ExpoLocalAuthentication (from `../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26/node_modules/expo-local-authentication/ios`)"
   - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.26/node_modules/expo-secure-store/ios`)"
+  - "ExpoSquircleView (from `../../../node_modules/.pnpm/expo-squircle-view@1.1.0_expo@51.0.26_react-native@0.74.1_@babel+core@7.24.6_@babel+preset-en_7tevxvvauuvl5gqvt52dvjpnji/node_modules/expo-squircle-view/ios`)"
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26/node_modules/expo-system-ui/ios`)"
   - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26/node_modules/expo-web-browser/ios`)"
   - "EXSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@0.27.4_expo-modules-autolinking@1.11.1_expo@51.0.26/node_modules/expo-splash-screen/ios`)"
@@ -1722,6 +1727,7 @@ SPEC REPOS:
     - libdav1d
     - libwebp
     - lottie-ios
+    - PocketSVG
     - SDWebImage
     - SDWebImageAVIFCoder
     - SDWebImageSVGCoder
@@ -1781,6 +1787,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core"
   ExpoSecureStore:
     :path: "../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=hl63v2r5dtztyuge4wydprmp6u_expo@51.0.26/node_modules/expo-secure-store/ios"
+  ExpoSquircleView:
+    :path: "../../../node_modules/.pnpm/expo-squircle-view@1.1.0_expo@51.0.26_react-native@0.74.1_@babel+core@7.24.6_@babel+preset-en_7tevxvvauuvl5gqvt52dvjpnji/node_modules/expo-squircle-view/ios"
   ExpoSystemUI:
     :path: "../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26/node_modules/expo-system-ui/ios"
   ExpoWebBrowser:
@@ -1946,6 +1954,7 @@ SPEC CHECKSUMS:
   ExpoLocalAuthentication: 9e02a56a4cf9868f0052656a93d4c94101a42ed7
   ExpoModulesCore: 5440e96a8ee014f4fd88e77264985fd0a65f5f8c
   ExpoSecureStore: 060cebcb956b80ddae09821610ac1aa9e1ac74cd
+  ExpoSquircleView: ab74c87a366c8058b846a91de679331159cc64ae
   ExpoSystemUI: d4f065a016cae6721b324eb659cdee4d4cf0cb26
   ExpoWebBrowser: 7595ccac6938eb65b076385fd23d035db9ecdc8e
   EXSplashScreen: d439ca817211886dc80a00f3761e3b6d861d7205
@@ -1959,6 +1968,7 @@ SPEC CHECKSUMS:
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   lottie-ios: fcb5e73e17ba4c983140b7d21095c834b3087418
   lottie-react-native: f851c0e235f171d99083c803f728f644be1dcf65
+  PocketSVG: ca3bc53ea8d68336ba830c47b2e547790507b901
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: efb313d8126259e9294dc4ee0002f44a6f676aba
   RCTRequired: f49ea29cece52aee20db633ae7edc4b271435562

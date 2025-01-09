@@ -2,8 +2,8 @@ import { RefObject, useRef } from 'react';
 import { ScrollView } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
-import { AvatarIcon } from '@/components/avatar-icon';
 import { Draggable } from '@/components/draggable';
+import { AccountAvatar } from '@/features/accounts/components/account-avatar';
 import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -11,7 +11,7 @@ import { defaultIconTestId } from '@/utils/testing-utils';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountBalance } from '../components/account-balance';
@@ -34,7 +34,6 @@ export function AccountSelectorSheetLayout({
   const scrollViewRef = useRef<ScrollView>(null);
   const placeholderIdx = useSharedValue<null | number>(null);
   const direction = useSharedValue<'down' | 'up'>('down');
-  const theme = useTheme<Theme>();
   const { themeDerivedFromThemePreference } = useSettings();
 
   return (
@@ -74,14 +73,10 @@ export function AccountSelectorSheetLayout({
                       />
                     }
                     icon={
-                      <AvatarIcon
-                        color={theme.colors['ink.background-primary']}
-                        icon={account.icon}
-                      />
+                      <AccountAvatar icon={account.icon} testID={defaultIconTestId(account.icon)} />
                     }
                     name={account.name}
                     walletName={wallet.name}
-                    iconTestID={defaultIconTestId(account.icon)}
                   />
                 )}
               </WalletLoader>

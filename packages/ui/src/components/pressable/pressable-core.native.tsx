@@ -9,6 +9,7 @@ import {
   type LayoutProps,
   type OpacityProps,
   type PositionProps,
+  ShadowProps,
   type SpacingProps,
   type SpacingShorthandProps,
   type VisibleProps,
@@ -18,6 +19,7 @@ import {
   layout,
   opacity,
   position,
+  shadow,
   spacing,
   spacingShorthand,
   visible,
@@ -29,6 +31,7 @@ export type PressableRestyleProps = OpacityProps<Theme> &
   VisibleProps<Theme> &
   SpacingShorthandProps<Theme> &
   SpacingProps<Theme> &
+  ShadowProps<Theme> &
   BorderProps<Theme> &
   BackgroundColorProps<Theme> &
   BackgroundColorShorthandProps<Theme> &
@@ -44,6 +47,7 @@ export const AnimatedRestylePressable = Animated.createAnimatedComponent(
       opacity,
       position,
       spacing,
+      shadow,
       spacingShorthand,
       visible,
     ],

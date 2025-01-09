@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
 
-import { AvatarIcon } from '@/components/avatar-icon';
 import { AccountListItem } from '@/features/accounts/account-list/account-list-item';
 import { AccountAddress } from '@/features/accounts/components/account-address';
+import { AccountAvatar } from '@/features/accounts/components/account-avatar';
 import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Text, Theme } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 function AccountItem({ account }: { account: Account }) {
   const { list: walletsList } = useWallets();
@@ -19,7 +18,6 @@ function AccountItem({ account }: { account: Account }) {
     [account.fingerprint, walletsList]
   );
 
-  const theme = useTheme<Theme>();
   return (
     <AccountListItem
       key={account.id}
@@ -30,7 +28,7 @@ function AccountItem({ account }: { account: Account }) {
       balance={
         <AccountBalance accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
-      icon={<AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />}
+      icon={<AccountAvatar icon={account.icon} />}
       walletName={walletName}
       py="3"
     />

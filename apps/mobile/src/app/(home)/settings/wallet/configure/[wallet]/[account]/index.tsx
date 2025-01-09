@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 
-import { AvatarIcon } from '@/components/avatar-icon';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/accounts/components/account-address';
+import { AccountAvatar } from '@/features/accounts/components/account-avatar';
 import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { AccountCard } from '@/features/accounts/components/account-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
@@ -20,7 +20,6 @@ import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
@@ -31,7 +30,6 @@ import {
   HeadIcon,
   PassportIcon,
   SheetRef,
-  Theme,
 } from '@leather.io/ui/native';
 
 interface ConfigureAccountProps extends AccountId {
@@ -41,7 +39,6 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   const accountNameSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const theme = useTheme<Theme>();
   const { i18n } = useLingui();
 
   const { displayToast } = useToastContext();
@@ -86,10 +83,9 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                 address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
                 balance={<AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />}
                 icon={
-                  <AvatarIcon color={theme.colors['ink.background-primary']} icon={account.icon} />
+                  <AccountAvatar icon={account.icon} testID={defaultIconTestId(account.icon)} />
                 }
                 name={account.name}
-                iconTestID={defaultIconTestId(account.icon)}
                 walletName={wallet.name}
               />
             )}
