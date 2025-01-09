@@ -12,7 +12,6 @@ interface AccountCardProps {
   onLongPress?(): void;
   onLayout?(e: LayoutChangeEvent): void;
   testID?: string;
-  iconTestID?: string;
 }
 export function AccountCard({
   address,
@@ -24,7 +23,6 @@ export function AccountCard({
   onLongPress,
   onLayout,
   testID,
-  iconTestID,
 }: AccountCardProps) {
   const Container = onPress ? TouchableOpacity : Box;
 
@@ -35,22 +33,14 @@ export function AccountCard({
       flexDirection="column"
       p="5"
       borderRadius="sm"
+      gap="6"
       borderWidth={1}
       borderColor="ink.border-transparent"
       backgroundColor="ink.background-primary"
       onLayout={onLayout}
       testID={testID}
     >
-      <Box
-        mb="6"
-        p="2"
-        alignSelf="flex-start"
-        borderRadius="round"
-        bg="ink.text-primary"
-        testID={iconTestID}
-      >
-        {icon}
-      </Box>
+      {icon}
       <Box flexDirection="row" justifyContent="space-between">
         <Box>
           <Text variant="label01">{name}</Text>

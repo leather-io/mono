@@ -40,9 +40,7 @@ export function AccountCardLayout({
       style={animatedStyle}
       testID={testID}
     >
-      <Box p="2" borderRadius="round" backgroundColor="ink.text-primary">
-        {icon}
-      </Box>
+      {icon}
       <Box gap="1">
         <Text variant="label01">{label}</Text>
         <Text variant="caption01" color="ink.text-subdued">
