@@ -17,6 +17,11 @@ jobs:
       - name: Setup repo
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '9.13.2'
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
