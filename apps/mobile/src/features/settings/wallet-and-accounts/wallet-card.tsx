@@ -2,13 +2,16 @@ import { useState } from 'react';
 
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { useToastContext } from '@/components/toast/toast-context';
-import { AccountList } from '@/features/accounts/account-list/account-list';
+import { AccountAddress } from '@/features/accounts/components/account-address';
+import { AccountBalance } from '@/features/accounts/components/account-balance';
+import { AccountCard } from '@/features/accounts/components/account-card';
 import { WalletId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
+import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -35,7 +38,7 @@ interface WalletCardProps extends WalletId {
 export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { list: accounts } = useAccountsByFingerprint(fingerprint, variant);
   const hasAccounts = accounts.length > 0;
-  const [showAccounts, setShowAccounts] = useState(true);
+  const [expanded, setExpanded] = useState(true);
   const theme = useTheme<Theme>();
   const keys = useKeyStore();
   const { displayToast } = useToastContext();
@@ -60,12 +63,12 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             alignItems="center"
             gap="1"
             onPress={() => {
-              setShowAccounts(!showAccounts);
+              setExpanded(!expanded);
             }}
             pressEffects={legacyTouchablePressEffect}
           >
             <Text variant="label02">{name}</Text>
-            {showAccounts ? (
+            {expanded ? (
               <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
             ) : (
               <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
@@ -91,9 +94,31 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
         </Box>
       )}
 
-      {showAccounts && (
-        <Box flexDirection="column" gap="3" mx="-5">
-          <AccountList accounts={accounts} onPress={onSelectAccount} />
+      {expanded && (
+        <Box flexDirection="column" gap="2">
+          {accounts.map(account => (
+            <AccountCard
+              key={account.id}
+              primaryTitle={account.name}
+              secondaryTitle={
+                <AccountBalance
+                  accountIndex={account.accountIndex}
+                  fingerprint={account.fingerprint}
+                />
+              }
+              address={
+                <AccountAddress
+                  accountIndex={account.accountIndex}
+                  fingerprint={account.fingerprint}
+                />
+              }
+              icon={account.icon}
+              iconTestID={defaultIconTestId(account.icon)}
+              onPress={() => onSelectAccount(account)}
+              testID={TestId.walletListAccountCard}
+            />
+          ))}
+
           {variant === 'active' && (
             <Button
               onPress={async () => {

@@ -3,13 +3,11 @@ import { ScrollView } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { Draggable } from '@/components/draggable';
-import { AccountAvatar } from '@/features/accounts/components/account-avatar';
 import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { useTheme } from '@shopify/restyle';
 
 import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 
@@ -43,45 +41,47 @@ export function AccountSelectorSheetLayout({
       themeVariant={themeDerivedFromThemePreference}
     >
       <BottomSheetScrollView ref={scrollViewRef}>
-        <Box p="5" gap="5">
+        <Box px="5" pb="7">
           <AccountSelectorHeader sheetRef={sheetRef} />
-          {accounts.map((account, idx) => (
-            <Draggable
-              idx={idx}
-              direction={direction}
-              scrollViewRef={scrollViewRef}
-              placeholderIdx={placeholderIdx}
-              cardsLength={accounts.length}
-              key={account.id}
-              cardId={account.id}
-              onCardPress={() => onAccountPress(account.id)}
-              swapCardIndexes={swapAccountIndexes}
-            >
-              <WalletLoader fingerprint={account.fingerprint} key={account.id}>
-                {wallet => (
-                  <AccountCard
-                    address={
-                      <AccountAddress
-                        accountIndex={account.accountIndex}
-                        fingerprint={account.fingerprint}
-                      />
-                    }
-                    balance={
-                      <AccountBalance
-                        accountIndex={account.accountIndex}
-                        fingerprint={account.fingerprint}
-                      />
-                    }
-                    icon={
-                      <AccountAvatar icon={account.icon} testID={defaultIconTestId(account.icon)} />
-                    }
-                    name={account.name}
-                    walletName={wallet.name}
-                  />
-                )}
-              </WalletLoader>
-            </Draggable>
-          ))}
+          <Box gap="2">
+            {accounts.map((account, idx) => (
+              <Draggable
+                idx={idx}
+                direction={direction}
+                scrollViewRef={scrollViewRef}
+                placeholderIdx={placeholderIdx}
+                cardsLength={accounts.length}
+                key={account.id}
+                cardId={account.id}
+                onCardPress={() => onAccountPress(account.id)}
+                swapCardIndexes={swapAccountIndexes}
+              >
+                <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+                  {wallet => (
+                    <AccountCard
+                      caption={wallet.name}
+                      primaryTitle={account.name}
+                      secondaryTitle={
+                        <AccountBalance
+                          variant="label01"
+                          accountIndex={account.accountIndex}
+                          fingerprint={account.fingerprint}
+                        />
+                      }
+                      address={
+                        <AccountAddress
+                          accountIndex={account.accountIndex}
+                          fingerprint={account.fingerprint}
+                        />
+                      }
+                      icon={account.icon}
+                      iconTestID={defaultIconTestId(account.icon)}
+                    />
+                  )}
+                </WalletLoader>
+              </Draggable>
+            ))}
+          </Box>
         </Box>
       </BottomSheetScrollView>
     </Sheet>

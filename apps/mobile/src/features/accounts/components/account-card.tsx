@@ -1,58 +1,94 @@
-import { LayoutChangeEvent } from 'react-native';
+import { ComponentType, ReactNode } from 'react';
+import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
-import { Box, Text, TouchableOpacity } from '@leather.io/ui/native';
+import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
+import { HasChildren } from '@/utils/types';
 
-interface AccountCardProps {
-  address: React.ReactNode;
-  balance: React.ReactNode;
-  icon: React.ReactNode;
-  name: string;
-  walletName: string;
+import { Box, Pressable, PressableProps, Text, usePressedState } from '@leather.io/ui/native';
+import { isString } from '@leather.io/utils';
+
+interface AccountCardProps extends PressableProps {
+  icon: AccountIcon | ComponentType;
+  caption?: string;
+  primaryTitle: ReactNode;
+  secondaryTitle?: ReactNode;
+  address?: ReactNode;
   onPress?(): void;
   onLongPress?(): void;
-  onLayout?(e: LayoutChangeEvent): void;
   testID?: string;
+  iconTestID?: string;
 }
+
 export function AccountCard({
-  address,
-  balance,
+  caption,
+  primaryTitle,
+  secondaryTitle,
   icon,
-  name,
-  walletName,
+  address,
   onPress,
-  onLongPress,
-  onLayout,
-  testID,
+  ...props
 }: AccountCardProps) {
-  const Container = onPress ? TouchableOpacity : Box;
+  const { pressed, onPressIn, onPressOut } = usePressedState(props);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: withSpring(pressed ? 0.95 : 1) }],
+  }));
 
   return (
-    <Container
-      onPress={onPress}
-      onLongPress={onLongPress}
-      flexDirection="column"
-      p="5"
-      borderRadius="sm"
-      gap="6"
+    <Pressable
+      height={156}
+      p="4"
+      justifyContent="space-between"
+      bg="ink.background-primary"
       borderWidth={1}
-      borderColor="ink.border-transparent"
-      backgroundColor="ink.background-primary"
-      onLayout={onLayout}
-      testID={testID}
+      borderStyle="solid"
+      borderColor="ink.border-default"
+      borderRadius="md"
+      shadowOpacity={0.04}
+      shadowOffset={{ width: 0, height: 2 }}
+      shadowRadius={6}
+      onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={animatedStyle}
+      {...props}
     >
-      {icon}
       <Box flexDirection="row" justifyContent="space-between">
-        <Box>
-          <Text variant="label01">{name}</Text>
-          <Text variant="caption01" color="ink.text-subdued">
-            {walletName}
-          </Text>
-        </Box>
-        <Box>
-          {balance}
-          {address}
-        </Box>
+        <AccountAvatar icon={icon} />
+        {address}
       </Box>
-    </Container>
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        gap="2"
+        mb="-0.5"
+      >
+        <Box gap="0.5" flexShrink={1}>
+          {caption && (
+            <Text variant="label03" numberOfLines={1}>
+              {caption}
+            </Text>
+          )}
+          <Title>{primaryTitle}</Title>
+        </Box>
+        <Title>{secondaryTitle}</Title>
+      </Box>
+    </Pressable>
   );
+}
+
+function Title({ children }: HasChildren) {
+  if (!children) {
+    return null;
+  }
+
+  if (isString(children)) {
+    return (
+      <Text variant="label01" numberOfLines={1}>
+        {children}
+      </Text>
+    );
+  }
+
+  return children;
 }
