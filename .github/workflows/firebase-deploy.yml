@@ -48,11 +48,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         shell: bash
-      - name: Install expo-dev-client
-        working-directory: ./apps/mobile
-        run: pnpm add expo-dev-client
 
       - name: Build Android app
+        working-directory: ./apps/mobile
         run: eas build --platform android --profile development --local --output ${{ github.workspace }}/app-release.apk
 
       - name: Upload APK artifact
