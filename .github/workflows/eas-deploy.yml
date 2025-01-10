@@ -116,4 +116,6 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+          JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
         run: bundle exec fastlane android distribute_android
