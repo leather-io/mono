@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
 
 export const sendTransferRequestParamSchema = z.object({
   account: z.number().optional(),

@@ -1,4 +1,4 @@
-import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../../rpc/schemas';
 
 export const stxMessageSigningTypes = ['utf8', 'structured'] as const;
 

@@ -1,39 +1,53 @@
 import { ValueOf } from '@leather.io/models';
 
+import { DefineSendTransferMethod } from './methods/bitcoin/send-transfer';
+import { DefineSignMessageMethod } from './methods/bitcoin/sign-message';
+import { DefineSignPsbtMethod } from './methods/bitcoin/sign-psbt';
 import { DefineGetAddressesMethod } from './methods/get-addresses';
 import { DefineGetInfoMethod } from './methods/get-info';
 import { DefineOpenMethod } from './methods/open';
 import { DefineOpenSwapMethod } from './methods/open-swap';
-import { DefineSendTransferMethod } from './methods/send-transfer';
-import { DefineSignMessageMethod } from './methods/sign-message';
-import { DefineSignPsbtMethod } from './methods/sign-psbt';
-import { DefineStxSignMessageMethod } from './methods/stx-sign-message';
-import { DefineStxSignTransactionMethod } from './methods/stx-sign-transaction';
+import { DefineStxCallContractMethod } from './methods/stacks/stx-contract-call';
+import { DefineStxDeployContractMethod } from './methods/stacks/stx-deploy-contract';
+import { DefineStxSignMessageMethod } from './methods/stacks/stx-sign-message';
+import { DefineStxSignTransactionMethod } from './methods/stacks/stx-sign-transaction';
+import { DefineStxTransferSip10FtMethod } from './methods/stacks/stx-transfer-sip10-ft';
+import { DefineStxTransferStxMethod } from './methods/stacks/stx-transfer-stx';
+import { DefineStxUpdateProfileMethod } from './methods/stacks/stx-update-profile';
 import { DefineSupportedMethods } from './methods/supported-methods';
 import { ExtractErrorResponse, ExtractSuccessResponse } from './rpc/schemas';
 
 export * from './rpc/schemas';
 export * from './methods/get-info';
-export * from './methods/sign-psbt';
+export * from './methods/bitcoin/sign-psbt';
 export * from './methods/get-addresses';
-export * from './methods/send-transfer';
-export * from './methods/sign-message';
-export * from './methods/stx-sign-message';
-export * from './methods/stx-sign-transaction';
+export * from './methods/bitcoin/send-transfer';
+export * from './methods/bitcoin/sign-message';
+export * from './methods/stacks/stx-sign-message';
+export * from './methods/stacks/stx-sign-transaction';
 export * from './methods/supported-methods';
 export * from './methods/open';
 export * from './methods/open-swap';
 
-export type LeatherRpcMethodMap = DefineGetInfoMethod &
-  DefineGetAddressesMethod &
-  DefineSignPsbtMethod &
-  DefineSignMessageMethod &
-  DefineSendTransferMethod &
-  DefineStxSignMessageMethod &
-  DefineStxSignTransactionMethod &
-  DefineOpenSwapMethod &
-  DefineOpenMethod &
-  DefineSupportedMethods;
+export type LeatherRpcMethodMap =
+  // Chain agnostic
+  DefineGetInfoMethod &
+    DefineOpenMethod &
+    DefineSupportedMethods &
+    DefineGetAddressesMethod &
+    DefineOpenSwapMethod &
+    // Bitcoin
+    DefineSignPsbtMethod &
+    DefineSignMessageMethod &
+    DefineSendTransferMethod &
+    // Stacks
+    DefineStxSignMessageMethod &
+    DefineStxSignTransactionMethod &
+    DefineStxCallContractMethod &
+    DefineStxDeployContractMethod &
+    DefineStxTransferSip10FtMethod &
+    DefineStxTransferStxMethod &
+    DefineStxUpdateProfileMethod;
 
 export type RpcRequests = ValueOf<LeatherRpcMethodMap>['request'];
 
