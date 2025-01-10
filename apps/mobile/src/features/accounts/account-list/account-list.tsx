@@ -23,7 +23,11 @@ export function AccountList({ accounts, onPress, showWalletInfo }: AccountListPr
             <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
           }
           balance={
-            <AccountBalance accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
+            <AccountBalance
+              accountIndex={account.accountIndex}
+              fingerprint={account.fingerprint}
+              variant="label02"
+            />
           }
           icon={<AccountAvatar icon={account.icon} />}
           iconTestID={defaultIconTestId(account.icon)}

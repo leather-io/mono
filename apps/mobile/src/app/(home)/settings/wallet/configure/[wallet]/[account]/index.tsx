@@ -5,7 +5,6 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/accounts/components/account-address';
-import { AccountAvatar } from '@/features/accounts/components/account-avatar';
 import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { AccountCard } from '@/features/accounts/components/account-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
@@ -81,12 +80,13 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
             {wallet => (
               <AccountCard
                 address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
-                balance={<AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />}
-                icon={
-                  <AccountAvatar icon={account.icon} testID={defaultIconTestId(account.icon)} />
+                secondaryTitle={
+                  <AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />
                 }
-                name={account.name}
-                walletName={wallet.name}
+                icon={account.icon}
+                iconTestID={defaultIconTestId(account.icon)}
+                primaryTitle={account.name}
+                caption={wallet.name}
               />
             )}
           </WalletLoader>
