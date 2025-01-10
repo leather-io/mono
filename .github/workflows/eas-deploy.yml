@@ -115,4 +115,5 @@ jobs:
         working-directory: ./apps/mobile/android
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: bundle exec fastlane android distribute_android
