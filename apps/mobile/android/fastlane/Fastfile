@@ -1,42 +1,36 @@
 default_platform(:android)
 
-platform :android do
-    desc "Deploy a new version to the Google Play Beta track"
-    lane :beta do
-        # Grab the latest build number from the Play Store
-        previous_build_number = google_play_track_version_codes(
-            track: "internal",
-            # json_key: "#{Dir.pwd}/play-store-credentials.json" #????
-            json_key: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        )[0]
+# platform :android do
+#     desc "Deploy a new version to the Google Play Beta track"
+#     lane :beta do
+#         # Grab the latest build number from the Play Store
+#         previous_build_number = google_play_track_version_codes(
+#             track: "internal",
+#             json_key: ENV['GOOGLE_SERVICES_JSON']
+#         )[0]
 
-        # Increment the build number
-        # increment_version_code(
-        #     gradle_file_path: "app/build.gradle",
-        #     version_code: previous_build_number + 1
-        # )
+#         # Increment the build number
 
-        # Build a release version of the app
-        gradle(
-            task: "clean assembleRelease",
-            print_command: false,
-            properties: {
-                "android.injected.signing.store.file" => "#{Dir.pwd}/example-app.keystore",
-                "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
-                # replace alias with your signing key alias
-                "android.injected.signing.key.alias" => "[example-app]",
-                "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
-            }
-        )
+#         # Build a release version of the app
+#         gradle(
+#             task: "clean assembleRelease",
+#             print_command: false,
+#             properties: {
+#                 "android.injected.signing.store.file" => "#{Dir.pwd}/example-app.keystore",
+#                 "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
+#                 # replace alias with your signing key alias
+#                 "android.injected.signing.key.alias" => "[example-app]",
+#                 "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
+#             }
+#         )
 
-        # Upload the app to the Play Store
-        upload_to_play_store(
-            track: "internal",
-            json_key: ${{ secrets.GOOGLE_SERVICES_JSON }}
-            # json_key: "#{Dir.pwd}/play-store-credentials.json"
-        )
-    end
-end
+#         # Upload the app to the Play Store
+#         upload_to_play_store(
+#             track: "internal",
+#             json_key: ENV['GOOGLE_SERVICES_JSON']
+#         )
+#     end
+# end
 
 #  original approach from the docs
 platform :android do
