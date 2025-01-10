@@ -51,7 +51,7 @@ jobs:
 
       - name: Build Android app
         working-directory: ./apps/mobile
-        run: eas build --platform android --profile development --local --output ${{ github.workspace }}/app-release.apk
+        run: eas build --platform android --profile=simulator-dev --non-interactive --no-wait --local --output ${{ github.workspace }}/app-release.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
