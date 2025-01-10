@@ -46,7 +46,8 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
+        shell: bash
 
       - name: Build Android app
         run: eas build --platform android --profile development --local --output ${{ github.workspace }}/app-release.apk
