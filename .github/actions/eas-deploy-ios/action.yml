@@ -128,8 +128,3 @@ runs:
       shell: bash
       env:
         FIREBASE_TOKEN: ${{ inputs.FIREBASE_TOKEN }}
-# TODO - maybe we can skip fastlane and just re-run expo build here and release to firebase?
-# OR we could try adding an EAS EXPO workflow to release to firebase?
-
-#  it starts  Uploading to EAS Build
-#  maybe we can push what it uploads to firebase?
