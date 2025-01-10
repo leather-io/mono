@@ -98,11 +98,3 @@ runs:
         eas build --platform android --profile=production --non-interactive --auto-submit
         fastlane run distribute_android
       shell: bash
-
-    - name: Firebase App Distribution
-      run: |
-        echo "${{ inputs.FIREBASE_TOKEN }}" > $HOME/.firebase_token
-        firebase appdistribution:distribute leather.apks --app "1:915379517791:android:d4e7cb446a612f8c789eea" --groups "leatherhood"
-      shell: bash
-      env:
-        FIREBASE_TOKEN: ${{ inputs.FIREBASE_TOKEN }}

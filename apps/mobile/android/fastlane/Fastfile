@@ -1,38 +1,5 @@
 default_platform(:android)
 
-# platform :android do
-#     desc "Deploy a new version to the Google Play Beta track"
-#     lane :beta do
-#         # Grab the latest build number from the Play Store
-#         previous_build_number = google_play_track_version_codes(
-#             track: "internal",
-#             json_key: ENV['GOOGLE_SERVICES_JSON']
-#         )[0]
-
-#         # Increment the build number
-
-#         # Build a release version of the app
-#         gradle(
-#             task: "clean assembleRelease",
-#             print_command: false,
-#             properties: {
-#                 "android.injected.signing.store.file" => "#{Dir.pwd}/example-app.keystore",
-#                 "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
-#                 # replace alias with your signing key alias
-#                 "android.injected.signing.key.alias" => "[example-app]",
-#                 "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
-#             }
-#         )
-
-#         # Upload the app to the Play Store
-#         upload_to_play_store(
-#             track: "internal",
-#             json_key: ENV['GOOGLE_SERVICES_JSON']
-#         )
-#     end
-# end
-
-#  original approach from the docs
 platform :android do
   desc "Build and distribute Android app"
   lane :distribute_android do
