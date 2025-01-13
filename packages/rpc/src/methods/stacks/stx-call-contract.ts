@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
-import { stacksTransactionDetailsSchema } from './_stacks-helpers';
+import { clarityValueSchema, stacksTransactionDetailsSchema } from './_stacks-helpers';
 
 export const stxCallContractMethodName = 'stx_callContract';
 
@@ -10,8 +10,8 @@ type StxCallContractRequestMethodName = typeof stxCallContractMethodName;
 // Request
 export const stxCallContractRequestParamsSchema = z.object({
   contract: z.string(),
-  asset: z.string(),
-  amount: z.coerce.number(),
+  functionName: z.string(),
+  functionArgs: z.array(clarityValueSchema).optional(),
 });
 
 export type StxCallContractRequestParams = z.infer<typeof stxCallContractRequestParamsSchema>;
