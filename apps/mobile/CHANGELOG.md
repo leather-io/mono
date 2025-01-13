@@ -396,6 +396,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.12
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.13
+    * @leather.io/crypto bumped to 1.6.29
+    * @leather.io/query bumped to 2.26.14
+    * @leather.io/rpc bumped to 2.5.1
+    * @leather.io/stacks bumped to 1.5.14
+    * @leather.io/tokens bumped to 0.12.5
+    * @leather.io/ui bumped to 1.47.4
+    * @leather.io/utils bumped to 0.23.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.13
+
 ## [2.5.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.4.1...@leather.io/mobile-v2.5.0) (2025-01-08)
 
 
