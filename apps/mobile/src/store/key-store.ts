@@ -66,8 +66,10 @@ export function useKeyStore() {
         return;
       }
       await mnemonicStore(fingerprint).setMnemonic({ mnemonic, biometrics, passphrase });
-      const { bitcoinKeychains, stacksKeychains } =
-        await this.deriveNextAccountKeychainsFrom(fingerprint);
+      const { bitcoinKeychains, stacksKeychains } = await this.deriveNextAccountKeychainsFrom({
+        mnemonic,
+        passphrase,
+      });
 
       wallets.add({
         wallet: { type: 'software', fingerprint, createdOn: new Date().toISOString() },
@@ -77,7 +79,7 @@ export function useKeyStore() {
 
     async createNewAccountOfWallet(fingerprint: string) {
       const { accountIndex, bitcoinKeychains, stacksKeychains } =
-        await this.deriveNextAccountKeychainsFrom(fingerprint);
+        await this.deriveNextAccountKeychainsFrom({ fingerprint });
 
       dispatch(
         userAddsAccount({
@@ -90,11 +92,45 @@ export function useKeyStore() {
       );
     },
 
-    async deriveNextAccountKeychainsFrom(fingerprint: string) {
-      const { mnemonic, passphrase } = await mnemonicStore(fingerprint).getMnemonic();
+    async deriveNextAccountKeychainsFrom(
+      props:
+        | {
+            fingerprint: string;
+          }
+        | {
+            mnemonic: string;
+            passphrase?: string;
+          }
+    ) {
+      if ('fingerprint' in props) {
+        const { mnemonic, passphrase } = await mnemonicStore(props.fingerprint).getMnemonic();
+        return this.deriveNextAccountKeychainsImpl({
+          fingerprint: props.fingerprint,
+          mnemonic,
+          passphrase,
+        });
+      }
+      if ('mnemonic' in props) {
+        return this.deriveNextAccountKeychainsImpl({
+          fingerprint: await getMnemonicRootKeyFingerprint(props.mnemonic, props.passphrase),
+          mnemonic: props.mnemonic,
+          passphrase: props.passphrase,
+        });
+      }
+      throw new Error(
+        'deriveNextAccountKeychainsFrom have received neither mnemonic nor fingerprint'
+      );
+    },
 
-      if (!mnemonic) throw new Error('No mnemonic found for fingerprint ' + fingerprint);
-
+    async deriveNextAccountKeychainsImpl({
+      fingerprint,
+      mnemonic,
+      passphrase,
+    }: {
+      fingerprint: string;
+      mnemonic: string;
+      passphrase?: string;
+    }) {
       const rootKeychain = deriveRootBip32Keychain(
         await deriveBip39SeedFromMnemonic(mnemonic, passphrase)
       );
