@@ -6,6 +6,7 @@ const config: LinguiConfig = {
   pseudoLocale: 'pseudo-locale',
   sourceLocale: 'en',
   fallbackLocales: {
+    default: 'en',
     'pseudo-locale': 'en',
   },
   catalogs: [
