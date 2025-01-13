@@ -11,11 +11,13 @@ export interface AccountOverviewProps {
 export function AccountOverview({ caption, icon, heading }: AccountOverviewProps) {
   return (
     <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
-      <Box height={180} mx="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
+      <Box mx="5" py="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
         <AccountAvatar icon={icon} />
         <Box gap="1" flexDirection="column" alignItems="center">
+          <Text variant="label02" textAlign="center">
+            {caption}
+          </Text>
           {heading}
-          <Text variant="caption01">{caption}</Text>
         </Box>
       </Box>
     </Box>
