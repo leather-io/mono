@@ -44,13 +44,14 @@ export function createSip10BalancesService(
    * Gets the cumulative SIP10 balance (denominated in USD) of a list of Stacks addresses. Includes full balance information for each individual address.
    */
   async function getSip10AggregateBalance(addresses: string[], signal?: AbortSignal) {
-    const addressBalances = await Promise.all(
-      addresses.map(address => getSip10AddressBalance(address, signal))
+    const addressResults = await Promise.all(
+      addresses.map(async address => await getSip10AddressBalance(address, signal))
     );
-    const totalUsdBalance = aggregateBaseCryptoAssetBalances(addressBalances.map(r => r.usd));
+
+    const totalUsdBalance = aggregateBaseCryptoAssetBalances(addressResults.map(r => r.usd));
     return {
       usd: totalUsdBalance,
-      addressBalances,
+      addressBalances: addressResults,
     };
   }
 

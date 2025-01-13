@@ -6,6 +6,7 @@ import {
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getSip10BalancesService } from '@leather.io/services';
+import { createMoney } from '@leather.io/utils';
 
 export function useSip10TotalBalance() {
   const addresses = useStacksSignerAddresses();
@@ -23,12 +24,19 @@ export function useSip10AccountBalance(fingerprint: string, accountIndex: number
   }
   return toFetchState(useSip10AddressBalanceQuery(address));
 }
+export function useSip10AggregateAvailableBalance(addresses: string[]) {
+  const { isLoading, data } = useSip10AggregateBalanceQuery(addresses);
+  return !isLoading && data?.usd ? data.usd.availableBalance : createMoney(0, 'USD');
+}
 
 export function useSip10AggregateBalanceQuery(addresses: string[]) {
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-aggregate-balance', addresses],
-    queryFn: ({ signal }: QueryFunctionContext) =>
-      getSip10BalancesService().getSip10AggregateBalance(addresses, signal),
+    queryFn: async ({ signal }: QueryFunctionContext) => {
+      const data = await getSip10BalancesService().getSip10AggregateBalance(addresses, signal);
+      if (!data) throw new Error('Failed to fetch SIP10 aggregate balance');
+      return data;
+    },
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
