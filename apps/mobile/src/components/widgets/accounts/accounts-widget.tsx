@@ -3,11 +3,15 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { AccountSelectorSheet } from '@/features/accounts/account-selector/account-selector-sheet';
+import { AccountBalance } from '@/features/accounts/components/account-balance';
+import { AccountCard } from '@/features/accounts/components/account-card';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
+import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
@@ -15,9 +19,8 @@ import { Box, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { Balance } from '../../balance/balance';
 import { Widget } from '../components/widget';
-import { AccountCard } from './components/cards/account-card';
-import { AddAccountCard } from './components/cards/add-account-card';
-import { CreateWalletCard } from './components/cards/create-wallet-card';
+import { AddAccountCard } from './components/add-account-card';
+import { CreateWalletCard } from './components/create-wallet-card';
 import { AddAccountSheet } from './sheets/add-account-sheet';
 
 export function AccountsWidget() {
@@ -27,6 +30,7 @@ export function AccountsWidget() {
   const router = useRouter();
   const wallets = useWallets();
   const accounts = useAccounts();
+  const { i18n } = useLingui();
   const theme = useTheme<Theme>();
 
   const { totalBalance } = useTotalBalance();
@@ -55,15 +59,33 @@ export function AccountsWidget() {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
-              gap: theme.spacing['3'],
+              gap: theme.spacing['2'],
               paddingHorizontal: theme.spacing['5'],
+            }}
+            style={{
+              // prevent card shadows being cut off
+              overflow: 'visible',
             }}
           >
             {accounts.list
               .filter(account => account.status !== 'hidden')
               .map(account => (
                 <AccountCard
-                  account={account}
+                  width={200}
+                  caption={i18n._({
+                    id: 'accounts.account.cell_caption',
+                    message: '{name}',
+                    values: { name: account.name || '' },
+                  })}
+                  primaryTitle={
+                    <AccountBalance
+                      variant="label01"
+                      accountIndex={account.accountIndex}
+                      fingerprint={account.fingerprint}
+                    />
+                  }
+                  icon={account.icon}
+                  iconTestID={defaultIconTestId(account.icon)}
                   key={account.id}
                   onPress={() => {
                     router.navigate({
