@@ -180,6 +180,15 @@
   * dependencies
     * @leather.io/models bumped to 0.24.2
 
+## [2.5.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.4.2...@leather.io/rpc-v2.5.0) (2025-01-13)
+
+
+### Features
+
+* **rpc:** add deployContract ([46af901](https://github.com/leather-io/mono/commit/46af901551139e858e18d92b26d8398a31b0b6e9))
+* **rpc:** add profile, backwards compat stx_signTransaction ([46af901](https://github.com/leather-io/mono/commit/46af901551139e858e18d92b26d8398a31b0b6e9))
+* **rpc:** add sip-30 schemas/types ([46af901](https://github.com/leather-io/mono/commit/46af901551139e858e18d92b26d8398a31b0b6e9))
+
 ## [2.4.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.4.1...@leather.io/rpc-v2.4.2) (2025-01-07)
 
 
