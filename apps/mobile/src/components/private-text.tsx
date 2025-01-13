@@ -1,37 +1,13 @@
-import { Pressable } from 'react-native';
-
-import { useSettings } from '@/store/settings/settings';
 import { usePrivacyMode } from '@/store/settings/settings.read';
-import { HasChildren } from '@/utils/types';
 
 import { Text, TextProps } from '@leather.io/ui/native';
 
-const defaultPrivateText = '***';
+const defaultMask = '***';
 
-interface PrivateTextProps extends HasChildren {
-  customPrivateText?: string;
-  privacyToggleDisabled?: boolean;
+interface PrivateTextProps extends TextProps {
+  mask?: string;
 }
-export function PrivateText({
-  children,
-  customPrivateText,
-  privacyToggleDisabled,
-  ...props
-}: PrivateTextProps & TextProps) {
-  const { changePrivacyModePreference, privacyModePreference } = useSettings();
+export function PrivateText({ children, mask = defaultMask, ...props }: PrivateTextProps) {
   const isPrivate = usePrivacyMode();
-
-  function onTogglePrivacyMode() {
-    changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
-  }
-
-  return (
-    <Pressable disabled={privacyToggleDisabled} onPress={() => onTogglePrivacyMode()}>
-      {isPrivate ? (
-        <Text {...props}>{customPrivateText ?? defaultPrivateText}</Text>
-      ) : (
-        <Text {...props}>{children}</Text>
-      )}
-    </Pressable>
-  );
+  return <Text {...props}>{isPrivate ? mask : children}</Text>;
 }
