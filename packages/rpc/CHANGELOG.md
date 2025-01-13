@@ -180,6 +180,13 @@
   * dependencies
     * @leather.io/models bumped to 0.24.2
 
+## [2.5.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.0...@leather.io/rpc-v2.5.1) (2025-01-13)
+
+
+### Bug Fixes
+
+* **rpc:** stx_getAddress, exports ([77e4774](https://github.com/leather-io/mono/commit/77e47749b6453ff4d03c4fc2bf848534b9b58347))
+
 ## [2.5.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.4.2...@leather.io/rpc-v2.5.0) (2025-01-13)
 
 
