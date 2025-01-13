@@ -21,9 +21,7 @@ export const stxSignTransactionRequestParamsSchema = z.union([
   stxSignTransactionRequestSip30ParamsSchema,
 ]);
 
-export type StxSignTransactionRequestParams = z.infer<
-  typeof stxSignTransactionRequestSip30ParamsSchema
->;
+export type StxSignTransactionRequestParams = z.infer<typeof stxSignTransactionRequestParamsSchema>;
 
 // For backwards compatibility, we return the same data under both properties
 export const stxSignTransactionResponseSchema = z.object({

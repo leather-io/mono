@@ -7,8 +7,9 @@ import { DefineGetAddressesMethod } from './methods/get-addresses';
 import { DefineGetInfoMethod } from './methods/get-info';
 import { DefineOpenMethod } from './methods/open';
 import { DefineOpenSwapMethod } from './methods/open-swap';
-import { DefineStxCallContractMethod } from './methods/stacks/stx-contract-call';
+import { DefineStxCallContractMethod } from './methods/stacks/stx-call-contract';
 import { DefineStxDeployContractMethod } from './methods/stacks/stx-deploy-contract';
+import { DefineStxGetAddressesMethod } from './methods/stacks/stx-get-addresses';
 import { DefineStxSignMessageMethod } from './methods/stacks/stx-sign-message';
 import { DefineStxSignTransactionMethod } from './methods/stacks/stx-sign-transaction';
 import { DefineStxTransferSip10FtMethod } from './methods/stacks/stx-transfer-sip10-ft';
@@ -25,6 +26,12 @@ export * from './methods/bitcoin/send-transfer';
 export * from './methods/bitcoin/sign-message';
 export * from './methods/stacks/stx-sign-message';
 export * from './methods/stacks/stx-sign-transaction';
+export * from './methods/stacks/stx-call-contract';
+export * from './methods/stacks/stx-deploy-contract';
+export * from './methods/stacks/stx-get-addresses';
+export * from './methods/stacks/stx-transfer-sip10-ft';
+export * from './methods/stacks/stx-transfer-stx';
+export * from './methods/stacks/stx-update-profile';
 export * from './methods/supported-methods';
 export * from './methods/open';
 export * from './methods/open-swap';
@@ -41,6 +48,7 @@ export type LeatherRpcMethodMap =
     DefineSignMessageMethod &
     DefineSendTransferMethod &
     // Stacks
+    DefineStxGetAddressesMethod &
     DefineStxSignMessageMethod &
     DefineStxSignTransactionMethod &
     DefineStxCallContractMethod &
