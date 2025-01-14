@@ -1,18 +1,24 @@
 import { z } from 'zod';
 
 import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
-import { stacksTransactionDetailsSchema } from './_stacks-helpers';
+import {
+  baseStacksTransactionConfigSchema,
+  stacksTransactionDetailsSchema,
+} from './_stacks-helpers';
 
 export const stxTransferStxMethodName = 'stx_transferStx';
 
 type StxTransferStxRequestMethodName = typeof stxTransferStxMethodName;
 
 // Request
-export const stxTransferStxRequestParamsSchema = z.object({
-  recipient: z.string(),
-  amount: z.number(),
-  memo: z.string().optional(),
-});
+export const stxTransferStxRequestParamsSchema = z.intersection(
+  z.object({
+    recipient: z.string(),
+    amount: z.number(),
+    memo: z.string().optional(),
+  }),
+  baseStacksTransactionConfigSchema
+);
 
 export type StxTransferStxRequestParams = z.infer<typeof stxTransferStxRequestParamsSchema>;
 

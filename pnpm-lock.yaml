@@ -809,6 +809,9 @@ importers:
       '@stacks/network':
         specifier: 6.13.0
         version: 6.13.0
+      '@stacks/transactions-v7':
+        specifier: npm:@stacks/transactions@7.0.2
+        version: '@stacks/transactions@7.0.2'
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -842,7 +845,7 @@ importers:
         version: 7.8.2
       alex-sdk:
         specifier: 2.1.4
-        version: 2.1.4(@stacks/network@7.0.0)(@stacks/transactions@7.0.0)
+        version: 2.1.4(@stacks/network@7.0.2)(@stacks/transactions@7.0.2)
       axios:
         specifier: 1.7.7
         version: 1.7.7
@@ -4304,8 +4307,8 @@ packages:
   '@stacks/common@6.16.0':
     resolution: {integrity: sha512-PnzvhrdGRMVZvxTulitlYafSK4l02gPCBBoI9QEoTqgSnv62oaOXhYAUUkTMFKxdHW1seVEwZsrahuXiZPIAwg==}
 
-  '@stacks/common@7.0.0':
-    resolution: {integrity: sha512-/BKBK9S9GEuGjbnc2fBAwsG21f8cfNekG/9mXLSMwBqnh4qaQY2hxK+6wRI2YXJgpkXrpZilpZy2sdPGlVUdQA==}
+  '@stacks/common@7.0.2':
+    resolution: {integrity: sha512-+RSecHdkxOtswmE4tDDoZlYEuULpnTQVeDIG5eZ32opK8cFxf4EugAcK9CsIsHx/Se1yTEaQ21WGATmJGK84lQ==}
 
   '@stacks/connect-ui@6.1.1':
     resolution: {integrity: sha512-iSo57djIynmqt0jGlFkRFu2nHY/Nk0LmXKdRf/Whw1w/YbZD+CQJweHRh77XQOtAVbXZ1+e/klszxABevcPtPg==}
@@ -4325,8 +4328,8 @@ packages:
   '@stacks/network@6.17.0':
     resolution: {integrity: sha512-numHbfKjwco/rbkGPOEz8+FcJ2nBnS/tdJ8R422Q70h3SiA9eqk9RjSzB8p4JP8yW1SZvW+eihADHfMpBuZyfw==}
 
-  '@stacks/network@7.0.0':
-    resolution: {integrity: sha512-4diddT0ii85BQ4PW6ww3l4cS7Oo0a5VIsJ7umBcCPAArIc4Sm/MIOEXIg9joKK8fVHLnWyh1p4D+febJQFfa+Q==}
+  '@stacks/network@7.0.2':
+    resolution: {integrity: sha512-XzHnoWqku/jRrTgMXhmh3c+I0O9vDH24KlhzGDZtBu+8CGGyHNPAZzGwvoUShonMXrXjEnfO9IYQwV5aJhfv6g==}
 
   '@stacks/profile@6.17.0':
     resolution: {integrity: sha512-EoYe0NapFc6bgA+vyCVY2sYYRHk3pbsbRnm3eaSp8y9Drfy8dBqsM10W1jjTwOn0R+IMmDT52lojdW7Pw3c7Mw==}
@@ -4340,8 +4343,8 @@ packages:
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.0.0':
-    resolution: {integrity: sha512-9kGTnJLwRQPugLzbdJ8MmFED+eRhlJKIXpz2mshyy238hvBc4T0jynsoJMi4qGqvJYzsiRYCLDPJVkkUde85vA==}
+  '@stacks/transactions@7.0.2':
+    resolution: {integrity: sha512-m2bvchqUeYv1ttXuC0EukW8UX4xBXTDcYb8bXmfI1RG89HXAvvCCgr5aiadU6zbutgoXvm8mquDt3nww0PO4Jg==}
 
   '@stacks/wallet-sdk@6.15.0':
     resolution: {integrity: sha512-VBMiWe5UAyDnvc2w8/XN7QuSkbXTnAJ5rvtzedb7yXKgIBMSjE+gQnUm0XasbNDRHc58Ag76IAMAIKh4ZAMC4w==}
@@ -16911,7 +16914,7 @@ snapshots:
       '@types/bn.js': 5.1.6
       '@types/node': 18.19.58
 
-  '@stacks/common@7.0.0': {}
+  '@stacks/common@7.0.2': {}
 
   '@stacks/connect-ui@6.1.1':
     dependencies:
@@ -16966,9 +16969,9 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/network@7.0.0':
+  '@stacks/network@7.0.2':
     dependencies:
-      '@stacks/common': 7.0.0
+      '@stacks/common': 7.0.2
       cross-fetch: 3.1.8
     transitivePeerDependencies:
       - encoding
@@ -17008,12 +17011,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@7.0.0':
+  '@stacks/transactions@7.0.2':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.0.0
-      '@stacks/network': 7.0.0
+      '@stacks/common': 7.0.2
+      '@stacks/network': 7.0.2
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
@@ -19245,11 +19248,11 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  alex-sdk@2.1.4(@stacks/network@7.0.0)(@stacks/transactions@7.0.0):
+  alex-sdk@2.1.4(@stacks/network@7.0.2)(@stacks/transactions@7.0.2):
     dependencies:
-      '@stacks/network': 7.0.0
-      '@stacks/transactions': 7.0.0
-      clarity-codegen: 0.5.3(@stacks/transactions@7.0.0)
+      '@stacks/network': 7.0.2
+      '@stacks/transactions': 7.0.2
+      clarity-codegen: 0.5.3(@stacks/transactions@7.0.2)
     transitivePeerDependencies:
       - debug
 
@@ -19975,10 +19978,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  clarity-codegen@0.5.3(@stacks/transactions@7.0.0):
+  clarity-codegen@0.5.3(@stacks/transactions@7.0.2):
     dependencies:
       '@stacks/stacks-blockchain-api-types': 7.8.2
-      '@stacks/transactions': 7.0.0
+      '@stacks/transactions': 7.0.2
       axios: 1.7.7
       lodash: 4.17.21
       yargs: 17.7.2
