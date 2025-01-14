@@ -19,6 +19,7 @@
   "dependencies": {
     "@leather.io/models": "workspace:*",
     "@stacks/network": "6.13.0",
+    "@stacks/transactions-v7": "npm:@stacks/transactions@7.0.2",
     "zod": "3.23.8"
   },
   "devDependencies": {
