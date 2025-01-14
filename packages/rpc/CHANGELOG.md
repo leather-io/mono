@@ -180,6 +180,14 @@
   * dependencies
     * @leather.io/models bumped to 0.24.2
 
+## [2.5.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.1...@leather.io/rpc-v2.5.2) (2025-01-14)
+
+
+### Bug Fixes
+
+* **rpc:** add zod clarity type schemas ([8eaf4d9](https://github.com/leather-io/mono/commit/8eaf4d9dca82671e07d85e3d39d630848d116a8c))
+* **rpc:** incorrect contract call schema ([97b7528](https://github.com/leather-io/mono/commit/97b7528d48936eefd08fe4c67bae61474f62d7d6))
+
 ## [2.5.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.0...@leather.io/rpc-v2.5.1) (2025-01-13)
 
 
