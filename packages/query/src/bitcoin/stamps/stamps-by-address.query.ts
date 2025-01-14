@@ -14,7 +14,7 @@ const stampSchema = z.object({
   keyburn: z.number().optional(),
   locked: z.number(),
   message_index: z.number().optional(),
-  stamp_base64: z.string(),
+  stamp_base64: z.string().optional(),
   stamp_mimetype: z.string(),
   stamp_url: z.string(),
   supply: z.number(),
