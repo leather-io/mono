@@ -101,6 +101,18 @@ export interface InscriptionCryptoAssetInfo extends BaseNonFungibleCryptoAssetIn
   readonly id: string;
   readonly mimeType: InscriptionMimeType;
   readonly number: number;
+  // via Inscription Model
+  readonly preview: string;
+  readonly src: string;
+  readonly title: string;
+  readonly output: string;
+  readonly txid: string;
+  readonly offset: string;
+  readonly address: string;
+  readonly genesisBlockHash: string;
+  readonly genesisTimestamp: number;
+  readonly genesisBlockHeight: number;
+  readonly value: string;
 }
 
 export interface StampCryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {

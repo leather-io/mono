@@ -8,8 +8,8 @@ import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
-import { useBitcoinAccountUtxos } from '@/queries/balance/bitcoin-balance.query';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
+import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -106,10 +106,7 @@ export function BasePsbtSigner({
   const { data: btcMarketData } = useBtcMarketDataQuery();
   const feeSheetRef = useRef<SheetRef>(null);
 
-  const { data: utxos = [] } = useBitcoinAccountUtxos({
-    fingerprint: psbtAccounts[0]?.fingerprint,
-    accountIndex: psbtAccounts[0]?.accountIndex,
-  });
+  const utxos = useAccountUtxos(psbtAccounts[0]?.fingerprint, psbtAccounts[0]?.accountIndex);
 
   const psbtDetails = useMemo(
     () =>
@@ -127,7 +124,7 @@ export function BasePsbtSigner({
       amount: createMoney(new BigNumber(output.value), 'BTC'),
       address: output.address,
     }));
-  const coinSelectionUtxos = createCoinSelectionUtxos(utxos);
+  const coinSelectionUtxos = createCoinSelectionUtxos(utxos.value?.available ?? []);
 
   const fees = getBitcoinFees({
     feeRates,

@@ -32,6 +32,11 @@ export interface BtcCryptoAssetBalance extends BaseCryptoAssetBalance {
    * Balance across UTXOs with need for larger fee than principal by UTXO given standard rate
    */
   readonly uneconomicalBalance: Money;
+
+  /**
+   * Balance of the union set of protected and uneconomical UTXOs
+   */
+  readonly unspendableBalance: Money;
 }
 
 export interface StxCryptoAssetBalance extends BaseCryptoAssetBalance {

@@ -8,5 +8,7 @@ export * from './market-data/market-data.service';
 export * from './balances/btc-balances.service';
 export * from './balances/stx-balances.service';
 export * from './balances/sip10-balances.service';
-export * from './assets/sip10-tokens.service';
+export * from './assets/sip10-asset.service';
 export * from './transactions/stacks-transactions.service';
+export * from './shared/bitcoin.types';
+export * from './utxos/utxos.service';

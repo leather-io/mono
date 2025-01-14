@@ -1,9 +1,5 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
-import { useStxBalance } from '@/queries/balance/stx-balance.query';
-import {
-  useStacksSignerAddressFromAccountIndex,
-  useStacksSignerAddresses,
-} from '@/store/keychains/stacks/stacks-keychains.read';
+import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
@@ -37,12 +33,13 @@ export function StacksTokenBalance({
 }
 
 export function StacksBalance() {
-  const addresses = useStacksSignerAddresses();
-  const { availableBalance, fiatBalance } = useStxBalance(addresses);
+  const balance = useStxTotalBalance();
+  // TODO: handle balance loading & error states
+  if (balance.state !== 'success') return;
   return (
     <StacksTokenBalance
-      availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      availableBalance={balance.value.stx.availableBalance}
+      fiatBalance={balance.value.usd.availableBalance}
       px="5"
       py="3"
     />
@@ -59,15 +56,13 @@ export function StacksBalanceByAccount({
   fingerprint,
   onPress,
 }: StacksBalanceByAccountProps) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
-  const { availableBalance, fiatBalance } = useStxBalance([address]);
+  const balance = useStxAccountBalance(fingerprint, accountIndex);
+  // TODO: handle balance loading & error states
+  if (balance.state !== 'success') return;
   return (
     <StacksTokenBalance
-      availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      availableBalance={balance.value.stx.availableBalance}
+      fiatBalance={balance.value.usd.availableBalance}
       onPress={onPress}
       px="5"
       py="3"

@@ -1,5 +1,5 @@
 import { AccountId } from '@/models/domain.model';
-import { useStxBalance } from '@/queries/balance/stx-balance.query';
+import { useStxAddressBalanceQuery } from '@/queries/balance/stx-balance.query';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { Money } from '@leather.io/models';
@@ -18,15 +18,20 @@ interface SendFormStxLoaderProps {
 export function SendFormStxLoader({ account, children }: SendFormStxLoaderProps) {
   const address =
     useStacksSignerAddressFromAccountIndex(account.fingerprint, account.accountIndex) ?? '';
-  const { availableBalance, fiatBalance } = useStxBalance([address]);
+
+  const {
+    data: balance,
+    isLoading: isBalanceLoading,
+    isError: isBalanceError,
+  } = useStxAddressBalanceQuery(address);
 
   const { data: nextNonce } = useNextNonce(address);
 
-  if (!address || !nextNonce) return null;
+  if (!address || !nextNonce || isBalanceLoading || isBalanceError) return null;
 
   return children({
-    availableBalance,
-    fiatBalance,
+    availableBalance: balance!.stx.availableBalance,
+    fiatBalance: balance!.usd.availableBalance,
     nonce: nextNonce?.nonce ?? '',
   });
 }

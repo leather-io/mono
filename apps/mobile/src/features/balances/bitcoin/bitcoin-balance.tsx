@@ -1,7 +1,4 @@
-import {
-  useBitcoinAccountTotalBitcoinBalance,
-  useWalletTotalBitcoinBalance,
-} from '@/queries/balance/bitcoin-balance.query';
+import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
@@ -38,11 +35,13 @@ export function BitcoinTokenBalance({
 }
 
 export function BitcoinBalance() {
-  const { availableBalance, fiatBalance } = useWalletTotalBitcoinBalance();
+  const balance = useBtcTotalBalance();
+  // TODO: handle balance loading & error states
+  if (balance.state !== 'success') return;
   return (
     <BitcoinTokenBalance
-      availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      availableBalance={balance.value.btc.availableBalance}
+      fiatBalance={balance.value.usd.availableBalance}
       px="5"
       py="3"
     />
@@ -59,14 +58,13 @@ export function BitcoinBalanceByAccount({
   fingerprint,
   onPress,
 }: BitcoinBalanceByAccountProps) {
-  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance({
-    accountIndex,
-    fingerprint,
-  });
+  const balance = useBtcAccountBalance(fingerprint, accountIndex);
+  // TODO: handle balance loading & error states
+  if (balance.state !== 'success') return;
   return (
     <BitcoinTokenBalance
-      availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      availableBalance={balance.value.btc.availableBalance}
+      fiatBalance={balance.value.usd.availableBalance}
       onPress={onPress}
       px="5"
       py="3"

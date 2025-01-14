@@ -1,7 +1,12 @@
 import { Container } from 'inversify';
 
-import { Sip10TokensService, createSip10TokensService } from './assets/sip10-tokens.service';
+import { RuneAssetService, createRuneAssetService } from './assets/rune-asset.service';
+import { Sip10AssetService, createSip10AssetService } from './assets/sip10-asset.service';
 import { BtcBalancesService, createBtcBalancesService } from './balances/btc-balances.service';
+import {
+  RunesBalancesService,
+  createRunesBalancesService,
+} from './balances/runes-balances.service';
 import {
   Sip10BalancesService,
   createSip10BalancesService,
@@ -43,6 +48,7 @@ import {
   StacksTransactionsService,
   createStacksTransactionsService,
 } from './transactions/stacks-transactions.service';
+import { UtxosService, createUtxosService } from './utxos/utxos.service';
 
 let servicesContainer: Container;
 
@@ -85,8 +91,11 @@ export const Services = {
   BtcBalancesService: Symbol.for('BtcBalancesService'),
   StxBalancesService: Symbol.for('StxBalancesService'),
   Sip10BalancesService: Symbol.for('Sip10BalancesService'),
+  RunesBalancesService: Symbol.for('RunesBalancesService'),
+  Sip10AssetService: Symbol.for('Sip10AssetService'),
+  RuneAssetService: Symbol.for('RuneAssetService'),
+  UtxosService: Symbol.for('UtxosService'),
   StacksTransactionsService: Symbol.for('StacksTransactionsService'),
-  Sip10TokensService: Symbol.for('Sip10TokensService'),
 };
 
 function registerDependencies(
@@ -180,9 +189,15 @@ function registerApplicationServices(container: Container) {
     )
     .inSingletonScope();
   container
-    .bind<Sip10TokensService>(Services.Sip10TokensService)
+    .bind<Sip10AssetService>(Services.Sip10AssetService)
     .toDynamicValue(c =>
-      createSip10TokensService(c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient))
+      createSip10AssetService(c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient))
+    )
+    .inSingletonScope();
+  container
+    .bind<RuneAssetService>(Services.RuneAssetService)
+    .toDynamicValue(c =>
+      createRuneAssetService(c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient))
     )
     .inSingletonScope();
   container
@@ -197,7 +212,7 @@ function registerApplicationServices(container: Container) {
     .bind<BtcBalancesService>(Services.BtcBalancesService)
     .toDynamicValue(c =>
       createBtcBalancesService(
-        c.container.get<LeatherApiClient>(Services.LeatherApiClient),
+        c.container.get<UtxosService>(Services.UtxosService),
         c.container.get<MarketDataService>(Services.MarketDataService)
       )
     )
@@ -218,7 +233,26 @@ function registerApplicationServices(container: Container) {
       createSip10BalancesService(
         c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
         c.container.get<MarketDataService>(Services.MarketDataService),
-        c.container.get<Sip10TokensService>(Services.Sip10TokensService)
+        c.container.get<Sip10AssetService>(Services.Sip10AssetService)
+      )
+    )
+    .inSingletonScope();
+  container
+    .bind<RunesBalancesService>(Services.RunesBalancesService)
+    .toDynamicValue(c =>
+      createRunesBalancesService(
+        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient),
+        c.container.get<MarketDataService>(Services.MarketDataService),
+        c.container.get<RuneAssetService>(Services.RuneAssetService)
+      )
+    )
+    .inSingletonScope();
+  container
+    .bind<UtxosService>(Services.UtxosService)
+    .toDynamicValue(c =>
+      createUtxosService(
+        c.container.get<LeatherApiClient>(Services.LeatherApiClient),
+        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient)
       )
     )
     .inSingletonScope();
@@ -239,8 +273,17 @@ export function getStxBalancesService() {
 export function getSip10BalancesService() {
   return getContainer().get<Sip10BalancesService>(Services.Sip10BalancesService);
 }
-export function getSip10TokensService() {
-  return getContainer().get<Sip10TokensService>(Services.Sip10TokensService);
+export function getRunesBalancesService() {
+  return getContainer().get<RunesBalancesService>(Services.RunesBalancesService);
+}
+export function getSip10AssetService() {
+  return getContainer().get<Sip10AssetService>(Services.Sip10AssetService);
+}
+export function getRuneAssetService() {
+  return getContainer().get<RuneAssetService>(Services.RuneAssetService);
+}
+export function getUtxosService() {
+  return getContainer().get<UtxosService>(Services.UtxosService);
 }
 export function getStacksTransactionsService() {
   return getContainer().get<StacksTransactionsService>(Services.StacksTransactionsService);

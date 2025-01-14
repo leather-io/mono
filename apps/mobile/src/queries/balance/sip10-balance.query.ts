@@ -1,11 +1,27 @@
+import { toFetchState } from '@/shared/fetch-state';
+import {
+  useStacksSignerAddressFromAccountIndex,
+  useStacksSignerAddresses,
+} from '@/store/keychains/stacks/stacks-keychains.read';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getSip10BalancesService } from '@leather.io/services';
-import { createMoney } from '@leather.io/utils';
 
-export function useSip10AggregateAvailableBalance(addresses: string[]) {
-  const { isLoading, data: balance } = useSip10AggregateBalanceQuery(addresses);
-  return !isLoading && balance ? balance.usd.availableBalance : createMoney(0, 'USD');
+export function useSip10TotalBalance() {
+  const addresses = useStacksSignerAddresses();
+  return toFetchState(useSip10AggregateBalanceQuery(addresses));
+}
+
+export function useSip10AggregateBalance(addresses: string[]) {
+  return toFetchState(useSip10AggregateBalanceQuery(addresses));
+}
+
+export function useSip10AccountBalance(fingerprint: string, accountIndex: number) {
+  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
+  if (!address) {
+    throw new Error('Stacks address not found');
+  }
+  return toFetchState(useSip10AddressBalanceQuery(address));
 }
 
 export function useSip10AggregateBalanceQuery(addresses: string[]) {
@@ -22,7 +38,7 @@ export function useSip10AggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-export function useSip10BalancesQuery(address: string) {
+export function useSip10AddressBalanceQuery(address: string) {
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-address-balance', address],
     queryFn: ({ signal }: QueryFunctionContext) =>

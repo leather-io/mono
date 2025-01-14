@@ -7,7 +7,7 @@ import {
   getAssetNameFromIdentifier,
   getContractPrincipalFromAssetIdentifier,
   isTransferableSip10Token,
-} from './sip10-tokens.utils';
+} from './sip10-asset.utils';
 
 describe('isTransferableSip10Token', () => {
   let mockTokenMetadata: Partial<HiroFtMetadataResponse>;

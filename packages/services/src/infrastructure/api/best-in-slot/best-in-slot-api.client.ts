@@ -7,7 +7,12 @@ import { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { NetworkSettingsService } from '../../settings/network-settings.service';
-import { runeTickerInfoSchema } from './best-in-slot-api.schemas';
+import {
+  bisBrc20MarketInfoSchema,
+  bisInscriptionSchema,
+  bisRuneTickerInfoSchema,
+  bisRuneValidOutputsSchema,
+} from './best-in-slot-api.schema';
 import { getBestInSlotBasePath } from './best-in-slot-api.utils';
 
 interface BestInSlotApiResponse<T> {
@@ -15,37 +20,16 @@ interface BestInSlotApiResponse<T> {
   data: T;
 }
 
-export type BestInSlotRuneTickerInfo = z.infer<typeof runeTickerInfoSchema>;
-
-export interface BestInSlotBrc20TickerInfo {
-  id: string;
-  number: number;
-  block_height: number;
-  tx_id: string;
-  address: string;
-  ticker: string;
-  max_supply: string;
-  mint_limit: string;
-  decimals: number;
-  deploy_timestamp: number;
-  minted_supply: string;
-  tx_count: number;
-}
-
-export interface BestInSlotBrc20MarketInfo {
-  marketcap: number;
-  min_listed_unit_price: number;
-  min_listed_unit_price_ordinalswallet: number;
-  min_listed_unit_price_unisat: number;
-  min_listed_unit_price_okx: number;
-  listed_supply: number;
-  listed_supply_ratio: number;
-}
+export type BisRuneTickerInfo = z.infer<typeof bisRuneTickerInfoSchema>;
+export type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
+export type BisInscription = z.infer<typeof bisInscriptionSchema>;
+export type BisRuneValidOutput = z.infer<typeof bisRuneValidOutputsSchema>;
 
 export interface BestInSlotApiClient {
-  fetchBrc20TickerInfo(ticker: string, signal?: AbortSignal): Promise<BestInSlotBrc20TickerInfo>;
-  fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal): Promise<BestInSlotBrc20MarketInfo>;
-  fetchRuneTickerInfo(runeName: string, signal?: AbortSignal): Promise<BestInSlotRuneTickerInfo>;
+  fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal): Promise<BisBrc20MarketInfo>;
+  fetchRuneTickerInfo(runeName: string, signal?: AbortSignal): Promise<BisRuneTickerInfo>;
+  fetchInscriptions(descriptor: string, signal?: AbortSignal): Promise<BisInscription[]>;
+  fetchRunesValidOutputs(descriptor: string, signal?: AbortSignal): Promise<BisRuneValidOutput[]>;
 }
 
 export function createBestInSlotApiClient(
@@ -53,32 +37,8 @@ export function createBestInSlotApiClient(
   limiter: RateLimiterService,
   cache: HttpCacheService
 ): BestInSlotApiClient {
-  async function fetchBrc20TickerInfo(ticker: string, signal?: AbortSignal) {
-    const response = await cache.fetchWithCache(
-      [
-        'best-in-slot-brc20-ticker-info',
-        bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
-        ticker,
-      ],
-      async () => {
-        const res = await limiter.add(
-          RateLimiterType.BestInSlot,
-          () =>
-            axios.get<BestInSlotApiResponse<BestInSlotBrc20TickerInfo>>(
-              `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/brc20/ticker_info?ticker=${ticker}`,
-              { signal }
-            ),
-          { signal }
-        );
-        return res?.data;
-      },
-      { ttl: HttpCacheTimeMs.twoMinutes }
-    );
-    return response.data;
-  }
-
   async function fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal) {
-    const response = await cache.fetchWithCache(
+    return await cache.fetchWithCache(
       [
         'best-in-slot-brc20-market-info',
         bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
@@ -88,21 +48,20 @@ export function createBestInSlotApiClient(
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
-            axios.get<BestInSlotApiResponse<BestInSlotBrc20MarketInfo>>(
+            axios.get<BestInSlotApiResponse<BisBrc20MarketInfo>>(
               `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/brc20/market_info?ticker=${ticker}`,
               { signal }
             ),
           { signal }
         );
-        return res.data;
+        return bisBrc20MarketInfoSchema.parse(res.data.data);
       },
       { ttl: HttpCacheTimeMs.twoMinutes }
     );
-    return response.data;
   }
 
   async function fetchRuneTickerInfo(runeName: string, signal?: AbortSignal) {
-    const response = await cache.fetchWithCache(
+    return await cache.fetchWithCache(
       [
         'best-in-slot-rune-ticker-info',
         bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
@@ -112,22 +71,76 @@ export function createBestInSlotApiClient(
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
-            axios.get<BestInSlotApiResponse<BestInSlotRuneTickerInfo>>(
+            axios.get<BestInSlotApiResponse<BisRuneTickerInfo>>(
               `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/runes/ticker_info?rune_name=${runeName}`,
               { signal }
             ),
           { signal }
         );
-        return res.data;
+        return bisRuneTickerInfoSchema.parse(res.data.data);
       },
       { ttl: HttpCacheTimeMs.twoMinutes }
     );
-    return response.data;
+  }
+
+  async function fetchInscriptions(descriptor: string, signal?: AbortSignal) {
+    const params = new URLSearchParams();
+    params.append('sort_by', 'inscr_num');
+    params.append('order', 'desc');
+    params.append('exclude_brc20', 'false');
+    params.append('xpub', descriptor);
+    params.append('offset', '0');
+    params.append('count', '2000');
+
+    return await cache.fetchWithCache(
+      [
+        'best-in-slot-inscriptions',
+        bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
+        descriptor,
+      ],
+      async () => {
+        const res = await limiter.add(
+          RateLimiterType.BestInSlot,
+          () =>
+            axios.get<BestInSlotApiResponse<BisInscription[]>>(
+              `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/wallet/inscriptions_xpub`,
+              { params, signal }
+            ),
+          { signal }
+        );
+        return z.array(bisInscriptionSchema).parse(res.data.data);
+      },
+      { ttl: HttpCacheTimeMs.twoMinutes }
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function fetchRunesValidOutputs(descriptor: string, signal?: AbortSignal) {
+    const params = new URLSearchParams();
+    params.append('sort_by', 'output');
+    params.append('order', 'desc');
+    params.append('xpub', descriptor);
+    params.append('offset', '0');
+    params.append('count', '2000');
+
+    return await cache.fetchWithCache(
+      [
+        'best-in-slot-runes-valid-outputs',
+        bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
+        descriptor,
+      ],
+      // eslint-disable-next-line @typescript-eslint/require-await
+      async () => {
+        return [];
+      },
+      { ttl: HttpCacheTimeMs.twoMinutes }
+    );
   }
 
   return {
-    fetchBrc20TickerInfo,
     fetchBrc20MarketInfo,
     fetchRuneTickerInfo,
+    fetchInscriptions,
+    fetchRunesValidOutputs,
   };
 }
