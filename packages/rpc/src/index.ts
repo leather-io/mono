@@ -11,6 +11,7 @@ import { DefineStxCallContractMethod } from './methods/stacks/stx-call-contract'
 import { DefineStxDeployContractMethod } from './methods/stacks/stx-deploy-contract';
 import { DefineStxGetAddressesMethod } from './methods/stacks/stx-get-addresses';
 import { DefineStxSignMessageMethod } from './methods/stacks/stx-sign-message';
+import { DefineStxSignStructuredMessageMethod } from './methods/stacks/stx-sign-structured-message.ts';
 import { DefineStxSignTransactionMethod } from './methods/stacks/stx-sign-transaction';
 import { DefineStxTransferSip10FtMethod } from './methods/stacks/stx-transfer-sip10-ft';
 import { DefineStxTransferStxMethod } from './methods/stacks/stx-transfer-stx';
@@ -50,6 +51,7 @@ export type LeatherRpcMethodMap =
     // Stacks
     DefineStxGetAddressesMethod &
     DefineStxSignMessageMethod &
+    DefineStxSignStructuredMessageMethod &
     DefineStxSignTransactionMethod &
     DefineStxCallContractMethod &
     DefineStxDeployContractMethod &
