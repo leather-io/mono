@@ -11,10 +11,14 @@ export const stxSignTransactionRequestLeatherRpcParamsSchema = z.object({
   stxAddress: z.string().optional(),
   attachment: z.string().optional(),
   accountIndex: z.string().optional(),
+  network: z.string().optional(),
 });
 
 // SIP-30 params
-export const stxSignTransactionRequestSip30ParamsSchema = z.object({ transaction: z.string() });
+export const stxSignTransactionRequestSip30ParamsSchema = z.object({
+  transaction: z.string(),
+  network: z.string().optional(),
+});
 
 export const stxSignTransactionRequestParamsSchema = z.union([
   stxSignTransactionRequestLeatherRpcParamsSchema,
