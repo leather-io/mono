@@ -36,6 +36,7 @@ export { ItemLayout } from './src/components/item-layout/item-layout.native';
 export { Cell, type CellProps } from './src/components/cell/cell.native';
 export {
   Sheet,
+  type SheetProps,
   type SheetRef,
   SheetProvider,
   UIBottomSheetTextInput,
