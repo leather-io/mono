@@ -13,10 +13,10 @@ function isAssetMetadataNotFoundResponse(
   return 'error' in resp;
 }
 
-export function isFtAsset(resp: FtAssetResponse): resp is FtMetadataResponse {
-  return !isAssetMetadataNotFoundResponse(resp);
+export function isFtAsset(resp: FtAssetResponse | null | undefined): resp is FtMetadataResponse {
+  return !!resp && !isAssetMetadataNotFoundResponse(resp);
 }
 
-export function isNftAsset(resp: NftAssetResponse): resp is NftMetadataResponse {
-  return !isAssetMetadataNotFoundResponse(resp);
+export function isNftAsset(resp: NftAssetResponse | null | undefined): resp is NftMetadataResponse {
+  return !!resp && !isAssetMetadataNotFoundResponse(resp);
 }
