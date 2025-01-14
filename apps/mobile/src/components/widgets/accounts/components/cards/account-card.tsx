@@ -1,6 +1,6 @@
 import { AvatarIcon } from '@/components/avatar-icon';
 import { Balance } from '@/components/balance/balance';
-import { useAccountTotalBalance } from '@/queries/balance/total-balance.query';
+import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { TestId } from '@/shared/test-id';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { AccountStore } from '@/store/accounts/utils';
@@ -21,7 +21,9 @@ export function AccountCard({ account: { id: accountId, icon, name }, onPress }:
   const theme = useTheme<Theme>();
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
 
-  const { totalBalance } = useAccountTotalBalance({ fingerprint, accountIndex });
+  const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
+  // TODO: handle balance loading & error states
+  if (totalBalance.state !== 'success') return;
 
   return (
     <AccountCardLayout
@@ -33,7 +35,7 @@ export function AccountCard({ account: { id: accountId, icon, name }, onPress }:
           height={32}
         />
       }
-      label={<Balance balance={totalBalance} />}
+      label={<Balance balance={totalBalance.value} />}
       caption={i18n._({
         id: 'accounts.account.cell_caption',
         message: '{name}',

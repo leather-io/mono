@@ -30,6 +30,8 @@ export function AccountsWidget() {
   const theme = useTheme<Theme>();
 
   const { totalBalance } = useTotalBalance();
+  // TODO: handle balance loading & error states
+  if (totalBalance.state !== 'success') return;
 
   return (
     <>
@@ -44,7 +46,7 @@ export function AccountsWidget() {
           </Widget.Header>
           {wallets.hasWallets && (
             <Box px="5">
-              <Balance balance={totalBalance} variant="heading03" />
+              <Balance balance={totalBalance.value} variant="heading03" />
             </Box>
           )}
         </Box>

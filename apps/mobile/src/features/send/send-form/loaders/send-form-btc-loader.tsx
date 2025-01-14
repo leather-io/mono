@@ -1,8 +1,6 @@
 import { AccountId } from '@/models/domain.model';
-import {
-  useBitcoinAccountTotalBitcoinBalance,
-  useBitcoinAccountUtxos,
-} from '@/queries/balance/bitcoin-balance.query';
+import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
+import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import BigNumber from 'bignumber.js';
 
 import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
@@ -22,11 +20,12 @@ interface SendFormBtcLoaderProps {
 export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps) {
   const accountId = { fingerprint: account.fingerprint, accountIndex: account.accountIndex };
   const { data: feeRates, isLoading: isFeeRatesLoading } = useAverageBitcoinFeeRates();
-  const { data: utxos = [], isLoading: isUtxosLoading } = useBitcoinAccountUtxos(accountId);
-  const { availableBalance, fiatBalance } = useBitcoinAccountTotalBitcoinBalance(accountId);
+  const accountUtxos = useAccountUtxos(accountId.fingerprint, accountId.accountIndex);
+  const btcBalance = useBtcAccountBalance(accountId.fingerprint, accountId.accountIndex);
 
   // Handle loading and error states
-  if (isUtxosLoading || isFeeRatesLoading) return null;
+  if (btcBalance.state !== 'success' || accountUtxos.state !== 'success' || isFeeRatesLoading)
+    return null;
 
   const bigZero = new BigNumber(0);
   const zeroFees = {
@@ -36,9 +35,9 @@ export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps)
   };
 
   return children({
-    availableBalance,
-    fiatBalance,
+    availableBalance: btcBalance.value.btc.availableBalance,
+    fiatBalance: btcBalance.value.usd.availableBalance,
     feeRates: feeRates || zeroFees,
-    utxos,
+    utxos: accountUtxos.value.available,
   });
 }

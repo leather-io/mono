@@ -38,16 +38,17 @@ export function createStxBalancesService(
   stacksTransactionsService: StacksTransactionsService
 ): StxBalancesService {
   /**
-   * Gets cumulative STX balance (denominated in both STX and USD) for list of Stacks addresses. Includes balance information for each individual address.
+   * Gets cumulative STX balance (denominated in both STX and USD) for list of Stacks addresses.
+   * Includes balance information for each individual address.
    */
   async function getStxAggregateBalance(addresses: string[], signal?: AbortSignal) {
-    const addressBalanceResults = await Promise.all(
+    const addressBalances = await Promise.all(
       addresses.map(address => getStxAddressBalance(address, signal))
     );
     return {
-      stx: aggregateStxCryptoAssetBalances(addressBalanceResults.map(res => res.stx)),
-      usd: aggregateStxCryptoAssetBalances(addressBalanceResults.map(res => res.usd)),
-      balances: addressBalanceResults,
+      stx: aggregateStxCryptoAssetBalances(addressBalances.map(res => res.stx)),
+      usd: aggregateStxCryptoAssetBalances(addressBalances.map(res => res.usd)),
+      balances: addressBalances,
     };
   }
 

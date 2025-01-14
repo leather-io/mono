@@ -4,22 +4,23 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import {
   createSip10CryptoAssetInfo,
   getContractPrincipalFromAssetIdentifier,
-} from './sip10-tokens.utils';
+} from './sip10-asset.utils';
 
-export interface Sip10TokensService {
-  getInfo(assetIdentifier: string, signal?: AbortSignal): Promise<Sip10CryptoAssetInfo>;
+export interface Sip10AssetService {
+  getAssetInfo(assetIdentifier: string, signal?: AbortSignal): Promise<Sip10CryptoAssetInfo>;
 }
 
-export function createSip10TokensService(stacksApiClient: HiroStacksApiClient): Sip10TokensService {
+export function createSip10AssetService(stacksApiClient: HiroStacksApiClient): Sip10AssetService {
   /**
-   * Gets full asset information for given SIP10 asset identifier. Asset indentifier expected format: \<address\>.\<contract-name\>::\<asset-name\>
+   * Gets full asset information for given SIP10 identifier.
+   * Expected identifier format: \<address\>.\<contract-name\>::\<asset-name\>
    */
-  async function getInfo(assetIdentifier: string, signal?: AbortSignal) {
+  async function getAssetInfo(assetIdentifier: string, signal?: AbortSignal) {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const metadata = await stacksApiClient.getFungibleTokenMetadata(principal, signal);
     return createSip10CryptoAssetInfo(assetIdentifier, metadata);
   }
   return {
-    getInfo,
+    getAssetInfo,
   };
 }
