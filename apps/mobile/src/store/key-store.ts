@@ -18,6 +18,15 @@ import { mnemonicStore } from './storage-persistors';
 import { makeAccountIdentifer, useAppDispatch } from './utils';
 import { useWallets } from './wallets/wallets.read';
 
+type DeriveNextAccountKeychainsProps =
+  | {
+    fingerprint: string;
+  }
+  | {
+    mnemonic: string;
+    passphrase?: string;
+  };
+
 export enum KEYCHAIN_ERROR {
   WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
 }
@@ -92,16 +101,7 @@ export function useKeyStore() {
       );
     },
 
-    async deriveNextAccountKeychainsFrom(
-      props:
-        | {
-            fingerprint: string;
-          }
-        | {
-            mnemonic: string;
-            passphrase?: string;
-          }
-    ) {
+    async deriveNextAccountKeychainsFrom(props: DeriveNextAccountKeychainsProps) {
       if ('fingerprint' in props) {
         const { mnemonic, passphrase } = await mnemonicStore(props.fingerprint).getMnemonic();
         return this.deriveNextAccountKeychainsImpl({
