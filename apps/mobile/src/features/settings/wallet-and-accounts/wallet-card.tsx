@@ -146,7 +146,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                       message: `Add account`,
                     })
               }
-              icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon />}
+              icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon variant="small" />}
             />
           )}
         </Box>
