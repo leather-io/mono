@@ -32,11 +32,8 @@ export function useSip10AggregateAvailableBalance(addresses: string[]) {
 export function useSip10AggregateBalanceQuery(addresses: string[]) {
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-aggregate-balance', addresses],
-    queryFn: async ({ signal }: QueryFunctionContext) => {
-      const data = await getSip10BalancesService().getSip10AggregateBalance(addresses, signal);
-      if (!data) throw new Error('Failed to fetch SIP10 aggregate balance');
-      return data;
-    },
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getSip10BalancesService().getSip10AggregateBalance(addresses, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
