@@ -286,6 +286,23 @@
     * @leather.io/rpc bumped to 2.5.2
     * @leather.io/utils bumped to 0.23.3
 
+## [2.26.16](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.15...@leather.io/query-v2.26.16) (2025-01-15)
+
+
+### Bug Fixes
+
+* **query:** update stamp schema ([ab8df37](https://github.com/leather-io/mono/commit/ab8df37cb7abafd2db371bc100d6c4f7528512f0))
+* unhandled error in is nft asset condition, LEA-1935 ([ec9abaf](https://github.com/leather-io/mono/commit/ec9abaf2e4046f646835cef9927b131bc8614b8b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.15
+    * @leather.io/rpc bumped to 2.5.3
+    * @leather.io/utils bumped to 0.23.4
+
 ## [2.26.11](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.10...@leather.io/query-v2.26.11) (2025-01-07)
 
 
