@@ -20,12 +20,12 @@ import { useWallets } from './wallets/wallets.read';
 
 type DeriveNextAccountKeychainsProps =
   | {
-    fingerprint: string;
-  }
+      fingerprint: string;
+    }
   | {
-    mnemonic: string;
-    passphrase?: string;
-  };
+      mnemonic: string;
+      passphrase?: string;
+    };
 
 export enum KEYCHAIN_ERROR {
   WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
