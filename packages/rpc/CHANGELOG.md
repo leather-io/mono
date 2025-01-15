@@ -180,6 +180,14 @@
   * dependencies
     * @leather.io/models bumped to 0.24.2
 
+## [2.5.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.2...@leather.io/rpc-v2.5.3) (2025-01-15)
+
+
+### Bug Fixes
+
+* **rpc:** add a network param to stx_signTransaction ([39c0b13](https://github.com/leather-io/mono/commit/39c0b1345d6128e5ab2cc845fb18d1e11f12c943))
+* **rpc:** add stx_signStructuredMessage ([b0447c2](https://github.com/leather-io/mono/commit/b0447c2b53976cca40effa7829bfdd160273377d))
+
 ## [2.5.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.1...@leather.io/rpc-v2.5.2) (2025-01-14)
 
 
