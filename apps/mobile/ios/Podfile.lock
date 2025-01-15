@@ -1632,7 +1632,7 @@ DEPENDENCIES:
   - "expo-dev-menu (from `../../../node_modules/.pnpm/expo-dev-menu@5.0.16_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.2_sv4q23kfwrr3e7xjv5gylxpsgq/node_modules/expo-dev-menu`)"
   - "expo-dev-menu-interface (from `../../../node_modules/.pnpm/expo-dev-menu-interface@1.8.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel_3pff7gitcjyg3566uk7iek4nly/node_modules/expo-dev-menu-interface/ios`)"
   - "ExpoAsset (from `../../../node_modules/.pnpm/expo-asset@10.0.6_b5dqityn7dtitewgaq3fc4hps4/node_modules/expo-asset/ios`)"
-  - "ExpoBlur (from `../../../node_modules/.pnpm/expo-blur@13.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.24.6__7adgaqkt3gd55jdqlkye4ibxjq/node_modules/expo-blur/ios`)"
+  - "ExpoBlur (from `../../../node_modules/.pnpm/expo-blur@13.0.2_patch_hash=2kiatwqczzm5sbyyi45w5rvkfu_expo@51.0.26_@babel+core@7.24.6_@babel_2cqa3vk4ik2igkq37qhnima5uy/node_modules/expo-blur/ios`)"
   - "ExpoClipboard (from `../../../node_modules/.pnpm/expo-clipboard@6.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.2_ccxjrrzlt5s5uamvnr4nwtms4e/node_modules/expo-clipboard/ios`)"
   - "ExpoCrypto (from `../../../node_modules/.pnpm/expo-crypto@13.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.24._h2ulmuk5g5qgvgcwhyc4imwx24/node_modules/expo-crypto/ios`)"
   - "ExpoDevice (from `../../../node_modules/.pnpm/expo-device@6.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.24.6_ypbzdx34cdu4iu7nzusi7hd7eq/node_modules/expo-device/ios`)"
@@ -1756,7 +1756,7 @@ EXTERNAL SOURCES:
   ExpoAsset:
     :path: "../../../node_modules/.pnpm/expo-asset@10.0.6_b5dqityn7dtitewgaq3fc4hps4/node_modules/expo-asset/ios"
   ExpoBlur:
-    :path: "../../../node_modules/.pnpm/expo-blur@13.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.24.6__7adgaqkt3gd55jdqlkye4ibxjq/node_modules/expo-blur/ios"
+    :path: "../../../node_modules/.pnpm/expo-blur@13.0.2_patch_hash=2kiatwqczzm5sbyyi45w5rvkfu_expo@51.0.26_@babel+core@7.24.6_@babel_2cqa3vk4ik2igkq37qhnima5uy/node_modules/expo-blur/ios"
   ExpoClipboard:
     :path: "../../../node_modules/.pnpm/expo-clipboard@6.0.3_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.2_ccxjrrzlt5s5uamvnr4nwtms4e/node_modules/expo-clipboard/ios"
   ExpoCrypto:

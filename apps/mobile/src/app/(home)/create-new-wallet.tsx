@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
@@ -9,6 +10,7 @@ import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
+import { ImageBackground } from 'expo-image';
 
 import { generateMnemonic } from '@leather.io/crypto';
 import {
@@ -22,11 +24,53 @@ import {
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
+function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: boolean }) {
+  const { themeDerivedFromThemePreference } = useSettings();
+  const { whenTheme } = useSettings();
+  return Platform.select({
+    ios: (
+      <BlurView
+        experimentalBlurMethod="dimezisBlurView"
+        themeVariant={themeDerivedFromThemePreference}
+        intensity={isHidden ? 30 : 0}
+        style={{
+          position: 'absolute',
+          top: -20,
+          bottom: -20,
+          left: -20,
+          right: -20,
+          zIndex: 10,
+        }}
+      >
+        {children}
+      </BlurView>
+    ),
+    android: (
+      <ImageBackground
+        contentFit="fill"
+        imageStyle={{}}
+        source={whenTheme({
+          light: require('../../assets/secret-blurred-light.png'),
+          dark: require('../../assets/secret-blurred-dark.png'),
+        })}
+        style={{
+          position: 'absolute',
+          top: -20,
+          bottom: -20,
+          left: -20,
+          right: -20,
+          zIndex: 10,
+        }}
+      >
+        {children}
+      </ImageBackground>
+    ),
+  });
+}
+
 export default function CreateNewWallet() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-
-  const { themeDerivedFromThemePreference } = useSettings();
   const [isHidden, setIsHidden] = useState(true);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
@@ -59,19 +103,7 @@ export default function CreateNewWallet() {
 
         <Box my="5">
           {isHidden && (
-            <BlurView
-              experimentalBlurMethod="dimezisBlurView"
-              themeVariant={themeDerivedFromThemePreference}
-              intensity={isHidden ? 30 : 0}
-              style={{
-                position: 'absolute',
-                top: -20,
-                bottom: -20,
-                left: -20,
-                right: -20,
-                zIndex: 10,
-              }}
-            >
+            <SecretBanner isHidden={isHidden}>
               <Pressable
                 onPress={() => setIsHidden(false)}
                 height="100%"
@@ -98,7 +130,7 @@ export default function CreateNewWallet() {
                   </Text>
                 </Box>
               </Pressable>
-            </BlurView>
+            </SecretBanner>
           )}
           <MnemonicDisplay mnemonic={mnemonic} />
         </Box>
