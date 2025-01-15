@@ -233,6 +233,22 @@
   * dependencies
     * @leather.io/rpc bumped to 2.5.3
 
+## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.23.4...@leather.io/utils-v0.24.0) (2025-01-15)
+
+
+### Features
+
+* utxos service ([1216c4b](https://github.com/leather-io/mono/commit/1216c4bfd34bb50bac4287320a51005215c3dea4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.15.4
+    * @leather.io/models bumped to 0.25.0
+    * @leather.io/rpc bumped to 2.5.4
+
 ## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.22.6...@leather.io/utils-v0.23.0) (2025-01-08)
 
 
