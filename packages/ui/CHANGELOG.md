@@ -260,6 +260,18 @@
     * @leather.io/models bumped to 0.25.0
     * @leather.io/panda-preset bumped to 0.8.7
 
+## [1.48.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.47.7...@leather.io/ui-v1.48.0) (2025-01-16)
+
+
+### Features
+
+* add squircle box component ([ac121d2](https://github.com/leather-io/mono/commit/ac121d201cbe5b02a5bf93a4e3ef28539ba64211))
+
+
+### Bug Fixes
+
+* use small icon size in Add account button ([81ab5f9](https://github.com/leather-io/mono/commit/81ab5f91851e0cc2b86ff145e3de627abc47e52f))
+
 ## [1.47.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.47.0...@leather.io/ui-v1.47.1) (2025-01-07)
 
 
