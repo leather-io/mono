@@ -30,6 +30,7 @@ export function useSip10AggregateAvailableBalance(addresses: string[]) {
 }
 
 export function useSip10AggregateBalanceQuery(addresses: string[]) {
+  // console.log('useSip10AggregateBalanceQuery addresses', addresses);
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-aggregate-balance', addresses],
     queryFn: ({ signal }: QueryFunctionContext) =>

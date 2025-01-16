@@ -47,8 +47,8 @@ export function createSip10BalancesService(
     const addressResults = await Promise.all(
       addresses.map(address => getSip10AddressBalance(address, signal))
     );
-
     const totalUsdBalance = aggregateBaseCryptoAssetBalances(addressResults.map(r => r.usd));
+    // console.log(new Date().toISOString(), 'SIP-10 addresses', addresses.length, addresses);
     return {
       usd: totalUsdBalance,
       addressBalances: addressResults,

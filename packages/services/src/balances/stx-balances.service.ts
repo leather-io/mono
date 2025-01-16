@@ -45,6 +45,7 @@ export function createStxBalancesService(
     const addressBalances = await Promise.all(
       addresses.map(address => getStxAddressBalance(address, signal))
     );
+    // console.log(new Date().toISOString(), 'STX addresses', addresses.length, addresses);
     return {
       stx: aggregateStxCryptoAssetBalances(addressBalances.map(res => res.stx)),
       usd: aggregateStxCryptoAssetBalances(addressBalances.map(res => res.usd)),
