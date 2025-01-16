@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 
+import { useAuthentication } from '@/common/use-authentication';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
@@ -24,7 +25,6 @@ import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
-import * as LocalAuthentication from 'expo-local-authentication';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
@@ -104,6 +104,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const removeWalletSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const { securityLevelPreference } = useSettings();
+  const { authenticate } = useAuthentication();
 
   const { displayToast } = useToastContext();
 
@@ -134,8 +135,8 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
   async function secureRemoveWallet() {
     if (securityLevelPreference === 'secure') {
-      const result = await LocalAuthentication.authenticateAsync();
-      if (result.success) {
+      const result = await authenticate();
+      if (result && result.success) {
         removeWallet();
       } else {
         displayToast({

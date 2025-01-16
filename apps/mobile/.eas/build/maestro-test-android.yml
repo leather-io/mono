@@ -22,4 +22,4 @@ build:
 
     - run_maestro_tests
     # TODO: Enable secure tests when we can support Biometrics on Android and an Android emulator with biometrics in EAS (LEA-1671)
-    # - run_secure_maestro_tests
+    - run_secure_maestro_tests

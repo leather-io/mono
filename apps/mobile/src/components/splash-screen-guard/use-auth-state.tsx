@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 
+import { useAuthentication } from '@/common/use-authentication';
 import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
-import * as LocalAuthentication from 'expo-local-authentication';
 
 const unlockTimeout = 60 * 1000;
 type AuthState = 'cold-start' | 'started' | 'failed' | 'passed-on-first' | 'passed-afterwards';
@@ -17,6 +17,7 @@ export function useAuthState({
 }) {
   const { securityLevelPreference, userLeavesApp, lastActive } = useSettings();
   const [authState, setAuthState] = useState<AuthState>('cold-start');
+  const { authenticate } = useAuthentication();
 
   const checkUnlockTime = useCallback(() => {
     return !!lastActive && lastActive > +new Date() - unlockTimeout;
@@ -38,8 +39,8 @@ export function useAuthState({
         return;
       }
 
-      const result = await LocalAuthentication.authenticateAsync();
-      if (result.success) {
+      const result = await authenticate();
+      if (result && result.success) {
         playSplash();
         if (firstTry) {
           setAuthState('passed-on-first');
@@ -52,7 +53,14 @@ export function useAuthState({
         setAuthState('failed');
       }
     },
-    [securityLevelPreference, checkUnlockTime, authState, playSplash, setAnimationFinished]
+    [
+      securityLevelPreference,
+      checkUnlockTime,
+      authState,
+      playSplash,
+      setAnimationFinished,
+      authenticate,
+    ]
   );
 
   const onAppForeground = useCallback(() => {

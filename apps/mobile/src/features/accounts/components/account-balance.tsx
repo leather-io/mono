@@ -10,5 +10,5 @@ export function AccountBalance({ accountIndex, fingerprint, ...textProps }: Acco
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
   // TODO: handle balance loading & error states
   if (totalBalance.state !== 'success') return;
-  return <Balance balance={totalBalance.value}  variant="label01" {...textProps} />;
+  return <Balance balance={totalBalance.value} variant="label01" {...textProps} />;
 }
