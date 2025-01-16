@@ -105,7 +105,7 @@ describe('Sip10BalancesService', () => {
       expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledTimes(3);
       expect(mockMarketDataService.getSip10MarketData).toHaveBeenCalledTimes(6);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(6);
-      expect(aggregateBalance.addressBalances.length).toEqual(3);
+      expect(aggregateBalance.aggregateBalances.length).toEqual(3);
     });
 
     it('calculates the combined usd balance of all sip10 tokens of each address', async () => {

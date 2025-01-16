@@ -34,7 +34,7 @@ export function AccountsWidget() {
   const theme = useTheme<Theme>();
 
   const { totalBalance } = useTotalBalance();
-  // TODO: handle balance loading & error states
+  // TODO LEA-1726: handle balance loading & error states
   if (totalBalance.state !== 'success') return;
 
   return (
