@@ -1,17 +1,19 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import {
+  //   useSip10BalancesQuery, //check Alexs change ere
+  useSip10AccountBalance,
   useSip10AggregateBalanceQuery,
-  useSip10BalancesQuery,
 } from '@/queries/balance/sip10-balance.query';
 import {
-  useStacksSignerAddressFromAccountIndex,
+  //   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,
 } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { Money } from '@leather.io/models';
+// import { Sip10AssetBalance } from '@leather.io/services';
 import { PressableProps } from '@leather.io/ui/native';
-import { sumMoney } from '@leather.io/utils';
 
+// import { sumMoney } from '@leather.io/utils';
 import { TokenBalance } from '../token-balance';
 
 interface Sip10TokenBalanceProps extends PressableProps {
@@ -42,11 +44,13 @@ export function Sip10TokenBalance({
 
 export function Sip10Balance() {
   const addresses = useStacksSignerAddresses();
-  const { isFetching, data } = useSip10AggregateBalanceQuery(addresses);
+  const balances = useSip10AggregateBalanceQuery(addresses);
 
-  if (isFetching) {
-    return null;
-  }
+  //   if (balances.state === 'loading') {
+  //     return null;
+  //   }
+  //   console.log('Sip10Balance balances', balances);
+  return balances;
   //   this 'works' on home now but only lists values of the first wallet added
   // it's not an aggregate of all wallets
   // data?.usd.totalBalance.amount is updating properly for multiple wallets
@@ -92,66 +96,66 @@ export function Sip10Balance() {
 
   //   find a good way to aggregate the balances and its done
 
-  const aggregateBalances = data?.balances.map(balances => {
-    // this always logs twice as I am mapping balances obviouslt :(
+  //   const aggregateBalances = data?.balances.map(balances => {
+  //     // this always logs twice as I am mapping balances obviouslt :(
 
-    // find a way to flatten data?.balances.balances and sum the same values
+  //     // find a way to flatten data?.balances.balances and sum the same values
 
-    // console.log(
-    //   new Date().toISOString(),
-    //   'balances',
-    //   balances.balances.map(b => ({
-    //     info: b.info,
-    //     sip10: b.sip10.availableBalance,
-    //     usd: b.usd.totalBalance,
-    //   }))
-    // );
-    return balances.balances.reduce(
-      (acc, balance) => {
-        const existingBalance = acc.find(b => b.symbol === balance.info.symbol);
-        if (existingBalance) {
-          existingBalance.availableBalance = sumMoney([
-            existingBalance.availableBalance,
-            balance.sip10.availableBalance,
-          ]);
-          existingBalance.fiatBalance = sumMoney([
-            existingBalance.fiatBalance,
-            balance.usd.totalBalance,
-          ]);
-          return acc;
-        }
-        return [
-          ...acc,
-          {
-            symbol: balance.info.symbol,
-            name: balance.info.name,
-            availableBalance: balance.sip10.availableBalance,
-            fiatBalance: balance.usd.totalBalance,
-          },
-        ];
-      },
-      [] as {
-        symbol: string;
-        name: string;
-        availableBalance: Money;
-        fiatBalance: Money;
-      }[]
-    );
-  });
+  //     // console.log(
+  //     //   new Date().toISOString(),
+  //     //   'balances',
+  //     //   balances.balances.map(b => ({
+  //     //     info: b.info,
+  //     //     sip10: b.sip10.availableBalance,
+  //     //     usd: b.usd.totalBalance,
+  //     //   }))
+  //     // );
+  //     return balances.balances.reduce(
+  //       (acc, balance) => {
+  //         const existingBalance = acc.find(b => b.symbol === balance.info.symbol);
+  //         if (existingBalance) {
+  //           existingBalance.availableBalance = sumMoney([
+  //             existingBalance.availableBalance,
+  //             balance.sip10.availableBalance,
+  //           ]);
+  //           existingBalance.fiatBalance = sumMoney([
+  //             existingBalance.fiatBalance,
+  //             balance.usd.totalBalance,
+  //           ]);
+  //           return acc;
+  //         }
+  //         return [
+  //           ...acc,
+  //           {
+  //             symbol: balance.info.symbol,
+  //             name: balance.info.name,
+  //             availableBalance: balance.sip10.availableBalance,
+  //             fiatBalance: balance.usd.totalBalance,
+  //           },
+  //         ];
+  //       },
+  //       [] as {
+  //         symbol: string;
+  //         name: string;
+  //         availableBalance: Money;
+  //         fiatBalance: Money;
+  //       }[]
+  //     );
+  //   });
 
-  return aggregateBalances?.map(balance =>
-    balance.map((balance, index) => (
-      <Sip10TokenBalance
-        key={`${balance.symbol}-${index}`}
-        symbol={balance.symbol}
-        name={balance.name}
-        availableBalance={balance.availableBalance}
-        fiatBalance={balance.fiatBalance}
-        px="5"
-        py="3"
-      />
-    ))
-  );
+  //   return aggregateBalances?.map(balance =>
+  //     balance.map((balance, index) => (
+  //       <Sip10TokenBalance
+  //         key={`${balance.symbol}-${index}`}
+  //         symbol={balance.symbol}
+  //         name={balance.name}
+  //         availableBalance={balance.availableBalance}
+  //         fiatBalance={balance.fiatBalance}
+  //         px="5"
+  //         py="3"
+  //       />
+  //     ))
+  //   );
 
   //   const mockBalances = [
   //     {
@@ -212,23 +216,21 @@ interface Sip10BalanceByAccountProps {
   fingerprint: string;
 }
 export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10BalanceByAccountProps) {
-  const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex);
-  if (!address) {
-    throw new Error('Stacks address not found');
-  }
-  const { isFetching, data } = useSip10BalancesQuery(address);
-  if (isFetching) {
+  const balances = useSip10AccountBalance(fingerprint, accountIndex);
+  if (balances.state === 'loading') {
     return null;
   }
-  return data?.balances.map((balance, index) => (
-    <Sip10TokenBalance
-      key={`${balance.info.symbol}-${index}`}
-      symbol={balance.info.symbol}
-      name={balance.info.name}
-      availableBalance={balance.sip10.availableBalance}
-      fiatBalance={balance.usd.totalBalance}
-      px="5"
-      py="3"
-    />
-  ));
+  //   console.log('Sip10BalanceByAccount balances', balances.value);
+  return null;
+  //   return balances.value?.balances.map((balance: Sip10AssetBalance, index: number) => (
+  //     <Sip10TokenBalance
+  //       key={`${balance.info.symbol}-${index}`}
+  //       symbol={balance.info.symbol}
+  //       name={balance.info.name}
+  //       availableBalance={balance.sip10.availableBalance}
+  //       fiatBalance={balance.usd.totalBalance}
+  //       px="5"
+  //       py="3"
+  //     />
+  //   ));
 }
