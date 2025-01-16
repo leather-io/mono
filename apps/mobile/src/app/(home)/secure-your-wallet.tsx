@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useAuthentication } from '@/common/use-authentication';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SkipSecureWalletSheet } from '@/components/secure-your-wallet/skip-secure-wallet-sheet';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
@@ -14,6 +15,7 @@ export default function SecureYourWalletScreen() {
   const theme = useTheme<Theme>();
   const sheetRef = useRef<SheetRef>(null);
   const { createWallet } = useCreateWallet();
+  const { callIfEnrolled } = useAuthentication();
 
   return (
     <>
@@ -55,8 +57,8 @@ export default function SecureYourWalletScreen() {
             })}
           />
           <Button
-            onPress={async () => {
-              await createWallet({ biometrics: true });
+            onPress={() => {
+              void callIfEnrolled(() => createWallet({ biometrics: true }));
             }}
             buttonState="default"
             title={t({

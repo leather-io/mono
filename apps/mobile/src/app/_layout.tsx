@@ -60,21 +60,21 @@ export default function RootLayout() {
             <QueryClientProvider client={queryClient}>
               <LeatherQueryProvider>
                 <ThemeProvider>
-                  <SplashScreenGuard>
-                    <HapticsProvider>
-                      <GestureHandlerRootView style={{ flex: 1 }}>
-                        <SheetNavigatorWrapper>
-                          <SheetProvider>
-                            <ToastWrapper>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    <ToastWrapper>
+                      <SplashScreenGuard>
+                        <HapticsProvider>
+                          <SheetNavigatorWrapper>
+                            <SheetProvider>
                               <AppRouter />
                               <SendSheet />
                               <ReceiveSheet />
-                            </ToastWrapper>
-                          </SheetProvider>
-                        </SheetNavigatorWrapper>
-                      </GestureHandlerRootView>
-                    </HapticsProvider>
-                  </SplashScreenGuard>
+                            </SheetProvider>
+                          </SheetNavigatorWrapper>
+                        </HapticsProvider>
+                      </SplashScreenGuard>
+                    </ToastWrapper>
+                  </GestureHandlerRootView>
                 </ThemeProvider>
               </LeatherQueryProvider>
             </QueryClientProvider>

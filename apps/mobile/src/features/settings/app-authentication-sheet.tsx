@@ -1,13 +1,13 @@
 import { RefObject } from 'react';
 import { Linking } from 'react-native';
 
+import { useAuthentication } from '@/common/use-authentication';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
-import * as LocalAuthentication from 'expo-local-authentication';
 
 import { KeyholeIcon, SheetRef } from '@leather.io/ui/native';
 
@@ -19,10 +19,16 @@ interface AppAuthenticationSheetProps {
 export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
+  const { authenticate } = useAuthentication();
 
   function onUpdateAppAuth() {
-    LocalAuthentication.authenticateAsync()
+    authenticate()
       .then(result => {
+        if (!result) {
+          // Do nothing if result is undefined, as that means it's already handled by useAuthentication hook
+          return;
+        }
+
         if (result.success) {
           settings.changeSecurityLevelPreference(
             settings.securityLevelPreference === 'secure' ? 'insecure' : 'secure'
@@ -34,15 +40,15 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
             }),
             type: 'success',
           });
-          return;
+        } else {
+          displayToast({
+            title: t({
+              id: 'app_auth.toast_title_error',
+              message: 'Failed to authenticate',
+            }),
+            type: 'error',
+          });
         }
-        displayToast({
-          title: t({
-            id: 'app_auth.toast_title_error',
-            message: 'Failed to authenticate',
-          }),
-          type: 'error',
-        });
       })
       .catch(() =>
         displayToast({
