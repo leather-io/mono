@@ -441,6 +441,22 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.15
 
+## [2.6.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.6.0...@leather.io/mobile-v2.6.1) (2025-01-16)
+
+
+### Bug Fixes
+
+* android secure storage ([1281837](https://github.com/leather-io/mono/commit/1281837090f4ccdaddc40a9a1a8aa270dd24f1c8))
+* limit account sheet max height ([9229a27](https://github.com/leather-io/mono/commit/9229a2716402d7dc468fbdd3e1161d63b4aeeb3f))
+* use small icon size in Add account button ([81ab5f9](https://github.com/leather-io/mono/commit/81ab5f91851e0cc2b86ff145e3de627abc47e52f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.48.0
+
 ## [2.6.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.5.4...@leather.io/mobile-v2.6.0) (2025-01-15)
 
 
