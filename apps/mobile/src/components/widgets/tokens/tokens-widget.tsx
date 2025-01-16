@@ -2,7 +2,7 @@ import {
   BitcoinBalance,
   BitcoinBalanceByAccount,
 } from '@/features/balances/bitcoin/bitcoin-balance';
-import { Sip10Balance, Sip10BalanceByAccount } from '@/features/balances/stacks/sip10-balance';
+import { Sip10BalanceByAccount } from '@/features/balances/stacks/sip10-balance';
 import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { AccountId } from '@/models/domain.model';
 import { HasChildren } from '@/utils/types';
@@ -26,7 +26,7 @@ export function AllAccountBalances() {
     <>
       <BitcoinBalance />
       <StacksBalance />
-      <Sip10Balance />
+      {/* <Sip10Balance /> */}
     </>
   );
 }
