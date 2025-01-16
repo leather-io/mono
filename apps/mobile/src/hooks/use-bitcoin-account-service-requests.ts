@@ -22,7 +22,7 @@ function getDescriptorFromKeychain<T extends { keyOrigin: string; xpub: string }
   }
 }
 
-function createBitcoinAccountIdentifier(
+export function createBitcoinAccountIdentifier(
   fingerprint: string,
   accountIndex: number,
   descriptors: string[]

@@ -14,7 +14,7 @@ export default function AccountScreen() {
   const { accountId } = configureAccountParamsSchema.parse(params);
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
-  // TODO: handle balance loading & error states
+  // TODO LEA-1726: handle balance loading & error states
   if (totalBalance.state !== 'success') return;
 
   return (

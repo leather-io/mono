@@ -36,7 +36,7 @@ export function BitcoinTokenBalance({
 
 export function BitcoinBalance() {
   const balance = useBtcTotalBalance();
-  // TODO: handle balance loading & error states
+  // TODO LEA-1726: handle balance loading & error states
   if (balance.state !== 'success') return;
   return (
     <BitcoinTokenBalance
@@ -59,7 +59,7 @@ export function BitcoinBalanceByAccount({
   onPress,
 }: BitcoinBalanceByAccountProps) {
   const balance = useBtcAccountBalance(fingerprint, accountIndex);
-  // TODO: handle balance loading & error states
+  // TODO LEA-1726: handle balance loading & error states
   if (balance.state !== 'success') return;
   return (
     <BitcoinTokenBalance

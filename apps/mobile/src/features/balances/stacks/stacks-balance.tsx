@@ -34,7 +34,7 @@ export function StacksTokenBalance({
 
 export function StacksBalance() {
   const balance = useStxTotalBalance();
-  // TODO: handle balance loading & error states
+  // TODO LEA-1726: handle balance loading & error states
   if (balance.state !== 'success') return;
   return (
     <StacksTokenBalance
@@ -57,7 +57,7 @@ export function StacksBalanceByAccount({
   onPress,
 }: StacksBalanceByAccountProps) {
   const balance = useStxAccountBalance(fingerprint, accountIndex);
-  // TODO: handle balance loading & error states
+  // TODO LEA-1726: handle balance loading & error states
   if (balance.state !== 'success') return;
   return (
     <StacksTokenBalance
