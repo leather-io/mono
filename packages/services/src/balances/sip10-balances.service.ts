@@ -9,6 +9,7 @@ import {
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { MarketDataService } from '../market-data/market-data.service';
+import { baseCryptoAssetZeroBalanceUsd } from './constants';
 
 export interface Sip10AssetBalance {
   asset: Sip10CryptoAssetInfo;
@@ -47,7 +48,10 @@ export function createSip10BalancesService(
     const addressBalances = await Promise.all(
       addresses.map(address => getSip10AddressBalance(address, signal))
     );
-    const totalUsdBalance = aggregateBaseCryptoAssetBalances(addressBalances.map(r => r.usd));
+    const totalUsdBalance = aggregateBaseCryptoAssetBalances([
+      baseCryptoAssetZeroBalanceUsd,
+      ...addressBalances.map(r => r.usd),
+    ]);
     return {
       usd: totalUsdBalance,
       addressBalances,

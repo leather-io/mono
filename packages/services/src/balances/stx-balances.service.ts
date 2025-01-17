@@ -13,6 +13,7 @@ import {
 } from '../infrastructure/api/hiro/hiro-stacks-api.utils';
 import { MarketDataService } from '../market-data/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
+import { stxCryptoAssetZeroBalanceStx, stxCryptoAssetZeroBalanceUsd } from './constants';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';
 
 export interface StxAggregateBalance {
@@ -46,8 +47,14 @@ export function createStxBalancesService(
       addresses.map(address => getStxAddressBalance(address, signal))
     );
     return {
-      stx: aggregateStxCryptoAssetBalances(addressBalances.map(res => res.stx)),
-      usd: aggregateStxCryptoAssetBalances(addressBalances.map(res => res.usd)),
+      stx: aggregateStxCryptoAssetBalances([
+        stxCryptoAssetZeroBalanceStx,
+        ...addressBalances.map(res => res.stx),
+      ]),
+      usd: aggregateStxCryptoAssetBalances([
+        stxCryptoAssetZeroBalanceUsd,
+        ...addressBalances.map(res => res.usd),
+      ]),
       balances: addressBalances,
     };
   }

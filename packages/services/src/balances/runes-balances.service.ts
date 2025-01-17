@@ -11,6 +11,7 @@ import { RuneAssetService } from '../assets/rune-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { MarketDataService } from '../market-data/market-data.service';
 import { BitcoinAccountIdentifier } from '../shared/bitcoin.types';
+import { baseCryptoAssetZeroBalanceUsd } from './constants';
 import { parseRunesOutputsBalances } from './runes-balances.utils';
 
 export interface RuneAssetBalance {
@@ -58,7 +59,10 @@ export function createRunesBalancesService(
       accounts.map(account => getRunesAccountBalance(account, signal))
     );
     return {
-      usd: aggregateBaseCryptoAssetBalances(accountBalances.map(b => b.usd)),
+      usd: aggregateBaseCryptoAssetBalances([
+        baseCryptoAssetZeroBalanceUsd,
+        ...accountBalances.map(b => b.usd),
+      ]),
       accountBalances,
     };
   }
