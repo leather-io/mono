@@ -27,6 +27,10 @@ export function AllAccountBalances() {
       <BitcoinBalance />
       <StacksBalance />
       <Sip10Balance />
+      {/* TODO: 
+      - need to limit to 5 items here, maybe use a size? or else limit to 3 SIP10s for now
+      - RunesBalance 
+      */}
     </>
   );
 }

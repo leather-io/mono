@@ -10,6 +10,7 @@ import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { MarketDataService } from '../market-data/market-data.service';
 import { baseCryptoAssetZeroBalanceUsd } from './constants';
+import { getAggregateSip10Balances } from './sip10-balances.utils';
 
 export interface Sip10AssetBalance {
   asset: Sip10CryptoAssetInfo;
@@ -26,6 +27,7 @@ export interface Sip10AddressBalance {
 export interface Sip10AggregateBalance {
   usd: CryptoAssetBalance;
   addressBalances: Sip10AddressBalance[];
+  aggregateBalances: Sip10AssetBalance[];
 }
 
 export interface Sip10BalancesService {
@@ -54,7 +56,10 @@ export function createSip10BalancesService(
     ]);
     return {
       usd: totalUsdBalance,
+      // TODO: ask Alex about removing this as we don't use it now
+      // maybe it is caching in the query for single account?
       addressBalances,
+      aggregateBalances: getAggregateSip10Balances(addressBalances),
     };
   }
 

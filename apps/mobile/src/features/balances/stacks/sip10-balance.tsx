@@ -40,19 +40,17 @@ export function Sip10Balance() {
   // TODO: handle balance loading & error states
   if (data.state !== 'success') return;
 
-  return data.value?.addressBalances.map(balances =>
-    balances.sip10s.map((balance, index) => (
-      <Sip10TokenBalance
-        key={`${balance.asset.symbol}-${index}`}
-        symbol={balance.asset.symbol}
-        name={balance.asset.name}
-        availableBalance={balance.sip10.availableBalance}
-        fiatBalance={balance.usd.totalBalance}
-        px="5"
-        py="3"
-      />
-    ))
-  );
+  return data.value?.aggregateBalances.map((balance, index) => (
+    <Sip10TokenBalance
+      key={`${balance.asset.symbol}-${index}`}
+      symbol={balance.asset.symbol}
+      name={balance.asset.name}
+      availableBalance={balance.sip10.availableBalance}
+      fiatBalance={balance.usd.totalBalance}
+      px="5"
+      py="3"
+    />
+  ));
 }
 interface Sip10BalanceByAccountProps {
   accountIndex: number;
