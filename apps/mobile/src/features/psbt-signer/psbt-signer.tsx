@@ -223,8 +223,8 @@ export function BasePsbtSigner({
         <Approver.Container>
           <Approver.Header
             title={t({
-              id: 'approver.send.title',
-              message: 'Send',
+              id: 'approver.send.token-title',
+              message: 'SEND TOKEN',
             })}
           />
           <Approver.Section>
