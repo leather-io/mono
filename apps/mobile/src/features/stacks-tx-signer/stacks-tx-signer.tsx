@@ -48,12 +48,15 @@ function formReviewTxSummary({ tx, symbol }: { tx: StacksTransaction; symbol: Cr
   const txValue = payload.amount;
   const fee = tx.auth.spendingCondition.fee;
   const totalSpendMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue + fee));
+  const txMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue));
+
   const feeMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(fee));
 
   return {
     recipient: addressToString(payload.recipient.address),
     feeMoney,
     totalSpendMoney,
+    txMoney,
     symbol: 'STX',
   };
 }
@@ -107,7 +110,7 @@ export function StacksTxSigner({
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 
   const { data: stxMarketData } = useStxMarketDataQuery();
-  const { recipient, feeMoney, totalSpendMoney } = formReviewTxSummary({
+  const { recipient, feeMoney, totalSpendMoney, txMoney } = formReviewTxSummary({
     tx,
     symbol: 'STX',
   });
@@ -244,7 +247,7 @@ export function StacksTxSigner({
             <ApproverAccountCard accounts={[account]} />
           </Approver.Section>
           <Approver.Section>
-            <StacksOutcome amount={totalSpendMoney} />
+            <StacksOutcome amount={txMoney} />
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
