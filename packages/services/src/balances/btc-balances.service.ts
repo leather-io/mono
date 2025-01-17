@@ -10,6 +10,7 @@ import { MarketDataService } from '../market-data/market-data.service';
 import { BitcoinAccountIdentifier, BitcoinAccountServiceRequest } from '../shared/bitcoin.types';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';
+import { btcCryptoAssetZeroBalanceBtc, btcCryptoAssetZeroBalanceUsd } from './constants';
 
 export interface BtcAccountBalance {
   account: BitcoinAccountIdentifier;
@@ -50,8 +51,14 @@ export function createBtcBalancesService(
       balanceRequests.map(req => getBtcAccountBalance(req, signal))
     );
     return {
-      btc: aggregateBtcCryptoAssetBalances(accountBalances.map(bal => bal.btc)),
-      usd: aggregateBtcCryptoAssetBalances(accountBalances.map(bal => bal.usd)),
+      btc: aggregateBtcCryptoAssetBalances([
+        btcCryptoAssetZeroBalanceBtc,
+        ...accountBalances.map(bal => bal.btc),
+      ]),
+      usd: aggregateBtcCryptoAssetBalances([
+        btcCryptoAssetZeroBalanceUsd,
+        ...accountBalances.map(bal => bal.usd),
+      ]),
       accountBalances,
     };
   }

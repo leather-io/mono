@@ -92,26 +92,29 @@ export function createBestInSlotApiClient(
     params.append('offset', '0');
     params.append('count', '2000');
 
-    return await cache.fetchWithCache(
-      [
-        'best-in-slot-inscriptions',
-        bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
-        descriptor,
-      ],
-      async () => {
-        const res = await limiter.add(
-          RateLimiterType.BestInSlot,
-          () =>
-            axios.get<BestInSlotApiResponse<BisInscription[]>>(
-              `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/wallet/inscriptions_xpub`,
-              { params, signal }
-            ),
-          { signal }
+    return bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode) !==
+      'mainnet'
+      ? []
+      : await cache.fetchWithCache(
+          [
+            'best-in-slot-inscriptions',
+            bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
+            descriptor,
+          ],
+          async () => {
+            const res = await limiter.add(
+              RateLimiterType.BestInSlot,
+              () =>
+                axios.get<BestInSlotApiResponse<BisInscription[]>>(
+                  `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/wallet/inscriptions_xpub`,
+                  { params, signal }
+                ),
+              { signal }
+            );
+            return z.array(bisInscriptionSchema).parse(res.data.data);
+          },
+          { ttl: HttpCacheTimeMs.twoMinutes }
         );
-        return z.array(bisInscriptionSchema).parse(res.data.data);
-      },
-      { ttl: HttpCacheTimeMs.twoMinutes }
-    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
