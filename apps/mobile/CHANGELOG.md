@@ -441,6 +441,20 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.15
 
+## [2.7.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.6.1...@leather.io/mobile-v2.7.0) (2025-01-20)
+
+
+### Features
+
+* add SIP-10 balances,Runes setup ref LEA-1832, LEA-1981 ([77de90a](https://github.com/leather-io/mono/commit/77de90afc5238d05e61c6bf7c8c42f7f58c14440))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.0.0
+
 ## [2.6.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.6.0...@leather.io/mobile-v2.6.1) (2025-01-16)
 
 
