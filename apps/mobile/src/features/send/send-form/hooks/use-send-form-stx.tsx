@@ -1,7 +1,6 @@
 import { useGenerateStxTokenTransferUnsignedTransaction } from '@/common/transactions/stacks-transactions.hooks';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
-import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 
@@ -18,7 +17,7 @@ import {
 } from '../../send-form.utils';
 import { SendFormStxContext } from '../providers/send-form-stx-provider';
 import { SendFormStxSchema } from '../schemas/send-form-stx.schema';
-import { formatStacksError } from '../validation/stx.validation';
+import { formatStacksError, trackAnalyticsForError } from '../validation/stx.validation';
 
 export type CurrentRoute = CreateCurrentSendRoute<'send-form-stx'>;
 
@@ -43,27 +42,31 @@ export function useSendFormStx() {
   const { displayToast } = useToastContext();
   const generateTx = useGenerateStxTokenTransferUnsignedTransaction(payer, publicKey);
 
-  function handleNonCompliantAddress(address: string) {
-    void analytics?.track('non_compliant_entity_detected', { address });
-    // eslint-disable-next-line lingui/no-unlocalized-strings
+  function handleNonCompliantAddress() {
     throw new StacksError('NonCompliantAddress');
   }
   return {
     onGoBack() {
       navigation.navigate('send-select-asset', { account });
     },
-    async onInitSendTransfer(data: SendFormStxContext, values: SendFormStxSchema) {
+    async onInitSendTransfer({ availableBalance }: SendFormStxContext, values: SendFormStxSchema) {
+      const parsedValues = parseSendFormValues(values);
+      const { amount, fee, recipient } = parsedValues;
       try {
-        const parsedValues = parseSendFormValues(values);
-        const { amount, recipient } = parsedValues;
         // TODO LEA-1852 - move to form schema validation
         // 1. validate precision
         if (!isValidPrecision(+values.amount, STX_DECIMALS)) {
-          // eslint-disable-next-line lingui/no-unlocalized-strings
           throw new StacksError('InvalidPrecision');
         }
         // 2. validate transaction
-        isValidStacksTransaction({ amount, payer, recipient, chainId });
+        isValidStacksTransaction({
+          amount,
+          fee,
+          payer,
+          recipient,
+          chainId,
+          availableBalance: availableBalance,
+        });
         // 3. validate address compliance
 
         try {
@@ -73,19 +76,19 @@ export function useSendFormStx() {
           });
 
           if (!isCompliant) {
-            handleNonCompliantAddress(recipient);
+            handleNonCompliantAddress();
           }
         } catch {
-          handleNonCompliantAddress(recipient);
+          handleNonCompliantAddress();
         }
         const tx = await generateTx(parsedValues);
 
-        // eslint-disable-next-line lingui/no-unlocalized-strings
         if (!tx) throw new StacksError('InvalidTransaction');
         const txHex = tx.serialize();
         navigation.navigate('sign-stacks-tx', { txHex, accountId: account.id });
       } catch (e) {
         if (e instanceof StacksError) {
+          trackAnalyticsForError({ errorMessage: e.message, address: recipient });
           displayToast({ title: formatStacksError(e.message), type: 'error' });
         } else {
           displayToast({

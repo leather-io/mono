@@ -52,6 +52,8 @@ export default tseslint.config(
         {
           ignoreFunction: [
             'Error',
+            'StacksError',
+            'BitcoinError',
             'console.log',
             'console.warn',
             'console.error',

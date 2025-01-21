@@ -32,6 +32,10 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
       id: 'bitcoin-error.invalid-transaction',
       message: 'Attempted to generate raw tx, but no tx exists',
     }),
+    InvalidAmount: t({
+      id: 'bitcoin-error.invalid-amount',
+      message: 'Invalid amount',
+    }),
     NonCompliantAddress: t({
       id: 'bitcoin-error.non-compliant-address',
       message: 'Compliance check failed',

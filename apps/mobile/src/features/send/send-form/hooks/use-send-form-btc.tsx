@@ -77,7 +77,6 @@ export function useSendFormBtc() {
 
   function handleNonCompliantAddress(address: BitcoinAddress) {
     void analytics?.track('non_compliant_entity_detected', { address });
-    // eslint-disable-next-line lingui/no-unlocalized-strings
     throw new BitcoinError('NonCompliantAddress');
   }
 
@@ -93,7 +92,6 @@ export function useSendFormBtc() {
         // TODO LEA-1852 - move to form schema validation
         // 1. validate precision
         if (!isValidPrecision(+inputAmount, BTC_DECIMALS)) {
-          // eslint-disable-next-line lingui/no-unlocalized-strings
           throw new BitcoinError('InvalidPrecision');
         }
         const parsedSendFormValues = parseSendFormValues(values);
@@ -132,7 +130,6 @@ export function useSendFormBtc() {
           bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
         });
 
-        // eslint-disable-next-line lingui/no-unlocalized-strings
         if (!tx) throw new BitcoinError('InvalidTransaction');
 
         const psbtHex = bytesToHex(tx.psbt);
