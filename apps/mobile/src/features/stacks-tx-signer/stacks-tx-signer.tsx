@@ -13,7 +13,6 @@ import { bytesToHex } from '@stacks/common';
 import {
   PayloadType,
   StacksTransactionWire,
-  TokenTransferPayloadWire,
   cvToString,
   deserializeTransaction,
 } from '@stacks/transactions';
@@ -47,15 +46,21 @@ interface ReviewTxSummaryProps {
 function formReviewTxSummary({ tx, symbol }: ReviewTxSummaryProps) {
   if (symbol !== 'STX') throw new Error('No support for SIP10');
 
-  // WARNING: Danerous type casting
-  const payload = tx.payload as TokenTransferPayloadWire;
-  const txValue = payload.amount;
-  const fee = tx.auth.spendingCondition.fee;
+  const {
+    payload,
+    auth: {
+      spendingCondition: { fee },
+    },
+  } = tx;
+  if (payload.payloadType !== PayloadType.TokenTransfer) {
+    throw new Error('Unsupported payload type');
+  }
+  const { amount: txValue, recipient } = payload;
   const totalSpendMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue + fee));
   const feeMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(fee));
 
   return {
-    recipient: cvToString(payload.recipient),
+    recipient: cvToString(recipient),
     feeMoney,
     totalSpendMoney,
     symbol: 'STX',
