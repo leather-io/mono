@@ -25,5 +25,13 @@ export function formatStacksError(errorMessage: StacksErrorKey) {
       id: 'stacks-error.invalid-precision',
       message: 'Invalid precision',
     }),
+    InvalidTransaction: t({
+      id: 'stacks-error.invalid-transaction',
+      message: 'Attempted to generate raw tx, but no tx exists',
+    }),
+    NonCompliantAddress: t({
+      id: 'stacks-error.non-compliant-address',
+      message: 'Compliance check failed',
+    }),
   });
 }

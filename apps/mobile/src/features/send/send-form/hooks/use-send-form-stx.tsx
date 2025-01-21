@@ -1,11 +1,13 @@
 import { useGenerateStxTokenTransferUnsignedTransaction } from '@/common/transactions/stacks-transactions.hooks';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import { ChainId } from '@leather.io/models';
+import { isAddressCompliant } from '@leather.io/query';
 import { StacksError, isValidStacksTransaction } from '@leather.io/stacks';
 import { createMoneyFromDecimal, isValidPrecision } from '@leather.io/utils';
 
@@ -41,38 +43,56 @@ export function useSendFormStx() {
   const { displayToast } = useToastContext();
   const generateTx = useGenerateStxTokenTransferUnsignedTransaction(payer, publicKey);
 
+  function handleNonCompliantAddress(address: string) {
+    void analytics?.track('non_compliant_entity_detected', { address });
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    throw new StacksError('NonCompliantAddress');
+  }
   return {
     onGoBack() {
       navigation.navigate('send-select-asset', { account });
     },
-    // Temporary logs until we can hook up to approver flow
     async onInitSendTransfer(data: SendFormStxContext, values: SendFormStxSchema) {
       try {
         const parsedValues = parseSendFormValues(values);
+        const { amount, recipient } = parsedValues;
+        // TODO LEA-1852 - move to form schema validation
+        // 1. validate precision
         if (!isValidPrecision(+values.amount, STX_DECIMALS)) {
           // eslint-disable-next-line lingui/no-unlocalized-strings
           throw new StacksError('InvalidPrecision');
         }
-        const { amount, recipient } = parsedValues;
+        // 2. validate transaction
         isValidStacksTransaction({ amount, payer, recipient, chainId });
+        // 3. validate address compliance
+
+        try {
+          const isCompliant = await isAddressCompliant({
+            address: recipient,
+            chain: chainId,
+          });
+
+          if (!isCompliant) {
+            handleNonCompliantAddress(recipient);
+          }
+        } catch {
+          handleNonCompliantAddress(recipient);
+        }
         const tx = await generateTx(parsedValues);
 
-        if (!tx) {
-          // logger('tx:', 'Attempted to generate raw tx, but no tx exists');
-          throw new Error(); // should make a new TransactionError? or just generic here?
-        }
+        // eslint-disable-next-line lingui/no-unlocalized-strings
+        if (!tx) throw new StacksError('InvalidTransaction');
         const txHex = tx.serialize();
         navigation.navigate('sign-stacks-tx', { txHex, accountId: account.id });
       } catch (e) {
         if (e instanceof StacksError) {
           displayToast({ title: formatStacksError(e.message), type: 'error' });
-          return;
+        } else {
+          displayToast({
+            title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
+            type: 'error',
+          });
         }
-
-        displayToast({
-          title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
-          type: 'error',
-        });
       }
     },
   };

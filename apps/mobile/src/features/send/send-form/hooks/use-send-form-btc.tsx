@@ -1,9 +1,8 @@
-import { useCallback } from 'react';
-
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -11,14 +10,13 @@ import BigNumber from 'bignumber.js';
 import {
   BitcoinError,
   CoinSelectionRecipient,
-  CoinSelectionUtxo,
   createBitcoinAddress,
-  getBitcoinFees,
   isValidBitcoinTransaction,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
 import { BTC_DECIMALS } from '@leather.io/constants';
-import { AverageBitcoinFeeRates, Money, bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import { BitcoinAddress, Money, bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import { isAddressCompliant } from '@leather.io/query';
 import { createMoneyFromDecimal, isValidPrecision } from '@leather.io/utils';
 
 import {
@@ -53,11 +51,7 @@ function parseSendFormValues({
     ],
   };
 }
-interface GetTxFeesArgs {
-  feeRates: AverageBitcoinFeeRates;
-  recipients: CoinSelectionRecipient[];
-  utxos: CoinSelectionUtxo[];
-}
+
 export function useSendFormBtc() {
   const {
     params: { account, address, publicKey },
@@ -81,32 +75,55 @@ export function useSendFormBtc() {
 
   const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(payer, publicKey);
 
-  const getTxFees = useCallback(
-    ({ feeRates, recipients, utxos }: GetTxFeesArgs) =>
-      getBitcoinFees({ feeRates, isSendingMax: false, recipients, utxos }),
-    []
-  );
+  function handleNonCompliantAddress(address: BitcoinAddress) {
+    void analytics?.track('non_compliant_entity_detected', { address });
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    throw new BitcoinError('NonCompliantAddress');
+  }
 
   return {
     onGoBack() {
       navigation.navigate('send-select-asset', { account });
     },
 
-    onInitSendTransfer({ utxos, feeRates }: SendFormBtcContext, values: SendFormBtcSchema) {
+    async onInitSendTransfer({ utxos, feeRates }: SendFormBtcContext, values: SendFormBtcSchema) {
       try {
         const { amount: inputAmount, recipient: recipientAddress, feeRate } = values;
+        const recipient = createBitcoinAddress(recipientAddress);
+        // TODO LEA-1852 - move to form schema validation
+        // 1. validate precision
         if (!isValidPrecision(+inputAmount, BTC_DECIMALS)) {
           // eslint-disable-next-line lingui/no-unlocalized-strings
           throw new BitcoinError('InvalidPrecision');
         }
-        const recipient = createBitcoinAddress(recipientAddress);
         const parsedSendFormValues = parseSendFormValues(values);
-
-        // Transform Utxo to CoinSelectionUtxo
         const coinSelectionUtxos = createCoinSelectionUtxos(utxos);
 
-        const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
+        // 2. validate transaction
+        isValidBitcoinTransaction({
+          amount: parsedSendFormValues.amount,
+          payer: payer,
+          recipient: recipient,
+          network,
+          utxos: coinSelectionUtxos,
+          feeRate: +feeRate,
+          feeRates,
+        });
+        // 3. validate address compliance
+        try {
+          const isCompliant = await isAddressCompliant({
+            address: recipient,
+            chain: network,
+          });
 
+          if (!isCompliant) {
+            handleNonCompliantAddress(recipient);
+          }
+        } catch {
+          handleNonCompliantAddress(recipient);
+        }
+        // 4. generate tx
+        const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
         const tx = generateTx({
           feeRate: Number(feeRate),
           isSendingMax: false,
@@ -115,29 +132,8 @@ export function useSendFormBtc() {
           bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
         });
 
-        // TODO - integrate fees with validation
-        const fees = getTxFees({
-          feeRates,
-          recipients: parsedSendFormValues.recipients,
-          utxos: coinSelectionUtxos,
-        });
-
-        const bitcoinTransaction = {
-          amount: parsedSendFormValues.amount,
-          payer: payer,
-          recipient: recipient,
-          network,
-          utxos: coinSelectionUtxos,
-          feeRate: +feeRate,
-          feeRates,
-        };
-
-        isValidBitcoinTransaction(bitcoinTransaction);
-        // no toast here as caught in catch block with generic error handling
-        // matches extension behavior for now
-        if (!tx) throw new Error('Attempted to generate raw tx, but no tx exists');
-        // eslint-disable-next-line no-console
-        console.log('fees:', fees);
+        // eslint-disable-next-line lingui/no-unlocalized-strings
+        if (!tx) throw new BitcoinError('InvalidTransaction');
 
         const psbtHex = bytesToHex(tx.psbt);
 
@@ -145,13 +141,12 @@ export function useSendFormBtc() {
       } catch (e) {
         if (e instanceof BitcoinError) {
           displayToast({ title: formatBitcoinError(e.message), type: 'error' });
-          return;
+        } else {
+          displayToast({
+            title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
+            type: 'error',
+          });
         }
-
-        displayToast({
-          title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
-          type: 'error',
-        });
       }
     },
   };
