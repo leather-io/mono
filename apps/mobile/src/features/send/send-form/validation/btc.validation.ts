@@ -13,7 +13,6 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
     }),
     InsufficientAmount: t({
       id: 'bitcoin-error.insufficient-amount',
-      // TODO test this - avoids useLingui
       message: `Minimum is ${minimumBtcSpend}`,
     }),
 
@@ -25,6 +24,18 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
       id: 'bitcoin-error.invalid-network-address',
       message: 'Address is for incorrect network',
     }),
+    InvalidPrecision: t({
+      id: 'bitcoin-error.invalid-precision',
+      message: 'Invalid precision',
+    }),
+    InvalidTransaction: t({
+      id: 'bitcoin-error.invalid-transaction',
+      message: 'Attempted to generate raw tx, but no tx exists',
+    }),
+    NonCompliantAddress: t({
+      id: 'bitcoin-error.non-compliant-address',
+      message: 'Compliance check failed',
+    }),
     NoInputsToSign: t({
       id: 'bitcoin-error.no-inputs-to-sign',
       message: 'No inputs to sign',
@@ -32,10 +43,6 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
     NoOutputsToSign: t({
       id: 'bitcoin-error.no-outputs-to-sign',
       message: 'No outputs to sign',
-    }),
-    InvalidPrecision: t({
-      id: 'bitcoin-error.invalid-precision',
-      message: 'Invalid precision',
     }),
   });
 }

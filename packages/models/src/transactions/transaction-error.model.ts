@@ -2,4 +2,6 @@ export type TransactionErrorKey =
   | 'InvalidAddress'
   | 'InsufficientFunds'
   | 'InvalidNetworkAddress'
-  | 'InvalidPrecision';
+  | 'InvalidPrecision'
+  | 'InvalidTransaction'
+  | 'NonCompliantAddress';
