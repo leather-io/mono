@@ -26,7 +26,7 @@ export function RecipientSheet<T extends SendFormBaseContext<T>>({
 
   return (
     <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
-      <Box pt="5" px="5">
+      <Box p="5" gap="1" height={112}>
         <TextInput
           autoCapitalize="none"
           autoComplete="off"
