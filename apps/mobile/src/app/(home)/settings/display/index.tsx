@@ -117,22 +117,20 @@ export default function SettingsDisplayScreen() {
             }}
           />
 
-          {isFeatureEnabled() && (
-            <SettingsListItem
-              title={t({
-                id: 'display.haptics.cell_title',
-                message: 'Haptics',
-              })}
-              caption={t({
-                id: 'display.haptics.cell_caption',
-                message: 'Toggle tactile feedback for touch interactions',
-              })}
-              icon={<PointerHandIcon />}
-              type="switch"
-              onSwitchValueChange={() => onUpdateHapticsPreference()}
-              switchValue={hapticsPreference === 'enabled'}
-            />
-          )}
+          <SettingsListItem
+            title={t({
+              id: 'display.haptics.cell_title',
+              message: 'Haptics',
+            })}
+            caption={t({
+              id: 'display.haptics.cell_caption',
+              message: 'Toggle tactile feedback for touch interactions',
+            })}
+            icon={<PointerHandIcon />}
+            type="switch"
+            onSwitchValueChange={() => onUpdateHapticsPreference()}
+            switchValue={hapticsPreference === 'enabled'}
+          />
         </SettingsList>
       </AnimatedHeaderScreenLayout>
       <ThemeSheet sheetRef={themeSheetRef} />
