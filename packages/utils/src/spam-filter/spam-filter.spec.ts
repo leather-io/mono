@@ -4,22 +4,19 @@ describe('Spam filter', () => {
   it('should allow valid tokens', () => {
     expect(spamFilter('This token name is OK')).not.toEqual(spamReplacement);
   });
-  it('should detect spam urls in strings and replace content', () => {
-    expect(spamFilter('www.fake')).toEqual(spamReplacement);
-    expect(spamFilter('https://www.fake.com')).toEqual(spamReplacement);
+
+  it('should detect tlds with dot in strings and replace content', () => {
     expect(spamFilter('fake.com')).toEqual(spamReplacement);
-    expect(spamFilter('https://www.fake')).toEqual(spamReplacement);
-    expect(spamFilter('http://www.fake')).toEqual(spamReplacement);
-    expect(spamFilter('ftp://fake.com')).toEqual(spamReplacement);
-    expect(spamFilter('https://fake.com')).toEqual(spamReplacement);
-    expect(spamFilter('http://fake.com')).toEqual(spamReplacement);
-    expect(spamFilter('https://fake')).toEqual(spamReplacement);
-    expect(spamFilter('http://fake')).toEqual(spamReplacement);
+    expect(spamFilter('random text http://fake.de')).toEqual(spamReplacement);
+    expect(spamFilter('random text .    de')).toEqual(spamReplacement);
   });
-  it('should flag tokens containing . as suspicious', () => {
-    expect(spamFilter('xxx.com')).toEqual(spamReplacement);
-    expect(spamFilter('xxxx.fund')).toEqual(spamReplacement);
+
+  it('should allow if without tld or with tld without dot', () => {
+    expect(spamFilter('www.fake')).toEqual('www.fake');
+    expect(spamFilter('random text http://fake')).toEqual('random text http://fake');
+    expect(spamFilter('random text xxx com')).toEqual('random text xxx com');
   });
+
   it('should detect spam words in strings and replace content', () => {
     expect(spamFilter('You won some stx')).toEqual(spamReplacement);
     expect(spamFilter('You Win some stx')).toEqual(spamReplacement);
