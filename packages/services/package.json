@@ -35,7 +35,7 @@
     "axios": "1.7.7",
     "inversify": "6.0.2",
     "p-queue": "8.0.1",
-    "zod": "3.23.8"
+    "zod": "3.24.1"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
