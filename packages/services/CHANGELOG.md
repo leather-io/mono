@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/leather-io/mono/compare/@leather.io/services-v1.0.0...@leather.io/services-v1.0.1) (2025-01-23)
+
+
+### Bug Fixes
+
+* correct test failure, ref LEA-1832 ([9213a1b](https://github.com/leather-io/mono/commit/9213a1b3ae9e4a553089186660074a0b4ba45d70))
+
 ## 1.0.0 (2025-01-20)
 
 
