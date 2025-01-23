@@ -441,6 +441,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.15
 
+## [2.7.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.0...@leather.io/mobile-v2.7.1) (2025-01-23)
+
+
+### Bug Fixes
+
+* correct test failure, ref LEA-1832 ([9213a1b](https://github.com/leather-io/mono/commit/9213a1b3ae9e4a553089186660074a0b4ba45d70))
+* specify sheet height for android, ref LEA-2023 ([0f7a8f2](https://github.com/leather-io/mono/commit/0f7a8f29d9f00d24fb7b9096f83b20180bfdf07e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.0.1
+
 ## [2.7.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.6.1...@leather.io/mobile-v2.7.0) (2025-01-20)
 
 
