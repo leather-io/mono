@@ -8,7 +8,11 @@ export type RpcParameterByPosition = z.infer<typeof rpcParameterByPositionSchema
 const rpcParameterByNameSchema = z.record(z.string(), z.unknown());
 export type RpcParameterByName = z.infer<typeof rpcParameterByNameSchema>;
 
-export const rpcParameterSchema = z.union([rpcParameterByPositionSchema, rpcParameterByNameSchema]);
+export const rpcParameterSchema = z.union([
+  rpcParameterByPositionSchema,
+  rpcParameterByNameSchema,
+  z.undefined(),
+]);
 export type RpcParameter = z.infer<typeof rpcParameterSchema>;
 
 export const rpcBasePropsSchema = z.object({
@@ -16,27 +20,62 @@ export const rpcBasePropsSchema = z.object({
   id: z.string(),
 });
 
+type BaseRpcRequestSchema = typeof rpcBasePropsSchema;
 export type RpcBaseProps = z.infer<typeof rpcBasePropsSchema>;
 
 //
 // RPC Request
-export function createRpcRequestSchema<TMethod extends z.ZodTypeAny, TParam extends z.ZodTypeAny>(
-  methodSchema: TMethod,
+// {
+//   "jsonrpc": "2.0",
+//   "id": "123",
+//   "method": "signPsbt",
+//   "params": { "psbt": "dead…beef" },
+// }
+export function createRpcRequestSchema<TMethod extends string>(
+  method: TMethod
+): BaseRpcRequestSchema & z.ZodObject<{ method: z.ZodLiteral<TMethod> }>;
+export function createRpcRequestSchema<TMethod extends string, TParam extends z.ZodTypeAny>(
+  method: TMethod,
   paramsSchema: TParam
+): BaseRpcRequestSchema & z.ZodObject<{ method: z.ZodLiteral<TMethod>; params: TParam }>;
+export function createRpcRequestSchema<TMethod extends string, TParam extends z.ZodTypeAny>(
+  method: TMethod,
+  paramsSchema?: TParam
 ) {
-  return rpcBasePropsSchema.extend({ method: methodSchema, params: paramsSchema });
+  // Unable to type this without the any, however the return type is corrects
+  if (!paramsSchema) return rpcBasePropsSchema.extend({ method: z.literal(method) }) as any;
+
+  return rpcBasePropsSchema.extend({
+    method: z.literal(method),
+    params: paramsSchema,
+  });
 }
 
-type RpcRequestSchema<TMethod, TParam extends RpcParameter = RpcParameter> = ReturnType<
-  typeof createRpcRequestSchema<z.ZodType<TMethod>, z.ZodType<TParam>>
+type RpcRequestSchema<TMethod extends string, TParam extends RpcParameter> = ReturnType<
+  typeof createRpcRequestSchema<TMethod, z.ZodType<TParam>>
 >;
 
-export type RpcRequest<TMethod, TParam extends RpcParameter = RpcParameter> = z.infer<
+export type RpcRequest<TMethod extends string, TParam extends RpcParameter = undefined> = z.infer<
   RpcRequestSchema<TMethod, TParam>
 >;
 
 //
 // RPC Error Body
+
+export enum RpcErrorCode {
+  // Spec defined server errors
+  PARSE_ERROR = -32700,
+  INVALID_REQUEST = -32600,
+  METHOD_NOT_FOUND = -32601,
+  INVALID_PARAMS = -32602,
+  INTERNAL_ERROR = -32603,
+  SERVER_ERROR = -32000,
+  // Client defined errors
+  USER_REJECTION = 4001,
+  METHOD_NOT_SUPPORTED = 4002,
+}
+const rpcErrorCodeSchema = z.nativeEnum(RpcErrorCode);
+
 export function createRpcErrorBodySchema<TErrorData extends z.ZodTypeAny>(
   errorDataSchema: TErrorData
 ) {
@@ -63,6 +102,8 @@ export function createRpcErrorResponseSchema<
   return rpcBasePropsSchema.extend({ error: errorSchema });
 }
 
+export const defaultErrorSchema = createRpcErrorBodySchema(z.any());
+
 type RpcErrorResponseSchema<TError extends RpcErrorBody = RpcErrorBody> = ReturnType<
   typeof createRpcErrorResponseSchema<z.ZodType<TError>>
 >;
@@ -73,6 +114,11 @@ export type RpcErrorResponse<TError extends RpcErrorBody = RpcErrorBody> = z.inf
 
 //
 // RPC Success Response
+// {
+//   "jsonrpc": "2.0",
+//   "id": "123",
+//   "result": { "signature": "dead…beef" }
+// }
 export function createRpcSuccessResponseSchema<TResult extends z.ZodType<object>>(
   resultSchema: TResult
 ) {
@@ -104,20 +150,6 @@ export type RpcResponse<
   TResult extends object,
   TError extends RpcErrorBody = RpcErrorBody,
 > = z.infer<RpcResponseSchema<TResult, TError>>;
-
-export enum RpcErrorCode {
-  // Spec defined server errors
-  PARSE_ERROR = -32700,
-  INVALID_REQUEST = -32600,
-  METHOD_NOT_FOUND = -32601,
-  INVALID_PARAMS = -32602,
-  INTERNAL_ERROR = -32603,
-  SERVER_ERROR = -32000,
-  // Client defined errors
-  USER_REJECTION = 4001,
-  METHOD_NOT_SUPPORTED = 4002,
-}
-const rpcErrorCodeSchema = z.nativeEnum(RpcErrorCode);
 
 export type ExtractSuccessResponse<T> = Extract<T, { result: any }>;
 

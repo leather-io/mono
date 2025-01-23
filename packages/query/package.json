@@ -54,7 +54,7 @@
     "url-join": "5.0.0",
     "uuid": "10.0.0",
     "yup": "1.3.3",
-    "zod": "3.23.8"
+    "zod": "3.24.1"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

@@ -128,7 +128,7 @@
     "readable-stream": "4.5.2",
     "redux-persist": "6.0.0",
     "uuid": "10.0.0",
-    "zod": "3.23.8"
+    "zod": "3.24.1"
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
