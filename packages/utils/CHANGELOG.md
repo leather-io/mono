@@ -233,6 +233,13 @@
   * dependencies
     * @leather.io/rpc bumped to 2.5.3
 
+## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.24.0...@leather.io/utils-v0.25.0) (2025-01-23)
+
+
+### Features
+
+* change spam filter logic, LEA-2072 ([cf7cfbc](https://github.com/leather-io/mono/commit/cf7cfbc0d113277dae4f3674d5ed23daad88365f))
+
 ## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.23.4...@leather.io/utils-v0.24.0) (2025-01-15)
 
 

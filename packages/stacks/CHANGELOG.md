@@ -263,6 +263,13 @@
     * @leather.io/models bumped to 0.25.0
     * @leather.io/utils bumped to 0.24.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.33
+    * @leather.io/utils bumped to 0.25.0
+
 ## [1.5.11](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.5.10...@leather.io/stacks-v1.5.11) (2025-01-07)
 
 
