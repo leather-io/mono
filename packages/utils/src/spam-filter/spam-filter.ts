@@ -1,5 +1,8 @@
-const urlRegex =
-  /(http|https|ftp)|(((http|ftp|https):\/\/)?(((http|ftp|https):\/\/)?(([\w.-]*)\.([\w]*))))/g;
+import { tlds } from './tlds-list';
+
+const tldRegex = tlds.join('|');
+const urlRegex = new RegExp(`\\b.*\\s*\\.\\s*(${tldRegex})\\b`, 'gi');
+
 const spamWords = ['won', 'win', 'click'];
 export const spamReplacement = 'Suspicious token';
 
