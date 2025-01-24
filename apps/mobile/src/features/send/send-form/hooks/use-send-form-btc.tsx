@@ -22,10 +22,10 @@ import { SendFormBtcSchema } from '../schemas/send-form-btc.schema';
 import {
   CreateCurrentSendRoute,
   createCoinSelectionUtxos,
-  formatBitcoinError,
   useSendSheetNavigation,
   useSendSheetRoute,
 } from '../send-form.utils';
+import { formatBitcoinError } from '../validation/btc.validation';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
 
