@@ -20,7 +20,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: iOS E2E build on EAS
-        # working-directory: /mono/apps/mobile
+        working-directory: ./apps/mobile
         run: |
           eas build --profile maestro-test-ios --platform ios --non-interactive
 
