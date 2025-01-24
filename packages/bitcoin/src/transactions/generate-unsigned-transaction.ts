@@ -1,15 +1,15 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
-import { BtcSignerDefaultBip32Derivation } from 'bitcoin-signer';
 
-import { BitcoinError } from '../bitcoin-error';
-import { BtcSignerNetwork } from '../bitcoin.network';
 import {
   CoinSelectionRecipient,
   CoinSelectionUtxo,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
 } from '../coin-selection/coin-selection';
+import { BtcSignerDefaultBip32Derivation } from '../signer/bitcoin-signer';
+import { BtcSignerNetwork } from '../utils/bitcoin.network';
+import { BitcoinError } from '../validation/bitcoin-error';
 
 export interface GenerateBitcoinUnsignedTransactionArgs {
   feeRate: number;

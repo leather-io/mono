@@ -2,9 +2,8 @@ import { useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { Inscription } from '@leather.io/models';
+import { Inscription, UtxoResponseItem } from '@leather.io/models';
 
-import { UtxoResponseItem } from '../../../types/utxo';
 import { RunesOutputsByAddress } from '../clients/best-in-slot';
 import { useBitcoinClient } from '../clients/bitcoin-client';
 import { createBestInSlotInscription } from '../ordinals/inscription.utils';

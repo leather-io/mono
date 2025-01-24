@@ -47,7 +47,7 @@ interface ReviewTxSummaryProps {
 function formReviewTxSummary({ tx, symbol }: ReviewTxSummaryProps) {
   if (symbol !== 'STX') throw new Error('No support for SIP10');
 
-  // WARNING: Danerous type casting
+  // WARNING: Dangerous type casting
   const payload = tx.payload as TokenTransferPayloadWire;
   const txValue = payload.amount;
   const fee = tx.auth.spendingCondition.fee;
@@ -164,6 +164,8 @@ export function StacksTxSigner({
         setTxHex(newTxHex);
       }
     } catch {
+      // TODO: throw StacksError here instead and then catch it in the parent component
+      // message should be the error message from the StacksError - Nonce must be a positive integer or 0
       displayToast({
         title: t({
           id: 'approver.send.stx.error.change-nonce',

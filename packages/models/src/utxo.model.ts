@@ -9,3 +9,19 @@ export interface Utxo extends UtxoId {
   path: string;
   value: string;
 }
+
+export interface UtxoResponseItem {
+  txid: string;
+  vout: number;
+  status: {
+    confirmed: boolean;
+    block_height: number;
+    block_hash: string;
+    block_time: number;
+  };
+  value: number;
+}
+
+export interface UtxoWithDerivationPath extends UtxoResponseItem {
+  derivationPath: string;
+}

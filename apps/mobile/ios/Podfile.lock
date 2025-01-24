@@ -250,7 +250,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalAuthentication (14.0.1):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.20):
+  - ExpoModulesCore (1.12.26):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1777,7 +1777,7 @@ DEPENDENCIES:
   - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7_mjv6uxwewvp26723rg6spv3avm/node_modules/expo-keep-awake/ios`)"
   - "ExpoLinearGradient (from `../../../node_modules/.pnpm/expo-linear-gradient@13.0.2_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+c_t5eijwjeoqq6m42g5tyz23ewuu/node_modules/expo-linear-gradient/ios`)"
   - "ExpoLocalAuthentication (from `../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@ba_yzzjoadwtjt7p4lnqzqsiiliji/node_modules/expo-local-authentication/ios`)"
-  - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core`)"
+  - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.26/node_modules/expo-modules-core`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=p47fkb42u626foibcqnuv2h6vm_expo@51.0.26_@babel+core@7.24._zk7yjfomq4exjbfrqhorwru75i/node_modules/expo-secure-store/ios`)"
   - "ExpoSquircleView (from `../../../node_modules/.pnpm/expo-squircle-view@1.1.0_ouc423pt3wwy4q52hxignghuh4/node_modules/expo-squircle-view/ios`)"
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@babel+core@7.2_ht4xlq4l5424qsyduifhohyfey/node_modules/expo-system-ui/ios`)"
@@ -1934,7 +1934,7 @@ EXTERNAL SOURCES:
   ExpoLocalAuthentication:
     :path: "../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26_@babel+core@7.24.6_@babel+preset-env@7.25.8_@ba_yzzjoadwtjt7p4lnqzqsiiliji/node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
-    :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core"
+    :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.26/node_modules/expo-modules-core"
   ExpoSecureStore:
     :path: "../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=p47fkb42u626foibcqnuv2h6vm_expo@51.0.26_@babel+core@7.24._zk7yjfomq4exjbfrqhorwru75i/node_modules/expo-secure-store/ios"
   ExpoSquircleView:
@@ -2107,7 +2107,11 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: dd02e65d49f1cfd9194640028ae2857e536eb1c9
   ExpoLinearGradient: 4c44b3803b441724874b232e6520b51ca6a50db1
   ExpoLocalAuthentication: b94db59f55df95350223200c746b4ddf0cb7cfc0
+<<<<<<< HEAD
   ExpoModulesCore: cad1227f619a67c82c52e0e71fc70514cd93def8
+=======
+  ExpoModulesCore: 9ac73e2f60e0ea1d30137ca96cfc8c2aa34ef2b2
+>>>>>>> d4ca5302 (chore: send form validation)
   ExpoSecureStore: 6506992a9f53c94ea716c54d4a63144965945c2c
   ExpoSquircleView: 0f3abe8b83641f934ef6146db50edc391739b32c
   ExpoSystemUI: 2072307375696c398a5d75633bdd5143fadc3d26
@@ -2136,7 +2140,7 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PocketSVG: ca3bc53ea8d68336ba830c47b2e547790507b901
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
+  RCT-Folly: 5dc73daec3476616d19e8a53f0156176f7b55461
   RCTDeprecation: efb313d8126259e9294dc4ee0002f44a6f676aba
   RCTRequired: f49ea29cece52aee20db633ae7edc4b271435562
   RCTTypeSafety: a11979ff0570d230d74de9f604f7d19692157bc4

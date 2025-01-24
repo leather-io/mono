@@ -21,7 +21,9 @@ export interface SendFormStxContext extends SendFormBaseContext<SendFormStxConte
 }
 
 export function SendFormStxProvider({ children }: HasChildren) {
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: { account },
+  } = useSendSheetRoute<CurrentRoute>();
 
   const { onInitSendTransfer } = useSendFormStx();
 
@@ -31,7 +33,7 @@ export function SendFormStxProvider({ children }: HasChildren) {
   );
 
   return (
-    <SendFormStxLoader account={route.params.account}>
+    <SendFormStxLoader account={account}>
       {({ availableBalance, fiatBalance, nonce }) => (
         <SendFormProvider<SendFormStxContext>
           initialData={{

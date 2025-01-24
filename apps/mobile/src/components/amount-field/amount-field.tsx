@@ -41,6 +41,20 @@ export function AmountField({
   function onToggleCurrencyMode() {
     onCurrencyModeChange(currency.secondary, amount.secondary);
   }
+  // TODO - copy extension send-max-button
+  // Hide send max button if lowest fee calc is greater
+  // than available balance which will default to zero
+
+  // const onSendMax = useCallback(() => {
+  //     void analytics.track('select_maximum_amount_for_send');
+  //     if (balance.amount.isLessThanOrEqualTo(0)) {
+  //       toast.error('Zero balance');
+  //       return;
+  //     }
+  //     return amountFieldHelpers.setValue(sendMaxBalance);
+  //   }, [amountFieldHelpers, balance.amount, sendMaxBalance, toast]);
+
+  const canSendMax = false;
 
   return (
     <Box
@@ -55,7 +69,7 @@ export function AmountField({
         <AmountFieldPrimaryValue color={textColor}>
           {formatValue(amount.primary, currency.primary)}
         </AmountFieldPrimaryValue>
-        <AmountSendMaxButton onPress={onSetIsSendingMax} />
+        {canSendMax && <AmountSendMaxButton onPress={onSetIsSendingMax} />}
       </Box>
       <AmountFieldSecondaryValue onToggleCurrencyMode={onToggleCurrencyMode}>
         {formatValue(amount.secondary, currency.secondary)}

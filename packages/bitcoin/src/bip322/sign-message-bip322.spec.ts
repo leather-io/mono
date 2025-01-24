@@ -3,7 +3,7 @@ import * as secp from '@noble/secp256k1';
 import * as btc from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { ecdsaPublicKeyToSchnorr } from '../bitcoin.utils';
+import { ecdsaPublicKeyToSchnorr } from '../utils/bitcoin.utils';
 import {
   createNativeSegwitBitcoinJsSigner,
   createTaprootBitcoinJsSigner,

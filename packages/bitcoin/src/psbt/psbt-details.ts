@@ -1,4 +1,4 @@
-import { getPsbtTxInputs, getPsbtTxOutputs } from 'bitcoin.utils';
+import { getPsbtTxInputs, getPsbtTxOutputs } from 'utils/bitcoin.utils';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { createMoney, subtractMoney } from '@leather.io/utils';

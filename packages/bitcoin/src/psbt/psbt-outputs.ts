@@ -1,6 +1,6 @@
 import type { TransactionOutput } from '@scure/btc-signer/psbt';
-import { getBtcSignerLibNetworkConfigByMode } from 'bitcoin.network';
-import { getAddressFromOutScript } from 'bitcoin.utils';
+import { getBtcSignerLibNetworkConfigByMode } from 'utils/bitcoin.network';
+import { getAddressFromOutScript } from 'utils/bitcoin.utils';
 
 import type { BitcoinNetworkModes } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';

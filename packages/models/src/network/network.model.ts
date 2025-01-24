@@ -54,6 +54,7 @@ export type BitcoinNetwork = (typeof bitcoinNetworks)[number];
 export type NetworkModes = (typeof networkModes)[number];
 type BitcoinTestnetModes = (typeof testnetModes)[number];
 
+// Cannot move this to packages/bitcoin due to cyclical dependencies
 export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNetworkModes {
   switch (network) {
     case 'mainnet':

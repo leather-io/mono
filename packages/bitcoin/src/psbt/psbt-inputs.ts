@@ -1,7 +1,7 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
-import { getBtcSignerLibNetworkConfigByMode } from 'bitcoin.network';
-import { getBitcoinInputAddress, getBitcoinInputValue } from 'bitcoin.utils';
+import { getBtcSignerLibNetworkConfigByMode } from 'utils/bitcoin.network';
+import { getBitcoinInputAddress, getBitcoinInputValue } from 'utils/bitcoin.utils';
 
 import type { BitcoinNetworkModes, Inscription } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';

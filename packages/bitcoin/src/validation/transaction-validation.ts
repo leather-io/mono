@@ -1,13 +1,32 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 
-import { BTC_DECIMALS } from '@leather.io/constants';
-import { UtxoResponseItem } from '@leather.io/query';
-import { btcToSat, satToBtc } from '@leather.io/utils';
+import { type BitcoinNetworkModes, UtxoResponseItem } from '@leather.io/models';
+import { FormErrorMessages, btcToSat, satToBtc } from '@leather.io/utils';
 
-import { FormErrorMessages, currencyPrecisionValidatorFactory } from './common.validation';
+import { BitcoinError } from '../validation/bitcoin-error';
+import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from './address-validation';
 
 const minSpendAmountInSats = 546;
+// Pete - maybe this should become isValidBitcoinTransaction and also check fees etc
+// can update it to use zod also?
+// probably better to use zod than throwing errors here
+
+export function isValidBitcoinTransaction(
+  senderAddress: string,
+  recipientAddress: string,
+  network: BitcoinNetworkModes
+) {
+  if (!isValidBitcoinAddress(senderAddress) || !isValidBitcoinAddress(recipientAddress)) {
+    throw new BitcoinError('InvalidAddress');
+  }
+  if (
+    !isValidBitcoinNetworkAddress(senderAddress, network) ||
+    !isValidBitcoinNetworkAddress(recipientAddress, network)
+  ) {
+    throw new BitcoinError('InvalidNetworkAddress');
+  }
+}
 
 interface BtcInsufficientBalanceValidatorArgs {
   calcMaxSpend(
@@ -19,6 +38,8 @@ interface BtcInsufficientBalanceValidatorArgs {
   recipient: string;
   utxos: UtxoResponseItem[];
 }
+
+// PETE - could still use zod like this but handle errors in a toast?
 export function btcInsufficientBalanceValidator({
   calcMaxSpend,
   recipient,
@@ -56,13 +77,7 @@ export function btcMinimumSpendValidator() {
         return true;
       },
       {
-        // FIXME: LEA-1647 - move to packages
-        /* eslint-disable-next-line lingui/no-unlocalized-strings  */
         message: `Minimum is ${satToBtc(minSpendAmountInSats)}`,
       }
     );
-}
-// btc and stx doing the same thing basically so just use currencyPrecisionValidatorFactory
-export function btcAmountPrecisionValidator(errorMsg: string) {
-  return currencyPrecisionValidatorFactory(BTC_DECIMALS, errorMsg);
 }

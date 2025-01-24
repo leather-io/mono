@@ -1,0 +1,15 @@
+import { type TransactionErrorKey } from '@leather.io/utils';
+
+export type StacksErrorKey = TransactionErrorKey;
+
+export class StacksError extends Error {
+  public message: StacksErrorKey;
+  constructor(message: StacksErrorKey) {
+    super(message);
+    this.name = 'BitcoinError';
+    this.message = message;
+
+    // Fix the prototype chain
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}

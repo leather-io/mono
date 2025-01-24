@@ -1,4 +1,4 @@
-import { inferPaymentTypeFromAddress } from 'bitcoin.utils';
+import { inferPaymentTypeFromAddress } from 'utils/bitcoin.utils';
 
 import { createMoney, sumNumbers } from '@leather.io/utils';
 

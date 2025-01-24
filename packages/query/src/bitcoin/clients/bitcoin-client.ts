@@ -7,10 +7,10 @@ import {
   BESTINSLOT_API_BASE_URL_MAINNET,
   BESTINSLOT_API_BASE_URL_TESTNET,
   BitcoinTx,
+  UtxoResponseItem,
 } from '@leather.io/models';
 import { match, whenNetwork } from '@leather.io/utils';
 
-import { UtxoResponseItem } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
 import { BestInSlotApi } from './best-in-slot';

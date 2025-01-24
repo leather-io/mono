@@ -21,5 +21,13 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
       id: 'bitcoin-error.insufficient-funds',
       message: 'Insufficient funds',
     }),
+    InvalidNetworkAddress: t({
+      id: 'bitcoin-error.invalid-address',
+      message: 'Address is for incorrect network',
+    }),
+    InvalidSameAddress: t({
+      id: 'bitcoin-error.invalid-same-address',
+      message: 'Cannot send to yourself',
+    }),
   });
 }

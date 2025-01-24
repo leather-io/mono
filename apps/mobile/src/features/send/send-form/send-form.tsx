@@ -15,8 +15,9 @@ import { SendFormRecipient } from './components/send-form-recipient';
 import { SendFormBaseContext, useSendFormContext } from './send-form-context';
 
 function SendForm<T extends SendFormBaseContext<T>>({ ...props }: HasChildren) {
-  const { formData } = useSendFormContext<T>();
-  const { defaultValues, schema } = formData;
+  const {
+    formData: { defaultValues, schema },
+  } = useSendFormContext<T>();
   const formMethods = useForm<z.infer<typeof schema>>({
     mode: 'onChange',
     defaultValues,

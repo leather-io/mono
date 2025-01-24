@@ -19,12 +19,14 @@ export interface SendFormBtcContext extends SendFormBaseContext<SendFormBtcConte
 }
 
 export function SendFormBtcProvider({ children }: HasChildren) {
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: { account },
+  } = useSendSheetRoute<CurrentRoute>();
 
   const { onInitSendTransfer } = useSendFormBtc();
 
   return (
-    <SendFormBtcLoader account={route.params.account}>
+    <SendFormBtcLoader account={account}>
       {({ availableBalance, fiatBalance, feeRates, utxos }) => {
         return (
           <SendFormProvider<SendFormBtcContext>

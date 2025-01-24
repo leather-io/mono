@@ -1,9 +1,9 @@
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
 
-import { testMnemonic } from '../../../config/test-helpers';
+import { testMnemonic } from '../../../../config/test-helpers';
+import { deriveTaprootAccount } from '../payments/p2tr-address-gen';
+import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-address-gen';
 import { lookupDerivationByAddress } from './lookup-derivation-by-address';
-import { deriveTaprootAccount } from './p2tr-address-gen';
-import { deriveNativeSegwitAccountFromRootKeychain } from './p2wpkh-address-gen';
 
 describe(lookupDerivationByAddress.name, async () => {
   const rootKeychain = await deriveRootKeychainFromMnemonic(testMnemonic);

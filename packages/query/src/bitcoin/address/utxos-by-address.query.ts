@@ -2,10 +2,9 @@ import { HDKey } from '@scure/bip32';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getTaprootAddress, makeNativeSegwitAddressIndexDerivationPath } from '@leather.io/bitcoin';
-import { NetworkConfiguration } from '@leather.io/models';
+import { NetworkConfiguration, UtxoWithDerivationPath } from '@leather.io/models';
 import { createCounter, oneWeekInMs } from '@leather.io/utils';
 
-import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
 import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';

@@ -14,6 +14,7 @@ export function getPostConditionFromString(postCondition: string): PostCondition
     const reader = new BytesReader(hexToBytes(postCondition));
     return deserializePostConditionWire(reader);
   } catch {
+    // TODO use StacksError
     throw new Error('Not a serialized post condition');
   }
 }

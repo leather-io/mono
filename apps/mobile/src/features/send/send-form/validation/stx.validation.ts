@@ -1,54 +1,47 @@
-import { validateStacksAddress } from '@stacks/transactions';
-import { z } from 'zod';
+import { t } from '@lingui/macro';
 
-import { ChainID, NetworkConfiguration } from '@leather.io/models';
-import { isEmptyString, isUndefined } from '@leather.io/utils';
+import { StacksErrorKey } from '@leather.io/stacks';
+import { match } from '@leather.io/utils';
 
-import { FormErrorMessages } from './common.validation';
-
-export function validateAddressChain(address: string, currentNetwork: NetworkConfiguration) {
-  const prefix = address.slice(0, 2);
-  switch (currentNetwork.chain.stacks.chainId) {
-    case ChainID.Mainnet:
-      return prefix === 'SM' || prefix === 'SP';
-    case ChainID.Testnet:
-      return prefix === 'SN' || prefix === 'ST';
-    default:
-      return false;
-  }
-}
-
-function notCurrentAddressValidatorFactory(currentAddress: string) {
-  return (value?: string) => value !== currentAddress;
-}
-
-export function notCurrentAddressValidator(currentAddress: string) {
-  return z.string().refine(notCurrentAddressValidatorFactory(currentAddress), {
-    message: FormErrorMessages.SameAddress,
+export function formatStacksError(errorMessage: StacksErrorKey) {
+  return match<StacksErrorKey>()(errorMessage, {
+    // maybe different error messages for same address?
+    InvalidAddress: t({
+      id: 'stacks-error.invalid-address',
+      message: 'Invalid address',
+    }),
+    InvalidNetworkAddress: t({
+      id: 'stacks-error.invalid-address',
+      message: 'Address is for incorrect network',
+    }),
+    InvalidSameAddress: t({
+      id: 'stacks-error.invalid-same-address',
+      message: 'Cannot send to yourself',
+    }),
+    InsufficientFunds: t({
+      id: 'stacks-error.insufficient-funds',
+      message: 'Insufficient funds',
+    }),
   });
 }
 
-function stxAddressNetworkValidatorFactory(currentNetwork: NetworkConfiguration) {
-  return (value?: string) => {
-    if (isUndefined(value) || isEmptyString(value)) return true;
-    return validateAddressChain(value, currentNetwork);
-  };
-}
+// export function complianceValidator(
+//   shouldCheckCompliance: yup.StringSchema<string | undefined, yup.AnyObject>,
+//   network: NetworkModes
+// ) {
+//   return yup.string().test({
+//     message: 'Compliance check failed',
+//     async test(value) {
+//       if (network !== 'mainnet') return true;
+//       if (!shouldCheckCompliance.isValidSync(value)) return true;
+//       if (isUndefined(value) || isEmptyString(value)) return true;
 
-export function stxAddressNetworkValidator(currentNetwork: NetworkConfiguration) {
-  return z.string().refine(stxAddressNetworkValidatorFactory(currentNetwork), {
-    message: FormErrorMessages.IncorrectNetworkAddress,
-  });
-}
-
-export function stxAddressValidator(errorMsg: string) {
-  return z.string().refine(
-    value => {
-      if (isUndefined(value) || isEmptyString(value)) return true;
-      return validateStacksAddress(value);
-    },
-    {
-      message: errorMsg,
-    }
-  );
-}
+//       try {
+//         const resp = await checkEntityAddressIsCompliant(value);
+//         return !resp.isOnSanctionsList;
+//       } catch (e) {
+//         return true;
+//       }
+//     },
+//   });
+// }

@@ -13,9 +13,9 @@ import { BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { PaymentTypes } from '@leather.io/rpc';
 import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
+import { getTaprootPayment } from '../payments/p2tr-address-gen';
+import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
 import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
-import { getTaprootPayment } from './p2tr-address-gen';
-import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
 
 export interface BitcoinAccount {
   type: PaymentTypes;

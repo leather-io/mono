@@ -3,6 +3,8 @@ import { useCallback } from 'react';
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useSettings } from '@/store/settings/settings';
+import { logger } from '@/utils/logger';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -12,9 +14,10 @@ import {
   CoinSelectionRecipient,
   CoinSelectionUtxo,
   getBitcoinFees,
+  isValidBitcoinTransaction, // isValidBitcoinTransaction,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates } from '@leather.io/models';
+import { AverageBitcoinFeeRates, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
 import { SendFormBtcContext } from '../providers/send-form-btc-provider';
@@ -30,12 +33,14 @@ import { formatBitcoinError } from '../validation/btc.validation';
 type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
 
 function parseSendFormValues(values: SendFormBtcSchema) {
+  const { amount: inputAmount, recipient: address } = values;
+  const amount = createMoneyFromDecimal(new BigNumber(inputAmount), 'BTC');
   return {
-    amount: createMoneyFromDecimal(new BigNumber(values.amount), 'BTC'),
+    amount,
     recipients: [
       {
-        address: values.recipient,
-        amount: createMoneyFromDecimal(new BigNumber(values.amount), 'BTC'),
+        address,
+        amount,
       },
     ],
   };
@@ -48,20 +53,26 @@ interface GetTxFeesArgs {
 }
 
 export function useSendFormBtc() {
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: { account, address: payer, publicKey },
+  } = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
-  const { account } = route.params;
   const { displayToast } = useToastContext();
+  const {
+    networkPreference: {
+      chain: {
+        bitcoin: { bitcoinNetwork },
+      },
+    },
+  } = useSettings();
+  const network = bitcoinNetworkToNetworkMode(bitcoinNetwork);
 
   const bitcoinKeychain = useBitcoinAccounts().accountIndexByPaymentType(
     account.fingerprint,
     account.accountIndex
   );
 
-  const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(
-    route.params.address,
-    route.params.publicKey
-  );
+  const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(payer, publicKey);
 
   const getTxFees = useCallback(
     ({ feeRates, recipients, utxos }: GetTxFeesArgs) =>
@@ -71,46 +82,55 @@ export function useSendFormBtc() {
 
   return {
     onGoBack() {
-      navigation.navigate('send-select-asset', { account: route.params.account });
+      navigation.navigate('send-select-asset', { account });
     },
-    // Temporary logs until we can hook up to approver flow
 
     onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
       try {
+        const { recipient, feeRate } = values;
         const parsedSendFormValues = parseSendFormValues(values);
         const coinSelectionUtxos = createCoinSelectionUtxos(data.utxos);
+
+        isValidBitcoinTransaction(payer, recipient, network);
 
         const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
 
         const tx = generateTx({
-          feeRate: Number(values.feeRate),
+          feeRate: Number(feeRate),
           isSendingMax: false,
           values: parsedSendFormValues,
           utxos: coinSelectionUtxos,
           bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
         });
 
+        // TODO - integrate fees with validation
         const fees = getTxFees({
           feeRates: data.feeRates,
           recipients: parsedSendFormValues.recipients,
           utxos: coinSelectionUtxos,
         });
 
-        // Show an error toast here?
-        if (!tx) throw new Error('Attempted to generate raw tx, but no tx exists');
-        // eslint-disable-next-line no-console
-        console.log('fees:', fees);
+        // no toast here as caught in catch block with generic error handling
+        // matches extension behavior for now
+        if (!tx) {
+          // logger('tx:', 'Attempted to generate raw tx, but no tx exists');
+          throw new Error();
+        }
+        logger('', fees);
 
         const psbtHex = bytesToHex(tx.psbt);
 
         navigation.navigate('sign-psbt', { psbtHex });
       } catch (e) {
-        const message =
-          e instanceof BitcoinError
-            ? formatBitcoinError(e.message)
-            : t({ id: 'something-went-wrong', message: 'Something went wrong' });
-
-        displayToast({ title: message, type: 'error' });
+        // logger('btc error:', e);
+        if (e instanceof BitcoinError) {
+          displayToast({ title: formatBitcoinError(e.message), type: 'error' });
+          return;
+        }
+        displayToast({
+          title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
+          type: 'error',
+        });
       }
     },
   };

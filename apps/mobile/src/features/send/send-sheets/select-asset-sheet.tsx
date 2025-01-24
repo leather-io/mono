@@ -18,10 +18,11 @@ type CurrentRoute = CreateCurrentSendRoute<'send-select-asset'>;
 
 export function SelectAssetSheet() {
   const { i18n } = useLingui();
-  const route = useSendSheetRoute<CurrentRoute>();
-  const navigation = useSendSheetNavigation<CurrentRoute>();
-  const account = route.params.account;
+  const {
+    params: { account },
+  } = useSendSheetRoute<CurrentRoute>();
   const { accountIndex, fingerprint, name } = account;
+  const navigation = useSendSheetNavigation<CurrentRoute>();
 
   return (
     <FullHeightSheetLayout

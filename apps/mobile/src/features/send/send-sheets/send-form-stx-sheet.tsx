@@ -15,7 +15,11 @@ type CurrentRoute = CreateCurrentSendRoute<'send-form-stx'>;
 
 export function SendFormStxSheet() {
   const { i18n } = useLingui();
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: {
+      account: { name: accountName },
+    },
+  } = useSendSheetRoute<CurrentRoute>();
 
   const { onGoBack } = useSendFormStx();
 
@@ -30,7 +34,7 @@ export function SendFormStxSheet() {
           subtitle={i18n._({
             id: 'select_asset.header_subtitle',
             message: '{subtitle}',
-            values: { subtitle: route.params.account.name },
+            values: { subtitle: accountName },
           })}
           rightElement={<NetworkBadge />}
         />

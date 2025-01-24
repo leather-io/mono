@@ -10,11 +10,11 @@ import {
 type CurrentRoute = CreateCurrentSendRoute<'sign-psbt'>;
 
 export function SendSheetSignPsbt() {
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: { psbtHex },
+  } = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
   const { sendSheetRef } = useSheetNavigatorContext();
-
-  const { psbtHex } = route.params;
 
   return (
     <PsbtSigner

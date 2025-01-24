@@ -9,7 +9,6 @@ import { SendFormBaseContext, useSendFormContext } from '../send-form-context';
 export function SendFormNumpad<T extends SendFormBaseContext<T>>() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { formData } = useSendFormContext<T>();
-  // TODO: fix implicit any-s
   const { control } = useFormContext<z.infer<typeof formData.schema>>();
   const {
     field: { onChange, value },

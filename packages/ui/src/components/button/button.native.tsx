@@ -137,6 +137,7 @@ export const Button = forwardRef(
         borderWidth={borderWidth}
         flexDirection="row"
         gap={hasGap ? '2' : undefined}
+        disabled={buttonState === 'disabled'}
         {...props}
       >
         {icon}

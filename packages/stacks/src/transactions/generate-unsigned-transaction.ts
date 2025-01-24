@@ -67,7 +67,7 @@ export async function generateStacksUnsignedTransaction(options: StacksUnsignedT
   const { txType } = options;
 
   const isValid = isTransactionTypeSupported(txType);
-
+  // TODO use StacksError
   if (!isValid) throw new Error(`Invalid Transaction Type: ${txType}`);
 
   switch (txType) {

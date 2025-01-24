@@ -10,11 +10,11 @@ import {
 type CurrentRoute = CreateCurrentSendRoute<'sign-stacks-tx'>;
 
 export function SendSheetSignStacksTx() {
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: { txHex, accountId },
+  } = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
   const { sendSheetRef } = useSheetNavigatorContext();
-
-  const { txHex, accountId } = route.params;
 
   return (
     <StacksTxSigner

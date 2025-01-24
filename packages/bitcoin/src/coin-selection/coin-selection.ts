@@ -5,7 +5,7 @@ import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
-import { BitcoinError } from '../bitcoin-error';
+import { BitcoinError } from '../validation/bitcoin-error';
 import { filterUneconomicalUtxos, getSizeInfo, getUtxoTotal } from './coin-selection.utils';
 
 export interface CoinSelectionOutput {
@@ -98,6 +98,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
 
   while (!hasSufficientUtxosForTx()) {
     const [nextUtxo] = getRemainingUnspentUtxos();
+    // this is the error hit in the form now
     if (!nextUtxo) throw new BitcoinError('InsufficientFunds');
     neededUtxos.push(nextUtxo);
   }

@@ -1,9 +1,8 @@
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { Inscription } from '@leather.io/models';
+import { Inscription, UtxoWithDerivationPath } from '@leather.io/models';
 import { createMoney, isDefined, sumNumbers } from '@leather.io/utils';
 
-import { UtxoWithDerivationPath } from '../../../types/utxo';
 import { filterUtxosWithInscriptions } from '../address/utxos-by-address.hooks';
 import { BestInSlotInscriptionByXpubResponse } from '../clients/best-in-slot';
 import { createBestInSlotInscription } from '../ordinals/inscription.utils';

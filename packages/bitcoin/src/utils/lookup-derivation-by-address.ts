@@ -2,6 +2,8 @@ import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
 
 import { createCounter } from '@leather.io/utils';
 
+import { makeTaprootAddressIndexDerivationPath } from '../payments/p2tr-address-gen';
+import { makeNativeSegwitAddressIndexDerivationPath } from '../payments/p2wpkh-address-gen';
 import {
   getNativeSegwitAddress,
   getTaprootAddress,
@@ -9,8 +11,6 @@ import {
   inferPaymentTypeFromAddress,
   whenSupportedPaymentType,
 } from './bitcoin.utils';
-import { makeTaprootAddressIndexDerivationPath } from './p2tr-address-gen';
-import { makeNativeSegwitAddressIndexDerivationPath } from './p2wpkh-address-gen';
 
 interface LookUpDerivationByAddressArgs {
   taprootXpub: string;

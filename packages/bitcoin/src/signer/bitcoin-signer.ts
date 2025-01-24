@@ -14,15 +14,15 @@ import type { BitcoinNetworkModes, ValueOf } from '@leather.io/models';
 import { PaymentTypes, signatureHash } from '@leather.io/rpc';
 import { hexToNumber, toHexString } from '@leather.io/utils';
 
+import { getTaprootPaymentFromAddressIndex } from '../payments/p2tr-address-gen';
+import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
 import {
   SupportedPaymentType,
   ecdsaPublicKeyToSchnorr,
   extractExtendedPublicKeyFromPolicy,
   inferPaymentTypeFromPath,
   whenSupportedPaymentType,
-} from './bitcoin.utils';
-import { getTaprootPaymentFromAddressIndex } from './p2tr-address-gen';
-import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
+} from '../utils/bitcoin.utils';
 
 export type AllowedSighashTypes = ValueOf<typeof signatureHash> | SigHash;
 

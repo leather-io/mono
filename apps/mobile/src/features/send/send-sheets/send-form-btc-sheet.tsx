@@ -11,10 +11,14 @@ import { SendFormBtcProvider } from '../send-form/providers/send-form-btc-provid
 import { SendForm } from '../send-form/send-form';
 import { CreateCurrentSendRoute, useSendSheetRoute } from '../send-form/send-form.utils';
 
-type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
+export type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
 export function SendFormBtcSheet() {
   const { i18n } = useLingui();
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: {
+      account: { name: accountName },
+    },
+  } = useSendSheetRoute<CurrentRoute>();
 
   const { onGoBack } = useSendFormBtc();
 
@@ -29,7 +33,7 @@ export function SendFormBtcSheet() {
           subtitle={i18n._({
             id: 'select_asset.header_subtitle',
             message: '{subtitle}',
-            values: { subtitle: route.params.account.name },
+            values: { subtitle: accountName },
           })}
           rightElement={<NetworkBadge />}
         />

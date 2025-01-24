@@ -1,3 +1,5 @@
+import { TransactionErrorKey } from '@leather.io/utils';
+
 export class BitcoinError extends Error {
   public message: BitcoinErrorKey;
   constructor(message: BitcoinErrorKey) {
@@ -10,8 +12,4 @@ export class BitcoinError extends Error {
   }
 }
 
-export type BitcoinErrorKey =
-  | 'InvalidAddress'
-  | 'InsufficientFunds'
-  | 'NoInputsToSign'
-  | 'NoOutputsToSign';
+export type BitcoinErrorKey = TransactionErrorKey | 'NoInputsToSign' | 'NoOutputsToSign';

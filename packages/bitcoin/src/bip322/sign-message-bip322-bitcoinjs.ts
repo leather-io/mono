@@ -4,7 +4,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
 
-import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network';
+import { getBitcoinJsLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
   bip322TransactionToSignValues,
   ecPairFromPrivateKey,

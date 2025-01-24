@@ -45,6 +45,7 @@ export function whenStacksChainId(chainId: ChainId) {
 
 // From `@stacks/wallet-sdk` package we are trying not to use
 export function deriveStxPrivateKey({ keychain, index }: { keychain: HDKey; index: number }) {
+  // TODO use StacksError
   if (keychain.depth !== DerivationPathDepth.Root) throw new Error('Root keychain must be depth 0');
   const accountKeychain = keychain.derive(makeStxDerivationPath(index));
   assertIsTruthy(accountKeychain.privateKey);

@@ -554,6 +554,9 @@ importers:
       varuint-bitcoin:
         specifier: 1.1.2
         version: 1.1.2
+      zod:
+        specifier: 3.24.1
+        version: 3.24.1
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -995,6 +998,9 @@ importers:
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
+      c32check:
+        specifier: 2.0.0
+        version: 2.0.0
     devDependencies:
       tsup:
         specifier: 8.1.0
@@ -15679,8 +15685,8 @@ snapshots:
 
   '@expo/prebuild-config@7.0.8(encoding@0.1.13)(expo-modules-autolinking@1.11.1)':
     dependencies:
-      '@expo/config': 9.0.3
-      '@expo/config-plugins': 8.0.8
+      '@expo/config': 9.0.4
+      '@expo/config-plugins': 8.0.10
       '@expo/config-types': 51.0.3
       '@expo/image-utils': 0.5.1(encoding@0.1.13)
       '@expo/json-file': 8.3.3
