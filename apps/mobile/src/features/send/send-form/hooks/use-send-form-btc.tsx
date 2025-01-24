@@ -17,15 +17,15 @@ import {
 import { AverageBitcoinFeeRates } from '@leather.io/models';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
+import { SendFormBtcContext } from '../providers/send-form-btc-provider';
+import { SendFormBtcSchema } from '../schemas/send-form-btc.schema';
 import {
   CreateCurrentSendRoute,
   createCoinSelectionUtxos,
   formatBitcoinError,
   useSendSheetNavigation,
   useSendSheetRoute,
-} from '../../send-form.utils';
-import { SendFormBtcContext } from '../providers/send-form-btc-provider';
-import { SendFormBtcSchema } from '../schemas/send-form-btc.schema';
+} from '../send-form.utils';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
 

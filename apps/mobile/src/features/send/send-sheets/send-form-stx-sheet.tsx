@@ -6,10 +6,10 @@ import { useLingui } from '@lingui/react';
 
 import { StxAvatarIcon } from '@leather.io/ui/native';
 
-import { CreateCurrentSendRoute, useSendSheetRoute } from '../send-form.utils';
 import { useSendFormStx } from '../send-form/hooks/use-send-form-stx';
 import { SendFormStxProvider } from '../send-form/providers/send-form-stx-provider';
 import { SendForm } from '../send-form/send-form';
+import { CreateCurrentSendRoute, useSendSheetRoute } from '../send-form/send-form.utils';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-form-stx'>;
 

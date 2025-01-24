@@ -12,7 +12,7 @@ import {
   CreateCurrentSendRoute,
   useSendSheetNavigation,
   useSendSheetRoute,
-} from '../send-form.utils';
+} from '../send-form/send-form.utils';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-select-asset'>;
 

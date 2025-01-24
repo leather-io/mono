@@ -3,13 +3,13 @@ import BigNumber from 'bignumber.js';
 
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
+import { SendFormStxContext } from '../providers/send-form-stx-provider';
+import { SendFormStxSchema } from '../schemas/send-form-stx.schema';
 import {
   CreateCurrentSendRoute,
   useSendSheetNavigation,
   useSendSheetRoute,
-} from '../../send-form.utils';
-import { SendFormStxContext } from '../providers/send-form-stx-provider';
-import { SendFormStxSchema } from '../schemas/send-form-stx.schema';
+} from '../send-form.utils';
 
 export type CurrentRoute = CreateCurrentSendRoute<'send-form-stx'>;
 
