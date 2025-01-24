@@ -1,5 +1,5 @@
 import:
-  - common/maestro.yml
+  - ../common/maestro.yml
 
 build:
   name: Create a build and run Maestro tests on it
