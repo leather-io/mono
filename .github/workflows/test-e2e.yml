@@ -19,6 +19,11 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: List current directory
+        run: ls -al
+      - name: Print working directory
+        run: echo "Current directory: $GITHUB_WORKSPACE"
+        
       - name: iOS E2E build on EAS
         working-directory: ./apps/mobile
         run: |
