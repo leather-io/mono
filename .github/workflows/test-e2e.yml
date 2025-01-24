@@ -38,6 +38,8 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Android E2E build on EAS
-        working-directory: mono/apps/mobile
+        working-directory: ../../apps/mobile
         run: |
           eas build --profile maestro-test-android --platform android --non-interactive
+
+# CI fails with mono/mono/apps/mobile/.eas/build/common/maestro.yml
