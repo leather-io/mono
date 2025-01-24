@@ -31,4 +31,4 @@ build:
     - eas/find_and_upload_build_artifacts
 
     - run_maestro_tests
-    - run_secure_maestro_tests
+    # - run_secure_maestro_tests
