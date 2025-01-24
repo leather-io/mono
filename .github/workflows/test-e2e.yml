@@ -23,7 +23,7 @@ jobs:
         run: ls -al
 
       - name: iOS E2E build on EAS
-        working-directory: ./apps/mobile
+        working-directory: ../../apps/mobile
         run: |
           eas build --profile maestro-test-ios --platform ios --non-interactive
 
@@ -41,7 +41,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Android E2E build on EAS
-        # working-directory: ./apps/mobile
+        working-directory: ../../apps/mobile
         run: |
           eas build --profile maestro-test-android --platform android --non-interactive
 
