@@ -10,8 +10,9 @@ import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useTheme } from '@shopify/restyle';
 
-import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountBalance } from '../components/account-balance';
@@ -36,6 +37,7 @@ export function AccountSelectorSheetLayout({
   const placeholderIdx = useSharedValue<null | number>(null);
   const direction = useSharedValue<'down' | 'up'>('down');
   const { themeDerivedFromThemePreference } = useSettings();
+  const theme = useTheme<Theme>();
 
   return (
     <Sheet
@@ -44,7 +46,10 @@ export function AccountSelectorSheetLayout({
       themeVariant={themeDerivedFromThemePreference}
       maxDynamicContentSize={Dimensions.get('screen').height - top - HEADER_HEIGHT}
     >
-      <BottomSheetScrollView ref={scrollViewRef}>
+      <BottomSheetScrollView
+        ref={scrollViewRef}
+        style={{ backgroundColor: theme.colors['ink.background-primary'] }}
+      >
         <Box px="5" pb="7">
           <AccountSelectorHeader sheetRef={sheetRef} />
           <Box gap="2">
