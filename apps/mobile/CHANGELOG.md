@@ -456,6 +456,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.17
 
+## [2.7.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.2...@leather.io/mobile-v2.7.3) (2025-01-27)
+
+
+### Bug Fixes
+
+* use correct background color on account sheet ([358d1d8](https://github.com/leather-io/mono/commit/358d1d87a50e23387a7593268f2b51b922dc0978))
+
 ## [2.7.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.0...@leather.io/mobile-v2.7.1) (2025-01-23)
 
 
