@@ -46,7 +46,7 @@
     "dompurify": "3.1.4",
     "expo": "51.0.26",
     "expo-asset": "10.0.6",
-    "expo-blur": "13.0.2",
+    "expo-blur": "14.0.3",
     "expo-constants": "16.0.2",
     "expo-font": "12.0.5",
     "expo-haptics": "13.0.1",
