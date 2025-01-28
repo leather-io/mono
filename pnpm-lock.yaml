@@ -310,6 +310,9 @@ importers:
       prism-react-renderer:
         specifier: 2.4.0
         version: 2.4.0(react@18.2.0)
+      punycode:
+        specifier: 2.3.1
+        version: 2.3.1
       react:
         specifier: 18.2.0
         version: 18.2.0
