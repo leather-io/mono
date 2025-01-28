@@ -15,8 +15,10 @@ import {
 } from '@leather.io/constants';
 import { defaultNetworksKeyedById } from '@leather.io/models';
 import { whenStacksChainId } from '@leather.io/stacks';
+import { truncateMiddle } from '@leather.io/utils';
 
 import type { RootState } from '..';
+import { useAccountDisplayName } from '../../hooks/use-account-display-name';
 
 function selectSettings(state: RootState) {
   return state.settings;
@@ -76,7 +78,6 @@ export function usePrivacyMode() {
   return privacyMode === 'hidden';
 }
 
-// TODO: Needs BNS name support
 export function useAccountDisplayAddress(fingerprint: string, accountIndex: number) {
   const { accountDisplayPreference } = useSettings();
 
@@ -90,16 +91,20 @@ export function useAccountDisplayAddress(fingerprint: string, accountIndex: numb
 
   const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
 
+  const { data: bnsName } = useAccountDisplayName({
+    address: stxAddress,
+  });
+
   switch (accountDisplayPreference.type) {
     case 'native-segwit':
-      return nativeSegwitPayer.address;
+      return truncateMiddle(nativeSegwitPayer.address);
     case 'taproot':
-      return taprootPayer.address;
+      return truncateMiddle(taprootPayer.address);
     case 'bns':
-      return '';
+      return bnsName;
     case 'stacks':
     default:
-      return stxAddress;
+      return truncateMiddle(stxAddress);
   }
 }
 
