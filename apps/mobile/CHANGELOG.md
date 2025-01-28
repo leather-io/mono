@@ -456,6 +456,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.17
 
+## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.3...@leather.io/mobile-v2.8.0) (2025-01-28)
+
+
+### Features
+
+* add bns-names to accounts, ref LEA-1826 ([92f06c2](https://github.com/leather-io/mono/commit/92f06c28e044cf672e311be8ac3ed0d6a90372c3))
+
 ## [2.7.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.2...@leather.io/mobile-v2.7.3) (2025-01-27)
 
 
