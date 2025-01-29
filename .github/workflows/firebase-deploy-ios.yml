@@ -70,5 +70,5 @@ jobs:
             --app "1:915379517791:ios:ecfa47ab5ee5f256789eea" \
             --groups "leatherhood" \
             --token "${{ secrets.FIREBASE_TOKEN }}" \
-            --release-notes "${{ steps.release.outputs.release_notes }}"
+            --release-notes "New build available"
         shell: bash
