@@ -1,29 +1,28 @@
 platform :ios do
   desc "Build and distribute iOS app"
-  lane :distribute_ios do
+
+  lane :build_ios do
+    match(type: "appstore", readonly: true)
     build_app(
       scheme: "leatherwalletmobile"
     )
+  end
+  lane :increment_version do
+  increment_version_number(
+    bump_type: "patch" # Options are: "patch", "minor", "major"
+  )
+  # Optionally, you can also increment the build number
+    increment_build_number
+  end
+  lane :distribute_ios do
+    build_ios
+    increment_version
     firebase_app_distribution(
       app: "1:915379517791:ios:ecfa47ab5ee5f256789eea",
       groups: "leatherhood",
-      release_notes: "New build available"
-    )
+      release_notes: "New will available",
+        )
   end
 
-    lane :build do
-      match(type: "development", readonly: true)
-    gym(
-      workspace: "YourApp.xcworkspace",
-      scheme: "leatherwalletmobile",
-      export_method: "app-store",
-      export_options: {
-        provisioningProfiles: {
-          "io.leather.mobilewallet" => "leatherhood"
-        }
-      },
-      xcargs: "-allowProvisioningUpdates"
-    )
-  end
 end
 
