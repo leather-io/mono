@@ -58,6 +58,13 @@ jobs:
         with:
           name: app-release
           path: ${{ github.workspace }}/app-release.apk
+      - name: Run Release Please
+        id: release
+        uses: google-github-actions/release-please-action@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          package-name: leatherwalletmobile
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
@@ -69,7 +76,8 @@ jobs:
           firebase appdistribution:distribute ${{ github.workspace }}/app-release.apk \
             --app "1:915379517791:android:d4e7cb446a612f8c789eea" \
             --groups "leatherhood" \
-            --token "${{ secrets.FIREBASE_TOKEN }}"
+            --token "${{ secrets.FIREBASE_TOKEN }}" \
+            --release-notes "${{ steps.release.outputs.release_notes }}"
         shell: bash
 
       - name: Build iOS app
@@ -92,5 +100,6 @@ jobs:
           firebase appdistribution:distribute ${{ github.workspace }}/app-release.ipa \
             --app "1:915379517791:ios:ecfa47ab5ee5f256789eea" \
             --groups "leatherhood" \
-            --token "${{ secrets.FIREBASE_TOKEN }}"
+            --token "${{ secrets.FIREBASE_TOKEN }}" \
+            --release-notes "${{ steps.release.outputs.release_notes }}"
         shell: bash
