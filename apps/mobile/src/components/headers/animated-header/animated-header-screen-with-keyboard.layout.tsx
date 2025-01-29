@@ -25,6 +25,7 @@ export function AnimatedHeaderScreenWithKeyboardLayout({
 }: AnimatedHeaderScreenWithKeyboardLayoutProps) {
   const [keyboardEnabled, setKeyboardEnabled] = useState(false);
   const {
+    animatedBlurOverlayStyle,
     defaultStyles,
     contentHeight,
     viewHeight,
@@ -38,6 +39,7 @@ export function AnimatedHeaderScreenWithKeyboardLayout({
     <>
       <AnimatedTitleHeader
         animatedStyle={animatedHeaderStyle}
+        animatedBlurOverlayStyle={animatedBlurOverlayStyle}
         rightElement={rightHeaderElement}
         title={title}
       />
