@@ -71,3 +71,26 @@ jobs:
             --groups "leatherhood" \
             --token "${{ secrets.FIREBASE_TOKEN }}"
         shell: bash
+
+      - name: Build iOS app
+        working-directory: ./apps/mobile
+        run: eas build --platform ios --profile=simulator-dev --non-interactive --no-wait --local --output ${{ github.workspace }}/app-release.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: ${{ github.workspace }}/app-release.ipa
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Firebase App Distribution
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase appdistribution:distribute ${{ github.workspace }}/app-release.ipa \
+            --app "1:915379517791:ios:ecfa47ab5ee5f256789eea" \
+            --groups "leatherhood" \
+            --token "${{ secrets.FIREBASE_TOKEN }}"
+        shell: bash
