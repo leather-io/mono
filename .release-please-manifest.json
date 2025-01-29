@@ -15,5 +15,6 @@
   "packages/utils": "0.25.0",
   "packages/crypto": "1.6.33",
   "packages/stacks": "1.5.18",
-  "packages/services": "1.0.2"
+  "packages/services": "1.0.2",
+  ".": "1.0.0"
 }
