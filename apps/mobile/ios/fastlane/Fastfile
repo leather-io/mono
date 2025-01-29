@@ -10,5 +10,20 @@ platform :ios do
       release_notes: "New build available"
     )
   end
+
+    lane :build do
+      match(type: "development", readonly: true)
+    gym(
+      workspace: "YourApp.xcworkspace",
+      scheme: "leatherwalletmobile",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "io.leather.mobilewallet" => "leatherhood"
+        }
+      },
+      xcargs: "-allowProvisioningUpdates"
+    )
+  end
 end
 
