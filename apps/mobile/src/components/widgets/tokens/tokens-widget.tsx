@@ -29,7 +29,7 @@ export function AllAccountBalances() {
       <StacksBalance />
       <Sip10Balance />
       {/* TODO LEA-1982: add runes balance */}
-      <RunesBalance />
+      {/* <RunesBalance /> */}
     </>
   );
 }
@@ -40,7 +40,7 @@ export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
       <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
       <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
       <Sip10BalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
-      <RunesBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+      {/* <RunesBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} /> */}
     </>
   );
 }

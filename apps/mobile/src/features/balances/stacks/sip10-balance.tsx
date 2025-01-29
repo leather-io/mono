@@ -37,7 +37,7 @@ export function Sip10TokenBalance({
 }
 export function Sip10Balance() {
   const data = useSip10TotalBalance();
-
+  console.log(data);
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
 

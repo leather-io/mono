@@ -1,5 +1,5 @@
-import { useTokenBalance } from '@/queries/balance/account-balance.query';
-import { TokenLoader, deserializeTokenId } from '@/store/accounts/accounts';
+import { useAccountBalance } from '@/queries/balance/account-balance.query';
+import { AccountLoader, deserializeAccountId } from '@/store/accounts/accounts';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
@@ -12,14 +12,14 @@ const configureTokenParamsSchema = z.object({
 export default function TokenScreen() {
   const params = useLocalSearchParams();
   const { accountId } = configureTokenParamsSchema.parse(params);
-  const { fingerprint, accountIndex } = deserializeTokenId(accountId);
-  const { totalBalance } = useTokenBalance({ fingerprint, accountIndex });
+  const { fingerprint, accountIndex } = deserializeAccountId(accountId);
+  const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
   // TODO LEA-1726: handle balance loading & error states
   if (totalBalance.state !== 'success') return;
 
   return (
-    <TokenLoader fingerprint={fingerprint} accountIndex={accountIndex}>
+    <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
       {account => <TokenLayout account={account} balance={totalBalance.value} />}
-    </TokenLoader>
+    </AccountLoader>
   );
 }

@@ -29,8 +29,8 @@ export function createSip10CryptoAssetInfo(
   assetIdentifier: string,
   metadata: HiroFtMetadataResponse
 ): Sip10CryptoAssetInfo {
-  const assetNAme = getAssetNameFromIdentifier(assetIdentifier);
-  const name = metadata.name || assetNAme;
+  const assetName = getAssetNameFromIdentifier(assetIdentifier);
+  const name = metadata.name || assetName;
 
   return {
     chain: CryptoAssetChains.stacks,
@@ -42,6 +42,6 @@ export function createSip10CryptoAssetInfo(
     hasMemo: isTransferableSip10Token(metadata),
     imageCanonicalUri: metadata.image_canonical_uri ?? '',
     name,
-    symbol: metadata.symbol || getTicker(name),
+    symbol: metadata?.symbol || getTicker(name),
   };
 }

@@ -100,6 +100,10 @@ export function createMarketDataService(
   async function getSip10MarketData(asset: Sip10CryptoAssetInfo, signal?: AbortSignal) {
     const tokenPrices = await alexSdkClient.getApiTokenPrices(signal);
     const tokenPriceMatch = tokenPrices.find(price => price.contract_id === asset.contractId);
+
+    if (!asset.symbol) {
+      return createMarketData(createMarketPair('BTC', 'USD'), createMoney(0, 'USD'));
+    }
     if (!tokenPriceMatch)
       return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(0, 'USD'));
     const assetPrice = convertAmountToFractionalUnit(

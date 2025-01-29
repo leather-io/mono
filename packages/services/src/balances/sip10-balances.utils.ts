@@ -28,10 +28,12 @@ export function sumBalances({
 export function getAggregateSip10Balances(
   addressBalances: { sip10s: Sip10AssetBalance[] }[]
 ): Sip10AssetBalance[] {
+  console.log('getAggregateSip10Balances', addressBalances);
   return addressBalances
     .flatMap(entry => entry.sip10s)
     .reduce((acc, balance) => {
-      const existingBalance = acc.find(b => b.asset.symbol === balance.asset.symbol);
+      console.log('getAggregateSip10Balances', balance.asset?.symbol);
+      const existingBalance = acc.find(b => b.asset?.symbol === balance.asset?.symbol);
       if (existingBalance) {
         existingBalance.sip10 = sumBalances({
           initialBalance: existingBalance.sip10,

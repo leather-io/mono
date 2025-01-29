@@ -49,10 +49,12 @@ export function createSip10BalancesService(
     const addressBalances = await Promise.all(
       addresses.map(address => getSip10AddressBalance(address, signal))
     );
+    console.log('WAXXXXXX', addresses, addressBalances);
     const totalUsdBalance = aggregateBaseCryptoAssetBalances([
       baseCryptoAssetZeroBalanceUsd,
       ...addressBalances.map(r => r.usd),
     ]);
+    console.log('tiofaidh ar la', totalUsdBalance);
     return {
       usd: totalUsdBalance,
       aggregateBalances: getAggregateSip10Balances(addressBalances),
@@ -70,6 +72,8 @@ export function createSip10BalancesService(
         return getSip10TokenBalance(tokenId, Number(fungibleTokens[tokenId]?.balance ?? 0), signal);
       })
     );
+    console.log('getSip10AddressBalance', address, balances.length);
+
     return {
       address,
       usd: aggregateBaseCryptoAssetBalances(balances.map(b => b.usd)),
@@ -83,7 +87,7 @@ export function createSip10BalancesService(
     signal?: AbortSignal
   ): Promise<Sip10AssetBalance> {
     const tokenInfo = await sip10TokensService.getAssetInfo(tokenId, signal);
-    const totalBalance = createMoney(amount, tokenInfo.symbol, tokenInfo.decimals);
+    const totalBalance = createMoney(amount, tokenInfo?.symbol ?? '', tokenInfo?.decimals ?? 0);
     const marketData = await marketDataService.getSip10MarketData(tokenInfo);
     return {
       asset: tokenInfo,

@@ -9,6 +9,7 @@ import { getSip10BalancesService } from '@leather.io/services';
 
 export function useSip10TotalBalance() {
   const addresses = useStacksSignerAddresses();
+  // console.log(addresses);
   return toFetchState(useSip10AggregateBalanceQuery(addresses));
 }
 
@@ -25,6 +26,7 @@ export function useSip10AccountBalance(fingerprint: string, accountIndex: number
 }
 
 export function useSip10AggregateBalanceQuery(addresses: string[]) {
+  console.log('keep er lit', addresses);
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-aggregate-balance', addresses],
     queryFn: ({ signal }: QueryFunctionContext) =>

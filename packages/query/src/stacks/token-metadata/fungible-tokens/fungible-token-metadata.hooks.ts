@@ -30,7 +30,7 @@ export function useStacksFungibleTokensBalance(
           if (!(resp && isFtAsset(resp))) return;
           const { contractAssetName } = getStacksAssetStringParts(key);
           const name = resp.name || contractAssetName;
-          const symbol = resp.symbol || getTicker(name);
+          const symbol = resp?.symbol || getTicker(name);
           return {
             contractId: key,
             balance: createBaseCryptoAssetBalance(

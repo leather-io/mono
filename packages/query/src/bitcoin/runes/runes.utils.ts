@@ -19,7 +19,7 @@ function createRuneCryptoAssetInfo(tickerInfo: RuneTickerInfo): RuneCryptoAssetI
     hasMemo: false,
     runeName: tickerInfo.rune_name,
     spacedRuneName: tickerInfo.spaced_rune_name,
-    symbol: tickerInfo.symbol ?? defaultRunesSymbol,
+    symbol: tickerInfo?.symbol ?? defaultRunesSymbol,
   };
 }
 

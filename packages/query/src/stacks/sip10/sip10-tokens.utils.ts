@@ -13,7 +13,7 @@ import { getTicker, isUndefined } from '@leather.io/utils';
 import { SwapAsset } from '../../common/alex-sdk/alex-sdk.hooks';
 
 export function isTransferableSip10Token(token: Partial<FtMetadataResponse>) {
-  return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);
+  return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token?.symbol);
 }
 
 export function createSip10CryptoAssetInfo(
@@ -33,7 +33,7 @@ export function createSip10CryptoAssetInfo(
     hasMemo: isTransferableSip10Token(ftAsset),
     imageCanonicalUri: ftAsset.image_canonical_uri ?? '',
     name,
-    symbol: ftAsset.symbol || getTicker(name),
+    symbol: ftAsset?.symbol || getTicker(name),
   };
 }
 
