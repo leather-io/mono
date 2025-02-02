@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
+import LeatherLettermark24 from '../assets/icons/leather-lettermark-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import LeatherLettermark from '../assets/icons/leather-lettermark-24-24.svg';
-import { Icon } from './icon/icon.native';
-
-export const LeatherLettermarkIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <LeatherLettermark />
-    </Icon>
-  );
+export const LeatherLettermarkIcon = createNativeIcon({
+  icon: {
+    medium: LeatherLettermark24,
+  },
+  displayName: 'LeatherLettermark',
 });
-
-LeatherLettermarkIcon.displayName = 'LeatherLettermarkIcon';

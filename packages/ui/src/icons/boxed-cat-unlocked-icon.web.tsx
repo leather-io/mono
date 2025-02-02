@@ -1,12 +1,9 @@
-import { forwardRef } from 'react';
+import BoxedCatUnlocked24 from '../assets/icons/boxed-cat-unlocked-24x24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import BoxedCatUnlocked from '../assets/icons/boxed-cat-unlocked-24x24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const BoxedCatUnlockedIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
-  <Icon ref={ref} {...props}>
-    <BoxedCatUnlocked />
-  </Icon>
-));
-
-BoxedCatUnlockedIcon.displayName = 'BoxedCatUnlockedIcon';
+export const BoxedCatUnlockedIcon = createWebIcon({
+  icon: {
+    medium: BoxedCatUnlocked24,
+  },
+  displayName: 'BoxedCatUnlocked',
+});

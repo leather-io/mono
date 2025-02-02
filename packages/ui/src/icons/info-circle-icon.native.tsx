@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import InfoCircle16 from '../assets/icons/info-circle-16-16.svg';
+import InfoCircle24 from '../assets/icons/info-circle-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import InfoCircleSmall from '../assets/icons/info-circle-16-16.svg';
-import InfoCircle from '../assets/icons/info-circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const InfoCircleIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <InfoCircleSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <InfoCircle />
-    </Icon>
-  );
+export const InfoCircleIcon = createNativeIcon({
+  icon: {
+    small: InfoCircle16,
+    medium: InfoCircle24,
+  },
+  displayName: 'InfoCircle',
 });
-
-InfoCircleIcon.displayName = 'InfoCircleIcon';

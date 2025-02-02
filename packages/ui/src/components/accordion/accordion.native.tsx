@@ -1,8 +1,6 @@
 import { ReactNode, useState } from 'react';
 
-import { useTheme } from '@shopify/restyle';
-
-import { ChevronDownIcon, ChevronUpIcon, Text, Theme, TouchableOpacity } from '../../../native';
+import { ChevronDownIcon, ChevronUpIcon, Text, TouchableOpacity } from '../../../native';
 
 interface AccordionProps {
   content: ReactNode;
@@ -11,7 +9,6 @@ interface AccordionProps {
 }
 export function Accordion({ content, label, testID }: AccordionProps) {
   const [showMore, setShowMore] = useState(false);
-  const theme = useTheme<Theme>();
   return (
     <>
       <TouchableOpacity
@@ -23,9 +20,9 @@ export function Accordion({ content, label, testID }: AccordionProps) {
       >
         <Text variant="label02">{label}</Text>
         {showMore ? (
-          <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
+          <ChevronUpIcon color="ink.text-primary" variant="small" />
         ) : (
-          <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
+          <ChevronDownIcon color="ink.text-primary" variant="small" />
         )}
       </TouchableOpacity>
       {showMore && content}

@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Plus16 from '../assets/icons/plus-16-16.svg';
+import Plus24 from '../assets/icons/plus-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import PlusSmall from '../assets/icons/plus-16-16.svg';
-import Plus from '../assets/icons/plus-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const PlusIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <PlusSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Plus />
-    </Icon>
-  );
+export const PlusIcon = createWebIcon({
+  icon: {
+    small: Plus16,
+    medium: Plus24,
+  },
+  displayName: 'Plus',
 });
-
-PlusIcon.displayName = 'PlusIcon';

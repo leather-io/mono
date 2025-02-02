@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import ColorPalette from '../../assets/icons/account-avatars/color-palette-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const ColorPaletteIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <ColorPalette />
-    </Icon>
-  );
+export const ColorPaletteIcon = createNativeIcon({
+  icon: {
+    medium: ColorPalette,
+  },
+  displayName: 'ColorPaletteIcon',
 });
-
-ColorPaletteIcon.displayName = 'ColorPaletteIcon';

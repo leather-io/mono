@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import Smile from '../../assets/icons/account-avatars/smile-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const SmileIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <Smile />
-    </Icon>
-  );
+export const SmileIcon = createNativeIcon({
+  icon: {
+    medium: Smile,
+  },
+  displayName: 'SmileIcon',
 });
-
-SmileIcon.displayName = 'SmileIcon';

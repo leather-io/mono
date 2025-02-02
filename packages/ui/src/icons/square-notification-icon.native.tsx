@@ -1,23 +1,11 @@
-import { Component, forwardRef } from 'react';
+import SquareNotification16 from '../assets/icons/square-notification-16-16.svg';
+import SquareNotification24 from '../assets/icons/square-notification-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import SquareNotificationSmall from '../assets/icons/square-notification-16-16.svg';
-import SquareNotification from '../assets/icons/square-notification-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const SquareNotificationIcon = forwardRef<Component, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <SquareNotificationSmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <SquareNotification />
-      </Icon>
-    );
-  }
-);
-
-SquareNotificationIcon.displayName = 'SquareNotificationIcon';
+export const SquareNotificationIcon = createNativeIcon({
+  icon: {
+    small: SquareNotification16,
+    medium: SquareNotification24,
+  },
+  displayName: 'SquareNotification',
+});

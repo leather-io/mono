@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Key16 from '../assets/icons/key-16-16.svg';
+import Key24 from '../assets/icons/key-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import KeySmall from '../assets/icons/key-16-16.svg';
-import Key from '../assets/icons/key-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const KeyIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <KeySmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Key />
-    </Icon>
-  );
+export const KeyIcon = createWebIcon({
+  icon: {
+    small: Key16,
+    medium: Key24,
+  },
+  displayName: 'Key',
 });
-
-KeyIcon.displayName = 'KeyIcon';

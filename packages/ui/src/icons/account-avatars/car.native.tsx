@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import Car from '../../assets/icons/account-avatars/car-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const CarIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <Car />
-    </Icon>
-  );
+export const CarIcon = createNativeIcon({
+  icon: {
+    medium: Car,
+  },
+  displayName: 'CarIcon',
 });
-
-CarIcon.displayName = 'CarIcon';

@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Bitcoin16 from '../assets/icons/bitcoin-16-16.svg';
+import Bitcoin24 from '../assets/icons/bitcoin-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import BitcoinSmall from '../assets/icons/bitcoin-16-16.svg';
-import Bitcoin from '../assets/icons/bitcoin-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const BitcoinIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <BitcoinSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Bitcoin />
-    </Icon>
-  );
+export const BitcoinIcon = createWebIcon({
+  icon: {
+    small: Bitcoin16,
+    medium: Bitcoin24,
+  },
+  displayName: 'Bitcoin',
 });
-
-BitcoinIcon.displayName = 'BitcoinIcon';

@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import CloudOff16 from '../assets/icons/cloud-off-16-16.svg';
+import CloudOff24 from '../assets/icons/cloud-off-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import CloudOffSmall from '../assets/icons/cloud-off-16-16.svg';
-import CloudOff from '../assets/icons/cloud-off-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const CloudOffIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <CloudOffSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <CloudOff />
-    </Icon>
-  );
+export const CloudOffIcon = createNativeIcon({
+  icon: {
+    small: CloudOff16,
+    medium: CloudOff24,
+  },
+  displayName: 'CloudOff',
 });
-
-CloudOffIcon.displayName = 'CloudOffIcon';
