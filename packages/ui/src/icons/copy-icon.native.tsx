@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import Copy16 from '../assets/icons/copy-16-16.svg';
+import Copy24 from '../assets/icons/copy-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import CopySmall from '../assets/icons/copy-16-16.svg';
-import Copy from '../assets/icons/copy-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const CopyIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <CopySmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Copy />
-    </Icon>
-  );
+export const CopyIcon = createNativeIcon({
+  icon: {
+    small: Copy16,
+    medium: Copy24,
+  },
+  displayName: 'Copy',
 });
-
-CopyIcon.displayName = 'CopyIcon';

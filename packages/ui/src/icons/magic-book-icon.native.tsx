@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import MagicBook16 from '../assets/icons/magic-book-16-16.svg';
+import MagicBook24 from '../assets/icons/magic-book-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import MagicBookSmall from '../assets/icons/magic-book-16-16.svg';
-import MagicBook from '../assets/icons/magic-book-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const MagicBookIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <MagicBookSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <MagicBook />
-    </Icon>
-  );
+export const MagicBookIcon = createNativeIcon({
+  icon: {
+    small: MagicBook16,
+    medium: MagicBook24,
+  },
+  displayName: 'MagicBook',
 });
-
-MagicBookIcon.displayName = 'MagicBookIcon';

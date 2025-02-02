@@ -130,7 +130,7 @@ export default function RecoverWallet() {
                   id: 'recover_wallet.paste_button',
                   message: 'Paste',
                 })}
-                icon={<NoteEmptyIcon color={theme.colors['ink.background-primary']} />}
+                icon={<NoteEmptyIcon color="ink.background-primary" />}
               />
             )}
             <TextInput
@@ -176,7 +176,7 @@ export default function RecoverWallet() {
                       bg="ink.background-secondary"
                       borderRadius="round"
                     >
-                      <LockIcon color={theme.colors['ink.text-primary']} />
+                      <LockIcon color="ink.text-primary" />
                     </Box>
                   </Cell.Icon>
                   <Cell.Content>

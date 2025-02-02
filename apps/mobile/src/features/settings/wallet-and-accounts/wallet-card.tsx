@@ -13,7 +13,6 @@ import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
 import {
@@ -25,7 +24,6 @@ import {
   Pressable,
   SettingsGearIcon,
   Text,
-  Theme,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
@@ -39,7 +37,6 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   const { list: accounts } = useAccountsByFingerprint(fingerprint, variant);
   const hasAccounts = accounts.length > 0;
   const [expanded, setExpanded] = useState(true);
-  const theme = useTheme<Theme>();
   const keys = useKeyStore();
   const { displayToast } = useToastContext();
   const router = useRouter();
@@ -69,9 +66,9 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           >
             <Text variant="label02">{name}</Text>
             {expanded ? (
-              <ChevronUpIcon color={theme.colors['ink.text-primary']} variant="small" />
+              <ChevronUpIcon color="ink.text-primary" variant="small" />
             ) : (
-              <ChevronDownIcon color={theme.colors['ink.text-primary']} variant="small" />
+              <ChevronDownIcon color="ink.text-primary" variant="small" />
             )}
           </Pressable>
           {variant === 'active' && (
@@ -88,7 +85,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               testID={TestId.walletListSettingsButton}
               pressEffects={legacyTouchablePressEffect}
             >
-              <SettingsGearIcon color={theme.colors['ink.text-primary']} />
+              <SettingsGearIcon color="ink.text-primary" />
             </Pressable>
           )}
         </Box>

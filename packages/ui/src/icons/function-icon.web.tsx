@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Function16 from '../assets/icons/function-16-16.svg';
+import Function24 from '../assets/icons/function-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import FunctionSmall from '../assets/icons/function-16-16.svg';
-import Function from '../assets/icons/function-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const FunctionIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <FunctionSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Function />
-    </Icon>
-  );
+export const FunctionIcon = createWebIcon({
+  icon: {
+    small: Function16,
+    medium: Function24,
+  },
+  displayName: 'Function',
 });
-
-FunctionIcon.displayName = 'FunctionIcon';

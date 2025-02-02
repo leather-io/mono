@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import Box from '../../assets/icons/account-avatars/box-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const BoxIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <Box />
-    </Icon>
-  );
+export const BoxIcon = createNativeIcon({
+  icon: {
+    medium: Box,
+  },
+  displayName: 'BoxIcon',
 });
-
-BoxIcon.displayName = 'BoxIcon';

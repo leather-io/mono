@@ -1,23 +1,11 @@
-import { Component, forwardRef } from 'react';
+import SettingsSliderThree16 from '../assets/icons/settings-slider-three-16-16.svg';
+import SettingsSliderThree24 from '../assets/icons/settings-slider-three-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import SettingsSliderThreeSmall from '../assets/icons/settings-slider-three-16-16.svg';
-import SettingsSliderThree from '../assets/icons/settings-slider-three-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const SettingsSliderThreeIcon = forwardRef<Component, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <SettingsSliderThreeSmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <SettingsSliderThree />
-      </Icon>
-    );
-  }
-);
-
-SettingsSliderThreeIcon.displayName = 'SettingsSliderThreeIcon';
+export const SettingsSliderThreeIcon = createNativeIcon({
+  icon: {
+    small: SettingsSliderThree16,
+    medium: SettingsSliderThree24,
+  },
+  displayName: 'SettingsSliderThree',
+});

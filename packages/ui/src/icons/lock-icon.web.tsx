@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Lock16 from '../assets/icons/lock-16-16.svg';
+import Lock24 from '../assets/icons/lock-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import LockSmall from '../assets/icons/lock-16-16.svg';
-import Lock from '../assets/icons/lock-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const LockIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <LockSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Lock />
-    </Icon>
-  );
+export const LockIcon = createWebIcon({
+  icon: {
+    small: Lock16,
+    medium: Lock24,
+  },
+  displayName: 'Lock',
 });
-
-LockIcon.displayName = 'LockIcon';

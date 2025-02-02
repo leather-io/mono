@@ -1,16 +1,9 @@
-import { SVGProps, forwardRef } from 'react';
+import LeatherLettermark24 from '../assets/icons/leather-lettermark-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import LeatherLettermark from '../assets/icons/leather-lettermark-24-24.svg';
-import { Icon } from './icon/icon.web';
-
-export const LeatherLettermarkIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  (props, ref) => {
-    return (
-      <Icon ref={ref} {...props}>
-        <LeatherLettermark />
-      </Icon>
-    );
-  }
-);
-
-LeatherLettermarkIcon.displayName = 'LeatherLettermarkIcon';
+export const LeatherLettermarkIcon = createWebIcon({
+  icon: {
+    medium: LeatherLettermark24,
+  },
+  displayName: 'LeatherLettermark',
+});

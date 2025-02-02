@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import LogoHardwareLedgerLogo from '../../assets/icons/logos/logo-hardware-ledger-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const LogoHardwareLedger = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <LogoHardwareLedgerLogo />
-    </Icon>
-  );
+export const LogoHardwareLedger = createNativeIcon({
+  icon: {
+    medium: LogoHardwareLedgerLogo,
+  },
+  displayName: 'LogoHardwareLedger',
 });
-
-LogoHardwareLedger.displayName = 'LogoHardwareLedger';

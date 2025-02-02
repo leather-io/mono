@@ -29,7 +29,6 @@ export {
 export { generateTheme, ThemeProvider } from './src/theme-native';
 export { TouchableOpacity } from './src/components/button/touchable-opacity.native';
 export type { Theme, ThemeVariant } from './src/theme-native';
-export { Icon } from './src/icons/icon/icon.native';
 export * from './src/icons/index.native';
 export { Flag } from './src/components/flag/flag.native';
 export { ItemLayout } from './src/components/item-layout/item-layout.native';

@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import Bell16 from '../assets/icons/bell-16-16.svg';
+import Bell24 from '../assets/icons/bell-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import BellSmall from '../assets/icons/bell-16-16.svg';
-import Bell from '../assets/icons/bell-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const BellIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <BellSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Bell />
-    </Icon>
-  );
+export const BellIcon = createNativeIcon({
+  icon: {
+    small: Bell16,
+    medium: Bell24,
+  },
+  displayName: 'Bell',
 });
-
-BellIcon.displayName = 'BellIcon';

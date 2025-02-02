@@ -1,16 +1,10 @@
-import { SVGProps, forwardRef } from 'react';
-
 import AnimalChameleon from '../../assets/icons/fee-animals/animal-chameleon-32-32.svg';
-import { Icon } from '../icon/icon.web';
+import { createWebIcon } from '../icon/create-icon.web';
 
-export const AnimalChameleonIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  (props, ref) => {
-    return (
-      <Icon ref={ref} {...props}>
-        <AnimalChameleon />
-      </Icon>
-    );
-  }
-);
-
-AnimalChameleonIcon.displayName = 'AnimalChameleonIcon';
+export const AnimalChameleonIcon = createWebIcon({
+  icon: {
+    large: AnimalChameleon,
+  },
+  defaultVariant: 'large',
+  displayName: 'AnimalChameleonIcon',
+});

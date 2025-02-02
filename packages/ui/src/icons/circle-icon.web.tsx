@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Circle16 from '../assets/icons/circle-16-16.svg';
+import Circle24 from '../assets/icons/circle-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import CircleSmall from '../assets/icons/circle-16-16.svg';
-import Circle from '../assets/icons/circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const CircleIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <CircleSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Circle />
-    </Icon>
-  );
+export const CircleIcon = createWebIcon({
+  icon: {
+    small: Circle16,
+    medium: Circle24,
+  },
+  displayName: 'Circle',
 });
-
-CircleIcon.displayName = 'CircleIcon';

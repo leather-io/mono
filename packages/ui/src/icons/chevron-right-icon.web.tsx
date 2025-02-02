@@ -1,23 +1,11 @@
-import { forwardRef } from 'react';
+import ChevronRight16 from '../assets/icons/chevron-right-16-16.svg';
+import ChevronRight24 from '../assets/icons/chevron-right-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import ChevronRightSmall from '../assets/icons/chevron-right-16-16.svg';
-import ChevronRight from '../assets/icons/chevron-right-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const ChevronRightIcon = forwardRef<SVGSVGElement, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <ChevronRightSmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <ChevronRight />
-      </Icon>
-    );
-  }
-);
-
-ChevronRightIcon.displayName = 'ChevronRightIcon';
+export const ChevronRightIcon = createWebIcon({
+  icon: {
+    small: ChevronRight16,
+    medium: ChevronRight24,
+  },
+  displayName: 'ChevronRight',
+});
