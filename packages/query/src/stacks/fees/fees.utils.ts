@@ -1,5 +1,5 @@
 import { bytesToHex } from '@stacks/common';
-import { PayloadType, StacksTransaction, serializePayload } from '@stacks/transactions';
+import { StacksTransaction, serializePayload } from '@stacks/transactions';
 import { BigNumber } from 'bignumber.js';
 
 import { DEFAULT_FEE_RATE } from '@leather.io/constants';
@@ -96,7 +96,6 @@ export function getDefaultSimulatedFeeEstimations(
 
 interface ParseStacksTxFeeEstimationResponseArgs {
   feeEstimation: StacksTxFeeEstimation;
-  payloadType: PayloadType | undefined;
   maxValues?: Money[];
   minValues?: Money[];
   txByteLength: number | null;
@@ -104,21 +103,11 @@ interface ParseStacksTxFeeEstimationResponseArgs {
 }
 export function parseStacksTxFeeEstimationResponse({
   feeEstimation,
-  payloadType,
   maxValues,
   minValues,
   txByteLength,
-  tokenTransferFeeEstimations,
 }: ParseStacksTxFeeEstimationResponseArgs): Fees {
   if (feeEstimation.error) return defaultStacksFees;
-
-  if (payloadType === PayloadType.TokenTransfer) {
-    return {
-      blockchain: 'stacks',
-      estimates: getTokenTransferSpecificFeeEstimations(tokenTransferFeeEstimations),
-      calculation: FeeCalculationTypes.TokenTransferSpecific,
-    };
-  }
 
   if (txByteLength && feeEstimationQueryFailedSilently(feeEstimation)) {
     return {

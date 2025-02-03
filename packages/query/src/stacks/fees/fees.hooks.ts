@@ -60,7 +60,6 @@ export function useCalculateStacksTxFees(unsignedTx?: StacksTransaction) {
     select: resp =>
       parseStacksTxFeeEstimationResponse({
         feeEstimation: resp,
-        payloadType: unsignedTx?.payload.payloadType,
         maxValues: feeEstimationsMaxValues,
         minValues: feeEstimationsMinValues,
         txByteLength,
