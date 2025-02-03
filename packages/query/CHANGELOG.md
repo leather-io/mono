@@ -303,6 +303,25 @@
     * @leather.io/bitcoin bumped to 0.19.17
     * @leather.io/utils bumped to 0.25.0
 
+## [2.26.19](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.18...@leather.io/query-v2.26.19) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.18
+    * @leather.io/constants bumped to 0.15.5
+    * @leather.io/models bumped to 0.25.1
+    * @leather.io/rpc bumped to 2.5.5
+    * @leather.io/stacks bumped to 1.5.19
+    * @leather.io/utils bumped to 0.25.1
+
 ## [2.26.16](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.15...@leather.io/query-v2.26.16) (2025-01-15)
 
 
