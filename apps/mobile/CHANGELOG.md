@@ -456,6 +456,33 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.17
 
+## [2.8.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.8.0...@leather.io/mobile-v2.8.1) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.1.3
+    * @leather.io/bitcoin bumped to 0.19.18
+    * @leather.io/constants bumped to 0.15.5
+    * @leather.io/crypto bumped to 1.6.34
+    * @leather.io/models bumped to 0.25.1
+    * @leather.io/query bumped to 2.26.19
+    * @leather.io/rpc bumped to 2.5.5
+    * @leather.io/services bumped to 1.0.3
+    * @leather.io/stacks bumped to 1.5.19
+    * @leather.io/tokens bumped to 0.12.10
+    * @leather.io/ui bumped to 1.48.2
+    * @leather.io/utils bumped to 0.25.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.18
+
 ## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.7.3...@leather.io/mobile-v2.8.0) (2025-01-28)
 
 
