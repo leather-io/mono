@@ -7,6 +7,13 @@
     * @leather.io/bitcoin bumped to 0.19.17
     * @leather.io/utils bumped to 0.25.0
 
+## [1.0.4](https://github.com/leather-io/mono/compare/@leather.io/services-v1.0.3...@leather.io/services-v1.0.4) (2025-02-04)
+
+
+### Bug Fixes
+
+* update hiro api headers ([346ad2a](https://github.com/leather-io/mono/commit/346ad2a41f1f4190ca6382748af99dc1ce8a3e6f))
+
 ## [1.0.3](https://github.com/leather-io/mono/compare/@leather.io/services-v1.0.2...@leather.io/services-v1.0.3) (2025-02-03)
 
 
