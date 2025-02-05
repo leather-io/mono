@@ -96,5 +96,6 @@ runs:
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
         eas build --platform android --profile=production --non-interactive --auto-submit
-        fastlane run distribute_android
+        cd android
+        bundle exec fastlane android distribute_android
       shell: bash

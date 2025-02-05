@@ -115,16 +115,9 @@ runs:
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
         eas build --platform ios --profile=production --non-interactive --auto-submit
-        fastlane run distribute_ios
+        cd ios
+        bundle exec fastlane ios distribute_ios
       shell: bash
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
         APPLE_ID: ${{ inputs.APPLE_ID }}
-
-    - name: Firebase App Distribution
-      run: |
-        echo "${{ inputs.FIREBASE_TOKEN }}" > $HOME/.firebase_token
-        firebase appdistribution:distribute leather.apks --app "1:915379517791:ios:ecfa47ab5ee5f256789eea" --groups "leatherhood"
-      shell: bash
-      env:
-        FIREBASE_TOKEN: ${{ inputs.FIREBASE_TOKEN }}
