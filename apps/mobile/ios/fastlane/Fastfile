@@ -14,14 +14,25 @@ platform :ios do
   # Optionally, you can also increment the build number
     increment_build_number
   end
+
+  lane :notify_slack do
+  Dotenv.load('./.env')
+  slack(
+    message: "iOS build completed successfully!",
+    channel: "#leather-mobile",
+    slack_url: ENV["SLACK_WEBHOOK_URL"]
+  )
+end
+
   lane :distribute_ios do
     build_ios
     increment_version
     firebase_app_distribution(
       app: "1:915379517791:ios:ecfa47ab5ee5f256789eea",
       groups: "leatherhood",
-      release_notes: "New will available",
+      release_notes: "New iOS build available",
         )
+    notify_slack
   end
 
 end

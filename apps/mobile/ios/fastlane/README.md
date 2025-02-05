@@ -31,6 +31,14 @@ Build and distribute iOS app
 
 
 
+### ios notify_slack
+
+```sh
+[bundle exec] fastlane ios notify_slack
+```
+
+
+
 ### ios distribute_ios
 
 ```sh
