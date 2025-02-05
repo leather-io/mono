@@ -5,7 +5,7 @@ platform :ios do
     match(type: "appstore", readonly: true)
     build_app(
       scheme: "leatherwalletmobile",
-      workspace: "../../apps/mobile/ios/leatherwalletmobile.xcworkspace",
+      workspace: "../../apps/mobile/ios/leatherwalletmobile.xcworkspace"
     )
   end
   lane :increment_version do

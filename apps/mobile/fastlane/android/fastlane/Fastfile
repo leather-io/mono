@@ -14,7 +14,7 @@ platform :android do
 lane :increment_version do
   # Increment the version code
   increment_version_code(
-    gradle_file_path: "../../../android/app/build.gradle" # Path to your build.gradle file
+    gradle_file_path: "./build.gradle" # Path to your build.gradle file
   )
 
   # Increment the version name
