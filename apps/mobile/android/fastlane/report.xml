@@ -4,10 +4,5 @@
     
     
     
-      
-      <testcase classname="fastlane.lanes" name="0: slack" time="0.287659">
-        
-      </testcase>
-    
   </testsuite>
 </testsuites>
