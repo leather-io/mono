@@ -1,22 +1,25 @@
+
+
 # default_platform(:android)
 
 platform :android do
   desc "Build and distribute Android app"
   lane :build_android do
     gradle(
-      task: "assembleRelease"
+      task: "assembleRelease",
+      project_dir: "../../android", # Adjust the path as necessary
     )
   end
 
 lane :increment_version do
   # Increment the version code
   increment_version_code(
-    gradle_file_path: "./app/build.gradle" # Path to your build.gradle file
+    gradle_file_path: "../../../android/app/build.gradle" # Path to your build.gradle file
   )
 
   # Increment the version name
   increment_version_name(
-    gradle_file_path: "./app/build.gradle", # Path to your build.gradle file
+    gradle_file_path: "./android/app/build.gradle", # Path to your build.gradle file
     version_name: next_version_name # Function to determine the next version name
   )
 end
@@ -32,7 +35,7 @@ end
 
 def get_version_name_from_gradle
   # Logic to read the current version name from the build.gradle file
-  gradle_file = File.read("../app/build.gradle")
+  gradle_file = File.read("../android/app/build.gradle")
   match = gradle_file.match(/versionName "(\d+\.\d+\.\d+)"/)
   match[1] if match
 end

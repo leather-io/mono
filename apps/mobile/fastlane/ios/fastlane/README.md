@@ -13,36 +13,28 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-## Android
+## iOS
 
-### android build_android
+### ios build_ios
 
 ```sh
-[bundle exec] fastlane android build_android
+[bundle exec] fastlane ios build_ios
 ```
 
-Build and distribute Android app
+Build and distribute iOS app
 
-### android increment_version
-
-```sh
-[bundle exec] fastlane android increment_version
-```
-
-
-
-### android notify_slack
+### ios increment_version
 
 ```sh
-[bundle exec] fastlane android notify_slack
+[bundle exec] fastlane ios increment_version
 ```
 
 
 
-### android distribute_android
+### ios distribute_ios
 
 ```sh
-[bundle exec] fastlane android distribute_android
+[bundle exec] fastlane ios distribute_ios
 ```
 
 

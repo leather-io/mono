@@ -1,0 +1,14 @@
+# fastlane/Fastfile
+
+# Import shared lanes
+import './shared/Fastfile'
+
+# Import iOS lanes
+platform :ios do
+  import './ios/fastlane/Fastfile'
+end
+
+# Import Android lanes
+platform :android do
+  import './android/fastlane/Fastfile'
+end
