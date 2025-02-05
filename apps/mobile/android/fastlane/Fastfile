@@ -7,41 +7,36 @@ platform :android do
       task: "assembleRelease"
     )
   end
-#     lane :auto_increment_version do
-#   # Increment the version code
-#   increment_version_code(
-#     gradle_file_path: "app/build.gradle" # Path to your build.gradle file
-#   )
 
-#   # Increment the version name
-#   increment_version_name(
-#     gradle_file_path: "app/build.gradle", # Path to your build.gradle file
-#     version_name: next_version_name # Function to determine the next version name
-#   )
-# end
-
-# def next_version_name
-#   # Logic to determine the next version name
-#   # For example, increment the patch version
-#   current_version = get_version_name_from_gradle
-#   version_parts = current_version.split(".")
-#   version_parts[-1] = version_parts[-1].to_i + 1
-#   version_parts.join(".")
-# end
-
-# def get_version_name_from_gradle
-#   # Logic to read the current version name from the build.gradle file
-#   gradle_file = File.read("app/build.gradle")
-#   match = gradle_file.match(/versionName "(\d+\.\d+\.\d+)"/)
-#   match[1] if match
-# end
-  lane :increment_version do
-  increment_version_number(
-    bump_type: "minor" # Options are: "patch", "minor", "major"
+lane :increment_version do
+  # Increment the version code
+  increment_version_code(
+    gradle_file_path: "./app/build.gradle" # Path to your build.gradle file
   )
-  # Optionally, you can also increment the build number
-    increment_build_number
-  end
+
+  # Increment the version name
+  increment_version_name(
+    gradle_file_path: "./app/build.gradle", # Path to your build.gradle file
+    version_name: next_version_name # Function to determine the next version name
+  )
+end
+
+def next_version_name
+  # Logic to determine the next version name
+  # For example, increment the patch version
+  current_version = get_version_name_from_gradle
+  version_parts = current_version.split(".")
+  version_parts[-1] = version_parts[-1].to_i + 1
+  version_parts.join(".")
+end
+
+def get_version_name_from_gradle
+  # Logic to read the current version name from the build.gradle file
+  gradle_file = File.read("../app/build.gradle")
+  match = gradle_file.match(/versionName "(\d+\.\d+\.\d+)"/)
+  match[1] if match
+end
+
 
   lane :distribute_android do
     build_android
@@ -49,7 +44,7 @@ platform :android do
     firebase_app_distribution(
       app: "1:915379517791:android:d4e7cb446a612f8c789eea",
       groups: "leatherhood",
-      release_notes: "New pete available"
+      release_notes: "New version available"
     )
   end
 end
