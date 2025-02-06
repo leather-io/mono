@@ -3,8 +3,6 @@ import { Avatar } from './avatar.native';
 
 export function BtcAvatarIcon() {
   return (
-    <Avatar bg="ink.background-primary" p="0">
-      <BtcIcon />
-    </Avatar>
+    <Avatar outlineColor="ink.border-transparent" icon={<BtcIcon width="100%" height="100%" />} />
   );
 }

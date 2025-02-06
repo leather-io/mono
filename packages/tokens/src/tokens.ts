@@ -22,6 +22,7 @@ export const tokens = {
     sm: { value: '4px' },
     md: { value: '8px' },
     lg: { value: '12px' },
+    round: { value: '9999px' },
   },
   sizes: {
     xs: { value: '12px' },

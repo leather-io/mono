@@ -18,7 +18,7 @@ export function ItemLayoutWithButtons({
   title,
 }: ItemWithButtonsLayoutProps) {
   return (
-    <Flag img={img}>
+    <Flag img={img} alignItems="center">
       <Flex alignItems="center" justifyContent="space-between" width="100%">
         <Stack
           alignItems="start"

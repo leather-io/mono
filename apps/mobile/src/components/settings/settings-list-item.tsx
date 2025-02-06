@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactElement } from 'react';
 
 import {
   Avatar,
@@ -15,7 +15,7 @@ interface ItemBaseProps {
   type?: ItemType;
   title: string;
   caption?: string;
-  icon?: ReactNode;
+  icon?: ReactElement;
   switchValue?: boolean | undefined;
   onSwitchValueChange?: (value: boolean) => Promise<void> | void | undefined;
   isRadioSelected?: boolean | undefined;
@@ -57,7 +57,7 @@ export function SettingsListItem({
     <Cell.Root pressable onPress={onPress} {...rest}>
       {icon && (
         <Cell.Icon>
-          <Avatar>{icon}</Avatar>
+          <Avatar icon={icon} />
         </Cell.Icon>
       )}
       <Cell.Content>

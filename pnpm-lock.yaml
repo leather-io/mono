@@ -1049,6 +1049,9 @@ importers:
       expo-haptics:
         specifier: 13.0.1
         version: 13.0.1(expo@51.0.26)
+      expo-image:
+        specifier: 1.12.9
+        version: 1.12.9(expo@51.0.26)
       expo-linear-gradient:
         specifier: 13.0.2
         version: 13.0.2(expo@51.0.26)

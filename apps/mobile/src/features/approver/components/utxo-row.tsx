@@ -18,7 +18,7 @@ export function UtxoRow({ isLocked, address, btcBalance, usdBalance, txid }: Utx
   return (
     <Cell.Root pressable={false}>
       <Cell.Icon>
-        <Avatar bg="ink.background-secondary">{icon}</Avatar>
+        <Avatar icon={icon} />
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">{truncateMiddle(address)}</Cell.Label>
