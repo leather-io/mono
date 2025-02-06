@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactElement } from 'react';
 
 import { Avatar, Box, ItemLayout, Pressable } from '@leather.io/ui/native';
 
@@ -6,7 +6,7 @@ interface BaseFeeOptionProps {
   onPress(): void;
   isSelected: boolean;
   disabled: boolean;
-  icon: ReactNode;
+  icon: ReactElement;
   title: string;
   time: string;
   balance: string;
@@ -36,7 +36,7 @@ export function BaseFeeOption({
         onPress={onPress}
         disabled={disabled}
       >
-        <Avatar>{icon}</Avatar>
+        <Avatar icon={icon} />
         <ItemLayout
           titleLeft={title}
           captionLeft={time}

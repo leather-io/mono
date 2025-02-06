@@ -12,9 +12,7 @@ export function MemoCard({ memo, onPress }: MemoCardProps) {
     <Box mx="-5">
       <Cell.Root pressable onPress={onPress}>
         <Cell.Icon>
-          <Avatar bg="ink.background-secondary">
-            <NoteTextIcon />
-          </Avatar>
+          <Avatar icon={<NoteTextIcon />} />
         </Cell.Icon>
         <Cell.Content style={{ flexGrow: 1, flexShrink: 0 }}>
           <Cell.Label variant="primary">

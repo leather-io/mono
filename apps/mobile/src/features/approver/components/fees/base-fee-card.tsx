@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactElement } from 'react';
 
 import { Balance } from '@/components/balance/balance';
 import { FeeBadge } from '@/features/send/fee-badge';
@@ -12,7 +12,7 @@ interface BaseFeeCardProps {
   amount: Money;
   onPress(): void;
   marketData: MarketData | undefined;
-  icon: ReactNode;
+  icon: ReactElement;
   title: string;
   time: string;
 }
@@ -22,7 +22,7 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
 
   return (
     <>
-      <Box flexDirection="row">
+      <Box flexDirection="row" gap="2">
         <Text variant="label01">
           {t({
             id: 'approver.fee.title',
@@ -34,9 +34,7 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
       <Box mx="-5">
         <Cell.Root pressable onPress={onPress}>
           <Cell.Icon>
-            <Avatar bg="ink.background-secondary" p="2">
-              {icon}
-            </Avatar>
+            <Avatar icon={icon} />
           </Cell.Icon>
           <Cell.Content>
             <Cell.Label variant="primary">{title}</Cell.Label>

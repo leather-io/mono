@@ -12,9 +12,7 @@ export function NonceCard({ nonce, onPress }: NonceCardProps) {
     <Box mx="-5">
       <Cell.Root pressable onPress={onPress}>
         <Cell.Icon>
-          <Avatar bg="ink.background-secondary">
-            <NumberedListIcon />
-          </Avatar>
+          <Avatar icon={<NumberedListIcon />} />
         </Cell.Icon>
         <Cell.Content style={{ flexGrow: 1, flexShrink: 0 }}>
           <Cell.Label variant="primary">

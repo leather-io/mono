@@ -1,4 +1,4 @@
-import { ReactNode, RefObject } from 'react';
+import { ReactElement, RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSettings } from '@/store/settings/settings';
@@ -8,7 +8,7 @@ import { useTheme } from '@shopify/restyle';
 import { Avatar, Box, Sheet, SheetHeader, SheetRef, Theme } from '@leather.io/ui/native';
 
 interface SettingsSheetLayoutProps extends HasChildren {
-  icon: ReactNode;
+  icon: ReactElement;
   sheetRef: RefObject<SheetRef>;
   title: string;
   onPressSupport?: () => void;
@@ -34,7 +34,7 @@ export function SettingsSheetLayout({
         }}
       >
         <SheetHeader
-          icon={<Avatar>{icon}</Avatar>}
+          icon={<Avatar icon={icon} />}
           onPressSupport={onPressSupport ? onPressSupport : undefined}
           title={title}
         />

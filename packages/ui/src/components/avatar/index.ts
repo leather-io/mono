@@ -1,4 +1,5 @@
 export * from './avatar.web';
+export * from './avatar.web';
 export { Brc20AvatarIcon } from './brc20-avatar-icon.web';
 export { BtcAvatarIcon } from './btc-avatar-icon.web';
 export { OrdinalAvatarIcon } from './ordinal-avatar-icon.web';

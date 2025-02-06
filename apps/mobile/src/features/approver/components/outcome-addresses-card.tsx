@@ -4,14 +4,7 @@ import { AddressDisplayer, Avatar, Flag, Text, UsersTwoIcon } from '@leather.io/
 
 function BitcoinAddress({ address }: { address: string }) {
   return (
-    <Flag
-      py="3"
-      img={
-        <Avatar bg="ink.background-secondary">
-          <UsersTwoIcon />
-        </Avatar>
-      }
-    >
+    <Flag py="3" img={<Avatar icon={<UsersTwoIcon />} />}>
       <AddressDisplayer address={address} />
     </Flag>
   );

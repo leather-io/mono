@@ -4,6 +4,7 @@ export {
   type AddressDisplayerProps,
 } from './components/address-displayer/address-displayer.web';
 export * from './components/avatar';
+export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
 export { Callout, type CalloutProps } from './components/callout/callout.web';

@@ -38,13 +38,7 @@ export function SendFormRecipient<T extends SendFormBaseContext<T>>() {
           p="4"
         >
           {recipient ? (
-            <Flag
-              img={
-                <Avatar>
-                  <UserIcon />
-                </Avatar>
-              }
-            >
+            <Flag img={<Avatar icon={<UserIcon />} />}>
               <AddressDisplayer address={recipient} />
             </Flag>
           ) : (
