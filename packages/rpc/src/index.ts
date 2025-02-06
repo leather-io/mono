@@ -25,6 +25,8 @@ export * from './methods/bitcoin/sign-psbt';
 export * from './methods/get-addresses';
 export * from './methods/bitcoin/send-transfer';
 export * from './methods/bitcoin/sign-message';
+export * from './methods/stacks/_clarity-values';
+export * from './methods/stacks/_stacks-helpers';
 export * from './methods/stacks/stx-sign-message';
 export * from './methods/stacks/stx-sign-transaction';
 export * from './methods/stacks/stx-call-contract';
