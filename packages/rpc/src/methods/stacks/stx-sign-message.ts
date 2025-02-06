@@ -1,36 +1,68 @@
-import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../../rpc/schemas';
+import { z } from 'zod';
 
-export const stxMessageSigningTypes = ['utf8', 'structured'] as const;
+import {
+  DefineRpcMethod,
+  createRpcRequestSchema,
+  createRpcResponseSchema,
+  defaultErrorSchema,
+} from '../../rpc/schemas';
 
-export type StxSignMessageTypes = (typeof stxMessageSigningTypes)[number];
+export const stxSignMessageMethodName = 'stx_signMessage';
 
-export interface StxSignMessageRequestParamsBase extends RpcParameterByName {
-  messageType: StxSignMessageTypes;
-  network?: 'mainnet' | 'testnet' | 'devnet' | 'mocknet';
-}
+// Request
+export const stxSignMessageTypeSchema = z.enum(['utf8', 'structured']);
+export type StxSignMessageTypes = z.infer<typeof stxSignMessageTypeSchema>;
 
-export interface StxSignMessageRequestParamsUtf8 extends StxSignMessageRequestParamsBase {
-  type: 'utf8';
-  message: string;
-}
+export const stxSignMessageRequestBaseSchema = z.object({
+  messageType: stxSignMessageTypeSchema,
+  network: z.optional(z.enum(['mainnet', 'testnet', 'devnet', 'mocknet'])),
+});
+export type StxSignMessageRequestParamsBase = z.infer<typeof stxSignMessageRequestBaseSchema>;
 
-export interface StxSignMessageRequestParamsStructured extends StxSignMessageRequestParamsBase {
-  type: 'structured';
-  domain: string;
-  message: string;
-}
+export const stxSignMessageRequestUtf8Schema = stxSignMessageRequestBaseSchema.merge(
+  z.object({
+    messageType: z.literal('utf8'),
+    message: z.string(),
+  })
+);
+export type StxSignMessageRequestParamsUtf8 = z.infer<typeof stxSignMessageRequestUtf8Schema>;
 
-export type StxSignMessageRequestParams =
-  | StxSignMessageRequestParamsUtf8
-  | StxSignMessageRequestParamsStructured;
+export const stxSignMessageRequestStructuredSchema = stxSignMessageRequestBaseSchema.merge(
+  z.object({
+    messageType: z.literal('structured'),
+    domain: z.string(),
+    message: z.string(),
+  })
+);
+export type StxSignMessageRequestParamsStructured = z.infer<
+  typeof stxSignMessageRequestStructuredSchema
+>;
 
-export interface StxSignMessageResponseBody {
-  signature: string;
-}
+export const stxSignMessageRequestParamsSchema = z.union([
+  stxSignMessageRequestUtf8Schema,
+  stxSignMessageRequestStructuredSchema,
+]);
+export type StxSignMessageRequestParams = z.infer<typeof stxSignMessageRequestParamsSchema>;
 
-export type StxSignMessageRequest = RpcRequest<'stx_signMessage', StxSignMessageRequestParams>;
+export const stxSignMessageRequestSchema = createRpcRequestSchema(
+  stxSignMessageMethodName,
+  stxSignMessageRequestParamsSchema
+);
+export type StxSignMessageRequest = z.infer<typeof stxSignMessageRequestSchema>;
 
-export type StxSignMessageResponse = RpcResponse<StxSignMessageResponseBody>;
+// Response
+export const stxSignMessageResponseBodySchema = z.object({
+  signature: z.string(),
+  publicKey: z.string(),
+});
+export type StxSignMessageResponseBodySchema = z.infer<typeof stxSignMessageResponseBodySchema>;
+
+export const stxSignMessageResponseSchema = createRpcResponseSchema(
+  stxSignMessageResponseBodySchema,
+  defaultErrorSchema
+);
+
+export type StxSignMessageResponse = z.infer<typeof stxSignMessageResponseSchema>;
 
 export type DefineStxSignMessageMethod = DefineRpcMethod<
   StxSignMessageRequest,
