@@ -41,14 +41,14 @@ export function Sip10Balance() {
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
 
-  return data.value.aggregateBalances.map((balance, index) => {
+  return data.value.sip10s.map((balance, index) => {
     if (index >= sip10MaxDisplay) return null;
     return (
       <Sip10TokenBalance
         key={`${balance.asset.symbol}-${index}`}
         symbol={balance.asset.symbol}
         name={balance.asset.name}
-        availableBalance={balance.sip10.availableBalance}
+        availableBalance={balance.crypto.availableBalance}
         fiatBalance={balance.usd.totalBalance}
         px="5"
         py="3"
@@ -72,7 +72,7 @@ export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10Balanc
         key={`${balance.asset.symbol}-${index}`}
         symbol={balance.asset.symbol}
         name={balance.asset.name}
-        availableBalance={balance.sip10.availableBalance}
+        availableBalance={balance.crypto.availableBalance}
         fiatBalance={balance.usd.totalBalance}
         px="5"
         py="3"

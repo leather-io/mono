@@ -66,19 +66,22 @@ describe('Sip10BalancesService', () => {
     it('retrieves sip10 token balances using hiro stacks API, market data, and token info', async () => {
       const signal = new AbortController().signal;
       const stacksAddress = 'STACKS_ADDRESS';
-      const balance = await sip10BalancesService.getSip10AddressBalance(stacksAddress, signal);
+      const addressBalance = await sip10BalancesService.getSip10AddressBalance(
+        stacksAddress,
+        signal
+      );
       expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledWith(stacksAddress, signal);
       expect(mockMarketDataService.getSip10MarketData).toHaveBeenCalledTimes(2);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(2);
-      expect(balance.sip10s.length).toEqual(2);
+      expect(addressBalance.sip10s.length).toEqual(2);
     });
 
     it('calculates the sip10 and usd balances of each individual sip10 token for an address', async () => {
       const balance = await sip10BalancesService.getSip10AddressBalance('STACKS_ADDRESS');
-      expect(balance.sip10s[0].sip10.totalBalance.amount).toEqual(initBigNumber(12000000));
-      expect(balance.sip10s[0].sip10.availableBalance.amount).toEqual(initBigNumber(12000000));
-      expect(balance.sip10s[1].sip10.totalBalance.amount).toEqual(initBigNumber(20000000));
-      expect(balance.sip10s[1].sip10.availableBalance.amount).toEqual(initBigNumber(20000000));
+      expect(balance.sip10s[0].crypto.totalBalance.amount).toEqual(initBigNumber(12000000));
+      expect(balance.sip10s[0].crypto.availableBalance.amount).toEqual(initBigNumber(12000000));
+      expect(balance.sip10s[1].crypto.totalBalance.amount).toEqual(initBigNumber(20000000));
+      expect(balance.sip10s[1].crypto.availableBalance.amount).toEqual(initBigNumber(20000000));
       expect(balance.sip10s[0].usd.totalBalance.amount).toEqual(initBigNumber(600));
       expect(balance.sip10s[0].usd.availableBalance.amount).toEqual(initBigNumber(600));
       expect(balance.sip10s[1].usd.totalBalance.amount).toEqual(initBigNumber(2000));
@@ -105,7 +108,7 @@ describe('Sip10BalancesService', () => {
       expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledTimes(3);
       expect(mockMarketDataService.getSip10MarketData).toHaveBeenCalledTimes(6);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(6);
-      expect(aggregateBalance.aggregateBalances.length).toEqual(2);
+      expect(aggregateBalance.sip10s.length).toEqual(2);
     });
 
     it('calculates the combined usd balance of all sip10 tokens of each address', async () => {

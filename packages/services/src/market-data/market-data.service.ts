@@ -114,7 +114,7 @@ export function createMarketDataService(
    */
   async function getRuneMarketData(asset: RuneCryptoAssetInfo, signal?: AbortSignal) {
     const btcMarketData = await getNativeAssetMarketData('BTC', signal);
-    const runeTickerInfo = await bestInSlotApiClient.fetchRuneTickerInfo(asset.symbol, signal);
+    const runeTickerInfo = await bestInSlotApiClient.fetchRuneTickerInfo(asset.runeName, signal);
     const runeFiatPrice = baseCurrencyAmountInQuote(
       createMoney(initBigNumber(runeTickerInfo.avg_unit_price_in_sats ?? 0), 'BTC'),
       btcMarketData

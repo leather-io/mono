@@ -79,7 +79,7 @@ export function createBestInSlotApiClient(
         );
         return bisRuneTickerInfoSchema.parse(res.data.data);
       },
-      { ttl: HttpCacheTimeMs.twoMinutes }
+      { ttl: HttpCacheTimeMs.oneMonth }
     );
   }
 
@@ -117,7 +117,6 @@ export function createBestInSlotApiClient(
         );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function fetchRunesValidOutputs(descriptor: string, signal?: AbortSignal) {
     const params = new URLSearchParams();
     params.append('sort_by', 'output');
@@ -132,9 +131,17 @@ export function createBestInSlotApiClient(
         bitcoinNetworkModeToCoreNetworkMode(networkService.getConfig().chain.bitcoin.mode),
         descriptor,
       ],
-      // eslint-disable-next-line @typescript-eslint/require-await
       async () => {
-        return [];
+        const res = await limiter.add(
+          RateLimiterType.BestInSlot,
+          () =>
+            axios.get<BestInSlotApiResponse<BisRuneValidOutput[]>>(
+              `${getBestInSlotBasePath(networkService.getConfig().chain.bitcoin.mode)}/runes/wallet_valid_outputs_xpub`,
+              { params, signal }
+            ),
+          { signal }
+        );
+        return z.array(bisRuneValidOutputsSchema).parse(res.data.data);
       },
       { ttl: HttpCacheTimeMs.twoMinutes }
     );

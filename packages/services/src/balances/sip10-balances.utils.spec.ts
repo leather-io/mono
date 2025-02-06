@@ -1,7 +1,7 @@
 import { createMoney } from '@leather.io/utils';
 
 import { Sip10AddressBalance, Sip10AssetBalance } from './sip10-balances.service';
-import { getAggregateSip10Balances, sumBalances } from './sip10-balances.utils';
+import { aggregateSip10AddressBalances } from './sip10-balances.utils';
 
 const mockBaseCryptoAssetBalance = {
   totalBalance: createMoney(100, 'USD'),
@@ -32,7 +32,7 @@ const mockSip10AssetBalance: Sip10AssetBalance = {
     imageCanonicalUri: '',
     hasMemo: false,
   },
-  sip10: mockBaseCryptoAssetBalance,
+  crypto: mockBaseCryptoAssetBalance,
   usd: mockBaseCryptoAssetBalance,
 };
 
@@ -51,7 +51,7 @@ const mockAddressBalances: Sip10AddressBalance[] = [
     sip10s: [
       {
         ...mockSip10AssetBalance,
-        sip10: {
+        crypto: {
           ...mockBaseCryptoAssetBalance2,
         },
       },
@@ -60,39 +60,22 @@ const mockAddressBalances: Sip10AddressBalance[] = [
   },
 ];
 
-describe('sumBalances', () => {
-  it('should correctly sum two balances', () => {
-    const initialBalance = mockBaseCryptoAssetBalance;
-    const accumulatedBalance = {
-      ...mockBaseCryptoAssetBalance2,
-    };
-
-    const result = sumBalances({ initialBalance, accumulatedBalance });
-
-    expect(result.totalBalance.amount.toNumber()).toBe(150);
-    expect(result.inboundBalance.amount.toNumber()).toBe(15);
-    expect(result.outboundBalance.amount.toNumber()).toBe(7);
-    expect(result.pendingBalance.amount.toNumber()).toBe(158);
-    expect(result.availableBalance.amount.toNumber()).toBe(143);
-  });
-});
-
-describe('getAggregateSip10Balances', () => {
+describe('aggregateSip10AssetBalances', () => {
   it('should aggregate balances from multiple addresses', () => {
-    const result = getAggregateSip10Balances(mockAddressBalances);
+    const result = aggregateSip10AddressBalances(mockAddressBalances);
 
     expect(result.length).toBe(1);
     expect(result[0].asset.symbol).toBe('TEST');
-    expect(result[0].sip10.totalBalance.amount.toNumber()).toBe(150);
-    expect(result[0].sip10.inboundBalance.amount.toNumber()).toBe(15);
-    expect(result[0].sip10.outboundBalance.amount.toNumber()).toBe(7);
-    expect(result[0].sip10.pendingBalance.amount.toNumber()).toBe(158);
-    expect(result[0].sip10.availableBalance.amount.toNumber()).toBe(143);
+    expect(result[0].crypto.totalBalance.amount.toNumber()).toBe(150);
+    expect(result[0].crypto.inboundBalance.amount.toNumber()).toBe(15);
+    expect(result[0].crypto.outboundBalance.amount.toNumber()).toBe(7);
+    expect(result[0].crypto.pendingBalance.amount.toNumber()).toBe(158);
+    expect(result[0].crypto.availableBalance.amount.toNumber()).toBe(143);
     expect(result[0].usd.totalBalance.amount.toNumber()).toBe(200);
   });
 
   it('should handle empty address balances', () => {
-    const result = getAggregateSip10Balances([]);
+    const result = aggregateSip10AddressBalances([]);
     expect(result).toEqual([]);
   });
 
@@ -103,7 +86,7 @@ describe('getAggregateSip10Balances', () => {
         ...mockSip10AssetBalance.asset,
         symbol: 'OTHER',
       },
-    };
+    } as Sip10AssetBalance;
 
     const addressBalances = [
       {
@@ -114,12 +97,12 @@ describe('getAggregateSip10Balances', () => {
       },
     ];
 
-    const result = getAggregateSip10Balances(addressBalances);
+    const result = aggregateSip10AddressBalances(addressBalances as Sip10AddressBalance[]);
 
     expect(result.length).toBe(2);
     expect(result[0].asset.symbol).toBe('TEST');
     expect(result[1].asset.symbol).toBe('OTHER');
-    expect(result[0].sip10.totalBalance.amount.toNumber()).toBe(200);
-    expect(result[1].sip10.totalBalance.amount.toNumber()).toBe(100);
+    expect(result[0].crypto.totalBalance.amount.toNumber()).toBe(200);
+    expect(result[1].crypto.totalBalance.amount.toNumber()).toBe(100);
   });
 });

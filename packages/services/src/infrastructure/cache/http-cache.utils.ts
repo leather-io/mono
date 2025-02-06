@@ -10,5 +10,7 @@ export const HttpCacheTimeMs = {
   thirtyMinutes: 30 * 60 * 1000,
   oneHour: 60 * 60 * 1000,
   oneDay: 24 * 60 * 60 * 1000,
+  oneMonth: 30 * 24 * 60 * 60 * 1000,
+  oneYear: 365 * 24 * 60 * 60 * 1000,
   infinity: Infinity,
 };
