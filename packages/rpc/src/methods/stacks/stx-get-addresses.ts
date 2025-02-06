@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 import {
   DefineRpcMethod,
-  RpcResponse,
   createRpcRequestSchema,
   createRpcResponseSchema,
   defaultErrorSchema,
@@ -31,7 +30,7 @@ export const stxGetAddressesResponseSchema = createRpcResponseSchema(
   defaultErrorSchema
 );
 
-export type StxGetAddressesResponse = RpcResponse<typeof stxGetAddressesResponseBodySchema>;
+export type StxGetAddressesResponse = z.infer<typeof stxGetAddressesResponseSchema>;
 
 export type DefineStxGetAddressesMethod = DefineRpcMethod<
   StxGetAddressesRequest,
