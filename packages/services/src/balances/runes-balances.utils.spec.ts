@@ -2,8 +2,8 @@ import { createMoney } from '@leather.io/utils';
 
 import { BisRuneValidOutput } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { BitcoinAccountIdentifier } from '../shared/bitcoin.types';
-import { RuneAssetBalance, RunesAccountBalance } from './runes-balances.service';
-import { aggregateRunesAccountBalances, readRunesOutputsBalances } from './runes-balances.utils';
+import { RuneBalance, RunesAccountBalance } from './runes-balances.service';
+import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 
 describe('readRunesOutputsBalances', () => {
   const runeName1 = 'SOME•RUNE•1';
@@ -73,7 +73,7 @@ const mockBitcoinAccountIdentifier: BitcoinAccountIdentifier = {
   taprootDescriptor: 'tr-descriptor',
 };
 
-const mockRuneAssetBalance: RuneAssetBalance = {
+const mockRuneAssetBalance: RuneBalance = {
   asset: {
     category: 'fungible',
     chain: 'bitcoin',
@@ -85,7 +85,7 @@ const mockRuneAssetBalance: RuneAssetBalance = {
     hasMemo: false,
   },
   crypto: mockRuneBalance,
-  usd: mockRuneBalance,
+  fiat: mockRuneBalance,
 };
 
 const mockAccountBalances: RunesAccountBalance[] = [
@@ -96,7 +96,7 @@ const mockAccountBalances: RunesAccountBalance[] = [
         ...mockRuneAssetBalance,
       },
     ],
-    usd: mockRuneBalance,
+    fiat: mockRuneBalance,
   },
   {
     account: mockBitcoinAccountIdentifier,
@@ -108,13 +108,13 @@ const mockAccountBalances: RunesAccountBalance[] = [
         },
       },
     ],
-    usd: mockRuneBalance,
+    fiat: mockRuneBalance,
   },
 ];
 
-describe('aggregateRuneAssetBalances', () => {
-  it('should aggregate balances from multiple accounts', () => {
-    const result = aggregateRunesAccountBalances(mockAccountBalances);
+describe('combineRunesBalances', () => {
+  it('should combine Rune balances from multiple accounts', () => {
+    const result = combineRunesBalances(mockAccountBalances);
 
     expect(result.length).toBe(1);
     expect(result[0].asset.runeName).toBe('TEST');
@@ -123,11 +123,11 @@ describe('aggregateRuneAssetBalances', () => {
     expect(result[0].crypto.outboundBalance.amount.toNumber()).toBe(7);
     expect(result[0].crypto.pendingBalance.amount.toNumber()).toBe(158);
     expect(result[0].crypto.availableBalance.amount.toNumber()).toBe(143);
-    expect(result[0].usd.totalBalance.amount.toNumber()).toBe(200);
+    expect(result[0].fiat.totalBalance.amount.toNumber()).toBe(200);
   });
 
   it('should handle empty address balances', () => {
-    const result = aggregateRunesAccountBalances([]);
+    const result = combineRunesBalances([]);
     expect(result).toEqual([]);
   });
 
@@ -138,7 +138,7 @@ describe('aggregateRuneAssetBalances', () => {
         ...mockRuneAssetBalance.asset,
         runeName: 'OTHER',
       },
-    } as RuneAssetBalance;
+    } as RuneBalance;
 
     const accountBalances = [
       {
@@ -149,7 +149,7 @@ describe('aggregateRuneAssetBalances', () => {
       },
     ];
 
-    const result = aggregateRunesAccountBalances(accountBalances as RunesAccountBalance[]);
+    const result = combineRunesBalances(accountBalances as RunesAccountBalance[]);
 
     expect(result.length).toBe(2);
     expect(result[0].asset.runeName).toBe('TEST');

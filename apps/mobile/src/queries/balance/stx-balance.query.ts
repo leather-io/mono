@@ -3,6 +3,7 @@ import {
   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,
 } from '@/store/keychains/stacks/stacks-keychains.read';
+import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getStxBalancesService } from '@leather.io/services';
@@ -21,8 +22,9 @@ export function useStxAccountBalance(fingerprint: string, accountIndex: number) 
 }
 
 export function useStxAggregateBalanceQuery(addresses: string[]) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-aggregate-balance', addresses],
+    queryKey: ['stx-balances-service-get-stx-aggregate-balance', addresses, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAggregateBalance(addresses, signal),
     refetchOnReconnect: false,
@@ -35,8 +37,9 @@ export function useStxAggregateBalanceQuery(addresses: string[]) {
 }
 
 export function useStxAddressBalanceQuery(address: string) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-address-balance', address],
+    queryKey: ['stx-balances-service-get-stx-address-balance', address, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAddressBalance(address, signal),
     refetchOnReconnect: false,

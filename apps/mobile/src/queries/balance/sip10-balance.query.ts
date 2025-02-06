@@ -3,6 +3,7 @@ import {
   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,
 } from '@/store/keychains/stacks/stacks-keychains.read';
+import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { getSip10BalancesService } from '@leather.io/services';
@@ -25,8 +26,13 @@ export function useSip10AccountBalance(fingerprint: string, accountIndex: number
 }
 
 export function useSip10AggregateBalanceQuery(addresses: string[]) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['sip10-balances-service-get-sip10-aggregate-balance', addresses],
+    queryKey: [
+      'sip10-balances-service-get-sip10-aggregate-balance',
+      addresses,
+      fiatCurrencyPreference,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalance(addresses, signal),
     refetchOnReconnect: false,
@@ -39,8 +45,9 @@ export function useSip10AggregateBalanceQuery(addresses: string[]) {
 }
 
 export function useSip10AddressBalanceQuery(address: string) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['sip10-balances-service-get-sip10-address-balance', address],
+    queryKey: ['sip10-balances-service-get-sip10-address-balance', address, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AddressBalance(address, signal),
     refetchOnReconnect: false,

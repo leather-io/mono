@@ -9,20 +9,20 @@ import {
 
 import { RuneAssetService } from '../assets/rune-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
+import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
 import { BitcoinAccountIdentifier } from '../shared/bitcoin.types';
-import { baseCryptoAssetZeroBalanceUsd } from './constants';
-import { aggregateRunesAccountBalances, readRunesOutputsBalances } from './runes-balances.utils';
+import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 
-export interface RuneAssetBalance {
+export interface RuneBalance {
   asset: RuneCryptoAssetInfo;
-  usd: CryptoAssetBalance;
+  fiat: CryptoAssetBalance;
   crypto: CryptoAssetBalance;
 }
 
 export interface RunesAggregateBalance {
-  usd: CryptoAssetBalance;
-  runes: RuneAssetBalance[];
+  fiat: CryptoAssetBalance;
+  runes: RuneBalance[];
 }
 
 export interface RunesAccountBalance extends RunesAggregateBalance {
@@ -41,13 +41,13 @@ export interface RunesBalancesService {
 }
 
 export function createRunesBalancesService(
+  settingsService: SettingsService,
   bisApiClient: BestInSlotApiClient,
   marketDataService: MarketDataService,
   runeAssetService: RuneAssetService
 ): RunesBalancesService {
   /**
-   * Retrieves cumulative Rune balance (denominated in USD) for provided Bitcoin accounts.
-   * Includes full balance information for each individual account.
+   * Gets combined Runes balances of provided Bitcoin accounts list. Includes cumulative fiat value.
    */
   async function getRunesAggregateBalance(
     accounts: BitcoinAccountIdentifier[],
@@ -56,18 +56,20 @@ export function createRunesBalancesService(
     const accountBalances = await Promise.all(
       accounts.map(account => getRunesAccountBalance(account, signal))
     );
+
+    const cumulativeFiatBalance =
+      accountBalances.length > 0
+        ? aggregateBaseCryptoAssetBalances(accountBalances.map(r => r.fiat))
+        : createBaseCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+
     return {
-      usd: aggregateBaseCryptoAssetBalances([
-        baseCryptoAssetZeroBalanceUsd,
-        ...accountBalances.map(b => b.usd),
-      ]),
-      runes: aggregateRunesAccountBalances(accountBalances),
+      fiat: cumulativeFiatBalance,
+      runes: combineRunesBalances(accountBalances),
     };
   }
 
   /**
-   * Retrieve Rune balances for given account.
-   * Includes cumulative USD-denominated balance.
+   * Gets all Rune balances for given account. Includes cumulative fiat value.
    */
   async function getRunesAccountBalance(
     account: BitcoinAccountIdentifier,
@@ -83,12 +85,15 @@ export function createRunesBalancesService(
         return getRuneBalance(runeName, runesOutputsBalances[runeName], signal);
       })
     );
+
+    const cumulativeFiatBalance =
+      runesBalances.length > 0
+        ? aggregateBaseCryptoAssetBalances(runesBalances.map(b => b.fiat))
+        : createBaseCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+
     return {
       account,
-      usd: aggregateBaseCryptoAssetBalances([
-        baseCryptoAssetZeroBalanceUsd,
-        ...runesBalances.map(b => b.usd),
-      ]),
+      fiat: cumulativeFiatBalance,
       runes: runesBalances,
     };
   }
@@ -97,13 +102,13 @@ export function createRunesBalancesService(
     runeName: string,
     amount: string,
     signal?: AbortSignal
-  ): Promise<RuneAssetBalance> {
+  ): Promise<RuneBalance> {
     const runeInfo = await runeAssetService.getAssetInfo(runeName, signal);
     const totalBalance = createMoney(initBigNumber(amount), runeInfo.runeName, runeInfo.decimals);
     const runeMarketData = await marketDataService.getRuneMarketData(runeInfo, signal);
     return {
       asset: runeInfo,
-      usd: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),
+      fiat: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };
   }

@@ -49,7 +49,7 @@ export function Sip10Balance() {
         symbol={balance.asset.symbol}
         name={balance.asset.name}
         availableBalance={balance.crypto.availableBalance}
-        fiatBalance={balance.usd.totalBalance}
+        fiatBalance={balance.fiat.totalBalance}
         px="5"
         py="3"
       />
@@ -73,7 +73,7 @@ export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10Balanc
         symbol={balance.asset.symbol}
         name={balance.asset.name}
         availableBalance={balance.crypto.availableBalance}
-        fiatBalance={balance.usd.totalBalance}
+        fiatBalance={balance.fiat.totalBalance}
         px="5"
         py="3"
       />

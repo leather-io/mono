@@ -1,7 +1,7 @@
 import { aggregateBaseCryptoAssetBalances, initBigNumber } from '@leather.io/utils';
 
 import { BisRuneValidOutput } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
-import { RuneAssetBalance, RunesAccountBalance } from './runes-balances.service';
+import { RuneBalance, RunesAccountBalance } from './runes-balances.service';
 
 export interface RunesOutputsBalances {
   [runeName: string]: string;
@@ -23,9 +23,7 @@ export function readRunesOutputsBalances(outputs: BisRuneValidOutput[]) {
   return runesBalances;
 }
 
-export function aggregateRunesAccountBalances(
-  accountBalances: RunesAccountBalance[]
-): RuneAssetBalance[] {
+export function combineRunesBalances(accountBalances: RunesAccountBalance[]): RuneBalance[] {
   return accountBalances
     .flatMap(entry => entry.runes)
     .reduce((acc, runeBalance) => {
@@ -35,17 +33,17 @@ export function aggregateRunesAccountBalances(
           existingBalance.crypto,
           runeBalance.crypto,
         ]);
-        existingBalance.usd = aggregateBaseCryptoAssetBalances([
-          existingBalance.usd,
-          runeBalance.usd,
+        existingBalance.fiat = aggregateBaseCryptoAssetBalances([
+          existingBalance.fiat,
+          runeBalance.fiat,
         ]);
       } else {
         acc.push({
           asset: runeBalance.asset,
           crypto: runeBalance.crypto,
-          usd: runeBalance.usd,
+          fiat: runeBalance.fiat,
         });
       }
       return acc;
-    }, [] as RuneAssetBalance[]);
+    }, [] as RuneBalance[]);
 }

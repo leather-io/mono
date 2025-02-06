@@ -4,6 +4,7 @@ import {
   useWalletBitcoinAccountServiceRequests,
 } from '@/hooks/use-bitcoin-account-service-requests';
 import { toFetchState } from '@/shared/fetch-state';
+import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { BitcoinAccountServiceRequest, getBtcBalancesService } from '@leather.io/services';
@@ -24,8 +25,13 @@ export function useBtcAccountBalance(fingerprint: string, accountIndex: number) 
 }
 
 export function useBtcAccountBalanceQuery(serviceRequest: BitcoinAccountServiceRequest) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-account-balance', serviceRequest],
+    queryKey: [
+      'btc-balance-service-get-btc-account-balance',
+      serviceRequest,
+      fiatCurrencyPreference,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBtcBalancesService().getBtcAccountBalance(serviceRequest, signal),
     refetchOnReconnect: false,
@@ -38,8 +44,13 @@ export function useBtcAccountBalanceQuery(serviceRequest: BitcoinAccountServiceR
 }
 
 export function useBtcAggregateBalanceQuery(serviceRequests: BitcoinAccountServiceRequest[]) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-aggregate-balance', serviceRequests],
+    queryKey: [
+      'btc-balance-service-get-btc-aggregate-balance',
+      serviceRequests,
+      fiatCurrencyPreference,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBtcBalancesService().getBtcAggregateBalance(serviceRequests, signal),
     refetchOnReconnect: false,

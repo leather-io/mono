@@ -4,6 +4,7 @@ import {
   useWalletBitcoinAccountServiceRequests,
 } from '@/hooks/use-bitcoin-account-service-requests';
 import { toFetchState } from '@/shared/fetch-state';
+import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { BitcoinAccountIdentifier, getRunesBalancesService } from '@leather.io/services';
@@ -25,8 +26,13 @@ export function useRunesAccountBalance(fingerprint: string, accountIndex: number
 }
 
 export function useRunesAggregateBalanceQuery(accounts: BitcoinAccountIdentifier[]) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['runes-balances-service-get-runes-aggregate-balance', accounts],
+    queryKey: [
+      'runes-balances-service-get-runes-aggregate-balance',
+      accounts,
+      fiatCurrencyPreference,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAggregateBalance(accounts, signal),
     refetchOnReconnect: false,
@@ -39,8 +45,9 @@ export function useRunesAggregateBalanceQuery(accounts: BitcoinAccountIdentifier
 }
 
 export function useRunesAccountBalanceQuery(account: BitcoinAccountIdentifier) {
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['runes-balances-service-get-runes-account-balance', account],
+    queryKey: ['runes-balances-service-get-runes-account-balance', account, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(account, signal),
     refetchOnReconnect: false,

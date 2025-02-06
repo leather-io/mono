@@ -36,7 +36,7 @@ export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps)
 
   return children({
     availableBalance: btcBalance.value.btc.availableBalance,
-    fiatBalance: btcBalance.value.usd.availableBalance,
+    fiatBalance: btcBalance.value.fiat.availableBalance,
     feeRates: feeRates || zeroFees,
     utxos: accountUtxos.value.available,
   });

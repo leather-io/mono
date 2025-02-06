@@ -47,7 +47,7 @@ export function RunesBalance() {
       symbol={balance.asset.symbol}
       name={balance.asset.runeName}
       availableBalance={balance.crypto.availableBalance}
-      fiatBalance={balance.usd.totalBalance}
+      fiatBalance={balance.fiat.totalBalance}
       px="5"
       py="3"
     />
@@ -65,7 +65,7 @@ export function RunesBalanceByAccount({ fingerprint, accountIndex }: AccountId) 
       symbol={balance.asset.symbol}
       name={balance.asset.spacedRuneName}
       availableBalance={balance.crypto.availableBalance}
-      fiatBalance={balance.usd.availableBalance}
+      fiatBalance={balance.fiat.availableBalance}
       px="5"
       py="3"
     />

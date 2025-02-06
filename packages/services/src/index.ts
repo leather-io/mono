@@ -7,7 +7,7 @@ export * from './infrastructure/api/alex-sdk/alex-sdk.client';
 export * from './infrastructure/api/coingecko/coingecko-api.client';
 export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
-export * from './infrastructure/settings/network-settings.service';
+export * from './infrastructure/settings/settings.service';
 export * from './inversify.config';
 export * from './market-data/market-data.service';
 export * from './shared/bitcoin.types';

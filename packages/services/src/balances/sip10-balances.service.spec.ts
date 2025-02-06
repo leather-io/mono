@@ -7,6 +7,7 @@ import {
   getContractPrincipalFromAssetIdentifier,
 } from '../assets/sip10-asset.utils';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
 import { createSip10BalancesService } from './sip10-balances.service';
 
@@ -52,7 +53,14 @@ describe('Sip10BalancesService', () => {
     ),
   } as Sip10AssetService;
 
+  const mockSettingsService = {
+    getSettings: vi.fn().mockResolvedValue({
+      fiatCurrency: 'USD',
+    }),
+  } as unknown as SettingsService;
+
   const sip10BalancesService = createSip10BalancesService(
+    mockSettingsService,
     mockStacksApiClient,
     mockMarketDataService,
     mockSip10TokensService
@@ -82,15 +90,15 @@ describe('Sip10BalancesService', () => {
       expect(balance.sip10s[0].crypto.availableBalance.amount).toEqual(initBigNumber(12000000));
       expect(balance.sip10s[1].crypto.totalBalance.amount).toEqual(initBigNumber(20000000));
       expect(balance.sip10s[1].crypto.availableBalance.amount).toEqual(initBigNumber(20000000));
-      expect(balance.sip10s[0].usd.totalBalance.amount).toEqual(initBigNumber(600));
-      expect(balance.sip10s[0].usd.availableBalance.amount).toEqual(initBigNumber(600));
-      expect(balance.sip10s[1].usd.totalBalance.amount).toEqual(initBigNumber(2000));
-      expect(balance.sip10s[1].usd.availableBalance.amount).toEqual(initBigNumber(2000));
+      expect(balance.sip10s[0].fiat.totalBalance.amount).toEqual(initBigNumber(600));
+      expect(balance.sip10s[0].fiat.availableBalance.amount).toEqual(initBigNumber(600));
+      expect(balance.sip10s[1].fiat.totalBalance.amount).toEqual(initBigNumber(2000));
+      expect(balance.sip10s[1].fiat.availableBalance.amount).toEqual(initBigNumber(2000));
     });
 
     it('sums the total usd balance of each sip10 token for an address', async () => {
       const balance = await sip10BalancesService.getSip10AddressBalance('STACKS_ADDRESS');
-      expect(balance.usd.availableBalance.amount).toEqual(initBigNumber(2600));
+      expect(balance.fiat.availableBalance.amount).toEqual(initBigNumber(2600));
     });
   });
 
@@ -117,8 +125,8 @@ describe('Sip10BalancesService', () => {
         'STACKS_ADDRESS2',
         'STACKS_ADDRESS3',
       ]);
-      expect(aggregateBalance.usd.totalBalance.amount).toEqual(initBigNumber(7800));
-      expect(aggregateBalance.usd.availableBalance.amount).toEqual(initBigNumber(7800));
+      expect(aggregateBalance.fiat.totalBalance.amount).toEqual(initBigNumber(7800));
+      expect(aggregateBalance.fiat.availableBalance.amount).toEqual(initBigNumber(7800));
     });
   });
 });

@@ -1,12 +1,13 @@
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { FetchState, toFetchState } from '@/shared/fetch-state';
+import { useSettings } from '@/store/settings/settings';
 
 import { Money } from '@leather.io/models';
 import {
-  BtcAggregateBalance,
+  BtcBalance,
   RunesAggregateBalance,
   Sip10AggregateBalance,
-  StxAggregateBalance,
+  StxBalance,
 } from '@leather.io/services';
 import { createMoney, isDefined, sumMoney } from '@leather.io/utils';
 
@@ -15,16 +16,17 @@ import { useRunesTotalBalance } from './runes-balance.query';
 import { useSip10TotalBalance } from './sip10-balance.query';
 
 interface TotalBalance {
-  btc: FetchState<BtcAggregateBalance>;
-  stx: FetchState<StxAggregateBalance>;
+  btc: FetchState<BtcBalance>;
+  stx: FetchState<StxBalance>;
   sip10: FetchState<Sip10AggregateBalance>;
   runes: FetchState<RunesAggregateBalance>;
   totalBalance: FetchState<Money>;
 }
 
-const zeroMoneyUsd = createMoney(0, 'USD');
-
 export function useTotalBalance(): TotalBalance {
+  const { fiatCurrencyPreference } = useSettings();
+  const zeroMoneyFiat = createMoney(0, fiatCurrencyPreference);
+
   const btcTotalBalance = useBtcTotalBalance();
   const stxTotalBalance = useStxTotalBalance();
   const sip10TotalBalance = useSip10TotalBalance();
@@ -42,11 +44,11 @@ export function useTotalBalance(): TotalBalance {
     runesTotalBalance.state === 'error';
   const accountBalance = sumMoney(
     [
-      zeroMoneyUsd,
-      btcTotalBalance.value?.usd.availableBalance,
-      stxTotalBalance.value?.usd.availableBalance,
-      sip10TotalBalance.value?.usd.availableBalance,
-      runesTotalBalance.value?.usd.availableBalance,
+      zeroMoneyFiat,
+      btcTotalBalance.value?.fiat.availableBalance,
+      stxTotalBalance.value?.fiat.availableBalance,
+      sip10TotalBalance.value?.fiat.availableBalance,
+      runesTotalBalance.value?.fiat.availableBalance,
     ].filter(isDefined)
   );
 

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
-import { NetworkSettingsService } from '../../settings/network-settings.service';
+import { SettingsService } from '../../settings/settings.service';
 
 const leatherApiUtxoSchema = z.object({
   address: z.string(),
@@ -44,20 +44,59 @@ const leatherApiTxLightSchema = z.object({
   vout: leatherApiTxVoutLightSchema,
 });
 
+const leatherApiFiatExchangeRatesSchema = z.object({
+  USD: z.number(),
+  EUR: z.number(),
+  GBP: z.number(),
+  AUD: z.number(),
+  CAD: z.number(),
+  CNY: z.number(),
+  JPY: z.number(),
+  KRW: z.number(),
+});
+
+const mockFiatExchangeRatesResponse = {
+  USD: 1,
+  EUR: 0.965411,
+  GBP: 0.808343,
+  AUD: 1.595469,
+  CAD: 1.435245,
+  CNY: 7.288765,
+  JPY: 152.33683,
+  KRW: 1450.4297,
+};
+
 export type LeatherApiUtxo = z.infer<typeof leatherApiUtxoSchema>;
 export type LeatherApiTxLight = z.infer<typeof leatherApiTxLightSchema>;
+export interface LeatherApiExchangeRates {
+  [symbol: string]: number;
+}
 
 export interface LeatherApiClient {
+  fetchFiatExchangeRates(signal?: AbortSignal): Promise<LeatherApiExchangeRates>;
   fetchUtxos(descriptor: string, signal?: AbortSignal): Promise<LeatherApiUtxo[]>;
   fetchTxs(descriptor: string, signal?: AbortSignal): Promise<LeatherApiTxLight[]>;
 }
 
 export function createLeatherApiClient(
   cacheService: HttpCacheService,
-  networkService: NetworkSettingsService
-) {
+  settingsService: SettingsService
+): LeatherApiClient {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function fetchFiatExchangeRates(signal?: AbortSignal) {
+    return await cacheService.fetchWithCache(
+      ['leather-fiat-exchange-rates'],
+      async () => {
+        // TODO: replace with Leather API call once available
+        const res = await Promise.resolve(mockFiatExchangeRatesResponse);
+        return leatherApiFiatExchangeRatesSchema.parse(res);
+      },
+      { ttl: HttpCacheTimeMs.oneDay }
+    );
+  }
+
   async function fetchUtxos(descriptor: string, signal?: AbortSignal) {
-    const network = networkService.getConfig().chain.bitcoin.bitcoinNetwork;
+    const network = settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
     return await cacheService.fetchWithCache(
       ['leather-utxos', network, descriptor],
       async () => {
@@ -72,7 +111,7 @@ export function createLeatherApiClient(
   }
 
   async function fetchTxs(descriptor: string, signal?: AbortSignal) {
-    const network = networkService.getConfig().chain.bitcoin.bitcoinNetwork;
+    const network = settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
     return await cacheService.fetchWithCache(
       ['leather-txs', network, descriptor],
       async () => {
@@ -87,6 +126,7 @@ export function createLeatherApiClient(
   }
 
   return {
+    fetchFiatExchangeRates,
     fetchUtxos,
     fetchTxs,
   };

@@ -1,17 +1,16 @@
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
 
-import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
-import { FungibleCryptoAssetInfo, NetworkModes } from '@leather.io/models';
+import { FiatCurrency, FungibleCryptoAssetInfo } from '@leather.io/models';
 import { getMarketDataService } from '@leather.io/services';
 import { oneMinInMs } from '@leather.io/utils';
 
 export function createMarketDataQueryOptions(
   token: FungibleCryptoAssetInfo,
-  network: NetworkModes
+  currency: FiatCurrency
 ) {
   return {
-    queryKey: ['market-data-service-get-market-data', network, token],
+    queryKey: ['market-data-service-get-market-data', token, currency],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getMarketDataService().getMarketData(token, signal),
     refetchOnReconnect: false,
@@ -24,23 +23,13 @@ export function createMarketDataQueryOptions(
 }
 
 export function useMarketDataQuery(token: FungibleCryptoAssetInfo) {
-  const { networkPreference } = useSettings();
-  return useQuery(
-    createMarketDataQueryOptions(
-      token,
-      bitcoinNetworkModeToCoreNetworkMode(networkPreference.chain.bitcoin.mode)
-    )
-  );
+  const { fiatCurrencyPreference } = useSettings();
+  return useQuery(createMarketDataQueryOptions(token, fiatCurrencyPreference));
 }
 
 export function useMarketDataQueries(tokens: FungibleCryptoAssetInfo[]) {
-  const { networkPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   return useQueries({
-    queries: tokens.map(token =>
-      createMarketDataQueryOptions(
-        token,
-        bitcoinNetworkModeToCoreNetworkMode(networkPreference.chain.bitcoin.mode)
-      )
-    ),
+    queries: tokens.map(token => createMarketDataQueryOptions(token, fiatCurrencyPreference)),
   });
 }

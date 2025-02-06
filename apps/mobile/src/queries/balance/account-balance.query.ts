@@ -1,6 +1,7 @@
 import { AccountId } from '@/models/domain.model';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { FetchState, toFetchState } from '@/shared/fetch-state';
+import { useSettings } from '@/store/settings/settings';
 
 import { Money } from '@leather.io/models';
 import {
@@ -23,10 +24,10 @@ interface AccountBalance {
   totalBalance: FetchState<Money>;
 }
 
-const zeroMoneyUsd = createMoney(0, 'USD');
-
 export function useAccountBalance(accountId: AccountId): AccountBalance {
   const { fingerprint, accountIndex } = accountId;
+  const { fiatCurrencyPreference } = useSettings();
+  const zeroMoneyFiat = createMoney(0, fiatCurrencyPreference);
 
   const btcAccountBalance = useBtcAccountBalance(fingerprint, accountIndex);
   const stxAccountBalance = useStxAccountBalance(fingerprint, accountIndex);
@@ -45,11 +46,11 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
     runesAccountBalance.state === 'error';
   const accountBalance = sumMoney(
     [
-      zeroMoneyUsd,
-      btcAccountBalance.value?.usd.availableBalance,
-      stxAccountBalance.value?.usd.availableBalance,
-      sip10AccountBalance.value?.usd.availableBalance,
-      runesAccountBalance.value?.usd.availableBalance,
+      zeroMoneyFiat,
+      btcAccountBalance.value?.fiat.availableBalance,
+      stxAccountBalance.value?.fiat.availableBalance,
+      sip10AccountBalance.value?.fiat.availableBalance,
+      runesAccountBalance.value?.fiat.availableBalance,
     ].filter(isDefined)
   );
 

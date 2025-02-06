@@ -8,19 +8,19 @@ import {
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
-import { baseCryptoAssetZeroBalanceUsd } from './constants';
-import { aggregateSip10AddressBalances } from './sip10-balances.utils';
+import { combineSip10Balances } from './sip10-balances.utils';
 
-export interface Sip10AssetBalance {
+export interface Sip10Balance {
   asset: Sip10CryptoAssetInfo;
-  usd: CryptoAssetBalance;
+  fiat: CryptoAssetBalance;
   crypto: CryptoAssetBalance;
 }
 
 export interface Sip10AggregateBalance {
-  usd: CryptoAssetBalance;
-  sip10s: Sip10AssetBalance[];
+  fiat: CryptoAssetBalance;
+  sip10s: Sip10Balance[];
 }
 
 export interface Sip10AddressBalance extends Sip10AggregateBalance {
@@ -36,44 +36,51 @@ export interface Sip10BalancesService {
 }
 
 export function createSip10BalancesService(
+  settingsService: SettingsService,
   stacksApiClient: HiroStacksApiClient,
   marketDataService: MarketDataService,
   sip10TokensService: Sip10AssetService
 ): Sip10BalancesService {
   /**
-   * Gets the cumulative SIP10 balance (denominated in USD) of a list of Stacks addresses. Includes full balance information for each individual address.
+   * Gets combined SIP10 token balances of provided Stacks address list. Includes cumulative fiat value.
    */
   async function getSip10AggregateBalance(addresses: string[], signal?: AbortSignal) {
     const addressBalances = await Promise.all(
       addresses.map(address => getSip10AddressBalance(address, signal))
     );
-    const totalUsdBalance = aggregateBaseCryptoAssetBalances([
-      baseCryptoAssetZeroBalanceUsd,
-      ...addressBalances.map(r => r.usd),
-    ]);
+
+    const cumulativeFiatBalance =
+      addressBalances.length > 0
+        ? aggregateBaseCryptoAssetBalances(addressBalances.map(r => r.fiat))
+        : createBaseCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+
     return {
-      usd: totalUsdBalance,
-      sip10s: aggregateSip10AddressBalances(addressBalances),
+      fiat: cumulativeFiatBalance,
+      sip10s: combineSip10Balances(addressBalances),
     };
   }
 
   /**
-   * Gets all SIP10 balances for given address. Includes both cumulative and individual USD values.
+   * Gets all SIP10 balances for given address. Includes cumulative fiat value.
    */
   async function getSip10AddressBalance(address: string, signal?: AbortSignal) {
     const fungibleTokens = (await stacksApiClient.getAddressBalances(address, signal))
       .fungible_tokens;
+
     const sip10Balances = await Promise.all(
       Object.keys(fungibleTokens).map(tokenId => {
         return getSip10TokenBalance(tokenId, Number(fungibleTokens[tokenId]?.balance ?? 0), signal);
       })
     );
+
+    const cumulativeFiatBalance =
+      sip10Balances.length > 0
+        ? aggregateBaseCryptoAssetBalances(sip10Balances.map(b => b.fiat))
+        : createBaseCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+
     return {
       address,
-      usd: aggregateBaseCryptoAssetBalances([
-        baseCryptoAssetZeroBalanceUsd,
-        ...sip10Balances.map(b => b.usd),
-      ]),
+      fiat: cumulativeFiatBalance,
       sip10s: sip10Balances,
     };
   }
@@ -82,13 +89,14 @@ export function createSip10BalancesService(
     tokenId: string,
     amount: number,
     signal?: AbortSignal
-  ): Promise<Sip10AssetBalance> {
+  ): Promise<Sip10Balance> {
     const tokenInfo = await sip10TokensService.getAssetInfo(tokenId, signal);
     const totalBalance = createMoney(amount, tokenInfo.symbol, tokenInfo.decimals);
     const marketData = await marketDataService.getSip10MarketData(tokenInfo);
+
     return {
       asset: tokenInfo,
-      usd: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
+      fiat: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };
   }
