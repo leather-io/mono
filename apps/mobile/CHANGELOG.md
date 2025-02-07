@@ -463,6 +463,31 @@
     * @leather.io/query bumped to 2.26.20
     * @leather.io/services bumped to 1.0.4
 
+## [2.9.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.8.2...@leather.io/mobile-v2.9.0) (2025-02-07)
+
+
+### Features
+
+* runes balances service ([b2084b7](https://github.com/leather-io/mono/commit/b2084b76ccc0bef363aa11899a4f56a8d52a7f43))
+* support fiat currency setting, ref LEA-2032 ([3ccdf24](https://github.com/leather-io/mono/commit/3ccdf24c3c43d59091c96c9b6cb26aadcae0679c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.19
+    * @leather.io/crypto bumped to 1.6.35
+    * @leather.io/query bumped to 2.26.21
+    * @leather.io/rpc bumped to 2.5.6
+    * @leather.io/services bumped to 1.1.0
+    * @leather.io/stacks bumped to 1.5.20
+    * @leather.io/tokens bumped to 0.12.11
+    * @leather.io/ui bumped to 1.48.3
+    * @leather.io/utils bumped to 0.25.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.19
+
 ## [2.8.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.8.0...@leather.io/mobile-v2.8.1) (2025-02-03)
 
 

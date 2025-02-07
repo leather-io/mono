@@ -186,6 +186,14 @@
   * dependencies
     * @leather.io/models bumped to 0.25.0
 
+## [2.5.6](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.5...@leather.io/rpc-v2.5.6) (2025-02-07)
+
+
+### Bug Fixes
+
+* **rpc:** refactor msg signing types, add publicKey param in response ([2dfe6b2](https://github.com/leather-io/mono/commit/2dfe6b2fc007b6d9ff9184d35bc5cad02496182d))
+* stx call contract types ([c159b40](https://github.com/leather-io/mono/commit/c159b402633eb7ccdbbfa4eec144f2e5ec3e8cc7))
+
 ## [2.5.5](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.4...@leather.io/rpc-v2.5.5) (2025-02-03)
 
 
