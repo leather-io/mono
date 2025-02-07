@@ -1,9 +1,10 @@
-import { CryptoAssetBalance, RuneCryptoAssetInfo } from '@leather.io/models';
+import { AccountAddresses, CryptoAssetBalance, RuneCryptoAssetInfo } from '@leather.io/models';
 import {
   aggregateBaseCryptoAssetBalances,
   baseCurrencyAmountInQuote,
   createBaseCryptoAssetBalance,
   createMoney,
+  hasBitcoinAddress,
   initBigNumber,
 } from '@leather.io/utils';
 
@@ -11,7 +12,6 @@ import { RuneAssetService } from '../assets/rune-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
-import { BitcoinAccountIdentifier } from '../shared/bitcoin.types';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 
 export interface RuneBalance {
@@ -26,16 +26,16 @@ export interface RunesAggregateBalance {
 }
 
 export interface RunesAccountBalance extends RunesAggregateBalance {
-  account: BitcoinAccountIdentifier;
+  account: AccountAddresses;
 }
 
 export interface RunesBalancesService {
   getRunesAccountBalance(
-    bitcoinAccount: BitcoinAccountIdentifier,
+    account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<RunesAccountBalance>;
   getRunesAggregateBalance(
-    accounts: BitcoinAccountIdentifier[],
+    accounts: AccountAddresses[],
     signal?: AbortSignal
   ): Promise<RunesAggregateBalance>;
 }
@@ -50,7 +50,7 @@ export function createRunesBalancesService(
    * Gets combined Runes balances of provided Bitcoin accounts list. Includes cumulative fiat value.
    */
   async function getRunesAggregateBalance(
-    accounts: BitcoinAccountIdentifier[],
+    accounts: AccountAddresses[],
     signal?: AbortSignal
   ): Promise<RunesAggregateBalance> {
     const accountBalances = await Promise.all(
@@ -72,13 +72,12 @@ export function createRunesBalancesService(
    * Gets all Rune balances for given account. Includes cumulative fiat value.
    */
   async function getRunesAccountBalance(
-    account: BitcoinAccountIdentifier,
+    account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<RunesAccountBalance> {
-    const runesOutputs = await bisApiClient.fetchRunesValidOutputs(
-      account.taprootDescriptor,
-      signal
-    );
+    const runesOutputs = hasBitcoinAddress(account)
+      ? await bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, signal)
+      : [];
     const runesOutputsBalances = readRunesOutputsBalances(runesOutputs);
     const runesBalances = await Promise.all(
       Object.keys(runesOutputsBalances).map(runeName => {

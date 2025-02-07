@@ -126,6 +126,7 @@ export const btcCryptoAsset: BtcCryptoAssetInfo = {
   decimals: 8,
   hasMemo: false,
 };
+
 export const stxCryptoAsset: StxCryptoAssetInfo = {
   chain: 'stacks',
   protocol: 'nativeStx',

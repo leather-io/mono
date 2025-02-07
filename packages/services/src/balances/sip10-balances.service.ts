@@ -90,12 +90,12 @@ export function createSip10BalancesService(
     amount: number,
     signal?: AbortSignal
   ): Promise<Sip10Balance> {
-    const tokenInfo = await sip10TokensService.getAssetInfo(tokenId, signal);
-    const totalBalance = createMoney(amount, tokenInfo.symbol, tokenInfo.decimals);
-    const marketData = await marketDataService.getSip10MarketData(tokenInfo);
+    const asset = await sip10TokensService.getAssetInfo(tokenId, signal);
+    const totalBalance = createMoney(amount, asset.symbol, asset.decimals);
+    const marketData = await marketDataService.getSip10MarketData(asset);
 
     return {
-      asset: tokenInfo,
+      asset,
       fiat: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };

@@ -1,5 +1,6 @@
-import { WalletId } from '@/models/domain.model';
 import { createAction } from '@reduxjs/toolkit';
+
+import { WalletId } from '@leather.io/models';
 
 import { BitcoinKeychain } from './keychains/bitcoin/utils';
 import { StacksKeychain } from './keychains/stacks/utils';

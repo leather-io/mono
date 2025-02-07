@@ -1,9 +1,8 @@
-import { AccountId } from '@/models/domain.model';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { FetchState, toFetchState } from '@/shared/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 
-import { Money } from '@leather.io/models';
+import { AccountId, Money } from '@leather.io/models';
 import {
   BtcAccountBalance,
   RunesAccountBalance,

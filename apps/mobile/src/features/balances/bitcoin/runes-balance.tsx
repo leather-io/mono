@@ -1,11 +1,10 @@
-import { AccountId } from '@/models/domain.model';
 import {
   useRunesAccountBalance,
   useRunesTotalBalance,
 } from '@/queries/balance/runes-balance.query';
 import { useSettings } from '@/store/settings/settings';
 
-import { Money } from '@leather.io/models';
+import { AccountId, Money } from '@leather.io/models';
 import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';

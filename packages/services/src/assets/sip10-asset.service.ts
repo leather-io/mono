@@ -4,7 +4,7 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import {
   createSip10CryptoAssetInfo,
   getContractPrincipalFromAssetIdentifier,
-} from './sip10-asset.utils';
+} from './stacks-asset.utils';
 
 export interface Sip10AssetService {
   getAssetInfo(assetIdentifier: string, signal?: AbortSignal): Promise<Sip10CryptoAssetInfo>;

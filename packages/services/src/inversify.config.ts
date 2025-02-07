@@ -1,6 +1,8 @@
 import { Container } from 'inversify';
 
+import { ActivityService, createActivityService } from './activity/activity.service';
 import { RuneAssetService, createRuneAssetService } from './assets/rune-asset.service';
+import { Sip9AssetService, createSip9AssetService } from './assets/sip9-asset.service';
 import { Sip10AssetService, createSip10AssetService } from './assets/sip10-asset.service';
 import { BtcBalancesService, createBtcBalancesService } from './balances/btc-balances.service';
 import {
@@ -84,10 +86,12 @@ export const Services = {
   Sip10BalancesService: Symbol.for('Sip10BalancesService'),
   RunesBalancesService: Symbol.for('RunesBalancesService'),
   Sip10AssetService: Symbol.for('Sip10AssetService'),
+  Sip9AssetService: Symbol.for('Sip9AssetService'),
   RuneAssetService: Symbol.for('RuneAssetService'),
   UtxosService: Symbol.for('UtxosService'),
   StacksTransactionsService: Symbol.for('StacksTransactionsService'),
   BitcoinTransactionsService: Symbol.for('BitcoinTransactionsService'),
+  ActivityService: Symbol.for('ActivityService'),
   NotificationsService: Symbol.for('NotificationsService'),
 };
 
@@ -155,6 +159,12 @@ function registerApplicationServices(container: Container) {
     .bind<Sip10AssetService>(Services.Sip10AssetService)
     .toDynamicValue(c =>
       createSip10AssetService(c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient))
+    )
+    .inSingletonScope();
+  container
+    .bind<Sip9AssetService>(Services.Sip9AssetService)
+    .toDynamicValue(c =>
+      createSip9AssetService(c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient))
     )
     .inSingletonScope();
   container
@@ -231,6 +241,19 @@ function registerApplicationServices(container: Container) {
     )
     .inSingletonScope();
   container
+    .bind<ActivityService>(Services.ActivityService)
+    .toDynamicValue(c =>
+      createActivityService(
+        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
+        c.container.get<StacksTransactionsService>(Services.StacksTransactionsService),
+        c.container.get<BitcoinTransactionsService>(Services.BitcoinTransactionsService),
+        c.container.get<MarketDataService>(Services.MarketDataService),
+        c.container.get<Sip10AssetService>(Services.Sip10AssetService),
+        c.container.get<Sip9AssetService>(Services.Sip9AssetService)
+      )
+    )
+    .inSingletonScope();
+  container
     .bind<NotificationsService>(Services.NotificationsService)
     .toDynamicValue(c =>
       createNotificationsService(c.container.get<LeatherApiClient>(Services.LeatherApiClient))
@@ -267,6 +290,12 @@ export function getUtxosService() {
 }
 export function getStacksTransactionsService() {
   return getContainer().get<StacksTransactionsService>(Services.StacksTransactionsService);
+}
+export function getBitcoinTransactionsService() {
+  return getContainer().get<BitcoinTransactionsService>(Services.BitcoinTransactionsService);
+}
+export function getActivityService() {
+  return getContainer().get<ActivityService>(Services.ActivityService);
 }
 export function getNotificationsService() {
   return getContainer().get<NotificationsService>(Services.NotificationsService);

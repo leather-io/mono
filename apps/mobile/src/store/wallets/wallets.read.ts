@@ -1,4 +1,4 @@
-import { WalletId } from '@/models/domain.model';
+import { WalletId } from '@leather.io/models';
 
 import { RootState } from '..';
 import { Account } from '../accounts/accounts';

@@ -1,7 +1,7 @@
 import { Balance } from '@/components/balance/balance';
-import { AccountId } from '@/models/domain.model';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 
+import { AccountId } from '@leather.io/models';
 import { TextProps } from '@leather.io/ui/native';
 
 type AccountBalanceProps = AccountId & TextProps;

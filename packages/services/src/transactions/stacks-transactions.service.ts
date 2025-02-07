@@ -17,13 +17,14 @@ export function createStacksTransactionsService(
    * Gets pending Stacks transactions from mempool by address.
    */
   async function getPendingTransactions(address: string, signal?: AbortSignal) {
-    const [mempoolTransactionsRes, confirmedTransactionsRes] = await Promise.all([
+    const [mempoolTransactionsResponse, addressTransactionsResponse] = await Promise.all([
       stacksApiClient.getAddressMempoolTransactions(address, signal),
-      stacksApiClient.getAddressConfirmedTransactions(address, signal),
+      stacksApiClient.getAddressTransactions(address, { pages: 1 }, signal),
     ]);
-    return mempoolTransactionsRes.results
-      .filter(filterOutConfirmedTransactions(confirmedTransactionsRes.results))
-      .filter(filterOutStaleTransactions(confirmedTransactionsRes.results));
+    const addressTransactions = addressTransactionsResponse.map(tx => tx.tx);
+    return mempoolTransactionsResponse.results
+      .filter(filterOutConfirmedTransactions(addressTransactions))
+      .filter(filterOutStaleTransactions(addressTransactions));
   }
 
   return {

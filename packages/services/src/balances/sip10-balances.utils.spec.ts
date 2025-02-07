@@ -25,6 +25,7 @@ const mockSip10AssetBalance: Sip10Balance = {
     name: 'Test Token',
     symbol: 'TEST',
     decimals: 6,
+    assetId: 'SP000...TEST',
     contractId: 'SP000...TEST',
     chain: 'stacks',
     protocol: 'sip10',

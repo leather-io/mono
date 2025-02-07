@@ -1,6 +1,6 @@
-import { AccountId } from '@/models/domain.model';
 import { useAccountDisplayAddress } from '@/store/settings/settings.read';
 
+import { AccountId } from '@leather.io/models';
 import { Text, TextProps } from '@leather.io/ui/native';
 
 type AccountAddressProps = AccountId & TextProps;

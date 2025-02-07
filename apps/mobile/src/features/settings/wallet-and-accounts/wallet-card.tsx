@@ -5,7 +5,6 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/accounts/components/account-address';
 import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { AccountCard } from '@/features/accounts/components/account-card';
-import { WalletId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
@@ -15,6 +14,7 @@ import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
+import { WalletId } from '@leather.io/models';
 import {
   Box,
   Button,

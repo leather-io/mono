@@ -28,6 +28,7 @@ export function createSip10CryptoAssetInfo(
     category: CryptoAssetCategories.fungible,
     protocol: CryptoAssetProtocols.sip10,
     canTransfer: isTransferableSip10Token(ftAsset),
+    assetId: key,
     contractId: key,
     decimals: ftAsset.decimals ?? 0,
     hasMemo: isTransferableSip10Token(ftAsset),

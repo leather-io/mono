@@ -1,9 +1,20 @@
-import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { BitcoinAccountIdentifier } from '../shared/bitcoin.types';
+import { AccountAddresses } from '@leather.io/models';
+import { hasBitcoinAddress } from '@leather.io/utils';
+
+import {
+  LeatherApiBitcoinTransaction,
+  LeatherApiClient,
+} from '../infrastructure/api/leather/leather-api.client';
 
 export interface BitcoinTransactionsService {
-  getAccountTransactions(account: BitcoinAccountIdentifier, signal?: AbortSignal): Promise<any[]>;
-  getDescriptorTransactions(descriptor: string, signal?: AbortSignal): Promise<any[]>;
+  getAccountTransactions(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<LeatherApiBitcoinTransaction[]>;
+  getDescriptorTransactions(
+    descriptor: string,
+    signal?: AbortSignal
+  ): Promise<LeatherApiBitcoinTransaction[]>;
 }
 
 export function createBitcoinTransactionsService(
@@ -12,13 +23,22 @@ export function createBitcoinTransactionsService(
   /* 
     Gets bitcoin transactions for an account
   */
-  async function getAccountTransactions(account: BitcoinAccountIdentifier, signal?: AbortSignal) {
+  async function getAccountTransactions(account: AccountAddresses, signal?: AbortSignal) {
+    if (!hasBitcoinAddress(account)) return [];
+
     const [nativeSegwitTxs, taprootTxs] = await Promise.all([
-      getDescriptorTransactions(account.nativeSegwitDescriptor, signal),
-      getDescriptorTransactions(account.taprootDescriptor, signal),
+      getDescriptorTransactions(account.bitcoin.nativeSegwitDescriptor, signal),
+      getDescriptorTransactions(account.bitcoin.taprootDescriptor, signal),
     ]);
-    // TODO: combine duplicate txids
-    return [...nativeSegwitTxs, ...taprootTxs];
+
+    const uniqueTxsMap = new Map<string, LeatherApiBitcoinTransaction>();
+    [...nativeSegwitTxs, ...taprootTxs].forEach(tx => {
+      if (!uniqueTxsMap.has(tx.txid)) {
+        uniqueTxsMap.set(tx.txid, tx);
+      }
+    });
+
+    return Array.from(uniqueTxsMap.values());
   }
   /* 
     Gets bitcoin transactions for a descriptor
@@ -31,6 +51,7 @@ export function createBitcoinTransactionsService(
     );
     return res.data;
   }
+
   return {
     getAccountTransactions,
     getDescriptorTransactions,

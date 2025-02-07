@@ -1,8 +1,7 @@
-import { AccountId } from '@/models/domain.model';
 import { useStxAddressBalanceQuery } from '@/queries/balance/stx-balance.query';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
-import { Money } from '@leather.io/models';
+import { AccountId, Money } from '@leather.io/models';
 import { useNextNonce } from '@leather.io/query';
 
 interface SendFormStxData {

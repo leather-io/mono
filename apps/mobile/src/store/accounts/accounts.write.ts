@@ -1,7 +1,8 @@
-import { AccountId } from '@/models/domain.model';
 import { t } from '@lingui/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
+
+import { AccountId } from '@leather.io/models';
 
 import { handleAppResetWithState, userAddsWallet, userRemovesWallet } from '../global-action';
 import { BitcoinKeychain } from '../keychains/bitcoin/utils';
