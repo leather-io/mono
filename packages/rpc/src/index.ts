@@ -11,7 +11,7 @@ import { DefineStxCallContractMethod } from './methods/stacks/stx-call-contract'
 import { DefineStxDeployContractMethod } from './methods/stacks/stx-deploy-contract';
 import { DefineStxGetAddressesMethod } from './methods/stacks/stx-get-addresses';
 import { DefineStxSignMessageMethod } from './methods/stacks/stx-sign-message';
-import { DefineStxSignStructuredMessageMethod } from './methods/stacks/stx-sign-structured-message.ts';
+import { DefineStxSignStructuredMessageMethod } from './methods/stacks/stx-sign-structured-message';
 import { DefineStxSignTransactionMethod } from './methods/stacks/stx-sign-transaction';
 import { DefineStxTransferSip10FtMethod } from './methods/stacks/stx-transfer-sip10-ft';
 import { DefineStxTransferStxMethod } from './methods/stacks/stx-transfer-stx';
@@ -28,6 +28,7 @@ export * from './methods/bitcoin/sign-message';
 export * from './methods/stacks/_clarity-values';
 export * from './methods/stacks/_stacks-helpers';
 export * from './methods/stacks/stx-sign-message';
+export * from './methods/stacks/stx-sign-structured-message';
 export * from './methods/stacks/stx-sign-transaction';
 export * from './methods/stacks/stx-call-contract';
 export * from './methods/stacks/stx-deploy-contract';
