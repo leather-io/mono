@@ -186,6 +186,13 @@
   * dependencies
     * @leather.io/models bumped to 0.25.0
 
+## [2.5.9](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.8...@leather.io/rpc-v2.5.9) (2025-02-10)
+
+
+### Bug Fixes
+
+* remove clarity value from sip30 types ([d0fc303](https://github.com/leather-io/mono/commit/d0fc303c76d3295f411f48cfbee5028c77cf5cbb))
+
 ## [2.5.8](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.7...@leather.io/rpc-v2.5.8) (2025-02-10)
 
 
