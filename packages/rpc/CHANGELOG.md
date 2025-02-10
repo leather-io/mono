@@ -186,6 +186,13 @@
   * dependencies
     * @leather.io/models bumped to 0.25.0
 
+## [2.5.8](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.7...@leather.io/rpc-v2.5.8) (2025-02-10)
+
+
+### Bug Fixes
+
+* update stx deploy contract types ([9adf8ce](https://github.com/leather-io/mono/commit/9adf8cec5ff88dcbd7bb268b09ad0bd37f87b713))
+
 ## [2.5.7](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.6...@leather.io/rpc-v2.5.7) (2025-02-10)
 
 
