@@ -186,6 +186,13 @@
   * dependencies
     * @leather.io/models bumped to 0.25.0
 
+## [2.5.7](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.6...@leather.io/rpc-v2.5.7) (2025-02-10)
+
+
+### Bug Fixes
+
+* **rpc:** export types ([0680dd8](https://github.com/leather-io/mono/commit/0680dd8c758fa446d874d32a5e5998d67c26fc56))
+
 ## [2.5.6](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.5...@leather.io/rpc-v2.5.6) (2025-02-07)
 
 
