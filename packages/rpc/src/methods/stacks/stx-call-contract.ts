@@ -6,7 +6,6 @@ import {
   createRpcResponseSchema,
   defaultErrorSchema,
 } from '../../rpc/schemas';
-import { clarityValueSchema } from './_clarity-values';
 import {
   baseStacksTransactionConfigSchema,
   stacksTransactionDetailsSchema,
@@ -21,7 +20,7 @@ export const stxCallContractRequestParamsSchema = z.intersection(
   z.object({
     contract: z.string(),
     functionName: z.string(),
-    functionArgs: z.array(clarityValueSchema).optional(),
+    functionArgs: z.array(z.string()).optional(),
   }),
   baseStacksTransactionConfigSchema
 );

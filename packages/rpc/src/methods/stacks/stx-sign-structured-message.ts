@@ -6,15 +6,14 @@ import {
   createRpcResponseSchema,
   defaultErrorSchema,
 } from '../../rpc/schemas';
-import { clarityValueSchema, cvTupleSchema } from './_clarity-values';
 
 export const stxSignStructuredMessageMethodName = 'stx_signStructuredMessage';
 export type StxSignStructuredMessageRequestMethodName = typeof stxSignStructuredMessageMethodName;
 
 // Request
 export const stxSignStructuredMessageRequestParamsSchema = z.object({
-  message: clarityValueSchema,
-  domain: cvTupleSchema,
+  domain: z.string(),
+  message: z.string(),
 });
 export type StxSignStructuredMessageRequestParams = z.infer<
   typeof stxSignStructuredMessageRequestParamsSchema
