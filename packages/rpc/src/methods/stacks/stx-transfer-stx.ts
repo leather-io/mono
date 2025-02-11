@@ -14,7 +14,7 @@ type StxTransferStxRequestMethodName = typeof stxTransferStxMethodName;
 export const stxTransferStxRequestParamsSchema = z.intersection(
   z.object({
     recipient: z.string(),
-    amount: z.number(),
+    amount: z.coerce.number(),
     memo: z.string().optional(),
   }),
   baseStacksTransactionConfigSchema
