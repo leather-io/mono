@@ -223,3 +223,8 @@ export function match<Variant extends string | number>() {
 export function removeTrailingNullCharacters(s: string) {
   return s.replace(/\0*$/g, '');
 }
+
+export function isNumberOrNumberList(value: unknown): value is number | number[] {
+  if (Array.isArray(value)) return value.every(item => isNumber(item));
+  return isNumber(value);
+}

@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-import {
-  DefineRpcMethod,
-  createRpcRequestSchema,
-  createRpcResponseSchema,
-  defaultErrorSchema,
-} from '../rpc/schemas';
-
-const rpcGetAddressesMethodName = 'getAddresses';
+import { defineRpcEndpoint } from '../rpc/schemas';
 
 export const bitcoinPaymentTypesSchema = z.enum(['p2pkh', 'p2sh', 'p2wpkh-p2sh', 'p2wpkh', 'p2tr']);
 export type BitcoinPaymentTypes = z.infer<typeof bitcoinPaymentTypesSchema>;
@@ -67,23 +60,13 @@ export const addressSchema = z.union([btcAddressSchema, stxAddressSchema]);
 
 export type Address = z.infer<typeof addressSchema>;
 
-export const getAddressesRequestSchema = createRpcRequestSchema(rpcGetAddressesMethodName);
-
-export type GetAddressesRequest = z.infer<typeof getAddressesRequestSchema>;
-
 //
 // Combined addresses response
 export const addressResponseBodySchema = z
   .object({ addresses: z.array(addressSchema) })
   .passthrough();
 
-export const getAddressesResponseSchema = createRpcResponseSchema(
-  addressResponseBodySchema,
-  defaultErrorSchema
-);
-
-export type AddressResponseBody = z.infer<typeof addressResponseBodySchema>;
-
-export type GetAddressesResponse = z.infer<typeof getAddressesResponseSchema>;
-
-export type DefineGetAddressesMethod = DefineRpcMethod<GetAddressesRequest, GetAddressesResponse>;
+export const getAddresses = defineRpcEndpoint({
+  method: 'getAddresses',
+  result: addressResponseBodySchema,
+});

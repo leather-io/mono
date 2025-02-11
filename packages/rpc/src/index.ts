@@ -1,22 +1,24 @@
+import { z } from 'zod';
+
 import { ValueOf } from '@leather.io/models';
 
-import { DefineSendTransferMethod } from './methods/bitcoin/send-transfer';
-import { DefineSignMessageMethod } from './methods/bitcoin/sign-message';
-import { DefineSignPsbtMethod } from './methods/bitcoin/sign-psbt';
-import { DefineGetAddressesMethod } from './methods/get-addresses';
-import { DefineGetInfoMethod } from './methods/get-info';
-import { DefineOpenMethod } from './methods/open';
-import { DefineOpenSwapMethod } from './methods/open-swap';
-import { DefineStxCallContractMethod } from './methods/stacks/stx-call-contract';
-import { DefineStxDeployContractMethod } from './methods/stacks/stx-deploy-contract';
-import { DefineStxGetAddressesMethod } from './methods/stacks/stx-get-addresses';
-import { DefineStxSignMessageMethod } from './methods/stacks/stx-sign-message';
-import { DefineStxSignStructuredMessageMethod } from './methods/stacks/stx-sign-structured-message';
-import { DefineStxSignTransactionMethod } from './methods/stacks/stx-sign-transaction';
-import { DefineStxTransferSip10FtMethod } from './methods/stacks/stx-transfer-sip10-ft';
-import { DefineStxTransferStxMethod } from './methods/stacks/stx-transfer-stx';
-import { DefineStxUpdateProfileMethod } from './methods/stacks/stx-update-profile';
-import { DefineSupportedMethods } from './methods/supported-methods';
+import { sendTransfer } from './methods/bitcoin/send-transfer';
+import { signMessage } from './methods/bitcoin/sign-message';
+import { signPsbt } from './methods/bitcoin/sign-psbt';
+import { getAddresses } from './methods/get-addresses';
+import { getInfo } from './methods/get-info';
+import { open } from './methods/open';
+import { openSwap } from './methods/open-swap';
+import { stxCallContract } from './methods/stacks/stx-call-contract';
+import { stxDeployContract } from './methods/stacks/stx-deploy-contract';
+import { stxGetAddresses } from './methods/stacks/stx-get-addresses';
+import { stxSignMessage } from './methods/stacks/stx-sign-message';
+import { stxSignStructuredMessage } from './methods/stacks/stx-sign-structured-message';
+import { stxSignTransaction } from './methods/stacks/stx-sign-transaction';
+import { stxTransferSip10Ft } from './methods/stacks/stx-transfer-sip10-ft';
+import { stxTransferStx } from './methods/stacks/stx-transfer-stx';
+import { stxUpdateProfile } from './methods/stacks/stx-update-profile';
+import { supportedMethods } from './methods/supported-methods';
 import { ExtractErrorResponse, ExtractSuccessResponse } from './rpc/schemas';
 
 export * from './rpc/schemas';
@@ -40,36 +42,43 @@ export * from './methods/supported-methods';
 export * from './methods/open';
 export * from './methods/open-swap';
 
-export type LeatherRpcMethodMap =
-  // Chain agnostic
-  DefineGetInfoMethod &
-    DefineOpenMethod &
-    DefineSupportedMethods &
-    DefineGetAddressesMethod &
-    DefineOpenSwapMethod &
-    // Bitcoin
-    DefineSignPsbtMethod &
-    DefineSignMessageMethod &
-    DefineSendTransferMethod &
-    // Stacks
-    DefineStxGetAddressesMethod &
-    DefineStxSignMessageMethod &
-    DefineStxSignStructuredMessageMethod &
-    DefineStxSignTransactionMethod &
-    DefineStxCallContractMethod &
-    DefineStxDeployContractMethod &
-    DefineStxTransferSip10FtMethod &
-    DefineStxTransferStxMethod &
-    DefineStxUpdateProfileMethod;
+export const endpoints = {
+  open,
+  getInfo,
+  supportedMethods,
+  openSwap,
+  getAddresses,
+  stxUpdateProfile,
+  stxSignMessage,
+  stxTransferStx,
+  stxTransferSip10Ft,
+  stxSignTransaction,
+  stxSignStructuredMessage,
+  stxGetAddresses,
+  stxDeployContract,
+  stxCallContract,
+  signPsbt,
+  signMessage,
+  sendTransfer,
+};
+
+type EndpointMap = (typeof endpoints)[keyof typeof endpoints];
+
+export type LeatherRpcMethodMap = {
+  [E in EndpointMap as E['method']]: {
+    request: z.infer<E['request']>;
+    response: z.infer<E['response']>;
+  };
+};
 
 export type RpcRequests = ValueOf<LeatherRpcMethodMap>['request'];
 
 export type RpcResponses = ValueOf<LeatherRpcMethodMap>['response'];
 
-export type MethodNames = keyof LeatherRpcMethodMap;
+export type RpcMethodNames = keyof LeatherRpcMethodMap;
 
 export interface RequestFn {
-  <T extends MethodNames>(
+  <T extends RpcMethodNames>(
     arg: T,
     params?: object | string[]
     // `Promise` throws if unsucessful, so here we extract the successful response
@@ -106,7 +115,7 @@ export interface LeatherProvider {
   listen: ListenFn;
 }
 
-export function createRpcSuccessResponse<T extends MethodNames>(
+export function createRpcSuccessResponse<T extends RpcMethodNames>(
   _method: T,
   response: Omit<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>, 'jsonrpc'>
 ) {
@@ -115,9 +124,9 @@ export function createRpcSuccessResponse<T extends MethodNames>(
   >;
 }
 
-export function createRpcErrorResponse<T extends MethodNames>(
+export function createRpcErrorResponse<T extends RpcMethodNames>(
   _method: T,
-  error: Omit<ExtractErrorResponse<LeatherRpcMethodMap[T]['response']>['error'], 'jsonrpc'>
+  error: Omit<ExtractErrorResponse<LeatherRpcMethodMap[T]['response']>, 'jsonrpc'>
 ) {
-  return { jsonrpc: '2.0', error } as ExtractErrorResponse<LeatherRpcMethodMap[T]['response']>;
+  return { jsonrpc: '2.0', ...error } as LeatherRpcMethodMap[T]['response'];
 }

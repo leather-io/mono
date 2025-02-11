@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-import {
-  DefineRpcMethod,
-  createRpcRequestSchema,
-  createRpcResponseSchema,
-  defaultErrorSchema,
-} from '../../rpc/schemas';
-
-export const stxSignTransactionMethodName = 'stx_signTransaction';
+import { defineRpcEndpoint } from '../../rpc/schemas';
 
 // Leather's RPC params prior to SIP-30
 // Developers should be warned away from this structure
@@ -25,32 +18,14 @@ export const stxSignTransactionRequestSip30ParamsSchema = z.object({
   network: z.string().optional(),
 });
 
-export const stxSignTransactionRequestParamsSchema = z.union([
-  stxSignTransactionRequestLeatherRpcParamsSchema,
-  stxSignTransactionRequestSip30ParamsSchema,
-]);
-export type StxSignTransactionRequestParams = z.infer<typeof stxSignTransactionRequestParamsSchema>;
-
-export const stxSignTransactionRequestSchema = createRpcRequestSchema(
-  stxSignTransactionMethodName,
-  stxSignTransactionRequestParamsSchema
-);
-export type StxSignTransactionRequest = z.infer<typeof stxSignTransactionRequestSchema>;
-
-// For backwards compatibility, we return the same data under both properties
-export const stxSignTransactionResponseBodySchema = z.object({
-  transaction: z.string(),
-  txHex: z.string(),
+export const stxSignTransaction = defineRpcEndpoint({
+  method: 'stx_signTransaction',
+  params: z.union([
+    stxSignTransactionRequestLeatherRpcParamsSchema,
+    stxSignTransactionRequestSip30ParamsSchema,
+  ]),
+  result: z.object({
+    transaction: z.string(),
+    txHex: z.string(),
+  }),
 });
-export type StxSignTransactionResponseBody = z.infer<typeof stxSignTransactionResponseBodySchema>;
-
-export const stxSignTransactionResponseSchema = createRpcResponseSchema(
-  stxSignTransactionResponseBodySchema,
-  defaultErrorSchema
-);
-export type StxSignTransactionResponse = z.infer<typeof stxSignTransactionResponseSchema>;
-
-export type DefineStxSignTransactionMethod = DefineRpcMethod<
-  StxSignTransactionRequest,
-  StxSignTransactionResponse
->;

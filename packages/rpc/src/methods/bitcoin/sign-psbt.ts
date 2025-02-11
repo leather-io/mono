@@ -1,6 +1,7 @@
-import { DefaultNetworkConfigurations } from '@leather.io/models';
+import { z } from 'zod';
 
-import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../../rpc/schemas';
+import { testIsNumberOrArrayOfNumbers } from '../../rpc/helpers';
+import { defineRpcEndpoint } from '../../rpc/schemas';
 
 /**
  * DEFAULT       -- all inputs, all outputs
@@ -11,32 +12,35 @@ import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '..
  * NONE + ANYONE -- one input, no outputs
  * SINGLE        -- one inputs, one output of the same index
  */
-export enum SignatureHash {
-  DEFAULT = 0x00,
-  ALL = 0x01,
-  NONE = 0x02,
-  SINGLE = 0x03,
-  ALL_ANYONECANPAY = 0x81,
-  NONE_ANYONECANPAY = 0x82,
-  SINGLE_ANYONECANPAY = 0x83,
-}
+export const signatureHash = {
+  DEFAULT: 0x00,
+  ALL: 0x01,
+  NONE: 0x02,
+  SINGLE: 0x03,
+  ALL_ANYONECANPAY: 0x81,
+  NONE_ANYONECANPAY: 0x82,
+  SINGLE_ANYONECANPAY: 0x83,
+} as const;
 
-export interface SignPsbtRequestParams extends RpcParameterByName {
-  account?: number;
-  allowedSighash?: SignatureHash[];
-  broadcast: boolean;
-  hex: string;
-  network: DefaultNetworkConfigurations;
-  signAtIndex?: number | number[];
-}
+const signPsbtRequestParamsSchema = z.object({
+  account: z.number().optional(),
+  allowedSighash: z.array(z.any()).optional(),
+  broadcast: z.boolean(),
+  hex: z.string(),
+  network: z.string(),
+  signAtIndex: z
+    .union([z.number(), z.array(z.number())])
+    .optional()
+    .refine(testIsNumberOrArrayOfNumbers),
+});
 
-export interface SignPsbtResponseBody {
-  hex: string;
-  txid?: string;
-}
+const signPsbtResponseBodySchema = z.object({
+  hex: z.string(),
+  txid: z.string().optional(),
+});
 
-export type SignPsbtRequest = RpcRequest<'signPsbt', SignPsbtRequestParams>;
-
-export type SignPsbtResponse = RpcResponse<SignPsbtResponseBody>;
-
-export type DefineSignPsbtMethod = DefineRpcMethod<SignPsbtRequest, SignPsbtResponse>;
+export const signPsbt = defineRpcEndpoint({
+  method: 'signPsbt',
+  params: signPsbtRequestParamsSchema,
+  result: signPsbtResponseBodySchema,
+});

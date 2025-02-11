@@ -1,22 +1,7 @@
 import { z } from 'zod';
 
-import {
-  DefineRpcMethod,
-  createRpcRequestSchema,
-  createRpcResponseSchema,
-  defaultErrorSchema,
-} from '../../rpc/schemas';
+import { defineRpcEndpoint } from '../../rpc/schemas';
 
-export const stxGetAddressesMethodName = 'stx_getAddresses';
-
-export type StxGetAddressesRequestMethodName = typeof stxGetAddressesMethodName;
-
-// Request
-export const stxGetAddressesRequestSchema = createRpcRequestSchema(stxGetAddressesMethodName);
-
-export type StxGetAddressesRequest = z.infer<typeof stxGetAddressesRequestSchema>;
-
-// Result
 export const stxAddressItemSchema = z.object({
   address: z.string(),
   publicKey: z.string(),
@@ -25,14 +10,7 @@ export const stxAddressItemSchema = z.object({
 
 export const stxGetAddressesResponseBodySchema = z.array(stxAddressItemSchema);
 
-export const stxGetAddressesResponseSchema = createRpcResponseSchema(
-  stxGetAddressesResponseBodySchema,
-  defaultErrorSchema
-);
-
-export type StxGetAddressesResponse = z.infer<typeof stxGetAddressesResponseSchema>;
-
-export type DefineStxGetAddressesMethod = DefineRpcMethod<
-  StxGetAddressesRequest,
-  StxGetAddressesResponse
->;
+export const stxGetAddresses = defineRpcEndpoint({
+  method: 'stx_getAddresses',
+  result: stxGetAddressesResponseBodySchema,
+});
