@@ -14,14 +14,14 @@ export const stxSignMessageTypeSchema = z.enum(['utf8', 'structured']);
 export type StxSignMessageTypes = z.infer<typeof stxSignMessageTypeSchema>;
 
 export const stxSignMessageRequestBaseSchema = z.object({
-  messageType: stxSignMessageTypeSchema,
+  messageType: stxSignMessageTypeSchema.optional().default('utf8'),
   network: z.optional(z.enum(['mainnet', 'testnet', 'devnet', 'mocknet'])),
 });
 export type StxSignMessageRequestParamsBase = z.infer<typeof stxSignMessageRequestBaseSchema>;
 
 export const stxSignMessageRequestUtf8Schema = stxSignMessageRequestBaseSchema.merge(
   z.object({
-    messageType: z.literal('utf8'),
+    messageType: z.literal('utf8').default('utf8'),
     message: z.string(),
   })
 );
