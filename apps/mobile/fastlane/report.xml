@@ -5,29 +5,47 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Switch to ios build_ios lane" time="0.0001">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.0002">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: match" time="0.990238">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000102">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: build_app" time="206.011737">
+      <testcase classname="fastlane.lanes" name="2: Switch to android build_android lane" time="5.5e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: Switch to ios increment_version lane" time="0.000126">
+      <testcase classname="fastlane.lanes" name="3: is_ci" time="5.8e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: increment_version_number" time="0.036094">
+      <testcase classname="fastlane.lanes" name="4: assembleRelease" time="37.333501">
         
-          <failure message="/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/actions/actions_helper.rb:67:in `execute_action'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:255:in `block in execute_action'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:229:in `chdir'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:229:in `execute_action'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:157:in `trigger_action_by_name'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/fast_file.rb:159:in `method_missing'&#10;ios/fastlane/Fastfile:12:in `block (2 levels) in parsing_binding'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/lane.rb:41:in `call'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:204:in `try_switch_to_lane'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:146:in `trigger_action_by_name'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/fast_file.rb:159:in `method_missing'&#10;ios/fastlane/Fastfile:20:in `block (2 levels) in parsing_binding'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/lane.rb:41:in `call'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/lane_manager.rb:46:in `cruise_lane'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/command_line_handler.rb:34:in `handle'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/commands_generator.rb:110:in `block (2 levels) in run'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/commander-4.6.0/lib/commander/command.rb:187:in `call'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/commander-4.6.0/lib/commander/command.rb:157:in `run'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/commander-4.6.0/lib/commander/runner.rb:444:in `run_active_command'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:124:in `run!'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/commander-4.6.0/lib/commander/delegates.rb:18:in `run!'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/commands_generator.rb:363:in `run'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/commands_generator.rb:43:in `start'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/fastlane/lib/fastlane/cli_tools_distributor.rb:123:in `take_off'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/fastlane-2.226.0/bin/fastlane:23:in `&lt;top (required)&gt;'&#10;/Users/petew/.rbenv/versions/2.7.6/bin/fastlane:23:in `load'&#10;/Users/petew/.rbenv/versions/2.7.6/bin/fastlane:23:in `&lt;top (required)&gt;'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/cli/exec.rb:58:in `load'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/cli/exec.rb:58:in `kernel_load'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/cli/exec.rb:23:in `run'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/cli.rb:492:in `exec'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/vendor/thor/lib/thor/command.rb:28:in `run'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/vendor/thor/lib/thor/invocation.rb:127:in `invoke_command'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/vendor/thor/lib/thor.rb:527:in `dispatch'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/cli.rb:34:in `dispatch'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/vendor/thor/lib/thor/base.rb:584:in `start'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/cli.rb:28:in `start'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/exe/bundle:37:in `block in &lt;top (required)&gt;'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/lib/bundler/friendly_errors.rb:117:in `with_friendly_errors'&#10;/Users/petew/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0/gems/bundler-2.4.22/exe/bundle:29:in `&lt;top (required)&gt;'&#10;/Users/petew/.rbenv/versions/2.7.6/bin/bundle:23:in `load'&#10;/Users/petew/.rbenv/versions/2.7.6/bin/bundle:23:in `&lt;main&gt;'&#10;&#10;Your current version () does not respect the format A or A.B or A.B.C" />
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: increment_version_code" time="0.00121">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: firebase_app_distribution" time="35.267542">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="7: Switch to android notify_slack lane" time="0.000645">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="8: slack" time="0.445111">
         
       </testcase>
     

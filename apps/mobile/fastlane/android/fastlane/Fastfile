@@ -1,62 +1,80 @@
+default_platform(:android)
 
-
-# default_platform(:android)
-
-platform :android do
-  desc "Build and distribute Android app"
-  lane :build_android do
-    gradle(
+desc "Build and distribute Android app"
+lane :build_android do |type|
+  if is_ci
+    setup_ci
+  end
+  if type == "prod"
+    build_output = gradle(
+      task: "assemble",
+      build_type: "Release",
+      project_dir: "android", # Updated path to point to the Android project root
+      properties: {
+        "android.injected.signing.store.file" => ENV['LEATHER_UPLOAD_STORE_FILE'],
+        "android.injected.signing.store.password" => ENV['LEATHER_UPLOAD_STORE_PASSWORD'],
+        "android.injected.signing.key.alias" => ENV['LEATHER_UPLOAD_KEY_ALIAS'],
+        "android.injected.signing.key.password" => ENV['LEATHER_UPLOAD_KEY_PASSWORD']
+      }
+    )
+    puts "BUILD OUTPUT: #{build_output}"
+  else
+    build_output = gradle(
       task: "assembleRelease",
-      project_dir: "../../android", # Adjust the path as necessary
+      project_dir: "android", # Updated path to point to the Android project root
     )
+    puts "BUILD OUTPUT: #{build_output}"
   end
-
-lane :increment_version do
-  # Increment the version code
-  increment_version_code(
-    gradle_file_path: "./build.gradle" # Path to your build.gradle file
-  )
-
-  # Increment the version name
-  increment_version_name(
-    gradle_file_path: "./android/app/build.gradle", # Path to your build.gradle file
-    version_name: next_version_name # Function to determine the next version name
-  )
 end
 
-def next_version_name
-  # Logic to determine the next version name
-  # For example, increment the patch version
-  current_version = get_version_name_from_gradle
-  version_parts = current_version.split(".")
-  version_parts[-1] = version_parts[-1].to_i + 1
-  version_parts.join(".")
-end
-
-def get_version_name_from_gradle
-  # Logic to read the current version name from the build.gradle file
-  gradle_file = File.read("../android/app/build.gradle")
-  match = gradle_file.match(/versionName "(\d+\.\d+\.\d+)"/)
-  match[1] if match
-end
-
-lane :notify_slack do
-  Dotenv.load('./.env')
+lane :notify_slack do |display_version:, build_version:, testing_url:, firebase_console_url:|
+  puts "DISPLAY VERSION: #{display_version}"
+  puts "BUILD VERSION: #{build_version}"
+  puts "TESTING URL: #{testing_url}"
+  puts "FIREBASE CONSOLE URL: #{firebase_console_url}"
   slack(
-    message: "Android build completed successfully!",
-    channel: "#leather-mobile",
-    slack_url: ENV["SLACK_WEBHOOK_URL"]
+    message: "A new Android build is ready to be tested! v#{display_version}+#{build_version}",
+    default_payloads: [:git_branch, :last_git_commit_hash],
+    attachment_properties: {
+      fields: [
+        {
+          title: "Testing URL",
+          value: testing_url,
+          short: false
+        },
+        {
+          title: "Firebase Console URL",
+          value: firebase_console_url,
+          short: false
+        }
+      ]
+    }
   )
 end
 
-  lane :distribute_android do
-    build_android
-    increment_version
-    firebase_app_distribution(
-      app: "1:915379517791:android:d4e7cb446a612f8c789eea",
-      groups: "leatherhood",
-      release_notes: "New version available"
-    )
-    notify_slack
-  end
+lane :distribute_android_beta do
+  build_android(type: "beta")
+  
+  increment_version_code(app_project_dir: "android")
+  
+  # This function returns a hash with the release details: 
+  # https://firebase.google.com/docs/reference/app-distribution/rest/v1/projects.apps.releases#resource:-release
+  release = firebase_app_distribution(
+    app: "1:915379517791:android:d4e7cb446a612f8c789eea",
+    groups: "leatherhood",
+    release_notes: "New version available"
+  )
+  
+  notify_slack(
+    display_version: release[:displayVersion], 
+    build_version: release[:buildVersion], 
+    testing_url: release[:testingUri], 
+    firebase_console_url: release[:firebaseConsoleUri]
+  )
+end
+
+lane :distribute_android_prod do
+  build_android(type: "prod")
+  increment_version
+  notify_slack
 end

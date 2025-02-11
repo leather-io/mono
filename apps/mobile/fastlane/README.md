@@ -42,6 +42,14 @@ Build and distribute iOS app
 
 
 
+### ios notify_slack
+
+```sh
+[bundle exec] fastlane ios notify_slack
+```
+
+
+
 ### ios distribute_ios
 
 ```sh
@@ -63,14 +71,6 @@ Build and distribute iOS app
 
 Build and distribute Android app
 
-### android increment_version
-
-```sh
-[bundle exec] fastlane android increment_version
-```
-
-
-
 ### android notify_slack
 
 ```sh
@@ -79,10 +79,26 @@ Build and distribute Android app
 
 
 
-### android distribute_android
+### android test_notify_slack
 
 ```sh
-[bundle exec] fastlane android distribute_android
+[bundle exec] fastlane android test_notify_slack
+```
+
+
+
+### android distribute_android_beta
+
+```sh
+[bundle exec] fastlane android distribute_android_beta
+```
+
+
+
+### android distribute_android_prod
+
+```sh
+[bundle exec] fastlane android distribute_android_prod
 ```
 
 
