@@ -1,33 +1,30 @@
-import { AllowAdditionalProperties } from '@leather.io/models';
+import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
-import { PaymentTypes } from '../get-addresses';
+import { defineRpcEndpoint } from '../../rpc/schemas';
 
 // Implements BIP-322
 // https://github.com/bitcoin/bips/blob/master/bip-0322.mediawiki
-export type Bip322MessageTypes = 'legacy' | 'bip322';
+export const Bip322MessageTypesSchema = z.enum(['legacy', 'bip322']);
+export type Bip322MessageTypes = z.infer<typeof Bip322MessageTypesSchema>;
 
-export interface SignMessageRequestParams extends AllowAdditionalProperties {
-  type?: Bip322MessageTypes;
-  account?: number;
-  message: string;
-  paymentType: PaymentTypes;
-}
+const supportedPaymentTypesSchema = z.enum(['p2tr', 'p2wpkh']);
 
-export interface SignMessageResponseBody extends AllowAdditionalProperties {
-  /**
-   * Base64 encoded signature
-   */
-  signature: string;
+export const signMessageRequestParamsSchema = z
+  .object({
+    type: Bip322MessageTypesSchema.optional(),
+    account: z.number().optional(),
+    message: z.string(),
+    paymentType: supportedPaymentTypesSchema,
+  })
+  .passthrough();
 
-  /**
-   * Address that signed the message
-   */
-  address: string;
-}
-
-export type SignMessageRequest = RpcRequest<'signMessage', SignMessageRequestParams>;
-
-export type SignMessageResponse = RpcResponse<SignMessageResponseBody>;
-
-export type DefineSignMessageMethod = DefineRpcMethod<SignMessageRequest, SignMessageResponse>;
+export const signMessage = defineRpcEndpoint({
+  method: 'signMessage',
+  params: signMessageRequestParamsSchema,
+  result: z
+    .object({
+      signature: z.string(),
+      address: z.string(),
+    })
+    .passthrough(),
+});

@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-import {
-  DefineRpcMethod,
-  createRpcRequestSchema,
-  createRpcResponseSchema,
-  defaultErrorSchema,
-} from '../../rpc/schemas';
-
-export const stxSignMessageMethodName = 'stx_signMessage';
+import { defineRpcEndpoint } from '../../rpc/schemas';
 
 // Request
 export const stxSignMessageTypeSchema = z.enum(['utf8', 'structured']);
@@ -38,33 +31,11 @@ export type StxSignMessageRequestParamsStructured = z.infer<
   typeof stxSignMessageRequestStructuredSchema
 >;
 
-export const stxSignMessageRequestParamsSchema = z.union([
-  stxSignMessageRequestUtf8Schema,
-  stxSignMessageRequestStructuredSchema,
-]);
-export type StxSignMessageRequestParams = z.infer<typeof stxSignMessageRequestParamsSchema>;
-
-export const stxSignMessageRequestSchema = createRpcRequestSchema(
-  stxSignMessageMethodName,
-  stxSignMessageRequestParamsSchema
-);
-export type StxSignMessageRequest = z.infer<typeof stxSignMessageRequestSchema>;
-
-// Response
-export const stxSignMessageResponseBodySchema = z.object({
-  signature: z.string(),
-  publicKey: z.string(),
+export const stxSignMessage = defineRpcEndpoint({
+  method: 'stx_signMessage',
+  params: z.union([stxSignMessageRequestUtf8Schema, stxSignMessageRequestStructuredSchema]),
+  result: z.object({
+    signature: z.string(),
+    publicKey: z.string(),
+  }),
 });
-export type StxSignMessageResponseBodySchema = z.infer<typeof stxSignMessageResponseBodySchema>;
-
-export const stxSignMessageResponseSchema = createRpcResponseSchema(
-  stxSignMessageResponseBodySchema,
-  defaultErrorSchema
-);
-
-export type StxSignMessageResponse = z.infer<typeof stxSignMessageResponseSchema>;
-
-export type DefineStxSignMessageMethod = DefineRpcMethod<
-  StxSignMessageRequest,
-  StxSignMessageResponse
->;

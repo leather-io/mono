@@ -1,12 +1,13 @@
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { z } from 'zod';
 
-interface GetInfoResponseBody {
-  version: string;
-  supportedMethods?: string[];
-}
+import { defineRpcEndpoint } from '../rpc/schemas';
 
-export type GetInfoRequest = RpcRequest<'getInfo'>;
+const getInfoResponseBodySchema = z.object({
+  version: z.string(),
+  supportedMethods: z.array(z.string()).optional(),
+});
 
-export type GetInfoResponse = RpcResponse<GetInfoResponseBody>;
-
-export type DefineGetInfoMethod = DefineRpcMethod<GetInfoRequest, GetInfoResponse>;
+export const getInfo = defineRpcEndpoint({
+  method: 'getInfo',
+  result: getInfoResponseBodySchema,
+});

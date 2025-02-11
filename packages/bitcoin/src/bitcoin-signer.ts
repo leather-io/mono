@@ -10,8 +10,8 @@ import {
   deriveKeychainFromXpub,
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
-import type { BitcoinNetworkModes } from '@leather.io/models';
-import { PaymentTypes, SignatureHash } from '@leather.io/rpc';
+import type { BitcoinNetworkModes, ValueOf } from '@leather.io/models';
+import { PaymentTypes, signatureHash } from '@leather.io/rpc';
 import { hexToNumber, toHexString } from '@leather.io/utils';
 
 import {
@@ -24,7 +24,7 @@ import {
 import { getTaprootPaymentFromAddressIndex } from './p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
 
-export type AllowedSighashTypes = SignatureHash | SigHash;
+export type AllowedSighashTypes = ValueOf<typeof signatureHash> | SigHash;
 
 export interface BitcoinAccountKeychain {
   descriptor: string;

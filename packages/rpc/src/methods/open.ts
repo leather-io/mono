@@ -1,11 +1,14 @@
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { z } from 'zod';
 
-interface OpenResponseBody {
-  message: string;
-}
+import { defineRpcEndpoint } from '../rpc/schemas';
 
-export type OpenRequest = RpcRequest<'open'>;
-
-export type OpenResponse = RpcResponse<OpenResponseBody>;
-
-export type DefineOpenMethod = DefineRpcMethod<OpenRequest, OpenResponse>;
+export const open = defineRpcEndpoint({
+  method: 'open',
+  params: z.object({
+    base: z.string(),
+    quote: z.string(),
+  }),
+  result: z.object({
+    message: z.string(),
+  }),
+});
