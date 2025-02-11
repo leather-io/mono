@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LayoutChangeEvent } from 'react-native';
 import {
+  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -9,7 +10,10 @@ import {
 
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 
-export function useAnimatedHeader(triggerAnimationYValue = 68) {
+const blurOverlayVisibilityThreshold = 12;
+const secondaryTitleVisibilityThreshold = 26;
+
+export function useAnimatedHeader(triggerAnimationYValue = secondaryTitleVisibilityThreshold) {
   const defaultStyles = useScrollViewStyles();
   const [contentHeight, setContentHeight] = useState(0);
   const [viewHeight, setViewHeight] = useState(0);
@@ -31,6 +35,11 @@ export function useAnimatedHeader(triggerAnimationYValue = 68) {
       });
       return {
         opacity,
+      };
+    }),
+    animatedBlurOverlayStyle: useAnimatedStyle(() => {
+      return {
+        opacity: interpolate(scrollY.value, [0, blurOverlayVisibilityThreshold], [0, 1], 'clamp'),
       };
     }),
     onContentSizeChange(_: number, height: number) {

@@ -42,7 +42,7 @@ import {
   RateLimiterService,
   createRateLimiterService,
 } from './infrastructure/rate-limiter/rate-limiter.service';
-import { NetworkSettingsService } from './infrastructure/settings/network-settings.service';
+import { SettingsService } from './infrastructure/settings/settings.service';
 import { MarketDataService, createMarketDataService } from './market-data/market-data.service';
 import {
   StacksTransactionsService,
@@ -53,12 +53,12 @@ import { UtxosService, createUtxosService } from './utxos/utxos.service';
 let servicesContainer: Container;
 
 export function initializeServiceContainers(
-  defaultNetworkSettingsService: NetworkSettingsService,
+  settingsService: SettingsService,
   cacheService: HttpCacheService
 ): Container {
   if (!servicesContainer) {
     servicesContainer = new Container();
-    registerDependencies(servicesContainer, defaultNetworkSettingsService, cacheService);
+    registerDependencies(servicesContainer, settingsService, cacheService);
   }
   return servicesContainer;
 }
@@ -75,7 +75,7 @@ export function getContainer(): Container {
  */
 export const Services = {
   // Infrastructure
-  NetworkSettingsService: Symbol.for('NetworkSettingsService'),
+  SettingsService: Symbol.for('SettingsService'),
   HttpCacheService: Symbol.for('HttpCacheService'),
   RateLimiterService: Symbol.for('RateLimiterService'),
   // API clients
@@ -100,19 +100,15 @@ export const Services = {
 
 function registerDependencies(
   container: Container,
-  networkSettingsService: NetworkSettingsService,
+  settingsService: SettingsService,
   cacheService: HttpCacheService
 ) {
   container.bind<HttpCacheService>(Services.HttpCacheService).toConstantValue(cacheService);
-  container
-    .bind<NetworkSettingsService>(Services.NetworkSettingsService)
-    .toConstantValue(networkSettingsService);
+  container.bind<SettingsService>(Services.SettingsService).toConstantValue(settingsService);
   container
     .bind<RateLimiterService>(Services.RateLimiterService)
     .toDynamicValue(c =>
-      createRateLimiterService(
-        c.container.get<NetworkSettingsService>(Services.NetworkSettingsService)
-      )
+      createRateLimiterService(c.container.get<SettingsService>(Services.SettingsService))
     )
     .inSingletonScope();
   registerApiClients(container);
@@ -142,7 +138,7 @@ function registerApiClients(container: Container) {
     .bind<BestInSlotApiClient>(Services.BestInSlotApiClient)
     .toDynamicValue(c =>
       createBestInSlotApiClient(
-        c.container.get<NetworkSettingsService>(Services.NetworkSettingsService),
+        c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<RateLimiterService>(Services.RateLimiterService),
         c.container.get<HttpCacheService>(Services.HttpCacheService)
       )
@@ -159,7 +155,7 @@ function registerApiClients(container: Container) {
     .toDynamicValue(c =>
       createLeatherApiClient(
         c.container.get<HttpCacheService>(Services.HttpCacheService),
-        c.container.get<NetworkSettingsService>(Services.NetworkSettingsService)
+        c.container.get<SettingsService>(Services.SettingsService)
       )
     )
     .inSingletonScope();
@@ -168,7 +164,7 @@ function registerApiClients(container: Container) {
     .toDynamicValue(c =>
       createHiroStacksApiClient(
         c.container.get<HttpCacheService>(Services.HttpCacheService),
-        c.container.get<NetworkSettingsService>(Services.NetworkSettingsService),
+        c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<RateLimiterService>(Services.RateLimiterService)
       )
     )
@@ -180,6 +176,8 @@ function registerApplicationServices(container: Container) {
     .bind<MarketDataService>(Services.MarketDataService)
     .toDynamicValue(c =>
       createMarketDataService(
+        c.container.get<SettingsService>(Services.SettingsService),
+        c.container.get<LeatherApiClient>(Services.LeatherApiClient),
         c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient),
         c.container.get<CoinGeckoApiClient>(Services.CoinGeckoApiClient),
         c.container.get<CoincapApiClient>(Services.CoincapApiClient),
@@ -212,6 +210,7 @@ function registerApplicationServices(container: Container) {
     .bind<BtcBalancesService>(Services.BtcBalancesService)
     .toDynamicValue(c =>
       createBtcBalancesService(
+        c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<UtxosService>(Services.UtxosService),
         c.container.get<MarketDataService>(Services.MarketDataService)
       )
@@ -221,6 +220,7 @@ function registerApplicationServices(container: Container) {
     .bind<StxBalancesService>(Services.StxBalancesService)
     .toDynamicValue(c =>
       createStxBalancesService(
+        c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
         c.container.get<MarketDataService>(Services.MarketDataService),
         c.container.get<StacksTransactionsService>(Services.StacksTransactionsService)
@@ -231,6 +231,7 @@ function registerApplicationServices(container: Container) {
     .bind<Sip10BalancesService>(Services.Sip10BalancesService)
     .toDynamicValue(c =>
       createSip10BalancesService(
+        c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
         c.container.get<MarketDataService>(Services.MarketDataService),
         c.container.get<Sip10AssetService>(Services.Sip10AssetService)
@@ -241,6 +242,7 @@ function registerApplicationServices(container: Container) {
     .bind<RunesBalancesService>(Services.RunesBalancesService)
     .toDynamicValue(c =>
       createRunesBalancesService(
+        c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient),
         c.container.get<MarketDataService>(Services.MarketDataService),
         c.container.get<RuneAssetService>(Services.RuneAssetService)

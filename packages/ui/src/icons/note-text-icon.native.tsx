@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import NoteText16 from '../assets/icons/note-text-16-16.svg';
+import NoteText24 from '../assets/icons/note-text-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import NoteTextSmall from '../assets/icons/note-text-16-16.svg';
-import NoteText from '../assets/icons/note-text-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const NoteTextIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <NoteTextSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <NoteText />
-    </Icon>
-  );
+export const NoteTextIcon = createNativeIcon({
+  icon: {
+    small: NoteText16,
+    medium: NoteText24,
+  },
+  displayName: 'NoteText',
 });
-
-NoteTextIcon.displayName = 'NoteTextIcon';

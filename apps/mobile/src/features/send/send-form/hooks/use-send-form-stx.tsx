@@ -1,5 +1,4 @@
 import { useGenerateStxTokenTransferUnsignedTransaction } from '@/common/transactions/stacks-transactions.hooks';
-import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
 import { createMoneyFromDecimal } from '@leather.io/utils';
@@ -48,7 +47,7 @@ export function useSendFormStx() {
       console.log('Unsigned tx:', tx);
       // Show an error toast here?
       if (!tx) throw new Error('Attempted to generate unsigned tx, but tx is undefined');
-      const txHex = bytesToHex(tx.serialize());
+      const txHex = tx.serialize();
       navigation.navigate('sign-stacks-tx', { txHex, accountId: account.id });
       // eslint-disable-next-line no-console
       console.log('tx hex:', txHex);

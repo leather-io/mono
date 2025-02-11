@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import CreditCard16 from '../assets/icons/credit-card-16-16.svg';
+import CreditCard24 from '../assets/icons/credit-card-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import CreditCardSmall from '../assets/icons/credit-card-16-16.svg';
-import CreditCard from '../assets/icons/credit-card-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const CreditCardIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <CreditCardSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <CreditCard />
-    </Icon>
-  );
+export const CreditCardIcon = createWebIcon({
+  icon: {
+    small: CreditCard16,
+    medium: CreditCard24,
+  },
+  displayName: 'CreditCard',
 });
-
-CreditCardIcon.displayName = 'CreditCardIcon';

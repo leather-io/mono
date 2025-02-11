@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import QuestionCircle16 from '../assets/icons/question-circle-16-16.svg';
+import QuestionCircle24 from '../assets/icons/question-circle-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import QuestionCircleSmall from '../assets/icons/question-circle-16-16.svg';
-import QuestionCircle from '../assets/icons/question-circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const QuestionCircleIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <QuestionCircleSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <QuestionCircle />
-    </Icon>
-  );
+export const QuestionCircleIcon = createNativeIcon({
+  icon: {
+    small: QuestionCircle16,
+    medium: QuestionCircle24,
+  },
+  displayName: 'QuestionCircle',
 });
-
-QuestionCircleIcon.displayName = 'QuestionCircleIcon';

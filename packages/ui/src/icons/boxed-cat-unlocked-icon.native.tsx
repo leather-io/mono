@@ -1,12 +1,9 @@
-import { Component, forwardRef } from 'react';
+import BoxedCatUnlocked24 from '../assets/icons/boxed-cat-unlocked-24x24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import BoxedCatUnlocked from '../assets/icons/boxed-cat-unlocked-24x24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const BoxedCatUnlockedIcon = forwardRef<Component, IconProps>((props, ref) => (
-  <Icon ref={ref} {...props}>
-    <BoxedCatUnlocked />
-  </Icon>
-));
-
-BoxedCatUnlockedIcon.displayName = 'BoxedCatUnlockedIcon';
+export const BoxedCatUnlockedIcon = createNativeIcon({
+  icon: {
+    medium: BoxedCatUnlocked24,
+  },
+  displayName: 'BoxedCatUnlocked',
+});

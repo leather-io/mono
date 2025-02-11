@@ -303,6 +303,68 @@
     * @leather.io/bitcoin bumped to 0.19.17
     * @leather.io/utils bumped to 0.25.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.19
+    * @leather.io/rpc bumped to 2.5.6
+    * @leather.io/stacks bumped to 1.5.20
+    * @leather.io/utils bumped to 0.25.2
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.20
+    * @leather.io/rpc bumped to 2.5.7
+    * @leather.io/stacks bumped to 1.5.21
+    * @leather.io/utils bumped to 0.25.3
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.21
+    * @leather.io/rpc bumped to 2.5.8
+    * @leather.io/stacks bumped to 1.5.22
+    * @leather.io/utils bumped to 0.25.4
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.22
+    * @leather.io/rpc bumped to 2.5.9
+    * @leather.io/stacks bumped to 1.5.23
+    * @leather.io/utils bumped to 0.25.5
+
+## [2.26.20](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.19...@leather.io/query-v2.26.20) (2025-02-04)
+
+
+### Bug Fixes
+
+* update hiro api headers ([346ad2a](https://github.com/leather-io/mono/commit/346ad2a41f1f4190ca6382748af99dc1ce8a3e6f))
+
+## [2.26.19](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.18...@leather.io/query-v2.26.19) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.18
+    * @leather.io/constants bumped to 0.15.5
+    * @leather.io/models bumped to 0.25.1
+    * @leather.io/rpc bumped to 2.5.5
+    * @leather.io/stacks bumped to 1.5.19
+    * @leather.io/utils bumped to 0.25.1
+
 ## [2.26.16](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.15...@leather.io/query-v2.26.16) (2025-01-15)
 
 

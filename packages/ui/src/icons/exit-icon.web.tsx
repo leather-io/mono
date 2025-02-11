@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Exit16 from '../assets/icons/exit-16-16.svg';
+import Exit24 from '../assets/icons/exit-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import ExitSmall from '../assets/icons/exit-16-16.svg';
-import Exit from '../assets/icons/exit-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const ExitIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <ExitSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Exit />
-    </Icon>
-  );
+export const ExitIcon = createWebIcon({
+  icon: {
+    small: Exit16,
+    medium: Exit24,
+  },
+  displayName: 'Exit',
 });
-
-ExitIcon.displayName = 'ExitIcon';

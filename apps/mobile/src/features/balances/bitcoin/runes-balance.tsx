@@ -1,5 +1,4 @@
 import { TokenIcon } from '@/components/widgets/tokens/token-icon';
-import { createBitcoinAccountIdentifier } from '@/hooks/use-bitcoin-account-service-requests';
 import { AccountId } from '@/models/domain.model';
 import {
   useRunesAccountBalance,
@@ -42,34 +41,31 @@ export function RunesBalance() {
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
 
-  return data.value.accountBalances.map((balances: any) =>
-    balances.runes.map((balance: any, index: any) => (
-      <RunesTokenBalance
-        key={`${balance.asset.symbol}-${index}`}
-        symbol={balance.asset.symbol}
-        name={balance.asset.name}
-        availableBalance={balance.availableBalance}
-        fiatBalance={balance.totalBalance}
-        px="5"
-        py="3"
-      />
-    ))
-  );
-}
-
-export function RunesBalanceByAccount({ fingerprint, accountIndex }: AccountId) {
-  const account = createBitcoinAccountIdentifier(fingerprint, accountIndex, []);
-  const data = useRunesAccountBalance(account);
-
-  // TODO LEA-1726: handle balance loading & error states
-  if (data.state !== 'success') return;
-  return data.value.runes.map((balance: any, index: any) => (
+  return data.value.runes.map((balance, index) => (
     <RunesTokenBalance
       key={`${balance.asset.symbol}-${index}`}
       symbol={balance.asset.symbol}
-      name={balance.asset.name}
-      availableBalance={balance.availableBalance}
-      fiatBalance={balance.totalBalance}
+      name={balance.asset.runeName}
+      availableBalance={balance.crypto.availableBalance}
+      fiatBalance={balance.fiat.totalBalance}
+      px="5"
+      py="3"
+    />
+  ));
+}
+
+export function RunesBalanceByAccount({ fingerprint, accountIndex }: AccountId) {
+  const data = useRunesAccountBalance(fingerprint, accountIndex);
+
+  // TODO LEA-1726: handle balance loading & error states
+  if (data.state !== 'success') return;
+  return data.value.runes.map((balance, index) => (
+    <RunesTokenBalance
+      key={`${balance.asset.symbol}-${index}`}
+      symbol={balance.asset.symbol}
+      name={balance.asset.spacedRuneName}
+      availableBalance={balance.crypto.availableBalance}
+      fiatBalance={balance.fiat.availableBalance}
       px="5"
       py="3"
     />

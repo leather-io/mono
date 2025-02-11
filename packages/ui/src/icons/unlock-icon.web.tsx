@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Unlock16 from '../assets/icons/unlock-16-16.svg';
+import Unlock24 from '../assets/icons/unlock-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import UnlockSmall from '../assets/icons/unlock-16-16.svg';
-import Unlock from '../assets/icons/unlock-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const UnlockIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <UnlockSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Unlock />
-    </Icon>
-  );
+export const UnlockIcon = createWebIcon({
+  icon: {
+    small: Unlock16,
+    medium: Unlock24,
+  },
+  displayName: 'Unlock',
 });
-
-UnlockIcon.displayName = 'UnlockIcon';

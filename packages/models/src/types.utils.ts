@@ -18,3 +18,7 @@ export type ReplaceTypes<T, Replacements extends { [K in keyof T]?: any }> = Omi
 > & {
   [K in keyof Replacements]: Replacements[K];
 };
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};

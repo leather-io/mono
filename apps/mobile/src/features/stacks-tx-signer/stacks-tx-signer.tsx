@@ -12,9 +12,9 @@ import { t } from '@lingui/macro';
 import { bytesToHex } from '@stacks/common';
 import {
   PayloadType,
-  StacksTransaction,
-  TokenTransferPayload,
-  addressToString,
+  StacksTransactionWire,
+  TokenTransferPayloadWire,
+  cvToString,
   deserializeTransaction,
 } from '@stacks/transactions';
 
@@ -40,18 +40,22 @@ import { StacksOutcome } from '../approver/components/stacks-outcome';
 import { ApproverState } from '../approver/utils';
 import { useBroadcastStxTransaction } from './use-broadcast-stx-transaction';
 
-function formReviewTxSummary({ tx, symbol }: { tx: StacksTransaction; symbol: CryptoCurrency }) {
-  if (symbol !== 'STX') {
-    throw new Error('No support for SIP10');
-  }
-  const payload = tx.payload as TokenTransferPayload;
+interface ReviewTxSummaryProps {
+  tx: StacksTransactionWire;
+  symbol: CryptoCurrency;
+}
+function formReviewTxSummary({ tx, symbol }: ReviewTxSummaryProps) {
+  if (symbol !== 'STX') throw new Error('No support for SIP10');
+
+  // WARNING: Danerous type casting
+  const payload = tx.payload as TokenTransferPayloadWire;
   const txValue = payload.amount;
   const fee = tx.auth.spendingCondition.fee;
   const totalSpendMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue + fee));
   const feeMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(fee));
 
   return {
-    recipient: addressToString(payload.recipient.address),
+    recipient: cvToString(payload.recipient),
     feeMoney,
     totalSpendMoney,
     symbol: 'STX',
@@ -131,7 +135,7 @@ export function StacksTxSigner({
           nonce: Number(tx.auth.spendingCondition.nonce),
           recipient: tx.payload.recipient,
         });
-        const newTxHex = bytesToHex(newTx.serialize());
+        const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
         setSelectedFeeType(feeType);
       }
@@ -156,7 +160,7 @@ export function StacksTxSigner({
           nonce: Number(nonce),
           recipient: tx.payload.recipient,
         });
-        const newTxHex = bytesToHex(newTx.serialize());
+        const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
       }
     } catch {
@@ -179,7 +183,7 @@ export function StacksTxSigner({
           nonce: Number(tx.auth.spendingCondition.nonce),
           recipient: tx.payload.recipient,
         });
-        const newTxHex = bytesToHex(newTx.serialize());
+        const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
       }
     } catch {
@@ -192,9 +196,8 @@ export function StacksTxSigner({
       });
     }
   }
-  if (!account) {
-    throw new Error('No account found');
-  }
+  if (!account) throw new Error('No account found');
+
   const totalSpendUsd = baseCurrencyAmountInQuoteWithFallback(totalSpendMoney, stxMarketData);
 
   const [approverState, setApproverState] = useState<ApproverState>('start');
@@ -206,14 +209,13 @@ export function StacksTxSigner({
 
     try {
       const signedTx = await signer?.sign(tx);
+
       await broadcastTransaction(
         { tx: signedTx, stacksNetwork },
         {
           onSuccess() {
             setApproverState('submitted');
-            setTimeout(() => {
-              onSuccess();
-            }, 1000);
+            setTimeout(() => onSuccess(), 1000);
           },
         }
       );

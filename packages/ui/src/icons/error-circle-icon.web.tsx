@@ -1,23 +1,11 @@
-import { forwardRef } from 'react';
+import ErrorCircle16 from '../assets/icons/error-circle-16-16.svg';
+import ErrorCircle24 from '../assets/icons/error-circle-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import ErrorCircleSmall from '../assets/icons/error-circle-16-16.svg';
-import ErrorCircle from '../assets/icons/error-circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const ErrorCircleIcon = forwardRef<SVGSVGElement, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <ErrorCircleSmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <ErrorCircle />
-      </Icon>
-    );
-  }
-);
-
-ErrorCircleIcon.displayName = 'ErrorCircleIcon';
+export const ErrorCircleIcon = createWebIcon({
+  icon: {
+    small: ErrorCircle16,
+    medium: ErrorCircle24,
+  },
+  displayName: 'ErrorCircle',
+});

@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import Palette16 from '../assets/icons/palette-16-16.svg';
+import Palette24 from '../assets/icons/palette-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import PaletteSmall from '../assets/icons/palette-16-16.svg';
-import Palette from '../assets/icons/palette-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const PaletteIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <PaletteSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Palette />
-    </Icon>
-  );
+export const PaletteIcon = createNativeIcon({
+  icon: {
+    small: Palette16,
+    medium: Palette24,
+  },
+  displayName: 'Palette',
 });
-
-PaletteIcon.displayName = 'PaletteIcon';

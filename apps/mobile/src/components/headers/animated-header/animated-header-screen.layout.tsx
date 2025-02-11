@@ -24,6 +24,7 @@ export function AnimatedHeaderScreenLayout({
     viewHeight,
     onScrollHandler,
     animatedHeaderStyle,
+    animatedBlurOverlayStyle,
     onContentSizeChange,
     onLayoutChange,
   } = useAnimatedHeader();
@@ -31,6 +32,7 @@ export function AnimatedHeaderScreenLayout({
   return (
     <>
       <AnimatedTitleHeader
+        animatedBlurOverlayStyle={animatedBlurOverlayStyle}
         animatedStyle={animatedHeaderStyle}
         rightElement={rightHeaderElement}
         title={title}

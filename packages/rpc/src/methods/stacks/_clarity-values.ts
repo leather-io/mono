@@ -15,7 +15,7 @@ import {
   StringUtf8CV,
   TrueCV,
   UIntCV,
-} from '@stacks/transactions-v7';
+} from '@stacks/transactions';
 import { z } from 'zod';
 
 // Clarity values

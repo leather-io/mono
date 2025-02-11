@@ -1,15 +1,10 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import AnimalEagle from '../../assets/icons/fee-animals/animal-eagle-32-32.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const AnimalEagleIcon = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <AnimalEagle />
-    </Icon>
-  );
+export const AnimalEagleIcon = createNativeIcon({
+  icon: {
+    large: AnimalEagle,
+  },
+  defaultVariant: 'large',
+  displayName: 'AnimalEagleIcon',
 });
-
-AnimalEagleIcon.displayName = 'AnimalEagleIcon';

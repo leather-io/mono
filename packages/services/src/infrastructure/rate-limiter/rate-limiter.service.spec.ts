@@ -1,22 +1,24 @@
-import { NetworkConfiguration } from '@leather.io/models';
-
+import { UserSettings } from '../settings/settings.service';
 import { bestInSlotApiLimiterSettings } from './best-in-slot-limiter';
 import { RateLimiterType, createRateLimiterService } from './rate-limiter.service';
 
 describe('RateLimiterService', () => {
-  const mockNetworkService = {
-    getConfig: () =>
+  const mockSettingsService = {
+    getSettings: () =>
       ({
-        chain: {
-          bitcoin: {
-            mode: 'mainnet',
+        fiatCurrency: 'USD',
+        network: {
+          chain: {
+            bitcoin: {
+              mode: 'mainnet',
+            },
           },
         },
-      }) as NetworkConfiguration,
+      }) as unknown as UserSettings,
   };
 
   it('should rate limit concurrent calls', async () => {
-    const service = createRateLimiterService(mockNetworkService);
+    const service = createRateLimiterService(mockSettingsService);
     const startTime = Date.now();
 
     const callCount = bestInSlotApiLimiterSettings.intervalCap + 1;
@@ -32,7 +34,7 @@ describe('RateLimiterService', () => {
   });
 
   it('should handle priorities correctly', async () => {
-    const service = createRateLimiterService(mockNetworkService);
+    const service = createRateLimiterService(mockSettingsService);
     const results: number[] = [];
     // first need to hit rate limit
     const fillerCalls = Array(bestInSlotApiLimiterSettings.intervalCap)

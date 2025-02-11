@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
+import {
+  DefineRpcMethod,
+  RpcRequest,
+  createRpcResponseSchema,
+  defaultErrorSchema,
+} from '../../rpc/schemas';
 import {
   baseStacksTransactionConfigSchema,
   stacksTransactionDetailsSchema,
@@ -30,7 +35,12 @@ export type StxDeployContractRequest = RpcRequest<
 // Result
 export const stxDeployContractResponseBodySchema = stacksTransactionDetailsSchema;
 
-export type StxDeployContractResponse = RpcResponse<typeof stxDeployContractResponseBodySchema>;
+export const stxDeployContractResponseSchema = createRpcResponseSchema(
+  stxDeployContractResponseBodySchema,
+  defaultErrorSchema
+);
+
+export type StxDeployContractResponse = z.infer<typeof stxDeployContractResponseSchema>;
 
 export type DefineStxDeployContractMethod = DefineRpcMethod<
   StxDeployContractRequest,

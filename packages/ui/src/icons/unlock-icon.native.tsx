@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import Unlock16 from '../assets/icons/unlock-16-16.svg';
+import Unlock24 from '../assets/icons/unlock-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import UnlockSmall from '../assets/icons/unlock-16-16.svg';
-import Unlock from '../assets/icons/unlock-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const UnlockIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <UnlockSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Unlock />
-    </Icon>
-  );
+export const UnlockIcon = createNativeIcon({
+  icon: {
+    small: Unlock16,
+    medium: Unlock24,
+  },
+  displayName: 'Unlock',
 });
-
-UnlockIcon.displayName = 'UnlockIcon';

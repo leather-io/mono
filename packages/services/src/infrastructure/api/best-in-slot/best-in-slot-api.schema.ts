@@ -6,11 +6,12 @@ export const bisRuneValidOutputsSchema = z.object({
   output: z.string(),
   rune_ids: z.array(z.string()),
   balances: z.array(z.string()),
-  min_price: z.number(),
-  unisat_price: z.number(),
+  min_price: z.number().nullable(),
+  unisat_price: z.number().nullable(),
+  derivation_path: z.string(),
   rune_names: z.array(z.string()),
   spaced_rune_names: z.array(z.string()),
-  decimals: z.number(),
+  decimals: z.array(z.number()),
 });
 
 const bisInscriptionDelegateSchema = z.object({

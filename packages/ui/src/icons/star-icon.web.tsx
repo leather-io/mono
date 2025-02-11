@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Star16 from '../assets/icons/star-16-16.svg';
+import Star24 from '../assets/icons/star-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import StarSmall from '../assets/icons/star-16-16.svg';
-import Star from '../assets/icons/star-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const StarIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <StarSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Star />
-    </Icon>
-  );
+export const StarIcon = createWebIcon({
+  icon: {
+    small: Star16,
+    medium: Star24,
+  },
+  displayName: 'Star',
 });
-
-StarIcon.displayName = 'StarIcon';

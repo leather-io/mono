@@ -1,21 +1,11 @@
-import { forwardRef } from 'react';
+import Code16 from '../assets/icons/code-16-16.svg';
+import Code24 from '../assets/icons/code-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import CodeSmall from '../assets/icons/code-16-16.svg';
-import Code from '../assets/icons/code-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const CodeIcon = forwardRef<SVGSVGElement, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <CodeSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <Code />
-    </Icon>
-  );
+export const CodeIcon = createWebIcon({
+  icon: {
+    small: Code16,
+    medium: Code24,
+  },
+  displayName: 'Code',
 });
-
-CodeIcon.displayName = 'CodeIcon';

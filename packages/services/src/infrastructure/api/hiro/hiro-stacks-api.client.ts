@@ -11,7 +11,7 @@ import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import { NetworkSettingsService } from '../../settings/network-settings.service';
+import { SettingsService } from '../../settings/settings.service';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 
 export type HiroAddressTransactionsListResponse = AddressTransactionsListResponse;
@@ -37,18 +37,22 @@ export interface HiroStacksApiClient {
 
 export function createHiroStacksApiClient(
   cache: HttpCacheService,
-  network: NetworkSettingsService,
+  settings: SettingsService,
   limiter: RateLimiterService
 ): HiroStacksApiClient {
   async function getAddressBalances(address: string, signal?: AbortSignal) {
     return await cache.fetchWithCache(
-      ['hiro-stacks-get-address-balances', address, network.getConfig().chain.stacks.chainId],
+      [
+        'hiro-stacks-get-address-balances',
+        address,
+        settings.getSettings().network.chain.stacks.chainId,
+      ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroAddressBalanceResponse>(
-              `${network.getConfig().chain.stacks.url}/extended/v1/address/${address}/balances`,
+              `${settings.getSettings().network.chain.stacks.url}/extended/v1/address/${address}/balances`,
               { signal }
             ),
           {
@@ -65,13 +69,17 @@ export function createHiroStacksApiClient(
 
   async function getAddressConfirmedTransactions(address: string, signal?: AbortSignal) {
     return await cache.fetchWithCache(
-      ['hiro-stacks-get-address-transactions', address, network.getConfig().chain.stacks.chainId],
+      [
+        'hiro-stacks-get-address-transactions',
+        address,
+        settings.getSettings().network.chain.stacks.chainId,
+      ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroAddressTransactionsListResponse>(
-              `${network.getConfig().chain.stacks.url}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`,
+              `${settings.getSettings().network.chain.stacks.url}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`,
               { signal }
             ),
           {
@@ -91,14 +99,14 @@ export function createHiroStacksApiClient(
       [
         'hiro-stacks-get-address-mempool-transactions',
         address,
-        network.getConfig().chain.stacks.chainId,
+        settings.getSettings().network.chain.stacks.chainId,
       ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<MempoolTransactionListResponse>(
-              `${network.getConfig().chain.stacks.url}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+              `${settings.getSettings().network.chain.stacks.url}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
               { signal }
             ),
           {
@@ -115,13 +123,17 @@ export function createHiroStacksApiClient(
 
   async function getFungibleTokenMetadata(principal: string, signal?: AbortSignal) {
     return await cache.fetchWithCache(
-      ['hiro-stacks-get-ft-token-metadata', principal, network.getConfig().chain.stacks.chainId],
+      [
+        'hiro-stacks-get-ft-token-metadata',
+        principal,
+        settings.getSettings().network.chain.stacks.chainId,
+      ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroFtMetadataResponse>(
-              `${network.getConfig().chain.stacks.url}/metadata/v1/ft/${principal}`,
+              `${settings.getSettings().network.chain.stacks.url}/metadata/v1/ft/${principal}`,
               { signal }
             ),
           {

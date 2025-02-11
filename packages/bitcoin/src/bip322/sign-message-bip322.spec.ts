@@ -1,6 +1,6 @@
+import { bytesToHex } from '@noble/hashes/utils';
 import * as secp from '@noble/secp256k1';
 import * as btc from '@scure/btc-signer';
-import { bytesToHex } from '@stacks/common';
 import * as bitcoin from 'bitcoinjs-lib';
 
 import { ecdsaPublicKeyToSchnorr } from '../bitcoin.utils';

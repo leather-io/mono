@@ -1,31 +1,32 @@
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { hexToBytes } from '@noble/hashes/utils';
 import {
   BytesReader,
-  FungibleConditionCode,
-  NonFungibleConditionCode,
-  createAssetInfo,
-  deserializePostCondition,
+  NonFungiblePostCondition,
+  StxPostCondition,
+  deserializePostConditionWire,
   hexToCV,
-  makeStandardNonFungiblePostCondition,
-  makeStandardSTXPostCondition,
-  serializePostCondition,
+  postConditionToHex,
 } from '@stacks/transactions';
 
-export const mockNftPostCondition = makeStandardNonFungiblePostCondition(
-  'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW',
-  NonFungibleConditionCode.Sends,
-  createAssetInfo('ST248HH800501WYSG7Z2SS1ZWHQW1GGH85Q6YJBCC', 'passive-blue-marmot', 'layer-nft'),
-  hexToCV('0x0100000000000000000000000000000003')
-);
+export const mockNftPostCondrtion: NonFungiblePostCondition = {
+  type: 'nft-postcondition',
+  address: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW',
+  condition: 'sent',
+  asset: 'ST248HH800501WYSG7Z2SS1ZWHQW1GGH85Q6YJBCC.passive-blue-marmot::layer-nft',
+  assetId: hexToCV('0x0100000000000000000000000000000003'),
+};
 
-export const mockStxPostCondition = makeStandardSTXPostCondition(
-  'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW',
-  FungibleConditionCode.Equal,
-  BigInt(100000000)
-);
+export const mockStxPostCondition: StxPostCondition = {
+  type: 'stx-postcondition',
+  address: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW',
+  condition: 'eq',
+  amount: 100000000,
+};
 
-export const mockPostConditionBytes = serializePostCondition(mockStxPostCondition);
-export const mockPostConditionHex = bytesToHex(mockPostConditionBytes);
-export const mockDeserializedPostCondition = deserializePostCondition(
+export const mockPostConditionHex = postConditionToHex(mockStxPostCondition);
+
+export const mockPostConditionBytes = hexToBytes(mockPostConditionHex);
+
+export const mockDeserializedPostCondition = deserializePostConditionWire(
   new BytesReader(hexToBytes(mockPostConditionHex))
 );

@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import GraduateCap16 from '../assets/icons/graduate-cap-16-16.svg';
+import GraduateCap24 from '../assets/icons/graduate-cap-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import GraduateCapSmall from '../assets/icons/graduate-cap-16-16.svg';
-import GraduateCap from '../assets/icons/graduate-cap-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const GraduateCapIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <GraduateCapSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <GraduateCap />
-    </Icon>
-  );
+export const GraduateCapIcon = createNativeIcon({
+  icon: {
+    small: GraduateCap16,
+    medium: GraduateCap24,
+  },
+  displayName: 'GraduateCap',
 });
-
-GraduateCapIcon.displayName = 'GraduateCapIcon';

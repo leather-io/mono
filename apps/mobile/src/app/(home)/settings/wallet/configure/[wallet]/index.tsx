@@ -23,7 +23,6 @@ import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
@@ -43,7 +42,7 @@ import {
   TrashIcon,
 } from '@leather.io/ui/native';
 
-function getUnavailableFeatures({ iconColor }: { iconColor: string }) {
+function getUnavailableFeatures({ iconColor }: { iconColor: keyof Theme['colors'] }) {
   const addressReuseTitle = t({
     id: 'configure_wallet.address_reuse.cell_title',
     message: 'Address reuse',
@@ -97,7 +96,6 @@ interface ConfigureWalletProps {
   wallet: WalletStore;
 }
 function ConfigureWallet({ wallet }: ConfigureWalletProps) {
-  const theme = useTheme<Theme>();
   const router = useRouter();
   const addWalletSheetRef = useRef<SheetRef>(null);
   const walletNameSheetRef = useRef<SheetRef>(null);
@@ -209,7 +207,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                 id: 'configure_wallet.remove_wallet.cell_title',
                 message: 'Remove wallet',
               })}
-              icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
+              icon={<TrashIcon color="red.action-primary-default" />}
               onPress={() => {
                 removeWalletSheetRef.current?.present();
               }}
@@ -223,10 +221,8 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
             })}
             content={
               <SettingsList>
-                {Object.values(
-                  getUnavailableFeatures({ iconColor: theme.colors['ink.text-subdued'] })
-                ).map(feature => {
-                  return (
+                {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
+                  feature => (
                     <SettingsListItem
                       key={feature.id}
                       title={feature.title}
@@ -236,8 +232,8 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                         id: feature.id,
                       })}
                     />
-                  );
-                })}
+                  )
+                )}
               </SettingsList>
             }
           />

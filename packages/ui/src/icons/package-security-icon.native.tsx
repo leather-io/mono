@@ -1,23 +1,11 @@
-import { Component, forwardRef } from 'react';
+import PackageSecurity16 from '../assets/icons/package-security-16-16.svg';
+import PackageSecurity24 from '../assets/icons/package-security-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import PackageSecuritySmall from '../assets/icons/package-security-16-16.svg';
-import PackageSecurity from '../assets/icons/package-security-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const PackageSecurityIcon = forwardRef<Component, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <PackageSecuritySmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <PackageSecurity />
-      </Icon>
-    );
-  }
-);
-
-PackageSecurityIcon.displayName = 'PackageSecurityIcon';
+export const PackageSecurityIcon = createNativeIcon({
+  icon: {
+    small: PackageSecurity16,
+    medium: PackageSecurity24,
+  },
+  displayName: 'PackageSecurity',
+});

@@ -18,35 +18,34 @@ export function HeaderLayout({
   bottomElement,
 }: HeaderLayoutProps) {
   const insets = useSafeAreaInsets();
+
   return (
     <Box
       bg="ink.background-primary"
-      style={{
-        justifyContent: 'center',
-        paddingTop: insets.top,
-        width: '100%',
-      }}
+      justifyContent="center"
+      width="100%"
+      style={{ paddingTop: insets.top }}
     >
       <Box
-        alignItems="center"
         flexDirection="row"
-        height={HEADER_HEIGHT}
+        alignItems="center"
         justifyContent="space-between"
+        height={HEADER_HEIGHT}
         gap="2"
         py="3"
         px="3"
       >
-        <Box alignItems="flex-start" flexGrow={1} height="100%" justifyContent="center" zIndex="20">
+        <Box alignItems="flex-start" justifyContent="center" flexGrow={1} height="100%" zIndex="20">
           {leftElement}
         </Box>
         <Box
           alignItems="center"
-          bottom={0}
           justifyContent="center"
-          left={0}
           position="absolute"
-          right={0}
           top={0}
+          right={0}
+          bottom={0}
+          left={0}
         >
           {centerElement}
         </Box>

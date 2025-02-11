@@ -1,23 +1,11 @@
-import { forwardRef } from 'react';
+import ArrowRotateClockwise16 from '../assets/icons/arrow-rotate-clockwise-16-16.svg';
+import ArrowRotateClockwise24 from '../assets/icons/arrow-rotate-clockwise-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-import ArrowRotateClockwiseSmall from '../assets/icons/arrow-rotate-clockwise-16-16.svg';
-import ArrowRotateClockwise from '../assets/icons/arrow-rotate-clockwise-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
-
-export const ArrowRotateClockwiseIcon = forwardRef<SVGSVGElement, IconProps>(
-  ({ variant, ...props }, ref) => {
-    if (variant === 'small')
-      return (
-        <Icon ref={ref} {...props}>
-          <ArrowRotateClockwiseSmall />
-        </Icon>
-      );
-    return (
-      <Icon ref={ref} {...props}>
-        <ArrowRotateClockwise />
-      </Icon>
-    );
-  }
-);
-
-ArrowRotateClockwiseIcon.displayName = 'ArrowRotateClockwiseIcon';
+export const ArrowRotateClockwiseIcon = createWebIcon({
+  icon: {
+    small: ArrowRotateClockwise16,
+    medium: ArrowRotateClockwise24,
+  },
+  displayName: 'ArrowRotateClockwise',
+});

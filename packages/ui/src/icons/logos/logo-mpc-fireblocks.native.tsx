@@ -1,15 +1,9 @@
-import { Component, forwardRef } from 'react';
-import { SvgProps } from 'react-native-svg';
-
 import LogoMpcFireblocksLogo from '../../assets/icons/logos/logo-mpc-fireblocks-24-24.svg';
-import { Icon } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export const LogoMpcFireblocks = forwardRef<Component, SvgProps>((props, ref) => {
-  return (
-    <Icon ref={ref} {...props}>
-      <LogoMpcFireblocksLogo />
-    </Icon>
-  );
+export const LogoMpcFireblocks = createNativeIcon({
+  icon: {
+    medium: LogoMpcFireblocksLogo,
+  },
+  displayName: 'LogoMpcFireblocks',
 });
-
-LogoMpcFireblocks.displayName = 'LogoMpcFireblocks';

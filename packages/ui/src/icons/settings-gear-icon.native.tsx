@@ -1,21 +1,11 @@
-import { Component, forwardRef } from 'react';
+import SettingsGear16 from '../assets/icons/settings-gear-16-16.svg';
+import SettingsGear24 from '../assets/icons/settings-gear-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-import SettingsGearSmall from '../assets/icons/settings-gear-16-16.svg';
-import SettingsGear from '../assets/icons/settings-gear-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
-
-export const SettingsGearIcon = forwardRef<Component, IconProps>(({ variant, ...props }, ref) => {
-  if (variant === 'small')
-    return (
-      <Icon ref={ref} {...props}>
-        <SettingsGearSmall />
-      </Icon>
-    );
-  return (
-    <Icon ref={ref} {...props}>
-      <SettingsGear />
-    </Icon>
-  );
+export const SettingsGearIcon = createNativeIcon({
+  icon: {
+    small: SettingsGear16,
+    medium: SettingsGear24,
+  },
+  displayName: 'SettingsGear',
 });
-
-SettingsGearIcon.displayName = 'SettingsGearIcon';

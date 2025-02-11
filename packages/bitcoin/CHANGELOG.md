@@ -443,6 +443,53 @@
     * @leather.io/crypto bumped to 1.6.33
     * @leather.io/utils bumped to 0.25.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.15.5
+    * @leather.io/crypto bumped to 1.6.34
+    * @leather.io/models bumped to 0.25.1
+    * @leather.io/utils bumped to 0.25.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.5.5
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.35
+    * @leather.io/utils bumped to 0.25.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.5.6
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.36
+    * @leather.io/utils bumped to 0.25.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.5.7
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.37
+    * @leather.io/utils bumped to 0.25.4
+  * devDependencies
+    * @leather.io/rpc bumped to 2.5.8
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.38
+    * @leather.io/utils bumped to 0.25.5
+  * devDependencies
+    * @leather.io/rpc bumped to 2.5.9
+
 ## [0.19.10](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.9...@leather.io/bitcoin-v0.19.10) (2025-01-07)
 
 

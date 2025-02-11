@@ -1,8 +1,7 @@
 import { SpinnerIcon } from '@/components/spinner-icon';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import { Button, CheckmarkCircleIcon, Theme } from '@leather.io/ui/native';
+import { Button, CheckmarkCircleIcon } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { ApproverState } from '../utils';
@@ -14,7 +13,6 @@ interface ApproverButtonsProps {
 }
 
 export function ApproverButtons({ approverState, onEdit, onApprove }: ApproverButtonsProps) {
-  const theme = useTheme<Theme>();
   switch (approverState) {
     case 'start':
       return (
@@ -61,7 +59,7 @@ export function ApproverButtons({ approverState, onEdit, onApprove }: ApproverBu
             id: 'approver.button.submitted',
             message: 'Submitted',
           })}
-          icon={<CheckmarkCircleIcon color={theme.colors['ink.background-primary']} />}
+          icon={<CheckmarkCircleIcon color="ink.background-primary" />}
         />
       );
     default:
