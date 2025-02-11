@@ -1,14 +1,18 @@
 import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
+import {
+  DefineRpcMethod,
+  createRpcRequestSchema,
+  createRpcResponseSchema,
+  defaultErrorSchema,
+} from '../../rpc/schemas';
 import {
   baseStacksTransactionConfigSchema,
   stacksTransactionDetailsSchema,
 } from './_stacks-helpers';
 
 export const stxTransferStxMethodName = 'stx_transferStx';
-
-type StxTransferStxRequestMethodName = typeof stxTransferStxMethodName;
+export type StxTransferStxRequestMethodName = typeof stxTransferStxMethodName;
 
 // Request
 export const stxTransferStxRequestParamsSchema = z.intersection(
@@ -19,18 +23,22 @@ export const stxTransferStxRequestParamsSchema = z.intersection(
   }),
   baseStacksTransactionConfigSchema
 );
-
 export type StxTransferStxRequestParams = z.infer<typeof stxTransferStxRequestParamsSchema>;
 
-export type StxTransferStxRequest = RpcRequest<
-  StxTransferStxRequestMethodName,
-  StxTransferStxRequestParams
->;
+export const stxTransferStxRequestSchema = createRpcRequestSchema(
+  stxTransferStxMethodName,
+  stxTransferStxRequestParamsSchema
+);
+export type StxTransferStxRequest = z.infer<typeof stxTransferStxRequestSchema>;
 
 // Result
 export const stxTransferStxResponseBodySchema = stacksTransactionDetailsSchema;
 
-export type StxTransferStxResponse = RpcResponse<typeof stxTransferStxResponseBodySchema>;
+export const stxTransferStxResponseSchema = createRpcResponseSchema(
+  stxTransferStxResponseBodySchema,
+  defaultErrorSchema
+);
+type StxTransferStxResponse = z.infer<typeof stxTransferStxResponseSchema>;
 
 export type DefineStxTransferStxMethod = DefineRpcMethod<
   StxTransferStxRequest,

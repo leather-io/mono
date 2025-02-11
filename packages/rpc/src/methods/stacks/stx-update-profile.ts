@@ -1,11 +1,16 @@
 import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../../rpc/schemas';
+import {
+  DefineRpcMethod,
+  createRpcRequestSchema,
+  createRpcResponseSchema,
+  defaultErrorSchema,
+} from '../../rpc/schemas';
 import { stacksTransactionDetailsSchema } from './_stacks-helpers';
 
 export const stxUpdateProfileMethodName = 'stx_updateProfile';
 
-type StxUpdateProfileRequestMethodName = typeof stxUpdateProfileMethodName;
+export type StxUpdateProfileRequestMethodName = typeof stxUpdateProfileMethodName;
 
 // Request
 export const stxUpdateProfileRequestParamsSchema = z.object({
@@ -15,15 +20,20 @@ export const stxUpdateProfileRequestParamsSchema = z.object({
 
 export type StxUpdateProfileRequestParams = z.infer<typeof stxUpdateProfileRequestParamsSchema>;
 
-export type StxUpdateProfileRequest = RpcRequest<
-  StxUpdateProfileRequestMethodName,
-  StxUpdateProfileRequestParams
->;
+export const stxUpdateProfileRequestSchema = createRpcRequestSchema(
+  stxUpdateProfileMethodName,
+  stxUpdateProfileRequestParamsSchema
+);
+export type StxUpdateProfileRequest = z.infer<typeof stxUpdateProfileRequestSchema>;
 
 // Result
 export const stxUpdateProfileResponseBodySchema = stacksTransactionDetailsSchema;
 
-export type StxUpdateProfileResponse = RpcResponse<typeof stxUpdateProfileResponseBodySchema>;
+export const stxUpdateProfileResponseSchema = createRpcResponseSchema(
+  stxUpdateProfileResponseBodySchema,
+  defaultErrorSchema
+);
+export type StxUpdateProfileResponse = z.infer<typeof stxUpdateProfileResponseSchema>;
 
 export type DefineStxUpdateProfileMethod = DefineRpcMethod<
   StxUpdateProfileRequest,

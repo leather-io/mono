@@ -1,16 +1,37 @@
-import { DefineRpcMethod, RpcParameterByName, RpcRequest, RpcResponse } from '../rpc/schemas';
+import { z } from 'zod';
 
-interface OpenSwapResponseBody {
-  message: string;
-}
+import {
+  DefineRpcMethod,
+  createRpcRequestSchema,
+  createRpcResponseSchema,
+  defaultErrorSchema,
+} from '../rpc/schemas';
 
-interface OpenSwapRequestParams extends RpcParameterByName {
-  base: string;
-  quote: string;
-}
+const methodName = 'openSwap';
 
-export type OpenSwapRequest = RpcRequest<'openSwap', OpenSwapRequestParams>;
+// Request
+export const openSwapRequestParamsSchema = z.object({
+  base: z.string(),
+  quote: z.string(),
+});
+export type OpenSwapRequestParams = z.infer<typeof openSwapRequestParamsSchema>;
 
-export type OpenSwapResponse = RpcResponse<OpenSwapResponseBody>;
+export const openSwapRequestSchema = createRpcRequestSchema(
+  methodName,
+  openSwapRequestParamsSchema
+);
+export type OpenSwapRequest = z.infer<typeof openSwapRequestSchema>;
+
+// Response
+export const openSwapResponseBodySchema = z.object({
+  message: z.string(),
+});
+export type OpenSwapResponseBody = z.infer<typeof openSwapRequestParamsSchema>;
+
+export const openSwapResponseSchema = createRpcResponseSchema(
+  openSwapResponseBodySchema,
+  defaultErrorSchema
+);
+export type OpenSwapResponse = z.infer<typeof openSwapResponseSchema>;
 
 export type DefineOpenSwapMethod = DefineRpcMethod<OpenSwapRequest, OpenSwapResponse>;
