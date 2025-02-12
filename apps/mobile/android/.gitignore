@@ -31,3 +31,6 @@ fastlane/test_output
 builds/*
 
 app/*.keystore
+
+# Google services JSON found in Firebase Project
+google-services.json

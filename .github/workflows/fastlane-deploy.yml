@@ -1,0 +1,55 @@
+name: Trigger iOS and Android beta deployments to Firebase App Distribution
+on:
+  pull_request:
+    types:
+      - synchronize
+      - labeled
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  distribute-ios-beta:
+    if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Fastlane
+        uses: ./.github/actions/setup-fastlane
+
+      - name: Run Fastlane
+        run: bundle exec fastlane ios distribute_ios_beta
+        working-directory: ./apps/mobile/fastlane
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+  distribute-android-beta:
+    if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Fastlane
+        uses: ./.github/actions/setup-fastlane
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Run Fastlane
+        run: bundle exec fastlane android distribute_android_beta
+        working-directory: ./apps/mobile/fastlane
+        env:
+          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.13-11/x64

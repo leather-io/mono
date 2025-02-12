@@ -1,11 +1,10 @@
 default_platform(:android)
 
 desc "Build and distribute Android app"
-lane :build_android do |type|
+private_lane :build_android do |type|
   if is_ci
     setup_ci
   end
-  if type == "prod"
     build_output = gradle(
       task: "assemble",
       build_type: "Release",
@@ -18,38 +17,6 @@ lane :build_android do |type|
       }
     )
     puts "BUILD OUTPUT: #{build_output}"
-  else
-    build_output = gradle(
-      task: "assembleRelease",
-      project_dir: "android", # Updated path to point to the Android project root
-    )
-    puts "BUILD OUTPUT: #{build_output}"
-  end
-end
-
-lane :notify_slack do |display_version:, build_version:, testing_url:, firebase_console_url:|
-  puts "DISPLAY VERSION: #{display_version}"
-  puts "BUILD VERSION: #{build_version}"
-  puts "TESTING URL: #{testing_url}"
-  puts "FIREBASE CONSOLE URL: #{firebase_console_url}"
-  slack(
-    message: "A new Android build is ready to be tested! v#{display_version}+#{build_version}",
-    default_payloads: [:git_branch, :last_git_commit_hash],
-    attachment_properties: {
-      fields: [
-        {
-          title: "Testing URL",
-          value: testing_url,
-          short: false
-        },
-        {
-          title: "Firebase Console URL",
-          value: firebase_console_url,
-          short: false
-        }
-      ]
-    }
-  )
 end
 
 lane :distribute_android_beta do
@@ -65,16 +32,7 @@ lane :distribute_android_beta do
     release_notes: "New version available"
   )
   
-  notify_slack(
-    display_version: release[:displayVersion], 
-    build_version: release[:buildVersion], 
-    testing_url: release[:testingUri], 
-    firebase_console_url: release[:firebaseConsoleUri]
+  notify_slack_of_firebase_build(
+    firebase_release: release
   )
-end
-
-lane :distribute_android_prod do
-  build_android(type: "prod")
-  increment_version
-  notify_slack
 end
