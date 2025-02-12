@@ -17,7 +17,14 @@ function spamWordFilter(input: string): boolean {
   return spamWords.some(containsSpam);
 }
 
-export function spamFilter(input: string): string {
+interface SpamFilterArgs {
+  input: string;
+  whitelist: string[];
+}
+
+export function spamFilter({ input, whitelist }: SpamFilterArgs): string {
+  if (whitelist.includes(input)) return input;
+
   const urlFound = spamUrlFilter(input);
   const spamWordsFound = spamWordFilter(input);
 
