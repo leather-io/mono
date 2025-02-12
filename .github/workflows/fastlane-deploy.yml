@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Fastlane
         working-directory: ./apps/mobile/fastlane
-        run: bundle exec fastlane android beta_build
+        run: bundle exec fastlane android distribute_android_beta
         env:
           LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
