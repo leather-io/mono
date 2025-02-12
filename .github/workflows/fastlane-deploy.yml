@@ -16,10 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Fastlane
+      - name: Setup for Fastlane
         uses: ./.github/actions/setup-fastlane
 
-      - name: Run Fastlane
+      - name: iOS Fastlane Beta Deployment
         run: bundle exec fastlane ios distribute_ios_beta
         working-directory: ./apps/mobile/fastlane
         env:
@@ -35,7 +35,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Fastlane
+      - name: Setup for Fastlane
         uses: ./.github/actions/setup-fastlane
 
       - name: Set up JDK
@@ -44,7 +44,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Run Fastlane
+      - name: Android Fastlane Beta Deployment
         working-directory: ./apps/mobile/fastlane
         run: bundle exec fastlane android distribute_android_beta
         env:
