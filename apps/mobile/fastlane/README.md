@@ -13,10 +13,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### notify_slack
+### notify_slack_of_firebase_build
 
 ```sh
-[bundle exec] fastlane notify_slack
+[bundle exec] fastlane notify_slack_of_firebase_build
 ```
 
 
@@ -32,28 +32,12 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios build_ios
 ```
 
-Build and distribute iOS app
+Build iOS app
 
-### ios increment_version
-
-```sh
-[bundle exec] fastlane ios increment_version
-```
-
-
-
-### ios notify_slack
+### ios distribute_ios_beta
 
 ```sh
-[bundle exec] fastlane ios notify_slack
-```
-
-
-
-### ios distribute_ios
-
-```sh
-[bundle exec] fastlane ios distribute_ios
+[bundle exec] fastlane ios distribute_ios_beta
 ```
 
 
@@ -63,42 +47,10 @@ Build and distribute iOS app
 
 ## Android
 
-### android build_android
-
-```sh
-[bundle exec] fastlane android build_android
-```
-
-Build and distribute Android app
-
-### android notify_slack
-
-```sh
-[bundle exec] fastlane android notify_slack
-```
-
-
-
-### android test_notify_slack
-
-```sh
-[bundle exec] fastlane android test_notify_slack
-```
-
-
-
 ### android distribute_android_beta
 
 ```sh
 [bundle exec] fastlane android distribute_android_beta
-```
-
-
-
-### android distribute_android_prod
-
-```sh
-[bundle exec] fastlane android distribute_android_prod
 ```
 
 

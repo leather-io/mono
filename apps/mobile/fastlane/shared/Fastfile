@@ -1,8 +1,20 @@
-lane :notify_slack do
-  Dotenv.load('./.env')
+lane :notify_slack_of_firebase_build do |firebase_release:|
   slack(
-    message: "Build completed successfully!",
-    channel: "#leather-mobile",
-    slack_url: ENV["SLACK_WEBHOOK_URL"]
+    message: "A new #{ENV["FASTLANE_PLATFORM_NAME"]} build is ready to be tested! v#{firebase_release[:displayVersion]}+#{firebase_release[:buildVersion]}",
+    default_payloads: [:git_branch, :last_git_commit_hash],
+    attachment_properties: {
+      fields: [
+        {
+          title: "Testing URL",
+          value: firebase_release[:testingUri],
+          short: false
+        },
+        {
+          title: "Firebase Console URL",
+          value: firebase_release[:firebaseConsoleUri],
+          short: false
+        }
+      ]
+    }
   )
 end
