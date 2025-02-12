@@ -2,21 +2,18 @@ default_platform(:android)
 
 desc "Build and distribute Android app"
 private_lane :build_android do |type|
-  if is_ci
-    setup_ci
-  end
-    build_output = gradle(
-      task: "assemble",
-      build_type: "Release",
-      project_dir: "android", # Updated path to point to the Android project root
-      properties: {
-        "android.injected.signing.store.file" => ENV['LEATHER_UPLOAD_STORE_FILE'],
-        "android.injected.signing.store.password" => ENV['LEATHER_UPLOAD_STORE_PASSWORD'],
-        "android.injected.signing.key.alias" => ENV['LEATHER_UPLOAD_KEY_ALIAS'],
-        "android.injected.signing.key.password" => ENV['LEATHER_UPLOAD_KEY_PASSWORD']
-      }
-    )
-    puts "BUILD OUTPUT: #{build_output}"
+  build_output = gradle(
+    task: "assemble",
+    build_type: "Release",
+    project_dir: "android", # Updated path to point to the Android project root
+    properties: {
+      "android.injected.signing.store.file" => ENV['LEATHER_UPLOAD_STORE_FILE'],
+      "android.injected.signing.store.password" => ENV['LEATHER_UPLOAD_STORE_PASSWORD'],
+      "android.injected.signing.key.alias" => ENV['LEATHER_UPLOAD_KEY_ALIAS'],
+      "android.injected.signing.key.password" => ENV['LEATHER_UPLOAD_KEY_PASSWORD']
+    }
+  )
+  puts "BUILD OUTPUT: #{build_output}"
 end
 
 lane :distribute_android_beta do
