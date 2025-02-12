@@ -511,6 +511,30 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.22
 
+## [2.10.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.9.3...@leather.io/mobile-v2.10.0) (2025-02-12)
+
+
+### Features
+
+* re-design Avatar component ([d0e8c19](https://github.com/leather-io/mono/commit/d0e8c19a019c480487a722abca21228aa4248238))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.23
+    * @leather.io/crypto bumped to 1.6.39
+    * @leather.io/query bumped to 2.27.0
+    * @leather.io/rpc bumped to 2.5.10
+    * @leather.io/services bumped to 1.1.4
+    * @leather.io/stacks bumped to 1.5.24
+    * @leather.io/tokens bumped to 0.13.0
+    * @leather.io/ui bumped to 1.49.0
+    * @leather.io/utils bumped to 0.26.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.23
+
 ## [2.9.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.8.2...@leather.io/mobile-v2.9.0) (2025-02-07)
 
 

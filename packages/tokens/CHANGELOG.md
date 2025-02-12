@@ -102,6 +102,20 @@
   * devDependencies
     * @leather.io/utils bumped to 0.25.5
 
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.12.14...@leather.io/tokens-v0.13.0) (2025-02-12)
+
+
+### Features
+
+* re-design Avatar component ([d0e8c19](https://github.com/leather-io/mono/commit/d0e8c19a019c480487a722abca21228aa4248238))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.26.0
+
 ## [0.12.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.12.0...@leather.io/tokens-v0.12.1) (2024-11-19)
 
 

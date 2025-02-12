@@ -186,6 +186,15 @@
   * dependencies
     * @leather.io/models bumped to 0.25.0
 
+## [2.5.10](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.9...@leather.io/rpc-v2.5.10) (2025-02-12)
+
+
+### Bug Fixes
+
+* add defaults to stx_signMessage, tests ([923969e](https://github.com/leather-io/mono/commit/923969e594c84e8ddb2239632bfa589710a42609))
+* **rpc:** coerce primitive value ([694f7dc](https://github.com/leather-io/mono/commit/694f7dcc29558c233bde955ad8cb96ff7b817735))
+* **rpc:** use more consistent schema definitions ([c5106c6](https://github.com/leather-io/mono/commit/c5106c60d3e71b7284c0c3a394819a1e173d4b32))
+
 ## [2.5.9](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.8...@leather.io/rpc-v2.5.9) (2025-02-10)
 
 

@@ -315,6 +315,23 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.8.13
 
+## [1.49.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.48.6...@leather.io/ui-v1.49.0) (2025-02-12)
+
+
+### Features
+
+* re-design Avatar component ([d0e8c19](https://github.com/leather-io/mono/commit/d0e8c19a019c480487a722abca21228aa4248238))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.13.0
+    * @leather.io/utils bumped to 0.26.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.8.14
+
 ## [1.48.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.47.7...@leather.io/ui-v1.48.0) (2025-01-16)
 
 

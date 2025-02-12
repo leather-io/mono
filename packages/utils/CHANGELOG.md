@@ -265,6 +265,20 @@
   * dependencies
     * @leather.io/rpc bumped to 2.5.9
 
+## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.25.5...@leather.io/utils-v0.26.0) (2025-02-12)
+
+
+### Features
+
+* add spam filter whitelist ([45e3798](https://github.com/leather-io/mono/commit/45e37984443a209f5ab55c8a99ef2306ab3e615d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.5.10
+
 ## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.24.0...@leather.io/utils-v0.25.0) (2025-01-23)
 
 

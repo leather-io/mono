@@ -339,6 +339,23 @@
     * @leather.io/stacks bumped to 1.5.23
     * @leather.io/utils bumped to 0.25.5
 
+## [2.27.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.24...@leather.io/query-v2.27.0) (2025-02-12)
+
+
+### Features
+
+* add spam filter whitelist ([45e3798](https://github.com/leather-io/mono/commit/45e37984443a209f5ab55c8a99ef2306ab3e615d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.23
+    * @leather.io/rpc bumped to 2.5.10
+    * @leather.io/stacks bumped to 1.5.24
+    * @leather.io/utils bumped to 0.26.0
+
 ## [2.26.20](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.19...@leather.io/query-v2.26.20) (2025-02-04)
 
 
