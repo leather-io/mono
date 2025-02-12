@@ -6,6 +6,9 @@ runs:
     - name: Provision
       uses: ./.github/actions/provision
 
+    - run: pnpm turbo run build
+      shell: bash
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
