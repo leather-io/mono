@@ -43,14 +43,6 @@ jobs:
           name: app-release.ipa
           path: ${{ github.workspace }}/app-release.ipa
 
-      - name: Upload IPA to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: leatherhood
-          file: ${{ github.workspace }}/app-release.ipa
-
   android-beta:
     runs-on: ubuntu-latest
     steps:
@@ -91,6 +83,12 @@ jobs:
           name: app-release.aab
           path: ${{ github.workspace }}/app-release.aab
 
+  upload-builds-to-firebase:
+    needs:
+      - ios-beta
+      - android-beta
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload AAB to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -99,46 +97,41 @@ jobs:
           groups: leatherhood
           file: ${{ github.workspace }}/app-release.aab
 
-  # distribute-ios-beta:
-  #   if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
-  #   runs-on: macos-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+      - name: Upload IPA to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.ipa
 
-  #     - name: Setup for Fastlane
-  #       uses: ./.github/actions/setup-fastlane
+  create-beta-release:
+    needs:
+      - android-beta
+      - ios-beta
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release notes for ${{ github.ref }}
+          draft: false
+      - name: Upload AAB to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/app-release.aab
+          asset_name: app-release-${{ github.ref }}.aab
+          asset_content_type: application/vnd.android.package-archive
 
-  #     - name: iOS Fastlane Beta Deployment
-  #       run: bundle exec fastlane ios distribute_ios_beta
-  #       working-directory: ./apps/mobile/fastlane
-  #       env:
-  #         APPLE_ID: ${{ secrets.APPLE_ID }}
-  #         EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-  #         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-  #         APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
-
-  # distribute-android-beta:
-  #   if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup for Fastlane
-  #       uses: ./.github/actions/setup-fastlane
-
-  #     - name: Set up JDK
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '17'
-
-  #     - name: Android Fastlane Beta Deployment
-  #       working-directory: ./apps/mobile/fastlane
-  #       run: bundle exec fastlane android distribute_android_beta
-  #       env:
-  #         LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-  #         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-  #         GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
-  #         ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      - name: Upload IPA to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/app-release.ipa
+          asset_name: app-release-${{ github.ref }}.ipa
+          asset_content_type: application/octet-stream
