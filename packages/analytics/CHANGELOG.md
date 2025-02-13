@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.25.1
 
+## [3.2.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.1.3...@leather.io/analytics-v3.2.0) (2025-02-13)
+
+
+### Features
+
+* firebase notifications and launchdarkly ([aeec844](https://github.com/leather-io/mono/commit/aeec84451c31d08023af6253f4a1d50b6c06b8b5))
+
 ## [3.1.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.0.4...@leather.io/analytics-v3.1.0) (2024-12-20)
 
 
