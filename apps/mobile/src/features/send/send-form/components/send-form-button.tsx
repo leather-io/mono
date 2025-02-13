@@ -19,7 +19,7 @@ export function SendFormButton<T extends SendFormBaseContext<T>>() {
   function onSubmitForm(values: z.infer<typeof schema>) {
     onInitSendTransfer(formData, values);
   }
-
+  // console.log('isValid', isValid);
   return (
     <Button
       mt="3"

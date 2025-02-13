@@ -11,7 +11,7 @@ export function formatStacksError(errorMessage: StacksErrorKey) {
       message: 'Invalid address',
     }),
     InvalidNetworkAddress: t({
-      id: 'stacks-error.invalid-address',
+      id: 'stacks-error.invalid-network-address',
       message: 'Address is for incorrect network',
     }),
     InvalidSameAddress: t({

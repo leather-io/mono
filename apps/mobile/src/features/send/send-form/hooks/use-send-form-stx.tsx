@@ -60,7 +60,8 @@ export function useSendFormStx() {
 
         if (!isValidPrecision(+amount, STX_DECIMALS)) {
           // TODO add appropriate Error Key
-          throw new Error();
+          // can't even throw these errors here wihout translating them
+          // throw new StacksError('InsufficientFunds');
         }
         if (
           !isValidTransactionAmount({
@@ -70,8 +71,7 @@ export function useSendFormStx() {
             unitConverter: stxToMicroStx,
           })
         ) {
-          // TODO add appropriate Error Key
-          throw new Error();
+          // throw new StacksError('InsufficientFunds');
         }
 
         // TODO implement a simple version of Send Max - design seems newer anyway so do it simpler then update

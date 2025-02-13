@@ -27,3 +27,19 @@ export function isValidAddressChain(address: string, currentNetwork: NetworkConf
       return false;
   }
 }
+
+function validateAddress(address: string) {
+  if (isUndefined(address) || isEmptyString(address)) {
+    return false;
+  }
+  return true;
+}
+export function validatePayerNotRecipient(senderAddress: string, recipientAddress: string) {
+  if (validateAddress(senderAddress) || validateAddress(recipientAddress)) {
+    return false;
+  }
+  if (senderAddress === recipientAddress) {
+    return false;
+  }
+  return true;
+}
