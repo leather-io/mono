@@ -522,6 +522,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.24
 
+## [2.11.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.11.1...@leather.io/mobile-v2.11.2) (2025-02-13)
+
+
+### Bug Fixes
+
+* ci builds caused by firebase env variables ([51f40b0](https://github.com/leather-io/mono/commit/51f40b067d3ec606351a069b0fa9b1ab73b23e38))
+
 ## [2.11.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.10.0...@leather.io/mobile-v2.11.0) (2025-02-13)
 
 
