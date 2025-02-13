@@ -98,7 +98,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
 
   while (!hasSufficientUtxosForTx()) {
     const [nextUtxo] = getRemainingUnspentUtxos();
-    // this is the error hit in the form now
+    // this is the error hit in the form now for insufficient funds
     if (!nextUtxo) throw new BitcoinError('InsufficientFunds');
     neededUtxos.push(nextUtxo);
   }

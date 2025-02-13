@@ -14,7 +14,7 @@ import {
   CoinSelectionRecipient,
   CoinSelectionUtxo,
   getBitcoinFees,
-  isValidBitcoinTransaction, // isValidBitcoinTransaction,
+  isValidBitcoinTransaction,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
 import { AverageBitcoinFeeRates, bitcoinNetworkToNetworkMode } from '@leather.io/models';
@@ -122,7 +122,6 @@ export function useSendFormBtc() {
 
         navigation.navigate('sign-psbt', { psbtHex });
       } catch (e) {
-        // logger('btc error:', e);
         if (e instanceof BitcoinError) {
           displayToast({ title: formatBitcoinError(e.message), type: 'error' });
           return;

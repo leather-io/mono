@@ -7,7 +7,7 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
   return match<BitcoinErrorKey>()(errorMessage, {
     InvalidAddress: t({
       id: 'bitcoin-error.invalid-address',
-      message: 'Invalid address',
+      message: 'Invalid addressddd',
     }),
     NoInputsToSign: t({
       id: 'bitcoin-error.no-inputs-to-sign',
@@ -22,12 +22,8 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
       message: 'Insufficient funds',
     }),
     InvalidNetworkAddress: t({
-      id: 'bitcoin-error.invalid-address',
+      id: 'bitcoin-error.invalid-network-address',
       message: 'Address is for incorrect network',
-    }),
-    InvalidSameAddress: t({
-      id: 'bitcoin-error.invalid-same-address',
-      message: 'Cannot send to yourself',
     }),
   });
 }

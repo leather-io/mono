@@ -1,5 +1,6 @@
 import { Network, validate } from 'bitcoin-address-validation';
 
+// import { z } from 'zod';
 import { type BitcoinNetworkModes } from '@leather.io/models';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
 
@@ -22,6 +23,25 @@ export function isValidBitcoinAddress(address: string) {
   } catch {
     return false;
   }
+
+  // return z
+  //   .string({
+  //     invalid_type_error: FormErrorMessages.AddressRequired,
+  //   })
+  //   .refine(
+  //     address => {
+  //       if (isUndefined(address) || isEmptyString(address)) return false;
+  //       try {
+  //         validate(address);
+  //         return true;
+  //       } catch {
+  //         return false;
+  //       }
+  //     },
+  //     {
+  //       message: FormErrorMessages.InvalidAddress,
+  //     }
+  //   );
 }
 
 export function isValidBitcoinNetworkAddress(address: string, network: BitcoinNetworkModes) {

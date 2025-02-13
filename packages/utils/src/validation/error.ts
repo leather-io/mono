@@ -1,5 +1,1 @@
-export type TransactionErrorKey =
-  | 'InvalidAddress'
-  | 'InsufficientFunds'
-  | 'InvalidNetworkAddress'
-  | 'InvalidSameAddress';
+export type TransactionErrorKey = 'InvalidAddress' | 'InsufficientFunds' | 'InvalidNetworkAddress';

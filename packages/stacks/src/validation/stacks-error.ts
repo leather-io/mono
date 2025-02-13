@@ -1,6 +1,6 @@
 import { type TransactionErrorKey } from '@leather.io/utils';
 
-export type StacksErrorKey = TransactionErrorKey;
+export type StacksErrorKey = TransactionErrorKey | 'InvalidSameAddress';
 
 export class StacksError extends Error {
   public message: StacksErrorKey;
