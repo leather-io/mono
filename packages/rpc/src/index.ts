@@ -64,41 +64,42 @@ export const endpoints = {
   signPsbt,
   signMessage,
   sendTransfer,
-};
+} as const;
 
 type EndpointMap = (typeof endpoints)[keyof typeof endpoints];
 
-export type LeatherRpcMethodMap = {
+/**
+ * Request map keyed by exact method name e.g. `stx_signMessage`
+ */
+export type RpcEndpointMap = {
   [E in EndpointMap as E['method']]: {
     request: z.infer<E['request']>;
     response: z.infer<E['response']>;
   };
 };
 
-export type RpcRequests = ValueOf<LeatherRpcMethodMap>['request'];
+/** @deprecated */
+export type LeatherRpcMethodMap = RpcEndpointMap;
 
-export type RpcResponses = ValueOf<LeatherRpcMethodMap>['response'];
+export type RpcRequests = ValueOf<RpcEndpointMap>['request'];
 
-export type RpcMethodNames = keyof LeatherRpcMethodMap;
+export type RpcResponses = ValueOf<RpcEndpointMap>['response'];
+
+export type RpcMethodNames = keyof RpcEndpointMap;
 
 export interface RequestFn {
   <
     T extends RpcMethodNames,
-    P extends LeatherRpcMethodMap[T]['request'] extends { params: infer P } ? P : never,
+    P extends RpcEndpointMap[T]['request'] extends { params?: infer P } ? P : never,
   >(
     arg: T,
     params: P
     // `Promise` throws if unsuccessful, so here we extract the successful response
-  ): LeatherRpcMethodMap[T]['request'] extends { params: object }
-    ? Promise<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>>
-    : never;
-
+  ): Promise<ExtractSuccessResponse<RpcEndpointMap[T]['response']>>;
   <T extends RpcMethodNames>(
     arg: T
     // `Promise` throws if unsuccessful, so here we extract the successful response
-  ): LeatherRpcMethodMap[T]['request'] extends { params: any }
-    ? never
-    : Promise<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>>;
+  ): Promise<ExtractSuccessResponse<RpcEndpointMap[T]['response']>>;
 }
 
 export interface ListenFn {
@@ -136,11 +137,9 @@ export interface LeatherProvider {
  */
 export function createRpcSuccessResponse<T extends RpcMethodNames>(
   _method: T,
-  response: Omit<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>, 'jsonrpc'>
+  response: Omit<ExtractSuccessResponse<RpcEndpointMap[T]['response']>, 'jsonrpc'>
 ) {
-  return { jsonrpc: '2.0', ...response } as ExtractSuccessResponse<
-    LeatherRpcMethodMap[T]['response']
-  >;
+  return { jsonrpc: '2.0', ...response } as ExtractSuccessResponse<RpcEndpointMap[T]['response']>;
 }
 
 /**
@@ -148,7 +147,7 @@ export function createRpcSuccessResponse<T extends RpcMethodNames>(
  */
 export function createRpcErrorResponse<T extends RpcMethodNames>(
   _method: T,
-  error: Omit<ExtractErrorResponse<LeatherRpcMethodMap[T]['response']>, 'jsonrpc'>
+  error: Omit<ExtractErrorResponse<RpcEndpointMap[T]['response']>, 'jsonrpc'>
 ) {
-  return { jsonrpc: '2.0', ...error } as LeatherRpcMethodMap[T]['response'];
+  return { jsonrpc: '2.0', ...error } as RpcEndpointMap[T]['response'];
 }

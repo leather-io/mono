@@ -11,6 +11,12 @@ export default tseslint.config(
     extends: [baseConfig],
   },
   {
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/ban-ts-comment': 'off',
+    },
+  },
+  {
     ignores: [
       '**/*.{js,cjs,mjs}',
       '**/node_modules/',
