@@ -23,6 +23,7 @@ import {
   selectHapticsPreference,
   selectLastActive,
   selectNetworkPreference,
+  selectNotificationsPreference,
   selectPrivacyModePreference,
   selectSecurityLevelPreference,
   selectThemePreference,
@@ -36,6 +37,7 @@ import {
   userChangedHapticsPreference,
   userChangedLastActive,
   userChangedNetworkPreference,
+  userChangedNotificationPreference,
   userChangedPrivacyModePreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
@@ -43,6 +45,7 @@ import {
 import {
   HapticsPreference,
   LastActiveTimestamp,
+  NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
   SettingsState,
@@ -62,6 +65,7 @@ export const initialState: SettingsState = {
   securityLevelPreference: 'not-selected',
   themePreference: 'system',
   lastActive: null,
+  notificationsPreference: 'not-selected',
 };
 
 export function useSettings() {
@@ -79,6 +83,7 @@ export function useSettings() {
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
   const themePreference = useSelector(selectThemePreference);
   const lastActive = useSelector(selectLastActive);
+  const notificationsPreference = useSelector(selectNotificationsPreference);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -96,6 +101,7 @@ export function useSettings() {
     themePreference,
     securityLevelPreference,
     lastActive,
+    notificationsPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
@@ -161,6 +167,12 @@ export function useSettings() {
       dispatch(userChangedThemePreference(theme));
       void analytics?.track('user_setting_updated', {
         theme,
+      });
+    },
+    changeNotificationsPreference(state: NotificationsPreference) {
+      dispatch(userChangedNotificationPreference(state));
+      void analytics?.track('user_setting_updated', {
+        notifications: state,
       });
     },
     userLeavesApp(timestamp: LastActiveTimestamp) {

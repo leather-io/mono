@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { z } from 'zod';
 
+import { SupportedBlockchains } from '@leather.io/models';
+
 import { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { SettingsService } from '../../settings/settings.service';
@@ -76,6 +78,14 @@ export interface LeatherApiClient {
   fetchFiatExchangeRates(signal?: AbortSignal): Promise<LeatherApiExchangeRates>;
   fetchUtxos(descriptor: string, signal?: AbortSignal): Promise<LeatherApiUtxo[]>;
   fetchTxs(descriptor: string, signal?: AbortSignal): Promise<LeatherApiTxLight[]>;
+  registerAddresses(
+    variables: {
+      addresses: string[];
+      notificationToken: string;
+      chain: SupportedBlockchains;
+    },
+    signal?: AbortSignal
+  ): Promise<unknown>;
 }
 
 export function createLeatherApiClient(
@@ -125,9 +135,40 @@ export function createLeatherApiClient(
     );
   }
 
+  async function registerAddresses(
+    {
+      addresses,
+      notificationToken,
+      chain,
+    }: {
+      addresses: string[];
+      notificationToken: string;
+      chain: SupportedBlockchains;
+    },
+    signal?: AbortSignal
+  ) {
+    return await cacheService.fetchWithCache(
+      ['/notifications/register', addresses, notificationToken, chain],
+      async () => {
+        // TODO: just await for now
+        try {
+          await axios.post<LeatherApiUtxo[]>(
+            `https://leather-api-gateway-staging.wallet-6d1.workers.dev/v1/notifications/register`,
+            { addresses, notificationToken, chain, network: 'mainnet', signal }
+          );
+        } catch {
+          // TODO: add analytics here
+        }
+        return null;
+      },
+      { ttl: HttpCacheTimeMs.fiveSeconds }
+    );
+  }
+
   return {
     fetchFiatExchangeRates,
     fetchUtxos,
     fetchTxs,
+    registerAddresses,
   };
 }

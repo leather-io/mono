@@ -45,6 +45,10 @@ import {
 import { SettingsService } from './infrastructure/settings/settings.service';
 import { MarketDataService, createMarketDataService } from './market-data/market-data.service';
 import {
+  NotificationsService,
+  createNotificationsService,
+} from './notifications/notifications.service';
+import {
   StacksTransactionsService,
   createStacksTransactionsService,
 } from './transactions/stacks-transactions.service';
@@ -96,6 +100,7 @@ export const Services = {
   RuneAssetService: Symbol.for('RuneAssetService'),
   UtxosService: Symbol.for('UtxosService'),
   StacksTransactionsService: Symbol.for('StacksTransactionsService'),
+  NotificationsService: Symbol.for('NotificationsService'),
 };
 
 function registerDependencies(
@@ -258,6 +263,12 @@ function registerApplicationServices(container: Container) {
       )
     )
     .inSingletonScope();
+  container
+    .bind<NotificationsService>(Services.NotificationsService)
+    .toDynamicValue(c =>
+      createNotificationsService(c.container.get<LeatherApiClient>(Services.LeatherApiClient))
+    )
+    .inSingletonScope();
 }
 
 /* 
@@ -289,4 +300,7 @@ export function getUtxosService() {
 }
 export function getStacksTransactionsService() {
   return getContainer().get<StacksTransactionsService>(Services.StacksTransactionsService);
+}
+export function getNotificationsService() {
+  return getContainer().get<NotificationsService>(Services.NotificationsService);
 }

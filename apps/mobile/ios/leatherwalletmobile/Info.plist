@@ -67,6 +67,11 @@
       <string>FiraCode-Retina.otf</string>
       <string>FiraCode-Medium.otf</string>
     </array>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>remote-notification</string>
+      <string>fetch</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

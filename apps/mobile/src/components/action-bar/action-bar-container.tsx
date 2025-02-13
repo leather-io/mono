@@ -5,7 +5,7 @@ import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigat
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { isFeatureEnabled } from '@/utils/feature-flag';
+import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
 
 import {
@@ -192,7 +192,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
         />
       }
       right={
-        isFeatureEnabled() && (
+        isDev() && (
           <ActionBarButton
             onPress={() => {
               // TODO: do nothing for now

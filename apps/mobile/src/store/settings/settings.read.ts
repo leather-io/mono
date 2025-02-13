@@ -74,6 +74,11 @@ export const selectSecurityLevelPreference = createSelector(
   state => state.securityLevelPreference
 );
 
+export const selectNotificationsPreference = createSelector(
+  selectSettings,
+  state => state.notificationsPreference
+);
+
 export const selectThemePreference = createSelector(selectSettings, state => state.themePreference);
 
 export const selectLastActive = createSelector(selectSettings, state => state.lastActive);

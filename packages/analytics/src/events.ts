@@ -122,7 +122,8 @@ type UserSettingValue =
   | { privacy_mode: 'hidden' | 'visible' }
   | { haptics: 'disabled' | 'enabled' }
   | { theme: 'light' | 'dark' | 'system' }
-  | { security_level: 'insecure' | 'secure' | 'not-selected' };
+  | { security_level: 'insecure' | 'secure' | 'not-selected' }
+  | { notifications: 'disabled' | 'enabled' | 'not-selected' };
 
 interface WalletCreatedValue {
   type: 'software' | 'ledger';
