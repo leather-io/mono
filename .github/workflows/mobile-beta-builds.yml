@@ -3,7 +3,7 @@ on:
   push:
     tags:
       - 'mobile-v*.*.*-beta.*'
-      - 'mobile-test-v*'
+      - 'mobile-test-v*.*.*-beta.*'
 permissions:
   contents: write
   pull-requests: write
