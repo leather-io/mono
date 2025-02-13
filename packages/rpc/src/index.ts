@@ -115,6 +115,9 @@ export interface LeatherProvider {
   listen: ListenFn;
 }
 
+/**
+ * Helper to create a successful RPC response object
+ */
 export function createRpcSuccessResponse<T extends RpcMethodNames>(
   _method: T,
   response: Omit<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>, 'jsonrpc'>
@@ -124,6 +127,9 @@ export function createRpcSuccessResponse<T extends RpcMethodNames>(
   >;
 }
 
+/**
+ * Helper to create an error RPC response object
+ */
 export function createRpcErrorResponse<T extends RpcMethodNames>(
   _method: T,
   error: Omit<ExtractErrorResponse<LeatherRpcMethodMap[T]['response']>, 'jsonrpc'>
