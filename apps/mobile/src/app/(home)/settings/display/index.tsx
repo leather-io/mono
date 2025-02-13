@@ -9,7 +9,7 @@ import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { useSettings } from '@/store/settings/settings';
-import { isFeatureEnabled } from '@/utils/feature-flag';
+import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -67,7 +67,7 @@ export default function SettingsDisplayScreen() {
               themeSheetRef.current?.present();
             }}
           />
-          {isFeatureEnabled() && (
+          {isDev() && (
             <>
               <SettingsListItem
                 title={t({

@@ -8,6 +8,8 @@ import { LeatherQueryProvider } from '@/common/leather-query-provider';
 import SheetNavigatorWrapper from '@/common/sheet-navigator/sheet-navigator-wrapper';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { ToastWrapper } from '@/components/toast/toast-context';
+import { featureFlagClient } from '@/features/feature-flags/feature-flag';
+import { setupFeatureFlags } from '@/features/feature-flags/setup-feature-flags';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { initiateI18n } from '@/locales';
@@ -17,6 +19,7 @@ import { persistor, store } from '@/store';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { HasChildren } from '@/utils/types';
+import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -41,6 +44,7 @@ export const unstable_settings = { initialRouteName: '/' };
 
 initAppServices();
 void initiateI18n();
+void setupFeatureFlags();
 
 export default function RootLayout() {
   const pathname = usePathname();
@@ -53,35 +57,37 @@ export default function RootLayout() {
   }, [pathname, params]);
 
   return (
-    <ReduxProvider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <I18nProvider i18n={i18n}>
-          <SafeAreaProvider>
-            <QueryClientProvider client={queryClient}>
-              <LeatherQueryProvider>
-                <ThemeProvider>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <ToastWrapper>
-                      <SplashScreenGuard>
-                        <HapticsProvider>
-                          <SheetNavigatorWrapper>
-                            <SheetProvider>
-                              <AppRouter />
-                              <SendSheet />
-                              <ReceiveSheet />
-                            </SheetProvider>
-                          </SheetNavigatorWrapper>
-                        </HapticsProvider>
-                      </SplashScreenGuard>
-                    </ToastWrapper>
-                  </GestureHandlerRootView>
-                </ThemeProvider>
-              </LeatherQueryProvider>
-            </QueryClientProvider>
-          </SafeAreaProvider>
-        </I18nProvider>
-      </PersistGate>
-    </ReduxProvider>
+    <LDProvider client={featureFlagClient}>
+      <ReduxProvider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <I18nProvider i18n={i18n}>
+            <SafeAreaProvider>
+              <QueryClientProvider client={queryClient}>
+                <LeatherQueryProvider>
+                  <ThemeProvider>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                      <ToastWrapper>
+                        <SplashScreenGuard>
+                          <HapticsProvider>
+                            <SheetNavigatorWrapper>
+                              <SheetProvider>
+                                <AppRouter />
+                                <SendSheet />
+                                <ReceiveSheet />
+                              </SheetProvider>
+                            </SheetNavigatorWrapper>
+                          </HapticsProvider>
+                        </SplashScreenGuard>
+                      </ToastWrapper>
+                    </GestureHandlerRootView>
+                  </ThemeProvider>
+                </LeatherQueryProvider>
+              </QueryClientProvider>
+            </SafeAreaProvider>
+          </I18nProvider>
+        </PersistGate>
+      </ReduxProvider>
+    </LDProvider>
   );
 }
 

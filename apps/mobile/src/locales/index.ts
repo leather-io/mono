@@ -1,11 +1,11 @@
-import { isFeatureEnabled } from '@/utils/feature-flag';
+import { isDev } from '@/utils/is-dev';
 import OtaClient from '@crowdin/ota-client';
 import { i18n } from '@lingui/core';
 import { formatter } from '@lingui/format-po';
 
 const prodHash = 'adcc836a66272410c0b94e9twcj'; // with po file format
 const devHash = 'a6b025ebb570b783a20df09twcj'; // with po file format
-const otaClient = new OtaClient(isFeatureEnabled() ? devHash : prodHash);
+const otaClient = new OtaClient(isDev() ? devHash : prodHash);
 
 export const DEFAULT_LOCALE = 'en';
 let LOCALES: string[] = [];

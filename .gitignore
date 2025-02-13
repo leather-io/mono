@@ -11,3 +11,5 @@ leather-styles
 **/.env
 coverage
 architecture/*.svg
+GoogleService-Info.plist
+google-services.json

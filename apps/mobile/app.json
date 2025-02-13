@@ -10,10 +10,15 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "entitlements": {
+        "aps-environment": "production"
+      },
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification", "fetch"]
+      },
       "bundleIdentifier": "io.leather.mobilewallet",
       "supportsTablet": false,
       "splash": {
@@ -28,6 +33,7 @@
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "icon": "./src/assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
@@ -64,9 +70,7 @@
       [
         "expo-asset",
         {
-          "assets": [
-            "src/scripts/injected-provider.js"
-          ]
+          "assets": ["src/scripts/injected-provider.js"]
         }
       ],
       [
@@ -74,7 +78,9 @@
         {
           "launchMode": "most-recent"
         }
-      ]
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging"
     ],
     "extra": {
       "router": {

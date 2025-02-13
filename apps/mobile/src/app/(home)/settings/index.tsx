@@ -10,7 +10,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
-import { isFeatureEnabled } from '@/utils/feature-flag';
+import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
 import * as Application from 'expo-application';
 import { useRouter } from 'expo-router';
@@ -100,7 +100,7 @@ export default function SettingsScreen() {
             onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
             testID={TestId.settingsNetworkButton}
           />
-          {isFeatureEnabled() && (
+          {isDev() && (
             <SettingsListItem
               py="3"
               title={t({

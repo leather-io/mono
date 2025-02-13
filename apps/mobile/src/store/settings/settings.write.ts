@@ -13,6 +13,7 @@ import { initialState } from './settings';
 import {
   HapticsPreference,
   LastActiveTimestamp,
+  NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
   ThemePreference,
@@ -55,6 +56,9 @@ export const settingsSlice = createSlice({
     userChangedLastActive(state, action: PayloadAction<LastActiveTimestamp>) {
       state.lastActive = action.payload;
     },
+    userChangedNotificationPreference(state, action: PayloadAction<NotificationsPreference>) {
+      state.notificationsPreference = action.payload;
+    },
   },
   extraReducers: builder => builder.addCase(...handleAppResetWithState(initialState)),
 });
@@ -71,4 +75,5 @@ export const {
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
   userChangedLastActive,
+  userChangedNotificationPreference,
 } = settingsSlice.actions;

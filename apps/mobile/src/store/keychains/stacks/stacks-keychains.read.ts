@@ -47,7 +47,9 @@ export function useStacksSigners() {
 }
 
 export function useStacksSignerAddresses() {
-  return useStacksSigners().list.map(signer => signer.address);
+  const { list: stacksSigners } = useStacksSigners();
+
+  return useMemo(() => stacksSigners.map(signer => signer.address), [stacksSigners]);
 }
 
 export function useStacksSignerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
