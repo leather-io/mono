@@ -511,6 +511,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.22
 
+## [2.11.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.10.0...@leather.io/mobile-v2.11.0) (2025-02-13)
+
+
+### Features
+
+* firebase notifications and launchdarkly ([aeec844](https://github.com/leather-io/mono/commit/aeec84451c31d08023af6253f4a1d50b6c06b8b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.2.0
+    * @leather.io/services bumped to 1.2.0
+
 ## [2.10.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.9.3...@leather.io/mobile-v2.10.0) (2025-02-12)
 
 
