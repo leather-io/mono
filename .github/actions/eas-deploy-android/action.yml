@@ -33,12 +33,6 @@ runs:
         sudo apt-get install jq
       shell: bash
 
-    - name: Install fastlane
-      run: |
-        sudo apt-get update
-        sudo gem install fastlane
-      shell: bash
-
     # Wait for build to either succeed or fail
     - name: 🛫 Build for Android Emulator 🛫
       id: android_simulator_build
@@ -96,6 +90,4 @@ runs:
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
         eas build --platform android --profile=production --non-interactive --auto-submit
-        cd android
-        bundle exec fastlane android distribute_android
       shell: bash
