@@ -1,0 +1,38 @@
+{
+  "name": "@leather.io/sdk",
+  "author": "leather.io",
+  "description": "Leather SDK",
+  "version": "1.5.24",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "prepublish": "pnpm build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "types": "tsc --declaration --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "dependencies": {
+    "@leather.io/models": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "ts-expect": "1.3.0",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "expect-type": "1.2.0",
+    "tsup": "8.1.0",
+    "vitest": "2.1.9"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
