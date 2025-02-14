@@ -4,7 +4,8 @@ on:
     tags:
       - 'mobile-v*.*.*-beta.*'
       - 'mobile-test-v*.*.*-beta.*'
-
+    branches:
+      - 'chore/LEA-1844/*'
 permissions:
   contents: write
   pull-requests: write
