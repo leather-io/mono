@@ -1,0 +1,128 @@
+name: Mobile beta deploy
+on:
+  push:
+    tags:
+      - 'mobile-v*.*.*-beta.*'
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ios-beta:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build iOS app
+        id: build-ios
+        uses: ./.github/actions/build-ios
+        with:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
+
+  android-beta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Android app
+        id: build-android
+        uses: ./.github/actions/build-android
+        with:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+  upload-to-firebase:
+    needs:
+      - android-beta
+      - ios-beta
+    # This workflow can only run on ubuntu because the firebase_upload step only supports ubuntu
+    runs-on: ubuntu-latest
+    outputs:
+      firebase_console_uri_ios: ${{ steps.firebase_upload_ipa.outputs.FIREBASE_CONSOLE_URI }}
+      firebase_console_uri_android: ${{ steps.firebase_upload_aab.outputs.FIREBASE_CONSOLE_URI }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.aab
+          path: ${{ github.workspace }}
+
+      - name: Download IPA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.ipa
+          path: ${{ github.workspace }}
+
+      - name: Upload IPA to Firebase App Distribution
+        id: firebase_upload_ipa
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID_IOS}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.ipa
+
+      - name: Upload AAB to Firebase
+        id: firebase_upload_aab
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.aab
+
+  create-beta-release:
+    needs:
+      - upload-to-firebase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: '${{ github.ref_name }}'
+          body: |
+            Android Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_android }}
+            ---
+            iOS Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_ios }}
+          draft: true
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.aab
+          path: ${{ github.workspace }}
+
+      - name: Download IPA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.ipa
+          path: ${{ github.workspace }}
+
+      - name: Upload AAB to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/app-release.aab
+          asset_name: ${{ github.ref }}.aab
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload IPA to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/app-release.ipa
+          asset_name: ${{ github.ref }}.ipa
+          asset_content_type: application/octet-stream
