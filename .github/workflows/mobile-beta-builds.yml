@@ -10,47 +10,47 @@ permissions:
   pull-requests: write
 
 jobs:
-  ios-beta:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  # ios-beta:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup for Fastlane
-        uses: ./.github/actions/setup-fastlane
+  #     - name: Setup for Fastlane
+  #       uses: ./.github/actions/setup-fastlane
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+  #     - name: Setup EAS
+  #       uses: expo/expo-github-action@v8
+  #       with:
+  #         eas-version: latest
+  #         token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Provision
-        uses: ./.github/actions/provision
+  #     - name: Provision
+  #       uses: ./.github/actions/provision
 
-      - name: Build iOS app
-        working-directory: ./apps/mobile
-        run: |
-          eas build --local \
-          --platform ios \
-          --profile production \
-          --non-interactive \
-          --no-wait \
-          --output ${{ github.workspace }}/app-release.ipa
+  #     - name: Build iOS app
+  #       working-directory: ./apps/mobile
+  #       run: |
+  #         eas build --local \
+  #         --platform ios \
+  #         --profile production \
+  #         --non-interactive \
+  #         --no-wait \
+  #         --output ${{ github.workspace }}/app-release.ipa
 
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release.ipa
-          path: ${{ github.workspace }}/app-release.ipa
+  #     - name: Upload IPA artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: app-release.ipa
+  #         path: ${{ github.workspace }}/app-release.ipa
 
-      - name: Upload IPA to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: leatherhood
-          file: ${{ github.workspace }}/app-release.ipa
+  #     - name: Upload IPA to Firebase App Distribution
+  #       uses: wzieba/Firebase-Distribution-Github-Action@v1
+  #       with:
+  #         appId: ${{secrets.FIREBASE_APP_ID}}
+  #         serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+  #         groups: leatherhood
+  #         file: ${{ github.workspace }}/app-release.ipa
 
   android-beta:
     runs-on: ubuntu-latest
@@ -103,7 +103,7 @@ jobs:
   create-beta-release:
     needs:
       - android-beta
-      - ios-beta
+      # - ios-beta
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -136,13 +136,13 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ github.workspace }}/app-release.aab
-          asset_name: app-release-${{ github.ref }}.aab
+          asset_name: ${{ github.ref }}.aab
           asset_content_type: application/vnd.android.package-archive
 
-      - name: Upload IPA to Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/app-release.ipa
-          asset_name: app-release-${{ github.ref }}.ipa
-          asset_content_type: application/octet-stream
+      # - name: Upload IPA to Release
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ github.workspace }}/app-release.ipa
+      #     asset_name: ${{ github.ref }}.ipa
+      #     asset_content_type: application/octet-stream
