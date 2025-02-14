@@ -145,7 +145,7 @@ jobs:
         id: firebase_upload_ipa
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
+          appId: ${{secrets.FIREBASE_APP_ID_IOS}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: leatherhood
           file: apps/mobile/app-release.ipa
