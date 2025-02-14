@@ -1,21 +1,7 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { btcCryptoAsset } from '@leather.io/constants';
 
-import { getMarketDataService } from '@leather.io/services';
-import { oneMinInMs } from '@leather.io/utils';
-
-export function createBtcMarketDataQueryOptions() {
-  return {
-    queryKey: ['market-data-service-get-btc-market-data'],
-    queryFn: ({ signal }: QueryFunctionContext) => getMarketDataService().getBtcMarketData(signal),
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    retryOnMount: false,
-    staleTime: oneMinInMs,
-    gcTime: oneMinInMs,
-  } as const;
-}
+import { useMarketDataQuery } from './market-data.query';
 
 export function useBtcMarketDataQuery() {
-  return useQuery(createBtcMarketDataQueryOptions());
+  return useMarketDataQuery(btcCryptoAsset);
 }

@@ -146,19 +146,18 @@ describe('isInboundUtxo', () => {
       txid: '1234',
       vout: 0,
       value: '100000',
-      confirmations: 3,
+      height: 1234,
     },
     {
       txid: '2468',
       vout: 1,
       value: '100000',
-      confirmations: 0,
     },
     {
       txid: '3692',
       vout: 2,
       value: '100000',
-      confirmations: 1,
+      height: 2468,
     },
     {
       txid: '4826',
@@ -167,14 +166,13 @@ describe('isInboundUtxo', () => {
     },
   ] as Utxo[];
 
-  it('should filter out utxos with non-zero confirmations', () => {
+  it('should filter confirmed tx with a block height value', () => {
     const inboundUtxos = utxos.filter(isInboundUtxo);
     expect(inboundUtxos).toEqual([
       {
         txid: '2468',
         vout: 1,
         value: '100000',
-        confirmations: 0,
       },
       {
         txid: '4826',

@@ -6,13 +6,13 @@ import { getMarketDataService } from '@leather.io/services';
 import { oneMinInMs } from '@leather.io/utils';
 
 export function createMarketDataQueryOptions(
-  token: FungibleCryptoAssetInfo,
+  asset: FungibleCryptoAssetInfo,
   currency: FiatCurrency
 ) {
   return {
-    queryKey: ['market-data-service-get-market-data', token, currency],
+    queryKey: ['market-data-service-get-market-data', asset, currency],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getMarketDataService().getMarketData(token, signal),
+      getMarketDataService().getMarketData(asset, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -22,14 +22,14 @@ export function createMarketDataQueryOptions(
   } as const;
 }
 
-export function useMarketDataQuery(token: FungibleCryptoAssetInfo) {
+export function useMarketDataQuery(asset: FungibleCryptoAssetInfo) {
   const { fiatCurrencyPreference } = useSettings();
-  return useQuery(createMarketDataQueryOptions(token, fiatCurrencyPreference));
+  return useQuery(createMarketDataQueryOptions(asset, fiatCurrencyPreference));
 }
 
-export function useMarketDataQueries(tokens: FungibleCryptoAssetInfo[]) {
+export function useMarketDataQueries(assets: FungibleCryptoAssetInfo[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQueries({
-    queries: tokens.map(token => createMarketDataQueryOptions(token, fiatCurrencyPreference)),
+    queries: assets.map(token => createMarketDataQueryOptions(token, fiatCurrencyPreference)),
   });
 }

@@ -12,23 +12,10 @@ import {
   createSip10BalancesService,
 } from './balances/sip10-balances.service';
 import { StxBalancesService, createStxBalancesService } from './balances/stx-balances.service';
-import { AlexSdkClient, createAlexSdkClient } from './infrastructure/api/alex-sdk/alex-sdk.client';
 import {
   BestInSlotApiClient,
   createBestInSlotApiClient,
 } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
-import {
-  BinanceApiClient,
-  createBinanceApiClient,
-} from './infrastructure/api/binance/binance-api.client';
-import {
-  CoincapApiClient,
-  createCoincapApiClient,
-} from './infrastructure/api/coincap/coincap-api.client';
-import {
-  CoinGeckoApiClient,
-  createCoinGeckoApiClient,
-} from './infrastructure/api/coingecko/coingecko-api.client';
 import {
   HiroStacksApiClient,
   createHiroStacksApiClient,
@@ -83,13 +70,9 @@ export const Services = {
   HttpCacheService: Symbol.for('HttpCacheService'),
   RateLimiterService: Symbol.for('RateLimiterService'),
   // API clients
-  AlexSdkClient: Symbol.for('AlexSdkClient'),
-  CoinGeckoApiClient: Symbol.for('CoinGeckoApiClient'),
-  CoincapApiClient: Symbol.for('CoincapApiClient'),
-  BinanceApiClient: Symbol.for('BinanceApiClient'),
   BestInSlotApiClient: Symbol.for('BestInSlotApiClient'),
-  LeatherApiClient: Symbol.for('LeatherApiClient'),
   HiroStacksApiClient: Symbol.for('HiroStacksApiClient'),
+  LeatherApiClient: Symbol.for('LeatherApiClient'),
   // Application Services
   MarketDataService: Symbol.for('MarketDataService'),
   BtcBalancesService: Symbol.for('BtcBalancesService'),
@@ -122,45 +105,12 @@ function registerDependencies(
 
 function registerApiClients(container: Container) {
   container
-    .bind<CoinGeckoApiClient>(Services.CoinGeckoApiClient)
-    .toDynamicValue(c =>
-      createCoinGeckoApiClient(c.container.get<HttpCacheService>(Services.HttpCacheService))
-    )
-    .inSingletonScope();
-  container
-    .bind<CoincapApiClient>(Services.CoincapApiClient)
-    .toDynamicValue(c =>
-      createCoincapApiClient(c.container.get<HttpCacheService>(Services.HttpCacheService))
-    )
-    .inSingletonScope();
-  container
-    .bind<BinanceApiClient>(Services.BinanceApiClient)
-    .toDynamicValue(c =>
-      createBinanceApiClient(c.container.get<HttpCacheService>(Services.HttpCacheService))
-    )
-    .inSingletonScope();
-  container
     .bind<BestInSlotApiClient>(Services.BestInSlotApiClient)
     .toDynamicValue(c =>
       createBestInSlotApiClient(
         c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<RateLimiterService>(Services.RateLimiterService),
         c.container.get<HttpCacheService>(Services.HttpCacheService)
-      )
-    )
-    .inSingletonScope();
-  container
-    .bind<AlexSdkClient>(Services.AlexSdkClient)
-    .toDynamicValue(c =>
-      createAlexSdkClient(c.container.get<HttpCacheService>(Services.HttpCacheService))
-    )
-    .inSingletonScope();
-  container
-    .bind<LeatherApiClient>(Services.LeatherApiClient)
-    .toDynamicValue(c =>
-      createLeatherApiClient(
-        c.container.get<HttpCacheService>(Services.HttpCacheService),
-        c.container.get<SettingsService>(Services.SettingsService)
       )
     )
     .inSingletonScope();
@@ -174,6 +124,15 @@ function registerApiClients(container: Container) {
       )
     )
     .inSingletonScope();
+  container
+    .bind<LeatherApiClient>(Services.LeatherApiClient)
+    .toDynamicValue(c =>
+      createLeatherApiClient(
+        c.container.get<HttpCacheService>(Services.HttpCacheService),
+        c.container.get<SettingsService>(Services.SettingsService)
+      )
+    )
+    .inSingletonScope();
 }
 
 function registerApplicationServices(container: Container) {
@@ -183,11 +142,7 @@ function registerApplicationServices(container: Container) {
       createMarketDataService(
         c.container.get<SettingsService>(Services.SettingsService),
         c.container.get<LeatherApiClient>(Services.LeatherApiClient),
-        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient),
-        c.container.get<CoinGeckoApiClient>(Services.CoinGeckoApiClient),
-        c.container.get<CoincapApiClient>(Services.CoincapApiClient),
-        c.container.get<BinanceApiClient>(Services.BinanceApiClient),
-        c.container.get<AlexSdkClient>(Services.AlexSdkClient)
+        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient)
       )
     )
     .inSingletonScope();

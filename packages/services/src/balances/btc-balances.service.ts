@@ -1,3 +1,4 @@
+import { btcCryptoAsset } from '@leather.io/constants';
 import { BtcCryptoAssetBalance } from '@leather.io/models';
 import {
   aggregateBtcCryptoAssetBalances,
@@ -83,7 +84,7 @@ export function createBtcBalancesService(
     const uneconomicalBalance = createMoney(sumUtxoValues(utxos.uneconomical), 'BTC');
     const unspendableBalance = createMoney(sumUtxoValues(utxos.unspendable), 'BTC');
 
-    const btcMarketData = await marketDataService.getBtcMarketData(signal);
+    const btcMarketData = await marketDataService.getMarketData(btcCryptoAsset, signal);
 
     return {
       account: request.account,
