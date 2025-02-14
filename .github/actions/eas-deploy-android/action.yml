@@ -7,6 +7,9 @@ inputs:
   LEATHER_BOT:
     description: 'GH bot token'
     required: true
+  FIREBASE_TOKEN:
+    description: 'Firebase token'
+    required: true
 runs:
   using: 'composite'
   steps:

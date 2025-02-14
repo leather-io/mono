@@ -1,0 +1,24 @@
+name: Setup Fastlane
+description: Set up CI environment for Fastlane
+runs:
+  using: 'composite'
+  steps:
+    - name: Provision
+      uses: ./.github/actions/provision
+
+    - run: pnpm turbo run build
+      shell: bash
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2
+
+    - name: Install Bundler
+      run: gem install bundler
+      shell: bash
+
+    - name: Install dependencies
+      working-directory: ./apps/mobile/fastlane
+      run: bundle install
+      shell: bash

@@ -1,0 +1,88 @@
+{
+  "expo": {
+    "name": "Leather",
+    "slug": "leather-wallet-mobile",
+    "version": "2.0.1",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "scheme": "leather",
+    "userInterfaceStyle": "automatic",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "io.leather.mobilewallet",
+      "supportsTablet": false,
+      "splash": {
+        "image": "./src/assets/light-mode-splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#12100F",
+        "dark": {
+          "image": "./src/assets/dark-mode-splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#716A60"
+        }
+      }
+    },
+    "android": {
+      "icon": "./src/assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#12100F"
+      },
+      "package": "io.leather.mobilewallet",
+      "splash": {
+        "image": "./src/assets/light-mode-splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#12100F",
+        "dark": {
+          "image": "./src/assets/dark-mode-splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#716A60"
+        }
+      }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Regular.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Light.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Medium.otf",
+            "node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/MarchePro-Super.otf"
+          ]
+        }
+      ],
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-asset",
+        {
+          "assets": ["src/scripts/injected-provider.js"]
+        }
+      ],
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc"
+      }
+    },
+    "owner": "leather-wallet",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

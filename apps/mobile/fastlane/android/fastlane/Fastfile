@@ -1,0 +1,35 @@
+default_platform(:android)
+
+desc "Build and distribute Android app"
+private_lane :build_android do |type|
+  build_output = gradle(
+    task: "assemble",
+    build_type: "Release",
+    project_dir: "android", # Updated path to point to the Android project root
+    properties: {
+      "android.injected.signing.store.file" => ENV['LEATHER_UPLOAD_STORE_FILE'],
+      "android.injected.signing.store.password" => ENV['LEATHER_UPLOAD_STORE_PASSWORD'],
+      "android.injected.signing.key.alias" => ENV['LEATHER_UPLOAD_KEY_ALIAS'],
+      "android.injected.signing.key.password" => ENV['LEATHER_UPLOAD_KEY_PASSWORD']
+    }
+  )
+  puts "BUILD OUTPUT: #{build_output}"
+end
+
+lane :distribute_android_beta do
+  build_android(type: "beta")
+  
+  increment_version_code(app_project_dir: "android")
+  
+  # This function returns a hash with the release details: 
+  # https://firebase.google.com/docs/reference/app-distribution/rest/v1/projects.apps.releases#resource:-release
+  release = firebase_app_distribution(
+    app: "1:915379517791:android:d4e7cb446a612f8c789eea",
+    groups: "leatherhood",
+    release_notes: "New version available"
+  )
+  
+  notify_slack_of_firebase_build(
+    firebase_release: release
+  )
+end

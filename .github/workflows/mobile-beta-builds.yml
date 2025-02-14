@@ -1,0 +1,194 @@
+name: Mobile beta deploy
+on:
+  push:
+    tags:
+      - 'mobile-v*.*.*-beta.*'
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ios-beta:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup for Fastlane
+        uses: ./.github/actions/setup-fastlane
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Provision
+        uses: ./.github/actions/provision
+
+      - name: Build iOS app
+        working-directory: ./apps/mobile
+        run: |
+          eas build --local \
+          --platform ios \
+          --profile production \
+          --non-interactive \
+          --no-wait \
+          --output ${{ github.workspace }}/app-release.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.ipa
+          path: ${{ github.workspace }}/app-release.ipa
+
+      - name: Upload IPA to Firebase App Distribution
+        id: firebase_upload
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.ipa
+
+  android-beta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup for Fastlane
+        uses: ./.github/actions/setup-fastlane
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Provision
+        uses: ./.github/actions/provision
+
+      - name: Build Android app
+        working-directory: ./apps/mobile
+        run: |
+          eas build --local \
+          --platform android \
+          --profile production \
+          --non-interactive \
+          --no-wait \
+          --output ${{ github.workspace }}/app-release.aab
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.aab
+          path: ${{ github.workspace }}/app-release.aab
+
+      - name: Upload AAB to Firebase
+        id: firebase_upload
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.aab
+
+  upload-to-firebase:
+    needs:
+      - android-beta
+      - ios-beta
+    # This workflow can only run on ubuntu because the firebase_upload step only supports ubuntu
+    runs-on: ubuntu-latest
+    outputs:
+      firebase_console_uri_ios: ${{ steps.firebase_upload_ipa.outputs.FIREBASE_CONSOLE_URI }}
+      firebase_console_uri_android: ${{ steps.firebase_upload_aab.outputs.FIREBASE_CONSOLE_URI }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.aab
+          path: ${{ github.workspace }}
+
+      - name: Download IPA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.ipa
+          path: ${{ github.workspace }}
+
+      - name: Upload IPA to Firebase App Distribution
+        id: firebase_upload_ipa
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID_IOS}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.ipa
+
+      - name: Upload AAB to Firebase
+        id: firebase_upload_aab
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: ${{ github.workspace }}/app-release.aab
+
+  create-beta-release:
+    needs:
+      - upload-to-firebase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: '${{ github.ref_name }}'
+          body: |
+            Android Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_android }}
+            ---
+            iOS Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_ios }}
+          draft: true
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.aab
+          path: ${{ github.workspace }}
+
+      - name: Download IPA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release.ipa
+          path: ${{ github.workspace }}
+
+      - name: Upload AAB to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/app-release.aab
+          asset_name: ${{ github.ref }}.aab
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload IPA to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/app-release.ipa
+          asset_name: ${{ github.ref }}.ipa
+          asset_content_type: application/octet-stream
