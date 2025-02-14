@@ -1,0 +1,64 @@
+name: Build Leather iOS
+description: Build the Leather Mobile iOS App
+inputs:
+  EXPO_TOKEN:
+    description: 'Expo token for authentication'
+    required: true
+  GOOGLE_SERVICES_INFO_PLIST_B64:
+    description: 'Google Services Info.plist file (base64 encoded)'
+    required: true
+
+outputs:
+  ipa_path:
+    description: 'Path to the built IPA file'
+    value: ${{ steps.set-ipa-path.outputs.ipa_path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Provision
+      uses: ./.github/actions/provision
+
+    - run: pnpm turbo run build
+      shell: bash
+
+    - name: Setup for Fastlane
+      uses: ./.github/actions/setup-fastlane
+
+    - name: Setup EAS
+      uses: expo/expo-github-action@v8
+      with:
+        eas-version: latest
+        token: ${{ inputs.EXPO_TOKEN }}
+
+    - name: Decode GOOGLE_SERVICES_INFO_PLIST
+      shell: bash
+      working-directory: ./apps/mobile
+      run: |
+        echo $GOOGLE_SERVICES_INFO_PLIST_B64 | base64 --decode > ./ios/leatherwalletmobile/GoogleService-Info.plist
+        ls -l ./ios/leatherwalletmobile/GoogleService-Info.plist
+      env:
+        GOOGLE_SERVICES_INFO_PLIST_B64: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+
+    - name: Build iOS app
+      shell: bash
+      working-directory: ./apps/mobile
+      id: build-ios
+      run: |
+        eas build --local \
+        --platform ios \
+        --profile production \
+        --non-interactive \
+        --output ${{ github.workspace }}/app-release.ipa
+
+    - name: Upload IPA artifact
+      id: set-ipa-path
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release.ipa
+        path: ${{ github.workspace }}/app-release.ipa
+
+    - name: Set IPA path
+      run: |
+        echo "ipa_path=${{ github.workspace }}/app-release.ipa" >> $GITHUB_OUTPUT
+      shell: bash
