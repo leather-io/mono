@@ -13,7 +13,7 @@ export function formatBalance(amount: string) {
 
   const noCommas = removeCommas(amount);
   const number = parseFloat(noCommas);
-  return number > 10000
+  return number > 10_000
     ? {
         isAbbreviated: true,
         value: abbreviateNumber(number),
