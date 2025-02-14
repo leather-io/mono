@@ -12,9 +12,6 @@ permissions:
 jobs:
   ios-beta:
     runs-on: macos-latest
-    outputs:
-      firebase_console_uri_ios: ${{ steps.firebase_upload.outputs.FIREBASE_CONSOLE_URI }}
-      firebase_testing_uri_ios: ${{ steps.firebase_upload.outputs.TESTING_URI }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -62,20 +59,8 @@ jobs:
           name: app-release.ipa
           path: apps/mobile/app-release.ipa
 
-      - name: Upload IPA to Firebase App Distribution
-        id: firebase_upload
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: leatherhood
-          file: apps/mobile/app-release.ipa
-
   android-beta:
     runs-on: ubuntu-latest
-    outputs:
-      firebase_console_uri_android: ${{ steps.firebase_upload.outputs.FIREBASE_CONSOLE_URI }}
-      firebase_testing_uri_android: ${{ steps.firebase_upload.outputs.TESTING_URI }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -129,8 +114,43 @@ jobs:
           name: app-release.aab
           path: apps/mobile/app-release.aab
 
+  upload-to-firebase:
+    needs:
+      - android-beta
+      - ios-beta
+    runs-on: ubuntu-latest
+    outputs:
+      firebase_console_uri_ios: ${{ steps.firebase_upload_ipa.outputs.FIREBASE_CONSOLE_URI }}
+      firebase_testing_uri_ios: ${{ steps.firebase_upload_ipa.outputs.TESTING_URI }}
+      firebase_console_uri_android: ${{ steps.firebase_upload_aab.outputs.FIREBASE_CONSOLE_URI }}
+      firebase_testing_uri_android: ${{ steps.firebase_upload_aab.outputs.TESTING_URI }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # - name: Download AAB artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: app-release.aab
+      #     path: ${{ github.workspace }}
+
+      # - name: Download IPA artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: app-release.ipa
+      #     path: ${{ github.workspace }}
+
+      - name: Upload IPA to Firebase App Distribution
+        id: firebase_upload_ipa
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: leatherhood
+          file: apps/mobile/app-release.ipa
+
       - name: Upload AAB to Firebase
-        id: firebase_upload
+        id: firebase_upload_aab
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
@@ -140,8 +160,7 @@ jobs:
 
   create-beta-release:
     needs:
-      - android-beta
-      - ios-beta
+      - upload-to-firebase
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -156,10 +175,10 @@ jobs:
           tag_name: ${{ github.ref_name }}
           release_name: Release ${{ github.ref_name }}
           body: |
-            Android Firebase Console Link: ${{ needs.android-beta.outputs.firebase_console_uri_android }}
-            Android Firebase Testing Link: ${{ needs.android-beta.outputs.firebase_testing_uri_android }}
-            iOS Firebase Console Link: ${{ needs.ios-beta.outputs.firebase_console_uri_ios }}
-            iOS Firebase Testing Link: ${{ needs.ios-beta.outputs.firebase_testing_uri_ios }}
+            Android Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_android }}
+            Android Firebase Testing Link: ${{ needs.upload-to-firebase.outputs.firebase_testing_uri_android }}
+            iOS Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_ios }}
+            iOS Firebase Testing Link: ${{ needs.upload-to-firebase.outputs.firebase_testing_uri_ios }}
           draft: true
 
       # - name: Download AAB artifact
