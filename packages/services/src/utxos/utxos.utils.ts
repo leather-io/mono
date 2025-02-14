@@ -35,7 +35,7 @@ export function utxoToId(utxo: Utxo) {
 }
 
 export function isInboundUtxo(utxo: Utxo) {
-  return !utxo.confirmations;
+  return !utxo.height;
 }
 
 export const uneconomicalSatThreshold = 10000;

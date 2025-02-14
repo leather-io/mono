@@ -3,8 +3,6 @@ export * from './balances/btc-balances.service';
 export * from './balances/runes-balances.service';
 export * from './balances/sip10-balances.service';
 export * from './balances/stx-balances.service';
-export * from './infrastructure/api/alex-sdk/alex-sdk.client';
-export * from './infrastructure/api/coingecko/coingecko-api.client';
 export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
 export * from './infrastructure/settings/settings.service';

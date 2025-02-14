@@ -4,8 +4,7 @@ export interface UtxoId {
 }
 
 export interface Utxo extends UtxoId {
-  height?: number;
-  confirmations?: number;
+  height?: number; // no height indicates unconfirmed tx
   address: string;
   path: string;
   value: string;

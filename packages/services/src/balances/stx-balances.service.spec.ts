@@ -22,7 +22,7 @@ describe('StxBalancesService', () => {
   } as unknown as HiroStacksApiClient;
 
   const mockMarketDataService = {
-    getStxMarketData: vi.fn().mockResolvedValue({
+    getMarketData: vi.fn().mockResolvedValue({
       pair: { base: 'STX', quote: 'USD' },
       price: { amount: initBigNumber(100), symbol: 'USD', decimals: 2 },
     }),
@@ -72,7 +72,7 @@ describe('StxBalancesService', () => {
 
     it('uses market data to calculate usd-denominated balances', async () => {
       const balance = await stxBalancesService.getStxAddressBalance(stacksAddress);
-      expect(mockMarketDataService.getStxMarketData).toHaveBeenCalled();
+      expect(mockMarketDataService.getMarketData).toHaveBeenCalled();
       expect(balance.fiat.totalBalance.amount).toEqual(initBigNumber(500));
       expect(balance.fiat.lockedBalance.amount).toEqual(initBigNumber(100));
       expect(balance.fiat.unlockedBalance.amount).toEqual(initBigNumber(400));

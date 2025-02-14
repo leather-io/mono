@@ -1,3 +1,4 @@
+import { stxCryptoAsset } from '@leather.io/constants';
 import { StxCryptoAssetBalance } from '@leather.io/models';
 import {
   aggregateStxCryptoAssetBalances,
@@ -69,7 +70,7 @@ export function createStxBalancesService(
     const [addressBalancesResponse, pendingTransactions, stxMarketData] = await Promise.all([
       stacksApiClient.getAddressBalances(address, signal),
       stacksTransactionsService.getPendingTransactions(address, signal),
-      marketDataService.getStxMarketData(signal),
+      marketDataService.getMarketData(stxCryptoAsset, signal),
     ]);
 
     const totalBalanceStx = createMoney(readStxTotalBalance(addressBalancesResponse), 'STX');
