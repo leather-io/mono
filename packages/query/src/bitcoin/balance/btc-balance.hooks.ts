@@ -2,12 +2,13 @@ import { useMemo } from 'react';
 
 import BigNumber from 'bignumber.js';
 
+import { BitcoinAddress } from '@leather.io/models';
 import { createMoney, isUndefined, sumNumbers } from '@leather.io/utils';
 
 import { useNativeSegwitUtxosByAddress } from '../address/utxos-by-address.hooks';
 import { useRunesEnabled } from '../runes/runes.hooks';
 
-export function useGetBitcoinBalanceByAddress(address: string) {
+export function useGetBitcoinBalanceByAddress(address: BitcoinAddress) {
   const runesEnabled = useRunesEnabled();
 
   const {

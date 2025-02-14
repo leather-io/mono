@@ -58,15 +58,13 @@ export function getSizeInfo(payload: {
   return sizeInfo;
 }
 
-export function getSpendableAmount({
-  utxos,
-  feeRate,
-  recipients,
-}: {
+interface GetSpendableAmountArgs {
   utxos: CoinSelectionUtxo[];
   feeRate: number;
   recipients: CoinSelectionRecipient[];
-}) {
+  isSendMax?: boolean;
+}
+export function getSpendableAmount({ utxos, feeRate, recipients }: GetSpendableAmountArgs) {
   const balance = utxos
     .map(utxo => Number(utxo.value))
     .reduce((prevVal, curVal) => prevVal + curVal, 0);
@@ -83,16 +81,17 @@ export function getSpendableAmount({
   };
 }
 
+interface FilterUneconomicalUtxosArgs {
+  utxos: CoinSelectionUtxo[];
+  feeRate: number;
+  recipients: CoinSelectionRecipient[];
+}
 // Check if the spendable amount drops when adding a utxo
 export function filterUneconomicalUtxos({
   utxos,
   feeRate,
   recipients,
-}: {
-  utxos: CoinSelectionUtxo[];
-  feeRate: number;
-  recipients: CoinSelectionRecipient[];
-}) {
+}: FilterUneconomicalUtxosArgs) {
   const { spendableAmount: fullSpendableAmount } = getSpendableAmount({
     utxos,
     feeRate,

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { Inscription, UtxoResponseItem } from '@leather.io/models';
+import { BitcoinAddress, Inscription, UtxoId, UtxoResponseItem } from '@leather.io/models';
 
 import { RunesOutputsByAddress } from '../clients/best-in-slot';
 import { useBitcoinClient } from '../clients/bitcoin-client';
@@ -12,13 +12,8 @@ import { useRunesEnabled, useRunesOutputsByAddress } from '../runes/runes.hooks'
 import { useBitcoinPendingTransactionsInputs } from './transactions-by-address.hooks';
 import { createGetUtxosByAddressQueryOptions } from './utxos-by-address.query';
 
-interface UtxoIdentifier {
-  txid: string;
-  vout: number;
-}
-
 export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
-  return <T extends UtxoIdentifier>(utxo: T) => {
+  return <T extends UtxoId>(utxo: T) => {
     return !inscriptions.some(
       inscription =>
         `${utxo.txid}:${utxo.vout.toString()}` === `${inscription.txid}:${inscription.output}`
@@ -27,7 +22,7 @@ export function filterUtxosWithInscriptions(inscriptions: Inscription[]) {
 }
 
 export function filterUtxosWithRunes(runes: RunesOutputsByAddress[]) {
-  return <T extends UtxoIdentifier>(utxo: T) => {
+  return <T extends UtxoId>(utxo: T) => {
     return !runes.some(rune => rune.output === `${utxo.txid}:${utxo.vout}`);
   };
 }
@@ -42,7 +37,10 @@ const defaultArgs = {
  * Warning: ⚠️ To avoid spending inscriptions, when using UTXOs
  * we set `filterInscriptionUtxos` and `filterPendingTxsUtxos` to true
  */
-export function useCurrentNativeSegwitUtxos(nativeSegwitAddress: string, args = defaultArgs) {
+export function useCurrentNativeSegwitUtxos(
+  nativeSegwitAddress: BitcoinAddress,
+  args = defaultArgs
+) {
   const { filterInscriptionUtxos, filterPendingTxsUtxos, filterRunesUtxos } = args;
 
   return useNativeSegwitUtxosByAddress({
@@ -54,7 +52,7 @@ export function useCurrentNativeSegwitUtxos(nativeSegwitAddress: string, args = 
 }
 
 interface UseFilterUtxosByAddressArgs {
-  address: string;
+  address: BitcoinAddress;
   filterInscriptionUtxos: boolean;
   filterPendingTxsUtxos: boolean;
   filterRunesUtxos: boolean;
@@ -62,7 +60,7 @@ interface UseFilterUtxosByAddressArgs {
 
 type FilterUtxoFunctionType = (utxos: UtxoResponseItem[]) => UtxoResponseItem[];
 
-function useUtxosByAddressQuery(address: string) {
+function useUtxosByAddressQuery(address: BitcoinAddress) {
   const client = useBitcoinClient();
 
   return useQuery(createGetUtxosByAddressQueryOptions({ address, client }));
@@ -143,7 +141,7 @@ function useFilterInscriptionsByAddress(address: string) {
   };
 }
 
-function useFilterRuneUtxosByAddress(address: string) {
+function useFilterRuneUtxosByAddress(address: BitcoinAddress) {
   // TO-DO what if data is undefined?
   const { data = [], isLoading } = useRunesOutputsByAddress(address);
   const runesEnabled = useRunesEnabled();

@@ -1,12 +1,12 @@
 import { Balance } from '@/components/balance/balance';
 
-import { Money } from '@leather.io/models';
+import { BitcoinAddress, Money } from '@leather.io/models';
 import { Avatar, Cell, LockIcon, UnlockIcon } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 
 interface UtxoRowProps {
   isLocked: boolean;
-  address: string;
+  address: BitcoinAddress;
   btcBalance: Money;
   usdBalance: Money;
   txid?: string;

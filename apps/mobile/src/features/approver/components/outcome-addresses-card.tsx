@@ -1,15 +1,13 @@
 import { t } from '@lingui/macro';
 
+import { BitcoinAddress } from '@leather.io/models';
 import { AddressDisplayer, Avatar, Flag, Text, UsersTwoIcon } from '@leather.io/ui/native';
 
-function BitcoinAddress({ address }: { address: string }) {
-  return (
-    <Flag py="3" img={<Avatar icon={<UsersTwoIcon />} />}>
-      <AddressDisplayer address={address} />
-    </Flag>
-  );
+interface OutcomeAddressesCardArgs {
+  addresses: BitcoinAddress[] | string[];
 }
-export function OutcomeAddressesCard({ addresses }: { addresses: string[] }) {
+
+export function OutcomeAddressesCard({ addresses }: OutcomeAddressesCardArgs) {
   return (
     <>
       <Text variant="label01">
@@ -19,7 +17,9 @@ export function OutcomeAddressesCard({ addresses }: { addresses: string[] }) {
         })}
       </Text>
       {addresses.map(address => (
-        <BitcoinAddress key={address} address={address} />
+        <Flag key={address} py="3" img={<Avatar icon={<UsersTwoIcon />} />}>
+          <AddressDisplayer address={address} />
+        </Flag>
       ))}
     </>
   );

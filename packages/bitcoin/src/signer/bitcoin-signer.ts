@@ -10,7 +10,7 @@ import {
   deriveKeychainFromXpub,
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
-import type { BitcoinNetworkModes, ValueOf } from '@leather.io/models';
+import type { BitcoinAddress, BitcoinNetworkModes, ValueOf } from '@leather.io/models';
 import { PaymentTypes, signatureHash } from '@leather.io/rpc';
 import { hexToNumber, toHexString } from '@leather.io/utils';
 
@@ -41,7 +41,7 @@ export interface BitcoinSigner<Payment> {
   payment: Payment;
   keychain: HDKey;
   derivationPath: string;
-  address: string;
+  address: BitcoinAddress;
   publicKey: Uint8Array;
   sign(tx: btc.Transaction): void;
   signIndex(tx: btc.Transaction, index: number, allowedSighash?: AllowedSighashTypes[]): void;
@@ -50,7 +50,7 @@ export interface BitcoinSigner<Payment> {
 export interface BitcoinPayerBase {
   paymentType: PaymentTypes;
   network: BitcoinNetworkModes;
-  address: string;
+  address: BitcoinAddress;
   keyOrigin: string;
   masterKeyFingerprint: string;
   publicKey: Uint8Array;

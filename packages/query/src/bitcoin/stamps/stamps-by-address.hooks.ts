@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 import {
+  BitcoinAddress,
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
@@ -11,7 +12,7 @@ import { createBaseCryptoAssetBalance, createMoney } from '@leather.io/utils';
 
 import { Src20Token, createGetStampsByAddressQueryOptions } from './stamps-by-address.query';
 
-export function useStampsByAddress(address: string) {
+export function useStampsByAddress(address: BitcoinAddress) {
   return useQuery({
     ...createGetStampsByAddressQueryOptions(address),
     select: resp => resp.data?.stamps,
@@ -32,7 +33,7 @@ function createSrc20CryptoAssetInfo(src20: Src20Token): Src20CryptoAssetInfo {
   };
 }
 
-export function useSrc20TokensByAddress(address: string) {
+export function useSrc20TokensByAddress(address: BitcoinAddress) {
   return useQuery({
     ...createGetStampsByAddressQueryOptions(address),
     select: resp =>

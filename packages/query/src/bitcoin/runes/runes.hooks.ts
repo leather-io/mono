@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import { BitcoinAddress, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { isDefined } from '@leather.io/utils';
 
 import { useConfigRunesEnabled } from '../../common/remote-config/remote-config.query';
@@ -18,7 +18,7 @@ export function useRunesEnabled() {
   );
 }
 
-export function useRuneTokens(addresses: string[]) {
+export function useRuneTokens(addresses: BitcoinAddress[]) {
   const runesBalances = useGetRunesWalletBalancesByAddressesQuery(addresses)
     .flatMap(query => query.data)
     .filter(isDefined);
@@ -33,6 +33,6 @@ export function useRuneTokens(addresses: string[]) {
   }, [results]);
 }
 
-export function useRunesOutputsByAddress(address: string) {
+export function useRunesOutputsByAddress(address: BitcoinAddress) {
   return useGetRunesOutputsByAddressQuery(address);
 }

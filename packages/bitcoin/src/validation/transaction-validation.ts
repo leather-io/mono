@@ -1,67 +1,60 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 
-import { type BitcoinNetworkModes, UtxoResponseItem } from '@leather.io/models';
+import { BitcoinAddress, type BitcoinNetworkModes } from '@leather.io/models';
 import { FormErrorMessages, btcToSat, satToBtc } from '@leather.io/utils';
 
+import { calculateMaxSpend } from '../coin-selection/calculate-max-spend';
+import { GetBitcoinFeesArgs } from '../fees/bitcoin-fees';
 import { BitcoinError } from '../validation/bitcoin-error';
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from './address-validation';
 
 const minSpendAmountInSats = 546;
-// Pete - maybe this should become isValidBitcoinTransaction and also check fees etc
-// can update it to use zod also?
-// probably better to use zod than throwing errors here
 
-export function isValidBitcoinTransaction(
-  senderAddress: string,
-  recipientAddress: string,
-  network: BitcoinNetworkModes
-) {
-  if (!isValidBitcoinAddress(senderAddress) || !isValidBitcoinAddress(recipientAddress)) {
+interface BitcoinTransaction extends Omit<GetBitcoinFeesArgs, 'recipients'> {
+  amount: number;
+  payer: BitcoinAddress;
+  recipient: BitcoinAddress;
+  network: BitcoinNetworkModes;
+  feeRate: number;
+}
+
+export function isValidBitcoinTransaction({
+  amount,
+  payer,
+  recipient,
+  network,
+  utxos,
+  feeRate,
+  feeRates,
+}: BitcoinTransaction) {
+  if (!isValidBitcoinAddress(payer) || !isValidBitcoinAddress(recipient)) {
     throw new BitcoinError('InvalidAddress');
   }
   if (
-    !isValidBitcoinNetworkAddress(senderAddress, network) ||
-    !isValidBitcoinNetworkAddress(recipientAddress, network)
+    !isValidBitcoinNetworkAddress(payer, network) ||
+    !isValidBitcoinNetworkAddress(recipient, network)
   ) {
     throw new BitcoinError('InvalidNetworkAddress');
   }
+
+  const { spendableBtc } = calculateMaxSpend({ recipient, utxos, feeRate, feeRates });
+
+  // btcInsufficientBalanceValidator();
+  if (!isBtcBalanceSufficient({ amount, spendableBtc })) {
+    throw new BitcoinError('InsufficientFunds');
+  }
 }
 
-interface BtcInsufficientBalanceValidatorArgs {
-  calcMaxSpend(
-    recipient: string,
-    utxos: UtxoResponseItem[]
-  ): {
-    spendableBitcoin: BigNumber;
-  };
-  recipient: string;
-  utxos: UtxoResponseItem[];
+interface isBtcBalanceSufficientArgs {
+  amount: number;
+  spendableBtc: BigNumber;
 }
-
-// PETE - could still use zod like this but handle errors in a toast?
-export function btcInsufficientBalanceValidator({
-  calcMaxSpend,
-  recipient,
-  utxos,
-}: BtcInsufficientBalanceValidatorArgs) {
-  return z
-    .number({
-      invalid_type_error: FormErrorMessages.MustBeNumber,
-    })
-    .refine(
-      value => {
-        if (!value) return false;
-        const maxSpend = calcMaxSpend(recipient, utxos);
-        if (!maxSpend) return false;
-        const desiredSpend = new BigNumber(value);
-        if (desiredSpend.isGreaterThan(maxSpend.spendableBitcoin)) return false;
-        return true;
-      },
-      {
-        message: FormErrorMessages.InsufficientFunds,
-      }
-    );
+export function isBtcBalanceSufficient({ amount, spendableBtc }: isBtcBalanceSufficientArgs) {
+  if (!spendableBtc) return false;
+  const desiredSpend = new BigNumber(amount);
+  if (desiredSpend.isGreaterThan(spendableBtc)) return false;
+  return true;
 }
 
 export function btcMinimumSpendValidator() {

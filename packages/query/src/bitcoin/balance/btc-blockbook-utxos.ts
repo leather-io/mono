@@ -12,10 +12,10 @@ function makeBalanceApiUrl(network: BitcoinNetwork, descriptor: string) {
   return balanceApi.replace('{network}', network).replace('{descriptor}', descriptor);
 }
 
+// Explicitly type the utxoSchema
 const utxoSchema = z.object({
   address: z.string(),
   confirmations: z.number().optional(),
-  // Unconfirmed utxos appear in this response. Height omitted when unconfirmed.
   height: z.number().optional(),
   path: z.string(),
   txid: z.string(),
@@ -27,16 +27,19 @@ const accountUtxoResponseSchema = z.array(utxoSchema);
 
 export type Utxo = z.infer<typeof utxoSchema>;
 
-export function createUtxoAccountCacheKey(network: string, descriptor: string) {
-  return ['btc-utxos', network, descriptor.substring(0, 35)];
-}
-
 export async function fetchAccountDescriptorUtxos(network: BitcoinNetwork, descriptor: string) {
   const resp = await axios.get<Utxo[]>(makeBalanceApiUrl(network, descriptor));
   return accountUtxoResponseSchema.parse(resp.data);
 }
 
-export function createUtxoQueryOptions(network: BitcoinNetwork, descriptor: string) {
+export function createUtxoAccountCacheKey(network: string, descriptor: string) {
+  return ['btc-utxos', network, descriptor.substring(0, 35)];
+}
+
+export function createUtxoQueryOptions(
+  network: BitcoinNetwork,
+  descriptor: string
+): UseQueryOptions<Utxo[]> {
   return {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,

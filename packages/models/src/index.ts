@@ -1,4 +1,5 @@
 export * from './bitcoin-unit.model';
+export * from './bitcoin-address';
 export * from './crypto-assets/crypto-asset-balance.model';
 export * from './crypto-assets/crypto-asset-info.model';
 export * from './crypto-assets/bitcoin/inscription.model';
@@ -15,4 +16,5 @@ export * from './network/network.schema';
 export * from './settings.model';
 export * from './transactions/bitcoin-transaction.model';
 export * from './transactions/stacks-transaction.model';
+export * from './transactions/transfer.model';
 export * from './utxo.model';

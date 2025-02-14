@@ -3,8 +3,8 @@ import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import BigNumber from 'bignumber.js';
 
-import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
-import { Utxo, useAverageBitcoinFeeRates } from '@leather.io/query';
+import { AverageBitcoinFeeRates, Money, Utxo } from '@leather.io/models';
+import { useAverageBitcoinFeeRates } from '@leather.io/query';
 
 interface SendFormBtcData {
   availableBalance: Money;
@@ -17,6 +17,7 @@ interface SendFormBtcLoaderProps {
   account: AccountId;
   children({ availableBalance, fiatBalance, feeRates, utxos }: SendFormBtcData): React.ReactNode;
 }
+
 export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps) {
   const accountId = { fingerprint: account.fingerprint, accountIndex: account.accountIndex };
   const { data: feeRates, isLoading: isFeeRatesLoading } = useAverageBitcoinFeeRates();

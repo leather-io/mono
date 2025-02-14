@@ -1,4 +1,5 @@
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
+import { createBitcoinAddress } from '@leather.io/models';
 
 import { testMnemonic } from '../../../../config/test-helpers';
 import { deriveTaprootAccount } from '../payments/p2tr-address-gen';
@@ -35,7 +36,7 @@ describe(lookupDerivationByAddress.name, async () => {
         nativeSegwitXpub: firstNativeSegwitAccountKeychain.keychain.publicExtendedKey,
         iterationLimit: 100,
       });
-      expect(lookup(address).path).toEqual(path);
+      expect(lookup(createBitcoinAddress(address)).path).toEqual(path);
     });
   });
 
@@ -50,7 +51,9 @@ describe(lookupDerivationByAddress.name, async () => {
         iterationLimit: 10,
       });
 
-      expect(lookup('bc1qvgtk702cayady9wvkhvs5jn8c2ldurhazx9nzf').path).toBe(`m/84'/0'/1'/0/0`);
+      expect(lookup(createBitcoinAddress('bc1qvgtk702cayady9wvkhvs5jn8c2ldurhazx9nzf')).path).toBe(
+        `m/84'/0'/1'/0/0`
+      );
     });
   });
 
@@ -65,7 +68,9 @@ describe(lookupDerivationByAddress.name, async () => {
         iterationLimit: 10,
       });
 
-      expect(lookup('bc1qvgsomefakeaddressitwontfind').status).toBe('failure');
+      expect(lookup(createBitcoinAddress('bc1qvgsomefakeaddressitwontfind')).status).toBe(
+        'failure'
+      );
     });
   });
 });

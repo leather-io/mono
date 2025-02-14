@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { validate } from 'bitcoin-address-validation';
 
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { BitcoinAddress, Money } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
 import { BitcoinError } from '../validation/bitcoin-error';
@@ -10,18 +10,18 @@ import { filterUneconomicalUtxos, getSizeInfo, getUtxoTotal } from './coin-selec
 
 export interface CoinSelectionOutput {
   value: bigint;
-  address?: string;
+  address?: BitcoinAddress;
 }
 
 export interface CoinSelectionUtxo {
-  address: string;
+  address: BitcoinAddress;
   txid: string;
   value: number;
   vout: number;
 }
 
 export interface CoinSelectionRecipient {
-  address: string;
+  address: BitcoinAddress;
   amount: Money;
 }
 

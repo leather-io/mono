@@ -1,4 +1,5 @@
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
+import { createBitcoinAddress, isBitcoinAddress } from '@leather.io/models';
 import { createMoney, createNullArrayOfLength, sumNumbers } from '@leather.io/utils';
 
 import { determineUtxosForSpend, determineUtxosForSpendAll } from './coin-selection';
@@ -20,7 +21,19 @@ const demoUtxos = [
   { value: 909 },
 ];
 
+const recipientAddress = createBitcoinAddress('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
+
+const legacyAddress = createBitcoinAddress('15PyZveQd28E2SHZu2ugkWZBp6iER41vXj');
+const segwitAddress = createBitcoinAddress('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH');
+const taprootAddress = createBitcoinAddress(
+  'tb1parwmj7533de3k2fw2kntyqacspvhm67qnjcmpqnnpfvzu05l69nsczdywd'
+);
+const invalidAddress = 'whoop-de-da-boop-da-de-not-a-bitcoin-address';
+
 function generate10kSpendWithDummyUtxoSet(recipient: string) {
+  if (!isBitcoinAddress(recipient)) {
+    throw new Error('Invalid Bitcoin address');
+  }
   return determineUtxosForSpend({
     utxos: demoUtxos as any,
     feeRate: 20,
@@ -35,7 +48,7 @@ describe(determineUtxosForSpend.name, () => {
         utxos: [{ value: 50_000 }] as any[],
         recipients: [
           {
-            address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+            address: recipientAddress,
             amount: createMoney(40_000, 'BTC'),
           },
         ],
@@ -50,7 +63,7 @@ describe(determineUtxosForSpend.name, () => {
         utxos: [{ value: 50_000 }, { value: 50_000 }] as any[],
         recipients: [
           {
-            address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+            address: recipientAddress,
             amount: createMoney(60_000, 'BTC'),
           },
         ],
@@ -76,7 +89,7 @@ describe(determineUtxosForSpend.name, () => {
         ] as any[],
         recipients: [
           {
-            address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+            address: recipientAddress,
             amount: createMoney(100_000, 'BTC'),
           },
         ],
@@ -89,13 +102,13 @@ describe(determineUtxosForSpend.name, () => {
 
   describe('sorting algorithm', () => {
     test('that it filters out dust utxos', () => {
-      const result = generate10kSpendWithDummyUtxoSet('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
+      const result = generate10kSpendWithDummyUtxoSet(recipientAddress);
       const hasDust = result.filteredUtxos.some(utxo => utxo.value <= BTC_P2WPKH_DUST_AMOUNT);
       expect(hasDust).toBeFalsy();
     });
 
     test('that it sorts utxos in decending order', () => {
-      const result = generate10kSpendWithDummyUtxoSet('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
+      const result = generate10kSpendWithDummyUtxoSet(recipientAddress);
       result.inputs.forEach((u, i) => {
         const nextUtxo = result.inputs[i + 1];
         if (!nextUtxo) return;
@@ -105,30 +118,24 @@ describe(determineUtxosForSpend.name, () => {
   });
 
   test('that it accepts a wrapped segwit address', () =>
-    expect(() =>
-      generate10kSpendWithDummyUtxoSet('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH')
-    ).not.toThrowError());
+    expect(() => generate10kSpendWithDummyUtxoSet(segwitAddress)).not.toThrowError());
 
   test('that it accepts a legacy addresses', () =>
-    expect(() =>
-      generate10kSpendWithDummyUtxoSet('15PyZveQd28E2SHZu2ugkWZBp6iER41vXj')
-    ).not.toThrowError());
+    expect(() => generate10kSpendWithDummyUtxoSet(legacyAddress)).not.toThrowError());
 
   test('that it throws an error with non-legit address', () => {
-    expect(() =>
-      generate10kSpendWithDummyUtxoSet('whoop-de-da-boop-da-de-not-a-bitcoin-address')
-    ).toThrowError();
+    expect(() => generate10kSpendWithDummyUtxoSet(invalidAddress)).toThrowError();
   });
 
   test('that given a set of utxos, legacy is more expensive', () => {
-    const legacy = generate10kSpendWithDummyUtxoSet('15PyZveQd28E2SHZu2ugkWZBp6iER41vXj');
-    const segwit = generate10kSpendWithDummyUtxoSet('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH');
+    const legacy = generate10kSpendWithDummyUtxoSet(legacyAddress);
+    const segwit = generate10kSpendWithDummyUtxoSet(segwitAddress);
     expect(legacy.fee.amount.isGreaterThan(segwit.fee.amount)).toBeTruthy();
   });
 
   test('that given a set of utxos, wrapped segwit is more expensive than native', () => {
-    const segwit = generate10kSpendWithDummyUtxoSet('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH');
-    const native = generate10kSpendWithDummyUtxoSet('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
+    const segwit = generate10kSpendWithDummyUtxoSet(segwitAddress);
+    const native = generate10kSpendWithDummyUtxoSet(recipientAddress);
     expect(segwit.fee.amount.isGreaterThan(native.fee.amount)).toBeTruthy();
   });
 
@@ -136,10 +143,8 @@ describe(determineUtxosForSpend.name, () => {
     // Non-obvious behaviour.
     // P2TR outputs = 34 vBytes
     // P2WPKH outputs = 22 vBytes
-    const native = generate10kSpendWithDummyUtxoSet('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
-    const taproot = generate10kSpendWithDummyUtxoSet(
-      'tb1parwmj7533de3k2fw2kntyqacspvhm67qnjcmpqnnpfvzu05l69nsczdywd'
-    );
+    const native = generate10kSpendWithDummyUtxoSet(recipientAddress);
+    const taproot = generate10kSpendWithDummyUtxoSet(taprootAddress);
     expect(taproot.fee.amount.isGreaterThan(native.fee.amount)).toBeTruthy();
   });
 
@@ -152,7 +157,7 @@ describe(determineUtxosForSpend.name, () => {
       utxos: testData as any,
       recipients: [
         {
-          address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+          address: recipientAddress,
           amount: createMoney(Number(amount), 'BTC'),
         },
       ],
@@ -172,7 +177,7 @@ describe(determineUtxosForSpend.name, () => {
     const feeRate = 3;
     const recipients = [
       {
-        address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+        address: recipientAddress,
         amount: createMoney(1, 'BTC'),
       },
     ];
@@ -188,7 +193,7 @@ describe(determineUtxosForSpend.name, () => {
       utxos: filteredUtxos as any,
       recipients: [
         {
-          address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+          address: recipientAddress,
           amount: createMoney(amount, 'BTC'),
         },
       ],
@@ -203,7 +208,7 @@ describe(determineUtxosForSpend.name, () => {
     const utxos = [{ value: 1000 }, { value: 2000 }, { value: 3000 }];
     const recipients = [
       {
-        address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+        address: recipientAddress,
         amount: createMoney(Number(1), 'BTC'),
       },
     ];

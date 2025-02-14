@@ -1,48 +1,56 @@
 import BigNumber from 'bignumber.js';
+// PETE these got moved but may need different types now
+import { filterUneconomicalUtxos, getSpendableAmount } from 'coin-selection/coin-selection.utils';
 
-import type { AverageBitcoinFeeRates } from '@leather.io/models';
+import type { AverageBitcoinFeeRates, BitcoinAddress, Money } from '@leather.io/models';
 import { createMoney, satToBtc } from '@leather.io/utils';
 
-import { CoinSelectionUtxo } from './coin-selection';
-import { filterUneconomicalUtxos, getSpendableAmount } from './coin-selection.utils';
+import { CoinSelectionUtxo } from '../coin-selection/coin-selection';
 
-interface CalculateMaxBitcoinSpend {
-  address: string;
+interface CalculateMaxSpendArgs {
+  // TODO double double check this is right
+  recipient: BitcoinAddress;
   utxos: CoinSelectionUtxo[];
-  fetchedFeeRates?: AverageBitcoinFeeRates;
+  feeRates?: AverageBitcoinFeeRates;
   feeRate?: number;
 }
 
-export function calculateMaxBitcoinSpend({
-  address,
+interface CalculateMaxSpendResponse {
+  spendAllFee: number;
+  amount: Money;
+  spendableBtc: BigNumber;
+}
+export function calculateMaxSpend({
+  recipient,
   utxos,
   feeRate,
-  fetchedFeeRates,
-}: CalculateMaxBitcoinSpend) {
-  if (!utxos.length || !fetchedFeeRates)
+  feeRates,
+}: CalculateMaxSpendArgs): CalculateMaxSpendResponse {
+  if (!utxos.length || !feeRates)
     return {
       spendAllFee: 0,
       amount: createMoney(0, 'BTC'),
-      spendableBitcoin: new BigNumber(0),
+      spendableBtc: new BigNumber(0),
     };
 
-  const currentFeeRate = feeRate ?? fetchedFeeRates.halfHourFee.toNumber();
+  const currentFeeRate = feeRate ?? feeRates.halfHourFee.toNumber();
 
   const filteredUtxos = filterUneconomicalUtxos({
     utxos,
     feeRate: currentFeeRate,
-    recipients: [{ address, amount: createMoney(0, 'BTC') }],
+    recipients: [{ address: recipient, amount: createMoney(0, 'BTC') }],
   });
 
   const { spendableAmount, fee } = getSpendableAmount({
     utxos: filteredUtxos,
     feeRate: currentFeeRate,
-    recipients: [{ address, amount: createMoney(0, 'BTC') }],
+    recipients: [{ address: recipient, amount: createMoney(0, 'BTC') }],
+    isSendMax: true,
   });
 
   return {
     spendAllFee: fee,
     amount: createMoney(spendableAmount, 'BTC'),
-    spendableBitcoin: satToBtc(spendableAmount),
+    spendableBtc: satToBtc(spendableAmount),
   };
 }

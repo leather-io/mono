@@ -20,11 +20,13 @@ export function getUtxoIdFromOutpoint(outpoint: string) {
 }
 
 export function filterMatchesAnyUtxoId(utxoIds: UtxoId[]) {
-  return (utxo: Utxo) => utxoIds.some(id => id.txid === utxo.txid && id.vout === utxo.vout);
+  return (utxo: Utxo): utxo is Utxo =>
+    utxoIds.some(id => id.txid === utxo.txid && id.vout === utxo.vout);
 }
 
 export function filterOutMatchesAnyUtxoId(utxoIds: UtxoId[]) {
-  return (utxo: Utxo) => !utxoIds.some(id => id.txid === utxo.txid && id.vout === utxo.vout);
+  return (utxo: Utxo): utxo is Utxo =>
+    !utxoIds.some(id => id.txid === utxo.txid && id.vout === utxo.vout);
 }
 
 export function utxoToId(utxo: Utxo) {
@@ -40,7 +42,7 @@ export function isInboundUtxo(utxo: Utxo) {
 
 export const uneconomicalSatThreshold = 10000;
 
-export function isUneconomicalUtxo(utxo: Utxo) {
+export function isUneconomicalUtxo(utxo: any): utxo is Utxo {
   return Number(utxo.value) < uneconomicalSatThreshold;
 }
 

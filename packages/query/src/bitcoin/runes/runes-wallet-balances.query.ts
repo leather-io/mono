@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 import PQueue from 'p-queue';
 
-import { NetworkConfiguration } from '@leather.io/models';
+import { BitcoinAddress, NetworkConfiguration } from '@leather.io/models';
 
 import { useConfigRunesEnabled } from '../../common/remote-config/remote-config.query';
 import { useLeatherNetwork } from '../../leather-query-provider';
@@ -12,7 +12,7 @@ import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 const queryOptions = { staleTime: 5 * 60 * 1000 } as const;
 
 interface CreateGetRunesWalletBalancesByAddressesQueryOptionsArgs {
-  address: string;
+  address: BitcoinAddress;
   client: BitcoinClient;
   network: NetworkConfiguration;
   runesEnabled: boolean;
@@ -36,7 +36,7 @@ export function createGetRunesWalletBalancesByAddressesQueryOptions({
   } as const;
 }
 
-export function useGetRunesWalletBalancesByAddressesQuery(addresses: string[]) {
+export function useGetRunesWalletBalancesByAddressesQuery(addresses: BitcoinAddress[]) {
   const client = useBitcoinClient();
   const network = useLeatherNetwork();
   const runesEnabled = useConfigRunesEnabled();

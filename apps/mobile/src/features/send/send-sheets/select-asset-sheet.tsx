@@ -8,6 +8,8 @@ import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { bytesToHex } from '@noble/hashes/utils';
 
+import { createBitcoinAddress } from '@leather.io/models';
+
 import {
   CreateCurrentSendRoute,
   useSendSheetNavigation,
@@ -49,7 +51,7 @@ export function SelectAssetSheet() {
             onPress={() =>
               navigation.navigate('send-form-btc', {
                 account,
-                address: nativeSegwitPayer.address,
+                address: createBitcoinAddress(nativeSegwitPayer.address),
                 publicKey: bytesToHex(nativeSegwitPayer.publicKey),
               })
             }

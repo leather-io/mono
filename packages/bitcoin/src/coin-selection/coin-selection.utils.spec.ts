@@ -1,12 +1,15 @@
+import { createBitcoinAddress } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { mockUtxos } from './coin-selection.mocks';
 import { filterUneconomicalUtxos } from './coin-selection.utils';
 
+const recipientAddress = createBitcoinAddress('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
+
 describe(filterUneconomicalUtxos.name, () => {
   const recipients = [
     {
-      address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+      address: recipientAddress,
       amount: createMoney(0, 'BTC'),
     },
   ];

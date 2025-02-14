@@ -9,7 +9,7 @@ import {
   extractAccountIndexFromPath,
   extractPurposeFromPath,
 } from '@leather.io/crypto';
-import { BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { PaymentTypes } from '@leather.io/rpc';
 import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
@@ -100,7 +100,10 @@ export function decodeBitcoinTx(tx: string): ReturnType<typeof btc.RawTx.decode>
   return btc.RawTx.decode(hexToBytes(tx));
 }
 
-export function getAddressFromOutScript(script: Uint8Array, bitcoinNetwork: BtcSignerNetwork) {
+export function getAddressFromOutScript(
+  script: Uint8Array,
+  bitcoinNetwork: BtcSignerNetwork
+): BitcoinAddress | string {
   const outputScript = btc.OutScript.decode(script);
 
   switch (outputScript.type) {
@@ -319,7 +322,7 @@ export function getPsbtTxOutputs(psbtTx: btc.Transaction): TransactionOutput[] {
   return outputs;
 }
 
-export function inferNetworkFromAddress(address: string): BitcoinNetworkModes {
+export function inferNetworkFromAddress(address: BitcoinAddress): BitcoinNetworkModes {
   if (address.startsWith('bc1')) return 'mainnet';
   if (address.startsWith('tb1')) return 'testnet';
   if (address.startsWith('bcrt1')) return 'regtest';
@@ -333,7 +336,7 @@ export function inferNetworkFromAddress(address: string): BitcoinNetworkModes {
   throw new Error('Invalid or unsupported Bitcoin address format');
 }
 
-export function inferPaymentTypeFromAddress(address: string): SupportedPaymentType {
+export function inferPaymentTypeFromAddress(address: BitcoinAddress): SupportedPaymentType {
   if (address.startsWith('bc1q') || address.startsWith('tb1q') || address.startsWith('bcrt1q'))
     return 'p2wpkh';
 

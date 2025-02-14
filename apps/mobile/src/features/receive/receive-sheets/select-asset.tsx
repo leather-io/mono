@@ -9,6 +9,7 @@ import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
+import { BitcoinAddress } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
 import {
@@ -25,7 +26,7 @@ type CurrentRoute = CreateCurrentReceiveRoute<'receive-select-asset'>;
 export interface SelectedAsset {
   assetSymbol: string;
   assetName: string;
-  address: string;
+  address: BitcoinAddress | string;
   addressType?: string;
   assetDescription: string;
 }

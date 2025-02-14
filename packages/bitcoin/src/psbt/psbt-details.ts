@@ -1,6 +1,6 @@
 import { getPsbtTxInputs, getPsbtTxOutputs } from 'utils/bitcoin.utils';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
 import { createMoney, subtractMoney } from '@leather.io/utils';
 
 import { getParsedInputs } from './psbt-inputs';
@@ -10,7 +10,7 @@ import { getPsbtAsTransaction } from './utils';
 
 interface GetPsbtDetailsArgs {
   psbtHex: string;
-  psbtAddresses: string[];
+  psbtAddresses: BitcoinAddress[];
   networkMode: BitcoinNetworkModes;
   indexesToSign?: number[];
 }

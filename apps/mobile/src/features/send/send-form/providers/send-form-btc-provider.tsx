@@ -1,8 +1,7 @@
 import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
-import { AverageBitcoinFeeRates } from '@leather.io/models';
-import { Utxo } from '@leather.io/query';
+import { AverageBitcoinFeeRates, Utxo } from '@leather.io/models';
 
 import { useSendFormBtc } from '../hooks/use-send-form-btc';
 import { SendFormBtcLoader } from '../loaders/send-form-btc-loader';

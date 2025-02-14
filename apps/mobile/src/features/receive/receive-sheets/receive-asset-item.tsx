@@ -1,10 +1,11 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
 import { TestId } from '@/shared/test-id';
 
+import { BitcoinAddress } from '@leather.io/models';
 import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
 
 interface ReceiveAssetItemProps {
-  address: string;
+  address: BitcoinAddress | string;
   addressType?: string;
   assetName: string;
   assetSymbol: string;

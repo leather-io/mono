@@ -2,6 +2,7 @@ import axios from 'axios';
 import { z } from 'zod';
 
 import {
+  BitcoinAddress,
   type BitcoinNetworkModes,
   MarketData,
   Money,
@@ -117,7 +118,7 @@ export interface RunesOutputsByAddress {
 }
 
 interface RunesOutputsByAddressArgs {
-  address: string;
+  address: BitcoinAddress;
   network?: BitcoinNetworkModes;
   sortBy?: 'output';
   order?: 'asc' | 'desc';

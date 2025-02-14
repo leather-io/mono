@@ -8,7 +8,7 @@ import {
   CoinSelectionUtxo,
   generateBitcoinUnsignedTransactionNativeSegwit,
 } from '@leather.io/bitcoin';
-import { Money } from '@leather.io/models';
+import { BitcoinAddress, Money } from '@leather.io/models';
 
 interface BtcTransactionValues {
   amount: Money;
@@ -23,7 +23,10 @@ interface GenerateBtcUnsignedTransactionCallbackArgs {
   bip32Derivation: BtcSignerDefaultBip32Derivation[];
 }
 
-export function useGenerateBtcUnsignedTransactionNativeSegwit(address: string, publicKey: string) {
+export function useGenerateBtcUnsignedTransactionNativeSegwit(
+  address: BitcoinAddress,
+  publicKey: string
+) {
   const network = useNetworkPreferenceBitcoinScureLibNetworkConfig();
 
   return useCallback(

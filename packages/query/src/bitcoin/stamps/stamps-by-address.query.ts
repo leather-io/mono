@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { z } from 'zod';
 
+import { BitcoinAddress } from '@leather.io/models';
+
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
 
 const stampSchema = z.object({
@@ -71,14 +73,16 @@ type StampsByAddressQueryResponse = z.infer<typeof stampsByAdressSchema>;
 /**
  * @see https://stampchain.io/docs#/default/get_api_v2_balance__address_
  */
-async function fetchStampsByAddress(address: string): Promise<StampsByAddressQueryResponse> {
+async function fetchStampsByAddress(
+  address: BitcoinAddress
+): Promise<StampsByAddressQueryResponse> {
   const resp = await axios.get<StampsByAddressQueryResponse>(
     `https://stampchain.io/api/v2/balance/${address}`
   );
   return stampsByAdressSchema.parse(resp.data);
 }
 
-export function createGetStampsByAddressQueryOptions(address: string) {
+export function createGetStampsByAddressQueryOptions(address: BitcoinAddress) {
   return {
     queryKey: [BitcoinQueryPrefixes.GetStampsByAddress, address],
     queryFn: () => fetchStampsByAddress(address),
@@ -86,6 +90,6 @@ export function createGetStampsByAddressQueryOptions(address: string) {
   } as const;
 }
 
-export function useGetStampsByAddressQuery(address: string) {
+export function useGetStampsByAddressQuery(address: BitcoinAddress) {
   return useQuery(createGetStampsByAddressQueryOptions(address));
 }

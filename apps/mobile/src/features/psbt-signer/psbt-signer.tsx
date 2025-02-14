@@ -21,7 +21,7 @@ import {
   getSizeInfo,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates, FeeTypes, Money } from '@leather.io/models';
+import { AverageBitcoinFeeRates, FeeTypes, Money, createBitcoinAddress } from '@leather.io/models';
 import {
   useAverageBitcoinFeeRates,
   useBitcoinBroadcastTransaction,
@@ -90,7 +90,7 @@ export function BasePsbtSigner({
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
   const psbtAccounts = usePsbtAccounts({ psbtHex });
   const psbtPayers = usePsbtPayers({ psbtHex });
-  const psbtAddresses = psbtPayers.map(payer => payer.address);
+  const psbtAddresses = psbtPayers.map(payer => createBitcoinAddress(payer.address));
 
   const { displayToast } = useToastContext();
   if (!psbtAccounts[0]) throw new Error('No psbt accounts');
@@ -147,8 +147,9 @@ export function BasePsbtSigner({
   ]);
   const totalSpend = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
 
+  const payer = createBitcoinAddress(psbtPayers[0].address);
   const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(
-    psbtPayers[0].address,
+    payer,
     bytesToHex(psbtPayers[0].publicKey)
   );
 

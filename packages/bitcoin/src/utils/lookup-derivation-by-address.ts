@@ -1,5 +1,6 @@
 import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
 
+import { BitcoinAddress } from '@leather.io/models';
 import { createCounter } from '@leather.io/utils';
 
 import { makeTaprootAddressIndexDerivationPath } from '../payments/p2tr-address-gen';
@@ -23,7 +24,7 @@ export function lookupDerivationByAddress(args: LookUpDerivationByAddressArgs) {
   const taprootKeychain = HDKey.fromExtendedKey(taprootXpub);
   const nativeSegwitKeychain = HDKey.fromExtendedKey(nativeSegwitXpub);
 
-  return (address: string) => {
+  return (address: BitcoinAddress) => {
     const network = inferNetworkFromAddress(address);
     const paymentType = inferPaymentTypeFromAddress(address);
 

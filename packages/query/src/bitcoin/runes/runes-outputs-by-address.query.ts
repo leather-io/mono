@@ -1,7 +1,7 @@
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import PQueue from 'p-queue';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
 
 import { useLeatherNetwork } from '../../leather-query-provider';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
@@ -11,12 +11,12 @@ import { useRunesEnabled } from './runes.hooks';
 
 const queryOptions = { staleTime: 5 * 60 * 1000 } as const;
 
-export function createGetRuneOutputsByAddressCacheKey(address: string) {
+export function createGetRuneOutputsByAddressCacheKey(address: BitcoinAddress) {
   return [BitcoinQueryPrefixes.GetRunesOutputsByAddress, address];
 }
 
 interface CreateGetRunesOutputsByAddressQueryOptionsArgs {
-  address: string;
+  address: BitcoinAddress;
   client: BitcoinClient;
   limiter: PQueue;
   network: BitcoinNetworkModes;
@@ -46,7 +46,7 @@ export function createGetRunesOutputsByAddressQueryOptions({
   } as const;
 }
 
-export function useGetRunesOutputsByAddressQuery(address: string) {
+export function useGetRunesOutputsByAddressQuery(address: BitcoinAddress) {
   const client = useBitcoinClient();
   const network = useLeatherNetwork();
   const runesEnabled = useRunesEnabled();

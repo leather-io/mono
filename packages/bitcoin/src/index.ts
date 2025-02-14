@@ -22,7 +22,7 @@ export * from './psbt/psbt-outputs';
 export * from './psbt/psbt-totals';
 export * from './psbt/psbt-details';
 export * from './psbt/utils';
-
+export * from '../../models/src/bitcoin-address';
 export * from './validation/address-validation';
 export * from './validation/bitcoin-error';
 export * from './validation/transaction-validation';
