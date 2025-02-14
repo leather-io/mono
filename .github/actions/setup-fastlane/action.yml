@@ -1,0 +1,18 @@
+name: Setup Fastlane
+description: Set up CI environment for Fastlane
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2
+
+    - name: Install Bundler
+      run: gem install bundler
+      shell: bash
+
+    - name: Install dependencies
+      working-directory: ./apps/mobile/fastlane
+      run: bundle install
+      shell: bash

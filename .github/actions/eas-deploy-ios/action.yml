@@ -109,3 +109,4 @@ runs:
       shell: bash
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+        APPLE_ID: ${{ inputs.APPLE_ID }}
