@@ -16,9 +16,6 @@ inputs:
   LEATHER_BOT:
     description: 'GH bot token'
     required: true
-  FIREBASE_TOKEN:
-    description: 'Firebase token'
-    required: true
 runs:
   using: 'composite'
   steps:
@@ -40,12 +37,6 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install jq
-      shell: bash
-
-    - name: Install fastlane
-      run: |
-        sudo apt-get update
-        sudo gem install fastlane
       shell: bash
 
     - name: Setup eas credentials
@@ -115,8 +106,6 @@ runs:
         cd apps/mobile
         # Release version of the app, we should wait for it to see the result
         eas build --platform ios --profile=production --non-interactive --auto-submit
-        cd ios
-        bundle exec fastlane ios distribute_ios
       shell: bash
       env:
         EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
