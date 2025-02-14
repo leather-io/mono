@@ -22,3 +22,4 @@ ignore:
   - apps/mobile/ios
   - apps/mobile/android
   - apps/mobile/artifacts
+  - apps/web/build

@@ -56,5 +56,26 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    name: 'web',
+    files: ['apps/web/src/**/*.{ts,tsx}'],
+    extends: [reactConfig, pluginLingui.configs['flat/recommended']],
+    rules: {
+      'lingui/no-unlocalized-strings': [
+        'error',
+        {
+          ignoreFunction: [
+            'Error',
+            'console.log',
+            'console.warn',
+            'console.error',
+            'it',
+            'describe',
+            'test',
+          ],
+        },
+      ],
+    },
   }
 );
