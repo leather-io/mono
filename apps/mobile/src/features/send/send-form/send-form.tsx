@@ -19,8 +19,9 @@ function SendForm<T extends SendFormBaseContext<T>>({ ...props }: HasChildren) {
     formData: { defaultValues, schema },
   } = useSendFormContext<T>();
   const formMethods = useForm<z.infer<typeof schema>>({
-    // mode: 'onChange',
-    mode: 'onBlur',
+    mode: 'onChange',
+    // mode: 'onSubmit',
+    // mode: 'onBlur', // tried on blur here but got messy with custom amount input
     defaultValues,
     resolver: zodResolver(schema),
   });

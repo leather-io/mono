@@ -126,8 +126,9 @@ export function useSendFormBtc() {
           displayToast({ title: formatBitcoinError(e.message), type: 'error' });
           return;
         }
+        console.log(e);
         displayToast({
-          title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
+          title: t({ id: 'something-went-wrong', message: 'Something went wrongd' }),
           type: 'error',
         });
       }

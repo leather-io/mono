@@ -12,14 +12,15 @@ export function SendFormButton<T extends SendFormBaseContext<T>>() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { onInitSendTransfer, schema } = formData;
   const {
-    formState: { isDirty, isValid },
+    getValues,
+    formState: { isDirty, isValid, errors },
     handleSubmit,
   } = useFormContext<z.infer<typeof schema>>();
 
   function onSubmitForm(values: z.infer<typeof schema>) {
     onInitSendTransfer(formData, values);
   }
-  // console.log('isValid', isValid);
+  console.log('isValid', isValid, errors, getValues());
   return (
     <Button
       mt="3"
@@ -32,3 +33,4 @@ export function SendFormButton<T extends SendFormBaseContext<T>>() {
     />
   );
 }
+// bc1qswevrkzaza2snx0penxpdg0g9fr36tgh9m0gvr

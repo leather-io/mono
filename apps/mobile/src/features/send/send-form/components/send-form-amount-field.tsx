@@ -23,9 +23,9 @@ export function SendFormAmountField<T extends SendFormBaseContext<T>>() {
   const {
     field: { onChange: onChangeCurrencyMode },
     fieldState: { isTouched: isTouchedCurrency, invalid: isInvalidCurrency },
-  } = useController({ name: 'currencyInputMode', control });
+  } = useController({ name: 'currencyMode', control });
 
-  const currencyMode = watch('currencyInputMode');
+  const currencyMode = watch('currencyMode');
 
   function handleCurrencyModeChange(currencyMode: CurrencyMode, newInputValue: string) {
     onChangeCurrencyMode(currencyMode);
