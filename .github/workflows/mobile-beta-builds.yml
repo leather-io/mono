@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release.ipa
-          path: app/mobile/app-release.ipa
+          path: apps/mobile/app-release.ipa
 
       - name: Upload IPA to Firebase App Distribution
         id: firebase_upload
@@ -69,7 +69,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: leatherhood
-          file: app/mobile/app-release.ipa
+          file: apps/mobile/app-release.ipa
 
   android-beta:
     runs-on: ubuntu-latest
@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release.aab
-          path: app/mobile/app-release.aab
+          path: apps/mobile/app-release.aab
 
       - name: Upload AAB to Firebase
         id: firebase_upload
@@ -136,7 +136,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: leatherhood
-          file: app/mobile/app-release.aab
+          file: apps/mobile/app-release.aab
 
   create-beta-release:
     needs:
