@@ -1,0 +1,3 @@
+default_platform(:android)
+
+# stubbed out but not used for now

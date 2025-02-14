@@ -27,7 +27,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="myapp"/>
+        <data android:scheme="leather"/>
         <data android:scheme="io.leather.mobilewallet"/>
         <data android:scheme="exp+leather-wallet-mobile"/>
       </intent-filter>

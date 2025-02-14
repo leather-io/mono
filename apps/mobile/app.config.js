@@ -2,10 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 // Setup EAS env variables for Firebase
-function setupFirebaseEnvVariables() {
-  const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
+function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
-
+  const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
     fs.copyFileSync(
       googleServicesPathAndroid,
@@ -13,25 +12,43 @@ function setupFirebaseEnvVariables() {
     );
   }
 
+  if (googleServicesB64) {
+    const decodedJson = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
+    fs.writeFileSync(path.join(__dirname, './android/app/google-services.json'), decodedJson);
+  }
+}
+
+function setupFirebaseEnvVariablesIos() {
+  const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
+  const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
     fs.copyFileSync(
       googleServicesPathIos,
       path.join(__dirname, './ios/leatherwalletmobile/GoogleService-Info.plist')
     );
   }
+
+  if (googleServicesB64) {
+    const decodedPlist = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
+    fs.writeFileSync(
+      path.join(__dirname, 'ios/leatherwalletmobile/GoogleService-Info.plist'),
+      decodedPlist
+    );
+  }
 }
 
 export default () => {
-  setupFirebaseEnvVariables();
+  setupFirebaseEnvVariablesAndroid();
+  setupFirebaseEnvVariablesIos();
 
   return {
     expo: {
       name: 'Leather',
       slug: 'leather-wallet-mobile',
-      version: '2.0.0',
+      version: '2.1.0',
       orientation: 'portrait',
       icon: './src/assets/icon.png',
-      scheme: 'myapp',
+      scheme: 'leather',
       userInterfaceStyle: 'automatic',
       updates: {
         fallbackToCacheTimeout: 0,
@@ -65,7 +82,6 @@ export default () => {
           foregroundImage: './src/assets/adaptive-icon.png',
           backgroundColor: '#12100F',
         },
-        package: 'io.leather.mobilewallet',
         splash: {
           image: './src/assets/light-mode-splash.png',
           resizeMode: 'contain',
