@@ -265,6 +265,13 @@
   * dependencies
     * @leather.io/rpc bumped to 2.5.9
 
+## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.26.0...@leather.io/utils-v0.27.0) (2025-02-14)
+
+
+### Features
+
+* adds underscore to number ([14f243f](https://github.com/leather-io/mono/commit/14f243f032bc5cdcd0f8b4fb19d77d45d1036c3c))
+
 ## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.25.5...@leather.io/utils-v0.26.0) (2025-02-12)
 
 
