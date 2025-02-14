@@ -4,8 +4,6 @@ on:
     tags:
       - 'mobile-v*.*.*-beta.*'
       - 'mobile-test-v*.*.*-beta.*'
-    branches:
-      - 'chore/LEA-1844/*'
 permissions:
   contents: write
   pull-requests: write
@@ -174,7 +172,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          release_name: '${{ github.ref_name }}'
           body: |
             Android Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_android }}
             Android Firebase Testing Link: ${{ needs.upload-to-firebase.outputs.firebase_testing_uri_android }}
