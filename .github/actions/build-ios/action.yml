@@ -19,6 +19,9 @@ runs:
     - name: Provision
       uses: ./.github/actions/provision
 
+    - run: pnpm turbo run build
+      shell: bash
+
     - name: Setup for Fastlane
       uses: ./.github/actions/setup-fastlane
 
