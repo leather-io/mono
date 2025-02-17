@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.25.1...@leather.io/models-v0.26.0) (2025-02-17)
+
+
+### Features
+
+* connect leather api client to backend ([bf94c84](https://github.com/leather-io/mono/commit/bf94c848c465f5f146fdc5508f14bb033b9dc829))
+
 ## [0.25.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.25.0...@leather.io/models-v0.25.1) (2025-02-03)
 
 
