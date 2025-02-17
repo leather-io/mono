@@ -4,13 +4,21 @@ inputs:
   EXPO_TOKEN:
     description: 'Expo token for authentication'
     required: true
+  GOOGLE_SERVICES_JSON:
+    description: 'Google Services JSON file'
+    required: true
+
 outputs:
   aab_path:
     description: 'Path to the built AAB file'
     value: ${{ steps.set-aab-path.outputs.aab_path }}
+
 runs:
   using: 'composite'
   steps:
+    - name: Provision
+      uses: ./.github/actions/provision
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -23,15 +31,12 @@ runs:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
 
-    - name: Provision
-      uses: ./.github/actions/provision
-
     - name: Decode GOOGLE_SERVICES_JSON
       shell: bash
       run: |
-        echo $GOOGLE_SERVICES_JSON_B64 | base64 -d > ./apps/mobile/android/app/google-services.json
+        echo $GOOGLE_SERVICES_JSON | base64 -d > ./apps/mobile/android/app/google-services.json
       env:
-        GOOGLE_SERVICES_JSON_B64: ${{ inputs.GOOGLE_SERVICES_JSON_B64 }}
+        GOOGLE_SERVICES_JSON: ${{ inputs.GOOGLE_SERVICES_JSON }}
 
     - name: Build Android app
       shell: bash

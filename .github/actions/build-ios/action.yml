@@ -4,10 +4,15 @@ inputs:
   EXPO_TOKEN:
     description: 'Expo token for authentication'
     required: true
+  GOOGLE_SERVICES_INFO_PLIST:
+    description: 'Google Services Info.plist file'
+    required: true
+
 outputs:
   ipa_path:
     description: 'Path to the built IPA file'
     value: ${{ steps.set-ipa-path.outputs.ipa_path }}
+
 runs:
   using: 'composite'
   steps:
@@ -22,6 +27,13 @@ runs:
       with:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
+
+    - name: Decode GOOGLE_SERVICES_INFO_PLIST
+      shell: bash
+      run: |
+        echo $GOOGLE_SERVICES_INFO_PLIST | base64 -d > ./apps/mobile/ios/Runner/GoogleService-Info.plist
+      env:
+        GOOGLE_SERVICES_INFO_PLIST: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST }}
 
     - name: Build iOS app
       shell: bash
