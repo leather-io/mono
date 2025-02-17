@@ -1,0 +1,42 @@
+{
+  "name": "@leather.io/provider",
+  "author": "leather-wallet",
+  "description": "LeatherProvider package for Leather",
+  "version": "2.5.11",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsup && node scripts/prepare-script.js",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "prepublish": "pnpm build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit",
+    "types": "tsc --declaration --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./mobile": "./dist/injected-provider.js"
+  },
+  "dependencies": {
+    "@leather.io/models": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@leather.io/utils": "workspace:*",
+    "@scure/btc-signer": "1.4.0",
+    "@stacks/connect": "7.4.0",
+    "@stacks/connect-jwt": "npm:@stacks/connect@7.4.0",
+    "@stacks/network": "7.0.2",
+    "@stacks/profile": "6.15.0",
+    "@stacks/transactions": "7.0.2",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "tsup": "8.1.0",
+    "vitest": "2.1.5"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
