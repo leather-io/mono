@@ -47,6 +47,8 @@ runs:
         --profile production \
         --non-interactive \
         --output ${{ github.workspace }}/app-release.ipa
+      env:
+        NODE_ENV: production
 
     - name: Upload IPA artifact
       id: set-ipa-path
