@@ -32,7 +32,6 @@ runs:
       shell: bash
       working-directory: ./apps/mobile
       run: |
-        cat ./ios/Runner/GoogleService-Info.plist
         echo $GOOGLE_SERVICES_INFO_PLIST > ./ios/Runner/GoogleService-Info.plist
         ls -l ./ios/Runner/GoogleService-Info.plist
       env:
