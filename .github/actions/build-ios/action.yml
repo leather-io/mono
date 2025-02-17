@@ -30,10 +30,11 @@ runs:
 
     - name: Decode GOOGLE_SERVICES_INFO_PLIST
       shell: bash
+      working-directory: ./apps/mobile
       run: |
-        cat ./apps/mobile/ios/Runner/GoogleService-Info.plist
-        echo $GOOGLE_SERVICES_INFO_PLIST > ./apps/mobile/ios/Runner/GoogleService-Info.plist
-        ls -l ./apps/mobile/ios/Runner/GoogleService-Info.plist
+        cat ./ios/Runner/GoogleService-Info.plist
+        echo $GOOGLE_SERVICES_INFO_PLIST > ./ios/Runner/GoogleService-Info.plist
+        ls -l ./ios/Runner/GoogleService-Info.plist
       env:
         GOOGLE_SERVICES_INFO_PLIST: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST }}
 

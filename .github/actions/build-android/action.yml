@@ -33,10 +33,11 @@ runs:
 
     - name: Decode GOOGLE_SERVICES_JSON
       shell: bash
+      working-directory: ./apps/mobile
       run: |
-        cat ./apps/mobile/android/app/google-services.json
-        echo $GOOGLE_SERVICES_JSON > ./apps/mobile/android/app/google-services.json
-        ls -l ./apps/mobile/android/app/google-services.json
+        cat ./android/app/google-services.json
+        echo $GOOGLE_SERVICES_JSON > ./android/app/google-services.json
+        ls -l ./android/app/google-services.json
       env:
         GOOGLE_SERVICES_JSON: ${{ inputs.GOOGLE_SERVICES_JSON }}
 
