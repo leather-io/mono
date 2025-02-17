@@ -492,6 +492,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@leather.io/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@react-router/node':
         specifier: 7.1.5
         version: 7.1.5(react-router@7.1.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.2)
