@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@leather.io/web",
   "type": "module",
   "scripts": {
     "build": "react-router build",
@@ -8,6 +8,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@leather.io/utils": "workspace:*",
     "@react-router/node": "7.1.5",
     "@react-router/serve": "7.1.5",
     "isbot": "5.1.17",
@@ -24,6 +25,5 @@
     "typescript": "5.7.2",
     "vite": "5.4.11",
     "vite-tsconfig-paths": "5.1.4"
-  },
-  "private": true
+  }
 }

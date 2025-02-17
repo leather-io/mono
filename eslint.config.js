@@ -7,7 +7,7 @@ import reactConfig from '@leather.io/eslint-config/react';
 
 export default tseslint.config(
   {
-    files: ['{packages,apps}/**/src/**/*.{ts,tsx}'],
+    files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
   },
   {
@@ -24,6 +24,7 @@ export default tseslint.config(
       '**/*.d.ts',
       '**/*.stories.{ts,tsx}',
       '**/tsup.config*.ts',
+      '**/.react-router/',
     ],
   },
   {
@@ -34,6 +35,11 @@ export default tseslint.config(
   {
     name: 'query',
     files: ['packages/query/src/**/*.{ts,tsx}'],
+    extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+  },
+  {
+    name: 'web',
+    files: ['apps/web/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
