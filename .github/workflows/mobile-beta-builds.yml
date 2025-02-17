@@ -11,94 +11,16 @@ jobs:
   ios-beta:
     runs-on: macos-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup for Fastlane
-        uses: ./.github/actions/setup-fastlane
-
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Provision
-        uses: ./.github/actions/provision
-
       - name: Build iOS app
-        working-directory: ./apps/mobile
-        run: |
-          eas build --local \
-          --platform ios \
-          --profile production \
-          --non-interactive \
-          --no-wait \
-          --output ${{ github.workspace }}/app-release.ipa
-
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release.ipa
-          path: ${{ github.workspace }}/app-release.ipa
-
-      - name: Upload IPA to Firebase App Distribution
-        id: firebase_upload
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: leatherhood
-          file: ${{ github.workspace }}/app-release.ipa
+        id: build-ios
+        uses: ./.github/actions/build-ios
 
   android-beta:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Setup for Fastlane
-        uses: ./.github/actions/setup-fastlane
-
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Provision
-        uses: ./.github/actions/provision
-
       - name: Build Android app
-        working-directory: ./apps/mobile
-        run: |
-          eas build --local \
-          --platform android \
-          --profile production \
-          --non-interactive \
-          --no-wait \
-          --output ${{ github.workspace }}/app-release.aab
-
-      - name: Upload AAB artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release.aab
-          path: ${{ github.workspace }}/app-release.aab
-
-      - name: Upload AAB to Firebase
-        id: firebase_upload
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: leatherhood
-          file: ${{ github.workspace }}/app-release.aab
+        id: build-android
+        uses: ./.github/actions/build-android
 
   upload-to-firebase:
     needs:

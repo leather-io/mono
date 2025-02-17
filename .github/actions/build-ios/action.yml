@@ -1,0 +1,46 @@
+name: Build Leather iOS
+description: Build the Leather Mobile iOS App
+outputs:
+  ipa_path:
+    description: 'Path to the built IPA file'
+    value: ${{ steps.set-ipa-path.outputs.ipa_path }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Provision
+      uses: ./.github/actions/provision
+
+    - name: Setup for Fastlane
+      uses: ./.github/actions/setup-fastlane
+
+    - name: Setup EAS
+      uses: expo/expo-github-action@v8
+      with:
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: Build iOS app
+      shell: bash
+      working-directory: ./apps/mobile
+      id: build-ios
+      run: |
+        eas build --local \
+        --platform ios \
+        --profile production \
+        --non-interactive \
+        --output ${{ github.workspace }}/app-release.ipa
+
+    - name: Upload IPA artifact
+      id: set-ipa-path
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release.ipa
+        path: ${{ github.workspace }}/app-release.ipa
+
+    - name: Set IPA path
+      run: |
+        echo "ipa_path=${{ github.workspace }}/app-release.ipa" >> $GITHUB_OUTPUT
+      shell: bash

@@ -1,0 +1,50 @@
+name: Build Leather Android
+description: Build the Leather Mobile Android App
+outputs:
+  aab_path:
+    description: 'Path to the built AAB file'
+    value: ${{ steps.set-aab-path.outputs.aab_path }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup for Fastlane
+      uses: ./.github/actions/setup-fastlane
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup EAS
+      uses: expo/expo-github-action@v8
+      with:
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: Provision
+      uses: ./.github/actions/provision
+
+    - name: Build Android app
+      shell: bash
+      working-directory: ./apps/mobile
+      run: |
+        eas build --local \
+        --platform android \
+        --profile production \
+        --non-interactive \
+        --output ${{ github.workspace }}/app-release.aab
+
+    - name: Upload AAB artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release.aab
+        path: ${{ github.workspace }}/app-release.aab
+
+    - name: Set AAB path
+      run: |
+        echo "aab_path=${{ github.workspace }}/app-release.aab" >> $GITHUB_OUTPUT
+      shell: bash
