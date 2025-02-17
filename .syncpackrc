@@ -3,6 +3,17 @@
     "prod",
     "dev"
   ],
+  "versionGroups": [
+    {
+      "dependencies": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "isIgnored": true
+    }
+  ],
   "semverGroups": [
     {
       "label": "Use workspace protocol when developing local packages",
