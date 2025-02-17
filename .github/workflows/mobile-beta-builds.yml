@@ -31,6 +31,7 @@ jobs:
         uses: ./.github/actions/build-android
         with:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
 
   upload-to-firebase:
     needs:
