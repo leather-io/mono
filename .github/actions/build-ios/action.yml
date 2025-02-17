@@ -1,5 +1,9 @@
 name: Build Leather iOS
 description: Build the Leather Mobile iOS App
+inputs:
+  EXPO_TOKEN:
+    description: 'Expo token for authentication'
+    required: true
 outputs:
   ipa_path:
     description: 'Path to the built IPA file'
@@ -17,7 +21,7 @@ runs:
       uses: expo/expo-github-action@v8
       with:
         eas-version: latest
-        token: ${{ secrets.EXPO_TOKEN }}
+        token: ${{ inputs.EXPO_TOKEN }}
 
     - name: Build iOS app
       shell: bash

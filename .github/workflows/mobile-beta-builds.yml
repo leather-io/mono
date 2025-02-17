@@ -17,6 +17,8 @@ jobs:
       - name: Build iOS app
         id: build-ios
         uses: ./.github/actions/build-ios
+        with:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
   android-beta:
     runs-on: ubuntu-latest
@@ -27,6 +29,8 @@ jobs:
       - name: Build Android app
         id: build-android
         uses: ./.github/actions/build-android
+        with:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
   upload-to-firebase:
     needs:
