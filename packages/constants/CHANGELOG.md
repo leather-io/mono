@@ -121,6 +121,20 @@
   * dependencies
     * @leather.io/models bumped to 0.25.1
 
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.15.5...@leather.io/constants-v0.16.0) (2025-02-17)
+
+
+### Features
+
+* connect leather api client to backend ([bf94c84](https://github.com/leather-io/mono/commit/bf94c848c465f5f146fdc5508f14bb033b9dc829))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.26.0
+
 ## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.14.1...@leather.io/constants-v0.15.0) (2024-12-12)
 
 

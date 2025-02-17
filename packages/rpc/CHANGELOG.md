@@ -192,6 +192,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.0
 
+## [2.5.13](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.12...@leather.io/rpc-v2.5.13) (2025-02-17)
+
+
+### Bug Fixes
+
+* stx transfer sip10 ft types ([6dd01c3](https://github.com/leather-io/mono/commit/6dd01c34f39c62f233420a4899f2a801b71c582b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.26.0
+    * @leather.io/utils bumped to 0.27.1
+
 ## [2.5.11](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.10...@leather.io/rpc-v2.5.11) (2025-02-13)
 
 

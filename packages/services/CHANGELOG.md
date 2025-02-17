@@ -60,6 +60,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.5.12
 
+## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.2.2...@leather.io/services-v1.3.0) (2025-02-17)
+
+
+### Features
+
+* connect leather api client to backend ([bf94c84](https://github.com/leather-io/mono/commit/bf94c848c465f5f146fdc5508f14bb033b9dc829))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.26
+    * @leather.io/constants bumped to 0.16.0
+    * @leather.io/models bumped to 0.26.0
+    * @leather.io/utils bumped to 0.27.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.5.13
+
 ## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.1.4...@leather.io/services-v1.2.0) (2025-02-13)
 
 

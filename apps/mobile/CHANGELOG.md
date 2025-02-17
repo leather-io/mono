@@ -538,6 +538,33 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.25
 
+## [2.12.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.11.3...@leather.io/mobile-v2.12.0) (2025-02-17)
+
+
+### Features
+
+* connect leather api client to backend ([bf94c84](https://github.com/leather-io/mono/commit/bf94c848c465f5f146fdc5508f14bb033b9dc829))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.2.1
+    * @leather.io/bitcoin bumped to 0.19.26
+    * @leather.io/constants bumped to 0.16.0
+    * @leather.io/crypto bumped to 1.6.41
+    * @leather.io/models bumped to 0.26.0
+    * @leather.io/query bumped to 2.27.3
+    * @leather.io/rpc bumped to 2.5.13
+    * @leather.io/services bumped to 1.3.0
+    * @leather.io/stacks bumped to 1.5.26
+    * @leather.io/tokens bumped to 0.13.2
+    * @leather.io/ui bumped to 1.49.2
+    * @leather.io/utils bumped to 0.27.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.26
+
 ## [2.11.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.11.1...@leather.io/mobile-v2.11.2) (2025-02-13)
 
 
