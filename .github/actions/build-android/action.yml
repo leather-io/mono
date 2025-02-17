@@ -7,12 +7,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup for Fastlane
-      uses: ./.github/actions/setup-fastlane
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
