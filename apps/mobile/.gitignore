@@ -46,3 +46,6 @@ expo-env.d.ts
 coverage
 tmp
 .tmp
+
+# Fastlane
+fastlane/report.xml
