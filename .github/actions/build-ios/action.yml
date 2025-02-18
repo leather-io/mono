@@ -31,14 +31,14 @@ runs:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
 
-    - name: Decode GOOGLE_SERVICES_INFO_PLIST
-      shell: bash
-      working-directory: ./apps/mobile
-      run: |
-        echo $GOOGLE_SERVICES_INFO_PLIST_B64 | base64 --decode > ./ios/leatherwalletmobile/GoogleService-Info.plist
-        ls -l ./ios/leatherwalletmobile/GoogleService-Info.plist
-      env:
-        GOOGLE_SERVICES_INFO_PLIST_B64: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+    # - name: Decode GOOGLE_SERVICES_INFO_PLIST
+    #   shell: bash
+    #   working-directory: ./apps/mobile
+    #   run: |
+    #     echo $GOOGLE_SERVICES_INFO_PLIST_B64 | base64 --decode > ./ios/leatherwalletmobile/GoogleService-Info.plist
+    #     ls -l ./ios/leatherwalletmobile/GoogleService-Info.plist
+    #   env:
+    #     GOOGLE_SERVICES_INFO_PLIST_B64: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64 }}
 
     - name: Build iOS app
       shell: bash

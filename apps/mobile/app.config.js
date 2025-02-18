@@ -2,10 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 // Setup EAS env variables for Firebase
-function setupFirebaseEnvVariables() {
-  const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
+function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
-
+  const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
     fs.copyFileSync(
       googleServicesPathAndroid,
@@ -13,16 +12,34 @@ function setupFirebaseEnvVariables() {
     );
   }
 
+  if (googleServicesB64) {
+    const decodedJson = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
+    fs.writeFileSync(path.join(__dirname, './android/app/google-services.json'), decodedJson);
+  }
+}
+
+function setupFirebaseEnvVariablesIos() {
+  const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
+  const googleServicesB64 = process.env.GOOGLE_SERVICE_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
     fs.copyFileSync(
       googleServicesPathIos,
       path.join(__dirname, './ios/leatherwalletmobile/GoogleService-Info.plist')
     );
   }
+
+  if (googleServicesB64) {
+    const decodedPlist = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
+    fs.writeFileSync(
+      path.join(__dirname, 'ios/leatherwalletmobile/GoogleService-Info.plist'),
+      decodedPlist
+    );
+  }
 }
 
 export default () => {
-  setupFirebaseEnvVariables();
+  setupFirebaseEnvVariablesAndroid();
+  setupFirebaseEnvVariablesIos();
 
   return {
     expo: {
