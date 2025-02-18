@@ -25,3 +25,5 @@ export function isValidStacksTransaction(
     throw new StacksError('InvalidSameAddress');
   }
 }
+
+//  PETE - need to add more stacks validation here and take in changes from https://github.com/leather-io/extension/pull/6125 for send max

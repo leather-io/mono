@@ -1,6 +1,6 @@
 import { Network, validate } from 'bitcoin-address-validation';
 
-import { BitcoinAddress, BitcoinNetworkModes, isBitcoinAddress } from '@leather.io/models';
+import { BitcoinNetworkModes, isBitcoinAddress } from '@leather.io/models';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
 
 // todo investigate handling this in bitcoinNetworkToNetworkMode
@@ -11,34 +11,18 @@ export function getBitcoinAddressNetworkType(network: BitcoinNetworkModes): Netw
   return network as Network;
 }
 
-export function isValidBitcoinAddress(address: BitcoinAddress) {
-  if (isUndefined(address) || isEmptyString(address)) {
-    return false;
-  }
-  if (!isBitcoinAddress(address)) {
+export function isValidBitcoinAddress(address: string) {
+  if (isUndefined(address) || isEmptyString(address) || !isBitcoinAddress(address)) {
     return false;
   }
 
-  try {
-    validate(address);
-    return true;
-  } catch {
-    return false;
-  }
+  return validate(address);
 }
 
-export function isValidBitcoinNetworkAddress(
-  address: BitcoinAddress,
-  network: BitcoinNetworkModes
-) {
+export function isValidBitcoinNetworkAddress(address: string, network: BitcoinNetworkModes) {
   if (!isValidBitcoinAddress(address) || !network) {
     return false;
   }
 
-  try {
-    validate(address, getBitcoinAddressNetworkType(network));
-    return true;
-  } catch {
-    return false;
-  }
+  return validate(address, getBitcoinAddressNetworkType(network));
 }

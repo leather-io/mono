@@ -1,23 +1,19 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import { describe, expect, it } from 'vitest';
 
-// move createBitcoinAddress to utils?
-import { createBitcoinAddress } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
+import { recipientAddress, taprootAddress } from '../mocks/mocks';
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
   GenerateBitcoinUnsignedTransactionArgs,
   generateBitcoinUnsignedTransactionNativeSegwit,
 } from './generate-unsigned-transaction';
 
-const address = createBitcoinAddress('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
-const recipientAddress = createBitcoinAddress('tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa');
-
 const mockResult = {
   inputs: [
     {
-      address: address,
+      address: recipientAddress,
       txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
       vout: 1,
       value: 200000,
@@ -47,13 +43,13 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     ],
     utxos: [
       {
-        address: address,
+        address: taprootAddress,
         txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
         vout: 0,
         value: 100000,
       },
       {
-        address: address,
+        address: taprootAddress,
         txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
         vout: 1,
         value: 200000,
@@ -71,7 +67,7 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     }
   });
 
-  it('should add change address to output correctly', () => {
+  it('should add change recipientAddress to output correctly', () => {
     const result = generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
 
     if (result) {

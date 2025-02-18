@@ -1,7 +1,14 @@
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
-import { createBitcoinAddress, isBitcoinAddress } from '@leather.io/models';
+import { isBitcoinAddress } from '@leather.io/models';
 import { createMoney, createNullArrayOfLength, sumNumbers } from '@leather.io/utils';
 
+import {
+  invalidAddress,
+  legacyAddress,
+  recipientAddress,
+  segwitAddress,
+  taprootAddress,
+} from '../mocks/mocks';
 import { determineUtxosForSpend, determineUtxosForSpendAll } from './coin-selection';
 import { filterUneconomicalUtxos, getSizeInfo } from './coin-selection.utils';
 
@@ -20,15 +27,6 @@ const demoUtxos = [
   { value: 1400 },
   { value: 909 },
 ];
-
-const recipientAddress = createBitcoinAddress('tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m');
-
-const legacyAddress = createBitcoinAddress('15PyZveQd28E2SHZu2ugkWZBp6iER41vXj');
-const segwitAddress = createBitcoinAddress('33SVjoCHJovrXxjDKLFSXo1h3t5KgkPzfH');
-const taprootAddress = createBitcoinAddress(
-  'tb1parwmj7533de3k2fw2kntyqacspvhm67qnjcmpqnnpfvzu05l69nsczdywd'
-);
-const invalidAddress = 'whoop-de-da-boop-da-de-not-a-bitcoin-address';
 
 function generate10kSpendWithDummyUtxoSet(recipient: string) {
   if (!isBitcoinAddress(recipient)) {

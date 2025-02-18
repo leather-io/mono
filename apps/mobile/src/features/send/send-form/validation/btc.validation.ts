@@ -1,21 +1,22 @@
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 
 import { BitcoinErrorKey, minSpendAmountInSats } from '@leather.io/bitcoin';
 import { match, satToBtc } from '@leather.io/utils';
 
+const minimumBtcSpend = satToBtc(minSpendAmountInSats);
+
 export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
-  const { i18n } = useLingui();
   return match<BitcoinErrorKey>()(errorMessage, {
     InsufficientFunds: t({
       id: 'bitcoin-error.insufficient-funds',
       message: 'Insufficient funds',
     }),
-    InsufficientAmount: i18n._({
+    InsufficientAmount: t({
       id: 'bitcoin-error.insufficient-amount',
-      message: '{amount}',
-      values: { amount: satToBtc(minSpendAmountInSats) },
+      // TODO test this - avoids useLingui
+      message: `Minimum is ${minimumBtcSpend}`,
     }),
+
     InvalidAddress: t({
       id: 'bitcoin-error.invalid-address',
       message: 'Invalid address',

@@ -1,10 +1,13 @@
 import BigNumber from 'bignumber.js';
-import { filterUneconomicalUtxos, getSpendableAmount } from 'coin-selection/coin-selection.utils';
 
 import type { AverageBitcoinFeeRates, BitcoinAddress, Money } from '@leather.io/models';
 import { createMoney, satToBtc } from '@leather.io/utils';
 
 import { CoinSelectionUtxo } from '../coin-selection/coin-selection';
+import {
+  filterUneconomicalUtxos,
+  getSpendableAmount,
+} from '../coin-selection/coin-selection.utils';
 
 interface CalculateMaxSpendArgs {
   recipient: BitcoinAddress;

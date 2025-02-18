@@ -58,11 +58,13 @@ export function useSendFormStx() {
         const { amount, recipient, fee } = values;
         isValidStacksTransaction(payer, recipient, networkPreference);
 
+        // TODO - move into stx-transaction validation
         if (!isValidPrecision(+amount, STX_DECIMALS)) {
           // TODO add appropriate Error Key
           // can't even throw these errors here wihout translating them
           // throw new StacksError('InsufficientFunds');
         }
+        // TODO - move is isValidTransactionAmount into stx package and check in isValidTransaction
         if (
           !isValidTransactionAmount({
             availableBalance,
