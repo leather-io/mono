@@ -13,7 +13,7 @@
     "crowdin:sync": "crowdin push && crowdin pull",
     "crowdin:sync:sources": "crowdin push",
     "crowdin:sync:translations": "crowdin pull",
-    "eas-build-post-install": "cd ../.. && pnpm build",
+    "eas-build-post-install": "cd ../.. && pnpm install && pnpm build",
     "firebase:android": "firebase login && firebase apps:sdkconfig ANDROID --project leather-b5081 > android/app/google-services.json",
     "firebase:ios": "firebase login && firebase apps:sdkconfig IOS --project leather-b5081 > ios/leatherwalletmobile/GoogleService-Info.plist",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
