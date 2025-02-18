@@ -65,7 +65,6 @@ export default () => {
           foregroundImage: './src/assets/adaptive-icon.png',
           backgroundColor: '#12100F',
         },
-        package: 'io.leather.mobilewallet',
         splash: {
           image: './src/assets/light-mode-splash.png',
           resizeMode: 'contain',
