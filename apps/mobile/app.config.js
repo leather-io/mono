@@ -20,7 +20,7 @@ function setupFirebaseEnvVariablesAndroid() {
 
 function setupFirebaseEnvVariablesIos() {
   const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
-  const googleServicesB64 = process.env.GOOGLE_SERVICE_INFO_PLIST_B64;
+  const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
     fs.copyFileSync(
       googleServicesPathIos,

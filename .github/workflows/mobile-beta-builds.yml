@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/actions/build-ios
         with:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_B64 }}
+          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
 
   android-beta:
     runs-on: ubuntu-latest
