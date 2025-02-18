@@ -37,26 +37,9 @@ function setupFirebaseEnvVariablesIos() {
   }
 }
 
-function validateServiceFiles() {
-  const googleServicesPathAndroid = path.join(__dirname, './android/app/google-services.json');
-  const googleServicesPathIos = path.join(
-    __dirname,
-    './ios/leatherwalletmobile/GoogleService-Info.plist'
-  );
-
-  if (!fs.existsSync(googleServicesPathAndroid)) {
-    throw new Error('google-services.json does not exist');
-  }
-
-  if (!fs.existsSync(googleServicesPathIos)) {
-    throw new Error('GoogleService-Info.plist does not exist');
-  }
-}
-
 export default () => {
   setupFirebaseEnvVariablesAndroid();
   setupFirebaseEnvVariablesIos();
-  validateServiceFiles();
 
   return {
     expo: {
