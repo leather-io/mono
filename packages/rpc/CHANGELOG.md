@@ -192,6 +192,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.0
 
+## [2.5.14](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.13...@leather.io/rpc-v2.5.14) (2025-02-18)
+
+
+### Bug Fixes
+
+* add zod intersection to type ([728a38a](https://github.com/leather-io/mono/commit/728a38ac09c5def89e0d94aa7e14a9cb52882d91))
+
 ## [2.5.13](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.12...@leather.io/rpc-v2.5.13) (2025-02-17)
 
 
