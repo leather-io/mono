@@ -8,7 +8,7 @@ import { encode } from 'varuint-bitcoin';
 import { PaymentTypes } from '@leather.io/rpc';
 import { isString } from '@leather.io/utils';
 
-import { toXOnly } from '../bitcoin.utils';
+import { toXOnly } from '../utils/bitcoin.utils';
 
 const bip322MessageTag = 'BIP0322-signed-message';
 

@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -11,57 +12,73 @@ import {
   BitcoinError,
   CoinSelectionRecipient,
   CoinSelectionUtxo,
+  createBitcoinAddress,
   getBitcoinFees,
+  isValidBitcoinTransaction,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates } from '@leather.io/models';
+import { AverageBitcoinFeeRates, Money, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
 import {
   CreateCurrentSendRoute,
   createCoinSelectionUtxos,
-  formatBitcoinError,
   useSendSheetNavigation,
   useSendSheetRoute,
 } from '../../send-form.utils';
 import { SendFormBtcContext } from '../providers/send-form-btc-provider';
 import { SendFormBtcSchema } from '../schemas/send-form-btc.schema';
+import { formatBitcoinError } from '../validation/btc.validation';
 
 type CurrentRoute = CreateCurrentSendRoute<'send-form-btc'>;
 
-function parseSendFormValues(values: SendFormBtcSchema) {
+interface ParsedSendFormValues {
+  amount: Money;
+  recipients: CoinSelectionRecipient[];
+}
+
+function parseSendFormValues({
+  amount: inputAmount,
+  recipient,
+}: SendFormBtcSchema): ParsedSendFormValues {
+  const amount = createMoneyFromDecimal(new BigNumber(inputAmount), 'BTC');
   return {
-    amount: createMoneyFromDecimal(new BigNumber(values.amount), 'BTC'),
+    amount,
     recipients: [
       {
-        address: values.recipient,
-        amount: createMoneyFromDecimal(new BigNumber(values.amount), 'BTC'),
+        address: createBitcoinAddress(recipient),
+        amount,
       },
     ],
   };
 }
-
 interface GetTxFeesArgs {
   feeRates: AverageBitcoinFeeRates;
   recipients: CoinSelectionRecipient[];
   utxos: CoinSelectionUtxo[];
 }
-
 export function useSendFormBtc() {
-  const route = useSendSheetRoute<CurrentRoute>();
+  const {
+    params: { account, address, publicKey },
+  } = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
-  const { account } = route.params;
   const { displayToast } = useToastContext();
+  const {
+    networkPreference: {
+      chain: {
+        bitcoin: { bitcoinNetwork },
+      },
+    },
+  } = useSettings();
+  const payer = createBitcoinAddress(address);
+  const network = bitcoinNetworkToNetworkMode(bitcoinNetwork);
 
   const bitcoinKeychain = useBitcoinAccounts().accountIndexByPaymentType(
     account.fingerprint,
     account.accountIndex
   );
 
-  const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(
-    route.params.address,
-    route.params.publicKey
-  );
+  const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(payer, publicKey);
 
   const getTxFees = useCallback(
     ({ feeRates, recipients, utxos }: GetTxFeesArgs) =>
@@ -71,32 +88,48 @@ export function useSendFormBtc() {
 
   return {
     onGoBack() {
-      navigation.navigate('send-select-asset', { account: route.params.account });
+      navigation.navigate('send-select-asset', { account });
     },
-    // Temporary logs until we can hook up to approver flow
 
-    onInitSendTransfer(data: SendFormBtcContext, values: SendFormBtcSchema) {
+    onInitSendTransfer({ utxos, feeRates }: SendFormBtcContext, values: SendFormBtcSchema) {
       try {
+        const { recipient: recipientAddress, feeRate } = values;
+        const recipient = createBitcoinAddress(recipientAddress);
         const parsedSendFormValues = parseSendFormValues(values);
-        const coinSelectionUtxos = createCoinSelectionUtxos(data.utxos);
+
+        // Transform Utxo to CoinSelectionUtxo
+        const coinSelectionUtxos = createCoinSelectionUtxos(utxos);
 
         const nativeSegwitPayer = bitcoinKeychain.nativeSegwit.derivePayer({ addressIndex: 0 });
 
         const tx = generateTx({
-          feeRate: Number(values.feeRate),
+          feeRate: Number(feeRate),
           isSendingMax: false,
           values: parsedSendFormValues,
           utxos: coinSelectionUtxos,
           bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
         });
 
+        // TODO - integrate fees with validation
         const fees = getTxFees({
-          feeRates: data.feeRates,
+          feeRates,
           recipients: parsedSendFormValues.recipients,
           utxos: coinSelectionUtxos,
         });
 
-        // Show an error toast here?
+        const bitcoinTransaction = {
+          amount: parsedSendFormValues.amount,
+          payer: payer,
+          recipient: recipient,
+          network,
+          utxos: coinSelectionUtxos,
+          feeRate: +feeRate,
+          feeRates,
+        };
+
+        isValidBitcoinTransaction(bitcoinTransaction);
+        // no toast here as caught in catch block with generic error handling
+        // matches extension behavior for now
         if (!tx) throw new Error('Attempted to generate raw tx, but no tx exists');
         // eslint-disable-next-line no-console
         console.log('fees:', fees);
@@ -105,12 +138,15 @@ export function useSendFormBtc() {
 
         navigation.navigate('sign-psbt', { psbtHex });
       } catch (e) {
-        const message =
-          e instanceof BitcoinError
-            ? formatBitcoinError(e.message)
-            : t({ id: 'something-went-wrong', message: 'Something went wrong' });
+        if (e instanceof BitcoinError) {
+          displayToast({ title: formatBitcoinError(e.message), type: 'error' });
+          return;
+        }
 
-        displayToast({ title: message, type: 'error' });
+        displayToast({
+          title: t({ id: 'something-went-wrong', message: 'Something went wrong' }),
+          type: 'error',
+        });
       }
     },
   };

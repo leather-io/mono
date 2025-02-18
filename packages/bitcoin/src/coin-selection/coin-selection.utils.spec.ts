@@ -1,12 +1,13 @@
 import { createMoney } from '@leather.io/utils';
 
+import { recipientAddress } from '../mocks/mocks';
 import { mockUtxos } from './coin-selection.mocks';
 import { filterUneconomicalUtxos } from './coin-selection.utils';
 
 describe(filterUneconomicalUtxos.name, () => {
   const recipients = [
     {
-      address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+      address: recipientAddress,
       amount: createMoney(0, 'BTC'),
     },
   ];

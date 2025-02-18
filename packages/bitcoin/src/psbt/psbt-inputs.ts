@@ -1,13 +1,15 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
-import { getBtcSignerLibNetworkConfigByMode } from 'bitcoin.network';
-import { getBitcoinInputAddress, getBitcoinInputValue } from 'bitcoin.utils';
+import { BitcoinAddress, createBitcoinAddress } from 'validation/bitcoin-address';
 
 import type { BitcoinNetworkModes, Inscription } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
+import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
+import { getBitcoinInputAddress, getBitcoinInputValue } from '../utils/bitcoin.utils';
+
 export interface PsbtInput {
-  address: string;
+  address: BitcoinAddress;
   index?: number;
   // TODO: inject inscription later on. getParsedInputs should be a pure function
   inscription?: Inscription;
@@ -23,7 +25,7 @@ interface GetParsedInputsArgs {
   inputs: TransactionInput[];
   indexesToSign?: number[];
   networkMode: BitcoinNetworkModes;
-  psbtAddresses: string[];
+  psbtAddresses: BitcoinAddress[];
 }
 
 interface GetParsedInputsResponse {
@@ -43,7 +45,8 @@ export function getParsedInputs({
     const inputAddress = isDefined(input.index)
       ? getBitcoinInputAddress(input, bitcoinNetwork)
       : '';
-    const isCurrentAddress = psbtAddresses.includes(inputAddress);
+    const bitcoinAddress = createBitcoinAddress(inputAddress);
+    const isCurrentAddress = psbtAddresses.includes(bitcoinAddress);
     // Flags when not signing ALL inputs/outputs (NONE, SINGLE, and ANYONECANPAY)
     const canChange =
       isCurrentAddress &&
@@ -53,7 +56,7 @@ export function getParsedInputs({
     const toSignIndex = isCurrentAddress && !signAll && indexesToSign.includes(i);
 
     return {
-      address: inputAddress,
+      address: bitcoinAddress,
       index: input.index,
       bip32Derivation: input.bip32Derivation,
       tapBip32Derivation: input.tapBip32Derivation,

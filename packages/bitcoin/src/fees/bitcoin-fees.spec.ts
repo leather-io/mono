@@ -4,17 +4,16 @@ import { AverageBitcoinFeeRates } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { CoinSelectionRecipient, CoinSelectionUtxo } from '../coin-selection/coin-selection';
+import { recipientAddress, taprootAddress } from '../mocks/mocks';
 import { getBitcoinFees, getBitcoinTransactionFee } from './bitcoin-fees';
 
 describe('getBitcoinTransactionFee', () => {
   it('should return the fee for a normal transaction', () => {
     const args = {
-      recipients: [
-        { address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa', amount: createMoney(1000, 'BTC') },
-      ],
+      recipients: [{ address: recipientAddress, amount: createMoney(1000, 'BTC') }],
       utxos: [
         {
-          address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+          address: taprootAddress,
           txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
           vout: 0,
           value: 2000,
@@ -30,12 +29,10 @@ describe('getBitcoinTransactionFee', () => {
   it('should return the fee for a max send transaction', () => {
     const args = {
       isSendingMax: true,
-      recipients: [
-        { address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa', amount: createMoney(2000, 'BTC') },
-      ],
+      recipients: [{ address: recipientAddress, amount: createMoney(2000, 'BTC') }],
       utxos: [
         {
-          address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+          address: taprootAddress,
           txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
           vout: 0,
           value: 2000,
@@ -67,11 +64,11 @@ describe('getBitcoinFees', () => {
       hourFee: new BigNumber(1),
     };
     const recipients: CoinSelectionRecipient[] = [
-      { address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa', amount: createMoney(1000, 'BTC') },
+      { address: recipientAddress, amount: createMoney(1000, 'BTC') },
     ];
     const utxos: CoinSelectionUtxo[] = [
       {
-        address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+        address: taprootAddress,
         txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
         vout: 0,
         value: 2000,

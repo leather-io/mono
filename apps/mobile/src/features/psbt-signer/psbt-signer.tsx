@@ -15,6 +15,7 @@ import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
 import {
+  createBitcoinAddress,
   getBitcoinFees,
   getPsbtAsTransaction,
   getPsbtDetails,
@@ -90,7 +91,7 @@ export function BasePsbtSigner({
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
   const psbtAccounts = usePsbtAccounts({ psbtHex });
   const psbtPayers = usePsbtPayers({ psbtHex });
-  const psbtAddresses = psbtPayers.map(payer => payer.address);
+  const psbtAddresses = psbtPayers.map(payer => createBitcoinAddress(payer.address));
 
   const { displayToast } = useToastContext();
   if (!psbtAccounts[0]) throw new Error('No psbt accounts');
@@ -119,7 +120,7 @@ export function BasePsbtSigner({
   );
 
   const recipients = psbtDetails.psbtOutputs
-    .filter(output => !psbtAddresses.includes(output.address))
+    .filter(output => !psbtAddresses.includes(createBitcoinAddress(output.address)))
     .map(output => ({
       amount: createMoney(new BigNumber(output.value), 'BTC'),
       address: output.address,
@@ -147,8 +148,9 @@ export function BasePsbtSigner({
   ]);
   const totalSpend = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
 
+  const payer = psbtPayers[0].address;
   const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(
-    psbtPayers[0].address,
+    payer,
     bytesToHex(psbtPayers[0].publicKey)
   );
 

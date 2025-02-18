@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
 
-import { getBtcSignerLibNetworkConfigByMode } from '../bitcoin.network';
+import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
   GenerateBitcoinUnsignedTransactionArgs,
   generateBitcoinUnsignedTransactionNativeSegwit,

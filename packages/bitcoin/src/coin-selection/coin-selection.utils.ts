@@ -4,7 +4,7 @@ import validate, { AddressInfo, AddressType, getAddressInfo } from 'bitcoin-addr
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { sumNumbers } from '@leather.io/utils';
 
-import { BtcSizeFeeEstimator } from '../btc-size-fee-estimator';
+import { BtcSizeFeeEstimator } from '../fees/btc-size-fee-estimator';
 import { CoinSelectionRecipient, CoinSelectionUtxo } from './coin-selection';
 
 export function getUtxoTotal(utxos: CoinSelectionUtxo[]) {
@@ -57,16 +57,13 @@ export function getSizeInfo(payload: {
 
   return sizeInfo;
 }
-
-export function getSpendableAmount({
-  utxos,
-  feeRate,
-  recipients,
-}: {
+interface GetSpendableAmountArgs {
   utxos: CoinSelectionUtxo[];
   feeRate: number;
   recipients: CoinSelectionRecipient[];
-}) {
+  isSendMax?: boolean;
+}
+export function getSpendableAmount({ utxos, feeRate, recipients }: GetSpendableAmountArgs) {
   const balance = utxos
     .map(utxo => Number(utxo.value))
     .reduce((prevVal, curVal) => prevVal + curVal, 0);
