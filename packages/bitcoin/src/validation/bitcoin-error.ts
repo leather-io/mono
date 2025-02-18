@@ -12,4 +12,8 @@ export class BitcoinError extends Error {
   }
 }
 
-export type BitcoinErrorKey = TransactionErrorKey | 'NoInputsToSign' | 'NoOutputsToSign';
+export type BitcoinErrorKey =
+  | TransactionErrorKey
+  | 'InsufficientAmount'
+  | 'NoInputsToSign'
+  | 'NoOutputsToSign';

@@ -13,6 +13,7 @@ import {
   BitcoinError,
   CoinSelectionRecipient,
   CoinSelectionUtxo,
+  calculateMaxSpend,
   getBitcoinFees,
   isValidBitcoinTransaction,
   payerToBip32Derivation,

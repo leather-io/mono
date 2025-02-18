@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-// PETE these got moved but may need different types now
 import { filterUneconomicalUtxos, getSpendableAmount } from 'coin-selection/coin-selection.utils';
 
 import type { AverageBitcoinFeeRates, BitcoinAddress, Money } from '@leather.io/models';
@@ -8,7 +7,6 @@ import { createMoney, satToBtc } from '@leather.io/utils';
 import { CoinSelectionUtxo } from '../coin-selection/coin-selection';
 
 interface CalculateMaxSpendArgs {
-  // TODO double double check this is right
   recipient: BitcoinAddress;
   utxos: CoinSelectionUtxo[];
   feeRates?: AverageBitcoinFeeRates;
