@@ -1,9 +1,10 @@
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
 
-import { testMnemonic } from '../../../config/test-helpers';
+import { testMnemonic } from '../../../../config/test-helpers';
+import { deriveTaprootAccount } from '../payments/p2tr-address-gen';
+import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-address-gen';
+import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { lookupDerivationByAddress } from './lookup-derivation-by-address';
-import { deriveTaprootAccount } from './p2tr-address-gen';
-import { deriveNativeSegwitAccountFromRootKeychain } from './p2wpkh-address-gen';
 
 describe(lookupDerivationByAddress.name, async () => {
   const rootKeychain = await deriveRootKeychainFromMnemonic(testMnemonic);
@@ -35,7 +36,7 @@ describe(lookupDerivationByAddress.name, async () => {
         nativeSegwitXpub: firstNativeSegwitAccountKeychain.keychain.publicExtendedKey,
         iterationLimit: 100,
       });
-      expect(lookup(address).path).toEqual(path);
+      expect(lookup(createBitcoinAddress(address)).path).toEqual(path);
     });
   });
 
@@ -50,7 +51,9 @@ describe(lookupDerivationByAddress.name, async () => {
         iterationLimit: 10,
       });
 
-      expect(lookup('bc1qvgtk702cayady9wvkhvs5jn8c2ldurhazx9nzf').path).toBe(`m/84'/0'/1'/0/0`);
+      expect(lookup(createBitcoinAddress('bc1qvgtk702cayady9wvkhvs5jn8c2ldurhazx9nzf')).path).toBe(
+        `m/84'/0'/1'/0/0`
+      );
     });
   });
 
@@ -65,7 +68,9 @@ describe(lookupDerivationByAddress.name, async () => {
         iterationLimit: 10,
       });
 
-      expect(lookup('bc1qvgsomefakeaddressitwontfind').status).toBe('failure');
+      expect(lookup(createBitcoinAddress('bc1qvgsomefakeaddressitwontfind')).status).toBe(
+        'failure'
+      );
     });
   });
 });

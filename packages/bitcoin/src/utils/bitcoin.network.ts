@@ -2,6 +2,8 @@ import * as bitcoinJs from 'bitcoinjs-lib';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
 
+// TODO - this PR was merged so we could update this
+// https://github.com/paulmillr/scure-btc-signer/blob/main/src/utils.ts
 // See this PR https://github.com/paulmillr/@scure/btc-signer/pull/15
 // Atttempting to add these directly to the library
 export interface BtcSignerNetwork {

@@ -1,7 +1,7 @@
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 
-import { deriveAddressIndexKeychainFromAccount } from './bitcoin.utils';
+import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
 import { deriveTaprootAccount, getTaprootPaymentFromAddressIndex } from './p2tr-address-gen';
 
 // TODO: this is a SECRET_KEY from @tests/mocks folder.

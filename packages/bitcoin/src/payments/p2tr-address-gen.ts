@@ -4,13 +4,13 @@ import * as btc from '@scure/btc-signer';
 import { DerivationPathDepth } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 
-import { getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
+import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
   BitcoinAccount,
   deriveAddressIndexZeroFromAccount,
   ecdsaPublicKeyToSchnorr,
   getBitcoinCoinTypeIndexByNetwork,
-} from './bitcoin.utils';
+} from '../utils/bitcoin.utils';
 
 export function makeTaprootAccountDerivationPath(
   network: BitcoinNetworkModes,

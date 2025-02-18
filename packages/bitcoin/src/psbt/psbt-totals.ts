@@ -1,7 +1,7 @@
-import { inferPaymentTypeFromAddress } from 'bitcoin.utils';
-
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
+import { inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
+import { BitcoinAddress } from '../validation/bitcoin-address';
 import { PsbtInput } from './psbt-inputs';
 import { PsbtOutput } from './psbt-outputs';
 
@@ -35,7 +35,7 @@ function calculatePsbtOutputsTotal(outputs: PsbtOutput[]) {
 }
 
 interface GetPsbtTotalsProps {
-  psbtAddresses: string[];
+  psbtAddresses: BitcoinAddress[];
   parsedInputs: PsbtInput[];
   parsedOutputs: PsbtOutput[];
 }

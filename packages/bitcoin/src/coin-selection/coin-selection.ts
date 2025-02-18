@@ -5,7 +5,7 @@ import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { createMoney, sumMoney } from '@leather.io/utils';
 
-import { BitcoinError } from '../bitcoin-error';
+import { BitcoinError } from '../validation/bitcoin-error';
 import { filterUneconomicalUtxos, getSizeInfo, getUtxoTotal } from './coin-selection.utils';
 
 export interface CoinSelectionOutput {

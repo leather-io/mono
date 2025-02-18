@@ -1,12 +1,14 @@
 import type { TransactionOutput } from '@scure/btc-signer/psbt';
-import { getBtcSignerLibNetworkConfigByMode } from 'bitcoin.network';
-import { getAddressFromOutScript } from 'bitcoin.utils';
 
-import type { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinNetworkModes } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
+import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
+import { getAddressFromOutScript } from '../utils/bitcoin.utils';
+import { BitcoinAddress, createBitcoinAddress } from '../validation/bitcoin-address';
+
 export interface PsbtOutput {
-  address: string;
+  address: BitcoinAddress;
   isMutable: boolean;
   toSign: boolean;
   value: number;
@@ -16,7 +18,7 @@ interface GetParsedOutputsArgs {
   isPsbtMutable: boolean;
   outputs: TransactionOutput[];
   networkMode: BitcoinNetworkModes;
-  psbtAddresses: string[];
+  psbtAddresses: BitcoinAddress[];
 }
 
 export function getParsedOutputs({
@@ -34,8 +36,9 @@ export function getParsedOutputs({
         // logger.error('Output has no script');
         return;
       }
-      const outputAddress = getAddressFromOutScript(output.script, bitcoinNetwork);
-
+      const outputAddress = createBitcoinAddress(
+        getAddressFromOutScript(output.script, bitcoinNetwork)
+      );
       const isCurrentAddress = psbtAddresses.includes(outputAddress);
 
       return {

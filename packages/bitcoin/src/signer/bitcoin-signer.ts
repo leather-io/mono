@@ -14,15 +14,16 @@ import type { BitcoinNetworkModes, ValueOf } from '@leather.io/models';
 import { PaymentTypes, signatureHash } from '@leather.io/rpc';
 import { hexToNumber, toHexString } from '@leather.io/utils';
 
+import { getTaprootPaymentFromAddressIndex } from '../payments/p2tr-address-gen';
+import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
 import {
   SupportedPaymentType,
   ecdsaPublicKeyToSchnorr,
   extractExtendedPublicKeyFromPolicy,
   inferPaymentTypeFromPath,
   whenSupportedPaymentType,
-} from './bitcoin.utils';
-import { getTaprootPaymentFromAddressIndex } from './p2tr-address-gen';
-import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
+} from '../utils/bitcoin.utils';
+import { BitcoinAddress } from '../validation/bitcoin-address';
 
 export type AllowedSighashTypes = ValueOf<typeof signatureHash> | SigHash;
 
@@ -41,7 +42,7 @@ export interface BitcoinSigner<Payment> {
   payment: Payment;
   keychain: HDKey;
   derivationPath: string;
-  address: string;
+  address: BitcoinAddress;
   publicKey: Uint8Array;
   sign(tx: btc.Transaction): void;
   signIndex(tx: btc.Transaction, index: number, allowedSighash?: AllowedSighashTypes[]): void;
@@ -50,7 +51,7 @@ export interface BitcoinSigner<Payment> {
 export interface BitcoinPayerBase {
   paymentType: PaymentTypes;
   network: BitcoinNetworkModes;
-  address: string;
+  address: BitcoinAddress;
   keyOrigin: string;
   masterKeyFingerprint: string;
   publicKey: Uint8Array;

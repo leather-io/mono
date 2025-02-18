@@ -10,15 +10,16 @@ import {
   extractPurposeFromPath,
 } from '@leather.io/crypto';
 import { BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
-import type { PaymentTypes } from '@leather.io/rpc';
+import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
+import { getTaprootPayment } from '../payments/p2tr-address-gen';
+import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
+import { BitcoinAddress } from '../validation/bitcoin-address';
 import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
-import { getTaprootPayment } from './p2tr-address-gen';
-import { getNativeSegwitPaymentFromAddressIndex } from './p2wpkh-address-gen';
 
 export interface BitcoinAccount {
-  type: PaymentTypes;
+  type: BitcoinPaymentTypes;
   derivationPath: string;
   keychain: HDKey;
   accountIndex: number;
@@ -100,7 +101,10 @@ export function decodeBitcoinTx(tx: string): ReturnType<typeof btc.RawTx.decode>
   return btc.RawTx.decode(hexToBytes(tx));
 }
 
-export function getAddressFromOutScript(script: Uint8Array, bitcoinNetwork: BtcSignerNetwork) {
+export function getAddressFromOutScript(
+  script: Uint8Array,
+  bitcoinNetwork: BtcSignerNetwork
+): string {
   const outputScript = btc.OutScript.decode(script);
 
   switch (outputScript.type) {
@@ -135,7 +139,7 @@ export function getAddressFromOutScript(script: Uint8Array, bitcoinNetwork: BtcS
  */
 export type BtcSignerLibPaymentTypeIdentifers = 'wpkh' | 'wsh' | 'tr' | 'pkh' | 'sh';
 
-export const paymentTypeMap: Record<BtcSignerLibPaymentTypeIdentifers, PaymentTypes> = {
+export const paymentTypeMap: Record<BtcSignerLibPaymentTypeIdentifers, BitcoinPaymentTypes> = {
   wpkh: 'p2wpkh',
   wsh: 'p2wpkh-p2sh',
   tr: 'p2tr',
@@ -155,14 +159,16 @@ export function isBtcSignerLibPaymentType(
   return payment in paymentTypeMap;
 }
 
-export function parseKnownPaymentType(payment: BtcSignerLibPaymentTypeIdentifers | PaymentTypes) {
+export function parseKnownPaymentType(
+  payment: BtcSignerLibPaymentTypeIdentifers | BitcoinPaymentTypes
+) {
   return isBtcSignerLibPaymentType(payment)
     ? btcSignerLibPaymentTypeToPaymentTypeMap(payment)
     : payment;
 }
 
-export type PaymentTypeMap<T> = Record<PaymentTypes, T>;
-export function whenPaymentType(mode: PaymentTypes | BtcSignerLibPaymentTypeIdentifers) {
+export type PaymentTypeMap<T> = Record<BitcoinPaymentTypes, T>;
+export function whenPaymentType(mode: BitcoinPaymentTypes | BtcSignerLibPaymentTypeIdentifers) {
   return <T>(paymentMap: PaymentTypeMap<T>): T => paymentMap[parseKnownPaymentType(mode)];
 }
 
@@ -178,7 +184,7 @@ export function whenSupportedPaymentType(mode: SupportedPaymentType) {
  * @example
  * `m/86'/1'/0'/0/0`
  */
-export function inferPaymentTypeFromPath(path: string): PaymentTypes {
+export function inferPaymentTypeFromPath(path: string): BitcoinPaymentTypes {
   const purpose = extractPurposeFromPath(path);
   switch (purpose) {
     case 84:
@@ -230,7 +236,7 @@ export function getBitcoinInputAddress(input: TransactionInput, bitcoinNetwork: 
 export function getInputPaymentType(
   input: TransactionInput,
   network: BitcoinNetworkModes
-): PaymentTypes {
+): BitcoinPaymentTypes {
   const address = getBitcoinInputAddress(input, getBtcSignerLibNetworkConfigByMode(network));
   if (address === '') throw new Error('Input address cannot be empty');
   if (address.startsWith('bc1p') || address.startsWith('tb1p') || address.startsWith('bcrt1p'))
@@ -319,7 +325,7 @@ export function getPsbtTxOutputs(psbtTx: btc.Transaction): TransactionOutput[] {
   return outputs;
 }
 
-export function inferNetworkFromAddress(address: string): BitcoinNetworkModes {
+export function inferNetworkFromAddress(address: BitcoinAddress): BitcoinNetworkModes {
   if (address.startsWith('bc1')) return 'mainnet';
   if (address.startsWith('tb1')) return 'testnet';
   if (address.startsWith('bcrt1')) return 'regtest';
@@ -333,7 +339,7 @@ export function inferNetworkFromAddress(address: string): BitcoinNetworkModes {
   throw new Error('Invalid or unsupported Bitcoin address format');
 }
 
-export function inferPaymentTypeFromAddress(address: string): SupportedPaymentType {
+export function inferPaymentTypeFromAddress(address: BitcoinAddress): SupportedPaymentType {
   if (address.startsWith('bc1q') || address.startsWith('tb1q') || address.startsWith('bcrt1q'))
     return 'p2wpkh';
 
