@@ -35,14 +35,14 @@ runs:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
 
-    - name: Decode GOOGLE_SERVICES_JSON
-      shell: bash
-      working-directory: ./apps/mobile
-      run: |
-        echo $GOOGLE_SERVICES_JSON_B64 | base64 --decode > ./android/app/google-services.json
-        ls -l ./android/app/google-services.json
-      env:
-        GOOGLE_SERVICES_JSON_B64: ${{ inputs.GOOGLE_SERVICES_JSON_B64 }}
+    # - name: Decode GOOGLE_SERVICES_JSON
+    #   shell: bash
+    #   working-directory: ./apps/mobile
+    #   run: |
+    #     echo $GOOGLE_SERVICES_JSON_B64 | base64 --decode > ./android/app/google-services.json
+    #     ls -l ./android/app/google-services.json
+    #   env:
+    #     GOOGLE_SERVICES_JSON_B64: ${{ inputs.GOOGLE_SERVICES_JSON_B64 }}
 
     - name: Build Android app
       shell: bash
