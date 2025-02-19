@@ -1,0 +1,24 @@
+name: Previous Mobile Tag
+description: Get the previous mobile tag
+outputs:
+  tag:
+    description: 'The previous mobile tag'
+    value: ${{ steps.get_previous_tag.outputs.previous_tag }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Fetch git history
+      shell: bash
+      run: git fetch --prune --unshallow --tags
+
+    - name: Get previous tag
+      id: get_previous_tag
+      shell: bash
+      run: |
+        current_tag=${{ github.ref_name }}
+        current_version=$(echo $current_tag | grep -o "v[0-9]*\.[0-9]*\.[0-9]*")
+        previous_tag=$(git tag --sort=v:refname | grep -E "^mobile(-test)?-v[0-9]*\.[0-9]*\.[0-9]*(-beta|-alpha)?\.*" | grep -v "$current_version" | head -n 1)
+        echo "previous_tag=$previous_tag" >> "$GITHUB_OUTPUT"
+        echo "current_version: $current_version"
+        echo "current_tag: $current_tag"
+        echo "previous_tag: $previous_tag"
