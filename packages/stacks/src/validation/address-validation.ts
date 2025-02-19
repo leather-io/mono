@@ -1,6 +1,6 @@
 import { c32addressDecode } from 'c32check';
 
-import { ChainId, NetworkConfiguration } from '@leather.io/models';
+import { ChainId } from '@leather.io/models';
 import { isEmptyString, isUndefined } from '@leather.io/utils';
 
 // taken from stacks-utils.ts
@@ -16,9 +16,9 @@ export function isValidStacksAddress(address: string) {
   }
 }
 
-export function isValidAddressChain(address: string, currentNetwork: NetworkConfiguration) {
+export function isValidAddressChain(address: string, chainId: ChainId) {
   const prefix = address.slice(0, 2);
-  switch (currentNetwork.chain.stacks.chainId) {
+  switch (chainId) {
     case ChainId.Mainnet:
       return prefix === 'SM' || prefix === 'SP';
     case ChainId.Testnet:

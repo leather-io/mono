@@ -6,6 +6,7 @@ import { t } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
+import { ChainId } from '@leather.io/models';
 import { StacksError, isValidStacksTransaction } from '@leather.io/stacks';
 import {
   createMoneyFromDecimal,
@@ -41,6 +42,7 @@ export function useSendFormStx() {
   } = useSendSheetRoute<CurrentRoute>();
   const navigation = useSendSheetNavigation<CurrentRoute>();
   const { networkPreference } = useSettings();
+  const chainId: ChainId = networkPreference.chain.stacks.chainId;
 
   const { displayToast } = useToastContext();
   const generateTx = useGenerateStxTokenTransferUnsignedTransaction(payer, publicKey);
@@ -56,7 +58,7 @@ export function useSendFormStx() {
         const { availableBalance } = data;
 
         const { amount, recipient, fee } = values;
-        isValidStacksTransaction(payer, recipient, networkPreference);
+        isValidStacksTransaction(payer, recipient, chainId);
 
         // TODO - move into stx-transaction validation
         if (!isValidPrecision(+amount, STX_DECIMALS)) {

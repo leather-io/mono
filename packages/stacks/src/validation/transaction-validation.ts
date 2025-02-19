@@ -1,4 +1,4 @@
-import { NetworkConfiguration } from '@leather.io/models';
+import { ChainId } from '@leather.io/models';
 
 import {
   isValidAddressChain,
@@ -10,14 +10,14 @@ import { StacksError } from './stacks-error';
 export function isValidStacksTransaction(
   senderAddress: string,
   recipientAddress: string,
-  currentNetwork: NetworkConfiguration
+  chainId: ChainId
 ) {
   if (!isValidStacksAddress(senderAddress) || !isValidStacksAddress(recipientAddress)) {
     throw new StacksError('InvalidAddress');
   }
   if (
-    !isValidAddressChain(senderAddress, currentNetwork) ||
-    !isValidAddressChain(recipientAddress, currentNetwork)
+    !isValidAddressChain(senderAddress, chainId) ||
+    !isValidAddressChain(recipientAddress, chainId)
   ) {
     throw new StacksError('InvalidNetworkAddress');
   }
