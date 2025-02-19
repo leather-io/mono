@@ -34,8 +34,34 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
 
+  update-changelog:
+    runs-on: ubuntu-latest
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get previous tag
+        id: previousTag
+        run: |
+          current_tag=${{ github.ref_name }}
+          current_version=$(echo $current_tag | grep -o "mobile-v[0-9]*\.[0-9]*\.[0-9]*")
+          previous_tag=$(git tag --sort=v:refname | grep "mobile[-test]-v[0-9]*\.[0-9]*\.[0-9]*-beta" | grep -v "$current_version" | head -n 1)
+          echo "tag=$previous_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Update CHANGELOG
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          fromTag: ${{ github.ref_name }}
+          toTag: ${{ steps.previousTag.outputs.tag }}
+          writeToFile: false
+
   upload-to-firebase:
     needs:
+      - update-changelog
       - android-beta
       - ios-beta
     # This workflow can only run on ubuntu because the firebase_upload step only supports ubuntu
@@ -67,6 +93,7 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: leatherhood
           file: ${{ github.workspace }}/app-release.ipa
+          releaseNotes: ${{ needs.update-changelog.outputs.changelog }}
 
       - name: Upload AAB to Firebase
         id: firebase_upload_aab
@@ -76,10 +103,12 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: leatherhood
           file: ${{ github.workspace }}/app-release.aab
+          releaseNotes: ${{ needs.update-changelog.outputs.changelog }}
 
   create-beta-release:
     needs:
       - upload-to-firebase
+      - update-changelog
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -92,11 +121,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: '${{ github.ref_name }}'
+          release_name: '@leather/mobile: ${{ github.ref_name }}'
           body: |
-            Android Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_android }}
+            ## Version: ${{ github.ref_name }}
+            [Android - Firebase Console Link](${{ needs.upload-to-firebase.outputs.firebase_console_uri_android }})
+            [iOS - Firebase Console Link](${{ needs.upload-to-firebase.outputs.firebase_console_uri_ios }})
+
             ---
-            iOS Firebase Console Link: ${{ needs.upload-to-firebase.outputs.firebase_console_uri_ios }}
+
+            ## What's Changed?
+            ${{ needs.update-changelog.outputs.changelog }}
           draft: true
 
       - name: Download AAB artifact
