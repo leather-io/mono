@@ -14,7 +14,11 @@
     "types": "tsc --declaration --emitDeclarationOnly"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
   "dependencies": {
     "@leather.io/models": "workspace:*",
