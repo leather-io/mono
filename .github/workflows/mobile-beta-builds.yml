@@ -44,10 +44,11 @@ jobs:
 
       - name: Get previous tag
         id: previousTag
+        shell: bash
         run: |
           current_tag=${{ github.ref_name }}
-          current_version=$(echo $current_tag | grep -o "v[0-9]*\.[0-9]*\.[0-9]*")
-          previous_tag=$(git tag --sort=v:refname | grep "v[0-9]*\.[0-9]*\.[0-9]*-beta" | grep -v "$current_version" | head -n 1)
+          current_version=$(echo $current_tag | grep -o "mobile-v[0-9]*\.[0-9]*\.[0-9]*")
+          previous_tag=$(git tag --sort=v:refname | grep -E "mobile(-test)?-v[0-9]*\.[0-9]*\.[0-9]*-beta" | grep -v "$current_version" | head -n 1)
           echo $previous_tag
           echo "tag=$previous_tag" >> "$GITHUB_OUTPUT"
 
@@ -57,8 +58,10 @@ jobs:
         with:
           token: ${{ github.token }}
           fromTag: ${{ github.ref_name }}
-          toTag: ${{ steps.previousTag.outputs.tag }}
+          toTag: ${{ env.PREVIOUS_TAG }}
           writeToFile: false
+        env:
+          PREVIOUS_TAG: ${{ steps.previousTag.outputs.tag }}
 
   upload-to-firebase:
     needs:
