@@ -43,13 +43,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get previous tag
-        id: previousTag
+        id: previous_tag
+        uses: ./.github/actions/previous-mobile-tag
+
+      - name: Print previous tag
         run: |
-          current_tag=${{ github.ref_name }}
-          current_version=$(echo $current_tag | grep -o "v[0-9]*\.[0-9]*\.[0-9]*")
-          previous_tag=$(git tag --sort=v:refname | grep "v[0-9]*\.[0-9]*\.[0-9]*-beta" | grep -v "$current_version" | head -n 1)
-          echo $previous_tag
-          echo "tag=$previous_tag" >> "$GITHUB_OUTPUT"
+          echo "Previous tag: ${{ steps.previous_tag.outputs.tag }}"
 
       - name: Update CHANGELOG
         id: changelog
@@ -57,8 +56,10 @@ jobs:
         with:
           token: ${{ github.token }}
           fromTag: ${{ github.ref_name }}
-          toTag: ${{ steps.previousTag.outputs.tag }}
+          toTag: ${{ env.PREVIOUS_TAG }}
           writeToFile: false
+        env:
+          PREVIOUS_TAG: ${{ steps.previous_tag.outputs.tag }}
 
   upload-to-firebase:
     needs:
