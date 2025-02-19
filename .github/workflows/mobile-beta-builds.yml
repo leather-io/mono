@@ -46,10 +46,10 @@ jobs:
         id: previousTag
         run: |
           current_tag=${{ github.ref_name }}
-          current_version=$(echo $current_tag | grep -o "mobile-v[0-9]*\.[0-9]*\.[0-9]*")
-          previous_tag=$(git tag --sort=v:refname | grep "mobile[-test]-v[0-9]*\.[0-9]*\.[0-9]*-beta" | grep -v "$current_version" | head -n 1)
+          current_version=$(echo $current_tag | grep -o "v[0-9]*\.[0-9]*\.[0-9]*")
+          previous_tag=$(git tag --sort=v:refname | grep "v[0-9]*\.[0-9]*\.[0-9]*-beta" | grep -v "$current_version" | head -n 1)
           echo $previous_tag
-          echo "::set-output name=tag::$previous_tag"
+          echo "tag=$previous_tag" >> "$GITHUB_OUTPUT"
 
       - name: Update CHANGELOG
         id: changelog
