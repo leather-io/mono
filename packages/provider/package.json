@@ -2,7 +2,7 @@
   "name": "@leather.io/provider",
   "author": "leather-wallet",
   "description": "LeatherProvider package for Leather",
-  "version": "2.5.11",
+  "version": "1.0.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
