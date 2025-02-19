@@ -80,8 +80,8 @@ export type RpcMethodNames = keyof LeatherRpcMethodMap;
 export interface RequestFn {
   <T extends RpcMethodNames>(
     arg: T,
-    params?: object | string[]
-    // `Promise` throws if unsucessful, so here we extract the successful response
+    params?: LeatherRpcMethodMap[T]['request'] extends { params: infer P } ? P : never
+    // `Promise` throws if unsuccessful, so here we extract the successful response
   ): Promise<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>>;
 }
 
