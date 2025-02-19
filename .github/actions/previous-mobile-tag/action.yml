@@ -1,0 +1,14 @@
+name: Previous Mobile Tag
+description: Get the previous mobile tag
+runs:
+  using: 'composite'
+  steps:
+    - name: Get previous tag
+      id: previousTag
+      shell: bash
+      run: |
+        current_tag=${{ github.ref_name }}
+        current_version=$(echo $current_tag | grep -o "v[0-9]*\.[0-9]*\.[0-9]*")
+        previous_tag=$(git tag --sort=v:refname | grep -E "^mobile(-test)?-v[0-9]*\.[0-9]*\.[0-9]*(-beta|-alpha)?\.*" | grep -v "$current_version" | head -n 1)
+        echo $previous_tag
+        echo "tag=$previous_tag" >> "$GITHUB_OUTPUT"
