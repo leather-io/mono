@@ -192,6 +192,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.0
 
+## [2.6.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.14...@leather.io/rpc-v2.6.0) (2025-02-19)
+
+
+### Features
+
+* **rpc:** commonjs output, fixes params type issue ([73fd10f](https://github.com/leather-io/mono/commit/73fd10f47572dac4eac972480ab465dde74cdf77))
+
 ## [2.5.14](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.5.13...@leather.io/rpc-v2.5.14) (2025-02-18)
 
 

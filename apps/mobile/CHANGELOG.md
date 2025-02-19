@@ -549,6 +549,26 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.27
 
+## [2.13.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.12.1...@leather.io/mobile-v2.13.0) (2025-02-19)
+
+
+### Features
+
+* move leather provider to a separate package in monorepo ([8bf2fcf](https://github.com/leather-io/mono/commit/8bf2fcf3e33278e9e5292a582a364c5e1ebe92f3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.28
+    * @leather.io/provider bumped to 1.0.0
+    * @leather.io/query bumped to 2.27.5
+    * @leather.io/rpc bumped to 2.6.0
+    * @leather.io/services bumped to 1.3.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.28
+
 ## [2.12.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.11.3...@leather.io/mobile-v2.12.0) (2025-02-17)
 
 
