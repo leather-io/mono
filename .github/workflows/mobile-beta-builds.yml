@@ -8,18 +8,18 @@ permissions:
   pull-requests: write
 
 jobs:
-  # ios-beta:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+  ios-beta:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  #     - name: Build iOS app
-  #       id: build-ios
-  #       uses: ./.github/actions/build-ios
-  #       with:
-  #         EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-  #         GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+      - name: Build iOS app
+        id: build-ios
+        uses: ./.github/actions/build-ios
+        with:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
 
   android-beta:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
   upload-to-firebase:
     needs:
       - android-beta
-      # - ios-beta
+      - ios-beta
     # This workflow can only run on ubuntu because the firebase_upload step only supports ubuntu
     runs-on: ubuntu-latest
     outputs:
