@@ -1,4 +1,4 @@
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { Box } from 'leather-styles/jsx';
 
 interface InscriptionTextLayoutProps {
@@ -25,7 +25,7 @@ export function InscriptionTextLayout({ content }: InscriptionTextLayoutProps) {
       textAlign="left"
       width="100%"
     >
-      <pre>{sanitize(content)}</pre>
+      <pre>{DOMPurify.sanitize(content)}</pre>
     </Box>
   );
 }
