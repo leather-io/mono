@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
 
+import { formatPrimaryValue } from '@/components/amount-field/amount-field.utils';
+import { InputCurrencyMode } from '@/utils/types';
+import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
+
+import { CryptoCurrency, FiatCurrency } from '@leather.io/models';
 import { Box, Text, TextProps, Theme } from '@leather.io/ui/native';
 
 const maxFontSize = 44;
@@ -11,6 +16,60 @@ const commonTextProps: TextProps = {
   fontVariant: ['tabular-nums'],
   letterSpacing: 1,
 };
+
+interface AmountFieldPrimaryValueProps {
+  color: keyof Theme['colors'];
+  value: string;
+  locale: string;
+  inputCurrencyMode: InputCurrencyMode;
+  cryptoCurrency: CryptoCurrency;
+  fiatCurrency: FiatCurrency;
+}
+
+export function AmountFieldPrimaryValue({
+  value,
+  color,
+  locale,
+  inputCurrencyMode,
+  fiatCurrency,
+  cryptoCurrency,
+}: AmountFieldPrimaryValueProps) {
+  const [dynamicFontSize, setDynamicFontSize] = useState(maxFontSize);
+  // Maintain the relative lineHeight to prevent text shifting down as font size decreases
+  const staticLineHeight = maxFontSize * lineHeightRatio;
+  const dynamicLineHeight = dynamicFontSize * lineHeightRatio;
+  const displayValue = formatPrimaryValue({
+    value,
+    currency: whenInputCurrencyMode(inputCurrencyMode)({
+      crypto: cryptoCurrency,
+      fiat: fiatCurrency,
+    }),
+    showCurrency: inputCurrencyMode === 'fiat',
+    locale,
+  });
+
+  return (
+    <Box height={staticLineHeight} flexShrink={1}>
+      <Box flexDirection="row" position="absolute" top={3}>
+        {displayValue.split('').map((character, index) => (
+          <Text
+            color={color}
+            key={index}
+            style={{ fontSize: dynamicFontSize, lineHeight: dynamicLineHeight }}
+            {...commonTextProps}
+          >
+            {character}
+          </Text>
+        ))}
+      </Box>
+      <TextMeasurementProxy
+        value={displayValue}
+        onFontSizeChange={setDynamicFontSize}
+        textProps={commonTextProps}
+      />
+    </Box>
+  );
+}
 
 interface TextMeasurementProxyProps {
   value: string;
@@ -47,39 +106,5 @@ function TextMeasurementProxy({ value, textProps, onFontSizeChange }: TextMeasur
     >
       {value}
     </Text>
-  );
-}
-
-interface AmountFieldPrimaryValueProps {
-  color: keyof Theme['colors'];
-  children: string;
-}
-
-export function AmountFieldPrimaryValue({ children, color }: AmountFieldPrimaryValueProps) {
-  const [dynamicFontSize, setDynamicFontSize] = useState(maxFontSize);
-  // Maintain the relative lineHeight to prevent text shifting down as font size decreases
-  const staticLineHeight = maxFontSize * lineHeightRatio;
-  const dynamicLineHeight = dynamicFontSize * lineHeightRatio;
-
-  return (
-    <Box height={staticLineHeight} flexShrink={1}>
-      <Box flexDirection="row" position="absolute" top={3}>
-        {children.split('').map((character, index) => (
-          <Text
-            color={color}
-            key={index}
-            style={{ fontSize: dynamicFontSize, lineHeight: dynamicLineHeight }}
-            {...commonTextProps}
-          >
-            {character}
-          </Text>
-        ))}
-      </Box>
-      <TextMeasurementProxy
-        value={children}
-        onFontSizeChange={setDynamicFontSize}
-        textProps={commonTextProps}
-      />
-    </Box>
   );
 }

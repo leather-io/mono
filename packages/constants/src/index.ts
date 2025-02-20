@@ -4,6 +4,7 @@ import type {
   BitcoinUnit,
   BitcoinUnitInfo,
   BtcCryptoAssetInfo,
+  Currency,
   StxCryptoAssetInfo,
 } from '@leather.io/models';
 
@@ -29,7 +30,7 @@ export const SATS_IN_BTC = 100_000_000;
 
 // Units of `Money` should be declared in their smallest unit. Similar to
 // Rosetta, we model currencies with their respective resolution
-export const currencyDecimalsMap = {
+export const currencyDecimalsMap: Record<Currency, number> = {
   BTC: BTC_DECIMALS,
   STX: STX_DECIMALS,
   USD: 2,

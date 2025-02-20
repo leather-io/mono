@@ -31,7 +31,7 @@ const cellRootStyles: BoxProps = {
   alignItems: 'center',
 };
 
-export const CellRoot = forwardRef<CellElement, CellProps>((props, ref) => {
+export const CellRoot = forwardRef<CellElement, CellProps>(({ style, ...props }, ref) => {
   const { pressed, onPressIn, onPressOut } = usePressedState();
   const theme = useTheme<Theme>();
 
@@ -50,7 +50,7 @@ export const CellRoot = forwardRef<CellElement, CellProps>((props, ref) => {
         {...cellRootStyles}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
-        style={animatedStyle}
+        style={[style, animatedStyle]}
         {...props}
       />
     );

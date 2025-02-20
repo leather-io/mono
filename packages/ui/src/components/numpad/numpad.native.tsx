@@ -111,10 +111,11 @@ function updateValue(currentValue: string, id: KeyId, decimalSeparator: DecimalS
   }
 }
 
-interface NumpadProps {
+export interface NumpadProps {
   value: string;
   onChange: (value: string) => void;
   locale?: string;
+  allowNextValue?: (value: string) => boolean;
   mode?: Mode;
 }
 
@@ -123,11 +124,18 @@ export function Numpad({
   onChange,
   locale = FALLBACK_LOCALE_IDENTIFIER,
   mode = 'decimal',
+  allowNextValue,
 }: NumpadProps) {
   const decimalSeparator = getDecimalSeparator(locale);
 
   function handlePress(key: Key) {
-    return () => onChange(updateValue(value, key.id, decimalSeparator));
+    const updatedValue = updateValue(value, key.id, decimalSeparator);
+    return () => {
+      if (allowNextValue && !allowNextValue(updatedValue)) {
+        return;
+      }
+      onChange(updatedValue);
+    };
   }
 
   function handleLongPress(key: Key) {

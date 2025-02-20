@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { FeeBadge } from '@/features/send/fee-badge';
+import { FeeBadge } from '@/features/send/components/fee-badge';
 import { t } from '@lingui/macro';
 
 import { MarketData, Money } from '@leather.io/models';

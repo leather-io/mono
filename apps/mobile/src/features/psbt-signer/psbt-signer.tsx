@@ -8,6 +8,7 @@ import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
+import { createCoinSelectionUtxos } from '@/features/send/utils';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
@@ -45,7 +46,6 @@ import {
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { FeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
-import { createCoinSelectionUtxos } from '../send/send-form.utils';
 import { usePsbtAccounts } from './use-psbt-accounts';
 import { usePsbtPayers } from './use-psbt-payers';
 import { usePsbtSigner } from './use-psbt-signer';

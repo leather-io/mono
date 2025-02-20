@@ -1,22 +1,24 @@
-import type { AverageBitcoinFeeRates, BitcoinAddress, Money } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import BigNumber from 'bignumber.js';
 
-import { CoinSelectionUtxo } from '../coin-selection/coin-selection';
-import {
-  filterUneconomicalUtxos,
-  getSpendableAmount,
-} from '../coin-selection/coin-selection.utils';
+import type { AverageBitcoinFeeRates, Money } from '@leather.io/models';
+import { createMoney, satToBtc } from '@leather.io/utils';
+
+import { CoinSelectionUtxo } from './coin-selection';
+import { filterUneconomicalUtxos, getSpendableAmount } from './coin-selection.utils';
 
 interface CalculateMaxSpendArgs {
-  recipient: BitcoinAddress;
+  // recipient is intentionally string instead of BitcoinAddress, as it's being validated
+  // with a fallback in a subroutine.
+  recipient: string;
   utxos: CoinSelectionUtxo[];
   feeRates?: AverageBitcoinFeeRates;
   feeRate?: number;
 }
 
-interface CalculateMaxSpendResponse {
+export interface CalculateMaxSpendResponse {
   spendAllFee: number;
   amount: Money;
+  spendableBitcoin: BigNumber;
 }
 export function calculateMaxSpend({
   recipient,
@@ -28,6 +30,7 @@ export function calculateMaxSpend({
     return {
       spendAllFee: 0,
       amount: createMoney(0, 'BTC'),
+      spendableBitcoin: new BigNumber(0),
     };
 
   const currentFeeRate = feeRate ?? feeRates.halfHourFee.toNumber();
@@ -48,5 +51,6 @@ export function calculateMaxSpend({
   return {
     spendAllFee: fee,
     amount: createMoney(spendableAmount, 'BTC'),
+    spendableBitcoin: satToBtc(spendableAmount),
   };
 }

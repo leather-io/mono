@@ -1,4 +1,5 @@
 import { type ReactNode, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { Platform } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -13,7 +14,7 @@ import { useTheme } from '@shopify/restyle';
 import { BlurView, Box, Theme } from '@leather.io/ui/native';
 
 export const ACTION_BAR_HEIGHT = 70;
-export const ACTION_BAR_BOTTOM_OFFSET = 40;
+export const ACTION_BAR_BOTTOM_OFFSET = 10;
 export const ACTION_BAR_TOTAL_HEIGHT = ACTION_BAR_HEIGHT + ACTION_BAR_BOTTOM_OFFSET;
 
 interface ActionBarProps {
@@ -82,22 +83,21 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
         containerAnimatedStyle,
       ]}
     >
-      <Box width="100%" px="5" justifyContent="center" alignItems="center">
+      <Box
+        borderRadius="sm"
+        overflow="hidden"
+        borderColor="ink.border-transparent"
+        borderWidth={1}
+        style={{ marginHorizontal: theme.spacing[5] - 1 }}
+      >
         <BlurView
+          experimentalBlurMethod="dimezisBlurView"
           themeVariant={themeDerivedFromThemePreference}
-          intensity={90}
+          intensity={Platform.OS === 'ios' ? 95 : 80}
           style={{
             flexDirection: 'row',
-            width: '100%',
             paddingHorizontal: theme.spacing[5],
-            paddingVertical: theme.spacing[2],
-            height: '100%',
-            backgroundColor: theme.colors['ink.background-primary'],
-            shadowColor: theme.colors['ink.background-overlay'],
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 5,
-            borderRadius: theme.borderRadii.xs,
+            height: 64,
           }}
         >
           {props.children}

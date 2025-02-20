@@ -1,30 +1,15 @@
-import BigNumber from 'bignumber.js';
-
 import { Money } from '@leather.io/models';
 
 export const minSpendAmountInSats = 546;
 
-interface isBtcBalanceSufficientArgs {
-  amount: Money;
-  spendable: Money;
+interface isBtcBalanceSufficientParams {
+  desiredSpend: Money;
+  maxSpend: Money;
 }
-export function isBtcBalanceSufficient({
-  amount: { amount },
-  spendable: { amount: spendableAmount },
-}: isBtcBalanceSufficientArgs) {
-  if (!spendableAmount) return false;
-  const desiredSpend = new BigNumber(amount);
-  const availableAmount = new BigNumber(spendableAmount);
-  if (desiredSpend.isGreaterThan(availableAmount)) return false;
-  return true;
+export function isBtcBalanceSufficient({ desiredSpend, maxSpend }: isBtcBalanceSufficientParams) {
+  return !desiredSpend.amount.isGreaterThan(maxSpend.amount);
 }
 
-interface IsBtcMinimumSpendArgs {
-  amount: Money;
-}
-export function isBtcMinimumSpend({ amount: { amount } }: IsBtcMinimumSpendArgs) {
-  if (!amount) return false;
-  const desiredSpend = new BigNumber(amount);
-  if (desiredSpend.isLessThan(minSpendAmountInSats)) return false;
-  return true;
+export function isBtcMinimumSpend(desiredSpend: Money) {
+  return !desiredSpend.amount.isLessThan(minSpendAmountInSats);
 }

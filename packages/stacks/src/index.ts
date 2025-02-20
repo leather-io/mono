@@ -8,4 +8,5 @@ export * from './transactions/transaction.types';
 
 export * from './validation/stacks-error';
 export * from './validation/address-validation';
+export * from './validation/memo-validation';
 export * from './validation/transaction-validation';

@@ -10,7 +10,11 @@ interface StacksTokenBalanceProps extends PressableProps {
   availableBalance: Money;
   fiatBalance: Money;
 }
-export function StacksTokenBalance({ availableBalance, fiatBalance }: StacksTokenBalanceProps) {
+export function StacksTokenBalance({
+  availableBalance,
+  fiatBalance,
+  ...rest
+}: StacksTokenBalanceProps) {
   return (
     <TokenBalance
       ticker="STX"
@@ -22,11 +26,16 @@ export function StacksTokenBalance({ availableBalance, fiatBalance }: StacksToke
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
+      {...rest}
     />
   );
 }
 
-export function StacksBalance() {
+interface StacksBalanceProps {
+  onPress?(): void;
+}
+
+export function StacksBalance({ onPress }: StacksBalanceProps) {
   const balance = useStxTotalBalance();
   // TODO LEA-1726: handle balance loading & error states
   if (balance.state !== 'success') return;
@@ -34,6 +43,7 @@ export function StacksBalance() {
     <StacksTokenBalance
       availableBalance={balance.value.stx.availableBalance}
       fiatBalance={balance.value.fiat.availableBalance}
+      onPress={onPress}
     />
   );
 }

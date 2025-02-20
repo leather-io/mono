@@ -33,12 +33,12 @@ export function isValidBitcoinTransaction({
     throw new BitcoinError('InvalidNetworkAddress');
   }
 
-  if (!isBtcMinimumSpend({ amount })) {
+  if (!isBtcMinimumSpend(amount)) {
     throw new BitcoinError('InsufficientAmount');
   }
 
-  const { amount: spendable } = calculateMaxSpend({ recipient, utxos, feeRate, feeRates });
-  if (!isBtcBalanceSufficient({ amount, spendable })) {
+  const maxSpend = calculateMaxSpend({ recipient, utxos, feeRate, feeRates });
+  if (!isBtcBalanceSufficient({ desiredSpend: amount, maxSpend: maxSpend.amount })) {
     throw new BitcoinError('InsufficientFunds');
   }
 }
