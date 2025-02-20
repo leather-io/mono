@@ -2,7 +2,8 @@ name: Mobile beta deploy
 on:
   push:
     tags:
-      - 'mobile-v*.*.*-beta.*'
+      # - 'mobile-v*.*.*-beta.*'
+      - 'bad-tag-fix-me'
 permissions:
   contents: write
   pull-requests: write
