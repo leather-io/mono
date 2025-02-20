@@ -34,7 +34,7 @@
     "@leather.io/tsconfig-config": "workspace:*",
     "prettier": "3.3.3",
     "tsup": "8.1.0",
-    "typescript": "5.5.4",
+    "typescript": "5.7.3",
     "vitest": "2.1.5"
   },
   "keywords": [
