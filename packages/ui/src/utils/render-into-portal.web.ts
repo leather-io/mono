@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 
-export function renderIntoPortal(jsx: ReactNode, portalElementId: string) {
+export function renderIntoPortal(jsx: ReactNode, portalElementId: string): ReactPortal {
   const portalElement = document.getElementById(portalElementId);
 
   if (!portalElement) {
@@ -10,5 +10,5 @@ export function renderIntoPortal(jsx: ReactNode, portalElementId: string) {
     );
   }
 
-  return createPortal(jsx, portalElement);
+  return createPortal(jsx as any, portalElement) as any;
 }

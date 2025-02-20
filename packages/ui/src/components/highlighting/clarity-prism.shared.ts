@@ -116,7 +116,7 @@ buff|hash160|sha256|sha512|sha512/256|keccak256|true|false|none)' +
     punctuation: /[()']/,
   };
 
-  Prism.languages.clarity = language;
+  if (Prism.languages) Prism.languages.clarity = language;
 }
 
 clarity(PrismLib);

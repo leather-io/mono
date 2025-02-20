@@ -272,6 +272,8 @@ module.exports = {
         // well with the `@/*` paths. Please take a look and see if there's a
         // workaround for this
         'apps/mobile',
+        // Do not need to check Panda files (they also have circular deps)
+        'apps/web/leather-styles',
         '/dist',
         '.storybook',
         '.*.js$',

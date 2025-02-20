@@ -64,7 +64,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             justifyContent="center"
             alignItems="center"
           >
-            <PreviewIcon width={64} height={64} />
+            {PreviewIcon && <PreviewIcon width={64} height={64} />}
           </SquircleBox>
 
           <Text variant="label01">

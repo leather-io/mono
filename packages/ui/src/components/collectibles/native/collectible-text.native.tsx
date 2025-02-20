@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// import { sanitize } from 'dompurify';
+// import DomPurify from 'dompurify';
 import { Text } from '../../../../native';
 import { CollectibleCardLayout } from './collectible-card-layout.native';
 

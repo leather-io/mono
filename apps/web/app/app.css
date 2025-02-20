@@ -1,0 +1,44 @@
+@layer reset, base, tokens, recipes, utilities;
+
+
+@font-face {
+  font-family: 'Diatype';
+  src: url('/fonts/diatype/diatype-regular.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Diatype';
+  src: url('/fonts/diatype/diatype-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Diatype';
+  src: url('/fonts/diatype/diatype-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Marche';
+  src: url('/fonts/marche/marche-super-pro.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  src: url('/fonts/fira-code/FiraCode-Retina.woff2') format('woff2');
+  font-weight: 450;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  src: url('/fonts/fira-code/FiraCode-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}

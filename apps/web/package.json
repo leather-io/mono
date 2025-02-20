@@ -4,26 +4,32 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
+    "prepare": "ls -lH ./node_modules/@leather.io/panda-preset/dist && panda codegen",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@leather.io/panda-preset": "0.8.19",
+    "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@react-router/node": "7.1.5",
-    "@react-router/serve": "7.1.5",
+    "@react-router/node": "7.2.0",
+    "@react-router/serve": "7.2.0",
     "isbot": "5.1.17",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router": "7.1.5"
+    "react-router": "7.2.0"
   },
   "devDependencies": {
-    "@react-router/dev": "7.1.5",
-    "@types/node": "20.14.0",
-    "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1",
-    "react-router-devtools": "1.1.0",
-    "typescript": "5.7.2",
-    "vite": "5.4.11",
+    "@originjs/vite-plugin-commonjs": "1.0.3",
+    "@pandacss/dev": "0.53.0",
+    "@react-router/dev": "7.2.0",
+    "@types/node": "22.13.5",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "react-router-devtools": "1.1.5",
+    "typescript": "5.7.3",
+    "vite": "6.1.1",
+    "vite-plugin-static-copy": "2.2.0",
     "vite-tsconfig-paths": "5.1.4"
   }
 }

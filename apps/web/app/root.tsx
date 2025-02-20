@@ -1,27 +1,24 @@
 import {
   Links,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
 } from 'react-router';
 
+import { styled } from 'leather-styles/jsx';
+
+import leatherUiStyles from '@leather.io/ui/styles?url';
+
 import type { Route } from './+types/root';
-import './app.css';
+import stylesheet from './app.css?url';
 
 export function links() {
   return [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    {
-      rel: 'preconnect',
-      href: 'https://fonts.gstatic.com',
-      crossOrigin: 'anonymous',
-    },
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-    },
+    { rel: 'stylesheet', href: stylesheet },
+    { rel: 'stylesheet', href: leatherUiStyles },
   ] satisfies Route.LinkDescriptors;
 }
 
@@ -34,11 +31,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <styled.body display="flex">
+        <styled.nav>
+          <ul>
+            <li>
+              <NavLink to="/">Home</NavLink>
+            </li>
+            <li>
+              <NavLink to="/docs">Docs</NavLink>
+            </li>
+          </ul>
+        </styled.nav>
+        <styled.main>{children}</styled.main>
         <ScrollRestoration />
         <Scripts />
-      </body>
+      </styled.body>
     </html>
   );
 }
