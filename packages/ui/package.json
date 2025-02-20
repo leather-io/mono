@@ -25,6 +25,7 @@
   "dependencies": {
     "@expo/vector-icons": "14.0.0",
     "@gorhom/bottom-sheet": "4.6.3",
+    "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@radix-ui/react-accessible-icon": "1.0.3",
