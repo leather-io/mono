@@ -52,7 +52,14 @@
     "vitest": "2.1.9"
   },
   "resolutions": {
-    "path-to-regexp": "0.1.12"
+    "cookie": "0.7.1",
+    "esbuild": "0.25.0",
+    "micromatch": "4.0.8",
+    "path-to-regexp": "0.1.12",
+    "send": "0.19.0",
+    "store2": "2.14.4",
+    "undici": "6.21.1",
+    "vite": "5.4.12"
   },
   "engines": {
     "node": ">=20.11.0",
@@ -64,7 +71,6 @@
   "packageManager": "pnpm@9.13.2",
   "pnpm": {
     "overrides": {
-      "esbuild": "0.25.0",
       "cross-spawn": "7.0.5"
     },
     "packageExtensions": {
