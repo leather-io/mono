@@ -1,0 +1,88 @@
+name: Update Mobile Versions
+
+on:
+  push:
+    tags:
+      - 'mobile-v*.*.*(-beta|-alpha).*'
+      - 'mobile-v*.*.*'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get current version
+        uses: ./.github/actions/previous-mobile-tag
+        id: previous-tag
+      
+      - name: Get release branch
+        id: release_branch
+        run: |
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw##*/}
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+          echo "Branch is $branch."
+      
+      - name: Extract version from tag
+        run: echo "VERSION=${{steps.previous-tag.outputs.current_version}}" >> $GITHUB_ENV
+
+      - name: Update gradle version for Android
+        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+        with:
+          build-gradle-path: './apps/mobile/android/app/build.gradle'
+          version-code: 1 # No need to set this, eas handles bumping the version code
+          version-name: "$VERSION"
+          print-file: true
+
+      - name: Update Info.plist
+        uses: damienaicheh/update-ios-version-info-plist-action@v1.2.0
+        with:
+          info-plist-path: "./apps/mobile/ios/leatherwalletmobile/Info.plist"
+          bundle-short-version-string: "$VERSION"
+          bundle-version: "1"
+          print-file: true
+      
+      - name: Update app.config.js
+        shell: bash
+        working-directory: ./apps/mobile
+        # Note if you want to debug this on macos you'll need to use sed -i '' <rest of command>
+        run: |
+          sed -i "s/version: '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*'/version: '$VERSION'/g" app.config.js
+
+      - name: Commit version bump to release branch
+        run: |
+          git config --global user.name "leather-bot <leather-bot@users.noreply.github.com>"
+          git config --global user.email "leather-bot <leather-bot@users.noreply.github.com>"
+          git checkout ${{ steps.release_branch.outputs.branch }}
+          git add .
+          git commit -m "chore: bump mobile iOS / Android versions to ${VERSION} after release"
+          git push origin ${{ steps.release_branch.outputs.branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+
+      - name: Get commit hash of version bump
+        run: echo "VERSION_BUMP_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Create version bump branch on dev
+        run: |
+          git checkout dev
+          git checkout -b version-bump/${VERSION}
+          git cherry-pick $VERSION_BUMP_COMMIT
+          git push origin version-bump/${VERSION}
+        env:
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+
+      - name: Open PR to merge version bump into dev
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: version-bump/${VERSION}
+          title: "chore: bump mobile iOS / Android versions to ${VERSION}"
+          body: "This PR updates app.json and package.json to reflect the latest published release."
+          base: dev
+          token: ${{ secrets.LEATHER_BOT }}
