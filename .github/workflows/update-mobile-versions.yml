@@ -73,11 +73,11 @@ jobs:
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "chore: bump mobile iOS / Android versions to ${VERSION}"
+          git commit -m "chore: bump mobile iOS / Android versions to ${{ env.VERSION }}"
           git push origin ${{ steps.tag_branch.outputs.branch }}
         env:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
-
+          VERSION: ${{ env.VERSION }}
       - name: Get commit hash of version bump
         if: success()
         run: echo "VERSION_BUMP_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
@@ -88,11 +88,12 @@ jobs:
           git fetch
           git checkout dev
           git checkout -b version-bump/${{ env.VERSION }}
-          git cherry-pick $VERSION_BUMP_COMMIT
+          git cherry-pick ${{ env.VERSION_BUMP_COMMIT }}
           git push -f origin version-bump/${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
           VERSION: ${{ env.VERSION }}
+          VERSION_BUMP_COMMIT: ${{ env.VERSION_BUMP_COMMIT }}
 
       - name: Open PR to merge version bump into dev
         uses: peter-evans/create-pull-request@v5
