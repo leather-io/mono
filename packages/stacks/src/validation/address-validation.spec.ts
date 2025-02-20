@@ -2,9 +2,8 @@ import { ChainId } from '@leather.io/models';
 
 import {
   TEST_ACCOUNT_1_STX_ADDRESS,
-  TEST_ACCOUNT_1_STX_ADDRESS_SM,
+  TEST_ACCOUNT_2_STX_ADDRESS,
   TEST_TESTNET_ACCOUNT_2_STX_ADDRESS,
-  TEST_TESTNET_ACCOUNT_2_STX_ADDRESS_SN,
 } from '../mocks/mocks';
 import {
   isValidAddressChain,
@@ -43,12 +42,11 @@ describe('isValidAddressChain', () => {
 
   it('returns true for valid mainnet address', () => {
     expect(isValidAddressChain(TEST_ACCOUNT_1_STX_ADDRESS, ChainId.Mainnet)).toBe(true);
-    expect(isValidAddressChain(TEST_ACCOUNT_1_STX_ADDRESS_SM, ChainId.Mainnet)).toBe(true);
+    expect(isValidAddressChain(TEST_ACCOUNT_2_STX_ADDRESS, ChainId.Mainnet)).toBe(true);
   });
 
   it('returns true for valid testnet address', () => {
     expect(isValidAddressChain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS, ChainId.Testnet)).toBe(true);
-    expect(isValidAddressChain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS_SN, ChainId.Testnet)).toBe(true);
   });
 
   it('returns false for invalid mainnet address', () => {
@@ -61,19 +59,18 @@ describe('isValidAddressChain', () => {
 
   it('returns false for mainnet address on testnet', () => {
     expect(isValidAddressChain(TEST_ACCOUNT_1_STX_ADDRESS, ChainId.Testnet)).toBe(false);
-    expect(isValidAddressChain(TEST_ACCOUNT_1_STX_ADDRESS_SM, ChainId.Testnet)).toBe(false);
+    expect(isValidAddressChain(TEST_ACCOUNT_2_STX_ADDRESS, ChainId.Testnet)).toBe(false);
   });
 
   it('returns false for testnet address on mainnet', () => {
     expect(isValidAddressChain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS, ChainId.Mainnet)).toBe(false);
-    expect(isValidAddressChain(TEST_TESTNET_ACCOUNT_2_STX_ADDRESS_SN, ChainId.Mainnet)).toBe(false);
   });
 });
 
 describe('validatePayerNotRecipient', () => {
   it('returns false for undefined senderAddress', () => {
     // @ts-expect-error undefined senderAddress
-    expect(validatePayerNotRecipient(undefined, TEST_ACCOUNT_1_STX_ADDRESS_SM)).toBe(false);
+    expect(validatePayerNotRecipient(undefined, TEST_ACCOUNT_1_STX_ADDRESS)).toBe(false);
   });
 
   it('returns false for undefined recipientAddress', () => {
@@ -82,7 +79,7 @@ describe('validatePayerNotRecipient', () => {
   });
 
   it('returns false for empty string senderAddress', () => {
-    expect(validatePayerNotRecipient('', TEST_ACCOUNT_1_STX_ADDRESS_SM)).toBe(false);
+    expect(validatePayerNotRecipient('', TEST_ACCOUNT_1_STX_ADDRESS)).toBe(false);
   });
 
   it('returns false for empty string recipientAddress', () => {
@@ -96,8 +93,8 @@ describe('validatePayerNotRecipient', () => {
   });
 
   it('returns true for different sender and recipient addresses', () => {
-    expect(
-      validatePayerNotRecipient(TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_1_STX_ADDRESS_SM)
-    ).toBe(true);
+    expect(validatePayerNotRecipient(TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_2_STX_ADDRESS)).toBe(
+      true
+    );
   });
 });

@@ -1,11 +1,6 @@
 import { ChainId } from '@leather.io/models';
 
-import {
-  TEST_ACCOUNT_1_STX_ADDRESS,
-  TEST_ACCOUNT_1_STX_ADDRESS_SM,
-  TEST_TESTNET_ACCOUNT_2_STX_ADDRESS,
-  TEST_TESTNET_ACCOUNT_2_STX_ADDRESS_SN,
-} from '../mocks/mocks';
+import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_2_STX_ADDRESS } from '../mocks/mocks';
 import { StacksError } from './stacks-error';
 import { isValidStacksTransaction } from './transaction-validation';
 
@@ -28,17 +23,27 @@ describe('isValidStacksTransaction', () => {
     expect(() =>
       isValidStacksTransaction(
         TEST_ACCOUNT_1_STX_ADDRESS,
-        TEST_ACCOUNT_1_STX_ADDRESS_SM,
+        TEST_ACCOUNT_2_STX_ADDRESS,
         ChainId.Testnet
       )
     ).toThrowError(new StacksError('InvalidNetworkAddress'));
   });
 
+  it('throws an error for invalid network address for same recipients', () => {
+    expect(() =>
+      isValidStacksTransaction(
+        TEST_ACCOUNT_1_STX_ADDRESS,
+        TEST_ACCOUNT_1_STX_ADDRESS,
+        ChainId.Mainnet
+      )
+    ).toThrowError(new StacksError('InvalidSameAddress'));
+  });
+
   it('throws an error for same sender and recipient addresses', () => {
     expect(() =>
       isValidStacksTransaction(
-        TEST_TESTNET_ACCOUNT_2_STX_ADDRESS,
-        TEST_TESTNET_ACCOUNT_2_STX_ADDRESS_SN,
+        TEST_ACCOUNT_1_STX_ADDRESS,
+        TEST_ACCOUNT_1_STX_ADDRESS,
         ChainId.Mainnet
       )
     ).toThrowError(new StacksError('InvalidSameAddress'));
@@ -48,7 +53,7 @@ describe('isValidStacksTransaction', () => {
     expect(() =>
       isValidStacksTransaction(
         TEST_ACCOUNT_1_STX_ADDRESS,
-        TEST_ACCOUNT_1_STX_ADDRESS_SM,
+        TEST_ACCOUNT_2_STX_ADDRESS,
         ChainId.Mainnet
       )
     ).not.toThrow();
