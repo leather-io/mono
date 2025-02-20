@@ -182,7 +182,7 @@ const networkSbtcTestnet: NetworkConfiguration = {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'regtest',
       mode: 'regtest',
-      bitcoinUrl: 'https://beta.sbtc-mempool.tech/api/proxy',
+      bitcoinUrl: 'https://bridge.staging.sbtc-emily-dev.com/api/proxy',
     },
   },
 };
