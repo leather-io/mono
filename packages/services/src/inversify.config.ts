@@ -36,6 +36,10 @@ import {
   createNotificationsService,
 } from './notifications/notifications.service';
 import {
+  BitcoinTransactionsService,
+  createBitcoinTransactionsService,
+} from './transactions/bitcoin-transactions.service';
+import {
   StacksTransactionsService,
   createStacksTransactionsService,
 } from './transactions/stacks-transactions.service';
@@ -83,6 +87,7 @@ export const Services = {
   RuneAssetService: Symbol.for('RuneAssetService'),
   UtxosService: Symbol.for('UtxosService'),
   StacksTransactionsService: Symbol.for('StacksTransactionsService'),
+  BitcoinTransactionsService: Symbol.for('BitcoinTransactionsService'),
   NotificationsService: Symbol.for('NotificationsService'),
 };
 
@@ -159,14 +164,6 @@ function registerApplicationServices(container: Container) {
     )
     .inSingletonScope();
   container
-    .bind<StacksTransactionsService>(Services.StacksTransactionsService)
-    .toDynamicValue(c =>
-      createStacksTransactionsService(
-        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient)
-      )
-    )
-    .inSingletonScope();
-  container
     .bind<BtcBalancesService>(Services.BtcBalancesService)
     .toDynamicValue(c =>
       createBtcBalancesService(
@@ -214,8 +211,23 @@ function registerApplicationServices(container: Container) {
     .toDynamicValue(c =>
       createUtxosService(
         c.container.get<LeatherApiClient>(Services.LeatherApiClient),
-        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient)
+        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient),
+        c.container.get<BitcoinTransactionsService>(Services.BitcoinTransactionsService)
       )
+    )
+    .inSingletonScope();
+  container
+    .bind<StacksTransactionsService>(Services.StacksTransactionsService)
+    .toDynamicValue(c =>
+      createStacksTransactionsService(
+        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient)
+      )
+    )
+    .inSingletonScope();
+  container
+    .bind<BitcoinTransactionsService>(Services.BitcoinTransactionsService)
+    .toDynamicValue(c =>
+      createBitcoinTransactionsService(c.container.get<LeatherApiClient>(Services.LeatherApiClient))
     )
     .inSingletonScope();
   container

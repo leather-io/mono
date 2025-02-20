@@ -1,6 +1,6 @@
 import { ZodSchema, z } from 'zod';
 
-export interface Page<T> {
+export interface LeatherApiPage<T> {
   meta: {
     page: number;
     pageSize: number;
@@ -10,19 +10,19 @@ export interface Page<T> {
   data: T[];
 }
 
-export interface PageRequest {
+export interface LeatherApiPageRequest {
   page: number;
   pageSize: number;
 }
 
-export function getPageRequestQueryParams(pageRequest: PageRequest): URLSearchParams {
+export function getPageRequestQueryParams(pageRequest: LeatherApiPageRequest): URLSearchParams {
   return new URLSearchParams({
     page: pageRequest.page.toString(),
     pageSize: pageRequest.pageSize.toString(),
   });
 }
 
-export function createPaginationSchema(schema: ZodSchema) {
+export function createPageSchema(schema: ZodSchema) {
   return z.object({
     meta: z.object({
       page: z.number(),

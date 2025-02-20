@@ -1,6 +1,13 @@
 import { Utxo, UtxoId } from '@leather.io/models';
 import { sumNumbers } from '@leather.io/utils';
 
+import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import {
+  isOutboundTx,
+  isPendingTx,
+  readTxOwnedVins,
+} from '../transactions/bitcoin-transactions.utils';
+
 export function getUtxoIdFromSatpoint(satpoint: string) {
   const splits = satpoint?.split(':');
   if (!splits || splits.length !== 3) return; // invalid satpoint
@@ -34,7 +41,7 @@ export function utxoToId(utxo: Utxo) {
   };
 }
 
-export function isInboundUtxo(utxo: Utxo) {
+export function isUnconfirmedUtxo(utxo: Utxo) {
   return !utxo.height;
 }
 
@@ -53,4 +60,25 @@ export function selectUniqueUtxoIds<T extends UtxoId>(ids: T[]) {
     (utxo, index, self) =>
       index === self.findIndex(u => u.txid === utxo.txid && u.vout === utxo.vout)
   );
+}
+
+export const fallbackUtxoHeight = 800_000;
+
+export function getOutboundUtxos(txs: LeatherApiBitcoinTransaction[]): Utxo[] {
+  const txMap = new Map(txs.map(tx => [tx.txid, tx]));
+  return txs
+    .filter(isPendingTx)
+    .filter(isOutboundTx)
+    .map(readTxOwnedVins)
+    .flat()
+    .map(vin => ({
+      txid: vin.txid,
+      vout: vin.n,
+      address: vin.address ?? '',
+      path: vin.path ?? '',
+      value: vin.value,
+      // there's a chance the page of txs doesnt include the original, to get height but because its outbound, we know it is confirmed.
+      // in these cases, fallback to a default height
+      height: txMap.get(vin.txid)?.height ?? fallbackUtxoHeight,
+    }));
 }

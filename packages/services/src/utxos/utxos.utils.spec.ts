@@ -1,12 +1,15 @@
 import { Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
+import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
 import {
+  fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
+  getOutboundUtxos,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
-  isInboundUtxo,
+  isUnconfirmedUtxo,
   isUneconomicalUtxo,
   selectUniqueUtxoIds,
   sumUtxoValues,
@@ -14,7 +17,7 @@ import {
   utxoToId,
 } from './utxos.utils';
 
-describe('getUtxoIdFromSatPoint', () => {
+describe(getUtxoIdFromSatpoint.name, () => {
   it('splits a valid satpoint and produces a corresponding utxo id', () => {
     const txid = 'abcdef12345';
     const vout = '0';
@@ -34,7 +37,7 @@ describe('getUtxoIdFromSatPoint', () => {
   });
 });
 
-describe('getUtxoIdFromOutpoint', () => {
+describe(getUtxoIdFromOutpoint.name, () => {
   it('splits a valid outpoint and produces a corresponding utxo id', () => {
     const txid = 'abcdef12345';
     const vout = '0';
@@ -96,7 +99,7 @@ describe('utxo list filtering', () => {
     },
   ] as UtxoId[];
 
-  describe('filterMatchesAnyUtxoId', () => {
+  describe(filterMatchesAnyUtxoId.name, () => {
     it('filters for matching utxos against list of utxo ids', () => {
       const filteredUtxos = utxos.filter(filterMatchesAnyUtxoId(ids));
       expect(filteredUtxos).toEqual([
@@ -117,7 +120,8 @@ describe('utxo list filtering', () => {
       expect(filteredUtxos).toEqual([]);
     });
   });
-  describe('filterOutMatchesAnyUtxoId', () => {
+
+  describe(filterOutMatchesAnyUtxoId.name, () => {
     it('filters out matching utxos against list of utxo ids', () => {
       const filteredUtxos = utxos.filter(filterOutMatchesAnyUtxoId(ids));
       expect(filteredUtxos).toEqual([
@@ -140,7 +144,7 @@ describe('utxo list filtering', () => {
   });
 });
 
-describe('isInboundUtxo', () => {
+describe(isUnconfirmedUtxo.name, () => {
   const utxos = [
     {
       txid: '1234',
@@ -167,8 +171,8 @@ describe('isInboundUtxo', () => {
   ] as Utxo[];
 
   it('should filter confirmed tx with a block height value', () => {
-    const inboundUtxos = utxos.filter(isInboundUtxo);
-    expect(inboundUtxos).toEqual([
+    const unconfirmedUtxos = utxos.filter(isUnconfirmedUtxo);
+    expect(unconfirmedUtxos).toEqual([
       {
         txid: '2468',
         vout: 1,
@@ -183,7 +187,7 @@ describe('isInboundUtxo', () => {
   });
 });
 
-describe('utxoToId', () => {
+describe(utxoToId.name, () => {
   it('returns the id of a UTXO', () => {
     const txid = 'txid';
     const vout = 2;
@@ -196,7 +200,7 @@ describe('utxoToId', () => {
   });
 });
 
-describe('isUneconomicalUtxo', () => {
+describe(isUneconomicalUtxo.name, () => {
   it('returns a boolean reflecting whether utxo value is less than uneconomical sat threshold', () => {
     const uneconomicalUtxo = {
       value: uneconomicalSatThreshold - 1,
@@ -209,7 +213,7 @@ describe('isUneconomicalUtxo', () => {
   });
 });
 
-describe('sumUtxoValues', () => {
+describe(sumUtxoValues.name, () => {
   it('returns summed values of all utxo in list', () => {
     const utxos = [
       {
@@ -229,7 +233,7 @@ describe('sumUtxoValues', () => {
   });
 });
 
-describe('selectUniqueUtxoIds', () => {
+describe(selectUniqueUtxoIds.name, () => {
   const utxos = [
     {
       txid: '1234',
@@ -315,5 +319,74 @@ describe('selectUniqueUtxoIds', () => {
         vout: 0,
       },
     ]);
+  });
+});
+
+describe(getOutboundUtxos.name, () => {
+  const ORIGINAL_TX_HEIGHT = 100_000;
+  const ownedVin = {
+    txid: '3',
+    n: 0,
+    value: '10000',
+    address: 'bc1q123',
+    owned: true,
+    path: 'bc1q123-path',
+  };
+  const externalVin = {
+    txid: '2',
+    n: 1,
+    value: '20000',
+    address: 'bc1q246',
+    path: 'bc1q246-path',
+  };
+  const ownedVout = {
+    n: 0,
+    value: '30000',
+    address: 'bc1q369',
+    owned: true,
+    path: 'bc1q369-path',
+  };
+  const txs: LeatherApiBitcoinTransaction[] = [
+    {
+      txid: '1',
+      vin: [ownedVin],
+      vout: [],
+    },
+    {
+      txid: '2',
+      vin: [externalVin],
+      vout: [],
+    },
+    {
+      txid: '3',
+      height: ORIGINAL_TX_HEIGHT,
+      vin: [],
+      vout: [ownedVout],
+    },
+    {
+      txid: '4',
+      height: 60000, // confirmed
+      vin: [],
+      vout: [],
+    },
+  ];
+
+  it('maps owned vins of unconfirmed, outbound transactions to UTXOs', () => {
+    const outboundUtxos = getOutboundUtxos(txs);
+
+    expect(outboundUtxos.length).toEqual(1);
+    expect(outboundUtxos[0].txid).toEqual(ownedVin.txid);
+    expect(outboundUtxos[0].vout).toEqual(ownedVin.n);
+    expect(outboundUtxos[0].address).toEqual(ownedVin.address);
+    expect(outboundUtxos[0].path).toEqual(ownedVin.path);
+    expect(outboundUtxos[0].value).toEqual(ownedVin.value);
+  });
+
+  it('reads the original tx height if available, otherwise falls back to a default', () => {
+    const originalHeightUtxos = getOutboundUtxos(txs);
+    const defaultHeightUtxos = getOutboundUtxos(txs.slice(0, 1));
+
+    expect(originalHeightUtxos[0].height).toEqual(ORIGINAL_TX_HEIGHT);
+    expect(defaultHeightUtxos[0].height).toEqual(fallbackUtxoHeight);
   });
 });
