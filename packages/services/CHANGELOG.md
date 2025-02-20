@@ -76,6 +76,24 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.6.0
 
+## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.3.2...@leather.io/services-v1.4.0) (2025-02-20)
+
+
+### Features
+
+* implement btc outbound balance ([f363834](https://github.com/leather-io/mono/commit/f363834e189c1e20c2dd3d55b2ecdb863e076990))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.29
+    * @leather.io/constants bumped to 0.17.0
+    * @leather.io/utils bumped to 0.27.2
+  * devDependencies
+    * @leather.io/rpc bumped to 2.6.1
+
 ## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.2.2...@leather.io/services-v1.3.0) (2025-02-17)
 
 
