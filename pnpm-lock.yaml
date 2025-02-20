@@ -17,6 +17,17 @@ overrides:
 
 packageExtensionsChecksum: sha256-w9nfWTMemrQJBImn0LMxYjjeDXLIBIIkTIzUl6uU5RM=
 
+patchedDependencies:
+  expo-blur@13.0.2:
+    hash: 8fe12a838f9b170ba9fb22195203dceefbeec0b500e2d47ec8c133ab4dcebf41
+    path: patches/expo-blur@13.0.2.patch
+  expo-secure-store@13.0.2:
+    hash: b2753e05d2293ca1584f223c366d82904c6efe44d9efd76d610b7080fe816754
+    path: patches/expo-secure-store@13.0.2.patch
+  pofile@1.1.4:
+    hash: 3aa567735e04439bd60b423ea3624e3a3f54a7b4f03e416ade823a8c342ad0c2
+    path: patches/pofile@1.1.4.patch
+
 importers:
 
   .:
@@ -45,6 +56,9 @@ importers:
       '@tanstack/eslint-plugin-query':
         specifier: 5.62.1
         version: 5.62.1(eslint@9.16.0(jiti@1.21.6))(typescript@5.7.3)
+      '@trivago/prettier-plugin-sort-imports':
+        specifier: 4.3.0
+        version: 4.3.0(@vue/compiler-sfc@3.4.19)(prettier@3.5.1)
       '@vitest/coverage-v8':
         specifier: 2.1.5
         version: 2.1.5(vitest@2.1.9(@types/node@22.7.8)(jsdom@22.1.0)(lightningcss@1.25.1)(terser@5.36.0))
@@ -57,6 +71,9 @@ importers:
       dotenv:
         specifier: 16.4.5
         version: 16.4.5
+      eslint:
+        specifier: 9.16.0
+        version: 9.16.0(jiti@1.21.6)
       eslint-plugin-lingui:
         specifier: 0.4.0
         version: 0.4.0(eslint@9.16.0(jiti@1.21.6))(typescript@5.7.3)
@@ -67,8 +84,8 @@ importers:
         specifier: 15.2.10
         version: 15.2.10
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       syncpack:
         specifier: 13.0.0
         version: 13.0.0(typescript@5.7.3)
@@ -78,6 +95,9 @@ importers:
       typescript:
         specifier: 5.7.3
         version: 5.7.3
+      typescript-eslint:
+        specifier: 8.18.0
+        version: 8.18.0(eslint@9.16.0(jiti@1.21.6))(typescript@5.7.3)
       vitest:
         specifier: 2.1.9
         version: 2.1.9(@types/node@22.7.8)(jsdom@22.1.0)(lightningcss@1.25.1)(terser@5.36.0)
@@ -233,7 +253,7 @@ importers:
         version: 10.0.6(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(expo-font@12.0.5(expo@51.0.26))(expo-modules-autolinking@1.11.1)(expo@51.0.26)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.3)
       expo-blur:
         specifier: 13.0.2
-        version: 13.0.2(expo@51.0.26)
+        version: 13.0.2(patch_hash=8fe12a838f9b170ba9fb22195203dceefbeec0b500e2d47ec8c133ab4dcebf41)(expo@51.0.26)
       expo-clipboard:
         specifier: 6.0.3
         version: 6.0.3(expo@51.0.26)
@@ -272,7 +292,7 @@ importers:
         version: 3.5.14(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(expo-constants@16.0.2)(expo-linking@6.3.1)(expo-modules-autolinking@1.11.1)(expo-status-bar@1.12.1)(expo@51.0.26)(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react@18.2.0)(typescript@5.7.3)
       expo-secure-store:
         specifier: 13.0.2
-        version: 13.0.2(expo@51.0.26)
+        version: 13.0.2(patch_hash=b2753e05d2293ca1584f223c366d82904c6efe44d9efd76d610b7080fe816754)(expo@51.0.26)
       expo-splash-screen:
         specifier: 0.27.4
         version: 0.27.4(encoding@0.1.13)(expo-modules-autolinking@1.11.1)(expo@51.0.26)
@@ -482,8 +502,8 @@ importers:
         specifier: 8.2.2
         version: 8.2.2
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@20.14.0))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.7.3)
@@ -561,8 +581,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig-config
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tslib:
         specifier: 2.6.2
         version: 2.6.2
@@ -592,8 +612,8 @@ importers:
         specifier: 8.2.2
         version: 8.2.2
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.7.8))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.7.3)
@@ -666,8 +686,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig-config
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.7.8))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.7.3)
@@ -692,10 +712,10 @@ importers:
     dependencies:
       '@trivago/prettier-plugin-sort-imports':
         specifier: 4.3.0
-        version: 4.3.0(@vue/compiler-sfc@3.4.19)(prettier@3.3.3)
+        version: 4.3.0(@vue/compiler-sfc@3.4.19)(prettier@3.5.1)
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
 
   packages/provider:
     dependencies:
@@ -846,8 +866,8 @@ importers:
         specifier: 22.1.0
         version: 22.1.0
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.7.8))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.7.3)
@@ -938,8 +958,8 @@ importers:
         specifier: 9.16.0
         version: 9.16.0(jiti@1.21.6)
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tslib:
         specifier: 2.6.2
         version: 2.6.2
@@ -1014,8 +1034,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.7.8))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.7.3)
@@ -1034,6 +1054,9 @@ importers:
       '@gorhom/bottom-sheet':
         specifier: 4.6.3
         version: 4.6.3(@types/react@18.2.79)(react-native-gesture-handler@2.16.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.6)(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0)
+      '@leather.io/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@leather.io/tokens':
         specifier: workspace:*
         version: link:../tokens
@@ -1099,7 +1122,7 @@ importers:
         version: 10.0.6(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(expo-font@12.0.5(expo@51.0.26))(expo-modules-autolinking@1.11.1)(expo@51.0.26)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.7.3)
       expo-blur:
         specifier: 13.0.2
-        version: 13.0.2(expo@51.0.26)
+        version: 13.0.2(patch_hash=8fe12a838f9b170ba9fb22195203dceefbeec0b500e2d47ec8c133ab4dcebf41)(expo@51.0.26)
       expo-constants:
         specifier: 16.0.2
         version: 16.0.2(expo@51.0.26)
@@ -1319,8 +1342,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig-config
       prettier:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.5.1
+        version: 3.5.1
       tsup:
         specifier: 8.1.0
         version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.7.8))(@swc/core@1.7.39)(postcss@8.4.47)(typescript@5.7.3)
@@ -11323,8 +11346,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.3.3:
-    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+  prettier@3.5.1:
+    resolution: {integrity: sha512-hPpFQvHwL3Qv5AdRvBFMhnKo4tYxp0ReXiPn2bxkiohEX6mBeBwEpBSQTkD458RaaDKQMYSp4hX4UtfUTA5wDw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -16463,7 +16486,7 @@ snapshots:
       ora: 5.4.1
       pathe: 1.1.2
       pkg-up: 3.1.0
-      pofile: 1.1.4
+      pofile: 1.1.4(patch_hash=3aa567735e04439bd60b423ea3624e3a3f54a7b4f03e416ade823a8c342ad0c2)
       pseudolocale: 2.1.0
       ramda: 0.27.2
       source-map: 0.8.0-beta.0
@@ -16504,7 +16527,7 @@ snapshots:
       '@lingui/conf': 4.11.1(typescript@5.7.3)
       '@lingui/message-utils': 4.11.1
       date-fns: 3.6.0
-      pofile: 1.1.4
+      pofile: 1.1.4(patch_hash=3aa567735e04439bd60b423ea3624e3a3f54a7b4f03e416ade823a8c342ad0c2)
     transitivePeerDependencies:
       - typescript
 
@@ -16513,7 +16536,7 @@ snapshots:
       '@lingui/conf': 5.0.0(typescript@5.7.3)
       '@lingui/message-utils': 5.0.0
       date-fns: 3.6.0
-      pofile: 1.1.4
+      pofile: 1.1.4(patch_hash=3aa567735e04439bd60b423ea3624e3a3f54a7b4f03e416ade823a8c342ad0c2)
     transitivePeerDependencies:
       - typescript
 
@@ -20322,7 +20345,7 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trivago/prettier-plugin-sort-imports@4.3.0(@vue/compiler-sfc@3.4.19)(prettier@3.3.3)':
+  '@trivago/prettier-plugin-sort-imports@4.3.0(@vue/compiler-sfc@3.4.19)(prettier@3.5.1)':
     dependencies:
       '@babel/generator': 7.17.7
       '@babel/parser': 7.25.8
@@ -20330,7 +20353,7 @@ snapshots:
       '@babel/types': 7.17.0
       javascript-natural-sort: 0.7.1
       lodash: 4.17.21
-      prettier: 3.3.3
+      prettier: 3.5.1
     optionalDependencies:
       '@vue/compiler-sfc': 3.4.19
     transitivePeerDependencies:
@@ -23099,7 +23122,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  expo-blur@13.0.2(expo@51.0.26):
+  expo-blur@13.0.2(patch_hash=8fe12a838f9b170ba9fb22195203dceefbeec0b500e2d47ec8c133ab4dcebf41)(expo@51.0.26):
     dependencies:
       expo: 51.0.26(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(expo-constants@16.0.2)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0)(typescript@5.7.3)
 
@@ -23299,7 +23322,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  expo-secure-store@13.0.2(expo@51.0.26):
+  expo-secure-store@13.0.2(patch_hash=b2753e05d2293ca1584f223c366d82904c6efe44d9efd76d610b7080fe816754)(expo@51.0.26):
     dependencies:
       expo: 51.0.26(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(expo-constants@16.0.2)(expo-linking@6.3.1)(expo-status-bar@1.12.1)(react-dom@18.2.0(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.25.8(@babel/core@7.24.6))(@react-native/assets-registry@0.73.1)(@types/react@18.2.79)(encoding@0.1.13)(react@18.2.0))(react@18.2.0)(typescript@5.7.3)
 
@@ -26879,7 +26902,7 @@ snapshots:
 
   pngjs@3.4.0: {}
 
-  pofile@1.1.4: {}
+  pofile@1.1.4(patch_hash=3aa567735e04439bd60b423ea3624e3a3f54a7b4f03e416ade823a8c342ad0c2): {}
 
   polished@4.3.1:
     dependencies:
@@ -27210,7 +27233,7 @@ snapshots:
 
   prettier@3.2.5: {}
 
-  prettier@3.3.3: {}
+  prettier@3.5.1: {}
 
   pretty-bytes@5.6.0: {}
 
