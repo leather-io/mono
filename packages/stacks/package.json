@@ -30,7 +30,8 @@
     "@stacks/network": "7.0.2",
     "@stacks/stacks-blockchain-api-types": "7.8.2",
     "@stacks/transactions": "7.0.2",
-    "bignumber.js": "9.1.2"
+    "bignumber.js": "9.1.2",
+    "c32check": "2.0.0"
   },
   "devDependencies": {
     "tsup": "8.1.0",
