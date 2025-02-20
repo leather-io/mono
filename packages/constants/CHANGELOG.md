@@ -121,6 +121,13 @@
   * dependencies
     * @leather.io/models bumped to 0.25.1
 
+## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.16.0...@leather.io/constants-v0.17.0) (2025-02-20)
+
+
+### Features
+
+* implement btc outbound balance ([f363834](https://github.com/leather-io/mono/commit/f363834e189c1e20c2dd3d55b2ecdb863e076990))
+
 ## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.15.5...@leather.io/constants-v0.16.0) (2025-02-17)
 
 

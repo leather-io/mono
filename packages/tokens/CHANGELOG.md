@@ -114,6 +114,12 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.27.2
+
 ## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.12.14...@leather.io/tokens-v0.13.0) (2025-02-12)
 
 

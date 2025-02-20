@@ -1,5 +1,12 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.6.1
+    * @leather.io/utils bumped to 0.27.2
+
 ## 1.0.0 (2025-02-19)
 
 
