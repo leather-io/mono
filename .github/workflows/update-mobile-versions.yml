@@ -24,7 +24,8 @@ jobs:
       - name: Get branch for tag
         id: tag_branch
         run: |
-          branch=$(git branch -r --contains ${{ github.ref }})
+          raw_branch=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw_branch##*origin/}
           echo "branch=$branch" >> $GITHUB_OUTPUT
           echo "Branch is $branch."
       
