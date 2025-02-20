@@ -53,12 +53,12 @@
   },
   "engines": {
     "node": ">=20.11.0",
-    "pnpm": ">=9.11.0",
+    "pnpm": ">=10.4.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@9.13.2",
+  "packageManager": "pnpm@10.4.1",
   "pnpm": {
     "overrides": {
       "esbuild": "0.21.5",
