@@ -17,6 +17,10 @@ export function isValidStacksAddress(address: string) {
 }
 
 export function isValidAddressChain(address: string, chainId: ChainId) {
+  if (!isValidStacksAddress(address)) {
+    return false;
+  }
+
   const prefix = address.slice(0, 2);
   switch (chainId) {
     case ChainId.Mainnet:
@@ -28,14 +32,8 @@ export function isValidAddressChain(address: string, chainId: ChainId) {
   }
 }
 
-function validateAddress(address: string) {
-  if (isUndefined(address) || isEmptyString(address)) {
-    return false;
-  }
-  return true;
-}
 export function validatePayerNotRecipient(senderAddress: string, recipientAddress: string) {
-  if (validateAddress(senderAddress) || validateAddress(recipientAddress)) {
+  if (!isValidStacksAddress(senderAddress) || !isValidStacksAddress(recipientAddress)) {
     return false;
   }
   if (senderAddress === recipientAddress) {

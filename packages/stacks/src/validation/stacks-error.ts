@@ -1,4 +1,4 @@
-export type TransactionErrorKey = 'InvalidAddress' | 'InsufficientFunds' | 'InvalidNetworkAddress';
+type TransactionErrorKey = 'InvalidAddress' | 'InsufficientFunds' | 'InvalidNetworkAddress';
 
 export type StacksErrorKey = TransactionErrorKey | 'InvalidSameAddress';
 
