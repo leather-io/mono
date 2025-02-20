@@ -30,30 +30,36 @@ jobs:
             exit 1
           fi
           echo "Branch is $branch."
-        
+
       - name: Get current version
         uses: ./.github/actions/previous-mobile-tag
         id: previous-tag
 
-      - name: Extract version from tag
-        run: echo "VERSION=${{steps.previous-tag.outputs.current_version}}" >> $GITHUB_ENV
+      - name: Extract version from tag without v prefix
+        run: |
+          raw_version=${{steps.previous-tag.outputs.current_version}}
+          echo "VERSION=${raw_version#v}" >> $GITHUB_ENV
 
       - name: Update gradle version for Android
         uses: damienaicheh/update-android-version-gradle-action@v1.0.0
         with:
           build-gradle-path: './apps/mobile/android/app/build.gradle'
           version-code: 1 # No need to set this, eas handles bumping the version code
-          version-name: ${{steps.previous-tag.outputs.current_version}}
+          version-name: ${{env.VERSION}}
           print-file: true
+        env:
+          VERSION: ${{env.VERSION}}
 
       - name: Update Info.plist
         uses: damienaicheh/update-ios-version-info-plist-action@v1.2.0
         with:
-          info-plist-path: "./apps/mobile/ios/leatherwalletmobile/Info.plist"
-          bundle-short-version-string: ${{steps.previous-tag.outputs.current_version}}
+          info-plist-path: './apps/mobile/ios/leatherwalletmobile/Info.plist'
+          bundle-short-version-string: ${{env.VERSION}}
           bundle-version: 1
           print-file: true
-      
+        env:
+          VERSION: ${{env.VERSION}}
+
       - name: Update app.config.js
         shell: bash
         working-directory: ./apps/mobile
@@ -78,6 +84,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
           VERSION: ${{ env.VERSION }}
+
       - name: Get commit hash of version bump
         if: success()
         run: echo "VERSION_BUMP_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
@@ -85,24 +92,29 @@ jobs:
       - name: Create version bump branch off dev
         if: success()
         run: |
+          if [ -z "$VERSION_BUMP_COMMIT" ]; then
+            echo "No version bump commit found, skipping PR creation"
+            exit 0
+          fi
           git fetch
           git checkout dev
-          git checkout -b version-bump/${{ env.VERSION }}
-          git cherry-pick ${{ env.VERSION_BUMP_COMMIT }}
-          git push -f origin version-bump/${{ env.VERSION }}
+          git cherry-pick --no-commit ${{ env.VERSION_BUMP_COMMIT }}
         env:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
           VERSION: ${{ env.VERSION }}
           VERSION_BUMP_COMMIT: ${{ env.VERSION_BUMP_COMMIT }}
 
       - name: Open PR to merge version bump into dev
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         if: success()
         with:
-          branch: version-bump/${{ env.VERSION }}
-          title: "chore: bump mobile iOS / Android versions to ${{ env.VERSION }}"
-          body: "This PR updates app.json and package.json to reflect the latest published release."
           base: dev
+          branch: version-bump/${{ env.VERSION }}
+          title: 'chore: bump mobile iOS / Android versions to ${{ env.VERSION }}'
+          commit-message: 'chore: bump mobile iOS / Android versions to ${{ env.VERSION }}'
+          body: 'This PR updates app.config.js, build.grade and Info.plist to reflect the latest published release.'
+          committer: 'leather-bot <leather-bot@users.noreply.github.com>'
+          author: 'leather-bot <leather-bot@users.noreply.github.com>'
           token: ${{ secrets.LEATHER_BOT }}
         env:
           VERSION: ${{ env.VERSION }}
