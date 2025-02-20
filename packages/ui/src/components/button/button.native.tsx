@@ -74,19 +74,20 @@ export const Button = forwardRef(
   (
     {
       title,
-      buttonState,
+      buttonState: buttonStateProp = 'default',
       icon,
       textStyle,
       ...rest
     }: Props & {
       title?: string;
-      buttonState: ButtonState;
+      buttonState?: ButtonState;
       icon?: React.ReactNode;
       textStyle?: StyleProp<TextStyle>;
     },
     ref
   ) => {
     const props = useRestyle(composedRestyleFunction, rest);
+    const buttonState = rest.disabled ? 'disabled' : buttonStateProp;
 
     const bg = whenButtonState<
       ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined

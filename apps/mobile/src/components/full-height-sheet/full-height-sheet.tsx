@@ -2,12 +2,12 @@ import { RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 
-import { HasChildren, Sheet, SheetRef } from '@leather.io/ui/native';
+import { Sheet, SheetProps, SheetRef } from '@leather.io/ui/native';
 
-interface FullHeightSheetProps extends HasChildren {
+interface FullHeightSheetProps extends Omit<SheetProps, 'themeVariant'> {
   sheetRef: RefObject<SheetRef>;
 }
-export function FullHeightSheet({ children, sheetRef }: FullHeightSheetProps) {
+export function FullHeightSheet({ sheetRef, ...sheetProps }: FullHeightSheetProps) {
   const { themeDerivedFromThemePreference } = useSettings();
 
   return (
@@ -16,8 +16,7 @@ export function FullHeightSheet({ children, sheetRef }: FullHeightSheetProps) {
       snapPointVariant="fullHeightWithNotch"
       shouldHaveContainer={false}
       themeVariant={themeDerivedFromThemePreference}
-    >
-      {children}
-    </Sheet>
+      {...sheetProps}
+    />
   );
 }

@@ -15,6 +15,7 @@ export function BitcoinTokenBalance({
   availableBalance,
   fiatBalance,
   onPress,
+  ...rest
 }: BitcoinTokenBalanceProps) {
   return (
     <TokenBalance
@@ -28,11 +29,16 @@ export function BitcoinTokenBalance({
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}
+      {...rest}
     />
   );
 }
 
-export function BitcoinBalance() {
+interface BitcoinBalanceProps {
+  onPress?(): void;
+}
+
+export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const balance = useBtcTotalBalance();
   // TODO LEA-1726: handle balance loading & error states
   if (balance.state !== 'success') return;
@@ -40,6 +46,7 @@ export function BitcoinBalance() {
     <BitcoinTokenBalance
       availableBalance={balance.value.btc.availableBalance}
       fiatBalance={balance.value.fiat.availableBalance}
+      onPress={onPress}
     />
   );
 }

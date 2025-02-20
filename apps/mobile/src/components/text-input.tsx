@@ -91,7 +91,9 @@ export function TextInput({
         placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}
         borderColor={borderColor}
-        p="4"
+        borderRadius="sm"
+        height={64}
+        px="4"
         color="ink.action-primary-default"
         {...props}
       />

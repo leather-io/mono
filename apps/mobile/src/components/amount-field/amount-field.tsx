@@ -1,45 +1,53 @@
 import { AmountSendMaxButton } from '@/components/amount-field/amount-send-max-button';
+import { InputCurrencyMode } from '@/utils/types';
 
+import { CryptoCurrency, FiatCurrency, MarketData } from '@leather.io/models';
 import { Box, Theme } from '@leather.io/ui/native';
 
 import { AmountFieldPrimaryValue } from './amount-field-primary-value';
 import { AmountFieldSecondaryValue } from './amount-field-secondary-value';
 
-type CurrencyMode = 'crypto' | 'fiat'; // TODO: Should be moved into containing form types
 type InternalState = 'initial' | 'active' | 'invalid';
 
-interface AmountFieldProps {
+export interface AmountFieldProps {
   inputValue: string;
   invalid: boolean;
-  currencyMode: CurrencyMode;
-  onCurrencyModeChange(currencyMode: CurrencyMode, newInputValue: string): void;
-  onSetIsSendingMax(): void;
-  formatValue(value: string, mode: CurrencyMode): string;
-  calculateSecondaryValue(value: string, currencyMode: CurrencyMode): string;
+  isValidating?: boolean;
+  inputCurrencyMode: InputCurrencyMode;
+  inputCurrencyModeChangeEnabled?: boolean;
+  onInputCurrencyModeChange?(inputCurrencyMode: InputCurrencyMode, newInputValue: string): void;
+  canSendMax?: boolean;
+  isSendingMax?: boolean;
+  onSetIsSendingMax?(): void;
+  fiatCurrency: FiatCurrency;
+  cryptoCurrency: CryptoCurrency;
+  marketData: MarketData;
+  locale: string;
 }
 
 export function AmountField({
   inputValue,
-  currencyMode,
+  inputCurrencyMode,
   invalid,
-  onCurrencyModeChange,
+  isValidating,
+  inputCurrencyModeChangeEnabled,
+  onInputCurrencyModeChange,
   onSetIsSendingMax,
-  calculateSecondaryValue,
-  formatValue,
+  cryptoCurrency,
+  marketData,
+  canSendMax,
+  fiatCurrency,
+  locale,
 }: AmountFieldProps) {
-  const state = evaluateInternalState({ inputValue, invalid });
+  const state = evaluateInternalState({ inputValue, invalid, isValidating });
   const textColor = getTextColor(state);
-  const currency = {
-    primary: currencyMode,
-    secondary: currencyMode === 'crypto' ? 'fiat' : 'crypto',
-  } as const;
-  const amount = {
-    primary: inputValue,
-    secondary: calculateSecondaryValue(inputValue, currencyMode),
-  };
 
-  function onToggleCurrencyMode() {
-    onCurrencyModeChange(currency.secondary, amount.secondary);
+  function handleSendMaxPress() {
+    if (!onSetIsSendingMax) {
+      return;
+    }
+
+    onSetIsSendingMax();
   }
 
   return (
@@ -52,33 +60,53 @@ export function AmountField({
       p="4"
     >
       <Box flexDirection="row" gap="4" justifyContent="space-between">
-        <AmountFieldPrimaryValue color={textColor}>
-          {formatValue(amount.primary, currency.primary)}
-        </AmountFieldPrimaryValue>
-        <AmountSendMaxButton onPress={onSetIsSendingMax} />
+        <AmountFieldPrimaryValue
+          color={textColor}
+          value={inputValue}
+          fiatCurrency={fiatCurrency}
+          inputCurrencyMode={inputCurrencyMode}
+          cryptoCurrency={cryptoCurrency}
+          locale={locale}
+        />
+        {canSendMax && <AmountSendMaxButton onPress={handleSendMaxPress} />}
       </Box>
-      <AmountFieldSecondaryValue onToggleCurrencyMode={onToggleCurrencyMode}>
-        {formatValue(amount.secondary, currency.secondary)}
-      </AmountFieldSecondaryValue>
+      <AmountFieldSecondaryValue
+        onInputCurrencyModeChange={onInputCurrencyModeChange}
+        inputCurrencyModeChangeEnabled={inputCurrencyModeChangeEnabled}
+        primaryValue={inputValue}
+        fiatCurrency={fiatCurrency}
+        inputCurrencyMode={inputCurrencyMode}
+        cryptoCurrency={cryptoCurrency}
+        locale={locale}
+        marketData={marketData}
+      />
     </Box>
   );
 }
 
-type EvaluateInternalStateParams = Pick<AmountFieldProps, 'invalid' | 'inputValue'>;
+type EvaluateInternalStateParams = Pick<
+  AmountFieldProps,
+  'invalid' | 'inputValue' | 'isValidating'
+>;
 
 function evaluateInternalState({
   invalid,
   inputValue,
+  isValidating,
 }: EvaluateInternalStateParams): InternalState {
-  if (invalid) {
-    return 'invalid';
+  if (inputValue === '0') {
+    return 'initial';
   }
 
-  if (inputValue !== '0') {
+  if (/^0\.0*$/.test(inputValue)) {
     return 'active';
   }
 
-  return 'initial';
+  if (invalid && !isValidating) {
+    return 'invalid';
+  }
+
+  return 'active';
 }
 
 function getTextColor(state: InternalState): keyof Theme['colors'] {

@@ -38,7 +38,7 @@ export function NumpadKey({ element, label, onPress, onLongPress }: NumpadKeyPro
 
 export function NumpadKeySlot({ children }: HasChildren) {
   return (
-    <Box height={48} flexGrow={1} flexShrink={1} flexBasis="30%">
+    <Box height={44} flexGrow={1} flexShrink={1} flexBasis="30%">
       {children}
     </Box>
   );

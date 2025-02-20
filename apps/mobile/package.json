@@ -119,6 +119,7 @@
     "metro-cache": "0.80.5",
     "metro-config": "0.80.5",
     "metro-resolver": "0.80.5",
+    "p-memoize": "7.1.1",
     "prism-react-renderer": "2.4.1",
     "punycode": "2.3.1",
     "react": "18.2.0",
