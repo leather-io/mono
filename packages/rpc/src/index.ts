@@ -78,11 +78,23 @@ export type RpcResponses = ValueOf<LeatherRpcMethodMap>['response'];
 export type RpcMethodNames = keyof LeatherRpcMethodMap;
 
 export interface RequestFn {
-  <T extends RpcMethodNames>(
+  <
+    T extends RpcMethodNames,
+    P extends LeatherRpcMethodMap[T]['request'] extends { params: infer P } ? P : never,
+  >(
     arg: T,
-    params?: LeatherRpcMethodMap[T]['request'] extends { params: infer P } ? P : never
+    params: P
     // `Promise` throws if unsuccessful, so here we extract the successful response
-  ): Promise<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>>;
+  ): LeatherRpcMethodMap[T]['request'] extends { params: object }
+    ? Promise<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>>
+    : never;
+
+  <T extends RpcMethodNames>(
+    arg: T
+    // `Promise` throws if unsuccessful, so here we extract the successful response
+  ): LeatherRpcMethodMap[T]['request'] extends { params: any }
+    ? never
+    : Promise<ExtractSuccessResponse<LeatherRpcMethodMap[T]['response']>>;
 }
 
 export interface ListenFn {
