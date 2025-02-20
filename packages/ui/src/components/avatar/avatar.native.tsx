@@ -128,7 +128,6 @@ interface AvatarIconProps {
   icon?: ReactElement;
   avatarSize: AvatarSize;
 }
-
 function AvatarIcon({ icon, avatarSize }: AvatarIconProps) {
   if (icon) {
     const iconProps = icon.props.variant

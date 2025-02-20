@@ -1,4 +1,3 @@
-import { AccountIcon } from '@/features/accounts/components/account-avatar';
 import { AccountId } from '@/models/domain.model';
 import { t } from '@lingui/macro';
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
@@ -106,7 +105,7 @@ export const accountsSlice = createSlice({
         userUpdatesAccountIcon,
         handleEntityActionWith(accountsAdapter.updateOne, payload => ({
           id: makeAccountIdentifer(payload.fingerprint, payload.accountIndex),
-          changes: { icon: payload.icon as AccountIcon },
+          changes: { icon: payload.icon },
         }))
       )
 

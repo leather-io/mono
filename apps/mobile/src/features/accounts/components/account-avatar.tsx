@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, ForwardRefExoticComponent } from 'react';
 
 import {
   AlienIcon,
@@ -26,7 +26,7 @@ import {
 } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
-export const accountIconMap = {
+export const accountIconMap: Record<string, ForwardRefExoticComponent<any>> = {
   pizza: PizzaIcon,
   sparkles: SparklesIcon,
   piggyBank: PiggybankIcon,
@@ -70,7 +70,7 @@ export function AccountAvatar(props: AccountAvatarProps) {
       alignItems="center"
       {...props}
     >
-      <Icon />
+      {Icon && <Icon />}
     </SquircleBox>
   );
 }

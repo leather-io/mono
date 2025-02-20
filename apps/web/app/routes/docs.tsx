@@ -1,13 +1,12 @@
 import { styled } from 'leather-styles/jsx';
 
-import type { Route } from './+types/docs';
-
-export default function DocsRoute({ loaderData }: Route.ComponentProps) {
+export default function DocsRoute() {
   return (
     <main>
       <styled.div p="space.04">
-        <styled.h1 textStyle="display.02">Leather docs page</styled.h1>
-        <styled.h2 textStyle="heading.03">Featured articles</styled.h2>
+        <styled.h1 textStyle="display.02">Leather web app</styled.h1>
+        <styled.h2 textStyle="heading.03">Docs page</styled.h2>
+        <ul></ul>
       </styled.div>
     </main>
   );

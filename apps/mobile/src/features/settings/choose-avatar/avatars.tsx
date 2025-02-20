@@ -12,18 +12,14 @@ interface AvatarProps {
 export function Avatars({ setNewIcon, currentIcon }: AvatarProps) {
   return (
     <Box flexDirection="row" gap="5" flexWrap="wrap">
-      {Object.keys(accountIconMap).map(icon => {
-        return (
-          <AvatarButton
-            isSelected={currentIcon === icon}
-            onPress={() => {
-              setNewIcon(icon as AccountIcon);
-            }}
-            key={icon}
-            icon={icon as AccountIcon}
-          />
-        );
-      })}
+      {Object.keys(accountIconMap).map(icon => (
+        <AvatarButton
+          isSelected={currentIcon === icon}
+          onPress={() => setNewIcon(icon)}
+          key={icon}
+          icon={icon}
+        />
+      ))}
     </Box>
   );
 }
