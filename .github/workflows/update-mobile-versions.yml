@@ -82,16 +82,17 @@ jobs:
         if: success()
         run: echo "VERSION_BUMP_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-      - name: Create version bump branch on dev
+      - name: Create version bump branch off dev
         if: success()
         run: |
           git fetch
           git checkout dev
-          git checkout -b version-bump/${VERSION}
+          git checkout -b version-bump/${{ env.VERSION }}
           git cherry-pick $VERSION_BUMP_COMMIT
-          git push -f origin version-bump/${VERSION}
+          git push -f origin version-bump/${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          VERSION: ${{ env.VERSION }}
 
       - name: Open PR to merge version bump into dev
         uses: peter-evans/create-pull-request@v5
