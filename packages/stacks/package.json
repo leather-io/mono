@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "tsup": "8.1.0",
-    "vitest": "2.1.5"
+    "vitest": "2.1.9"
   },
   "files": [
     "dist"
