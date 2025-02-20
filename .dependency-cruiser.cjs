@@ -163,6 +163,7 @@ module.exports = {
         'in your package.json.',
       from: {},
       to: {
+        pathNot: ['next'],
         dependencyTypes: ['npm-no-pkg', 'npm-unknown'],
       },
     },
