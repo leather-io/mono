@@ -48,7 +48,7 @@
     "prettier": "3.3.3",
     "syncpack": "13.0.0",
     "turbo": "2.3.0",
-    "typescript": "5.5.4",
+    "typescript": "5.7.3",
     "vitest": "2.1.9"
   },
   "engines": {
@@ -208,11 +208,6 @@
           "expo-modules-core": "*"
         }
       }
-    },
-    "patchedDependencies": {
-      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch",
-      "pofile@1.1.4": "patches/pofile@1.1.4.patch",
-      "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch"
     }
   },
   "resolutions": {
