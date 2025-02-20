@@ -11,6 +11,7 @@ import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
+import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings.selectors';
 import { SettingsService } from '../../settings/settings.service';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 
@@ -42,17 +43,13 @@ export function createHiroStacksApiClient(
 ): HiroStacksApiClient {
   async function getAddressBalances(address: string, signal?: AbortSignal) {
     return await cache.fetchWithCache(
-      [
-        'hiro-stacks-get-address-balances',
-        address,
-        settings.getSettings().network.chain.stacks.chainId,
-      ],
+      ['hiro-stacks-get-address-balances', address, selectStacksChainId(settings.getSettings())],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroAddressBalanceResponse>(
-              `${settings.getSettings().network.chain.stacks.url}/extended/v1/address/${address}/balances`,
+              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/address/${address}/balances`,
               { signal }
             ),
           {
@@ -72,14 +69,14 @@ export function createHiroStacksApiClient(
       [
         'hiro-stacks-get-address-transactions',
         address,
-        settings.getSettings().network.chain.stacks.chainId,
+        selectStacksChainId(settings.getSettings()),
       ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroAddressTransactionsListResponse>(
-              `${settings.getSettings().network.chain.stacks.url}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`,
+              `${selectStacksApiUrl(settings.getSettings())}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`,
               { signal }
             ),
           {
@@ -99,14 +96,14 @@ export function createHiroStacksApiClient(
       [
         'hiro-stacks-get-address-mempool-transactions',
         address,
-        settings.getSettings().network.chain.stacks.chainId,
+        selectStacksChainId(settings.getSettings()),
       ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<MempoolTransactionListResponse>(
-              `${settings.getSettings().network.chain.stacks.url}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
               { signal }
             ),
           {
@@ -123,17 +120,13 @@ export function createHiroStacksApiClient(
 
   async function getFungibleTokenMetadata(principal: string, signal?: AbortSignal) {
     return await cache.fetchWithCache(
-      [
-        'hiro-stacks-get-ft-token-metadata',
-        principal,
-        settings.getSettings().network.chain.stacks.chainId,
-      ],
+      ['hiro-stacks-get-ft-token-metadata', principal, selectStacksChainId(settings.getSettings())],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroFtMetadataResponse>(
-              `${settings.getSettings().network.chain.stacks.url}/metadata/v1/ft/${principal}`,
+              `${selectStacksApiUrl(settings.getSettings())}/metadata/v1/ft/${principal}`,
               { signal }
             ),
           {

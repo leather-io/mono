@@ -6,6 +6,7 @@ import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
+import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
 import { SettingsService } from '../../settings/settings.service';
 import {
   bisBrc20MarketInfoSchema,
@@ -38,20 +39,17 @@ export function createBestInSlotApiClient(
   cache: HttpCacheService
 ): BestInSlotApiClient {
   async function fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal) {
+    const network = bitcoinNetworkModeToCoreNetworkMode(
+      selectBitcoinNetworkMode(settingsService.getSettings())
+    );
     return await cache.fetchWithCache(
-      [
-        'best-in-slot-brc20-market-info',
-        bitcoinNetworkModeToCoreNetworkMode(
-          settingsService.getSettings().network.chain.bitcoin.mode
-        ),
-        ticker,
-      ],
+      ['best-in-slot-brc20-market-info', network, ticker],
       async () => {
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
             axios.get<BestInSlotApiResponse<BisBrc20MarketInfo>>(
-              `${getBestInSlotBasePath(settingsService.getSettings().network.chain.bitcoin.mode)}/brc20/market_info?ticker=${ticker}`,
+              `${getBestInSlotBasePath(network)}/brc20/market_info?ticker=${ticker}`,
               { signal }
             ),
           { signal }
@@ -63,20 +61,17 @@ export function createBestInSlotApiClient(
   }
 
   async function fetchRuneTickerInfo(runeName: string, signal?: AbortSignal) {
+    const network = bitcoinNetworkModeToCoreNetworkMode(
+      selectBitcoinNetworkMode(settingsService.getSettings())
+    );
     return await cache.fetchWithCache(
-      [
-        'best-in-slot-rune-ticker-info',
-        bitcoinNetworkModeToCoreNetworkMode(
-          settingsService.getSettings().network.chain.bitcoin.mode
-        ),
-        runeName,
-      ],
+      ['best-in-slot-rune-ticker-info', network, runeName],
       async () => {
         const res = await limiter.add(
           RateLimiterType.BestInSlot,
           () =>
             axios.get<BestInSlotApiResponse<BisRuneTickerInfo>>(
-              `${getBestInSlotBasePath(settingsService.getSettings().network.chain.bitcoin.mode)}/runes/ticker_info?rune_name=${runeName}`,
+              `${getBestInSlotBasePath(network)}/runes/ticker_info?rune_name=${runeName}`,
               { signal }
             ),
           { signal }
@@ -96,24 +91,19 @@ export function createBestInSlotApiClient(
     params.append('offset', '0');
     params.append('count', '2000');
 
-    return bitcoinNetworkModeToCoreNetworkMode(
-      settingsService.getSettings().network.chain.bitcoin.mode
-    ) !== 'mainnet'
+    const network = bitcoinNetworkModeToCoreNetworkMode(
+      selectBitcoinNetworkMode(settingsService.getSettings())
+    );
+    return network !== 'mainnet'
       ? []
       : await cache.fetchWithCache(
-          [
-            'best-in-slot-inscriptions',
-            bitcoinNetworkModeToCoreNetworkMode(
-              settingsService.getSettings().network.chain.bitcoin.mode
-            ),
-            descriptor,
-          ],
+          ['best-in-slot-inscriptions', network, descriptor],
           async () => {
             const res = await limiter.add(
               RateLimiterType.BestInSlot,
               () =>
                 axios.get<BestInSlotApiResponse<BisInscription[]>>(
-                  `${getBestInSlotBasePath(settingsService.getSettings().network.chain.bitcoin.mode)}/wallet/inscriptions_xpub`,
+                  `${getBestInSlotBasePath(network)}/wallet/inscriptions_xpub`,
                   { params, signal }
                 ),
               { signal }
@@ -132,28 +122,27 @@ export function createBestInSlotApiClient(
     params.append('offset', '0');
     params.append('count', '2000');
 
-    return await cache.fetchWithCache(
-      [
-        'best-in-slot-runes-valid-outputs',
-        bitcoinNetworkModeToCoreNetworkMode(
-          settingsService.getSettings().network.chain.bitcoin.mode
-        ),
-        descriptor,
-      ],
-      async () => {
-        const res = await limiter.add(
-          RateLimiterType.BestInSlot,
-          () =>
-            axios.get<BestInSlotApiResponse<BisRuneValidOutput[]>>(
-              `${getBestInSlotBasePath(settingsService.getSettings().network.chain.bitcoin.mode)}/runes/wallet_valid_outputs_xpub`,
-              { params, signal }
-            ),
-          { signal }
-        );
-        return z.array(bisRuneValidOutputsSchema).parse(res.data.data);
-      },
-      { ttl: HttpCacheTimeMs.twoMinutes }
+    const network = bitcoinNetworkModeToCoreNetworkMode(
+      selectBitcoinNetworkMode(settingsService.getSettings())
     );
+    return network !== 'mainnet'
+      ? []
+      : await cache.fetchWithCache(
+          ['best-in-slot-runes-valid-outputs', network, descriptor],
+          async () => {
+            const res = await limiter.add(
+              RateLimiterType.BestInSlot,
+              () =>
+                axios.get<BestInSlotApiResponse<BisRuneValidOutput[]>>(
+                  `${getBestInSlotBasePath(network)}/runes/wallet_valid_outputs_xpub`,
+                  { params, signal }
+                ),
+              { signal }
+            );
+            return z.array(bisRuneValidOutputsSchema).parse(res.data.data);
+          },
+          { ttl: HttpCacheTimeMs.twoMinutes }
+        );
   }
 
   return {

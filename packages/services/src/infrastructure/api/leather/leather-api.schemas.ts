@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createPaginationSchema } from './leather-api.pagination';
+import { createPageSchema } from './leather-api.pagination';
 
 export const leatherApiUtxoSchema = z.object({
   txid: z.string(),
@@ -11,30 +11,31 @@ export const leatherApiUtxoSchema = z.object({
   path: z.string(),
 });
 
-export const leatherApiAddressTypes = ['ns', 'tr', 'other'] as const;
-
 export const leatherApiBitcoinTransactionSchema = z.object({
   txid: z.string(),
   height: z.number().optional(),
   time: z.number().optional(),
   vin: z.array(
     z.object({
+      txid: z.string(),
       n: z.number(),
-      own: z.boolean().optional(),
-      type: z.enum(leatherApiAddressTypes),
-      value: z.number(),
+      owned: z.boolean().optional(),
+      address: z.string().optional(),
+      path: z.string().optional(),
+      value: z.string(),
     })
   ),
   vout: z.array(
     z.object({
       n: z.number(),
-      own: z.boolean().optional(),
-      type: z.enum(leatherApiAddressTypes),
-      value: z.number(),
+      owned: z.boolean().optional(),
+      address: z.string().optional(),
+      path: z.string().optional(),
+      value: z.string(),
     })
   ),
 });
-export const leatherApiBitcoinTransactionPageSchema = createPaginationSchema(
+export const leatherApiBitcoinTransactionPageSchema = createPageSchema(
   leatherApiBitcoinTransactionSchema
 );
 

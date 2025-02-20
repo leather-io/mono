@@ -4,18 +4,19 @@ import { isDefined } from '@leather.io/utils';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { BitcoinAccountServiceRequest } from '../shared/bitcoin.types';
+import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import {
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
+  getOutboundUtxos,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
-  isInboundUtxo,
+  isUnconfirmedUtxo,
   isUneconomicalUtxo,
   selectUniqueUtxoIds,
 } from './utxos.utils';
 
 export interface UtxoTotals {
-  total: Utxo[];
   confirmed: Utxo[];
   inbound: Utxo[];
   outbound: Utxo[];
@@ -37,7 +38,8 @@ export interface UtxosService {
 
 export function createUtxosService(
   leatherApiClient: LeatherApiClient,
-  bisApiClient: BestInSlotApiClient
+  bisApiClient: BestInSlotApiClient,
+  bitcoinTransactionsService: BitcoinTransactionsService
 ): UtxosService {
   /**
    * Retrieve categorized UTXO lists for given Bitcoin account.
@@ -50,7 +52,6 @@ export function createUtxosService(
       getDescriptorUtxos(request.account.taprootDescriptor, request.unprotectedUtxos, signal),
     ]);
     return {
-      total: [...nativeSegwitUtxos.total, ...taprootUtxos.total],
       confirmed: [...nativeSegwitUtxos.confirmed, ...taprootUtxos.confirmed],
       inbound: [...nativeSegwitUtxos.inbound, ...taprootUtxos.inbound],
       outbound: [...nativeSegwitUtxos.outbound, ...taprootUtxos.outbound],
@@ -71,19 +72,21 @@ export function createUtxosService(
     unprotectedUtxoIds: UtxoId[] = [],
     signal?: AbortSignal
   ) {
-    const [totalUtxos, totalProtectedUtxos] = await Promise.all([
+    const [leatherApiUtxos, totalProtectedUtxos, btcTxs] = await Promise.all([
       leatherApiClient.fetchUtxos(descriptor, signal),
       getDescriptorProtectedUtxos(descriptor, signal),
+      bitcoinTransactionsService.getDescriptorTransactions(descriptor, signal),
     ]);
+    const outboundUtxos = getOutboundUtxos(btcTxs);
     const protectedUtxos = totalProtectedUtxos.filter(
       filterOutMatchesAnyUtxoId(unprotectedUtxoIds)
     );
-    const inboundUtxos = totalUtxos.filter(isInboundUtxo);
-    const outboundUtxos: Utxo[] = [];
-    const confirmedUtxos = totalUtxos.filter(filterOutMatchesAnyUtxoId(inboundUtxos));
-    const uneconomicalUtxos = confirmedUtxos
-      .filter(utxo => !isInboundUtxo(utxo))
-      .filter(isUneconomicalUtxo);
+    const unconfirmedUtxos = leatherApiUtxos.filter(isUnconfirmedUtxo);
+    const confirmedUtxos = [
+      ...leatherApiUtxos.filter(filterOutMatchesAnyUtxoId(unconfirmedUtxos)),
+      ...outboundUtxos,
+    ];
+    const uneconomicalUtxos = confirmedUtxos.filter(isUneconomicalUtxo);
     const unspendableUtxos = selectUniqueUtxoIds([
       ...outboundUtxos,
       ...protectedUtxos,
@@ -91,9 +94,8 @@ export function createUtxosService(
     ]);
     const availableUtxos = confirmedUtxos.filter(filterOutMatchesAnyUtxoId(unspendableUtxos));
     return {
-      total: totalUtxos,
       confirmed: confirmedUtxos,
-      inbound: inboundUtxos,
+      inbound: unconfirmedUtxos,
       outbound: outboundUtxos,
       protected: protectedUtxos,
       uneconomical: uneconomicalUtxos,
@@ -103,7 +105,7 @@ export function createUtxosService(
   }
 
   /**
-   * Retrieve protected UTXOs (w/ inscriptions or runes) for given Bitcoin taproot xpub descriptor.
+   * Retrieve protected UTXOs (those w/ inscriptions or runes) for given Bitcoin taproot xpub descriptor.
    */
   async function getDescriptorProtectedUtxos(taprootDescriptor: string, signal?: AbortSignal) {
     if (!taprootDescriptor.toLocaleLowerCase().startsWith('tr(')) return [];
@@ -117,6 +119,7 @@ export function createUtxosService(
       .map(inscription => getUtxoIdFromSatpoint(inscription.satpoint))
       .filter(isDefined);
     const runesUtxoIds = runeOutputs.map(r => getUtxoIdFromOutpoint(r.output)).filter(isDefined);
+
     return utxos.filter(filterMatchesAnyUtxoId([...inscribedUtxoIds, ...runesUtxoIds]));
   }
 

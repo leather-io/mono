@@ -11,3 +11,4 @@ export * from './market-data/market-data.service';
 export * from './shared/bitcoin.types';
 export * from './transactions/stacks-transactions.service';
 export * from './utxos/utxos.service';
+export * from './shared/bitcoin.types';
