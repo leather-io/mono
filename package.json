@@ -51,16 +51,6 @@
     "typescript": "5.5.4",
     "vitest": "2.1.9"
   },
-  "resolutions": {
-    "cookie": "0.7.1",
-    "esbuild": "0.25.0",
-    "micromatch": "4.0.8",
-    "path-to-regexp": "0.1.12",
-    "send": "0.19.0",
-    "store2": "2.14.4",
-    "undici": "6.21.1",
-    "vite": "5.4.12"
-  },
   "engines": {
     "node": ">=20.11.0",
     "pnpm": ">=9.11.0",
@@ -224,5 +214,15 @@
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
       "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch"
     }
+  },
+  "resolutions": {
+    "cookie": "0.7.1",
+    "esbuild": "0.25.0",
+    "micromatch": "4.0.8",
+    "path-to-regexp": "0.1.12",
+    "send": "0.19.0",
+    "store2": "2.14.4",
+    "undici": "6.21.1",
+    "vite": "5.4.12"
   }
 }
