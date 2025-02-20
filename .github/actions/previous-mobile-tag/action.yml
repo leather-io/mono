@@ -1,9 +1,14 @@
-name: Previous Mobile Tag
-description: Get the previous mobile tag
+name: Mobile Release Tags
+description: Get the previous mobile release tag and current version
+
 outputs:
   tag:
-    description: 'The previous mobile tag'
+    description: 'The previous mobile release tag'
     value: ${{ steps.get_previous_tag.outputs.previous_tag }}
+  current_version:
+    description: 'The current version'
+    value: ${{ steps.get_previous_tag.outputs.current_version }}
+
 runs:
   using: 'composite'
   steps:
@@ -19,6 +24,7 @@ runs:
         current_version=$(echo $current_tag | grep -o "v[0-9]*\.[0-9]*\.[0-9]*")
         previous_tag=$(git tag --sort=v:refname | grep -E "^mobile(-test)?-v[0-9]*\.[0-9]*\.[0-9]*(-beta|-alpha)?\.*" | grep -v "$current_version" | head -n 1)
         echo "previous_tag=$previous_tag" >> "$GITHUB_OUTPUT"
+        echo "current_version=$current_version" >> "$GITHUB_OUTPUT"
         echo "current_version: $current_version"
         echo "current_tag: $current_tag"
         echo "previous_tag: $previous_tag"
