@@ -547,6 +547,28 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.6.1
 
+## [0.19.31](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.30...@leather.io/bitcoin-v0.19.31) (2025-02-21)
+
+
+### Bug Fixes
+
+* upgrade prettier ([5a1577c](https://github.com/leather-io/mono/commit/5a1577cc382b4399d427dbf049d1f1d08d984f33))
+* upgrade typescript ([14b91ee](https://github.com/leather-io/mono/commit/14b91ee484d89d25399af7b3e9144e1b4e6a48a7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.2
+    * @leather.io/crypto bumped to 1.6.44
+    * @leather.io/models bumped to 0.26.2
+    * @leather.io/utils bumped to 0.27.4
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.1
+    * @leather.io/rpc bumped to 2.6.3
+    * @leather.io/tsconfig-config bumped to 0.6.1
+
 ## [0.19.30](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.29...@leather.io/bitcoin-v0.19.30) (2025-02-21)
 
 

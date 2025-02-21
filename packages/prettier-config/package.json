@@ -2,7 +2,7 @@
   "name": "@leather.io/prettier-config",
   "author": "Leather.io contact@leather.io",
   "description": "Shared prettier configuration",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/prettier-config",
   "repository": {

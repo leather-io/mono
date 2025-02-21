@@ -567,6 +567,36 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.29
 
+## [2.14.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.0...@leather.io/mobile-v2.14.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* upgrade prettier ([5a1577c](https://github.com/leather-io/mono/commit/5a1577cc382b4399d427dbf049d1f1d08d984f33))
+* upgrade typescript ([14b91ee](https://github.com/leather-io/mono/commit/14b91ee484d89d25399af7b3e9144e1b4e6a48a7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.2.3
+    * @leather.io/bitcoin bumped to 0.19.31
+    * @leather.io/constants bumped to 0.17.2
+    * @leather.io/crypto bumped to 1.6.44
+    * @leather.io/models bumped to 0.26.2
+    * @leather.io/provider bumped to 1.0.3
+    * @leather.io/query bumped to 2.27.8
+    * @leather.io/rpc bumped to 2.6.3
+    * @leather.io/services bumped to 1.4.2
+    * @leather.io/stacks bumped to 1.6.1
+    * @leather.io/tokens bumped to 0.13.5
+    * @leather.io/ui bumped to 1.49.5
+    * @leather.io/utils bumped to 0.27.4
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.31
+    * @leather.io/prettier-config bumped to 0.6.1
+
 ## [2.14.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.13.1...@leather.io/mobile-v2.14.0) (2025-02-21)
 
 
