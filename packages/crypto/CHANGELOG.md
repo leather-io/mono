@@ -282,6 +282,12 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.27.4
+
 ## [1.6.43](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.42...@leather.io/crypto-v1.6.43) (2025-02-21)
 
 
