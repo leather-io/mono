@@ -4,9 +4,10 @@ import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 
+import { STX_DECIMALS } from '@leather.io/constants';
 import { ChainId } from '@leather.io/models';
 import { StacksError, isValidStacksTransaction } from '@leather.io/stacks';
-import { createMoneyFromDecimal } from '@leather.io/utils';
+import { createMoneyFromDecimal, isValidPrecision } from '@leather.io/utils';
 
 import {
   CreateCurrentSendRoute,
@@ -47,9 +48,13 @@ export function useSendFormStx() {
     // Temporary logs until we can hook up to approver flow
     async onInitSendTransfer(data: SendFormStxContext, values: SendFormStxSchema) {
       try {
-        const { recipient } = values;
-        isValidStacksTransaction(payer, recipient, chainId);
-        const tx = await generateTx(parseSendFormValues(values));
+        const parsedValues = parseSendFormValues(values);
+        if (!isValidPrecision(+values.amount, STX_DECIMALS)) {
+          throw new StacksError('InvalidPrecision');
+        }
+        const { amount, recipient } = parsedValues;
+        isValidStacksTransaction({ amount, payer, recipient, chainId });
+        const tx = await generateTx(parsedValues);
 
         if (!tx) {
           // logger('tx:', 'Attempted to generate raw tx, but no tx exists');

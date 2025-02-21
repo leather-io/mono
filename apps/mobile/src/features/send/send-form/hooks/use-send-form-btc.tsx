@@ -17,8 +17,9 @@ import {
   isValidBitcoinTransaction,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
+import { BTC_DECIMALS } from '@leather.io/constants';
 import { AverageBitcoinFeeRates, Money, bitcoinNetworkToNetworkMode } from '@leather.io/models';
-import { createMoneyFromDecimal } from '@leather.io/utils';
+import { createMoneyFromDecimal, isValidPrecision } from '@leather.io/utils';
 
 import {
   CreateCurrentSendRoute,
@@ -93,7 +94,10 @@ export function useSendFormBtc() {
 
     onInitSendTransfer({ utxos, feeRates }: SendFormBtcContext, values: SendFormBtcSchema) {
       try {
-        const { recipient: recipientAddress, feeRate } = values;
+        const { amount: inputAmount, recipient: recipientAddress, feeRate } = values;
+        if (!isValidPrecision(+inputAmount, BTC_DECIMALS)) {
+          throw new BitcoinError('InvalidPrecision');
+        }
         const recipient = createBitcoinAddress(recipientAddress);
         const parsedSendFormValues = parseSendFormValues(values);
 

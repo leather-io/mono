@@ -1,4 +1,4 @@
-type TransactionErrorKey = 'InvalidAddress' | 'InsufficientFunds' | 'InvalidNetworkAddress';
+import { TransactionErrorKey } from '@leather.io/models';
 
 export type StacksErrorKey = TransactionErrorKey | 'InvalidSameAddress';
 
