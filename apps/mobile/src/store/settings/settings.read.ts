@@ -134,6 +134,9 @@ export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
         [ChainId.Mainnet]: TransactionVersion.Mainnet,
         [ChainId.Testnet]: TransactionVersion.Testnet,
       }),
+      client: {
+        baseUrl: networkPreference.chain.stacks.url,
+      },
       chainId:
         networkPreference.chain.stacks.subnetChainId ?? networkPreference.chain.stacks.chainId,
       bnsLookupUrl: networkPreference.chain.stacks.url || '',
