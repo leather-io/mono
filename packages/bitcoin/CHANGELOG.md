@@ -547,6 +547,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.6.1
 
+## [0.19.30](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.29...@leather.io/bitcoin-v0.19.30) (2025-02-21)
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.1
+    * @leather.io/crypto bumped to 1.6.43
+    * @leather.io/models bumped to 0.26.1
+    * @leather.io/utils bumped to 0.27.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.6.2
+
 ## [0.19.10](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.9...@leather.io/bitcoin-v0.19.10) (2025-01-07)
 
 

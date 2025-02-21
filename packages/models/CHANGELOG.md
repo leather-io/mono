@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.26.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.0...@leather.io/models-v0.26.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* update sbtc bitcoin url ([57de284](https://github.com/leather-io/mono/commit/57de284dc9fbc29f8efc1cb4892639fe442d5eee))
+
 ## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.25.1...@leather.io/models-v0.26.0) (2025-02-17)
 
 

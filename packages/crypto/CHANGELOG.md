@@ -282,6 +282,20 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.2
 
+## [1.6.43](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.42...@leather.io/crypto-v1.6.43) (2025-02-21)
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.27.3
+
 ## [1.6.11](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.10...@leather.io/crypto-v1.6.11) (2024-11-19)
 
 

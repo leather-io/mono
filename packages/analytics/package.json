@@ -2,7 +2,7 @@
   "name": "@leather.io/analytics",
   "author": "Leather.io contact@leather.io",
   "description": "Analytics package for Leather using Segment",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "license": "MIT",
   "homepage": "https://github.com/leather.io/mono/tree/dev/packages/analytics",
   "repository": {

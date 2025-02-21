@@ -278,6 +278,21 @@
   * dependencies
     * @leather.io/constants bumped to 0.17.0
 
+## [0.27.3](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.2...@leather.io/utils-v0.27.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.1
+    * @leather.io/models bumped to 0.26.1
+
 ## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.26.0...@leather.io/utils-v0.27.0) (2025-02-14)
 
 
