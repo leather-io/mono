@@ -3,8 +3,9 @@ import * as secp from '@noble/secp256k1';
 import * as btc from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
+import { createBitcoinAddress } from '@leather.io/models';
+
 import { ecdsaPublicKeyToSchnorr } from '../utils/bitcoin.utils';
-import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   createNativeSegwitBitcoinJsSigner,
   createTaprootBitcoinJsSigner,

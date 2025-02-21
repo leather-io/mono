@@ -1,6 +1,7 @@
 import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { createMoney, createNullArrayOfLength, sumNumbers } from '@leather.io/utils';
 
+import { isBitcoinAddress } from '../../../models/src/crypto-assets/bitcoin/bitcoin-address';
 import {
   invalidAddress,
   legacyAddress,
@@ -8,7 +9,6 @@ import {
   segwitAddress,
   taprootAddress,
 } from '../mocks/mocks';
-import { isBitcoinAddress } from '../validation/bitcoin-address';
 import { determineUtxosForSpend, determineUtxosForSpendAll } from './coin-selection';
 import { filterUneconomicalUtxos, getSizeInfo } from './coin-selection.utils';
 

@@ -1,9 +1,9 @@
 import { deriveRootKeychainFromMnemonic } from '@leather.io/crypto';
+import { createBitcoinAddress } from '@leather.io/models';
 
 import { testMnemonic } from '../../../../config/test-helpers';
 import { deriveTaprootAccount } from '../payments/p2tr-address-gen';
 import { deriveNativeSegwitAccountFromRootKeychain } from '../payments/p2wpkh-address-gen';
-import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { lookupDerivationByAddress } from './lookup-derivation-by-address';
 
 describe(lookupDerivationByAddress.name, async () => {

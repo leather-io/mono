@@ -9,13 +9,12 @@ import {
   extractAccountIndexFromPath,
   extractPurposeFromPath,
 } from '@leather.io/crypto';
-import { BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
 import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
 import { getTaprootPayment } from '../payments/p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
-import { BitcoinAddress } from '../validation/bitcoin-address';
 import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 
 export interface BitcoinAccount {

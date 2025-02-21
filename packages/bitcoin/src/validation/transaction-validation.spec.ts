@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinError, BitcoinNetworkModes } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import {
@@ -8,7 +8,6 @@ import {
   TEST_ACCOUNT_1_TAPROOT_ADDRESS,
   inValidCharactersAddress,
 } from '../mocks/mocks';
-import { BitcoinError } from '../validation/bitcoin-error';
 import { isValidBitcoinTransaction } from './transaction-validation';
 
 const mockTransaction = {

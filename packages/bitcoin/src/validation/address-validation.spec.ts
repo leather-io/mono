@@ -1,5 +1,7 @@
 import { Network } from 'bitcoin-address-validation';
 
+import { isValidBitcoinAddress } from '@leather.io/models';
+
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_1_TAPROOT_ADDRESS,
@@ -8,11 +10,7 @@ import {
   inValidCharactersAddress,
   inValidLengthAddress,
 } from '../mocks/mocks';
-import {
-  getBitcoinAddressNetworkType,
-  isValidBitcoinAddress,
-  isValidBitcoinNetworkAddress,
-} from './address-validation';
+import { getBitcoinAddressNetworkType, isValidBitcoinNetworkAddress } from './address-validation';
 
 describe('getBitcoinAddressNetworkType', () => {
   it('returns the correct network type', () => {

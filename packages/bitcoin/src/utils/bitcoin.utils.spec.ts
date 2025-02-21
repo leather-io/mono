@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { createBitcoinAddress } from '../validation/bitcoin-address';
+import { createBitcoinAddress } from '@leather.io/models';
+
 import { inferNetworkFromAddress, inferPaymentTypeFromAddress } from './bitcoin.utils';
 
 describe(inferNetworkFromAddress.name, () => {

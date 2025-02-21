@@ -1,4 +1,6 @@
-export * from './bitcoin-unit.model';
+export * from './crypto-assets/bitcoin/bitcoin-address';
+export * from './crypto-assets/bitcoin/bitcoin-error';
+export * from './crypto-assets/bitcoin/bitcoin-unit.model';
 export * from './crypto-assets/crypto-asset-balance.model';
 export * from './crypto-assets/crypto-asset-info.model';
 export * from './crypto-assets/bitcoin/inscription.model';

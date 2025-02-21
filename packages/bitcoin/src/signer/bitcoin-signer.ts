@@ -11,6 +11,7 @@ import {
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
 import type { BitcoinNetworkModes, ValueOf } from '@leather.io/models';
+import { BitcoinAddress } from '@leather.io/models';
 import { PaymentTypes, signatureHash } from '@leather.io/rpc';
 import { hexToNumber, toHexString } from '@leather.io/utils';
 
@@ -23,7 +24,6 @@ import {
   inferPaymentTypeFromPath,
   whenSupportedPaymentType,
 } from '../utils/bitcoin.utils';
-import { BitcoinAddress } from '../validation/bitcoin-address';
 
 export type AllowedSighashTypes = ValueOf<typeof signatureHash> | SigHash;
 

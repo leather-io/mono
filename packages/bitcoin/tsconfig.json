@@ -1,6 +1,6 @@
 {
   "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
-  "include": ["**/*"],
+  "include": ["**/*", "../models/src/crypto-assets/bitcoin/bitcoin-address.ts"],
   "exclude": ["./dist"],
   "compilerOptions": {
     "baseUrl": "src",

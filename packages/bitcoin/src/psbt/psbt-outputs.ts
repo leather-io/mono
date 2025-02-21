@@ -1,11 +1,10 @@
 import type { TransactionOutput } from '@scure/btc-signer/psbt';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes, createBitcoinAddress } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { getAddressFromOutScript } from '../utils/bitcoin.utils';
-import { BitcoinAddress, createBitcoinAddress } from '../validation/bitcoin-address';
 
 export interface PsbtOutput {
   address: BitcoinAddress;

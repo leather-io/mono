@@ -15,14 +15,13 @@ import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
 import {
-  createBitcoinAddress,
   getBitcoinFees,
   getPsbtAsTransaction,
   getPsbtDetails,
   getSizeInfo,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates, FeeTypes, Money } from '@leather.io/models';
+import { AverageBitcoinFeeRates, FeeTypes, Money, createBitcoinAddress } from '@leather.io/models';
 import {
   useAverageBitcoinFeeRates,
   useBitcoinBroadcastTransaction,

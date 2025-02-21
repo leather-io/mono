@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro';
 
-import { BitcoinErrorKey, minSpendAmountInSats } from '@leather.io/bitcoin';
+import { minSpendAmountInSats } from '@leather.io/bitcoin';
+import { BitcoinErrorKey } from '@leather.io/models';
 import { match, satToBtc } from '@leather.io/utils';
 
 const minimumBtcSpend = satToBtc(minSpendAmountInSats);

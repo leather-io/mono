@@ -1,5 +1,10 @@
-import { isValidBitcoinAddress } from './address-validation';
+import { validate } from 'bitcoin-address-validation';
+
 import { BitcoinError } from './bitcoin-error';
+
+export function isValidBitcoinAddress(address: string) {
+  return validate(address);
+}
 
 // Branded type for Bitcoin addresses
 export type BitcoinAddress = string & { readonly __brand: unique symbol };

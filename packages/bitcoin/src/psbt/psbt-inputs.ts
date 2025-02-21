@@ -1,8 +1,12 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
-import { BitcoinAddress, createBitcoinAddress } from 'validation/bitcoin-address';
 
-import type { BitcoinNetworkModes, Inscription } from '@leather.io/models';
+import {
+  BitcoinAddress,
+  BitcoinNetworkModes,
+  Inscription,
+  createBitcoinAddress,
+} from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';

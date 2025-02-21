@@ -1,4 +1,5 @@
-import { createBitcoinAddress } from '../validation/bitcoin-address';
+import { createBitcoinAddress } from '@leather.io/models';
+
 import { calculateMaxSpend } from './calculate-max-spend';
 import { generateMockAverageFee, mockUtxos } from './coin-selection.mocks';
 

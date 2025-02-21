@@ -1,4 +1,4 @@
-import { createBitcoinAddress } from '../validation/bitcoin-address';
+import { createBitcoinAddress } from '@leather.io/models';
 
 // maybe these should be in mono/config?
 // from extension/tests/mocks/constants
