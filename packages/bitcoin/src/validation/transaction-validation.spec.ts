@@ -57,4 +57,20 @@ describe('isValidBitcoinTransaction', () => {
     };
     expect(() => isValidBitcoinTransaction(transaction)).toThrow(BitcoinError);
   });
+
+  it('should throw an error if the amount precision is invalid', () => {
+    const transaction = {
+      ...mockTransaction,
+      amount: createMoney(1.123456789, 'USD'),
+    };
+    expect(() => isValidBitcoinTransaction(transaction)).toThrow(BitcoinError);
+  });
+
+  it('should not throw an error if the amount precision is valid', () => {
+    const transaction = {
+      ...mockTransaction,
+      amount: createMoney(1.123456, 'USD'),
+    };
+    expect(() => isValidBitcoinTransaction(transaction)).not.toThrow(BitcoinError);
+  });
 });

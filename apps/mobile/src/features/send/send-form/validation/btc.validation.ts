@@ -33,5 +33,9 @@ export function formatBitcoinError(errorMessage: BitcoinErrorKey) {
       id: 'bitcoin-error.no-outputs-to-sign',
       message: 'No outputs to sign',
     }),
+    InvalidPrecision: t({
+      id: 'bitcoin-error.invalid-precision',
+      message: 'Invalid precision',
+    }),
   });
 }

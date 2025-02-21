@@ -21,5 +21,9 @@ export function formatStacksError(errorMessage: StacksErrorKey) {
       id: 'stacks-error.insufficient-funds',
       message: 'Insufficient funds',
     }),
+    InvalidPrecision: t({
+      id: 'stacks-error.invalid-precision',
+      message: 'Invalid precision',
+    }),
   });
 }
