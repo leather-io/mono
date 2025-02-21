@@ -205,6 +205,13 @@
     * @leather.io/models bumped to 0.26.2
     * @leather.io/utils bumped to 0.27.4
 
+## [2.6.4](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.3...@leather.io/rpc-v2.6.4) (2025-02-21)
+
+
+### Bug Fixes
+
+* request params ([bf81686](https://github.com/leather-io/mono/commit/bf81686cd1ab6ee6c8f830f345c2093485de176c))
+
 ## [2.6.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.1...@leather.io/rpc-v2.6.2) (2025-02-21)
 
 

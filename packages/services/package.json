@@ -2,7 +2,7 @@
   "name": "@leather.io/services",
   "author": "Leather.io contact@leather.io",
   "description": "Leather Services Package",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "license": "MIT",
   "homepage": "https://github.com/leather.io/mono/tree/dev/packages/services",
   "repository": {
