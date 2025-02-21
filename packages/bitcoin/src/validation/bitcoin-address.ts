@@ -1,8 +1,7 @@
+import { BitcoinAddress } from '@leather.io/models';
+
 import { isValidBitcoinAddress } from './address-validation';
 import { BitcoinError } from './bitcoin-error';
-
-// Branded type for Bitcoin addresses
-export type BitcoinAddress = string & { readonly __brand: unique symbol };
 
 export function isBitcoinAddress(value: string): value is BitcoinAddress {
   try {
