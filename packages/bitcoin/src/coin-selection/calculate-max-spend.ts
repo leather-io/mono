@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import type { AverageBitcoinFeeRates, Money } from '@leather.io/models';
+import type { AverageBitcoinFeeRates, BitcoinAddress, Money } from '@leather.io/models';
 import { createMoney, satToBtc } from '@leather.io/utils';
 
 import { CoinSelectionUtxo } from '../coin-selection/coin-selection';
@@ -8,7 +8,6 @@ import {
   filterUneconomicalUtxos,
   getSpendableAmount,
 } from '../coin-selection/coin-selection.utils';
-import { BitcoinAddress } from '../validation/bitcoin-address';
 
 interface CalculateMaxSpendArgs {
   recipient: BitcoinAddress;

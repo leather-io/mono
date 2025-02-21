@@ -1,8 +1,7 @@
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
 import { createMoney, subtractMoney } from '@leather.io/utils';
 
 import { getPsbtTxInputs, getPsbtTxOutputs } from '../utils/bitcoin.utils';
-import { BitcoinAddress } from '../validation/bitcoin-address';
 import { getParsedInputs } from './psbt-inputs';
 import { getParsedOutputs } from './psbt-outputs';
 import { getPsbtTotals } from './psbt-totals';

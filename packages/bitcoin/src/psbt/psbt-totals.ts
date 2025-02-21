@@ -1,7 +1,7 @@
+import { BitcoinAddress } from '@leather.io/models';
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
 import { inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
-import { BitcoinAddress } from '../validation/bitcoin-address';
 import { PsbtInput } from './psbt-inputs';
 import { PsbtOutput } from './psbt-outputs';
 
