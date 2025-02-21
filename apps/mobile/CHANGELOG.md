@@ -567,6 +567,39 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.29
 
+## [2.14.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.13.1...@leather.io/mobile-v2.14.0) (2025-02-21)
+
+
+### Features
+
+* validate stacks address in mobile send, ref LEA-1647 ([2a0f09b](https://github.com/leather-io/mono/commit/2a0f09bd8c013cc53525f80230b02455503bfb80))
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.2.2
+    * @leather.io/bitcoin bumped to 0.19.30
+    * @leather.io/constants bumped to 0.17.1
+    * @leather.io/crypto bumped to 1.6.43
+    * @leather.io/models bumped to 0.26.1
+    * @leather.io/provider bumped to 1.0.2
+    * @leather.io/query bumped to 2.27.7
+    * @leather.io/rpc bumped to 2.6.2
+    * @leather.io/services bumped to 1.4.1
+    * @leather.io/stacks bumped to 1.6.0
+    * @leather.io/tokens bumped to 0.13.4
+    * @leather.io/ui bumped to 1.49.4
+    * @leather.io/utils bumped to 0.27.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.30
+
 ## [2.13.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.12.1...@leather.io/mobile-v2.13.0) (2025-02-19)
 
 

@@ -390,6 +390,25 @@
     * @leather.io/stacks bumped to 1.5.27
     * @leather.io/utils bumped to 0.27.2
 
+## [2.27.7](https://github.com/leather-io/mono/compare/@leather.io/query-v2.27.6...@leather.io/query-v2.27.7) (2025-02-21)
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.30
+    * @leather.io/constants bumped to 0.17.1
+    * @leather.io/models bumped to 0.26.1
+    * @leather.io/rpc bumped to 2.6.2
+    * @leather.io/stacks bumped to 1.6.0
+    * @leather.io/utils bumped to 0.27.3
+
 ## [2.27.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.26.24...@leather.io/query-v2.27.0) (2025-02-12)
 
 

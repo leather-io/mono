@@ -343,6 +343,24 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.8.17
 
+## [1.49.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.49.3...@leather.io/ui-v1.49.4) (2025-02-21)
+
+
+### Bug Fixes
+
+* update dompurify to prevent xss vulnerability ([6cb0fe3](https://github.com/leather-io/mono/commit/6cb0fe3e5043a6ddb79b1db6cc50a16a8785a9d6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.13.4
+    * @leather.io/utils bumped to 0.27.3
+  * devDependencies
+    * @leather.io/models bumped to 0.26.1
+    * @leather.io/panda-preset bumped to 0.8.18
+
 ## [1.49.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.48.6...@leather.io/ui-v1.49.0) (2025-02-12)
 
 

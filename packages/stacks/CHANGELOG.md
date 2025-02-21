@@ -338,6 +338,29 @@
     * @leather.io/crypto bumped to 1.6.42
     * @leather.io/utils bumped to 0.27.2
 
+## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.5.27...@leather.io/stacks-v1.6.0) (2025-02-21)
+
+
+### Features
+
+* add address validation to stacks pacakge, ref LEA-1647 ([db0602b](https://github.com/leather-io/mono/commit/db0602bf1dcc1756ad897ef3493ee2db6146f08f))
+* validate stacks address in mobile send, ref LEA-1647 ([2a0f09b](https://github.com/leather-io/mono/commit/2a0f09bd8c013cc53525f80230b02455503bfb80))
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.1
+    * @leather.io/crypto bumped to 1.6.43
+    * @leather.io/models bumped to 0.26.1
+    * @leather.io/utils bumped to 0.27.3
+
 ## [1.5.11](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.5.10...@leather.io/stacks-v1.5.11) (2025-01-07)
 
 

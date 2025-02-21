@@ -36,6 +36,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.26.0
 
+## [3.2.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.2.1...@leather.io/analytics-v3.2.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* block vitest remote code execution ([c00abaf](https://github.com/leather-io/mono/commit/c00abaf33668b3274825dad886feb6dfadb1d9b1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.26.1
+
 ## [3.2.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.1.3...@leather.io/analytics-v3.2.0) (2025-02-13)
 
 
