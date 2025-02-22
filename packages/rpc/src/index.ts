@@ -15,6 +15,7 @@ import { stxGetAddresses } from './methods/stacks/stx-get-addresses';
 import { stxSignMessage } from './methods/stacks/stx-sign-message';
 import { stxSignStructuredMessage } from './methods/stacks/stx-sign-structured-message';
 import { stxSignTransaction } from './methods/stacks/stx-sign-transaction';
+import { stxTransferSip9Nft } from './methods/stacks/stx-transfer-sip9-nft';
 import { stxTransferSip10Ft } from './methods/stacks/stx-transfer-sip10-ft';
 import { stxTransferStx } from './methods/stacks/stx-transfer-stx';
 import { stxUpdateProfile } from './methods/stacks/stx-update-profile';
@@ -35,6 +36,7 @@ export * from './methods/stacks/stx-sign-transaction';
 export * from './methods/stacks/stx-call-contract';
 export * from './methods/stacks/stx-deploy-contract';
 export * from './methods/stacks/stx-get-addresses';
+export * from './methods/stacks/stx-transfer-sip9-nft';
 export * from './methods/stacks/stx-transfer-sip10-ft';
 export * from './methods/stacks/stx-transfer-stx';
 export * from './methods/stacks/stx-update-profile';
@@ -51,6 +53,7 @@ export const endpoints = {
   stxUpdateProfile,
   stxSignMessage,
   stxTransferStx,
+  stxTransferSip9Nft,
   stxTransferSip10Ft,
   stxSignTransaction,
   stxSignStructuredMessage,

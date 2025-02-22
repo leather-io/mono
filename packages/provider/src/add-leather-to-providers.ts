@@ -38,6 +38,7 @@ export function addLeatherToProviders() {
       'stx_signMessage',
       'stx_transferStx',
       'stx_transferSip10Ft',
+      'stx_transferSip9Nft',
       'stx_signTransaction',
       'stx_signStructuredMessage',
       'stx_getAddresses',
