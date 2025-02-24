@@ -347,6 +347,20 @@
     * @leather.io/models bumped to 0.26.2
     * @leather.io/utils bumped to 0.27.4
 
+## [1.6.2](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.6.1...@leather.io/stacks-v1.6.2) (2025-02-24)
+
+
+### Bug Fixes
+
+* **rpc:** upgrade signer libs ([a8c7894](https://github.com/leather-io/mono/commit/a8c7894bcc060352dab404fb6417b17f1bb77ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.6.45
+
 ## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.5.27...@leather.io/stacks-v1.6.0) (2025-02-21)
 
 

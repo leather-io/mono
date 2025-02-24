@@ -397,6 +397,27 @@
     * @leather.io/bitcoin bumped to 0.19.32
     * @leather.io/rpc bumped to 2.6.4
 
+## [2.28.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.27.9...@leather.io/query-v2.28.0) (2025-02-24)
+
+
+### Features
+
+* change fee estimation logic, LEA-1760 ([94ca727](https://github.com/leather-io/mono/commit/94ca7270f65d5d17b232fca862149b38eb8e356a))
+
+
+### Bug Fixes
+
+* **rpc:** upgrade signer libs ([a8c7894](https://github.com/leather-io/mono/commit/a8c7894bcc060352dab404fb6417b17f1bb77ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.33
+    * @leather.io/rpc bumped to 2.6.5
+    * @leather.io/stacks bumped to 1.6.2
+
 ## [2.27.8](https://github.com/leather-io/mono/compare/@leather.io/query-v2.27.7...@leather.io/query-v2.27.8) (2025-02-21)
 
 

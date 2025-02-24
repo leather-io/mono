@@ -288,6 +288,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.4
 
+## [1.6.45](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.44...@leather.io/crypto-v1.6.45) (2025-02-24)
+
+
+### Bug Fixes
+
+* **rpc:** upgrade signer libs ([a8c7894](https://github.com/leather-io/mono/commit/a8c7894bcc060352dab404fb6417b17f1bb77ac1))
+
 ## [1.6.43](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.42...@leather.io/crypto-v1.6.43) (2025-02-21)
 
 
