@@ -19,7 +19,6 @@ interface CalculateMaxSpendArgs {
 interface CalculateMaxSpendResponse {
   spendAllFee: number;
   amount: Money;
-  spendableBtc: BigNumber;
 }
 export function calculateMaxSpend({
   recipient,
@@ -31,7 +30,6 @@ export function calculateMaxSpend({
     return {
       spendAllFee: 0,
       amount: createMoney(0, 'BTC'),
-      spendableBtc: new BigNumber(0),
     };
 
   const currentFeeRate = feeRate ?? feeRates.halfHourFee.toNumber();
@@ -52,6 +50,5 @@ export function calculateMaxSpend({
   return {
     spendAllFee: fee,
     amount: createMoney(spendableAmount, 'BTC'),
-    spendableBtc: satToBtc(spendableAmount),
   };
 }

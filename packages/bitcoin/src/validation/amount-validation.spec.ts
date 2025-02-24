@@ -8,7 +8,7 @@ describe('isBtcBalanceSufficient', () => {
   it('returns true if the balance is sufficient', () => {
     const args = {
       amount: createMoney(1, 'BTC'),
-      spendableBtc: new BigNumber(2),
+      spendable: createMoney(2, 'BTC'),
     };
     expect(isBtcBalanceSufficient(args)).toBe(true);
   });
@@ -16,7 +16,7 @@ describe('isBtcBalanceSufficient', () => {
   it('returns false if the balance is not sufficient', () => {
     const args = {
       amount: createMoney(2, 'BTC'),
-      spendableBtc: new BigNumber(1),
+      spendable: createMoney(1, 'BTC'),
     };
     expect(isBtcBalanceSufficient(args)).toBe(false);
   });

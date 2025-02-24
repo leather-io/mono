@@ -37,9 +37,8 @@ export function isValidBitcoinTransaction({
     throw new BitcoinError('InsufficientAmount');
   }
 
-  const { spendableBtc } = calculateMaxSpend({ recipient, utxos, feeRate, feeRates });
-
-  if (!isBtcBalanceSufficient({ amount, spendableBtc })) {
+  const { amount: spendable } = calculateMaxSpend({ recipient, utxos, feeRate, feeRates });
+  if (!isBtcBalanceSufficient({ amount, spendable })) {
     throw new BitcoinError('InsufficientFunds');
   }
 }
