@@ -201,11 +201,11 @@ importers:
         specifier: 0.1.35
         version: 0.1.35
       '@scure/bip32':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@scure/btc-signer':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@segment/analytics-react-native':
         specifier: 2.20.2
         version: 2.20.2(e9f89ac2af4823a5394957b59ce78df1)
@@ -538,17 +538,17 @@ importers:
         specifier: 2.1.0
         version: 2.1.0
       '@scure/base':
-        specifier: 1.1.9
-        version: 1.1.9
+        specifier: 1.2.4
+        version: 1.2.4
       '@scure/bip32':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@scure/bip39':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.5.4
+        version: 1.5.4
       '@scure/btc-signer':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.6.0
+        version: 1.6.0
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -627,11 +627,11 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@scure/bip32':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@scure/bip39':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.5.4
+        version: 1.5.4
       just-memoize:
         specifier: 2.2.0
         version: 2.2.0
@@ -729,8 +729,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@scure/btc-signer':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@stacks/connect':
         specifier: 7.4.0
         version: 7.4.0(encoding@0.1.13)
@@ -787,14 +787,14 @@ importers:
         specifier: 1.5.0
         version: 1.5.0
       '@scure/base':
-        specifier: 1.1.9
-        version: 1.1.9
+        specifier: 1.2.4
+        version: 1.2.4
       '@scure/bip32':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@scure/btc-signer':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@stacks/common':
         specifier: 7.0.2
         version: 7.0.2
@@ -887,8 +887,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@scure/btc-signer':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
@@ -991,8 +991,8 @@ importers:
         specifier: 1.5.0
         version: 1.5.0
       '@scure/bip32':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@stacks/common':
         specifier: 7.0.2
         version: 7.0.2
@@ -1373,6 +1373,10 @@ packages:
     resolution: {integrity: sha512-0xZJFNE5XMpENsgfHYTw8FbX4kv53mFLn2i3XPoq69LyhYSCBJtitaHx9QnsVTrsogI4Z3+HtEfZ2/GFPOtf5g==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/code-frame@7.26.2':
+    resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/compat-data@7.25.8':
     resolution: {integrity: sha512-ZsysZyXY4Tlx+Q53XdnOFmqwfB9QDTHYxaZYajWRoBLuLEAwI2UIbtxOjWh/cFaa9IKUlcB+DDuoskLuKu56JA==}
     engines: {node: '>=6.9.0'}
@@ -1394,6 +1398,10 @@ packages:
 
   '@babel/generator@7.25.7':
     resolution: {integrity: sha512-5Dqpl5fyV9pIAD62yK9P7fcA768uVPUyrQmqpqstHWgMma4feF1x/oFysBCVZLY5wJ2GkMUCdsNDnGZrPoR6rA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/generator@7.26.9':
+    resolution: {integrity: sha512-kEWdzjOAUMW4hAyrzJ0ZaTOu9OmpyDIQicIh0zg0EEcEkYXZb2TjtBhnHi2ViX7PKwZqF4xwqfAm299/QMP3lg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-annotate-as-pure@7.25.7':
@@ -1487,8 +1495,16 @@ packages:
     resolution: {integrity: sha512-CbkjYdsJNHFk8uqpEkpCvRs3YRp9tY6FmFY7wLMSYuGYkrdUi7r2lc4/wqsvlHoMznX3WJ9IP8giGPq68T/Y6g==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/helper-string-parser@7.25.9':
+    resolution: {integrity: sha512-4A/SCr/2KLd5jrtOMFzaKjVtAei3+2r/NChoBNoZ3EyP/+GlhoaEGoWOZUmFmoITP7zOJyHIMm+DYRd8o3PvHA==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/helper-validator-identifier@7.25.7':
     resolution: {integrity: sha512-AM6TzwYqGChO45oiuPqwL2t20/HdMC1rTPAesnBCgPCSF1x3oN9MVUwQV2iyz4xqWrctwK5RNC8LV22kaQCNYg==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/helper-validator-identifier@7.25.9':
+    resolution: {integrity: sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-validator-option@7.25.7':
@@ -1509,6 +1525,11 @@ packages:
 
   '@babel/parser@7.25.8':
     resolution: {integrity: sha512-HcttkxzdPucv3nNFmfOOMfFf64KgdJVqm1KaCm25dPGMLElo9nsLvXeJECQg8UzPuBGLyTSA0ZzqCtDSzKTEoQ==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
+  '@babel/parser@7.26.9':
+    resolution: {integrity: sha512-81NWa1njQblgZbQHxWHpxxCzNsa3ZwvFqpUg7P+NNUU6f3UU2jBEg4OlF/J6rl8+PQGh1q6/zWScd001YwcA5A==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -2139,6 +2160,10 @@ packages:
     resolution: {integrity: sha512-wRwtAgI3bAS+JGU2upWNL9lSlDcRCqD05BZ1n3X2ONLH1WilFP6O1otQjeMK/1g0pvYcXC7b/qVUB1keofjtZA==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/template@7.26.9':
+    resolution: {integrity: sha512-qyRplbeIpNZhmzOysF/wFMuP9sctmh2cFzRAZOn1YapxBsE1i9bJIY586R/WBLfLcmcBlM8ROBiQURnnNy+zfA==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/traverse@7.23.2':
     resolution: {integrity: sha512-azpe59SQ48qG6nu2CzcMLbxUudtN+dOM9kDbUqGq3HXUJRlo7i8fvPoxQUzYgLZ4cMVmuZgm8vvBpNeRhd6XSw==}
     engines: {node: '>=6.9.0'}
@@ -2147,12 +2172,20 @@ packages:
     resolution: {integrity: sha512-jatJPT1Zjqvh/1FyJs6qAHL+Dzb7sTb+xr7Q+gM1b+1oBsMsQQ4FkVKb6dFlJvLlVssqkRzV05Jzervt9yhnzg==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/traverse@7.26.9':
+    resolution: {integrity: sha512-ZYW7L+pL8ahU5fXmNbPF+iZFHCv5scFak7MZ9bwaRPLUhHh7QQEMjZUg0HevihoqCM5iSYHN61EyCoZvqC+bxg==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/types@7.17.0':
     resolution: {integrity: sha512-TmKSNO4D5rzhL5bjWFcVHHLETzfQ/AmbKpKPOSjlP0WoHZ6L911fgoOKY4Alp/emzG4cHJdyN49zpgkbXFEHHw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.25.8':
     resolution: {integrity: sha512-JWtuCu8VQsMladxVz/P4HzHUGCAwpuqacmowgXFs5XjxIgKuNjnLokQzuVjlTvIzODaDmpjT3oxcC48vyk9EWg==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/types@7.26.9':
+    resolution: {integrity: sha512-Y3IR1cRnOxOCDvMmNiym7XpXQ93iGDDPHx+Zj+NM+rg0fBaShfQLkg+hKPaZCEvg5N/LeCo4+Rj/i3FuJsIQaw==}
     engines: {node: '>=6.9.0'}
 
   '@base2/pretty-print-object@1.0.1':
@@ -3221,6 +3254,10 @@ packages:
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
     engines: {node: '>=6.0.0'}
 
+  '@jridgewell/gen-mapping@0.3.8':
+    resolution: {integrity: sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==}
+    engines: {node: '>=6.0.0'}
+
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
@@ -3345,8 +3382,8 @@ packages:
   '@microsoft/tsdoc@0.15.0':
     resolution: {integrity: sha512-HZpPoABogPvjeJOdzCOSJsXeL/SMCBgBZMVC3X3d7YYp2gf31MfxhUoYUNwf1ERPJOnQc0wkFn9trqI6ZEdZuA==}
 
-  '@noble/curves@1.6.0':
-    resolution: {integrity: sha512-TlaHRXDehJuRNR9TfZDNQ45mMEd5dwUwmicsafcIX4SsNiqnCHKjE/1alYPd/lDRVhxdhUAlv8uEhMCI5zjIJQ==}
+  '@noble/curves@1.8.1':
+    resolution: {integrity: sha512-warwspo+UYUPep0Q+vtdVB4Ugn8GGQj8iyB3gnRWsztmUHTI3S1nhdiWNsPUGL0vud7JlRRk1XEu7Lq1KGTnMQ==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/hashes@1.1.5':
@@ -3354,6 +3391,10 @@ packages:
 
   '@noble/hashes@1.5.0':
     resolution: {integrity: sha512-1j6kQFb7QRru7eKN3ZDvRcP13rugwdxZqCjbiAVZfIJwgj2A65UmT4TgARXGlXgnRkORLTDTrO19ZErt7+QXgA==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.7.1':
+    resolution: {integrity: sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/secp256k1@1.7.1':
@@ -4673,20 +4714,23 @@ packages:
   '@scure/base@1.1.9':
     resolution: {integrity: sha512-8YKhl8GHiNI/pU2VMaofa2Tor7PJRAjwQLBBuilkJ9L5+13yVbC7JO/wS7piioAvPSwR3JKM1IJ/u4xQzbcXKg==}
 
+  '@scure/base@1.2.4':
+    resolution: {integrity: sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==}
+
   '@scure/bip32@1.1.3':
     resolution: {integrity: sha512-dSH3+LCWONlSNQuF34xZrG6Xas7tp2jSSqHb/pMfXWM0vKE4JZOtK3uJfoWouUVW5IGlls75HkXmYLldZ8ySgQ==}
 
-  '@scure/bip32@1.5.0':
-    resolution: {integrity: sha512-8EnFYkqEQdnkuGBVpCzKxyIwDCBLDVj3oiX0EKUFre/tOjL/Hqba1D6n/8RcmaQy4f95qQFrO2A8Sr6ybh4NRw==}
+  '@scure/bip32@1.6.2':
+    resolution: {integrity: sha512-t96EPDMbtGgtb7onKKqxRLfE5g05k7uHnHRM2xdE6BP/ZmxaLtPek4J4KfVn/90IQNrU1IOAqMgiDtUdtbe3nw==}
 
   '@scure/bip39@1.1.0':
     resolution: {integrity: sha512-pwrPOS16VeTKg98dYXQyIjJEcWfz7/1YJIwxUEPFfQPtc86Ym/1sVgQ2RLoD43AazMk2l/unK4ITySSpW2+82w==}
 
-  '@scure/bip39@1.4.0':
-    resolution: {integrity: sha512-BEEm6p8IueV/ZTfQLp/0vhw4NPnT9oWf5+28nvmeUICjP99f4vr2d+qc7AVGDDtwRep6ifR43Yed9ERVmiITzw==}
+  '@scure/bip39@1.5.4':
+    resolution: {integrity: sha512-TFM4ni0vKvCfBpohoh+/lY05i9gRbSwXWngAsF4CABQxoaOHijxuaZ2R6cStDQ5CHtHO9aGJTr4ksVJASRRyMA==}
 
-  '@scure/btc-signer@1.4.0':
-    resolution: {integrity: sha512-uSZqmiWWm1+wflQbiob0CrzQSCwDO9MmAxqsqk+tkiRcUv8GbC3Ptv9/2nUbsoUBuPN/6mBQJ/KOBzHjc5Bgow==}
+  '@scure/btc-signer@1.6.0':
+    resolution: {integrity: sha512-qd6ciJE4Onk1xdQEdjPvRbLRrH7EddPZagMuZOFv77R/76EWixENd6nuoxqHNEPGRbS09rgAhhPgT7j0oQdi1A==}
 
   '@segment/analytics-react-native@2.20.2':
     resolution: {integrity: sha512-aGeYpLk6RXeBf1b685AGY89yoYhsB+TVcX/LBsFgchms58ReGNY+XuulKhA67KRdQtKuiGT2Ztm+Ls9hUumaNQ==}
@@ -8176,6 +8220,9 @@ packages:
   expo-modules-core@2.0.3:
     resolution: {integrity: sha512-S/Ozg6NhLkMc7k+qSLzOtjCexuimkYXHM/PCZtbn53nkuNYyaLpfVfrsJsRWxLIMe8ftbm6cDrKlN5mJ6lNODg==}
 
+  expo-modules-core@2.2.2:
+    resolution: {integrity: sha512-SgjK86UD89gKAscRK3bdpn6Ojfs/KU4GujtuFx1wm4JaBjmXH4aakWkItkPlAV2pjIiHJHWQbENL9xjbw/Qr/g==}
+
   expo-notifications@0.28.14:
     resolution: {integrity: sha512-bRdJIuJiGTVPbcTVjeFgkT5qXvOaG4BEHcYU8yqMmWmKt4e4eInDjVzKf0axJ/dvwF3kyeoPENtRBiDbLCutjw==}
     peerDependencies:
@@ -9632,6 +9679,11 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
+  jsesc@3.1.0:
+    resolution: {integrity: sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==}
+    engines: {node: '>=6'}
+    hasBin: true
+
   json-bigint@1.0.0:
     resolution: {integrity: sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==}
 
@@ -10364,8 +10416,8 @@ packages:
     engines: {node: '>=18.18'}
     hasBin: true
 
-  micro-packed@0.6.3:
-    resolution: {integrity: sha512-VmVkyc7lIzAq/XCPFuLc/CwQ7Ehs5XDK3IwqsZHiBIDttAI9Gs7go6Lv4lNRuAIKrGKcRTtthFKUNyHS0S4wJQ==}
+  micro-packed@0.7.2:
+    resolution: {integrity: sha512-HJ/u8+tMzgrJVAl6P/4l8KGjJSA3SCZaRb1m4wpbovNScCSmVOGUYbkkcoPPcknCHWPpRAdjy+yqXqyQWf+k8g==}
 
   microdiff@1.3.2:
     resolution: {integrity: sha512-pKy60S2febliZIbwdfEQKTtL5bLNxOyiRRmD400gueYl9XcHyNGxzHSlJWn9IMHwYXT0yohPYL08+bGozVk8cQ==}
@@ -13672,6 +13724,12 @@ snapshots:
       '@babel/highlight': 7.25.7
       picocolors: 1.1.1
 
+  '@babel/code-frame@7.26.2':
+    dependencies:
+      '@babel/helper-validator-identifier': 7.25.9
+      js-tokens: 4.0.0
+      picocolors: 1.1.1
+
   '@babel/compat-data@7.25.8': {}
 
   '@babel/core@7.24.6':
@@ -13734,6 +13792,14 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
       jsesc: 3.0.2
+
+  '@babel/generator@7.26.9':
+    dependencies:
+      '@babel/parser': 7.26.9
+      '@babel/types': 7.26.9
+      '@jridgewell/gen-mapping': 0.3.8
+      '@jridgewell/trace-mapping': 0.3.25
+      jsesc: 3.1.0
 
   '@babel/helper-annotate-as-pure@7.25.7':
     dependencies:
@@ -13876,7 +13942,11 @@ snapshots:
 
   '@babel/helper-string-parser@7.25.7': {}
 
+  '@babel/helper-string-parser@7.25.9': {}
+
   '@babel/helper-validator-identifier@7.25.7': {}
+
+  '@babel/helper-validator-identifier@7.25.9': {}
 
   '@babel/helper-validator-option@7.25.7': {}
 
@@ -13903,6 +13973,10 @@ snapshots:
   '@babel/parser@7.25.8':
     dependencies:
       '@babel/types': 7.25.8
+
+  '@babel/parser@7.26.9':
+    dependencies:
+      '@babel/types': 7.26.9
 
   '@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.25.7(@babel/core@7.24.6)':
     dependencies:
@@ -14653,6 +14727,12 @@ snapshots:
       '@babel/parser': 7.25.8
       '@babel/types': 7.25.8
 
+  '@babel/template@7.26.9':
+    dependencies:
+      '@babel/code-frame': 7.26.2
+      '@babel/parser': 7.26.9
+      '@babel/types': 7.26.9
+
   '@babel/traverse@7.23.2':
     dependencies:
       '@babel/code-frame': 7.25.7
@@ -14680,6 +14760,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@babel/traverse@7.26.9':
+    dependencies:
+      '@babel/code-frame': 7.26.2
+      '@babel/generator': 7.26.9
+      '@babel/parser': 7.26.9
+      '@babel/template': 7.26.9
+      '@babel/types': 7.26.9
+      debug: 4.3.7
+      globals: 11.12.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@babel/types@7.17.0':
     dependencies:
       '@babel/helper-validator-identifier': 7.25.7
@@ -14690,6 +14782,11 @@ snapshots:
       '@babel/helper-string-parser': 7.25.7
       '@babel/helper-validator-identifier': 7.25.7
       to-fast-properties: 2.0.0
+
+  '@babel/types@7.26.9':
+    dependencies:
+      '@babel/helper-string-parser': 7.25.9
+      '@babel/helper-validator-identifier': 7.25.9
 
   '@base2/pretty-print-object@1.0.1': {}
 
@@ -16421,6 +16518,12 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
       '@jridgewell/trace-mapping': 0.3.25
 
+  '@jridgewell/gen-mapping@0.3.8':
+    dependencies:
+      '@jridgewell/set-array': 1.2.1
+      '@jridgewell/sourcemap-codec': 1.5.0
+      '@jridgewell/trace-mapping': 0.3.25
+
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/set-array@1.2.1': {}
@@ -16651,13 +16754,15 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.0': {}
 
-  '@noble/curves@1.6.0':
+  '@noble/curves@1.8.1':
     dependencies:
-      '@noble/hashes': 1.5.0
+      '@noble/hashes': 1.7.1
 
   '@noble/hashes@1.1.5': {}
 
   '@noble/hashes@1.5.0': {}
+
+  '@noble/hashes@1.7.1': {}
 
   '@noble/secp256k1@1.7.1': {}
 
@@ -18587,34 +18692,36 @@ snapshots:
 
   '@scure/base@1.1.9': {}
 
+  '@scure/base@1.2.4': {}
+
   '@scure/bip32@1.1.3':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
       '@scure/base': 1.1.9
 
-  '@scure/bip32@1.5.0':
+  '@scure/bip32@1.6.2':
     dependencies:
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
-      '@scure/base': 1.1.9
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/base': 1.2.4
 
   '@scure/bip39@1.1.0':
     dependencies:
       '@noble/hashes': 1.1.5
       '@scure/base': 1.1.9
 
-  '@scure/bip39@1.4.0':
+  '@scure/bip39@1.5.4':
     dependencies:
-      '@noble/hashes': 1.5.0
-      '@scure/base': 1.1.9
+      '@noble/hashes': 1.7.1
+      '@scure/base': 1.2.4
 
-  '@scure/btc-signer@1.4.0':
+  '@scure/btc-signer@1.6.0':
     dependencies:
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
-      '@scure/base': 1.1.9
-      micro-packed: 0.6.3
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/base': 1.2.4
+      micro-packed: 0.7.2
 
   '@segment/analytics-react-native@2.20.2(e9f89ac2af4823a5394957b59ce78df1)':
     dependencies:
@@ -21530,7 +21637,7 @@ snapshots:
   bip32@4.0.0:
     dependencies:
       '@noble/hashes': 1.5.0
-      '@scure/base': 1.1.9
+      '@scure/base': 1.2.4
       typeforce: 1.18.0
       wif: 2.0.6
 
@@ -23229,7 +23336,7 @@ snapshots:
   expo-linking@6.3.1(expo@51.0.26):
     dependencies:
       expo-constants: 16.0.2(expo@51.0.26)
-      expo-modules-core: 2.0.3
+      expo-modules-core: 2.2.2
       invariant: 2.2.4
     transitivePeerDependencies:
       - expo
@@ -23265,6 +23372,10 @@ snapshots:
       invariant: 2.2.4
 
   expo-modules-core@2.0.3:
+    dependencies:
+      invariant: 2.2.4
+
+  expo-modules-core@2.2.2:
     dependencies:
       invariant: 2.2.4
 
@@ -25174,6 +25285,8 @@ snapshots:
 
   jsesc@3.0.2: {}
 
+  jsesc@3.1.0: {}
+
   json-bigint@1.0.0:
     dependencies:
       bignumber.js: 9.1.2
@@ -25951,7 +26064,7 @@ snapshots:
   metro-source-map@0.81.0:
     dependencies:
       '@babel/traverse': 7.25.7
-      '@babel/traverse--for-generate-function-map': '@babel/traverse@7.25.7'
+      '@babel/traverse--for-generate-function-map': '@babel/traverse@7.26.9'
       '@babel/types': 7.25.8
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
@@ -26239,9 +26352,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  micro-packed@0.6.3:
+  micro-packed@0.7.2:
     dependencies:
-      '@scure/base': 1.1.9
+      '@scure/base': 1.2.4
 
   microdiff@1.3.2: {}
 
