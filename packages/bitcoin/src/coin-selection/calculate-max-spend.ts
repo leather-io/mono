@@ -1,7 +1,5 @@
-import BigNumber from 'bignumber.js';
-
 import type { AverageBitcoinFeeRates, BitcoinAddress, Money } from '@leather.io/models';
-import { createMoney, satToBtc } from '@leather.io/utils';
+import { createMoney } from '@leather.io/utils';
 
 import { CoinSelectionUtxo } from '../coin-selection/coin-selection';
 import {

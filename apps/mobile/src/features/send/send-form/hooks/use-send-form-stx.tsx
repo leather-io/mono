@@ -50,6 +50,7 @@ export function useSendFormStx() {
       try {
         const parsedValues = parseSendFormValues(values);
         if (!isValidPrecision(+values.amount, STX_DECIMALS)) {
+          // eslint-disable-next-line lingui/no-unlocalized-strings
           throw new StacksError('InvalidPrecision');
         }
         const { amount, recipient } = parsedValues;

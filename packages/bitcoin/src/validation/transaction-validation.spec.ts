@@ -76,7 +76,7 @@ describe('isValidBitcoinTransaction', () => {
   it('should throw an error if the amount precision is invalid', () => {
     const transaction = {
       ...mockTransaction,
-      amount: createMoney(1.123456789, 'USD'),
+      amount: createMoney(1.123456789, 'BTC'),
     };
     expect(() => isValidBitcoinTransaction(transaction)).toThrow(BitcoinError);
   });
@@ -90,7 +90,7 @@ describe('isValidBitcoinTransaction', () => {
       ...mockTransaction,
       payer: TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS,
       recipient: TEST_TESTNET_ACCOUNT_2_TAPROOT_ADDRESS,
-      amount: createMoney(1.123456, 'USD'),
+      amount: createMoney(new BigNumber(546), 'BTC'),
     };
     expect(() => isValidBitcoinTransaction(transaction)).not.toThrow(BitcoinError);
   });

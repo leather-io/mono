@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 
 import { Money } from '@leather.io/models';
-import { btcToSat } from '@leather.io/utils';
 
 export const minSpendAmountInSats = 546;
 
@@ -25,8 +24,7 @@ interface IsBtcMinimumSpendArgs {
 }
 export function isBtcMinimumSpend({ amount: { amount } }: IsBtcMinimumSpendArgs) {
   if (!amount) return false;
-
-  const desiredSpend = btcToSat(amount);
+  const desiredSpend = new BigNumber(amount);
   if (desiredSpend.isLessThan(minSpendAmountInSats)) return false;
   return true;
 }
