@@ -24,6 +24,7 @@ interface DraggableProps {
   onCardPress(cardId: string): void;
   swapCardIndexes(idx1: number | null, idx2: number | null): void;
   children: ReactNode;
+  disableReorder?: boolean;
 }
 
 export function Draggable({
@@ -36,6 +37,7 @@ export function Draggable({
   onCardPress,
   swapCardIndexes,
   children,
+  disableReorder,
 }: DraggableProps) {
   const ref = useRef<Animated.View>(null);
   const theme = useTheme<Theme>();
@@ -48,7 +50,7 @@ export function Draggable({
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ translateY: translationY.value }, { scale: zoom.value }],
     position: isAnimatedShared.value ? 'absolute' : 'relative',
-    zIndex: isAnimatedShared.value ? 100 : 1,
+    zIndex: isAnimatedShared.value ? 20 : 1,
     width: '100%',
     top: isAnimatedShared.value ? thisItemPosition.value.y : 0,
     left: isAnimatedShared.value ? thisItemPosition.value.x : 0,
@@ -107,7 +109,7 @@ export function Draggable({
     runOnJS(onCardPress)(cardId);
   });
 
-  const gestures = Gesture.Exclusive(pan, onPress);
+  const gestures = disableReorder ? onPress : Gesture.Exclusive(pan, onPress);
 
   return (
     <>

@@ -1,41 +1,26 @@
-import {
-  AnalyticsClientConfig,
-  EventProperties,
-  ExternalAnalyticsClientInterface,
-  Json,
-} from './types';
+import { AnalyticsClientConfig, AnalyticsClientInterface, Events, JsonMap } from './types';
 
-export type AnalyticsClientOptions = Pick<
-  AnalyticsClientConfig,
-  'defaultProperties' | 'defaultTraits'
->;
-
-export function AnalyticsClient<T extends ExternalAnalyticsClientInterface>(
-  client: T,
-  options: AnalyticsClientOptions
+export function AnalyticsClient<T extends AnalyticsClientInterface>(
+  analyticsClient: T,
+  options: Pick<AnalyticsClientConfig<T>, 'defaultProperties' | 'defaultTraits'>
 ) {
   return {
-    async track<K extends keyof EventProperties>(event: K, properties: EventProperties[K]) {
-      return client.track(event, { ...properties, ...options.defaultProperties });
+    async track<K extends keyof Events>(
+      event: K,
+      ...properties: undefined extends Events[K] ? [] : [param: Events[K]]
+    ) {
+      return analyticsClient.track(event, { ...properties, ...options.defaultProperties });
     },
-
-    async untypedTrack(event: string, properties?: Json) {
+    async untypedTrack(event: string, properties?: JsonMap) {
       if (event.match(/^[a-zA-Z0-9\s][a-zA-Z0-9\s]*$/)) {
         throw new Error('Event must be snake_case');
       }
-      return client.track(event as any, { ...properties, ...options.defaultProperties });
+      return analyticsClient.track(event as any, { ...properties, ...options.defaultProperties });
     },
-
-    async screen(name: string, properties?: Json) {
-      return client.screen(name, { ...properties, ...options.defaultProperties });
-    },
-
-    async group(groupId: string, traits?: Json) {
-      return client.group(groupId, { ...traits, ...options.defaultTraits });
-    },
-
-    async identify(userId: string, traits?: Json) {
-      return client.identify(userId, { ...traits, ...options.defaultTraits });
-    },
+    screen: analyticsClient.screen.bind(analyticsClient),
+    group: analyticsClient.group.bind(analyticsClient),
+    identify: analyticsClient.identify.bind(analyticsClient),
+    page: analyticsClient.page ? analyticsClient.page.bind(analyticsClient) : Promise.resolve(),
+    client: analyticsClient,
   };
 }

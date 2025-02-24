@@ -1,30 +1,31 @@
+import { useRef } from 'react';
+
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
-import {
-  CollectiblesWidget,
-  mockCollectibles,
-  serializeCollectibles,
-} from '@/components/widgets/collectibles';
-import { TokensWidget } from '@/components/widgets/tokens';
-import { mockTotalBalance } from '@/mocks/balance.mocks';
-import { getMockTokens } from '@/mocks/tokens.mocks';
-import { useAccounts } from '@/store/accounts/accounts.read';
+import { AllAccountBalances, TokensWidget } from '@/components/widgets/tokens/tokens-widget';
+import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
+import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
 
+import { SheetRef } from '@leather.io/ui/native';
+
 export function Home() {
   useLingui();
-  const wallets = useWallets();
-  const accounts = useAccounts();
+  const { hasWallets } = useWallets();
+  const notificationSheetRef = useRef<SheetRef>(null);
+
+  useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
 
   return (
     <PageLayout>
-      <AccountsWidget accounts={accounts.list} wallets={wallets.list} />
-      <TokensWidget tokens={getMockTokens()} totalBalance={mockTotalBalance} />
-      <CollectiblesWidget
-        collectibles={serializeCollectibles(mockCollectibles)}
-        totalBalance={mockTotalBalance}
-      />
+      <AccountsWidget />
+      {hasWallets && (
+        <TokensWidget>
+          <AllAccountBalances />
+        </TokensWidget>
+      )}
+      <NotificationsSheet sheetRef={notificationSheetRef} />
     </PageLayout>
   );
 }

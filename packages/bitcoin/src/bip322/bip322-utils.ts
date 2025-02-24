@@ -1,6 +1,6 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
-import { hexToBytes, utf8ToBytes } from '@stacks/common';
+import { hexToBytes, utf8ToBytes } from '@noble/hashes/utils';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory } from 'ecpair';
 import { encode } from 'varuint-bitcoin';
@@ -8,7 +8,7 @@ import { encode } from 'varuint-bitcoin';
 import { PaymentTypes } from '@leather.io/rpc';
 import { isString } from '@leather.io/utils';
 
-import { toXOnly } from '../bitcoin.utils';
+import { toXOnly } from '../utils/bitcoin.utils';
 
 const bip322MessageTag = 'BIP0322-signed-message';
 
@@ -63,7 +63,7 @@ function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
 
 export function tweakSigner(signer: bitcoin.Signer, opts: any = {}): bitcoin.Signer {
   // @ts-expect-error privateKey exists on signer
-  let privateKey: Uint8Array | undefined = signer.privateKey!;
+  let privateKey: Uint8Array | undefined = signer.privateKey;
   if (!privateKey) {
     throw new Error('Private key is required for tweaking signer!');
   }

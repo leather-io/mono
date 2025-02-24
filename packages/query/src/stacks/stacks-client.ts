@@ -26,6 +26,8 @@ import type {
   NonFungibleTokenHoldingListResult,
   StacksTxFeeEstimation,
 } from './hiro-api-types';
+import { hiroApiRequestsPriorityLevels } from './hiro-requests-priorities';
+import './leather-headers';
 import type { Stx20BalanceResponse } from './stx20-api-types';
 
 type NonFungibleTokenHoldingsResponse = Paginated<NonFungibleTokenHoldingListResult[]>;
@@ -38,35 +40,6 @@ export interface CallReadOnlyFunctionArgs {
   tip?: string;
   signal?: AbortSignal;
 }
-
-export const hiroApiRequestsPriorityLevels = {
-  createWalletGaiaConfig: 15,
-  makeAuthResponse: 15,
-
-  getNetworkStatus: 10,
-  getNamesOwnedByAddress: 9,
-
-  getAccountBalance: 5,
-
-  getAccountTransactionsWithTransfers: 4,
-
-  getAccountNonces: 4,
-  getNameInfo: 4,
-  getNftHoldings: 4,
-  getAddressMempoolTransactions: 4,
-  getRawTransactionById: 4,
-  getTransactionById: 4,
-  getContractInterface: 4,
-
-  getNetworkBlockTimes: 3,
-
-  postFeeTransaction: 2,
-  getFtMetadata: 2,
-  getNftMetadata: 2,
-  callReadOnlyFunction: 2,
-
-  getStx20Balances: 1,
-};
 
 export function stacksClient(basePath: string) {
   const rateLimiter = getHiroApiRateLimiter(basePath);

@@ -1,10 +1,9 @@
 import LogoMpcQredoLogo from '../../assets/icons/logos/logo-mpc-qredo-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoMpcQredo({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoMpcQredoLogo />
-    </Icon>
-  );
-}
+export const LogoMpcQredo = createNativeIcon({
+  icon: {
+    medium: LogoMpcQredoLogo,
+  },
+  displayName: 'LogoMpcQredo',
+});

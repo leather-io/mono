@@ -4,8 +4,6 @@ appId: io.leather.mobilewallet
 - runFlow: ../shared/clean-up.yaml
 - runFlow:
     file: ../shared/add-wallet.yaml
-    env:
-      SECURE: yes
 - assertNotVisible:
     id: 'toastContainer'
 - tapOn:
@@ -16,11 +14,18 @@ appId: io.leather.mobilewallet
     id: 'walletListAccountCard'
 - tapOn:
     text: 'Hide account'
+- assertVisible: 'Un-hide account'
 - tapOn:
     id: 'backButton'
 - assertNotVisible:
     id: 'walletListAccountCard'
 - tapOn:
     text: 'Hidden accounts 1 hidden accounts'
-- assertVisible:
+- tapOn:
     id: 'walletListAccountCard'
+- tapOn: Un-hide account
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'
+- assertNotVisible: Hidden accounts 0 hidden accounts

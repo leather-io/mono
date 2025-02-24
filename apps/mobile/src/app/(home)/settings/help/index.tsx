@@ -1,77 +1,61 @@
-import { ScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Linking } from 'react-native';
 
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
-import {
-  Box,
-  Cell,
-  GraduateCapIcon,
-  MagicBookIcon,
-  SupportIcon,
-  Theme,
-} from '@leather.io/ui/native';
+import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@leather.io/constants';
+import { GraduateCapIcon, MagicBookIcon, SupportIcon } from '@leather.io/ui/native';
 
 export default function SettingsHelpScreen() {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
-
   return (
-    <Box flex={1} backgroundColor="ink.background-primary">
-      <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: theme.spacing['5'],
-          paddingTop: theme.spacing['5'],
-          paddingBottom: theme.spacing['5'] + bottom,
-          gap: theme.spacing[5],
-        }}
-      >
-        <Cell.Root
+    <AnimatedHeaderScreenLayout
+      rightHeaderElement={<NetworkBadge />}
+      title={t({
+        id: 'help.header_title',
+        message: 'Help',
+      })}
+    >
+      <SettingsList>
+        <SettingsListItem
           title={t({
             id: 'help.support.cell_title',
             message: 'Support and feedback',
           })}
           caption={t({
             id: 'help.support.cell_caption',
-            message: 'Placeholder',
+            message: 'Contact our support team',
           })}
           icon={<SupportIcon />}
-          onPress={() => {}}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-
-        <Cell.Root
+          onPress={() => void Linking.openURL(LEATHER_SUPPORT_URL)}
+        />
+        <SettingsListItem
           title={t({
             id: 'help.guides.cell_title',
             message: 'Guides',
           })}
           caption={t({
             id: 'help.guides.cell_caption',
-            message: 'Placeholder',
+            message: 'Dive into feature details',
           })}
           icon={<MagicBookIcon />}
-          onPress={() => {}}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-
-        <Cell.Root
+          onPress={() => void Linking.openURL(LEATHER_GUIDES_URL)}
+        />
+        <SettingsListItem
           title={t({
             id: 'help.learn.cell_title',
             message: 'Learn',
           })}
           caption={t({
             id: 'help.learn.cell_caption',
-            message: 'Placeholder',
+            message: 'Expand your knowledge',
           })}
           icon={<GraduateCapIcon />}
-          onPress={() => {}}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-      </ScrollView>
-    </Box>
+          onPress={() => void Linking.openURL(LEATHER_LEARN_URL)}
+        />
+      </SettingsList>
+    </AnimatedHeaderScreenLayout>
   );
 }

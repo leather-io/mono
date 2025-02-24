@@ -1,10 +1,9 @@
 import LogoMpcCopperLogo from '../../assets/icons/logos/logo-mpc-copper-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoMpcCopper({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoMpcCopperLogo />
-    </Icon>
-  );
-}
+export const LogoMpcCopper = createNativeIcon({
+  icon: {
+    medium: LogoMpcCopperLogo,
+  },
+  displayName: 'LogoMpcCopper',
+});

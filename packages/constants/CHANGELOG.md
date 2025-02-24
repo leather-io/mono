@@ -49,6 +49,159 @@
   * dependencies
     * @leather.io/models bumped to 0.18.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.19.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.19.1
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.20.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.21.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.22.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.23.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.24.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.24.1
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.24.2
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.24.3
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.25.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.25.1
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.26.1
+
+## [0.17.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.17.1...@leather.io/constants-v0.17.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* upgrade prettier ([5a1577c](https://github.com/leather-io/mono/commit/5a1577cc382b4399d427dbf049d1f1d08d984f33))
+* upgrade typescript ([14b91ee](https://github.com/leather-io/mono/commit/14b91ee484d89d25399af7b3e9144e1b4e6a48a7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.26.2
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.1
+    * @leather.io/tsconfig-config bumped to 0.6.1
+
+## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.16.0...@leather.io/constants-v0.17.0) (2025-02-20)
+
+
+### Features
+
+* implement btc outbound balance ([f363834](https://github.com/leather-io/mono/commit/f363834e189c1e20c2dd3d55b2ecdb863e076990))
+
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.15.5...@leather.io/constants-v0.16.0) (2025-02-17)
+
+
+### Features
+
+* connect leather api client to backend ([bf94c84](https://github.com/leather-io/mono/commit/bf94c848c465f5f146fdc5508f14bb033b9dc829))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.26.0
+
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.14.1...@leather.io/constants-v0.15.0) (2024-12-12)
+
+
+### Features
+
+* add connect dapps const ([173f703](https://github.com/leather-io/mono/commit/173f7032f3943191f2b0ecfbf2becfc25aef660f))
+
+## [0.14.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.14.0...@leather.io/constants-v0.14.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* add support links and text updates, ref #LEA-1835 ([8103cac](https://github.com/leather-io/mono/commit/8103cac687c2df10a8df81d511c43e38bb11c92b))
+* only show support links if they go somewhere, ref #LEA-1835 ([83caa84](https://github.com/leather-io/mono/commit/83caa84a7f247c4438719e6cd3625b200ab203fd))
+
+## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.13.7...@leather.io/constants-v0.14.0) (2024-12-04)
+
+
+### Features
+
+* add psbt functionality ([6b676a9](https://github.com/leather-io/mono/commit/6b676a971fbd7497e6c285a818374f13745b032c))
+
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.12.5...@leather.io/constants-v0.13.0) (2024-10-30)
+
+
+### Features
+
+* **bitcoin:** recursive address look up helper ([7f3d11c](https://github.com/leather-io/mono/commit/7f3d11c9e62c11492b9a88b18b7011d9cd6b4a98))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.18.3
+
 ## [0.12.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.12.1...@leather.io/constants-v0.12.2) (2024-10-11)
 
 

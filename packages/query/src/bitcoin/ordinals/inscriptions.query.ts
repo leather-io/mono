@@ -12,6 +12,10 @@ import { useBitcoinClient } from '../clients/bitcoin-client';
 
 const bestinslotInscriptionsRequestNum = 2000;
 
+export function createGetInscriptionsByAddressCacheKey(address: string, networkId: string) {
+  return [BitcoinQueryPrefixes.GetInscriptionsByAddress, networkId, address];
+}
+
 export function useGetInscriptionsByAddressQuery(address: string) {
   const network = useLeatherNetwork();
   const client = useBitcoinClient();
@@ -19,7 +23,7 @@ export function useGetInscriptionsByAddressQuery(address: string) {
 
   const query = useInfiniteQuery({
     enabled: !!address,
-    queryKey: [BitcoinQueryPrefixes.GetInscriptionsByAddress, network.id, address],
+    queryKey: createGetInscriptionsByAddressCacheKey(address, network.id),
     async queryFn({ pageParam, signal }) {
       const res = await limiter.add(
         () =>
@@ -54,6 +58,7 @@ export function useGetInscriptionsByAddressQuery(address: string) {
   useEffect(() => {
     if (!address) return;
     void query.fetchNextPage();
+    // eslint-disable-next-line @tanstack/query/no-unstable-deps
   }, [address, query, query.data]);
 
   return query;

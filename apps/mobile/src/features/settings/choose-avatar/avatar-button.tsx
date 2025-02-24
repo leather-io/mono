@@ -1,41 +1,20 @@
-import { getAvatarIcon } from '@/components/avatar-icon';
+import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import { Pressable } from '@leather.io/ui/native';
 
 interface AvatarButtonProps {
-  icon: string;
+  icon: AccountIcon;
   onPress(): void;
   isSelected: boolean;
 }
 export function AvatarButton({ icon, onPress, isSelected }: AvatarButtonProps) {
-  const theme = useTheme<Theme>();
-  const Icon = getAvatarIcon(icon);
   return (
-    <Box>
-      {isSelected && (
-        <Box
-          width={52}
-          height={52}
-          left={-2}
-          top={-2}
-          borderRadius="round"
-          bg="ink.text-primary"
-          position="absolute"
-        />
-      )}
-      <TouchableOpacity
-        testID={defaultIconTestId(icon)}
-        borderWidth={2}
-        borderColor="ink.background-primary"
-        onPress={onPress}
-        style={{ padding: 6 }}
-        borderRadius="round"
-        bg="ink.text-primary"
-      >
-        <Icon width={32} height={32} color={theme.colors['ink.background-primary']} />
-      </TouchableOpacity>
-    </Box>
+    <Pressable testID={defaultIconTestId(icon)} onPress={onPress}>
+      <AccountAvatar
+        icon={icon}
+        borderColor={isSelected ? 'ink.action-primary-default' : 'ink.border-default'}
+      />
+    </Pressable>
   );
 }

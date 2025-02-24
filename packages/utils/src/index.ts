@@ -6,7 +6,9 @@ import type { NetworkModes } from '@leather.io/models';
 export { createCounter } from './counter';
 export * from './math';
 export * from './money';
-export * from './sort-assets';
+export * from './assets/sort-assets';
+export * from './assets/asset-display-name';
+export * from './assets/balance-helpers';
 export * from './truncate-middle';
 export * from './time';
 
@@ -87,7 +89,7 @@ export function isEmptyArray(data: unknown[]) {
 }
 
 // TODO: extension concept, remove remove from utils
-export const defaultWalletKeyId = 'default' as const;
+export const defaultWalletKeyId = 'default';
 
 export function reverseBytes(bytes: Buffer): Buffer;
 export function reverseBytes(bytes: Uint8Array): Uint8Array;
@@ -122,16 +124,6 @@ export function isFulfilled<T>(p: PromiseSettledResult<T>): p is PromiseFulfille
 
 export function isRejected<T>(p: PromiseSettledResult<T>): p is PromiseRejectedResult {
   return p.status === 'rejected';
-}
-
-// TODO: Move to @leather.io/stacks
-export function getPrincipalFromContractId(identifier: string) {
-  return identifier.split('::')[0];
-}
-
-// TODO: Move to @leather.io/stacks
-export function formatContractId(address: string, name: string) {
-  return `${address}.${name}`;
 }
 
 export function createNullArrayOfLength(length: number) {
@@ -204,10 +196,35 @@ export function assertIsTruthy<T>(val: T): asserts val is NonNullable<T> {
   if (!val) throw new Error(`expected: true, actual: ${val}`);
 }
 
+/**
+ * Ensure all cases in a control flow are handled by asserting a value is `never`.
+ *
+ * Typically used in `switch` statements to enforce exhaustiveness.
+ * TypeScript's type checking will catch unhandled cases at compile time.
+ */
+export function assertUnreachable(value: never): never {
+  throw new Error(`Unexpected value: ${JSON.stringify(value)}`);
+}
+
 export function capitalize(val: string) {
   return val.charAt(0).toUpperCase() + val.slice(1);
 }
 
 export function uniqueArray<T>(arr: T[]) {
   return Array.from(new Set(arr));
+}
+
+export function match<Variant extends string | number>() {
+  return function matchVariant<T>(variant: Variant, match: Record<Variant, T>) {
+    return match[variant];
+  };
+}
+
+export function removeTrailingNullCharacters(s: string) {
+  return s.replace(/\0*$/g, '');
+}
+
+export function isNumberOrNumberList(value: unknown): value is number | number[] {
+  if (Array.isArray(value)) return value.every(item => isNumber(item));
+  return isNumber(value);
 }

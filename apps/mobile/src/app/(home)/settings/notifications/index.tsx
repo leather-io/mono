@@ -1,27 +1,31 @@
+import { SettingsListItem } from '@/components/settings/settings-list-item';
+import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { Cell, PlaceholderIcon } from '@leather.io/ui/native';
+import { Box, PlaceholderIcon } from '@leather.io/ui/native';
 
-import SettingsScreenLayout from '../settings-screen.layout';
-
-// TODO: Hook up to notifications service when available or use Expo?
 export default function SettingsNotificationsScreen() {
+  const { changeNotificationsPreference, notificationsPreference } = useSettings();
   return (
-    <SettingsScreenLayout>
-      <Cell.Root
-        title={t({
-          id: 'notifications.push.cell_title',
-          message: 'Notification',
-        })}
-        caption={t({
-          id: 'notifications.push.cell_caption',
-          message: 'Placeholder',
-        })}
-        icon={<PlaceholderIcon />}
-        onPress={() => {}}
-      >
-        <Cell.Switch value={false} />
-      </Cell.Root>
-    </SettingsScreenLayout>
+    <Box bg="ink.background-primary" flex={1}>
+      <Box flex={1} gap="3" paddingTop="5">
+        <SettingsListItem
+          title={t({
+            id: 'notifications.push.cell_title',
+            message: 'Transaction confirmations',
+          })}
+          caption={t({
+            id: 'notifications.push.cell_caption',
+            message: 'Receive updates when sending and receiving amounts',
+          })}
+          icon={<PlaceholderIcon />}
+          type="switch"
+          switchValue={notificationsPreference === 'enabled'}
+          onSwitchValueChange={isEnabled => {
+            changeNotificationsPreference(isEnabled ? 'enabled' : 'disabled');
+          }}
+        />
+      </Box>
+    </Box>
   );
 }

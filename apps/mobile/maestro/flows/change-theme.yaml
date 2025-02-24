@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn: Display Theme and account identifier
+- tapOn: Theme System
+- tapOn: Light
+- tapOn: DISPLAY
+- assertVisible: Theme Light
+- assertNotVisible: Theme System
+- assertNotVisible: Theme Dark
+- tapOn: Theme Light
+- tapOn: DISPLAY
+- tapOn: Theme Light
+- tapOn: Dark
+- tapOn: DISPLAY
+- assertVisible: Theme Dark
+- assertNotVisible: Theme System
+- assertNotVisible: Theme Light

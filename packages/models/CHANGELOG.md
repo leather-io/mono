@@ -24,6 +24,127 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.26.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.1...@leather.io/models-v0.26.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* upgrade prettier ([5a1577c](https://github.com/leather-io/mono/commit/5a1577cc382b4399d427dbf049d1f1d08d984f33))
+* upgrade typescript ([14b91ee](https://github.com/leather-io/mono/commit/14b91ee484d89d25399af7b3e9144e1b4e6a48a7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.1
+    * @leather.io/tsconfig-config bumped to 0.6.1
+
+## [0.26.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.0...@leather.io/models-v0.26.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* update sbtc bitcoin url ([57de284](https://github.com/leather-io/mono/commit/57de284dc9fbc29f8efc1cb4892639fe442d5eee))
+
+## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.25.1...@leather.io/models-v0.26.0) (2025-02-17)
+
+
+### Features
+
+* connect leather api client to backend ([bf94c84](https://github.com/leather-io/mono/commit/bf94c848c465f5f146fdc5508f14bb033b9dc829))
+
+## [0.25.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.25.0...@leather.io/models-v0.25.1) (2025-02-03)
+
+
+### Bug Fixes
+
+* **rpc:** favour zod types only ([1994cc4](https://github.com/leather-io/mono/commit/1994cc487a1e3ddabfbf932bb3e6052fc66cba25))
+
+## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.3...@leather.io/models-v0.25.0) (2025-01-15)
+
+
+### Features
+
+* utxos service ([1216c4b](https://github.com/leather-io/mono/commit/1216c4bfd34bb50bac4287320a51005215c3dea4))
+
+## [0.24.3](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.2...@leather.io/models-v0.24.3) (2025-01-07)
+
+
+### Bug Fixes
+
+* address all occurrences triggering no-unused-vars ([6708dea](https://github.com/leather-io/mono/commit/6708deaf298fa4203dbfc7304bd75d0faa7a64b5))
+
+## [0.24.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.1...@leather.io/models-v0.24.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* add src20 image types, ref leather-io/mono[#724](https://github.com/leather-io/mono/issues/724) ([7404ae6](https://github.com/leather-io/mono/commit/7404ae643d0495703e9b1699e302a968a4afeee0))
+
+## [0.24.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.24.0...@leather.io/models-v0.24.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* testnet ordering ([c98c69f](https://github.com/leather-io/mono/commit/c98c69f0db00449232adcb2775ebb4a3d7c7fbc4))
+
+## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.23.0...@leather.io/models-v0.24.0) (2024-12-03)
+
+
+### Features
+
+* balances service ([85e13f0](https://github.com/leather-io/mono/commit/85e13f052142d9a26aed3a84c22c36207efa91de))
+
+## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.22.0...@leather.io/models-v0.23.0) (2024-11-29)
+
+
+### Features
+
+* migrate bitcoin generate txs, closes LEA-1735 ([44fd6cf](https://github.com/leather-io/mono/commit/44fd6cfd29a2016b38d96b4e80e377ae7eae81df))
+
+## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.21.0...@leather.io/models-v0.22.0) (2024-11-25)
+
+
+### Features
+
+* migrate stacks generate txs, closes LEA-1732 ([95a00fd](https://github.com/leather-io/mono/commit/95a00fd0a9f54718146a08a4fe50c92455e86961))
+
+## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.20.0...@leather.io/models-v0.21.0) (2024-11-21)
+
+
+### Features
+
+* add stx transfer fees default values ([262efd1](https://github.com/leather-io/mono/commit/262efd1f0d1f0c4b450bf3dd3f998f7598e2c337))
+
+## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.19.1...@leather.io/models-v0.20.0) (2024-11-20)
+
+
+### Features
+
+* **models:** sbtc testnet network ([1be2972](https://github.com/leather-io/mono/commit/1be29726360bf0e9a7477fa96c1c3947f39f1d62))
+
+## [0.19.1](https://github.com/leather-io/mono/compare/@leather.io/models-v0.19.0...@leather.io/models-v0.19.1) (2024-11-15)
+
+
+### Bug Fixes
+
+* incorrect port on sbtc dev env mempool.space instance ([9c24dfb](https://github.com/leather-io/mono/commit/9c24dfb62e62b40e9e7baa47907f09dedeb06005))
+
+## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.3...@leather.io/models-v0.19.0) (2024-11-06)
+
+
+### Features
+
+* market data service ([58fc169](https://github.com/leather-io/mono/commit/58fc169aafdbb65b519c3e10db71034e1470bc59))
+
+## [0.18.3](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.2...@leather.io/models-v0.18.3) (2024-10-30)
+
+
+### Bug Fixes
+
+* **query:** gcTime using too big of a number for javascript ([b7975f9](https://github.com/leather-io/mono/commit/b7975f9a4acf4b5898e92247c170b664c796d3c7))
+
 ## [0.18.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.18.1...@leather.io/models-v0.18.2) (2024-10-18)
 
 

@@ -1,5 +1,7 @@
 import { RefObject } from 'react';
 
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -7,7 +9,7 @@ import { useLingui } from '@lingui/react';
 
 import { currencyNameMap } from '@leather.io/constants';
 import { FiatCurrency } from '@leather.io/models';
-import { Cell, DollarCircleIcon, SheetRef } from '@leather.io/ui/native';
+import { DollarCircleIcon, SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -39,24 +41,26 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
         message: 'Conversion unit',
       })}
     >
-      {Object.entries(currencyNameMap).map(([symbol, name]) => (
-        <Cell.Root
-          key={symbol}
-          title={i18n._({
-            id: 'conversion_unit.cell_title',
-            message: '{name}',
-            values: { name },
-          })}
-          caption={i18n._({
-            id: 'conversion_unit.cell_caption',
-            message: '{symbol}',
-            values: { symbol },
-          })}
-          onPress={() => onUpdateConversionUnit(symbol)}
-        >
-          <Cell.Radio isSelected={settings.fiatCurrencyPreference === symbol} />
-        </Cell.Root>
-      ))}
+      <SettingsList gap="0">
+        {Object.entries(currencyNameMap).map(([symbol, name]) => (
+          <SettingsListItem
+            key={symbol}
+            title={i18n._({
+              id: 'conversion_unit.cell_title',
+              message: '{name}',
+              values: { name },
+            })}
+            caption={i18n._({
+              id: 'conversion_unit.cell_caption',
+              message: '{symbol}',
+              values: { symbol },
+            })}
+            onPress={() => onUpdateConversionUnit(symbol)}
+            type="radio"
+            isRadioSelected={settings.fiatCurrencyPreference === symbol}
+          />
+        ))}
+      </SettingsList>
     </SettingsSheetLayout>
   );
 }

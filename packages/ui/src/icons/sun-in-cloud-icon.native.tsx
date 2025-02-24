@@ -1,17 +1,11 @@
-import SunInCloudSmall from '../assets/icons/sun-in-cloud-16-16.svg';
-import SunInCloud from '../assets/icons/sun-in-cloud-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import SunInCloud16 from '../assets/icons/sun-in-cloud-16-16.svg';
+import SunInCloud24 from '../assets/icons/sun-in-cloud-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function SunInCloudIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <SunInCloudSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <SunInCloud />
-    </Icon>
-  );
-}
+export const SunInCloudIcon = createNativeIcon({
+  icon: {
+    small: SunInCloud16,
+    medium: SunInCloud24,
+  },
+  displayName: 'SunInCloud',
+});

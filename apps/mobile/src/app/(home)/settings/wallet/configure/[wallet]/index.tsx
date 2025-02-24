@@ -1,23 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useRef, useState } from 'react';
 
+import { useAuthentication } from '@/common/use-authentication';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
-import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
+import {
+  NotifyUserSheetData,
+  NotifyUserSheetLayout,
+} from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
-import { RemoveWalletSheet } from '@/components/wallet-settings/remove-wallet-sheet';
-import { WalletNameSheet } from '@/components/wallet-settings/wallet-name-sheet';
+import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
+import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
+import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
 import { WalletStore } from '@/store/wallets/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { userRenamesWallet } from '@/store/wallets/wallets.write';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
 import {
@@ -26,7 +33,6 @@ import {
   ArrowsRepeatLeftRightIcon,
   BarcodeIcon,
   Box,
-  Cell,
   Eye1ClosedIcon,
   InboxIcon,
   SheetRef,
@@ -36,60 +42,7 @@ import {
   TrashIcon,
 } from '@leather.io/ui/native';
 
-interface ConfigureWalletProps {
-  wallet: WalletStore;
-}
-function ConfigureWallet({ wallet }: ConfigureWalletProps) {
-  const theme = useTheme<Theme>();
-  const router = useRouter();
-  const addWalletSheetRef = useRef<SheetRef>(null);
-  const walletNameSheetRef = useRef<SheetRef>(null);
-  const removeWalletSheetRef = useRef<SheetRef>(null);
-  const navigation = useNavigation();
-  const dispatch = useAppDispatch();
-
-  const { displayToast } = useToastContext();
-
-  useEffect(() => {
-    navigation.setOptions({ title: wallet.name });
-  }, [navigation, wallet.name]);
-
-  function setName(name: string) {
-    if (name === '') {
-      displayToast({
-        title: t({
-          id: 'configure_wallet.wallet_name.empty_name_error',
-          message: 'Wallet name cannot be empty',
-        }),
-        type: 'error',
-      });
-      return { success: false };
-    }
-    dispatch(
-      userRenamesWallet({
-        fingerprint: wallet.fingerprint,
-        name,
-      })
-    );
-    navigation.setOptions({ title: name });
-    return { success: true };
-  }
-
-  function removeWallet() {
-    router.back();
-    dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
-  }
-
-  const notifySheetRef = useRef<SheetRef>(null);
-  const [notifySheetData, setNotifySheetData] = useState<NotifyUserSheetData | null>(null);
-
-  function onOpenSheet(option: NotifyUserSheetData) {
-    return () => {
-      setNotifySheetData(option);
-      notifySheetRef.current?.present();
-    };
-  }
-
+function getUnavailableFeatures({ iconColor }: { iconColor: keyof Theme['colors'] }) {
   const addressReuseTitle = t({
     id: 'configure_wallet.address_reuse.cell_title',
     message: 'Address reuse',
@@ -110,19 +63,121 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     id: 'configure_wallet.export_key.cell_title',
     message: 'Export key',
   });
+  return {
+    addressReuse: {
+      title: addressReuseTitle,
+      icon: <ArrowsRepeatLeftRightIcon color={iconColor} />,
+      id: WaitlistIds.addressReuse,
+    },
+    addressScanRange: {
+      title: addressScanRangeTitle,
+      icon: <BarcodeIcon color={iconColor} />,
+      id: WaitlistIds.capsule,
+    },
+    addressTypes: {
+      title: addressTypesTitle,
+      icon: <InboxIcon color={iconColor} />,
+      id: WaitlistIds.addressTypes,
+    },
+    exportXpub: {
+      title: exportXpubTitle,
+      icon: <ArrowOutOfBoxIcon color={iconColor} />,
+      id: WaitlistIds.exportXpub,
+    },
+    exportKey: {
+      title: exportKeyTitle,
+      icon: <ArrowOutOfBoxIcon color={iconColor} />,
+      id: WaitlistIds.exportKey,
+    },
+  };
+}
+
+interface ConfigureWalletProps {
+  wallet: WalletStore;
+}
+function ConfigureWallet({ wallet }: ConfigureWalletProps) {
+  const router = useRouter();
+  const addWalletSheetRef = useRef<SheetRef>(null);
+  const walletNameSheetRef = useRef<SheetRef>(null);
+  const removeWalletSheetRef = useRef<SheetRef>(null);
+  const dispatch = useAppDispatch();
+  const { securityLevelPreference } = useSettings();
+  const { authenticate } = useAuthentication();
+
+  const { displayToast } = useToastContext();
+
+  function setName(name: string) {
+    if (name === '') {
+      displayToast({
+        title: t({
+          id: 'configure_wallet.wallet_name.empty_name_error',
+          message: 'Wallet name cannot be empty',
+        }),
+        type: 'error',
+      });
+      return { success: false };
+    }
+    dispatch(
+      userRenamesWallet({
+        fingerprint: wallet.fingerprint,
+        name,
+      })
+    );
+    return { success: true };
+  }
+
+  function removeWallet() {
+    router.back();
+    dispatch(userRemovesWallet({ fingerprint: wallet.fingerprint }));
+  }
+
+  async function secureRemoveWallet() {
+    if (securityLevelPreference === 'secure') {
+      const result = await authenticate();
+      if (result && result.success) {
+        removeWallet();
+      } else {
+        displayToast({
+          title: t({
+            id: 'configure_wallet.delete_wallet.authentication_failed',
+            message: 'Authentication failed',
+          }),
+          type: 'error',
+        });
+      }
+    }
+  }
+
+  async function onRemoveWallet() {
+    if (securityLevelPreference === 'secure') {
+      await secureRemoveWallet();
+      return;
+    }
+    removeWallet();
+  }
+
+  const notifySheetRef = useRef<SheetRef>(null);
+  const [notifySheetData, setNotifySheetData] = useState<NotifyUserSheetData | null>(null);
+
+  function onOpenSheet(option: NotifyUserSheetData) {
+    return () => {
+      setNotifySheetData(option);
+      notifySheetRef.current?.present();
+    };
+  }
+
   return (
     <>
-      <Box flex={1} backgroundColor="ink.background-primary">
-        <ScrollView
-          contentContainerStyle={{
-            paddingTop: theme.spacing['5'],
-            paddingBottom: theme.spacing['5'],
-            gap: theme.spacing[5],
-          }}
-        >
-          <Box px="5" gap="6">
-            <Text variant="heading05">{wallet.name}</Text>
-            <Cell.Root
+      <AnimatedHeaderScreenLayout
+        title={t({
+          id: 'configure_wallet.header_title',
+          message: 'Configure wallet',
+        })}
+      >
+        <Box gap="3">
+          <Text variant="heading05">{wallet.name}</Text>
+          <SettingsList>
+            <SettingsListItem
               title={t({
                 id: 'configure_wallet.view_key.cell_title',
                 message: 'View Secret Key',
@@ -135,10 +190,8 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                 });
               }}
               testID={TestId.walletSettingsViewSecretKeyButton}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Cell.Root
+            />
+            <SettingsListItem
               title={t({
                 id: 'configure_wallet.rename_wallet.cell_title',
                 message: 'Rename wallet',
@@ -148,98 +201,62 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                 walletNameSheetRef.current?.present();
               }}
               testID={TestId.walletSettingsRenameWalletButton}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Cell.Root
+            />
+            <SettingsListItem
               title={t({
                 id: 'configure_wallet.remove_wallet.cell_title',
                 message: 'Remove wallet',
               })}
-              icon={<TrashIcon color={theme.colors['red.action-primary-default']} />}
+              icon={<TrashIcon color="red.action-primary-default" />}
               onPress={() => {
                 removeWalletSheetRef.current?.present();
               }}
               testID={TestId.walletSettingsRemoveWalletButton}
-            >
-              <Cell.Chevron />
-            </Cell.Root>
-            <Accordion
-              label={t({
-                id: 'configure_wallet.accordion_label',
-                message: 'Advanced options',
-              })}
-              content={
-                <>
-                  <Cell.Root
-                    title={addressReuseTitle}
-                    icon={<ArrowsRepeatLeftRightIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressReuseTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={addressScanRangeTitle}
-                    icon={<BarcodeIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressScanRangeTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={addressTypesTitle}
-                    icon={<InboxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: addressTypesTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={exportXpubTitle}
-                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: exportXpubTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                  <Cell.Root
-                    title={exportKeyTitle}
-                    icon={<ArrowOutOfBoxIcon color={theme.colors['ink.text-subdued']} />}
-                    onPress={onOpenSheet({
-                      title: exportKeyTitle,
-                    })}
-                  >
-                    <Cell.Chevron />
-                  </Cell.Root>
-                </>
-              }
             />
+          </SettingsList>
+          <Accordion
+            label={t({
+              id: 'configure_wallet.accordion_label',
+              message: 'More options',
+            })}
+            content={
+              <SettingsList>
+                {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
+                  feature => (
+                    <SettingsListItem
+                      key={feature.id}
+                      title={feature.title}
+                      icon={feature.icon}
+                      onPress={onOpenSheet({
+                        title: feature.title,
+                        id: feature.id,
+                      })}
+                    />
+                  )
+                )}
+              </SettingsList>
+            }
+          />
+        </Box>
+        <Box mb="7">
+          <Divider />
+          <Box py="5">
+            <Text variant="caption01">
+              {t({
+                id: 'configure_wallet.creation_label',
+                message: 'Creation date',
+              })}
+            </Text>
+            <Text variant="caption01" color="ink.text-subdued">
+              {dayjs(wallet.createdOn).format('D MMM YYYY')}
+            </Text>
           </Box>
-          <Box mb="7">
-            <Divider />
-            <Box p="5">
-              <Text variant="caption01">
-                {t({
-                  id: 'configure_wallet.creation_label',
-                  message: 'Creation date',
-                })}
-              </Text>
-              <Text variant="caption01" color="ink.text-subdued">
-                {dayjs(wallet.createdOn).format('D MMM YYYY')}
-              </Text>
-            </Box>
-          </Box>
-        </ScrollView>
-      </Box>
+        </Box>
+      </AnimatedHeaderScreenLayout>
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
-      <RemoveWalletSheet onSubmit={removeWallet} sheetRef={removeWalletSheetRef} />
-      <NotifyUserSheet sheetData={notifySheetData} sheetRef={notifySheetRef} />
+      <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
+      <NotifyUserSheetLayout sheetData={notifySheetData} sheetRef={notifySheetRef} />
     </>
   );
 }

@@ -12,7 +12,7 @@ export function useAlexSdkLatestPricesQuery(): UseQueryResult<
   return useQuery({
     queryKey: ['alex-sdk-latest-prices'],
     queryFn: async () => alex.getLatestPrices(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     retryDelay: 1000 * 60,

@@ -1,17 +1,11 @@
-import ArrowLeftSmall from '../assets/icons/arrow-left-16-16.svg';
-import ArrowLeft from '../assets/icons/arrow-left-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import ArrowLeft16 from '../assets/icons/arrow-left-16-16.svg';
+import ArrowLeft24 from '../assets/icons/arrow-left-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function ArrowLeftIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <ArrowLeftSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <ArrowLeft />
-    </Icon>
-  );
-}
+export const ArrowLeftIcon = createNativeIcon({
+  icon: {
+    small: ArrowLeft16,
+    medium: ArrowLeft24,
+  },
+  displayName: 'ArrowLeft',
+});

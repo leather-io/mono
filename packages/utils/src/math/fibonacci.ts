@@ -1,5 +1,5 @@
 function fibonacci(n = 0): number {
-  if (n < 0) throw 'Cannot calculate from negative number';
+  if (n < 0) throw new Error('Cannot calculate from negative number');
   if (n < 2) return n;
   return fibonacci(n - 1) + fibonacci(n - 2);
 }

@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow:
+    file: ../shared/add-wallet.yaml
+- tapOn: 'Receive'
+- assertVisible: 'Select account'
+- tapOn:
+    id: 'walletListAccountCard'
+    index: 0
+- tapOn:
+    id: 'receiveAssetItem'
+    index: 0
+- assertVisible: 'This is your Native Segwit address.'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'receiveAssetItem'
+    index: 1
+- assertVisible: "This is your Taproot address. Use it to receive tokens and collectibles\
+    \ on the bitcoin network."
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'receiveAssetItem'
+    index: 2
+- assertVisible: 'This is your Stacks address.'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'backButton'
+- assertVisible: 'Select account'

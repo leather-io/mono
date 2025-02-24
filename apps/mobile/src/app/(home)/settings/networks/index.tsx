@@ -1,4 +1,8 @@
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
@@ -9,15 +13,12 @@ import {
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 import {
-  Cell,
   GlobeIcon,
   PlaceholderIcon,
   PlaygroundFormsIcon,
   TestTubeIcon,
 } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
-
-import SettingsScreenLayout from '../settings-screen.layout';
 
 function getNetworkIcon(network: DefaultNetworkConfigurations) {
   switch (network) {
@@ -49,32 +50,40 @@ export default function SettingsNetworksScreen() {
   }
 
   return (
-    <SettingsScreenLayout>
-      {defaultNetworkPreferences.map(network => (
-        <Cell.Root
-          icon={getNetworkIcon(network)}
-          title={i18n._({
-            id: 'networks.cell_title',
-            message: '{network}',
-            values: { network: capitalize(network) },
-          })}
-          caption={
-            settings.networkPreference.id === network
-              ? t({
-                  id: 'networks.cell_caption_enabled',
-                  message: 'Enabled',
-                })
-              : t({
-                  id: 'networks.cell_caption_disabled',
-                  message: 'Disabled',
-                })
-          }
-          key={network}
-          onPress={() => onChangeNetwork(network)}
-        >
-          <Cell.Radio isSelected={settings.networkPreference.id === network} />
-        </Cell.Root>
-      ))}
-    </SettingsScreenLayout>
+    <AnimatedHeaderScreenLayout
+      rightHeaderElement={<NetworkBadge />}
+      title={t({
+        id: 'networks.header_title',
+        message: 'Networks',
+      })}
+    >
+      <SettingsList>
+        {defaultNetworkPreferences.map(network => (
+          <SettingsListItem
+            icon={getNetworkIcon(network)}
+            title={i18n._({
+              id: 'networks.cell_title',
+              message: '{network}',
+              values: { network: capitalize(network) },
+            })}
+            caption={
+              settings.networkPreference.id === network
+                ? t({
+                    id: 'networks.cell_caption_enabled',
+                    message: 'Enabled',
+                  })
+                : t({
+                    id: 'networks.cell_caption_disabled',
+                    message: 'Disabled',
+                  })
+            }
+            key={network}
+            onPress={() => onChangeNetwork(network)}
+            type="radio"
+            isRadioSelected={settings.networkPreference.id === network}
+          />
+        ))}
+      </SettingsList>
+    </AnimatedHeaderScreenLayout>
   );
 }

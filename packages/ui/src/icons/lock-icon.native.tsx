@@ -1,17 +1,11 @@
-import LockSmall from '../assets/icons/lock-16-16.svg';
-import Lock from '../assets/icons/lock-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import Lock16 from '../assets/icons/lock-16-16.svg';
+import Lock24 from '../assets/icons/lock-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function LockIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <LockSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Lock />
-    </Icon>
-  );
-}
+export const LockIcon = createNativeIcon({
+  icon: {
+    small: Lock16,
+    medium: Lock24,
+  },
+  displayName: 'Lock',
+});

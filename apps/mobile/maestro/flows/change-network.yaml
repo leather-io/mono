@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsNetworkButton'
+- tapOn: Testnet4 Disabled
+- tapOn:
+    id: 'backButton'
+- assertVisible: Testnet4
+- tapOn:
+    id: 'backButton'
+- assertVisible: Testnet4
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn: Networks Mainnet, testnet or signet
+- tapOn: Mainnet Disabled
+- tapOn:
+    id: 'backButton'
+- assertNotVisible: Testnet4
+- tapOn:
+    id: 'backButton'
+- assertNotVisible: Testnet4

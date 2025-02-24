@@ -1,17 +1,11 @@
-import PencilSmall from '../assets/icons/pencil-16-16.svg';
-import Pencil from '../assets/icons/pencil-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Pencil16 from '../assets/icons/pencil-16-16.svg';
+import Pencil24 from '../assets/icons/pencil-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function PencilIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <PencilSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Pencil />
-    </Icon>
-  );
-}
+export const PencilIcon = createWebIcon({
+  icon: {
+    small: Pencil16,
+    medium: Pencil24,
+  },
+  displayName: 'Pencil',
+});

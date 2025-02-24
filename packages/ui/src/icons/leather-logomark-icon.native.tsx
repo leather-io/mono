@@ -1,10 +1,17 @@
-import LeatherLogomark from '../assets/icons/leather-logomark.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import { Component, forwardRef } from 'react';
+import { SvgProps } from 'react-native-svg';
 
-export function LeatherLogomarkIcon(props: IconProps) {
+import { useTheme } from '@shopify/restyle';
+
+import LeatherLogomark from '../assets/icons/leather-logomark.svg';
+import { Theme } from '../theme-native';
+
+export const LeatherLogomarkIcon = forwardRef<Component, SvgProps>((props, ref) => {
+  const theme = useTheme<Theme>();
+
   return (
-    <Icon {...props}>
-      <LeatherLogomark />
-    </Icon>
+    <LeatherLogomark ref={ref} color={theme.colors['ink.action-primary-default']} {...props} />
   );
-}
+});
+
+LeatherLogomarkIcon.displayName = 'LeatherLogomarkIcon';

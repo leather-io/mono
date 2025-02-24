@@ -1,0 +1,9 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn: 'Help Support, guides and articles'
+- tapOn: 'Guides Dive into feature details'
+- assertVisible: 'USER GUIDES'

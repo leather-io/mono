@@ -1,20 +1,13 @@
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MnemonicDisplay } from '@/components/create-new-wallet/mnemonic-display';
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { useMnemonic } from '@/store/storage-persistors';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
-import {
-  Box,
-  Button,
-  QuestionCircleIcon,
-  Text,
-  Theme,
-  TouchableOpacity,
-} from '@leather.io/ui/native';
+import { Box, Button, Text, Theme } from '@leather.io/ui/native';
 
 function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
   const { bottom } = useSafeAreaInsets();
@@ -26,32 +19,14 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
 
   // TODO: get mnemonic key of wallet
   return (
-    <Box
-      flex={1}
-      backgroundColor="ink.background-primary"
-      justifyContent="space-between"
-      style={{ paddingBottom: bottom + theme.spacing['5'] }}
-    >
-      <ScrollView style={{ paddingHorizontal: theme.spacing['5'] }}>
-        <Box gap="3" pt="5">
-          <TouchableOpacity
-            onPress={() => {
-              // TODO: show some kind of a helper here
-            }}
-            p="5"
-            position="absolute"
-            right={-theme.spacing['5']}
-            zIndex={10}
-            top={theme.spacing['1']}
-          >
-            <QuestionCircleIcon color={theme.colors['ink.text-primary']} variant="small" />
-          </TouchableOpacity>
-          <Text variant="heading03">
-            {t({
-              id: 'view_secret_key.title',
-              message: 'SECRET KEY',
-            })}
-          </Text>
+    <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
+      <AnimatedHeaderScreenLayout
+        title={t({
+          id: 'view_secret_key.title',
+          message: 'SECRET KEY',
+        })}
+      >
+        <Box gap="3">
           <Text variant="label01">
             {t({
               id: 'view_secret_key.subtitle',
@@ -63,7 +38,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
         <Box my="5">
           <MnemonicDisplay mnemonic={mnemonic} passphrase={passphrase} />
         </Box>
-      </ScrollView>
+      </AnimatedHeaderScreenLayout>
       <Box px="5" gap="4">
         <Button
           onPress={() => {
@@ -72,7 +47,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
           buttonState="default"
           title={t({
             id: 'view_secret_key.button',
-            message: `I've backed it up`,
+            message: 'Done',
           })}
         />
       </Box>

@@ -1,10 +1,9 @@
 import LogoMpcBitgoLogo from '../../assets/icons/logos/logo-mpc-bitgo-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoMpcBitgo({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoMpcBitgoLogo />
-    </Icon>
-  );
-}
+export const LogoMpcBitgo = createNativeIcon({
+  icon: {
+    medium: LogoMpcBitgoLogo,
+  },
+  displayName: 'LogoMpcBitgo',
+});

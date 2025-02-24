@@ -6,7 +6,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, PlaceholderIcon, Text, Theme, TouchableOpacity } from '@leather.io/ui/native';
+import {
+  Box,
+  PlaceholderIcon,
+  Pressable,
+  Text,
+  Theme,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
 import { TabBar } from '../tab-bar';
 import { formatURL } from './utils';
@@ -71,6 +79,8 @@ function getCurrentArray(currentTab: CurrentTab) {
       return RECENT;
     case 'suggested':
       return SUGGESTED;
+    default:
+      assertUnreachable(currentTab);
   }
 }
 
@@ -82,7 +92,12 @@ interface AppWidgetProps {
 }
 function AppWidget({ onPress, shortcut }: AppWidgetProps) {
   return (
-    <TouchableOpacity onPress={onPress} flexDirection="row" gap="3">
+    <Pressable
+      onPress={onPress}
+      flexDirection="row"
+      gap="3"
+      pressEffects={legacyTouchablePressEffect}
+    >
       <Box borderRadius="sm">
         <PlaceholderIcon height={60} width={60} />
       </Box>
@@ -95,7 +110,7 @@ function AppWidget({ onPress, shortcut }: AppWidgetProps) {
           </Text>
         ) : null}
       </Box>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -154,14 +169,20 @@ export function BrowserEmptyState({
           />
         </Box>
         {textURL ? (
-          <TouchableOpacity p="3" mx="2" justifyContent="center" onPress={resetTextInput}>
+          <Pressable
+            p="3"
+            mx="2"
+            justifyContent="center"
+            onPress={resetTextInput}
+            pressEffects={legacyTouchablePressEffect}
+          >
             <Text variant="label02">
               {t({
                 id: 'browser.input_reset_label',
                 message: 'Cancel',
               })}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         ) : null}
       </Box>
       <TabBar

@@ -3,7 +3,6 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { TestId } from '@/shared/test-id';
-import { ResponsiveValue, useTheme } from '@shopify/restyle';
 
 import {
   Box,
@@ -11,7 +10,6 @@ import {
   ErrorTriangleIcon,
   InfoCircleIcon,
   Text,
-  Theme,
 } from '@leather.io/ui/native';
 
 import { ToastData, ToastMethods, ToastProps, ToastType } from './types';
@@ -25,31 +23,20 @@ const TOP_POSITION = {
 
 const TOAST_OPEN_DURATION = 3000;
 
-function getIcon(type: ToastType, theme: Theme) {
+function getIcon(type: ToastType) {
   switch (type) {
     case 'error':
-      return <ErrorTriangleIcon color={theme.colors['red.action-primary-default']} />;
+      return <ErrorTriangleIcon color="red.action-primary-default" />;
     case 'info':
-      return <InfoCircleIcon color={theme.colors['ink.background-primary']} />;
+      return <InfoCircleIcon color="ink.background-primary" />;
     case 'success':
-      return <CheckmarkCircleIcon color={theme.colors['green.action-primary-default']} />;
+      return <CheckmarkCircleIcon color="green.action-primary-default" />;
     default:
-      return <InfoCircleIcon color={theme.colors['ink.background-primary']} />;
+      return <InfoCircleIcon color="ink.background-primary" />;
   }
 }
 
-function getBackground(
-  type: ToastType
-): ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> {
-  switch (type) {
-    case 'error':
-    case 'info':
-    case 'success':
-      return 'ink.text-primary';
-  }
-}
 export function Toast({ toastRef }: ToastProps) {
-  const theme = useTheme<Theme>();
   const [toastData, setToastData] = useState<ToastData | null>(null);
   const top = useSharedValue<number>(TOP_POSITION.closed);
   const timeout = useRef<NodeJS.Timeout>();
@@ -93,18 +80,18 @@ export function Toast({ toastRef }: ToastProps) {
       <AnimatedBox
         style={animatedStyle}
         position="absolute"
-        bg={getBackground(toastData.type)}
+        bg="ink.text-primary"
         borderRadius="xs"
         p="3"
         alignSelf="center"
         gap="3"
         flexDirection="row"
-        zIndex={9999}
+        zIndex="100"
         justifyContent="center"
         alignItems="center"
         testID={TestId.toastContainer}
       >
-        {getIcon(toastData.type, theme)}
+        {getIcon(toastData.type)}
         <Text variant="label02" color="ink.background-primary">
           {toastData.title}
         </Text>

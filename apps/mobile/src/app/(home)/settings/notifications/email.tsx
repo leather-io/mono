@@ -1,11 +1,10 @@
 import { useRef } from 'react';
 
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { EmailAddressSheet } from '@/features/settings/email-address-sheet';
 import { t } from '@lingui/macro';
 
-import { Cell, EmailIcon, SheetRef } from '@leather.io/ui/native';
-
-import SettingsScreenLayout from '../settings-screen.layout';
+import { Box, EmailIcon, SheetRef } from '@leather.io/ui/native';
 
 // TODO: Hook up to email service when available
 export default function SettingsNotificationsEmailScreen() {
@@ -13,24 +12,20 @@ export default function SettingsNotificationsEmailScreen() {
 
   return (
     <>
-      <SettingsScreenLayout>
-        <Cell.Root
-          title={t({
-            id: 'notifications.email.cell_title',
-            message: 'Email address',
-          })}
-          caption={t({
-            id: 'notifications.email.cell_caption',
-            message: 'Placeholder',
-          })}
-          icon={<EmailIcon />}
-          onPress={() => {
-            emailAddressSheetRef.current?.present();
-          }}
-        >
-          <Cell.Chevron />
-        </Cell.Root>
-      </SettingsScreenLayout>
+      <Box bg="ink.background-primary" flex={1}>
+        <Box flex={1} gap="3" paddingTop="5">
+          <SettingsListItem
+            title={t({
+              id: 'notifications.email.cell_title',
+              message: 'Email address',
+            })}
+            icon={<EmailIcon />}
+            onPress={() => {
+              emailAddressSheetRef.current?.present();
+            }}
+          />
+        </Box>
+      </Box>
       <EmailAddressSheet sheetRef={emailAddressSheetRef} />
     </>
   );

@@ -1,10 +1,9 @@
 import LogoHardwareBitkeyLogo from '../../assets/icons/logos/logo-hardware-bitkey-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoHardwareBitkey({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoHardwareBitkeyLogo />
-    </Icon>
-  );
-}
+export const LogoHardwareBitkey = createNativeIcon({
+  icon: {
+    medium: LogoHardwareBitkeyLogo,
+  },
+  displayName: 'LogoHardwareBitkey',
+});

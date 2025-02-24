@@ -5,7 +5,7 @@ const loadingStyles = {
     _after: {
       animation: 'spin',
       border: '2px solid',
-      borderColor: 'ink.action-primary-default',
+      borderColor: 'currentColor',
       borderBottomColor: 'transparent',
       boxSizing: 'border-box',
       content: '""',
@@ -17,7 +17,6 @@ const loadingStyles = {
       top: 'calc(50% - 10px)',
       width: '20px',
     },
-    color: 'transparent !important',
   },
 };
 
@@ -48,6 +47,7 @@ export const buttonRecipe = defineRecipe({
         },
         _disabled: {
           _hover: { bg: 'ink.background-secondary' },
+          _loading: { bg: 'ink.action-primary-default' },
           bg: 'ink.background-secondary',
           color: 'ink.text-non-interactive',
           cursor: 'not-allowed',
@@ -106,6 +106,14 @@ export const buttonRecipe = defineRecipe({
         },
         ...loadingStyles,
       },
+
+      success: {
+        _disabled: {
+          cursor: 'not-allowed',
+        },
+        bg: 'green.action-primary-default',
+        color: 'ink.background-primary',
+      },
     },
 
     invert: { true: {} },
@@ -141,6 +149,22 @@ export const buttonRecipe = defineRecipe({
     },
     {
       css: {
+        height: '40px',
+        py: 'unset',
+      },
+      size: 'sm',
+      variant: 'solid',
+    },
+    {
+      css: {
+        height: '48px',
+        py: 'unset',
+      },
+      size: 'md',
+      variant: 'solid',
+    },
+    {
+      css: {
         _active: {
           bg: 'ink.text-primary',
         },
@@ -167,6 +191,17 @@ export const buttonRecipe = defineRecipe({
       },
       trigger: true,
       variant: 'ghost',
+    },
+    {
+      css: {
+        _disabled: {
+          cursor: 'not-allowed',
+        },
+        bg: 'green.action-primary-default',
+        color: 'ink.text-primary',
+      },
+      invert: true,
+      variant: 'success',
     },
   ],
 });

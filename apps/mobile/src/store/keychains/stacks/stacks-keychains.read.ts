@@ -45,3 +45,14 @@ export function useStacksSigners() {
     [list]
   );
 }
+
+export function useStacksSignerAddresses() {
+  const { list: stacksSigners } = useStacksSigners();
+
+  return useMemo(() => stacksSigners.map(signer => signer.address), [stacksSigners]);
+}
+
+export function useStacksSignerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
+  const signers = useStacksSigners().fromAccountIndex(fingerprint, accountIndex);
+  return signers.map(signer => signer.address)[0];
+}

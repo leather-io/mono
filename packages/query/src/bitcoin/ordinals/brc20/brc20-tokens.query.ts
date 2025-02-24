@@ -4,6 +4,7 @@ import { P2TROut } from '@scure/btc-signer/payment';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import type { BitcoinSigner } from '@leather.io/bitcoin';
+import { BitcoinAddress } from '@leather.io/models';
 import { createNumArrayOfRange } from '@leather.io/utils';
 
 import { useLeatherNetwork } from '../../../leather-query-provider';
@@ -18,7 +19,7 @@ export function useGetBrc20TokensQuery({
   nativeSegwitAddress,
   createTaprootSigner,
 }: {
-  nativeSegwitAddress: string;
+  nativeSegwitAddress: BitcoinAddress;
   createTaprootSigner: ((addressIndex: number) => BitcoinSigner<P2TROut>) | undefined;
 }) {
   const network = useLeatherNetwork();
@@ -83,7 +84,8 @@ export function useGetBrc20TokensQuery({
         console.log('Error fetching BRC-20 tokens:', error);
         return [];
       });
-      addressesWithoutTokens += brc20Tokens.filter(tokens => tokens.length === 0).length;
+      addressesWithoutTokens +=
+        brc20Tokens.filter(tokens => tokens.length === 0).length || addressesSimultaneousFetchLimit;
 
       return {
         addressesWithoutTokens,
@@ -108,7 +110,7 @@ export function useGetBrc20TokensQuery({
         fromIndex: fromIndex + addressesSimultaneousFetchLimit,
       };
     },
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
     refetchOnWindowFocus: true,
     staleTime: 5 * 60 * 1000,
@@ -119,6 +121,7 @@ export function useGetBrc20TokensQuery({
     if (query.hasNextPage) {
       void query.fetchNextPage();
     }
+    // eslint-disable-next-line @tanstack/query/no-unstable-deps
   }, [query, query.data]);
 
   return query;

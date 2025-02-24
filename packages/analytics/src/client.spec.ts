@@ -6,16 +6,19 @@ export const mockExternalAnalyticsClient = {
   screen: vi.fn().mockResolvedValue(undefined),
   group: vi.fn().mockResolvedValue(undefined),
   identify: vi.fn().mockResolvedValue(undefined),
+  page: vi.fn().mockResolvedValue(undefined),
+  register: vi.fn().mockResolvedValue(undefined),
+  deregister: vi.fn().mockResolvedValue(undefined),
 };
 
 describe('AnalyticsClient', () => {
   it('should be able to track all events with default properties', async () => {
-    const client = AnalyticsClient(mockExternalAnalyticsClient, {
+    const analytics = AnalyticsClient(mockExternalAnalyticsClient, {
       defaultProperties: { platform: 'web' },
     });
 
-    await client.track('background_analytics_schema_fail', undefined);
-    await client.screen('/home/screen', undefined);
+    await analytics.track('background_analytics_schema_fail');
+    await analytics.client.screen('/home/screen', undefined);
 
     expect(mockExternalAnalyticsClient.track).toHaveBeenCalledWith(
       'background_analytics_schema_fail',
@@ -30,12 +33,12 @@ describe('AnalyticsClient', () => {
   });
 
   it('should be able to track group and identify with default traits', async () => {
-    const client = AnalyticsClient(mockExternalAnalyticsClient, {
+    const analytics = AnalyticsClient(mockExternalAnalyticsClient, {
       defaultTraits: { user: 'test' },
     });
 
-    await client.identify('1df3_34j3', undefined);
-    await client.group('1df3_34j3', undefined);
+    await analytics.client.identify('1df3_34j3');
+    await analytics.client.group('1df3_34j3');
 
     expect(mockExternalAnalyticsClient.identify).toHaveBeenCalledWith('1df3_34j3', {
       user: 'test',

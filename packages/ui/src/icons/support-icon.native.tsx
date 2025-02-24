@@ -1,17 +1,11 @@
-import SupportSmall from '../assets/icons/support-16-16.svg';
-import Support from '../assets/icons/support-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import Support16 from '../assets/icons/support-16-16.svg';
+import Support24 from '../assets/icons/support-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function SupportIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <SupportSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Support />
-    </Icon>
-  );
-}
+export const SupportIcon = createNativeIcon({
+  icon: {
+    small: Support16,
+    medium: Support24,
+  },
+  displayName: 'Support',
+});

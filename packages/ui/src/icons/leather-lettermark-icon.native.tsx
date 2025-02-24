@@ -1,10 +1,9 @@
-import LeatherLettermark from '../assets/icons/leather-lettermark-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import LeatherLettermark24 from '../assets/icons/leather-lettermark-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function LeatherLettermarkIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <LeatherLettermark />
-    </Icon>
-  );
-}
+export const LeatherLettermarkIcon = createNativeIcon({
+  icon: {
+    medium: LeatherLettermark24,
+  },
+  displayName: 'LeatherLettermark',
+});

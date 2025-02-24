@@ -20,6 +20,8 @@ import {
   visible,
 } from '@shopify/restyle';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 import { Text, Theme, TouchableOpacity } from '../../../native';
 
 const buttonRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
@@ -49,6 +51,8 @@ function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState,
       return match.outline;
     case 'ghost':
       return match.ghost;
+    default:
+      assertUnreachable(buttonState);
   }
 }
 
@@ -59,7 +63,7 @@ export function getButtonTextColor(buttonState: ButtonState) {
       default: 'ink.background-primary',
       critical: 'ink.background-primary',
       disabled: 'ink.text-non-interactive',
-      success: 'green.action-primary-default',
+      success: 'ink.background-primary',
       outline: 'ink.action-primary-default',
       ghost: 'ink.text-primary',
     }
@@ -90,7 +94,7 @@ export const Button = forwardRef(
       default: 'ink.text-primary',
       critical: 'red.action-primary-default',
       disabled: 'ink.background-secondary',
-      success: 'green.background-primary',
+      success: 'green.action-primary-default',
       outline: 'ink.background-primary',
       ghost: undefined,
     });
@@ -143,5 +147,7 @@ export const Button = forwardRef(
     );
   }
 );
+
+Button.displayName = 'Button';
 
 export const AnimatedButton = Animated.createAnimatedComponent(Button);

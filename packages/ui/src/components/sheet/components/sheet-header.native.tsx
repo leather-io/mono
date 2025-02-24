@@ -5,7 +5,7 @@ const SHEET_HEADER_HEIGHT = 72;
 interface SheetHeaderProps {
   title: string;
   icon: React.ReactNode;
-  onPressSupport?: () => unknown;
+  onPressSupport?: () => void;
 }
 
 export function SheetHeader({ title, icon, onPressSupport }: SheetHeaderProps) {
@@ -19,11 +19,13 @@ export function SheetHeader({ title, icon, onPressSupport }: SheetHeaderProps) {
           </Text>
         </Box>
       </Box>
-      <Box alignItems="flex-end" flex={1}>
-        <TouchableOpacity onPress={onPressSupport} zIndex={10}>
-          <QuestionCircleIcon variant="small" />
-        </TouchableOpacity>
-      </Box>
+      {onPressSupport && (
+        <Box alignItems="flex-end" flex={1}>
+          <TouchableOpacity onPress={onPressSupport} zIndex="10">
+            <QuestionCircleIcon variant="small" />
+          </TouchableOpacity>
+        </Box>
+      )}
     </Box>
   );
 }

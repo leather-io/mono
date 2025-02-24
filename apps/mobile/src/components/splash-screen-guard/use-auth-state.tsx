@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 
-import { useAppState } from '@/hooks/app-state';
+import { useAuthentication } from '@/common/use-authentication';
+import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
-import * as LocalAuthentication from 'expo-local-authentication';
+import { analytics } from '@/utils/analytics';
 
 const unlockTimeout = 60 * 1000;
 type AuthState = 'cold-start' | 'started' | 'failed' | 'passed-on-first' | 'passed-afterwards';
@@ -16,6 +17,7 @@ export function useAuthState({
 }) {
   const { securityLevelPreference, userLeavesApp, lastActive } = useSettings();
   const [authState, setAuthState] = useState<AuthState>('cold-start');
+  const { authenticate } = useAuthentication();
 
   const checkUnlockTime = useCallback(() => {
     return !!lastActive && lastActive > +new Date() - unlockTimeout;
@@ -37,19 +39,28 @@ export function useAuthState({
         return;
       }
 
-      const result = await LocalAuthentication.authenticateAsync();
-      if (result.success) {
+      const result = await authenticate();
+      if (result && result.success) {
         playSplash();
         if (firstTry) {
           setAuthState('passed-on-first');
+          void analytics?.track('app_unlocked');
         } else {
           setAuthState('passed-afterwards');
+          void analytics?.track('app_unlocked');
         }
       } else {
         setAuthState('failed');
       }
     },
-    [securityLevelPreference, checkUnlockTime, authState, playSplash, setAnimationFinished]
+    [
+      securityLevelPreference,
+      checkUnlockTime,
+      authState,
+      playSplash,
+      setAnimationFinished,
+      authenticate,
+    ]
   );
 
   const onAppForeground = useCallback(() => {
@@ -58,7 +69,6 @@ export function useAuthState({
 
   const onAppBackground = useCallback(() => {
     if (securityLevelPreference === 'secure') {
-      setAnimationFinished(false);
       setAuthState('started');
 
       // add latest active timestamp only if the app was actually unlocked
@@ -67,12 +77,13 @@ export function useAuthState({
         userLeavesApp(+new Date());
       }
     }
-  }, [securityLevelPreference, userLeavesApp, setAnimationFinished, authState]);
+  }, [securityLevelPreference, userLeavesApp, authState]);
 
   const lockApp = useCallback(() => {
     setAnimationFinished(false);
     setAuthState('failed');
     userLeavesApp(null);
+    void analytics?.track('app_locked');
   }, [setAnimationFinished, setAuthState, userLeavesApp]);
 
   useAppState({

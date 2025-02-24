@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -6,8 +6,6 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { ApproverSheet } from '@/components/browser/approver-sheet';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem } from '@/components/developer-console/list-items';
-import { useToastContext } from '@/components/toast/toast-context';
-import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { getAvailableLocales } from '@/locales';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
@@ -28,32 +26,7 @@ export default function DeveloperConsoleScreen() {
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
 
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const toast = useToastContext();
-  const {
-    registerPushNotifications,
-    _scheduleTestNotification,
-    setNotificationReceivedListener,
-    cleanupNotificationReceivedListener,
-  } = usePushNotifications();
-
   const settings = useSettings();
-
-  useEffect(() => {
-    setNotificationReceivedListener(notification => {
-      const notificationText =
-        notification.request.content.title ?? notification.request.content.body;
-      if (notificationText) {
-        toast.displayToast({
-          title: notificationText,
-          type: 'success',
-        });
-      }
-    });
-    return () => {
-      cleanupNotificationReceivedListener();
-    };
-  }, []);
-
   function toggleLocalization() {
     const locales = getAvailableLocales();
     const locIdx = locales.findIndex(loc => loc === i18n.locale);
@@ -103,14 +76,6 @@ export default function DeveloperConsoleScreen() {
               method: 'getAddresses',
             })
           }
-        />
-        <PressableListItem
-          title={t`register for Push notifications`}
-          onPress={registerPushNotifications}
-        />
-        <PressableListItem
-          title={t`schedule dummy notifications in 3s`}
-          onPress={() => _scheduleTestNotification(3)}
         />
         <PressableListItem title={t`toggle localization: ${locale}`} onPress={toggleLocalization} />
         <PressableListItem title={t`signMessage`} />

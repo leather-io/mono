@@ -1,0 +1,169 @@
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    theme-overrides: {
+      N1: '#12100F'
+      N2: '#12100F'
+      N4: '#EAE6DF'
+      N5: '#CBC6BD'
+      N7: '#FFFFFF'
+      B1: '#12100F'
+      B2: '#433B33'
+      B3: '#DDD7CF'
+      B4: '#EAE6DF'
+      B5: '#F7F4F0'
+      B6: '#FFFFFF'
+      AA4: '#544D45'
+      AA5: '#726B63'
+      AB4: '#3B3530'
+      AB5: '#6D625B'
+    }
+  }
+}
+
+style.bold: false
+
+title: LEATHER ARCHITECTURE {
+  near: top-center
+  shape: text
+  style: {
+    font-size: 44
+    italic: true
+  }
+}
+
+user: {
+  shape: person
+}
+
+user -> products
+user -> apps
+
+mono: {
+  label: ''
+  entity layer: {
+    style: {
+      stroke-width: 0
+    }
+    label: 'Entity Layer'
+    grid-rows: 2
+    "@leather.io/models"
+  }
+
+  domain_layer: {
+    label: 'Domain Layer'
+    style: {
+      stroke-width: 0
+    }
+    grid-rows: 3
+    "@leather.io/constants"
+    "@leather.io/utils"
+    "@leather.io/crypto"
+    "@leather.io/stacks"
+    "@leather.io/bitcoin"
+  }
+
+  presentation_layer: {
+    label: 'Presentation Layer'
+    style: {
+      stroke-width: 0
+    }
+    grid-rows: 1
+    "@leather.io/tokens"
+    "@leather.io/ui"
+  }
+
+  infra_layer: {
+    label: 'Infrastructure Layer'
+    style: {
+      stroke-width: 0
+    }
+    grid-rows: 1
+    "@leather.io/api"
+    "@leather.io/query"
+  }
+
+  application_layer: {
+    label: 'Application Layer'
+    style: {
+      stroke-width: 0
+    }
+    grid-rows: 1
+    "@leather.io/services": {
+      style: {
+        multiple: true
+      }
+    }
+  }
+}
+
+dev_tools: {
+  label: 'Dev Tools'
+  grid-rows: 1
+  "@stacks/connect"
+  "@leather.io/rpc"
+}
+apps: {
+  label: "Apps"
+  style: {
+    multiple: true
+  }
+  grid-rows: 1
+  "gamma.io"
+  "bitflow.finance"
+}
+
+products: {
+  label: "Products"
+  grid-rows: 1
+  'mobile'
+  'extension'
+}
+
+external: {
+  label: "Cloud services"
+  grid-rows: 1
+  shape: cloud
+
+  external_apis: {
+    label: "External APIs"
+    grid-rows: 2
+    style: {
+      stroke-width: 0
+    }
+
+    'bestinslot'
+    'mempool.space'
+    'hiro.so'
+    'quicknode'
+  }
+  cloudflare_workers: {
+    label: "Cloudflare Workers"
+    style: {
+      stroke-width: 0
+    }
+
+    grid-rows: 1
+    'get_utxos_by_xpub'
+  }
+  services: {
+    label: "Services"
+    style: {
+      stroke-width: 0
+    }
+    grid-rows: 2
+    CrowdIn
+    Sentry
+    Mixpanel
+  }
+}
+
+mono.infra_layer <-> external
+
+external.cloudflare_workers.get_utxos_by_xpub -> external.external_apis.quicknode
+external.cloudflare_workers.get_utxos_by_xpub -> external.external_apis.'mempool.space'
+
+mono.presentation_layer <- products
+mono.entity layer <- mono.domain_layer <- mono.infra_layer <- mono.application_layer <- products
+apps -> dev_tools
+dev_tools -> products

@@ -1,0 +1,38 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- runFlow:
+    file: ../shared/add-wallet.yaml
+- tapOn: My accounts
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- tapOn: Wallet 1
+- assertNotVisible: Add account
+- assertNotVisible: Account 1 $0.00
+- tapOn: Wallet 1
+- tapOn:
+    id: 'walletListSettingsButton'
+# Test advanced options menu
+- tapOn: Advanced options
+- assertVisible: Address reuse
+- assertVisible: Address scan range
+- assertVisible: Export xPub
+- tapOn: Advanced options
+- assertNotVisible: Address reuse
+# Test removing wallet flows
+- tapOn: Remove wallet
+- tapOn: Cancel
+- assertVisible: CONFIGURE WALLET
+- tapOn: Remove wallet
+- assertVisible: >-
+    The wallet will be removed from this device. You will lose access
+    to all tokens and collectibles associated with this wallet. Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device.
+- tapOn: Proceed
+- assertNotVisible: CONFIGURE WALLET
+- tapOn:
+    id: 'backButton'
+# Ensure wallet is removed and not other wallets are present
+- assertNotVisible: Wallet 1
+- assertVisible: Create or restore wallet Create, Import or connect instantly
+- assertVisible: Add Wallet

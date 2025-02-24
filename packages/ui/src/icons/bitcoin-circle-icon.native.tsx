@@ -1,17 +1,11 @@
-import BitcoinCircleSmall from '../assets/icons/bitcoin-circle-16-16.svg';
-import BitcoinCircle from '../assets/icons/bitcoin-circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import BitcoinCircle16 from '../assets/icons/bitcoin-circle-16-16.svg';
+import BitcoinCircle24 from '../assets/icons/bitcoin-circle-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function BitcoinCircleIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <BitcoinCircleSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <BitcoinCircle />
-    </Icon>
-  );
-}
+export const BitcoinCircleIcon = createNativeIcon({
+  icon: {
+    small: BitcoinCircle16,
+    medium: BitcoinCircle24,
+  },
+  displayName: 'BitcoinCircle',
+});

@@ -1,15 +1,17 @@
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
+import { isDev } from '@/utils/is-dev';
 import { useRouter } from 'expo-router';
 
 import {
   Box,
   Eye1ClosedIcon,
   Eye1Icon,
+  Pressable,
   PulseIcon,
   SettingsGearIcon,
-  TouchableOpacity,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 export function HeaderOptions() {
@@ -22,27 +24,32 @@ export function HeaderOptions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
-      <TouchableOpacity
+      <Pressable
         p="2"
         onPress={() => onUpdatePrivacyMode()}
         testID={TestId.homePrivacyButton}
+        pressEffects={legacyTouchablePressEffect}
       >
         {privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
-      </TouchableOpacity>
-      <TouchableOpacity
+      </Pressable>
+      <Pressable
         p="2"
         onPress={() => router.navigate(AppRoutes.Settings)}
         testID={TestId.homeSettingsButton}
+        pressEffects={legacyTouchablePressEffect}
       >
         <SettingsGearIcon />
-      </TouchableOpacity>
-      <TouchableOpacity
-        p="2"
-        onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
-        testID={TestId.homeDeveloperToolsButton}
-      >
-        <PulseIcon />
-      </TouchableOpacity>
+      </Pressable>
+      {isDev() && (
+        <Pressable
+          p="2"
+          onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
+          testID={TestId.homeDeveloperToolsButton}
+          pressEffects={legacyTouchablePressEffect}
+        >
+          <PulseIcon />
+        </Pressable>
+      )}
     </Box>
   );
 }

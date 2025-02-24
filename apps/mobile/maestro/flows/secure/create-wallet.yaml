@@ -1,0 +1,10 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../../shared/clean-up.yaml
+- runFlow:
+    when:
+      platform: iOS
+    file: ../../shared/add-wallet.yaml
+    env:
+      SECURE: yes

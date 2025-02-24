@@ -1,17 +1,11 @@
-import DownloadSmall from '../assets/icons/download-16-16.svg';
-import Download from '../assets/icons/download-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Download16 from '../assets/icons/download-16-16.svg';
+import Download24 from '../assets/icons/download-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function DownloadIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <DownloadSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Download />
-    </Icon>
-  );
-}
+export const DownloadIcon = createWebIcon({
+  icon: {
+    small: Download16,
+    medium: Download24,
+  },
+  displayName: 'Download',
+});

@@ -59,11 +59,25 @@ export function formatMoneyWithoutSymbol({ amount, decimals }: Money) {
   return `${amount.shiftedBy(-decimals).toString()}`;
 }
 
+export function formatMoneyToFixedDecimal(
+  { amount, symbol, decimals }: Money,
+  fixedDecimals: number
+) {
+  return `${amount.shiftedBy(-decimals).toFixed(fixedDecimals)} ${symbol}`;
+}
+
+export function formatMoneyToFixedDecimalWithoutSymbol(
+  { amount, decimals }: Money,
+  fixedDecimals: number
+) {
+  return `${amount.shiftedBy(-decimals).toFixed(fixedDecimals)}`;
+}
+
 export function formatMoneyPadded({ amount, symbol, decimals }: Money) {
   return `${amount.shiftedBy(-decimals).toFormat(decimals)} ${symbol}`;
 }
 
-export function i18nFormatCurrency(quantity: Money, decimals: number = 2) {
+export function i18nFormatCurrency(quantity: Money, decimals = 2) {
   if (quantity.symbol !== 'USD') throw new Error('Cannot format non-USD amounts');
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',

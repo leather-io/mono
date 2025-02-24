@@ -6,11 +6,11 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
@@ -27,7 +27,6 @@ import {
   SheetRef,
   SignalIcon,
   Text,
-  Theme,
   ThemeVariant,
 } from '@leather.io/ui/native';
 
@@ -45,6 +44,7 @@ interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   restoreWallet(): unknown;
   onOpenSheet(option: NotifyUserSheetData): unknown;
   themeVariant: ThemeVariant;
+  opensFully?: boolean;
 }
 export function AddWalletSheetLayout({
   addWalletSheetRef,
@@ -52,10 +52,10 @@ export function AddWalletSheetLayout({
   restoreWallet,
   onOpenSheet,
   themeVariant,
+  opensFully,
 }: AddWalletSheetLayoutProps) {
-  const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
+  const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
-  const theme = useTheme<Theme>();
   const router = useRouter();
   const { whenTheme } = useSettings();
 
@@ -74,6 +74,9 @@ export function AddWalletSheetLayout({
       animatedIndex={animatedIndex}
       ref={addWalletSheetRef}
       themeVariant={themeVariant}
+      onDismiss={() => {
+        setMoreOptionsVisible(!!opensFully);
+      }}
     >
       <AnimatedBox style={animatedStyle}>
         <Box
@@ -90,14 +93,16 @@ export function AddWalletSheetLayout({
             source={require('@/assets/create-wallet-image.png')}
           />
         </Box>
-        <Box p="5">
-          <Text pb="5" variant="heading03">
-            {t({
-              id: 'add_wallet.header_title',
-              message: 'Add wallet',
-            })}
-          </Text>
-          <Box flexDirection="column" gap="1">
+        <Box>
+          <Box p="5">
+            <Text variant="heading03">
+              {t({
+                id: 'add_wallet.header_title',
+                message: 'Add wallet',
+              })}
+            </Text>
+          </Box>
+          <Box gap="1" pb="5">
             <AddWalletCell
               onPress={createWallet}
               title={t({
@@ -143,7 +148,7 @@ export function AddWalletSheetLayout({
                     id: 'add_wallet.connect_wallet.cell_caption',
                     message: 'Ledger, Trezor, Ryder and more',
                   })}
-                  icon={<SignalIcon color={theme.colors['ink.text-subdued']} />}
+                  icon={<SignalIcon color="ink.text-subdued" />}
                   onPress={() => {
                     router.navigate(AppRoutes.HardwareWallets);
                     addWalletSheetRef.current?.close();
@@ -158,13 +163,14 @@ export function AddWalletSheetLayout({
                     id: 'add_wallet.email_wallet.cell_caption',
                     message: 'Access custodial wallet',
                   })}
-                  icon={<EmailIcon color={theme.colors['ink.text-subdued']} />}
+                  icon={<EmailIcon color="ink.text-subdued" />}
                   onPress={() => {
                     onOpenSheet({
                       title: t({
                         id: 'email_wallet.header_title',
                         message: 'Create or restore via email',
                       }),
+                      id: WaitlistIds.restoreViaEmail,
                     });
                   }}
                 />
@@ -177,7 +183,7 @@ export function AddWalletSheetLayout({
                     id: 'add_wallet.mpc_wallet.cell_caption',
                     message: 'Import existing accounts',
                   })}
-                  icon={<PaletteIcon color={theme.colors['ink.text-subdued']} />}
+                  icon={<PaletteIcon color="ink.text-subdued" />}
                   onPress={() => {
                     router.navigate(AppRoutes.MpcWallets);
                     addWalletSheetRef.current?.close();
@@ -192,13 +198,14 @@ export function AddWalletSheetLayout({
                     id: 'add_wallet.watch_only_wallet.cell_caption',
                     message: 'No key needed',
                   })}
-                  icon={<Eye2Icon color={theme.colors['ink.text-subdued']} />}
+                  icon={<Eye2Icon color="ink.text-subdued" />}
                   onPress={() => {
                     onOpenSheet({
                       title: t({
                         id: 'notify_user.watch_only_wallet.header_title',
                         message: 'Create watch-only wallet',
                       }),
+                      id: WaitlistIds.watchOnlyWallet,
                     });
                   }}
                 />

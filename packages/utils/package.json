@@ -2,7 +2,7 @@
   "name": "@leather.io/utils",
   "author": "Leather.io contact@leather.io",
   "description": "Shared bitcoin utilities",
-  "version": "0.16.6",
+  "version": "0.27.4",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/utils",
   "repository": {
@@ -16,8 +16,6 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
@@ -29,18 +27,15 @@
   "dependencies": {
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
-    "@leather.io/rpc": "workspace:*",
     "bignumber.js": "9.1.2"
   },
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "eslint": "8.53.0",
-    "prettier": "3.3.3",
+    "prettier": "3.5.1",
     "tsup": "8.1.0",
-    "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "typescript": "5.7.3",
+    "vitest": "2.1.9"
   },
   "keywords": [
     "leather",

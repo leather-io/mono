@@ -1,17 +1,11 @@
-import EllipsisHSmall from '../assets/icons/ellipsis-h-16-16.svg';
-import EllipsisH from '../assets/icons/ellipsis-h-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import EllipsisH16 from '../assets/icons/ellipsis-h-16-16.svg';
+import EllipsisH24 from '../assets/icons/ellipsis-h-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function EllipsisHIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <EllipsisHSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <EllipsisH />
-    </Icon>
-  );
-}
+export const EllipsisHIcon = createNativeIcon({
+  icon: {
+    small: EllipsisH16,
+    medium: EllipsisH24,
+  },
+  displayName: 'EllipsisH',
+});

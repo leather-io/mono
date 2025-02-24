@@ -1,4 +1,5 @@
 import { Queue, QueueAddOptions } from 'p-queue';
+import { v4 as uuid } from 'uuid';
 
 type RunFunction = () => Promise<unknown>;
 
@@ -14,7 +15,7 @@ function lowerBound<T>(array: readonly T[], value: T, comparator: (a: T, b: T) =
     const step = Math.trunc(count / 2);
     let it = first + step;
 
-    if (comparator(array[it]!, value) <= 0) {
+    if (comparator(array[it], value) <= 0) {
       first = ++it;
       count -= step + 1;
     } else {
@@ -33,7 +34,7 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
       priority: 0,
       ...options,
     };
-    const id = crypto.randomUUID();
+    const id = uuid();
 
     const element = {
       priority: options.priority,
@@ -50,7 +51,7 @@ export class PriorityQueue implements Queue<RunFunction, PriorityQueueOptions> {
       }
     });
 
-    if (this.size && this.queue[this.size - 1]!.priority! >= options.priority!) {
+    if (this.size && this.queue[this.size - 1].priority! >= options.priority!) {
       this.queue.push(element);
       return;
     }

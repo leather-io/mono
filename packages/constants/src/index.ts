@@ -3,6 +3,8 @@ import type {
   AccountDisplayPreferenceInfo,
   BitcoinUnit,
   BitcoinUnitInfo,
+  BtcCryptoAssetInfo,
+  StxCryptoAssetInfo,
 } from '@leather.io/models';
 
 export const gaiaUrl = 'https://hub.blockstack.org';
@@ -23,6 +25,7 @@ export const PERSISTENCE_CACHE_TIME = 1000 * 60 * 60 * 12; // 12 hours
 
 export const BTC_DECIMALS = 8;
 export const STX_DECIMALS = 6;
+export const SATS_IN_BTC = 100_000_000;
 
 // Units of `Money` should be declared in their smallest unit. Similar to
 // Rosetta, we model currencies with their respective resolution
@@ -61,6 +64,14 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
+export const LEATHER_GUIDES_URL = 'https://leather.io/guides';
+
+export const LEATHER_GUIDES_CONNECT_DAPPS = `${LEATHER_GUIDES_URL}/connect-dapps`;
+
+export const LEATHER_LEARN_URL = 'https://leather.io/learn';
+
+export const LEATHER_API_URL = 'https://leather-api-gateway-staging.wallet-6d1.workers.dev';
+
 export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   bitcoin: {
     name: 'bitcoin',
@@ -88,7 +99,7 @@ export const accountDisplayPreferencesKeyedByType: Record<
   [AccountDisplayPreferenceType.NativeSegwit]: {
     type: 'native-segwit',
     blockchain: 'bitcoin',
-    name: 'Native SegWit address',
+    name: 'Native Segwit address',
   },
   [AccountDisplayPreferenceType.Taproot]: {
     type: 'taproot',
@@ -105,4 +116,21 @@ export const accountDisplayPreferencesKeyedByType: Record<
     blockchain: 'stacks',
     name: 'Stacks address',
   },
+};
+
+export const btcCryptoAsset: BtcCryptoAssetInfo = {
+  chain: 'bitcoin',
+  protocol: 'nativeBtc',
+  symbol: 'BTC',
+  category: 'fungible',
+  decimals: 8,
+  hasMemo: false,
+};
+export const stxCryptoAsset: StxCryptoAssetInfo = {
+  chain: 'stacks',
+  protocol: 'nativeStx',
+  symbol: 'STX',
+  category: 'fungible',
+  decimals: 6,
+  hasMemo: false,
 };

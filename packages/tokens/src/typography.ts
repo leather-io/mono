@@ -1,3 +1,5 @@
+import { assertUnreachable } from '@leather.io/utils';
+
 const fontMap = {
   web: {
     firaCode: 'Fira Code',
@@ -7,7 +9,7 @@ const fontMap = {
   mobile: {
     // please, remember to use PostScript name of the font on mobile
     // Ref: https://docs.expo.dev/develop/user-interface/fonts/#what-is-postscript-name-of-a-font
-    firaCode: '<Need to use PostScript name here> Fira Code',
+    firaCode: 'FiraCode-Retina',
     diatype: 'ABCDiatype-Regular',
     spaceMono: 'SpaceMono-Regular',
     marchePro: 'MarchePro-Super',
@@ -37,6 +39,8 @@ function getTextVariants({ platform }: { platform: Platform }) {
         return `${(size / 16).toFixed(4)}rem` as const;
       case 'mobile':
         return size;
+      default:
+        assertUnreachable(platform);
     }
   }
 
@@ -46,6 +50,8 @@ function getTextVariants({ platform }: { platform: Platform }) {
         return weight;
       case 'mobile':
         return weight.toString();
+      default:
+        assertUnreachable(platform);
     }
   }
 
@@ -68,13 +74,11 @@ function getTextVariants({ platform }: { platform: Platform }) {
   const heading02 = {
     ...commonMarcheProStyles,
     fontSize: transformSize(44),
-    fontWeight: transformWeight(800),
     lineHeight: transformSize(44),
   };
   const heading03 = {
     ...commonMarcheProStyles,
     fontSize: transformSize(32),
-    fontWeight: transformWeight(800),
     lineHeight: transformSize(35),
     letterSpacing: 0.64,
   };
@@ -92,7 +96,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
   };
   const label01 = {
     ...commonDiatypeStyles,
-    fontSize: transformSize(16),
+    fontSize: transformSize(17),
     fontWeight: transformWeight(500),
     lineHeight: transformSize(24),
     letterSpacing: 0.16,
@@ -132,7 +136,14 @@ function getTextVariants({ platform }: { platform: Platform }) {
     ...commonFiracodeStyles,
     fontSize: transformSize(13),
     lineHeight: transformSize(18),
-    fontWeight: transformWeight(450),
+    fontWeight: transformWeight(400),
+  };
+
+  const address = {
+    ...commonFiracodeStyles,
+    fontSize: transformSize(14),
+    lineHeight: transformSize(24),
+    fontWeight: transformWeight(500),
   };
 
   const textVariants = {
@@ -150,6 +161,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
     body02,
     caption01,
     code,
+    address,
     defaults: body01,
   };
 
@@ -220,6 +232,11 @@ export function getWebTextVariants() {
     code: {
       description: 'code',
       value: textVariants.code,
+    },
+
+    address: {
+      description: 'address',
+      value: textVariants.address,
     },
   } as const;
 }

@@ -1,17 +1,11 @@
-import TerminalSmall from '../assets/icons/terminal-16-16.svg';
-import Terminal from '../assets/icons/terminal-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Terminal16 from '../assets/icons/terminal-16-16.svg';
+import Terminal24 from '../assets/icons/terminal-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function TerminalIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <TerminalSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Terminal />
-    </Icon>
-  );
-}
+export const TerminalIcon = createWebIcon({
+  icon: {
+    small: Terminal16,
+    medium: Terminal24,
+  },
+  displayName: 'Terminal',
+});

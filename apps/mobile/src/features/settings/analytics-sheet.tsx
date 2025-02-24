@@ -1,10 +1,14 @@
 import { RefObject } from 'react';
+import { Linking } from 'react-native';
 
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { LEATHER_GUIDES_MOBILE_ANALYTICS } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { Cell, CookieIcon, SheetRef } from '@leather.io/ui/native';
+import { CookieIcon, SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -36,23 +40,23 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
         id: 'analytics.header_title',
         message: 'Analytics',
       })}
+      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_ANALYTICS)}
     >
-      <Cell.Root
-        title={t({
-          id: 'analytics.cell_title',
-          message: 'Allow collection of data',
-        })}
-        caption={t({
-          id: 'analytics.cell_caption',
-          message: 'Placeholder',
-        })}
-        onPress={() => onUpdateAnalytics()}
-      >
-        <Cell.Switch
-          onValueChange={() => onUpdateAnalytics()}
-          value={settings.analyticsPreference === 'consent-given'}
+      <SettingsList>
+        <SettingsListItem
+          title={t({
+            id: 'analytics.cell_title',
+            message: 'Allow collection of data',
+          })}
+          caption={t({
+            id: 'analytics.cell_caption',
+            message: 'Share anonymous usage details',
+          })}
+          type="switch"
+          onSwitchValueChange={() => onUpdateAnalytics()}
+          switchValue={settings.analyticsPreference === 'consent-given'}
         />
-      </Cell.Root>
+      </SettingsList>
     </SettingsSheetLayout>
   );
 }

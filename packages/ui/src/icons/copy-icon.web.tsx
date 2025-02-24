@@ -1,17 +1,11 @@
-import CopySmall from '../assets/icons/copy-16-16.svg';
-import Copy from '../assets/icons/copy-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Copy16 from '../assets/icons/copy-16-16.svg';
+import Copy24 from '../assets/icons/copy-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function CopyIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <CopySmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Copy />
-    </Icon>
-  );
-}
+export const CopyIcon = createWebIcon({
+  icon: {
+    small: Copy16,
+    medium: Copy24,
+  },
+  displayName: 'Copy',
+});

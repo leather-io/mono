@@ -11,6 +11,8 @@ const Root: typeof RadixTabs.Root = forwardRef((props, ref) => (
   <RadixTabs.Root className={tabRootStyles} ref={ref} {...props} />
 ));
 
+Root.displayName = 'Tabs.Root';
+
 const tabsTriggerStyles = css({
   position: 'relative',
   textStyle: 'label.01',
@@ -40,6 +42,8 @@ const Trigger: typeof RadixTabs.Trigger = forwardRef((props, ref) => (
   <RadixTabs.Trigger className={tabsTriggerStyles} ref={ref} {...props} />
 ));
 
+Trigger.displayName = 'Tabs.Trigger';
+
 const tabsListStyles = css({
   flexShrink: 0,
   display: 'flex',
@@ -57,5 +61,7 @@ const tabsListStyles = css({
 const List: typeof RadixTabs.List = forwardRef((props, ref) => (
   <RadixTabs.List className={tabsListStyles} ref={ref} {...props} />
 ));
+
+List.displayName = 'Tabs.List';
 
 export const Tabs = { Root, List, Trigger, Content: RadixTabs.Content };

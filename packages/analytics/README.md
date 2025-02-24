@@ -13,43 +13,34 @@ pnpm install @leather/analytics
 Before making any analytics calls, you must configure the analytics client with your write key.
 
 ```ts
-import { configureAnalyticsClient } from '@leather.io/analytics';
+import { AnalyticsClientType, configureAnalyticsClient } from '@leather.io/analytics';
 
-configureAnalyticsClient({
-  writeKey: 'YOUR_WRITE_KEY',
+export const analytics: AnalyticsClientType = configureAnalyticsClient({
+  client: segmentClient,
   defaultProperties: {
-    platform: 'web',
+    platform: 'mobile',
   },
 });
 ```
 
-Now you can make analytics calls.
+Now you can make analytics calls with your configured client.
 
 ```ts
-import { analyticsClient } from '@leather/analytics';
+import { analytics } from 'path/to/analytics';
 
-analyticsClient.track('My Event', {
+analytics.track('My Event', {
   property: 'value',
 });
 ```
 
-You can also inject your own analytics client if you are using a custom analytics service or want to use a stubbed client for testing.
-
-````ts
-import { configureAnalyticsClient } from '@leather/analytics';
-
-configureAnalyticsClient({
-  client: myAnalyticsClient,
-});
-
 ## Development
 
-```bash
+```sh
 pnpm build
-````
+```
 
 or
 
-```bash
+```sh
 pnpm build:watch
 ```

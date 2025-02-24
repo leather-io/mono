@@ -1,42 +1,72 @@
-import { AllowAdditionalProperties } from '@leather.io/models';
+import { z } from 'zod';
 
-import { DefineRpcMethod, RpcRequest, RpcResponse } from '../rpc';
+import { defineRpcEndpoint } from '../rpc/schemas';
 
-export type PaymentTypes = 'p2pkh' | 'p2sh' | 'p2wpkh-p2sh' | 'p2wpkh' | 'p2tr';
+export const bitcoinPaymentTypesSchema = z.enum(['p2pkh', 'p2sh', 'p2wpkh-p2sh', 'p2wpkh', 'p2tr']);
+export type BitcoinPaymentTypes = z.infer<typeof bitcoinPaymentTypesSchema>;
 
-export interface BtcAddressBase extends AllowAdditionalProperties {
-  symbol: 'BTC';
-  type: PaymentTypes;
-  address: string;
-  publicKey: string;
-  derivationPath: string;
-}
+/** @deprecated use `BitcoinPaymentTypes` */
+export type PaymentTypes = BitcoinPaymentTypes;
 
-export interface NativeSegwitAddress extends BtcAddressBase {
-  type: 'p2wpkh';
-}
+//
+// Bitcoin
+export const btcAddressBaseSchema = z.object({
+  symbol: z.literal('BTC'),
+  type: bitcoinPaymentTypesSchema,
+  address: z.string(),
+  publicKey: z.string(),
+  derivationPath: z.string(),
+});
 
-export interface TaprootAddress extends BtcAddressBase {
-  type: 'p2tr';
-  tweakedPublicKey: string;
-}
+export type BtcAddressBase = z.infer<typeof btcAddressBaseSchema>;
 
-export type BtcAddress = NativeSegwitAddress | TaprootAddress;
+const nativeSegwitAddressSchema = btcAddressBaseSchema
+  .extend({
+    type: z.literal('p2wpkh'),
+  })
+  .passthrough();
 
-export interface StxAddress extends AllowAdditionalProperties {
-  symbol: 'STX';
-  address: string;
-  publicKey: string;
-}
+export type NativeSegwitAddress = z.infer<typeof nativeSegwitAddressSchema>;
 
-export type Address = BtcAddress | StxAddress;
+const taprootAddressSchema = btcAddressBaseSchema
+  .extend({
+    type: z.literal('p2tr'),
+    tweakedPublicKey: z.string(),
+  })
+  .passthrough();
 
-export interface AddressResponseBody extends AllowAdditionalProperties {
-  addresses: Address[];
-}
+export type TaprootAddress = z.infer<typeof taprootAddressSchema>;
 
-export type GetAddressesRequest = RpcRequest<'getAddresses'>;
+export const btcAddressSchema = z.discriminatedUnion('type', [
+  nativeSegwitAddressSchema,
+  taprootAddressSchema,
+]);
 
-export type GetAddressesResponse = RpcResponse<AddressResponseBody>;
+export type BtcAddress = z.infer<typeof btcAddressSchema>;
 
-export type DefineGetAddressesMethod = DefineRpcMethod<GetAddressesRequest, GetAddressesResponse>;
+//
+// Stacks
+export const stxAddressSchema = z
+  .object({
+    symbol: z.literal('STX'),
+    address: z.string(),
+    publicKey: z.string(),
+  })
+  .passthrough();
+
+export type StxAddress = z.infer<typeof stxAddressSchema>;
+
+export const addressSchema = z.union([btcAddressSchema, stxAddressSchema]);
+
+export type Address = z.infer<typeof addressSchema>;
+
+//
+// Combined addresses response
+export const addressResponseBodySchema = z
+  .object({ addresses: z.array(addressSchema) })
+  .passthrough();
+
+export const getAddresses = defineRpcEndpoint({
+  method: 'getAddresses',
+  result: addressResponseBodySchema,
+});

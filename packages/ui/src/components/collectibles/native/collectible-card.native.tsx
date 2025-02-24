@@ -24,6 +24,9 @@ export function CollectibleCard({ name, type, src, mimeType }: CollectibleCardPr
       case 'svg':
       case 'video':
         return <CollectibleHtml src={src} />;
+      default:
+        // TODO: Needs explicit case handling for when mimeType is not set/of unknown type.
+        return null;
     }
   }
 

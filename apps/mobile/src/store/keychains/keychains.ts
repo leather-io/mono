@@ -1,6 +1,10 @@
 import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
 
-import { BitcoinAccountKeychain } from '@leather.io/bitcoin';
+import {
+  BitcoinAccountKeychain,
+  BitcoinNativeSegwitPayer,
+  BitcoinTaprootPayer,
+} from '@leather.io/bitcoin';
 import {
   extractAccountIndexFromDescriptor,
   extractAccountIndexFromPath,
@@ -8,9 +12,11 @@ import {
   extractFingerprintFromDescriptor,
   extractKeyOriginPathFromDescriptor,
 } from '@leather.io/crypto';
+import { StacksSigner } from '@leather.io/stacks';
 import { isDefined } from '@leather.io/utils';
 
 import { useBitcoinAccounts } from './bitcoin/bitcoin-keychains.read';
+import { useStacksSigners } from './stacks/stacks-keychains.read';
 
 interface RemoveAccount {
   fingerprint: string;
@@ -112,4 +118,51 @@ export function BitcoinAccountLoader({
   );
   if (!nativeSegwit || !taproot) return fallback ?? null;
   return children({ nativeSegwit, taproot });
+}
+
+interface BitcoinPayerLoaderProps {
+  fingerprint: string;
+  accountIndex: number;
+  fallback?: React.ReactNode;
+  children({
+    nativeSegwitPayer,
+    taprootPayer,
+  }: {
+    nativeSegwitPayer: BitcoinNativeSegwitPayer;
+    taprootPayer: BitcoinTaprootPayer;
+  }): React.ReactNode;
+}
+export function BitcoinPayerLoader({
+  fingerprint,
+  accountIndex,
+  fallback,
+  children,
+}: BitcoinPayerLoaderProps) {
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+  if (!nativeSegwit || !taproot) return fallback ?? null;
+
+  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+
+  return children({ nativeSegwitPayer, taprootPayer });
+}
+
+interface StacksSignerLoaderProps {
+  fingerprint: string;
+  accountIndex: number;
+  fallback?: React.ReactNode;
+  children({ stxSigner }: { stxSigner: StacksSigner }): React.ReactNode;
+}
+export function StacksSignerLoader({
+  fingerprint,
+  accountIndex,
+  fallback,
+  children,
+}: StacksSignerLoaderProps) {
+  const stxSigner = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
+  if (!stxSigner) return fallback ?? null;
+  return children({ stxSigner });
 }

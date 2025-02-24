@@ -1,17 +1,11 @@
-import LockSmall from '../assets/icons/lock-16-16.svg';
-import Lock from '../assets/icons/lock-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Lock16 from '../assets/icons/lock-16-16.svg';
+import Lock24 from '../assets/icons/lock-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function LockIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <LockSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Lock />
-    </Icon>
-  );
-}
+export const LockIcon = createWebIcon({
+  icon: {
+    small: Lock16,
+    medium: Lock24,
+  },
+  displayName: 'Lock',
+});

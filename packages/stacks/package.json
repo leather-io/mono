@@ -2,7 +2,7 @@
   "name": "@leather.io/stacks",
   "author": "leather.io",
   "description": "Stacks package for Leather",
-  "version": "1.2.3",
+  "version": "1.6.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -19,16 +19,23 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
+    "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
-    "@scure/bip32": "1.5.0",
-    "@stacks/encryption": "6.16.1",
-    "@stacks/transactions": "6.15.0"
+    "@scure/bip32": "1.6.2",
+    "@stacks/common": "7.0.2",
+    "@stacks/encryption": "7.0.2",
+    "@stacks/network": "7.0.2",
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
+    "@stacks/transactions": "7.0.2",
+    "bignumber.js": "9.1.2",
+    "c32check": "2.0.0"
   },
   "devDependencies": {
-    "tsup": "8.1.0"
+    "tsup": "8.1.0",
+    "vitest": "2.1.9"
   },
   "files": [
     "dist"

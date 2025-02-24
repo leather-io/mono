@@ -1,17 +1,11 @@
-import TrashSmall from '../assets/icons/trash-16-16.svg';
-import Trash from '../assets/icons/trash-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Trash16 from '../assets/icons/trash-16-16.svg';
+import Trash24 from '../assets/icons/trash-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function TrashIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <TrashSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Trash />
-    </Icon>
-  );
-}
+export const TrashIcon = createWebIcon({
+  icon: {
+    small: Trash16,
+    medium: Trash24,
+  },
+  displayName: 'Trash',
+});

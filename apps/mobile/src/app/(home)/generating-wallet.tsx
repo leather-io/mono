@@ -15,7 +15,7 @@ export default function GeneratingWalletScreen() {
         bottom={height / 2}
         left={0}
         right={0}
-        zIndex={10}
+        zIndex="10"
         justifyContent="center"
         alignItems="center"
       >

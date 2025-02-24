@@ -1,17 +1,11 @@
-import UsersTwoSmall from '../assets/icons/users-two-16-16.svg';
-import UsersTwo from '../assets/icons/users-two-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import UsersTwo16 from '../assets/icons/users-two-16-16.svg';
+import UsersTwo24 from '../assets/icons/users-two-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function UsersTwoIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <UsersTwoSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <UsersTwo />
-    </Icon>
-  );
-}
+export const UsersTwoIcon = createNativeIcon({
+  icon: {
+    small: UsersTwo16,
+    medium: UsersTwo24,
+  },
+  displayName: 'UsersTwo',
+});

@@ -1,17 +1,11 @@
-import QrCodeSmall from '../assets/icons/qr-code-16-16.svg';
-import QrCode from '../assets/icons/qr-code-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import QrCode16 from '../assets/icons/qr-code-16-16.svg';
+import QrCode24 from '../assets/icons/qr-code-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function QrCodeIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <QrCodeSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <QrCode />
-    </Icon>
-  );
-}
+export const QrCodeIcon = createWebIcon({
+  icon: {
+    small: QrCode16,
+    medium: QrCode24,
+  },
+  displayName: 'QrCode',
+});

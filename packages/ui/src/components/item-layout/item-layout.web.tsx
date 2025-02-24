@@ -2,13 +2,10 @@ import { ReactNode, isValidElement } from 'react';
 
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 
-import { Flag } from '../../components/flag/flag.web';
-import {
-  pressableCaptionStyles,
-  pressableChevronStyles,
-} from '../../components/pressable/pressable.web';
 import { CheckmarkIcon } from '../../icons/checkmark-icon.web';
-import { ChevronUpIcon } from '../../icons/chevron-up-icon.web';
+import { ChevronRightIcon } from '../../icons/chevron-right-icon.web';
+import { Flag } from '../flag/flag.web';
+import { pressableCaptionStyles, pressableChevronStyles } from '../pressable/pressable.web';
 
 interface ItemLayoutProps {
   captionLeft: ReactNode;
@@ -82,7 +79,11 @@ export function ItemLayout({
           )}
         </Stack>
         {showChevron && (
-          <ChevronUpIcon color={pressableChevronStyles} transform="rotate(90deg)" variant="small" />
+          <ChevronRightIcon
+            className={pressableChevronStyles}
+            transform="rotate(90deg)"
+            variant="small"
+          />
         )}
       </HStack>
     </Flex>

@@ -1,110 +1,155 @@
-import { forwardRef } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  ReactElement,
+  cloneElement,
+  forwardRef,
+} from 'react';
 
 import * as RadixAvatar from '@radix-ui/react-avatar';
-import { type RecipeVariantProps, css, cva } from 'leather-styles/css';
-import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 
-export const defaultFallbackDelay = 600;
-export function getAvatarFallback(val: string) {
-  return val.slice(0, 2);
+import { isDefined } from '@leather.io/utils';
+
+import { IconProps } from '../../icons/icon/create-icon.web';
+import { AvatarSize, AvatarVariant, defaultFallbackDelay, iconSizeMap } from './avatar.shared';
+
+type AvatarElement = ElementRef<typeof AvatarRoot>;
+
+export interface AvatarProps extends ComponentPropsWithoutRef<typeof AvatarRoot> {
+  size?: AvatarSize;
+  variant?: AvatarVariant;
+  icon?: ReactElement;
+  indicator?: ReactElement;
+  image?: string;
+  imageAlt?: string;
+  fallback?: string;
+  fallbackDelayMs?: number;
 }
 
-const avatarRecipe = cva({
+export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
+  const {
+    // TODO: The default size is temporarily set to 'lg' to look correct with current design.
+    //       Set to 'xl', once LEA-2111 is ready.
+    size = 'lg',
+    variant = 'circle',
+    icon,
+    indicator,
+    image,
+    imageAlt,
+    fallback,
+    outlineColor,
+    fallbackDelayMs = defaultFallbackDelay,
+    ...rest
+  } = props;
+  return (
+    <AvatarRoot
+      ref={ref}
+      size={size}
+      variant={variant}
+      outlineColor={
+        outlineColor ??
+        (isDefined(image) ? 'ink.border-transparent' : 'ink.component-background-hover')
+      }
+      {...rest}
+    >
+      <AvatarImage src={image} alt={imageAlt ?? fallback} />
+      <AvatarIcon avatarSize={size} icon={icon} />
+      {fallback ? <AvatarFallback delayMs={fallbackDelayMs}>{fallback}</AvatarFallback> : null}
+      {indicator ? (
+        <styled.div
+          bg="ink.background-primary"
+          borderRadius="round"
+          position="absolute"
+          bottom={-4}
+          right={-4}
+          padding={3}
+        >
+          {indicator}
+        </styled.div>
+      ) : null}
+    </AvatarRoot>
+  );
+});
+
+Avatar.displayName = 'Avatar';
+
+const AvatarRoot = styled(RadixAvatar.Root, {
   base: {
+    position: 'relative',
+    display: 'flex',
     alignItems: 'center',
-    bg: 'ink.background-secondary',
-    display: 'inline-flex',
     justifyContent: 'center',
-    overflow: 'hidden',
+    bg: 'ink.background-secondary',
     userSelect: 'none',
-    verticalAlign: 'middle',
+    outlineWidth: 1,
+    outlineStyle: 'solid',
+    outlineColor: 'ink.component-background-hover',
+    outlineOffset: -1,
   },
   variants: {
-    size: {
-      sm: { width: 'sm', height: 'sm' },
-      md: { width: 'md', height: 'md' },
-      lg: { width: 'lg', height: 'lg' },
-      xl: { width: 'xl', height: 'xl' },
-      xxl: { width: 'xxl', height: 'xxl' },
+    outlineType: {
+      image: {
+        outlineColor: 'ink.border-transparent',
+      },
+      icon: {
+        outlineColor: 'ink.component-background-hover',
+      },
     },
     variant: {
-      circle: { rounded: '100%' },
-      square: { rounded: 'xs' },
+      circle: { borderRadius: 'round' },
+      square: { borderRadius: '10px' },
+    },
+    size: {
+      xs: { width: 16, height: 16 },
+      sm: { width: 24, height: 24 },
+      md: { width: 32, height: 32 },
+      lg: { width: 40, height: 40 },
+      xl: { width: 48, height: 48 },
     },
   },
+  compoundVariants: [
+    {
+      size: 'xs',
+      variant: 'square',
+      css: {
+        borderRadius: 'xs',
+      },
+    },
+  ],
   defaultVariants: {
-    size: 'xl',
+    size: 'lg',
     variant: 'circle',
   },
 });
 
-type AvatarVariants = RecipeVariantProps<typeof avatarRecipe>;
-export type AvatarProps = RadixAvatar.AvatarProps & AvatarVariants;
-
-function Root({ size, variant, ...props }: AvatarProps) {
-  return <RadixAvatar.Root className={avatarRecipe({ size, variant })} {...props} />;
+interface AvatarIconProps {
+  icon?: ReactElement;
+  avatarSize: AvatarSize;
 }
 
-const avatarImageStyles = css({
-  aspectRatio: '1 / 1',
-  height: '100%',
-  objectFit: 'cover',
-  rounded: 'inherit',
-  width: '100%',
-});
-const Image: typeof RadixAvatar.Image = forwardRef((props, ref) => (
-  <RadixAvatar.Image className={avatarImageStyles} ref={ref} {...props} />
-));
+function AvatarIcon({ icon, avatarSize }: AvatarIconProps) {
+  if (icon) {
+    const iconProps = icon.props.variant
+      ? { variant: icon.props.variant }
+      : iconSizeMap[avatarSize];
+    return cloneElement<IconProps>(icon, iconProps);
+  }
 
-const avatarFallbackStyles = css({
-  alignItems: 'center',
-  bg: 'inherit',
-  border: '1px solid',
-  borderColor: 'ink.border-default',
-  color: 'ink.text-primary',
-  display: 'flex',
-  fontWeight: 500,
-  height: '100%',
-  justifyContent: 'center',
-  rounded: 'inherit',
-  textStyle: 'label.02',
-  width: '100%',
-});
-const Fallback: typeof RadixAvatar.Fallback = forwardRef((props, ref) => (
-  <RadixAvatar.Fallback className={avatarFallbackStyles} ref={ref} {...props} />
-));
-
-const avatarIconStyles = css({
-  alignItems: 'center',
-  bg: 'inherit',
-  border: '1px solid',
-  borderColor: 'ink.border-default',
-  display: 'flex',
-  height: '100%',
-  justifyContent: 'center',
-  rounded: 'inherit',
-  width: '100%',
-});
-function Icon(props: HTMLStyledProps<'span'>) {
-  return <styled.span className={avatarIconStyles} {...props} />;
+  return null;
 }
 
-const avatarSvgStyles = css({
-  alignItems: 'center',
-  display: 'flex',
-  height: '100%',
-  justifyContent: 'center',
-  rounded: 'inherit',
-  width: '100%',
+const AvatarFallback = styled(RadixAvatar.Fallback, {
+  base: {
+    textStyle: 'label.02',
+  },
 });
-function Svg({ children, ...props }: HTMLStyledProps<'span'>) {
-  return (
-    <styled.span className={avatarSvgStyles} {...props}>
-      <styled.svg width="100%" height="100%" viewBox="0 0 32 32" fill="none">
-        {children}
-      </styled.svg>
-    </styled.span>
-  );
-}
 
-export const Avatar = { Root, Image, Fallback, Icon, Svg };
+const AvatarImage = styled(RadixAvatar.Image, {
+  base: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: 'inherit',
+  },
+});

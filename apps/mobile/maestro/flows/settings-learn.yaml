@@ -1,0 +1,14 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsHelpButton'
+- tapOn: 'Learn Expand your knowledge'
+- assertVisible: 'LEARN'
+- assertVisible: 'Dive Deeper into Bitcoin & Leather: Essential Knowledge & Beyond'
+- launchApp:
+    appId: io.leather.mobilewallet
+    clearState: false

@@ -22,6 +22,23 @@ export function selectAccounts(status?: AccountStatus) {
   });
 }
 
+export function useSelectByAccountIds(accountIds: string[]) {
+  return useSelector(selectByAccountIds(accountIds));
+}
+
+function selectByAccountIds(accountIds: string[]) {
+  return createSelector(selectors.selectEntities, entities => {
+    return accountIds
+      .map(id => entities[id])
+      .map(account => {
+        if (!account) {
+          throw new Error('No account found');
+        }
+        return initalizeAccount(account);
+      });
+  });
+}
+
 export function selectAccountsByFingerprint(fingerprint: string, status?: AccountStatus) {
   return createSelector(selectAccounts(status), accounts =>
     accounts.filter(account => account.fingerprint === fingerprint)
@@ -44,6 +61,7 @@ export function useAccountsByFingerprint(fingerprint: string, status?: AccountSt
 export function useAccounts(status?: AccountStatus) {
   return {
     list: useSelector(selectAccounts(status)),
+    hasAccounts: useSelector(selectAccounts(status)).length > 0,
   };
 }
 

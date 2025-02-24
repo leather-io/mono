@@ -24,6 +24,179 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.22.6
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.23.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.23.1
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.23.2
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.23.3
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.23.4
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.24.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.25.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.25.1
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.25.2
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.25.3
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.25.4
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.25.5
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.27.0
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.27.1
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.27.2
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.27.3
+
+## [0.13.5](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.13.4...@leather.io/tokens-v0.13.5) (2025-02-21)
+
+
+### Bug Fixes
+
+* upgrade prettier ([5a1577c](https://github.com/leather-io/mono/commit/5a1577cc382b4399d427dbf049d1f1d08d984f33))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.1
+    * @leather.io/tsconfig-config bumped to 0.6.1
+    * @leather.io/utils bumped to 0.27.4
+
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.12.14...@leather.io/tokens-v0.13.0) (2025-02-12)
+
+
+### Features
+
+* re-design Avatar component ([d0e8c19](https://github.com/leather-io/mono/commit/d0e8c19a019c480487a722abca21228aa4248238))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/utils bumped to 0.26.0
+
+## [0.12.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.12.0...@leather.io/tokens-v0.12.1) (2024-11-19)
+
+
+### Bug Fixes
+
+* make ItemLayout full-width and match designs ([8bb0059](https://github.com/leather-io/mono/commit/8bb00594a16805d201a37016390bab70de1a5bae))
+
+## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.11.0...@leather.io/tokens-v0.12.0) (2024-11-15)
+
+
+### Features
+
+* approver ux ui ([ac5231b](https://github.com/leather-io/mono/commit/ac5231b15c5df3d1067c0ae7f15ac201d412dc72))
+
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.10.0...@leather.io/tokens-v0.11.0) (2024-11-15)
+
+
+### Features
+
+* add z-index scale ([7361358](https://github.com/leather-io/mono/commit/73613585e4e01939a688ab56a291be5bf3d0347b))
+
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.2...@leather.io/tokens-v0.10.0) (2024-11-08)
+
+
+### Features
+
+* add address text style token ([4e6613c](https://github.com/leather-io/mono/commit/4e6613c74c659f32ca78bd99fddd0fd741347fea))
+
+
+### Bug Fixes
+
+* add Fira Code for mobile, use correct weights for web ([6ea653e](https://github.com/leather-io/mono/commit/6ea653ef3686a255f36347bed4c6b15d3492d55b))
+* export address displayer types ([70c81d7](https://github.com/leather-io/mono/commit/70c81d7ca40e23125ca7ad95116982a48b462af4))
+
+## [0.9.2](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.1...@leather.io/tokens-v0.9.2) (2024-11-01)
+
+
+### Bug Fixes
+
+* **mobile:** remove fontWeight from MarchePro font, closes LEA-1584 ([e36f098](https://github.com/leather-io/mono/commit/e36f098eec5fe757d3b788eb849fe59e58f48c91))
+
 ## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.9.0...@leather.io/tokens-v0.9.1) (2024-10-17)
 
 

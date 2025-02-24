@@ -1,10 +1,9 @@
 import LogoHardwareTrezorLogo from '../../assets/icons/logos/logo-hardware-trezor-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoHardwareTrezor({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoHardwareTrezorLogo />
-    </Icon>
-  );
-}
+export const LogoHardwareTrezor = createNativeIcon({
+  icon: {
+    medium: LogoHardwareTrezorLogo,
+  },
+  displayName: 'LogoHardwareTrezor',
+});

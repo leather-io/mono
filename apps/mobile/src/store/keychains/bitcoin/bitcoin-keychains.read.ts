@@ -66,12 +66,19 @@ interface SplitByPaymentTypesReturn {
   nativeSegwit: WithDerivePayer<BitcoinAccountKeychain, BitcoinNativeSegwitPayer>;
   taproot: WithDerivePayer<BitcoinAccountKeychain, BitcoinTaprootPayer>;
 }
-function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
-  const nativeSegwit = accounts.find(
-    account => inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh'
-  );
 
-  const taproot = accounts.find(account => inferPaymentTypeFromPath(account.keyOrigin) === 'p2tr');
+function isTaprootAccount(account: BitcoinAccountKeychain) {
+  return inferPaymentTypeFromPath(account.keyOrigin) === 'p2tr';
+}
+
+function isNativeSegwitAccount(account: BitcoinAccountKeychain) {
+  return inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh';
+}
+
+function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
+  const nativeSegwit = accounts.find(isNativeSegwitAccount);
+
+  const taproot = accounts.find(isTaprootAccount);
 
   if (!nativeSegwit || !taproot)
     throw new Error('It is always expected an account has both Taproot and Native Segwit');
@@ -92,4 +99,36 @@ export function useBitcoinAccounts() {
       },
     };
   }, [list]);
+}
+
+export function useBitcoinPayerFromAccountIndex(fingerprint: string, accountIndex: number) {
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+
+  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+
+  return { taprootPayer, nativeSegwitPayer };
+}
+
+export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
+  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+
+  const taprootPayerAddress = taproot.derivePayer({ addressIndex: 0 }).address;
+  const nativeSegwitPayerAddress = nativeSegwit.derivePayer({ addressIndex: 0 }).address;
+
+  return { taprootPayerAddress, nativeSegwitPayerAddress };
+}
+
+export function useBitcoinAddresses() {
+  const { list: accounts } = useBitcoinAccounts();
+  return useMemo(
+    () => accounts.map(keychain => keychain.derivePayer({ addressIndex: 0 })).map(a => a.address),
+    [accounts]
+  );
 }

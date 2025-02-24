@@ -1,0 +1,11 @@
+diff --git a/android/build.gradle b/android/build.gradle
+index 2f778014c877a8e7ecee3f5300b8ea05636e5992..03be2f8dc2f6416cd82767b8ec040ca2ae87f399 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -19,5 +19,5 @@ android {
+ }
+ 
+ dependencies {
+-  implementation 'com.github.Dimezis:BlurView:version-2.0.3'
++  implementation 'com.github.Dimezis:BlurView:version-2.0.6'
+ }

@@ -22,3 +22,5 @@ export const Link = forwardRef((props: LinkProps, ref: ForwardedRef<HTMLAnchorEl
     </StyledLink>
   );
 });
+
+Link.displayName = 'Link';

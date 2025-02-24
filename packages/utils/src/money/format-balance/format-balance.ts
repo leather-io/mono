@@ -12,8 +12,8 @@ export function formatBalance(amount: string) {
   }
 
   const noCommas = removeCommas(amount);
-  const number = noCommas.includes('.') ? parseFloat(noCommas) : parseInt(noCommas);
-  return number > 10000
+  const number = parseFloat(noCommas);
+  return number > 10_000
     ? {
         isAbbreviated: true,
         value: abbreviateNumber(number),

@@ -1,17 +1,11 @@
-import GlobeSmall from '../assets/icons/globe-16-16.svg';
-import Globe from '../assets/icons/globe-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import Globe16 from '../assets/icons/globe-16-16.svg';
+import Globe24 from '../assets/icons/globe-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function GlobeIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <GlobeSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Globe />
-    </Icon>
-  );
-}
+export const GlobeIcon = createNativeIcon({
+  icon: {
+    small: Globe16,
+    medium: Globe24,
+  },
+  displayName: 'Globe',
+});

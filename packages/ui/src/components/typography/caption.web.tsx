@@ -15,3 +15,5 @@ export const Caption = forwardRef<HTMLSpanElement, HTMLStyledProps<'span'>>(
     </styled.span>
   )
 );
+
+Caption.displayName = 'Caption';

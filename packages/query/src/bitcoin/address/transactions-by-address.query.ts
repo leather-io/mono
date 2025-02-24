@@ -5,7 +5,13 @@ import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
 
 const staleTime = 10 * 1000;
 
-const queryOptions = { staleTime, gcTime: Infinity, refetchInterval: staleTime };
+const queryOptions = {
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  staleTime,
+  gcTime: Infinity,
+  refetchInterval: staleTime,
+};
 
 interface CreateGetBitcoinTransactionsByAddressQueryOptionsArgs {
   address: string;

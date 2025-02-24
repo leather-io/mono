@@ -3,9 +3,13 @@ import { BigNumber } from 'bignumber.js';
 import { type MarketData, type Money, type NumType, formatMarketPair } from '@leather.io/models';
 
 import { isNumber } from '..';
-import { initBigNumber, sumNumbers } from '../math/helpers';
+import { initBigNumber } from '../math/helpers';
 import { createMoney, formatMoney } from './format-money';
 import { isMoney } from './is-money';
+
+export function baseCurrencyAmountInQuoteWithFallback(quantity: Money, marketData?: MarketData) {
+  return marketData ? baseCurrencyAmountInQuote(quantity, marketData) : createMoney(0, 'USD');
+}
 
 export function baseCurrencyAmountInQuote(quantity: Money, { pair, price }: MarketData) {
   if (quantity.symbol !== pair.base)
@@ -38,7 +42,6 @@ export function convertToMoneyTypeWithDefaultOfZero(
   return createMoney(initBigNumber(num ?? 0), symbol.toUpperCase(), decimals);
 }
 
-// ts-unused-exports:disable-next-line
 export function convertAmountToBaseUnit(num: Money | BigNumber, decimals?: number) {
   if (isMoney(num)) return num.amount.shiftedBy(-num.decimals);
   if (!isNumber(decimals)) throw new Error('Must define decimal of given currency');
@@ -54,6 +57,6 @@ export function sumMoney(moneysArr: Money[]) {
   if (moneysArr.some(item => item.symbol !== moneysArr[0].symbol))
     throw new Error('Cannot sum different currencies');
 
-  const sum = sumNumbers(moneysArr.map(item => item.amount.toNumber()));
+  const sum = moneysArr.reduce((acc, item) => acc.plus(item.amount), new BigNumber(0));
   return createMoney(sum, moneysArr[0].symbol, moneysArr[0].decimals);
 }

@@ -1,0 +1,18 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+# Accounts drawer doesn't open if no accounts are present
+- tapOn: 'My accounts'
+- assertNotVisible:
+    id: 'settingsWalletAndAccountsButton'
+- runFlow:
+    file: ../shared/add-wallet.yaml
+# Accounts drawer should open now
+- tapOn: 'My accounts'
+- assertVisible: 'Accounts'
+- assertVisible:
+    id: 'settingsWalletAndAccountsButton'
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible: 'WALLETS'

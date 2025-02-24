@@ -33,6 +33,11 @@ interface FeeEstimationsConfig {
   minValuesEnabled?: boolean;
 }
 
+interface SbtcConfig {
+  enabled: boolean;
+  contracts: Record<'mainnet' | 'testnet', { address: string }>;
+}
+
 export interface RemoteConfig {
   messages: any;
   activeFiatProviders?: Record<string, ActiveFiatProvider>;
@@ -45,5 +50,6 @@ export interface RemoteConfig {
     mainnetApiUrl: string;
     signetApiUrl: string;
   };
+  sbtc: SbtcConfig;
   tokensEnabledByDefault: string[];
 }

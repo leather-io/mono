@@ -2,7 +2,7 @@
   "name": "@leather.io/constants",
   "author": "Leather.io contact@leather.io",
   "description": "Shared bitcoin utilities",
-  "version": "0.12.5",
+  "version": "0.17.2",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/constants",
   "repository": {
@@ -16,8 +16,6 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -28,14 +26,12 @@
     "@leather.io/models": "workspace:*"
   },
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "concurrently": "8.2.2",
-    "eslint": "8.53.0",
-    "prettier": "3.3.3",
+    "prettier": "3.5.1",
     "tsup": "8.1.0",
-    "typescript": "5.5.4"
+    "typescript": "5.7.3"
   },
   "keywords": [
     "constants",

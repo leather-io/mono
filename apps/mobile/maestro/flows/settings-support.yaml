@@ -1,0 +1,12 @@
+appId: io.leather.mobilewallet
+---
+- launchApp
+- runFlow: ../shared/clean-up.yaml
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'Help Support, guides and articles'
+- tapOn:
+    id: 'settingsHelpButton'
+- tapOn: 'Support and feedback Contact our support team'
+# view the support page in the browser
+- assertVisible: 'GET SUPPORT'

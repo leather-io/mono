@@ -1,17 +1,11 @@
-import SquareNotificationSmall from '../assets/icons/square-notification-16-16.svg';
-import SquareNotification from '../assets/icons/square-notification-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import SquareNotification16 from '../assets/icons/square-notification-16-16.svg';
+import SquareNotification24 from '../assets/icons/square-notification-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function SquareNotificationIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <SquareNotificationSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <SquareNotification />
-    </Icon>
-  );
-}
+export const SquareNotificationIcon = createNativeIcon({
+  icon: {
+    small: SquareNotification16,
+    medium: SquareNotification24,
+  },
+  displayName: 'SquareNotification',
+});

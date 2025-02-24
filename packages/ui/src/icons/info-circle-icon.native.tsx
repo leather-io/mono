@@ -1,17 +1,11 @@
-import InfoCircleSmall from '../assets/icons/info-circle-16-16.svg';
-import InfoCircle from '../assets/icons/info-circle-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import InfoCircle16 from '../assets/icons/info-circle-16-16.svg';
+import InfoCircle24 from '../assets/icons/info-circle-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function InfoCircleIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <InfoCircleSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <InfoCircle />
-    </Icon>
-  );
-}
+export const InfoCircleIcon = createNativeIcon({
+  icon: {
+    small: InfoCircle16,
+    medium: InfoCircle24,
+  },
+  displayName: 'InfoCircle',
+});

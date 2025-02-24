@@ -19,6 +19,12 @@ export type BestInSlotInscriptionResponse = z.infer<typeof bestInSlotInscription
 export type BestinSlotInscriptionBatchInfoResponse = z.infer<
   typeof bestInslotInscriptionBatchInfoSchema
 >;
+
+export interface BestInSlotInscriptionByXpubResponse {
+  data: BestInSlotInscriptionResponse[];
+  block_height: number;
+}
+
 export interface BestInSlotInscriptionByIdResponse {
   data: BestInSlotInscriptionResponse;
   block_height: number;
@@ -144,7 +150,7 @@ interface BestInSlotInscriptionByAddressesArgs extends BestInSlotInscriptionByAd
   addresses: string[];
 }
 
-interface BestInSlotInscriptionByAddressResponse {
+export interface BestInSlotInscriptionByAddressResponse {
   block_height: number;
   data: BestInSlotInscriptionsByTxIdResponse[];
 }
@@ -299,10 +305,30 @@ export function BestInSlotApi(basePath: string) {
     return resp.data.data;
   }
 
+  // https://leatherapi.bestinslot.xyz/v3/wallet/inscriptions_xpub?sort_by=inscr_num&order=desc&offset=0&count=100&exclude_brc20=true&xpub=tr(xpub6CXPXMfXcvsrKobgiqZJm1XdW4HBEB7dM1FfpZmbWjmU5yMp6npza7MD6Jd3xUJZCX9wy6cTiT1xTh7aE3aXDSzVRHFQVwG8SoKnwkW7QD2)
+
+  async function getInscriptionsByXpub(xpub: string) {
+    const params = new URLSearchParams();
+    params.append('sort_by', 'inscr_num');
+    params.append('order', 'desc');
+    params.append('exclude_brc20', 'false');
+    params.append('xpub', xpub);
+    // TODO: Verify with BIS if results actually are paginated
+    params.append('offset', '0');
+    params.append('count', '2000');
+
+    const resp = await axios.get<BestInSlotInscriptionByXpubResponse>(
+      `${basePath}/wallet/inscriptions_xpub`,
+      { params }
+    );
+    return resp.data;
+  }
+
   return {
     getInscriptionsByAddress,
     getInscriptionsByAddresses,
     getInscriptionsByTransactionId,
+    getInscriptionsByXpub,
     getInscriptionById,
     getBrc20Balances,
     getBrc20TickerInfo,

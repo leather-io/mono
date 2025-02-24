@@ -1,17 +1,11 @@
-import EmailNotificationSmall from '../assets/icons/email-notification-16-16.svg';
-import EmailNotification from '../assets/icons/email-notification-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import EmailNotification16 from '../assets/icons/email-notification-16-16.svg';
+import EmailNotification24 from '../assets/icons/email-notification-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function EmailNotificationIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <EmailNotificationSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <EmailNotification />
-    </Icon>
-  );
-}
+export const EmailNotificationIcon = createNativeIcon({
+  icon: {
+    small: EmailNotification16,
+    medium: EmailNotification24,
+  },
+  displayName: 'EmailNotification',
+});

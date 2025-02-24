@@ -14,7 +14,7 @@ const stampSchema = z.object({
   keyburn: z.number().optional(),
   locked: z.number(),
   message_index: z.number().optional(),
-  stamp_base64: z.string(),
+  stamp_base64: z.string().optional(),
   stamp_mimetype: z.string(),
   stamp_url: z.string(),
   supply: z.number(),
@@ -42,6 +42,8 @@ const src20TokenSchema = z.object({
   amt: z.string().optional(),
   block_time: z.string(),
   last_update: z.number(),
+  deploy_tx: z.string(),
+  deploy_img: z.string(),
 });
 
 export type Src20Token = z.infer<typeof src20TokenSchema>;
@@ -55,12 +57,9 @@ const stampsByAdressSchema = z.object({
   btc: z
     .object({
       address: z.string(),
-      balance: z.number(),
-      txCount: z.number(),
-      unconfirmedBalance: z.number(),
-      unconfirmedTxCount: z.number(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
   data: z.object({
     stamps: z.array(stampSchema),
     src20: z.array(src20TokenSchema),

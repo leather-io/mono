@@ -4,8 +4,12 @@ tsconfig.tsbuildinfo
 .turbo/
 .tsup/
 .idea
+.eslintcache
 # macOS
 .DS_Store
 leather-styles
 **/.env
 coverage
+architecture/*.svg
+GoogleService-Info.plist
+google-services.json

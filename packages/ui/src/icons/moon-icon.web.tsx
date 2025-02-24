@@ -1,17 +1,11 @@
-import MoonSmall from '../assets/icons/moon-16-16.svg';
-import Moon from '../assets/icons/moon-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Moon16 from '../assets/icons/moon-16-16.svg';
+import Moon24 from '../assets/icons/moon-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function MoonIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <MoonSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Moon />
-    </Icon>
-  );
-}
+export const MoonIcon = createWebIcon({
+  icon: {
+    small: Moon16,
+    medium: Moon24,
+  },
+  displayName: 'Moon',
+});

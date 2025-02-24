@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { AccountIcon, accountIconMap } from '@/features/accounts/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
+import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 import { AccountId } from '@/models/domain.model';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
@@ -13,20 +14,21 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 
-import { Box, Button, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, SquircleBox, Text, Theme } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
 interface ChooseAvatarProps extends AccountId {
   account: Account;
 }
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {
+  const defaultStyles = useScrollViewStyles();
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const router = useRouter();
-  const [newIcon, setNewIcon] = useState<string | null>(null);
-  const { displayToast } = useToastContext();
+  const [newIcon, setNewIcon] = useState<AccountIcon | null>(null);
+  const PreviewIcon = accountIconMap[newIcon ?? account.icon];
 
   useEffect(() => {
     navigation.setOptions({ title: account.name });
@@ -38,13 +40,6 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
     const payload = { fingerprint, accountIndex, icon };
     dispatch(userUpdatesAccountIcon(payload));
     router.back();
-    displayToast({
-      type: 'success',
-      title: t({
-        id: 'choose_avatar.toast_title',
-        message: 'Account label updated',
-      }),
-    });
   }
 
   function onSubmit() {
@@ -54,34 +49,31 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
   }
 
   return (
-    <Box flex={1} backgroundColor="ink.background-primary" justifyContent="space-between">
-      <ScrollView
-        contentContainerStyle={{
-          paddingTop: theme.spacing['5'],
-          paddingBottom: theme.spacing['5'] + bottom,
-          gap: theme.spacing[5],
-        }}
-      >
-        <Box px="5" gap="6">
-          <Text variant="heading03">
-            {t({
-              id: 'choose_avatar.title',
-              message: 'Choose account avatar',
-            })}
-          </Text>
-          <Text variant="heading05">
+    <Box bg="ink.background-primary" flex={1}>
+      <ScrollView contentContainerStyle={defaultStyles}>
+        <Box gap="5">
+          <SquircleBox
+            alignSelf="center"
+            width={124}
+            height={124}
+            borderWidth={1}
+            borderColor="ink.border-transparent"
+            borderRadius={48}
+            cornerSmoothing={100}
+            preserveSmoothing={true}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <PreviewIcon width={64} height={64} />
+          </SquircleBox>
+
+          <Text variant="label01">
             {t({
               id: 'choose_avatar.images.subtitle',
-              message: 'Choose an image',
+              message: 'Icons',
             })}
           </Text>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
-          <Text variant="heading05">
-            {t({
-              id: 'choose_avatar.collectibles.subtitle',
-              message: 'Or choose one of your collectibles',
-            })}
-          </Text>
         </Box>
       </ScrollView>
       <Box
@@ -96,7 +88,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
           buttonState={isSubmitDisabled ? 'disabled' : 'default'}
           title={t({
             id: 'choose_avatar.button',
-            message: 'Confirm',
+            message: 'Save',
           })}
         />
       </Box>

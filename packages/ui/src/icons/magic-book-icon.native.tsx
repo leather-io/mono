@@ -1,17 +1,11 @@
-import MagicBookSmall from '../assets/icons/magic-book-16-16.svg';
-import MagicBook from '../assets/icons/magic-book-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import MagicBook16 from '../assets/icons/magic-book-16-16.svg';
+import MagicBook24 from '../assets/icons/magic-book-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function MagicBookIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <MagicBookSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <MagicBook />
-    </Icon>
-  );
-}
+export const MagicBookIcon = createNativeIcon({
+  icon: {
+    small: MagicBook16,
+    medium: MagicBook24,
+  },
+  displayName: 'MagicBook',
+});

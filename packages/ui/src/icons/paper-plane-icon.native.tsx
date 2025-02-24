@@ -1,17 +1,11 @@
-import PaperPlaneSmall from '../assets/icons/paper-plane-16-16.svg';
-import PaperPlane from '../assets/icons/paper-plane-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import PaperPlane16 from '../assets/icons/paper-plane-16-16.svg';
+import PaperPlane24 from '../assets/icons/paper-plane-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function PaperPlaneIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <PaperPlaneSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <PaperPlane />
-    </Icon>
-  );
-}
+export const PaperPlaneIcon = createNativeIcon({
+  icon: {
+    small: PaperPlane16,
+    medium: PaperPlane24,
+  },
+  displayName: 'PaperPlane',
+});

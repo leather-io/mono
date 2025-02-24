@@ -2,7 +2,7 @@
   "name": "@leather.io/models",
   "author": "Leather.io contact@leather.io",
   "description": "Leather models and types",
-  "version": "0.18.2",
+  "version": "0.26.2",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/models",
   "repository": {
@@ -16,8 +16,6 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint . --fix --ignore-path ../../.eslintignore",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "exports": {
@@ -27,16 +25,14 @@
   "dependencies": {
     "@stacks/stacks-blockchain-api-types": "7.8.2",
     "bignumber.js": "9.1.2",
-    "zod": "3.23.6"
+    "zod": "3.24.1"
   },
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "eslint": "8.53.0",
-    "prettier": "3.3.3",
+    "prettier": "3.5.1",
     "tsup": "8.1.0",
-    "typescript": "5.5.4"
+    "typescript": "5.7.3"
   },
   "keywords": [
     "leather",

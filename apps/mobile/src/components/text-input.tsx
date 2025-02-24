@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ReactNode, RefObject } from 'react';
+import { ComponentPropsWithoutRef, RefObject } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
 import { t } from '@lingui/macro';
@@ -21,6 +21,7 @@ import {
 } from '@shopify/restyle';
 
 import { Box, Text, TextInputProps, Theme, TextInput as UITextInput } from '@leather.io/ui/native';
+import { assertUnreachable } from '@leather.io/utils';
 
 const inputRestyleFunctions = [opacity, visible, spacing, spacingShorthand, layout];
 
@@ -43,21 +44,21 @@ function whenInputState<T>(inputState: InputState, match: Record<InputState, T>)
       return match.focused;
     case 'error':
       return match.error;
+    default:
+      assertUnreachable(inputState);
   }
 }
 
 export function TextInput({
   inputState,
-  Icon,
-  ref,
+  inputRef,
   errorMessage,
   textVariant,
   TextInputComponent,
   ...rest
 }: Props & {
   inputState: InputState;
-  Icon?: ReactNode;
-  ref?: RefObject<RNTextInput>;
+  inputRef?: RefObject<RNTextInput>;
   errorMessage?: string;
   textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;
@@ -85,6 +86,7 @@ export function TextInput({
   return (
     <Box>
       <_TextInput
+        ref={inputRef}
         textVariant={textVariant}
         placeholderTextColor={theme.colors['ink.text-subdued']}
         borderWidth={1}

@@ -104,3 +104,5 @@ export const Pressable = forwardRef<
     />
   );
 });
+
+Pressable.displayName = 'Pressable';

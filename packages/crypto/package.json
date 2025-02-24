@@ -2,7 +2,7 @@
   "name": "@leather.io/crypto",
   "author": "leather.io",
   "description": "Generic crypto utils package for Leather",
-  "version": "1.6.6",
+  "version": "1.6.44",
   "license": "MIT",
   "scripts": {
     "build": "tsup",
@@ -17,13 +17,13 @@
   },
   "dependencies": {
     "@leather.io/utils": "workspace:*",
-    "@scure/bip32": "1.5.0",
-    "@scure/bip39": "1.4.0",
+    "@scure/bip32": "1.6.2",
+    "@scure/bip39": "1.5.4",
     "just-memoize": "2.2.0"
   },
   "devDependencies": {
     "tsup": "8.1.0",
-    "vitest": "2.0.5"
+    "vitest": "2.1.9"
   },
   "files": [
     "dist"

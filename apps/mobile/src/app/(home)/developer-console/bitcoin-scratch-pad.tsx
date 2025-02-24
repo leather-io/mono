@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TextInput } from 'react-native';
 
-import { usePsbtSigner } from '@/features/psbt-signer/psbt-signer';
+import { usePsbtSigner } from '@/features/psbt-signer/use-psbt-signer';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { BitcoinAccountLoader } from '@/store/keychains/keychains';
 import { t } from '@lingui/macro';
@@ -28,6 +28,8 @@ export default function BitcoinScratchPad() {
         {({ nativeSegwit, taproot }) => (
           <Text fontSize={6} lineHeight={8}>
             {JSON.stringify(
+              // TODO: Use `omit` instead.
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               [nativeSegwit, taproot].map(({ keychain, ...rest }) => rest),
               null,
               2
@@ -72,11 +74,11 @@ export default function BitcoinScratchPad() {
           try {
             signedTx.finalize();
           } catch (e) {
-            // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+            // eslint-disable-next-line no-console
             console.log('ERROR Finalising', e);
           }
 
-          // eslint-disable-next-line no-console, lingui/no-unlocalized-strings
+          // eslint-disable-next-line no-console
           console.log('Tx payload', signedTx.hex);
         }}
       />

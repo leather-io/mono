@@ -49,7 +49,7 @@ export function ApproverDemo() {
         <Approver.Advanced>
           <Approver.Section>
             Section 3
-            <Pressable onClick={() => {}} mt="space.03">
+            <Pressable mt="space.03">
               <ItemLayout
                 captionLeft="Example"
                 captionRight="Example"

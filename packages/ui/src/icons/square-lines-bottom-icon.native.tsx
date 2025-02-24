@@ -1,17 +1,11 @@
-import SquareLinesBottomSmall from '../assets/icons/square-lines-bottom-16-16.svg';
-import SquareLinesBottom from '../assets/icons/square-lines-bottom-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import SquareLinesBottom16 from '../assets/icons/square-lines-bottom-16-16.svg';
+import SquareLinesBottom24 from '../assets/icons/square-lines-bottom-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function SquareLinesBottomIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <SquareLinesBottomSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <SquareLinesBottom />
-    </Icon>
-  );
-}
+export const SquareLinesBottomIcon = createNativeIcon({
+  icon: {
+    small: SquareLinesBottom16,
+    medium: SquareLinesBottom24,
+  },
+  displayName: 'SquareLinesBottom',
+});

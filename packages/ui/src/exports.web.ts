@@ -1,9 +1,13 @@
 export { Accordion } from './components/accordion/accordion.web';
-export { AddressDisplayer } from './components/address-displayer/address-displayer.web';
+export {
+  AddressDisplayer,
+  type AddressDisplayerProps,
+} from './components/address-displayer/address-displayer.web';
 export * from './components/avatar';
+export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
-export { Callout } from './components/callout/callout.web';
+export { Callout, type CalloutProps } from './components/callout/callout.web';
 export * from './components/sheet';
 export { DropdownMenu } from './components/dropdown-menu/dropdown-menu.web';
 export { Flag, type FlagProps } from './components/flag/flag.web';
@@ -18,7 +22,7 @@ export * from './components/select';
 export { Tabs } from './components/tabs/tabs.web';
 export * from './components/toast';
 export * from './components/tooltip';
-export { Tag, type TagProps, type TagVariants } from './components/tag/tag.web';
+export { Badge, type BadgeProps } from './components/badge/badge.web';
 export * from './components/typography/index.web';
 export { DynamicColorCircle } from './components/dynamic-color-circle.web';
 export { Hr, DashedHr, type HrProps } from './components/hr.web';
@@ -26,10 +30,12 @@ export { Logo } from './components/logo.web';
 export { LoadingSpinner, Spinner } from './components/spinner';
 export { shimmerStyles } from './components/skeleton-loader/shimmer.styles.web';
 export { SkeletonLoader } from './components/skeleton-loader/skeleton-loader.web';
-export { Icon } from './icons/icon/icon.web';
 export * from './icons/index.web';
 export * from './components/approver/approver.web';
 export * from './components/favicon/favicon.web';
 export { usePressable } from './hooks/use-pressable.web';
 export * from './components/collectibles/index.web';
 export * from './components/switch/switch.web';
+export { Highlighter, type HighlighterProps } from './components/highlighting/highlighter.web';
+export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
+export { Slider } from './components/slider/slider.web';

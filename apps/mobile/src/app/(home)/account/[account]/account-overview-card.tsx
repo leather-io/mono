@@ -1,41 +1,23 @@
-import { useTheme } from '@shopify/restyle';
+import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
 
-import { Box, IconProps, Text } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 export interface AccountOverviewProps {
   caption: string;
   heading: React.ReactNode;
-  Icon: React.FC<IconProps>;
+  icon: AccountIcon;
 }
 
-export function AccountOverview({ caption, Icon, heading }: AccountOverviewProps) {
-  const theme = useTheme();
-
+export function AccountOverview({ caption, icon, heading }: AccountOverviewProps) {
   return (
-    <Box
-      alignItems="flex-start"
-      alignContent="flex-start"
-      alignSelf="stretch"
-      m="5"
-      flexWrap="wrap"
-    >
-      <Box
-        p="5"
-        width={342}
-        height={180}
-        flexDirection="column"
-        alignItems="center"
-        gap="3"
-        flex={1}
-      >
-        <Box p="2" borderRadius="round" backgroundColor="ink.text-primary">
-          <Icon color={theme.colors['ink.background-primary']} width={40} height={40} />
-        </Box>
+    <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
+      <Box mx="5" py="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
+        <AccountAvatar icon={icon} />
         <Box gap="1" flexDirection="column" alignItems="center">
-          {heading}
-          <Text variant="caption01" color="ink.text-subdued">
+          <Text variant="label02" textAlign="center">
             {caption}
           </Text>
+          {heading}
         </Box>
       </Box>
     </Box>

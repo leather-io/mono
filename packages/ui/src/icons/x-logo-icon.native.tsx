@@ -1,10 +1,9 @@
-import XLogo from '../assets/icons/x-logo.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import XLogo24 from '../assets/icons/x-logo.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function XLogoIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <XLogo />
-    </Icon>
-  );
-}
+export const XLogoIcon = createNativeIcon({
+  icon: {
+    medium: XLogo24,
+  },
+  displayName: 'XLogo',
+});

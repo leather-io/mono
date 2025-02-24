@@ -1,17 +1,11 @@
-import CopySmall from '../assets/icons/copy-16-16.svg';
-import Copy from '../assets/icons/copy-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import Copy16 from '../assets/icons/copy-16-16.svg';
+import Copy24 from '../assets/icons/copy-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function CopyIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <CopySmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Copy />
-    </Icon>
-  );
-}
+export const CopyIcon = createNativeIcon({
+  icon: {
+    small: Copy16,
+    medium: Copy24,
+  },
+  displayName: 'Copy',
+});

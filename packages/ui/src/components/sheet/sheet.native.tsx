@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   BottomSheetModal,
+  type BottomSheetModalProps,
   BottomSheetModalProvider,
   BottomSheetScrollView,
   BottomSheetTextInput,
@@ -13,52 +14,53 @@ import {
 import { useTheme } from '@shopify/restyle';
 
 import { Box, Theme, createTextInput } from '../../../native';
-import { ThemeVariant } from '../../theme-native/theme';
+import { ThemeVariant } from '../../theme-native';
 import { Backdrop } from './components/sheet-backdrop.native';
 
-export const UIBottomSheetTextInput = createTextInput(BottomSheetTextInput);
+export const CLOSED_ANIMATED_SHARED_VALUE = -888;
+
+export interface SheetProps extends BottomSheetModalProps {
+  shouldHaveContainer?: boolean;
+  isFullHeight?: boolean;
+  isScrollView?: boolean;
+  animatedPosition?: SharedValue<number>;
+  animatedIndex?: SharedValue<number>;
+  themeVariant: ThemeVariant;
+  children: ReactNode;
+}
 
 export type SheetRef = BottomSheetModal;
-export const SheetProvider = BottomSheetModalProvider;
 
-export const CLOSED_ANIMATED_SHARED_VALUE = -888;
-export const Sheet = forwardRef<
-  BottomSheetModal,
-  {
-    shouldHaveContainer?: boolean;
-    isScrollView?: boolean;
-    children: ReactNode;
-    animatedPosition?: SharedValue<number>;
-    onDismiss?(): void;
-    animatedIndex?: SharedValue<number>;
-    themeVariant: ThemeVariant;
-  }
->(
+export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
   (
     {
       shouldHaveContainer = true,
+      isFullHeight,
       isScrollView,
       children,
       animatedPosition,
       animatedIndex,
       onDismiss,
       themeVariant,
+      ...props
     },
     ref
   ) => {
+    const { bottom, top } = useSafeAreaInsets();
+    const theme = useTheme<Theme>();
     const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
     const defaultAnimatedIndex = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
-    const { bottom } = useSafeAreaInsets();
-    const theme = useTheme<Theme>();
     const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
     const internalAnimatedIndex = animatedIndex ?? defaultAnimatedIndex;
     const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
+    const snapPoints = isFullHeight ? ['100%'] : undefined;
     return (
       <BottomSheetModal
         animatedIndex={internalAnimatedIndex}
         stackBehavior="push"
         onDismiss={onDismiss}
-        enableDynamicSizing
+        enableDynamicSizing={!isFullHeight}
+        snapPoints={snapPoints}
         ref={ref}
         enablePanDownToClose
         backdropComponent={() => (
@@ -69,17 +71,24 @@ export const Sheet = forwardRef<
           />
         )}
         animatedPosition={internalAnimatedPosition}
-        handleComponent={() => (
-          <Box position="absolute" top={-12} width="100%" alignItems="center">
-            <Box height={6} width={60} borderRadius="round" bg="green.background-primary" />
-          </Box>
-        )}
+        handleComponent={() =>
+          isFullHeight ? (
+            <Box alignItems="center" padding="2" position="absolute" top={top} width="100%">
+              <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
+            </Box>
+          ) : (
+            <Box alignItems="center" position="absolute" top={-12} width="100%">
+              <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
+            </Box>
+          )
+        }
         // maestro can't find bottom sheet component without this:
         // https://github.com/mobile-dev-inc/maestro/issues/1493#issuecomment-1966447805
         accessible={Platform.select({
           // setting it to false on Android seems to cause issues with TalkBack instead
           ios: false,
         })}
+        {...props}
       >
         {shouldHaveContainer && (
           <BottomSheetComponent
@@ -99,3 +108,8 @@ export const Sheet = forwardRef<
     );
   }
 );
+
+Sheet.displayName = 'Sheet';
+
+export const SheetProvider = BottomSheetModalProvider;
+export const UIBottomSheetTextInput = createTextInput(BottomSheetTextInput);

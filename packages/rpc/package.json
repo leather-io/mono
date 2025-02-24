@@ -2,7 +2,7 @@
   "name": "@leather.io/rpc",
   "author": "leather-wallet",
   "description": "RPC types package for Leather",
-  "version": "2.1.13",
+  "version": "2.6.4",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -14,14 +14,23 @@
     "types": "tsc --declaration --emitDeclarationOnly"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
   "dependencies": {
     "@leather.io/models": "workspace:*",
-    "zod": "3.23.6"
+    "@leather.io/utils": "workspace:*",
+    "@scure/btc-signer": "1.6.0",
+    "@stacks/network": "7.0.2",
+    "@stacks/transactions": "7.0.2",
+    "zod": "3.24.1"
   },
   "devDependencies": {
-    "tsup": "8.1.0"
+    "tsup": "8.1.0",
+    "vitest": "2.1.9"
   },
   "files": [
     "dist"

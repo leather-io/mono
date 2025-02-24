@@ -21,8 +21,10 @@ export const BESTINSLOT_API_BASE_URL_TESTNET = 'https://leatherapi_testnet.besti
 
 export const STX20_API_BASE_URL_MAINNET = 'https://api.stx20.com/api/v1';
 
+export const BNS_V2_API_BASE_URL = 'https://api.bnsv2.com';
+
 // Copied from @stacks/transactions to avoid dependencies
-export enum ChainID {
+export enum ChainId {
   Testnet = 2147483648,
   Mainnet = 1,
 }
@@ -32,13 +34,14 @@ export enum WalletDefaultNetworkConfigurationIds {
   testnet = 'testnet',
   testnet4 = 'testnet4',
   signet = 'signet',
+  sbtcTestnet = 'sbtcTestnet',
   sbtcDevenv = 'sbtcDevenv',
   devnet = 'devnet',
 }
 
 export type DefaultNetworkConfigurations = keyof typeof WalletDefaultNetworkConfigurationIds;
 
-const supportedBlockchains = ['stacks', 'bitcoin'] as const;
+export const supportedBlockchains = ['stacks', 'bitcoin'] as const;
 
 export type SupportedBlockchains = (typeof supportedBlockchains)[number];
 
@@ -63,6 +66,10 @@ export function bitcoinNetworkToNetworkMode(network: BitcoinNetwork): BitcoinNet
       return 'regtest';
     case 'signet':
       return 'signet';
+    default:
+      // TODO: Needs exhaustive check. Cannot import 'assertUnreachable' since 'utils' package depends on 'models'.
+      //       Ideally this function should live in utils, but it's currently widely used in the extension.
+      throw new Error(`Unhandled case: ${network}`);
   }
 }
 
@@ -83,9 +90,9 @@ export interface StacksChainConfig extends BaseChainConfig {
   blockchain: 'stacks';
   url: string;
   /** The chainId of the network (or parent network if this is a subnet) */
-  chainId: ChainID;
+  chainId: ChainId;
   /** An additional chainId for subnets. Indicated a subnet if defined and is mainly used for signing. */
-  subnetChainId?: ChainID;
+  subnetChainId?: ChainId;
 }
 
 export type NetworkConfiguration = z.infer<typeof networkConfigurationSchema>;
@@ -96,7 +103,7 @@ const networkMainnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Mainnet,
+      chainId: ChainId.Mainnet,
       url: HIRO_API_BASE_URL_MAINNET,
     },
     bitcoin: {
@@ -114,7 +121,7 @@ const networkTestnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -132,7 +139,7 @@ const networkTestnet4: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -150,7 +157,7 @@ const networkSignet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: HIRO_API_BASE_URL_TESTNET,
     },
     bitcoin: {
@@ -162,20 +169,38 @@ const networkSignet: NetworkConfiguration = {
   },
 };
 
+const networkSbtcTestnet: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.sbtcTestnet,
+  name: 'sBTC Testnet',
+  chain: {
+    stacks: {
+      blockchain: 'stacks',
+      chainId: ChainId.Testnet,
+      url: HIRO_API_BASE_URL_TESTNET,
+    },
+    bitcoin: {
+      blockchain: 'bitcoin',
+      bitcoinNetwork: 'regtest',
+      mode: 'regtest',
+      bitcoinUrl: 'https://beta.sbtc-mempool.tech/api/proxy',
+    },
+  },
+};
+
 const networkSbtcDevenv: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds.sbtcDevenv,
   name: 'sBTC Devenv',
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: 'http://localhost:3999',
     },
     bitcoin: {
       blockchain: 'bitcoin',
       bitcoinNetwork: 'regtest',
       mode: 'regtest',
-      bitcoinUrl: 'http://localhost:8999/api',
+      bitcoinUrl: 'http://localhost:3000/api/proxy',
     },
   },
 };
@@ -186,7 +211,7 @@ const networkDevnet: NetworkConfiguration = {
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: ChainID.Testnet,
+      chainId: ChainId.Testnet,
       url: 'http://localhost:3999',
     },
     bitcoin: {
@@ -205,9 +230,10 @@ export const defaultNetworksKeyedById: Record<
   NetworkConfiguration
 > = {
   [WalletDefaultNetworkConfigurationIds.mainnet]: networkMainnet,
-  [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
   [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
+  [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
+  [WalletDefaultNetworkConfigurationIds.sbtcTestnet]: networkSbtcTestnet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,
 };

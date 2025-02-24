@@ -12,15 +12,31 @@ export type ButtonProps = Omit<
   ButtonVariantProps;
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { children, fullWidth, size, trigger, invert, type = 'button', variant, ...rest } = props;
+  const {
+    children,
+    fullWidth,
+    size,
+    trigger,
+    invert,
+    type = 'button',
+    variant,
+    disabled: disabledProp,
+    ...rest
+  } = props;
+  const isLoading = rest['aria-busy'] === true || rest['aria-busy'] === 'true';
+  const disabled = isLoading || disabledProp;
+
   return (
     <StyledButton
       ref={ref}
       className={buttonRecipe({ fullWidth, size, invert, trigger, variant })}
       type={type}
+      disabled={disabled}
       {...rest}
     >
-      {children}
+      <styled.span opacity={isLoading ? 0 : 1}>{children}</styled.span>
     </StyledButton>
   );
 });
+
+Button.displayName = 'Button';

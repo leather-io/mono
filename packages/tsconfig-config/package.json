@@ -2,7 +2,7 @@
   "name": "@leather.io/tsconfig-config",
   "author": "Leather.io contact@leather.io",
   "description": "Shared tsconfig configuration",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/tsconfig-config",
   "repository": {
@@ -12,7 +12,7 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
-    "typescript": "5.5.4"
+    "typescript": "5.7.3"
   },
   "keywords": [
     "leather",

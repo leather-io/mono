@@ -1,40 +1,37 @@
 import { RefObject } from 'react';
 
-import { usePushNotifications } from '@/hooks/use-push-notifications';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
 
-import {
-  BellAlarmIcon,
-  Box,
-  Button,
-  Sheet,
-  SheetRef,
-  Text,
-  Theme,
-  getButtonTextColor,
-} from '@leather.io/ui/native';
+import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
 
 export interface NotifyUserSheetData {
   title: string;
+  id: string;
 }
 
-interface NotifyUserSheetProps {
+interface NotifyUserSheetLayoutProps {
   onCloseSheet?(): unknown;
   sheetData: NotifyUserSheetData | null;
   sheetRef: RefObject<SheetRef>;
 }
-export function NotifyUserSheet({ onCloseSheet, sheetData, sheetRef }: NotifyUserSheetProps) {
-  const theme = useTheme<Theme>();
+export function NotifyUserSheetLayout({
+  onCloseSheet,
+  sheetData,
+  sheetRef,
+}: NotifyUserSheetLayoutProps) {
   const { themeDerivedFromThemePreference } = useSettings();
-  const { registerPushNotifications } = usePushNotifications();
   const { i18n } = useLingui();
 
-  async function onNotify() {
-    await registerPushNotifications();
+  function onNotify() {
+    if (sheetData) {
+      void analytics?.track('submit_feature_waitlist', {
+        feature: sheetData.id,
+      });
+    }
     sheetRef.current?.dismiss();
   }
 
@@ -63,11 +60,10 @@ export function NotifyUserSheet({ onCloseSheet, sheetData, sheetRef }: NotifyUse
         </Box>
         <Button
           onPress={onNotify}
-          icon={<BellAlarmIcon color={theme.colors[getButtonTextColor('default')]} />}
           buttonState="default"
           title={t({
-            id: 'notify_user.button',
-            message: 'Notify me',
+            id: 'notify_user.interested_button',
+            message: "I'm interested",
           })}
         />
       </Box>

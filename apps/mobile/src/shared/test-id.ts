@@ -11,6 +11,8 @@ export enum TestId {
   homeDeveloperToolsButton = 'homeDeveloperToolsButton',
   homePrivacyButton = 'homePrivacyButton',
   homeSettingsButton = 'homeSettingsButton',
+  networkBadge = 'networkBadge',
+  receiveAssetItem = 'receiveAssetItem',
   restoreWalletContinue = 'restoreWalletContinue',
   restoreWalletSheetButton = 'restoreWalletSheetButton',
   restoreWalletTextInput = 'restoreWalletTextInput',
@@ -36,4 +38,5 @@ export enum TestId {
   walletSettingsRemoveWalletButton = 'walletSettingsRemoveWalletButton',
   walletSettingsRenameWalletButton = 'walletSettingsRenameWalletButton',
   walletSettingsViewSecretKeyButton = 'walletSettingsViewSecretKeyButton',
+  walletSettingsAccountNameCell = 'walletSettingsAccountNameCell',
 }

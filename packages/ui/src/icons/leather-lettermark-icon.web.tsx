@@ -1,10 +1,9 @@
-import LeatherLettermark from '../assets/icons/leather-lettermark-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import LeatherLettermark24 from '../assets/icons/leather-lettermark-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function LeatherLettermarkIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <LeatherLettermark />
-    </Icon>
-  );
-}
+export const LeatherLettermarkIcon = createWebIcon({
+  icon: {
+    medium: LeatherLettermark24,
+  },
+  displayName: 'LeatherLettermark',
+});

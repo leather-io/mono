@@ -1,12 +1,16 @@
 import { useRef, useState } from 'react';
 
-import { MpcWalletListLayout } from '@/components/mpc-wallet/mpc-wallet-list.layout';
-import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
+import {
+  NotifyUserSheetData,
+  NotifyUserSheetLayout,
+} from '@/components/sheets/notify-user-sheet.layout';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 
 import {
-  Box,
-  Cell,
   LogoMpcBitgo,
   LogoMpcCapsule,
   LogoMpcCopper,
@@ -26,6 +30,7 @@ function getUnavailableFeatures() {
         message: 'BitGo',
       }),
       icon: <LogoMpcBitgo />,
+      id: WaitlistIds.bitgo,
     },
     capsule: {
       title: t({
@@ -33,6 +38,7 @@ function getUnavailableFeatures() {
         message: 'Capsule',
       }),
       icon: <LogoMpcCapsule />,
+      id: WaitlistIds.capsule,
     },
     copper: {
       title: t({
@@ -40,6 +46,7 @@ function getUnavailableFeatures() {
         message: 'Copper',
       }),
       icon: <LogoMpcCopper />,
+      id: WaitlistIds.copper,
     },
     fireblocks: {
       title: t({
@@ -47,6 +54,7 @@ function getUnavailableFeatures() {
         message: 'Fireblocks',
       }),
       icon: <LogoMpcFireblocks />,
+      id: WaitlistIds.fireblocks,
     },
     foredefi: {
       title: t({
@@ -54,6 +62,8 @@ function getUnavailableFeatures() {
         message: 'Fordefi',
       }),
       icon: <LogoMpcFordefi />,
+
+      id: WaitlistIds.foredefi,
     },
     portal: {
       title: t({
@@ -61,6 +71,7 @@ function getUnavailableFeatures() {
         message: 'Portal',
       }),
       icon: <LogoMpcPortal />,
+      id: WaitlistIds.portal,
     },
     privy: {
       title: t({
@@ -68,6 +79,7 @@ function getUnavailableFeatures() {
         message: 'Privy',
       }),
       icon: <LogoMpcPrivy />,
+      id: WaitlistIds.privy,
     },
     qredo: {
       title: t({
@@ -75,6 +87,7 @@ function getUnavailableFeatures() {
         message: 'Qredo',
       }),
       icon: <LogoMpcQredo />,
+      id: WaitlistIds.qredo,
     },
   };
 }
@@ -94,14 +107,19 @@ export default function MpcWalletListScreen() {
 
   return (
     <>
-      <MpcWalletListLayout>
-        <Box gap="1" pt="5">
-          {Object.entries(getUnavailableFeatures()).map(featureEntry => {
-            const [featureKey, feature] = featureEntry;
+      <AnimatedHeaderScreenLayout
+        title={t({
+          id: 'mpc_wallets.title',
+          message: 'Connect mpc wallet',
+        })}
+      >
+        <SettingsList>
+          {Object.values(getUnavailableFeatures()).map(feature => {
             const mpcWalletName = feature.title;
 
             function onPress() {
               onOpenSheet({
+                id: feature.id,
                 title: t({
                   id: 'notify_user.mpc_wallet.header_title',
                   message: `Connect Mpc wallet: ${mpcWalletName}`,
@@ -110,21 +128,21 @@ export default function MpcWalletListScreen() {
             }
 
             return (
-              <Cell.Root
-                py="4"
-                key={featureKey}
+              <SettingsListItem
+                key={feature.id}
                 onPress={onPress}
                 title={feature.title}
                 icon={feature.icon}
-              >
-                <Cell.Chevron />
-              </Cell.Root>
+              />
             );
           })}
-        </Box>
-      </MpcWalletListLayout>
-
-      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
+        </SettingsList>
+      </AnimatedHeaderScreenLayout>
+      <NotifyUserSheetLayout
+        onCloseSheet={onCloseSheet}
+        sheetData={sheetData}
+        sheetRef={sheetRef}
+      />
     </>
   );
 }

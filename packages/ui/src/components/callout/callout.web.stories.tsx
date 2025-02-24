@@ -1,9 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import { Callout as Component } from './callout.web';
+import { CloudOffIcon } from '../../icons/cloud-off-icon.web';
+import { Callout } from './callout.web';
 
-const meta: Meta<typeof Component> = {
-  component: Component,
+const meta: Meta<typeof Callout> = {
+  component: Callout,
   tags: ['autodocs'],
   title: 'Callout',
   args: {
@@ -12,13 +13,14 @@ const meta: Meta<typeof Component> = {
   parameters: {
     controls: { include: ['variant'] },
   },
-  render: args => <Component {...args} width="500px" />,
+  render: args => <Callout {...args} />,
 };
 
 export default meta;
-type Story = StoryObj<typeof Component>;
 
-export const Callout: Story = {
+type Story = StoryObj<typeof Callout>;
+
+export const Basic: Story = {
   args: {
     children:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.',
@@ -49,5 +51,13 @@ export const WithOnlyCaption: Story = {
 export const WithShortCaption: Story = {
   args: {
     children: 'Short caption with no title.',
+  },
+};
+
+export const WithCustomIcon: Story = {
+  args: {
+    title: 'Some balances are currently unavailable, which may impact the total balance displayed.',
+    icon: <CloudOffIcon />,
+    variant: 'warning',
   },
 };

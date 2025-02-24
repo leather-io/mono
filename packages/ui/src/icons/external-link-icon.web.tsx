@@ -1,17 +1,11 @@
-import ExternalLinkSmall from '../assets/icons/external-link-16-16.svg';
-import ExternalLink from '../assets/icons/external-link-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import ExternalLink16 from '../assets/icons/external-link-16-16.svg';
+import ExternalLink24 from '../assets/icons/external-link-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function ExternalLinkIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <ExternalLinkSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <ExternalLink />
-    </Icon>
-  );
-}
+export const ExternalLinkIcon = createWebIcon({
+  icon: {
+    small: ExternalLink16,
+    medium: ExternalLink24,
+  },
+  displayName: 'ExternalLink',
+});

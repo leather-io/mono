@@ -1,0 +1,59 @@
+import { RefObject } from 'react';
+
+import { useSettings } from '@/store/settings/settings';
+import { t } from '@lingui/macro';
+import { Image } from 'expo-image';
+
+import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
+
+export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef> }) {
+  const { themeDerivedFromThemePreference, changeNotificationsPreference } = useSettings();
+
+  return (
+    <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
+      <Box style={{ height: 200 }}>
+        <Image
+          style={{ height: '100%' }}
+          contentFit="cover"
+          source={require('@/assets/notifications-placeholder.png')}
+        />
+      </Box>
+      <Box py="3" px="5" gap="5">
+        <Text variant="heading03">
+          {t({ id: 'notifications-sheet.title', message: 'Get transaction notifications' })}
+        </Text>
+        <Text>
+          {t({
+            id: 'notifications-sheet.subtitle',
+            message:
+              'Enable notifications to receive updates when you send and receive amounts. You can adjust your preference anytime in Settings.',
+          })}
+        </Text>
+        <Box gap="3" py="3">
+          <Button
+            onPress={() => {
+              changeNotificationsPreference('enabled');
+              sheetRef.current?.dismiss();
+            }}
+            buttonState="default"
+            title={t({
+              id: 'notification-sheet.submit_button',
+              message: `Notify me`,
+            })}
+          />
+          <Button
+            onPress={() => {
+              changeNotificationsPreference('disabled');
+              sheetRef.current?.dismiss();
+            }}
+            buttonState="ghost"
+            title={t({
+              id: 'notification-sheet.cancel_button',
+              message: `Don't notify me`,
+            })}
+          />
+        </Box>
+      </Box>
+    </Sheet>
+  );
+}

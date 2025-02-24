@@ -1,5 +1,8 @@
-const urlRegex =
-  /(http|https|ftp)|(((http|ftp|https):\/\/)?(((http|ftp|https):\/\/)?(([\w.-]*)\.([\w]*))))/g;
+import { tlds } from './tlds-list';
+
+const tldRegex = tlds.join('|');
+const urlRegex = new RegExp(`\\b.*\\s*\\.\\s*(${tldRegex})\\b`, 'gi');
+
 const spamWords = ['won', 'win', 'click'];
 export const spamReplacement = 'Suspicious token';
 
@@ -8,11 +11,20 @@ function spamUrlFilter(input: string) {
 }
 
 function spamWordFilter(input: string): boolean {
-  const containsSpam = (element: string) => input.toLowerCase().includes(element);
+  function containsSpam(element: string) {
+    return input.toLowerCase().includes(element);
+  }
   return spamWords.some(containsSpam);
 }
 
-export function spamFilter(input: string): string {
+interface SpamFilterArgs {
+  input: string;
+  whitelist: string[];
+}
+
+export function spamFilter({ input, whitelist }: SpamFilterArgs): string {
+  if (whitelist.includes(input)) return input;
+
   const urlFound = spamUrlFilter(input);
   const spamWordsFound = spamWordFilter(input);
 

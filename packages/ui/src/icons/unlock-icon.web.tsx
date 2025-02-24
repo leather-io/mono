@@ -1,17 +1,11 @@
-import UnlockSmall from '../assets/icons/unlock-16-16.svg';
-import Unlock from '../assets/icons/unlock-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Unlock16 from '../assets/icons/unlock-16-16.svg';
+import Unlock24 from '../assets/icons/unlock-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function UnlockIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <UnlockSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Unlock />
-    </Icon>
-  );
-}
+export const UnlockIcon = createWebIcon({
+  icon: {
+    small: Unlock16,
+    medium: Unlock24,
+  },
+  displayName: 'Unlock',
+});

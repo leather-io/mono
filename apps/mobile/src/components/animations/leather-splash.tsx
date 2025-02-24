@@ -31,3 +31,5 @@ export const LeatherSplash = forwardRef<LottieView, Partial<LottieViewProps> & L
     );
   }
 );
+
+LeatherSplash.displayName = 'LeatherSplash';

@@ -1,12 +1,16 @@
 import { useRef, useState } from 'react';
 
-import { HardwareWalletListLayout } from '@/components/hardware-wallet/hardware-wallet-list.layout';
-import { NotifyUserSheet, NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
+import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { SettingsList } from '@/components/settings/settings-list';
+import { SettingsListItem } from '@/components/settings/settings-list-item';
+import {
+  NotifyUserSheetData,
+  NotifyUserSheetLayout,
+} from '@/components/sheets/notify-user-sheet.layout';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 
 import {
-  Box,
-  Cell,
   LogoHardwareBitkey,
   LogoHardwareFoundation,
   LogoHardwareLedger,
@@ -24,6 +28,7 @@ function getUnavailableFeatures() {
         message: 'Bitkey',
       }),
       icon: <LogoHardwareBitkey />,
+      id: WaitlistIds.bitkey,
     },
     capsule: {
       title: t({
@@ -31,6 +36,7 @@ function getUnavailableFeatures() {
         message: 'Ledger',
       }),
       icon: <LogoHardwareLedger />,
+      id: WaitlistIds.capsule,
     },
     copper: {
       title: t({
@@ -38,6 +44,7 @@ function getUnavailableFeatures() {
         message: 'OneKey',
       }),
       icon: <LogoHardwareOnekey />,
+      id: WaitlistIds.copper,
     },
     fireblocks: {
       title: t({
@@ -45,6 +52,7 @@ function getUnavailableFeatures() {
         message: 'Passport',
       }),
       icon: <LogoHardwareFoundation />,
+      id: WaitlistIds.fireblocks,
     },
     foredefi: {
       title: t({
@@ -52,6 +60,7 @@ function getUnavailableFeatures() {
         message: 'Ryder',
       }),
       icon: <LogoHardwareRyder />,
+      id: WaitlistIds.foredefi,
     },
     portal: {
       title: t({
@@ -59,6 +68,7 @@ function getUnavailableFeatures() {
         message: 'Trezor',
       }),
       icon: <LogoHardwareTrezor />,
+      id: WaitlistIds.portal,
     },
   };
 }
@@ -78,10 +88,14 @@ export default function HardwareWalletListScreen() {
 
   return (
     <>
-      <HardwareWalletListLayout>
-        <Box gap="1" pt="5">
-          {Object.entries(getUnavailableFeatures()).map(featureEntry => {
-            const [featureKey, feature] = featureEntry;
+      <AnimatedHeaderScreenLayout
+        title={t({
+          id: 'hardware_wallets.title',
+          message: 'Connect device',
+        })}
+      >
+        <SettingsList>
+          {Object.values(getUnavailableFeatures()).map(feature => {
             const hardwareWalletName = feature.title;
             function onPress() {
               onOpenSheet({
@@ -89,23 +103,25 @@ export default function HardwareWalletListScreen() {
                   id: 'notify_user.hardware_wallets.header_title',
                   message: `Connect hardware wallet: ${hardwareWalletName}`,
                 }),
+                id: feature.id,
               });
             }
             return (
-              <Cell.Root
-                py="4"
-                key={featureKey}
+              <SettingsListItem
+                key={feature.id}
                 title={feature.title}
                 icon={feature.icon}
                 onPress={onPress}
-              >
-                <Cell.Chevron />
-              </Cell.Root>
+              />
             );
           })}
-        </Box>
-      </HardwareWalletListLayout>
-      <NotifyUserSheet onCloseSheet={onCloseSheet} sheetData={sheetData} sheetRef={sheetRef} />
+        </SettingsList>
+      </AnimatedHeaderScreenLayout>
+      <NotifyUserSheetLayout
+        onCloseSheet={onCloseSheet}
+        sheetData={sheetData}
+        sheetRef={sheetRef}
+      />
     </>
   );
 }

@@ -1,21 +1,24 @@
-import type { HTMLStyledProps } from 'leather-styles/types';
+import { Flex, FlexProps, styled } from 'leather-styles/jsx';
 
 import { isEven } from '@leather.io/utils';
 
-import { AddressDisplayerLayout } from './address-displayer.layout.web';
+import { AddressDisplayerBaseProps } from './address-displayer.types.shared';
 import { groupByFour } from './address-displayer.utils.shared';
 
-interface AddressDisplayerProps extends HTMLStyledProps<'span'> {
-  address: string;
-}
+export type AddressDisplayerProps = AddressDisplayerBaseProps & FlexProps;
+
 export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
   return (
-    <>
+    <Flex direction="row" columnGap="1ch" flexWrap="wrap" {...props}>
       {groupByFour(address).map((letterGroup, index) => (
-        <AddressDisplayerLayout key={index} isEven={isEven(index + 1)} {...props}>
+        <styled.span
+          key={index}
+          color={isEven(index) ? 'ink.text-primary' : 'ink.text-subdued'}
+          textStyle="address"
+        >
           {letterGroup}
-        </AddressDisplayerLayout>
+        </styled.span>
       ))}
-    </>
+    </Flex>
   );
 }

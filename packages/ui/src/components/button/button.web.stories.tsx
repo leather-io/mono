@@ -26,6 +26,18 @@ export const Button: Story = {
   },
 };
 
+export const Loading: Story = {
+  parameters: {
+    controls: { include: ['size', 'variant'] },
+  },
+  args: {
+    'aria-busy': true,
+    children: 'Button',
+    size: 'md',
+    variant: 'solid',
+  },
+};
+
 export const Disabled: Story = {
   parameters: {
     controls: { include: ['size', 'variant'] },
@@ -35,6 +47,17 @@ export const Disabled: Story = {
     children: 'Button',
     size: 'md',
     variant: 'solid',
+  },
+};
+
+export const Success: Story = {
+  parameters: {
+    controls: { include: ['size', 'variant'] },
+  },
+  args: {
+    children: 'Button',
+    size: 'md',
+    variant: 'success',
   },
 };
 

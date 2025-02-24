@@ -14,12 +14,7 @@ const preview: Preview = {
 
   decorators: [
     Story => (
-      <View
-        style={{
-          flex: 1,
-          padding: 8,
-        }}
-      >
+      <View>
         <Story />
       </View>
     ),

@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react';
+import { ReactElement, RefObject, useState } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 
@@ -6,7 +6,6 @@ import {
   Avatar,
   Box,
   Button,
-  IconProps,
   Sheet,
   SheetHeader,
   SheetRef,
@@ -15,11 +14,11 @@ import {
 
 import { TextInput } from '../text-input';
 
-interface InputSheetProps {
+interface InputSheetLayoutProps {
   sheetRef: RefObject<SheetRef>;
   initialValue: string;
   title: string;
-  TitleIcon: React.FC<IconProps>;
+  icon: ReactElement;
   placeholder: string;
   submitTitle: string;
   onSubmit(newVal: string): void;
@@ -27,32 +26,25 @@ interface InputSheetProps {
   inputTestId?: string;
   submitTestId?: string;
 }
-export function InputSheet({
+export function InputSheetLayout({
   sheetRef,
   initialValue,
   placeholder,
   title,
-  TitleIcon,
+  icon,
   submitTitle,
   onSubmit,
   onDismiss,
   inputTestId,
   submitTestId,
-}: InputSheetProps) {
+}: InputSheetLayoutProps) {
   const [internalValue, setInternalValue] = useState(initialValue);
   const { themeDerivedFromThemePreference } = useSettings();
   return (
     <Sheet onDismiss={onDismiss} ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box p="5" justifyContent="space-between" gap="5">
         <Box>
-          <SheetHeader
-            icon={
-              <Avatar>
-                <TitleIcon />
-              </Avatar>
-            }
-            title={title}
-          />
+          <SheetHeader icon={<Avatar icon={icon} />} title={title} />
           <TextInput
             value={internalValue}
             onChangeText={text => {

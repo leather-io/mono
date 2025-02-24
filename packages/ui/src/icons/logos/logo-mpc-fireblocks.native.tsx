@@ -1,10 +1,9 @@
 import LogoMpcFireblocksLogo from '../../assets/icons/logos/logo-mpc-fireblocks-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoMpcFireblocks({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoMpcFireblocksLogo />
-    </Icon>
-  );
-}
+export const LogoMpcFireblocks = createNativeIcon({
+  icon: {
+    medium: LogoMpcFireblocksLogo,
+  },
+  displayName: 'LogoMpcFireblocks',
+});

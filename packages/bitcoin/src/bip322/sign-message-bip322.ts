@@ -1,5 +1,5 @@
+import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
-import { hexToBytes } from '@stacks/common';
 
 import { hashBip322Message } from './bip322-utils';
 

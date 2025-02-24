@@ -1,6 +1,7 @@
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import { analytics } from '@/utils/analytics';
 import { whenTheme } from '@/utils/when-theme';
 
 import {
@@ -19,8 +20,10 @@ import {
   selectBitcoinUnitPreference,
   selectCurrencyPreference,
   selectEmailAddressPreference,
+  selectHapticsPreference,
   selectLastActive,
   selectNetworkPreference,
+  selectNotificationsPreference,
   selectPrivacyModePreference,
   selectSecurityLevelPreference,
   selectThemePreference,
@@ -31,14 +34,18 @@ import {
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
+  userChangedHapticsPreference,
   userChangedLastActive,
   userChangedNetworkPreference,
+  userChangedNotificationPreference,
   userChangedPrivacyModePreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
 } from './settings.write';
 import {
+  HapticsPreference,
   LastActiveTimestamp,
+  NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
   SettingsState,
@@ -54,9 +61,11 @@ export const initialState: SettingsState = {
   fiatCurrencyPreference: 'USD',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
+  hapticsPreference: 'enabled',
   securityLevelPreference: 'not-selected',
   themePreference: 'system',
   lastActive: null,
+  notificationsPreference: 'not-selected',
 };
 
 export function useSettings() {
@@ -69,10 +78,12 @@ export function useSettings() {
   const emailAddressPreference = useSelector(selectEmailAddressPreference);
   const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
   const privacyModePreference = useSelector(selectPrivacyModePreference);
+  const hapticsPreference = useSelector(selectHapticsPreference);
   const networkPreference = useSelector(selectNetworkPreference);
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
   const themePreference = useSelector(selectThemePreference);
   const lastActive = useSelector(selectLastActive);
+  const notificationsPreference = useSelector(selectNotificationsPreference);
 
   const themeDerivedFromThemePreference =
     (themePreference === 'system' ? systemTheme : themePreference) ?? 'light';
@@ -85,37 +96,84 @@ export function useSettings() {
     fiatCurrencyPreference,
     networkPreference,
     privacyModePreference,
+    hapticsPreference,
     themeDerivedFromThemePreference,
     themePreference,
     securityLevelPreference,
     lastActive,
+    notificationsPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
     changeAccountDisplayPreference(type: AccountDisplayPreference) {
       dispatch(userChangedAccountDisplayPreference(type));
+      void analytics?.track('user_setting_updated', {
+        account_display: type,
+      });
     },
     changeAnalyticsPreference(pref: AnalyticsPreference) {
       dispatch(userChangedAnalyticsPreference(pref));
+      void analytics?.track('user_setting_updated', {
+        analytics: pref,
+      });
+      void analytics?.identify({
+        analytics_preference: pref,
+      });
     },
     changeBitcoinUnitPreference(unit: BitcoinUnit) {
       dispatch(userChangedBitcoinUnitPreference(unit));
+      void analytics?.track('user_setting_updated', {
+        bitcoin_unit: unit,
+      });
     },
     changeEmailAddressPreference(address: string) {
       dispatch(userChangedEmailAddressPreference(address));
+      void analytics?.track('user_setting_updated', {
+        email_address: address,
+      });
+      void analytics?.identify({
+        has_email_address: !!address,
+      });
     },
     changeFiatCurrencyPreference(unit: FiatCurrency) {
+      void analytics?.track('user_setting_updated', {
+        fiat_currency: unit,
+      });
       dispatch(userChangedFiatCurrencyPreference(unit));
     },
     changeNetworkPreference(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetworkPreference(network));
+      void analytics?.track('user_setting_updated', {
+        network,
+      });
     },
     changePrivacyModePreference(mode: PrivacyModePreference) {
       dispatch(userChangedPrivacyModePreference(mode));
+      void analytics?.track('user_setting_updated', {
+        privacy_mode: mode,
+      });
+    },
+    changeHapticsPreference(state: HapticsPreference) {
+      dispatch(userChangedHapticsPreference(state));
+      void analytics?.track('user_setting_updated', {
+        haptics: state,
+      });
     },
     changeSecurityLevelPreference(level: SecurityLevelPreference) {
       dispatch(userChangedSecurityLevelPreference(level));
+      void analytics?.track('user_setting_updated', {
+        security_level: level,
+      });
     },
     changeThemePreference(theme: ThemePreference) {
       dispatch(userChangedThemePreference(theme));
+      void analytics?.track('user_setting_updated', {
+        theme,
+      });
+    },
+    changeNotificationsPreference(state: NotificationsPreference) {
+      dispatch(userChangedNotificationPreference(state));
+      void analytics?.track('user_setting_updated', {
+        notifications: state,
+      });
     },
     userLeavesApp(timestamp: LastActiveTimestamp) {
       dispatch(userChangedLastActive(timestamp));
@@ -123,18 +181,25 @@ export function useSettings() {
 
     // TODO: Remove when live, debug only
     toggleNetwork() {
-      dispatch(
-        networkPreference.chain.bitcoin.bitcoinNetwork === 'mainnet'
-          ? userChangedNetworkPreference('testnet')
-          : userChangedNetworkPreference('mainnet')
-      );
+      const network =
+        networkPreference.chain.bitcoin.bitcoinNetwork === 'mainnet' ? 'testnet' : 'mainnet';
+      dispatch(userChangedNetworkPreference(network));
+      void analytics?.identify({
+        active_network: network,
+      });
+      void analytics?.track('user_setting_updated', {
+        network,
+      });
     },
     toggleTheme() {
-      dispatch(
-        themeDerivedFromThemePreference === 'light'
-          ? userChangedThemePreference('dark')
-          : userChangedThemePreference('light')
-      );
+      const theme = themeDerivedFromThemePreference === 'light' ? 'dark' : 'light';
+      dispatch(userChangedThemePreference(theme));
+      void analytics?.track('user_setting_updated', {
+        theme,
+      });
+      void analytics?.identify({
+        active_theme: theme,
+      });
     },
   };
 }

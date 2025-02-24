@@ -2,7 +2,7 @@
   "name": "@leather.io/tokens",
   "author": "Leather.io contact@leather.io",
   "description": "Shared design tokens",
-  "version": "0.9.1",
+  "version": "0.13.5",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/tokens",
   "repository": {
@@ -13,7 +13,6 @@
   "scripts": {
     "build": "tsup",
     "build:watch": "tsup --watch",
-    "lint": "eslint . --ignore-path ../../.eslintignore",
     "prepublish": "pnpm build",
     "typecheck": "tsc --noEmit"
   },
@@ -22,10 +21,10 @@
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "devDependencies": {
-    "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
-    "prettier": "3.3.3",
+    "@leather.io/utils": "workspace:*",
+    "prettier": "3.5.1",
     "tsup": "8.1.0"
   },
   "keywords": [

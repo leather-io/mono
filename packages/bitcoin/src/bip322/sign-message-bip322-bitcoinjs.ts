@@ -2,9 +2,9 @@ import { base64 } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
 
-import { getBitcoinJsLibNetworkConfigByMode } from '../bitcoin.network';
+import { getBitcoinJsLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
   bip322TransactionToSignValues,
   ecPairFromPrivateKey,
@@ -21,7 +21,11 @@ export function createTaprootBitcoinJsSigner(privateKey: Buffer) {
   return tweakSigner(ecPairFromPrivateKey(privateKey));
 }
 
-export function createToSpendTx(address: string, message: string, network: BitcoinNetworkModes) {
+export function createToSpendTx(
+  address: BitcoinAddress,
+  message: string,
+  network: BitcoinNetworkModes
+) {
   const { prevoutHash, prevoutIndex, sequence } = bip322TransactionToSignValues;
 
   const script = bitcoin.address.toOutputScript(
@@ -59,7 +63,7 @@ function createToSignTx(toSpendTxHex: Buffer, script: Buffer, network: BitcoinNe
 }
 
 interface SignBip322MessageSimple {
-  address: string;
+  address: BitcoinAddress;
   message: string;
   network: BitcoinNetworkModes;
   signPsbt(psbt: bitcoin.Psbt): Promise<btc.Transaction>;

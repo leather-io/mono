@@ -5,6 +5,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "types": ["vitest/globals"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "skipLibCheck": true
   }
 }

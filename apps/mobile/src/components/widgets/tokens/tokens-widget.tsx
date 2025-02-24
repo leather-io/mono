@@ -1,56 +1,46 @@
-import React from 'react';
-
+import {
+  BitcoinBalance,
+  BitcoinBalanceByAccount,
+} from '@/features/balances/bitcoin/bitcoin-balance';
+import { RunesBalance, RunesBalanceByAccount } from '@/features/balances/bitcoin/runes-balance';
+import { Sip10Balance, Sip10BalanceByAccount } from '@/features/balances/stacks/sip10-balance';
+import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
+import { AccountId } from '@/models/domain.model';
+import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
-import { Money } from '@leather.io/models';
-import { Flag, ItemLayout } from '@leather.io/ui/native';
+import { Widget } from '../components/widget';
 
-import { type Token } from '../../../mocks/tokens.mocks';
-import { Balance } from '../../balance/balance';
-import { Widget, WidgetHeader } from '../components/widget';
-
-interface TokensWidgetProps {
-  tokens: Token[];
-  totalBalance: Money;
-}
-
-function showChain(chain: string) {
-  if (chain === 'Stacks blockchain' || chain === 'Bitcoin blockchain') return '';
-  return chain;
-}
-
-export function TokensWidget({ tokens, totalBalance }: TokensWidgetProps) {
+export function TokensWidget({ children }: HasChildren) {
   return (
-    <Widget
-      header={
-        <WidgetHeader
-          title={t({
-            id: 'tokens.header_title',
-            message: 'My tokens',
-          })}
-          totalBalance={totalBalance}
-        />
-      }
-    >
-      {tokens.map(
-        ({
-          availableBalance: { availableBalance },
-          icon,
-          tokenName,
-          ticker,
-          chain,
-          fiatBalance,
-        }) => (
-          <Flag key={ticker} img={icon} align="middle" spacing="1" reverse={false}>
-            <ItemLayout
-              titleLeft={tokenName}
-              titleRight={availableBalance && <Balance balance={availableBalance} />}
-              captionLeft={showChain(chain)}
-              captionRight={<Balance balance={fiatBalance} color="ink.text-subdued" />}
-            />
-          </Flag>
-        )
-      )}
+    <Widget>
+      <Widget.Header>
+        <Widget.Title title={t({ id: 'tokens.header_title', message: 'My tokens' })} />
+      </Widget.Header>
+      <Widget.Body>{children}</Widget.Body>
     </Widget>
+  );
+}
+
+export function AllAccountBalances() {
+  return (
+    <>
+      <BitcoinBalance />
+      <StacksBalance />
+      <Sip10Balance />
+      {/* TODO LEA-1982: add runes balance */}
+      <RunesBalance />
+    </>
+  );
+}
+
+export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
+  return (
+    <>
+      <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+      <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+      <Sip10BalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+      <RunesBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+    </>
   );
 }

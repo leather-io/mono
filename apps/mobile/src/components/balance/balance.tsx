@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PrivateText } from '@/components/private-text';
 import { usePrivacyMode } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';
@@ -14,7 +12,7 @@ interface BalanceProps extends TextProps {
   lockedBalance?: string;
 }
 
-function formatBalance(balance: Money, isFiat: boolean) {
+export function formatBalance(balance: Money, isFiat: boolean) {
   if (isFiat) {
     const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
     // i18nFormatCurrency is hardcoded to only accept USD
@@ -39,12 +37,7 @@ export function Balance({
 
   if (!lockedBalance) {
     return (
-      <PrivateText
-        customPrivateText={privateText}
-        color={color}
-        privacyToggleDisabled
-        variant={variant}
-      >
+      <PrivateText mask={privateText} color={color} variant={variant}>
         {formattedBalance}
       </PrivateText>
     );
@@ -52,12 +45,7 @@ export function Balance({
 
   return (
     <BulletSeparator color={color}>
-      <PrivateText
-        customPrivateText={privateText}
-        color={color}
-        privacyToggleDisabled
-        variant={variant}
-      >
+      <PrivateText mask={privateText} color={color} variant={variant}>
         {formattedBalance}
       </PrivateText>
       {!isPrivate ? (

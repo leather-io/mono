@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import axios from 'axios';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
@@ -6,7 +8,7 @@ import {
   BESTINSLOT_API_BASE_URL_TESTNET,
   BitcoinTx,
 } from '@leather.io/models';
-import { whenNetwork } from '@leather.io/utils';
+import { match, whenNetwork } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
 import { useLeatherNetwork } from '../../leather-query-provider';
@@ -78,10 +80,16 @@ function FeeEstimatesApi() {
         fast: high_fee_per_kb / 1000,
       };
     },
-    async getFeeEstimatesFromMempoolSpaceApi(): Promise<FeeResult> {
-      const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(
-        `https://mempool.space/api/v1/fees/recommended`
-      );
+    async getFeeEstimatesFromMempoolSpaceApi(
+      network: 'main' | 'test3' | 'test4'
+    ): Promise<FeeResult> {
+      const matchNetwork = match<'main' | 'test3' | 'test4'>();
+      const networkApi = matchNetwork(network, {
+        main: 'https://mempool.space/api/v1/fees/recommended',
+        test3: 'https://mempool.space/testnet/api/v1/fees/recommended',
+        test4: 'https://mempool.space/testnet4/api/v1/fees/recommended',
+      });
+      const resp = await axios.get<FeeEstimateMempoolSpaceApiResponse>(networkApi);
       const { fastestFee, halfHourFee, hourFee } = resp.data;
       return {
         slow: hourFee,
@@ -109,7 +117,6 @@ function TransactionsApi(basePath: string) {
     async broadcastTransaction(tx: string) {
       // TODO: refactor to use `axios`
       // https://github.com/leather-io/extension/issues/4521
-      // eslint-disable-next-line no-restricted-globals
       return fetch(`${basePath}/tx`, {
         method: 'POST',
         body: tx,
@@ -158,9 +165,13 @@ export function useBitcoinClient() {
     testnet: BESTINSLOT_API_BASE_URL_TESTNET,
   });
 
-  return bitcoinClient({
-    networkName: network.chain.bitcoin.bitcoinNetwork,
-    basePath: network.chain.bitcoin.bitcoinUrl,
-    bestInSlotPath,
-  });
+  return useMemo(
+    () =>
+      bitcoinClient({
+        networkName: network.chain.bitcoin.bitcoinNetwork,
+        basePath: network.chain.bitcoin.bitcoinUrl,
+        bestInSlotPath,
+      }),
+    [bestInSlotPath, network.chain.bitcoin.bitcoinNetwork, network.chain.bitcoin.bitcoinUrl]
+  );
 }

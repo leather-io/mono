@@ -13,7 +13,9 @@ import { HasChildren } from '../../../utils/has-children.shared';
 import { getScrollParent } from '../../../utils/utils.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
-const slightPauseForContentEnterAnimation = () => delay(120);
+function slightPauseForContentEnterAnimation() {
+  return delay(120);
+}
 
 export function ApproverAdvanced({ children }: HasChildren) {
   const { isDisplayingAdvancedView, setIsDisplayingAdvancedView } = useApproverContext();

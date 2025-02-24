@@ -16,10 +16,10 @@
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
-    "lint": "turbo run lint",
+    "lint": "eslint --cache --max-warnings 0",
     "lint:deps": "pnpm dependency-cruiser .",
     "lint:filenames": "pnpm ls-lint",
-    "lint:fix": "turbo run lint:fix",
+    "lint:fix": "pnpm lint --fix",
     "prepare": "husky",
     "syncpack:fix": "syncpack fix-mismatches",
     "syncpack:format": "syncpack format",
@@ -30,42 +30,43 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@babel/runtime": "7.25.0",
-    "@changesets/cli": "2.26.2",
-    "@commitlint/cli": "18.0.0",
-    "@commitlint/config-conventional": "18.0.0",
+    "@babel/runtime": "7.26.0",
+    "@commitlint/cli": "19.6.0",
+    "@commitlint/config-conventional": "19.6.0",
     "@leather.io/eslint-config": "workspace:*",
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@ls-lint/ls-lint": "2.2.3",
-    "@vitest/coverage-v8": "2.0.5",
-    "dependency-cruiser": "16.3.10",
-    "eslint": "8.53.0",
-    "husky": "9.1.4",
-    "prettier": "3.3.3",
-    "syncpack": "12.4.0",
-    "turbo": "2.0.13",
-    "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "@tanstack/eslint-plugin-query": "5.62.1",
+    "@trivago/prettier-plugin-sort-imports": "4.3.0",
+    "@vitest/coverage-v8": "2.1.5",
+    "chalk": "5.3.0",
+    "dependency-cruiser": "16.6.0",
+    "dotenv": "16.4.5",
+    "eslint": "9.16.0",
+    "eslint-plugin-lingui": "0.4.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.2.10",
+    "prettier": "3.5.1",
+    "syncpack": "13.0.0",
+    "turbo": "2.4.2",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.18.0",
+    "vitest": "2.1.9"
   },
   "engines": {
     "node": ">=20.11.0",
-    "pnpm": ">=9.11.0",
+    "pnpm": ">=10.4.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@10.4.1",
   "pnpm": {
     "overrides": {
-      "esbuild": "0.21.5"
+      "cross-spawn": "7.0.5"
     },
     "packageExtensions": {
-      "eslint-config-next@*": {
-        "dependencies": {
-          "next": "*"
-        }
-      },
       "@expo/cli@*": {
         "dependencies": {
           "metro": "*",
@@ -212,7 +213,19 @@
       }
     },
     "patchedDependencies": {
-      "expo-secure-store@13.0.1": "patches/expo-secure-store@13.0.1.patch"
+      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch",
+      "pofile@1.1.4": "patches/pofile@1.1.4.patch",
+      "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch"
     }
+  },
+  "resolutions": {
+    "cookie": "0.7.1",
+    "esbuild": "0.25.0",
+    "micromatch": "4.0.8",
+    "path-to-regexp": "0.1.12",
+    "send": "0.19.0",
+    "store2": "2.14.4",
+    "undici": "6.21.1",
+    "vite": "5.4.12"
   }
 }

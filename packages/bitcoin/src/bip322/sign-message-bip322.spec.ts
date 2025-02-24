@@ -1,9 +1,10 @@
+import { bytesToHex } from '@noble/hashes/utils';
 import * as secp from '@noble/secp256k1';
 import * as btc from '@scure/btc-signer';
-import { bytesToHex } from '@stacks/common';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { ecdsaPublicKeyToSchnorr } from '../bitcoin.utils';
+import { ecdsaPublicKeyToSchnorr } from '../utils/bitcoin.utils';
+import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   createNativeSegwitBitcoinJsSigner,
   createTaprootBitcoinJsSigner,
@@ -11,13 +12,11 @@ import {
   signBip322MessageSimple,
 } from './sign-message-bip322-bitcoinjs';
 
+const address = createBitcoinAddress('bc1q9vza2e8x573nczrlzms0wvx3gsqjx7vavgkx0l');
+
 describe(createToSpendTx.name, () => {
   test('bitcoinjs example', () => {
-    const result = createToSpendTx(
-      'bc1q9vza2e8x573nczrlzms0wvx3gsqjx7vavgkx0l',
-      'generatedWithBitcoinJs',
-      'mainnet'
-    );
+    const result = createToSpendTx(address, 'generatedWithBitcoinJs', 'mainnet');
 
     expect(result.script.toString('hex')).toEqual('00142b05d564e6a7a33c087f16e0f730d1440123799d');
 
@@ -33,19 +32,19 @@ describe(signBip322MessageSimple.name, () => {
   const testVectorKey = btc.WIF().decode('L3VFeEujGtevx9w18HD1fhRbCH67Az2dpCymeRE1SoPK6XQtaN2k');
 
   describe('Message signing, Native Segwit', () => {
-    const nativeSegwitAddress = btc.getAddress('wpkh', testVectorKey);
+    const rawNativeSegwitAddress = btc.getAddress('wpkh', testVectorKey);
     const payment = btc.p2wpkh(secp.getPublicKey(testVectorKey, true));
 
-    async function signPsbt(psbt: bitcoin.Psbt) {
+    function signPsbt(psbt: bitcoin.Psbt) {
       psbt.signAllInputs(createNativeSegwitBitcoinJsSigner(Buffer.from(testVectorKey)));
-      return btc.Transaction.fromPSBT(psbt.toBuffer());
+      return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
     }
 
-    if (!nativeSegwitAddress) throw new Error('nativeSegwitAddress is undefined');
-
+    if (!rawNativeSegwitAddress) throw new Error('nativeSegwitAddress is undefined');
+    const nativeSegwitAddress = createBitcoinAddress(rawNativeSegwitAddress);
     test('Addresses against native segwit test vectors', () => {
-      expect(nativeSegwitAddress).toEqual('bc1q9vza2e8x573nczrlzms0wvx3gsqjx7vavgkx0l');
-      expect(payment.address).toEqual('bc1q9vza2e8x573nczrlzms0wvx3gsqjx7vavgkx0l');
+      expect(nativeSegwitAddress).toEqual(address);
+      expect(payment.address).toEqual(address);
     });
 
     test('Signature: "" (empty string)', async () => {
@@ -113,20 +112,21 @@ describe(signBip322MessageSimple.name, () => {
   });
 
   describe('Message Signing, Taproot', () => {
-    const taprootAddress = btc.getAddress('tr', testVectorKey);
+    const rawTaprootAddress = btc.getAddress('tr', testVectorKey);
 
-    if (!taprootAddress) throw new Error('Could not generate taproot address');
+    if (!rawTaprootAddress) throw new Error('Could not generate taproot address');
 
+    const taprootAddress = createBitcoinAddress(rawTaprootAddress);
     const payment = btc.p2tr(
       ecdsaPublicKeyToSchnorr(secp.getPublicKey(Buffer.from(testVectorKey), true))
     );
 
-    async function signPsbt(psbt: bitcoin.Psbt) {
+    function signPsbt(psbt: bitcoin.Psbt) {
       psbt.data.inputs.forEach(
         input => (input.tapInternalKey = Buffer.from(payment.tapInternalKey))
       );
       psbt.signAllInputs(createTaprootBitcoinJsSigner(Buffer.from(testVectorKey)));
-      return btc.Transaction.fromPSBT(psbt.toBuffer());
+      return Promise.resolve(btc.Transaction.fromPSBT(psbt.toBuffer()));
     }
 
     test('Addresses against taproot test vectors', () => {

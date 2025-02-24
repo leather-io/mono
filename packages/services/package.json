@@ -1,0 +1,56 @@
+{
+  "name": "@leather.io/services",
+  "author": "Leather.io contact@leather.io",
+  "description": "Leather Services Package",
+  "version": "1.4.3",
+  "license": "MIT",
+  "homepage": "https://github.com/leather.io/mono/tree/dev/packages/services",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:leather.io/mono.git",
+    "directory": "packages/services"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
+    "format": "prettier . --write --ignore-path ../../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "bugs": "https://github.com/leather-io/mono/issues",
+  "dependencies": {
+    "@hirosystems/token-metadata-api-client": "1.2.0",
+    "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/constants": "workspace:*",
+    "@leather.io/models": "workspace:*",
+    "@leather.io/utils": "workspace:*",
+    "@stacks/stacks-blockchain-api-types": "7.8.2",
+    "alex-sdk": "2.1.4",
+    "axios": "1.7.7",
+    "bignumber.js": "9.1.2",
+    "inversify": "6.0.2",
+    "p-queue": "8.0.1",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@leather.io/tsconfig-config": "workspace:*",
+    "eslint": "9.16.0",
+    "prettier": "3.5.1",
+    "tslib": "2.6.2",
+    "tsup": "8.1.0",
+    "typescript": "5.7.3",
+    "vitest": "2.1.9"
+  },
+  "prettier": "@leather.io/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,4 +1,4 @@
-import { AvatarIcon } from '@/components/avatar-icon';
+import { AccountIcon } from '@/features/accounts/components/account-avatar';
 import z from 'zod';
 
 export type AccountStatus = 'active' | 'hidden';
@@ -11,7 +11,7 @@ export const accountStoreSchema = z.object({
 });
 export interface AccountStore {
   id: string;
-  icon: string | AvatarIcon;
+  icon: AccountIcon;
   name: string;
   status: AccountStatus;
 }

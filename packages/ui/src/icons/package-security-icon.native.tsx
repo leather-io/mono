@@ -1,17 +1,11 @@
-import PackageSecuritySmall from '../assets/icons/package-security-16-16.svg';
-import PackageSecurity from '../assets/icons/package-security-24-24.svg';
-import { Icon, IconProps } from './icon/icon.native';
+import PackageSecurity16 from '../assets/icons/package-security-16-16.svg';
+import PackageSecurity24 from '../assets/icons/package-security-24-24.svg';
+import { createNativeIcon } from './icon/create-icon.native';
 
-export function PackageSecurityIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <PackageSecuritySmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <PackageSecurity />
-    </Icon>
-  );
-}
+export const PackageSecurityIcon = createNativeIcon({
+  icon: {
+    small: PackageSecurity16,
+    medium: PackageSecurity24,
+  },
+  displayName: 'PackageSecurity',
+});

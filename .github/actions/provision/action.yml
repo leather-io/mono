@@ -6,7 +6,7 @@ runs:
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:
-        version: '9.11.0'
+        version: '10.4.1'
 
     - name: Set up node
       uses: actions/setup-node@v3
@@ -14,6 +14,12 @@ runs:
         node-version: 20
         registry-url: 'https://registry.npmjs.org/'
         cache: 'pnpm'
+
+    - name: Add env variable files
+      run: |
+        echo "$GOOGLE_SERVICES_JSON_B64" | base64 --decode > apps/mobile/android/app/google-services.json
+        echo "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 --decode > apps/mobile/ios/leatherwalletmobile/GoogleService-Info.plist
+      shell: bash
 
     - name: Install dependencies
       run: pnpm install

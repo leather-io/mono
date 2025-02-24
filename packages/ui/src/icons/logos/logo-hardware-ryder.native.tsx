@@ -1,10 +1,9 @@
 import LogoHardwareRyderLogo from '../../assets/icons/logos/logo-hardware-ryder-24-24.svg';
-import { Icon, IconProps } from '../icon/icon.native';
+import { createNativeIcon } from '../icon/create-icon.native';
 
-export function LogoHardwareRyder({ variant, ...props }: IconProps) {
-  return (
-    <Icon {...props}>
-      <LogoHardwareRyderLogo />
-    </Icon>
-  );
-}
+export const LogoHardwareRyder = createNativeIcon({
+  icon: {
+    medium: LogoHardwareRyderLogo,
+  },
+  displayName: 'LogoHardwareRyder',
+});

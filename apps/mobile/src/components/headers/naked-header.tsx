@@ -4,11 +4,21 @@ import { useRouter } from 'expo-router';
 import { HeaderBackButton } from './components/header-back-button';
 import { HeaderLayout } from './header.layout';
 
-export function NakedHeader() {
+interface NakedHeaderProps {
+  onGoBack?: () => void;
+  rightElement?: React.ReactNode;
+}
+export function NakedHeader({ onGoBack, rightElement }: NakedHeaderProps) {
   const router = useRouter();
+
+  function goBack() {
+    router.back();
+  }
+
   return (
     <HeaderLayout
-      leftElement={<HeaderBackButton onPress={() => router.back()} testID={TestId.backButton} />}
+      leftElement={<HeaderBackButton onPress={onGoBack ?? goBack} testID={TestId.backButton} />}
+      rightElement={rightElement}
     />
   );
 }

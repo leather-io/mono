@@ -1,6 +1,0 @@
-extends: '@leather.io/eslint-config'
-plugins:
-  - '@tanstack/eslint-plugin-query'
-parserOptions:
-  project: ./tsconfig.json
-ignorePatterns: .eslintrc.js

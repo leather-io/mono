@@ -1,17 +1,11 @@
-import Eye1ClosedSmall from '../assets/icons/eye-1-closed-16-16.svg';
-import Eye1Closed from '../assets/icons/eye-1-closed-24-24.svg';
-import { Icon, IconProps } from './icon/icon.web';
+import Eye1Closed16 from '../assets/icons/eye-1-closed-16-16.svg';
+import Eye1Closed24 from '../assets/icons/eye-1-closed-24-24.svg';
+import { createWebIcon } from './icon/create-icon.web';
 
-export function Eye1ClosedIcon({ variant, ...props }: IconProps) {
-  if (variant === 'small')
-    return (
-      <Icon {...props}>
-        <Eye1ClosedSmall />
-      </Icon>
-    );
-  return (
-    <Icon {...props}>
-      <Eye1Closed />
-    </Icon>
-  );
-}
+export const Eye1ClosedIcon = createWebIcon({
+  icon: {
+    small: Eye1Closed16,
+    medium: Eye1Closed24,
+  },
+  displayName: 'Eye1Closed',
+});

@@ -1,0 +1,65 @@
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+index 62a9908e1f70620d9e721ae681de43696c0c5395..c43897d715226659654dff790113545d1466b4e5 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+@@ -58,8 +58,10 @@ class AuthenticationHelper(
+ 
+   fun assertBiometricsSupport() {
+     val biometricManager = BiometricManager.from(context)
++    val biometricAuthenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
++                                  BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+     @SuppressLint("SwitchIntDef") // BiometricManager.BIOMETRIC_SUCCESS shouldn't do anything
+-    when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
++    when (biometricManager.canAuthenticate(biometricAuthenticators)) {
+       BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+         throw AuthenticationException("No hardware available for biometric authentication. Use expo-local-authentication to check if the device supports it")
+       }
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
+index e5729cc74a4d1066f9979e139b31d321e18f9a95..2455cdfc916f52a1b1fad5cfb679340d0cbf275d 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
+@@ -1,6 +1,7 @@
+ package expo.modules.securestore
+ 
+ import android.content.Context
++import androidx.biometric.BiometricManager
+ import androidx.biometric.BiometricPrompt
+ import androidx.biometric.BiometricPrompt.PromptInfo
+ import androidx.core.content.ContextCompat
+@@ -15,7 +16,10 @@ class AuthenticationPrompt(private val currentActivity: FragmentActivity, contex
+   private var executor: Executor = ContextCompat.getMainExecutor(context)
+   private var promptInfo = PromptInfo.Builder()
+     .setTitle(title)
+-    .setNegativeButtonText(context.getString(android.R.string.cancel))
++    .setAllowedAuthenticators(
++      BiometricManager.Authenticators.BIOMETRIC_STRONG or
++      BiometricManager.Authenticators.DEVICE_CREDENTIAL
++    )
+     .build()
+ 
+   suspend fun authenticate(cipher: Cipher): BiometricPrompt.AuthenticationResult? =
+diff --git a/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt b/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
+index 3a12dc996a27c1d97ac110d808f1cdf98e5379b9..d76addfd8d616a2e8d8dae34899369719da89ea7 100644
+--- a/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
++++ b/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
+@@ -61,6 +61,7 @@ class AESEncryptor : KeyBasedEncryptor<KeyStore.SecretKeyEntry> {
+       .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+       .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+       .setUserAuthenticationRequired(options.requireAuthentication)
++      .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG or KeyProperties.AUTH_DEVICE_CREDENTIAL)
+       .build()
+ 
+     val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, keyStore.provider)
+diff --git a/ios/SecureStoreModule.swift b/ios/SecureStoreModule.swift
+index 7af7fe54431edbdf4be6ffecaa5b17f90deebbf8..2a55fc26393e85ebc773be11d77bcc802de59579 100644
+--- a/ios/SecureStoreModule.swift
++++ b/ios/SecureStoreModule.swift
+@@ -96,7 +96,7 @@ public final class SecureStoreModule: Module {
+       guard let _ = Bundle.main.infoDictionary?["NSFaceIDUsageDescription"] as? String else {
+         throw MissingPlistKeyException()
+       }
+-      let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, SecAccessControlCreateFlags.biometryCurrentSet, nil)
++      let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, SecAccessControlCreateFlags.userPresence, nil)
+       setItemQuery[kSecAttrAccessControl as String] = accessOptions
+     }
+ 

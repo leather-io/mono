@@ -24,14 +24,16 @@ interface Options {
   forwardProps?: string[];
 }
 
-const shouldForwardProp = (prop: string, variantKeys: string[], options: Options = {}) =>
-  options.forwardProps?.includes(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop));
+function shouldForwardProp(prop: string, variantKeys: string[], options: Options = {}) {
+  return (
+    options.forwardProps?.includes(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
+  );
+}
 
-export const createStyleContext = <R extends Recipe>(recipe: R) => {
+export function createStyleContext<R extends Recipe>(recipe: R) {
   const StyleContext = createContext<Record<Slot<R>, string> | null>(null);
 
-  // eslint-disable-next-line
-  const withRootProvider = <P extends {}>(Component: ElementType) => {
+  function withRootProvider<P extends Record<string, unknown>>(Component: ElementType) {
     function StyledComponent(props: P) {
       const [variantProps, otherProps] = recipe.splitVariantProps(props);
       const slotStyles = recipe(variantProps) as Record<Slot<R>, string>;
@@ -43,13 +45,13 @@ export const createStyleContext = <R extends Recipe>(recipe: R) => {
       );
     }
     return StyledComponent;
-  };
+  }
 
-  const withProvider = <T, P extends { className?: string | undefined }>(
+  function withProvider<T, P extends { className?: string | undefined }>(
     Component: ElementType,
     slot: Slot<R>,
     options?: Options
-  ): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> => {
+  ): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> {
     const StyledComponent = styled(
       Component,
       {},
@@ -76,12 +78,12 @@ export const createStyleContext = <R extends Recipe>(recipe: R) => {
     StyledSlotProvider.displayName = Component.displayName || Component.name;
 
     return StyledSlotProvider;
-  };
+  }
 
-  const withContext = <T, P extends { className?: string | undefined }>(
+  function withContext<T, P extends { className?: string | undefined }>(
     Component: ElementType,
     slot: Slot<R>
-  ): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> => {
+  ): ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>> {
     const StyledComponent = styled(Component);
     const StyledSlotComponent = forwardRef<T, P>((props, ref) => {
       const slotStyles = useContext(StyleContext);
@@ -94,11 +96,11 @@ export const createStyleContext = <R extends Recipe>(recipe: R) => {
     StyledSlotComponent.displayName = Component.displayName || Component.name;
 
     return StyledSlotComponent;
-  };
+  }
 
   return {
     withRootProvider,
     withProvider,
     withContext,
   };
-};
+}
