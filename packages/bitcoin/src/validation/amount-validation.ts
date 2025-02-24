@@ -7,15 +7,16 @@ export const minSpendAmountInSats = 546;
 
 interface isBtcBalanceSufficientArgs {
   amount: Money;
-  spendableBtc: BigNumber;
+  spendable: Money;
 }
 export function isBtcBalanceSufficient({
   amount: { amount },
-  spendableBtc,
+  spendable: { amount: spendableAmount },
 }: isBtcBalanceSufficientArgs) {
-  if (!spendableBtc) return false;
+  if (!spendableAmount) return false;
   const desiredSpend = new BigNumber(amount);
-  if (desiredSpend.isGreaterThan(spendableBtc)) return false;
+  const availableAmount = new BigNumber(spendableAmount);
+  if (desiredSpend.isGreaterThan(availableAmount)) return false;
   return true;
 }
 

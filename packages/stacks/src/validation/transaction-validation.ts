@@ -9,8 +9,8 @@ import { StacksError } from './stacks-error';
 
 interface StacksTransaction {
   amount: Money;
-  payer: string;
-  recipient: string;
+  payer: string; // TODO add branded type for Stacks address
+  recipient: string; // TODO add branded type for Stacks address
   chainId: ChainId;
 }
 
@@ -24,4 +24,18 @@ export function isValidStacksTransaction({ amount, payer, recipient, chainId }: 
   if (!validatePayerNotRecipient(payer, recipient)) {
     throw new StacksError('InvalidSameAddress');
   }
+
+  // // TODO - move is isValidTransactionAmount into stx package and check in isValidTransaction
+  // if (
+  //   !isValidTransactionAmount({
+  //     availableBalance,
+  //     amount: +amount,
+  //     fee: +fee,
+  //     unitConverter: stxToMicroStx,
+  //   })
+  // ) {
+  //   // throw new StacksError('InsufficientFunds');
+  // }
+
+  // TODO implement a simple version of Send Max - design seems newer anyway so do it simpler then update
 }

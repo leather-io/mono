@@ -16,7 +16,11 @@ const mockTransaction = {
 
 describe('isValidStacksTransaction', () => {
   it('throws an error for invalid sender address', () => {
-    expect(() => isValidStacksTransaction(mockTransaction)).toThrowError(
+    const transaction = {
+      ...mockTransaction,
+      payer: InvalidAddress,
+    };
+    expect(() => isValidStacksTransaction(transaction)).toThrowError(
       new StacksError('InvalidAddress')
     );
   });
@@ -48,7 +52,7 @@ describe('isValidStacksTransaction', () => {
       recipient: TEST_ACCOUNT_1_STX_ADDRESS,
     };
     expect(() => isValidStacksTransaction(transaction)).toThrowError(
-      new StacksError('InvalidSameAddress')
+      new StacksError('InvalidNetworkAddress')
     );
   });
 
