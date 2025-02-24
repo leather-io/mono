@@ -71,6 +71,17 @@ module.exports = {
       },
     },
     {
+      name: 'no-imports-in-tokens',
+      severity: 'error',
+      comment: `@leather.io/tokens should not depend on any other packages.`,
+      from: {
+        path: '^packages/tokens',
+      },
+      to: {
+        path: '^(?!packages/tokens)',
+      },
+    },
+    {
       name: 'no-circular',
       severity: 'error',
       comment:

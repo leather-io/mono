@@ -75,7 +75,7 @@
     "@babel/core": "7.24.6",
     "@babel/runtime": "7.26.0",
     "@leather.io/models": "workspace:*",
-    "@leather.io/panda-preset": "0.8.19",
+    "@leather.io/panda-preset": "workspace:*",
     "@microsoft/api-extractor": "7.47.6",
     "@pandacss/dev": "0.53.0",
     "@react-native-async-storage/async-storage": "1.23.1",
