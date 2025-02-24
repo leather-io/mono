@@ -25,9 +25,9 @@ export const signatureHash = {
 const signPsbtRequestParamsSchema = z.object({
   account: z.number().optional(),
   allowedSighash: z.array(z.any()).optional(),
-  broadcast: z.boolean(),
+  broadcast: z.boolean().optional(),
   hex: z.string(),
-  network: z.string(),
+  network: z.string().optional(),
   signAtIndex: z
     .union([z.number(), z.array(z.number())])
     .optional()
