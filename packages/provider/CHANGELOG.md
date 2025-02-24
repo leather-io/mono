@@ -21,6 +21,20 @@
   * dependencies
     * @leather.io/rpc bumped to 2.6.4
 
+## [1.0.5](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.0.4...@leather.io/provider-v1.0.5) (2025-02-24)
+
+
+### Bug Fixes
+
+* **rpc:** upgrade signer libs ([a8c7894](https://github.com/leather-io/mono/commit/a8c7894bcc060352dab404fb6417b17f1bb77ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.6.5
+
 ## [1.0.2](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.0.1...@leather.io/provider-v1.0.2) (2025-02-21)
 
 

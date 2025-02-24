@@ -579,6 +579,29 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.32
 
+## [2.14.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.2...@leather.io/mobile-v2.14.3) (2025-02-24)
+
+
+### Bug Fixes
+
+* mobile stacks network ([05c0d86](https://github.com/leather-io/mono/commit/05c0d86e8a9b14f93bd92a84142e2ec0a16c7606))
+* **rpc:** upgrade signer libs ([a8c7894](https://github.com/leather-io/mono/commit/a8c7894bcc060352dab404fb6417b17f1bb77ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.33
+    * @leather.io/crypto bumped to 1.6.45
+    * @leather.io/provider bumped to 1.0.5
+    * @leather.io/query bumped to 2.28.0
+    * @leather.io/rpc bumped to 2.6.5
+    * @leather.io/services bumped to 1.4.4
+    * @leather.io/stacks bumped to 1.6.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.33
+
 ## [2.14.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.0...@leather.io/mobile-v2.14.1) (2025-02-21)
 
 

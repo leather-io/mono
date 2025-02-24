@@ -205,6 +205,14 @@
     * @leather.io/models bumped to 0.26.2
     * @leather.io/utils bumped to 0.27.4
 
+## [2.6.5](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.4...@leather.io/rpc-v2.6.5) (2025-02-24)
+
+
+### Bug Fixes
+
+* **rpc:** optional signPsbt params ([3dff855](https://github.com/leather-io/mono/commit/3dff8558904b504a88d0ab8324ef01f9c5fdae39))
+* **rpc:** upgrade signer libs ([a8c7894](https://github.com/leather-io/mono/commit/a8c7894bcc060352dab404fb6417b17f1bb77ac1))
+
 ## [2.6.4](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.3...@leather.io/rpc-v2.6.4) (2025-02-21)
 
 
