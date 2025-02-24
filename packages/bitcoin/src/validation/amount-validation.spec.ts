@@ -25,14 +25,26 @@ describe('isBtcBalanceSufficient', () => {
 describe('isBtcMinimumSpend', () => {
   it('returns true if the amount is greater than or equal to the minimum spend', () => {
     const args = {
-      amount: createMoney(1, 'BTC'),
+      amount: { amount: new BigNumber(600), decimals: 8, symbol: 'BTC' },
     };
     expect(isBtcMinimumSpend(args)).toBe(true);
   });
 
+  it('returns true if the amount is equal to the minimum spend', () => {
+    const args = {
+      amount: { amount: new BigNumber(546), decimals: 8, symbol: 'BTC' },
+    };
+    expect(isBtcMinimumSpend(args)).toBe(true);
+  });
   it('returns false if the amount is less than the minimum spend', () => {
     const args = {
-      amount: createMoney(0.000005, 'BTC'),
+      amount: { amount: new BigNumber(1), decimals: 8, symbol: 'BTC' },
+    };
+    expect(isBtcMinimumSpend(args)).toBe(false);
+  });
+  it('returns false if the amount is less than the minimum spend', () => {
+    const args = {
+      amount: { amount: new BigNumber(545), decimals: 8, symbol: 'BTC' },
     };
     expect(isBtcMinimumSpend(args)).toBe(false);
   });

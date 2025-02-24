@@ -96,6 +96,7 @@ export function useSendFormBtc() {
       try {
         const { amount: inputAmount, recipient: recipientAddress, feeRate } = values;
         if (!isValidPrecision(+inputAmount, BTC_DECIMALS)) {
+          // eslint-disable-next-line lingui/no-unlocalized-strings
           throw new BitcoinError('InvalidPrecision');
         }
         const recipient = createBitcoinAddress(recipientAddress);
