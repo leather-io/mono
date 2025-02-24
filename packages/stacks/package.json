@@ -24,7 +24,7 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
-    "@scure/bip32": "1.5.0",
+    "@scure/bip32": "1.6.2",
     "@stacks/common": "7.0.2",
     "@stacks/encryption": "7.0.2",
     "@stacks/network": "7.0.2",
