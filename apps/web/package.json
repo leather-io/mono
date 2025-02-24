@@ -4,12 +4,12 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
-    "prepare": "ls -lH ./node_modules/@leather.io/panda-preset/dist && panda codegen",
+    "prepare": "ls -R ./node_modules/@leather.io/panda-preset && panda codegen",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@leather.io/panda-preset": "0.8.19",
+    "@leather.io/panda-preset": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@react-router/node": "7.2.0",

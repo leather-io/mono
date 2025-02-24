@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "prepare": "panda codegen"
+    "prepare": "pnpm build"
   },
   "exports": {
     ".": "./dist/preset.js"
