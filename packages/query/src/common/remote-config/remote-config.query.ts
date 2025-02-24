@@ -6,6 +6,7 @@ import { createMoney, isUndefined } from '@leather.io/utils';
 
 import type { ActiveFiatProvider, HiroMessage, RemoteConfig } from '../../../types/remote-config';
 import { LeatherEnvironment, useLeatherEnv, useLeatherGithub } from '../../leather-query-provider';
+import { DefaultMinMaxRangeFeeEstimations } from './remote-config.types';
 
 function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github']) {
   const IS_DEV_ENV = env === 'development';
@@ -134,4 +135,18 @@ export function useConfigTokenTransferFeeEstimations() {
 export function useConfigSpamFilterWhitelist(): string[] {
   const config = useRemoteConfig();
   return get(config, 'spamFilterWhitelist', []);
+}
+
+export function useConfigStacksContractCallFeeEstimations():
+  | DefaultMinMaxRangeFeeEstimations
+  | undefined {
+  const config = useRemoteConfig();
+  return get(config, 'stacksContractCallFeeEstimations', undefined);
+}
+
+export function useConfigStacksContractDeploymentFeeEstimations():
+  | DefaultMinMaxRangeFeeEstimations
+  | undefined {
+  const config = useRemoteConfig();
+  return get(config, 'stacksContractDeploymentFeeEstimations', undefined);
 }

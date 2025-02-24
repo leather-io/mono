@@ -3,8 +3,12 @@ import { BigNumber } from 'bignumber.js';
 
 import { DEFAULT_FEE_RATE } from '@leather.io/constants';
 import { FeeCalculationTypes, Fees, Money, StacksFeeEstimate } from '@leather.io/models';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, createMoneyFromDecimal, microStxToStx } from '@leather.io/utils';
 
+import {
+  DefaultMinMaxRangeFeeEstimations,
+  StacksFeeEstimationRange,
+} from '../../common/remote-config/remote-config.types';
 import { FeeEstimation, StacksTxFeeEstimation } from '../hiro-api-types';
 
 function initStxAmount(amount: number) {
@@ -93,6 +97,82 @@ export function getDefaultSimulatedFeeEstimations(
   ];
 }
 
+function chooseFeeValueFromDefaultAndHiroFee(
+  hiroFee: number,
+  defaultFees: StacksFeeEstimationRange,
+  type: 'low' | 'standard' | 'high'
+) {
+  const maxValue = microStxToStx(defaultFees.max);
+  const minValue = microStxToStx(defaultFees.min);
+  const hiroFeeInStx = microStxToStx(hiroFee);
+
+  if (hiroFeeInStx.isGreaterThan(maxValue)) {
+    if (type === 'high') {
+      return hiroFeeInStx;
+    }
+    return maxValue;
+  }
+
+  if (hiroFeeInStx.isGreaterThanOrEqualTo(minValue) && hiroFeeInStx.isLessThanOrEqualTo(maxValue)) {
+    return hiroFeeInStx;
+  }
+
+  if (hiroFeeInStx.isLessThan(minValue)) {
+    if (type === 'low') {
+      return hiroFeeInStx;
+    }
+    return minValue;
+  }
+
+  return defaultFees.min;
+}
+
+export function getFeeEstimationsBasedOnDefaultMinMaxValues({
+  defaultEstimations,
+  hiroFeeEstimations,
+}: {
+  defaultEstimations: DefaultMinMaxRangeFeeEstimations;
+  hiroFeeEstimations: FeeEstimation[];
+}) {
+  const fees = [
+    {
+      fee: createMoneyFromDecimal(
+        chooseFeeValueFromDefaultAndHiroFee(
+          hiroFeeEstimations[0].fee,
+          defaultEstimations.low,
+          'low'
+        ),
+        'STX'
+      ),
+      feeRate: 0,
+    },
+    {
+      fee: createMoneyFromDecimal(
+        chooseFeeValueFromDefaultAndHiroFee(
+          hiroFeeEstimations[1].fee,
+          defaultEstimations.standard,
+          'standard'
+        ),
+        'STX'
+      ),
+      feeRate: 0,
+    },
+    {
+      fee: createMoneyFromDecimal(
+        chooseFeeValueFromDefaultAndHiroFee(
+          hiroFeeEstimations[2].fee,
+          defaultEstimations.high,
+          'high'
+        ),
+        'STX'
+      ),
+      feeRate: 0,
+    },
+  ];
+
+  return fees;
+}
+
 interface ParseStacksTxFeeEstimationResponseArgs {
   feeEstimation: StacksTxFeeEstimation;
   payloadType: PayloadType | undefined;
@@ -100,7 +180,10 @@ interface ParseStacksTxFeeEstimationResponseArgs {
   minValues?: Money[];
   txByteLength: number | null;
   tokenTransferFeeEstimations: number[];
+  contractCallDefaultFeeEstimations: DefaultMinMaxRangeFeeEstimations | undefined;
+  contractDeploymentDefaultFeeEstimations: DefaultMinMaxRangeFeeEstimations | undefined;
 }
+
 export function parseStacksTxFeeEstimationResponse({
   feeEstimation,
   payloadType,
@@ -108,6 +191,8 @@ export function parseStacksTxFeeEstimationResponse({
   minValues,
   txByteLength,
   tokenTransferFeeEstimations,
+  contractCallDefaultFeeEstimations,
+  contractDeploymentDefaultFeeEstimations,
 }: ParseStacksTxFeeEstimationResponseArgs): Fees {
   if (feeEstimation.error) return defaultStacksFees;
 
@@ -116,6 +201,31 @@ export function parseStacksTxFeeEstimationResponse({
       blockchain: 'stacks',
       estimates: getTokenTransferSpecificFeeEstimations(tokenTransferFeeEstimations),
       calculation: FeeCalculationTypes.TokenTransferSpecific,
+    };
+  }
+
+  if (payloadType === PayloadType.ContractCall && contractCallDefaultFeeEstimations) {
+    return {
+      blockchain: 'stacks',
+      estimates: getFeeEstimationsBasedOnDefaultMinMaxValues({
+        defaultEstimations: contractCallDefaultFeeEstimations,
+        hiroFeeEstimations: feeEstimation.estimations,
+      }),
+      calculation: FeeCalculationTypes.Default,
+    };
+  }
+
+  if (
+    payloadType === PayloadType.VersionedSmartContract &&
+    contractDeploymentDefaultFeeEstimations
+  ) {
+    return {
+      blockchain: 'stacks',
+      estimates: getFeeEstimationsBasedOnDefaultMinMaxValues({
+        defaultEstimations: contractDeploymentDefaultFeeEstimations,
+        hiroFeeEstimations: feeEstimation.estimations,
+      }),
+      calculation: FeeCalculationTypes.Default,
     };
   }
 
