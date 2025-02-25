@@ -15,3 +15,22 @@ declare global {
   }
 }
 ```
+
+## SIP-30 Support
+
+| Method                     |        |
+|----------------------------|------- |
+| `stx_getAddresses`         | 🟢 Yes |
+| `stx_getAccounts`          | 🔴 No |
+| `stx_getNetworks`          | 🔴 No |
+| `stx_transferStx`          | 🟢 Yes |
+| `stx_transferSip10Ft`      | 🟢 Yes |
+| `stx_transferSip9Nft`      | 🟢 Yes |
+| `stx_callContract`         | 🟠 Yes <sub>Hex-encoded Clarity values only</sub> |
+| `stx_deployContract`       | 🟠 Yes <sub>Hex-encoded Clarity values only</sub> |
+| `stx_signTransaction`      | 🟠 Yes <sub>Hex-encoded Clarity values only</sub> |
+| `stx_signMessage`          | 🟠 Yes <sub>Hex-encoded Clarity values only</sub> |
+| `stx_signStructuredMessage` | 🟠 Yes <sub>Hex-encoded Clarity values only</sub> |
+| `stx_updateProfile`        | 🔴 No |
+| `stx_accountChange` (event) | 🔴 No |
+| `stx_networkChange` (event) | 🔴 No |
