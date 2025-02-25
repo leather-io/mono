@@ -10,7 +10,7 @@ const staleTime = 1 * 60 * 1000;
 const queryOptions = {
   staleTime,
   gcTime: oneWeekInMs,
-  refetchOnMount: true,
+  refetchInterval: staleTime,
 } as const;
 
 interface CreateGetStacksAccountBalanceQueryOptionsArgs {
