@@ -579,6 +579,28 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.32
 
+## [2.14.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.3...@leather.io/mobile-v2.14.4) (2025-02-25)
+
+
+### Bug Fixes
+
+* fix error asserting minimum spend amount ([2c3700f](https://github.com/leather-io/mono/commit/2c3700fd50ba4fa57d84d73f9de3598cfb0e28bc))
+* fix error calculating available spend amount ([63727ef](https://github.com/leather-io/mono/commit/63727ef62b23eb75da005cf8a1d1544e7351a0e6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.34
+    * @leather.io/provider bumped to 1.0.6
+    * @leather.io/query bumped to 2.28.1
+    * @leather.io/rpc bumped to 2.6.6
+    * @leather.io/services bumped to 1.4.5
+    * @leather.io/stacks bumped to 1.6.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.34
+
 ## [2.14.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.2...@leather.io/mobile-v2.14.3) (2025-02-24)
 
 

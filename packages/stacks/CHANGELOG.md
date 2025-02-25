@@ -347,6 +347,14 @@
     * @leather.io/models bumped to 0.26.2
     * @leather.io/utils bumped to 0.27.4
 
+## [1.6.3](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.6.2...@leather.io/stacks-v1.6.3) (2025-02-25)
+
+
+### Bug Fixes
+
+* fix error asserting minimum spend amount ([2c3700f](https://github.com/leather-io/mono/commit/2c3700fd50ba4fa57d84d73f9de3598cfb0e28bc))
+* fix error calculating available spend amount ([63727ef](https://github.com/leather-io/mono/commit/63727ef62b23eb75da005cf8a1d1544e7351a0e6))
+
 ## [1.6.2](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.6.1...@leather.io/stacks-v1.6.2) (2025-02-24)
 
 
