@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.26.3](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.2...@leather.io/models-v0.26.3) (2025-02-25)
+
+
+### Bug Fixes
+
+* fix error asserting minimum spend amount ([2c3700f](https://github.com/leather-io/mono/commit/2c3700fd50ba4fa57d84d73f9de3598cfb0e28bc))
+
 ## [0.26.2](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.1...@leather.io/models-v0.26.2) (2025-02-21)
 
 

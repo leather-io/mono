@@ -278,6 +278,21 @@
   * dependencies
     * @leather.io/constants bumped to 0.17.0
 
+## [0.27.5](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.4...@leather.io/utils-v0.27.5) (2025-02-25)
+
+
+### Bug Fixes
+
+* fix error asserting minimum spend amount ([2c3700f](https://github.com/leather-io/mono/commit/2c3700fd50ba4fa57d84d73f9de3598cfb0e28bc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.3
+    * @leather.io/models bumped to 0.26.3
+
 ## [0.27.4](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.3...@leather.io/utils-v0.27.4) (2025-02-21)
 
 
