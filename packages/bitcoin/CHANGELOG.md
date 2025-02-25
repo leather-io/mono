@@ -553,6 +553,27 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.6.4
 
+## [0.19.34](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.33...@leather.io/bitcoin-v0.19.34) (2025-02-25)
+
+
+### Bug Fixes
+
+* fix error asserting minimum spend amount ([2c3700f](https://github.com/leather-io/mono/commit/2c3700fd50ba4fa57d84d73f9de3598cfb0e28bc))
+* fix error calculating available spend amount ([63727ef](https://github.com/leather-io/mono/commit/63727ef62b23eb75da005cf8a1d1544e7351a0e6))
+* update bitcoin readme.md ([e706590](https://github.com/leather-io/mono/commit/e7065904524da2ddb681370410d33da9bd6c8dac))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.3
+    * @leather.io/crypto bumped to 1.6.46
+    * @leather.io/models bumped to 0.26.3
+    * @leather.io/utils bumped to 0.27.5
+  * devDependencies
+    * @leather.io/rpc bumped to 2.6.6
+
 ## [0.19.33](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.32...@leather.io/bitcoin-v0.19.33) (2025-02-24)
 
 
