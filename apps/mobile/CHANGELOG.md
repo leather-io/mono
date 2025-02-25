@@ -579,6 +579,23 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.32
 
+## [2.15.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.4...@leather.io/mobile-v2.15.0) (2025-02-25)
+
+
+### Features
+
+* **ui:** house, glasses, newspaper icons ([2771815](https://github.com/leather-io/mono/commit/27718151669705b6408ae68e3b97ed6a2d383e52))
+* **web:** set up panda, closes LEA-2121 ([47e2c2f](https://github.com/leather-io/mono/commit/47e2c2f813d3280aeecabb9745cc94b03192cef0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.3.0
+    * @leather.io/tokens bumped to 0.14.0
+    * @leather.io/ui bumped to 1.50.0
+
 ## [2.14.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.14.3...@leather.io/mobile-v2.14.4) (2025-02-25)
 
 

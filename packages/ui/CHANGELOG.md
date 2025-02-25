@@ -353,6 +353,28 @@
     * @leather.io/models bumped to 0.26.3
     * @leather.io/panda-preset bumped to 0.8.20
 
+## [1.50.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.49.6...@leather.io/ui-v1.50.0) (2025-02-25)
+
+
+### Features
+
+* **ui:** house, glasses, newspaper icons ([2771815](https://github.com/leather-io/mono/commit/27718151669705b6408ae68e3b97ed6a2d383e52))
+* **web:** set up panda, closes LEA-2121 ([47e2c2f](https://github.com/leather-io/mono/commit/47e2c2f813d3280aeecabb9745cc94b03192cef0))
+
+
+### Bug Fixes
+
+* panda-preset build chain ([78296d4](https://github.com/leather-io/mono/commit/78296d4e42880e3c0ea59be555a6a99d1182d493))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.14.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.9.0
+
 ## [1.49.5](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.49.4...@leather.io/ui-v1.49.5) (2025-02-21)
 
 
