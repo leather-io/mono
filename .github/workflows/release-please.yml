@@ -19,14 +19,16 @@ jobs:
       mobile_release_created: ${{ steps.release.outputs.leather-io-mobile--release-created }}
     # Our PNPM workspace issue was fixed here: https://github.com/googleapis/release-please/pull/2281
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: google-github-actions/release-please-action@v3
         id: release
         with:
+          command: manifest
           # this assumes that you have created a personal access token (PAT)
           token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          target-branch: dev
+          default-branch: dev
+          release-type: 'minor'
 
     # The logic below handles the npm publication:
   deploy:
