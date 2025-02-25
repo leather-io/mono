@@ -1,3 +1,3 @@
 # @leather.io/bitcoin
 
-This package is a copy of [bitcoin](https://github.com/leather-io/extension/tree/dev/src/shared/crypto/bitcoin) shared directory in extension repo.
+`@leather.io/bitcoin` is intended to be the home of domain logic relating to the Bitcoin blockchain operations, such as address generation, and transaction signing.
