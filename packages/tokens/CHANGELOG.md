@@ -132,6 +132,18 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.5
 
+## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.13.6...@leather.io/tokens-v0.14.0) (2025-02-25)
+
+
+### Features
+
+* **ui:** house, glasses, newspaper icons ([2771815](https://github.com/leather-io/mono/commit/27718151669705b6408ae68e3b97ed6a2d383e52))
+
+
+### Bug Fixes
+
+* panda-preset build chain ([78296d4](https://github.com/leather-io/mono/commit/78296d4e42880e3c0ea59be555a6a99d1182d493))
+
 ## [0.13.5](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.13.4...@leather.io/tokens-v0.13.5) (2025-02-21)
 
 
