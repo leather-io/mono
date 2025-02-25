@@ -35,10 +35,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <styled.nav>
           <ul>
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/" role="link">
+                Home
+              </NavLink>
             </li>
             <li>
-              <NavLink to="/docs">Docs</NavLink>
+              <NavLink to="/docs" role="link">
+                Docs
+              </NavLink>
             </li>
           </ul>
         </styled.nav>

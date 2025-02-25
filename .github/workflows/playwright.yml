@@ -1,0 +1,43 @@
+name: Playwright Tests
+on:
+  pull_request:
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Get installed Playwright version
+        id: playwright-version
+        working-directory: apps/web
+        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> $GITHUB_ENV
+
+      - name: Cache playwright binaries
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: Install Playwright browsers
+        working-directory: apps/web
+        run: pnpm exec playwright install chrome chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Install Playwright deps
+        working-directory: apps/web
+        run: pnpm exec playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Build packages
+        run: pnpm turbo run build --filter="@leather.io/web"
+
+      - name: Run Playwright tests
+        working-directory: apps/web
+        run: pnpm exec playwright test
