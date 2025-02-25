@@ -397,6 +397,22 @@
     * @leather.io/bitcoin bumped to 0.19.32
     * @leather.io/rpc bumped to 2.6.4
 
+## [2.28.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.28.0...@leather.io/query-v2.28.1) (2025-02-25)
+
+
+### Bug Fixes
+
+* **query:** add refetch interval stacks balances, ref leather-io/extension[#5965](https://github.com/leather-io/mono/issues/5965) ([3ceae4a](https://github.com/leather-io/mono/commit/3ceae4ac62efafcb1bf871ca3bb4f0f3359032b6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.34
+    * @leather.io/rpc bumped to 2.6.6
+    * @leather.io/stacks bumped to 1.6.3
+
 ## [2.28.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.27.9...@leather.io/query-v2.28.0) (2025-02-24)
 
 

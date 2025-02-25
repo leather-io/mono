@@ -2,7 +2,7 @@
   "name": "@leather.io/provider",
   "author": "leather-wallet",
   "description": "LeatherProvider package for Leather",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@leather.io/models": "workspace:*",
-    "@leather.io/rpc": "workspace:*",
+    "@leather.io/rpc": "2.6.6",
     "@leather.io/utils": "workspace:*",
     "@scure/btc-signer": "1.6.0",
     "@stacks/connect": "7.4.0",

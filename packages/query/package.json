@@ -2,7 +2,7 @@
   "name": "@leather.io/query",
   "author": "Leather.io contact@leather.io",
   "description": "Leather query",
-  "version": "2.28.0",
+  "version": "2.28.1",
   "license": "MIT",
   "homepage": "https://github.com/leather-io/mono/tree/dev/packages/query",
   "repository": {
@@ -31,11 +31,11 @@
   "dependencies": {
     "@fungible-systems/zone-file": "2.0.0",
     "@hirosystems/token-metadata-api-client": "1.2.0",
-    "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/bitcoin": "0.19.34",
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
-    "@leather.io/rpc": "workspace:*",
-    "@leather.io/stacks": "workspace:*",
+    "@leather.io/rpc": "2.6.6",
+    "@leather.io/stacks": "1.6.3",
     "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
     "@scure/base": "1.2.4",
