@@ -7,12 +7,15 @@ import type { Route } from './+types/home';
 const articles = [
   {
     name: 'How to Create a Bitcoin Wallet',
+    url: './blog/create-bitcoin-wallet',
   },
   {
     name: 'How To Secure My Crypto Wallet',
+    url: './blog/secure-crypto-wallet',
   },
   {
     name: 'December partner highlights',
+    url: './blog/recover-crypto-wallet',
   },
 ];
 
@@ -38,7 +41,7 @@ export default function HomeRoute({ loaderData }: Route.ComponentProps) {
         <ul>
           {loaderData.map(article => (
             <li key={article.name}>
-              <a href="">{article.name}</a>
+              <a href={article.url}>{article.name}</a>
             </li>
           ))}
         </ul>

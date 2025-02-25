@@ -1,6 +1,6 @@
 # Leather.io Web App
 
-Home of Leather's web app, built with [React Router v7](https://reactrouter.com/) in frameework mode.
+Home of Leather's web app, built with [React Router v7](https://reactrouter.com/) in framework mode.
 
 ## Getting Started
 
