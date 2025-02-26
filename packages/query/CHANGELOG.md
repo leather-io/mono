@@ -397,6 +397,25 @@
     * @leather.io/bitcoin bumped to 0.19.32
     * @leather.io/rpc bumped to 2.6.4
 
+## [2.29.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.28.1...@leather.io/query-v2.29.0) (2025-02-26)
+
+
+### Features
+
+* add compliance checks to mobile, ref LEA-1852 ([ac964e1](https://github.com/leather-io/mono/commit/ac964e1259837b2a9ac01b15736718bacf288f3f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.35
+    * @leather.io/constants bumped to 0.17.4
+    * @leather.io/models bumped to 0.27.0
+    * @leather.io/rpc bumped to 2.6.7
+    * @leather.io/stacks bumped to 1.6.4
+    * @leather.io/utils bumped to 0.27.6
+
 ## [2.28.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.28.0...@leather.io/query-v2.28.1) (2025-02-25)
 
 
