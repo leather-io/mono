@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.3...@leather.io/models-v0.27.0) (2025-02-26)
+
+
+### Features
+
+* add compliance checks to mobile, ref LEA-1852 ([ac964e1](https://github.com/leather-io/mono/commit/ac964e1259837b2a9ac01b15736718bacf288f3f))
+
 ## [0.26.3](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.2...@leather.io/models-v0.26.3) (2025-02-25)
 
 
