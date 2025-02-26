@@ -353,6 +353,13 @@
     * @leather.io/models bumped to 0.26.3
     * @leather.io/panda-preset bumped to 0.8.20
 
+## [1.50.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.50.0...@leather.io/ui-v1.50.1) (2025-02-26)
+
+
+### Bug Fixes
+
+* roll back react upgrade in ui to fix bug in mobile ([25a033d](https://github.com/leather-io/mono/commit/25a033d7df5525685079791a7f5497dadb4218c5))
+
 ## [1.50.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.49.6...@leather.io/ui-v1.50.0) (2025-02-25)
 
 
