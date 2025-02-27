@@ -361,6 +361,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.27.0
 
+## [1.51.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.50.2...@leather.io/ui-v1.51.0) (2025-02-27)
+
+
+### Features
+
+* add use clipboard ([57f0dc8](https://github.com/leather-io/mono/commit/57f0dc84be8ab719cad04b95edb893ffc4e2d318))
+
 ## [1.50.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.50.0...@leather.io/ui-v1.50.1) (2025-02-26)
 
 
