@@ -1,4 +1,9 @@
-import { addressResponseBodySchema, btcAddressBaseSchema, stxAddressSchema } from './get-addresses';
+import {
+  addressResponseBodySchema,
+  btcAddressBaseSchema,
+  getAddresses,
+  stxAddressSchema,
+} from './get-addresses';
 
 describe('getAddresses', () => {
   const baseRespnseBodyBtc = {
@@ -47,5 +52,15 @@ describe('getAddresses', () => {
       });
       expect(result.success).toEqual(true);
     });
+  });
+
+  test('network being added conditionally', () => {
+    const result = getAddresses.params.safeParse({ network: 'testnet' });
+    expect(result.success).toEqual(true);
+  });
+
+  test('empty params since there is only one prop that is optional', () => {
+    const result = getAddresses.params.safeParse({});
+    expect(result.success).toEqual(true);
   });
 });

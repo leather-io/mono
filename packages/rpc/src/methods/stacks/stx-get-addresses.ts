@@ -12,5 +12,6 @@ export const stxGetAddressesResponseBodySchema = z.array(stxAddressItemSchema);
 
 export const stxGetAddresses = defineRpcEndpoint({
   method: 'stx_getAddresses',
+  params: z.object({ network: z.string().optional() }).optional(),
   result: stxGetAddressesResponseBodySchema,
 });
