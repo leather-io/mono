@@ -39,3 +39,4 @@ export * from './components/switch/switch.web';
 export { Highlighter, type HighlighterProps } from './components/highlighting/highlighter.web';
 export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
 export { Slider } from './components/slider/slider.web';
+export { useClipboard } from './utils/use-clipboard.web';
