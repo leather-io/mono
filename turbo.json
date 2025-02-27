@@ -3,23 +3,19 @@
   "tasks": {
     "build": {
       "outputs": [
-        "dist/**",
-        "dist-*/**"
+        "packages/*/dist/**",
+        "packages/*/dist-*/**",
+        "apps/web/build/**",
+        "apps/mobile/{ios,android,build}/**"
       ],
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "build:watch": {},
     "format": {},
     "format:check": {},
     "typecheck": {},
     "check:all": {
-      "dependsOn": [
-        "build",
-        "format",
-        "typecheck"
-      ]
+      "dependsOn": ["build", "format", "typecheck"]
     },
     "dev": {
       "cache": false,
