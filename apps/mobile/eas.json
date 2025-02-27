@@ -17,7 +17,7 @@
     },
     "simulator-dev": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -29,7 +29,7 @@
     },
     "simulator-pr": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -41,7 +41,7 @@
     },
     "development": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
@@ -50,7 +50,7 @@
     },
     "preview-simulator": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -59,7 +59,7 @@
     },
     "preview": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
         "cocoapods": "1.15.2"
@@ -67,7 +67,7 @@
     },
     "production": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "distribution": "store",
       "autoIncrement": true,
       "ios": {
@@ -79,7 +79,7 @@
     },
     "maestro-test-ios": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "withoutCredentials": true,
       "config": "maestro-test-ios.yml",
       "ios": {
@@ -90,7 +90,7 @@
     },
     "maestro-test-android": {
       "node": "20.11.0",
-      "pnpm": "9.11.0",
+      "pnpm": "10.4.1",
       "withoutCredentials": true,
       "config": "maestro-test-android.yml",
       "android": {
