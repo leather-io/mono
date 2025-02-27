@@ -212,6 +212,13 @@
     * @leather.io/models bumped to 0.27.0
     * @leather.io/utils bumped to 0.27.6
 
+## [2.6.8](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.7...@leather.io/rpc-v2.6.8) (2025-02-27)
+
+
+### Bug Fixes
+
+* **rpc:** getAddress network support, ref LEA-2195 ([7281d2f](https://github.com/leather-io/mono/commit/7281d2f09e30bdb9865ac089146386cc2c14cb77))
+
 ## [2.6.6](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.5...@leather.io/rpc-v2.6.6) (2025-02-25)
 
 
