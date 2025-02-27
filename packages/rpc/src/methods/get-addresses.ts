@@ -68,5 +68,6 @@ export const addressResponseBodySchema = z
 
 export const getAddresses = defineRpcEndpoint({
   method: 'getAddresses',
+  params: z.object({ network: z.string().optional() }).optional(),
   result: addressResponseBodySchema,
 });
