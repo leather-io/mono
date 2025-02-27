@@ -23,6 +23,7 @@ import { supportedMethods } from './methods/supported-methods';
 import { ExtractErrorResponse, ExtractSuccessResponse } from './rpc/schemas';
 
 export * from './rpc/schemas';
+export * from './rpc/helpers';
 export * from './methods/get-info';
 export * from './methods/bitcoin/sign-psbt';
 export * from './methods/get-addresses';

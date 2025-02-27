@@ -142,6 +142,7 @@ export type RpcParams<T extends { params: z.ZodType }> = z.infer<T['params']>;
 
 export type RpcResponse<T extends { response: z.ZodType }> = z.infer<T['response']>;
 export type RpcResult<T extends { result: z.ZodType }> = z.infer<T['result']>;
+
 export function defineRpcEndpoint<
   Method extends string,
   Result extends z.ZodTypeAny,
@@ -201,6 +202,7 @@ export function defineRpcEndpoint<
       response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
     } {
   const error = (props.error ?? defaultErrorSchema) as Error;
+
   if ('params' in props) {
     return {
       method: props.method,
