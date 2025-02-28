@@ -212,6 +212,13 @@
     * @leather.io/models bumped to 0.27.0
     * @leather.io/utils bumped to 0.27.6
 
+## [2.7.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.7.0...@leather.io/rpc-v2.7.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* export methods individually ([73ecc57](https://github.com/leather-io/mono/commit/73ecc577891bffc2ec65f9c2d8c2c9ebb1d32c00))
+
 ## [2.7.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.6.8...@leather.io/rpc-v2.7.0) (2025-02-27)
 
 
