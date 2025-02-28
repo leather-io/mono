@@ -1,7 +1,6 @@
 import {
   Links,
   Meta,
-  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -14,6 +13,7 @@ import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
+import { Nav } from './layouts/nav/nav';
 
 export function links() {
   return [
@@ -31,21 +31,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <styled.body display="flex">
-        <styled.nav>
-          <ul>
-            <li>
-              <NavLink to="/" role="link">
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/docs" role="link">
-                Docs
-              </NavLink>
-            </li>
-          </ul>
-        </styled.nav>
+      <styled.body display="flex" height="100vh">
+        <Nav />
         <styled.main>{children}</styled.main>
         <ScrollRestoration />
         <Scripts />

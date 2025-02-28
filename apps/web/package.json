@@ -4,7 +4,8 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
-    "prepare": "ls -R ./node_modules/@leather.io/panda-preset && panda codegen",
+    "deploy": "pnpm build && wrangler deploy",
+    "prepare": "panda codegen",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
