@@ -7,15 +7,24 @@ export function testIsNumberOrArrayOfNumbers(value: unknown) {
   return isNumberOrNumberList(value);
 }
 
+function encodeBase64Json(payload: Record<any, unknown>) {
+  const jsonString = JSON.stringify(payload);
+  return btoa(jsonString);
+}
+
+function decodeBase64Json(encodedPayload: string): unknown {
+  const jsonString = atob(encodedPayload);
+  return JSON.parse(jsonString);
+}
+
 export function createRequestEncoder<T extends z.ZodTypeAny>(schema: T) {
   function encode(request: z.infer<T>) {
-    const jsonString = JSON.stringify(schema.parse(request));
-    return btoa(jsonString);
+    return encodeBase64Json(schema.parse(request));
   }
 
   function decode(encodedRequest: string): z.infer<T> {
-    const jsonString = atob(encodedRequest);
-    return schema.parse(JSON.parse(jsonString));
+    const parsedJson = decodeBase64Json(encodedRequest);
+    return schema.parse(parsedJson);
   }
 
   return { encode, decode };
