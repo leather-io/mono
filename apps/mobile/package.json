@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "2.16.3",
+  "version": "2.16.4",
   "type": "module",
   "scripts": {
     "1password:env:dev": "op read \"op://leather-cli/env-content/dev\" > .env",
