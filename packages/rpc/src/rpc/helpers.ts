@@ -7,12 +7,12 @@ export function testIsNumberOrArrayOfNumbers(value: unknown) {
   return isNumberOrNumberList(value);
 }
 
-function encodeBase64Json(payload: Record<any, unknown>) {
+export function encodeBase64Json(payload: Record<any, unknown>) {
   const jsonString = JSON.stringify(payload);
   return btoa(jsonString);
 }
 
-function decodeBase64Json(encodedPayload: string): unknown {
+export function decodeBase64Json(encodedPayload: string): unknown {
   const jsonString = atob(encodedPayload);
   return JSON.parse(jsonString);
 }
