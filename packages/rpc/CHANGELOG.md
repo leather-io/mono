@@ -212,6 +212,13 @@
     * @leather.io/models bumped to 0.27.0
     * @leather.io/utils bumped to 0.27.6
 
+## [2.7.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.7.1...@leather.io/rpc-v2.7.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* **rpc:** actually export encode fns ([644006a](https://github.com/leather-io/mono/commit/644006ad0ed0228136ae30cbf1d44c0103be7f54))
+
 ## [2.7.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.7.0...@leather.io/rpc-v2.7.1) (2025-02-28)
 
 
