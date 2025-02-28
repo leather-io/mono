@@ -9,7 +9,8 @@ appId: io.leather.mobilewallet
     id: 'settingsWalletAndAccountsButton'
 - tapOn: Wallet 1
 - assertNotVisible: Add account
-- assertNotVisible: Account 1 $0.00
+- assertNotVisible:
+    id: 'homeAccountCard-0'
 - tapOn: Wallet 1
 - tapOn:
     id: 'walletListSettingsButton'

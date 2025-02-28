@@ -12,11 +12,9 @@ appId: io.leather.mobilewallet
 - tapOn: "I've backed it up"
 - assertVisible: 'Wallet added successfully'
 - assertVisible:
-    id: homeAccountCard
-    index: 0
+    id: 'homeAccountCard-0'
 - assertVisible:
-    id: homeAccountCard
-    index: 1
+    id: 'homeAccountCard-1'
 - tapOn: 'My accounts'
 - assertVisible: 'Wallet 1'
 - assertVisible: 'Wallet 2'

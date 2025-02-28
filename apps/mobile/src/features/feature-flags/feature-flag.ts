@@ -6,7 +6,7 @@ export const featureFlagClient = new ReactNativeLDClient(
   process.env.EXPO_PUBLIC_LAUNCH_DARKLY ?? '',
   AutoEnvAttributes.Enabled,
   {
-    debug: process.env.NODE_ENV === 'development',
+    debug: process.env.EXPO_PUBLIC_NODE_ENV === 'development',
     applicationInfo: {
       id: 'leather-mobile-wallet',
       version: Application.nativeApplicationVersion ?? '0.0.1',

@@ -51,4 +51,4 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Proceed'
 - assertVisible:
-    id: 'homeAccountCard'
+    id: 'homeAccountCard-0'

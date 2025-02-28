@@ -49,3 +49,9 @@ tmp
 
 # Fastlane
 fastlane/report.xml
+
+# EAS / Builds
+credentials.json
+*.ipa
+*.apk
+*.aab

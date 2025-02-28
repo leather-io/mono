@@ -17,4 +17,4 @@ appId: io.leather.mobilewallet
 - assertVisible:
     id: 'homeAddWalletButton'
 - assertNotVisible:
-    id: 'homeAccountCard'
+    id: 'homeAccountCard-0'

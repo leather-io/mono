@@ -28,6 +28,7 @@ export enum TestId {
   settingsTitle = 'settingsTitle',
   settingsWalletAndAccountsButton = 'settingsWalletAndAccountsButton',
   toastContainer = 'toastContainer',
+  tokenBalanceItem = 'tokenBalanceItem',
   walletChangeNameSheetInput = 'walletChangeNameSheetInput',
   walletChangeNameSheetSaveButton = 'walletChangeNameSheetSaveButton',
   walletCreationBackedUpButton = 'walletCreationBackedUpButton',

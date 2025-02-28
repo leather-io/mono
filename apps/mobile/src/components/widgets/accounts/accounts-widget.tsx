@@ -7,6 +7,7 @@ import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { AccountCard } from '@/features/accounts/components/account-card';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
@@ -69,9 +70,10 @@ export function AccountsWidget() {
           >
             {accounts.list
               .filter(account => account.status !== 'hidden')
-              .map(account => (
+              .map((account, i) => (
                 <AccountCard
                   width={200}
+                  testID={`${TestId.homeAccountCard}-${i}`}
                   caption={i18n._({
                     id: 'accounts.account.cell_caption',
                     message: '{name}',
