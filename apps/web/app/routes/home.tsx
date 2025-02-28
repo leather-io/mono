@@ -1,5 +1,7 @@
+import { request } from '@stacks/connect';
 import { styled } from 'leather-styles/jsx';
 
+import { Button } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import type { Route } from './+types/home';
@@ -45,6 +47,14 @@ export default function HomeRoute({ loaderData }: Route.ComponentProps) {
             </li>
           ))}
         </ul>
+        <Button
+          onClick={async () => {
+            const result = await request('getAddresses');
+            console.log(result);
+          }}
+        >
+          Connect
+        </Button>
       </styled.div>
     </>
   );
