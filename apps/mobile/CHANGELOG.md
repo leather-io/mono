@@ -634,6 +634,14 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.39
 
+## [2.16.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.16.4...@leather.io/mobile-v2.16.5) (2025-02-28)
+
+
+### Bug Fixes
+
+* add wallet sheet image bg color ([791d206](https://github.com/leather-io/mono/commit/791d206fee6803510d548eb90834082617942e96))
+* update pnpm version for EAS builds, closes LEA-2199 ([dd41175](https://github.com/leather-io/mono/commit/dd4117573f116f1eb91fff057983f85e7bf4385f))
+
 ## [2.16.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.15.1...@leather.io/mobile-v2.16.0) (2025-02-26)
 
 
