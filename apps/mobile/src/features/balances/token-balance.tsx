@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { CryptoAssetProtocol, Money } from '@leather.io/models';
@@ -36,7 +37,13 @@ export function TokenBalance({
   ...rest
 }: TokenBalanceProps) {
   return (
-    <Cell.Root pressable={true} disabled={!onPress} onPress={onPress} {...rest}>
+    <Cell.Root
+      pressable={true}
+      testID={`${TestId.tokenBalanceItem}-${rest.ticker}`}
+      disabled={!onPress}
+      onPress={onPress}
+      {...rest}
+    >
       <Cell.Icon>{icon}</Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">{tokenName}</Cell.Label>

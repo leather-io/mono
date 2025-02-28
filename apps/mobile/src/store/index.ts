@@ -51,7 +51,7 @@ export const store = configureStore({
   reducer: persistReducer(persistConfig, reducer),
   devTools: false,
   enhancers: getDefaultEnhancers => {
-    if (process.env.NODE_ENV === 'development')
+    if (process.env.EXPO_PUBLIC_NODE_ENV === 'development')
       return getDefaultEnhancers().concat(devToolsEnhancer({ trace: true }));
 
     return getDefaultEnhancers();

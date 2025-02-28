@@ -76,6 +76,7 @@ export default () => {
         },
       },
       android: {
+        package: 'io.leather.mobilewallet',
         googleServicesFile: './android/app/google-services.json',
         icon: './src/assets/icon.png',
         adaptiveIcon: {

@@ -1,3 +1,3 @@
 export function isDev() {
-  return process.env.NODE_ENV === 'development';
+  return process.env.EXPO_PUBLIC_NODE_ENV === 'development';
 }
