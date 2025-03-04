@@ -42,6 +42,9 @@ function matchPlaceholders(translation: string): StringWithPlaceholders {
 }
 
 export async function initiateI18n() {
+  // run load and activate so the I18nProvider doesn't block the render
+  i18n.load('en', {});
+  i18n.activate(DEFAULT_LOCALE);
   const locales = getLocales();
 
   const deviceLocale =

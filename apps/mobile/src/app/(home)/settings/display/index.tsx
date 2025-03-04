@@ -60,9 +60,8 @@ export default function SettingsDisplayScreen() {
               message: 'Theme',
             })}
             caption={i18n._({
-              id: 'display.theme.cell_caption',
-              message: '{theme}',
-              values: { theme: capitalize(themePreference) },
+              id: `display.theme.${themePreference}`,
+              message: capitalize(themePreference),
             })}
             icon={<SunInCloudIcon />}
             onPress={() => {
@@ -99,23 +98,24 @@ export default function SettingsDisplayScreen() {
                   bitcoinUnitSheetRef.current?.present();
                 }}
               />
+              <SettingsListItem
+                title={t({
+                  id: 'display.conversion_unit.cell_title',
+                  message: 'Conversion unit',
+                })}
+                caption={i18n._({
+                  id: 'display.conversion_unit.cell_caption',
+                  message: '{currency}',
+                  values: { currency: fiatCurrencyPreference },
+                })}
+                icon={<DollarCircleIcon />}
+                onPress={() => {
+                  conversionUnitSheetRef.current?.present();
+                }}
+              />
             </>
           )}
-          <SettingsListItem
-            title={t({
-              id: 'display.conversion_unit.cell_title',
-              message: 'Conversion unit',
-            })}
-            caption={i18n._({
-              id: 'display.conversion_unit.cell_caption',
-              message: '{currency}',
-              values: { currency: fiatCurrencyPreference },
-            })}
-            icon={<DollarCircleIcon />}
-            onPress={() => {
-              conversionUnitSheetRef.current?.present();
-            }}
-          />
+
           <SettingsListItem
             title={t({
               id: 'display.account_identifier.cell_title',
