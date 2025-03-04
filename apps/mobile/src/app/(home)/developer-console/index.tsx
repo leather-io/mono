@@ -6,13 +6,11 @@ import { AddWalletSheet } from '@/components/add-wallet/';
 import { ApproverSheet } from '@/components/browser/approver-sheet';
 import { BrowserMessage } from '@/components/browser/browser-in-use';
 import { PressableListItem } from '@/components/developer-console/list-items';
-import { getAvailableLocales } from '@/locales';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { WalletFingerprintLoader, WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
@@ -21,25 +19,11 @@ import { Box, SheetRef, Theme } from '@leather.io/ui/native';
 export default function DeveloperConsoleScreen() {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const { i18n } = useLingui();
 
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
 
   const addWalletSheetRef = useRef<SheetRef>(null);
   const settings = useSettings();
-  function toggleLocalization() {
-    const locales = getAvailableLocales();
-    const locIdx = locales.findIndex(loc => loc === i18n.locale);
-    const isLastItem = locIdx === locales.length - 1;
-    const nextIdx = isLastItem ? 0 : locIdx + 1;
-    const nextLocale = locales[nextIdx];
-    if (!nextLocale) {
-      throw new Error("Didn't find next locale for some reason");
-    }
-    i18n.activate(nextLocale);
-  }
-
-  const locale = i18n.locale;
 
   return (
     <Box flex={1} backgroundColor="ink.background-primary">
@@ -77,7 +61,6 @@ export default function DeveloperConsoleScreen() {
             })
           }
         />
-        <PressableListItem title={t`toggle localization: ${locale}`} onPress={toggleLocalization} />
         <PressableListItem title={t`signMessage`} />
         <PressableListItem title={t`transferBtc`} />
         <PressableListItem title={t`signPsbt`} />
