@@ -129,7 +129,7 @@ export function useConfigTokensEnabledByDefault(): string[] {
 
 export function useConfigTokenTransferFeeEstimations() {
   const config = useRemoteConfig();
-  return get(config, 'tokenTransferFeeEstimations', []);
+  return get(config, 'tokenTransferFeeEstimations', undefined);
 }
 
 export function useConfigSpamFilterWhitelist(): string[] {

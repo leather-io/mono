@@ -179,7 +179,7 @@ interface ParseStacksTxFeeEstimationResponseArgs {
   maxValues?: Money[];
   minValues?: Money[];
   txByteLength: number | null;
-  tokenTransferFeeEstimations: number[];
+  tokenTransferFeeEstimations: number[] | undefined;
   contractCallDefaultFeeEstimations: DefaultMinMaxRangeFeeEstimations | undefined;
   contractDeploymentDefaultFeeEstimations: DefaultMinMaxRangeFeeEstimations | undefined;
 }
@@ -196,7 +196,7 @@ export function parseStacksTxFeeEstimationResponse({
 }: ParseStacksTxFeeEstimationResponseArgs): Fees {
   if (feeEstimation.error) return defaultStacksFees;
 
-  if (payloadType === PayloadType.TokenTransfer) {
+  if (payloadType === PayloadType.TokenTransfer && tokenTransferFeeEstimations) {
     return {
       blockchain: 'stacks',
       estimates: getTokenTransferSpecificFeeEstimations(tokenTransferFeeEstimations),
