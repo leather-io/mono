@@ -98,24 +98,24 @@ export default function SettingsDisplayScreen() {
                   bitcoinUnitSheetRef.current?.present();
                 }}
               />
-              <SettingsListItem
-                title={t({
-                  id: 'display.conversion_unit.cell_title',
-                  message: 'Conversion unit',
-                })}
-                caption={i18n._({
-                  id: 'display.conversion_unit.cell_caption',
-                  message: '{currency}',
-                  values: { currency: fiatCurrencyPreference },
-                })}
-                icon={<DollarCircleIcon />}
-                onPress={() => {
-                  conversionUnitSheetRef.current?.present();
-                }}
-              />
             </>
           )}
 
+          <SettingsListItem
+            title={t({
+              id: 'display.conversion_unit.cell_title',
+              message: 'Conversion unit',
+            })}
+            caption={i18n._({
+              id: 'display.conversion_unit.cell_caption',
+              message: '{currency}',
+              values: { currency: fiatCurrencyPreference },
+            })}
+            icon={<DollarCircleIcon />}
+            onPress={() => {
+              conversionUnitSheetRef.current?.present();
+            }}
+          />
           <SettingsListItem
             title={t({
               id: 'display.account_identifier.cell_title',
