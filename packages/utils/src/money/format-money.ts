@@ -78,10 +78,9 @@ export function formatMoneyPadded({ amount, symbol, decimals }: Money) {
 }
 
 export function i18nFormatCurrency(quantity: Money, decimals = 2) {
-  if (quantity.symbol !== 'USD') throw new Error('Cannot format non-USD amounts');
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: quantity.symbol,
     maximumFractionDigits: decimals,
   });
 
