@@ -356,6 +356,23 @@
     * @leather.io/models bumped to 0.27.0
     * @leather.io/utils bumped to 0.27.6
 
+## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.6.4...@leather.io/stacks-v1.7.0) (2025-03-04)
+
+
+### Features
+
+* add stacks transaction validation, ref LEA-1681 ([e752b45](https://github.com/leather-io/mono/commit/e752b4581b9c7250bb93f4f7155764dd205dbb0a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.17.5
+    * @leather.io/crypto bumped to 1.6.48
+    * @leather.io/models bumped to 0.28.0
+    * @leather.io/utils bumped to 0.27.7
+
 ## [1.6.3](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.6.2...@leather.io/stacks-v1.6.3) (2025-02-25)
 
 

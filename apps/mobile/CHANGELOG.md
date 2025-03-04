@@ -634,6 +634,39 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.39
 
+## [2.17.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.16.5...@leather.io/mobile-v2.17.0) (2025-03-04)
+
+
+### Features
+
+* add stacks transaction validation, ref LEA-1681 ([e752b45](https://github.com/leather-io/mono/commit/e752b4581b9c7250bb93f4f7155764dd205dbb0a))
+
+
+### Bug Fixes
+
+* add locale setting and default i18n for ES, ref LEA-2138 ([54487fb](https://github.com/leather-io/mono/commit/54487fbc5d9c68263babb255b3076ea795decb3e))
+* use dynamic key for theme display ([401f645](https://github.com/leather-io/mono/commit/401f645c615a31dc7573e1404fa01d88b24d2982))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.3.2
+    * @leather.io/bitcoin bumped to 0.19.40
+    * @leather.io/constants bumped to 0.17.5
+    * @leather.io/crypto bumped to 1.6.48
+    * @leather.io/models bumped to 0.28.0
+    * @leather.io/provider bumped to 1.0.12
+    * @leather.io/query bumped to 2.29.5
+    * @leather.io/rpc bumped to 2.7.3
+    * @leather.io/services bumped to 1.4.11
+    * @leather.io/stacks bumped to 1.7.0
+    * @leather.io/ui bumped to 1.51.1
+    * @leather.io/utils bumped to 0.27.7
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.40
+
 ## [2.16.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.16.4...@leather.io/mobile-v2.16.5) (2025-02-28)
 
 

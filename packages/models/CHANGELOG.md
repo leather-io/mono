@@ -24,6 +24,13 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.28.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.27.0...@leather.io/models-v0.28.0) (2025-03-04)
+
+
+### Features
+
+* add stacks transaction validation, ref LEA-1681 ([e752b45](https://github.com/leather-io/mono/commit/e752b4581b9c7250bb93f4f7155764dd205dbb0a))
+
 ## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.26.3...@leather.io/models-v0.27.0) (2025-02-26)
 
 
