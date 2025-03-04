@@ -1,7 +1,11 @@
+import { getLocales } from 'react-native-localize';
+
 import { isDev } from '@/utils/is-dev';
 import OtaClient from '@crowdin/ota-client';
 import { i18n } from '@lingui/core';
 import { formatter } from '@lingui/format-po';
+
+import { isDefined } from '@leather.io/utils';
 
 const prodHash = 'adcc836a66272410c0b94e9twcj'; // with po file format
 const devHash = 'a6b025ebb570b783a20df09twcj'; // with po file format
@@ -38,9 +42,12 @@ function matchPlaceholders(translation: string): StringWithPlaceholders {
 }
 
 export async function initiateI18n() {
-  // run load and activate so the I18nProvider doesn't block the render
-  i18n.load('en', {});
-  i18n.activate(DEFAULT_LOCALE);
+  const locales = getLocales();
+
+  const deviceLocale =
+    locales.find(locale => isDefined(locale.languageTag))?.languageTag ?? DEFAULT_LOCALE;
+  // LEA-2138 Only support es-ES and en
+  i18n.activate(deviceLocale === 'es-ES' ? deviceLocale : DEFAULT_LOCALE);
 
   const translations = await otaClient.getTranslations();
 

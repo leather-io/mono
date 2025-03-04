@@ -8,6 +8,7 @@ import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
+import { toggleLocalization } from '@/locales/toggle-localization';
 import { useSettings } from '@/store/settings/settings';
 import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
@@ -16,6 +17,7 @@ import { useLingui } from '@lingui/react';
 import {
   BitcoinCircleIcon,
   DollarCircleIcon,
+  GlobeIcon,
   PackageSecurityIcon,
   PointerHandIcon,
   SheetRef,
@@ -67,6 +69,19 @@ export default function SettingsDisplayScreen() {
               themeSheetRef.current?.present();
             }}
           />
+          <SettingsListItem
+            title={t({
+              id: 'display.language.cell_title',
+              message: 'Language',
+            })}
+            caption={i18n._({
+              id: 'display.language.cell_caption',
+              message: '{locale}',
+              values: { locale: i18n.locale },
+            })}
+            icon={<GlobeIcon />}
+            onPress={() => toggleLocalization()}
+          />
           {isDev() && (
             <>
               <SettingsListItem
@@ -84,23 +99,23 @@ export default function SettingsDisplayScreen() {
                   bitcoinUnitSheetRef.current?.present();
                 }}
               />
-              <SettingsListItem
-                title={t({
-                  id: 'display.conversion_unit.cell_title',
-                  message: 'Conversion unit',
-                })}
-                caption={i18n._({
-                  id: 'display.conversion_unit.cell_caption',
-                  message: '{currency}',
-                  values: { currency: fiatCurrencyPreference },
-                })}
-                icon={<DollarCircleIcon />}
-                onPress={() => {
-                  conversionUnitSheetRef.current?.present();
-                }}
-              />
             </>
           )}
+          <SettingsListItem
+            title={t({
+              id: 'display.conversion_unit.cell_title',
+              message: 'Conversion unit',
+            })}
+            caption={i18n._({
+              id: 'display.conversion_unit.cell_caption',
+              message: '{currency}',
+              values: { currency: fiatCurrencyPreference },
+            })}
+            icon={<DollarCircleIcon />}
+            onPress={() => {
+              conversionUnitSheetRef.current?.present();
+            }}
+          />
           <SettingsListItem
             title={t({
               id: 'display.account_identifier.cell_title',
@@ -116,7 +131,6 @@ export default function SettingsDisplayScreen() {
               accountIdentifierSheetRef.current?.present();
             }}
           />
-
           <SettingsListItem
             title={t({
               id: 'display.haptics.cell_title',
