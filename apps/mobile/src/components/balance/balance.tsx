@@ -11,6 +11,8 @@ import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils'
 interface BalanceProps extends TextProps {
   balance: Money;
   lockedBalance?: string;
+  maxWidth?: number | string;
+  numberOfLines?: number;
 }
 
 export function formatBalance(balance: Money, isFiat: boolean) {
@@ -27,6 +29,8 @@ export function Balance({
   lockedBalance,
   variant = 'label01',
   color = 'ink.text-primary',
+  maxWidth,
+  numberOfLines = 1,
 }: BalanceProps) {
   const { i18n } = useLingui();
   const isPrivate = usePrivacyMode();
@@ -34,9 +38,20 @@ export function Balance({
   const formattedBalance = formatBalance(balance, isFiat);
   const privateText = isFiat ? undefined : `*${i18n._(balance.symbol)}`;
 
+  const ellipsisStyle = {
+    maxWidth,
+    ...(numberOfLines > 0 ? { numberOfLines } : {}),
+  };
+
   if (!lockedBalance) {
     return (
-      <PrivateText mask={privateText} color={color} variant={variant}>
+      <PrivateText
+        mask={privateText}
+        color={color}
+        variant={variant}
+        ellipsizeMode="tail"
+        {...ellipsisStyle}
+      >
         {formattedBalance}
       </PrivateText>
     );
@@ -44,11 +59,17 @@ export function Balance({
 
   return (
     <BulletSeparator color={color}>
-      <PrivateText mask={privateText} color={color} variant={variant}>
+      <PrivateText
+        mask={privateText}
+        color={color}
+        variant={variant}
+        ellipsizeMode="tail"
+        {...ellipsisStyle}
+      >
         {formattedBalance}
       </PrivateText>
       {!isPrivate ? (
-        <Text color={color} variant={variant}>
+        <Text color={color} variant={variant} ellipsizeMode="tail" numberOfLines={numberOfLines}>
           {lockedBalance}
           {t({
             id: 'locked',

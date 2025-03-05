@@ -6,3 +6,4 @@ export { OrdinalAvatarIcon } from './ordinal-avatar-icon.web';
 export { RunesAvatarIcon } from './runes-avatar-icon.web';
 export { Src20AvatarIcon } from './src20-avatar-icon.web';
 export { StxAvatarIcon } from './stx-avatar-icon.web';
+export { StacksAssetAvatar } from './stacks-asset-avatar.web';

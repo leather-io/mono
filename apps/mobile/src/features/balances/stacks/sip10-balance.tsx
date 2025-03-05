@@ -1,32 +1,43 @@
-import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import {
   useSip10AccountBalance,
   useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
 
 import { Money } from '@leather.io/models';
-import { PressableProps } from '@leather.io/ui/native';
+import { Avatar, PressableProps, StacksAssetAvatar, Text } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
 const sip10MaxDisplay = 3;
 interface Sip10TokenBalanceProps extends PressableProps {
   availableBalance: Money;
+  contractId: string;
   fiatBalance: Money;
   symbol: string;
   name: string;
+  iconSrc?: string;
 }
 export function Sip10TokenBalance({
   availableBalance,
+  contractId,
   fiatBalance,
   name,
   symbol,
+  iconSrc,
   ...rest
 }: Sip10TokenBalanceProps) {
+  const icon = iconSrc ? (
+    <Avatar image={iconSrc} />
+  ) : (
+    <StacksAssetAvatar gradientString={contractId} img={iconSrc}>
+      <Text>{name[0]}</Text>
+    </StacksAssetAvatar>
+  );
+
   return (
     <TokenBalance
       ticker={symbol}
-      icon={<TokenIcon ticker={symbol} />} // TODO LEA-1909: add images from uri
+      icon={icon}
       tokenName={name}
       protocol="sip10"
       fiatBalance={fiatBalance}
@@ -48,6 +59,8 @@ export function Sip10Balance() {
         key={`${balance.asset.symbol}-${index}`}
         symbol={balance.asset.symbol}
         name={balance.asset.name}
+        iconSrc={balance.asset.imageCanonicalUri}
+        contractId={balance.asset.contractId}
         availableBalance={balance.crypto.availableBalance}
         fiatBalance={balance.fiat.totalBalance}
         px="5"
@@ -71,6 +84,8 @@ export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10Balanc
       <Sip10TokenBalance
         key={`${balance.asset.symbol}-${index}`}
         symbol={balance.asset.symbol}
+        contractId={balance.asset.contractId}
+        iconSrc={balance.asset.imageCanonicalUri}
         name={balance.asset.name}
         availableBalance={balance.crypto.availableBalance}
         fiatBalance={balance.fiat.totalBalance}

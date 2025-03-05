@@ -28,7 +28,6 @@ export function AllAccountBalances() {
       <BitcoinBalance />
       <StacksBalance />
       <Sip10Balance />
-      {/* TODO LEA-1982: add runes balance */}
       <RunesBalance />
     </>
   );

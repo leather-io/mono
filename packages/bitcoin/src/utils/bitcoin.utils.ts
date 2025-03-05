@@ -106,7 +106,6 @@ export function getAddressFromOutScript(
   bitcoinNetwork: BtcSignerNetwork
 ): BitcoinAddress | null {
   const outputScript = btc.OutScript.decode(script);
-
   switch (outputScript.type) {
     case 'pkh':
     case 'sh':
