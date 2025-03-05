@@ -292,6 +292,13 @@
     * @leather.io/constants bumped to 0.17.5
     * @leather.io/models bumped to 0.28.0
 
+## [0.27.8](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.7...@leather.io/utils-v0.27.8) (2025-03-05)
+
+
+### Bug Fixes
+
+* specify currency symbol and precision using currency map, ref LEA-2032 ([46c9cf8](https://github.com/leather-io/mono/commit/46c9cf83a3c8651d7c8171ee002da1622b9b397f))
+
 ## [0.27.5](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.4...@leather.io/utils-v0.27.5) (2025-02-25)
 
 
