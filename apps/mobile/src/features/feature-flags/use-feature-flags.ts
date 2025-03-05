@@ -10,3 +10,12 @@ export function useReleasePushNotificationsFlag() {
 
   return releasePushNotifications;
 }
+
+export function useReleaseBrowserFeatureFlag() {
+  const releaseBrowserFeature = useBoolVariation(
+    featureFlagKeys.releaseBrowserFeature.key,
+    featureFlagKeys.releaseBrowserFeature.defaultValue
+  );
+
+  return releaseBrowserFeature;
+}

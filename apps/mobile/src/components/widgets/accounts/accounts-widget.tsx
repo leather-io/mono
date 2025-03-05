@@ -109,7 +109,16 @@ export function AccountsWidget() {
 
       <AddAccountSheet addAccountSheetRef={addAccountSheetRef} />
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
-      <AccountSelectorSheet sheetRef={accountSelectorSheetRef} />
+      <AccountSelectorSheet
+        sheetRef={accountSelectorSheetRef}
+        onAccountPress={(accountId: string) => {
+          accountSelectorSheetRef.current?.close();
+          router.navigate({
+            pathname: AppRoutes.Account,
+            params: { accountId },
+          });
+        }}
+      />
     </>
   );
 }

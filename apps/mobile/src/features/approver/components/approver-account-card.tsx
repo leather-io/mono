@@ -10,7 +10,7 @@ import { t } from '@lingui/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
 
-function AccountItem({ account }: { account: Account }) {
+function AccountItem({ account, onPress }: { account: Account; onPress?: () => void }) {
   const { list: walletsList } = useWallets();
 
   const walletName = useMemo(
@@ -20,6 +20,7 @@ function AccountItem({ account }: { account: Account }) {
 
   return (
     <AccountListItem
+      onPress={onPress}
       key={account.id}
       accountName={account.name}
       address={
@@ -35,7 +36,13 @@ function AccountItem({ account }: { account: Account }) {
   );
 }
 
-export function ApproverAccountCard({ accounts }: { accounts: Account[] }) {
+export function ApproverAccountCard({
+  accounts,
+  onPress,
+}: {
+  accounts: Account[];
+  onPress?: () => void;
+}) {
   return (
     <>
       <Text variant="label01">
@@ -46,7 +53,7 @@ export function ApproverAccountCard({ accounts }: { accounts: Account[] }) {
       </Text>
       <Box mx="-5">
         {accounts.map(account => (
-          <AccountItem key={account.id} account={account} />
+          <AccountItem onPress={onPress} key={account.id} account={account} />
         ))}
       </Box>
     </>

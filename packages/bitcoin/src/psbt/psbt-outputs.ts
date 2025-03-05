@@ -5,7 +5,6 @@ import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { getAddressFromOutScript } from '../utils/bitcoin.utils';
-import { createBitcoinAddress } from '../validation/bitcoin-address';
 
 export interface PsbtOutput {
   address: BitcoinAddress;
@@ -36,9 +35,11 @@ export function getParsedOutputs({
         // logger.error('Output has no script');
         return;
       }
-      const outputAddress = createBitcoinAddress(
-        getAddressFromOutScript(output.script, bitcoinNetwork)
-      );
+      const outputAddress = getAddressFromOutScript(output.script, bitcoinNetwork);
+      if (outputAddress === null) {
+        throw new Error('PSBT output has unsupported bitcoin address');
+      }
+
       const isCurrentAddress = psbtAddresses.includes(outputAddress);
 
       return {

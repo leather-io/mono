@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { formatBalance } from '@/components/balance/balance';
+import { normalizeSignAtIndex } from '@/components/browser/approver-sheet/utils';
 import { useToastContext } from '@/components/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
@@ -22,12 +23,20 @@ import {
   getSizeInfo,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates, FeeTypes, Money } from '@leather.io/models';
+import {
+  AverageBitcoinFeeRates,
+  BitcoinNetworkModes,
+  FeeTypes,
+  Money,
+  WalletDefaultNetworkConfigurationIds,
+  defaultNetworksKeyedById,
+} from '@leather.io/models';
 import {
   useAverageBitcoinFeeRates,
   useBitcoinBroadcastTransaction,
   useCurrentNetworkState,
 } from '@leather.io/query';
+import { RpcParams, RpcResult, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
@@ -44,17 +53,18 @@ import { usePsbtAccounts } from './use-psbt-accounts';
 import { usePsbtPayers } from './use-psbt-payers';
 import { usePsbtSigner } from './use-psbt-signer';
 
-interface BasePsbtSignerProps {
-  psbtHex: string;
-  onEdit(): void;
-  onSuccess(): void;
+interface BasePsbtSignerProps extends PsbtSignerProps {
   feeRates: AverageBitcoinFeeRates;
 }
 
 interface PsbtSignerProps {
   psbtHex: string;
-  onEdit(): void;
-  onSuccess(): void;
+  broadcast: RpcParams<typeof signPsbt>['broadcast'];
+  onBack(): void;
+  onSuccess(result: RpcResult<typeof signPsbt>): void;
+  allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
+  signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
+  network?: BitcoinNetworkModes;
 }
 
 interface FeeTypeParams {
@@ -82,11 +92,23 @@ export function PsbtSigner(props: PsbtSignerProps) {
   return <BasePsbtSigner feeRates={feeRates} {...props} />;
 }
 
+function getPsbtNetwork(network: BitcoinNetworkModes) {
+  if (network === 'testnet')
+    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet4];
+  if (network === 'mainnet')
+    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet];
+  throw new Error('This network is currently not supported');
+}
+
 export function BasePsbtSigner({
   psbtHex: _psbtHex,
-  onEdit,
+  onBack,
   onSuccess,
   feeRates,
+  signAtIndex,
+  allowedSighash,
+  broadcast,
+  network: requestedNetwork,
 }: BasePsbtSignerProps) {
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
   const psbtAccounts = usePsbtAccounts({ psbtHex });
@@ -100,7 +122,8 @@ export function BasePsbtSigner({
   if (!psbtPayers[0]) throw new Error('No payer found');
   if (psbtPayers.length > 1) throw new Error('Only one psbt payer is supported right now');
 
-  const network = useCurrentNetworkState();
+  const currentNetwork = useCurrentNetworkState();
+  const network = requestedNetwork ? getPsbtNetwork(requestedNetwork) : currentNetwork;
   const { sign } = usePsbtSigner();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const [approverState, setApproverState] = useState<ApproverState>('start');
@@ -183,17 +206,30 @@ export function BasePsbtSigner({
     setApproverState('submitting');
     try {
       const psbt = getPsbtAsTransaction(psbtHex);
-      const signedTx = await sign(psbt.toPSBT());
+      const signedTx = await sign(psbt.toPSBT(), {
+        signAtIndex: normalizeSignAtIndex(signAtIndex),
+        allowedSighash,
+      });
       signedTx.finalize();
+
+      if (!broadcast) {
+        onSuccess({
+          hex: signedTx.hex,
+        });
+        return;
+      }
 
       await broadcastTx({
         // TODO: for now
         skipSpendableCheckUtxoIds: 'all',
         tx: signedTx.hex,
-        onSuccess() {
+        onSuccess(txid) {
           setApproverState('submitted');
           setTimeout(() => {
-            onSuccess();
+            onSuccess({
+              hex: signedTx.hex,
+              txid,
+            });
           }, 1000);
         },
         onError() {
@@ -277,7 +313,7 @@ export function BasePsbtSigner({
           <Approver.Actions>
             <ApproverButtons
               approverState={approverState}
-              onEdit={onEdit}
+              onBack={onBack}
               onApprove={onSubmitTransaction}
             />
           </Approver.Actions>

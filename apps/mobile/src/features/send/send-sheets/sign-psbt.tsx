@@ -18,8 +18,9 @@ export function SendSheetSignPsbt() {
 
   return (
     <PsbtSigner
+      broadcast
       psbtHex={psbtHex}
-      onEdit={navigation.goBack}
+      onBack={navigation.goBack}
       onSuccess={() => sendSheetRef.current?.close()}
     />
   );

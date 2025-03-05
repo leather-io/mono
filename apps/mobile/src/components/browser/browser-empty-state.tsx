@@ -3,8 +3,11 @@ import { TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useApps } from '@/store/apps/apps.read';
+import { App } from '@/store/apps/utils';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
+import { Image } from 'expo-image';
 
 import {
   Box,
@@ -14,7 +17,6 @@ import {
   Theme,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
-import { assertUnreachable } from '@leather.io/utils';
 
 import { TabBar } from '../tab-bar';
 import { formatURL } from './utils';
@@ -25,72 +27,14 @@ interface BrowserEmptyStateProps {
   goToActiveBrowser: () => void;
 }
 
-interface Shortcut {
-  title: string;
-  link: string;
-  description?: string;
-  favicon?: string;
-}
-
-function getCurrentArray(currentTab: CurrentTab) {
-  const SUGGESTED: Shortcut[] = [
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-  ];
-
-  const RECENT: Shortcut[] = [
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-  ];
-
-  const CONNECTED: Shortcut[] = [
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title`, description: t`Description` },
-    { link: 'https://gamma.io', title: t`Title` },
-    { link: 'https://gamma.io', title: t`Title` },
-  ];
-  switch (currentTab) {
-    case 'connected':
-      return CONNECTED;
-    case 'recent':
-      return RECENT;
-    case 'suggested':
-      return SUGGESTED;
-    default:
-      assertUnreachable(currentTab);
-  }
-}
-
 type CurrentTab = 'suggested' | 'recent' | 'connected';
 
 interface AppWidgetProps {
   onPress: () => void;
-  shortcut: Shortcut;
+  title: string;
+  icon: string;
 }
-function AppWidget({ onPress, shortcut }: AppWidgetProps) {
+function AppWidget({ onPress, title, icon }: AppWidgetProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -99,16 +43,15 @@ function AppWidget({ onPress, shortcut }: AppWidgetProps) {
       pressEffects={legacyTouchablePressEffect}
     >
       <Box borderRadius="sm">
-        <PlaceholderIcon height={60} width={60} />
+        {icon ? (
+          <Image style={{ height: 32, width: 32 }} source={{ uri: icon }} />
+        ) : (
+          <PlaceholderIcon height={60} width={60} />
+        )}
       </Box>
 
       <Box justifyContent="center" gap="1">
-        <Text variant="label02">{shortcut.title}</Text>
-        {shortcut.description ? (
-          <Text variant="label03" color="ink.text-subdued">
-            {shortcut.description}
-          </Text>
-        ) : null}
+        <Text variant="label02">{title}</Text>
       </Box>
     </Pressable>
   );
@@ -122,6 +65,18 @@ export function BrowserEmptyState({
   const { top, bottom } = useSafeAreaInsets();
   const [currentTab, setCurrentTab] = useState<CurrentTab>('suggested');
   const theme = useTheme<Theme>();
+  const { list: connectedApps } = useApps('connected');
+  const { list: recentApps } = useApps('recently_visited');
+
+  const tabMap: Record<CurrentTab, Pick<App, 'origin' | 'icon'>[]> = {
+    connected: connectedApps,
+    recent: recentApps,
+    suggested: [
+      { origin: 'https://gamma.io', icon: '' },
+      { origin: 'https://stacks.gamma.io', icon: '' },
+    ],
+  };
+
   function redirect(url: string) {
     setTextURL(formatURL(url));
     goToActiveBrowser();
@@ -227,12 +182,13 @@ export function BrowserEmptyState({
           gap: theme.spacing[3],
         }}
       >
-        {getCurrentArray(currentTab).map((shortcut, idx) => (
+        {tabMap[currentTab].map(app => (
           <AppWidget
-            key={shortcut.link + idx}
-            shortcut={shortcut}
+            key={app.origin}
+            title={app.origin}
+            icon={app.icon}
             onPress={() => {
-              setTextURL(shortcut.link);
+              setTextURL(app.origin);
               goToActiveBrowser();
             }}
           />

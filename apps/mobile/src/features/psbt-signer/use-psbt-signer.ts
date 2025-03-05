@@ -10,7 +10,7 @@ import { isDefined, uniqueArray } from '@leather.io/utils';
 
 export function usePsbtSigner() {
   return {
-    async sign(tx: Uint8Array) {
+    async sign(tx: Uint8Array, options?: { signAtIndex?: number[]; allowedSighash?: number[] }) {
       const unsignedTx = btc.Transaction.fromPSBT(tx);
 
       const inputs = getPsbtTxInputs(unsignedTx);
@@ -22,6 +22,7 @@ export function usePsbtSigner() {
       // const requiredPaths = ["efd01538/86'/0'/0'/0/0"];
       const requiredPaths = uniqueArray(
         inputs
+          .filter((_, idx) => options?.signAtIndex?.includes(idx) ?? true)
           .flatMap(input =>
             extractRequiredKeyOrigins(input.bip32Derivation ?? input.tapBip32Derivation ?? [])
           )
@@ -64,7 +65,7 @@ export function usePsbtSigner() {
         if (!key || keys.length !== 1) throw new Error('Unimplemented: Multisig transactions');
 
         try {
-          unsignedTx.signIdx(pkMap[key]!.privateKey!, index);
+          unsignedTx.signIdx(pkMap[key]!.privateKey!, index, options?.allowedSighash);
         } catch (e) {
           // eslint-disable-next-line no-console
           console.log(e);

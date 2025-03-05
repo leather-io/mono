@@ -1,18 +1,20 @@
 import { RefObject, useCallback, useMemo } from 'react';
 
-import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
 import { useAppDispatch } from '@/store/utils';
-import { useRouter } from 'expo-router';
 
 import { SheetRef } from '@leather.io/ui/native';
 
 import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 
-export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRef> }) {
+interface AccountSelectedSheetProps {
+  sheetRef: RefObject<SheetRef>;
+  onAccountPress: (accountId: string) => void;
+}
+
+export function AccountSelectorSheet({ sheetRef, onAccountPress }: AccountSelectedSheetProps) {
   const accounts = useAccounts().list;
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const checkIdxWithinBounds = useCallback(
     (id: number) => {
@@ -39,16 +41,6 @@ export function AccountSelectorSheet({ sheetRef }: { sheetRef: RefObject<SheetRe
       dispatch(userUpdatesAccountOrder({ accountIds }));
     },
     [accountIds, checkIdxWithinBounds, dispatch]
-  );
-  const onAccountPress = useCallback(
-    (accountId: string) => {
-      sheetRef.current?.close();
-      router.navigate({
-        pathname: AppRoutes.Account,
-        params: { accountId },
-      });
-    },
-    [router, sheetRef]
   );
 
   return (

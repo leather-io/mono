@@ -59,9 +59,18 @@ export function useAccountsByFingerprint(fingerprint: string, status?: AccountSt
 }
 
 export function useAccounts(status?: AccountStatus) {
+  const accountsList = useSelector(selectAccounts(status));
+  function fromFingerprint(fingerprint: string) {
+    return accountsList.filter(account => account.fingerprint === fingerprint);
+  }
+  function fromAccountIndex(fingerprint: string, accountIndex: number) {
+    return fromFingerprint(fingerprint).filter(account => account.accountIndex === accountIndex);
+  }
   return {
-    list: useSelector(selectAccounts(status)),
-    hasAccounts: useSelector(selectAccounts(status)).length > 0,
+    list: accountsList,
+    hasAccounts: accountsList.length > 0,
+    fromFingerprint,
+    fromAccountIndex,
   };
 }
 

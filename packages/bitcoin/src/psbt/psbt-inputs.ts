@@ -1,6 +1,5 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import type { TransactionInput } from '@scure/btc-signer/psbt';
-import { createBitcoinAddress } from 'validation/bitcoin-address';
 
 import type { BitcoinAddress, BitcoinNetworkModes, Inscription } from '@leather.io/models';
 import { isDefined, isUndefined } from '@leather.io/utils';
@@ -42,10 +41,12 @@ export function getParsedInputs({
 
   const signAll = isUndefined(indexesToSign);
   const psbtInputs = inputs.map((input, i) => {
-    const inputAddress = isDefined(input.index)
+    const bitcoinAddress = isDefined(input.index)
       ? getBitcoinInputAddress(input, bitcoinNetwork)
-      : '';
-    const bitcoinAddress = createBitcoinAddress(inputAddress);
+      : null;
+    if (bitcoinAddress === null) {
+      throw new Error('PSBT input has unsupported bitcoin address');
+    }
     const isCurrentAddress = psbtAddresses.includes(bitcoinAddress);
     // Flags when not signing ALL inputs/outputs (NONE, SINGLE, and ANYONECANPAY)
     const canChange =
