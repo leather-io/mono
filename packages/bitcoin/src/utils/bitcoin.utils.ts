@@ -15,6 +15,7 @@ import { defaultWalletKeyId, isDefined, whenNetwork } from '@leather.io/utils';
 
 import { getTaprootPayment } from '../payments/p2tr-address-gen';
 import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
+import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 
 export interface BitcoinAccount {
@@ -103,7 +104,7 @@ export function decodeBitcoinTx(tx: string): ReturnType<typeof btc.RawTx.decode>
 export function getAddressFromOutScript(
   script: Uint8Array,
   bitcoinNetwork: BtcSignerNetwork
-): string {
+): BitcoinAddress | null {
   const outputScript = btc.OutScript.decode(script);
 
   switch (outputScript.type) {
@@ -111,25 +112,28 @@ export function getAddressFromOutScript(
     case 'sh':
     case 'wpkh':
     case 'wsh':
-      return btc.Address(bitcoinNetwork).encode({
-        type: outputScript.type,
-        hash: outputScript.hash,
-      });
+      return createBitcoinAddress(
+        btc.Address(bitcoinNetwork).encode({
+          type: outputScript.type,
+          hash: outputScript.hash,
+        })
+      );
     case 'tr':
-      return btc.Address(bitcoinNetwork).encode({
-        type: outputScript.type,
-        pubkey: outputScript.pubkey,
-      });
+      return createBitcoinAddress(
+        btc.Address(bitcoinNetwork).encode({
+          type: outputScript.type,
+          pubkey: outputScript.pubkey,
+        })
+      );
     case 'ms':
-      return btc.p2ms(outputScript.m, outputScript.pubkeys).address ?? '';
+      return createBitcoinAddress(btc.p2ms(outputScript.m, outputScript.pubkeys).address ?? '');
     case 'pk':
-      return btc.p2pk(outputScript.pubkey, bitcoinNetwork).address ?? '';
+      return createBitcoinAddress(btc.p2pk(outputScript.pubkey, bitcoinNetwork).address ?? '');
     case 'unknown':
-      return 'unknown';
     case 'tr_ms':
     case 'tr_ns':
     default:
-      return '';
+      return null;
   }
 }
 
@@ -229,7 +233,7 @@ export function getBitcoinInputAddress(input: TransactionInput, bitcoinNetwork: 
       input.nonWitnessUtxo.outputs[input.index]?.script,
       bitcoinNetwork
     );
-  return '';
+  return null;
 }
 
 export function getInputPaymentType(
@@ -237,7 +241,7 @@ export function getInputPaymentType(
   network: BitcoinNetworkModes
 ): BitcoinPaymentTypes {
   const address = getBitcoinInputAddress(input, getBtcSignerLibNetworkConfigByMode(network));
-  if (address === '') throw new Error('Input address cannot be empty');
+  if (address === null) throw new Error('Input address cannot be empty');
   if (address.startsWith('bc1p') || address.startsWith('tb1p') || address.startsWith('bcrt1p'))
     return 'p2tr';
   if (address.startsWith('bc1q') || address.startsWith('tb1q') || address.startsWith('bcrt1q'))

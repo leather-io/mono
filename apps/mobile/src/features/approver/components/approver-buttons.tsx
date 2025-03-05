@@ -8,11 +8,11 @@ import { ApproverState } from '../utils';
 
 interface ApproverButtonsProps {
   approverState: ApproverState;
-  onEdit(): void;
+  onBack(): void;
   onApprove(): void;
 }
 
-export function ApproverButtons({ approverState, onEdit, onApprove }: ApproverButtonsProps) {
+export function ApproverButtons({ approverState, onBack, onApprove }: ApproverButtonsProps) {
   switch (approverState) {
     case 'start':
       return (
@@ -24,7 +24,7 @@ export function ApproverButtons({ approverState, onEdit, onApprove }: ApproverBu
               message: 'Edit',
             })}
             flex={1}
-            onPress={onEdit}
+            onPress={onBack}
           />
           <Button
             buttonState="default"

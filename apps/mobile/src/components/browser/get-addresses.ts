@@ -2,7 +2,7 @@ import { bytesToHex } from '@stacks/common';
 import type { Account } from '@stacks/wallet-sdk';
 
 import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
-import { BtcAddress } from '@leather.io/rpc';
+import { BtcAddress, getAddresses } from '@leather.io/rpc';
 
 // Extending the `Account` type from `@stacks/wallet-sdk`
 export type SoftwareStacksAccount = Account & {
@@ -22,12 +22,11 @@ export interface HardwareStacksAccount {
 }
 
 export type StacksAccountResponse = SoftwareStacksAccount | HardwareStacksAccount;
-
 // We could think of making the arguments optional here.
 export function formatAddressesForGetAddresses({
   taproot,
   nativeSegwit,
-  stacksAccountAddress,
+  stacksAccount,
 }: {
   taproot: {
     address: string;
@@ -39,7 +38,10 @@ export function formatAddressesForGetAddresses({
     publicKey: Uint8Array;
     derivationPath: string;
   };
-  stacksAccountAddress: string;
+  stacksAccount: {
+    address: string;
+    publicKey: Uint8Array;
+  };
 }) {
   const keysToIncludeInResponse = [];
   const nativeSegwitAddressResponse: BtcAddress = {
@@ -64,9 +66,11 @@ export function formatAddressesForGetAddresses({
 
   const stacksAddressResponse = {
     symbol: 'STX',
-    address: stacksAccountAddress,
+    address: stacksAccount.address,
+    publicKey: bytesToHex(stacksAccount.publicKey),
   };
 
   keysToIncludeInResponse.push(stacksAddressResponse);
-  return keysToIncludeInResponse;
+
+  return getAddresses.result.shape.addresses.parse(keysToIncludeInResponse);
 }

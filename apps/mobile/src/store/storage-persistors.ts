@@ -25,7 +25,7 @@ export const persistConfig: PersistConfig<RootState> = {
   },
   version: 0,
   storage: AsyncStorage,
-  whitelist: ['wallets', 'accounts', 'keychains', 'settings'],
+  whitelist: ['wallets', 'accounts', 'keychains', 'settings', 'apps'],
 };
 
 function getBasicSecureStoreConfig() {

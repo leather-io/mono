@@ -11,3 +11,7 @@ initInpageProvider({
     version: 'replace_version',
   },
 });
+// note: this is required, or you'll sometimes get silent failures
+// Ref: https://github.com/react-native-webview/react-native-webview/blob/master/docs/Guide.md#the-injectedjavascript-prop
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+true;

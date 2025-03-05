@@ -3,18 +3,19 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AddWalletSheet } from '@/components/add-wallet/';
-import { ApproverSheet } from '@/components/browser/approver-sheet';
-import { BrowserMessage } from '@/components/browser/browser-in-use';
+import { ApproverSheet } from '@/components/browser/approver-sheet/approver-sheet';
+import { BrowserMessage } from '@/components/browser/approver-sheet/utils';
 import { PressableListItem } from '@/components/developer-console/list-items';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
-import { WalletFingerprintLoader, WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
 import { Box, SheetRef, Theme } from '@leather.io/ui/native';
+
+const LEATHER_URL = 'https://leather.io';
 
 export default function DeveloperConsoleScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -69,20 +70,11 @@ export default function DeveloperConsoleScreen() {
         <PressableListItem title={t`Drawer`} />
         <PressableListItem title={t`Page`} />
       </ScrollView>
-      <WalletFingerprintLoader>
-        {fingerprints => (
-          <WalletLoader fingerprint={fingerprints[0]}>
-            {wallet => (
-              <ApproverSheet
-                fingerprint={wallet.fingerprint}
-                accountIndex={0}
-                message={getAddressesMessage}
-                sendResult={() => setGetAddressesMessage(null)}
-              />
-            )}
-          </WalletLoader>
-        )}
-      </WalletFingerprintLoader>
+      <ApproverSheet
+        origin={LEATHER_URL}
+        message={getAddressesMessage}
+        sendResult={() => setGetAddressesMessage(null)}
+      />
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </Box>
   );

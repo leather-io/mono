@@ -297,7 +297,7 @@ export function StacksTxSigner({
           <Approver.Actions>
             <ApproverButtons
               approverState={approverState}
-              onEdit={onEdit}
+              onBack={onEdit}
               onApprove={onSubmitTransaction}
             />
           </Approver.Actions>

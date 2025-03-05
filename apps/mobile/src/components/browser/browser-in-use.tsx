@@ -1,13 +1,15 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
-import injectedProvider from '@/scripts/dist/injected-provider';
+import { getFaviconAndSave } from '@/filesystem/favicon';
+import { userAddsApp } from '@/store/apps/apps.write';
 import { useSettings } from '@/store/settings/settings';
-import { WalletFingerprintLoader, WalletLoader } from '@/store/wallets/wallets.read';
+import { useAppDispatch } from '@/store/utils';
 import { useTheme } from '@shopify/restyle';
 
+import injectedProvider from '@leather.io/provider/mobile';
 import {
   ArrowRotateClockwiseIcon,
   Box,
@@ -23,27 +25,31 @@ import {
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
-import { ApproverSheet } from './approver-sheet';
+import { ApproverSheet } from './approver-sheet/approver-sheet';
+import { BrowserMessage } from './approver-sheet/utils';
 
 interface BrowserInUseProp {
   textURL: string;
   goToInactiveBrowser: () => void;
 }
 
-interface BrowserMessageDetails {
-  jsonrpc: string;
-  id: string;
-  method: 'getAddresses';
-}
-export type BrowserMessage = BrowserMessageDetails | null;
-
-export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) {
+export function BrowserInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) {
   const { top, bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
+  const [origin, setOrigin] = useState<string | null>(null);
   const settingsSheetRef = useRef<SheetRef>(null);
   const { themeDerivedFromThemePreference } = useSettings();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (navState) {
+      setOrigin(new URL(navState.url).origin);
+    } else {
+      setOrigin(null);
+    }
+  }, [navState, setOrigin]);
 
   function closeBrowser() {
     goToInactiveBrowser();
@@ -65,8 +71,14 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
     settingsSheetRef.current?.present();
   }
 
-  function handleWebViewNavigationStateChange(newNavState: WebViewNavigation) {
+  async function handleWebViewNavigationStateChange(newNavState: WebViewNavigation) {
     setNavState(newNavState);
+    const url = new URL(newNavState.url);
+
+    const uri = await getFaviconAndSave(url.hostname);
+    if (uri) {
+      dispatch(userAddsApp({ icon: uri, origin: url.origin, status: 'recently_visited' }));
+    }
   }
 
   const [message, setMessage] = useState<BrowserMessage>(null);
@@ -104,7 +116,11 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
       </Box>
       <WebView
         onMessage={onMessageHandler}
-        injectedJavaScript={injectedProvider}
+        injectedJavaScript={injectedProvider({
+          branch: 'branch',
+          version: 'version',
+          commitSha: 'sha',
+        })}
         ref={webViewRef}
         style={{
           flex: 1,
@@ -147,20 +163,16 @@ export function BrowerInUse({ textURL, goToInactiveBrowser }: BrowserInUseProp) 
       <Sheet ref={settingsSheetRef} themeVariant={themeDerivedFromThemePreference}>
         <Box p="5" />
       </Sheet>
-      <WalletFingerprintLoader>
-        {fingerprints => (
-          <WalletLoader fingerprint={fingerprints[0]}>
-            {wallet => (
-              <ApproverSheet
-                fingerprint={wallet.fingerprint}
-                accountIndex={0}
-                message={message}
-                sendResult={() => setMessage(null)}
-              />
-            )}
-          </WalletLoader>
-        )}
-      </WalletFingerprintLoader>
+      {origin && (
+        <ApproverSheet
+          message={message}
+          origin={origin}
+          sendResult={result => {
+            webViewRef.current?.postMessage(JSON.stringify(result));
+            setMessage(null);
+          }}
+        />
+      )}
     </View>
   );
 }

@@ -132,3 +132,11 @@ export function useBitcoinAddresses() {
     [accounts]
   );
 }
+
+export function findAccountByAddress(
+  accounts: ReturnType<typeof useBitcoinAccounts>['list'],
+  address: string,
+  addressIndex = 0
+) {
+  return accounts.find(keychain => keychain.derivePayer({ addressIndex }).address === address);
+}

@@ -13,6 +13,7 @@ import {
 import z from 'zod';
 
 import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
+import { appsSlice } from './apps/apps.write';
 import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.write';
 import { bitcoinKeychainStoreSchema } from './keychains/bitcoin/utils';
 import { stacksKeychainSlice } from './keychains/stacks/stacks-keychains.write';
@@ -41,6 +42,7 @@ const reducer = combineReducers({
     stacks: stacksKeychainSlice.reducer,
   }),
   settings: settingsSlice.reducer,
+  apps: appsSlice.reducer,
 });
 
 export type RootState = ReturnType<typeof reducer>;

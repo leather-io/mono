@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { BrowserEmptyState } from '@/components/browser/browser-empty-state';
-import { BrowerInUse } from '@/components/browser/browser-in-use';
+import { BrowserInUse } from '@/components/browser/browser-in-use';
 import { BrowserType } from '@/components/browser/utils';
 
 import { assertUnreachable } from '@leather.io/utils';
@@ -22,7 +22,7 @@ export default function BrowserScreen() {
 
     case BrowserType.active:
       return (
-        <BrowerInUse
+        <BrowserInUse
           textURL={textURL}
           goToInactiveBrowser={() => {
             setBrowserType(BrowserType.inactive);
