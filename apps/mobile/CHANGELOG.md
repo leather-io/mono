@@ -634,6 +634,30 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.19.39
 
+## [2.17.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.17.0...@leather.io/mobile-v2.17.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* specify currency symbol and precision using currency map, ref LEA-2032 ([46c9cf8](https://github.com/leather-io/mono/commit/46c9cf83a3c8651d7c8171ee002da1622b9b397f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.19.41
+    * @leather.io/crypto bumped to 1.6.49
+    * @leather.io/provider bumped to 1.0.13
+    * @leather.io/query bumped to 2.29.6
+    * @leather.io/rpc bumped to 2.7.4
+    * @leather.io/services bumped to 1.4.12
+    * @leather.io/stacks bumped to 1.7.1
+    * @leather.io/ui bumped to 1.51.2
+    * @leather.io/utils bumped to 0.27.8
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.19.41
+
 ## [2.17.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.16.5...@leather.io/mobile-v2.17.0) (2025-03-04)
 
 
