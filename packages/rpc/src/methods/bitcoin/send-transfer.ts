@@ -5,14 +5,14 @@ import { defineRpcEndpoint } from '../../rpc/schemas';
 const sendTransferLegacyParamSchema = z.object({
   account: z.number().optional(),
   address: z.string(),
-  amount: z.string(),
+  amount: z.coerce.string(),
   network: z.string(),
 });
 export type RpcSendTransferLegacyParams = z.infer<typeof sendTransferLegacyParamSchema>;
 
 const transferRecipientParamSchema = z.object({
   address: z.string(),
-  amount: z.string(),
+  amount: z.coerce.string(),
 });
 
 const rpcSendTransferParamsSchema = z.object({
