@@ -26,18 +26,26 @@ export function Sip10TokenBalance({
   iconSrc,
   ...rest
 }: Sip10TokenBalanceProps) {
-  const icon = iconSrc ? (
-    <Avatar image={iconSrc} />
-  ) : (
-    <StacksAssetAvatar gradientString={contractId} img={iconSrc}>
-      <Text>{name[0]}</Text>
-    </StacksAssetAvatar>
-  );
+  // const icon = iconSrc ? (
+  //   <Avatar image={iconSrc} />
+  // ) : (
+  //   <StacksAssetAvatar gradientString={contractId} img={iconSrc}>
+  //     <Text>{name[0]}</Text>
+  //   </StacksAssetAvatar>
+  // );
 
   return (
     <TokenBalance
       ticker={symbol}
-      icon={icon}
+      icon={
+        <Avatar
+          image={iconSrc === '' ? 'https://avatar.vercel.sh/hfdiehfeihfifhe?size=36' : iconSrc}
+          imageAlt={name}
+          fallback={name[0]}
+        >
+          <Text>{name[0]}</Text>
+        </Avatar>
+      }
       tokenName={name}
       protocol="sip10"
       fiatBalance={fiatBalance}

@@ -22,7 +22,7 @@ export function StacksAssetAvatar({
   if (!gradientString) return null;
 
   return (
-    <DynamicColorCircle value={gradientString}>
+    <DynamicColorCircle value="keowkowkeowkeoewkwoe">
       <View style={{ position: 'absolute' }}>{children}</View>
     </DynamicColorCircle>
   );

@@ -1,8 +1,6 @@
-import { AvatarFallback } from '@radix-ui/react-avatar';
 import { Box, BoxProps } from 'leather-styles/jsx';
 
 import { DynamicColorCircle } from '../dynamic-color-circle.web';
-import { defaultFallbackDelay } from './avatar.shared';
 import { Avatar } from './avatar.web';
 import { StxAvatarIcon } from './stx-avatar-icon.web';
 

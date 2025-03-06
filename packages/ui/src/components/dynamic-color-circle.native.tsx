@@ -18,7 +18,7 @@ export function DynamicColorCircle({ children, value }: DynamicColorCircleProps)
       <Image
         alt="Dynamic avatar"
         source={{ uri: `https://avatar.vercel.sh/${value}?size=${sizeParam}` }}
-        style={{ borderRadius: parseInt(sizeParam) / 2 }}
+        // style={{ borderRadius: parseInt(sizeParam) / 2 }}
       />
       {children}
     </View>
