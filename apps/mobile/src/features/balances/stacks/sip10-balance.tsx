@@ -8,7 +8,7 @@ import { Avatar, PressableProps, StacksAssetAvatar, Text } from '@leather.io/ui/
 
 import { TokenBalance } from '../token-balance';
 
-const sip10MaxDisplay = 3;
+// const sip10MaxDisplay = 3;
 interface Sip10TokenBalanceProps extends PressableProps {
   availableBalance: Money;
   contractId: string;
@@ -37,6 +37,8 @@ export function Sip10TokenBalance({
   // PETE Dynamic circle etc. is way overly complex for just this path!
   // Keep it simple and add some text to it
 
+  // grab the SVGs from ALEX!
+
   return (
     <TokenBalance
       ticker={symbol}
@@ -64,7 +66,7 @@ export function Sip10Balance() {
   if (data.state !== 'success') return;
 
   return data.value.sip10s.map((balance, index) => {
-    if (index >= sip10MaxDisplay) return null;
+    // if (index >= sip10MaxDisplay) return null;
     return (
       <Sip10TokenBalance
         key={`${balance.asset.symbol}-${index}`}
@@ -90,7 +92,7 @@ export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10Balanc
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
   return data.value.sip10s.map((balance, index) => {
-    if (index >= sip10MaxDisplay) return null;
+    // if (index >= sip10MaxDisplay) return null;
     return (
       <Sip10TokenBalance
         key={`${balance.asset.symbol}-${index}`}
