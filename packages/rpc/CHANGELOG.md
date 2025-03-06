@@ -225,6 +225,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.8
 
+## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.7.4...@leather.io/rpc-v2.8.0) (2025-03-06)
+
+
+### Features
+
+* **sdk:** leather client sdk ([afcd899](https://github.com/leather-io/mono/commit/afcd899ec917a20ee9c4205df9ea27b4613da141))
+
 ## [2.7.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.7.1...@leather.io/rpc-v2.7.2) (2025-02-28)
 
 
