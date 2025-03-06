@@ -225,6 +225,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.8
 
+## [2.8.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.8.0...@leather.io/rpc-v2.8.1) (2025-03-06)
+
+
+### Bug Fixes
+
+* **rpc:** send transfer, closes LEA-2248 ([5bc4028](https://github.com/leather-io/mono/commit/5bc402810be6b5201bfd9f3bdde2e2a30910eead))
+
 ## [2.8.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.7.4...@leather.io/rpc-v2.8.0) (2025-03-06)
 
 
