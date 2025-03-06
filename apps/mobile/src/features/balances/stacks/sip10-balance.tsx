@@ -34,12 +34,15 @@ export function Sip10TokenBalance({
   //   </StacksAssetAvatar>
   // );
 
+  // PETE Dynamic circle etc. is way overly complex for just this path!
+  // Keep it simple and add some text to it
+
   return (
     <TokenBalance
       ticker={symbol}
       icon={
         <Avatar
-          image={iconSrc === '' ? 'https://avatar.vercel.sh/hfdiehfeihfifhe?size=36' : iconSrc}
+          image={iconSrc === '' ? `https://avatar.vercel.sh/${contractId}?size=36` : iconSrc}
           imageAlt={name}
           fallback={name[0]}
         >
