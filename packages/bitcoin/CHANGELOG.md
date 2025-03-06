@@ -608,6 +608,20 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.7.4
 
+## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.41...@leather.io/bitcoin-v0.20.0) (2025-03-06)
+
+
+### Features
+
+* browser rpc ([2166045](https://github.com/leather-io/mono/commit/21660453b994d2a0cf56b2b9cb0c4377ddf2544d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/rpc bumped to 2.8.0
+
 ## [0.19.34](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.19.33...@leather.io/bitcoin-v0.19.34) (2025-02-25)
 
 
