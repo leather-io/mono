@@ -1,12 +1,12 @@
-import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import { AccountId } from '@/models/domain.model';
 import {
   useRunesAccountBalance,
   useRunesTotalBalance,
 } from '@/queries/balance/runes-balance.query';
+import { useSettings } from '@/store/settings/settings';
 
 import { Money } from '@leather.io/models';
-import { PressableProps } from '@leather.io/ui/native';
+import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
@@ -23,12 +23,13 @@ export function RunesTokenBalance({
   symbol,
   ...rest
 }: RunesTokenBalanceProps) {
+  const { themeDerivedFromThemePreference } = useSettings();
   return (
     <TokenBalance
       ticker={symbol}
-      icon={<TokenIcon ticker={symbol} />} // TODO LEA-1909: add images from uri
+      icon={<RunesAvatarIcon theme={themeDerivedFromThemePreference} />}
       tokenName={name}
-      protocol="sip10"
+      protocol="rune"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       {...rest}
