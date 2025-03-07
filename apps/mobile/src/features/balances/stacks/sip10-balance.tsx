@@ -88,7 +88,8 @@ interface Sip10BalanceByAccountProps {
 }
 export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10BalanceByAccountProps) {
   const data = useSip10AccountBalance(fingerprint, accountIndex);
-
+  console.log('*******************');
+  console.log(data.value?.sip10s);
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
   return data.value.sip10s.map((balance, index) => {
