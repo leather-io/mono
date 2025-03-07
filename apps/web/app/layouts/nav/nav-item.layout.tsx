@@ -13,10 +13,11 @@ interface NavItemProps {
   icon: string;
   children: ReactNode;
 }
-export function NavItem({ children, icon }: NavItemProps) {
+export function NavItem({ children, icon, href }: NavItemProps) {
   return (
     <StyledNavLink
-      to="/"
+      to={href}
+      prefetch="intent"
       role="link"
       display="block"
       textStyle="label.02"

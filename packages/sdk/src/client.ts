@@ -6,6 +6,10 @@ import {
   endpoints,
 } from '@leather.io/rpc';
 
+export function isBrowser() {
+  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
+}
+
 type Entries<T, K extends keyof T = keyof T> = (K extends unknown ? [K, T[K]] : never)[];
 const endpointEntries = Object.entries(endpoints) as Entries<typeof endpoints>;
 
@@ -34,19 +38,26 @@ type LeatherSdk = {
 };
 
 interface LeatherClientConfig {
-  getProvider(): LeatherProvider | undefined;
+  getProvider?(): LeatherProvider | undefined;
+  onProviderNotFound?(): void;
 }
 
-const defaultOptions: LeatherClientConfig = {
+const defaultOptions = {
   getProvider() {
-    return (globalThis as any).LeatherProvider;
+    return (globalThis as any).LeatherProvider as LeatherProvider;
   },
-};
+  onProviderNotFound() {
+    // eslint-disable-next-line no-console
+    if (isBrowser()) console.log('Provider not found');
+  },
+} satisfies LeatherClientConfig;
 
 export function createLeatherClient(clientConfig?: LeatherClientConfig) {
-  const { getProvider } = { ...defaultOptions, ...clientConfig };
+  const { getProvider, onProviderNotFound } = { ...defaultOptions, ...clientConfig };
 
-  if (!getProvider()) throw new Error('LeatherProvider not found on global object');
+  if (isBrowser() && !getProvider()) {
+    onProviderNotFound();
+  }
 
   const actionMap = endpointEntries.reduce(
     (client, [fnName, endpoint]) => ({

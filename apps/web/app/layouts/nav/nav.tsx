@@ -43,8 +43,8 @@ export function Nav() {
           Home
         </NavItem>
 
-        <NavItem href="/send" icon="pulse">
-          Activity
+        <NavItem href="/earn" icon="pulse">
+          Earn
         </NavItem>
 
         <NavItem href="/send" icon="paper-plane">

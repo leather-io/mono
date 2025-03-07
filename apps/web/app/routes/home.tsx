@@ -1,7 +1,5 @@
-import { request } from '@stacks/connect';
-import { styled } from 'leather-styles/jsx';
+import { Home } from '~/features/home/home';
 
-import { Button } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import type { Route } from './+types/home';
@@ -32,30 +30,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function HomeRoute({ loaderData }: Route.ComponentProps) {
-  return (
-    <>
-      <styled.div p="space.04">
-        <styled.h1 textStyle="display.02">Bitcoin for the rest of us</styled.h1>
-        <styled.h2 textStyle="heading.05">
-          Unlock yield opportunities without giving up control of your assets.
-        </styled.h2>
-        <styled.h2 textStyle="heading.03">Featured articles</styled.h2>
-        <ul>
-          {loaderData.map(article => (
-            <li key={article.name}>
-              <a href={article.url}>{article.name}</a>
-            </li>
-          ))}
-        </ul>
-        <Button
-          onClick={async () => {
-            const result = await request('getAddresses');
-            console.log(result);
-          }}
-        >
-          Connect
-        </Button>
-      </styled.div>
-    </>
-  );
+  return <Home latestArticles={loaderData} />;
 }

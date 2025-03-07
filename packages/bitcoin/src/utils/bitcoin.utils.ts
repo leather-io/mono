@@ -132,11 +132,11 @@ export function getAddressFromOutScript(
     case 'unknown':
     case 'tr_ms':
     case 'tr_ns':
+    case 'p2a':
     default:
       return null;
   }
 }
-
 /**
  * Payment type identifiers, as described by `@scure/btc-signer` library
  */
