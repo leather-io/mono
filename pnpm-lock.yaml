@@ -502,6 +502,9 @@ importers:
       '@leather.io/panda-preset':
         specifier: workspace:*
         version: link:../../packages/panda-preset
+      '@leather.io/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@leather.io/ui':
         specifier: workspace:*
         version: link:../../packages/ui
