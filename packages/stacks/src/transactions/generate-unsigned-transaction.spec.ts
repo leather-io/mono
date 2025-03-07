@@ -4,12 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createMoney } from '@leather.io/utils';
 
-import {
-  generateUnsignedContractCall,
-  generateUnsignedContractDeploy,
-  generateUnsignedStxTokenTransfer,
-  initNonce,
-} from './generate-unsigned-transaction';
+import { generateStacksUnsignedTransaction, initNonce } from './generate-unsigned-transaction';
 import {
   StacksUnsignedContractCallOptions,
   StacksUnsignedContractDeployOptions,
@@ -28,7 +23,7 @@ describe('initNonce', () => {
   });
 });
 
-describe('generateUnsignedContractCall', () => {
+describe('generateStacksUnsignedTransaction', () => {
   it('should generate unsigned contract call', async () => {
     const options: StacksUnsignedContractCallOptions = {
       txType: TransactionTypes.ContractCall,
@@ -42,15 +37,13 @@ describe('generateUnsignedContractCall', () => {
       publicKey: testPublicKey,
     };
 
-    const result = await generateUnsignedContractCall(options);
+    const result = await generateStacksUnsignedTransaction(options);
     expect(result).toBeDefined();
     expect(result.payload.payloadType).toEqual(PayloadType.ContractCall);
     expect(result.auth.spendingCondition.fee).toBe(BigInt('1000'));
     expect(result.auth.spendingCondition.nonce).toBe(BigInt('1'));
   });
-});
 
-describe('generateUnsignedContractDeploy', () => {
   it('should generate unsigned contract deploy', async () => {
     const options: StacksUnsignedContractDeployOptions = {
       txType: TransactionTypes.ContractDeploy,
@@ -61,15 +54,13 @@ describe('generateUnsignedContractDeploy', () => {
       publicKey: testPublicKey,
     };
 
-    const result = await generateUnsignedContractDeploy(options);
+    const result = await generateStacksUnsignedTransaction(options);
     expect(result).toBeDefined();
     expect(result.payload.payloadType).toEqual(PayloadType.VersionedSmartContract);
     expect(result.auth.spendingCondition.fee).toBe(BigInt('1000'));
     expect(result.auth.spendingCondition.nonce).toBe(BigInt('1'));
   });
-});
 
-describe('generateUnsignedStxTokenTransfer', () => {
   it('should generate unsigned STX token transfer', async () => {
     const options: StacksUnsignedTokenTransferOptions = {
       txType: TransactionTypes.StxTokenTransfer,
@@ -80,7 +71,7 @@ describe('generateUnsignedStxTokenTransfer', () => {
       publicKey: testPublicKey,
     };
 
-    const result = await generateUnsignedStxTokenTransfer(options);
+    const result = await generateStacksUnsignedTransaction(options);
     expect(result).toBeDefined();
     expect(result.payload.payloadType).toEqual(PayloadType.TokenTransfer);
     expect(result.auth.spendingCondition.fee).toBe(BigInt('1000'));

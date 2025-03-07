@@ -225,8 +225,8 @@ importers:
         specifier: 7.8.2
         version: 7.8.2
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       '@stacks/wallet-sdk':
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
@@ -779,7 +779,7 @@ importers:
         version: link:../tokens
       tsup:
         specifier: 8.1.0
-        version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.5))(@swc/core@1.7.39(@swc/helpers@0.5.15))(postcss@8.4.49)(typescript@5.7.3)
+        version: 8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.5))(@swc/core@1.7.39(@swc/helpers@0.5.15))(postcss@8.5.3)(typescript@5.7.3)
 
   packages/prettier-config:
     dependencies:
@@ -817,8 +817,8 @@ importers:
         specifier: 6.15.0
         version: 6.15.0(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -884,14 +884,14 @@ importers:
         specifier: 7.8.2
         version: 7.8.2
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.59.16
         version: 5.59.16(react@18.2.0)
       alex-sdk:
         specifier: 2.1.4
-        version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.2(encoding@0.1.13))
+        version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
         specifier: 1.7.7
         version: 1.7.7
@@ -972,8 +972,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -1032,7 +1032,7 @@ importers:
         version: 7.8.2
       alex-sdk:
         specifier: 2.1.4
-        version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.2(encoding@0.1.13))
+        version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
         specifier: 1.7.7
         version: 1.7.7
@@ -1110,8 +1110,8 @@ importers:
         specifier: 7.8.2
         version: 7.8.2
       '@stacks/transactions':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -2987,7 +2987,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {node: '>=0.10.0'}
+    engines: {'0': node >=0.10.0}
 
   '@expo/cli@0.18.28':
     resolution: {integrity: sha512-fvbVPId6s6etindzP6Nzos/CS1NurMVy4JKozjebArHr63tBid5i/UY5Pp+4wTCAM20gB2SjRdwcwoL6HFC4Iw==}
@@ -3596,7 +3596,6 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
-    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -5388,8 +5387,8 @@ packages:
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.0.2':
-    resolution: {integrity: sha512-m2bvchqUeYv1ttXuC0EukW8UX4xBXTDcYb8bXmfI1RG89HXAvvCCgr5aiadU6zbutgoXvm8mquDt3nww0PO4Jg==}
+  '@stacks/transactions@7.0.5':
+    resolution: {integrity: sha512-mHsv7lUbZ5w4MKJ3NAirtdClIXLNKMqWIqT2rLjbIHzlYBqvZaELJSYD+km6E7Cm9G3yUYszorhruQmSTgilbg==}
 
   '@stacks/wallet-sdk@7.0.2':
     resolution: {integrity: sha512-hUVfdxpQXgspaaPab+KplypMjXw8xX73I20Bw79lE9L/CgEyMDw/AwauhH+ukhwGH0E4BbEy0Ezg6WfRVFo9Dw==}
@@ -20706,7 +20705,7 @@ snapshots:
     dependencies:
       '@stacks/common': 7.0.2
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.2(encoding@0.1.13)
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
       jsontokens: 4.0.1
       schema-inspector: 2.1.0
       zone-file: 2.0.0-beta.3
@@ -20737,7 +20736,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@7.0.2(encoding@0.1.13)':
+  '@stacks/transactions@7.0.5(encoding@0.1.13)':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
@@ -20758,7 +20757,7 @@ snapshots:
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/profile': 7.0.2(encoding@0.1.13)
       '@stacks/storage': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.2(encoding@0.1.13)
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
       c32check: 2.0.0
       jsontokens: 4.0.1
       zone-file: 2.0.0-beta.3
@@ -22982,11 +22981,11 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  alex-sdk@2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.2(encoding@0.1.13)):
+  alex-sdk@2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
-      '@stacks/transactions': 7.0.2(encoding@0.1.13)
-      clarity-codegen: 0.5.3(@stacks/transactions@7.0.2(encoding@0.1.13))
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      clarity-codegen: 0.5.3(@stacks/transactions@7.0.5(encoding@0.1.13))
     transitivePeerDependencies:
       - debug
 
@@ -23818,10 +23817,10 @@ snapshots:
     dependencies:
       json-parse-helpfulerror: 1.0.3
 
-  clarity-codegen@0.5.3(@stacks/transactions@7.0.2(encoding@0.1.13)):
+  clarity-codegen@0.5.3(@stacks/transactions@7.0.5(encoding@0.1.13)):
     dependencies:
       '@stacks/stacks-blockchain-api-types': 7.8.2
-      '@stacks/transactions': 7.0.2(encoding@0.1.13)
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
       axios: 1.7.7
       lodash: 4.17.21
       yargs: 17.7.2
@@ -29340,13 +29339,6 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.47
 
-  postcss-load-config@4.0.2(postcss@8.4.49):
-    dependencies:
-      lilconfig: 3.1.2
-      yaml: 2.6.0
-    optionalDependencies:
-      postcss: 8.4.49
-
   postcss-load-config@4.0.2(postcss@8.5.3):
     dependencies:
       lilconfig: 3.1.2
@@ -31507,31 +31499,6 @@ snapshots:
       '@microsoft/api-extractor': 7.47.6(@types/node@22.13.5)
       '@swc/core': 1.7.39(@swc/helpers@0.5.15)
       postcss: 8.4.47
-      typescript: 5.7.3
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-
-  tsup@8.1.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.5))(@swc/core@1.7.39(@swc/helpers@0.5.15))(postcss@8.4.49)(typescript@5.7.3):
-    dependencies:
-      bundle-require: 4.2.1(esbuild@0.25.0)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      debug: 4.4.0
-      esbuild: 0.25.0
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.49)
-      resolve-from: 5.0.0
-      rollup: 4.34.8
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tree-kill: 1.2.2
-    optionalDependencies:
-      '@microsoft/api-extractor': 7.47.6(@types/node@22.13.5)
-      '@swc/core': 1.7.39(@swc/helpers@0.5.15)
-      postcss: 8.4.49
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color

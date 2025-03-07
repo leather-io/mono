@@ -2207,7 +2207,7 @@ SPEC CHECKSUMS:
   segment-analytics-react-native: 53785e35d44a0643beffa40eada68a4cbdf7292e
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   sovran-react-native: 5f02bd2d111ffe226d00c7b0435290eae6f10934
-  Yoga: 348f8b538c3ed4423eb58a8e5730feec50bce372
+  Yoga: b9a182ab00cf25926e7f79657d08c5d23c2d03b0
 
 PODFILE CHECKSUM: 1335b53efc7b068f7d36e7fd7794eb32b5151c61
 
