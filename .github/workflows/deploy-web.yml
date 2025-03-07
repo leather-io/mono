@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - 'feat/nav-bar'
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build web app
+        run: pnpm turbo run build --filter="@leather.io/web"
+
+      - run: ls -R apps/web/build
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          workingDirectory: apps/web
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.LEATHER_BOT }}

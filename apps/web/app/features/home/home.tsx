@@ -25,6 +25,7 @@ export function Home({ latestArticles }: HomeProps) {
         <Button
           onClick={async () => {
             const result = await leather.getAddresses();
+            // eslint-disable-next-line no-console
             console.log(result);
           }}
         >

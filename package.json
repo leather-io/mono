@@ -29,6 +29,9 @@
     "test:unit": "pnpm -r test:unit",
     "typecheck": "turbo run typecheck"
   },
+  "dependencies": {
+    "wrangler": "3.114.0"
+  },
   "devDependencies": {
     "@babel/runtime": "7.26.0",
     "@commitlint/cli": "19.6.0",

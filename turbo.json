@@ -3,10 +3,11 @@
   "tasks": {
     "build": {
       "outputs": [
-        "packages/*/dist/**",
-        "packages/*/dist-*/**",
-        "apps/web/build/**",
-        "apps/mobile/{ios,android,build}/**"
+        "dist/**",
+        "dist-*/**",
+        "build/**",
+        "{ios,android,build}/**",
+        "leather-styles/**"
       ],
       "dependsOn": ["^build"]
     },
