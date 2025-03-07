@@ -12,6 +12,7 @@ import { openSwap } from './methods/open-swap';
 import { stxCallContract } from './methods/stacks/stx-call-contract';
 import { stxDeployContract } from './methods/stacks/stx-deploy-contract';
 import { stxGetAddresses } from './methods/stacks/stx-get-addresses';
+import { stxGetNetworks } from './methods/stacks/stx-get-networks';
 import { stxSignMessage } from './methods/stacks/stx-sign-message';
 import { stxSignStructuredMessage } from './methods/stacks/stx-sign-structured-message';
 import { stxSignTransaction } from './methods/stacks/stx-sign-transaction';
@@ -46,24 +47,25 @@ export * from './methods/open';
 export * from './methods/open-swap';
 
 export const endpoints = {
-  open,
-  getInfo,
-  supportedMethods,
-  openSwap,
   getAddresses,
-  stxUpdateProfile,
-  stxSignMessage,
-  stxTransferStx,
-  stxTransferSip9Nft,
-  stxTransferSip10Ft,
-  stxSignTransaction,
-  stxSignStructuredMessage,
-  stxGetAddresses,
-  stxDeployContract,
-  stxCallContract,
-  signPsbt,
-  signMessage,
+  getInfo,
+  open,
+  openSwap,
   sendTransfer,
+  signMessage,
+  signPsbt,
+  stxCallContract,
+  stxDeployContract,
+  stxGetAddresses,
+  stxGetNetworks,
+  stxSignMessage,
+  stxSignStructuredMessage,
+  stxSignTransaction,
+  stxTransferSip10Ft,
+  stxTransferSip9Nft,
+  stxTransferStx,
+  stxUpdateProfile,
+  supportedMethods,
 } as const;
 
 type EndpointMap = (typeof endpoints)[keyof typeof endpoints];
