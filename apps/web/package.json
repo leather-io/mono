@@ -3,35 +3,42 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "dev": "react-router dev",
     "deploy": "pnpm build && wrangler deploy",
+    "dev": "react-router dev",
     "prepare": "panda codegen",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@leather.io/panda-preset": "workspace:*",
+    "@leather.io/rpc": "workspace:*",
+    "@leather.io/sdk": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@react-router/node": "7.2.0",
-    "@react-router/serve": "7.2.0",
+    "@react-router/node": "7.3.0",
+    "@react-router/serve": "7.3.0",
     "isbot": "5.1.17",
+    "nprogress": "0.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router": "7.2.0"
+    "react-router": "7.3.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "4.20250303.0",
     "@originjs/vite-plugin-commonjs": "1.0.3",
-    "@pandacss/dev": "0.53.0",
-    "@playwright/test": "1.50.1",
-    "@react-router/dev": "7.2.0",
+    "@pandacss/dev": "0.53.1",
+    "@playwright/test": "1.51.0",
+    "@react-router/cloudflare": "7.3.0",
+    "@react-router/dev": "7.3.0",
     "@types/node": "22.13.5",
+    "@types/nprogress": "0.2.3",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
-    "react-router-devtools": "1.1.5",
+    "react-router-devtools": "1.1.6",
     "typescript": "5.7.3",
     "vite": "6.2.0",
-    "vite-plugin-static-copy": "2.2.0",
-    "vite-tsconfig-paths": "5.1.4"
+    "vite-plugin-static-copy": "2.3.0",
+    "vite-tsconfig-paths": "5.1.4",
+    "wrangler": "3.114.0"
   }
 }

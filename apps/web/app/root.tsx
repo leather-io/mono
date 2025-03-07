@@ -9,10 +9,12 @@ import {
 
 import { styled } from 'leather-styles/jsx';
 
+import type { LeatherProvider } from '@leather.io/rpc';
 import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
+import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
 
 export function links() {
@@ -20,6 +22,12 @@ export function links() {
     { rel: 'stylesheet', href: stylesheet },
     { rel: 'stylesheet', href: leatherUiStyles },
   ] satisfies Route.LinkDescriptors;
+}
+
+declare global {
+  interface Window {
+    LeatherProvider?: LeatherProvider;
+  }
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -32,6 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <styled.body display="flex" height="100vh">
+        <GlobalLoader />
         <Nav />
         <styled.main>{children}</styled.main>
         <ScrollRestoration />

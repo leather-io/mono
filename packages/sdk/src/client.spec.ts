@@ -4,16 +4,24 @@ import { RpcParams, RpcResult, endpoints, getAddresses } from '@leather.io/rpc';
 
 import { createLeatherClient } from './client';
 
-vi.stubGlobal('LeatherProvider', {
-  request: () => Promise.resolve(),
-});
-
 describe('Leather SDK', () => {
+  vi.stubGlobal('LeatherProvider', {
+    request: () => Promise.resolve(),
+  });
   const client = createLeatherClient();
 
-  const clientMethods = Object.keys(client);
+  const methods = Object.keys(client);
   test('that it has a method for each endpoint', () => {
-    Object.values(endpoints).forEach(endpoint => clientMethods.includes(endpoint.method));
+    Object.values(endpoints).forEach(endpoint => methods.includes(endpoint.method));
+  });
+
+  // write test that ensures the onprovider call isn't called
+  test('onProviderNotFound is called if provider is available', () => {
+    vi.stubGlobal('window', { document: {} });
+    vi.stubGlobal('LeatherProvider', undefined);
+    const onProviderNotFound = vi.fn();
+    createLeatherClient({ onProviderNotFound });
+    expect(onProviderNotFound).toHaveBeenCalled();
   });
 
   test('Optional params, compiler should be happy no parameters', async () => {

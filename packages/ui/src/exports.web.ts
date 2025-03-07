@@ -40,3 +40,4 @@ export { Highlighter, type HighlighterProps } from './components/highlighting/hi
 export { Prism, type PrismType } from './components/highlighting/clarity-prism.shared';
 export { Slider } from './components/slider/slider.web';
 export { useClipboard } from './utils/use-clipboard.web';
+export { useOnMount } from './utils/use-on-mount.shared';

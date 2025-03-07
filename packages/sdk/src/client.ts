@@ -41,7 +41,6 @@ interface LeatherClientConfig {
   getProvider?(): LeatherProvider | undefined;
   onProviderNotFound?(): void;
 }
-
 const defaultOptions = {
   getProvider() {
     return (globalThis as any).LeatherProvider as LeatherProvider;
