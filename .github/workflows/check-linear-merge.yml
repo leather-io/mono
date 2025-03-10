@@ -1,0 +1,50 @@
+name: Enforce Fast-Forward Merge
+
+on:
+  merge_group:
+    types:
+      - checks_requested
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  enforce-ff-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.merge_group.base_ref }}
+
+      - name: Echo Merge Group Event Details
+        run: |
+          echo "Merge Group Event:"
+          echo "base_ref: ${{ github.event.merge_group.base_ref }}"
+          echo "head_ref: ${{ github.event.merge_group.head_ref }}"
+          echo "base_sha: ${{ github.event.merge_group.base_sha }}"
+          echo "head_sha: ${{ github.event.merge_group.head_sha }}"
+          echo "merge_group_id: ${{ github.event.merge_group.id }}"
+          echo "merge_group_actor: ${{ github.event.merge_group.actor.login }}"
+          echo "number: ${{ github.event.merge_group.number }}"
+          echo "Full merge_group object:"
+          echo "${{ toJson(github.event.merge_group) }}"
+
+      - name: Get PR Branch Name
+        run: |
+          echo "PR_BRANCH=${{ github.event.merge_group.head_ref }}" >> $GITHUB_ENV
+
+      - name: Check for Fast-Forward Merge
+        id: ff_check
+        run: |
+          git merge --ff-only origin/${{ env.PR_BRANCH }} || 
+          (echo "Merge is not fast-forwardable. Failing workflow!"; exit 1)
+
+      - name: Force fail
+        run: |
+          exit 1
+
+      - name: Success Message
+        if: success()
+        run: echo "✅ Fast-Forward Merge is possible! The PR can be merged cleanly."
