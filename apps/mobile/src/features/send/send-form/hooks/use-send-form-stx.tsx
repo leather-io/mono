@@ -1,13 +1,16 @@
-import { useGenerateStxTokenTransferUnsignedTransaction } from '@/common/transactions/stacks-transactions.hooks';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useSettings } from '@/store/settings/settings';
+import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
 
 import { STX_DECIMALS } from '@leather.io/constants';
-import { ChainId } from '@leather.io/models';
 import { isAddressCompliant } from '@leather.io/query';
-import { StacksError, isValidStacksTransaction } from '@leather.io/stacks';
+import {
+  StacksError,
+  TransactionTypes,
+  generateStacksUnsignedTransaction,
+  isValidStacksTransaction,
+} from '@leather.io/stacks';
 import { createMoneyFromDecimal, isValidPrecision } from '@leather.io/utils';
 
 import {
@@ -35,16 +38,15 @@ export function useSendFormStx() {
   const {
     params: { account, address: payer, publicKey },
   } = useSendSheetRoute<CurrentRoute>();
-  const navigation = useSendSheetNavigation<CurrentRoute>();
-  const { networkPreference } = useSettings();
-  const chainId: ChainId = networkPreference.chain.stacks.chainId;
-
   const { displayToast } = useToastContext();
-  const generateTx = useGenerateStxTokenTransferUnsignedTransaction(payer, publicKey);
+  const navigation = useSendSheetNavigation<CurrentRoute>();
+  const stacksNetwork = useNetworkPreferenceStacksNetwork();
+  const { chainId } = stacksNetwork;
 
   function handleNonCompliantAddress() {
     throw new StacksError('NonCompliantAddress');
   }
+
   return {
     onGoBack() {
       navigation.navigate('send-select-asset', { account });
@@ -81,7 +83,12 @@ export function useSendFormStx() {
         } catch {
           handleNonCompliantAddress();
         }
-        const tx = await generateTx(parsedValues);
+        const tx = await generateStacksUnsignedTransaction({
+          ...parsedValues,
+          txType: TransactionTypes.StxTokenTransfer,
+          network: stacksNetwork,
+          publicKey,
+        });
 
         if (!tx) throw new StacksError('InvalidTransaction');
         const txHex = tx.serialize();

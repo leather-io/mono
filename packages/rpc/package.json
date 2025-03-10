@@ -25,7 +25,7 @@
     "@leather.io/utils": "workspace:*",
     "@scure/btc-signer": "1.6.0",
     "@stacks/network": "7.0.2",
-    "@stacks/transactions": "7.0.2",
+    "@stacks/transactions": "7.0.5",
     "zod": "3.24.1"
   },
   "devDependencies": {

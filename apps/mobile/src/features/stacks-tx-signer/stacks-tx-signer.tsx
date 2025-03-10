@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 
-import { useGenerateStxTokenTransferUnsignedTransaction } from '@/common/transactions/stacks-transactions.hooks';
 import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
@@ -19,6 +18,7 @@ import {
 
 import { type CryptoCurrency, FeeTypes } from '@leather.io/models';
 import { useCalculateStacksTxFees } from '@leather.io/query';
+import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
@@ -126,19 +126,23 @@ export function StacksTxSigner({
   if (!signer?.publicKey) throw new Error('No public key found');
 
   const account = useAccountByIndex(fingerprint, accountIndex);
-  const generateTx = useGenerateStxTokenTransferUnsignedTransaction(
-    signer?.address,
-    bytesToHex(signer?.publicKey)
-  );
+
+  const txOptions = {
+    publicKey: bytesToHex(signer?.publicKey),
+    network: stacksNetwork,
+  };
+
   async function onChangeFee(feeType: FeeTypes) {
     try {
       if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateTx({
+        const newTx = await generateStacksUnsignedTransaction({
+          txType: TransactionTypes.StxTokenTransfer,
           amount: createMoney(tx.payload.amount, 'STX'),
           fee: fees[feeType],
           memo: tx.payload.memo.content,
           nonce: Number(tx.auth.spendingCondition.nonce),
           recipient: tx.payload.recipient,
+          ...txOptions,
         });
         const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
@@ -158,12 +162,14 @@ export function StacksTxSigner({
   async function onChangeNonce(nonce: string) {
     try {
       if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateTx({
+        const newTx = await generateStacksUnsignedTransaction({
+          txType: TransactionTypes.StxTokenTransfer,
           amount: createMoney(tx.payload.amount, 'STX'),
           fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
           memo: tx.payload.memo.content,
           nonce: Number(nonce),
           recipient: tx.payload.recipient,
+          ...txOptions,
         });
         const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
@@ -181,12 +187,14 @@ export function StacksTxSigner({
   async function onChangeMemo(memo: string) {
     try {
       if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateTx({
+        const newTx = await generateStacksUnsignedTransaction({
+          txType: TransactionTypes.StxTokenTransfer,
           amount: createMoney(tx.payload.amount, 'STX'),
           fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
-          memo,
           nonce: Number(tx.auth.spendingCondition.nonce),
           recipient: tx.payload.recipient,
+          memo,
+          ...txOptions,
         });
         const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
