@@ -33,12 +33,14 @@ export function useRemoteConfig() {
   const { data } = useQuery({
     queryKey: ['walletConfig'],
     queryFn: fetchLeatherMessages(env, leatherGh),
+    initialData: leatherGh.localConfig,
     // As we're fetching from Github, a third-party, we want
     // to avoid any unnecessary stress on their services, so
     // we use quite slow stale/retry times
     staleTime: 1000 * 60 * 10,
     retryDelay: 1000 * 60,
   });
+
   return data;
 }
 
