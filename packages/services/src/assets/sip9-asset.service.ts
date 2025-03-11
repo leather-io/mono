@@ -26,12 +26,9 @@ export function createSip9AssetService(stacksApiClient: HiroStacksApiClient): Si
     signal?: AbortSignal
   ) {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
-    const metadata = await stacksApiClient.getNonFungibleTokenMetadata(
-      principal,
-      getNonFungibleTokenId(tokenHexValue),
-      signal
-    );
-    return createSip9CryptoAssetInfo(assetIdentifier, metadata);
+    const tokenId = getNonFungibleTokenId(tokenHexValue);
+    const metadata = await stacksApiClient.getNonFungibleTokenMetadata(principal, tokenId, signal);
+    return createSip9CryptoAssetInfo(assetIdentifier, tokenId, metadata);
   }
   return {
     getAssetInfo,

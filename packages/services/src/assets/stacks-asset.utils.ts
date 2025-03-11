@@ -53,6 +53,7 @@ export function getNonFungibleTokenId(hex: string): number {
 
 export function createSip9CryptoAssetInfo(
   assetIdentifier: string,
+  tokenId: number,
   { metadata }: HiroNftMetadataResponse
 ): Sip9CryptoAssetInfo {
   const assetName = getAssetNameFromIdentifier(assetIdentifier);
@@ -62,6 +63,8 @@ export function createSip9CryptoAssetInfo(
     protocol: CryptoAssetProtocols.sip9,
     assetId: assetIdentifier,
     contractId: getContractPrincipalFromAssetIdentifier(assetIdentifier),
+    tokenId,
+    collection: (metadata?.properties as any)?.collection ?? '',
     name: metadata?.name ?? assetName,
     description: metadata?.description ?? '',
     cachedImage: metadata?.cached_image ?? '',

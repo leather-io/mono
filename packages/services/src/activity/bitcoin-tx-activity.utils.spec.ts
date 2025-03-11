@@ -4,6 +4,7 @@ import {
   ReceiveAssetActivity,
   SendAssetActivity,
 } from '@leather.io/models';
+import { dateToUnixTimestamp } from '@leather.io/utils';
 
 import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
 import {
@@ -21,7 +22,7 @@ describe(mapBitcoinTxBlockTime.name, () => {
     expect(blockTime).toBe(456);
   });
   it('defaults to current timestamp when no time or height', () => {
-    const now = new Date().getTime();
+    const now = dateToUnixTimestamp(new Date());
     const blockTimeNoHeight = mapBitcoinTxBlockTime({
       time: 456,
     } as LeatherApiBitcoinTransaction);

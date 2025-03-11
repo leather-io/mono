@@ -359,3 +359,7 @@ export function getBitcoinInputValue(input: TransactionInput) {
   // logger.warn('Unable to find either `witnessUtxo` or `nonWitnessUtxo` in input. Defaulting to 0');
   return 0;
 }
+
+export function serializeSatPoint(txid: string, output: string | number, offset: string | number) {
+  return [txid, output, offset].join(':');
+}

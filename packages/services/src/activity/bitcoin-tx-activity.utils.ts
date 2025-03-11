@@ -7,12 +7,12 @@ import {
   ReceiveAssetActivity,
   SendAssetActivity,
 } from '@leather.io/models';
-import { isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
+import { dateToUnixTimestamp, isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 
 import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
 
 export function mapBitcoinTxBlockTime(tx: LeatherApiBitcoinTransaction) {
-  return tx.height && tx.time ? tx.time : new Date().getTime();
+  return tx.height && tx.time ? tx.time : dateToUnixTimestamp(new Date());
 }
 
 export function mapBitcoinTxStatus(tx: LeatherApiBitcoinTransaction) {

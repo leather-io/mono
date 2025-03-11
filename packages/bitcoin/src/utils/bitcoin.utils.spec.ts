@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import { inferNetworkFromAddress, inferPaymentTypeFromAddress } from './bitcoin.utils';
+import {
+  inferNetworkFromAddress,
+  inferPaymentTypeFromAddress,
+  serializeSatPoint,
+} from './bitcoin.utils';
 
 describe(inferNetworkFromAddress.name, () => {
   it('should return "mainnet" for P2PKH mainnet addresses', () => {
@@ -81,5 +85,18 @@ describe(inferPaymentTypeFromAddress.name, () => {
   it('should return p2tr for regtest P2TR address', () => {
     const address = createBitcoinAddress('bcrt1pxyzabc123'); // Example P2TR regtest address
     expect(inferPaymentTypeFromAddress(address)).toBe('p2tr');
+  });
+});
+
+describe(serializeSatPoint.name, () => {
+  it('formats sat point from txid, output and offset', () => {
+    const satPoint = serializeSatPoint('abc123', 0, 100);
+    expect(satPoint).toBe('abc123:0:100');
+  });
+
+  it('handles string and number inputs', () => {
+    expect(serializeSatPoint('def456', '1', 200)).toBe('def456:1:200');
+    expect(serializeSatPoint('def456', 1, '200')).toBe('def456:1:200');
+    expect(serializeSatPoint('def456', '1', '200')).toBe('def456:1:200');
   });
 });
