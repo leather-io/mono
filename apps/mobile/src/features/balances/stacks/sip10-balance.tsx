@@ -1,37 +1,51 @@
-import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import {
   useSip10AccountBalance,
   useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
 
 import { Money } from '@leather.io/models';
-import { PressableProps } from '@leather.io/ui/native';
+import { Avatar } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
-const sip10MaxDisplay = 3;
-interface Sip10TokenBalanceProps extends PressableProps {
+function getFallbackAvatar(contractId: string) {
+  // TODO LEA-2264 use avatars from Alex API
+  // extension uses StacksAssetAvatar and DynamicColorCircle for this
+  return `https://avatar.vercel.sh/${contractId}?size=36`;
+}
+
+interface Sip10TokenBalanceProps {
   availableBalance: Money;
+  contractId: string;
   fiatBalance: Money;
-  symbol: string;
+  imageCanonicalUri: string;
   name: string;
+  symbol: string;
 }
 export function Sip10TokenBalance({
   availableBalance,
+  contractId,
   fiatBalance,
+  imageCanonicalUri,
   name,
   symbol,
-  ...rest
 }: Sip10TokenBalanceProps) {
   return (
     <TokenBalance
       ticker={symbol}
-      icon={<TokenIcon ticker={symbol} />} // TODO LEA-1909: add images from uri
+      icon={
+        <Avatar
+          image={imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId)}
+          imageAlt={name}
+          fallback={name[0]}
+        />
+      }
       tokenName={name}
       protocol="sip10"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
-      {...rest}
+      px="5"
+      py="3"
     />
   );
 }
@@ -42,16 +56,15 @@ export function Sip10Balance() {
   if (data.state !== 'success') return;
 
   return data.value.sip10s.map((balance, index) => {
-    if (index >= sip10MaxDisplay) return null;
     return (
       <Sip10TokenBalance
-        key={`${balance.asset.symbol}-${index}`}
-        symbol={balance.asset.symbol}
-        name={balance.asset.name}
         availableBalance={balance.crypto.availableBalance}
+        contractId={balance.asset.contractId}
         fiatBalance={balance.fiat.totalBalance}
-        px="5"
-        py="3"
+        imageCanonicalUri={balance.asset.imageCanonicalUri}
+        key={`${balance.asset.symbol}-${index}`}
+        name={balance.asset.name}
+        symbol={balance.asset.symbol}
       />
     );
   });
@@ -66,16 +79,15 @@ export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10Balanc
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
   return data.value.sip10s.map((balance, index) => {
-    if (index >= sip10MaxDisplay) return null;
     return (
       <Sip10TokenBalance
-        key={`${balance.asset.symbol}-${index}`}
-        symbol={balance.asset.symbol}
-        name={balance.asset.name}
         availableBalance={balance.crypto.availableBalance}
         fiatBalance={balance.fiat.totalBalance}
-        px="5"
-        py="3"
+        contractId={balance.asset.contractId}
+        key={`${balance.asset.symbol}-${index}`}
+        imageCanonicalUri={balance.asset.imageCanonicalUri}
+        name={balance.asset.name}
+        symbol={balance.asset.symbol}
       />
     );
   });

@@ -6,7 +6,7 @@ import { useLingui } from '@lingui/react';
 import { currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { BulletSeparator, Text, TextProps } from '@leather.io/ui/native';
-import { formatMoney, i18nFormatCurrency } from '@leather.io/utils';
+import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
 
 interface BalanceProps extends TextProps {
   balance: Money;
@@ -19,7 +19,7 @@ export function formatBalance(balance: Money, isFiat: boolean) {
     return i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals);
   }
 
-  return formatMoney(balance);
+  return formatMoneyWithoutSymbol(balance);
 }
 
 export function Balance({

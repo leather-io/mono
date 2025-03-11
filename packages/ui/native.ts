@@ -3,6 +3,7 @@ export { Avatar } from './src/components/avatar/avatar.native';
 export { BulletSeparator } from './src/components/bullet-separator/bullet-separator.native';
 export { BtcAvatarIcon } from './src/components/avatar/btc-avatar-icon.native';
 export { StxAvatarIcon } from './src/components/avatar/stx-avatar-icon.native';
+export { RunesAvatarIcon } from './src/components/avatar/runes-avatar-icon.native';
 export { Box, type BoxProps } from './src/components/box/box.native';
 export { SquircleBox, type SquircleBoxProps } from './src/components/box/squircle-box.native';
 export { BlurView } from './src/components/blur-view/blur-view.native';
