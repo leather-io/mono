@@ -2,7 +2,7 @@
   "name": "@leather.io/sdk",
   "author": "leather.io",
   "description": "Leather SDK",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "type": "module",
   "scripts": {

@@ -646,6 +646,30 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.19.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.19.0...@leather.io/mobile-v2.19.1) (2025-03-11)
+
+
+### Bug Fixes
+
+* podfile.lock conflicts ([6967c5b](https://github.com/leather-io/mono/commit/6967c5b7791c441b39adf62a87b161962cd6da09))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.21.1
+    * @leather.io/crypto bumped to 1.6.51
+    * @leather.io/provider bumped to 1.1.3
+    * @leather.io/query bumped to 2.30.1
+    * @leather.io/rpc bumped to 2.9.1
+    * @leather.io/services bumped to 1.5.1
+    * @leather.io/stacks bumped to 1.7.3
+    * @leather.io/ui bumped to 1.51.4
+    * @leather.io/utils bumped to 0.29.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.21.1
+
 ## [2.19.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.18.1...@leather.io/mobile-v2.19.0) (2025-03-11)
 
 

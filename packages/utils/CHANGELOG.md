@@ -292,6 +292,13 @@
     * @leather.io/constants bumped to 0.17.5
     * @leather.io/models bumped to 0.28.0
 
+## [0.29.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.28.0...@leather.io/utils-v0.29.0) (2025-03-11)
+
+
+### Features
+
+* add spam filter test ([f65caad](https://github.com/leather-io/mono/commit/f65caad42e8b471d521c7685961df50af2529c8b))
+
 ## [0.28.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.8...@leather.io/utils-v0.28.0) (2025-03-11)
 
 
