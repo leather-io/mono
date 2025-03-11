@@ -6,6 +6,13 @@
   * dependencies
     * @leather.io/rpc bumped to 2.8.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.29.0
+    * @leather.io/rpc bumped to 2.9.0
+
 ## 1.0.0 (2025-03-06)
 
 

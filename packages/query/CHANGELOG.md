@@ -459,6 +459,26 @@
     * @leather.io/bitcoin bumped to 0.20.1
     * @leather.io/rpc bumped to 2.8.1
 
+## [2.30.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.29.8...@leather.io/query-v2.30.0) (2025-03-11)
+
+
+### Features
+
+* activity service ([fc8364b](https://github.com/leather-io/mono/commit/fc8364bcfb90e582043df52e8adf7111343fc7db))
+* add fallback if config fetch failed, LEA-1806 ([1d0768b](https://github.com/leather-io/mono/commit/1d0768bec2d47cbcb03b96c4f47282c1bb32be57))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.21.0
+    * @leather.io/constants bumped to 0.18.0
+    * @leather.io/models bumped to 0.29.0
+    * @leather.io/rpc bumped to 2.9.0
+    * @leather.io/stacks bumped to 1.7.2
+    * @leather.io/utils bumped to 0.28.0
+
 ## [2.29.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.28.1...@leather.io/query-v2.29.0) (2025-02-26)
 
 

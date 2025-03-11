@@ -375,6 +375,22 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.8
 
+## [1.51.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.51.2...@leather.io/ui-v1.51.3) (2025-03-11)
+
+
+### Bug Fixes
+
+* add runes + fallback sip-10 avatars. Hide token symbol, show all sip10, ref LEA-2017 ([da05e7e](https://github.com/leather-io/mono/commit/da05e7e1d24421511e9b1f3ee875237dd0268d76))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.28.0
+  * devDependencies
+    * @leather.io/models bumped to 0.29.0
+
 ## [1.51.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.50.2...@leather.io/ui-v1.51.0) (2025-02-27)
 
 

@@ -292,6 +292,21 @@
     * @leather.io/constants bumped to 0.17.5
     * @leather.io/models bumped to 0.28.0
 
+## [0.28.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.8...@leather.io/utils-v0.28.0) (2025-03-11)
+
+
+### Features
+
+* activity service ([fc8364b](https://github.com/leather-io/mono/commit/fc8364bcfb90e582043df52e8adf7111343fc7db))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.18.0
+    * @leather.io/models bumped to 0.29.0
+
 ## [0.27.8](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.27.7...@leather.io/utils-v0.27.8) (2025-03-05)
 
 
