@@ -114,7 +114,7 @@ export function useSettings() {
       void analytics?.track('user_setting_updated', {
         analytics: pref,
       });
-      void analytics?.identify({
+      void analytics?.identify(undefined, {
         analytics_preference: pref,
       });
     },
@@ -129,7 +129,7 @@ export function useSettings() {
       void analytics?.track('user_setting_updated', {
         email_address: address,
       });
-      void analytics?.identify({
+      void analytics?.identify(undefined, {
         has_email_address: !!address,
       });
     },
@@ -184,7 +184,7 @@ export function useSettings() {
       const network =
         networkPreference.chain.bitcoin.bitcoinNetwork === 'mainnet' ? 'testnet' : 'mainnet';
       dispatch(userChangedNetworkPreference(network));
-      void analytics?.identify({
+      void analytics?.identify(undefined, {
         active_network: network,
       });
       void analytics?.track('user_setting_updated', {
@@ -197,7 +197,7 @@ export function useSettings() {
       void analytics?.track('user_setting_updated', {
         theme,
       });
-      void analytics?.identify({
+      void analytics?.identify(undefined, {
         active_theme: theme,
       });
     },

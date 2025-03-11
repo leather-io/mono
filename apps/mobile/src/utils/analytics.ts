@@ -1,5 +1,6 @@
 import { store } from '@/store';
 import { selectAnalyticsPreference } from '@/store/settings/settings.read';
+import { AppLifecycleEventPlugin } from '@/utils/analytics-plugins';
 import { SegmentClient, createClient } from '@segment/analytics-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
@@ -9,6 +10,8 @@ const segmentClient = createClient({
   trackAppLifecycleEvents: true,
   debug: false,
 });
+
+segmentClient.add({ plugin: new AppLifecycleEventPlugin() });
 
 const leatherAnalyticsClient = configureAnalyticsClient<SegmentClient>({
   client: segmentClient,

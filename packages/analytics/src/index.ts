@@ -12,5 +12,5 @@ export function configureAnalyticsClient<T extends AnalyticsClientInterface>({
   defaultProperties: DefaultProperties;
   defaultTraits?: JsonMap;
 }) {
-  return AnalyticsClient<T>(client, { defaultProperties, defaultTraits });
+  return AnalyticsClient<T>({ client, defaultProperties, defaultTraits });
 }

@@ -16,6 +16,8 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write \"src/**/*.ts\" --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check \"src/**/*.ts\" --ignore-path ../../.prettierignore",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "typecheck": "tsc --noEmit"
   },
   "exports": {

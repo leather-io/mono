@@ -10,7 +10,7 @@ export interface AnalyticsClientInterface {
   track: (event: string, ...args: any[]) => Promise<any>;
   group: (groupId: string, traits?: any, ...args: any[]) => Promise<any>;
   identify: (...args: any[]) => Promise<any>;
-  page?: (name: string, ...args: any[]) => Promise<any>;
+  page?: (category?: string, name?: string, ...args: any[]) => Promise<any>;
 }
 
 export interface AnalyticsClientConfig<T extends AnalyticsClientInterface> {
