@@ -1,7 +1,7 @@
+import { AccountAddresses } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { BisRuneValidOutput } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
-import { BitcoinAccountIdentifier } from '../shared/bitcoin.types';
 import { RuneBalance, RunesAccountBalance } from './runes-balances.service';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 
@@ -66,11 +66,15 @@ const mockRuneBalance2 = {
   availableBalance: createMoney(48, 'USD'),
 };
 
-const mockBitcoinAccountIdentifier: BitcoinAccountIdentifier = {
-  fingerprint: 'abcdefg',
-  accountIndex: 0,
-  nativeSegwitDescriptor: 'ns-descriptor',
-  taprootDescriptor: 'tr-descriptor',
+const mockAccountAddresses: AccountAddresses = {
+  id: {
+    fingerprint: 'abcdefg',
+    accountIndex: 0,
+  },
+  bitcoin: {
+    nativeSegwitDescriptor: 'ns-descriptor',
+    taprootDescriptor: 'tr-descriptor',
+  },
 };
 
 const mockRuneAssetBalance: RuneBalance = {
@@ -90,7 +94,7 @@ const mockRuneAssetBalance: RuneBalance = {
 
 const mockAccountBalances: RunesAccountBalance[] = [
   {
-    account: mockBitcoinAccountIdentifier,
+    account: mockAccountAddresses,
     runes: [
       {
         ...mockRuneAssetBalance,
@@ -99,7 +103,7 @@ const mockAccountBalances: RunesAccountBalance[] = [
     fiat: mockRuneBalance,
   },
   {
-    account: mockBitcoinAccountIdentifier,
+    account: mockAccountAddresses,
     runes: [
       {
         ...mockRuneAssetBalance,

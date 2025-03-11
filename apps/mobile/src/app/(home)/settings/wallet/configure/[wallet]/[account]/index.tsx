@@ -9,7 +9,6 @@ import { AccountBalance } from '@/features/accounts/components/account-balance';
 import { AccountCard } from '@/features/accounts/components/account-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
-import { AccountId } from '@/models/domain.model';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
@@ -22,6 +21,7 @@ import { useLingui } from '@lingui/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
+import { AccountId } from '@leather.io/models';
 import {
   Box,
   Eye1ClosedIcon,

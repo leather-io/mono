@@ -1,9 +1,8 @@
-import { Utxo, UtxoId } from '@leather.io/models';
-import { isDefined } from '@leather.io/utils';
+import { AccountAddresses, Utxo, UtxoId } from '@leather.io/models';
+import { hasBitcoinAddress, isDefined } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { BitcoinAccountServiceRequest } from '../shared/bitcoin.types';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import {
   filterMatchesAnyUtxoId,
@@ -27,14 +26,28 @@ export interface UtxoTotals {
 }
 
 export interface UtxosService {
-  getAccountUtxos(request: BitcoinAccountServiceRequest, signal?: AbortSignal): Promise<UtxoTotals>;
+  getAccountUtxos(
+    account: AccountAddresses,
+    unprotectedUtxos: UtxoId[],
+    signal?: AbortSignal
+  ): Promise<UtxoTotals>;
   getDescriptorUtxos(
     descriptor: string,
-    unprotectedUtxoIds?: UtxoId[],
+    unprotectedUtxos: UtxoId[],
     signal?: AbortSignal
   ): Promise<UtxoTotals>;
   getDescriptorProtectedUtxos(taprootDescriptor: string, signal?: AbortSignal): Promise<Utxo[]>;
 }
+
+const emptyUtxos: UtxoTotals = {
+  confirmed: [],
+  inbound: [],
+  outbound: [],
+  protected: [],
+  uneconomical: [],
+  unspendable: [],
+  available: [],
+};
 
 export function createUtxosService(
   leatherApiClient: LeatherApiClient,
@@ -46,10 +59,16 @@ export function createUtxosService(
    *
    * An optional list of unprotected UTXOs can be provided on request to selectively move UTXO values from protected to available.
    */
-  async function getAccountUtxos(request: BitcoinAccountServiceRequest, signal?: AbortSignal) {
+  async function getAccountUtxos(
+    account: AccountAddresses,
+    unprotectedUtxos: UtxoId[],
+    signal?: AbortSignal
+  ) {
+    if (!hasBitcoinAddress(account)) return emptyUtxos;
+
     const [nativeSegwitUtxos, taprootUtxos] = await Promise.all([
-      getDescriptorUtxos(request.account.nativeSegwitDescriptor, [], signal),
-      getDescriptorUtxos(request.account.taprootDescriptor, request.unprotectedUtxos, signal),
+      getDescriptorUtxos(account.bitcoin.nativeSegwitDescriptor, [], signal),
+      getDescriptorUtxos(account.bitcoin.taprootDescriptor, unprotectedUtxos, signal),
     ]);
     return {
       confirmed: [...nativeSegwitUtxos.confirmed, ...taprootUtxos.confirmed],
@@ -69,7 +88,7 @@ export function createUtxosService(
    */
   async function getDescriptorUtxos(
     descriptor: string,
-    unprotectedUtxoIds: UtxoId[] = [],
+    unprotectedUtxoIds: UtxoId[],
     signal?: AbortSignal
   ) {
     const [leatherApiUtxos, totalProtectedUtxos, btcTxs] = await Promise.all([

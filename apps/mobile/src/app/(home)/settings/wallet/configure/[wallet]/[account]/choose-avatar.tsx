@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountIcon, accountIconMap } from '@/features/accounts/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
-import { AccountId } from '@/models/domain.model';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
@@ -14,6 +13,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 
+import { AccountId } from '@leather.io/models';
 import { Box, Button, SquircleBox, Text, Theme } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 

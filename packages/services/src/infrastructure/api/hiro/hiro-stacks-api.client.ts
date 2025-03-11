@@ -1,8 +1,13 @@
-import { FtMetadataResponse } from '@hirosystems/token-metadata-api-client';
+import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-metadata-api-client';
 import {
+  AddressAssetsListResponse,
   AddressBalanceResponse,
-  AddressTransactionsListResponse,
+  AddressTransactionWithTransfers,
+  AddressTransactionsWithTransfersListResponse,
+  MempoolTransaction,
   MempoolTransactionListResponse,
+  Transaction,
+  TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
 
@@ -13,19 +18,45 @@ import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings.selectors';
 import { SettingsService } from '../../settings/settings.service';
+import { HiroMultiPageRequest, fetchHiroPages } from './hiro-multi-page';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
+import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
-export type HiroAddressTransactionsListResponse = AddressTransactionsListResponse;
+export interface HiroPageRequest {
+  limit: number;
+  offset: number;
+}
+export interface HiroPageResponse<T> {
+  limit: number;
+  offset: number;
+  total: number;
+  results: T[];
+}
+
+export type HiroAddressTransactionsResponse = AddressTransactionsWithTransfersListResponse;
+export type HiroAddressTransactionWithTransfers = AddressTransactionWithTransfers;
+export type HiroAddressTransaction = AddressTransactionWithTransfers;
 export type HiroAddressBalanceResponse = AddressBalanceResponse;
 export type HiroMempoolTransactionListResponse = MempoolTransactionListResponse;
 export type HiroFtMetadataResponse = FtMetadataResponse;
+export type HiroNftMetadataResponse = NftMetadataResponse;
+export type HiroTransactionEvent = TransactionEvent;
+export type HiroTransactionEventsResponse = AddressAssetsListResponse;
+export type HiroStacksTransaction = Transaction;
+export type HiroStacksMempoolTransaction = MempoolTransaction;
 
 export interface HiroStacksApiClient {
   getAddressBalances(address: string, signal?: AbortSignal): Promise<HiroAddressBalanceResponse>;
-  getAddressConfirmedTransactions(
+  getAddressTransactions(
     address: string,
+    pages: HiroMultiPageRequest,
     signal?: AbortSignal
-  ): Promise<HiroAddressTransactionsListResponse>;
+  ): Promise<HiroAddressTransaction[]>;
+  getTransactionEvents(
+    address: string,
+    pages: HiroMultiPageRequest,
+    signal?: AbortSignal
+  ): Promise<HiroTransactionEvent[]>;
   getAddressMempoolTransactions(
     address: string,
     signal?: AbortSignal
@@ -34,6 +65,11 @@ export interface HiroStacksApiClient {
     principal: string,
     signal?: AbortSignal
   ): Promise<HiroFtMetadataResponse>;
+  getNonFungibleTokenMetadata(
+    principal: string,
+    tokenId: number,
+    signal?: AbortSignal
+  ): Promise<HiroNftMetadataResponse>;
 }
 
 export function createHiroStacksApiClient(
@@ -60,23 +96,85 @@ export function createHiroStacksApiClient(
         );
         return res.data;
       },
-      { ttl: HttpCacheTimeMs.twoMinutes }
+      { ttl: HttpCacheTimeMs.tenSeconds }
     );
   }
 
-  async function getAddressConfirmedTransactions(address: string, signal?: AbortSignal) {
+  async function _getAddressTransactionsPage(
+    address: string,
+    page: HiroPageRequest,
+    signal?: AbortSignal
+  ): Promise<HiroAddressTransactionsResponse> {
+    const pageParams = new URLSearchParams({
+      limit: page.limit.toString(),
+      offset: page.offset.toString(),
+    });
     return await cache.fetchWithCache(
       [
         'hiro-stacks-get-address-transactions',
-        address,
         selectStacksChainId(settings.getSettings()),
+        address,
+        pageParams.toString(),
       ],
       async () => {
         const res = await limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<HiroAddressTransactionsListResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/extended/v2/addresses/${address}/transactions?limit=${DEFAULT_LIST_LIMIT}`,
+            axios.get<HiroAddressTransactionsResponse>(
+              `${selectStacksApiUrl(settings.getSettings())}/extended/v2/addresses/${address}/transactions?${pageParams.toString()}`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return {
+          ...res.data,
+          results: res.data.results.map(filterVerboseUnusedTransactionWithTransfersData),
+        };
+      },
+      { ttl: HttpCacheTimeMs.tenSeconds }
+    );
+  }
+
+  async function getAddressTransactions(
+    address: string,
+    pages: HiroMultiPageRequest,
+    signal?: AbortSignal
+  ): Promise<HiroAddressTransaction[]> {
+    return fetchHiroPages<HiroAddressTransaction>(
+      page => _getAddressTransactionsPage(address, page, signal),
+      {
+        limit: 50,
+        pagesRequest: pages,
+      }
+    );
+  }
+
+  async function _getTransactionEventsPage(
+    address: string,
+    page: HiroPageRequest,
+    signal?: AbortSignal
+  ): Promise<HiroTransactionEventsResponse> {
+    const pageParams = new URLSearchParams({
+      limit: page.limit.toString(),
+      offset: page.offset.toString(),
+    });
+    return await cache.fetchWithCache(
+      [
+        'hiro-stacks-get-transaction-events',
+        selectStacksChainId(settings.getSettings()),
+        address,
+        pageParams.toString(),
+      ],
+      async () => {
+        const res = await limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            axios.get<HiroTransactionEventsResponse>(
+              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/address/${address}/assets?${pageParams.toString()}`,
               { signal }
             ),
           {
@@ -87,7 +185,21 @@ export function createHiroStacksApiClient(
         );
         return res.data;
       },
-      { ttl: HttpCacheTimeMs.fiveMinutes }
+      { ttl: HttpCacheTimeMs.tenSeconds }
+    );
+  }
+
+  async function getTransactionEvents(
+    address: string,
+    pages: HiroMultiPageRequest,
+    signal?: AbortSignal
+  ): Promise<HiroTransactionEvent[]> {
+    return fetchHiroPages<HiroTransactionEvent>(
+      page => _getTransactionEventsPage(address, page, signal),
+      {
+        limit: 100,
+        pagesRequest: pages,
+      }
     );
   }
 
@@ -114,7 +226,7 @@ export function createHiroStacksApiClient(
         );
         return res.data;
       },
-      { ttl: HttpCacheTimeMs.fiveMinutes }
+      { ttl: HttpCacheTimeMs.fiveSeconds }
     );
   }
 
@@ -141,10 +253,43 @@ export function createHiroStacksApiClient(
     );
   }
 
+  async function getNonFungibleTokenMetadata(
+    principal: string,
+    tokenId: number,
+    signal?: AbortSignal
+  ) {
+    return await cache.fetchWithCache(
+      [
+        'hiro-stacks-get-nft-token-metadata',
+        principal,
+        selectStacksChainId(settings.getSettings()),
+      ],
+      async () => {
+        const res = await limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            axios.get<HiroNftMetadataResponse>(
+              `${selectStacksApiUrl(settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getNftMetadata,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data;
+      },
+      { ttl: HttpCacheTimeMs.infinity }
+    );
+  }
+
   return {
-    getAddressConfirmedTransactions,
+    getAddressTransactions,
+    getTransactionEvents,
     getAddressBalances,
     getAddressMempoolTransactions,
     getFungibleTokenMetadata,
+    getNonFungibleTokenMetadata,
   };
 }

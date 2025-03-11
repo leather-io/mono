@@ -31,6 +31,7 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@stacks/stacks-blockchain-api-types": "7.8.2",
+    "@stacks/transactions": "7.0.5",
     "alex-sdk": "2.1.4",
     "axios": "1.7.7",
     "bignumber.js": "9.1.2",

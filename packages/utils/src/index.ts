@@ -6,6 +6,7 @@ import type { NetworkModes } from '@leather.io/models';
 export { createCounter } from './counter';
 export * from './math';
 export * from './money';
+export * from './accounts/account-addresses';
 export * from './assets/sort-assets';
 export * from './assets/asset-display-name';
 export * from './assets/balance-helpers';

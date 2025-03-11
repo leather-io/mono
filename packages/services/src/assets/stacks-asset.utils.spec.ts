@@ -7,7 +7,7 @@ import {
   getAssetNameFromIdentifier,
   getContractPrincipalFromAssetIdentifier,
   isTransferableSip10Token,
-} from './sip10-asset.utils';
+} from './stacks-asset.utils';
 
 describe('isTransferableSip10Token', () => {
   let mockTokenMetadata: Partial<HiroFtMetadataResponse>;
@@ -81,6 +81,7 @@ describe('createSip10CryptoAssetInfo', () => {
       category: CryptoAssetCategories.fungible,
       protocol: CryptoAssetProtocols.sip10,
       canTransfer: true,
+      assetId: assetIdentifier,
       contractId: 'SP123.token-contract',
       decimals: 6,
       hasMemo: true,

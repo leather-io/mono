@@ -73,6 +73,7 @@ export interface Sip10CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
   readonly protocol: 'sip10';
   readonly name: string;
   readonly canTransfer: boolean;
+  readonly assetId: string;
   readonly contractId: string;
   readonly imageCanonicalUri: string;
   readonly symbol: string;
@@ -124,9 +125,12 @@ export interface StampCryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
 export interface Sip9CryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
   readonly chain: 'stacks';
   readonly protocol: 'sip9';
-  readonly name: string;
+  readonly assetId: string;
   readonly contractId: string;
-  readonly imageCanonicalUri: string;
+  readonly name: string;
+  readonly description: string;
+  readonly cachedImage: string;
+  readonly cachedImageThumbnail: string;
 }
 export type NonFungibleCryptoAssetInfo =
   | InscriptionCryptoAssetInfo

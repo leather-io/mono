@@ -17,3 +17,8 @@ export * from './transactions/bitcoin-transaction.model';
 export * from './transactions/stacks-transaction.model';
 export * from './transactions/transaction-error.model';
 export * from './utxo.model';
+export * from './activity/activity-level.model';
+export * from './activity/activity-status.model';
+export * from './activity/activity-type.model';
+export * from './activity/activity.model';
+export * from './account.model';

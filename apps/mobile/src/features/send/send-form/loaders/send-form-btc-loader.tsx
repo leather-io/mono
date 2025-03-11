@@ -1,9 +1,8 @@
-import { AccountId } from '@/models/domain.model';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import BigNumber from 'bignumber.js';
 
-import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
+import { AccountId, AverageBitcoinFeeRates, Money } from '@leather.io/models';
 import { Utxo, useAverageBitcoinFeeRates } from '@leather.io/query';
 
 interface SendFormBtcData {

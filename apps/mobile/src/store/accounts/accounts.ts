@@ -1,4 +1,4 @@
-import { AccountId } from '@/models/domain.model';
+import { AccountId } from '@leather.io/models';
 
 import { useAccountByIndex } from './accounts.read';
 import { AccountStore } from './utils';

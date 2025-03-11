@@ -1,19 +1,20 @@
-import { useBitcoinAccountServiceRequest } from '@/hooks/use-bitcoin-account-service-requests';
+import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { toFetchState } from '@/shared/fetch-state';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { BitcoinAccountServiceRequest, getUtxosService } from '@leather.io/services';
+import { AccountAddresses } from '@leather.io/models';
+import { getUtxosService } from '@leather.io/services';
 
 export function useAccountUtxos(fingerprint: string, accountIndex: number) {
-  const request = useBitcoinAccountServiceRequest(fingerprint, accountIndex);
-  return toFetchState(useAccountUtxosQuery(request));
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(useAccountUtxosQuery(account));
 }
 
-export function useAccountUtxosQuery(request: BitcoinAccountServiceRequest) {
+export function useAccountUtxosQuery(account: AccountAddresses) {
   return useQuery({
-    queryKey: ['utxos-service-get-account-utxos', request],
+    queryKey: ['utxos-service-get-account-utxos', account],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getUtxosService().getAccountUtxos(request, signal),
+      getUtxosService().getAccountUtxos(account, [], signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

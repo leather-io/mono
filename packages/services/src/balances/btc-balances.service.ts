@@ -1,5 +1,5 @@
 import { btcCryptoAsset } from '@leather.io/constants';
-import { BtcCryptoAssetBalance } from '@leather.io/models';
+import { AccountAddresses, BtcCryptoAssetBalance, UtxoId } from '@leather.io/models';
 import {
   aggregateBtcCryptoAssetBalances,
   baseCurrencyAmountInQuote,
@@ -9,7 +9,6 @@ import {
 
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
-import { BitcoinAccountIdentifier, BitcoinAccountServiceRequest } from '../shared/bitcoin.types';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';
 
@@ -19,16 +18,21 @@ export interface BtcBalance {
 }
 
 export interface BtcAccountBalance extends BtcBalance {
-  account: BitcoinAccountIdentifier;
+  account: AccountAddresses;
+}
+
+export interface BtcAccountBalanceRequest {
+  account: AccountAddresses;
+  unprotectedUtxos: UtxoId[];
 }
 
 export interface BtcBalancesService {
   getBtcAccountBalance(
-    request: BitcoinAccountServiceRequest,
+    request: BtcAccountBalanceRequest,
     signal?: AbortSignal
   ): Promise<BtcAccountBalance>;
   getBtcAggregateBalance(
-    requests: BitcoinAccountServiceRequest[],
+    requests: BtcAccountBalanceRequest[],
     signal?: AbortSignal
   ): Promise<BtcBalance>;
 }
@@ -44,7 +48,7 @@ export function createBtcBalancesService(
    * Gets cumulative BTC balance of requested Bitcoin accounts list, denominated in both BTC and fiat.
    */
   async function getBtcAggregateBalance(
-    balanceRequests: BitcoinAccountServiceRequest[],
+    balanceRequests: BtcAccountBalanceRequest[],
     signal?: AbortSignal
   ) {
     const accountBalances = await Promise.all(
@@ -74,8 +78,12 @@ export function createBtcBalancesService(
    *
    * A list of selectively unprotected UTXOs provided on the request will move the UTXO values from protected to available balance.
    */
-  async function getBtcAccountBalance(request: BitcoinAccountServiceRequest, signal?: AbortSignal) {
-    const utxos = await utxosService.getAccountUtxos(request, signal);
+  async function getBtcAccountBalance(request: BtcAccountBalanceRequest, signal?: AbortSignal) {
+    const utxos = await utxosService.getAccountUtxos(
+      request.account,
+      request.unprotectedUtxos,
+      signal
+    );
 
     const totalBalance = createMoney(sumUtxoValues(utxos.confirmed), 'BTC');
     const inboundBalance = createMoney(sumUtxoValues(utxos.inbound), 'BTC');

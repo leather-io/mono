@@ -5,7 +5,7 @@ import { Sip10AssetService } from '../assets/sip10-asset.service';
 import {
   getAssetNameFromIdentifier,
   getContractPrincipalFromAssetIdentifier,
-} from '../assets/sip10-asset.utils';
+} from '../assets/stacks-asset.utils';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';

@@ -1,31 +1,31 @@
 import {
-  useBitcoinAccountServiceRequest,
-  useTotalBitcoinAccountServiceRequests,
-  useWalletBitcoinAccountServiceRequests,
-} from '@/hooks/use-bitcoin-account-service-requests';
+  useAccountAddresses,
+  useTotalAccountAddresses,
+  useWalletAccountAddresses,
+} from '@/hooks/use-account-addresses';
 import { toFetchState } from '@/shared/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { BitcoinAccountIdentifier, getRunesBalancesService } from '@leather.io/services';
+import { AccountAddresses } from '@leather.io/models';
+import { getRunesBalancesService } from '@leather.io/services';
 
 export function useRunesTotalBalance() {
-  // TODO LEA-1982: check with Alex once we have xpub-based runes endpoint from BIS
-  const totalRequests = useTotalBitcoinAccountServiceRequests();
-  return toFetchState(useRunesAggregateBalanceQuery(totalRequests.map(r => r.account)));
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(useRunesAggregateBalanceQuery(accounts));
 }
 
 export function useRunesWalletBalance(fingerprint: string) {
-  const walletRequests = useWalletBitcoinAccountServiceRequests(fingerprint);
-  return toFetchState(useRunesAggregateBalanceQuery(walletRequests.map(r => r.account)));
+  const accounts = useWalletAccountAddresses(fingerprint);
+  return toFetchState(useRunesAggregateBalanceQuery(accounts));
 }
 
 export function useRunesAccountBalance(fingerprint: string, accountIndex: number) {
-  const accountRequest = useBitcoinAccountServiceRequest(fingerprint, accountIndex);
-  return toFetchState(useRunesAccountBalanceQuery(accountRequest.account));
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(useRunesAccountBalanceQuery(account));
 }
 
-export function useRunesAggregateBalanceQuery(accounts: BitcoinAccountIdentifier[]) {
+export function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: [
@@ -44,7 +44,7 @@ export function useRunesAggregateBalanceQuery(accounts: BitcoinAccountIdentifier
   });
 }
 
-export function useRunesAccountBalanceQuery(account: BitcoinAccountIdentifier) {
+export function useRunesAccountBalanceQuery(account: AccountAddresses) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['runes-balances-service-get-runes-account-balance', account, fiatCurrencyPreference],
