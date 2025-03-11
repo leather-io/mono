@@ -219,6 +219,7 @@
     }
   },
   "resolutions": {
+    "axios": "1.8.2",
     "cookie": "0.7.1",
     "esbuild": "0.25.0",
     "micromatch": "4.0.8",

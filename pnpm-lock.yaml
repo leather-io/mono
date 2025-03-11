@@ -13,6 +13,7 @@ overrides:
   store2: 2.14.4
   undici: 6.21.1
   vite: 5.4.12
+  axios: 1.8.2
   cross-spawn: 7.0.5
 
 packageExtensionsChecksum: sha256-w9nfWTMemrQJBImn0LMxYjjeDXLIBIIkTIzUl6uU5RM=
@@ -893,8 +894,8 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
-        specifier: 1.7.7
-        version: 1.7.7
+        specifier: 1.8.2
+        version: 1.8.2
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -1037,8 +1038,8 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
-        specifier: 1.7.7
-        version: 1.7.7
+        specifier: 1.8.2
+        version: 1.8.2
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -7131,8 +7132,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.7.7:
-    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
+  axios@1.8.2:
+    resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
 
   b4a@1.6.7:
     resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
@@ -22778,7 +22779,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios@1.7.7:
+  axios@1.8.2:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.1
@@ -23378,7 +23379,7 @@ snapshots:
     dependencies:
       '@stacks/stacks-blockchain-api-types': 7.8.2
       '@stacks/transactions': 7.0.5(encoding@0.1.13)
-      axios: 1.7.7
+      axios: 1.8.2
       lodash: 4.17.21
       yargs: 17.7.2
       yqueue: 1.0.1
