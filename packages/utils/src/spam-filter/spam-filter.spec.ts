@@ -13,6 +13,7 @@ describe('Spam filter', () => {
       spamReplacement
     );
     expect(spamFilter({ input: 'random text .    de', whitelist: [] })).toEqual(spamReplacement);
+    expect(spamFilter({ input: 'random text.gr', whitelist: [] })).toEqual(spamReplacement);
   });
 
   it('should allow if without tld or with tld without dot', () => {
