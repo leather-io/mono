@@ -1,4 +1,4 @@
-import { InscriptionMimeType } from './bitcoin/inscription.model';
+import { InscriptionMimeType } from './inscription-mime-type.model';
 
 export const CryptoAssetChains = {
   bitcoin: 'bitcoin',
@@ -102,20 +102,18 @@ export interface InscriptionCryptoAssetInfo extends BaseNonFungibleCryptoAssetIn
   readonly id: string;
   readonly mimeType: InscriptionMimeType;
   readonly number: number;
-  // via Inscription Model
+  readonly address: string;
+  readonly title: string;
+  readonly txid: string;
+  readonly output: string;
+  readonly offset: string;
   readonly preview: string;
   readonly src: string;
-  readonly title: string;
-  readonly output: string;
-  readonly txid: string;
-  readonly offset: string;
-  readonly address: string;
+  readonly value: string;
   readonly genesisBlockHash: string;
   readonly genesisTimestamp: number;
   readonly genesisBlockHeight: number;
-  readonly value: string;
 }
-
 export interface StampCryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
   readonly chain: 'bitcoin';
   readonly protocol: 'stamp';
@@ -127,6 +125,8 @@ export interface Sip9CryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
   readonly protocol: 'sip9';
   readonly assetId: string;
   readonly contractId: string;
+  readonly tokenId: number;
+  readonly collection: string;
   readonly name: string;
   readonly description: string;
   readonly cachedImage: string;

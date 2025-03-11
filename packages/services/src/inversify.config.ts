@@ -15,6 +15,10 @@ import {
 } from './balances/sip10-balances.service';
 import { StxBalancesService, createStxBalancesService } from './balances/stx-balances.service';
 import {
+  CollectiblesService,
+  createCollectiblesService,
+} from './collectibles/collectibles.service';
+import {
   BestInSlotApiClient,
   createBestInSlotApiClient,
 } from './infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -92,6 +96,7 @@ export const Services = {
   StacksTransactionsService: Symbol.for('StacksTransactionsService'),
   BitcoinTransactionsService: Symbol.for('BitcoinTransactionsService'),
   ActivityService: Symbol.for('ActivityService'),
+  CollectiblesService: Symbol.for('CollectiblesService'),
   NotificationsService: Symbol.for('NotificationsService'),
 };
 
@@ -254,6 +259,16 @@ function registerApplicationServices(container: Container) {
     )
     .inSingletonScope();
   container
+    .bind<CollectiblesService>(Services.CollectiblesService)
+    .toDynamicValue(c =>
+      createCollectiblesService(
+        c.container.get<BestInSlotApiClient>(Services.BestInSlotApiClient),
+        c.container.get<HiroStacksApiClient>(Services.HiroStacksApiClient),
+        c.container.get<Sip9AssetService>(Services.Sip9AssetService)
+      )
+    )
+    .inSingletonScope();
+  container
     .bind<NotificationsService>(Services.NotificationsService)
     .toDynamicValue(c =>
       createNotificationsService(c.container.get<LeatherApiClient>(Services.LeatherApiClient))
@@ -296,6 +311,9 @@ export function getBitcoinTransactionsService() {
 }
 export function getActivityService() {
   return getContainer().get<ActivityService>(Services.ActivityService);
+}
+export function getCollectiblesService() {
+  return getContainer().get<CollectiblesService>(Services.CollectiblesService);
 }
 export function getNotificationsService() {
   return getContainer().get<NotificationsService>(Services.NotificationsService);

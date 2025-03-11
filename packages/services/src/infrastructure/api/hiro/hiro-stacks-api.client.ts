@@ -6,6 +6,8 @@ import {
   AddressTransactionsWithTransfersListResponse,
   MempoolTransaction,
   MempoolTransactionListResponse,
+  NonFungibleTokenHolding,
+  NonFungibleTokenHoldingsList,
   Transaction,
   TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
@@ -44,6 +46,7 @@ export type HiroTransactionEvent = TransactionEvent;
 export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;
 export type HiroStacksMempoolTransaction = MempoolTransaction;
+export type HiroNftHolding = NonFungibleTokenHolding;
 
 export interface HiroStacksApiClient {
   getAddressBalances(address: string, signal?: AbortSignal): Promise<HiroAddressBalanceResponse>;
@@ -70,6 +73,7 @@ export interface HiroStacksApiClient {
     tokenId: number,
     signal?: AbortSignal
   ): Promise<HiroNftMetadataResponse>;
+  getNonFungibleHoldings(principal: string, signal?: AbortSignal): Promise<HiroNftHolding[]>;
 }
 
 export function createHiroStacksApiClient(
@@ -284,6 +288,33 @@ export function createHiroStacksApiClient(
     );
   }
 
+  async function getNonFungibleHoldings(principal: string, signal?: AbortSignal) {
+    const pageParams = new URLSearchParams({
+      limit: '100',
+      offset: '0',
+    });
+    return await cache.fetchWithCache(
+      ['hiro-stacks-get-nft-holdings', principal, selectStacksChainId(settings.getSettings())],
+      async () => {
+        const res = await limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            axios.get<NonFungibleTokenHoldingsList>(
+              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&${pageParams.toString()}`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getNftHoldings,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data.results;
+      },
+      { ttl: HttpCacheTimeMs.tenSeconds }
+    );
+  }
+
   return {
     getAddressTransactions,
     getTransactionEvents,
@@ -291,5 +322,6 @@ export function createHiroStacksApiClient(
     getAddressMempoolTransactions,
     getFungibleTokenMetadata,
     getNonFungibleTokenMetadata,
+    getNonFungibleHoldings,
   };
 }
