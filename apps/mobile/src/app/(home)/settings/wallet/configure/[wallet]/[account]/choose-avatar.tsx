@@ -21,8 +21,8 @@ interface ChooseAvatarProps extends AccountId {
   account: Account;
 }
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {
-  const defaultStyles = useScrollViewStyles();
   const { bottom } = useSafeAreaInsets();
+  const defaultStyles = useScrollViewStyles();
   const theme = useTheme<Theme>();
   const dispatch = useAppDispatch();
   const navigation = useNavigation();

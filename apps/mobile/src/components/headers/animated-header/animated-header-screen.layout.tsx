@@ -5,18 +5,31 @@ import { HasChildren } from '@/utils/types';
 
 import { Box, Text } from '@leather.io/ui/native';
 
+import { ReversibleHeader } from '../components/animated-reversible-header';
 import { useAnimatedHeader } from './animated-header.hooks';
+
+interface ScrollViewStylesProps {
+  gap?: number;
+  paddingBottom?: number;
+  paddingHorizontal?: number;
+}
 
 interface AnimatedHeaderScreenLayoutProps extends HasChildren {
   rightHeaderElement?: React.ReactNode;
   rightTitleElement?: React.ReactNode;
-  title: string;
+  title: string | React.ReactNode;
+  subtitle?: string | React.ReactNode;
+  contentContainerStyles?: ScrollViewStylesProps;
+  isHeaderReversible?: boolean;
 }
 export function AnimatedHeaderScreenLayout({
   children,
   rightHeaderElement,
   rightTitleElement,
   title,
+  subtitle,
+  contentContainerStyles,
+  isHeaderReversible = false,
 }: AnimatedHeaderScreenLayoutProps) {
   const {
     defaultStyles,
@@ -27,6 +40,7 @@ export function AnimatedHeaderScreenLayout({
     animatedBlurOverlayStyle,
     onContentSizeChange,
     onLayoutChange,
+    scrollY,
   } = useAnimatedHeader();
 
   return (
@@ -36,10 +50,16 @@ export function AnimatedHeaderScreenLayout({
         animatedStyle={animatedHeaderStyle}
         rightElement={rightHeaderElement}
         title={title}
+        subtitle={subtitle}
+        scrollY={scrollY}
+        isHeaderReversible={isHeaderReversible}
       />
       <Box bg="ink.background-primary" flex={1} onLayout={onLayoutChange}>
         <Animated.ScrollView
-          contentContainerStyle={defaultStyles}
+          contentContainerStyle={{
+            ...defaultStyles,
+            ...contentContainerStyles,
+          }}
           onContentSizeChange={onContentSizeChange}
           onScroll={onScrollHandler}
           scrollEnabled={contentHeight > viewHeight}
@@ -47,7 +67,11 @@ export function AnimatedHeaderScreenLayout({
         >
           <Box flexDirection="row" justifyContent="space-between" paddingBottom="5">
             <Box alignItems="flex-start" flex={1} maxWidth={320}>
-              <Text variant="heading03">{title}</Text>
+              {isHeaderReversible ? (
+                <ReversibleHeader title={title} subtitle={subtitle} scrollY={scrollY} />
+              ) : (
+                <Text variant="heading03">{title}</Text>
+              )}
             </Box>
             <Box alignItems="flex-end">{rightTitleElement}</Box>
           </Box>

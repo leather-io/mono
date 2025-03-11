@@ -4,8 +4,8 @@ import { Avatar } from './avatar.native';
 export function StxAvatarIcon() {
   return (
     <Avatar
-      outlineColor="ink.border-transparent"
       icon={<StacksIcon width="100%" height="100%" />}
+      indicator={<StacksIcon width={16} height={16} />}
     />
   );
 }

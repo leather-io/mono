@@ -11,7 +11,7 @@ import {
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 
 const blurOverlayVisibilityThreshold = 12;
-const secondaryTitleVisibilityThreshold = 26;
+export const secondaryTitleVisibilityThreshold = 26;
 
 export function useAnimatedHeader(triggerAnimationYValue = secondaryTitleVisibilityThreshold) {
   const defaultStyles = useScrollViewStyles();
@@ -24,6 +24,7 @@ export function useAnimatedHeader(triggerAnimationYValue = secondaryTitleVisibil
     contentHeight,
     viewHeight,
     scrollY,
+    secondaryTitleVisibilityThreshold,
     onScrollHandler: useAnimatedScrollHandler({
       onScroll: event => {
         scrollY.value = event.contentOffset.y;

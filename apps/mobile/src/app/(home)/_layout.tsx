@@ -40,6 +40,7 @@ export default function StackLayout() {
 
       {/* Account */}
       <Stack.Screen name="account/[account]/index" options={{ header: () => <NakedHeader /> }} />
+      <Stack.Screen name="balances/index" options={{ headerShown: false }} />
 
       {/* Developer Console */}
       <Stack.Screen

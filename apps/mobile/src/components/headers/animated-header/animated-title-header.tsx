@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
@@ -9,8 +9,10 @@ import { useRouter } from 'expo-router';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
+import { ReversibleHeader } from '../components/animated-reversible-header';
 import { HeaderBackButton } from '../components/header-back-button';
 import { HeaderTitle } from '../components/header-title';
+import { HeaderTitleWithSubtitle } from '../components/header-title-with-subtitle';
 import { HeaderLayout } from '../header.layout';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -18,14 +20,20 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 interface AnimatedTitleHeaderProps {
   animatedStyle: ReturnType<typeof useAnimatedStyle>;
   animatedBlurOverlayStyle: ReturnType<typeof useAnimatedStyle>;
-  title: string;
+  title: string | ReactNode;
+  subtitle?: string | ReactNode;
+  scrollY?: SharedValue<number>;
   rightElement?: ReactNode;
+  isHeaderReversible?: boolean;
 }
 export function AnimatedTitleHeader({
   animatedStyle,
   title,
+  subtitle,
   rightElement,
+  scrollY,
   animatedBlurOverlayStyle,
+  isHeaderReversible = false,
 }: AnimatedTitleHeaderProps) {
   const router = useRouter();
   const { themeDerivedFromThemePreference } = useSettings();
@@ -39,7 +47,15 @@ export function AnimatedTitleHeader({
         leftElement={<HeaderBackButton onPress={() => router.back()} testID={TestId.backButton} />}
         centerElement={
           <AnimatedBox style={animatedStyle}>
-            <HeaderTitle title={title} />
+            {subtitle ? (
+              isHeaderReversible && scrollY ? (
+                <ReversibleHeader title={title} subtitle={subtitle} scrollY={scrollY} />
+              ) : (
+                <HeaderTitleWithSubtitle title={title} subtitle={subtitle} />
+              )
+            ) : (
+              <HeaderTitle title={title} />
+            )}
           </AnimatedBox>
         }
         rightElement={rightElement}
