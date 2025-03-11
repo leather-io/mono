@@ -1,21 +1,24 @@
-import { Stack, Text } from '@leather.io/ui/native';
+import { ReactNode } from 'react';
 
-interface HeaderTitleWithSubtitleProps {
-  title: string;
-  subtitle?: string;
+import { BoxProps, Stack } from '@leather.io/ui/native';
+
+import { HeaderSubtitle, HeaderTitle } from './header-title';
+
+interface HeaderTitleWithSubtitleProps extends BoxProps {
+  title: string | ReactNode;
+  subtitle?: string | ReactNode;
   testID?: string;
 }
-export function HeaderTitleWithSubtitle({ title, subtitle, testID }: HeaderTitleWithSubtitleProps) {
+export function HeaderTitleWithSubtitle({
+  title,
+  subtitle,
+  testID,
+  ...props
+}: HeaderTitleWithSubtitleProps) {
   return (
-    <Stack alignItems="center" justifyContent="center">
-      <Text variant="heading05" color="ink.text-primary" testID={testID}>
-        {title}
-      </Text>
-      {subtitle && (
-        <Text variant="label03" color="ink.text-subdued">
-          {subtitle}
-        </Text>
-      )}
+    <Stack alignItems="center" justifyContent="center" {...props}>
+      {typeof title === 'string' ? <HeaderTitle title={title} testID={testID} /> : title}
+      {typeof subtitle === 'string' ? <HeaderSubtitle title={subtitle} /> : subtitle}
     </Stack>
   );
 }

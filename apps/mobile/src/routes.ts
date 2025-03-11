@@ -7,7 +7,7 @@ export enum AppRoutes {
   Send = '/send',
   Receive = '/receive',
   Swap = '/swap',
-  Tokens = '/tokens',
+  Balances = '/balances',
   Collectibles = '/collectibles',
   Browser = '/browser',
   CreateNewWallet = '/create-new-wallet',

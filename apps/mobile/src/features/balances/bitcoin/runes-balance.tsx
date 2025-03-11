@@ -2,7 +2,6 @@ import {
   useRunesAccountBalance,
   useRunesTotalBalance,
 } from '@/queries/balance/runes-balance.query';
-import { useSettings } from '@/store/settings/settings';
 
 import { AccountId, Money } from '@leather.io/models';
 import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
@@ -20,18 +19,15 @@ export function RunesTokenBalance({
   fiatBalance,
   name,
   symbol,
-  ...rest
 }: RunesTokenBalanceProps) {
-  const { themeDerivedFromThemePreference } = useSettings();
   return (
     <TokenBalance
       ticker={symbol}
-      icon={<RunesAvatarIcon theme={themeDerivedFromThemePreference} />}
+      icon={<RunesAvatarIcon />}
       tokenName={name}
       protocol="rune"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
-      {...rest}
     />
   );
 }
@@ -48,8 +44,6 @@ export function RunesBalance() {
       name={balance.asset.runeName}
       availableBalance={balance.crypto.availableBalance}
       fiatBalance={balance.fiat.totalBalance}
-      px="5"
-      py="3"
     />
   ));
 }
@@ -66,8 +60,6 @@ export function RunesBalanceByAccount({ fingerprint, accountIndex }: AccountId) 
       name={balance.asset.spacedRuneName}
       availableBalance={balance.crypto.availableBalance}
       fiatBalance={balance.fiat.availableBalance}
-      px="5"
-      py="3"
     />
   ));
 }

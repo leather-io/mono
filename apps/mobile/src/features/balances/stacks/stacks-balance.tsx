@@ -1,9 +1,8 @@
-import { TokenIcon } from '@/components/widgets/tokens/token-icon';
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
-import { PressableProps } from '@leather.io/ui/native';
+import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
 
@@ -11,15 +10,11 @@ interface StacksTokenBalanceProps extends PressableProps {
   availableBalance: Money;
   fiatBalance: Money;
 }
-export function StacksTokenBalance({
-  availableBalance,
-  fiatBalance,
-  ...rest
-}: StacksTokenBalanceProps) {
+export function StacksTokenBalance({ availableBalance, fiatBalance }: StacksTokenBalanceProps) {
   return (
     <TokenBalance
       ticker="STX"
-      icon={<TokenIcon ticker="STX" />}
+      icon={<StxAvatarIcon />}
       tokenName={t({
         id: 'asset_name.stacks',
         message: 'Stacks',
@@ -27,7 +22,6 @@ export function StacksTokenBalance({
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
-      {...rest}
     />
   );
 }
@@ -40,8 +34,6 @@ export function StacksBalance() {
     <StacksTokenBalance
       availableBalance={balance.value.stx.availableBalance}
       fiatBalance={balance.value.fiat.availableBalance}
-      px="5"
-      py="3"
     />
   );
 }
@@ -64,8 +56,6 @@ export function StacksBalanceByAccount({
       availableBalance={balance.value.stx.availableBalance}
       fiatBalance={balance.value.fiat.availableBalance}
       onPress={onPress}
-      px="5"
-      py="3"
     />
   );
 }

@@ -15,7 +15,6 @@ export function BitcoinTokenBalance({
   availableBalance,
   fiatBalance,
   onPress,
-  ...rest
 }: BitcoinTokenBalanceProps) {
   return (
     <TokenBalance
@@ -29,7 +28,6 @@ export function BitcoinTokenBalance({
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}
-      {...rest}
     />
   );
 }
@@ -42,8 +40,6 @@ export function BitcoinBalance() {
     <BitcoinTokenBalance
       availableBalance={balance.value.btc.availableBalance}
       fiatBalance={balance.value.fiat.availableBalance}
-      px="5"
-      py="3"
     />
   );
 }
@@ -66,8 +62,6 @@ export function BitcoinBalanceByAccount({
       availableBalance={balance.value.btc.availableBalance}
       fiatBalance={balance.value.fiat.availableBalance}
       onPress={onPress}
-      px="5"
-      py="3"
     />
   );
 }

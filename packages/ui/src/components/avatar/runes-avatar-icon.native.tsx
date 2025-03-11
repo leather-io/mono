@@ -1,26 +1,19 @@
 import Svg, { Rect } from 'react-native-svg';
 
-import { ThemeVariant } from 'src/theme-native/theme';
+import { useTheme } from '@shopify/restyle';
+import { Theme } from 'src/theme-native/theme';
 
-import { colorThemes } from '@leather.io/tokens';
-
+import BtcIcon from '../../assets/icons/bitcoin.svg';
 import { Avatar } from './avatar.native';
 
-interface RunesAvatarIconProps {
-  theme: ThemeVariant;
-}
-export function RunesAvatarIcon({ theme }: RunesAvatarIconProps) {
-  const darkFill =
-    theme === 'light'
-      ? colorThemes.base['ink.background-primary']
-      : colorThemes.dark['ink.background-primary'];
-  const lightFill =
-    theme === 'light'
-      ? colorThemes.base['ink.action-primary-default']
-      : colorThemes.dark['ink.action-primary-default'];
+export function RunesAvatarIcon() {
+  const { colors } = useTheme<Theme>();
+
+  const lightFill = colors['ink.action-primary-default'];
+  const darkFill = colors['ink.background-primary'];
+
   return (
     <Avatar
-      outlineColor="ink.border-transparent"
       icon={
         <Svg width="100%" height="100%" viewBox="0 0 32 32" fill="none">
           <Rect width="32" height="32" rx="16" fill={darkFill} />
@@ -29,6 +22,7 @@ export function RunesAvatarIcon({ theme }: RunesAvatarIconProps) {
           <Rect x="10" y="10" width="12" height="12" fill={lightFill} />
         </Svg>
       }
+      indicator={<BtcIcon width={16} height={16} />}
     />
   );
 }

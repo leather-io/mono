@@ -1,7 +1,7 @@
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
-import { TokenIcon } from '@/components/widgets/tokens/token-icon';
+import { TokenIcon } from '@/components/widgets/balances/token-icon';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';

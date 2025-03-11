@@ -4,15 +4,9 @@ import {
 } from '@/queries/balance/sip10-balance.query';
 
 import { Money } from '@leather.io/models';
-import { Avatar } from '@leather.io/ui/native';
+import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
 import { TokenBalance } from '../token-balance';
-
-function getFallbackAvatar(contractId: string) {
-  // TODO LEA-2264 use avatars from Alex API
-  // extension uses StacksAssetAvatar and DynamicColorCircle for this
-  return `https://avatar.vercel.sh/${contractId}?size=36`;
-}
 
 interface Sip10TokenBalanceProps {
   availableBalance: Money;
@@ -34,18 +28,16 @@ export function Sip10TokenBalance({
     <TokenBalance
       ticker={symbol}
       icon={
-        <Avatar
-          image={imageCanonicalUri !== '' ? imageCanonicalUri : getFallbackAvatar(contractId)}
-          imageAlt={name}
-          fallback={name[0]}
+        <Sip10AvatarIcon
+          contractId={contractId}
+          imageCanonicalUri={imageCanonicalUri}
+          name={name}
         />
       }
       tokenName={name}
       protocol="sip10"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
-      px="5"
-      py="3"
     />
   );
 }

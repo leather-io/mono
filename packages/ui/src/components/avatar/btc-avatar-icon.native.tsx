@@ -3,6 +3,9 @@ import { Avatar } from './avatar.native';
 
 export function BtcAvatarIcon() {
   return (
-    <Avatar outlineColor="ink.border-transparent" icon={<BtcIcon width="100%" height="100%" />} />
+    <Avatar
+      icon={<BtcIcon width="100%" height="100%" />}
+      indicator={<BtcIcon width={16} height={16} />}
+    />
   );
 }
