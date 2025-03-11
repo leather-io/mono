@@ -3,6 +3,8 @@ import { leather } from '~/helpers/leather-sdk';
 
 import { Button } from '@leather.io/ui';
 
+import { HomeHeroCard } from './components/home-card';
+
 interface HomeProps {
   latestArticles: { name: string; url: string }[];
 }
@@ -10,11 +12,16 @@ export function Home({ latestArticles }: HomeProps) {
   return (
     <>
       <styled.div p="space.04">
-        <styled.h1 textStyle="display.02">Bitcoin for the rest of us</styled.h1>
-        <styled.h2 textStyle="heading.05">
-          Unlock yield opportunities without giving up control of your assets.
-        </styled.h2>
-        <styled.h2 textStyle="heading.03">Featured articles</styled.h2>
+        <HomeHeroCard>
+          <styled.h1 textStyle="heading.03">Earn rewards with BTC</styled.h1>
+          <styled.p textStyle="label.02" mt="space.03">
+            Bridge BTC to sBTC to access DeFi, NFTs, and ~5% Bitcoin yield* while keeping full
+            liquidity and self-custody. Transfers adjust rewards dynamically.
+          </styled.p>
+          <styled.button textStyle="label.02" mt="space.03">
+            Get started →
+          </styled.button>
+        </HomeHeroCard>
         <ul>
           {latestArticles.map(article => (
             <li key={article.name}>

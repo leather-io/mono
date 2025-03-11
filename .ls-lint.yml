@@ -8,17 +8,20 @@ ignore:
   - .git
   - .idea
   - .vscode
-  - dist
+  - apps/*/node_modules
   - apps/mobile/.expo/*
+  - apps/mobile/android
+  - apps/mobile/artifacts
+  - apps/mobile/ios
+  - apps/web/{.react-router,build}
+  - dist
+  - node_modules
+  - packages/**/.react-router
   - packages/*/.tsup
-  - packages/ui/ios
+  - packages/*/node_modules
   - packages/ui/android
   - packages/ui/dist-native
   - packages/ui/dist-web
-  - node_modules
-  - packages/*/node_modules
-  - apps/*/node_modules
+  - packages/ui/ios
+  - packages/ui/storybook-static
   - storybook-static
-  - apps/mobile/ios
-  - apps/mobile/android
-  - apps/mobile/artifacts

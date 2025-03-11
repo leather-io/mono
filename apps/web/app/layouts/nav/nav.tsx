@@ -1,8 +1,11 @@
 import { styled } from 'leather-styles/jsx';
+import { AuthButton } from '~/components/auth-button';
 
 import { NavItem } from './nav-item.layout';
 
 export function Nav() {
+  const allNavItems = false;
+
   return (
     <styled.nav
       display="flex"
@@ -60,22 +63,27 @@ export function Nav() {
         </NavItem>
       </styled.div>
 
-      <styled.div mt="auto" mb="space.09">
-        <NavItem href="/blog" icon="newspaper">
-          Blog
-        </NavItem>
+      {allNavItems && (
+        <styled.div mt="auto" mb="space.09">
+          <NavItem href="/blog" icon="newspaper">
+            Blog
+          </NavItem>
 
-        <NavItem href="/guides" icon="glasses">
-          Guides
-        </NavItem>
+          <NavItem href="/guides" icon="glasses">
+            Guides
+          </NavItem>
 
-        <NavItem href="/dev-docs" icon="terminal">
-          Dev Docs
-        </NavItem>
+          <NavItem href="/dev-docs" icon="terminal">
+            Dev Docs
+          </NavItem>
 
-        <NavItem href="/support" icon="support">
-          Support
-        </NavItem>
+          <NavItem href="/support" icon="support">
+            Support
+          </NavItem>
+        </styled.div>
+      )}
+      <styled.div mt="auto" mb="space.04">
+        <AuthButton state="extension-pre-onboarding" mx="space.04" />
       </styled.div>
     </styled.nav>
   );

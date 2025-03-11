@@ -15,7 +15,6 @@ describe('Leather SDK', () => {
     Object.values(endpoints).forEach(endpoint => methods.includes(endpoint.method));
   });
 
-  // write test that ensures the onprovider call isn't called
   test('onProviderNotFound is called if provider is available', () => {
     vi.stubGlobal('window', { document: {} });
     vi.stubGlobal('LeatherProvider', undefined);
