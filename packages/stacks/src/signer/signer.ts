@@ -15,7 +15,7 @@ import { NetworkModes } from '@leather.io/models';
 
 import { deriveStxPrivateKey, extractStacksDerivationPathAccountIndex } from '../stacks.utils';
 
-// Warning: mutatitive. Ideally there would be a tx.clone() method
+// Warning: mutative. Ideally there would be a tx.clone() method
 export function signStacksTransaction(tx: StacksTransactionWire, privateKey: string) {
   const signer = new TransactionSigner(tx);
   signer.signOrigin(privateKey);
