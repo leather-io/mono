@@ -54,6 +54,12 @@
   * devDependencies
     * @leather.io/models bumped to 0.28.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.29.0
+
 ## [3.3.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.2.4...@leather.io/analytics-v3.3.0) (2025-02-25)
 
 

@@ -646,6 +646,38 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.19.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.18.1...@leather.io/mobile-v2.19.0) (2025-03-11)
+
+
+### Features
+
+* activity service ([fc8364b](https://github.com/leather-io/mono/commit/fc8364bcfb90e582043df52e8adf7111343fc7db))
+
+
+### Bug Fixes
+
+* add runes + fallback sip-10 avatars. Hide token symbol, show all sip10, ref LEA-2017 ([da05e7e](https://github.com/leather-io/mono/commit/da05e7e1d24421511e9b1f3ee875237dd0268d76))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.3.3
+    * @leather.io/bitcoin bumped to 0.21.0
+    * @leather.io/constants bumped to 0.18.0
+    * @leather.io/crypto bumped to 1.6.50
+    * @leather.io/models bumped to 0.29.0
+    * @leather.io/provider bumped to 1.1.2
+    * @leather.io/query bumped to 2.30.0
+    * @leather.io/rpc bumped to 2.9.0
+    * @leather.io/services bumped to 1.5.0
+    * @leather.io/stacks bumped to 1.7.2
+    * @leather.io/ui bumped to 1.51.3
+    * @leather.io/utils bumped to 0.28.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.21.0
+
 ## [2.18.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.17.1...@leather.io/mobile-v2.18.0) (2025-03-06)
 
 

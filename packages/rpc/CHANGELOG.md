@@ -225,6 +225,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.27.8
 
+## [2.9.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.8.1...@leather.io/rpc-v2.9.0) (2025-03-11)
+
+
+### Features
+
+* **rpc:** add stx_getNetworks ([b3d545e](https://github.com/leather-io/mono/commit/b3d545e939d821cdd28318eab7a747a0e45a9e45))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.29.0
+    * @leather.io/utils bumped to 0.28.0
+
 ## [2.8.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.8.0...@leather.io/rpc-v2.8.1) (2025-03-06)
 
 

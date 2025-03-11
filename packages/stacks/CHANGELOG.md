@@ -363,6 +363,23 @@
     * @leather.io/crypto bumped to 1.6.49
     * @leather.io/utils bumped to 0.27.8
 
+## [1.7.2](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.7.1...@leather.io/stacks-v1.7.2) (2025-03-11)
+
+
+### Bug Fixes
+
+* stacks pkg release ([49e1748](https://github.com/leather-io/mono/commit/49e174882e6590f6a889a17409a11605a6a23aa4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.18.0
+    * @leather.io/crypto bumped to 1.6.50
+    * @leather.io/models bumped to 0.29.0
+    * @leather.io/utils bumped to 0.28.0
+
 ## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.6.4...@leather.io/stacks-v1.7.0) (2025-03-04)
 
 
