@@ -11,4 +11,4 @@ export function isLeatherInstalled() {
   return isDefined(window.LeatherProvider);
 }
 
-export type AuthState = 'no-extension' | 'extension-pre-onboarding' | 'extension-user';
+export type ExtensionState = 'missing' | 'detected' | 'connected';

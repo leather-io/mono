@@ -60,3 +60,4 @@ export { usePressedState } from './src/hooks/use-pressed-state.native';
 export { useHaptics, HapticsProvider } from './src/hooks/use-haptics.native';
 export { Approver } from './src/components/approver/approver.native';
 export { Badge, type BadgeProps } from './src/components/badge/badge.native';
+export * from './src/utils/has-children.shared';
