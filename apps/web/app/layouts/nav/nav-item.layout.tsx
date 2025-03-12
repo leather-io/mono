@@ -23,7 +23,9 @@ export function NavItem({ children, icon, href }: NavItemProps) {
       textStyle="label.02"
       pl="space.04"
       py="space.02"
+      outline="none"
       _hover={{ bg: 'ink.component-background-hover' }}
+      _focusVisible={{ textDecoration: 'underline' }}
     >
       <Flag
         spacing="space.04"

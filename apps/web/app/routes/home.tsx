@@ -1,4 +1,4 @@
-import { Home } from '~/features/home/home';
+import { Home } from '~/pages/home/home';
 
 import { delay } from '@leather.io/utils';
 

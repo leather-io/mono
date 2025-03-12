@@ -1,4 +1,4 @@
-import { Earn } from '~/features/earn/earn';
+import { Earn } from '~/pages/earn/earn';
 
 import { delay } from '@leather.io/utils';
 
