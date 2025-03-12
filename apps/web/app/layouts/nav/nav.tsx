@@ -82,8 +82,8 @@ export function Nav() {
           </NavItem>
         </styled.div>
       )}
-      <styled.div mt="auto" mb="space.04">
-        <AuthButton state="extension-pre-onboarding" mx="space.04" />
+      <styled.div mt="auto" mb="space.04" mx="space.04">
+        <AuthButton state="detected" />
       </styled.div>
     </styled.nav>
   );
