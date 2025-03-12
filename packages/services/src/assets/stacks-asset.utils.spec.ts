@@ -3,6 +3,7 @@ import { CryptoAssetCategories, CryptoAssetChains, CryptoAssetProtocols } from '
 import { HiroFtMetadataResponse } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
   createSip10CryptoAssetInfo,
+  createSip10ImageCanonicalUri,
   getAddressFromAssetIdentifier,
   getAssetNameFromIdentifier,
   getContractPrincipalFromAssetIdentifier,
@@ -95,5 +96,53 @@ describe('createSip10CryptoAssetInfo', () => {
     delete metadata.name;
     const result = createSip10CryptoAssetInfo(assetIdentifier, metadata);
     expect(result.name).toBe('TOKEN');
+  });
+});
+
+describe('createSip10ImageCanonicalUri', () => {
+  const assetIdentifier = 'SP123.token-contract::TOKEN';
+
+  it('returns the image_canonical_uri from metadata when it exists', () => {
+    const metadata = {
+      image_canonical_uri: 'https://test.com/image.png',
+    } as HiroFtMetadataResponse;
+
+    const result = createSip10ImageCanonicalUri({ metadata, assetIdentifier });
+    expect(result).toBe('https://test.com/image.png');
+  });
+
+  it('returns empty string when image_canonical_uri is empty', () => {
+    const metadata = {
+      image_canonical_uri: '',
+    } as HiroFtMetadataResponse;
+
+    const result = createSip10ImageCanonicalUri({ metadata, assetIdentifier });
+    expect(result).toBe('');
+  });
+
+  it('returns empty string when image_canonical_uri is undefined and no match in alexTokenData', () => {
+    const metadata = {} as HiroFtMetadataResponse;
+    const nonMatchingAssetId = 'SP123.non-matching::TOKEN';
+
+    const result = createSip10ImageCanonicalUri({ metadata, assetIdentifier: nonMatchingAssetId });
+    expect(result).toBe('');
+  });
+
+  it('returns icon from alexTokenData when image_canonical_uri is undefined and asset matches', () => {
+    // Mock alexTokenData to include a matching asset
+    const originalAlexTokenData = [...alexTokenData];
+    const mockIcon = 'https://alex-token-icon.png';
+
+    // Replace alexTokenData with our mock that includes our test asset
+    const mockAlexData = [{ id: assetIdentifier, icon: mockIcon }];
+    (alexTokenData as any) = mockAlexData;
+
+    const metadata = {} as HiroFtMetadataResponse;
+    const result = createSip10ImageCanonicalUri({ metadata, assetIdentifier });
+
+    // Restore original alexTokenData
+    (alexTokenData as any) = originalAlexTokenData;
+
+    expect(result).toBe(mockIcon);
   });
 });

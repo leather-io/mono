@@ -13,6 +13,8 @@ import {
   HiroFtMetadataResponse,
   HiroNftMetadataResponse,
 } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { createSip10ImageCanonicalUri } from './sip10-asset.utils';
+import { alexTokenData } from './sip10-consts';
 
 export function isTransferableSip10Token(token: Partial<HiroFtMetadataResponse>) {
   return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);
@@ -85,8 +87,39 @@ export function createSip10CryptoAssetInfo(
     contractId: getContractPrincipalFromAssetIdentifier(assetIdentifier),
     decimals: metadata.decimals ?? 0,
     hasMemo: isTransferableSip10Token(metadata),
-    imageCanonicalUri: metadata.image_canonical_uri ?? '',
+    imageCanonicalUri: createSip10ImageCanonicalUri({ metadata, assetName }),
     name,
     symbol: metadata.symbol || getTicker(name),
   };
+}
+
+interface Sip10ImageCanonicalUriArgs {
+  metadata: HiroFtMetadataResponse;
+  assetName: string;
+}
+export function createSip10ImageCanonicalUri({
+  metadata,
+  assetName,
+}: Sip10ImageCanonicalUriArgs): string {
+  if (isUndefined(metadata.image_canonical_uri) || metadata.image_canonical_uri === '') {
+    const tokenInfoFromAlexLabs = alexTokenData.find(({ name }) => assetName === name);
+
+    console.log(
+      'createSip10ImageCanonicalUri metadata',
+      metadata.image_canonical_uri,
+      assetName,
+      tokenInfoFromAlexLabs?.icon
+    );
+    return tokenInfoFromAlexLabs?.icon ?? '';
+  }
+  return metadata.image_canonical_uri;
+}
+// TODO: use this to fetch data from alex lab once determined where to call it from
+export async function fetchDataFromAlexLab(signal?: AbortSignal): Promise<any> {
+  const alexLabsSip10Api = `https://alex-sdk-api.alexlab.co/`;
+  const response = await fetch(alexLabsSip10Api, { signal });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data from Alex Lab API: ${response.statusText}`);
+  }
+  return response.json();
 }

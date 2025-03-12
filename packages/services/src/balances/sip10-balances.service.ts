@@ -84,7 +84,6 @@ export function createSip10BalancesService(
       sip10s: sip10Balances,
     };
   }
-
   async function getSip10TokenBalance(
     tokenId: string,
     amount: number,

@@ -18,6 +18,7 @@ export function createSip10AssetService(stacksApiClient: HiroStacksApiClient): S
   async function getAssetInfo(assetIdentifier: string, signal?: AbortSignal) {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const metadata = await stacksApiClient.getFungibleTokenMetadata(principal, signal);
+
     return createSip10CryptoAssetInfo(assetIdentifier, metadata);
   }
   return {
