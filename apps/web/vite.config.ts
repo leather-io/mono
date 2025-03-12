@@ -13,6 +13,9 @@ const knownIcons = [
   'paper-plane',
   'inbox',
   'arrows-repeat-left-right',
+  'arrow-right-left',
+  'exit',
+  'chevron-down',
   'newspaper',
   'glasses',
   'terminal',
@@ -39,7 +42,6 @@ export default defineConfig(({ isSsrBuild }) => ({
     },
   },
   plugins: [
-    // Type error with plugin
     viteStaticCopy({
       targets: [
         {

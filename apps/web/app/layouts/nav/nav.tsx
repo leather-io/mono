@@ -1,5 +1,6 @@
 import { styled } from 'leather-styles/jsx';
-import { AuthButton } from '~/components/auth-button';
+import { WhenClient } from '~/components/client-only';
+import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 
 import { NavItem } from './nav-item.layout';
 
@@ -10,6 +11,7 @@ export function Nav() {
     <styled.nav
       display="flex"
       flexDirection="column"
+      width="148px"
       minWidth="148px"
       borderColor="ink.border-default"
       borderRight="1px solid"
@@ -82,9 +84,10 @@ export function Nav() {
           </NavItem>
         </styled.div>
       )}
-      <styled.div mt="auto" mb="space.04" mx="space.04">
-        <AuthButton state="detected" />
-      </styled.div>
+
+      <WhenClient>
+        <SignInButton />
+      </WhenClient>
     </styled.nav>
   );
 }
