@@ -1,3 +1,4 @@
+import { CryptoAssetBalance } from '@leather.io/models';
 import { aggregateBaseCryptoAssetBalances } from '@leather.io/utils';
 
 import { Sip10AddressBalance, Sip10Balance } from './sip10-balances.service';
@@ -25,4 +26,11 @@ export function combineSip10Balances(addressBalances: Sip10AddressBalance[]): Si
       }
       return acc;
     }, [] as Sip10Balance[]);
+}
+
+export function sortByAvailableFiatBalance(
+  a: { fiat: CryptoAssetBalance },
+  b: { fiat: CryptoAssetBalance }
+) {
+  return b.fiat.availableBalance.amount.minus(a.fiat.availableBalance.amount).toNumber();
 }

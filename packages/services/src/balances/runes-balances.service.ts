@@ -13,6 +13,7 @@ import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
+import { sortByAvailableFiatBalance } from './sip10-balances.utils';
 
 export interface RuneBalance {
   asset: RuneCryptoAssetInfo;
@@ -64,7 +65,7 @@ export function createRunesBalancesService(
 
     return {
       fiat: cumulativeFiatBalance,
-      runes: combineRunesBalances(accountBalances),
+      runes: combineRunesBalances(accountBalances).sort(sortByAvailableFiatBalance),
     };
   }
 
@@ -79,11 +80,15 @@ export function createRunesBalancesService(
       ? await bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, signal)
       : [];
     const runesOutputsBalances = readRunesOutputsBalances(runesOutputs);
-    const runesBalances = await Promise.all(
-      Object.keys(runesOutputsBalances).map(runeName => {
-        return getRuneBalance(runeName, runesOutputsBalances[runeName], signal);
-      })
-    );
+    const runesBalances = (
+      await Promise.allSettled(
+        Object.keys(runesOutputsBalances).map(runeName => {
+          return getRuneBalance(runeName, runesOutputsBalances[runeName], signal);
+        })
+      )
+    )
+      .filter(result => result.status === 'fulfilled')
+      .map(b => b.value);
 
     const cumulativeFiatBalance =
       runesBalances.length > 0
@@ -93,7 +98,7 @@ export function createRunesBalancesService(
     return {
       account,
       fiat: cumulativeFiatBalance,
-      runes: runesBalances,
+      runes: runesBalances.sort(sortByAvailableFiatBalance),
     };
   }
 
@@ -111,6 +116,7 @@ export function createRunesBalancesService(
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };
   }
+
   return {
     getRunesAccountBalance,
     getRunesAggregateBalance,
