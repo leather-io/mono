@@ -36,11 +36,11 @@ export function BitcoinFeeOption({
       time={getBitcoinFeeData(feeType).time}
       isSelected={isSelected}
       disabled={disabled}
-      balance={formatBalance(sats, false)}
+      balance={formatBalance({ balance: sats, isFiat: false })}
       balanceUsd={i18n._({
         id: 'fees-sheet.fee-rate-caption',
         message: '{feeRate} sats/B · {balanceUsd}',
-        values: { feeRate, balanceUsd: formatBalance(usd, true) },
+        values: { feeRate, balanceUsd: formatBalance({ balance: usd, isFiat: true }) },
       })}
     />
   );

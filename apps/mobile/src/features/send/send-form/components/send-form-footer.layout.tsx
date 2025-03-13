@@ -1,6 +1,4 @@
-import { HasChildren } from '@/utils/types';
-
-import { Box } from '@leather.io/ui/native';
+import { Box, HasChildren } from '@leather.io/ui/native';
 
 export function SendFormFooterLayout({ children }: HasChildren) {
   return (

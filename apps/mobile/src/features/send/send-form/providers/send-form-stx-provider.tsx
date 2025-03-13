@@ -1,8 +1,8 @@
-import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
 import { Fees } from '@leather.io/models';
 import { defaultStacksFees } from '@leather.io/query';
+import { HasChildren } from '@leather.io/ui/native';
 import { convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
 
 import { CreateCurrentSendRoute, useSendSheetRoute } from '../../send-form.utils';

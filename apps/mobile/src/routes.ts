@@ -18,7 +18,8 @@ export enum AppRoutes {
 
   // Account
   Account = '/account/[account]',
-
+  Activity = '/activity',
+  AccountActivity = '/account/[account]/activity',
   // Settings
   Settings = '/settings',
   SettingsDisplay = '/settings/display',

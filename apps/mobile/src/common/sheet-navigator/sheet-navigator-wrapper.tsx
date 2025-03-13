@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 
-import { HasChildren } from '@/utils/types';
-
-import { SheetRef } from '@leather.io/ui/native';
+import { HasChildren, SheetRef } from '@leather.io/ui/native';
 
 import { SheetNavigatorProvider } from './sheet-navigator-provider';
 

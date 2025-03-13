@@ -308,7 +308,7 @@ export function BasePsbtSigner({
                 message: 'Total spend',
               })}
             </Text>
-            <Text variant="label02">{formatBalance(totalSpend, true)}</Text>
+            <Text variant="label02">{formatBalance({ balance: totalSpend, isFiat: true })}</Text>
           </Box>
           <Approver.Actions>
             <ApproverButtons

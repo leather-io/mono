@@ -8,24 +8,38 @@ import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stack
 
 import { AccountId } from '@leather.io/models';
 
-export function AllAccountBalances() {
+export interface HardCap {
+  hardCap?: boolean;
+}
+
+// FIXME LEA-2310: introduce hardCap prop to balances pending sorting
+export function AllAccountBalances({ hardCap }: HardCap) {
   return (
     <>
       <BitcoinBalance />
       <StacksBalance />
-      <Sip10Balance />
-      <RunesBalance />
+      <Sip10Balance hardCap={hardCap} />
+      <RunesBalance hardCap={hardCap} />
     </>
   );
 }
 
-export function AccountBalances({ fingerprint, accountIndex }: AccountId) {
+// FIXME LEA-2310: introduce hardCap prop to balances pending sorting
+export function AccountBalances({ hardCap, fingerprint, accountIndex }: AccountId & HardCap) {
   return (
     <>
       <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
       <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
-      <Sip10BalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
-      <RunesBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+      <Sip10BalanceByAccount
+        hardCap={hardCap}
+        fingerprint={fingerprint}
+        accountIndex={accountIndex}
+      />
+      <RunesBalanceByAccount
+        hardCap={hardCap}
+        fingerprint={fingerprint}
+        accountIndex={accountIndex}
+      />
     </>
   );
 }

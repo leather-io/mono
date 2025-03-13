@@ -2,10 +2,17 @@ import { ReactElement, RefObject } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSettings } from '@/store/settings/settings';
-import { HasChildren } from '@/utils/types';
 import { useTheme } from '@shopify/restyle';
 
-import { Avatar, Box, Sheet, SheetHeader, SheetRef, Theme } from '@leather.io/ui/native';
+import {
+  Avatar,
+  Box,
+  HasChildren,
+  Sheet,
+  SheetHeader,
+  SheetRef,
+  Theme,
+} from '@leather.io/ui/native';
 
 interface SettingsSheetLayoutProps extends HasChildren {
   icon: ReactElement;

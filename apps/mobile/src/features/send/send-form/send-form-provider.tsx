@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { HasChildren } from '@/utils/types';
+import { HasChildren } from '@leather.io/ui/native';
 
 import { SendFormBaseContext, sendFormContext as SendFormContext } from './send-form-context';
 

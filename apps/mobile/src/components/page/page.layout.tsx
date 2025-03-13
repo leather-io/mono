@@ -9,9 +9,8 @@ import {
   createOnScrollHandler,
 } from '@/components/action-bar/action-bar-container';
 import { queryClient } from '@/queries/query';
-import { HasChildren } from '@/utils/types';
 
-import { Box } from '@leather.io/ui/native';
+import { Box, HasChildren } from '@leather.io/ui/native';
 
 import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar/action-bar';
 

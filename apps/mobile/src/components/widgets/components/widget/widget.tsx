@@ -1,6 +1,4 @@
-import { HasChildren } from '@/utils/types';
-
-import { Box } from '@leather.io/ui/native';
+import { Box, HasChildren } from '@leather.io/ui/native';
 
 import { WidgetHeader } from './widget-header';
 import { WidgetTitle } from './widget-title';

@@ -1,8 +1,8 @@
-import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 
 import { AverageBitcoinFeeRates } from '@leather.io/models';
 import { Utxo } from '@leather.io/query';
+import { HasChildren } from '@leather.io/ui/native';
 
 import { CreateCurrentSendRoute, useSendSheetRoute } from '../../send-form.utils';
 import { useSendFormBtc } from '../hooks/use-send-form-btc';

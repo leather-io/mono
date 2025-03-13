@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useRef } from 'react';
 
-import { HasChildren } from '@/utils/types';
+import { HasChildren } from '@leather.io/ui/native';
 
 import { Toast } from '.';
 import { ToastData, ToastMethods } from './types';

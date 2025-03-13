@@ -1,11 +1,11 @@
 import Animated from 'react-native-reanimated';
 
 import { AnimatedTitleHeader } from '@/components/headers/animated-header/animated-title-header';
-import { HasChildren } from '@/utils/types';
 
-import { Box, Text } from '@leather.io/ui/native';
+import { Box, HasChildren, TextProps } from '@leather.io/ui/native';
 
 import { ReversibleHeader } from '../components/animated-reversible-header';
+import { ContentTitle } from '../components/content-title';
 import { useAnimatedHeader } from './animated-header.hooks';
 
 interface ScrollViewStylesProps {
@@ -18,15 +18,20 @@ interface AnimatedHeaderScreenLayoutProps extends HasChildren {
   rightHeaderElement?: React.ReactNode;
   rightTitleElement?: React.ReactNode;
   title: string | React.ReactNode;
+  contentTitle?: string | React.ReactNode;
+  contentTitleStyles?: TextProps;
   subtitle?: string | React.ReactNode;
   contentContainerStyles?: ScrollViewStylesProps;
   isHeaderReversible?: boolean;
 }
+
 export function AnimatedHeaderScreenLayout({
   children,
   rightHeaderElement,
   rightTitleElement,
   title,
+  contentTitle,
+  contentTitleStyles,
   subtitle,
   contentContainerStyles,
   isHeaderReversible = false,
@@ -70,7 +75,7 @@ export function AnimatedHeaderScreenLayout({
               {isHeaderReversible ? (
                 <ReversibleHeader title={title} subtitle={subtitle} scrollY={scrollY} />
               ) : (
-                <Text variant="heading03">{title}</Text>
+                <ContentTitle title={contentTitle} {...contentTitleStyles} />
               )}
             </Box>
             <Box alignItems="flex-end">{rightTitleElement}</Box>

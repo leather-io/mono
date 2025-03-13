@@ -1,11 +1,14 @@
 import { useRef } from 'react';
 
+import { ActivityWidget } from '@/app/(home)/activity/components/activity-widget';
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import { BalancesWidget } from '@/components/widgets/balances/balances-widget';
 import { AllAccountBalances } from '@/features/balances/balances';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
+import { useTotalAccountAddresses } from '@/hooks/use-account-addresses';
+import { useTotalActivityQuery } from '@/queries/activity/account-activity.query';
 import { AppRoutes } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
@@ -18,6 +21,9 @@ export function Home() {
   const { hasWallets } = useWallets();
   const notificationSheetRef = useRef<SheetRef>(null);
 
+  const accounts = useTotalAccountAddresses();
+  const { data: activity, isLoading } = useTotalActivityQuery(accounts);
+
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
 
   return (
@@ -25,8 +31,15 @@ export function Home() {
       <AccountsWidget />
       {hasWallets && (
         <BalancesWidget onPressHeader={() => router.navigate(AppRoutes.Balances)}>
-          <AllAccountBalances />
+          <AllAccountBalances hardCap />
         </BalancesWidget>
+      )}
+      {activity && (
+        <ActivityWidget
+          activity={activity}
+          isLoading={isLoading}
+          onPressHeader={() => router.navigate(AppRoutes.Activity)}
+        />
       )}
       <NotificationsSheet sheetRef={notificationSheetRef} />
     </PageLayout>

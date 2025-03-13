@@ -11,27 +11,36 @@ import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils'
 interface BalanceProps extends TextProps {
   balance: Money;
   lockedBalance?: string;
+  operator?: string;
 }
 
-export function formatBalance(balance: Money, isFiat: boolean) {
+interface FormatBalanceProps {
+  balance: Money;
+  isFiat: boolean;
+  operator?: string;
+}
+export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps) {
   if (isFiat) {
     const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
     return i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals);
   }
 
-  return formatMoneyWithoutSymbol(balance);
+  return operator
+    ? `${operator} ${formatMoneyWithoutSymbol(balance)}`
+    : formatMoneyWithoutSymbol(balance);
 }
 
 export function Balance({
   balance,
   lockedBalance,
+  operator,
   variant = 'label01',
   color = 'ink.text-primary',
 }: BalanceProps) {
   const { i18n } = useLingui();
   const isPrivate = usePrivacyMode();
   const isFiat = balance.symbol in currencyNameMap;
-  const formattedBalance = formatBalance(balance, isFiat);
+  const formattedBalance = formatBalance({ balance, isFiat, operator });
   const privateText = isFiat ? undefined : `*${i18n._(balance.symbol)}`;
 
   if (!lockedBalance) {
