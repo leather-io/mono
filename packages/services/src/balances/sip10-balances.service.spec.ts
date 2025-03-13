@@ -84,16 +84,16 @@ describe('Sip10BalancesService', () => {
       expect(addressBalance.sip10s.length).toEqual(2);
     });
 
-    it('calculates the sip10 and usd balances of each individual sip10 token for an address', async () => {
+    it('calculates the sip10 and usd balances of each individual sip10 token and sorts list by fiat value', async () => {
       const balance = await sip10BalancesService.getSip10AddressBalance('STACKS_ADDRESS');
-      expect(balance.sip10s[0].crypto.totalBalance.amount).toEqual(initBigNumber(12000000));
-      expect(balance.sip10s[0].crypto.availableBalance.amount).toEqual(initBigNumber(12000000));
-      expect(balance.sip10s[1].crypto.totalBalance.amount).toEqual(initBigNumber(20000000));
-      expect(balance.sip10s[1].crypto.availableBalance.amount).toEqual(initBigNumber(20000000));
-      expect(balance.sip10s[0].fiat.totalBalance.amount).toEqual(initBigNumber(600));
-      expect(balance.sip10s[0].fiat.availableBalance.amount).toEqual(initBigNumber(600));
-      expect(balance.sip10s[1].fiat.totalBalance.amount).toEqual(initBigNumber(2000));
-      expect(balance.sip10s[1].fiat.availableBalance.amount).toEqual(initBigNumber(2000));
+      expect(balance.sip10s[1].crypto.totalBalance.amount).toEqual(initBigNumber(12000000));
+      expect(balance.sip10s[1].crypto.availableBalance.amount).toEqual(initBigNumber(12000000));
+      expect(balance.sip10s[0].crypto.totalBalance.amount).toEqual(initBigNumber(20000000));
+      expect(balance.sip10s[0].crypto.availableBalance.amount).toEqual(initBigNumber(20000000));
+      expect(balance.sip10s[1].fiat.totalBalance.amount).toEqual(initBigNumber(600));
+      expect(balance.sip10s[1].fiat.availableBalance.amount).toEqual(initBigNumber(600));
+      expect(balance.sip10s[0].fiat.totalBalance.amount).toEqual(initBigNumber(2000));
+      expect(balance.sip10s[0].fiat.availableBalance.amount).toEqual(initBigNumber(2000));
     });
 
     it('sums the total usd balance of each sip10 token for an address', async () => {

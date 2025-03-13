@@ -10,7 +10,7 @@ import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
-import { combineSip10Balances } from './sip10-balances.utils';
+import { combineSip10Balances, sortByAvailableFiatBalance } from './sip10-balances.utils';
 
 export interface Sip10Balance {
   asset: Sip10CryptoAssetInfo;
@@ -56,7 +56,7 @@ export function createSip10BalancesService(
 
     return {
       fiat: cumulativeFiatBalance,
-      sip10s: combineSip10Balances(addressBalances),
+      sip10s: combineSip10Balances(addressBalances).sort(sortByAvailableFiatBalance),
     };
   }
 
@@ -67,11 +67,17 @@ export function createSip10BalancesService(
     const fungibleTokens = (await stacksApiClient.getAddressBalances(address, signal))
       .fungible_tokens;
 
-    const sip10Balances = await Promise.all(
-      Object.keys(fungibleTokens).map(tokenId => {
-        return getSip10TokenBalance(tokenId, Number(fungibleTokens[tokenId]?.balance ?? 0), signal);
-      })
-    );
+    const sip10Balances = (
+      await Promise.allSettled(
+        Object.keys(fungibleTokens)
+          .filter(tokenId => Number(fungibleTokens[tokenId]?.balance ?? 0) !== 0)
+          .map(tokenId =>
+            getSip10TokenBalance(tokenId, Number(fungibleTokens[tokenId]?.balance ?? 0), signal)
+          )
+      )
+    )
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value);
 
     const cumulativeFiatBalance =
       sip10Balances.length > 0
@@ -81,7 +87,7 @@ export function createSip10BalancesService(
     return {
       address,
       fiat: cumulativeFiatBalance,
-      sip10s: sip10Balances,
+      sip10s: sip10Balances.sort(sortByAvailableFiatBalance),
     };
   }
 
