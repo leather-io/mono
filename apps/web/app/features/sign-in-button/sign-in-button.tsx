@@ -10,12 +10,12 @@ function InstallLeatherButton() {
   return (
     <SignInButtonContainer>
       <SignInButtonLayout
-        onClick={() => {
+        onClick={() =>
           window.open(
             'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en',
             '_blank'
-          );
-        }}
+          )
+        }
       >
         Install
       </SignInButtonLayout>

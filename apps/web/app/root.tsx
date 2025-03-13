@@ -1,21 +1,13 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  isRouteErrorResponse,
-} from 'react-router';
-
-import { styled } from 'leather-styles/jsx';
+import { Provider as ReduxProvider } from 'react-redux';
+import { Outlet, isRouteErrorResponse } from 'react-router';
 
 import type { LeatherProvider } from '@leather.io/rpc';
 import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
-import { GlobalLoader } from './layouts/nav/global-loader';
-import { Nav } from './layouts/nav/nav';
+import { RootLayout } from './layouts/root/root.layout';
+import { store } from './store/store';
 
 export function links() {
   return [
@@ -30,28 +22,14 @@ declare global {
   }
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <styled.body display="flex" height="100vh">
-        <GlobalLoader />
-        <Nav />
-        <styled.main>{children}</styled.main>
-        <ScrollRestoration />
-        <Scripts />
-      </styled.body>
-    </html>
-  );
-}
+export { RootLayout as Layout };
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <ReduxProvider store={store}>
+      <Outlet />
+    </ReduxProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

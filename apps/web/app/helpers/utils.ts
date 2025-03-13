@@ -8,7 +8,15 @@ export function getUiPackageAssetUrl(path: string) {
 }
 
 export function isLeatherInstalled() {
-  return isDefined(window.LeatherProvider);
+  return isClient() && isDefined(window.LeatherProvider);
 }
 
 export type ExtensionState = 'missing' | 'detected' | 'connected';
+
+export function isClient() {
+  return typeof window !== 'undefined';
+}
+
+export function isServer() {
+  return !isClient();
+}

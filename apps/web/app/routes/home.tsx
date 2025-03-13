@@ -1,7 +1,5 @@
 import { Home } from '~/pages/home/home';
 
-import { delay } from '@leather.io/utils';
-
 import type { Route } from './+types/home';
 
 const articles = [
@@ -19,8 +17,7 @@ const articles = [
   },
 ];
 
-export async function loader() {
-  await delay(300);
+export function loader() {
   return articles;
 }
 
