@@ -3,9 +3,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Animated from 'react-native-reanimated';
 
 import { AnimatedTitleHeader } from '@/components/headers/animated-header/animated-title-header';
-import { HasChildren } from '@/utils/types';
 
-import { Box, Text } from '@leather.io/ui/native';
+import { Box, HasChildren, Text } from '@leather.io/ui/native';
 
 import { useAnimatedHeader } from './animated-header.hooks';
 

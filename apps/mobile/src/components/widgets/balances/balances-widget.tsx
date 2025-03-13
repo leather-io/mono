@@ -1,6 +1,7 @@
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
-import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
+
+import { HasChildren } from '@leather.io/ui/native';
 
 import { Widget } from '../components/widget';
 

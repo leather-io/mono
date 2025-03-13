@@ -19,7 +19,6 @@ import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
-import { HasChildren } from '@/utils/types';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
@@ -30,6 +29,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import {
   Box,
+  HasChildren,
   HapticsProvider as LeatherHapticsProvider,
   ThemeProvider as LeatherThemeProvider,
   SheetProvider,

@@ -5,8 +5,9 @@ import { z } from 'zod';
 
 import { AccountLayout } from './account.layout';
 
-const configureAccountParamsSchema = z.object({
+export const configureAccountParamsSchema = z.object({
   accountId: z.string(),
+  accountName: z.string().optional(),
 });
 
 export default function AccountScreen() {

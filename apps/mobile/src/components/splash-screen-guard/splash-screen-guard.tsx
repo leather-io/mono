@@ -3,7 +3,6 @@ import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSettings } from '@/store/settings/settings';
-import { HasChildren } from '@/utils/types';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as SplashScreen from 'expo-splash-screen';
@@ -11,7 +10,7 @@ import * as SystemUI from 'expo-system-ui';
 import LottieView from 'lottie-react-native';
 
 import { colorThemes } from '@leather.io/tokens';
-import { Box, Button, Theme, useOnMount } from '@leather.io/ui/native';
+import { Box, Button, HasChildren, Theme, useOnMount } from '@leather.io/ui/native';
 
 import { LeatherLockedSplash } from '../animations/leather-locked-splash';
 import { LeatherSplash } from '../animations/leather-splash';

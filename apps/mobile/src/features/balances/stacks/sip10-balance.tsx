@@ -6,6 +6,7 @@ import {
 import { Money } from '@leather.io/models';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
+import { HardCap } from '../balances';
 import { TokenBalance } from '../token-balance';
 
 interface Sip10TokenBalanceProps {
@@ -41,13 +42,16 @@ export function Sip10TokenBalance({
     />
   );
 }
-export function Sip10Balance() {
+
+export function Sip10Balance({ hardCap }: HardCap) {
   const data = useSip10TotalBalance();
 
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
 
   return data.value.sip10s.map((balance, index) => {
+    // FIXME LEA-2310: temporary hard cap for widget view pending sorting
+    if (hardCap && index >= 2) return null;
     return (
       <Sip10TokenBalance
         availableBalance={balance.crypto.availableBalance}
@@ -65,12 +69,18 @@ interface Sip10BalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
 }
-export function Sip10BalanceByAccount({ accountIndex, fingerprint }: Sip10BalanceByAccountProps) {
+export function Sip10BalanceByAccount({
+  hardCap,
+  accountIndex,
+  fingerprint,
+}: Sip10BalanceByAccountProps & HardCap) {
   const data = useSip10AccountBalance(fingerprint, accountIndex);
 
   // TODO LEA-1726: handle balance loading & error states
   if (data.state !== 'success') return;
   return data.value.sip10s.map((balance, index) => {
+    // FIXME LEA-2310: temporary hard cap for widget view pending sorting
+    if (hardCap && index >= 2) return null;
     return (
       <Sip10TokenBalance
         availableBalance={balance.crypto.availableBalance}

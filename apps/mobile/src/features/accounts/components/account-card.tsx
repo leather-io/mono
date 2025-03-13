@@ -2,9 +2,15 @@ import { ComponentType, ReactNode } from 'react';
 import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
-import { HasChildren } from '@/utils/types';
 
-import { Box, Pressable, PressableProps, Text, usePressedState } from '@leather.io/ui/native';
+import {
+  Box,
+  HasChildren,
+  Pressable,
+  PressableProps,
+  Text,
+  usePressedState,
+} from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
 interface AccountCardProps extends PressableProps {

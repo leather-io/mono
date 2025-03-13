@@ -43,8 +43,8 @@ export function HeaderOptions() {
       {isDev() && (
         <Pressable
           p="2"
-          onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
-          testID={TestId.homeDeveloperToolsButton}
+          onPress={() => router.navigate(AppRoutes.Activity)}
+          testID={TestId.homeActivityButton}
           pressEffects={legacyTouchablePressEffect}
         >
           <PulseIcon />

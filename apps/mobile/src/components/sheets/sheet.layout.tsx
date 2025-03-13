@@ -1,9 +1,8 @@
 import { ReactNode, RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
-import { HasChildren } from '@/utils/types';
 
-import { Avatar, Box, Sheet, SheetHeader, SheetRef } from '@leather.io/ui/native';
+import { Avatar, Box, HasChildren, Sheet, SheetHeader, SheetRef } from '@leather.io/ui/native';
 
 interface SheetLayoutProps extends HasChildren {
   icon: ReactNode;

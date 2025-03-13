@@ -19,7 +19,7 @@ export { extractPhraseFromString } from './extract-phrase-from-string/extract-ph
 export { pxStringToNumber } from './px-string-to-number/px-string-to-number';
 export { formatBalance } from './money/format-balance/format-balance';
 export { abbreviateNumber } from './abbreviate-number/abbreviate-number';
-
+export { makeStacksTxExplorerLink } from './explorer/make-stacks-tx-explorer-link';
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }

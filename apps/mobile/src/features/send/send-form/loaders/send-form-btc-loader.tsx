@@ -22,7 +22,7 @@ export function SendFormBtcLoader({ account, children }: SendFormBtcLoaderProps)
   const accountUtxos = useAccountUtxos(accountId.fingerprint, accountId.accountIndex);
   const btcBalance = useBtcAccountBalance(accountId.fingerprint, accountId.accountIndex);
 
-  // Handle loading and error states
+  // TODO LEA-1726: Handle loading and error states
   if (btcBalance.state !== 'success' || accountUtxos.state !== 'success' || isFeeRatesLoading)
     return null;
 

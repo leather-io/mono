@@ -1,8 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { HasChildren } from '@/utils/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+
+import { HasChildren } from '@leather.io/ui/native';
 
 import { SendFormAmountField } from './components/send-form-amount-field';
 import { SendFormAsset } from './components/send-form-asset';

@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { HasChildren } from '@/utils/types';
 import { useTheme } from '@shopify/restyle';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, HasChildren, Theme } from '@leather.io/ui/native';
 
 interface FullHeightSheetLayoutProps extends HasChildren {
   header: React.ReactNode;
