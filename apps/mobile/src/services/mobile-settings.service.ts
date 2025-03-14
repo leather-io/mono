@@ -3,13 +3,11 @@ import { selectCurrencyPreference, selectNetworkPreference } from '@/store/setti
 
 import { SettingsService } from '@leather.io/services';
 
-export function createMobileSettingsService(): SettingsService {
-  return {
-    getSettings() {
-      return {
-        fiatCurrency: selectCurrencyPreference(store.getState()),
-        network: selectNetworkPreference(store.getState()),
-      };
-    },
-  };
+export class MobileSettingsService implements SettingsService {
+  getSettings() {
+    return {
+      fiatCurrency: selectCurrencyPreference(store.getState()),
+      network: selectNetworkPreference(store.getState()),
+    };
+  }
 }

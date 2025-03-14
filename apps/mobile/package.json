@@ -143,6 +143,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
+    "@babel/plugin-transform-class-static-block": "7.26.0",
     "@babel/runtime": "7.26.0",
     "@crowdin/cli": "4.1.1",
     "@leather.io/bitcoin": "workspace:*",

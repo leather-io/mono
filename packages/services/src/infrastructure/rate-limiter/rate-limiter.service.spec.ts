@@ -1,6 +1,6 @@
 import { UserSettings } from '../settings/settings.service';
 import { bestInSlotApiLimiterSettings } from './best-in-slot-limiter';
-import { RateLimiterType, createRateLimiterService } from './rate-limiter.service';
+import { RateLimiterService, RateLimiterType } from './rate-limiter.service';
 
 describe('RateLimiterService', () => {
   const mockSettingsService = {
@@ -18,7 +18,7 @@ describe('RateLimiterService', () => {
   };
 
   it('should rate limit concurrent calls', async () => {
-    const service = createRateLimiterService(mockSettingsService);
+    const service = new RateLimiterService(mockSettingsService);
     const startTime = Date.now();
 
     const callCount = bestInSlotApiLimiterSettings.intervalCap + 1;
@@ -34,7 +34,7 @@ describe('RateLimiterService', () => {
   });
 
   it('should handle priorities correctly', async () => {
-    const service = createRateLimiterService(mockSettingsService);
+    const service = new RateLimiterService(mockSettingsService);
     const results: number[] = [];
     // first need to hit rate limit
     const fillerCalls = Array(bestInSlotApiLimiterSettings.intervalCap)

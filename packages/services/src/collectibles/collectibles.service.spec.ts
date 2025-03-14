@@ -11,9 +11,9 @@ import {
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { createCollectiblesService } from './collectibles.service';
+import { CollectiblesService } from './collectibles.service';
 
-describe(createCollectiblesService.name, () => {
+describe(CollectiblesService.name, () => {
   const mockBisApiClient = {
     fetchInscriptions: vi.fn().mockResolvedValue([
       {
@@ -69,7 +69,7 @@ describe(createCollectiblesService.name, () => {
     ),
   } as unknown as Sip9AssetService;
 
-  const collectiblesService = createCollectiblesService(
+  const collectiblesService = new CollectiblesService(
     mockBisApiClient,
     mockStacksApiClient,
     mockSip9AssetService

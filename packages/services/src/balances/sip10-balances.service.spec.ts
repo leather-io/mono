@@ -9,9 +9,9 @@ import {
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
-import { createSip10BalancesService } from './sip10-balances.service';
+import { Sip10BalancesService } from './sip10-balances.service';
 
-describe('Sip10BalancesService', () => {
+describe(Sip10BalancesService.name, () => {
   const mockStacksApiClient = {
     getAddressBalances: vi.fn().mockResolvedValue({
       fungible_tokens: {
@@ -51,7 +51,7 @@ describe('Sip10BalancesService', () => {
         symbol: getAssetNameFromIdentifier(assetId).toLocaleUpperCase(),
       })
     ),
-  } as Sip10AssetService;
+  } as unknown as Sip10AssetService;
 
   const mockSettingsService = {
     getSettings: vi.fn().mockResolvedValue({
@@ -59,7 +59,7 @@ describe('Sip10BalancesService', () => {
     }),
   } as unknown as SettingsService;
 
-  const sip10BalancesService = createSip10BalancesService(
+  const sip10BalancesService = new Sip10BalancesService(
     mockSettingsService,
     mockStacksApiClient,
     mockMarketDataService,

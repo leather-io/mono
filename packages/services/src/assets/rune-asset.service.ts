@@ -1,18 +1,19 @@
+import { injectable } from 'inversify';
+
 import { RuneCryptoAssetInfo } from '@leather.io/models';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { createRuneCryptoAssetInfo } from './rune-asset.utils';
 
-export interface RuneAssetService {
-  getAssetInfo(runeName: string, signal?: AbortSignal): Promise<RuneCryptoAssetInfo>;
-}
+@injectable()
+export class RuneAssetService {
+  constructor(private readonly bisApiClient: BestInSlotApiClient) {}
 
-export function createRuneAssetService(bisApiClient: BestInSlotApiClient): RuneAssetService {
   /**
    * Gets full asset information for given Rune by name.
    */
-  async function getAssetInfo(runeName: string, signal?: AbortSignal) {
-    const tickerInfo = await bisApiClient.fetchRuneTickerInfo(runeName, signal);
+  public async getAssetInfo(runeName: string, signal?: AbortSignal): Promise<RuneCryptoAssetInfo> {
+    const tickerInfo = await this.bisApiClient.fetchRuneTickerInfo(runeName, signal);
 
     return createRuneCryptoAssetInfo(
       tickerInfo.rune_name,
@@ -21,7 +22,4 @@ export function createRuneAssetService(bisApiClient: BestInSlotApiClient): RuneA
       tickerInfo.symbol
     );
   }
-  return {
-    getAssetInfo,
-  };
 }

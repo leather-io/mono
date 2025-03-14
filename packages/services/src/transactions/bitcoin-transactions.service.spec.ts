@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { AccountAddresses } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { createBitcoinTransactionsService } from './bitcoin-transactions.service';
+import { BitcoinTransactionsService } from './bitcoin-transactions.service';
 
-describe(createBitcoinTransactionsService.name, () => {
+describe(BitcoinTransactionsService.name, () => {
   describe('getAccountTransactions', () => {
     it('deduplicates transactions with the same txid from different descriptors', async () => {
       const duplicateTx = {
@@ -36,7 +36,7 @@ describe(createBitcoinTransactionsService.name, () => {
         },
       } as unknown as LeatherApiClient;
 
-      const service = createBitcoinTransactionsService(mockLeatherApiClient);
+      const service = new BitcoinTransactionsService(mockLeatherApiClient);
       const result = await service.getAccountTransactions(mockAccount);
       expect(result).toHaveLength(2);
       expect(result).toEqual(expect.arrayContaining([duplicateTx, uniqueTx]));
@@ -49,7 +49,7 @@ describe(createBitcoinTransactionsService.name, () => {
           accountIndex: 0,
         },
       };
-      const service = createBitcoinTransactionsService({} as unknown as LeatherApiClient);
+      const service = new BitcoinTransactionsService({} as unknown as LeatherApiClient);
       const result = await service.getAccountTransactions(mockAccount);
       expect(result).toEqual([]);
     });

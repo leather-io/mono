@@ -4,9 +4,9 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import { SettingsService } from '../infrastructure/settings/settings.service';
 import { MarketDataService } from '../market-data/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
-import { createStxBalancesService } from './stx-balances.service';
+import { StxBalancesService } from './stx-balances.service';
 
-describe('StxBalancesService', () => {
+describe(StxBalancesService.name, () => {
   const stacksAddress = 'STACKS_ADDRESS';
 
   const mockSettingsService = {
@@ -40,7 +40,7 @@ describe('StxBalancesService', () => {
     ]),
   } as unknown as StacksTransactionsService;
 
-  const stxBalancesService = createStxBalancesService(
+  const stxBalancesService = new StxBalancesService(
     mockSettingsService,
     mockStacksApiClient,
     mockMarketDataService,

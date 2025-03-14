@@ -1,4 +1,5 @@
 import { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
+import { injectable } from 'inversify';
 
 import {
   AccountAddresses,
@@ -13,30 +14,27 @@ import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { mapBisInscriptionToCreateInscriptionData, sortByBlockHeight } from './collectibles.utils';
 
-export interface CollectiblesService {
-  getTotalCollectibles(
+@injectable()
+export class CollectiblesService {
+  constructor(
+    private readonly bisApiClient: BestInSlotApiClient,
+    private readonly stacksApiClient: HiroStacksApiClient,
+    private readonly sip9AssetsService: Sip9AssetService
+  ) {}
+
+  public async getTotalCollectibles(
     accounts: AccountAddresses[],
     signal?: AbortSignal
-  ): Promise<NonFungibleCryptoAssetInfo[]>;
-  getAccountCollectibles(
-    account: AccountAddresses,
-    signal?: AbortSignal
-  ): Promise<NonFungibleCryptoAssetInfo[]>;
-}
-
-export function createCollectiblesService(
-  bisApiClient: BestInSlotApiClient,
-  stacksApiClient: HiroStacksApiClient,
-  sip9AssetsService: Sip9AssetService
-): CollectiblesService {
-  async function getTotalCollectibles(accounts: AccountAddresses[], signal?: AbortSignal) {
+  ): Promise<NonFungibleCryptoAssetInfo[]> {
     const stacksCollectibles = await Promise.all(
-      accounts.filter(a => a.stacks).map(a => getSip9sWithBlockHeight(a.stacks!.stxAddress, signal))
+      accounts
+        .filter(a => a.stacks)
+        .map(a => this.getSip9sWithBlockHeight(a.stacks!.stxAddress, signal))
     );
     const bitcoinCollectibles = await Promise.all(
       accounts
         .filter(a => a.bitcoin)
-        .map(a => getInscriptionsWithBlockHeight(a.bitcoin!.taprootDescriptor, signal))
+        .map(a => this.getInscriptionsWithBlockHeight(a.bitcoin!.taprootDescriptor, signal))
     );
     return [
       ...stacksCollectibles
@@ -50,13 +48,16 @@ export function createCollectiblesService(
     ];
   }
 
-  async function getAccountCollectibles(account: AccountAddresses, signal?: AbortSignal) {
+  public async getAccountCollectibles(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<NonFungibleCryptoAssetInfo[]> {
     const [bitcoinCollectibles, stacksCollectibles] = await Promise.all([
       account.bitcoin
-        ? getInscriptionsWithBlockHeight(account.bitcoin.taprootDescriptor, signal)
+        ? this.getInscriptionsWithBlockHeight(account.bitcoin.taprootDescriptor, signal)
         : Promise.resolve([]),
       account.stacks
-        ? getSip9sWithBlockHeight(account.stacks.stxAddress, signal)
+        ? this.getSip9sWithBlockHeight(account.stacks.stxAddress, signal)
         : Promise.resolve([]),
     ]);
     return [
@@ -65,12 +66,12 @@ export function createCollectiblesService(
     ];
   }
 
-  async function getSip9sWithBlockHeight(
+  private async getSip9sWithBlockHeight(
     stxAddress: string,
     signal?: AbortSignal
   ): Promise<{ asset: Sip9CryptoAssetInfo; blockHeight: number }[]> {
     try {
-      const nftHoldings = await stacksApiClient.getNonFungibleHoldings(stxAddress, signal);
+      const nftHoldings = await this.stacksApiClient.getNonFungibleHoldings(stxAddress, signal);
       const BATCH_SIZE = 6;
       const sip9s = [];
       for (let i = 0; i < nftHoldings.length; i += BATCH_SIZE) {
@@ -78,7 +79,7 @@ export function createCollectiblesService(
           nftHoldings
             .slice(i, i + BATCH_SIZE)
             .map(holding =>
-              getOptionalSip9AssetInfo(holding, signal).then(asset =>
+              this.getOptionalSip9AssetInfo(holding, signal).then(asset =>
                 asset ? { asset, blockHeight: holding.block_height } : undefined
               )
             )
@@ -91,12 +92,12 @@ export function createCollectiblesService(
     }
   }
 
-  async function getOptionalSip9AssetInfo(
+  private async getOptionalSip9AssetInfo(
     holding: NonFungibleTokenHolding,
     signal?: AbortSignal
   ): Promise<Sip9CryptoAssetInfo | undefined> {
     try {
-      return await sip9AssetsService.getAssetInfo(
+      return await this.sip9AssetsService.getAssetInfo(
         holding.asset_identifier,
         holding.value.hex,
         signal
@@ -106,12 +107,12 @@ export function createCollectiblesService(
     }
   }
 
-  async function getInscriptionsWithBlockHeight(
+  private async getInscriptionsWithBlockHeight(
     taprootDescriptor: string,
     signal?: AbortSignal
   ): Promise<{ asset: InscriptionCryptoAssetInfo; blockHeight: number }[]> {
     try {
-      const bisInscriptions = await bisApiClient.fetchInscriptions(taprootDescriptor, signal);
+      const bisInscriptions = await this.bisApiClient.fetchInscriptions(taprootDescriptor, signal);
       return bisInscriptions.map(inscription => ({
         asset: createInscriptionCryptoAssetInfo(
           mapBisInscriptionToCreateInscriptionData(inscription)
@@ -122,9 +123,4 @@ export function createCollectiblesService(
       return [];
     }
   }
-
-  return {
-    getTotalCollectibles,
-    getAccountCollectibles,
-  };
 }

@@ -1,3 +1,5 @@
+import { injectable } from 'inversify';
+
 import { StacksTx } from '@leather.io/models';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -6,28 +8,20 @@ import {
   filterOutStaleTransactions,
 } from './stacks-transactions.utils';
 
-export interface StacksTransactionsService {
-  getPendingTransactions(address: string, signal?: AbortSignal): Promise<StacksTx[]>;
-}
-
-export function createStacksTransactionsService(
-  stacksApiClient: HiroStacksApiClient
-): StacksTransactionsService {
+@injectable()
+export class StacksTransactionsService {
+  constructor(private readonly stacksApiClient: HiroStacksApiClient) {}
   /**
    * Gets pending Stacks transactions from mempool by address.
    */
-  async function getPendingTransactions(address: string, signal?: AbortSignal) {
+  public async getPendingTransactions(address: string, signal?: AbortSignal): Promise<StacksTx[]> {
     const [mempoolTransactionsResponse, addressTransactionsResponse] = await Promise.all([
-      stacksApiClient.getAddressMempoolTransactions(address, signal),
-      stacksApiClient.getAddressTransactions(address, { pages: 1 }, signal),
+      this.stacksApiClient.getAddressMempoolTransactions(address, signal),
+      this.stacksApiClient.getAddressTransactions(address, { pages: 1 }, signal),
     ]);
     const addressTransactions = addressTransactionsResponse.map(tx => tx.tx);
     return mempoolTransactionsResponse.results
       .filter(filterOutConfirmedTransactions(addressTransactions))
       .filter(filterOutStaleTransactions(addressTransactions));
   }
-
-  return {
-    getPendingTransactions,
-  };
 }
