@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { inject, injectable } from 'inversify';
 
 import { btcCryptoAsset, currencyDecimalsMap } from '@leather.io/constants';
 import {
@@ -20,35 +21,34 @@ import {
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
+import { Types } from '../inversify.types';
 
-export interface MarketDataService {
-  getMarketData(asset: FungibleCryptoAssetInfo, signal?: AbortSignal): Promise<MarketData>;
-  getNativeAssetMarketData(asset: NativeCryptoAssetInfo, signal?: AbortSignal): Promise<MarketData>;
-  getSip10MarketData(asset: Sip10CryptoAssetInfo): Promise<MarketData>;
-  getBrc20MarketData(asset: Brc20CryptoAssetInfo, signal?: AbortSignal): Promise<MarketData>;
-  getRuneMarketData(asset: RuneCryptoAssetInfo, signal?: AbortSignal): Promise<MarketData>;
-}
+@injectable()
+export class MarketDataService {
+  constructor(
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
+    private readonly leatherApiClient: LeatherApiClient,
+    private readonly bestInSlotApiClient: BestInSlotApiClient
+  ) {}
 
-export function createMarketDataService(
-  settingsService: SettingsService,
-  leatherApiClient: LeatherApiClient,
-  bestInSlotApiClient: BestInSlotApiClient
-): MarketDataService {
   /**
    * Retrieves current market data for asset.
    */
-  async function getMarketData(asset: FungibleCryptoAssetInfo, signal?: AbortSignal) {
+  public async getMarketData(
+    asset: FungibleCryptoAssetInfo,
+    signal?: AbortSignal
+  ): Promise<MarketData> {
     switch (asset.protocol) {
       case 'nativeBtc':
       case 'nativeStx':
-        return await getNativeAssetMarketData(asset, signal);
+        return await this.getNativeAssetMarketData(asset, signal);
       case 'sip10':
-        return getSip10MarketData(asset, signal);
+        return this.getSip10MarketData(asset, signal);
       case 'rune':
-        return getRuneMarketData(asset, signal);
+        return this.getRuneMarketData(asset, signal);
       case 'brc20':
-        return getBrc20MarketData(asset, signal);
+        return this.getBrc20MarketData(asset, signal);
       default:
         throw Error('Market data not supported for asset type: ' + asset.protocol);
     }
@@ -57,9 +57,12 @@ export function createMarketDataService(
   /**
    * Get current market data for Native Asset (BTC, STX).
    */
-  async function getNativeAssetMarketData(currency: NativeCryptoAssetInfo, signal?: AbortSignal) {
-    const prices = await leatherApiClient.fetchCryptoPrices(signal);
-    return await buildFiatCurrencyPreferenceMarketData(
+  public async getNativeAssetMarketData(
+    currency: NativeCryptoAssetInfo,
+    signal?: AbortSignal
+  ): Promise<MarketData> {
+    const prices = await this.leatherApiClient.fetchCryptoPrices(signal);
+    return await this.buildFiatCurrencyPreferenceMarketData(
       currency.symbol,
       convertAmountToFractionalUnit(
         initBigNumber(prices.prices[currency.symbol]),
@@ -71,13 +74,16 @@ export function createMarketDataService(
   /**
    * Get current market data for SIP10 Asset.
    */
-  async function getSip10MarketData(asset: Sip10CryptoAssetInfo, signal?: AbortSignal) {
-    const tokenPrices = await leatherApiClient.fetchSip10Prices(signal);
+  public async getSip10MarketData(
+    asset: Sip10CryptoAssetInfo,
+    signal?: AbortSignal
+  ): Promise<MarketData> {
+    const tokenPrices = await this.leatherApiClient.fetchSip10Prices(signal);
     const tokenPriceMatch = tokenPrices.prices.find(price => price.principal === asset.contractId);
     if (!tokenPriceMatch)
       return createMarketData(
-        createMarketPair(asset.symbol, settingsService.getSettings().fiatCurrency),
-        createMoney(0, settingsService.getSettings().fiatCurrency)
+        createMarketPair(asset.symbol, this.settingsService.getSettings().fiatCurrency),
+        createMoney(0, this.settingsService.getSettings().fiatCurrency)
       );
 
     const assetPrice = convertAmountToFractionalUnit(
@@ -85,21 +91,27 @@ export function createMarketDataService(
       currencyDecimalsMap.USD
     );
 
-    return await buildFiatCurrencyPreferenceMarketData(asset.symbol, assetPrice);
+    return await this.buildFiatCurrencyPreferenceMarketData(asset.symbol, assetPrice);
   }
 
   /**
    * Get current market data for Rune Asset.
    */
-  async function getRuneMarketData(asset: RuneCryptoAssetInfo, signal?: AbortSignal) {
-    const btcMarketData = await getNativeAssetMarketData(btcCryptoAsset, signal);
-    const runeTickerInfo = await bestInSlotApiClient.fetchRuneTickerInfo(asset.runeName, signal);
+  public async getRuneMarketData(
+    asset: RuneCryptoAssetInfo,
+    signal?: AbortSignal
+  ): Promise<MarketData> {
+    const btcMarketData = await this.getNativeAssetMarketData(btcCryptoAsset, signal);
+    const runeTickerInfo = await this.bestInSlotApiClient.fetchRuneTickerInfo(
+      asset.runeName,
+      signal
+    );
     const runeFiatPrice = baseCurrencyAmountInQuote(
       createMoney(initBigNumber(runeTickerInfo.avg_unit_price_in_sats ?? 0), 'BTC'),
       btcMarketData
     );
 
-    return await buildFiatCurrencyPreferenceMarketData(
+    return await this.buildFiatCurrencyPreferenceMarketData(
       runeTickerInfo.rune_name,
       runeFiatPrice.amount
     );
@@ -108,46 +120,41 @@ export function createMarketDataService(
   /**
    * Get current market data for BRC20 Asset.
    */
-  async function getBrc20MarketData(asset: Brc20CryptoAssetInfo, signal?: AbortSignal) {
-    const btcMarketData = await getNativeAssetMarketData(btcCryptoAsset, signal);
-    const bisMarketInfo = await bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal);
+  public async getBrc20MarketData(
+    asset: Brc20CryptoAssetInfo,
+    signal?: AbortSignal
+  ): Promise<MarketData> {
+    const btcMarketData = await this.getNativeAssetMarketData(btcCryptoAsset, signal);
+    const bisMarketInfo = await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal);
     const brc20FiatPrice = baseCurrencyAmountInQuote(
       createMoney(initBigNumber(bisMarketInfo.min_listed_unit_price ?? 0), 'BTC'),
       btcMarketData
     );
 
-    return await buildFiatCurrencyPreferenceMarketData(asset.symbol, brc20FiatPrice.amount);
+    return await this.buildFiatCurrencyPreferenceMarketData(asset.symbol, brc20FiatPrice.amount);
   }
 
-  async function buildFiatCurrencyPreferenceMarketData(
+  private async buildFiatCurrencyPreferenceMarketData(
     assetSymbol: string,
     assetPriceUsd: BigNumber
   ) {
     return createMarketData(
-      createMarketPair(assetSymbol, settingsService.getSettings().fiatCurrency),
+      createMarketPair(assetSymbol, this.settingsService.getSettings().fiatCurrency),
       createMoney(
-        settingsService.getSettings().fiatCurrency === 'USD'
+        this.settingsService.getSettings().fiatCurrency === 'USD'
           ? assetPriceUsd
-          : assetPriceUsd.times(await readFiatCurrencyPreferenceExchangeRate()),
-        settingsService.getSettings().fiatCurrency
+          : assetPriceUsd.times(await this.readFiatCurrencyPreferenceExchangeRate()),
+        this.settingsService.getSettings().fiatCurrency
       )
     );
   }
 
-  async function readFiatCurrencyPreferenceExchangeRate() {
-    const exchangeRates = await leatherApiClient.fetchFiatExchangeRates();
+  private async readFiatCurrencyPreferenceExchangeRate() {
+    const exchangeRates = await this.leatherApiClient.fetchFiatExchangeRates();
     return initBigNumber(
       exchangeRates.rates[
-        settingsService.getSettings().fiatCurrency as keyof typeof exchangeRates.rates
+        this.settingsService.getSettings().fiatCurrency as keyof typeof exchangeRates.rates
       ]
     );
   }
-
-  return {
-    getMarketData,
-    getNativeAssetMarketData,
-    getSip10MarketData,
-    getRuneMarketData,
-    getBrc20MarketData,
-  };
 }

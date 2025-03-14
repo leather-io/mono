@@ -1,3 +1,5 @@
+import { injectable } from 'inversify';
+
 import { btcCryptoAsset, stxCryptoAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
@@ -42,47 +44,37 @@ import {
   mapTokenTransferActivity,
 } from './stacks-tx-activity.utils';
 
-export interface ActivityService {
-  getTotalActivity(accounts: AccountAddresses[], signal?: AbortSignal): Promise<Activity[]>;
-  getAccountActivity(account: AccountAddresses, signal?: AbortSignal): Promise<Activity[]>;
-  getActivityByAsset(
-    account: AccountAddresses,
-    asset: CryptoAssetInfo,
-    signal?: AbortSignal
-  ): Promise<Activity[]>;
-  getStacksActivity(account: AccountAddresses, signal?: AbortSignal): Promise<Activity[]>;
-  getBtcActivity(account: AccountAddresses, signal?: AbortSignal): Promise<Activity[]>;
-  getStxActivity(account: AccountAddresses, signal?: AbortSignal): Promise<Activity[]>;
-  getSip10Activity(
-    asset: Sip10CryptoAssetInfo,
-    account: AccountAddresses,
-    signal?: AbortSignal
-  ): Promise<Activity[]>;
-}
-
-export function createActivityService(
-  hiroStacksApiClient: HiroStacksApiClient,
-  stacksTransactionsService: StacksTransactionsService,
-  bitcoinTransactionsService: BitcoinTransactionsService,
-  marketDataService: MarketDataService,
-  sip10AssetService: Sip10AssetService,
-  sip9AssetService: Sip9AssetService
-): ActivityService {
+@injectable()
+export class ActivityService {
+  constructor(
+    private readonly hiroStacksApiClient: HiroStacksApiClient,
+    private readonly stacksTransactionsService: StacksTransactionsService,
+    private readonly bitcoinTransactionsService: BitcoinTransactionsService,
+    private readonly marketDataService: MarketDataService,
+    private readonly sip10AssetService: Sip10AssetService,
+    private readonly sip9AssetService: Sip9AssetService
+  ) {}
   /*
    * Gets combined total activity for a list of accounts
    */
-  async function getTotalActivity(accounts: AccountAddresses[], signal?: AbortSignal) {
-    const activityLists = await Promise.all(accounts.map(a => getAccountActivity(a, signal)));
+  public async getTotalActivity(
+    accounts: AccountAddresses[],
+    signal?: AbortSignal
+  ): Promise<Activity[]> {
+    const activityLists = await Promise.all(accounts.map(a => this.getAccountActivity(a, signal)));
     return activityLists.flat().sort(sortActivityByTimestampDesc);
   }
 
   /*
    * Gets activity list for an account
    */
-  async function getAccountActivity(account: AccountAddresses, signal?: AbortSignal) {
+  public async getAccountActivity(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<Activity[]> {
     const [btcActivity, stacksActivity] = await Promise.all([
-      getBtcActivity(account, signal),
-      getStacksActivity(account, signal),
+      this.getBtcActivity(account, signal),
+      this.getStacksActivity(account, signal),
     ]);
     return [...btcActivity, ...stacksActivity].sort(sortActivityByTimestampDesc);
   }
@@ -90,77 +82,102 @@ export function createActivityService(
   /*
    * Gets activity list for an account restricted to a single asset
    */
-  async function getActivityByAsset(
+  public async getActivityByAsset(
     account: AccountAddresses,
     asset: CryptoAssetInfo,
     signal?: AbortSignal
-  ) {
+  ): Promise<Activity[]> {
     switch (asset.protocol) {
       case 'nativeBtc':
-        return await getBtcActivity(account, signal);
+        return await this.getBtcActivity(account, signal);
       case 'nativeStx':
-        return await getStxActivity(account, signal);
+        return await this.getStxActivity(account, signal);
       case 'sip10':
-        return await getSip10Activity(asset, account, signal);
+        return await this.getSip10Activity(asset, account, signal);
       default:
         return [];
     }
   }
 
   /*
-   *  Gets BTC activity list for an account
+   *  Gets BTC Asset activity list for an account
    */
-  async function getBtcActivity(
+  public async getBtcActivity(
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<Activity[]> {
     if (!hasBitcoinAddress(account)) return [];
 
     const [bitcoinTransactions] = await Promise.all([
-      bitcoinTransactionsService.getAccountTransactions(account, signal),
-      marketDataService.getMarketData(btcCryptoAsset, signal),
+      this.bitcoinTransactionsService.getAccountTransactions(account, signal),
+      this.marketDataService.getMarketData(btcCryptoAsset, signal),
     ]);
     const activityList: Activity[] = [];
     for (const tx of bitcoinTransactions) {
       const txActivity = mapBitcoinTxToActivity(tx, account);
       if (txActivity) {
-        activityList.push(await applyMarketData(txActivity));
+        activityList.push(await this.applyMarketData(txActivity));
       }
     }
     return activityList.sort(sortActivityByTimestampDesc);
   }
 
-  async function getStacksActivity(account: AccountAddresses, signal?: AbortSignal) {
-    if (!hasStacksAddress(account)) return [];
-
-    const [pendingTxs, txs, txEvents] = await Promise.all([
-      stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
-      hiroStacksApiClient.getAddressTransactions(account.stacks.stxAddress, { pages: 2 }, signal),
-      hiroStacksApiClient.getTransactionEvents(account.stacks.stxAddress, { pages: 2 }, signal),
-    ]);
-    const eventsByTxId = getEventsByTxId(txEvents);
-    const activityList: Activity[] = [];
-    for (const tx of [...pendingTxs, ...txs.map(tx => tx.tx)]) {
-      const txActivity = await getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
-      if (txActivity) {
-        activityList.push(
-          ...(await Promise.all(txActivity.map(activity => applyMarketData(activity, signal))))
-        );
-      }
-    }
-    return activityList.sort(sortActivityByTimestampDesc);
-  }
-
-  async function getStxActivity(
+  /*
+   *  Gets Stacks chain activity list for an account
+   */
+  public async getStacksActivity(
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<Activity[]> {
     if (!hasStacksAddress(account)) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
-      stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
-      hiroStacksApiClient.getAddressTransactions(account.stacks.stxAddress, { pages: 2 }, signal),
-      hiroStacksApiClient.getTransactionEvents(account.stacks.stxAddress, { pages: 2 }, signal),
+      this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
+      this.hiroStacksApiClient.getAddressTransactions(
+        account.stacks.stxAddress,
+        { pages: 2 },
+        signal
+      ),
+      this.hiroStacksApiClient.getTransactionEvents(
+        account.stacks.stxAddress,
+        { pages: 2 },
+        signal
+      ),
+    ]);
+    const eventsByTxId = getEventsByTxId(txEvents);
+    const activityList: Activity[] = [];
+    for (const tx of [...pendingTxs, ...txs.map(tx => tx.tx)]) {
+      const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
+      if (txActivity) {
+        activityList.push(
+          ...(await Promise.all(txActivity.map(activity => this.applyMarketData(activity, signal))))
+        );
+      }
+    }
+    return activityList.sort(sortActivityByTimestampDesc);
+  }
+
+  /*
+   *  Gets STX asset activity list for an account
+   */
+  public async getStxActivity(
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<Activity[]> {
+    if (!hasStacksAddress(account)) return [];
+
+    const [pendingTxs, txs, txEvents] = await Promise.all([
+      this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
+      this.hiroStacksApiClient.getAddressTransactions(
+        account.stacks.stxAddress,
+        { pages: 2 },
+        signal
+      ),
+      this.hiroStacksApiClient.getTransactionEvents(
+        account.stacks.stxAddress,
+        { pages: 2 },
+        signal
+      ),
     ]);
     const stxEventsByTxId = getEventsByTxId(
       txEvents.filter(event => event.event_type === 'stx_asset' || event.event_type === 'stx_lock')
@@ -170,17 +187,20 @@ export function createActivityService(
       ...pendingTxs,
       ...txs.filter(tx => stxEventsByTxId.has(tx.tx.tx_id)).map(tx => tx.tx),
     ]) {
-      const txActivity = await getStacksTxActivity(tx, stxEventsByTxId.get(tx.tx_id), account);
+      const txActivity = await this.getStacksTxActivity(tx, stxEventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
-          ...(await Promise.all(txActivity.map(activity => applyMarketData(activity, signal))))
+          ...(await Promise.all(txActivity.map(activity => this.applyMarketData(activity, signal))))
         );
       }
     }
     return activityList.sort(sortActivityByTimestampDesc);
   }
 
-  async function getSip10Activity(
+  /*
+   *  Gets SIP10 asset activity list for an account
+   */
+  public async getSip10Activity(
     asset: Sip10CryptoAssetInfo,
     account: AccountAddresses,
     signal?: AbortSignal
@@ -188,9 +208,17 @@ export function createActivityService(
     if (!hasStacksAddress(account)) return [];
 
     const [pendingTxs, txs, txEvents] = await Promise.all([
-      stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
-      hiroStacksApiClient.getAddressTransactions(account.stacks.stxAddress, { pages: 2 }, signal),
-      hiroStacksApiClient.getTransactionEvents(account.stacks.stxAddress, { pages: 2 }, signal),
+      this.stacksTransactionsService.getPendingTransactions(account.stacks.stxAddress, signal),
+      this.hiroStacksApiClient.getAddressTransactions(
+        account.stacks.stxAddress,
+        { pages: 2 },
+        signal
+      ),
+      this.hiroStacksApiClient.getTransactionEvents(
+        account.stacks.stxAddress,
+        { pages: 2 },
+        signal
+      ),
     ]);
     const eventsByTxId = getEventsByTxId(txEvents);
     const sip10AssetTxs = txs.filter(tx =>
@@ -206,17 +234,17 @@ export function createActivityService(
     );
     const activityList: Activity[] = [];
     for (const tx of [...pendingTxs, ...sip10AssetTxs.map(tx => tx.tx)]) {
-      const txActivity = await getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
+      const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
-          ...(await Promise.all(txActivity.map(activity => applyMarketData(activity, signal))))
+          ...(await Promise.all(txActivity.map(activity => this.applyMarketData(activity, signal))))
         );
       }
     }
     return activityList.sort(sortActivityByTimestampDesc);
   }
 
-  async function getStacksTxActivity(
+  private async getStacksTxActivity(
     tx: HiroStacksTransaction | HiroStacksMempoolTransaction,
     txEvents: HiroTransactionEvent[] = [],
     account: AccountAddresses,
@@ -229,31 +257,31 @@ export function createActivityService(
         return mapSmartContractActivity(
           tx,
           account,
-          await getStacksAssetTransfersWithInfo(tx, txEvents, signal)
+          await this.getStacksAssetTransfersWithInfo(tx, txEvents, signal)
         );
       case 'contract_call':
         return mapContractCallActivity(
           tx,
           account,
-          await getStacksAssetTransfersWithInfo(tx, txEvents, signal)
+          await this.getStacksAssetTransfersWithInfo(tx, txEvents, signal)
         );
       default:
         return [];
     }
   }
 
-  async function getStacksAssetTransfersWithInfo(
+  private async getStacksAssetTransfersWithInfo(
     tx: HiroStacksTransaction | HiroStacksMempoolTransaction,
     txEvents: HiroTransactionEvent[],
     signal?: AbortSignal
   ): Promise<StacksAssetTransferWithInfo[]> {
     const transfers = getStacksAssetTransfers(tx, txEvents);
-    return (await Promise.all(transfers.map(t => addStacksTransferAssetInfo(t, signal)))).filter(
-      isDefined
-    );
+    return (
+      await Promise.all(transfers.map(t => this.addStacksTransferAssetInfo(t, signal)))
+    ).filter(isDefined);
   }
 
-  async function addStacksTransferAssetInfo(
+  private async addStacksTransferAssetInfo(
     transfer: StacksAssetTransfer,
     signal?: AbortSignal
   ): Promise<StacksAssetTransferWithInfo | undefined> {
@@ -268,8 +296,12 @@ export function createActivityService(
           ...transfer,
           assetInfo:
             transfer.assetCategory === CryptoAssetCategories.fungible
-              ? await sip10AssetService.getAssetInfo(transfer.assetId, signal)
-              : await sip9AssetService.getAssetInfo(transfer.assetId, transfer.tokenValue!, signal),
+              ? await this.sip10AssetService.getAssetInfo(transfer.assetId, signal)
+              : await this.sip9AssetService.getAssetInfo(
+                  transfer.assetId,
+                  transfer.tokenValue!,
+                  signal
+                ),
         };
       } catch {
         // if we're unable to find asset metadata, remove transfer
@@ -278,14 +310,14 @@ export function createActivityService(
     }
   }
 
-  async function applyMarketData(activity: Activity, signal?: AbortSignal) {
+  private async applyMarketData(activity: Activity, signal?: AbortSignal) {
     if (
       activity.type === OnChainActivityTypes.sendAsset ||
       activity.type === OnChainActivityTypes.receiveAsset
     ) {
       const isTransferAssetFungible = activity.asset.category === CryptoAssetCategories.fungible;
       if (isTransferAssetFungible) {
-        const assetMarketData = await marketDataService.getMarketData(activity.asset, signal);
+        const assetMarketData = await this.marketDataService.getMarketData(activity.asset, signal);
         const cryptoValue = createMoney(
           activity.amount,
           activity.asset.symbol,
@@ -307,7 +339,7 @@ export function createActivityService(
       let fromAssetValue,
         toAssetValue = undefined;
       if (isSwapFromAssetFungible) {
-        const fromAssetMarketData = await marketDataService.getMarketData(
+        const fromAssetMarketData = await this.marketDataService.getMarketData(
           activity.fromAsset,
           signal
         );
@@ -322,7 +354,10 @@ export function createActivityService(
         };
       }
       if (isSwapToAssetFungible) {
-        const toAssetMarketData = await marketDataService.getMarketData(activity.toAsset, signal);
+        const toAssetMarketData = await this.marketDataService.getMarketData(
+          activity.toAsset,
+          signal
+        );
         const cryptoToValue = createMoney(
           activity.toAmount,
           activity.toAsset.symbol,
@@ -341,14 +376,4 @@ export function createActivityService(
     }
     return activity;
   }
-
-  return {
-    getTotalActivity,
-    getAccountActivity,
-    getActivityByAsset,
-    getStacksActivity,
-    getStxActivity,
-    getBtcActivity,
-    getSip10Activity,
-  };
 }

@@ -1,3 +1,5 @@
+import { inject, injectable } from 'inversify';
+
 import { btcCryptoAsset } from '@leather.io/constants';
 import { AccountAddresses, BtcCryptoAssetBalance, UtxoId } from '@leather.io/models';
 import {
@@ -7,7 +9,8 @@ import {
   createMoney,
 } from '@leather.io/utils';
 
-import { SettingsService } from '../infrastructure/settings/settings.service';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
+import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';
@@ -26,33 +29,24 @@ export interface BtcAccountBalanceRequest {
   unprotectedUtxos: UtxoId[];
 }
 
-export interface BtcBalancesService {
-  getBtcAccountBalance(
-    request: BtcAccountBalanceRequest,
-    signal?: AbortSignal
-  ): Promise<BtcAccountBalance>;
-  getBtcAggregateBalance(
-    requests: BtcAccountBalanceRequest[],
-    signal?: AbortSignal
-  ): Promise<BtcBalance>;
-}
-
 const btcCryptoAssetZeroBalance = createBtcCryptoAssetBalance(createMoney(0, 'BTC'));
 
-export function createBtcBalancesService(
-  settingsService: SettingsService,
-  utxosService: UtxosService,
-  marketDataService: MarketDataService
-): BtcBalancesService {
+@injectable()
+export class BtcBalancesService {
+  constructor(
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
+    private readonly utxosService: UtxosService,
+    private readonly marketDataService: MarketDataService
+  ) {}
   /**
    * Gets cumulative BTC balance of requested Bitcoin accounts list, denominated in both BTC and fiat.
    */
-  async function getBtcAggregateBalance(
+  public async getBtcAggregateBalance(
     balanceRequests: BtcAccountBalanceRequest[],
     signal?: AbortSignal
-  ) {
+  ): Promise<BtcBalance> {
     const accountBalances = await Promise.all(
-      balanceRequests.map(req => getBtcAccountBalance(req, signal))
+      balanceRequests.map(req => this.getBtcAccountBalance(req, signal))
     );
 
     const cumulativeBtcBalance =
@@ -63,7 +57,9 @@ export function createBtcBalancesService(
     const cumulativeFiatBalance =
       accountBalances.length > 0
         ? aggregateBtcCryptoAssetBalances(accountBalances.map(r => r.fiat))
-        : createBtcCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+        : createBtcCryptoAssetBalance(
+            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+          );
 
     return {
       btc: cumulativeBtcBalance,
@@ -78,8 +74,11 @@ export function createBtcBalancesService(
    *
    * A list of selectively unprotected UTXOs provided on the request will move the UTXO values from protected to available balance.
    */
-  async function getBtcAccountBalance(request: BtcAccountBalanceRequest, signal?: AbortSignal) {
-    const utxos = await utxosService.getAccountUtxos(
+  public async getBtcAccountBalance(
+    request: BtcAccountBalanceRequest,
+    signal?: AbortSignal
+  ): Promise<BtcAccountBalance> {
+    const utxos = await this.utxosService.getAccountUtxos(
       request.account,
       request.unprotectedUtxos,
       signal
@@ -92,7 +91,7 @@ export function createBtcBalancesService(
     const uneconomicalBalance = createMoney(sumUtxoValues(utxos.uneconomical), 'BTC');
     const unspendableBalance = createMoney(sumUtxoValues(utxos.unspendable), 'BTC');
 
-    const btcMarketData = await marketDataService.getMarketData(btcCryptoAsset, signal);
+    const btcMarketData = await this.marketDataService.getMarketData(btcCryptoAsset, signal);
 
     return {
       account: request.account,
@@ -114,9 +113,4 @@ export function createBtcBalancesService(
       ),
     };
   }
-
-  return {
-    getBtcAccountBalance,
-    getBtcAggregateBalance,
-  };
 }

@@ -1,3 +1,5 @@
+import { inject, injectable } from 'inversify';
+
 import { AccountAddresses, CryptoAssetBalance, RuneCryptoAssetInfo } from '@leather.io/models';
 import {
   aggregateBaseCryptoAssetBalances,
@@ -10,7 +12,8 @@ import {
 
 import { RuneAssetService } from '../assets/rune-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
+import type { SettingsService } from '../infrastructure/settings/settings.service';
+import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
 import { sortByAvailableFiatBalance } from './sip10-balances.utils';
@@ -30,38 +33,31 @@ export interface RunesAccountBalance extends RunesAggregateBalance {
   account: AccountAddresses;
 }
 
-export interface RunesBalancesService {
-  getRunesAccountBalance(
-    account: AccountAddresses,
-    signal?: AbortSignal
-  ): Promise<RunesAccountBalance>;
-  getRunesAggregateBalance(
-    accounts: AccountAddresses[],
-    signal?: AbortSignal
-  ): Promise<RunesAggregateBalance>;
-}
-
-export function createRunesBalancesService(
-  settingsService: SettingsService,
-  bisApiClient: BestInSlotApiClient,
-  marketDataService: MarketDataService,
-  runeAssetService: RuneAssetService
-): RunesBalancesService {
+@injectable()
+export class RunesBalancesService {
+  constructor(
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
+    private readonly bisApiClient: BestInSlotApiClient,
+    private readonly marketDataService: MarketDataService,
+    private readonly runeAssetService: RuneAssetService
+  ) {}
   /**
    * Gets combined Runes balances of provided Bitcoin accounts list. Includes cumulative fiat value.
    */
-  async function getRunesAggregateBalance(
+  public async getRunesAggregateBalance(
     accounts: AccountAddresses[],
     signal?: AbortSignal
   ): Promise<RunesAggregateBalance> {
     const accountBalances = await Promise.all(
-      accounts.map(account => getRunesAccountBalance(account, signal))
+      accounts.map(account => this.getRunesAccountBalance(account, signal))
     );
 
     const cumulativeFiatBalance =
       accountBalances.length > 0
         ? aggregateBaseCryptoAssetBalances(accountBalances.map(r => r.fiat))
-        : createBaseCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+        : createBaseCryptoAssetBalance(
+            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+          );
 
     return {
       fiat: cumulativeFiatBalance,
@@ -72,18 +68,18 @@ export function createRunesBalancesService(
   /**
    * Gets all Rune balances for given account. Includes cumulative fiat value.
    */
-  async function getRunesAccountBalance(
+  public async getRunesAccountBalance(
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<RunesAccountBalance> {
     const runesOutputs = hasBitcoinAddress(account)
-      ? await bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, signal)
+      ? await this.bisApiClient.fetchRunesValidOutputs(account.bitcoin.taprootDescriptor, signal)
       : [];
     const runesOutputsBalances = readRunesOutputsBalances(runesOutputs);
     const runesBalances = (
       await Promise.allSettled(
         Object.keys(runesOutputsBalances).map(runeName => {
-          return getRuneBalance(runeName, runesOutputsBalances[runeName], signal);
+          return this.getRuneBalance(runeName, runesOutputsBalances[runeName], signal);
         })
       )
     )
@@ -93,7 +89,9 @@ export function createRunesBalancesService(
     const cumulativeFiatBalance =
       runesBalances.length > 0
         ? aggregateBaseCryptoAssetBalances(runesBalances.map(b => b.fiat))
-        : createBaseCryptoAssetBalance(createMoney(0, settingsService.getSettings().fiatCurrency));
+        : createBaseCryptoAssetBalance(
+            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+          );
 
     return {
       account,
@@ -102,23 +100,18 @@ export function createRunesBalancesService(
     };
   }
 
-  async function getRuneBalance(
+  public async getRuneBalance(
     runeName: string,
     amount: string,
     signal?: AbortSignal
   ): Promise<RuneBalance> {
-    const runeInfo = await runeAssetService.getAssetInfo(runeName, signal);
+    const runeInfo = await this.runeAssetService.getAssetInfo(runeName, signal);
     const totalBalance = createMoney(initBigNumber(amount), runeInfo.runeName, runeInfo.decimals);
-    const runeMarketData = await marketDataService.getRuneMarketData(runeInfo, signal);
+    const runeMarketData = await this.marketDataService.getRuneMarketData(runeInfo, signal);
     return {
       asset: runeInfo,
       fiat: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };
   }
-
-  return {
-    getRunesAccountBalance,
-    getRunesAggregateBalance,
-  };
 }

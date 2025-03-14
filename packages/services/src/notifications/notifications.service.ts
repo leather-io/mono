@@ -1,22 +1,14 @@
+import { injectable } from 'inversify';
+
 import { SupportedBlockchains } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 
-export interface NotificationsService {
-  registerAddressNotification(
-    variables: {
-      addresses: string[];
-      notificationToken: string;
-      chain: SupportedBlockchains;
-    },
-    signal?: AbortSignal
-  ): Promise<unknown>;
-}
+@injectable()
+export class NotificationsService {
+  constructor(private readonly leatherApiClient: LeatherApiClient) {}
 
-export function createNotificationsService(
-  leatherApiClient: LeatherApiClient
-): NotificationsService {
-  function registerAddressNotification(
+  public async registerAddressNotification(
     {
       addresses,
       notificationToken,
@@ -28,10 +20,9 @@ export function createNotificationsService(
     },
     signal?: AbortSignal
   ) {
-    return leatherApiClient.registerAddresses({ addresses, notificationToken, chain }, signal);
+    return await this.leatherApiClient.registerAddresses(
+      { addresses, notificationToken, chain },
+      signal
+    );
   }
-
-  return {
-    registerAddressNotification,
-  };
 }

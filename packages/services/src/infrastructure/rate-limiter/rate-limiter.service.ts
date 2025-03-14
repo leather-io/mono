@@ -1,9 +1,11 @@
+import { inject, injectable } from 'inversify';
 import PQueue from 'p-queue';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 import { NetworkModes } from '@leather.io/models';
 
-import { SettingsService } from '../settings/settings.service';
+import { Types } from '../../inversify.types';
+import type { SettingsService } from '../settings/settings.service';
 import { bestInSlotMainnetApiLimiter, bestInSlotTestnetApiLimiter } from './best-in-slot-limiter';
 import { hiroStacksMainnetApiLimiter, hiroStacksTestnetApiLimiter } from './hiro-rate-limiter';
 
@@ -33,35 +35,36 @@ export interface RateLimiterCallOptions {
   signal?: AbortSignal;
 }
 
-export interface RateLimiterService {
-  add<T>(type: RateLimiterType, fn: () => Promise<T>, options?: RateLimiterCallOptions): Promise<T>;
-}
-
-export function createRateLimiterService(settingsService: SettingsService): RateLimiterService {
-  const limiters = new Map<string, PQueue>([
-    [getLimiterKey(RateLimiterType.BestInSlot, 'mainnet'), bestInSlotMainnetApiLimiter],
-    [getLimiterKey(RateLimiterType.BestInSlot, 'testnet'), bestInSlotTestnetApiLimiter],
-    [getLimiterKey(RateLimiterType.HiroStacks, 'mainnet'), hiroStacksMainnetApiLimiter],
-    [getLimiterKey(RateLimiterType.HiroStacks, 'testnet'), hiroStacksTestnetApiLimiter],
+@injectable()
+export class RateLimiterService {
+  private readonly limiters: Map<string, PQueue> = new Map([
+    [this.getLimiterKey(RateLimiterType.BestInSlot, 'mainnet'), bestInSlotMainnetApiLimiter],
+    [this.getLimiterKey(RateLimiterType.BestInSlot, 'testnet'), bestInSlotTestnetApiLimiter],
+    [this.getLimiterKey(RateLimiterType.HiroStacks, 'mainnet'), hiroStacksMainnetApiLimiter],
+    [this.getLimiterKey(RateLimiterType.HiroStacks, 'testnet'), hiroStacksTestnetApiLimiter],
   ]);
 
-  function getLimiterKey(type: RateLimiterType, network: NetworkModes) {
+  constructor(@inject(Types.SettingsService) private readonly settingsService: SettingsService) {}
+
+  public getLimiterKey(type: RateLimiterType, network: NetworkModes) {
     return `${type}_${network}`;
   }
 
-  function getLimiter(type: RateLimiterType, mode: NetworkModes) {
-    const key = getLimiterKey(type, mode);
-    return limiters.get(key)!;
+  public getLimiter(type: RateLimiterType, mode: NetworkModes): PQueue {
+    const key = this.getLimiterKey(type, mode);
+    return this.limiters.get(key)!;
   }
 
-  async function add<T>(
+  public async add<T>(
     type: RateLimiterType,
     fn: () => Promise<T>,
     options?: RateLimiterCallOptions
   ): Promise<T> {
-    const limiter = getLimiter(
+    const limiter = this.getLimiter(
       type,
-      bitcoinNetworkModeToCoreNetworkMode(settingsService.getSettings().network.chain.bitcoin.mode)
+      bitcoinNetworkModeToCoreNetworkMode(
+        this.settingsService.getSettings().network.chain.bitcoin.mode
+      )
     );
     const result = await limiter.add(fn, options);
     if (result === undefined) {
@@ -69,8 +72,4 @@ export function createRateLimiterService(settingsService: SettingsService): Rate
     }
     return result;
   }
-
-  return {
-    add,
-  };
 }

@@ -2,6 +2,8 @@
   "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
   "compilerOptions": {
     "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "types": ["vitest/globals"],
     "outDir": "./dist"
   },

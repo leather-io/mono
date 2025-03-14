@@ -1,13 +1,15 @@
 import axios from 'axios';
+import { inject, injectable } from 'inversify';
 import { z } from 'zod';
 
 import { LEATHER_API_URL } from '@leather.io/constants';
 import { SupportedBlockchains } from '@leather.io/models';
 
-import { HttpCacheService } from '../../cache/http-cache.service';
+import { Types } from '../../../inversify.types';
+import type { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
-import { SettingsService } from '../../settings/settings.service';
+import type { SettingsService } from '../../settings/settings.service';
 import {
   LeatherApiPage,
   LeatherApiPageRequest,
@@ -32,33 +34,16 @@ export type LeatherApiRegisterNotificationsResponse = z.infer<
   typeof leatherApiRegisterNotificationsResponseSchema
 >;
 
-export interface LeatherApiClient {
-  fetchUtxos(descriptor: string, signal?: AbortSignal): Promise<LeatherApiUtxo[]>;
-  fetchBitcoinTransactions(
-    descriptor: string,
-    page: LeatherApiPageRequest,
-    signal?: AbortSignal
-  ): Promise<LeatherApiPage<LeatherApiBitcoinTransaction>>;
-  fetchFiatExchangeRates(signal?: AbortSignal): Promise<LeatherApiFiatRates>;
-  fetchCryptoPrices(signal?: AbortSignal): Promise<LeatherApiCryptoPrices>;
-  fetchSip10Prices(signal?: AbortSignal): Promise<LeatherApiSip10Prices>;
-  registerAddresses(
-    variables: {
-      addresses: string[];
-      notificationToken: string;
-      chain: SupportedBlockchains;
-    },
-    signal?: AbortSignal
-  ): Promise<LeatherApiRegisterNotificationsResponse>;
-}
+@injectable()
+export class LeatherApiClient {
+  constructor(
+    @inject(Types.CacheService) private readonly cacheService: HttpCacheService,
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService
+  ) {}
 
-export function createLeatherApiClient(
-  cacheService: HttpCacheService,
-  settingsService: SettingsService
-): LeatherApiClient {
-  async function fetchUtxos(descriptor: string, signal?: AbortSignal): Promise<LeatherApiUtxo[]> {
-    const network = settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
-    return await cacheService.fetchWithCache(
+  async fetchUtxos(descriptor: string, signal?: AbortSignal): Promise<LeatherApiUtxo[]> {
+    const network = this.settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
+    return await this.cacheService.fetchWithCache(
       ['leather-api-utxos', network, descriptor],
       async () => {
         const res = await axios.get<LeatherApiUtxo[]>(
@@ -71,14 +56,14 @@ export function createLeatherApiClient(
     );
   }
 
-  async function fetchBitcoinTransactions(
+  async fetchBitcoinTransactions(
     descriptor: string,
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
   ): Promise<LeatherApiPage<LeatherApiBitcoinTransaction>> {
     const params = getPageRequestQueryParams(pageRequest);
-    params.append('network', selectBitcoinNetworkMode(settingsService.getSettings()));
-    return await cacheService.fetchWithCache(
+    params.append('network', selectBitcoinNetworkMode(this.settingsService.getSettings()));
+    return await this.cacheService.fetchWithCache(
       ['leather-api-transactions', descriptor, params.toString()],
       async () => {
         const res = await axios.get<LeatherApiPage<LeatherApiBitcoinTransaction>>(
@@ -91,8 +76,8 @@ export function createLeatherApiClient(
     );
   }
 
-  async function fetchFiatExchangeRates(signal?: AbortSignal): Promise<LeatherApiFiatRates> {
-    return await cacheService.fetchWithCache(
+  async fetchFiatExchangeRates(signal?: AbortSignal): Promise<LeatherApiFiatRates> {
+    return await this.cacheService.fetchWithCache(
       ['leather-api-fiat-rates'],
       async () => {
         const res = await axios.get<LeatherApiFiatRates>(
@@ -107,8 +92,8 @@ export function createLeatherApiClient(
     );
   }
 
-  async function fetchCryptoPrices(signal?: AbortSignal): Promise<LeatherApiCryptoPrices> {
-    return await cacheService.fetchWithCache(
+  async fetchCryptoPrices(signal?: AbortSignal): Promise<LeatherApiCryptoPrices> {
+    return await this.cacheService.fetchWithCache(
       ['leather-api-crypto-prices'],
       async () => {
         const res = await axios.get<LeatherApiCryptoPrices>(
@@ -123,8 +108,8 @@ export function createLeatherApiClient(
     );
   }
 
-  async function fetchSip10Prices(signal?: AbortSignal): Promise<LeatherApiSip10Prices> {
-    return await cacheService.fetchWithCache(
+  async fetchSip10Prices(signal?: AbortSignal): Promise<LeatherApiSip10Prices> {
+    return await this.cacheService.fetchWithCache(
       ['leather-api-sip10-prices'],
       async () => {
         const res = await axios.get<LeatherApiSip10Prices>(
@@ -139,7 +124,7 @@ export function createLeatherApiClient(
     );
   }
 
-  async function registerAddresses(
+  async registerAddresses(
     {
       addresses,
       notificationToken,
@@ -151,7 +136,7 @@ export function createLeatherApiClient(
     },
     signal?: AbortSignal
   ): Promise<LeatherApiRegisterNotificationsResponse> {
-    return await cacheService.fetchWithCache(
+    return await this.cacheService.fetchWithCache(
       ['leather-api-register-notifications', addresses, notificationToken, chain],
       async () => {
         const res = await axios.post<LeatherApiRegisterNotificationsResponse>(
@@ -169,13 +154,4 @@ export function createLeatherApiClient(
       { ttl: HttpCacheTimeMs.fiveSeconds }
     );
   }
-
-  return {
-    fetchUtxos,
-    fetchBitcoinTransactions,
-    fetchFiatExchangeRates,
-    fetchCryptoPrices,
-    fetchSip10Prices,
-    registerAddresses,
-  };
 }

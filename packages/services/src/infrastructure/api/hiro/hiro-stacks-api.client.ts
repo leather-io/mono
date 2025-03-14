@@ -12,14 +12,16 @@ import {
   TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
 import axios from 'axios';
+import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 
-import { HttpCacheService } from '../../cache/http-cache.service';
+import { Types } from '../../../inversify.types';
+import type { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings.selectors';
-import { SettingsService } from '../../settings/settings.service';
+import type { SettingsService } from '../../settings/settings.service';
 import { HiroMultiPageRequest, fetchHiroPages } from './hiro-multi-page';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
@@ -48,48 +50,30 @@ export type HiroStacksTransaction = Transaction;
 export type HiroStacksMempoolTransaction = MempoolTransaction;
 export type HiroNftHolding = NonFungibleTokenHolding;
 
-export interface HiroStacksApiClient {
-  getAddressBalances(address: string, signal?: AbortSignal): Promise<HiroAddressBalanceResponse>;
-  getAddressTransactions(
-    address: string,
-    pages: HiroMultiPageRequest,
-    signal?: AbortSignal
-  ): Promise<HiroAddressTransaction[]>;
-  getTransactionEvents(
-    address: string,
-    pages: HiroMultiPageRequest,
-    signal?: AbortSignal
-  ): Promise<HiroTransactionEvent[]>;
-  getAddressMempoolTransactions(
-    address: string,
-    signal?: AbortSignal
-  ): Promise<HiroMempoolTransactionListResponse>;
-  getFungibleTokenMetadata(
-    principal: string,
-    signal?: AbortSignal
-  ): Promise<HiroFtMetadataResponse>;
-  getNonFungibleTokenMetadata(
-    principal: string,
-    tokenId: number,
-    signal?: AbortSignal
-  ): Promise<HiroNftMetadataResponse>;
-  getNonFungibleHoldings(principal: string, signal?: AbortSignal): Promise<HiroNftHolding[]>;
-}
+@injectable()
+export class HiroStacksApiClient {
+  constructor(
+    @inject(Types.CacheService) private readonly cache: HttpCacheService,
+    @inject(Types.SettingsService) private readonly settings: SettingsService,
+    private readonly limiter: RateLimiterService
+  ) {}
 
-export function createHiroStacksApiClient(
-  cache: HttpCacheService,
-  settings: SettingsService,
-  limiter: RateLimiterService
-): HiroStacksApiClient {
-  async function getAddressBalances(address: string, signal?: AbortSignal) {
-    return await cache.fetchWithCache(
-      ['hiro-stacks-get-address-balances', address, selectStacksChainId(settings.getSettings())],
+  public async getAddressBalances(
+    address: string,
+    signal?: AbortSignal
+  ): Promise<HiroAddressBalanceResponse> {
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-balances',
+        address,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroAddressBalanceResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/address/${address}/balances`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/balances`,
               { signal }
             ),
           {
@@ -104,7 +88,7 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function _getAddressTransactionsPage(
+  private async getAddressTransactionsPage(
     address: string,
     page: HiroPageRequest,
     signal?: AbortSignal
@@ -113,19 +97,19 @@ export function createHiroStacksApiClient(
       limit: page.limit.toString(),
       offset: page.offset.toString(),
     });
-    return await cache.fetchWithCache(
+    return await this.cache.fetchWithCache(
       [
         'hiro-stacks-get-address-transactions',
-        selectStacksChainId(settings.getSettings()),
+        selectStacksChainId(this.settings.getSettings()),
         address,
         pageParams.toString(),
       ],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroAddressTransactionsResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/extended/v2/addresses/${address}/transactions?${pageParams.toString()}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/addresses/${address}/transactions?${pageParams.toString()}`,
               { signal }
             ),
           {
@@ -143,13 +127,13 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function getAddressTransactions(
+  public async getAddressTransactions(
     address: string,
     pages: HiroMultiPageRequest,
     signal?: AbortSignal
   ): Promise<HiroAddressTransaction[]> {
     return fetchHiroPages<HiroAddressTransaction>(
-      page => _getAddressTransactionsPage(address, page, signal),
+      page => this.getAddressTransactionsPage(address, page, signal),
       {
         limit: 50,
         pagesRequest: pages,
@@ -157,7 +141,7 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function _getTransactionEventsPage(
+  private async getTransactionEventsPage(
     address: string,
     page: HiroPageRequest,
     signal?: AbortSignal
@@ -166,19 +150,19 @@ export function createHiroStacksApiClient(
       limit: page.limit.toString(),
       offset: page.offset.toString(),
     });
-    return await cache.fetchWithCache(
+    return await this.cache.fetchWithCache(
       [
         'hiro-stacks-get-transaction-events',
-        selectStacksChainId(settings.getSettings()),
+        selectStacksChainId(this.settings.getSettings()),
         address,
         pageParams.toString(),
       ],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroTransactionEventsResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/address/${address}/assets?${pageParams.toString()}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/assets?${pageParams.toString()}`,
               { signal }
             ),
           {
@@ -193,13 +177,13 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function getTransactionEvents(
+  public async getTransactionEvents(
     address: string,
     pages: HiroMultiPageRequest,
     signal?: AbortSignal
   ): Promise<HiroTransactionEvent[]> {
     return fetchHiroPages<HiroTransactionEvent>(
-      page => _getTransactionEventsPage(address, page, signal),
+      page => this.getTransactionEventsPage(address, page, signal),
       {
         limit: 100,
         pagesRequest: pages,
@@ -207,19 +191,22 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function getAddressMempoolTransactions(address: string, signal?: AbortSignal) {
-    return await cache.fetchWithCache(
+  public async getAddressMempoolTransactions(
+    address: string,
+    signal?: AbortSignal
+  ): Promise<HiroMempoolTransactionListResponse> {
+    return await this.cache.fetchWithCache(
       [
         'hiro-stacks-get-address-mempool-transactions',
         address,
-        selectStacksChainId(settings.getSettings()),
+        selectStacksChainId(this.settings.getSettings()),
       ],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<MempoolTransactionListResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
               { signal }
             ),
           {
@@ -234,15 +221,22 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function getFungibleTokenMetadata(principal: string, signal?: AbortSignal) {
-    return await cache.fetchWithCache(
-      ['hiro-stacks-get-ft-token-metadata', principal, selectStacksChainId(settings.getSettings())],
+  public async getFungibleTokenMetadata(
+    principal: string,
+    signal?: AbortSignal
+  ): Promise<HiroFtMetadataResponse> {
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-ft-token-metadata',
+        principal,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroFtMetadataResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/metadata/v1/ft/${principal}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/ft/${principal}`,
               { signal }
             ),
           {
@@ -257,23 +251,23 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function getNonFungibleTokenMetadata(
+  public async getNonFungibleTokenMetadata(
     principal: string,
     tokenId: number,
     signal?: AbortSignal
-  ) {
-    return await cache.fetchWithCache(
+  ): Promise<HiroNftMetadataResponse> {
+    return await this.cache.fetchWithCache(
       [
         'hiro-stacks-get-nft-token-metadata',
         principal,
-        selectStacksChainId(settings.getSettings()),
+        selectStacksChainId(this.settings.getSettings()),
       ],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<HiroNftMetadataResponse>(
-              `${selectStacksApiUrl(settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
               { signal }
             ),
           {
@@ -288,19 +282,22 @@ export function createHiroStacksApiClient(
     );
   }
 
-  async function getNonFungibleHoldings(principal: string, signal?: AbortSignal) {
+  public async getNonFungibleHoldings(
+    principal: string,
+    signal?: AbortSignal
+  ): Promise<HiroNftHolding[]> {
     const pageParams = new URLSearchParams({
       limit: '100',
       offset: '0',
     });
-    return await cache.fetchWithCache(
-      ['hiro-stacks-get-nft-holdings', principal, selectStacksChainId(settings.getSettings())],
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-nft-holdings', principal, selectStacksChainId(this.settings.getSettings())],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
             axios.get<NonFungibleTokenHoldingsList>(
-              `${selectStacksApiUrl(settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&${pageParams.toString()}`,
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&${pageParams.toString()}`,
               { signal }
             ),
           {
@@ -314,14 +311,4 @@ export function createHiroStacksApiClient(
       { ttl: HttpCacheTimeMs.tenSeconds }
     );
   }
-
-  return {
-    getAddressTransactions,
-    getTransactionEvents,
-    getAddressBalances,
-    getAddressMempoolTransactions,
-    getFungibleTokenMetadata,
-    getNonFungibleTokenMetadata,
-    getNonFungibleHoldings,
-  };
 }

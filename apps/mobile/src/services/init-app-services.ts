@@ -1,8 +1,11 @@
-import { initializeServiceContainers } from '@leather.io/services';
+import { initServicesContainer } from '@leather.io/services';
 
-import { createMobileHttpCacheService } from './mobile-http-cache.service';
-import { createMobileSettingsService } from './mobile-settings.service';
+import { MobileHttpCacheService } from './mobile-http-cache.service';
+import { MobileSettingsService } from './mobile-settings.service';
 
 export function initAppServices() {
-  initializeServiceContainers(createMobileSettingsService(), createMobileHttpCacheService());
+  initServicesContainer({
+    cacheService: MobileHttpCacheService,
+    settingsService: MobileSettingsService,
+  });
 }

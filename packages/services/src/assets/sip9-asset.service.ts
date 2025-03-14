@@ -1,3 +1,5 @@
+import { injectable } from 'inversify';
+
 import { Sip9CryptoAssetInfo } from '@leather.io/models';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -7,30 +9,25 @@ import {
   getNonFungibleTokenId,
 } from './stacks-asset.utils';
 
-export interface Sip9AssetService {
-  getAssetInfo(
-    assetIdentifier: string,
-    tokenHexValue: string,
-    signal?: AbortSignal
-  ): Promise<Sip9CryptoAssetInfo>;
-}
-
-export function createSip9AssetService(stacksApiClient: HiroStacksApiClient): Sip9AssetService {
+@injectable()
+export class Sip9AssetService {
+  constructor(private readonly stacksApiClient: HiroStacksApiClient) {}
   /**
    * Gets full asset information for given SIP-9 asset identifier.
    * Expected identifier format: \<address\>.\<contract-name\>::\<asset-name\>
    */
-  async function getAssetInfo(
+  public async getAssetInfo(
     assetIdentifier: string,
     tokenHexValue: string,
     signal?: AbortSignal
-  ) {
+  ): Promise<Sip9CryptoAssetInfo> {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const tokenId = getNonFungibleTokenId(tokenHexValue);
-    const metadata = await stacksApiClient.getNonFungibleTokenMetadata(principal, tokenId, signal);
+    const metadata = await this.stacksApiClient.getNonFungibleTokenMetadata(
+      principal,
+      tokenId,
+      signal
+    );
     return createSip9CryptoAssetInfo(assetIdentifier, tokenId, metadata);
   }
-  return {
-    getAssetInfo,
-  };
 }

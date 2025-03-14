@@ -1,16 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { getStacksTransactionsService } from '../inversify.config';
-import { createStacksTransactionsService } from './stacks-transactions.service';
+import { StacksTransactionsService } from './stacks-transactions.service';
 
-describe(getStacksTransactionsService.name, () => {
+describe(StacksTransactionsService.name, () => {
   const mockStacksApiClient = {
     getAddressMempoolTransactions: vi.fn().mockResolvedValue({ results: [] }),
     getAddressTransactions: vi.fn().mockResolvedValue([]),
   } as unknown as HiroStacksApiClient;
 
-  const stacksTransactionsService = createStacksTransactionsService(mockStacksApiClient);
+  const stacksTransactionsService = new StacksTransactionsService(mockStacksApiClient);
 
   beforeEach(() => {
     vi.clearAllMocks();

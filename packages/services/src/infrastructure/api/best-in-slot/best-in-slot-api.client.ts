@@ -1,13 +1,15 @@
 import axios from 'axios';
+import { inject, injectable } from 'inversify';
 import { z } from 'zod';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
 
-import { HttpCacheService } from '../../cache/http-cache.service';
+import { Types } from '../../../inversify.types';
+import type { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
-import { SettingsService } from '../../settings/settings.service';
+import type { SettingsService } from '../../settings/settings.service';
 import {
   bisBrc20MarketInfoSchema,
   bisInscriptionSchema,
@@ -26,26 +28,25 @@ export type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
 export type BisInscription = z.infer<typeof bisInscriptionSchema>;
 export type BisRuneValidOutput = z.infer<typeof bisRuneValidOutputsSchema>;
 
-export interface BestInSlotApiClient {
-  fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal): Promise<BisBrc20MarketInfo>;
-  fetchRuneTickerInfo(runeName: string, signal?: AbortSignal): Promise<BisRuneTickerInfo>;
-  fetchInscriptions(descriptor: string, signal?: AbortSignal): Promise<BisInscription[]>;
-  fetchRunesValidOutputs(descriptor: string, signal?: AbortSignal): Promise<BisRuneValidOutput[]>;
-}
+@injectable()
+export class BestInSlotApiClient {
+  constructor(
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
+    @inject(Types.CacheService) private readonly cache: HttpCacheService,
+    private readonly limiter: RateLimiterService
+  ) {}
 
-export function createBestInSlotApiClient(
-  settingsService: SettingsService,
-  limiter: RateLimiterService,
-  cache: HttpCacheService
-): BestInSlotApiClient {
-  async function fetchBrc20MarketInfo(ticker: string, signal?: AbortSignal) {
+  public async fetchBrc20MarketInfo(
+    ticker: string,
+    signal?: AbortSignal
+  ): Promise<BisBrc20MarketInfo> {
     const network = bitcoinNetworkModeToCoreNetworkMode(
-      selectBitcoinNetworkMode(settingsService.getSettings())
+      selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
-    return await cache.fetchWithCache(
+    return await this.cache.fetchWithCache(
       ['best-in-slot-brc20-market-info', network, ticker],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.BestInSlot,
           () =>
             axios.get<BestInSlotApiResponse<BisBrc20MarketInfo>>(
@@ -60,14 +61,17 @@ export function createBestInSlotApiClient(
     );
   }
 
-  async function fetchRuneTickerInfo(runeName: string, signal?: AbortSignal) {
+  public async fetchRuneTickerInfo(
+    runeName: string,
+    signal?: AbortSignal
+  ): Promise<BisRuneTickerInfo> {
     const network = bitcoinNetworkModeToCoreNetworkMode(
-      selectBitcoinNetworkMode(settingsService.getSettings())
+      selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
-    return await cache.fetchWithCache(
+    return await this.cache.fetchWithCache(
       ['best-in-slot-rune-ticker-info', network, runeName],
       async () => {
-        const res = await limiter.add(
+        const res = await this.limiter.add(
           RateLimiterType.BestInSlot,
           () =>
             axios.get<BestInSlotApiResponse<BisRuneTickerInfo>>(
@@ -82,7 +86,10 @@ export function createBestInSlotApiClient(
     );
   }
 
-  async function fetchInscriptions(descriptor: string, signal?: AbortSignal) {
+  public async fetchInscriptions(
+    descriptor: string,
+    signal?: AbortSignal
+  ): Promise<BisInscription[]> {
     const params = new URLSearchParams();
     params.append('sort_by', 'inscr_num');
     params.append('order', 'desc');
@@ -92,14 +99,14 @@ export function createBestInSlotApiClient(
     params.append('count', '2000');
 
     const network = bitcoinNetworkModeToCoreNetworkMode(
-      selectBitcoinNetworkMode(settingsService.getSettings())
+      selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
     return network !== 'mainnet'
       ? []
-      : await cache.fetchWithCache(
+      : await this.cache.fetchWithCache(
           ['best-in-slot-inscriptions', network, descriptor],
           async () => {
-            const res = await limiter.add(
+            const res = await this.limiter.add(
               RateLimiterType.BestInSlot,
               () =>
                 axios.get<BestInSlotApiResponse<BisInscription[]>>(
@@ -114,7 +121,10 @@ export function createBestInSlotApiClient(
         );
   }
 
-  async function fetchRunesValidOutputs(descriptor: string, signal?: AbortSignal) {
+  public async fetchRunesValidOutputs(
+    descriptor: string,
+    signal?: AbortSignal
+  ): Promise<BisRuneValidOutput[]> {
     const params = new URLSearchParams();
     params.append('sort_by', 'output');
     params.append('order', 'desc');
@@ -123,14 +133,14 @@ export function createBestInSlotApiClient(
     params.append('count', '2000');
 
     const network = bitcoinNetworkModeToCoreNetworkMode(
-      selectBitcoinNetworkMode(settingsService.getSettings())
+      selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
     return network !== 'mainnet'
       ? []
-      : await cache.fetchWithCache(
+      : await this.cache.fetchWithCache(
           ['best-in-slot-runes-valid-outputs', network, descriptor],
           async () => {
-            const res = await limiter.add(
+            const res = await this.limiter.add(
               RateLimiterType.BestInSlot,
               () =>
                 axios.get<BestInSlotApiResponse<BisRuneValidOutput[]>>(
@@ -144,11 +154,4 @@ export function createBestInSlotApiClient(
           { ttl: HttpCacheTimeMs.twoMinutes }
         );
   }
-
-  return {
-    fetchBrc20MarketInfo,
-    fetchRuneTickerInfo,
-    fetchInscriptions,
-    fetchRunesValidOutputs,
-  };
 }
