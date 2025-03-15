@@ -6,8 +6,11 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
+import { useToastContext } from '@/components/toast/toast-context';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { WaitlistIds } from '@/features/waitlist/ids';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import { useDeviceId } from '@/hooks/use-device-id';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { isDev } from '@/utils/is-dev';
@@ -20,7 +23,9 @@ import {
   BellIcon,
   Box,
   Button,
+  CopyIcon,
   GlobeTiltedIcon,
+  Pressable,
   SettingsGearIcon,
   SheetRef,
   ShieldIcon,
@@ -29,6 +34,7 @@ import {
   Text,
   UsersTwoIcon,
   WalletIcon,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
@@ -36,6 +42,20 @@ export default function SettingsScreen() {
   const feesSheetRef = useRef<SheetRef>(null);
   const router = useRouter();
   const { lockApp } = useAuthContext();
+  const { displayToast } = useToastContext();
+  const deviceId = useDeviceId();
+  const { onCopy: onDeviceIdCopy } = useCopyToClipboard(deviceId ?? '');
+
+  function handleCopyDeviceIdToClipboard() {
+    void onDeviceIdCopy();
+    displayToast({
+      title: t({
+        id: 'settings.device_id.toast_title',
+        message: 'ID copied to clipboard',
+      }),
+      type: 'success',
+    });
+  }
 
   return (
     <>
@@ -163,9 +183,9 @@ export default function SettingsScreen() {
             </SettingsList>
           }
         />
-        <Divider />
-        <Box py="3">
-          <Text variant="label01">
+
+        <Box>
+          <Text variant="label02">
             {t({
               id: 'settings.version_label',
               message: 'Version',
@@ -175,6 +195,31 @@ export default function SettingsScreen() {
             {Application.nativeApplicationVersion} / {Application.nativeBuildVersion}
           </Text>
         </Box>
+        {deviceId && (
+          <Box>
+            <Text variant="label02">
+              {t({
+                id: 'settings.device_id_label',
+                message: 'Device ID',
+              })}
+            </Text>
+            <Pressable
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+              onPress={handleCopyDeviceIdToClipboard}
+              pressEffects={legacyTouchablePressEffect}
+            >
+              <Text variant="caption01" color="ink.text-subdued">
+                {deviceId}
+              </Text>
+              <CopyIcon variant="small" style={{ marginTop: -2 }} />
+            </Pressable>
+          </Box>
+        )}
+
+        <Divider my="3" />
+
         <Button
           onPress={lockApp}
           buttonState="outline"
