@@ -7,13 +7,14 @@ import {
   isRouteErrorResponse,
 } from 'react-router';
 
-import { styled } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
 
 import type { LeatherProvider } from '@leather.io/rpc';
 import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
+import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
 
@@ -39,10 +40,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <styled.body display="flex" height="100vh">
+      <styled.body>
         <GlobalLoader />
         <Nav />
-        <styled.main>{children}</styled.main>
+        <Flex flexDir="column" marginLeft="navbar" minHeight="100vh">
+          <styled.main flex={1}>{children}</styled.main>
+          <Footer />
+        </Flex>
         <ScrollRestoration />
         <Scripts />
       </styled.body>

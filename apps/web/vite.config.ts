@@ -8,18 +8,19 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const knownIcons = [
-  'house',
-  'pulse',
-  'paper-plane',
-  'inbox',
-  'arrows-repeat-left-right',
-  'arrow-right-left',
-  'exit',
-  'chevron-down',
-  'newspaper',
-  'glasses',
-  'terminal',
-  'support',
+  'house-16-16.svg',
+  'pulse-16-16.svg',
+  'paper-plane-16-16.svg',
+  'inbox-16-16.svg',
+  'arrows-repeat-left-right-16-16.svg',
+  'arrow-right-left-16-16.svg',
+  'exit-16-16.svg',
+  'chevron-down-16-16.svg',
+  'newspaper-16-16.svg',
+  'glasses-16-16.svg',
+  'terminal-16-16.svg',
+  'support-16-16.svg',
+  'leather-lettermark-24-24.svg',
 ];
 
 export default defineConfig(({ isSsrBuild }) => ({
@@ -45,9 +46,7 @@ export default defineConfig(({ isSsrBuild }) => ({
     viteStaticCopy({
       targets: [
         {
-          src: knownIcons.map(
-            icon => `node_modules/@leather.io/ui/dist-web/assets/icons/${icon}-16-16.svg`
-          ),
+          src: knownIcons.map(icon => `node_modules/@leather.io/ui/dist-web/assets/icons/${icon}`),
           dest: 'assets/icons',
         },
       ],

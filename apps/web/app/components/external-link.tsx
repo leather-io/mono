@@ -1,0 +1,29 @@
+import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
+
+interface ExternalLinkProps extends HTMLStyledProps<'a'> {
+  href: string;
+  withIcon?: boolean;
+}
+export function ExternalLink({ href, withIcon, children, ...props }: ExternalLinkProps) {
+  return (
+    <styled.a
+      textStyle="label.03"
+      borderBottom="1px solid"
+      borderColor="ink.text-non-interactive"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      _hover={{ borderColor: 'ink.action-primary-hover' }}
+      _focus={{ borderColor: 'ink.action-primary-hover' }}
+      outline={0}
+      {...props}
+    >
+      {children}
+      {withIcon && (
+        <styled.span ml="space.01" display="inline-block" transform="rotate(45deg)">
+          ↑
+        </styled.span>
+      )}
+    </styled.a>
+  );
+}
