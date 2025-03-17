@@ -468,6 +468,26 @@
     * @leather.io/stacks bumped to 1.7.3
     * @leather.io/utils bumped to 0.29.0
 
+## [2.31.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.30.1...@leather.io/query-v2.31.0) (2025-03-17)
+
+
+### Features
+
+* add stacking queries, LEA-2322 ([f4d8ccb](https://github.com/leather-io/mono/commit/f4d8ccbe758f42d0c3436c167172090c5676310d))
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.22.0
+    * @leather.io/constants bumped to 0.18.1
+    * @leather.io/models bumped to 0.30.0
+    * @leather.io/rpc bumped to 2.9.2
+    * @leather.io/stacks bumped to 1.7.4
+    * @leather.io/utils bumped to 0.30.0
+
 ## [2.30.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.29.8...@leather.io/query-v2.30.0) (2025-03-11)
 
 

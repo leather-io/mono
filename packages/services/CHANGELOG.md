@@ -191,6 +191,31 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.9.1
 
+## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.5.1...@leather.io/services-v1.6.0) (2025-03-17)
+
+
+### Features
+
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+
+
+### Bug Fixes
+
+* leather api fetch using correct bitcoin network setting ([5e21f19](https://github.com/leather-io/mono/commit/5e21f19469a849516f47c166e9e3e80c367cb192))
+* sip10 balances service error handling ([ca5cbe5](https://github.com/leather-io/mono/commit/ca5cbe57df3d80de1ad62a3ebf7f53c5bd71763a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.22.0
+    * @leather.io/constants bumped to 0.18.1
+    * @leather.io/models bumped to 0.30.0
+    * @leather.io/utils bumped to 0.30.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.9.2
+
 ## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.4.14...@leather.io/services-v1.5.0) (2025-03-11)
 
 

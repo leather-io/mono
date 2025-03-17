@@ -19,6 +19,30 @@
   * dependencies
     * @leather.io/rpc bumped to 2.9.1
 
+## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.0.3...@leather.io/sdk-v1.1.0) (2025-03-17)
+
+
+### Features
+
+* home card ui component ([a2a2376](https://github.com/leather-io/mono/commit/a2a2376f7585baa1854c10b72cf941dc6a982da7))
+* **web:** auth button styling ([495dda3](https://github.com/leather-io/mono/commit/495dda37d993cf1688707f0474cb94e1b9cfbef8))
+* **web:** basic connect functionality ([6ded9eb](https://github.com/leather-io/mono/commit/6ded9eb307062e2181180f415f78d974d5235902))
+* **web:** cf deployment setup ([f806d4c](https://github.com/leather-io/mono/commit/f806d4c17c127e840616068f00fd3da05602e52c))
+* **web:** sign in button, closes LEA-2317 ([b308681](https://github.com/leather-io/mono/commit/b308681dac47c2e7b52c5c73afd7765586cd92ef))
+
+
+### Bug Fixes
+
+* **sdk:** return result only ([7bb64ab](https://github.com/leather-io/mono/commit/7bb64abd14d40389f22fee6cc3d3152bf32fa9c0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.30.0
+    * @leather.io/rpc bumped to 2.9.2
+
 ## 1.0.0 (2025-03-06)
 
 
