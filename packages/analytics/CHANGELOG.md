@@ -60,6 +60,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.29.0
 
+## [3.4.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.3.3...@leather.io/analytics-v3.4.0) (2025-03-17)
+
+
+### Features
+
+* ensure platform defaults correctly set on mobile ([6956699](https://github.com/leather-io/mono/commit/69566995267061d4661e6094c04d21b9a732deaf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.30.0
+
 ## [3.3.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.2.4...@leather.io/analytics-v3.3.0) (2025-02-25)
 
 

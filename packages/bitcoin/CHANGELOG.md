@@ -623,6 +623,27 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.9.1
 
+## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.21.1...@leather.io/bitcoin-v0.22.0) (2025-03-17)
+
+
+### Features
+
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* **web:** auth button styling ([495dda3](https://github.com/leather-io/mono/commit/495dda37d993cf1688707f0474cb94e1b9cfbef8))
+* **web:** basic connect functionality ([6ded9eb](https://github.com/leather-io/mono/commit/6ded9eb307062e2181180f415f78d974d5235902))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.18.1
+    * @leather.io/crypto bumped to 1.6.52
+    * @leather.io/models bumped to 0.30.0
+    * @leather.io/utils bumped to 0.30.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.9.2
+
 ## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.20.1...@leather.io/bitcoin-v0.21.0) (2025-03-11)
 
 

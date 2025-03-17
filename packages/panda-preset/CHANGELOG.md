@@ -204,6 +204,14 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.13.6
 
+## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.9.0...@leather.io/panda-preset-v0.10.0) (2025-03-17)
+
+
+### Features
+
+* **web:** auth button styling ([495dda3](https://github.com/leather-io/mono/commit/495dda37d993cf1688707f0474cb94e1b9cfbef8))
+* **web:** cf deployment setup ([f806d4c](https://github.com/leather-io/mono/commit/f806d4c17c127e840616068f00fd3da05602e52c))
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.8.20...@leather.io/panda-preset-v0.9.0) (2025-02-25)
 
 

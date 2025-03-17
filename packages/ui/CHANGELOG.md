@@ -381,6 +381,31 @@
   * dependencies
     * @leather.io/utils bumped to 0.29.0
 
+## [1.52.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.51.4...@leather.io/ui-v1.52.0) (2025-03-17)
+
+
+### Features
+
+* add tokens pages, avatars indicators, animated sheet header ref LEA-2017 ([2c099c1](https://github.com/leather-io/mono/commit/2c099c154ddf2b5b3009f8b3e48c82533ad2b873))
+* **web:** auth button styling ([495dda3](https://github.com/leather-io/mono/commit/495dda37d993cf1688707f0474cb94e1b9cfbef8))
+* **web:** cf deployment setup ([f806d4c](https://github.com/leather-io/mono/commit/f806d4c17c127e840616068f00fd3da05602e52c))
+* **web:** sign in button, closes LEA-2317 ([b308681](https://github.com/leather-io/mono/commit/b308681dac47c2e7b52c5c73afd7765586cd92ef))
+
+
+### Bug Fixes
+
+* export needed icons for web ([19f1ca2](https://github.com/leather-io/mono/commit/19f1ca2fc36213af957a3e9e88bc440cffd46e0c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.30.0
+  * devDependencies
+    * @leather.io/models bumped to 0.30.0
+    * @leather.io/panda-preset bumped to 0.10.0
+
 ## [1.51.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.51.2...@leather.io/ui-v1.51.3) (2025-03-11)
 
 

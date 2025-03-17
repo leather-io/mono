@@ -646,6 +646,36 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.20.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.19.1...@leather.io/mobile-v2.20.0) (2025-03-17)
+
+
+### Features
+
+* add tokens pages, avatars indicators, animated sheet header ref LEA-2017 ([2c099c1](https://github.com/leather-io/mono/commit/2c099c154ddf2b5b3009f8b3e48c82533ad2b873))
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* ensure platform defaults correctly set on mobile ([6956699](https://github.com/leather-io/mono/commit/69566995267061d4661e6094c04d21b9a732deaf))
+* **web:** auth button styling ([495dda3](https://github.com/leather-io/mono/commit/495dda37d993cf1688707f0474cb94e1b9cfbef8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.4.0
+    * @leather.io/bitcoin bumped to 0.22.0
+    * @leather.io/constants bumped to 0.18.1
+    * @leather.io/crypto bumped to 1.6.52
+    * @leather.io/models bumped to 0.30.0
+    * @leather.io/provider bumped to 1.1.4
+    * @leather.io/query bumped to 2.31.0
+    * @leather.io/rpc bumped to 2.9.2
+    * @leather.io/services bumped to 1.6.0
+    * @leather.io/stacks bumped to 1.7.4
+    * @leather.io/ui bumped to 1.52.0
+    * @leather.io/utils bumped to 0.30.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.22.0
+
 ## [2.19.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.19.0...@leather.io/mobile-v2.19.1) (2025-03-11)
 
 
