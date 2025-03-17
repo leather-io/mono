@@ -129,7 +129,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
   };
   const caption01 = {
     ...commonDiatypeStyles,
-    fontSize: transformSize(15),
+    fontSize: transformSize(13),
     fontWeight: transformWeight(400),
     lineHeight: transformSize(20),
   };

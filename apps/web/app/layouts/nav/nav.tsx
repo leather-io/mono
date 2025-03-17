@@ -10,9 +10,11 @@ export function Nav() {
   return (
     <styled.nav
       display="flex"
+      pos="fixed"
+      height="100vh"
       flexDirection="column"
-      width="148px"
-      minWidth="148px"
+      width="navbar"
+      minWidth="navbar"
       borderColor="ink.border-default"
       borderRight="1px solid"
       minHeight="fit-content"

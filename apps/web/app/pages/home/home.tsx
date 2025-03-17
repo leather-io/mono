@@ -1,4 +1,5 @@
 import { styled } from 'leather-styles/jsx';
+import { Page } from '~/components/page';
 
 import { HomeHeroCard } from './components/home-card';
 
@@ -7,7 +8,7 @@ interface HomeProps {
 }
 export function Home({ latestArticles }: HomeProps) {
   return (
-    <styled.div p="space.04">
+    <Page>
       <HomeHeroCard>
         <styled.h1 textStyle="heading.03">Earn rewards with BTC</styled.h1>
         <styled.p textStyle="label.02" mt="space.03">
@@ -25,6 +26,6 @@ export function Home({ latestArticles }: HomeProps) {
           </li>
         ))}
       </ul>
-    </styled.div>
+    </Page>
   );
 }
