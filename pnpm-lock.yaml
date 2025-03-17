@@ -493,7 +493,7 @@ importers:
         version: 0.2.1(@redux-devtools/core@4.0.0(react-redux@9.1.2(@types/react@18.2.79)(react@18.2.0)(redux@5.0.1))(react@18.2.0)(redux@5.0.1))(expo@51.0.26)(immutable@4.3.7)(redux@5.0.1)
       ts-jest:
         specifier: 29.1.4
-        version: 29.1.4(@babel/core@7.24.6)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.6))(jest@29.7.0(@types/node@22.13.5)(babel-plugin-macros@3.1.0))(typescript@5.7.3)
+        version: 29.1.4(@babel/core@7.24.6)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.6))(esbuild@0.25.0)(jest@29.7.0(@types/node@22.13.5)(babel-plugin-macros@3.1.0))(typescript@5.7.3)
       tslib:
         specifier: 2.6.2
         version: 2.6.2
@@ -912,6 +912,9 @@ importers:
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
+      '@stacks/stacking':
+        specifier: 7.0.5
+        version: 7.0.5(encoding@0.1.13)
       '@stacks/stacks-blockchain-api-types':
         specifier: 7.8.2
         version: 7.8.2
@@ -920,7 +923,7 @@ importers:
         version: 7.0.5(encoding@0.1.13)
       '@tanstack/react-query':
         specifier: 5.59.16
-        version: 5.59.16(react@18.2.0)
+        version: 5.59.16(react@19.0.0)
       alex-sdk:
         specifier: 2.1.4
         version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
@@ -938,7 +941,7 @@ importers:
         version: 8.0.1
       react:
         specifier: '*'
-        version: 18.2.0
+        version: 19.0.0
       url-join:
         specifier: 5.0.0
         version: 5.0.0
@@ -2807,6 +2810,7 @@ packages:
 
   '@effect/schema@0.71.1':
     resolution: {integrity: sha512-XvFttkuBUL3s4ofZ+OVE4Pagb4wsPG8laSS8iO5lVI9Yt1zIM49uxlYIA2BJ45jjS3MdplUepC0NilotKnjU2A==}
+    deprecated: this package has been merged into the main effect package
     peerDependencies:
       effect: ^3.6.5
 
@@ -3065,7 +3069,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.18.28':
     resolution: {integrity: sha512-fvbVPId6s6etindzP6Nzos/CS1NurMVy4JKozjebArHr63tBid5i/UY5Pp+4wTCAM20gB2SjRdwcwoL6HFC4Iw==}
@@ -3788,6 +3792,7 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -5460,6 +5465,9 @@ packages:
   '@rushstack/ts-command-line@4.22.5':
     resolution: {integrity: sha512-eFm+5DJboPHAy3epLNQtmG+hDlBzS950g26nZPbciMQeXmZ5shGGNe6ERjV77wnr5IuxfLhYGJ4ZjPy8Z56MBA==}
 
+  '@scure/base@1.1.1':
+    resolution: {integrity: sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==}
+
   '@scure/base@1.1.9':
     resolution: {integrity: sha512-8YKhl8GHiNI/pU2VMaofa2Tor7PJRAjwQLBBuilkJ9L5+13yVbC7JO/wS7piioAvPSwR3JKM1IJ/u4xQzbcXKg==}
 
@@ -5567,6 +5575,9 @@ packages:
   '@stacks/encryption@7.0.2':
     resolution: {integrity: sha512-3evRvxPqVzQAhcZ8uacQrVfAETUMIV8VyKkHGsd4QZroGWlvXQheLV3CFeDttFb304QcKq/oKv1clOvQ2shaAw==}
 
+  '@stacks/encryption@7.0.5':
+    resolution: {integrity: sha512-X42ZuUPX6vRb3JCt5nkqFunef9EeOLfHXjsKUD2HcOJT7hgC6p6VNTs5iwy/aOQMZdVsxFYAy56m5DbStPU06Q==}
+
   '@stacks/network@6.17.0':
     resolution: {integrity: sha512-numHbfKjwco/rbkGPOEz8+FcJ2nBnS/tdJ8R422Q70h3SiA9eqk9RjSzB8p4JP8yW1SZvW+eihADHfMpBuZyfw==}
 
@@ -5581,6 +5592,12 @@ packages:
 
   '@stacks/profile@7.0.2':
     resolution: {integrity: sha512-BJis1ZAP2yzv0IFaJcm4mZFtauizcB1zBVpAeOSX06BDEUgM8h0L8uRvAbfTvSuSjsveNgblucZouZMSEsQMGA==}
+
+  '@stacks/stacking@7.0.5':
+    resolution: {integrity: sha512-OOjb1BRqGkAn/BunKKdF2olZ0NjHX8uZ6+EHCLuBZbny22hwf22jnqScRE6H4kXJsreF11RLktJEUfBagJrQ1A==}
+
+  '@stacks/stacks-blockchain-api-types@0.61.0':
+    resolution: {integrity: sha512-yPOfTUboo5eA9BZL/hqMcM71GstrFs9YWzOrJFPeP4cOO1wgYvAcckgBRbgiE3NqeX0A7SLZLDAXLZbATuRq9w==}
 
   '@stacks/stacks-blockchain-api-types@7.8.2':
     resolution: {integrity: sha512-wcDSdgIZx/ttQfUTPtGJOIyEkTOjmCsC79TaIyxTIiihSgrGppqTuzkwHD/DyuQkcJtUZvDTxMsAXkBKShE1kw==}
@@ -20677,6 +20694,8 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
+  '@scure/base@1.1.1': {}
+
   '@scure/base@1.1.9': {}
 
   '@scure/base@1.2.4': {}
@@ -20847,6 +20866,17 @@ snapshots:
       ripemd160-min: 0.0.6
       varuint-bitcoin: 1.1.2
 
+  '@stacks/encryption@7.0.5':
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@noble/secp256k1': 1.7.1
+      '@scure/bip39': 1.1.0
+      '@stacks/common': 7.0.2
+      base64-js: 1.5.1
+      bs58: 5.0.0
+      ripemd160-min: 0.0.6
+      varuint-bitcoin: 1.1.2
+
   '@stacks/network@6.17.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 6.16.0
@@ -20893,6 +20923,21 @@ snapshots:
       zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
       - encoding
+
+  '@stacks/stacking@7.0.5(encoding@0.1.13)':
+    dependencies:
+      '@noble/hashes': 1.1.5
+      '@scure/base': 1.1.1
+      '@stacks/common': 7.0.2
+      '@stacks/encryption': 7.0.5
+      '@stacks/network': 7.0.2(encoding@0.1.13)
+      '@stacks/stacks-blockchain-api-types': 0.61.0
+      '@stacks/transactions': 7.0.5(encoding@0.1.13)
+      bs58: 5.0.0
+    transitivePeerDependencies:
+      - encoding
+
+  '@stacks/stacks-blockchain-api-types@0.61.0': {}
 
   '@stacks/stacks-blockchain-api-types@7.8.2': {}
 
@@ -22409,6 +22454,11 @@ snapshots:
     dependencies:
       '@tanstack/query-core': 5.59.16
       react: 18.2.0
+
+  '@tanstack/react-query@5.59.16(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.59.16
+      react: 19.0.0
 
   '@testing-library/dom@10.4.0':
     dependencies:
@@ -31525,7 +31575,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-jest@29.1.4(@babel/core@7.24.6)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.6))(jest@29.7.0(@types/node@22.13.5)(babel-plugin-macros@3.1.0))(typescript@5.7.3):
+  ts-jest@29.1.4(@babel/core@7.24.6)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.6))(esbuild@0.25.0)(jest@29.7.0(@types/node@22.13.5)(babel-plugin-macros@3.1.0))(typescript@5.7.3):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
@@ -31542,6 +31592,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       babel-jest: 29.7.0(@babel/core@7.24.6)
+      esbuild: 0.25.0
 
   ts-morph@24.0.0:
     dependencies:
