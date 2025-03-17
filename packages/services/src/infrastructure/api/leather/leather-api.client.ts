@@ -8,7 +8,7 @@ import { SupportedBlockchains } from '@leather.io/models';
 import { Types } from '../../../inversify.types';
 import type { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
-import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
+import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import {
   LeatherApiPage,
@@ -62,7 +62,7 @@ export class LeatherApiClient {
     signal?: AbortSignal
   ): Promise<LeatherApiPage<LeatherApiBitcoinTransaction>> {
     const params = getPageRequestQueryParams(pageRequest);
-    params.append('network', selectBitcoinNetworkMode(this.settingsService.getSettings()));
+    params.append('network', selectBitcoinNetwork(this.settingsService.getSettings()));
     return await this.cacheService.fetchWithCache(
       ['leather-api-transactions', descriptor, params.toString()],
       async () => {
