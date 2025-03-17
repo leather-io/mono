@@ -40,3 +40,13 @@ export enum BnsV2QueryPrefixes {
   GetBnsNamesByAddress = 'get-bns-names-by-address',
   GetBnsV2ZoneFileData = 'get-bns-v2-zone-file-data',
 }
+
+export enum StackingQueryPrefixes {
+  GetAllowanceContractCallers = 'get-allowance-contract-callers',
+  GetCycleDuration = 'get-cycle-duration',
+  GetStatus = 'get-status',
+  GetPoxOperationInfo = 'get-pox-operation-info',
+  GetCoreInfo = 'get-core-info',
+  GetSecondsUntilNextCycle = 'get-seconds-until-next-cycle',
+  GetPoxInfo = 'get-pox-info',
+}
