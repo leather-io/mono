@@ -9,7 +9,7 @@ interface HomeProps {
 export function Home({ latestArticles }: HomeProps) {
   return (
     <Page>
-      <HomeHeroCard>
+      <HomeHeroCard mt="space.07">
         <styled.h1 textStyle="heading.03">Earn rewards with BTC</styled.h1>
         <styled.p textStyle="label.02" mt="space.03">
           Bridge BTC to sBTC to access DeFi, NFTs, and ~5% Bitcoin yield* while keeping full
@@ -19,13 +19,13 @@ export function Home({ latestArticles }: HomeProps) {
           Get started →
         </styled.button>
       </HomeHeroCard>
-      <ul>
+      <styled.ul mt="space.04" mb="space.09">
         {latestArticles.map(article => (
           <li key={article.name}>
             <a href={article.url}>{article.name}</a>
           </li>
         ))}
-      </ul>
+      </styled.ul>
     </Page>
   );
 }

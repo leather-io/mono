@@ -67,7 +67,7 @@ export function CollectibleItemLayout({
             backgroundColor: showBorder
               ? token('colors.ink.background-primary')
               : token('colors.ink.component-background-default'),
-            border: showBorder ? token('borders.dashed') : 'unset',
+            border: showBorder ? token('borders.default') : 'unset',
           }}
           top="0px"
           width="100%"

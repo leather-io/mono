@@ -38,8 +38,7 @@ export function ActiveAccountButtonLayout({
           textStyle="label.03"
           outline="none"
           appearance="none"
-          borderTop="1px solid"
-          borderColor="ink.border-default"
+          borderTop="default"
           _focusVisible={{ textDecoration: 'underline' }}
         >
           <Flag reverse img={<img src={getUiPackageAssetUrl('icons/chevron-down-16-16.svg')} />}>

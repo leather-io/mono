@@ -16,8 +16,7 @@ export function FooterLayout(props: HTMLStyledProps<'footer'>) {
       px="space.07"
       pb="space.05"
       backgroundColor="ink.background-secondary"
-      borderTop="1px solid"
-      borderColor="ink.border-default"
+      borderTop="default"
       {...props}
     />
   );

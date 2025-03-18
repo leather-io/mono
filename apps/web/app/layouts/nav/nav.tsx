@@ -15,8 +15,7 @@ export function Nav() {
       flexDirection="column"
       width="navbar"
       minWidth="navbar"
-      borderColor="ink.border-default"
-      borderRight="1px solid"
+      borderRight="default"
       minHeight="fit-content"
     >
       <styled.svg

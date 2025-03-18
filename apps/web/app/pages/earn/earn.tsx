@@ -1,14 +1,22 @@
 import { styled } from 'leather-styles/jsx';
 import { Page } from '~/components/page';
 
+import { EarnInstructions } from './components/earn-instructions';
+import { EarnProviderTable } from './components/earn-provider-table';
+
 export function Earn() {
   return (
     <Page>
-      <styled.h1>Earn</styled.h1>
-      <styled.h2 textStyle="heading.05">Stack in a pool</styled.h2>
-      <styled.p textStyle="caption.01" mt="space.02">
-        Stacking in a pool with others and earn a reward proportional to the amount stacked
-      </styled.p>
+      <Page.Header title="Earn" />
+
+      <styled.h2 textStyle="heading.05" mt="space.07">
+        Stack in a pool
+      </styled.h2>
+
+      <EarnInstructions mt="space.03" />
+
+      <EarnProviderTable mt="space.05" />
+
       <styled.div
         mt="space.07"
         w="100%"
