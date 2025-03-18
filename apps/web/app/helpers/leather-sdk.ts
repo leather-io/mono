@@ -5,3 +5,5 @@ export const leather = createLeatherClient({
     // TODO: Update store to show no leather installed msg
   },
 });
+
+export type StxCallContractParams = Parameters<typeof leather.stxCallContract>[0];
