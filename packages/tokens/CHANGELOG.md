@@ -132,6 +132,13 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.5
 
+## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.14.0...@leather.io/tokens-v0.15.0) (2025-03-19)
+
+
+### Features
+
+* **web:** site footer ([d238c40](https://github.com/leather-io/mono/commit/d238c40c7af87435818f41b44621c266386f66c9))
+
 ## [0.14.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.13.6...@leather.io/tokens-v0.14.0) (2025-02-25)
 
 
