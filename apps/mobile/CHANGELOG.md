@@ -646,6 +646,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.21.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.20.0...@leather.io/mobile-v2.21.0) (2025-03-19)
+
+
+### Features
+
+* **mobile:** add device id to settings ([a5b5f58](https://github.com/leather-io/mono/commit/a5b5f589784902cad7b6e07854747104ba2ce966))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.15.0
+    * @leather.io/ui bumped to 1.52.1
+
 ## [2.20.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.19.1...@leather.io/mobile-v2.20.0) (2025-03-17)
 
 
