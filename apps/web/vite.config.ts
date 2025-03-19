@@ -4,6 +4,7 @@ import { reactRouter } from '@react-router/dev/vite';
 import { cloudflareDevProxy } from '@react-router/dev/vite/cloudflare';
 import path from 'node:path';
 import { defineConfig } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -59,5 +60,6 @@ export default defineConfig(({ isSsrBuild }) => ({
     viteCommonjs(),
     reactRouter(),
     tsconfigPaths(),
+    nodePolyfills({ globals: { Buffer: true } }), // Buffer is required for bitcoinjs-lib
   ],
 }));

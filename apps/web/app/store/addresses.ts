@@ -1,7 +1,10 @@
+import { useMemo } from 'react';
+
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { leather } from '~/helpers/leather-sdk';
 import { type ExtensionState, isLeatherInstalled } from '~/helpers/utils';
+import { useStacksNetwork } from '~/store/stacks-network';
 
 type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
 
@@ -16,17 +19,28 @@ export const extensionStateAtom = atom<ExtensionState>(get => {
 
 export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { networkName, setNetworkName } = useStacksNetwork();
   const status = useAtomValue(extensionStateAtom);
+
+  const stxAddress = useMemo(
+    () => addresses.find(address => address.symbol === 'STX'),
+    [addresses]
+  );
+
   return {
     addresses,
     setAddresses,
     status,
+    stxAddress,
     async connect() {
+      // const result = await leather.getAddresses({ network: networkName }); // FIXME: Returns wrong value (result.result.addresses)
       const result = await leather.getAddresses();
       setAddresses(result.addresses);
     },
     disconnect() {
       setAddresses([]);
+      setNetworkName('mainnet');
     },
   };
 }

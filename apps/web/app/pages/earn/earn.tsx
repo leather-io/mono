@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { styled } from 'leather-styles/jsx';
 import { Page } from '~/components/page';
 
@@ -16,6 +18,11 @@ export function Earn() {
         background="ink.border-default"
         borderRadius="lg"
       />
+      <Link to="/earn/stacking">
+        <styled.button textStyle="label.02" mt="space.03" cursor="pointer">
+          Start Stacking →
+        </styled.button>
+      </Link>
       <styled.h2 textStyle="heading.05" mt="space.05">
         Liquid stacking
       </styled.h2>

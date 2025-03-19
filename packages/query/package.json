@@ -47,7 +47,7 @@
     "@stacks/stacks-blockchain-api-types": "7.8.2",
     "@stacks/transactions": "7.0.5",
     "@tanstack/react-query": "5.59.16",
-    "alex-sdk": "2.1.4",
+    "alex-sdk": "3.1.0",
     "axios": "1.8.2",
     "bignumber.js": "9.1.2",
     "lodash.get": "4.4.2",

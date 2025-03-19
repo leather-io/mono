@@ -2,7 +2,7 @@ import { Earn } from '~/pages/earn/earn';
 
 import { delay } from '@leather.io/utils';
 
-import type { Route } from './+types/earn';
+import type { Route } from './+types/index';
 
 export async function loader() {
   await delay(400);
@@ -17,6 +17,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function HomeRoute() {
-  return <Earn content={''} />;
+export default function EarnRoute() {
+  return <Earn />;
 }
