@@ -9,7 +9,6 @@ export enum AppRoutes {
   Swap = '/swap',
   Balances = '/balances',
   Collectibles = '/collectibles',
-  Browser = '/browser',
   CreateNewWallet = '/create-new-wallet',
   RecoverWallet = '/recover-wallet',
   SecureYourWallet = '/secure-your-wallet',

@@ -17,9 +17,7 @@ export const ACTION_BAR_BOTTOM_OFFSET = 40;
 export const ACTION_BAR_TOTAL_HEIGHT = ACTION_BAR_HEIGHT + ACTION_BAR_BOTTOM_OFFSET;
 
 interface ActionBarProps {
-  left?: ReactNode;
-  center?: ReactNode;
-  right?: ReactNode;
+  children?: ReactNode;
 }
 
 export interface ActionBarMethods {
@@ -102,21 +100,7 @@ export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (
             borderRadius: theme.borderRadii.xs,
           }}
         >
-          {props.left && (
-            <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
-              {props.left}
-            </Box>
-          )}
-          {props.center && (
-            <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
-              {props.center}
-            </Box>
-          )}
-          {props.right && (
-            <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
-              {props?.right}
-            </Box>
-          )}
+          {props.children}
         </BlurView>
       </Box>
     </Animated.View>

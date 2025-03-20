@@ -1,3 +1,4 @@
+import { normalizeSignAtIndex } from '@/features/psbt-signer/utils';
 import {
   findAccountByAddress,
   useBitcoinAccounts,
@@ -20,18 +21,6 @@ import {
 } from '@leather.io/crypto';
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { RpcRequests } from '@leather.io/rpc';
-
-type SignAtIndex = number | number[] | undefined;
-
-export function normalizeSignAtIndex(signAtIndex: SignAtIndex) {
-  if (Array.isArray(signAtIndex)) {
-    return signAtIndex;
-  }
-  if (signAtIndex === undefined) {
-    return undefined;
-  }
-  return [signAtIndex];
-}
 
 interface InfuseBip32Props {
   psbtHex: string;

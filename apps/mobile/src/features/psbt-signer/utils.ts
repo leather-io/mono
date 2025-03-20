@@ -34,3 +34,15 @@ export function getPsbtOutputDerivationPaths({ psbtHex }: { psbtHex: string }) {
 
   return outputDescriptor;
 }
+
+type SignAtIndex = number | number[] | undefined;
+
+export function normalizeSignAtIndex(signAtIndex: SignAtIndex) {
+  if (Array.isArray(signAtIndex)) {
+    return signAtIndex;
+  }
+  if (signAtIndex === undefined) {
+    return undefined;
+  }
+  return [signAtIndex];
+}

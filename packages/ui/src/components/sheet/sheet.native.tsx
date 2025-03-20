@@ -1,5 +1,5 @@
 import { ReactNode, forwardRef } from 'react';
-import { Platform } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import { SharedValue, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,15 +13,20 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
+import { match } from '@leather.io/utils';
+
 import { Box, Theme, createTextInput } from '../../../native';
 import { ThemeVariant } from '../../theme-native';
 import { Backdrop } from './components/sheet-backdrop.native';
 
+const { height } = Dimensions.get('window');
 export const CLOSED_ANIMATED_SHARED_VALUE = -888;
+
+type SnapPointVariant = 'fullHeightWithNotch' | 'fullHeightWithoutNotch' | 'none';
 
 export interface SheetProps extends BottomSheetModalProps {
   shouldHaveContainer?: boolean;
-  isFullHeight?: boolean;
+  snapPointVariant?: SnapPointVariant;
   isScrollView?: boolean;
   animatedPosition?: SharedValue<number>;
   animatedIndex?: SharedValue<number>;
@@ -35,7 +40,7 @@ export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
   (
     {
       shouldHaveContainer = true,
-      isFullHeight,
+      snapPointVariant = 'none',
       isScrollView,
       children,
       animatedPosition,
@@ -53,13 +58,23 @@ export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
     const internalAnimatedPosition = animatedPosition ?? defaultAnimatedPosition;
     const internalAnimatedIndex = animatedIndex ?? defaultAnimatedIndex;
     const BottomSheetComponent = isScrollView ? BottomSheetScrollView : BottomSheetView;
-    const snapPoints = isFullHeight ? ['100%'] : undefined;
+    const snapPointVariantMatcher = match<SnapPointVariant>();
+    const snapPoints = snapPointVariantMatcher(snapPointVariant, {
+      fullHeightWithNotch: ['100%'],
+      fullHeightWithoutNotch: [height - top - theme.spacing['5']],
+      none: undefined,
+    });
+    const handleComponentTop = snapPointVariantMatcher(snapPointVariant, {
+      fullHeightWithNotch: top,
+      fullHeightWithoutNotch: -theme.spacing['4'],
+      none: 0,
+    });
     return (
       <BottomSheetModal
         animatedIndex={internalAnimatedIndex}
         stackBehavior="push"
         onDismiss={onDismiss}
-        enableDynamicSizing={!isFullHeight}
+        enableDynamicSizing={snapPointVariant === 'none'}
         snapPoints={snapPoints}
         ref={ref}
         enablePanDownToClose
@@ -71,17 +86,17 @@ export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
           />
         )}
         animatedPosition={internalAnimatedPosition}
-        handleComponent={() =>
-          isFullHeight ? (
-            <Box alignItems="center" padding="2" position="absolute" top={top} width="100%">
-              <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
-            </Box>
-          ) : (
-            <Box alignItems="center" position="absolute" top={-12} width="100%">
-              <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
-            </Box>
-          )
-        }
+        handleComponent={() => (
+          <Box
+            alignItems="center"
+            padding="2"
+            position="absolute"
+            top={handleComponentTop}
+            width="100%"
+          >
+            <Box height={6} width={60} borderRadius="round" bg="ink.border-default" />
+          </Box>
+        )}
         // maestro can't find bottom sheet component without this:
         // https://github.com/mobile-dev-inc/maestro/issues/1493#issuecomment-1966447805
         accessible={Platform.select({

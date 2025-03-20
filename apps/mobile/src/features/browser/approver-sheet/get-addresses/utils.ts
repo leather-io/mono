@@ -1,27 +1,8 @@
 import { bytesToHex } from '@stacks/common';
-import type { Account } from '@stacks/wallet-sdk';
 
 import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
 import { BtcAddress, getAddresses } from '@leather.io/rpc';
 
-// Extending the `Account` type from `@stacks/wallet-sdk`
-export type SoftwareStacksAccount = Account & {
-  type: 'software';
-  index: number;
-  address: string;
-  stxPublicKey: string;
-  dataPublicKey: string;
-};
-
-export interface HardwareStacksAccount {
-  type: 'ledger';
-  index: number;
-  address: string;
-  stxPublicKey: string;
-  dataPublicKey: string;
-}
-
-export type StacksAccountResponse = SoftwareStacksAccount | HardwareStacksAccount;
 // We could think of making the arguments optional here.
 export function formatAddressesForGetAddresses({
   taproot,

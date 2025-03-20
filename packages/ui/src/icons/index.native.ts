@@ -133,3 +133,8 @@ export * from './users-two-icon.native';
 export * from './wallet-icon.native';
 export * from './wallet-plus-icon.native';
 export * from './x-logo-icon.native';
+export * from './browser-icon.native';
+export * from './connection-icon.native';
+export * from './clock-icon.native';
+export * from './sparkle-icon.native';
+export * from './arrow-refresh-icon.native';

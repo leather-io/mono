@@ -2,7 +2,6 @@ import { useMemo, useRef, useState } from 'react';
 
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { formatBalance } from '@/components/balance/balance';
-import { normalizeSignAtIndex } from '@/components/browser/approver-sheet/utils';
 import { useToastContext } from '@/components/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
@@ -52,6 +51,7 @@ import { createCoinSelectionUtxos } from '../send/send-form.utils';
 import { usePsbtAccounts } from './use-psbt-accounts';
 import { usePsbtPayers } from './use-psbt-payers';
 import { usePsbtSigner } from './use-psbt-signer';
+import { normalizeSignAtIndex } from './utils';
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
   feeRates: AverageBitcoinFeeRates;
@@ -256,7 +256,7 @@ export function BasePsbtSigner({
   }
 
   return (
-    <>
+    <Box flex={1} backgroundColor="ink.background-secondary">
       <Approver>
         <Approver.Container>
           <Approver.Header
@@ -338,6 +338,6 @@ export function BasePsbtSigner({
         txSize={txVBytes}
         currentFeeRate={Math.round(psbtDetails.fee.amount.toNumber() / txVBytes)}
       />
-    </>
+    </Box>
   );
 }

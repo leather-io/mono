@@ -1,11 +1,9 @@
 import { useRef } from 'react';
 
-import { BrowserWidget } from '@/components/browser/browser-widget';
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import { BalancesWidget } from '@/components/widgets/balances/balances-widget';
 import { AllAccountBalances } from '@/features/balances/balances';
-import { useReleaseBrowserFeatureFlag } from '@/features/feature-flags/use-feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { AppRoutes } from '@/routes';
@@ -19,7 +17,6 @@ export function Home() {
   useLingui();
   const { hasWallets } = useWallets();
   const notificationSheetRef = useRef<SheetRef>(null);
-  const releaseBrowserFeature = useReleaseBrowserFeatureFlag();
 
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
 
@@ -32,7 +29,6 @@ export function Home() {
         </BalancesWidget>
       )}
       <NotificationsSheet sheetRef={notificationSheetRef} />
-      {releaseBrowserFeature && <BrowserWidget />}
     </PageLayout>
   );
 }

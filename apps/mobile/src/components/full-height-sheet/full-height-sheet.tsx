@@ -14,7 +14,7 @@ export function FullHeightSheet({ children, sheetRef }: FullHeightSheetProps) {
   return (
     <Sheet
       ref={sheetRef}
-      isFullHeight
+      snapPointVariant="fullHeightWithNotch"
       shouldHaveContainer={false}
       themeVariant={themeDerivedFromThemePreference}
     >

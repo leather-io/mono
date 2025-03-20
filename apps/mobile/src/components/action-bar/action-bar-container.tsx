@@ -3,13 +3,15 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
+import { BrowserSheet } from '@/features/browser/browser/browser-sheet';
+import { useReleaseBrowserFeatureFlag } from '@/features/feature-flags/use-feature-flags';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
 
 import {
-  ArrowsRepeatLeftRightIcon,
+  Box,
+  BrowserIcon,
   InboxIcon,
   PaperPlaneIcon,
   PlusIcon,
@@ -17,6 +19,7 @@ import {
   SheetRef,
   Text,
   legacyTouchablePressEffect,
+  useOnMount,
 } from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
 
@@ -125,26 +128,28 @@ export function useActionBarContext() {
 interface ActionBarButtonProps {
   onPress: () => void;
   icon: ReactNode;
-  label: string;
+  label?: string;
   testID?: string;
 }
 function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps) {
   return (
-    <Pressable
-      onPress={onPress}
-      justifyContent="center"
-      alignItems="center"
-      flex={1}
-      height="100%"
-      flexDirection="row"
-      gap="2"
-      pressEffects={legacyTouchablePressEffect}
-      haptics="soft"
-      testID={testID}
-    >
-      {icon}
-      <Text variant="label02">{label}</Text>
-    </Pressable>
+    <Box flex={1} flexDirection="row" justifyContent="center" alignItems="center">
+      <Pressable
+        onPress={onPress}
+        justifyContent="center"
+        alignItems="center"
+        flex={1}
+        height="100%"
+        flexDirection="row"
+        gap="2"
+        pressEffects={legacyTouchablePressEffect}
+        haptics="soft"
+        testID={testID}
+      >
+        {icon}
+        {label && <Text variant="label02">{label}</Text>}
+      </Pressable>
+    </Box>
   );
 }
 
@@ -152,67 +157,46 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const { sendSheetRef, receiveSheetRef } = useSheetNavigatorContext();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
+  const browserSheetRef = useRef<SheetRef>(null);
+  const browserRef = useRef<SheetRef>(null);
+  const releaseBrowserFeature = useReleaseBrowserFeatureFlag();
+
+  useOnMount(() => {
+    browserRef.current?.present();
+  });
 
   const actionBar = isEmptyArray(wallets.list) ? (
-    <ActionBar
-      ref={ref}
-      center={
-        <ActionBarButton
-          onPress={() => addWalletSheetRef.current?.present()}
-          icon={<PlusIcon />}
-          label={t({
-            id: 'action_bar.add_wallet_label',
-            message: 'Add Wallet',
-          })}
-          testID={TestId.homeAddWalletButton}
-        />
-      }
-    />
+    <ActionBar ref={ref}>
+      <ActionBarButton
+        onPress={() => addWalletSheetRef.current?.present()}
+        icon={<PlusIcon />}
+        label={t({
+          id: 'action_bar.add_wallet_label',
+          message: 'Add Wallet',
+        })}
+        testID={TestId.homeAddWalletButton}
+      />
+    </ActionBar>
   ) : (
-    <ActionBar
-      ref={ref}
-      left={
+    <ActionBar ref={ref}>
+      <ActionBarButton onPress={() => sendSheetRef.current?.present()} icon={<PaperPlaneIcon />} />
+      <ActionBarButton onPress={() => receiveSheetRef.current?.present()} icon={<InboxIcon />} />
+      {releaseBrowserFeature && (
         <ActionBarButton
-          onPress={() => sendSheetRef.current?.present()}
-          icon={<PaperPlaneIcon />}
-          label={t({
-            id: 'action_bar.send_label',
-            message: 'Send',
-          })}
+          onPress={() => {
+            browserSheetRef.current?.present();
+          }}
+          icon={<BrowserIcon />}
         />
-      }
-      center={
-        <ActionBarButton
-          onPress={() => receiveSheetRef.current?.present()}
-          icon={<InboxIcon />}
-          label={t({
-            id: 'action_bar.receive_label',
-            message: 'Receive',
-          })}
-        />
-      }
-      right={
-        isDev() && (
-          <ActionBarButton
-            onPress={() => {
-              // TODO: do nothing for now
-              //router.navigate(AppRoutes.Swap)
-            }}
-            icon={<ArrowsRepeatLeftRightIcon />}
-            label={t({
-              id: 'action_bar.swap_label',
-              message: 'Swap',
-            })}
-          />
-        )
-      }
-    />
+      )}
+    </ActionBar>
   );
 
   return (
     <>
       {actionBar}
       <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
+      <BrowserSheet sheetRef={browserSheetRef} />
     </>
   );
 });

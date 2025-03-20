@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
@@ -57,37 +58,39 @@ export default function RootLayout() {
   }, [pathname, params]);
 
   return (
-    <LDProvider client={featureFlagClient}>
-      <ReduxProvider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <I18nProvider i18n={i18n}>
-            <SafeAreaProvider>
-              <QueryClientProvider client={queryClient}>
-                <LeatherQueryProvider>
-                  <ThemeProvider>
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                      <ToastWrapper>
-                        <SplashScreenGuard>
-                          <HapticsProvider>
-                            <SheetNavigatorWrapper>
-                              <SheetProvider>
-                                <AppRouter />
-                                <SendSheet />
-                                <ReceiveSheet />
-                              </SheetProvider>
-                            </SheetNavigatorWrapper>
-                          </HapticsProvider>
-                        </SplashScreenGuard>
-                      </ToastWrapper>
-                    </GestureHandlerRootView>
-                  </ThemeProvider>
-                </LeatherQueryProvider>
-              </QueryClientProvider>
-            </SafeAreaProvider>
-          </I18nProvider>
-        </PersistGate>
-      </ReduxProvider>
-    </LDProvider>
+    <KeyboardProvider>
+      <LDProvider client={featureFlagClient}>
+        <ReduxProvider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <I18nProvider i18n={i18n}>
+              <SafeAreaProvider>
+                <QueryClientProvider client={queryClient}>
+                  <LeatherQueryProvider>
+                    <ThemeProvider>
+                      <GestureHandlerRootView style={{ flex: 1 }}>
+                        <ToastWrapper>
+                          <SplashScreenGuard>
+                            <HapticsProvider>
+                              <SheetNavigatorWrapper>
+                                <SheetProvider>
+                                  <AppRouter />
+                                  <SendSheet />
+                                  <ReceiveSheet />
+                                </SheetProvider>
+                              </SheetNavigatorWrapper>
+                            </HapticsProvider>
+                          </SplashScreenGuard>
+                        </ToastWrapper>
+                      </GestureHandlerRootView>
+                    </ThemeProvider>
+                  </LeatherQueryProvider>
+                </QueryClientProvider>
+              </SafeAreaProvider>
+            </I18nProvider>
+          </PersistGate>
+        </ReduxProvider>
+      </LDProvider>
+    </KeyboardProvider>
   );
 }
 
