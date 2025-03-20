@@ -1,5 +1,10 @@
 import { initInpageProvider } from '.';
 
+// WebView on Android doesn't support window.addEventListener('message') directly
+(window as any).onMessageFromRN = function (str: string) {
+  window.postMessage(str, window.location.origin);
+};
+
 initInpageProvider({
   onDispatch(rpcRequest) {
     (window as any).ReactNativeWebView.postMessage(JSON.stringify(rpcRequest));

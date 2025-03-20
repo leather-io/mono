@@ -1,5 +1,6 @@
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
+import { handleAppResetWithState } from '../global-action';
 import { entitySchema, handleEntityActionWith } from '../utils';
 import { App, appSchema } from './utils';
 
@@ -45,5 +46,6 @@ export const appsSlice = createSlice({
       )
       .addCase(userRemovesApp, (state, action) => {
         appsAdapter.removeOne(state, action.payload.origin);
-      }),
+      })
+      .addCase(...handleAppResetWithState(initialState)),
 });

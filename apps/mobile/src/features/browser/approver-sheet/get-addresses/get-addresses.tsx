@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 
-import { formatAddressesForGetAddresses } from '@/components/browser/get-addresses';
 import { AccountSelectorSheet } from '@/features/accounts/account-selector/account-selector-sheet';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
@@ -14,6 +13,7 @@ import { RpcRequest, createRpcSuccessResponse, getAddresses } from '@leather.io/
 import { SheetRef } from '@leather.io/ui/native';
 
 import { GetAddressesApproverLayout } from './get-addresses.layout';
+import { formatAddressesForGetAddresses } from './utils';
 
 function useGetAddressesAccount(accountId: string | null) {
   const { fromAccountIndex: stacksAccountFromAccountIndex } = useStacksSigners();

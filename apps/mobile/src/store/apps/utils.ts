@@ -11,6 +11,8 @@ const recentlyVisitedAppSchema = z.object({
 const baseAppSchema = z.object({
   origin: z.string(),
   icon: z.string(),
+  screenshot: z.union([z.string(), z.null()]),
+  name: z.string(),
 });
 
 export const appSchema = z.intersection(
