@@ -42,6 +42,9 @@ export function useBitcoinBroadcastTransaction() {
           const hasInscribedUtxos = await checkIfUtxosListIncludesInscribed(utxos);
 
           if (hasInscribedUtxos) {
+            // Temp log until we relocate query hooks
+            // eslint-disable-next-line no-console
+            console.log('Inscribed utxo detected, aborting broadcast');
             return;
           }
         }
@@ -62,7 +65,7 @@ export function useBitcoinBroadcastTransaction() {
         onFinally?.();
       }
     },
-    [checkIfUtxosListIncludesInscribed, client]
+    [checkIfUtxosListIncludesInscribed, client.transactionsApi]
   );
 
   return { broadcastTx, isBroadcasting };
