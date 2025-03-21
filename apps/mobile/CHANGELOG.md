@@ -646,6 +646,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.22.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.21.0...@leather.io/mobile-v2.22.0) (2025-03-21)
+
+
+### Features
+
+* browser ui ([34cf34b](https://github.com/leather-io/mono/commit/34cf34b147c261056200b20232fb404308056025))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/provider bumped to 1.2.0
+    * @leather.io/ui bumped to 1.53.0
+
 ## [2.21.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.20.0...@leather.io/mobile-v2.21.0) (2025-03-19)
 
 
