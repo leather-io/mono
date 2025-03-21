@@ -1,4 +1,5 @@
 import { css } from 'leather-styles/css';
+import { HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 export const theadBorderBottom = css({
   _after: {
@@ -11,3 +12,7 @@ export const theadBorderBottom = css({
     bg: 'ink.border-default',
   },
 });
+
+export function SortableHeader(props: HTMLStyledProps<'div'>) {
+  return <styled.div _hover={{ textDecoration: 'underline' }} {...props} />;
+}

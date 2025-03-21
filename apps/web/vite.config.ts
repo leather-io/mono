@@ -21,6 +21,8 @@ const knownIcons = [
   'terminal-16-16.svg',
   'support-16-16.svg',
   'leather-lettermark-24-24.svg',
+  'bitcoin.svg',
+  'stacks.svg',
 ];
 
 export default defineConfig(({ isSsrBuild }) => ({

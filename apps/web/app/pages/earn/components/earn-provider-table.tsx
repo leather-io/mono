@@ -8,10 +8,22 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { css } from 'leather-styles/css';
 import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { theadBorderBottom } from '~/components/table';
+import { DummyIcon } from '~/components/dummy';
+import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
+import { StacksIcon } from '~/components/icons/stacks-icon';
+import { SortableHeader, theadBorderBottom } from '~/components/table';
 
-import { Button } from '@leather.io/ui';
+import { Button, Flag } from '@leather.io/ui';
+
+const offsetMinAmountColumm = css({
+  transform: [null, null, 'translateX(-40%)'],
+});
+
+const offsetEstAprColumm = css({
+  transform: [null, null, 'translateX(-50%)'],
+});
 
 interface EarnProvider {
   provider: string;
@@ -64,15 +76,25 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
     () => [
       {
         accessorKey: 'provider',
-        cell: info => <styled.span>{info.getValue() as string}</styled.span>,
-        header: () => <styled.span>Provider</styled.span>,
+        cell: info => (
+          <Flag img={<DummyIcon />}>
+            <styled.span color="ink.text-primary">{info.getValue() as string}</styled.span>
+          </Flag>
+        ),
+        header: () => <SortableHeader>Provider</SortableHeader>,
         meta: { align: 'left' },
         size: 12,
       },
       {
         accessorKey: 'minAmount',
-        cell: info => <styled.span>{info.getValue() as string}</styled.span>,
-        header: () => <styled.span>Minimum Amount</styled.span>,
+        cell: info => (
+          <styled.div className={offsetMinAmountColumm}>
+            {info.getValue() === null ? '—' : (info.getValue() as string)}
+          </styled.div>
+        ),
+        header: () => (
+          <SortableHeader className={offsetMinAmountColumm}>Minimum Amount</SortableHeader>
+        ),
         sortUndefined: 'last', //force undefined values to the end
         sortDescFirst: false,
         meta: { align: 'right' },
@@ -81,23 +103,34 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'estApr',
-        cell: info => <styled.span mr="space.08">{info.getValue() as string}</styled.span>,
-        header: () => <styled.span mr="space.08">Est. APR</styled.span>,
+        cell: info => (
+          <styled.div className={offsetEstAprColumm}>{info.getValue() as string}</styled.div>
+        ),
+        header: () => <SortableHeader className={offsetEstAprColumm}>Est. APR</SortableHeader>,
         meta: { align: 'right' },
-        size: 20,
-        maxSize: 20,
       },
       {
         accessorKey: 'payout',
+        header: () => <SortableHeader>Payout</SortableHeader>,
         cell: info => (
-          <Flex ml="space.07" justifyContent="space-between" alignItems="baseline">
-            {info.getValue() as string}
-            <Button size="sm" ml="space.04">
+          <Flex justifyContent="space-between" alignItems="center">
+            <Flag
+              spacing="space.02"
+              img={
+                <>
+                  {info.getValue() === 'STX' && <StacksIcon />}
+                  {info.getValue() === 'BTC' && <BitcoinIcon />}
+                </>
+              }
+            >
+              {info.getValue() as string}
+            </Flag>
+
+            <Button size="sm" ml="space.04" minW="fit-content">
               Start pooling
             </Button>
           </Flex>
         ),
-        header: () => <styled.span ml="space.07">Payout</styled.span>,
         meta: { align: 'left' },
         size: 35,
       },
