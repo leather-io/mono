@@ -1,4 +1,4 @@
-import { Query, QueryKey } from '@tanstack/react-query';
+import type { Query, QueryKey } from '@tanstack/react-query';
 import axios from 'axios';
 import { ZodError } from 'zod';
 

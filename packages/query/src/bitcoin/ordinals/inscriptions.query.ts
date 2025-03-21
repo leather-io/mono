@@ -1,67 +1,9 @@
-import { useEffect } from 'react';
-
-import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
-
-import { useLeatherNetwork } from '../../leather-query-provider';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
-import { useBitcoinClient } from '../clients/bitcoin-client';
-
-const bestinslotInscriptionsRequestNum = 2000;
 
 export function createGetInscriptionsByAddressCacheKey(address: string, networkId: string) {
   return [BitcoinQueryPrefixes.GetInscriptionsByAddress, networkId, address];
-}
-
-export function useGetInscriptionsByAddressQuery(address: string) {
-  const network = useLeatherNetwork();
-  const client = useBitcoinClient();
-  const limiter = useBestInSlotApiRateLimiter();
-
-  const query = useInfiniteQuery({
-    enabled: !!address,
-    queryKey: createGetInscriptionsByAddressCacheKey(address, network.id),
-    async queryFn({ pageParam, signal }) {
-      const res = await limiter.add(
-        () =>
-          client.BestInSlotApi.getInscriptionsByAddress({
-            address,
-            network: network.id as WalletDefaultNetworkConfigurationIds,
-            offset: pageParam,
-            signal,
-            count: bestinslotInscriptionsRequestNum,
-          }),
-        { signal, throwOnTimeout: true }
-      );
-
-      return {
-        offset: pageParam,
-        data: res.data,
-      };
-    },
-    initialPageParam: 0,
-    getNextPageParam(lastPage) {
-      if (!address) return undefined;
-      if (lastPage.data.length < bestinslotInscriptionsRequestNum) return undefined;
-      return lastPage.offset + bestinslotInscriptionsRequestNum;
-    },
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    staleTime: 3 * 60 * 1000,
-  });
-
-  // Auto-trigger next request
-  useEffect(() => {
-    if (!address) return;
-    void query.fetchNextPage();
-    // eslint-disable-next-line @tanstack/query/no-unstable-deps
-  }, [address, query, query.data]);
-
-  return query;
 }
 
 // In lieu of reliable API, we scrape HTML from the Ordinals.com explorer and

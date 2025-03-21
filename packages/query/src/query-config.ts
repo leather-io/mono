@@ -1,4 +1,4 @@
-import { QueryObserverSuccessResult, UseQueryResult } from '@tanstack/react-query';
+import type { QueryObserverSuccessResult, UseQueryResult } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 
 export function isErrorTooManyRequests<TData, TError = unknown>(

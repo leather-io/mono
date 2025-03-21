@@ -1,9 +1,10 @@
+import { useBnsV2Client } from '@/queries/stacks/bns/bns-v2-client';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 import { toUnicode } from 'punycode';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
-import { createGetBnsNamesOwnedByAddressQueryOptions, useBnsV2Client } from '@leather.io/query';
+import { createGetBnsNamesOwnedByAddressQueryOptions } from '@leather.io/query';
 import { truncateMiddle } from '@leather.io/utils';
 
 // LEA-1826: Consciously duplicating from extension for convenience

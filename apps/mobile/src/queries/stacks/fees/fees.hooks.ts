@@ -1,7 +1,16 @@
 import { useMemo } from 'react';
 
-import { StacksTransactionWire } from '@stacks/transactions';
+import type { StacksTransactionWire } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
+
+import {
+  createPostStacksFeeTransactionQueryOptions,
+  defaultFeesMaxValuesAsMoney,
+  defaultFeesMinValuesAsMoney,
+  getEstimatedUnsignedStacksTxByteLength,
+  getSerializedUnsignedStacksTxPayload,
+  parseStacksTxFeeEstimationResponse,
+} from '@leather.io/query';
 
 import {
   useConfigFeeEstimationsMaxEnabled,
@@ -13,14 +22,6 @@ import {
   useConfigTokenTransferFeeEstimations,
 } from '../../common/remote-config/remote-config.query';
 import { useStacksClient } from '../stacks-client';
-import { createPostStacksFeeTransactionQueryOptions } from './fees.query';
-import {
-  defaultFeesMaxValuesAsMoney,
-  defaultFeesMinValuesAsMoney,
-  getEstimatedUnsignedStacksTxByteLength,
-  getSerializedUnsignedStacksTxPayload,
-  parseStacksTxFeeEstimationResponse,
-} from './fees.utils';
 
 function useFeeEstimationsMaxValues() {
   const configFeeEstimationsMaxEnabled = useConfigFeeEstimationsMaxEnabled();

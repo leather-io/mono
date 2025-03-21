@@ -1,12 +1,16 @@
+import { ReactNode } from 'react';
+
+import { LeatherQueryProvider as LeatherProvider } from '@/queries/leather-query-provider';
 import { queryClient } from '@/queries/query';
 import { GITHUB_ORG, GITHUB_REPO } from '@/shared/constants';
 import { BRANCH_NAME, WALLET_ENVIRONMENT } from '@/shared/environment';
 import { useSettings } from '@/store/settings/settings';
 
-import { LeatherQueryProvider as LeatherProvider } from '@leather.io/query';
-import { HasChildren } from '@leather.io/ui/native';
+interface LeatherQueryProviderProps {
+  children: ReactNode;
+}
 
-export function LeatherQueryProvider({ children }: HasChildren) {
+export function LeatherQueryProvider({ children }: LeatherQueryProviderProps) {
   const { networkPreference } = useSettings();
   return (
     <LeatherProvider

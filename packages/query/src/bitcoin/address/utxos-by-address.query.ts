@@ -1,14 +1,13 @@
 import { HDKey } from '@scure/bip32';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 
 import { getTaprootAddress, makeNativeSegwitAddressIndexDerivationPath } from '@leather.io/bitcoin';
 import { NetworkConfiguration } from '@leather.io/models';
 import { createCounter, oneWeekInMs } from '@leather.io/utils';
 
 import { UtxoWithDerivationPath } from '../../../types/utxo';
-import { useLeatherNetwork } from '../../leather-query-provider';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
+import { BitcoinClient } from '../clients/bitcoin-client';
 import { hasInscriptions } from './address.utils';
 
 const staleTime = 3 * 60 * 1000;
@@ -30,11 +29,6 @@ export function createGetUtxosByAddressQueryOptions({
       client.addressApi.getUtxosByAddress(address, signal),
     ...queryOptions,
   } as const;
-}
-
-export function useGetUtxosByAddressQuery(address: string) {
-  const client = useBitcoinClient();
-  return useQuery(createGetUtxosByAddressQueryOptions({ address, client }));
 }
 
 const stopSearchAfterNumberAddressesWithoutUtxos = 5;
@@ -102,29 +96,4 @@ export function createGetTaprootUtxosByAddressQueryOptions({
     refetchInterval: 15000,
     refetchOnWindowFocus: false,
   } as const;
-}
-
-/**
- * Returns all utxos for the user's current taproot account. The search for
- * utxos iterates through all addresses until a sufficiently large number of
- * empty addresses is found.
- */
-export function useGetTaprootUtxosByAddressQuery({
-  taprootKeychain,
-  currentAccountIndex,
-}: {
-  taprootKeychain: HDKey | undefined;
-  currentAccountIndex: number;
-}) {
-  const network = useLeatherNetwork();
-  const client = useBitcoinClient();
-
-  return useQuery(
-    createGetTaprootUtxosByAddressQueryOptions({
-      client,
-      currentAccountIndex,
-      network,
-      taprootKeychain,
-    })
-  );
 }

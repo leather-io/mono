@@ -1,8 +1,7 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext } from '@tanstack/react-query';
 
-import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../../query-prefixes';
-import { StacksClient, useStacksClient } from '../../stacks-client';
+import { StacksClient } from '../../stacks-client';
 
 const staleTime = 15 * 60 * 1000; // 15 min
 
@@ -24,17 +23,4 @@ export function createGetNonFungibleTokenHoldingsQueryOptions({
     queryFn: ({ signal }: QueryFunctionContext) => client.getNftHoldings(address, signal),
     ...queryOptions,
   } as const;
-}
-
-export function useGetNonFungibleTokenHoldingsQuery(address: string) {
-  const client = useStacksClient();
-  const network = useCurrentNetworkState();
-
-  return useQuery(
-    createGetNonFungibleTokenHoldingsQueryOptions({
-      address,
-      client,
-      network: network.chain.stacks.url,
-    })
-  );
 }

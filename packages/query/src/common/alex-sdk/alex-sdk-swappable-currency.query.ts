@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
-
 import { alex } from './alex-sdk.hooks';
 
 const queryOptions = {
@@ -16,8 +14,4 @@ export function createGetAlexSwappableCurrenciesQueryOptions() {
     queryFn: () => alex.fetchSwappableCurrency(),
     ...queryOptions,
   } as const;
-}
-
-export function useGetAlexSwappableCurrenciesQuery() {
-  return useQuery(createGetAlexSwappableCurrenciesQueryOptions());
 }

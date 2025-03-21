@@ -1,8 +1,8 @@
 import { useStxAddressBalanceQuery } from '@/queries/balance/stx-balance.query';
+import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import { AccountId, Money } from '@leather.io/models';
-import { useNextNonce } from '@leather.io/query';
 
 interface SendFormStxData {
   availableBalance: Money;

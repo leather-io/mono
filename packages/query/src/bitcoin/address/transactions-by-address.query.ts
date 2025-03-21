@@ -1,7 +1,7 @@
-import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
+import { BitcoinClient } from '../clients/bitcoin-client';
 
 const staleTime = 10 * 1000;
 
@@ -28,19 +28,4 @@ export function createGetBitcoinTransactionsByAddressQueryOptions({
       client.addressApi.getTransactionsByAddress(address, signal),
     ...queryOptions,
   } as const;
-}
-
-export function useGetBitcoinTransactionsByAddressQuery(address: string) {
-  const client = useBitcoinClient();
-  return useQuery(createGetBitcoinTransactionsByAddressQueryOptions({ address, client }));
-}
-
-export function useGetBitcoinTransactionsByAddressListQuery(addresses: string[]) {
-  const client = useBitcoinClient();
-
-  return useQueries({
-    queries: addresses.map(address => {
-      return createGetBitcoinTransactionsByAddressQueryOptions({ address, client });
-    }),
-  });
 }

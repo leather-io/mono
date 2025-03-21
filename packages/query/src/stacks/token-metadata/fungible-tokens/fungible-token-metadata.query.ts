@@ -1,11 +1,10 @@
-import { QueryFunctionContext, UseQueryOptions, useQuery } from '@tanstack/react-query';
+import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { oneWeekInMs } from '@leather.io/utils';
 
-import { useCurrentNetworkState } from '../../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../../query-prefixes';
-import { StacksClient, useStacksClient } from '../../stacks-client';
+import { StacksClient } from '../../stacks-client';
 import { FtAssetResponse } from '../token-metadata.utils';
 
 const queryOptions = {
@@ -43,17 +42,4 @@ export function createGetFungibleTokenMetadataQueryOptions({
     },
     ...queryOptions,
   } as const;
-}
-
-export function useGetFungibleTokenMetadataQuery(address: string) {
-  const client = useStacksClient();
-  const network = useCurrentNetworkState();
-
-  return useQuery(
-    createGetFungibleTokenMetadataQueryOptions({
-      address,
-      client,
-      network: network.chain.stacks.url,
-    })
-  );
 }

@@ -1,11 +1,11 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
 import { AverageBitcoinFeeRates } from '@leather.io/models';
+import { createGetBitcoinFeeEstimatesQueryOptions } from '@leather.io/query';
 import { calculateMeanAverage, initBigNumber, isFulfilled, isRejected } from '@leather.io/utils';
 
-import { useLeatherNetwork } from '../../leather-query-provider';
 import { useBitcoinClient } from '../clients/bitcoin-client';
-import { createGetBitcoinFeeEstimatesQueryOptions } from './fee-estimates.query';
+import { useLeatherNetwork } from '../leather-query-provider';
 
 export function useAverageBitcoinFeeRates(): UseQueryResult<AverageBitcoinFeeRates> {
   const client = useBitcoinClient();

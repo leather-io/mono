@@ -1,11 +1,10 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react';
+import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { ChainId } from '@stacks/network';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { NetworkConfiguration, NetworkModes } from '@leather.io/models';
-
-import type { RemoteConfig } from '../types/remote-config';
+import type { RemoteConfig } from '@leather.io/query';
 
 export interface LeatherEnvironment {
   env: string;

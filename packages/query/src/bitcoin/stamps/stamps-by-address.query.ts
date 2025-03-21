@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { z } from 'zod';
 
@@ -84,8 +83,4 @@ export function createGetStampsByAddressQueryOptions(address: string) {
     queryFn: () => fetchStampsByAddress(address),
     refetchOnWindowFocus: false,
   } as const;
-}
-
-export function useGetStampsByAddressQuery(address: string) {
-  return useQuery(createGetStampsByAddressQueryOptions(address));
 }

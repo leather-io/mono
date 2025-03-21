@@ -1,5 +1,6 @@
+import { useCurrentNetworkState } from '@/queries/leather-query-provider';
+
 import { Activity } from '@leather.io/models';
-import { useCurrentNetworkState } from '@leather.io/query';
 import { Box, Pressable, usePressedState } from '@leather.io/ui/native';
 
 import { goToStacksExplorer } from '../utils/go-to-stacks-explorer';

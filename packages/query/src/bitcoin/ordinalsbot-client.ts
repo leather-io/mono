@@ -1,10 +1,5 @@
-import { useMemo } from 'react';
-
 import axios from 'axios';
 import urlJoin from 'url-join';
-
-import { useConfigOrdinalsbot } from '../common/remote-config/remote-config.query';
-import { useLeatherNetwork } from '../leather-query-provider';
 
 interface InscriptionOrderSuccessResponse {
   status: 'ok';
@@ -122,7 +117,7 @@ interface OrderStatusErrorResponse {
   error: string;
 }
 
-function OrdinalsbotClient(basePath: string) {
+export function OrdinalsbotClient(basePath: string) {
   return {
     async isAvailable() {
       return axios.get<{ status: string }>(urlJoin(basePath, 'status'));
@@ -146,18 +141,4 @@ function OrdinalsbotClient(basePath: string) {
       );
     },
   };
-}
-
-function useOrdinalsbotApiUrl() {
-  const currentNetwork = useLeatherNetwork();
-  const ordinalsbotConfig = useConfigOrdinalsbot();
-
-  if (currentNetwork.chain.bitcoin.bitcoinNetwork === 'mainnet')
-    return ordinalsbotConfig.mainnetApiUrl;
-  return ordinalsbotConfig.signetApiUrl;
-}
-
-export function useOrdinalsbotClient() {
-  const apiUrl = useOrdinalsbotApiUrl();
-  return useMemo(() => OrdinalsbotClient(apiUrl), [apiUrl]);
 }
