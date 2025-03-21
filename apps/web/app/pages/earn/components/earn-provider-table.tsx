@@ -127,7 +127,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
             </Flag>
 
             <Button size="sm" ml="space.04" minW="fit-content">
-              Start pooling
+              Start earning
             </Button>
           </Flex>
         ),

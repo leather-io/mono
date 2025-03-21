@@ -1,10 +1,9 @@
-import type { ReactElement } from 'react';
+// This is some pretty funky border code I am not a fan of, but didn't find an
+import { ReactElement } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Flex, Grid, type HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
-import { DummyIcon } from '~/components/dummy';
+import { Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 
-// This is some pretty funky border code I am not a fan of, but didn't find an
 // easier way to handle the conditional border for the breakpoints
 const gridBorders = css({
   '& > .earn-step:not(:last-child)': {
@@ -22,8 +21,10 @@ const gridBorders = css({
   },
 });
 
-// interface EarnInstructionsProps extends HTMLStyledProps<'section'> {}
-export function EarnInstructions(props: HTMLStyledProps<'section'>) {
+interface ExplainerProps extends HTMLStyledProps<'section'> {
+  children: ReactElement[];
+}
+export function Explainer({ children, ...props }: ExplainerProps) {
   return (
     <styled.section border="default" borderRadius="sm" {...props}>
       <Grid
@@ -31,30 +32,7 @@ export function EarnInstructions(props: HTMLStyledProps<'section'>) {
         gap={0}
         gridTemplateColumns={['repeat(2, 1fr)', 'repeat(2, 1fr)', 'repeat(4, 1fr)']}
       >
-        <EarnInstructionStep
-          index={0}
-          title="Own STX"
-          description="Acquire or hold STX in your wallet, ready to stack."
-          img={<DummyIcon />}
-        />
-        <EarnInstructionStep
-          index={1}
-          title="Choose a provider"
-          description="Pick a protocol from the table below"
-          img={<DummyIcon />}
-        />
-        <EarnInstructionStep
-          index={2}
-          title="Lock STX"
-          description="Delegate and lock your STX into the chosen pool"
-          img={<DummyIcon />}
-        />
-        <EarnInstructionStep
-          index={3}
-          title="Begin earning"
-          description="Receive regular rewards without lifting a finger"
-          img={<DummyIcon />}
-        />
+        {children}
       </Grid>
     </styled.section>
   );
@@ -66,7 +44,7 @@ interface EarnInstructionStepProps {
   description: string;
   img: ReactElement;
 }
-export function EarnInstructionStep({ index, title, description, img }: EarnInstructionStepProps) {
+export function ExplainerStep({ index, title, description, img }: EarnInstructionStepProps) {
   return (
     <Flex flexDir="column" p="space.05" className="earn-step">
       <VStack gap="space.02" alignItems="left">
@@ -82,3 +60,5 @@ export function EarnInstructionStep({ index, title, description, img }: EarnInst
     </Flex>
   );
 }
+
+Explainer.Step = ExplainerStep;

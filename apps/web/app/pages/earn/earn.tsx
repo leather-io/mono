@@ -1,8 +1,9 @@
 import { styled } from 'leather-styles/jsx';
 import { Page } from '~/components/page';
 
-import { EarnInstructions } from './components/earn-instructions';
 import { EarnProviderTable } from './components/earn-provider-table';
+import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
+import { StackingExplainer } from './components/stacking-explainer';
 
 export function Earn() {
   return (
@@ -13,23 +14,16 @@ export function Earn() {
         Stack in a pool
       </styled.h2>
 
-      <EarnInstructions mt="space.03" />
+      <StackingExplainer mt="space.04" />
 
       <EarnProviderTable mt="space.05" />
 
-      <styled.div
-        mt="space.07"
-        w="100%"
-        height="300px"
-        background="ink.border-default"
-        borderRadius="lg"
-      />
-      <styled.h2 textStyle="heading.05" mt="space.05">
+      <styled.h2 textStyle="heading.05" mt="space.09">
         Liquid stacking
       </styled.h2>
-      <styled.p textStyle="caption.01" mt="space.02">
-        Stack while keeping your STX liquid
-      </styled.p>
+
+      <LiquidStackingExplainer mt="space.04" />
+
       <styled.div
         my="space.07"
         w="100%"
