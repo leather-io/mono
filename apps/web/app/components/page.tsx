@@ -26,4 +26,16 @@ function PageHeader({ title }: PageHeaderProps) {
   );
 }
 
+function PageDivider(props: HTMLStyledProps<'hr'>) {
+  return (
+    <styled.hr
+      className={insetPageMarginX}
+      color="ink.background-primary"
+      borderBottom="default"
+      {...props}
+    />
+  );
+}
+
 Page.Header = PageHeader;
+Page.Divider = PageDivider;
