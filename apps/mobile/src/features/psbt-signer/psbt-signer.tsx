@@ -8,7 +8,10 @@ import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
+import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
+import { useBitcoinBroadcastTransaction } from '@/queries/transaction/use-bitcoin-broadcast-transaction';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
@@ -30,11 +33,6 @@ import {
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
-import {
-  useAverageBitcoinFeeRates,
-  useBitcoinBroadcastTransaction,
-  useCurrentNetworkState,
-} from '@leather.io/query';
 import { RpcParams, RpcResult, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
 import {

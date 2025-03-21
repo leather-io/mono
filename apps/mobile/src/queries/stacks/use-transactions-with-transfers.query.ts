@@ -3,11 +3,10 @@ import { useCallback } from 'react';
 import { AddressTransactionWithTransfers } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
-import {
-  createGetAccountTransactionsWithTransfersQueryOptions,
-  useCurrentNetworkState,
-  useStacksClient,
-} from '@leather.io/query';
+import { createGetAccountTransactionsWithTransfersQueryOptions } from '@leather.io/query';
+
+import { useCurrentNetworkState } from '../leather-query-provider';
+import { useStacksClient } from './stacks-client';
 
 export function useGetAccountTransactionsWithTransfersQueries(addresses: string[]) {
   const network = useCurrentNetworkState();

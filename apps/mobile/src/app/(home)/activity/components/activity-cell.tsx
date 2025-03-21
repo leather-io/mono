@@ -1,8 +1,8 @@
 import { Balance } from '@/components/balance/balance';
+import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import dayjs from 'dayjs';
 
 import { Activity } from '@leather.io/models';
-import { useCurrentNetworkState } from '@leather.io/query';
 import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 import { formatActivityType } from '../utils/format-activity';

@@ -1,7 +1,7 @@
-import { QueryFunctionContext, useQueries, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext } from '@tanstack/react-query';
 
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient, useStacksClient } from '../stacks-client';
+import { StacksClient } from '../stacks-client';
 
 const queryOptions = {
   staleTime: 30 * 1000,
@@ -23,21 +23,4 @@ export function createGetTransactionByIdQueryOptions({
     queryFn: ({ signal }: QueryFunctionContext) => client.getTransactionById(txid, signal),
     ...queryOptions,
   } as const;
-}
-
-export function useGetTransactionByIdQuery(txid: string) {
-  const client = useStacksClient();
-  return useQuery(createGetTransactionByIdQueryOptions({ client, txid }));
-}
-
-export function useGetTransactionByIdListQuery(txids: string[]) {
-  const client = useStacksClient();
-
-  return useQueries({
-    queries: txids.map(txid => {
-      return {
-        ...createGetTransactionByIdQueryOptions({ client, txid }),
-      };
-    }),
-  });
 }

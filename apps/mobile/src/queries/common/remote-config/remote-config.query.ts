@@ -1,12 +1,16 @@
+import {
+  LeatherEnvironment,
+  useLeatherEnv,
+  useLeatherGithub,
+} from '@/queries/leather-query-provider';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import get from 'lodash.get';
 
+import { type DefaultMinMaxRangeFeeEstimations, type RemoteConfig } from '@leather.io/query';
 import { createMoney, isUndefined } from '@leather.io/utils';
 
-import type { ActiveFiatProvider, HiroMessage, RemoteConfig } from '../../../types/remote-config';
-import { LeatherEnvironment, useLeatherEnv, useLeatherGithub } from '../../leather-query-provider';
-import { DefaultMinMaxRangeFeeEstimations } from './remote-config.types';
+export { AvailableRegions } from '@leather.io/query';
 
 function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github']) {
   const IS_DEV_ENV = env === 'development';
@@ -42,33 +46,6 @@ export function useRemoteConfig() {
   });
 
   return data;
-}
-
-export function useRemoteLeatherMessages(): HiroMessage[] {
-  const config = useRemoteConfig();
-  return get(config, 'messages.global', []);
-}
-
-export function useActiveFiatProviders() {
-  const config = useRemoteConfig();
-  if (!config?.activeFiatProviders) return {} as Record<string, ActiveFiatProvider>;
-
-  return Object.fromEntries(
-    Object.entries(config.activeFiatProviders).filter(([_, provider]) => provider.enabled)
-  );
-}
-
-export function useHasFiatProviders() {
-  const activeProviders = useActiveFiatProviders();
-  return (
-    activeProviders &&
-    Object.keys(activeProviders).reduce((acc, key) => activeProviders[key].enabled || acc, false)
-  );
-}
-
-export function useRecoverUninscribedTaprootUtxosFeatureEnabled() {
-  const config = useRemoteConfig();
-  return get(config, 'recoverUninscribedTaprootUtxosFeatureEnabled', false);
 }
 
 export function useConfigFeeEstimationsMaxEnabled() {

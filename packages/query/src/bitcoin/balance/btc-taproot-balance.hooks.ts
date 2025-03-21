@@ -1,4 +1,4 @@
-import { UseQueryResult } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 import { Inscription } from '@leather.io/models';
 import { createMoney, isDefined, sumNumbers } from '@leather.io/utils';

@@ -1,13 +1,10 @@
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 import PQueue from 'p-queue';
 
 import { BitcoinNetworkModes } from '@leather.io/models';
 
-import { useLeatherNetwork } from '../../leather-query-provider';
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
-import { useBestInSlotApiRateLimiter } from '../../rate-limiter/best-in-slot-limiter';
-import { BitcoinClient, useBitcoinClient } from '../clients/bitcoin-client';
-import { useRunesEnabled } from './runes.hooks';
+import { BitcoinClient } from '../clients/bitcoin-client';
 
 const queryOptions = { staleTime: 5 * 60 * 1000 } as const;
 
@@ -44,21 +41,4 @@ export function createGetRunesOutputsByAddressQueryOptions({
       ),
     ...queryOptions,
   } as const;
-}
-
-export function useGetRunesOutputsByAddressQuery(address: string) {
-  const client = useBitcoinClient();
-  const network = useLeatherNetwork();
-  const runesEnabled = useRunesEnabled();
-  const limiter = useBestInSlotApiRateLimiter();
-
-  return useQuery(
-    createGetRunesOutputsByAddressQueryOptions({
-      address,
-      client,
-      limiter,
-      network: network.chain.bitcoin.mode,
-      runesEnabled,
-    })
-  );
 }

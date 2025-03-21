@@ -1,17 +1,9 @@
-import { useMemo } from 'react';
-
 import axios from 'axios';
 
-import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
-import {
-  BESTINSLOT_API_BASE_URL_MAINNET,
-  BESTINSLOT_API_BASE_URL_TESTNET,
-  BitcoinTx,
-} from '@leather.io/models';
-import { match, whenNetwork } from '@leather.io/utils';
+import { BitcoinTx } from '@leather.io/models';
+import { match } from '@leather.io/utils';
 
 import { UtxoResponseItem } from '../../../types/utxo';
-import { useLeatherNetwork } from '../../leather-query-provider';
 import { getBitcoinRatelimiter } from '../bitcoin-rate-limiter';
 import { BestInSlotApi } from './best-in-slot';
 
@@ -154,24 +146,4 @@ export function bitcoinClient({
     transactionsApi: TransactionsApi(basePath),
     BestInSlotApi: BestInSlotApi(bestInSlotPath),
   };
-}
-
-export function useBitcoinClient() {
-  const network = useLeatherNetwork();
-  const bestInSlotPath = whenNetwork(
-    bitcoinNetworkModeToCoreNetworkMode(network.chain.bitcoin.mode)
-  )({
-    mainnet: BESTINSLOT_API_BASE_URL_MAINNET,
-    testnet: BESTINSLOT_API_BASE_URL_TESTNET,
-  });
-
-  return useMemo(
-    () =>
-      bitcoinClient({
-        networkName: network.chain.bitcoin.bitcoinNetwork,
-        basePath: network.chain.bitcoin.bitcoinUrl,
-        bestInSlotPath,
-      }),
-    [bestInSlotPath, network.chain.bitcoin.bitcoinNetwork, network.chain.bitcoin.bitcoinUrl]
-  );
 }

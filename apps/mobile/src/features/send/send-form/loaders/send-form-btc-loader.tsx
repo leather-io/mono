@@ -1,9 +1,10 @@
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
+import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import BigNumber from 'bignumber.js';
 
 import { AccountId, AverageBitcoinFeeRates, Money } from '@leather.io/models';
-import { Utxo, useAverageBitcoinFeeRates } from '@leather.io/query';
+import { Utxo } from '@leather.io/query';
 
 interface SendFormBtcData {
   availableBalance: Money;

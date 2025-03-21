@@ -1,9 +1,8 @@
 import { AddressTransactionsWithTransfersListResponse } from '@stacks/stacks-blockchain-api-types';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext } from '@tanstack/react-query';
 
-import { useCurrentNetworkState } from '../../leather-query-provider';
 import { StacksQueryPrefixes } from '../../query-prefixes';
-import { StacksClient, useStacksClient } from '../stacks-client';
+import { StacksClient } from '../stacks-client';
 
 const queryOptions = {
   staleTime: 60 * 1000,
@@ -54,17 +53,4 @@ export function createGetAccountTransactionsWithTransfersQueryOptions({
     },
     ...queryOptions,
   } as const;
-}
-
-export function useGetAccountTransactionsWithTransfersQuery(address: string) {
-  const network = useCurrentNetworkState();
-  const client = useStacksClient();
-
-  return useQuery(
-    createGetAccountTransactionsWithTransfersQueryOptions({
-      address,
-      client,
-      network: network.chain.stacks.url,
-    })
-  );
 }

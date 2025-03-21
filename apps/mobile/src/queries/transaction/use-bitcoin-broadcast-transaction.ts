@@ -3,10 +3,11 @@ import { useCallback, useState } from 'react';
 import { TransactionInput } from '@scure/btc-signer/psbt';
 
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
+import { filterOutIntentionalUtxoSpend } from '@leather.io/query';
 import { delay } from '@leather.io/utils';
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
-import { filterOutIntentionalUtxoSpend, useCheckUnspendableUtxos } from './use-check-utxos';
+import { useCheckUnspendableUtxos } from './use-check-utxos';
 
 interface BroadcastCallbackArgs {
   tx: string;

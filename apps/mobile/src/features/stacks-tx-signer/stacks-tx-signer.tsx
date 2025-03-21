@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
+import { useCalculateStacksTxFees } from '@/queries/stacks/fees/fees.hooks';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
@@ -17,7 +18,6 @@ import {
 } from '@stacks/transactions';
 
 import { type CryptoCurrency, FeeTypes } from '@leather.io/models';
-import { useCalculateStacksTxFees } from '@leather.io/query';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
 import {

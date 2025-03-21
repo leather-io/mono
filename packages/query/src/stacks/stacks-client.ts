@@ -18,7 +18,6 @@ import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { STX20_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 import { Paginated } from '../../types/api-types';
-import { useLeatherNetwork } from '../leather-query-provider';
 import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
   AddressBalanceResponse,
@@ -276,8 +275,3 @@ export function stacksClient(basePath: string) {
 }
 
 export type StacksClient = ReturnType<typeof stacksClient>;
-
-export function useStacksClient() {
-  const network = useLeatherNetwork();
-  return stacksClient(network.chain.stacks.url);
-}

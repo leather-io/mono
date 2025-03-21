@@ -2,7 +2,7 @@ import { ClientParam } from '@stacks/common';
 import { StacksNetwork } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { fetchCallReadOnlyFunction, noneCV, principalCV } from '@stacks/transactions';
-import { UseQueryOptions } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
 import { StackingQueryPrefixes } from '../query-prefixes';
 

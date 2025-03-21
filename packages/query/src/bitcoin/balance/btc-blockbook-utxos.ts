@@ -1,4 +1,4 @@
-import { UseQueryOptions } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { z } from 'zod';
 

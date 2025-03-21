@@ -3,12 +3,11 @@ import { useCallback, useMemo } from 'react';
 import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
 import { useQueries } from '@tanstack/react-query';
 
-import {
-  createGetAddressMempoolTransactionsQueryOptions,
-  useGetTransactionByIdListQuery,
-  useStacksClient,
-} from '@leather.io/query';
+import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
 import { isUndefined } from '@leather.io/utils';
+
+import { useGetTransactionByIdListQuery } from '../transaction/transactions-by-id.query';
+import { useStacksClient } from './stacks-client';
 
 export function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
   const client = useStacksClient();
