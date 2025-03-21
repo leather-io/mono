@@ -1,7 +1,7 @@
 import { styled } from 'leather-styles/jsx';
 import { Page } from '~/components/page';
 
-import { EarnProviderTable } from './components/earn-provider-table';
+import { EarnProviderTable, LiquidStackingProviderTable } from './components/earn-provider-table';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
 
@@ -24,13 +24,9 @@ export function Earn() {
 
       <LiquidStackingExplainer mt="space.04" />
 
-      <styled.div
-        my="space.07"
-        w="100%"
-        height="300px"
-        background="ink.border-default"
-        borderRadius="lg"
-      />
+      <LiquidStackingProviderTable mt="space.05" />
+
+      <Page.Divider my="space.07" />
     </Page>
   );
 }
