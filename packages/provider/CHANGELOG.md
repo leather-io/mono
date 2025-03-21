@@ -97,6 +97,13 @@
     * @leather.io/rpc bumped to 2.9.2
     * @leather.io/utils bumped to 0.30.0
 
+## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.1.4...@leather.io/provider-v1.2.0) (2025-03-21)
+
+
+### Features
+
+* browser ui ([34cf34b](https://github.com/leather-io/mono/commit/34cf34b147c261056200b20232fb404308056025))
+
 ## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.0.13...@leather.io/provider-v1.1.0) (2025-03-06)
 
 

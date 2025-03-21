@@ -389,6 +389,21 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.53.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.52.1...@leather.io/ui-v1.53.0) (2025-03-21)
+
+
+### Features
+
+* browser ui ([34cf34b](https://github.com/leather-io/mono/commit/34cf34b147c261056200b20232fb404308056025))
+* **web:** earn page ([077f7a2](https://github.com/leather-io/mono/commit/077f7a281ab8a97d2872fd9f9fd66287a698ede1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.11.0
+
 ## [1.52.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.51.4...@leather.io/ui-v1.52.0) (2025-03-17)
 
 

@@ -210,6 +210,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.15.0
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.10.1...@leather.io/panda-preset-v0.11.0) (2025-03-21)
+
+
+### Features
+
+* **web:** earn page ([077f7a2](https://github.com/leather-io/mono/commit/077f7a281ab8a97d2872fd9f9fd66287a698ede1))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.9.0...@leather.io/panda-preset-v0.10.0) (2025-03-17)
 
 
