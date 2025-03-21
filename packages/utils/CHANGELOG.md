@@ -292,6 +292,13 @@
     * @leather.io/constants bumped to 0.17.5
     * @leather.io/models bumped to 0.28.0
 
+## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.30.0...@leather.io/utils-v0.31.0) (2025-03-21)
+
+
+### Features
+
+* integrate activity service to UI, ref LEA-2285 ([ef37ae1](https://github.com/leather-io/mono/commit/ef37ae11e633b949f03afc4a01b52b29e97207a8))
+
 ## [0.30.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.29.0...@leather.io/utils-v0.30.0) (2025-03-17)
 
 
