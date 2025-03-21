@@ -389,6 +389,20 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.54.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.53.0...@leather.io/ui-v1.54.0) (2025-03-21)
+
+
+### Features
+
+* integrate activity service to UI, ref LEA-2285 ([ef37ae1](https://github.com/leather-io/mono/commit/ef37ae11e633b949f03afc4a01b52b29e97207a8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.31.0
+
 ## [1.53.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.52.1...@leather.io/ui-v1.53.0) (2025-03-21)
 
 

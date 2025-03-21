@@ -646,6 +646,30 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.23.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.22.0...@leather.io/mobile-v2.23.0) (2025-03-21)
+
+
+### Features
+
+* integrate activity service to UI, ref LEA-2285 ([ef37ae1](https://github.com/leather-io/mono/commit/ef37ae11e633b949f03afc4a01b52b29e97207a8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.22.1
+    * @leather.io/crypto bumped to 1.6.53
+    * @leather.io/provider bumped to 1.2.1
+    * @leather.io/query bumped to 2.31.1
+    * @leather.io/rpc bumped to 2.9.3
+    * @leather.io/services bumped to 1.6.1
+    * @leather.io/stacks bumped to 1.7.5
+    * @leather.io/ui bumped to 1.54.0
+    * @leather.io/utils bumped to 0.31.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.22.1
+
 ## [2.22.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.21.0...@leather.io/mobile-v2.22.0) (2025-03-21)
 
 
