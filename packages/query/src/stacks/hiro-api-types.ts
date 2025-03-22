@@ -1,4 +1,3 @@
-import { ContractInterfaceResponse } from '@stacks/stacks-blockchain-api-types';
 import type { AddressTokenOfferingLocked } from '@stacks/stacks-blockchain-api-types/generated';
 
 export type SelectedKeys =
@@ -56,13 +55,6 @@ export interface AddressBalanceResponse {
   token_offering_locked?: AddressTokenOfferingLocked;
 }
 
-export type ContractInterfaceResponseWithFunctions = Omit<
-  ContractInterfaceResponse,
-  'functions'
-> & {
-  functions: ContractInterfaceFunction[];
-};
-
 export interface FeeEstimation {
   fee: number;
   fee_rate: number;
@@ -84,24 +76,4 @@ export interface NonFungibleTokenHoldingListResult {
     hex: string;
     repr: string;
   };
-}
-
-// These types copied from `@stacks/rpc-client` package that is no longer
-// maintained. We define them here only to remove the package.
-/** @deprecated */
-interface BufferArg {
-  buffer: {
-    length: number;
-  };
-}
-/** @deprecated */
-export interface ContractInterfaceFunctionArg {
-  name: string;
-  type: string | BufferArg;
-}
-/** @deprecated */
-export interface ContractInterfaceFunction {
-  name: string;
-  access: 'public' | 'private' | 'read_only';
-  args: ContractInterfaceFunctionArg[];
 }

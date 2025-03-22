@@ -12,6 +12,7 @@ import type {
   ReadOnlyFunctionSuccessResponse,
   Transaction,
 } from '@stacks/stacks-blockchain-api-types';
+import { ClarityAbi } from '@stacks/transactions';
 import axios from 'axios';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
@@ -21,7 +22,6 @@ import { Paginated } from '../../types/api-types';
 import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
   AddressBalanceResponse,
-  ContractInterfaceResponseWithFunctions,
   NonFungibleTokenHoldingListResult,
   StacksTxFeeEstimation,
 } from './hiro-api-types';
@@ -245,7 +245,7 @@ export function stacksClient(basePath: string) {
     ) {
       const resp = await rateLimiter.add(
         () =>
-          axios.get<ContractInterfaceResponseWithFunctions>(
+          axios.get<ClarityAbi>(
             `${basePath}/v2/contracts/interface/${contractAddress}/${contractName}`,
             { signal }
           ),
