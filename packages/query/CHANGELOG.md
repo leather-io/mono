@@ -477,6 +477,13 @@
     * @leather.io/stacks bumped to 1.7.5
     * @leather.io/utils bumped to 0.31.0
 
+## [2.32.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.31.1...@leather.io/query-v2.32.0) (2025-03-24)
+
+
+### Features
+
+* movies queries away from [@leather](https://github.com/leather).io/query ([64f39a9](https://github.com/leather-io/mono/commit/64f39a90a14c5d285f6aae74a6ad593588844a19))
+
 ## [2.31.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.30.1...@leather.io/query-v2.31.0) (2025-03-17)
 
 
