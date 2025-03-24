@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   deploy-eas-ios:
-    if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
+    if: contains(github.event.pull_request.labels.*.name, 'build:mobile:simulator')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   deploy-eas-android:
-    if: contains(github.event.pull_request.labels.*.name, 'needs:demo-build')
+    if: contains(github.event.pull_request.labels.*.name, 'build:mobile:simulator')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
