@@ -9,8 +9,8 @@ interface BaseFeeOptionProps {
   icon: ReactElement;
   title: string;
   time: string;
-  balance: string;
-  balanceUsd: string;
+  formattedFeeAmount: string;
+  formattedFiatFeeAmount: string;
 }
 
 export function BaseFeeOption({
@@ -20,8 +20,8 @@ export function BaseFeeOption({
   icon,
   title,
   time,
-  balance,
-  balanceUsd,
+  formattedFeeAmount,
+  formattedFiatFeeAmount,
 }: BaseFeeOptionProps) {
   return (
     <>
@@ -40,8 +40,8 @@ export function BaseFeeOption({
         <ItemLayout
           titleLeft={title}
           captionLeft={time}
-          titleRight={balance}
-          captionRight={balanceUsd}
+          titleRight={formattedFeeAmount}
+          captionRight={formattedFiatFeeAmount}
         />
         {disabled && (
           <Box

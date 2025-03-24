@@ -8,7 +8,7 @@ import { BaseFeeOption } from './base-fee-option';
 interface StacksFeeOptionProps {
   feeType: FeeTypes;
   fee: Money;
-  usd: Money;
+  fiatFee: Money;
   onPress(): void;
   isSelected: boolean;
   disabled: boolean;
@@ -17,7 +17,7 @@ interface StacksFeeOptionProps {
 export function StacksFeeOption({
   feeType,
   fee,
-  usd,
+  fiatFee,
   onPress,
   isSelected,
   disabled,
@@ -30,8 +30,8 @@ export function StacksFeeOption({
       icon={getStacksFeeData(feeType).icon}
       title={getStacksFeeData(feeType).title}
       time={getStacksFeeData(feeType).time}
-      balance={formatBalance({ balance: fee, isFiat: false })}
-      balanceUsd={formatBalance({ balance: usd, isFiat: true })}
+      formattedFeeAmount={formatBalance({ balance: fee, isFiat: false })}
+      formattedFiatFeeAmount={formatBalance({ balance: fiatFee, isFiat: true })}
     />
   );
 }
