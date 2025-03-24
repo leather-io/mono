@@ -49,7 +49,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to NPM
-        run: pnpm -r publish --no-git-checks
+        run: pnpm --filter="./packages/*" publish --no-git-checks
 
   trigger-extension-package-update:
     needs: release-please
