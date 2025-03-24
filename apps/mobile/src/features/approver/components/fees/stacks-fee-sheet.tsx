@@ -9,12 +9,11 @@ import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 import { FeeSheetLayout } from './fee-sheet.layout';
 import { StacksFeeOption } from './stacks-fee-option';
 
-const feeTypeArr = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
+const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
 
 interface FeesSheetProps {
   sheetRef: RefObject<SheetRef>;
   selectedFeeType: FeeTypes;
-  setSelectedFeeType(feeType: FeeTypes): void;
   fees: Record<FeeTypes, Money>;
   currentFee: Money;
   onChangeFee(feeType: FeeTypes): void;
@@ -23,7 +22,6 @@ interface FeesSheetProps {
 export function StacksFeesSheet({
   sheetRef,
   selectedFeeType,
-  setSelectedFeeType,
   fees,
   currentFee,
   onChangeFee,
@@ -34,18 +32,20 @@ export function StacksFeesSheet({
     return baseCurrencyAmountInQuoteWithFallback(fee, stxMarketData);
   }
 
+  function handleChangeFee(feeType: FeeTypes) {
+    sheetRef.current?.close();
+    onChangeFee(feeType);
+  }
+
   return (
     <FeeSheetLayout sheetRef={sheetRef}>
-      {feeTypeArr.map(feeType => {
+      {feeTypes.map(feeType => {
         const fee = feeType !== FeeTypes.Custom ? fees[feeType] : currentFee;
         return (
           <StacksFeeOption
             isSelected={selectedFeeType === feeType}
             disabled={feeType === FeeTypes.Custom}
-            onPress={() => {
-              setSelectedFeeType(feeType);
-              onChangeFee(feeType);
-            }}
+            onPress={() => handleChangeFee(feeType)}
             key={feeType}
             feeType={feeType}
             fee={fee}

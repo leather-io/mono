@@ -44,7 +44,7 @@ import {
 } from '@leather.io/utils';
 
 import { ApproverButtons } from '../approver/components/approver-buttons';
-import { FeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
+import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
 import { usePsbtAccounts } from './use-psbt-accounts';
 import { usePsbtPayers } from './use-psbt-payers';
@@ -196,7 +196,15 @@ export function BasePsbtSigner({
       if (!tx) throw new Error('No tx');
       const psbtHex = bytesToHex(tx.psbt);
 
+      setSelectedFeeType(feeType);
       setPsbtHex(psbtHex);
+      displayToast({
+        title: t({
+          id: 'approver.send.btc.success.change-fee',
+          message: 'Fee updated',
+        }),
+        type: 'success',
+      });
     }
   }
 
@@ -275,9 +283,7 @@ export function BasePsbtSigner({
             <BitcoinFeeCard
               feeType={selectedFeeType}
               amount={psbtDetails.fee}
-              onPress={() => {
-                feeSheetRef.current?.present();
-              }}
+              onPress={() => feeSheetRef.current?.present()}
             />
           </Approver.Section>
           <Approver.Advanced
@@ -327,10 +333,9 @@ export function BasePsbtSigner({
           />
         )}
       </Approver>
-      <FeesSheet
+      <BitcoinFeesSheet
         sheetRef={feeSheetRef}
         selectedFeeType={selectedFeeType}
-        setSelectedFeeType={setSelectedFeeType}
         onChangeFee={onChangeFee}
         fees={feeRates}
         txSize={txVBytes}
