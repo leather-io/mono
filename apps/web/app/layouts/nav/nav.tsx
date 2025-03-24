@@ -2,6 +2,18 @@ import { styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 
+import {
+  ArrowsRepeatLeftRightIcon,
+  GlassesIcon,
+  HouseIcon,
+  InboxIcon,
+  NewspaperIcon,
+  PaperPlaneIcon,
+  PlusIcon,
+  SupportIcon,
+  TerminalIcon,
+} from '@leather.io/ui';
+
 import { NavItem } from './nav-item.layout';
 
 export function Nav() {
@@ -45,42 +57,42 @@ export function Nav() {
       </styled.svg>
 
       <styled.div mt="space.06" mb="space.06">
-        <NavItem href="/" icon="house">
+        <NavItem href="/" icon={<HouseIcon variant="small" />}>
           Home
         </NavItem>
 
-        <NavItem href="/earn" icon="pulse">
+        <NavItem href="/earn" icon={<PlusIcon variant="small" />}>
           Earn
         </NavItem>
 
-        <NavItem href="/send" icon="paper-plane">
+        <NavItem href="/send" icon={<PaperPlaneIcon variant="small" />}>
           Send
         </NavItem>
 
-        <NavItem href="/receive" icon="inbox">
+        <NavItem href="/receive" icon={<InboxIcon variant="small" />}>
           Receive
         </NavItem>
 
-        <NavItem href="/swap" icon="arrows-repeat-left-right">
+        <NavItem href="/swap" icon={<ArrowsRepeatLeftRightIcon variant="small" />}>
           Swap
         </NavItem>
       </styled.div>
 
       {allNavItems && (
         <styled.div mt="auto" mb="space.09">
-          <NavItem href="/blog" icon="newspaper">
+          <NavItem href="/blog" icon={<NewspaperIcon variant="small" />}>
             Blog
           </NavItem>
 
-          <NavItem href="/guides" icon="glasses">
+          <NavItem href="/guides" icon={<GlassesIcon variant="small" />}>
             Guides
           </NavItem>
 
-          <NavItem href="/dev-docs" icon="terminal">
+          <NavItem href="/dev-docs" icon={<TerminalIcon variant="small" />}>
             Dev Docs
           </NavItem>
 
-          <NavItem href="/support" icon="support">
+          <NavItem href="/support" icon={<SupportIcon variant="small" />}>
             Support
           </NavItem>
         </styled.div>

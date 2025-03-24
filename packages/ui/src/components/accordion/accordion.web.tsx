@@ -62,7 +62,7 @@ const Content: typeof RadixAccordion.Content = forwardRef(({ className, ...props
 Content.displayName = 'Accordion.Content';
 
 const Item: typeof RadixAccordion.Item = forwardRef((props, ref) => (
-  <RadixAccordion.Item {...props} ref={ref} />
+  <RadixAccordion.Item ref={ref} {...props} />
 ));
 
 Item.displayName = 'Accordion.Item';

@@ -82,6 +82,7 @@ export * from './star-icon.web';
 export * from './sun-icon.web';
 export * from './sun-in-cloud-icon.web';
 export * from './support-icon.web';
+export * from './terminal-icon.web';
 export * from './trash-icon.web';
 export * from './unlock-icon.web';
 export * from './user-icon.web';

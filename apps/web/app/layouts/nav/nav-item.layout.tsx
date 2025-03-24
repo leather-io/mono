@@ -1,8 +1,7 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { NavLink } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
-import { getUiPackageAssetUrl } from '~/helpers/utils';
 
 import { Flag } from '@leather.io/ui';
 
@@ -10,7 +9,7 @@ const StyledNavLink = styled(NavLink);
 
 interface NavItemProps {
   href: string;
-  icon: string;
+  icon: ReactElement;
   children: ReactNode;
 }
 export function NavItem({ children, icon, href }: NavItemProps) {
@@ -27,16 +26,7 @@ export function NavItem({ children, icon, href }: NavItemProps) {
       _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ textDecoration: 'underline' }}
     >
-      <Flag
-        spacing="space.04"
-        img={
-          <styled.img
-            userSelect="none"
-            src={getUiPackageAssetUrl(`icons/${icon}-16-16.svg`)}
-            alt={`${icon} icon`}
-          />
-        }
-      >
+      <Flag spacing="space.04" img={icon}>
         {children}
       </Flag>
     </StyledNavLink>
