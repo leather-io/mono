@@ -646,6 +646,20 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.24.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.23.0...@leather.io/mobile-v2.24.0) (2025-03-24)
+
+
+### Features
+
+* movies queries away from [@leather](https://github.com/leather).io/query ([64f39a9](https://github.com/leather-io/mono/commit/64f39a90a14c5d285f6aae74a6ad593588844a19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.32.0
+
 ## [2.23.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.22.0...@leather.io/mobile-v2.23.0) (2025-03-21)
 
 
