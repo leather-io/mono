@@ -12,16 +12,15 @@ import { match } from '@leather.io/utils';
 export type ApproverState = 'start' | 'submitting' | 'submitted';
 
 function getBaseFeeData(feeType: FeeTypes) {
-  const feeMatcher = match<FeeTypes>();
-  const icon = feeMatcher(feeType, {
+  const icon = {
     [FeeTypes.Low]: <AnimalSnailIcon />,
     [FeeTypes.Middle]: <AnimalRabbitIcon />,
     [FeeTypes.High]: <AnimalEagleIcon />,
     [FeeTypes.Custom]: <AnimalChameleonIcon />,
     [FeeTypes.Unknown]: <AnimalChameleonIcon />,
-  });
+  }[feeType];
 
-  const title = feeMatcher(feeType, {
+  const title = {
     [FeeTypes.Low]: t({
       id: 'approver.fee.type.low',
       message: 'Slow',
@@ -42,14 +41,13 @@ function getBaseFeeData(feeType: FeeTypes) {
       id: 'approver.fee.type.unknown',
       message: 'Unknown',
     }),
-  });
+  }[feeType];
   return { icon, title };
 }
 
 export function getBitcoinFeeData(feeType: FeeTypes) {
-  const feeMatcher = match<FeeTypes>();
   const { icon, title } = getBaseFeeData(feeType);
-  const time = feeMatcher(feeType, {
+  const time = {
     [FeeTypes.Low]: t({
       id: 'approver.bitcoin.fee.speed.low',
       message: '~40 mins',
@@ -70,12 +68,8 @@ export function getBitcoinFeeData(feeType: FeeTypes) {
       id: 'approver.fee.speed.unknown',
       message: 'Unknown',
     }),
-  });
-  return {
-    icon,
-    title,
-    time,
-  };
+  }[feeType];
+  return { icon, title, time };
 }
 
 export function getStacksFeeData(feeType: FeeTypes) {
