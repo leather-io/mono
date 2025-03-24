@@ -8,7 +8,8 @@ import {
   styled,
 } from 'leather-styles/jsx';
 import { ExternalLink } from '~/components/external-link';
-import { getUiPackageAssetUrl } from '~/helpers/utils';
+
+import { LeatherLettermarkIcon } from '@leather.io/ui';
 
 export function FooterLayout(props: HTMLStyledProps<'footer'>) {
   return (
@@ -34,14 +35,7 @@ function FooterGrid(props: GridProps) {
 }
 
 function FooterLeatherIcon() {
-  return (
-    <styled.img
-      src={getUiPackageAssetUrl('icons/leather-lettermark-24-24.svg')}
-      alt="Leather logo"
-      width="20"
-      height="20"
-    />
-  );
+  return <LeatherLettermarkIcon variant="small" />;
 }
 
 interface FooterColumnProps extends FlexProps {

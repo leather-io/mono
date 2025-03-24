@@ -1,7 +1,15 @@
 import { styled } from 'leather-styles/jsx';
-import { getUiPackageAssetUrl } from '~/helpers/utils';
 
-import { Button, type ButtonProps, DropdownMenu, Flag, type HasChildren } from '@leather.io/ui';
+import {
+  ArrowsRepeatLeftRightIcon,
+  Button,
+  type ButtonProps,
+  ChevronDownIcon,
+  DropdownMenu,
+  ExitIcon,
+  Flag,
+  type HasChildren,
+} from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 export function SignInButtonContainer({ children }: HasChildren) {
@@ -41,7 +49,7 @@ export function ActiveAccountButtonLayout({
           borderTop="default"
           _focusVisible={{ textDecoration: 'underline' }}
         >
-          <Flag reverse img={<img src={getUiPackageAssetUrl('icons/chevron-down-16-16.svg')} />}>
+          <Flag reverse img={<ChevronDownIcon variant="small" />}>
             {truncateMiddle(address, 4)}
           </Flag>
         </styled.button>
@@ -51,16 +59,7 @@ export function ActiveAccountButtonLayout({
         <DropdownMenu.Content sideOffset={2}>
           <styled.div mx="space.02" py="space.02">
             <DropdownMenu.Item onSelect={onSwitchAccount}>
-              <Flag
-                textStyle="label.02"
-                img={
-                  <img
-                    src={getUiPackageAssetUrl('icons/arrow-right-left-16-16.svg')}
-                    width="16"
-                    height="16"
-                  />
-                }
-              >
+              <Flag textStyle="label.02" img={<ArrowsRepeatLeftRightIcon variant="small" />}>
                 Switch account
               </Flag>
             </DropdownMenu.Item>
@@ -69,13 +68,9 @@ export function ActiveAccountButtonLayout({
                 color="red.action-primary-default"
                 textStyle="label.02"
                 img={
-                  <styled.img
-                    // Hack to make icon red while icons don't work
-                    filter="invert(18%) sepia(94%) saturate(7491%) hue-rotate(359deg);"
-                    src={getUiPackageAssetUrl('icons/exit-16-16.svg')}
-                    width="16"
-                    height="16"
-                  />
+                  <styled.div filter="invert(18%) sepia(94%) saturate(7491%) hue-rotate(359deg);">
+                    <ExitIcon variant="small" />
+                  </styled.div>
                 }
               >
                 Sign out
