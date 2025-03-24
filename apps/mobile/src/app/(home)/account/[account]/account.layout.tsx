@@ -17,6 +17,7 @@ interface AccountLayoutProps {
   account: Account;
   balance: Money;
 }
+
 export function AccountLayout({ account, balance }: AccountLayoutProps) {
   const accountAddresses = useAccountAddresses(account.fingerprint, account.accountIndex);
   const { data: activity, isLoading } = useAccountActivityQuery(accountAddresses);
@@ -28,7 +29,15 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
         heading={<Balance balance={balance} variant="heading02" />}
         caption={account.name}
       />
-      <BalancesWidget onPressHeader={() => router.navigate(AppRoutes.Balances)}>
+      <BalancesWidget
+        onPressHeader={() =>
+          router.navigate({
+            pathname: AppRoutes.AccountBalances,
+            params: { accountId: account.id },
+          })
+        }
+        totalBalance={balance}
+      >
         <AccountBalances
           hardCap
           fingerprint={account.fingerprint}

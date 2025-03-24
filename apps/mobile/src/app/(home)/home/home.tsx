@@ -9,6 +9,7 @@ import { NotificationsSheet } from '@/features/notifications/notifications-sheet
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useTotalActivityQuery } from '@/queries/activity/account-activity.query';
+import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AppRoutes } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { useLingui } from '@lingui/react';
@@ -23,14 +24,19 @@ export function Home() {
 
   const accounts = useTotalAccountAddresses();
   const { data: activity, isLoading } = useTotalActivityQuery(accounts);
+  const { totalBalance } = useTotalBalance();
 
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
+  if (totalBalance.state !== 'success') return;
 
   return (
     <PageLayout>
       <AccountsWidget />
       {hasWallets && (
-        <BalancesWidget onPressHeader={() => router.navigate(AppRoutes.Balances)}>
+        <BalancesWidget
+          onPressHeader={() => router.navigate(AppRoutes.Balances)}
+          totalBalance={totalBalance.value}
+        >
           <AllAccountBalances hardCap />
         </BalancesWidget>
       )}
