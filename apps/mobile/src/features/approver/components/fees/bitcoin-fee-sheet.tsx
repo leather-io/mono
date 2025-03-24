@@ -5,12 +5,12 @@ import BigNumber from 'bignumber.js';
 
 import { AverageBitcoinFeeRates, FeeTypes } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuoteWithFallback, createMoney, match } from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 import { BitcoinFeeOption } from './bitcoin-fee-option';
 import { FeeSheetLayout } from './fee-sheet.layout';
 
-const feeTypeArr = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
+const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
 
 interface FeesSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -36,25 +36,24 @@ export function FeesSheet({
   function getUsd(fee: number) {
     if (!fee) return createMoney(0, 'USD');
     const btcBalance = createMoney(fee, 'BTC');
-    const usdBalance = baseCurrencyAmountInQuoteWithFallback(btcBalance, btcMarketData);
-    return usdBalance;
+    return baseCurrencyAmountInQuoteWithFallback(btcBalance, btcMarketData);
   }
 
   function getFee(feeType: FeeTypes) {
-    const feeRate = match<FeeTypes>()(feeType, {
+    const feeRate = {
       [FeeTypes.Low]: fees?.hourFee ?? BigNumber(0),
       [FeeTypes.Middle]: fees?.halfHourFee ?? BigNumber(0),
       [FeeTypes.High]: fees?.fastestFee ?? BigNumber(0),
       [FeeTypes.Unknown]: BigNumber(0),
       [FeeTypes.Custom]: BigNumber(currentFeeRate),
-    });
+    }[feeType];
     const fee = txSize * feeRate.toNumber();
     return { feeRate, fee };
   }
 
   return (
     <FeeSheetLayout sheetRef={sheetRef}>
-      {feeTypeArr.map(feeType => {
+      {feeTypes.map(feeType => {
         const { feeRate, fee } = getFee(feeType);
         return (
           <BitcoinFeeOption
