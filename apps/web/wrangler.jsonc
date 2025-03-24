@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "leather-web",
+  "compatibility_date": "2025-02-24",
+  "main": "./workers/app.ts",
+  "workers_dev": true,
+  "assets": {},
+  "send_metrics": false,
+  "observability": {
+    "enabled": false
+  },
+  "vars": {
+    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
+  }
+}

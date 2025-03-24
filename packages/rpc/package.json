@@ -26,10 +26,10 @@
     "@scure/btc-signer": "1.6.0",
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.0.5",
-    "zod": "3.24.1"
+    "zod": "3.24.2"
   },
   "devDependencies": {
-    "tsup": "8.1.0",
+    "tsup": "8.4.0",
     "vitest": "2.1.9"
   },
   "files": [

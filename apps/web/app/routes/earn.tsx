@@ -18,5 +18,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function HomeRoute() {
-  return <Earn content={''} />;
+  return <Earn />;
 }
