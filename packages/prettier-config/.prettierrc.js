@@ -22,4 +22,13 @@ export default {
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
+  // github.com/prettier/prettier/issues/15956#issuecomment-1987146114
+  overrides: [
+    {
+      files: ['*.jsonc', '.eslintrc', 'tsconfig*.json'],
+      options: {
+        trailingComma: 'none',
+      },
+    },
+  ],
 };

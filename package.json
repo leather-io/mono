@@ -29,9 +29,6 @@
     "test:unit": "pnpm -r test:unit",
     "typecheck": "turbo run typecheck"
   },
-  "dependencies": {
-    "wrangler": "3.114.0"
-  },
   "devDependencies": {
     "@babel/runtime": "7.26.0",
     "@commitlint/cli": "19.6.0",
@@ -220,16 +217,5 @@
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
       "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch"
     }
-  },
-  "resolutions": {
-    "axios": "1.8.2",
-    "cookie": "0.7.1",
-    "esbuild": "0.25.0",
-    "micromatch": "4.0.8",
-    "path-to-regexp": "0.1.12",
-    "send": "0.19.0",
-    "store2": "2.14.4",
-    "undici": "6.21.1",
-    "vite": "5.4.12"
   }
 }

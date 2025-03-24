@@ -25,7 +25,7 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "prettier": "3.5.1",
-    "tsup": "8.1.0"
+    "tsup": "8.4.0"
   },
   "keywords": [
     "leather",
