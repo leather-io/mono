@@ -15,17 +15,15 @@ const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom]
 interface FeesSheetProps {
   sheetRef: RefObject<SheetRef>;
   selectedFeeType: FeeTypes;
-  setSelectedFeeType(feeType: FeeTypes): void;
   fees: AverageBitcoinFeeRates | undefined;
   txSize: number;
   currentFeeRate: number;
   onChangeFee(feeType: FeeTypes): void;
 }
 
-export function FeesSheet({
+export function BitcoinFeesSheet({
   sheetRef,
   selectedFeeType,
-  setSelectedFeeType,
   fees,
   txSize,
   currentFeeRate,
@@ -49,6 +47,11 @@ export function FeesSheet({
     return { feeRate, fee };
   }
 
+  function handleFeeChange(feeType: FeeTypes) {
+    onChangeFee(feeType);
+    sheetRef.current?.close();
+  }
+
   return (
     <FeeSheetLayout sheetRef={sheetRef}>
       {feeTypes.map(feeType => {
@@ -57,10 +60,7 @@ export function FeesSheet({
           <BitcoinFeeOption
             isSelected={selectedFeeType === feeType}
             disabled={feeType === FeeTypes.Custom}
-            onPress={() => {
-              setSelectedFeeType(feeType);
-              onChangeFee(feeType);
-            }}
+            onPress={() => handleFeeChange(feeType)}
             key={feeType}
             feeType={feeType}
             feeRate={feeRate.toNumber()}

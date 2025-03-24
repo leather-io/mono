@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { Avatar, Box, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { Avatar, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 interface BaseFeeOptionProps {
   onPress(): void;
@@ -23,10 +23,15 @@ export function BaseFeeOption({
   formattedFeeAmount,
   formattedFiatFeeAmount,
 }: BaseFeeOptionProps) {
+  const borderColor = {
+    default: isSelected ? 'ink.text-primary' : 'ink.border-default',
+    pressed: 'ink.action-primary-hover',
+  } as const;
+
   return (
     <>
       <Pressable
-        borderColor={isSelected ? 'ink.text-primary' : 'ink.border-default'}
+        borderColor={borderColor.default}
         borderWidth={1}
         borderRadius="xs"
         flexDirection="row"
@@ -35,6 +40,14 @@ export function BaseFeeOption({
         gap="3"
         onPress={onPress}
         disabled={disabled}
+        opacity={disabled ? 0.5 : 1}
+        pressEffects={{
+          borderColor: {
+            from: borderColor.default,
+            to: borderColor.pressed,
+            settings: { type: 'timing' },
+          },
+        }}
       >
         <Avatar icon={icon} />
         <ItemLayout
@@ -43,17 +56,6 @@ export function BaseFeeOption({
           titleRight={formattedFeeAmount}
           captionRight={formattedFiatFeeAmount}
         />
-        {disabled && (
-          <Box
-            top={0}
-            bottom={0}
-            right={0}
-            left={0}
-            position="absolute"
-            backgroundColor="ink.background-overlay"
-            opacity={0.1}
-          />
-        )}
       </Pressable>
     </>
   );

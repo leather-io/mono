@@ -147,6 +147,13 @@ export function StacksTxSigner({
         const newTxHex = newTx.serialize();
         setTxHex(newTxHex);
         setSelectedFeeType(feeType);
+        displayToast({
+          title: t({
+            id: 'approver.send.stx.success.change-fee',
+            message: 'Fee updated',
+          }),
+          type: 'success',
+        });
       }
     } catch {
       displayToast({
@@ -324,7 +331,6 @@ export function StacksTxSigner({
       <StacksFeesSheet
         sheetRef={feeSheetRef}
         selectedFeeType={selectedFeeType}
-        setSelectedFeeType={setSelectedFeeType}
         onChangeFee={onChangeFee}
         fees={fees}
         currentFee={createMoney(tx.auth.spendingCondition.fee, 'STX')}

@@ -21,7 +21,7 @@ export function FeeSheetLayout({ sheetRef, children }: FeeSheetLayoutProps) {
       <Box
         style={{
           paddingBottom: theme.spacing[5] + bottom,
-          paddingTop: theme.spacing[4],
+          paddingTop: theme.spacing[5],
         }}
         gap="3"
         p="3"
