@@ -15,19 +15,19 @@ interface InputsAndOutputsCardProps {
 export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardProps) {
   const { data: btcMarketData } = useBtcMarketDataQuery();
 
-  function addBalance<T extends PsbtInput | PsbtOutput>(inputOutput: T) {
-    const btcBalance = createMoney(Number(inputOutput.value), 'BTC');
-    const usdBalance = baseCurrencyAmountInQuoteWithFallback(btcBalance, btcMarketData);
+  function annotateWithMoney<T extends PsbtInput | PsbtOutput>(inputOutput: T) {
+    const btcAmount = createMoney(Number(inputOutput.value), 'BTC');
+    const fiatAmount = baseCurrencyAmountInQuoteWithFallback(btcAmount, btcMarketData);
     return {
       ...inputOutput,
-      btcBalance,
-      usdBalance,
+      btcAmount,
+      fiatAmount,
     };
   }
 
-  const inputsWithBalance = inputs.map(addBalance);
+  const inputsWithMoney = inputs.map(annotateWithMoney);
+  const outputsWithMoney = outputs.map(annotateWithMoney);
 
-  const outputsWithBalance = outputs.map(addBalance);
   return (
     <Box gap="5">
       <Text variant="label02">
@@ -44,13 +44,13 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
           })}
         </Text>
         <Box mx="-5">
-          {inputsWithBalance.map(input => (
+          {inputsWithMoney.map(annotateWithMoney).map(input => (
             <UtxoRow
-              key={input.txid + input.address + input.btcBalance.amount.valueOf()}
+              key={input.txid + input.address + input.btcAmount.amount.valueOf()}
               txid={input.txid}
               address={input.address}
-              btcBalance={input.btcBalance}
-              usdBalance={input.usdBalance}
+              btcAmount={input.btcAmount}
+              fiatAmount={input.fiatAmount}
               isLocked
             />
           ))}
@@ -64,12 +64,12 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
           })}
         </Text>
         <Box mx="-5">
-          {outputsWithBalance.map(output => (
+          {outputsWithMoney.map(output => (
             <UtxoRow
-              key={output.address + output.btcBalance.amount.valueOf()}
+              key={output.address + output.btcAmount.amount.valueOf()}
               address={output.address}
-              btcBalance={output.btcBalance}
-              usdBalance={output.usdBalance}
+              btcAmount={output.btcAmount}
+              fiatAmount={output.fiatAmount}
               isLocked
             />
           ))}

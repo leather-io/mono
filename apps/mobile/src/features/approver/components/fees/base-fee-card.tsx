@@ -18,7 +18,7 @@ interface BaseFeeCardProps {
 }
 
 export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: BaseFeeCardProps) {
-  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
+  const fiatAmount = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
 
   return (
     <>
@@ -44,7 +44,7 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
             <Box flexDirection="row" alignItems="center" gap="2">
               <Box alignItems="flex-end">
                 <Balance balance={amount} variant="label02" />
-                <Balance balance={fiatBalance} variant="label02" color="ink.text-subdued" />
+                <Balance balance={fiatAmount} variant="label02" color="ink.text-subdued" />
               </Box>
               <ChevronRightIcon variant="small" />
             </Box>

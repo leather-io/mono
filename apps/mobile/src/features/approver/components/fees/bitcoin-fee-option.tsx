@@ -11,7 +11,7 @@ interface BitcoinFeeOptionProps {
   feeType: FeeTypes;
   fee: number;
   feeRate: number;
-  usd: Money;
+  fiatFee: Money;
   onPress(): void;
   isSelected: boolean;
   disabled: boolean;
@@ -21,7 +21,7 @@ export function BitcoinFeeOption({
   feeType,
   fee,
   feeRate,
-  usd,
+  fiatFee,
   onPress,
   isSelected,
   disabled,
@@ -36,11 +36,11 @@ export function BitcoinFeeOption({
       time={getBitcoinFeeData(feeType).time}
       isSelected={isSelected}
       disabled={disabled}
-      balance={formatBalance({ balance: sats, isFiat: false })}
-      balanceUsd={i18n._({
+      formattedFeeAmount={formatBalance({ balance: sats, isFiat: false })}
+      formattedFiatFeeAmount={i18n._({
         id: 'fees-sheet.fee-rate-caption',
-        message: '{feeRate} sats/B · {balanceUsd}',
-        values: { feeRate, balanceUsd: formatBalance({ balance: usd, isFiat: true }) },
+        message: '{feeRate} sats/B · {fiatFee}',
+        values: { feeRate, fiatFee: formatBalance({ balance: fiatFee, isFiat: true }) },
       })}
     />
   );

@@ -7,12 +7,12 @@ import { truncateMiddle } from '@leather.io/utils';
 interface UtxoRowProps {
   isLocked: boolean;
   address: string;
-  btcBalance: Money;
-  usdBalance: Money;
+  btcAmount: Money;
+  fiatAmount: Money;
   txid?: string;
 }
 
-export function UtxoRow({ isLocked, address, btcBalance, usdBalance, txid }: UtxoRowProps) {
+export function UtxoRow({ isLocked, address, btcAmount, fiatAmount, txid }: UtxoRowProps) {
   const icon = isLocked ? <LockIcon /> : <UnlockIcon color="red.action-primary-default" />;
 
   return (
@@ -25,8 +25,8 @@ export function UtxoRow({ isLocked, address, btcBalance, usdBalance, txid }: Utx
         {txid && <Cell.Label variant="secondary">{truncateMiddle(txid)}</Cell.Label>}
       </Cell.Content>
       <Cell.Aside>
-        <Balance balance={btcBalance} variant="label02" />
-        <Balance balance={usdBalance} variant="label02" color="ink.text-subdued" />
+        <Balance balance={btcAmount} variant="label02" />
+        <Balance balance={fiatAmount} variant="label02" color="ink.text-subdued" />
       </Cell.Aside>
     </Cell.Root>
   );
