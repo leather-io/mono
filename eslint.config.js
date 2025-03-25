@@ -45,7 +45,7 @@ export default tseslint.config(
   },
   {
     name: 'web',
-    files: ['apps/web/**/*.{ts,tsx}'],
+    files: ['apps/web/app/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {

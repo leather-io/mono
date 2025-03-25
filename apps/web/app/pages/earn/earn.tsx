@@ -8,7 +8,7 @@ import { StackingExplainer } from './components/stacking-explainer';
 export function Earn() {
   return (
     <Page>
-      <Page.Header title="Earn" />
+      <Page.Header title="Invest in Stacks" />
 
       <styled.h2 textStyle="heading.05" mt="space.07">
         Stack in a pool
