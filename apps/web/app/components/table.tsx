@@ -40,15 +40,6 @@ export const TableHead = forwardRef<HTMLTableSectionElement, HTMLStyledProps<'th
   (props, ref) => <styled.thead height="40px" className={theadBorderBottom} ref={ref} {...props} />
 );
 
-// <styled.th
-//   key={header.id}
-//   colSpan={header.colSpan}
-//   textStyle="label.03"
-//   color="ink.text-subdued"
-//   style={{ width: `${header.getSize()}%` }}
-//   align={(header.column.columnDef.meta as any)?.align}
-// >
-
 export const TableHeader = forwardRef<HTMLTableCellElement, HTMLStyledProps<'th'>>((props, ref) => (
   <styled.th textStyle="label.03" color="ink.text-subdued" ref={ref} {...props} />
 ));
