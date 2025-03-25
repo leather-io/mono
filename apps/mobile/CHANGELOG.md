@@ -646,6 +646,20 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.24.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.24.0...@leather.io/mobile-v2.24.1) (2025-03-25)
+
+
+### Bug Fixes
+
+* add new route for account balances and correct account total, ref LEA-2017 ([40bc482](https://github.com/leather-io/mono/commit/40bc482c24589f75027f5a90491bef7d0d7e338d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.54.1
+
 ## [2.24.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.23.0...@leather.io/mobile-v2.24.0) (2025-03-24)
 
 
