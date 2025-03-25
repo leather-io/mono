@@ -389,6 +389,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.54.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.54.0...@leather.io/ui-v1.54.1) (2025-03-25)
+
+
+### Bug Fixes
+
+* **web:** enable imports of icons from ui, closes LEA-2315 ([4f7559b](https://github.com/leather-io/mono/commit/4f7559b0ad1448b8a84c5d89c421c48b1def2dba))
+
 ## [1.54.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.53.0...@leather.io/ui-v1.54.0) (2025-03-21)
 
 
