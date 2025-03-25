@@ -1,6 +1,6 @@
 import { mockInscriptionResponsesList } from '../../../test/mock-inscriptions';
 import { createBestInSlotInscription } from './inscription.utils';
-import { findInscriptionsOnUtxo } from './inscriptions.hooks';
+import { findInscriptionsOnUtxo } from './ordinals.utils';
 
 describe(findInscriptionsOnUtxo, () => {
   test('that it finds an inscription on a utxo', () => {

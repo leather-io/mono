@@ -1,7 +1,5 @@
 import { Inscription } from '@leather.io/models';
 
-import { BitcoinClient } from '../clients/bitcoin-client';
-
 interface FindInscriptionsOnUtxoArgs {
   index: number;
   inscriptions: Inscription[];
@@ -15,13 +13,4 @@ export function findInscriptionsOnUtxo({ index, inscriptions, txId }: FindInscri
 
 export function createInscriptionByXpubQueryKey(xpub: string) {
   return ['inscriptions', xpub.substring(0, 32)];
-}
-
-export function createInscriptionByXpubQuery(client: BitcoinClient, xpub: string) {
-  return {
-    queryKey: createInscriptionByXpubQueryKey(xpub),
-    queryFn: () => client.BestInSlotApi.getInscriptionsByXpub(xpub),
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-  } as const;
 }
