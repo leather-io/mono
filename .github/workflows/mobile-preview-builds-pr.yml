@@ -1,15 +1,16 @@
-name: Trigger mobile preview builds for iOS and Android
+name: Trigger mobile preview builds for iOS and Android in PRs
 on:
   pull_request:
     types:
       - synchronize
       - labeled
+
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  deploy-eas-ios:
+  deploy-eas-ios-pr:
     if: contains(github.event.pull_request.labels.*.name, 'build:mobile:simulator')
     runs-on: ubuntu-latest
     steps:
@@ -21,9 +22,9 @@ jobs:
           ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          IS_MAIN_BRANCH: false
 
-  deploy-eas-android:
+  deploy-eas-android-pr:
     if: contains(github.event.pull_request.labels.*.name, 'build:mobile:simulator')
     runs-on: ubuntu-latest
     steps:
@@ -32,5 +33,4 @@ jobs:
         with:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          IS_MAIN_BRANCH: false
