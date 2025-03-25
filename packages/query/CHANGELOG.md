@@ -477,6 +477,13 @@
     * @leather.io/stacks bumped to 1.7.5
     * @leather.io/utils bumped to 0.31.0
 
+## [2.33.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.32.0...@leather.io/query-v2.33.0) (2025-03-25)
+
+
+### Features
+
+* **web:** add query provider and upgrade alex sdk package ([4e9fde1](https://github.com/leather-io/mono/commit/4e9fde1343847eb866c9799ad241fd27de27d37e))
+
 ## [2.32.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.31.1...@leather.io/query-v2.32.0) (2025-03-24)
 
 

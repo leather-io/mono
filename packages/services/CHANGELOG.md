@@ -200,6 +200,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.9.3
 
+## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.6.1...@leather.io/services-v1.7.0) (2025-03-25)
+
+
+### Features
+
+* **web:** add query provider and upgrade alex sdk package ([4e9fde1](https://github.com/leather-io/mono/commit/4e9fde1343847eb866c9799ad241fd27de27d37e))
+
 ## [1.6.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.5.1...@leather.io/services-v1.6.0) (2025-03-17)
 
 
