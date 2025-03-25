@@ -646,6 +646,21 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.20.1
 
+## [2.24.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.24.1...@leather.io/mobile-v2.24.2) (2025-03-25)
+
+
+### Bug Fixes
+
+* **mobile:** collapse the sheet and show toast on fee selection in approver ([f7ccb19](https://github.com/leather-io/mono/commit/f7ccb199f88ab845dd6387e5f1787aa06ae44d08))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.33.0
+    * @leather.io/services bumped to 1.7.0
+
 ## [2.24.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.24.0...@leather.io/mobile-v2.24.1) (2025-03-25)
 
 
