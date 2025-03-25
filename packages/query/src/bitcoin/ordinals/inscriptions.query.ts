@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 import { BitcoinQueryPrefixes } from '../../query-prefixes';
+import { BitcoinClient } from '../clients/bitcoin-client';
+import { createInscriptionByXpubQueryKey } from './ordinals.utils';
 
 export function createGetInscriptionsByAddressCacheKey(address: string, networkId: string) {
   return [BitcoinQueryPrefixes.GetInscriptionsByAddress, networkId, address];
@@ -32,4 +34,13 @@ export async function getNumberOfInscriptionOnUtxoUsingOrdinalsCom(id: string, i
   if (thumbnailCount === 0 && firstHeaderText !== 'inscriptions') return 0;
 
   return thumbnailCount;
+}
+
+export function createInscriptionByXpubQuery(client: BitcoinClient, xpub: string) {
+  return {
+    queryKey: createInscriptionByXpubQueryKey(xpub),
+    queryFn: () => client.BestInSlotApi.getInscriptionsByXpub(xpub),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  } as const;
 }

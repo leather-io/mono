@@ -1,4 +1,4 @@
-import { alex } from './alex-sdk.hooks';
+import { alex } from './alex-sdk.utils';
 
 const queryOptions = {
   refetchOnMount: true,

@@ -4,7 +4,7 @@ import {
   mockPendingTxs2,
   mockPendingTxs3,
 } from '../../../test/mock-btc-txs';
-import { calculateOutboundPendingTxsValue } from './transactions-by-address.hooks';
+import { calculateOutboundPendingTxsValue } from './address.utils';
 
 describe(calculateOutboundPendingTxsValue.name, () => {
   test('that it returns 0 if there are no pending txs', () => {
