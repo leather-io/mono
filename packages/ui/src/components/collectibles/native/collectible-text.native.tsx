@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
-// import DomPurify from 'dompurify';
-import { Text } from '../../../../native';
+import { Text } from '../../text/text.native';
 import { CollectibleCardLayout } from './collectible-card-layout.native';
 
 interface CollectibleTextProps {
   src: string;
+  size?: number;
 }
 
-export function CollectibleText({ src }: CollectibleTextProps) {
+export function CollectibleText({ src, size = 200 }: CollectibleTextProps) {
   const [content, setContent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,22 +20,26 @@ export function CollectibleText({ src }: CollectibleTextProps) {
         }
         const data = await response.json();
         setContent(JSON.stringify(data, null, 2));
-        // eslint-disable-next-line no-empty
-      } catch {}
+      } catch {
+        setContent('Content not found');
+      }
     }
 
     void fetchContent();
   }, [src]);
 
+  if (!content) return null;
+
   return (
-    <CollectibleCardLayout bg="ink.text-primary" p="4">
-      <Text color="ink.background-secondary" textAlign="left">
-        {/* FIXME
-        - implement alternative for dompurify in native
-        - I tried using jsdom as a polyfill but then hit an error Can't resolve 'vm' in jsdom
-        - maybe we should write our own sanitizer?
-        */}
-        {/* {content ? sanitize(content) : ''} */}
+    <CollectibleCardLayout bg="ink.text-primary" p="4" width={size} height={size}>
+      {/* 
+       TODO: assess security implications of rendering HTML content
+       - XSS attacks seem unlikely on React Native 
+      - I tried using RenderHtml, but it was not working as expected
+      - sanitize-html is a popular library for this, but it's a little heavy for this use case
+      - I tried regex's but theres always a new case to catch and it actually removes some valid content
+       */}
+      <Text color="ink.background-secondary" variant="code">
         {content}
       </Text>
     </CollectibleCardLayout>

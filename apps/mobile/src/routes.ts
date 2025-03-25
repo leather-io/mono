@@ -21,6 +21,7 @@ export enum AppRoutes {
   Activity = '/activity',
   AccountActivity = '/account/[account]/activity',
   AccountBalances = '/account/[account]/balances',
+  AccountCollectibles = '/account/[account]/collectibles',
   // Settings
   Settings = '/settings',
   SettingsDisplay = '/settings/display',

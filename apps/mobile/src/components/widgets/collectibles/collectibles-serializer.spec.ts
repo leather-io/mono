@@ -1,6 +1,11 @@
-import { mockCollectibles } from '@leather.io/ui/native';
-
 import { serializeCollectibles } from './collectibles-serializer';
+import { mockCollectibles } from './collectibles.mocks';
+import {
+  formatInsciptionName,
+  isValidInscription,
+  isValidSip9,
+  isValidStamp,
+} from './collectibles.utils';
 
 describe('serializeCollectibles', () => {
   it('should correctly serialize collectibles', () => {
@@ -56,5 +61,38 @@ describe('serializeCollectibles', () => {
         })
       );
     });
+  });
+});
+
+describe('isValidInscription', () => {
+  it('should return true for valid inscriptions', () => {
+    const inscription = mockCollectibles.find(c => c.protocol === 'inscription');
+    if (!inscription) throw new Error('No inscription found in test data');
+    expect(isValidInscription(inscription)).toBe(true);
+  });
+});
+
+describe('isValidSip9', () => {
+  it('should return true for valid sip9s', () => {
+    const sip9 = mockCollectibles.find(c => c.protocol === 'sip9');
+    if (!sip9) throw new Error('No sip9 found in test data');
+    expect(isValidSip9(sip9)).toBe(true);
+  });
+});
+
+describe('isValidStamp', () => {
+  it('should return true for valid stamps', () => {
+    const stamp = mockCollectibles.find(c => c.protocol === 'stamp');
+    if (!stamp) throw new Error('No stamp found in test data');
+    expect(isValidStamp(stamp)).toBe(true);
+  });
+});
+
+describe('formatInsciptionName', () => {
+  it('should replace "Inscription" with "#" in the name', () => {
+    expect(formatInsciptionName('Inscription 123')).toBe('# 123');
+    expect(formatInsciptionName('My Inscription 456')).toBe('My # 456');
+    expect(formatInsciptionName('Inscription Inscription')).toBe('# #');
+    expect(formatInsciptionName('No Match Here')).toBe('No Match Here');
   });
 });

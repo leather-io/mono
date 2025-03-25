@@ -40,11 +40,16 @@ export default function StackLayout() {
       {/* Account */}
       <Stack.Screen name="account/[account]/index" options={{ header: () => <NakedHeader /> }} />
       <Stack.Screen name="account/[account]/activity" options={{ headerShown: false }} />
+      <Stack.Screen name="account/[account]/collectibles" options={{ headerShown: false }} />
       <Stack.Screen name="account/[account]/balances" options={{ headerShown: false }} />
       <Stack.Screen name="balances/index" options={{ headerShown: false }} />
 
       {/* Activity */}
       <Stack.Screen name="activity/index" options={{ headerShown: false }} />
+
+      {/* Collectibles */}
+      <Stack.Screen name="collectibles/index" options={{ headerShown: false }} />
+
       {/* Developer Console */}
       <Stack.Screen
         name="developer-console/index"

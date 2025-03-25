@@ -16,4 +16,5 @@ export type BitcoinErrorKey =
   | TransactionErrorKey
   | 'InsufficientAmount'
   | 'NoInputsToSign'
-  | 'NoOutputsToSign';
+  | 'NoOutputsToSign'
+  | 'InscribedUtxos';

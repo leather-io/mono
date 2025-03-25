@@ -71,5 +71,12 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    name: 'test-files',
+    files: ['**/*.spec.ts', '**/*.mocks.ts'],
+    rules: {
+      'lingui/no-unlocalized-strings': 'off',
+    },
   }
 );

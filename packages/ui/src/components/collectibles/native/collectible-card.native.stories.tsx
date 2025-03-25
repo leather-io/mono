@@ -55,10 +55,10 @@ export const OrdinalGltfCollectibleCardStory = {
 
 export const StxNftCollectibleCardStory = {
   args: {
-    mimeType: null,
+    mimeType: undefined,
     name: 'BlockSurvey #90',
     src: 'https://assets.hiro.so/api/mainnet/token-metadata-api/SPNWZ5V2TPWGQGVDR6T7B6RQ4XMGZ4PXTEE0VQ0S.blocksurvey/90.png',
-    type: 'stacks',
+    type: 'stx20',
   },
   argTypes: {},
 } satisfies StoryObj<typeof CollectibleCard>;

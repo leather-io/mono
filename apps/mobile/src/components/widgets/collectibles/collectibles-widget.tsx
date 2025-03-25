@@ -1,30 +1,34 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { FetchState } from '@/shared/fetch-state';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { Money } from '@leather.io/models';
-import { CollectibleCard, CollectibleCardProps, Theme } from '@leather.io/ui/native';
+import { NonFungibleCryptoAssetInfo } from '@leather.io/models';
+import { Theme } from '@leather.io/ui/native';
 
 import { Widget } from '../components/widget';
+import { CollectiblesLayout } from './collectibles.layout';
 
 interface CollectiblesWidgetProps {
-  collectibles: CollectibleCardProps[];
-  totalBalance: Money;
+  collectibles: FetchState<NonFungibleCryptoAssetInfo[]>;
+  onPressHeader: () => void;
 }
 
-export function CollectiblesWidget({ collectibles, totalBalance }: CollectiblesWidgetProps) {
+export function CollectiblesWidget({ onPressHeader, collectibles }: CollectiblesWidgetProps) {
   const theme = useTheme<Theme>();
+
+  // TODO LEA-1726: Handle loading and error states
+  if (collectibles.state !== 'success') return null;
 
   return (
     <Widget>
-      <Widget.Header>
+      <Widget.Header onPress={onPressHeader}>
         <Widget.Title
           title={t({
             id: 'collectibles.header_title',
             message: 'My collectibles',
           })}
-          totalBalance={totalBalance}
         />
       </Widget.Header>
       <Widget.Body>
@@ -33,12 +37,9 @@ export function CollectiblesWidget({ collectibles, totalBalance }: CollectiblesW
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             gap: theme.spacing['3'],
-            paddingHorizontal: theme.spacing['5'],
           }}
         >
-          {collectibles.map((collectible: CollectibleCardProps, index) => (
-            <CollectibleCard key={index} {...collectible} />
-          ))}
+          <CollectiblesLayout collectibles={collectibles.value} mode="widget" />
         </ScrollView>
       </Widget.Body>
     </Widget>
