@@ -71,7 +71,8 @@ export const LEATHER_GUIDES_CONNECT_DAPPS = `${LEATHER_GUIDES_URL}/connect-dapps
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
-export const LEATHER_API_URL = 'https://staging.api.leather.io';
+export const LEATHER_API_URL_STAGING = 'https://staging.api.leather.io';
+export const LEATHER_API_URL_PRODUCTION = 'https://api.leather.io';
 
 export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   bitcoin: {

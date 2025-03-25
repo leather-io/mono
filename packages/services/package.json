@@ -16,6 +16,7 @@
     "build:watch": "tsup --watch --onSuccess 'tsup --dts-only'",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
+    "gen-api-types": "dotenv -e .env -- openapi-typescript --redocly ./redocly.yaml https://staging.api.leather.io/docs/openapi.json -o ./src/infrastructure/api/leather/leather-api.types.ts && pnpm format",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
@@ -36,6 +37,7 @@
     "axios": "1.8.2",
     "bignumber.js": "9.1.2",
     "inversify": "7.1.0",
+    "openapi-fetch": "0.13.5",
     "p-queue": "8.0.1",
     "reflect-metadata": "0.2.2",
     "zod": "3.24.2"
@@ -44,7 +46,9 @@
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
+    "dotenv-cli": "8.0.0",
     "eslint": "9.16.0",
+    "openapi-typescript": "7.6.1",
     "prettier": "3.5.1",
     "tslib": "2.6.2",
     "tsup": "8.4.0",

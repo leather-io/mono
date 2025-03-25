@@ -20,6 +20,7 @@ import { UtxosService } from './utxos/utxos.service';
 let servicesContainer: Container;
 
 export interface InitServicesContainerOptions {
+  walletEnvironment: string;
   settingsService: Newable<SettingsService>;
   cacheService: Newable<HttpCacheService>;
 }
@@ -27,6 +28,7 @@ export interface InitServicesContainerOptions {
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
   if (!servicesContainer) {
     servicesContainer = new Container({ autobind: true });
+    servicesContainer.bind(Types.WalletEnvironment).toConstantValue(options.walletEnvironment);
     servicesContainer
       .bind<SettingsService>(Types.SettingsService)
       .to(options.settingsService)
