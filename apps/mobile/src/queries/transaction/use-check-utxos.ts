@@ -3,19 +3,13 @@ import { useCallback, useState } from 'react';
 import { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 
+import { BitcoinError } from '@leather.io/bitcoin';
 import { BitcoinClient, getNumberOfInscriptionOnUtxoUsingOrdinalsCom } from '@leather.io/query';
 import { isUndefined } from '@leather.io/utils';
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
 import { useCurrentNetworkState, useIsLeatherTestingEnv } from '../leather-query-provider';
 
-class PreventTransactionError extends Error {
-  constructor(message: string) {
-    super(message);
-    // eslint-disable-next-line lingui/no-unlocalized-strings
-    this.name = 'PreventTransactionError';
-  }
-}
 interface CheckInscribedUtxosByBestinslotArgs {
   inputs: TransactionInput[];
   txids: string[];
@@ -62,10 +56,7 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
 
   const preventTransaction = useCallback(() => {
     if (blockTxAction) return blockTxAction();
-    throw new PreventTransactionError(
-      // eslint-disable-next-line lingui/no-unlocalized-strings
-      'Transaction is prevented due to inscribed utxos in the transaction. Please contact support for more information.'
-    );
+    throw new BitcoinError('InscribedUtxos');
   }, [blockTxAction]);
 
   const checkIfUtxosListIncludesInscribed = useCallback(
@@ -108,7 +99,7 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
         // if there are no inscribed utxos in the transaction => allow the transaction
         return false;
       } catch (e) {
-        if (e instanceof PreventTransactionError) {
+        if (e instanceof BitcoinError) {
           throw e;
         }
 
