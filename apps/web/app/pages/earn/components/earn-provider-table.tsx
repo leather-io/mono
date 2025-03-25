@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 
 import {
   type ColumnDef,
@@ -13,6 +13,7 @@ import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
+import { ImgFillLoader } from '~/components/img-loader';
 import { SortableHeader, Table, theadBorderBottom } from '~/components/table';
 
 import { Button, Flag } from '@leather.io/ui';
@@ -30,14 +31,44 @@ interface EarnProvider {
   minAmount: string | null;
   estApr: string;
   payout: string;
+  icon: ReactElement;
 }
 const earnProviders: EarnProvider[] = [
-  { provider: 'Fast Pool', minAmount: null, estApr: '5%', payout: 'STX' },
-  { provider: 'PlanBetter', minAmount: '200 STX', estApr: '10%', payout: 'STX' },
-  { provider: 'Restake', minAmount: '100 STX', estApr: '11%', payout: 'STX' },
-  { provider: 'Xverse Pool', minAmount: '100 STX', estApr: '10%', payout: 'BTC' },
-  { provider: 'Stacking DAO', minAmount: '100 STX', estApr: '16%', payout: 'STX' },
-  { provider: 'Xverse', minAmount: null, estApr: '10%', payout: 'STX' },
+  {
+    provider: 'Fast Pool',
+    icon: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
+    minAmount: null,
+    estApr: '5%',
+    payout: 'STX',
+  },
+  {
+    provider: 'PlanBetter',
+    icon: <ImgFillLoader src="icons/planbetter.webp" width="24" fill="black" />,
+    minAmount: '200 STX',
+    estApr: '10%',
+    payout: 'STX',
+  },
+  {
+    provider: 'Restake',
+    icon: <ImgFillLoader src="icons/restake.webp" width="24" fill="#124044" />,
+    minAmount: '100 STX',
+    estApr: '11%',
+    payout: 'STX',
+  },
+  {
+    provider: 'Xverse Pool',
+    icon: <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
+    minAmount: '100 STX',
+    estApr: '10%',
+    payout: 'BTC',
+  },
+  {
+    provider: 'Stacking DAO',
+    icon: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
+    minAmount: '100 STX',
+    estApr: '16%',
+    payout: 'STX',
+  },
 ];
 
 export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
@@ -47,7 +78,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'provider',
         cell: info => (
-          <Flag img={<DummyIcon />}>
+          <Flag img={info.row.original.icon}>
             <styled.span color="ink.text-primary">{info.getValue() as string}</styled.span>
           </Flag>
         ),
@@ -165,10 +196,21 @@ interface LiquidStackingProvider {
   provider: string;
   estApr: string;
   payout: string;
+  icon: ReactElement;
 }
 const liquidStackingProviders: LiquidStackingProvider[] = [
-  { provider: 'StackingDAO', estApr: '5%', payout: 'stSTX' },
-  { provider: 'LISA', estApr: '10%', payout: 'LiSTX' },
+  {
+    provider: 'StackingDAO',
+    estApr: '5%',
+    payout: 'stSTX',
+    icon: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="black" />,
+  },
+  {
+    provider: 'LISA',
+    estApr: '10%',
+    payout: 'LiSTX',
+    icon: <ImgFillLoader src="icons/lisa.webp" width="24" fill="#FB9DF1" />,
+  },
 ];
 
 export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
@@ -178,7 +220,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'provider',
         cell: info => (
-          <Flag img={<DummyIcon />}>
+          <Flag img={info.row.original.icon}>
             <styled.span color="ink.text-primary">{info.getValue() as string}</styled.span>
           </Flag>
         ),
