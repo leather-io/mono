@@ -1,0 +1,6 @@
+resolve:
+  http:
+    headers:
+      - matches: https://staging.api.leather.io/docs/openapi.json
+        name: Authorization
+        envVariable: LEATHER_API_BASIC_AUTH

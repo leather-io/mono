@@ -1,8 +1,7 @@
-import axios from 'axios';
 import { inject, injectable } from 'inversify';
-import { z } from 'zod';
+import createClient from 'openapi-fetch';
 
-import { LEATHER_API_URL } from '@leather.io/constants';
+import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
 import { SupportedBlockchains } from '@leather.io/models';
 
 import { Types } from '../../../inversify.types';
@@ -10,47 +9,45 @@ import type { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
-import {
-  LeatherApiPage,
-  LeatherApiPageRequest,
-  getPageRequestQueryParams,
-} from './leather-api.pagination';
-import {
-  leatherApiBitcoinTransactionPageSchema,
-  leatherApiBitcoinTransactionSchema,
-  leatherApiCryptoPricesSchema,
-  leatherApiFiatRatesSchema,
-  leatherApiRegisterNotificationsResponseSchema,
-  leatherApiSip10PricesSchema,
-  leatherApiUtxoSchema,
-} from './leather-api.schemas';
+import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
+import { paths } from './leather-api.types';
 
-export type LeatherApiUtxo = z.infer<typeof leatherApiUtxoSchema>;
-export type LeatherApiBitcoinTransaction = z.infer<typeof leatherApiBitcoinTransactionSchema>;
-export type LeatherApiFiatRates = z.infer<typeof leatherApiFiatRatesSchema>;
-export type LeatherApiCryptoPrices = z.infer<typeof leatherApiCryptoPricesSchema>;
-export type LeatherApiSip10Prices = z.infer<typeof leatherApiSip10PricesSchema>;
-export type LeatherApiRegisterNotificationsResponse = z.infer<
-  typeof leatherApiRegisterNotificationsResponseSchema
->;
+export type LeatherApiBitcoinTransaction =
+  paths['/v1/transactions/{descriptor}']['get']['responses'][200]['content']['application/json']['data'][number];
 
 @injectable()
 export class LeatherApiClient {
+  private readonly client;
+
   constructor(
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService,
-    @inject(Types.SettingsService) private readonly settingsService: SettingsService
-  ) {}
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
+    @inject(Types.WalletEnvironment) environmnet: string
+  ) {
+    this.client = createClient<paths>({
+      baseUrl: environmnet === 'production' ? LEATHER_API_URL_PRODUCTION : LEATHER_API_URL_STAGING,
+    });
+    this.client.use({
+      onResponse({ response }) {
+        if (!response.ok) {
+          throw new Error(
+            `Leather API (${response.url}): ${response.status} ${response.statusText}`
+          );
+        }
+      },
+    });
+  }
 
-  async fetchUtxos(descriptor: string, signal?: AbortSignal): Promise<LeatherApiUtxo[]> {
+  async fetchUtxos(descriptor: string, signal?: AbortSignal) {
     const network = this.settingsService.getSettings().network.chain.bitcoin.bitcoinNetwork;
     return await this.cacheService.fetchWithCache(
       ['leather-api-utxos', network, descriptor],
       async () => {
-        const res = await axios.get<LeatherApiUtxo[]>(
-          `${LEATHER_API_URL}/v1/utxos/${descriptor}?network=${network}`,
-          { signal }
-        );
-        return z.array(leatherApiUtxoSchema).parse(res.data);
+        const { data } = await this.client.GET(`/v1/utxos/{descriptor}`, {
+          params: { path: { descriptor }, query: { network } },
+          signal,
+        });
+        return data!;
       },
       { ttl: HttpCacheTimeMs.fiveSeconds }
     );
@@ -60,65 +57,57 @@ export class LeatherApiClient {
     descriptor: string,
     pageRequest: LeatherApiPageRequest,
     signal?: AbortSignal
-  ): Promise<LeatherApiPage<LeatherApiBitcoinTransaction>> {
+  ) {
     const params = getPageRequestQueryParams(pageRequest);
-    params.append('network', selectBitcoinNetwork(this.settingsService.getSettings()));
+    const network = selectBitcoinNetwork(this.settingsService.getSettings());
     return await this.cacheService.fetchWithCache(
       ['leather-api-transactions', descriptor, params.toString()],
       async () => {
-        const res = await axios.get<LeatherApiPage<LeatherApiBitcoinTransaction>>(
-          `${LEATHER_API_URL}/v1/transactions/${descriptor}?${params.toString()}`,
-          { signal }
-        );
-        return leatherApiBitcoinTransactionPageSchema.parse(res.data);
+        const { data } = await this.client.GET(`/v1/transactions/{descriptor}`, {
+          params: {
+            path: { descriptor },
+            query: {
+              network,
+              page: pageRequest.page.toString(),
+              pageSize: pageRequest.pageSize.toString(),
+            },
+          },
+          signal,
+        });
+        return data!;
       },
       { ttl: HttpCacheTimeMs.fiveSeconds }
     );
   }
 
-  async fetchFiatExchangeRates(signal?: AbortSignal): Promise<LeatherApiFiatRates> {
+  async fetchFiatExchangeRates(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(
       ['leather-api-fiat-rates'],
       async () => {
-        const res = await axios.get<LeatherApiFiatRates>(
-          `${LEATHER_API_URL}/v1/market/fiat-rates`,
-          {
-            signal,
-          }
-        );
-        return leatherApiFiatRatesSchema.parse(res.data);
+        const { data } = await this.client.GET('/v1/market/fiat-rates', { signal });
+        return data!;
       },
       { ttl: HttpCacheTimeMs.oneDay }
     );
   }
 
-  async fetchCryptoPrices(signal?: AbortSignal): Promise<LeatherApiCryptoPrices> {
+  async fetchCryptoPrices(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(
       ['leather-api-crypto-prices'],
       async () => {
-        const res = await axios.get<LeatherApiCryptoPrices>(
-          `${LEATHER_API_URL}/v1/market/crypto-prices`,
-          {
-            signal,
-          }
-        );
-        return leatherApiCryptoPricesSchema.parse(res.data);
+        const { data } = await this.client.GET('/v1/market/crypto-prices', { signal });
+        return data!;
       },
       { ttl: HttpCacheTimeMs.tenMinutes }
     );
   }
 
-  async fetchSip10Prices(signal?: AbortSignal): Promise<LeatherApiSip10Prices> {
+  async fetchSip10Prices(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(
       ['leather-api-sip10-prices'],
       async () => {
-        const res = await axios.get<LeatherApiSip10Prices>(
-          `${LEATHER_API_URL}/v1/market/sip10-prices`,
-          {
-            signal,
-          }
-        );
-        return leatherApiSip10PricesSchema.parse(res.data);
+        const { data } = await this.client.GET('/v1/market/sip10-prices', { signal });
+        return data!;
       },
       { ttl: HttpCacheTimeMs.tenMinutes }
     );
@@ -135,21 +124,20 @@ export class LeatherApiClient {
       chain: SupportedBlockchains;
     },
     signal?: AbortSignal
-  ): Promise<LeatherApiRegisterNotificationsResponse> {
+  ) {
     return await this.cacheService.fetchWithCache(
       ['leather-api-register-notifications', addresses, notificationToken, chain],
       async () => {
-        const res = await axios.post<LeatherApiRegisterNotificationsResponse>(
-          `${LEATHER_API_URL}/v1/notifications/register`,
-          {
+        const { data } = await this.client.POST('/v1/notifications/register', {
+          body: {
             addresses,
             notificationToken,
             chain,
             network: 'mainnet',
           },
-          { signal }
-        );
-        return leatherApiRegisterNotificationsResponseSchema.parse(res.data);
+          signal,
+        });
+        return data!;
       },
       { ttl: HttpCacheTimeMs.fiveSeconds }
     );
