@@ -533,6 +533,9 @@ importers:
       '@leather.io/panda-preset':
         specifier: workspace:*
         version: link:../../packages/panda-preset
+      '@leather.io/query':
+        specifier: workspace:*
+        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -560,6 +563,9 @@ importers:
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
+      '@tanstack/react-query':
+        specifier: 5.59.16
+        version: 5.59.16(react@19.0.0)
       '@tanstack/react-table':
         specifier: 8.21.2
         version: 8.21.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -581,9 +587,15 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
+      react-hook-form:
+        specifier: 7.53.2
+        version: 7.53.2(react@19.0.0)
       react-router:
         specifier: 7.4.0
         version: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      safe-buffer:
+        specifier: 5.2.1
+        version: 5.2.1
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -967,8 +979,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       alex-sdk:
-        specifier: 2.1.4
-        version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
+        specifier: 3.1.0
+        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
         specifier: 1.8.2
         version: 1.8.2
@@ -1108,8 +1120,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       alex-sdk:
-        specifier: 2.1.4
-        version: 2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
+        specifier: 3.1.0
+        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
         specifier: 1.8.2
         version: 1.8.2
@@ -7344,12 +7356,12 @@ packages:
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
 
-  alex-sdk@2.1.4:
-    resolution: {integrity: sha512-fFFyk3iwioqRsNOiWQyVXl+5vjlIU0ez3Ko9JnE6JBt8F8pNLMAkPIBlZA/nW/EhdFrrTuyuT0CHxH22GumQ5w==}
+  alex-sdk@3.1.0:
+    resolution: {integrity: sha512-nNBrI3H1cQMSFqz2RxvGh/gjEPh9yfyvIjfUYj6O78nUidnMBEcncn3qYq6LlqURaT4cXK1h6RJHxT5sc1eg7A==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@stacks/network': ^6.3.0
-      '@stacks/transactions': ^6.2.0
+      '@stacks/network': ^7.0.2
+      '@stacks/transactions': ^7.0.2
 
   anser@1.4.10:
     resolution: {integrity: sha512-hCv9AqTQ8ycjpSd3upOJd7vFwW1JaoYQ7tpham03GJ1ca8/65rqn0RpaWpItOAd6ylW9wAw6luXYPJIyPFVOww==}
@@ -7981,11 +7993,12 @@ packages:
     resolution: {integrity: sha512-yKNcXi/Mvi5kb1uK0sahubYiyfUO2EUgOp4NcY9+8NX5Xmc+4yeNogZuLFkpLBBj7/QI9MjRUIuXrV9XOw5kVg==}
     engines: {node: '>= 0.3.0'}
 
-  clarity-codegen@0.5.3:
-    resolution: {integrity: sha512-SmcGEJVCsx2ljD7hGzcIv4W3lUzJl2k3zuH5kHDI0lgO2N6sTPRv+WyXzxmMsJvGCsdggkvVU9ebc2cR/Z+h+g==}
+  clarity-codegen@1.0.0-beta.1:
+    resolution: {integrity: sha512-cEyEpOoR3xnTMmGWxycWFH0+Xgmuyhw3ueydg5TFeap1ZXh4/aoxqYIg7JwALlv09wZv/JXe3H+yodMra31pDQ==}
     hasBin: true
     peerDependencies:
-      '@stacks/transactions': '*'
+      '@stacks/common': ^7.0.2
+      '@stacks/transactions': ^7.0.2
 
   classnames@2.5.1:
     resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
@@ -9372,8 +9385,8 @@ packages:
     resolution: {integrity: sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==}
     engines: {node: '>= 0.10.0'}
 
-  exsolve@1.0.2:
-    resolution: {integrity: sha512-ZEcIMbthn2zeX4/wD/DLxDUjuCltHXT8Htvm/JFlTkdYgWh2+HGppgwwNUnIVxzxP7yJOPtuBAec0dLx6lVY8w==}
+  exsolve@1.0.4:
+    resolution: {integrity: sha512-xsZH6PXaER4XoV+NiT7JHp1bJodJVT+cxeSH1G0f0tlT0lJqYuHUP3bUx2HtfTDvOagMINYp8rsqusxud3RXhw==}
 
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
@@ -23598,12 +23611,13 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  alex-sdk@2.1.4(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
+  alex-sdk@3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13)):
     dependencies:
       '@stacks/network': 7.0.2(encoding@0.1.13)
       '@stacks/transactions': 7.0.5(encoding@0.1.13)
-      clarity-codegen: 0.5.3(@stacks/transactions@7.0.5(encoding@0.1.13))
+      clarity-codegen: 1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.0.5(encoding@0.1.13))
     transitivePeerDependencies:
+      - '@stacks/common'
       - debug
 
   anser@1.4.10: {}
@@ -24430,8 +24444,9 @@ snapshots:
     dependencies:
       json-parse-helpfulerror: 1.0.3
 
-  clarity-codegen@0.5.3(@stacks/transactions@7.0.5(encoding@0.1.13)):
+  clarity-codegen@1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.0.5(encoding@0.1.13)):
     dependencies:
+      '@stacks/common': 7.0.2
       '@stacks/stacks-blockchain-api-types': 7.8.2
       '@stacks/transactions': 7.0.5(encoding@0.1.13)
       axios: 1.8.2
@@ -26164,7 +26179,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  exsolve@1.0.2: {}
+  exsolve@1.0.4: {}
 
   extend@3.0.2: {}
 
@@ -30420,7 +30435,7 @@ snapshots:
       '@types/doctrine': 0.0.9
       '@types/resolve': 1.20.6
       doctrine: 3.0.0
-      resolve: 1.22.8
+      resolve: 1.22.10
       strip-indent: 4.0.0
     transitivePeerDependencies:
       - supports-color
@@ -30453,6 +30468,10 @@ snapshots:
   react-hook-form@7.53.2(react@18.2.0):
     dependencies:
       react: 18.2.0
+
+  react-hook-form@7.53.2(react@19.0.0):
+    dependencies:
+      react: 19.0.0
 
   react-hotkeys-hook@4.6.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
@@ -31303,7 +31322,7 @@ snapshots:
     dependencies:
       color: 4.2.3
       detect-libc: 2.0.3
-      semver: 7.6.3
+      semver: 7.7.1
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.33.5
       '@img/sharp-darwin-x64': 0.33.5
@@ -32290,7 +32309,7 @@ snapshots:
   unenv@2.0.0-rc.8:
     dependencies:
       defu: 6.1.4
-      exsolve: 1.0.2
+      exsolve: 1.0.4
       ohash: 2.0.11
       pathe: 2.0.3
       ufo: 1.5.4
