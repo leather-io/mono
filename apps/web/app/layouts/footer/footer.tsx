@@ -1,7 +1,5 @@
 import { FooterLayout as Footer } from './footer.layout';
 
-const year = new Date().getFullYear();
-
 function AppFooter() {
   return (
     <Footer>
@@ -49,7 +47,9 @@ function AppFooter() {
 
       <Footer.LegalText
         product="A Trust Machines product"
-        copyright={`© ${year} Leather Wallet, LLC`}
+        // Hard coding date as Cloudflare Workers renders new Date() as epoch
+        // start time
+        copyright={`© 2025 Leather Wallet, LLC`}
       />
     </Footer>
   );
