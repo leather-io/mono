@@ -1,6 +1,7 @@
 import { styled } from 'leather-styles/jsx';
+import { StacksIcon } from '~/components/icons/stacks-icon';
 
-import { GlassesIcon, NewspaperIcon, StacksIcon, SupportIcon, TerminalIcon } from '@leather.io/ui';
+import { GlassesIcon, NewspaperIcon, SupportIcon, TerminalIcon } from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
 
@@ -35,6 +36,57 @@ export function Nav() {
         </styled.svg>
       </styled.div>
 
+      <Drawer.Root>
+        <Drawer.Trigger>
+          <IconButton
+            variant="ghost"
+            bottom="space.06"
+            right="space.06"
+            borderRadius="50%"
+            bg="white"
+            boxShadow="rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+            pos="fixed"
+            zIndex={99}
+            transform="scale(1.4)"
+            icon={<BarsTwoIcon variant="small" />}
+          />
+        </Drawer.Trigger>
+        <Drawer.Portal>
+          <Drawer.Overlay className={css({ pos: 'fixed', bottom: 0, left: 0, right: 0 })} />
+          <Drawer.Content
+            className={css({
+              h: 'fit-content',
+              pos: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              outline: 'none',
+              zIndex: 999,
+            })}
+          >
+            <styled.div
+              pos="relative"
+              p="space.04"
+              bg="white"
+              zIndex={999}
+              borderTopLeftRadius="md"
+              borderTopRightRadius="md"
+            >
+              <NavItem href="/stacking" icon={<StacksIcon />}>
+                Stacking
+              </NavItem>
+
+              <NavItem href="/blog" icon={<NewspaperIcon variant="small" />}>
+                Blog
+              </NavItem>
+              <NavItem href="/guides" icon={<GlassesIcon variant="small" />}>
+                Guides
+              </NavItem>
+            </styled.div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+
       <styled.div mt="space.08">
         <NavItem
           href="/sbtc-rewards"
@@ -59,7 +111,7 @@ export function Nav() {
           sBTC
         </NavItem>
 
-        <NavItem href="/stacking" icon={<StacksIcon variant="small" />}>
+        <NavItem href="/stacking" icon={<StacksIcon />}>
           Stacking
         </NavItem>
 
