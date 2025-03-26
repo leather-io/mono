@@ -1,5 +1,5 @@
 // import { IconEdit } from '@tabler/icons-react';
-import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/app';
+import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/constants';
 
 import { NetworkInstanceToPoxContractMap, Pool, PoolName } from '../utils/types-preset-pools';
 import { PoolIcon } from './pool-icon';

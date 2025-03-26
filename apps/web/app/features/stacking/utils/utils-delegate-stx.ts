@@ -12,7 +12,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { z } from 'zod';
-import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/app';
+import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/constants';
 import { StxCallContractParams, leather } from '~/helpers/leather-sdk';
 import { cyclesToBurnChainHeight } from '~/utils/calculate-burn-height';
 import { toHumanReadableStx } from '~/utils/unit-convert';

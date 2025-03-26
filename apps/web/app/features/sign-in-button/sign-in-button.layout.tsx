@@ -21,7 +21,7 @@ export function SignInButtonContainer({ children }: HasChildren) {
 }
 
 export function SignInButtonLayout(props: ButtonProps) {
-  return <Button variant="outline" fullWidth {...props} />;
+  return <Button variant="outline" size="xs" fullWidth {...props} />;
 }
 
 interface ActiveAccountButtonLayoutProps {

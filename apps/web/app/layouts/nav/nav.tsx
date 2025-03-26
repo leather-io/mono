@@ -2,12 +2,15 @@ import { styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 
+import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 import {
   BitcoinIcon,
   GlassesIcon,
   HouseIcon,
   Hr,
+  MobileIcon,
   NewspaperIcon,
+  PuzzleIcon,
   StacksIcon,
   SupportIcon,
   TerminalIcon,
@@ -61,7 +64,7 @@ export function Nav() {
         <Hr mx="space.04" my="space.04" width="132px" />
       </styled.div>
 
-      <styled.div>
+      <styled.div mt="space.01">
         <styled.h3 textStyle="label.03" mx="space.04" mb="space.03" color="ink.text-subdued">
           Learn
         </styled.h3>
@@ -88,56 +91,11 @@ export function Nav() {
           Install
         </styled.h3>
 
-        <NavItem
-          href="https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en&pli=1"
-          icon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="17"
-              height="17"
-              viewBox="0 0 17 17"
-              fill="none"
-            >
-              <path
-                d="M3.20703 7.66667V4C3.20703 3.44772 3.65475 3 4.20703 3H13.207C13.7593 3 14.207 3.44771 14.207 4V7.66667M3.20703 7.66667V13C3.20703 13.5523 3.65475 14 4.20703 14H13.207C13.7593 14 14.207 13.5523 14.207 13V7.66667M3.20703 7.66667H14.207M7.8737 5.33333H12.207M6.20703 5.33333C6.20703 5.60948 5.98317 5.83333 5.70703 5.83333C5.43089 5.83333 5.20703 5.60948 5.20703 5.33333C5.20703 5.05719 5.43089 4.83333 5.70703 4.83333C5.98317 4.83333 6.20703 5.05719 6.20703 5.33333Z"
-                stroke="#12100F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-        >
-          Browser
+        <NavItem href={LEATHER_EXTENSION_CHROME_STORE_URL} icon={<PuzzleIcon variant="small" />}>
+          Extension
         </NavItem>
 
-        <NavItem
-          href="/sbtc-rewards"
-          icon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="17"
-              height="17"
-              viewBox="0 0 17 17"
-              fill="none"
-            >
-              <g clipPath="url(#clip0_3940_1038)">
-                <path
-                  d="M7.20671 13.3346H10.2067M5.20671 15.3346H12.2067C12.5749 15.3346 12.8734 15.0362 12.8734 14.668V2.33464C12.8734 1.96645 12.5749 1.66797 12.2067 1.66797H5.20671C4.83852 1.66797 4.54004 1.96645 4.54004 2.33464V14.668C4.54004 15.0362 4.83852 15.3346 5.20671 15.3346Z"
-                  stroke="#12100F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_3940_1038">
-                  <rect width="16" height="16" fill="white" transform="translate(0.707031 0.5)" />
-                </clipPath>
-              </defs>
-            </svg>
-          }
-        >
+        <NavItem href="/sbtc-rewards" icon={<MobileIcon variant="small" />}>
           Mobile
         </NavItem>
       </styled.div>

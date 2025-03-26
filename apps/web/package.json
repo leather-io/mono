@@ -13,6 +13,7 @@
     "typecheck": "wrangler types && react-router typegen && tsc -b"
   },
   "dependencies": {
+    "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
     "@leather.io/query": "workspace:*",

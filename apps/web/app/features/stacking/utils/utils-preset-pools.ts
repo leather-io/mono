@@ -1,5 +1,5 @@
 import { ChainId, StacksNetwork, StacksNetworkName } from '@stacks/network';
-import { DEFAULT_DEVNET_SERVER } from '~/constants';
+import { DEFAULT_DEVNET_SERVER } from '~/constants/constants';
 
 import { pools } from '../components/preset-pools';
 import {
