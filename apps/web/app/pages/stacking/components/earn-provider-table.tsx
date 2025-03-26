@@ -14,16 +14,34 @@ import { DummyIcon } from '~/components/dummy';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { ImgFillLoader } from '~/components/img-loader';
-import { SortableHeader, Table, theadBorderBottom } from '~/components/table';
+import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
 
 import { Button, Flag } from '@leather.io/ui';
 
 const offsetMinAmountColumm = css({
-  transform: [null, null, 'translateX(-40%)'],
+  transform: [null, null, 'translateX(-15%)'],
+  maxWidth: '120px',
 });
 
 const offsetEstAprColumm = css({
-  transform: [null, null, 'translateX(-50%)'],
+  transform: [null, 'translateX(-40%)', 'translateX(-70%)'],
+  maxWidth: '120px',
+});
+
+const tableBodyRowActiveStyles = css({
+  _hover: {
+    '& > tr div': {
+      color: 'ink.text-subdued',
+    },
+  },
+});
+
+const tableRowActiveStyles = css({
+  _hover: {
+    '& div': {
+      color: 'ink.text-primary !important',
+    },
+  },
 });
 
 interface EarnProvider {
@@ -78,8 +96,8 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'provider',
         cell: info => (
-          <Flag img={info.row.original.icon}>
-            <styled.span color="ink.text-primary">{info.getValue() as string}</styled.span>
+          <Flag img={info.row.original.icon} color="ink.text-primary">
+            {info.getValue() as string}
           </Flag>
         ),
         header: () => <SortableHeader>Provider</SortableHeader>,
@@ -127,7 +145,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
               {info.getValue() as string}
             </Flag>
 
-            <Button size="sm" ml="space.04" minW="fit-content">
+            <Button size="xs" ml="space.04" minW="fit-content">
               Start earning
             </Button>
           </Flex>
@@ -155,7 +173,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
       <Table.Table>
         <Table.Head height="40px" className={theadBorderBottom}>
           {table.getHeaderGroups().map(headerGroup => (
-            <Table.Row key={headerGroup.id}>
+            <Table.Row key={headerGroup.id} className={rowPadding}>
               {headerGroup.headers.map(header => (
                 <Table.Header
                   key={header.id}
@@ -176,9 +194,13 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
             </Table.Row>
           ))}
         </Table.Head>
-        <Table.Body>
+        <Table.Body className={tableBodyRowActiveStyles}>
           {table.getRowModel().rows.map(row => (
-            <Table.Row key={row.id} height="56px">
+            <Table.Row
+              key={row.id}
+              height="56px"
+              className={rowPadding + ' ' + tableRowActiveStyles}
+            >
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} align={(cell.column.columnDef.meta as any)?.align}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -220,8 +242,8 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'provider',
         cell: info => (
-          <Flag img={info.row.original.icon}>
-            <styled.span color="ink.text-primary">{info.getValue() as string}</styled.span>
+          <Flag img={info.row.original.icon} color="ink.text-primary">
+            {info.getValue() as string}
           </Flag>
         ),
         header: () => <SortableHeader>Provider</SortableHeader>,
@@ -253,7 +275,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
               {info.getValue() as string}
             </Flag>
 
-            <Button size="sm" ml="space.04" minW="fit-content">
+            <Button size="xs" ml="space.04" minW="fit-content">
               Start earning
             </Button>
           </Flex>
@@ -281,7 +303,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       <Table.Table>
         <Table.Head height="40px" className={theadBorderBottom}>
           {table.getHeaderGroups().map(headerGroup => (
-            <Table.Row key={headerGroup.id}>
+            <Table.Row key={headerGroup.id} className={rowPadding}>
               {headerGroup.headers.map(header => (
                 <Table.Header
                   key={header.id}
@@ -302,9 +324,13 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
             </Table.Row>
           ))}
         </Table.Head>
-        <Table.Body>
+        <Table.Body className={tableBodyRowActiveStyles}>
           {table.getRowModel().rows.map(row => (
-            <Table.Row key={row.id} height="56px">
+            <Table.Row
+              key={row.id}
+              height="56px"
+              className={rowPadding + ' ' + tableRowActiveStyles}
+            >
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} align={(cell.column.columnDef.meta as any)?.align}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

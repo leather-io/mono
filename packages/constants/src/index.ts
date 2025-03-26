@@ -71,6 +71,9 @@ export const LEATHER_GUIDES_CONNECT_DAPPS = `${LEATHER_GUIDES_URL}/connect-dapps
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
+export const LEATHER_EXTENSION_CHROME_STORE_URL =
+  'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';
+
 export const LEATHER_API_URL_STAGING = 'https://staging.api.leather.io';
 export const LEATHER_API_URL_PRODUCTION = 'https://api.leather.io';
 

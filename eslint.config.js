@@ -31,6 +31,7 @@ export default tseslint.config(
       '**/*.stories.{ts,tsx}',
       '**/tsup.config*.ts',
       '**/.react-router/',
+      '**/.wrangler/',
     ],
   },
   {

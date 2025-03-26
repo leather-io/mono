@@ -1,5 +1,7 @@
 import { stxToMicroStx } from '@leather.io/utils';
 
+import packageJson from '../../package.json';
+
 export const EXPLORER_URL = 'https://explorer.stacks.co';
 
 export const STACKING_ADDRESS_FORMAT_HELP_URL =
@@ -24,3 +26,10 @@ export const FEE_RATE = 400;
 export const SEND_MANY_CONTACT_ID = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.send-many-memo';
 
 export const BUY_STACKS_URL = 'https://coinmarketcap.com/currencies/stacks/markets/';
+
+export const DEFAULT_DEVNET_SERVER = 'http://localhost:3999';
+
+export const VERSION = packageJson.version;
+
+export const GITHUB_ORG = 'leather-io';
+export const GITHUB_REPO = 'mono';
