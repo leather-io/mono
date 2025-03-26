@@ -5,7 +5,7 @@ import { EarnProviderTable, LiquidStackingProviderTable } from './components/ear
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
 
-export function Earn() {
+export function Stacking() {
   return (
     <Page>
       <Page.Header title="Invest in Stacks" />

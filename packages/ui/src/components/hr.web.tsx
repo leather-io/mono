@@ -4,7 +4,7 @@ import { HTMLStyledProps } from 'leather-styles/types';
 export type HrProps = HTMLStyledProps<'hr'>;
 
 export function Hr(props: HrProps) {
-  return <styled.hr border="default" width="100%" {...props} />;
+  return <styled.hr color="ink.border-default" width="100%" {...props} />;
 }
 
 export function DashedHr(props: HrProps) {

@@ -1,8 +1,8 @@
-import { Earn } from '~/pages/earn/earn';
+import { Stacking } from '~/pages/stacking/stacking';
 
 import { delay } from '@leather.io/utils';
 
-import type { Route } from './+types/earn';
+import type { Route } from './+types/stacking';
 
 export async function loader() {
   await delay(400);
@@ -17,6 +17,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function HomeRoute() {
-  return <Earn />;
+export default function StackingRoute() {
+  return <Stacking />;
 }
