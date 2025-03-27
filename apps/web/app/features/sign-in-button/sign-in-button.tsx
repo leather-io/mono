@@ -18,11 +18,12 @@ function ConnectLeatherButton() {
 }
 
 function ActiveAccountButton() {
-  const { addresses, connect, disconnect } = useLeatherConnect();
+  const { addresses, connect, openExtension, disconnect } = useLeatherConnect();
   return (
     <ActiveAccountButtonLayout
       address={addresses[2].address}
       onSwitchAccount={connect}
+      onOpenExtension={openExtension}
       onSignout={disconnect}
     />
   );
