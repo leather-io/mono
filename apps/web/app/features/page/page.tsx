@@ -1,7 +1,10 @@
 import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { WhenClient } from '~/components/client-only';
 
-const insetPageMarginX = css({ mx: '-space.07' });
+import { SignInButton } from '../sign-in-button/sign-in-button';
+
+export const insetPageMarginX = css({ mx: '-space.07' });
 
 export function Page(props: HTMLStyledProps<'div'>) {
   return <styled.div mx="space.07" {...props} />;
@@ -10,11 +13,12 @@ export function Page(props: HTMLStyledProps<'div'>) {
 interface PageHeaderProps {
   title: React.ReactNode;
 }
-function PageHeader({ title }: PageHeaderProps) {
+export function PageHeader({ title }: PageHeaderProps) {
   return (
     <styled.header
       className={insetPageMarginX}
       display="flex"
+      justifyContent="space-between"
       h="60px"
       borderBottom="default"
       alignItems="center"
@@ -22,11 +26,15 @@ function PageHeader({ title }: PageHeaderProps) {
       <styled.h1 textStyle="heading.04" mx="space.05">
         {title}
       </styled.h1>
+
+      <WhenClient>
+        <SignInButton />
+      </WhenClient>
     </styled.header>
   );
 }
 
-function PageDivider(props: HTMLStyledProps<'hr'>) {
+export function PageDivider(props: HTMLStyledProps<'hr'>) {
   return (
     <styled.hr
       className={insetPageMarginX}
@@ -37,5 +45,5 @@ function PageDivider(props: HTMLStyledProps<'hr'>) {
   );
 }
 
-Page.Header = PageHeader;
 Page.Divider = PageDivider;
+Page.Header = PageHeader;

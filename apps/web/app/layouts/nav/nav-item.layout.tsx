@@ -16,12 +16,13 @@ export function NavItem({ children, icon, href }: NavItemProps) {
   return (
     <StyledNavLink
       to={href}
+      userSelect="none"
       prefetch="intent"
       role="link"
       display="block"
       textStyle="label.02"
       pl="space.04"
-      py="space.02"
+      py="space.04"
       outline="none"
       _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ textDecoration: 'underline' }}

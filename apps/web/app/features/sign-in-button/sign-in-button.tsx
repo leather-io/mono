@@ -1,35 +1,20 @@
 import { useLeatherConnect } from '~/store/addresses';
 
-import {
-  ActiveAccountButtonLayout,
-  SignInButtonContainer,
-  SignInButtonLayout,
-} from './sign-in-button.layout';
+import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
+
+import { ActiveAccountButtonLayout, SignInButtonLayout } from './sign-in-button.layout';
 
 function InstallLeatherButton() {
   return (
-    <SignInButtonContainer>
-      <SignInButtonLayout
-        onClick={() => {
-          window.open(
-            'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en',
-            '_blank'
-          );
-        }}
-      >
-        Install
-      </SignInButtonLayout>
-    </SignInButtonContainer>
+    <SignInButtonLayout onClick={() => window.open(LEATHER_EXTENSION_CHROME_STORE_URL, '_blank')}>
+      Install
+    </SignInButtonLayout>
   );
 }
 
 function ConnectLeatherButton() {
   const { connect } = useLeatherConnect();
-  return (
-    <SignInButtonContainer>
-      <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>
-    </SignInButtonContainer>
-  );
+  return <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>;
 }
 
 function ActiveAccountButton() {

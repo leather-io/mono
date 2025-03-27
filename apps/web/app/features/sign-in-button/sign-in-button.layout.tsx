@@ -8,20 +8,11 @@ import {
   DropdownMenu,
   ExitIcon,
   Flag,
-  type HasChildren,
 } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
-export function SignInButtonContainer({ children }: HasChildren) {
-  return (
-    <styled.div mt="auto" mb="space.04" mx="space.04">
-      {children}
-    </styled.div>
-  );
-}
-
 export function SignInButtonLayout(props: ButtonProps) {
-  return <Button variant="outline" size="xs" fullWidth {...props} />;
+  return <Button height="60px !important" borderRadius="0" width="120px" fullWidth {...props} />;
 }
 
 interface ActiveAccountButtonLayoutProps {
@@ -35,18 +26,17 @@ export function ActiveAccountButtonLayout({
   onSwitchAccount,
 }: ActiveAccountButtonLayoutProps) {
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <styled.button
           userSelect="none"
-          mt="auto"
           textAlign="left"
-          px="space.04"
-          height="56px"
+          px="space.05"
+          height="100%"
           textStyle="label.03"
           outline="none"
           appearance="none"
-          borderTop="default"
+          borderLeft="default"
           _focusVisible={{ textDecoration: 'underline' }}
         >
           <Flag reverse img={<ChevronDownIcon variant="small" />}>
