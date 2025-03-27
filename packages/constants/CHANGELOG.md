@@ -151,6 +151,14 @@
   * dependencies
     * @leather.io/models bumped to 0.30.0
 
+## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.18.1...@leather.io/constants-v0.19.0) (2025-03-27)
+
+
+### Features
+
+* integrate leather api types into client ([c6ea29b](https://github.com/leather-io/mono/commit/c6ea29b3bc472f7fdfe9d5ab2880bbffa6a68cf4))
+* **web:** table improvements ([e625b84](https://github.com/leather-io/mono/commit/e625b847f2e1cf46a93a0e046bb8c55b73ed5d34))
+
 ## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.17.5...@leather.io/constants-v0.18.0) (2025-03-11)
 
 

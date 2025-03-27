@@ -210,6 +210,14 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.15.0
 
+## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.11.0...@leather.io/panda-preset-v0.12.0) (2025-03-27)
+
+
+### Features
+
+* **web:** side bar v2 ([ec17e70](https://github.com/leather-io/mono/commit/ec17e702e6f9dce1b1be3b759b10ef52cd6fb368))
+* **web:** table improvements ([e625b84](https://github.com/leather-io/mono/commit/e625b847f2e1cf46a93a0e046bb8c55b73ed5d34))
+
 ## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.10.1...@leather.io/panda-preset-v0.11.0) (2025-03-21)
 
 

@@ -477,6 +477,24 @@
     * @leather.io/stacks bumped to 1.7.5
     * @leather.io/utils bumped to 0.31.0
 
+## [2.34.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.33.0...@leather.io/query-v2.34.0) (2025-03-27)
+
+
+### Features
+
+* add stack in a pool page ([2567ddb](https://github.com/leather-io/mono/commit/2567ddb912658168f88589be0c8163d05bbfdabf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.22.2
+    * @leather.io/constants bumped to 0.19.0
+    * @leather.io/rpc bumped to 2.9.4
+    * @leather.io/stacks bumped to 1.7.6
+    * @leather.io/utils bumped to 0.31.1
+
 ## [2.33.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.32.0...@leather.io/query-v2.33.0) (2025-03-25)
 
 
