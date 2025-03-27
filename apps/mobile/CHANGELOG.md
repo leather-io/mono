@@ -663,6 +663,25 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.22.2
 
+## [2.25.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.24.3...@leather.io/mobile-v2.25.0) (2025-03-27)
+
+
+### Features
+
+* integrate collectibles, ref LEA-1426 ([8639772](https://github.com/leather-io/mono/commit/86397724e64ed7f29ac610761e0f87684b5db8f8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.23.0
+    * @leather.io/query bumped to 2.34.1
+    * @leather.io/services bumped to 1.7.2
+    * @leather.io/ui bumped to 1.56.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.23.0
+
 ## [2.24.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.24.1...@leather.io/mobile-v2.24.2) (2025-03-25)
 
 
