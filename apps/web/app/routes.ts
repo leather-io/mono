@@ -1,8 +1,10 @@
-import { type RouteConfig, index, route } from '@react-router/dev/routes';
+import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
 export default [
   index('routes/home.tsx'),
-  route('stacking', 'routes/stacking.tsx'),
-  route('sbtc-rewards', 'routes/sbtc-rewards.tsx'),
+  ...prefix('stacking', [
+    index('routes/stacking/index.tsx'),
+    route('stack-in-pool/:slug', 'routes/stacking/stacking.tsx'),
+  ]),
   route('docs', 'routes/docs.tsx'),
 ] satisfies RouteConfig;

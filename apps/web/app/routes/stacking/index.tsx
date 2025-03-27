@@ -2,7 +2,7 @@ import { Stacking } from '~/pages/stacking/stacking';
 
 import { delay } from '@leather.io/utils';
 
-import type { Route } from './+types/stacking';
+import type { Route } from '../+types/home';
 
 export async function loader() {
   await delay(400);
@@ -17,6 +17,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function StackingRoute() {
+export default function HomeRoute() {
   return <Stacking />;
 }
