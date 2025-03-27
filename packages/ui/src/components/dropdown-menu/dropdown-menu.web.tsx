@@ -69,8 +69,25 @@ const dropdownContentStyles = css({
   p: '0',
   willChange: 'transform, opacity',
   zIndex: 999,
-  _closed: { animation: 'slideDownAndOut 140ms ease-in-out' },
-  _open: { animation: 'slideUpAndFade 140ms ease-in-out' },
+  animationDuration: '160ms',
+  animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  animationName: 'slideUpAndFade',
+  '&[data-side="top"]': {
+    _open: { animationName: 'slideUpAndFade' },
+    _closed: { animation: 'slideDownAndOut' },
+  },
+  '&[data-side="bottom"]': {
+    _open: { animationName: 'slideDownAndFade' },
+    _closed: { animationName: 'slideUpAndOut' },
+  },
+  '&[data-side="left"]': {
+    _open: { animationName: 'slideLeftAndFade' },
+    _closed: { animationName: 'slideRightAndOut' },
+  },
+  '&[data-side="right"]': {
+    _open: { animationName: 'slideRightAndFade' },
+    _closed: { animationName: 'slideLeftAndOut' },
+  },
 });
 const Content: typeof RadixDropdownMenu.Content = forwardRef(({ className, ...props }, ref) => (
   <RadixDropdownMenu.Content

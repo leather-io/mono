@@ -23,7 +23,7 @@ export function PageHeader({ title }: PageHeaderProps) {
       borderBottom="default"
       alignItems="center"
     >
-      <styled.h1 textStyle="heading.04" mx="space.05">
+      <styled.h1 textStyle="heading.05" mx="space.05">
         {title}
       </styled.h1>
 

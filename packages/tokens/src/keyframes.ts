@@ -85,6 +85,10 @@ export const keyframes = {
     from: { opacity: 1, transform: 'translateY(0)' },
     to: { opacity: 0, transform: 'translateY(4px)' },
   },
+  slideUpAndOut: {
+    from: { opacity: 1, transform: 'translateY(0)' },
+    to: { opacity: 0, transform: 'translateY(-4px)' },
+  },
   slideDown: {
     from: { maxHeight: 0 },
     to: { maxHeight: '1000px' },

@@ -42,6 +42,9 @@ export function useLeatherConnect() {
     stxAddress,
     btcAddressP2tr,
     btcAddressP2wpkh,
+    openExtension() {
+      void leather.open({ mode: 'fullpage' });
+    },
     async connect() {
       const result = await leather.getAddresses();
       setAddresses(result.addresses);
