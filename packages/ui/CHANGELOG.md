@@ -389,6 +389,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.56.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.55.0...@leather.io/ui-v1.56.0) (2025-03-27)
+
+
+### Features
+
+* integrate collectibles, ref LEA-1426 ([8639772](https://github.com/leather-io/mono/commit/86397724e64ed7f29ac610761e0f87684b5db8f8))
+
 ## [1.55.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.54.1...@leather.io/ui-v1.55.0) (2025-03-27)
 
 

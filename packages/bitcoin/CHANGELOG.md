@@ -642,6 +642,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.9.4
 
+## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.22.2...@leather.io/bitcoin-v0.23.0) (2025-03-27)
+
+
+### Features
+
+* integrate collectibles, ref LEA-1426 ([8639772](https://github.com/leather-io/mono/commit/86397724e64ed7f29ac610761e0f87684b5db8f8))
+
 ## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.21.1...@leather.io/bitcoin-v0.22.0) (2025-03-17)
 
 
