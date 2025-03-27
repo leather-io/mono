@@ -1,5 +1,5 @@
 import { styled } from 'leather-styles/jsx';
-import { Page } from '~/components/page';
+import { Page } from '~/features/page/page';
 
 import { EarnProviderTable, LiquidStackingProviderTable } from './components/earn-provider-table';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';

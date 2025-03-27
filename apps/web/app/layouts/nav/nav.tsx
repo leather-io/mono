@@ -1,20 +1,6 @@
 import { styled } from 'leather-styles/jsx';
-import { WhenClient } from '~/components/client-only';
-import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 
-import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
-import {
-  BitcoinIcon,
-  GlassesIcon,
-  HouseIcon,
-  Hr,
-  MobileIcon,
-  NewspaperIcon,
-  PuzzleIcon,
-  StacksIcon,
-  SupportIcon,
-  TerminalIcon,
-} from '@leather.io/ui';
+import { GlassesIcon, NewspaperIcon, StacksIcon, SupportIcon, TerminalIcon } from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
 
@@ -46,63 +32,50 @@ export function Nav() {
       </styled.svg>
 
       <styled.div mt="space.04">
-        <styled.h3 textStyle="label.03" mx="space.04" mb="space.03" color="ink.text-subdued">
-          Earn
-        </styled.h3>
-
-        <NavItem href="/" icon={<HouseIcon variant="small" />}>
-          Home
-        </NavItem>
-
-        <NavItem href="/sbtc-rewards" icon={<BitcoinIcon variant="small" />}>
-          sBTC Rewards
+        <NavItem
+          href="/sbtc-rewards"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M5.54735 3.71429V8M5.54735 3.71429H3.83307M5.54735 3.71429H9.69021C10.8737 3.71429 11.8331 4.67368 11.8331 5.85714C11.8331 7.04061 10.8737 8 9.69021 8M5.54735 8V12.2857M5.54735 8H9.69021M5.54735 12.2857H3.83307M5.54735 12.2857H9.69021C10.8737 12.2857 11.8331 11.3263 11.8331 10.1429C11.8331 8.95939 10.8737 8 9.69021 8M8.11878 2V3.71429M8.11878 12.2857V14"
+                stroke="#12100F"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          }
+        >
+          sBTC
         </NavItem>
 
         <NavItem href="/stacking" icon={<StacksIcon variant="small" />}>
           Stacking
         </NavItem>
-        <Hr mx="space.04" my="space.04" width="132px" />
-      </styled.div>
 
-      <styled.div mt="space.01">
-        <styled.h3 textStyle="label.03" mx="space.04" mb="space.03" color="ink.text-subdued">
-          Learn
-        </styled.h3>
         <NavItem href="/blog" icon={<NewspaperIcon variant="small" />}>
           Blog
         </NavItem>
-
         <NavItem href="/guides" icon={<GlassesIcon variant="small" />}>
           Guides
         </NavItem>
+      </styled.div>
 
+      <styled.div mt="auto" mb="space.06">
         <NavItem href="/dev-docs" icon={<TerminalIcon variant="small" />}>
-          Dev Docs
+          Developers
         </NavItem>
 
         <NavItem href="/support" icon={<SupportIcon variant="small" />}>
           Support
         </NavItem>
-        <Hr mx="space.04" my="space.04" width="132px" />
       </styled.div>
-
-      <styled.div mt="space.02" mb="space.02">
-        <styled.h3 textStyle="label.03" mx="space.04" mb="space.03" color="ink.text-subdued">
-          Install
-        </styled.h3>
-
-        <NavItem href={LEATHER_EXTENSION_CHROME_STORE_URL} icon={<PuzzleIcon variant="small" />}>
-          Extension
-        </NavItem>
-
-        <NavItem href="/sbtc-rewards" icon={<MobileIcon variant="small" />}>
-          Mobile
-        </NavItem>
-      </styled.div>
-
-      <WhenClient>
-        <SignInButton />
-      </WhenClient>
     </styled.nav>
   );
 }

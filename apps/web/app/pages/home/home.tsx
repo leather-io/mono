@@ -1,5 +1,5 @@
 import { styled } from 'leather-styles/jsx';
-import { Page } from '~/components/page';
+import { Page } from '~/features/page/page';
 
 import { HomeHeroCard } from './components/home-card';
 
