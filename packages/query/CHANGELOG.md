@@ -483,6 +483,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.23.0
 
+## [2.34.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.34.1...@leather.io/query-v2.34.2) (2025-03-27)
+
+
+### Bug Fixes
+
+* contract interface query response type ([0b5aa4d](https://github.com/leather-io/mono/commit/0b5aa4db8c6183cc02ff78eaf9e90e9b2b2fcf11))
+
 ## [2.34.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.33.0...@leather.io/query-v2.34.0) (2025-03-27)
 
 
