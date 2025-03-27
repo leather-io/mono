@@ -389,6 +389,23 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.55.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.54.1...@leather.io/ui-v1.55.0) (2025-03-27)
+
+
+### Features
+
+* **web:** side bar v2 ([ec17e70](https://github.com/leather-io/mono/commit/ec17e702e6f9dce1b1be3b759b10ef52cd6fb368))
+* **web:** table improvements ([e625b84](https://github.com/leather-io/mono/commit/e625b847f2e1cf46a93a0e046bb8c55b73ed5d34))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.31.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.12.0
+
 ## [1.54.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.54.0...@leather.io/ui-v1.54.1) (2025-03-25)
 
 
