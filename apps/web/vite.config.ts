@@ -17,7 +17,28 @@ export default defineConfig({
   resolve: {
     alias: {
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
+      // polyfill required packages
+      crypto: 'crypto-browserify',
+      stream: 'stream-browserify',
+      vm: 'vm-browserify',
+      fs: 'browserify-fs',
+      path: 'path-browserify',
+      os: 'os-browserify/browser',
+      assert: 'assert',
+      process: 'process/browser',
+      'node:crypto': 'crypto-browserify',
+      'node:stream': 'stream-browserify',
+      'node:vm': 'vm-browserify',
+      'node:fs': 'browserify-fs',
+      'node:path': 'path-browserify',
+      'node:os': 'os-browserify/browser',
+      'node:assert': 'assert',
+      'node:process': 'process/browser',
+      'safe-process': 'process/browser', // vite marks "process" package as external, this is workaround
     },
+  },
+  define: {
+    global: 'globalThis', // required for some libs (e.g. pbkdf2)
   },
   plugins: [
     cloudflare({ viteEnvironment: { name: 'ssr' } }),

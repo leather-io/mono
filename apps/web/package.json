@@ -32,6 +32,7 @@
     "isbot": "5.1.17",
     "jotai": "2.12.2",
     "nprogress": "0.2.0",
+    "process": "0.11.10",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "7.53.2",
@@ -51,12 +52,18 @@
     "@types/nprogress": "0.2.3",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
+    "browserify-fs": "1.0.0",
+    "crypto-browserify": "3.12.1",
+    "os-browserify": "0.3.0",
+    "path-browserify": "1.0.1",
     "react-router-devtools": "1.1.6",
+    "stream-browserify": "3.0.0",
     "typescript": "5.7.3",
     "vite": "6.2.3",
     "vite-plugin-svgr": "4.3.0",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "2.1.9",
+    "vm-browserify": "1.1.2",
     "wrangler": "3.114.1"
   }
 }

@@ -76,3 +76,4 @@ export * from './src/stacks/bns/bns-v2-client';
 export * from './src/stacks/bns/bns.utils';
 export * from './src/stacks/bns/bns.schemas';
 export * from './src/stacks/bns/bns.query';
+export * from './src/stacking/stacking.query';

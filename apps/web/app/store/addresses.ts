@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { leather } from '~/helpers/leather-sdk';
@@ -17,10 +19,29 @@ export const extensionStateAtom = atom<ExtensionState>(get => {
 export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
   const status = useAtomValue(extensionStateAtom);
+
+  const stxAddress = useMemo(
+    () => addresses.find(address => address.symbol === 'STX'),
+    [addresses]
+  );
+
+  const btcAddressP2tr = useMemo(
+    () => addresses.find(address => address.type === 'p2tr'),
+    [addresses]
+  );
+
+  const btcAddressP2wpkh = useMemo(
+    () => addresses.find(address => address.type === 'p2wpkh'),
+    [addresses]
+  );
+
   return {
     addresses,
     setAddresses,
     status,
+    stxAddress,
+    btcAddressP2tr,
+    btcAddressP2wpkh,
     async connect() {
       const result = await leather.getAddresses();
       setAddresses(result.addresses);
