@@ -7,7 +7,6 @@ on:
 
 jobs:
   synchronize-with-crowdin:
-    if: false
     runs-on: ubuntu-latest
 
     steps:
