@@ -669,6 +669,13 @@
   * dependencies
     * @leather.io/query bumped to 2.34.2
 
+## [2.25.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.1...@leather.io/mobile-v2.25.2) (2025-03-28)
+
+
+### Bug Fixes
+
+* re-add crowdin action and update crowdin ([9072786](https://github.com/leather-io/mono/commit/9072786a7dda25939cde563d190d1a1903fa9fb9))
+
 ## [2.25.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.24.3...@leather.io/mobile-v2.25.0) (2025-03-27)
 
 
