@@ -1,9 +1,8 @@
 import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
-import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
-import { BrowserSheet } from '@/features/browser/browser/browser-sheet';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useReleaseBrowserFeatureFlag } from '@/features/feature-flags/use-feature-flags';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -154,10 +153,9 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
 }
 
 export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
-  const { sendSheetRef, receiveSheetRef } = useSheetNavigatorContext();
+  const { browserSheetRef, sendSheetRef, receiveSheetRef } = useGlobalSheets();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const browserSheetRef = useRef<SheetRef>(null);
   const browserRef = useRef<SheetRef>(null);
   const releaseBrowserFeature = useReleaseBrowserFeatureFlag();
 
@@ -165,19 +163,24 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
     browserRef.current?.present();
   });
 
-  const actionBar = isEmptyArray(wallets.list) ? (
-    <ActionBar ref={ref}>
-      <ActionBarButton
-        onPress={() => addWalletSheetRef.current?.present()}
-        icon={<PlusIcon />}
-        label={t({
-          id: 'action_bar.add_wallet_label',
-          message: 'Add Wallet',
-        })}
-        testID={TestId.homeAddWalletButton}
-      />
-    </ActionBar>
-  ) : (
+  if (isEmptyArray(wallets.list)) {
+    return (
+      <ActionBar ref={ref}>
+        <ActionBarButton
+          onPress={() => addWalletSheetRef.current?.present()}
+          icon={<PlusIcon />}
+          label={t({
+            id: 'action_bar.add_wallet_label',
+            message: 'Add Wallet',
+          })}
+          testID={TestId.homeAddWalletButton}
+        />
+        <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
+      </ActionBar>
+    );
+  }
+
+  return (
     <ActionBar ref={ref}>
       <ActionBarButton onPress={() => sendSheetRef.current?.present()} icon={<PaperPlaneIcon />} />
       <ActionBarButton onPress={() => receiveSheetRef.current?.present()} icon={<InboxIcon />} />
@@ -190,14 +193,6 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
         />
       )}
     </ActionBar>
-  );
-
-  return (
-    <>
-      {actionBar}
-      <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
-      <BrowserSheet sheetRef={browserSheetRef} />
-    </>
   );
 });
 

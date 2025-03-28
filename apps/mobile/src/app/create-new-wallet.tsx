@@ -50,8 +50,8 @@ function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: b
         contentFit="fill"
         imageStyle={{}}
         source={whenTheme({
-          light: require('../../assets/secret-blurred-light.png'),
-          dark: require('../../assets/secret-blurred-dark.png'),
+          light: require('../assets/secret-blurred-light.png'),
+          dark: require('../assets/secret-blurred-dark.png'),
         })}
         style={{
           position: 'absolute',

@@ -1,4 +1,4 @@
-import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
@@ -11,7 +11,7 @@ export function Approval() {
   const {
     state: { selectedAsset, selectedAccount },
   } = useSendFlowContext();
-  const { sendSheetRef } = useSheetNavigatorContext();
+  const { sendSheetRef } = useGlobalSheets();
 
   if (!selectedAsset || !selectedAccount || !txHex) {
     // TODO: This only can happen due to developer error. Find the best way to log & represent this.

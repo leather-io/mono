@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 
-import { useAuthentication } from '@/common/use-authentication';
 import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
@@ -14,6 +13,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
+import { useAuthentication } from '@/hooks/use-authentication';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';

@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useAuthentication } from '@/common/use-authentication';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SkipSecureWalletSheet } from '@/components/secure-your-wallet/skip-secure-wallet-sheet';
+import { useAuthentication } from '@/hooks/use-authentication';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

@@ -1,10 +1,10 @@
 import { RefObject } from 'react';
 import { Linking } from 'react-native';
 
-import { useAuthentication } from '@/common/use-authentication';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useAuthentication } from '@/hooks/use-authentication';
 import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
