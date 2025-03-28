@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - dev
+      - test/release-job
 
 permissions:
   contents: write
@@ -19,6 +20,13 @@ jobs:
       mobile_release_created: ${{ steps.release.outputs.leather-io-mobile--release-created }}
     # Our PNPM workspace issue was fixed here: https://github.com/googleapis/release-please/pull/2281
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Git user
+        run: |
+          git config user.name "leather-bot"
+          git config user.email "leather-bot@leather.io"
+
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
         with:
@@ -37,8 +45,7 @@ jobs:
           manifest-file: .release-please-manifest.json
           default-branch: dev
           release-type: 'minor'
-          # Add GPG signing configuration
-          signoff: true
+          signoff: 'leather-bot <leather-bot@leather.io>'
 
     # The logic below handles the npm publication:
   deploy:
