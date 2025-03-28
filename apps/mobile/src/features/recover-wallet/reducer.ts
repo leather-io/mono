@@ -2,13 +2,13 @@ import { InputState } from '@/components/text-input';
 
 import { Action } from './actions';
 
-type State = {
+interface State {
   recoveryMnemonic: string;
   inputState: InputState;
   errorMessage: string;
   isButtonDisabled: boolean;
   passphrase: string;
-};
+}
 
 export const initialState: State = {
   recoveryMnemonic: '',

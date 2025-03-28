@@ -86,6 +86,7 @@ export function TextInput({
   return (
     <Box>
       <_TextInput
+        autoCorrect
         ref={inputRef}
         textVariant={textVariant}
         placeholderTextColor={theme.colors['ink.text-subdued']}
