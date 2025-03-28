@@ -58,17 +58,16 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
           }
         />
       )}
-      {collectibles && (
-        <CollectiblesWidget
-          collectibles={collectibles}
-          onPressHeader={() =>
-            router.navigate({
-              pathname: AppRoutes.AccountCollectibles,
-              params: { accountId: account.id, accountName: account.name },
-            })
-          }
-        />
-      )}
+
+      <CollectiblesWidget
+        collectibles={collectibles}
+        onPressHeader={() =>
+          router.navigate({
+            pathname: AppRoutes.AccountCollectibles,
+            params: { accountId: account.id, accountName: account.name },
+          })
+        }
+      />
     </PageLayout>
   );
 }
