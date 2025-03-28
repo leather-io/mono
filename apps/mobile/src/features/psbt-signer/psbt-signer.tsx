@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
 
-import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/common/transactions/bitcoin-transactions.hooks';
 import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
@@ -12,6 +11,7 @@ import { createCoinSelectionUtxos } from '@/features/send/utils';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
+import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/queries/transaction/bitcoin-transactions.hooks';
 import { useBitcoinBroadcastTransaction } from '@/queries/transaction/use-bitcoin-broadcast-transaction';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { t } from '@lingui/macro';

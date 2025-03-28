@@ -1,11 +1,11 @@
 import { RefObject } from 'react';
 import { Linking } from 'react-native';
 
-import { getAccountDisplayPreferencesKeyedByType } from '@/common/display-preference';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER } from '@/shared/constants';
+import { getAccountDisplayPreferencesKeyedByType } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 

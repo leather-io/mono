@@ -1,11 +1,11 @@
-import { useSheetNavigatorContext } from '@/common/sheet-navigator/sheet-navigator-provider';
 import { FullHeightSheet } from '@/components/full-height-sheet/full-height-sheet';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { Send } from '@/features/send/send';
 
 import { useHaptics } from '@leather.io/ui/native';
 
 export function SendSheet() {
-  const { sendSheetRef } = useSheetNavigatorContext();
+  const { sendSheetRef } = useGlobalSheets();
   const triggerHaptics = useHaptics();
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {

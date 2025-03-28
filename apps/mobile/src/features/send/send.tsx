@@ -1,4 +1,4 @@
-import { SheetNavigationContainer } from '@/common/sheet-navigator/sheet-navigation-container';
+import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
 import { SendNavigator, SendStack } from '@/features/send/navigation';
 import { Approval } from '@/features/send/screens/approval';
 import { Form } from '@/features/send/screens/form';

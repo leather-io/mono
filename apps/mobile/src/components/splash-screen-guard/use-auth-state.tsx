@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
-import { useAuthentication } from '@/common/use-authentication';
 import { useAppState } from '@/hooks/use-app-state';
+import { useAuthentication } from '@/hooks/use-authentication';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 

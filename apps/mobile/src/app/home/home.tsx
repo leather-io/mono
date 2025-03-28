@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { ActivityWidget } from '@/app/(home)/activity/components/activity-widget';
+import { ActivityWidget } from '@/app/activity/components/activity-widget';
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import { BalancesWidget } from '@/components/widgets/balances/balances-widget';

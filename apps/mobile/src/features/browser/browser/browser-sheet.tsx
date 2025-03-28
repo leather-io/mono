@@ -1,20 +1,18 @@
-import { RefObject, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useSettings } from '@/store/settings/settings';
 
-import { Sheet, SheetRef } from '@leather.io/ui/native';
+import { Sheet } from '@leather.io/ui/native';
 
 import { BrowserActiveState } from './browser-active-state';
 import { BrowserInactiveState } from './browser-inactive-state';
 import { SearchBar } from './search-bar/search-bar';
 import { useBrowserSearchState } from './use-browser-search-state';
 
-interface BrowserSheetProps {
-  sheetRef: RefObject<SheetRef>;
-}
-
-export function BrowserSheet({ sheetRef }: BrowserSheetProps) {
+export function BrowserSheet() {
+  const { browserSheetRef } = useGlobalSheets();
   const { browserSearchState, goToUrl, resetSearchBar, setTextUrl } = useBrowserSearchState();
 
   const webViewRef = useRef<WebView>(null);
@@ -24,7 +22,7 @@ export function BrowserSheet({ sheetRef }: BrowserSheetProps) {
 
   return (
     <Sheet
-      ref={sheetRef}
+      ref={browserSheetRef}
       snapPointVariant="fullHeightWithoutNotch"
       shouldHaveContainer={false}
       themeVariant={themeDerivedFromThemePreference}
