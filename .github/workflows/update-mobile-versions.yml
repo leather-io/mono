@@ -64,12 +64,19 @@ jobs:
         env:
           VERSION: ${{env.VERSION}}
 
-      - name: Update app.config.js
-        shell: bash
+      - name: Update version in app.config.js
         working-directory: ./apps/mobile
         # Note if you want to debug this on macos you'll need to use sed -i '' <rest of command>
         run: |
           sed -i "s/version: '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*'/version: '$VERSION'/g" app.config.js
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.LEATHER_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.LEATHER_BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       - name: Commit version bump to release branch
         run: |
