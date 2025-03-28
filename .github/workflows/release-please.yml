@@ -19,6 +19,14 @@ jobs:
       mobile_release_created: ${{ steps.release.outputs.leather-io-mobile--release-created }}
     # Our PNPM workspace issue was fixed here: https://github.com/googleapis/release-please/pull/2281
     steps:
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.LEATHER_BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.LEATHER_BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - uses: google-github-actions/release-please-action@v3
         id: release
         with:
@@ -29,6 +37,8 @@ jobs:
           manifest-file: .release-please-manifest.json
           default-branch: dev
           release-type: 'minor'
+          # Add GPG signing configuration
+          signoff: true
 
     # The logic below handles the npm publication:
   deploy:
