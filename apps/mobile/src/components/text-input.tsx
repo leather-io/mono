@@ -97,13 +97,13 @@ export function TextInput({
         color="ink.action-primary-default"
         {...props}
       />
-      {inputState === 'error' ? (
-        <Box position="absolute" style={{ bottom: -30 }}>
+      {inputState === 'error' && (
+        <Box>
           <Text color="red.action-primary-default" variant="caption01">
             {_errorMessage}
           </Text>
         </Box>
-      ) : null}
+      )}
     </Box>
   );
 }
