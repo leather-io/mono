@@ -17,8 +17,9 @@ interface ActivityWidgetProps {
 export function ActivityWidget({ activity, isLoading, onPressHeader }: ActivityWidgetProps) {
   const theme = useTheme<Theme>();
 
+  const hasActivity = activity && activity.length > 0;
   // TODO LEA-1726: handle  loading & error states
-  if (isLoading || !activity) return null;
+  if (isLoading || !hasActivity) return null;
 
   return (
     <Widget>

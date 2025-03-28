@@ -17,9 +17,10 @@ interface CollectiblesWidgetProps {
 
 export function CollectiblesWidget({ onPressHeader, collectibles }: CollectiblesWidgetProps) {
   const theme = useTheme<Theme>();
-
   // TODO LEA-1726: Handle loading and error states
   if (collectibles.state !== 'success') return null;
+  const hasCollectibles = collectibles.value && collectibles.value.length > 0;
+  if (!hasCollectibles) return null;
 
   return (
     <Widget>
