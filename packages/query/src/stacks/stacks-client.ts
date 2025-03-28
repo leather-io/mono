@@ -8,7 +8,6 @@ import type {
   MempoolTransaction,
   MempoolTransactionListResponse,
   NetworkBlockTimesResponse,
-  ReadOnlyFunctionArgs,
   ReadOnlyFunctionSuccessResponse,
   Transaction,
 } from '@stacks/stacks-blockchain-api-types';
@@ -18,40 +17,46 @@ import axios from 'axios';
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 import { STX20_API_BASE_URL_MAINNET } from '@leather.io/models';
 
-import { Paginated } from '../../types/api-types';
 import { getHiroApiRateLimiter } from '../rate-limiter/hiro-rate-limiter';
 import type {
-  AddressBalanceResponse,
-  NonFungibleTokenHoldingListResult,
+  CallReadOnlyFunctionArgs,
+  HiroSip10AddressBalancesResponse,
+  HiroStxAddressBalanceResponse,
+  NonFungibleTokenHoldingsResponse,
   StacksTxFeeEstimation,
 } from './hiro-api-types';
 import { hiroApiRequestsPriorityLevels } from './hiro-requests-priorities';
 import './leather-headers';
 import type { Stx20BalanceResponse } from './stx20-api-types';
 
-type NonFungibleTokenHoldingsResponse = Paginated<NonFungibleTokenHoldingListResult[]>;
-
-export interface CallReadOnlyFunctionArgs {
-  contractAddress: string;
-  contractName: string;
-  functionName: string;
-  readOnlyFunctionArgs: ReadOnlyFunctionArgs;
-  tip?: string;
-  signal?: AbortSignal;
-}
-
 export function stacksClient(basePath: string) {
   const rateLimiter = getHiroApiRateLimiter(basePath);
 
   return {
-    async getAccountBalance(address: string, signal: AbortSignal) {
+    async getStxAddressBalance(address: string, signal: AbortSignal) {
       const resp = await rateLimiter.add(
         () =>
-          axios.get<AddressBalanceResponse>(`${basePath}/extended/v1/address/${address}/balances`, {
-            signal,
-          }),
+          axios.get<HiroStxAddressBalanceResponse>(
+            `${basePath}/extended/v2/addresses/${address}/balances/stx`,
+            { signal }
+          ),
         {
-          priority: hiroApiRequestsPriorityLevels.getAccountBalance,
+          priority: hiroApiRequestsPriorityLevels.getAddressBalance,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return resp.data;
+    },
+    async getSip10AddressBalances(address: string, signal: AbortSignal) {
+      const resp = await rateLimiter.add(
+        () =>
+          axios.get<HiroSip10AddressBalancesResponse>(
+            `${basePath}/extended/v2/addresses/${address}/balances/ft`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAddressBalance,
           signal,
           throwOnTimeout: true,
         }

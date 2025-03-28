@@ -5,7 +5,7 @@ export const hiroApiRequestsPriorityLevels = {
   getNetworkStatus: 10,
   getNamesOwnedByAddress: 9,
 
-  getAccountBalance: 5,
+  getAddressBalance: 5,
 
   getAccountTransactionsWithTransfers: 4,
 
