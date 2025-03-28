@@ -34,6 +34,8 @@ export enum StacksQueryPrefixes {
   PostFeeTransaction = 'post-fee-transaction',
   GetContractInterface = 'get-contract-interface',
   GetAccountBalance = 'get-account-balance',
+  GetStxAddressBalance = 'get-stx-address-balance',
+  GetSip10AddressBalances = 'get-sip10-address-balances',
 }
 
 export enum BnsV2QueryPrefixes {
