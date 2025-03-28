@@ -1,0 +1,40 @@
+name: Crowdin Action
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  synchronize-with-crowdin:
+    if: false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Provision
+        uses: ./.github/actions/provision
+
+      - name: Extract lingui strings
+        working-directory: ./apps/mobile
+        run: |
+          pnpm lingui
+      - name: crowdin action
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          create_pull_request: false
+          config: apps/mobile/crowdin.yml
+        env:
+          # A classic GitHub Personal Access Token with the 'repo' scope selected (the user should have write access to the repository).
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+
+          # A numeric ID, found at https://crowdin.com/project/<projectName>/tools/api
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+
+          # Visit https://crowdin.com/settings#api-key to create this token
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
