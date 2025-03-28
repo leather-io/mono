@@ -9,6 +9,7 @@ import { useTheme } from '@shopify/restyle';
 
 import {
   Accordion,
+  Box,
   Button,
   Cell,
   ChevronRightIcon,
@@ -18,7 +19,6 @@ import {
   Text,
   Theme,
 } from '@leather.io/ui/native';
-import { Box } from '@leather.io/ui/native';
 
 interface RecoverWalletLayoutProps extends HasChildren {
   passphrase: string;

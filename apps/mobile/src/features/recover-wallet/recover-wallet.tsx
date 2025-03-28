@@ -1,4 +1,4 @@
-import { useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { Keyboard, TextInput as RNTextInput } from 'react-native';
 
 import { TextInput } from '@/components/text-input';
@@ -9,7 +9,7 @@ import { t } from '@lingui/macro';
 import * as Clipboard from 'expo-clipboard';
 
 import { isValidMnemonic } from '@leather.io/crypto';
-import { Box, Button, NoteEmptyIcon, SheetRef } from '@leather.io/ui/native';
+import { Box, Button, NoteEmptyIcon } from '@leather.io/ui/native';
 
 import {
   clearError,
@@ -30,6 +30,10 @@ export function RecoverWallet() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { recoveryMnemonic, inputState, errorMessage, isButtonDisabled, passphrase } = state;
   const hidePasteButton = recoveryMnemonic.length > 0;
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   function validateMnemonicOnBlur() {
     const invalidWords = getInvalidMnemonicWords(recoveryMnemonic);
@@ -56,7 +60,6 @@ export function RecoverWallet() {
     const mnemonic = textChangeAmount <= 1 ? text : text.trim();
     checkMnemonic(mnemonic);
     dispatch(setRecoveryMnemonic(mnemonic));
-    // dispatch({ type: 'SET_INPUT_STATE', payload: 'default' });
 
     const copiedString = await Clipboard.getStringAsync();
     if (mnemonic === copiedString.trim()) {
@@ -73,6 +76,7 @@ export function RecoverWallet() {
   }
 
   async function pasteFromClipboard() {
+    Keyboard.dismiss();
     const copiedString = await Clipboard.getStringAsync();
     const cleanedString = copiedString.trim();
     dispatch(setRecoveryMnemonic(cleanedString));
