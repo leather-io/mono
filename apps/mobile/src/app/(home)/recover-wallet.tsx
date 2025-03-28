@@ -76,11 +76,15 @@ export default function RecoverWallet() {
   }
 
   async function onChangeText(text: string) {
-    checkMnemonic(text);
-    setRecoveryMnemonic(text);
+    const textChangeAmount = Math.abs(recoveryMnemonic.length - text.length);
+    // If the user has entered multiple characters - infer native paste
+    const mnemonic = textChangeAmount <= 1 ? text : text.trim();
+    checkMnemonic(mnemonic);
+    setRecoveryMnemonic(mnemonic);
     setInputState('default');
+
     const copiedString = await Clipboard.getStringAsync();
-    if (text === copiedString) {
+    if (mnemonic === copiedString.trim()) {
       Keyboard.dismiss();
     }
   }
@@ -95,8 +99,9 @@ export default function RecoverWallet() {
 
   async function pasteFromClipboard() {
     const copiedString = await Clipboard.getStringAsync();
-    setRecoveryMnemonic(copiedString);
-    checkMnemonic(copiedString);
+    const cleanedString = copiedString.trim();
+    setRecoveryMnemonic(cleanedString);
+    checkMnemonic(cleanedString);
     inputRef.current?.focus();
   }
 
