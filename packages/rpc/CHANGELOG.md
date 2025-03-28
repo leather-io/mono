@@ -250,6 +250,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.31.1
 
+## [2.10.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.9.4...@leather.io/rpc-v2.10.0) (2025-03-28)
+
+
+### Features
+
+* **ui:** location-aware dropdown transitions ([dd1f99b](https://github.com/leather-io/mono/commit/dd1f99b8ec9f4c12f135f4a9dd7ac663aa9576dc))
+
 ## [2.9.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.8.1...@leather.io/rpc-v2.9.0) (2025-03-11)
 
 

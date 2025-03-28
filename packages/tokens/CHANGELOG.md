@@ -132,6 +132,13 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.5
 
+## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.15.0...@leather.io/tokens-v0.16.0) (2025-03-28)
+
+
+### Features
+
+* **ui:** location-aware dropdown transitions ([dd1f99b](https://github.com/leather-io/mono/commit/dd1f99b8ec9f4c12f135f4a9dd7ac663aa9576dc))
+
 ## [0.15.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.14.0...@leather.io/tokens-v0.15.0) (2025-03-19)
 
 

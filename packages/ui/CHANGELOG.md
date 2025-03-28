@@ -389,6 +389,22 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.57.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.56.0...@leather.io/ui-v1.57.0) (2025-03-28)
+
+
+### Features
+
+* **ui:** location-aware dropdown transitions ([dd1f99b](https://github.com/leather-io/mono/commit/dd1f99b8ec9f4c12f135f4a9dd7ac663aa9576dc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.16.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.12.1
+
 ## [1.56.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.55.0...@leather.io/ui-v1.56.0) (2025-03-27)
 
 
