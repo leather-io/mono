@@ -1,8 +1,15 @@
+import { useRef, useState } from 'react';
+
+import {
+  NotifyUserSheetData,
+  NotifyUserSheetLayout,
+} from '@/components/sheets/notify-user-sheet.layout';
+import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 
-import { Box, Button, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, SheetRef, Text, Theme } from '@leather.io/ui/native';
 
 import { useToastContext } from '../toast/toast-context';
 import { MnemonicWordBox } from './mnemonic-word-box';
@@ -30,50 +37,63 @@ export function MnemonicDisplay({
 }) {
   const { displayToast } = useToastContext();
   const theme = useTheme<Theme>();
+  const notifySheetRef = useRef<SheetRef>(null);
+
   if (!mnemonic) return null;
   const mnemonicWords = mnemonic.split(' ');
 
   return (
-    <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" p="3">
-      <Box pb="2" flexDirection="row" flexWrap="wrap" gap="2">
-        {mnemonicWords.map((word, idx) => (
-          <MnemonicWordBox key={word + idx} wordIdx={idx + 1} word={word} />
-        ))}
+    <>
+      <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" p="3">
+        <Box pb="2" flexDirection="row" flexWrap="wrap" gap="2">
+          {mnemonicWords.map((word, idx) => (
+            <MnemonicWordBox key={word + idx} wordIdx={idx + 1} word={word} />
+          ))}
+        </Box>
+        {passphrase && <PassphraseDisplay passphrase={passphrase} />}
+        <Box pt="4" gap="2" flexDirection="row" justifyContent="space-between">
+          <Button
+            onPress={async () => {
+              await Clipboard.setStringAsync(mnemonic);
+              displayToast({
+                title: t({
+                  id: 'create_new_wallet.mnemonic.toast_title',
+                  message: `Successfully copied to clipboard!`,
+                }),
+                type: 'success',
+              });
+            }}
+            flex={1}
+            style={{ borderColor: theme.colors['ink.text-primary'] }}
+            buttonState="outline"
+            title={t({
+              id: 'create_new_wallet.mnemonic.copy_button',
+              message: `Copy`,
+            })}
+          />
+          <Button
+            onPress={() => notifySheetRef.current?.present()}
+            flex={1}
+            style={{ borderColor: theme.colors['ink.text-primary'] }}
+            buttonState="outline"
+            title={t({
+              id: 'create_new_wallet.mnemonic.save_button',
+              message: `Save to...`,
+            })}
+          />
+        </Box>
       </Box>
-      {passphrase && <PassphraseDisplay passphrase={passphrase} />}
-      <Box pt="4" gap="2" flexDirection="row" justifyContent="space-between">
-        <Button
-          onPress={async () => {
-            await Clipboard.setStringAsync(mnemonic);
-            displayToast({
-              title: t({
-                id: 'create_new_wallet.mnemonic.toast_title',
-                message: `Successfully copied to clipboard!`,
-              }),
-              type: 'success',
-            });
-          }}
-          flex={1}
-          style={{ borderColor: theme.colors['ink.text-primary'] }}
-          buttonState="outline"
-          title={t({
-            id: 'create_new_wallet.mnemonic.copy_button',
-            message: `Copy`,
-          })}
-        />
-        <Button
-          onPress={async () => {
-            // TODO: add Save to functionality
-          }}
-          flex={1}
-          style={{ borderColor: theme.colors['ink.text-primary'] }}
-          buttonState="outline"
-          title={t({
-            id: 'create_new_wallet.mnemonic.save_button',
-            message: `Save to...`,
-          })}
-        />
-      </Box>
-    </Box>
+
+      <NotifyUserSheetLayout
+        sheetData={{
+          title: t({
+            id: 'create_new_wallet.mnemonic.save_button.waitlist_title',
+            message: 'Save to...',
+          }),
+          id: WaitlistIds.saveMnemonic,
+        }}
+        sheetRef={notifySheetRef}
+      />
+    </>
   );
 }

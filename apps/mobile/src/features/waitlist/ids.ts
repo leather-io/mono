@@ -15,6 +15,7 @@ export const WaitlistIds = {
   exportKey: 'exportKey',
   contacts: 'contacts',
   restoreViaEmail: 'restoreViaEmail',
+  saveMnemonic: 'saveMnemonic',
   watchOnlyWallet: 'watchOnlyWallet',
   bitkey: 'bitkey',
 };
