@@ -4,7 +4,8 @@ export default [
   index('routes/home.tsx'),
   ...prefix('stacking', [
     index('routes/stacking/index.tsx'),
-    route('stack-in-pool/:slug', 'routes/stacking/stacking.tsx'),
+    route(':slug', 'routes/stacking/stacking.tsx'),
   ]),
   route('docs', 'routes/docs.tsx'),
+  route('sbtc-rewards', 'routes/sbtc-rewards.tsx'),
 ] satisfies RouteConfig;

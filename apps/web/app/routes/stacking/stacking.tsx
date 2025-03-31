@@ -1,5 +1,10 @@
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
-import { PoolNameSlugMap, PoolSlug } from '~/features/stacking/utils/types-preset-pools';
+import {
+  PoolIdToDisplayNameMap,
+  PoolSlug,
+  PoolSlugToIdMap,
+} from '~/features/stacking/utils/types-preset-pools';
+import { StackInPool } from '~/pages/stacking/stack-in-pool';
 
 import { delay } from '@leather.io/utils';
 
@@ -17,13 +22,14 @@ export function meta({}: Route.MetaArgs) {
 
 export default function EarnStackingRoute({ params }: Route.ComponentProps) {
   const poolSlug = params.slug as PoolSlug;
-  const poolName = PoolNameSlugMap[poolSlug];
+  const poolId = PoolSlugToIdMap[poolSlug];
+  const poolName = PoolIdToDisplayNameMap[poolId];
 
   if (!poolName) throw new Error(`Uknown pool - ${poolSlug}`);
 
   return (
     <StackingClientProvider>
-      <div>Stacking</div>
+      <StackInPool poolName={poolName} />
     </StackingClientProvider>
   );
 }

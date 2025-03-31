@@ -61,7 +61,7 @@ const earnProviders: EarnProvider[] = [
     minAmount: null,
     estApr: '5%',
     payout: 'STX',
-    slug: 'fastPool',
+    slug: 'fast-pool',
   },
   {
     provider: 'PlanBetter',
@@ -69,7 +69,7 @@ const earnProviders: EarnProvider[] = [
     minAmount: '200 STX',
     estApr: '10%',
     payout: 'STX',
-    slug: 'planBetter',
+    slug: 'plan-better',
   },
   {
     provider: 'Restake',
@@ -93,7 +93,7 @@ const earnProviders: EarnProvider[] = [
     minAmount: '100 STX',
     estApr: '16%',
     payout: 'STX',
-    slug: 'stackingDao',
+    slug: 'stacking-dao',
   },
 ];
 
@@ -154,7 +154,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
             </Flag>
 
             <Link
-              to={`/stacking/stack-in-pool/${info.row.original.slug}`}
+              to={`/stacking/${info.row.original.slug}`}
               style={{ minWidth: 'fit-content' }}
             >
               <Button size="xs" ml="space.04" minW="fit-content">
