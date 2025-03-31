@@ -683,6 +683,30 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.23.1
 
+## [2.25.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.3...@leather.io/mobile-v2.25.4) (2025-03-31)
+
+
+### Bug Fixes
+
+* auto focus on textinput for mnemonic, ref LEA-2361 ([fa7e5b5](https://github.com/leather-io/mono/commit/fa7e5b55c93025110c70ccfb11d8cc9f54f541fd))
+* fix position of TextInput error message, ref LEA-2177 ([f50d986](https://github.com/leather-io/mono/commit/f50d986ffb105ba2f9ad9bd95f82c5d432e0f245))
+* only show widgets if data ([e220484](https://github.com/leather-io/mono/commit/e2204842ba439a249ce4f08bfa5f664ae0c072be))
+* refactor recover wallet ([d3683a9](https://github.com/leather-io/mono/commit/d3683a93d8a62ac0e29d48b6d0f3c5af66113b0d))
+* trim whitespace from key copy automatically, ref LEA-2146 ([2fdea2f](https://github.com/leather-io/mono/commit/2fdea2f11d13340352fbdf3e4a155ace8bb8cc32))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.23.2
+    * @leather.io/provider bumped to 1.2.4
+    * @leather.io/query bumped to 2.34.4
+    * @leather.io/rpc bumped to 2.10.1
+    * @leather.io/services bumped to 1.7.4
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.23.2
+
 ## [2.25.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.1...@leather.io/mobile-v2.25.2) (2025-03-28)
 
 

@@ -250,6 +250,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.31.1
 
+## [2.10.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.10.0...@leather.io/rpc-v2.10.1) (2025-03-31)
+
+
+### Bug Fixes
+
+* **rpc:** allow unknown props in open method ([3f86176](https://github.com/leather-io/mono/commit/3f86176bb7a5d92eab247bd8f040107b7146e40f))
+
 ## [2.10.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.9.4...@leather.io/rpc-v2.10.0) (2025-03-28)
 
 
