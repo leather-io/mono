@@ -4,7 +4,7 @@ import { TransactionInput } from '@scure/btc-signer/psbt';
 import { bytesToHex } from '@stacks/common';
 
 import { BitcoinError } from '@leather.io/bitcoin';
-import { BitcoinClient, getNumberOfInscriptionOnUtxoUsingOrdinalsCom } from '@leather.io/query';
+import { BitcoinClient, getNumberOfInscriptionsOnUtxoUsingOrdinalsCom } from '@leather.io/query';
 import { isUndefined } from '@leather.io/utils';
 
 import { useBitcoinClient } from '../clients/bitcoin-client';
@@ -83,7 +83,7 @@ export function useCheckUnspendableUtxos(blockTxAction?: () => void) {
             if (isUndefined(inscriptionIndex)) {
               throw new Error('Inscription index is missing in the input');
             }
-            const num = await getNumberOfInscriptionOnUtxoUsingOrdinalsCom(id, inscriptionIndex);
+            const num = await getNumberOfInscriptionsOnUtxoUsingOrdinalsCom(id, inscriptionIndex);
             return num > 0;
           })
         );
