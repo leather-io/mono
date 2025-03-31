@@ -19,8 +19,8 @@ export const errorMessages = {
       values: { precision: decimals },
     }),
   minimumAmount: i18n._({
-    message: `Minimum is { minSpendAmountInSats }`,
     id: 'send.validation.minimum_amount',
+    message: `Minimum is {minSpendAmountInSats}`,
     values: { minSpendAmountInSats: satToBtc(minSpendAmountInSats) },
   }),
   insufficientFunds: i18n._({
