@@ -74,7 +74,7 @@ export function GetAddressesApproverLayout({
             <Button
               buttonState="default"
               title={t({
-                id: 'approver.button.approve',
+                id: 'approver.button.confirm',
                 message: 'Confirm',
               })}
               flex={1}

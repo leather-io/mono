@@ -60,8 +60,9 @@ export default function SettingsDisplayScreen() {
               message: 'Theme',
             })}
             caption={i18n._({
-              id: `display.theme.${themePreference}`,
-              message: capitalize(themePreference),
+              id: 'display.theme.cell_caption',
+              message: '{theme}',
+              values: { theme: capitalize(themePreference) },
             })}
             icon={<SunInCloudIcon />}
             onPress={() => {
