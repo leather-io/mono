@@ -683,6 +683,20 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.23.1
 
+## [2.25.7](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.6...@leather.io/mobile-v2.25.7) (2025-03-31)
+
+
+### Bug Fixes
+
+* utxo inscription check html page path ([cf72e09](https://github.com/leather-io/mono/commit/cf72e098b52b2bfaa17034c8ef738362a2270452))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.34.5
+
 ## [2.25.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.5...@leather.io/mobile-v2.25.6) (2025-03-31)
 
 
