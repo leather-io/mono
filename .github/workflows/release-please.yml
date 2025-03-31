@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - dev
-      - test/release-job
 
 permissions:
   contents: write
@@ -21,6 +20,9 @@ jobs:
     # Our PNPM workspace issue was fixed here: https://github.com/googleapis/release-please/pull/2281
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.LEATHER_BOT }}
 
       - uses: google-github-actions/release-please-action@v3
         id: release

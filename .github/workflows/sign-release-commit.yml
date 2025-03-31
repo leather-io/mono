@@ -3,9 +3,12 @@ name: Sign Release Commit
 on:
   pull_request:
     branches:
-      - release-please-**
+      - release-please*
     types:
       - synchronize
+  push:
+    branches:
+      - release-please*
 
 permissions:
   contents: write
