@@ -497,6 +497,13 @@
     * @leather.io/bitcoin bumped to 0.23.2
     * @leather.io/rpc bumped to 2.10.1
 
+## [2.34.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.34.4...@leather.io/query-v2.34.5) (2025-03-31)
+
+
+### Bug Fixes
+
+* utxo inscription check html page path ([cf72e09](https://github.com/leather-io/mono/commit/cf72e098b52b2bfaa17034c8ef738362a2270452))
+
 ## [2.34.2](https://github.com/leather-io/mono/compare/@leather.io/query-v2.34.1...@leather.io/query-v2.34.2) (2025-03-27)
 
 
