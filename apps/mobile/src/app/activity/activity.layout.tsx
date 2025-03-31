@@ -1,5 +1,6 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 
 import { HasChildren } from '@leather.io/ui/native';
@@ -20,9 +21,10 @@ function getTitle(accountName?: string) {
 
 function getContentTitle(accountName?: string) {
   return accountName
-    ? t({
-        id: 'activity.account.header__content_title',
-        message: `${accountName} Activity`,
+    ? i18n._({
+        id: 'activity.account.header_content_title',
+        message: '{accountName} Activity',
+        values: { accountName: accountName },
       })
     : t({
         id: 'activity.header_title',
