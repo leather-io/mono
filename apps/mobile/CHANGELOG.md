@@ -683,6 +683,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.23.1
 
+## [2.25.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.4...@leather.io/mobile-v2.25.5) (2025-03-31)
+
+
+### Bug Fixes
+
+* fix lingui ([395ac5a](https://github.com/leather-io/mono/commit/395ac5a05edca0ed28f88b619a6a103ba3a70a10))
+
 ## [2.25.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.3...@leather.io/mobile-v2.25.4) (2025-03-31)
 
 
