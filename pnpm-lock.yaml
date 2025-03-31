@@ -214,8 +214,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/stacks-blockchain-api-types':
-        specifier: 7.8.2
-        version: 7.8.2
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
@@ -229,8 +229,8 @@ importers:
         specifier: 4.4.9
         version: 4.4.9
       axios:
-        specifier: 1.8.2
-        version: 1.8.2
+        specifier: 1.8.4
+        version: 1.8.4
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -553,6 +553,9 @@ importers:
       '@stacks/stacking':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
+      '@stacks/stacks-blockchain-api-types':
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
@@ -562,6 +565,9 @@ importers:
       '@tanstack/react-table':
         specifier: 8.21.2
         version: 8.21.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      axios:
+        specifier: 1.8.4
+        version: 1.8.4
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -635,6 +641,12 @@ importers:
       crypto-browserify:
         specifier: 3.12.1
         version: 3.12.1
+      http-browserify:
+        specifier: 1.7.0
+        version: 1.7.0
+      https-browserify:
+        specifier: 1.0.0
+        version: 1.0.0
       os-browserify:
         specifier: 0.3.0
         version: 0.3.0
@@ -644,12 +656,21 @@ importers:
       react-router-devtools:
         specifier: 1.1.6
         version: 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react-router@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(vite@6.2.3(@types/node@22.13.13)(jiti@1.21.6)(lightningcss@1.25.1)(terser@5.36.0)(yaml@2.6.0))
+      rollup-plugin-node-polyfills:
+        specifier: 0.2.1
+        version: 0.2.1
       stream-browserify:
         specifier: 3.0.0
         version: 3.0.0
+      tty-browserify:
+        specifier: 0.0.1
+        version: 0.0.1
       typescript:
         specifier: 5.7.3
         version: 5.7.3
+      util:
+        specifier: 0.12.5
+        version: 0.12.5
       vite:
         specifier: 6.2.3
         version: 6.2.3(@types/node@22.13.13)(jiti@1.21.6)(lightningcss@1.25.1)(terser@5.36.0)(yaml@2.6.0)
@@ -668,6 +689,9 @@ importers:
       wrangler:
         specifier: 3.114.1
         version: 3.114.1(@cloudflare/workers-types@4.20250303.0)
+      zlib-browserify:
+        specifier: 0.0.3
+        version: 0.0.3
 
   packages/analytics:
     devDependencies:
@@ -849,8 +873,8 @@ importers:
   packages/models:
     dependencies:
       '@stacks/stacks-blockchain-api-types':
-        specifier: 7.8.2
-        version: 7.8.2
+        specifier: 7.14.1
+        version: 7.14.1
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -990,8 +1014,8 @@ importers:
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
       '@stacks/stacks-blockchain-api-types':
-        specifier: 7.8.2
-        version: 7.8.2
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
@@ -999,8 +1023,8 @@ importers:
         specifier: 3.1.0
         version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
-        specifier: 1.8.2
-        version: 1.8.2
+        specifier: 1.8.4
+        version: 1.8.4
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -1128,8 +1152,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@stacks/stacks-blockchain-api-types':
-        specifier: 7.8.2
-        version: 7.8.2
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
@@ -1137,8 +1161,8 @@ importers:
         specifier: 3.1.0
         version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.0.5(encoding@0.1.13))
       axios:
-        specifier: 1.8.2
-        version: 1.8.2
+        specifier: 1.8.4
+        version: 1.8.4
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -1225,8 +1249,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
       '@stacks/stacks-blockchain-api-types':
-        specifier: 7.8.2
-        version: 7.8.2
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.0.5
         version: 7.0.5(encoding@0.1.13)
@@ -6536,8 +6560,8 @@ packages:
   '@stacks/stacks-blockchain-api-types@0.61.0':
     resolution: {integrity: sha512-yPOfTUboo5eA9BZL/hqMcM71GstrFs9YWzOrJFPeP4cOO1wgYvAcckgBRbgiE3NqeX0A7SLZLDAXLZbATuRq9w==}
 
-  '@stacks/stacks-blockchain-api-types@7.8.2':
-    resolution: {integrity: sha512-wcDSdgIZx/ttQfUTPtGJOIyEkTOjmCsC79TaIyxTIiihSgrGppqTuzkwHD/DyuQkcJtUZvDTxMsAXkBKShE1kw==}
+  '@stacks/stacks-blockchain-api-types@7.14.1':
+    resolution: {integrity: sha512-65hvhXxC+EUqHJAQsqlBCqXB+zwfxZICSKYJugdg6BCp9I9qniyfz5XyQeC4RMVo0tgEoRdS/b5ZCFo5kLWmxA==}
 
   '@stacks/storage@7.0.2':
     resolution: {integrity: sha512-PQHXEyOcqIJ4+SDxpwhb4MekGH6wrRDCTC5ZqpIscfXdKQE4IfdLQYA6aD9DKuFgA7mgpIZVtibSoEUXUvyl0g==}
@@ -8058,6 +8082,9 @@ packages:
   '@zxing/text-encoding@0.9.0':
     resolution: {integrity: sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==}
 
+  Base64@0.2.1:
+    resolution: {integrity: sha512-reGEWshDmTDQDsCec/HduOO9Wyj6yMOupMfhIf3ugN1TDlK2NQW4DDJSqNNtp380SNcvRfXtO8HSCQot0d0SMw==}
+
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
     hasBin: true
@@ -8403,8 +8430,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.8.2:
-    resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
+  axios@1.8.4:
+    resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
   b4a@1.6.7:
     resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
@@ -9538,6 +9565,9 @@ packages:
   deep-equal-in-any-order@2.0.6:
     resolution: {integrity: sha512-RfnWHQzph10YrUjvWwhd15Dne8ciSJcZ3U6OD7owPwiVwsdE5IFSoZGg8rlwJD11ES+9H5y8j3fCofviRHOqLQ==}
 
+  deep-equal@0.0.0:
+    resolution: {integrity: sha512-p1bI/kkDPT6auUI0U+WLuIIrzmDIDo80I406J8tT4y6I4ZGtBuMeTudrKDtBdMJFAcxqrQdx27gosqPVyY3IvQ==}
+
   deep-equal@1.1.2:
     resolution: {integrity: sha512-5tdhKF6DbU7iIzrIOa1AOUt39ZRm13cmL1cGEh//aqR8x9+tNfbywRf0n5FD/18OKMdo7DNEtrX2t22ZAkI+eg==}
     engines: {node: '>= 0.4'}
@@ -9578,6 +9608,9 @@ packages:
   define-properties@1.2.1:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
+
+  defined@0.0.0:
+    resolution: {integrity: sha512-zpqiCT8bODLu3QSmLLic8xJnYWBFjOSu/fBCm189oAiTtPq/PSanNACKZDS7kgSyCJY7P+IcODzlIogBK/9RBg==}
 
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
@@ -11165,6 +11198,9 @@ packages:
   htmlparser2@6.1.0:
     resolution: {integrity: sha512-gyyPk6rgonLFEDGoeRgQNaEUvdJ4ktTmmUh/h2t7s+M8oPpIPxgNACWa+6ESR57kXstwqPiCut0V8NRpcwgU7A==}
 
+  http-browserify@1.7.0:
+    resolution: {integrity: sha512-Irf/LJXmE3cBzU1eaR4+NEX6bmVLqt1wkmDiA7kBwH7zmb0D8kBAXsDmQ88hhj/qv9iEZKlyGx/hrMcFi8sOHw==}
+
   http-cache-semantics@4.1.1:
     resolution: {integrity: sha512-er295DKPVsV82j5kw1Gjt+ADA/XYHsajl82cGNQG2eyoPkvgUhX+nDIyelzhIWbbsXP39EHcI6l5tYs2FYqYXQ==}
 
@@ -11182,6 +11218,9 @@ packages:
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
+
+  https-browserify@1.0.0:
+    resolution: {integrity: sha512-J+FkSdyD+0mA0N+81tMotaRMfSL9SGi+xpD3T6YApKsc3bGSXJlfXri3VyFOeYkfLRQisDk1W+jIFFKBeUBbBg==}
 
   https-proxy-agent@5.0.1:
     resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
@@ -12028,6 +12067,9 @@ packages:
 
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+
+  jsonify@0.0.1:
+    resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
 
   jsonparse@1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -15359,6 +15401,9 @@ packages:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
 
+  tape@0.2.2:
+    resolution: {integrity: sha512-bfyf/0yv2FZVsf80b7oo50Lyi35sfjE7VM6206du7LtpbdQP8rbLhZy/stuS/Dcq4w6jE1Pz2zFrHtfeOKbaUA==}
+
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
@@ -15699,6 +15744,9 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  tty-browserify@0.0.1:
+    resolution: {integrity: sha512-C3TaO7K81YvjCgQH9Q1S3R3P3BtN3RIM8n+OvX4il1K1zgE8ZhI0op7kClgkxtutIE8hQrcrHBXvIheqKUUCxw==}
 
   turbo-darwin-64@2.4.2:
     resolution: {integrity: sha512-HFfemyWB60CJtEvVQj9yby5rkkWw9fLAdLtAPGtPQoU3tKh8t/uzCAZKso2aPVbib9vGUuGbPGoGpaRXdVhj5g==}
@@ -16653,6 +16701,9 @@ packages:
   zip-stream@6.0.1:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
+
+  zlib-browserify@0.0.3:
+    resolution: {integrity: sha512-KW42YGoQKq7+oU46deeWMUsrPyBruEWV1DoObBTMfEC2LnTqQIrwKVKrPoz2mn5DXESW4Ca/lIP2MqGHrt/WFA==}
 
   zod-validation-error@2.1.0:
     resolution: {integrity: sha512-VJh93e2wb4c3tWtGgTa0OF/dTt/zoPCPzXq4V11ZjxmEAFaPi/Zss1xIZdEB5RD8GD00U0/iVXgqkF77RV7pdQ==}
@@ -23221,7 +23272,7 @@ snapshots:
 
   '@stacks/stacks-blockchain-api-types@0.61.0': {}
 
-  '@stacks/stacks-blockchain-api-types@7.8.2': {}
+  '@stacks/stacks-blockchain-api-types@7.14.1': {}
 
   '@stacks/storage@7.0.2(encoding@0.1.13)':
     dependencies:
@@ -25400,6 +25451,8 @@ snapshots:
   '@zxing/text-encoding@0.9.0':
     optional: true
 
+  Base64@0.2.1: {}
+
   JSONStream@1.3.5:
     dependencies:
       jsonparse: 1.3.1
@@ -25765,7 +25818,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios@1.8.2:
+  axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.1
@@ -26440,9 +26493,9 @@ snapshots:
   clarity-codegen@1.0.0-beta.1(@stacks/common@7.0.2)(@stacks/transactions@7.0.5(encoding@0.1.13)):
     dependencies:
       '@stacks/common': 7.0.2
-      '@stacks/stacks-blockchain-api-types': 7.8.2
+      '@stacks/stacks-blockchain-api-types': 7.14.1
       '@stacks/transactions': 7.0.5(encoding@0.1.13)
-      axios: 1.8.2
+      axios: 1.8.4
       lodash: 4.17.21
       yargs: 17.7.2
       yqueue: 1.0.1
@@ -27113,6 +27166,8 @@ snapshots:
       lodash.mapvalues: 4.6.0
       sort-any: 2.0.0
 
+  deep-equal@0.0.0: {}
+
   deep-equal@1.1.2:
     dependencies:
       is-arguments: 1.1.1
@@ -27156,6 +27211,8 @@ snapshots:
       define-data-property: 1.1.4
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
+
+  defined@0.0.0: {}
 
   defu@6.1.4: {}
 
@@ -29346,6 +29403,11 @@ snapshots:
       domutils: 2.8.0
       entities: 2.2.0
 
+  http-browserify@1.7.0:
+    dependencies:
+      Base64: 0.2.1
+      inherits: 2.0.4
+
   http-cache-semantics@4.1.1:
     optional: true
 
@@ -29373,6 +29435,8 @@ snapshots:
       debug: 4.4.0(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
+
+  https-browserify@1.0.0: {}
 
   https-proxy-agent@5.0.1:
     dependencies:
@@ -30375,6 +30439,8 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+
+  jsonify@0.0.1: {}
 
   jsonparse@1.3.1: {}
 
@@ -34413,6 +34479,12 @@ snapshots:
 
   tapable@2.2.1: {}
 
+  tape@0.2.2:
+    dependencies:
+      deep-equal: 0.0.0
+      defined: 0.0.0
+      jsonify: 0.0.1
+
   tar-stream@3.1.7:
     dependencies:
       b4a: 1.6.7
@@ -34801,6 +34873,8 @@ snapshots:
       - supports-color
       - tsx
       - yaml
+
+  tty-browserify@0.0.1: {}
 
   turbo-darwin-64@2.4.2:
     optional: true
@@ -35775,6 +35849,10 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.5.2
+
+  zlib-browserify@0.0.3:
+    dependencies:
+      tape: 0.2.2
 
   zod-validation-error@2.1.0(zod@3.24.2):
     dependencies:

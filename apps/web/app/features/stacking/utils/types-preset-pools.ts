@@ -1,16 +1,26 @@
 export type NetworkInstance = 'mainnet' | 'testnet' | 'devnet';
 
-export const PoolNameSlugMap = {
+export const PoolSlugToIdMap = {
+  'fast-pool': 'fastPool',
+  'plan-better': 'planBetter',
+  'stacking-dao': 'stackingDao',
+  xverse: 'xverse',
+  restake: 'restake',
+  custom: 'custom',
+} as const;
+
+export const PoolIdToDisplayNameMap = {
   fastPool: 'FAST Pool',
-  xverse: 'Xverse',
   planBetter: 'PlanBetter',
-  restake: 'Restake',
   stackingDao: 'Stacking DAO',
+  xverse: 'Xverse',
+  restake: 'Restake',
   custom: 'Custom Pool',
 } as const;
 
-export type PoolSlug = keyof typeof PoolNameSlugMap;
-export type PoolName = (typeof PoolNameSlugMap)[PoolSlug];
+export type PoolSlug = keyof typeof PoolSlugToIdMap;
+export type PoolId = (typeof PoolSlugToIdMap)[PoolSlug];
+export type PoolName = (typeof PoolIdToDisplayNameMap)[PoolId];
 
 export type PoxContractName =
   | 'WrapperOneCycle'

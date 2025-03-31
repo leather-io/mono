@@ -1,7 +1,7 @@
 import { StacksNetwork } from '@stacks/network';
 
 // import { analytics } from '@utils/analytics';
-import { EditingFormValues, PoolWrapperAllowanceState } from './types';
+import { PoolWrapperAllowanceState, StackingFormValues } from './types';
 import { HandleAllowContractCallerArgs } from './utils-allow-contract-caller';
 import {
   getNetworkInstance,
@@ -14,7 +14,7 @@ interface CreateHandleSubmitArgs {
   setHasUserConfirmedPoolWrapperContract: React.Dispatch<
     React.SetStateAction<PoolWrapperAllowanceState>
   >;
-  handleDelegateStxSubmit: (val: EditingFormValues, onFinish?: () => void) => Promise<void>;
+  handleDelegateStxSubmit: (val: StackingFormValues, onFinish?: () => void) => Promise<void>;
   handleAllowContractCallerSubmit: ({
     poxWrapperContract,
     onFinish,
@@ -29,7 +29,7 @@ export function createHandleSubmit({
   setHasUserConfirmedPoolWrapperContract,
   network,
 }: CreateHandleSubmitArgs) {
-  return async function handleSubmit(values: EditingFormValues) {
+  return async function handleSubmit(values: StackingFormValues) {
     if (values.poolName && requiresAllowContractCaller(values.poolName)) {
       const poxWrapperContract = getPoxWrapperContract(values.poolName, network);
       const networkInstance = getNetworkInstance(network);

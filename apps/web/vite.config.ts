@@ -17,7 +17,10 @@ export default defineConfig({
   resolve: {
     alias: {
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
+      // import from 'axios' fails in SSR
+      axios: path.resolve(__dirname, 'node_modules/axios/dist/browser/axios.cjs'),
       // polyfill required packages
+      'safe-process': 'process/browser', // vite marks "process" package as external, this is workaround
       crypto: 'crypto-browserify',
       stream: 'stream-browserify',
       vm: 'vm-browserify',
@@ -26,6 +29,11 @@ export default defineConfig({
       os: 'os-browserify/browser',
       assert: 'assert',
       process: 'process/browser',
+      http: 'http-browserify',
+      https: 'https-browserify',
+      zlib: 'zlib-browserify',
+      tty: 'tty-browserify',
+      util: 'rollup-plugin-node-polyfills/polyfills/util.js',
       'node:crypto': 'crypto-browserify',
       'node:stream': 'stream-browserify',
       'node:vm': 'vm-browserify',
@@ -34,7 +42,11 @@ export default defineConfig({
       'node:os': 'os-browserify/browser',
       'node:assert': 'assert',
       'node:process': 'process/browser',
-      'safe-process': 'process/browser', // vite marks "process" package as external, this is workaround
+      'node:http': 'http-browserify',
+      'node:https': 'https-browserify',
+      'node:zlib': 'zlib-browserify',
+      'node:tty': 'tty-browserify',
+      'node:util': 'rollup-plugin-node-polyfills/polyfills/util.js',
     },
   },
   define: {

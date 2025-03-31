@@ -21,7 +21,7 @@ import { stxAmountSchema } from '~/utils/validators/stx-amount-validator';
 import { stxToMicroStx } from '@leather.io/utils';
 
 import { pools } from '../components/preset-pools';
-import { EditingFormValues } from './types';
+import { StackingFormValues } from './types';
 import { PoolName } from './types-preset-pools';
 import { getNetworkInstanceByName, getPoxContract } from './utils-preset-pools';
 
@@ -67,7 +67,7 @@ export function createValidationSchema(_args: Args) {
 }
 
 function getOptions(
-  values: EditingFormValues,
+  values: StackingFormValues,
   poxInfo: PoxInfo,
   stackingContract: string,
   client: StackingClient,
@@ -152,7 +152,7 @@ export function createHandleSubmit({
   setIsContractCallExtensionPageOpen,
   navigate,
 }: CreateHandleSubmitArgs) {
-  return async function handleSubmit(values: EditingFormValues, onFinish?: () => void) {
+  return async function handleSubmit(values: StackingFormValues, onFinish?: () => void) {
     // TODO: handle thrown errors
     const [poxInfo, stackingContract] = await Promise.all([
       client.getPoxInfo(),

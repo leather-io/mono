@@ -1,3 +1,4 @@
+import { HIRO_API_BASE_URL_MAINNET, HIRO_API_BASE_URL_TESTNET } from '@leather.io/models';
 import { stxToMicroStx } from '@leather.io/utils';
 
 import packageJson from '../../package.json';
@@ -28,6 +29,10 @@ export const SEND_MANY_CONTACT_ID = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.s
 export const BUY_STACKS_URL = 'https://coinmarketcap.com/currencies/stacks/markets/';
 
 export const DEFAULT_DEVNET_SERVER = 'http://localhost:3999';
+
+export const DEFAULT_MAINNET_SERVER = HIRO_API_BASE_URL_MAINNET;
+
+export const DEFAULT_TESTNET_SERVER = HIRO_API_BASE_URL_TESTNET;
 
 export const VERSION = packageJson.version;
 
