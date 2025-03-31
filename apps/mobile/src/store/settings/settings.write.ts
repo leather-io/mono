@@ -13,6 +13,7 @@ import { initialState } from './settings';
 import {
   HapticsPreference,
   LastActiveTimestamp,
+  LocalePreference,
   NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
@@ -37,6 +38,9 @@ export const settingsSlice = createSlice({
     },
     userChangedFiatCurrencyPreference(state, action: PayloadAction<FiatCurrency>) {
       state.fiatCurrencyPreference = action.payload;
+    },
+    userChangedLocalePreference(state, action: PayloadAction<LocalePreference>) {
+      state.localePreference = action.payload;
     },
     userChangedNetworkPreference(state, action: PayloadAction<DefaultNetworkConfigurations>) {
       state.networkPreference = action.payload;
@@ -69,6 +73,7 @@ export const {
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
   userChangedFiatCurrencyPreference,
+  userChangedLocalePreference,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
   userChangedHapticsPreference,

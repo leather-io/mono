@@ -54,6 +54,11 @@ export const selectEmailAddressPreference = createSelector(
   state => state.emailAddressPreference
 );
 
+export const selectLocalePreference = createSelector(
+  selectSettings,
+  state => state.localePreference
+);
+
 export const selectNetworkPreference = createSelector(
   selectSettings,
   state => defaultNetworksKeyedById[state.networkPreference]

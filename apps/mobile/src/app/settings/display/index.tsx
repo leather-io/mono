@@ -6,9 +6,9 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
+import { LocaleSelectionSheet } from '@/features/settings/locale-selection-sheet';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
-import { toggleLocalization } from '@/locales/toggle-localization';
 import { useSettings } from '@/store/settings/settings';
 import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
@@ -30,11 +30,13 @@ export default function SettingsDisplayScreen() {
   const bitcoinUnitSheetRef = useRef<SheetRef>(null);
   const conversionUnitSheetRef = useRef<SheetRef>(null);
   const accountIdentifierSheetRef = useRef<SheetRef>(null);
+  const LocaleSelectionSheetRef = useRef<SheetRef>(null);
   const {
     accountDisplayPreference,
     bitcoinUnitPreference,
     changeHapticsPreference,
     fiatCurrencyPreference,
+    localePreference,
     hapticsPreference,
     themePreference,
   } = useSettings();
@@ -71,16 +73,16 @@ export default function SettingsDisplayScreen() {
           />
           <SettingsListItem
             title={t({
-              id: 'display.language.cell_title',
-              message: 'Language',
+              id: 'display.locale.cell_title',
+              message: 'Locale',
             })}
             caption={i18n._({
-              id: 'display.language.cell_caption',
+              id: 'display.locale.cell_caption',
               message: '{locale}',
-              values: { locale: i18n.locale },
+              values: { locale: localePreference },
             })}
             icon={<GlobeIcon />}
-            onPress={() => toggleLocalization()}
+            onPress={() => LocaleSelectionSheetRef.current?.present()}
           />
           {isDev() && (
             <>
@@ -152,6 +154,7 @@ export default function SettingsDisplayScreen() {
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />
       <AccountIdentifierSheet sheetRef={accountIdentifierSheetRef} />
+      <LocaleSelectionSheet sheetRef={LocaleSelectionSheetRef} />
     </>
   );
 }

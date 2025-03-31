@@ -22,6 +22,7 @@ import {
   selectEmailAddressPreference,
   selectHapticsPreference,
   selectLastActive,
+  selectLocalePreference,
   selectNetworkPreference,
   selectNotificationsPreference,
   selectPrivacyModePreference,
@@ -36,6 +37,7 @@ import {
   userChangedFiatCurrencyPreference,
   userChangedHapticsPreference,
   userChangedLastActive,
+  userChangedLocalePreference,
   userChangedNetworkPreference,
   userChangedNotificationPreference,
   userChangedPrivacyModePreference,
@@ -45,6 +47,7 @@ import {
 import {
   HapticsPreference,
   LastActiveTimestamp,
+  LocalePreference,
   NotificationsPreference,
   PrivacyModePreference,
   SecurityLevelPreference,
@@ -59,6 +62,7 @@ export const initialState: SettingsState = {
   createdOn: new Date().toISOString(),
   emailAddressPreference: '',
   fiatCurrencyPreference: 'USD',
+  localePreference: 'en',
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
   hapticsPreference: 'enabled',
@@ -78,6 +82,7 @@ export function useSettings() {
   const emailAddressPreference = useSelector(selectEmailAddressPreference);
   const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
   const privacyModePreference = useSelector(selectPrivacyModePreference);
+  const localePreference = useSelector(selectLocalePreference);
   const hapticsPreference = useSelector(selectHapticsPreference);
   const networkPreference = useSelector(selectNetworkPreference);
   const securityLevelPreference = useSelector(selectSecurityLevelPreference);
@@ -94,6 +99,7 @@ export function useSettings() {
     bitcoinUnitPreference,
     emailAddressPreference,
     fiatCurrencyPreference,
+    localePreference,
     networkPreference,
     privacyModePreference,
     hapticsPreference,
@@ -138,6 +144,12 @@ export function useSettings() {
         fiat_currency: unit,
       });
       dispatch(userChangedFiatCurrencyPreference(unit));
+    },
+    changeLocalePreference(locale: LocalePreference) {
+      dispatch(userChangedLocalePreference(locale));
+      void analytics?.track('user_setting_updated', {
+        locale,
+      });
     },
     changeNetworkPreference(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetworkPreference(network));

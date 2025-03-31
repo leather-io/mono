@@ -12,10 +12,6 @@ const devHash = 'a6b025ebb570b783a20df09twcj'; // with po file format
 const otaClient = new OtaClient(isDev() ? devHash : prodHash);
 
 export const DEFAULT_LOCALE = 'en';
-let LOCALES: string[] = [];
-export function getAvailableLocales() {
-  return LOCALES;
-}
 
 const placeholderRegex = /[.]*{([^{}]*)}[.]*/g;
 
@@ -46,16 +42,30 @@ export async function initiateI18n() {
   i18n.load('en', {});
   i18n.activate(DEFAULT_LOCALE);
   const locales = getLocales();
-
-  const deviceLocale =
-    locales.find(locale => isDefined(locale.languageTag))?.languageTag ?? DEFAULT_LOCALE;
-  // LEA-2138 Only support es-ES and en
-  i18n.activate(deviceLocale === 'es-ES' ? deviceLocale : DEFAULT_LOCALE);
+  const getDeviceLocale = () => {
+    const deviceLocale = locales.find(locale => isDefined(locale.languageTag))?.languageTag;
+    function isLocaleSupported(locale: string) {
+      return (
+        locale.includes('en') ||
+        locale.includes('es') ||
+        // Disabling Korean, Russian for now as not all translations are available
+        // locale.includes('ko') ||
+        // locale.includes('ru') ||
+        locale.includes('zh')
+      );
+    }
+    // don't use different locales for english
+    const isEnglish = deviceLocale?.includes('en');
+    if (!deviceLocale || isEnglish || !isLocaleSupported(deviceLocale)) {
+      return DEFAULT_LOCALE;
+    }
+    return deviceLocale;
+  };
+  i18n.activate(getDeviceLocale());
 
   const translations = await otaClient.getTranslations();
 
   const form = formatter({ explicitIdAsDefault: true, printLinguiId: true });
-  LOCALES = Object.keys(translations);
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   Object.keys(translations).map(async locale => {

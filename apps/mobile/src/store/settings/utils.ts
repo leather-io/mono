@@ -15,6 +15,7 @@ export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
 export type ThemePreference = (typeof defaultThemePreferences)[number];
 export type Theme = Exclude<ThemePreference, 'system'>;
 export type SecurityLevelPreference = 'insecure' | 'secure' | 'not-selected';
+export type LocalePreference = 'en' | 'es' | 'ko' | 'ru' | 'zh';
 export type NotificationsPreference = 'enabled' | 'disabled' | 'not-selected';
 export type PrivacyModePreference = 'hidden' | 'visible';
 export type HapticsPreference = 'disabled' | 'enabled';
@@ -27,6 +28,7 @@ export interface SettingsState {
   createdOn: string;
   emailAddressPreference: EmailAddress;
   fiatCurrencyPreference: FiatCurrency;
+  localePreference: LocalePreference;
   networkPreference: DefaultNetworkConfigurations;
   privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;
@@ -44,6 +46,7 @@ export const settingsSchema = z.object({
   createdOn: z.string(),
   emailAddressPreference: z.string(),
   fiatCurrencyPreference: z.string(),
+  localePreference: z.string(),
   networkPreference: z.string(),
   privacyModePreference: z.string(),
   themePreference: z.string(),

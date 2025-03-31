@@ -116,6 +116,7 @@ type UserSettingValue =
   | { bitcoin_unit: 'bitcoin' | 'satoshi' }
   | { email_address: string }
   | { fiat_currency: string }
+  | { locale: string }
   | {
       network: DefaultNetworkConfigurations;
     }
