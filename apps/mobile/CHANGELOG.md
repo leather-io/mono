@@ -683,6 +683,16 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.23.1
 
+## [2.25.6](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.5...@leather.io/mobile-v2.25.6) (2025-03-31)
+
+
+### Bug Fixes
+
+* add waitlist trigger for Save To, ref LEA-1825 ([9d691b7](https://github.com/leather-io/mono/commit/9d691b7414d15ca5ecf50845f7332fd6f763c444))
+* adjust icon padding, ref LEA-2003 ([730cc0a](https://github.com/leather-io/mono/commit/730cc0a7b9233a1ca88e7ed4111f533ca10ecc5e))
+* fix problem with lingui dynamic key ([28f4c1d](https://github.com/leather-io/mono/commit/28f4c1d2ae32a776fc8d8c6acc0a3fca03ff7893))
+* manually specify latest iOS to appease AppStore ([61c2308](https://github.com/leather-io/mono/commit/61c23080afafa412f2df6f5e20dd1c38a1e65fb2))
+
 ## [2.25.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.4...@leather.io/mobile-v2.25.5) (2025-03-31)
 
 
