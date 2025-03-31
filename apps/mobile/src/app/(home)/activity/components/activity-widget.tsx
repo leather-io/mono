@@ -25,7 +25,7 @@ export function ActivityWidget({ activity, isLoading, onPressHeader }: ActivityW
     <Widget>
       <Box>
         <Widget.Header onPress={onPressHeader}>
-          <Widget.Title title={t({ id: 'activity.header_title', message: 'My activity' })} />
+          <Widget.Title title={t({ id: 'activity.widget.header_title', message: 'My activity' })} />
         </Widget.Header>
       </Box>
       <Widget.Body>
