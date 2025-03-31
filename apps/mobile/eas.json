@@ -12,7 +12,8 @@
       },
       "ios": {
         "simulator": true,
-        "cocoapods": "1.15.2"
+        "cocoapods": "1.15.2",
+        "image": "latest"
       }
     },
     "simulator-dev": {
@@ -21,7 +22,8 @@
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "cocoapods": "1.15.2"
+        "cocoapods": "1.15.2",
+        "image": "latest"
       },
       "android": {
         "image": "latest"
@@ -33,7 +35,8 @@
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "cocoapods": "1.15.2"
+        "cocoapods": "1.15.2",
+        "image": "latest"
       },
       "android": {
         "image": "latest"
@@ -45,6 +48,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
+        "image": "latest",
         "cocoapods": "1.15.2"
       }
     },
@@ -53,6 +57,7 @@
       "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
+        "image": "latest",
         "simulator": true,
         "cocoapods": "1.15.2"
       }
@@ -62,6 +67,7 @@
       "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
+        "image": "latest",
         "cocoapods": "1.15.2"
       }
     },
@@ -71,6 +77,7 @@
       "distribution": "store",
       "autoIncrement": true,
       "ios": {
+        "image": "latest",
         "cocoapods": "1.15.2"
       },
       "android": {

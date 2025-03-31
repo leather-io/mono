@@ -1,9 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
-import {
-  NotifyUserSheetData,
-  NotifyUserSheetLayout,
-} from '@/components/sheets/notify-user-sheet.layout';
+import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -78,7 +75,7 @@ export function MnemonicDisplay({
             buttonState="outline"
             title={t({
               id: 'create_new_wallet.mnemonic.save_button',
-              message: `Save to...`,
+              message: `Save to…`,
             })}
           />
         </Box>
@@ -88,7 +85,7 @@ export function MnemonicDisplay({
         sheetData={{
           title: t({
             id: 'create_new_wallet.mnemonic.save_button.waitlist_title',
-            message: 'Save to...',
+            message: 'Save to…',
           }),
           id: WaitlistIds.saveMnemonic,
         }}
