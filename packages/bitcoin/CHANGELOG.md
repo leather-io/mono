@@ -654,6 +654,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.10.1
 
+## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.23.2...@leather.io/bitcoin-v0.24.0) (2025-04-01)
+
+
+### Features
+
+* sign message ([e5617b5](https://github.com/leather-io/mono/commit/e5617b529d3e7ce2ff5e10734e52e05e63c9a385))
+
 ## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.22.2...@leather.io/bitcoin-v0.23.0) (2025-03-27)
 
 

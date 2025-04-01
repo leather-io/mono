@@ -683,6 +683,24 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.23.1
 
+## [2.26.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.7...@leather.io/mobile-v2.26.0) (2025-04-01)
+
+
+### Features
+
+* sign message ([e5617b5](https://github.com/leather-io/mono/commit/e5617b529d3e7ce2ff5e10734e52e05e63c9a385))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.24.0
+    * @leather.io/query bumped to 2.34.6
+    * @leather.io/services bumped to 1.7.5
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.24.0
+
 ## [2.25.7](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.6...@leather.io/mobile-v2.25.7) (2025-03-31)
 
 
