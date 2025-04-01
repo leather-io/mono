@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
 
 import { ClarityType } from '@stacks/transactions';
-import { Stack, styled } from 'leather-styles/jsx';
+import { Stack } from 'leather-styles/jsx';
 import { ChoosePoolingAmount } from '~/features/stacking/components/choose-pooling-amount';
 import { StackingFormInfoPanel } from '~/features/stacking/components/stacking-form-info-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
@@ -13,6 +13,7 @@ import { useStacksNetwork } from '~/store/stacks-network';
 
 import { Spinner } from '@leather.io/ui';
 
+import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
 import { StackingFormItemTitle } from './components/stacking-form-item-title';
 import {
@@ -84,10 +85,12 @@ function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
     network,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasUserConfirmedPoolWrapperContract, setHasUserConfirmedPoolWrapperContract] =
     useState<PoolWrapperAllowanceState>({});
 
-  const derivedAllowanceState = useMemo(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const poolsContractsAllowanceState = useMemo(
     () => ({
       [networkInstance]: {
         [poxContracts['Pox4']]: true,
@@ -107,10 +110,6 @@ function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
       getAllowanceContractCallersOneCycleQuery?.data?.type,
     ]
   );
-
-  useEffect(() => {
-    setHasUserConfirmedPoolWrapperContract(derivedAllowanceState);
-  }, [derivedAllowanceState]);
 
   const formMethods = useForm<StackingFormValues>({
     defaultValues: {
@@ -136,14 +135,20 @@ function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
                 <StackingFormItemTitle title="Address to receive rewards" />
                 <ChooseRewardsAddress />
               </Stack>
+
+              <Stack gap="space.02">
+                <StackingFormItemTitle title="Duration" />
+              </Stack>
+
+              <Stack gap="space.02">
+                <StackingFormItemTitle title="Pooling conditions" />
+                <ChoosePoolingConditions />
+              </Stack>
             </Stack>
           </Form>
         }
         stackingInfoPanel={<StackingFormInfoPanel>{/*<PoolingInfoCard />*/}</StackingFormInfoPanel>}
       />
-      <styled.pre>
-        {String(JSON.stringify(hasUserConfirmedPoolWrapperContract, null, 2))}
-      </styled.pre>
     </FormProvider>
   );
 }

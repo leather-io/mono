@@ -1,4 +1,5 @@
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
+import { validatePoolSlug } from '~/features/stacking/utils/stacking-pools-validator';
 import {
   PoolIdToDisplayNameMap,
   PoolSlug,
@@ -21,11 +22,15 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function EarnStackingRoute({ params }: Route.ComponentProps) {
+  const isSlugValid = validatePoolSlug(params.slug);
+
+  if (!isSlugValid) {
+    throw new Error(`Invalid pool slug: ${params.slug}`);
+  }
+
   const poolSlug = params.slug as PoolSlug;
   const poolId = PoolSlugToIdMap[poolSlug];
   const poolName = PoolIdToDisplayNameMap[poolId];
-
-  if (!poolName) throw new Error(`Uknown pool - ${poolSlug}`);
 
   return (
     <StackingClientProvider>
