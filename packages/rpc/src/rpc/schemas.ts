@@ -65,6 +65,9 @@ export enum RpcErrorCode {
   // Client defined errors
   USER_REJECTION = 4001,
   METHOD_NOT_SUPPORTED = 4002,
+  // gRPC spec borrowed
+  PERMISSION_DENIED = 7,
+  UNAUTHENTICATED = 16,
 }
 const rpcErrorCodeSchema = z.nativeEnum(RpcErrorCode);
 

@@ -4,11 +4,6 @@ import { defineRpcEndpoint } from '../rpc/schemas';
 
 export const open = defineRpcEndpoint({
   method: 'open',
-  params: z
-    .object({ mode: z.enum(['fullpage', 'popup']) })
-    .passthrough()
-    .optional(),
-  result: z.null(),
+  params: z.object({ mode: z.enum(['fullpage', 'popup']) }).default({ mode: 'popup' }),
+  result: z.object({ success: z.literal(true) }),
 });
-
-export type OpenParams = z.infer<typeof open.params>;
