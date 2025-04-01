@@ -3,13 +3,19 @@ import { App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 
 import { bitcoinNetworkModesSchema } from '@leather.io/models';
-import { RpcRequest, RpcResult, createRpcSuccessResponse, signPsbt } from '@leather.io/rpc';
+import {
+  RpcRequest,
+  RpcResponse,
+  RpcResult,
+  createRpcSuccessResponse,
+  signPsbt,
+} from '@leather.io/rpc';
 
 import { addBip32DerivationFieldToInputs } from './utils';
 
 interface SignPsbtApproverProps {
   message: RpcRequest<typeof signPsbt>;
-  sendResult(result: object): void;
+  sendResult(result: RpcResponse<typeof signPsbt>): void;
   origin: string;
   app: App;
   closeApprover(): void;

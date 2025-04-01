@@ -60,7 +60,7 @@ export function useLeatherNetwork(): NetworkConfiguration {
   return leatherNetwork;
 }
 
-interface NetworkState extends NetworkConfiguration {
+export interface NetworkState extends NetworkConfiguration {
   isTestnet: boolean;
   mode: NetworkModes;
 }
