@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import createClient from 'openapi-fetch';
+import { v4 as uuidv4 } from 'uuid';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
 import { SupportedBlockchains } from '@leather.io/models';
@@ -24,10 +25,15 @@ export class LeatherApiClient {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     @inject(Types.WalletEnvironment) environmnet: string
   ) {
+    const clientId = uuidv4();
     this.client = createClient<paths>({
       baseUrl: environmnet === 'production' ? LEATHER_API_URL_PRODUCTION : LEATHER_API_URL_STAGING,
     });
     this.client.use({
+      onRequest({ request }) {
+        request.headers.set('X-Client-ID', clientId);
+        return request;
+      },
       onResponse({ response }) {
         if (!response.ok) {
           throw new Error(
