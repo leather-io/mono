@@ -250,6 +250,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.31.1
 
+## [2.10.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.10.1...@leather.io/rpc-v2.10.2) (2025-04-01)
+
+
+### Bug Fixes
+
+* **rpc:** add new error codes ([3ccf178](https://github.com/leather-io/mono/commit/3ccf178aa6fd1a721ded19df7e20a23d8f21d1ef))
+
 ## [2.10.1](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.10.0...@leather.io/rpc-v2.10.1) (2025-03-31)
 
 
