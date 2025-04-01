@@ -8,6 +8,9 @@ import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
+  optimizeDeps: {
+    include: ['axios'],
+  },
   css: {
     postcss: {
       // Type error with Panda plugin
@@ -49,6 +52,7 @@ export default defineConfig({
       'node:util': 'rollup-plugin-node-polyfills/polyfills/util.js',
     },
   },
+
   define: {
     global: 'globalThis', // required for some libs (e.g. pbkdf2)
   },
