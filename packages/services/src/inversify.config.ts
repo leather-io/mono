@@ -27,7 +27,7 @@ export interface InitServicesContainerOptions {
 
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
   if (!servicesContainer) {
-    servicesContainer = new Container({ autobind: true });
+    servicesContainer = new Container({ autobind: true, defaultScope: 'Singleton' });
     servicesContainer.bind(Types.WalletEnvironment).toConstantValue(options.walletEnvironment);
     servicesContainer
       .bind<SettingsService>(Types.SettingsService)
