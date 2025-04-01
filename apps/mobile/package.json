@@ -82,6 +82,7 @@
     "@types/lodash.get": "4.4.9",
     "axios": "1.8.2",
     "bignumber.js": "9.1.2",
+    "bitcoinjs-lib": "6.1.5",
     "buffer": "6.0.3",
     "dayjs": "1.11.13",
     "expo": "51.0.26",

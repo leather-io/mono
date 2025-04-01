@@ -2,6 +2,7 @@ import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { P2Ret, P2TROut } from '@scure/btc-signer/payment';
 import { SigHash } from '@scure/btc-signer/transaction';
+import * as bitcoin from 'bitcoinjs-lib';
 
 import {
   DerivationPathDepth,
@@ -183,6 +184,33 @@ export function payerToTapBip32Derivation(
       },
     },
   ];
+}
+
+type PsbtInputBitcoinJsLib = bitcoin.Psbt['data']['inputs']['0'];
+
+type TapBip32DerivationBitcoinJsLib = NonNullable<PsbtInputBitcoinJsLib['tapBip32Derivation']>['0'];
+
+export function payerToTapBip32DerivationBitcoinJsLib(
+  args: PayerToBip32DerivationArgs
+): TapBip32DerivationBitcoinJsLib {
+  return {
+    masterFingerprint: Buffer.from(args.masterKeyFingerprint, 'hex'),
+    path: keyOriginToDerivationPath(args.keyOrigin),
+    leafHashes: [],
+    pubkey: Buffer.from(ecdsaPublicKeyToSchnorr(args.publicKey)),
+  };
+}
+
+type Bip32DerivationBitcoinJsLib = NonNullable<PsbtInputBitcoinJsLib['bip32Derivation']>['0'];
+
+export function payerToBip32DerivationBitcoinJsLib(
+  args: PayerToBip32DerivationArgs
+): Bip32DerivationBitcoinJsLib {
+  return {
+    masterFingerprint: Buffer.from(args.masterKeyFingerprint, 'hex'),
+    path: keyOriginToDerivationPath(args.keyOrigin),
+    pubkey: Buffer.from(args.publicKey),
+  };
 }
 
 /**

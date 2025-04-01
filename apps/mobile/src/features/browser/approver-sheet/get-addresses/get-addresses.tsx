@@ -4,41 +4,20 @@ import { AccountSelectorSheet } from '@/features/accounts/account-selector/accou
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
-import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
-import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import { destructAccountIdentifier, makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
-import { RpcRequest, createRpcSuccessResponse, getAddresses } from '@leather.io/rpc';
+import { RpcRequest, RpcResponse, createRpcSuccessResponse, getAddresses } from '@leather.io/rpc';
 import { SheetRef } from '@leather.io/ui/native';
 
+import { useGetAddressesAccount } from './get-addresses.hooks';
 import { GetAddressesApproverLayout } from './get-addresses.layout';
 import { formatAddressesForGetAddresses } from './utils';
-
-function useGetAddressesAccount(accountId: string | null) {
-  const { fromAccountIndex: stacksAccountFromAccountIndex } = useStacksSigners();
-  const { accountIndexByPaymentType } = useBitcoinAccounts();
-  const { fromAccountIndex: accountFromAccountIndex } = useAccounts();
-  if (!accountId) return null;
-  const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
-  const account = accountFromAccountIndex(fingerprint, accountIndex);
-
-  if (!account) return null;
-
-  const stacksAccount = stacksAccountFromAccountIndex(fingerprint, accountIndex)[0];
-  const { nativeSegwit, taproot } = accountIndexByPaymentType(fingerprint, accountIndex);
-
-  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
-  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
-  if (!stacksAccount || !nativeSegwitPayer || !taprootPayer)
-    throw new Error('some of the accounts are not available');
-  return { fingerprint, accountIndex, taprootPayer, nativeSegwitPayer, stacksAccount };
-}
 
 interface GetAddressesApproverProps {
   app: App;
   message: RpcRequest<typeof getAddresses>;
-  sendResult(result: object): void;
+  sendResult(result: RpcResponse<typeof getAddresses>): void;
   origin: string;
   closeApprover(): void;
 }

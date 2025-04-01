@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TextInput } from 'react-native';
 
-import { usePsbtSigner } from '@/features/psbt-signer/use-psbt-signer';
+import { signTx } from '@/features/psbt-signer/signer';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { BitcoinAccountLoader } from '@/store/keychains/keychains';
 import { t } from '@lingui/macro';
@@ -13,7 +13,6 @@ import { Box, Button, Text } from '@leather.io/ui/native';
 //
 // This can be deleted soon, just a place to hang out and test some stuff
 export default function BitcoinScratchPad() {
-  const { sign } = usePsbtSigner();
   const [text, setText] = useState('bc1qetcn9fdtzq3wez6vrljjyry225ml7j52h3kwgl');
 
   const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType('efd01538', 1);
@@ -69,7 +68,7 @@ export default function BitcoinScratchPad() {
             19000n
           );
 
-          const signedTx = await sign(tx.toPSBT());
+          const signedTx = await signTx(tx.toPSBT());
 
           try {
             signedTx.finalize();

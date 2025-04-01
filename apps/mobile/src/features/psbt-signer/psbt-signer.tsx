@@ -46,9 +46,9 @@ import {
 import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
+import { signTx } from './signer';
 import { usePsbtAccounts } from './use-psbt-accounts';
 import { usePsbtPayers } from './use-psbt-payers';
-import { usePsbtSigner } from './use-psbt-signer';
 import { normalizeSignAtIndex } from './utils';
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
@@ -122,7 +122,6 @@ export function BasePsbtSigner({
 
   const currentNetwork = useCurrentNetworkState();
   const network = requestedNetwork ? getPsbtNetwork(requestedNetwork) : currentNetwork;
-  const { sign } = usePsbtSigner();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const [approverState, setApproverState] = useState<ApproverState>('start');
   const { data: btcMarketData } = useBtcMarketDataQuery();
@@ -212,7 +211,7 @@ export function BasePsbtSigner({
     setApproverState('submitting');
     try {
       const psbt = getPsbtAsTransaction(psbtHex);
-      const signedTx = await sign(psbt.toPSBT(), {
+      const signedTx = await signTx(psbt.toPSBT(), {
         signAtIndex: normalizeSignAtIndex(signAtIndex),
         allowedSighash,
       });

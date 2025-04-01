@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useAppByOrigin } from '@/store/apps/apps.read';
 import { useSettings } from '@/store/settings/settings';
 
+import { RpcResponses } from '@leather.io/rpc';
 import { Sheet, SheetRef } from '@leather.io/ui/native';
 
 import { BrowserApprover } from './browser-approver';
@@ -10,7 +11,7 @@ import { BrowserMessage } from './utils';
 
 interface ApproverSheetProps {
   message: BrowserMessage;
-  sendResult(result: object): void;
+  sendResult(result: RpcResponses): void;
   origin: string;
 }
 
