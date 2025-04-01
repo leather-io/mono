@@ -69,21 +69,22 @@ export default function SettingsDisplayScreen() {
               themeSheetRef.current?.present();
             }}
           />
-          <SettingsListItem
-            title={t({
-              id: 'display.language.cell_title',
-              message: 'Language',
-            })}
-            caption={i18n._({
-              id: 'display.language.cell_caption',
-              message: '{locale}',
-              values: { locale: i18n.locale },
-            })}
-            icon={<GlobeIcon />}
-            onPress={() => toggleLocalization()}
-          />
+
           {isDev() && (
             <>
+              <SettingsListItem
+                title={t({
+                  id: 'display.language.cell_title',
+                  message: 'Language',
+                })}
+                caption={i18n._({
+                  id: 'display.language.cell_caption',
+                  message: '{locale}',
+                  values: { locale: i18n.locale },
+                })}
+                icon={<GlobeIcon />}
+                onPress={() => toggleLocalization()}
+              />
               <SettingsListItem
                 title={t({
                   id: 'display.bitcoin_unit.cell_title',
