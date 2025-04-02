@@ -9,6 +9,7 @@ import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
+import { Environment } from './infrastructure/environment';
 import { SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market-data/market-data.service';
@@ -20,7 +21,7 @@ import { UtxosService } from './utxos/utxos.service';
 let servicesContainer: Container;
 
 export interface InitServicesContainerOptions {
-  walletEnvironment: string;
+  env: Environment;
   settingsService: Newable<SettingsService>;
   cacheService: Newable<HttpCacheService>;
 }
@@ -28,7 +29,7 @@ export interface InitServicesContainerOptions {
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
   if (!servicesContainer) {
     servicesContainer = new Container({ autobind: true, defaultScope: 'Singleton' });
-    servicesContainer.bind(Types.WalletEnvironment).toConstantValue(options.walletEnvironment);
+    servicesContainer.bind(Types.Environment).toConstantValue(options.env);
     servicesContainer
       .bind<SettingsService>(Types.SettingsService)
       .to(options.settingsService)

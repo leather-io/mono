@@ -12,3 +12,4 @@ export * from './transactions/stacks-transactions.service';
 export * from './transactions/bitcoin-transactions.service';
 export * from './utxos/utxos.service';
 export * from './activity/activity.service';
+export * from './infrastructure/environment';
