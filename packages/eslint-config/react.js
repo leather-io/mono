@@ -15,6 +15,7 @@ export default [
     rules: {
       'react/function-component-definition': 'error',
       'react/prop-types': 'off',
+      'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'ignore' }],
     },
   },
   {

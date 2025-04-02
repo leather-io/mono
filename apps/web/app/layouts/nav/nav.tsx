@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
@@ -50,6 +51,12 @@ export function NavContents() {
 
 export function Nav() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const location = useLocation();
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [location]);
+
   return (
     <>
       <styled.nav

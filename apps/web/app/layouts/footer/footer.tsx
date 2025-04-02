@@ -7,7 +7,7 @@ function AppFooter() {
         <Footer.LeatherIcon />
 
         <Footer.Column title="Stay in touch">
-          <Footer.Link withIcon href="https://twitter.com/leather_btc">
+          <Footer.Link withIcon href="https://twitter.com/leatherbtc">
             X
           </Footer.Link>
           <Footer.Link withIcon href="https://discord.gg/leatherwallet">
@@ -49,7 +49,7 @@ function AppFooter() {
         product="A Trust Machines product"
         // Hard coding date as Cloudflare Workers renders new Date() as epoch
         // start time
-        copyright={`© 2025 Leather Wallet, LLC`}
+        copyright="© 2025 Leather Wallet, LLC"
       />
     </Footer>
   );
