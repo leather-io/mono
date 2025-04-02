@@ -24,6 +24,14 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.30.0...@leather.io/models-v0.31.0) (2025-04-02)
+
+
+### Features
+
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+
 ## [0.30.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.29.0...@leather.io/models-v0.30.0) (2025-03-17)
 
 

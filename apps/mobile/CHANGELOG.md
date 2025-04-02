@@ -695,6 +695,35 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.24.1
 
+## [2.27.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.26.1...@leather.io/mobile-v2.27.0) (2025-04-02)
+
+
+### Features
+
+* add client id to leather api reqs ([41b6cdd](https://github.com/leather-io/mono/commit/41b6cdd3b884fba7eb60563b6dcccf5a855e1d17))
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.4.1
+    * @leather.io/bitcoin bumped to 0.24.2
+    * @leather.io/constants bumped to 0.19.1
+    * @leather.io/crypto bumped to 1.6.55
+    * @leather.io/models bumped to 0.31.0
+    * @leather.io/provider bumped to 1.2.6
+    * @leather.io/query bumped to 2.35.0
+    * @leather.io/rpc bumped to 2.10.3
+    * @leather.io/services bumped to 1.8.0
+    * @leather.io/stacks bumped to 1.8.0
+    * @leather.io/ui bumped to 1.58.0
+    * @leather.io/utils bumped to 0.31.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.24.2
+
 ## [2.26.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.25.7...@leather.io/mobile-v2.26.0) (2025-04-01)
 
 
