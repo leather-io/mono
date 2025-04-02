@@ -6,6 +6,8 @@
     "build": "react-router build",
     "deploy": "pnpm build && wrangler deploy",
     "dev": "react-router dev",
+    "format": "prettier --write \"app/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "prepare": "panda codegen",
     "start": "react-router-serve ./build/server/index.js",
     "test:coverage": "vitest run --coverage",

@@ -153,10 +153,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
               {info.getValue() as string}
             </Flag>
 
-            <Link
-              to={`/stacking/${info.row.original.slug}`}
-              style={{ minWidth: 'fit-content' }}
-            >
+            <Link to={`/stacking/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
               <Button size="xs" ml="space.04" minW="fit-content">
                 Start earning
               </Button>

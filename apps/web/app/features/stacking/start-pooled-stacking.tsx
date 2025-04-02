@@ -16,6 +16,7 @@ import { Spinner } from '@leather.io/ui';
 import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
+import { PoolingDetails } from './components/pooling-details';
 import { StackingFormItemTitle } from './components/stacking-form-item-title';
 import {
   useGetAllowanceContractCallersQuery,
@@ -23,7 +24,6 @@ import {
 } from './hooks/stacking.query';
 import { PoolWrapperAllowanceState, StackingFormValues } from './utils/types';
 import { PoolName } from './utils/types-preset-pools';
-import { PoolingDetails } from './components/pooling-details';
 
 interface StartPooledStackingProps {
   poolName: PoolName;
