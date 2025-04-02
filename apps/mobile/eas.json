@@ -76,6 +76,9 @@
       "pnpm": "10.4.1",
       "distribution": "store",
       "autoIncrement": true,
+      "env": {
+        "WALLET_ENVIRONMENT": "production"
+      },
       "ios": {
         "image": "latest",
         "cocoapods": "1.15.2"
