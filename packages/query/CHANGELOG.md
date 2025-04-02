@@ -510,6 +510,14 @@
     * @leather.io/bitcoin bumped to 0.24.1
     * @leather.io/rpc bumped to 2.10.2
 
+## [2.35.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.35.0...@leather.io/query-v2.35.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* hiro deprecated endpoints ([9d2b940](https://github.com/leather-io/mono/commit/9d2b94074cb515b15d6fad0e16381e069e2c686a))
+* stx balance hooks ([a0d688d](https://github.com/leather-io/mono/commit/a0d688d4ba40c4bb4652320ff7a690522b835ba4))
+
 ## [2.35.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.34.7...@leather.io/query-v2.35.0) (2025-04-02)
 
 
