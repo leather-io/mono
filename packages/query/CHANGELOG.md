@@ -510,6 +510,27 @@
     * @leather.io/bitcoin bumped to 0.24.1
     * @leather.io/rpc bumped to 2.10.2
 
+## [2.35.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.34.7...@leather.io/query-v2.35.0) (2025-04-02)
+
+
+### Features
+
+* add client id to leather api reqs ([41b6cdd](https://github.com/leather-io/mono/commit/41b6cdd3b884fba7eb60563b6dcccf5a855e1d17))
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.24.2
+    * @leather.io/constants bumped to 0.19.1
+    * @leather.io/models bumped to 0.31.0
+    * @leather.io/rpc bumped to 2.10.3
+    * @leather.io/stacks bumped to 1.8.0
+    * @leather.io/utils bumped to 0.31.2
+
 ## [2.34.5](https://github.com/leather-io/mono/compare/@leather.io/query-v2.34.4...@leather.io/query-v2.34.5) (2025-03-31)
 
 

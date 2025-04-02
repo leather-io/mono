@@ -394,6 +394,24 @@
     * @leather.io/crypto bumped to 1.6.54
     * @leather.io/utils bumped to 0.31.1
 
+## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.7.6...@leather.io/stacks-v1.8.0) (2025-04-02)
+
+
+### Features
+
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.19.1
+    * @leather.io/crypto bumped to 1.6.55
+    * @leather.io/models bumped to 0.31.0
+    * @leather.io/utils bumped to 0.31.2
+
 ## [1.7.2](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.7.1...@leather.io/stacks-v1.7.2) (2025-03-11)
 
 

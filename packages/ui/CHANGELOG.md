@@ -389,6 +389,23 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.58.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.57.0...@leather.io/ui-v1.58.0) (2025-04-02)
+
+
+### Features
+
+* add pooling conditions in stack form ([833a1f5](https://github.com/leather-io/mono/commit/833a1f5f459108badbfca46eaa8c7534f4efa939))
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.31.2
+  * devDependencies
+    * @leather.io/models bumped to 0.31.0
+
 ## [1.57.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.56.0...@leather.io/ui-v1.57.0) (2025-03-28)
 
 
