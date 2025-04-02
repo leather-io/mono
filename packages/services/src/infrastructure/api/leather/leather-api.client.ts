@@ -8,6 +8,7 @@ import { SupportedBlockchains } from '@leather.io/models';
 import { Types } from '../../../inversify.types';
 import type { HttpCacheService } from '../../cache/http-cache.service';
 import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
+import type { Environment } from '../../environment';
 import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
@@ -23,11 +24,14 @@ export class LeatherApiClient {
   constructor(
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService,
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
-    @inject(Types.WalletEnvironment) environmnet: string
+    @inject(Types.Environment) env: Environment
   ) {
     const clientId = uuidv4();
     this.client = createClient<paths>({
-      baseUrl: environmnet === 'production' ? LEATHER_API_URL_PRODUCTION : LEATHER_API_URL_STAGING,
+      baseUrl:
+        env.environment === 'production'
+          ? LEATHER_API_URL_PRODUCTION
+          : (env.leatherApiUrl ?? LEATHER_API_URL_STAGING),
     });
     this.client.use({
       onRequest({ request }) {
