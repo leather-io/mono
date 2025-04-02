@@ -33,6 +33,9 @@
       "node": "20.11.0",
       "pnpm": "10.4.1",
       "distribution": "internal",
+      "env": {
+        "WALLET_ENVIRONMENT": "production"
+      },
       "ios": {
         "simulator": true,
         "cocoapods": "1.15.2",
