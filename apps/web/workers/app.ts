@@ -33,6 +33,7 @@ export default {
     }
     //
     // End demo
+
     return requestHandler(request, {
       cloudflare: { env, ctx },
     });
