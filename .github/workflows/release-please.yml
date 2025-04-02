@@ -15,9 +15,6 @@ jobs:
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       changelog: ${{ steps.release.outputs.changelog }}
-      mobile_changelog: ${{ steps.release.outputs.leather-io-mobile--changelog }}
-      mobile_release_created: ${{ steps.release.outputs.leather-io-mobile--release-created }}
-    # Our PNPM workspace issue was fixed here: https://github.com/googleapis/release-please/pull/2281
     steps:
       - uses: actions/checkout@v4
         with:
@@ -68,33 +65,3 @@ jobs:
           token: ${{ secrets.LEATHER_BOT }}
           repository: leather-io/extension
           event-type: leather-deps-updated
-
-  # The logic below handles eas deployment and appstore submission:
-  deploy-eas-ios:
-    needs: release-please
-    runs-on: ubuntu-latest
-    # Ensure we only publish if a new release was created
-    if: needs.release-please.outputs.mobile_release_created
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy-ios
-        with:
-          EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-
-  # The logic below handles eas deployment and appstore submission:
-  deploy-eas-android:
-    needs: release-please
-    runs-on: ubuntu-latest
-    # Ensure we only publish if a new release was created
-    if: needs.release-please.outputs.mobile_release_created
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy-android
-        with:
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
