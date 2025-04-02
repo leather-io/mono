@@ -1,6 +1,6 @@
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 
-import { BoxedCatLockedIcon, StacksIcon, MagnifyingGlassIcon } from '@leather.io/ui';
+import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
 
 const POOLING_CONDITIONS = [
   {

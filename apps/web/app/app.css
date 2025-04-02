@@ -1,6 +1,5 @@
 @layer reset, base, tokens, recipes, utilities;
 
-
 @font-face {
   font-family: 'Diatype';
   src: url('/fonts/diatype/diatype-regular.woff2') format('woff2');
