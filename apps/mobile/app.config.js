@@ -44,14 +44,20 @@ export default () => {
   return {
     expo: {
       name: 'Leather',
+      owner: 'leather-wallet',
       slug: 'leather-wallet-mobile',
       version: '2.2.0',
+      runtimeVersion: {
+        policy: 'fingerprint',
+      },
       orientation: 'portrait',
       icon: './src/assets/icon.png',
       scheme: 'leather',
       userInterfaceStyle: 'automatic',
+      platforms: ['ios', 'android'],
       updates: {
         fallbackToCacheTimeout: 0,
+        url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
       },
       assetBundlePatterns: ['**/*'],
       ios: {
@@ -133,7 +139,6 @@ export default () => {
           projectId: 'c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
         },
       },
-      owner: 'leather-wallet',
       experiments: {
         typedRoutes: true,
       },

@@ -5,67 +5,23 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "test": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release",
-        "withoutCredentials": true
-      },
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
-      }
-    },
-    "simulator-dev": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
-      }
-    },
-    "simulator-pr": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
-      }
-    },
     "development": {
       "node": "20.11.0",
       "pnpm": "10.4.1",
+      "channel": "development",
+      "distribution": "internal",
       "developmentClient": true,
-      "distribution": "internal",
       "ios": {
         "image": "latest",
         "cocoapods": "1.15.2"
       }
     },
-    "preview-simulator": {
+    "staging": {
       "node": "20.11.0",
       "pnpm": "10.4.1",
       "distribution": "internal",
-      "ios": {
-        "image": "latest",
-        "simulator": true,
-        "cocoapods": "1.15.2"
-      }
-    },
-    "preview": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "distribution": "internal",
+      "channel": "staging",
+      "autoIncrement": true,
       "ios": {
         "image": "latest",
         "cocoapods": "1.15.2"
@@ -74,6 +30,7 @@
     "production": {
       "node": "20.11.0",
       "pnpm": "10.4.1",
+      "channel": "production",
       "distribution": "store",
       "autoIncrement": true,
       "ios": {
@@ -87,7 +44,9 @@
     "maestro": {
       "node": "20.11.0",
       "pnpm": "10.4.1",
-      "environment": "preview",
+      "environment": "production",
+      "withoutCredentials": true,
+      "channel": "maestro",
       "distribution": "internal",
       "ios": {
         "simulator": true,
@@ -96,6 +55,20 @@
       },
       "android": {
         "buildType": "apk",
+        "image": "latest"
+      }
+    },
+    "preview": {
+      "node": "20.11.0",
+      "pnpm": "10.4.1",
+      "distribution": "internal",
+      "channel": "preview",
+      "ios": {
+        "simulator": true,
+        "cocoapods": "1.15.2",
+        "image": "latest"
+      },
+      "android": {
         "image": "latest"
       }
     }

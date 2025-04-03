@@ -31,13 +31,13 @@ runs:
 
     # Wait for build to either succeed or fail
     - name: 🛫 Build for Android Emulator 🛫
-      id: android_simulator_build
+      id: android_preview_build
       run: |
         cd apps/mobile
         if [[ "$IS_MAIN_BRANCH" == "true" ]]
         then
-          # No wait on simulator version build of the app if we are on a dev branch
-          eas build --platform android --profile=simulator-dev --non-interactive --no-wait
+          # No wait on preview version build of the app if we are on a dev branch
+          eas build --platform android --profile=preview --non-interactive --no-wait
         else
           # set temporary command output 
           setTmpOutput () { tee /tmp/capture.out; }
@@ -45,7 +45,7 @@ runs:
           # get temporary command output 
           getTmpOutput () { cat /tmp/capture.out; }
           
-          eas build --platform android --profile=simulator-pr --non-interactive | setTmpOutput 
+          eas build --platform android --profile=preview --non-interactive | setTmpOutput 
 
           # Last line of the build output is the link to the expo build
           UNSAFE_BUILD_LINK=$(getTmpOutput | tail -n 1)
@@ -66,7 +66,7 @@ runs:
       if: ${{ inputs.IS_MAIN_BRANCH == 'false' }}
       uses: actions/github-script@v7
       env:
-        BUILD_LINK: ${{ steps.android_simulator_build.outputs.BUILD_LINK }}
+        BUILD_LINK: ${{ steps.android_preview_build.outputs.BUILD_LINK }}
       with:
         github-token: ${{ inputs.LEATHER_BOT }}
         script: |
