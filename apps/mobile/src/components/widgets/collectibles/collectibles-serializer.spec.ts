@@ -81,14 +81,6 @@ describe('isValidSip9', () => {
   });
 });
 
-// describe('isValidStamp', () => {
-//   it('should return true for valid stamps', () => {
-//     const stamp = mockCollectibles.find(c => c.protocol === 'stamp');
-//     if (!stamp) throw new Error('No stamp found in test data');
-//     expect(isValidStamp(stamp)).toBe(true);
-//   });
-// });
-
 describe('formatInsciptionName', () => {
   it('should replace "Inscription" with "#" in the name', () => {
     expect(formatInsciptionName('Inscription 123')).toBe('# 123');
