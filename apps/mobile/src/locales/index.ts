@@ -1,6 +1,6 @@
 import { getLocales } from 'react-native-localize';
 
-import { isProduction } from '@/utils/is-production';
+import { isProduction } from '@/shared/environment';
 import OtaClient from '@crowdin/ota-client';
 import { i18n } from '@lingui/core';
 import { formatter } from '@lingui/format-po';
