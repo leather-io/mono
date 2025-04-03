@@ -28,3 +28,12 @@ export function useReleaseLocaleFeatureFlag() {
 
   return releaseLocaleFeature;
 }
+
+export function useReleaseNotificationsFeatureFlag() {
+  const releaseNotificationsFeature = useBoolVariation(
+    featureFlagKeys.releaseNotificationsFeature.key,
+    featureFlagKeys.releaseNotificationsFeature.defaultValue
+  );
+
+  return releaseNotificationsFeature;
+}
