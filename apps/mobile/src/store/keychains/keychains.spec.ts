@@ -1,8 +1,81 @@
+import { vi } from 'vitest';
+
 import {
   filterKeychainsByAccountIndex,
   filterKeychainsByFingerprint,
   findHighestAccountIndexOfFingerprint,
 } from './keychains';
+
+// Mock the useBitcoinAccounts hook
+vi.mock('./bitcoin/bitcoin-keychains.read', () => ({
+  useBitcoinAccounts: vi.fn(() => ({
+    bitcoinKeychains: vi.fn(() => [
+      {
+        descriptor: 'mock-descriptor',
+        derivePayer: vi.fn(() => ({
+          address: 'mock-bitcoin-address',
+        })),
+      },
+    ]),
+    selectNetworkPreference: vi.fn(() => ({
+      chain: {
+        bitcoin: {
+          bitcoinNetwork: 'testnet',
+        },
+        stacks: {
+          chainId: 'testnet',
+        },
+      },
+    })),
+    list: [],
+    fromFingerprint: vi.fn(),
+    fromAccountIndex: vi.fn(),
+    accountIndexByPaymentType: vi.fn(() => ({
+      nativeSegwit: {
+        keyOrigin: '',
+        derivePayer: vi.fn(() => ({
+          address: 'mock-native-segwit-address',
+        })),
+      },
+      taproot: {
+        keyOrigin: '',
+        derivePayer: vi.fn(() => ({
+          address: 'mock-taproot-address',
+        })),
+      },
+    })),
+  })),
+}));
+
+// Mock the useStacksSigners hook
+vi.mock('./stacks/stacks-keychains.read', () => ({
+  useStacksSigners: vi.fn(() => ({
+    list: [
+      {
+        descriptor: 'mock-stacks-descriptor',
+        address: 'mock-stacks-address',
+      },
+    ],
+    fromFingerprint: vi.fn(),
+    fromAccountIndex: vi.fn(() => [
+      {
+        address: 'mock-stacks-address',
+      },
+    ]),
+  })),
+  selectNetworkPreference: vi.fn(() => ({
+    chain: {
+      bitcoin: {
+        bitcoinNetwork: 'testnet',
+      },
+      stacks: {
+        chainId: 'testnet',
+      },
+    },
+  })),
+  useStacksSignerAddresses: vi.fn(() => ['mock-stacks-address']),
+  useStacksSignerAddressFromAccountIndex: vi.fn(() => 'mock-stacks-address'),
+}));
 
 const fingerprintAlpha = 'deadbeef';
 const fingerprintBeta = 'cafebabe';
