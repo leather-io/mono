@@ -27,6 +27,10 @@ export const featureFlagKeys = {
     key: 'release_locale_feature',
     defaultValue: false,
   },
+  releaseNotificationsFeature: {
+    key: 'release_notifications_feature',
+    defaultValue: false,
+  },
 };
 
 export type FEATURE_FLAG_KEYS = keyof typeof featureFlagKeys;

@@ -7,13 +7,13 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useReleaseNotificationsFeatureFlag } from '@/features/feature-flags/use-feature-flags';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useDeviceId } from '@/hooks/use-device-id';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
-import { isProduction } from '@/utils/is-production';
 import { t } from '@lingui/macro';
 import * as Application from 'expo-application';
 import { useRouter } from 'expo-router';
@@ -45,7 +45,7 @@ export default function SettingsScreen() {
   const { displayToast } = useToastContext();
   const deviceId = useDeviceId();
   const { onCopy: onDeviceIdCopy } = useCopyToClipboard(deviceId ?? '');
-
+  const releaseNotificationsFeature = useReleaseNotificationsFeatureFlag();
   function handleCopyDeviceIdToClipboard() {
     void onDeviceIdCopy();
     displayToast({
@@ -120,7 +120,7 @@ export default function SettingsScreen() {
             onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
             testID={TestId.settingsNetworkButton}
           />
-          {!isProduction() && (
+          {releaseNotificationsFeature && (
             <SettingsListItem
               py="3"
               title={t({
