@@ -1,3 +1,4 @@
+import { isProduction } from '@/shared/environment';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
 import {
@@ -51,8 +52,7 @@ export const store = configureStore({
   reducer: persistReducer(persistConfig, reducer),
   devTools: false,
   enhancers: getDefaultEnhancers => {
-    if (process.env.EXPO_PUBLIC_NODE_ENV === 'development')
-      return getDefaultEnhancers().concat(devToolsEnhancer({ trace: true }));
+    if (!isProduction()) return getDefaultEnhancers().concat(devToolsEnhancer({ trace: true }));
 
     return getDefaultEnhancers();
   },
