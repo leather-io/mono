@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { LeatherQueryProvider as LeatherProvider } from '@/queries/leather-query-provider';
 import { queryClient } from '@/queries/query';
 import { GITHUB_ORG, GITHUB_REPO } from '@/shared/constants';
-import { BRANCH_NAME, WALLET_ENVIRONMENT } from '@/shared/environment';
+import { BRANCH_NAME, isProduction } from '@/shared/environment';
 import { useSettings } from '@/store/settings/settings';
 
 interface LeatherQueryProviderProps {
@@ -17,7 +17,7 @@ export function LeatherQueryProvider({ children }: LeatherQueryProviderProps) {
       client={queryClient}
       network={networkPreference}
       environment={{
-        env: WALLET_ENVIRONMENT,
+        env: isProduction() ? 'production' : 'development',
         github: {
           org: GITHUB_ORG,
           repo: GITHUB_REPO,
