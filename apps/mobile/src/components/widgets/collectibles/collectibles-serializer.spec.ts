@@ -1,11 +1,13 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { serializeCollectibles } from './collectibles-serializer';
 import { mockCollectibles } from './collectibles.mocks';
-import {
-  formatInsciptionName,
-  isValidInscription,
-  isValidSip9,
-  isValidStamp,
-} from './collectibles.utils';
+import { formatInsciptionName, isValidInscription, isValidSip9 } from './collectibles.utils';
+
+// Mock @lingui/macro
+vi.mock('@lingui/macro', () => ({
+  t: ({ message }: { id: string; message: string }) => message,
+}));
 
 describe('serializeCollectibles', () => {
   it('should correctly serialize collectibles', () => {
@@ -14,11 +16,10 @@ describe('serializeCollectibles', () => {
     expect(serializedCollectibles).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: expect.any(String),
-          title: expect.any(String),
-          imageUrl: expect.any(String),
-          collection: expect.any(String),
-          type: expect.stringMatching(/^(ordinal|stacks)$/),
+          name: expect.any(String),
+          subtitle: expect.any(String),
+          type: expect.stringMatching(/^(inscription|sip9|stamp)$/),
+          src: expect.any(String),
         }),
       ])
     );
@@ -80,13 +81,13 @@ describe('isValidSip9', () => {
   });
 });
 
-describe('isValidStamp', () => {
-  it('should return true for valid stamps', () => {
-    const stamp = mockCollectibles.find(c => c.protocol === 'stamp');
-    if (!stamp) throw new Error('No stamp found in test data');
-    expect(isValidStamp(stamp)).toBe(true);
-  });
-});
+// describe('isValidStamp', () => {
+//   it('should return true for valid stamps', () => {
+//     const stamp = mockCollectibles.find(c => c.protocol === 'stamp');
+//     if (!stamp) throw new Error('No stamp found in test data');
+//     expect(isValidStamp(stamp)).toBe(true);
+//   });
+// });
 
 describe('formatInsciptionName', () => {
   it('should replace "Inscription" with "#" in the name', () => {

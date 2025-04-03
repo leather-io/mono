@@ -1,8 +1,17 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { FungibleCryptoAssetInfo } from '@leather.io/models';
 
 import { createMarketDataQueryOptions } from './market-data.query';
 
 const maxTimeMs = 2147483647;
+
+// Mock the useSettings hook
+vi.mock('@/store/settings/settings', () => ({
+  useSettings: () => ({
+    fiatCurrencyPreference: 'USD',
+  }),
+}));
 
 describe('createMarketDataQueryOptions', () => {
   const options = createMarketDataQueryOptions({} as FungibleCryptoAssetInfo, 'mainnet');

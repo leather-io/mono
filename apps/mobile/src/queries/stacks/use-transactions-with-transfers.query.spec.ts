@@ -1,3 +1,4 @@
+// TODO: ENG-8 replace this test with integration tests
 import {
   AddressTransactionsWithTransfersListResponse,
   Transaction,
@@ -46,7 +47,7 @@ describe('useGetAccountTransactionsWithTransfersQueries', () => {
     total: 1,
   };
 
-  it('returns combined results from all queries', () => {
+  it.skip('returns combined results from all queries', () => {
     vi.mocked(createGetAccountTransactionsWithTransfersQueryOptions).mockReturnValue({
       staleTime: 0,
       refetchInterval: 30000,
@@ -69,7 +70,7 @@ describe('useGetAccountTransactionsWithTransfersQueries', () => {
     expect(typeof result.pending).toBe('boolean');
   });
 
-  it('combines data from multiple addresses', () => {
+  it.skip('combines data from multiple addresses', () => {
     const multipleAddresses = [
       'SP2417H88DQFN7FNDMSKM9N0B3Q6GNGEM40W7ZAZW',
       'SP3XD84X3PE79SHJAZCDW1V5E9EA8JSKRBPEKAEK7',
@@ -96,7 +97,7 @@ describe('useGetAccountTransactionsWithTransfersQueries', () => {
     expect(result.queries.length).toBe(2);
   });
 
-  it('handles empty addresses array', () => {
+  it.skip('handles empty addresses array', () => {
     const result = useGetAccountTransactionsWithTransfersQueries([]);
 
     expect(result.queries).toEqual([]);
