@@ -32,7 +32,8 @@
     "storybook-generate": "sb-rn-get-stories -js",
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
-    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "dependencies": {
