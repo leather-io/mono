@@ -1,7 +1,7 @@
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
-import { isDev } from '@/utils/is-dev';
+import { isProduction } from '@/utils/is-production';
 import { useRouter } from 'expo-router';
 
 import {
@@ -40,7 +40,7 @@ export function HeaderOptions() {
       >
         <SettingsGearIcon />
       </Pressable>
-      {isDev() && (
+      {!isProduction() && (
         <Pressable
           p="2"
           onPress={() => router.navigate(AppRoutes.Activity)}

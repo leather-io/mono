@@ -23,6 +23,10 @@ export const featureFlagKeys = {
     key: 'release_browser_feature',
     defaultValue: false,
   },
+  releaseLocaleFeature: {
+    key: 'release_locale_feature',
+    defaultValue: false,
+  },
 };
 
 export type FEATURE_FLAG_KEYS = keyof typeof featureFlagKeys;

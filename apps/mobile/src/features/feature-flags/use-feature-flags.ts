@@ -19,3 +19,12 @@ export function useReleaseBrowserFeatureFlag() {
 
   return releaseBrowserFeature;
 }
+
+export function useReleaseLocaleFeatureFlag() {
+  const releaseLocaleFeature = useBoolVariation(
+    featureFlagKeys.releaseLocaleFeature.key,
+    featureFlagKeys.releaseLocaleFeature.defaultValue
+  );
+
+  return releaseLocaleFeature;
+}
