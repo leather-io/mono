@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
+import { useReleaseLocaleFeatureFlag } from '@/features/feature-flags/use-feature-flags';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
@@ -10,7 +11,6 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { toggleLocalization } from '@/locales/toggle-localization';
 import { useSettings } from '@/store/settings/settings';
-import { isDev } from '@/utils/is-dev';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -26,6 +26,7 @@ import {
 import { capitalize } from '@leather.io/utils';
 
 export default function SettingsDisplayScreen() {
+  const releaseLocaleFeature = useReleaseLocaleFeatureFlag();
   const themeSheetRef = useRef<SheetRef>(null);
   const bitcoinUnitSheetRef = useRef<SheetRef>(null);
   const conversionUnitSheetRef = useRef<SheetRef>(null);
@@ -70,7 +71,7 @@ export default function SettingsDisplayScreen() {
             }}
           />
 
-          {isDev() && (
+          {releaseLocaleFeature && (
             <>
               <SettingsListItem
                 title={t({

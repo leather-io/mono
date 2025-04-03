@@ -13,7 +13,7 @@ import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useDeviceId } from '@/hooks/use-device-id';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
-import { isDev } from '@/utils/is-dev';
+import { isProduction } from '@/utils/is-production';
 import { t } from '@lingui/macro';
 import * as Application from 'expo-application';
 import { useRouter } from 'expo-router';
@@ -120,7 +120,7 @@ export default function SettingsScreen() {
             onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
             testID={TestId.settingsNetworkButton}
           />
-          {isDev() && (
+          {!isProduction() && (
             <SettingsListItem
               py="3"
               title={t({
