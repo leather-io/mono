@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedHeaderScreenWithKeyboardLayout } from '@/components/headers/animated-header/animated-header-screen-with-keyboard.layout';
-import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
+import { RestoreWalletSheet } from '@/features/restore-wallet/components/restore-wallet-sheet';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -20,23 +20,23 @@ import {
   Theme,
 } from '@leather.io/ui/native';
 
-interface RecoverWalletLayoutProps extends HasChildren {
+interface RestoreWalletLayoutProps extends HasChildren {
   passphrase: string;
   setPassphrase: (passphrase: string) => void;
   onSubmit: () => void;
   isButtonDisabled: boolean;
 }
 
-export function RecoverWalletLayout({
+export function RestoreWalletLayout({
   children,
   setPassphrase,
   passphrase,
   onSubmit,
   isButtonDisabled,
-}: RecoverWalletLayoutProps) {
+}: RestoreWalletLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
-  const recoverWalletSheetRef = useRef<SheetRef>(null);
+  const restoreWalletSheetRef = useRef<SheetRef>(null);
 
   return (
     <>
@@ -51,7 +51,7 @@ export function RecoverWalletLayout({
           title={t({ id: 'recover_wallet.title', message: 'Enter your secret key' })}
         >
           <Box gap="3">
-            <Text variant="label01">
+            <Text variant="label01" testID={TestId.restoreWalletPassphraseTitle}>
               {t({
                 id: 'recover_wallet.subtitle',
                 message: 'Paste or type a Secret Key to add its associated wallet.',
@@ -65,13 +65,15 @@ export function RecoverWalletLayout({
               id: 'recover_wallet.accordion_label',
               message: 'Advanced options',
             })}
+            testID={TestId.restoreWalletAdvancedOptionsButton}
             content={
               <Box mx="-5">
                 <Cell.Root
                   pressable
                   onPress={() => {
-                    recoverWalletSheetRef.current?.present();
+                    restoreWalletSheetRef.current?.present();
                   }}
+                  testID={TestId.restoreWalletAdvancedOptionsPassphraseToggle}
                 >
                   <Cell.Icon>
                     <Box
@@ -90,7 +92,10 @@ export function RecoverWalletLayout({
                         message: 'BIP39 passphrase',
                       })}
                     </Cell.Label>
-                    <Cell.Label variant="primary">
+                    <Cell.Label
+                      variant="primary"
+                      testID={TestId.restoreWalletAdvancedOptionsPassphraseStatus}
+                    >
                       {passphrase
                         ? t({
                             id: 'recover_wallet.passphrase_enabled',
@@ -122,10 +127,10 @@ export function RecoverWalletLayout({
           testID={TestId.restoreWalletContinue}
         />
       </Box>
-      <RecoverWalletSheet
+      <RestoreWalletSheet
         setPassphrase={setPassphrase}
         passphrase={passphrase}
-        recoverWalletSheetRef={recoverWalletSheetRef}
+        restoreWalletSheetRef={restoreWalletSheetRef}
       />
     </>
   );

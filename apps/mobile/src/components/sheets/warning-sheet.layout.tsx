@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
@@ -34,7 +35,7 @@ export function WarningSheetLayout({
   const { themeDerivedFromThemePreference } = useSettings();
   return (
     <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
-      <Box p="5" justifyContent="space-between" gap="5">
+      <Box p="5" justifyContent="space-between" gap="5" testID={TestId.warningSheet}>
         <Box gap="5">
           <Box>
             <SheetHeader
@@ -68,6 +69,7 @@ export function WarningSheetLayout({
               id: 'warning.submit_button',
               message: `Proceed`,
             })}
+            testID={TestId.warningSubmitButton}
           />
           <Button
             onPress={() => sheetRef.current?.dismiss()}
@@ -76,6 +78,7 @@ export function WarningSheetLayout({
               id: 'warning.cancel_button',
               message: `Cancel`,
             })}
+            testID={TestId.warningCancelButton}
           />
         </Box>
       </Box>

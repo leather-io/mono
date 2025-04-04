@@ -25,7 +25,7 @@ export function AddWalletSheet({ addWalletSheetRef, opensFully }: AddWalletSheet
   }, [addWalletSheetRef, router]);
 
   const restoreWallet = useCallback(() => {
-    router.navigate(AppRoutes.RecoverWallet);
+    router.navigate(AppRoutes.RestoreWallet);
     addWalletSheetRef.current?.close();
   }, [addWalletSheetRef, router]);
 

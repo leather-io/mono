@@ -7,6 +7,7 @@ import { AccountList } from '@/features/accounts/account-list/account-list';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { TestId } from '@/shared/test-id';
 import { type Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 
@@ -40,6 +41,7 @@ export function SelectAccount() {
           })}
           leftElement={canGoBack ? <HeaderBackButton onPress={handleBackButtonPress} /> : null}
           rightElement={<NetworkBadge />}
+          testID={TestId.selectAccountHeader}
         />
       }
     >

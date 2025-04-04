@@ -1,6 +1,7 @@
 import { ComponentPropsWithoutRef, RefObject } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import {
   BaseTheme,
@@ -100,7 +101,11 @@ export function TextInput({
       />
       {inputState === 'error' && (
         <Box>
-          <Text color="red.action-primary-default" variant="caption01">
+          <Text
+            color="red.action-primary-default"
+            variant="caption01"
+            testID={TestId.textInputErrorMessage}
+          >
             {_errorMessage}
           </Text>
         </Box>

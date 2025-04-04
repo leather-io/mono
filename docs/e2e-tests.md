@@ -39,6 +39,11 @@ Whenever you create a new flow don't forget to add it in expo build [maestro-flo
 
 You want a recording of your new changes? Simply create an E2E test for you changes and run `maestro record maestro/flows/your-amazing-flow.yaml` and it will create an mp4 for you!
 
+### Maestro best practices
+
+- don't use paste as it prompts the simulator for permission
+- when changing text don't assert for new text, assert for absence of original as typing can fat finger
+
 ### Add test to CI
 
 To add test to CI, you need to add it to the `run_maestro_tests` function in [maestro.yml](../apps/mobile/.eas/common/maestro.yml)

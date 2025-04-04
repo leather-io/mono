@@ -11,7 +11,7 @@ interface AvatarProps {
 
 export function Avatars({ setNewIcon, currentIcon }: AvatarProps) {
   return (
-    <Box flexDirection="row" gap="5" flexWrap="wrap">
+    <Box flexDirection="row" gap="5" flexWrap="wrap" justifyContent="center" alignItems="center">
       {Object.keys(accountIconMap).map(icon => (
         <AvatarButton
           isSelected={currentIcon === icon}

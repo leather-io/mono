@@ -3,7 +3,7 @@ appId: io.leather.mobilewallet
 - tapOn:
     text: 'Add Wallet'
 - tapOn:
-    id: 'createNewWalletSheetButton'
+    id: 'createNewWalletButton'
 - tapOn:
     id: 'walletCreationBackedUpButton'
 - runFlow:
@@ -21,6 +21,6 @@ appId: io.leather.mobilewallet
       - waitForAnimationToEnd:
           timeout: 3000
       - tapOn:
-          text: 'Proceed'
+          text: 'Continue'
 - assertVisible:
     id: 'homeAccountCard-0'

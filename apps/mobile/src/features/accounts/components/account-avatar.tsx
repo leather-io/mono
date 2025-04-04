@@ -1,5 +1,7 @@
 import { ComponentType, ForwardRefExoticComponent } from 'react';
 
+import { TestId } from '@/shared/test-id';
+
 import {
   AlienIcon,
   BankIcon,
@@ -56,6 +58,7 @@ interface AccountAvatarProps extends SquircleBoxProps {
 }
 
 export function AccountAvatar(props: AccountAvatarProps) {
+  const testID = isString(props.icon) ? `${TestId.defaultAccountIcon}_${props.icon}` : undefined;
   const Icon = isString(props.icon) ? accountIconMap[props.icon] : props.icon;
   return (
     <SquircleBox
@@ -68,6 +71,7 @@ export function AccountAvatar(props: AccountAvatarProps) {
       preserveSmoothing={true}
       justifyContent="center"
       alignItems="center"
+      testID={testID}
       {...props}
     >
       {Icon && <Icon />}

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountIcon, accountIconMap } from '@/features/accounts/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
+import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
@@ -51,7 +52,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
   return (
     <Box bg="ink.background-primary" flex={1}>
       <ScrollView contentContainerStyle={defaultStyles}>
-        <Box gap="5" px="5">
+        <Box gap="5" px="5" justifyContent="center">
           <SquircleBox
             alignSelf="center"
             width={124}
@@ -67,7 +68,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             {PreviewIcon && <PreviewIcon width={64} height={64} />}
           </SquircleBox>
 
-          <Text variant="label01">
+          <Text variant="label01" px="5">
             {t({
               id: 'choose_avatar.images.subtitle',
               message: 'Icons',
@@ -90,6 +91,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             id: 'choose_avatar.button',
             message: 'Save',
           })}
+          testID={TestId.chooseAvatarButton}
         />
       </Box>
     </Box>

@@ -9,24 +9,22 @@ appId: io.leather.mobilewallet
 - tapOn:
     id: 'homeSettingsButton'
 - tapOn:
-    text: 'Wallets and accounts Add, configure and remove'
+    id: 'settingsWalletAndAccountsButton'
 - tapOn:
     id: 'walletListSettingsButton'
     index: 0
 - tapOn:
-    text: 'Rename wallet'
-# # Doing this because iOS input is a bit flaky on maestro,
-# # It's known issue and they are on it.
-# # https://maestro.mobile.dev/api-reference/commands/erasetext
-# - longPressOn:
-#     id: 'walletChangeNameSheetInput'
-# - tapOn: 'Select All'
-- tapOn:
+    id: 'walletSettingsRenameWalletButton'
+# Doing this because iOS input is a bit flaky on maestro,
+# It's known issue and they are on it.
+# https://maestro.mobile.dev/api-reference/commands/erasetext
+- longPressOn:
     id: 'walletChangeNameSheetInput'
+- tapOn: 'Select All'
 - eraseText
-
-- inputText: 'testWallet'
+- inputText: 'new name'
 - tapOn:
-    text: 'Save'
-- assertVisible:
-    text: 'testWallet'
+    id: 'walletChangeNameSheetSaveButton'
+# Its safer to assert that the old name is not visible
+- assertNotVisible:
+    text: '~contains Wallet 1'

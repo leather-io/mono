@@ -10,7 +10,6 @@ import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
@@ -19,7 +18,7 @@ import { useRouter } from 'expo-router';
 import { Box, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { Balance } from '../../balance/balance';
-import { Widget } from '../components/widget';
+import { Widget, WidgetTitle } from '../components/widget';
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
 import { AddAccountSheet } from './sheets/add-account-sheet';
@@ -47,7 +46,10 @@ export function AccountsWidget() {
               wallets.hasWallets ? () => accountSelectorSheetRef.current?.present() : undefined
             }
           >
-            <Widget.Title title={t({ id: 'accounts.header_title', message: 'My accounts' })} />
+            <WidgetTitle
+              title={t({ id: 'accounts.header_title', message: 'My accounts' })}
+              testID={TestId.accountsWidgetTitle}
+            />
           </Widget.Header>
           {wallets.hasWallets && (
             <Box px="5">
@@ -87,7 +89,6 @@ export function AccountsWidget() {
                     />
                   }
                   icon={account.icon}
-                  iconTestID={defaultIconTestId(account.icon)}
                   key={account.id}
                   onPress={() => {
                     router.navigate({

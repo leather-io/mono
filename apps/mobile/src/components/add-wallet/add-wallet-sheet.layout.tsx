@@ -113,7 +113,7 @@ export function AddWalletSheetLayout({
                 id: 'add_wallet.create_wallet.cell_caption',
                 message: 'Create a new Bitcoin and Stacks wallet',
               })}
-              testID={TestId.createNewWalletSheetButton}
+              testID={TestId.createNewWalletButton}
               icon={<PlusIcon />}
             />
             <AddWalletCell

@@ -1,24 +1,27 @@
 import { RefObject } from 'react';
 
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { LockIcon, SheetRef } from '@leather.io/ui/native';
 
-import { InputSheetLayout } from '../sheets/input-sheet.layout';
+import { InputSheetLayout } from '../../../components/sheets/input-sheet.layout';
 
-interface RecoverWalletSheetProps {
-  recoverWalletSheetRef: RefObject<SheetRef>;
+interface RestoreWalletSheetProps {
+  restoreWalletSheetRef: RefObject<SheetRef>;
   passphrase: string;
   setPassphrase(passphrase: string): unknown;
 }
-export function RecoverWalletSheet({
-  recoverWalletSheetRef,
+export function RestoreWalletSheet({
+  restoreWalletSheetRef,
   passphrase,
   setPassphrase,
-}: RecoverWalletSheetProps) {
+}: RestoreWalletSheetProps) {
   return (
     <InputSheetLayout
-      sheetRef={recoverWalletSheetRef}
+      inputTestId={TestId.restoreWalletPassphraseInput}
+      submitTestId={TestId.restoreWalletPassphraseSubmit}
+      sheetRef={restoreWalletSheetRef}
       initialValue={passphrase}
       title={t({
         id: 'recover_wallet.passphrase.header_title',
@@ -34,7 +37,7 @@ export function RecoverWalletSheet({
         message: `Confirm`,
       })}
       onSubmit={newPassphrase => {
-        recoverWalletSheetRef.current?.close();
+        restoreWalletSheetRef.current?.close();
         setPassphrase(newPassphrase);
       }}
     />

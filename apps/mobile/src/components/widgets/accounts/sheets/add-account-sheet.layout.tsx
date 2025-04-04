@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import {
@@ -47,6 +48,7 @@ export function AddAccountSheetLayout({
               message: 'Choose existing leather wallet',
             })}
             icon={<WalletPlusIcon />}
+            testID={TestId.createNewAccountButton}
           />
           <AddWalletCell
             onPress={addToNewWallet}
@@ -58,6 +60,7 @@ export function AddAccountSheetLayout({
               id: 'add_account.new_wallet.cell_caption',
               message: 'Create new wallet',
             })}
+            testID={TestId.createNewWalletSheetButton}
             icon={<PlusIcon />}
           />
         </Box>

@@ -10,12 +10,14 @@ interface HeaderLayoutProps {
   centerElement?: ReactNode;
   rightElement?: ReactNode;
   bottomElement?: ReactNode;
+  testID?: string;
 }
 export function HeaderLayout({
   leftElement,
   centerElement,
   rightElement,
   bottomElement,
+  testID,
 }: HeaderLayoutProps) {
   const insets = useSafeAreaInsets();
 
@@ -25,6 +27,7 @@ export function HeaderLayout({
       justifyContent="center"
       width="100%"
       style={{ paddingTop: insets.top }}
+      testID={testID}
     >
       <Box
         flexDirection="row"

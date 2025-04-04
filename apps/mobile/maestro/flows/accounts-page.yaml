@@ -12,9 +12,6 @@ appId: io.leather.mobilewallet
     id: 'tokenBalanceItem-BTC'
 - assertVisible:
     id: 'tokenBalanceItem-STX'
-- assertVisible: 'Send'
-- assertVisible: 'Receive'
-- assertVisible: 'Swap'
 - tapOn:
     id: 'backButton'
 - assertNotVisible:

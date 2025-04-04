@@ -5,7 +5,6 @@ interface AccountListItemProps extends PressableProps {
   address: React.ReactNode;
   balance: React.ReactNode;
   icon: React.ReactNode;
-  iconTestID?: string;
   testID?: string;
   walletName?: string;
 }
@@ -14,7 +13,6 @@ export function AccountListItem({
   address,
   balance,
   icon,
-  iconTestID,
   onPress,
   testID,
   walletName,
@@ -22,7 +20,7 @@ export function AccountListItem({
 }: AccountListItemProps) {
   return (
     <Cell.Root pressable={true} disabled={!onPress} onPress={onPress} testID={testID} {...rest}>
-      <Cell.Icon testID={iconTestID}>{icon}</Cell.Icon>
+      <Cell.Icon>{icon}</Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">{accountName}</Cell.Label>
         <Cell.Label variant="secondary">{walletName}</Cell.Label>

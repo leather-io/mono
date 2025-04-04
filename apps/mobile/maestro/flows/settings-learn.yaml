@@ -6,7 +6,8 @@ appId: io.leather.mobilewallet
     id: 'homeSettingsButton'
 - tapOn:
     id: 'settingsHelpButton'
-- tapOn: 'Learn Expand your knowledge'
+- tapOn:
+    id: 'settingsLearnButton'
 - assertVisible: 'LEARN'
 - assertVisible: 'Dive Deeper into Bitcoin & Leather: Essential Knowledge & Beyond'
 - launchApp:

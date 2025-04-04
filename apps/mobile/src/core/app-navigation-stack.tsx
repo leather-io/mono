@@ -77,7 +77,7 @@ export function AppNavigationStack() {
       <Stack.Screen name="create-new-wallet" options={{ headerShown: false }} />
       <Stack.Screen name="hardware-wallets" options={{ headerShown: false }} />
       <Stack.Screen name="mpc-wallets" options={{ headerShown: false }} />
-      <Stack.Screen name="recover-wallet" options={{ headerShown: false }} />
+      <Stack.Screen name="restore-wallet" options={{ headerShown: false }} />
       <Stack.Screen name="secure-your-wallet" options={{ headerShown: false }} />
     </Stack>
   );

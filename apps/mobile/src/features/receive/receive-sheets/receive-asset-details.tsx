@@ -34,9 +34,8 @@ export function ReceiveAssetDetails() {
   const navigation = useReceiveSheetNavigation<CurrentRoute>();
   const asset = route.params.asset;
   const accountName = route.params.accountName;
-  const { assetName, address, addressType, assetDescription } = asset;
+  const { assetName, address, addressType, assetDescription, type } = asset;
   const onCopyAddress = useCopyAddress();
-
   return (
     <FullHeightSheetLayout
       header={
@@ -62,7 +61,11 @@ export function ReceiveAssetDetails() {
             {addressType && <AddressTypeBadge type={addressType} />}
           </Box>
           <Box>
-            <Text variant="label02" color="ink.text-subdued">
+            <Text
+              variant="label02"
+              color="ink.text-subdued"
+              testID={`${TestId.receiveAssetDescription}-${type}`}
+            >
               {assetDescription}
             </Text>
           </Box>
@@ -85,6 +88,7 @@ export function ReceiveAssetDetails() {
         </Box>
 
         <Pressable
+          testID={TestId.receiveAssetShareButton}
           onPress={async () =>
             await Share.share({
               message: address,

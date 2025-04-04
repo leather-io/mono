@@ -15,7 +15,6 @@ import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
-import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -84,7 +83,6 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                   <AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />
                 }
                 icon={account.icon}
-                iconTestID={defaultIconTestId(account.icon)}
                 primaryTitle={account.name}
                 caption={wallet.name}
               />
@@ -120,6 +118,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                 params: { wallet: fingerprint, account: accountIndex },
               });
             }}
+            testID={TestId.walletSettingsAccountAvatarCell}
           />
           {account.status === 'active' ? (
             <SettingsListItem
@@ -129,6 +128,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               })}
               icon={<Eye1ClosedIcon />}
               onPress={toggleHideAccount}
+              testID={TestId.accountSettingsHideAccountButton}
             />
           ) : (
             <SettingsListItem

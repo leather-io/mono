@@ -4,6 +4,7 @@ import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@leather.io/constants';
@@ -28,6 +29,7 @@ export default function SettingsHelpScreen() {
             id: 'help.support.cell_caption',
             message: 'Contact our support team',
           })}
+          testID={TestId.settingsSupportButton}
           icon={<SupportIcon />}
           onPress={() => void Linking.openURL(LEATHER_SUPPORT_URL)}
         />
@@ -40,6 +42,7 @@ export default function SettingsHelpScreen() {
             id: 'help.guides.cell_caption',
             message: 'Dive into feature details',
           })}
+          testID={TestId.settingsGuidesButton}
           icon={<MagicBookIcon />}
           onPress={() => void Linking.openURL(LEATHER_GUIDES_URL)}
         />
@@ -52,6 +55,7 @@ export default function SettingsHelpScreen() {
             id: 'help.learn.cell_caption',
             message: 'Expand your knowledge',
           })}
+          testID={TestId.settingsLearnButton}
           icon={<GraduateCapIcon />}
           onPress={() => void Linking.openURL(LEATHER_LEARN_URL)}
         />

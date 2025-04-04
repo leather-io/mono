@@ -9,12 +9,12 @@ appId: io.leather.mobilewallet
 - tapOn:
     id: 'homeSettingsButton'
 - tapOn:
-    text: 'Wallets and accounts Add, configure and remove'
+    id: 'settingsWalletAndAccountsButton'
 - tapOn:
     id: 'walletListAccountCard'
 - tapOn:
     text: 'Hide account'
-- assertVisible: 'Un-hide account'
+- assertVisible: 'Reveal account'
 - tapOn:
     id: 'backButton'
 - assertNotVisible:
@@ -23,7 +23,8 @@ appId: io.leather.mobilewallet
     text: 'Hidden accounts 1 hidden accounts'
 - tapOn:
     id: 'walletListAccountCard'
-- tapOn: Un-hide account
+- tapOn:
+    text: 'Reveal account'
 - tapOn:
     id: 'backButton'
 - tapOn:

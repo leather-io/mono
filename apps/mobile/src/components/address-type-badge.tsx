@@ -1,3 +1,4 @@
+import { TestId } from '@/shared/test-id';
 import { useLingui } from '@lingui/react';
 
 import { Box, Text } from '@leather.io/ui/native';
@@ -15,6 +16,7 @@ export function AddressTypeBadge({ type }: AddressTypeBadgeProps) {
       borderRadius="xs"
       borderWidth={1}
       px="1"
+      testID={`${TestId.addressTypeBadge}-${type}`}
     >
       <Text color="ink.text-subdued" fontSize={11} fontWeight={500} lineHeight={12}>
         {i18n._({

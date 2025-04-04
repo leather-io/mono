@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - main
+      - chore/ENG-7/e2e-tests
   pull_request_labeled:
     labels:
       - needs:e2e-tests
@@ -29,20 +30,19 @@ jobs:
     params:
       build_id: ${{ needs.build_android.outputs.build_id }}
       flow_path:
-        - maestro/flows/accounts-drawer.yaml
+        - maestro/flows/accounts-selector-sheet.yaml
         - maestro/flows/accounts-page.yaml
         - maestro/flows/change-network.yaml
         - maestro/flows/change-theme.yaml
         - maestro/flows/create-wallet-without-security.yaml
-        # Failing tests:
-        # - maestro/flows/change-account-icon.yaml
-        # - maestro/flows/hide-account.yaml
-        # - maestro/flows/receive.yaml
-        # - maestro/flows/restore-wallet.yaml
-        # - maestro/flows/send.yaml
-        # - maestro/flows/settings-guides.yaml
-        # - maestro/flows/settings-learn.yaml
-        # - maestro/flows/settings-support.yaml
-        # - maestro/flows/wallet-add-account.yaml
-        # - maestro/flows/wallet-management.yaml
-        # - maestro/flows/wallet-multi-wallet.yaml
+        - maestro/flows/change-account-icon.yaml
+        - maestro/flows/hide-account.yaml
+        - maestro/flows/receive.yaml
+        - maestro/flows/restore-wallet.yaml
+        - maestro/flows/send.yaml
+        - maestro/flows/settings-guides.yaml
+        - maestro/flows/settings-learn.yaml
+        - maestro/flows/settings-support.yaml
+        - maestro/flows/wallet-add-account.yaml
+        - maestro/flows/wallet-management.yaml
+        - maestro/flows/wallet-multi-wallet.yaml

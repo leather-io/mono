@@ -4,30 +4,43 @@ appId: io.leather.mobilewallet
 - runFlow: ../shared/clean-up.yaml
 - runFlow:
     file: ../shared/add-wallet.yaml
-- tapOn: 'Receive'
-- assertVisible: 'Select account'
 - tapOn:
-    id: 'walletListAccountCard'
-    index: 0
+    id: 'actionBarReceiveButton'
+- assertVisible:
+    id: 'selectAccountHeader'
+# make sure native segwit is working
 - tapOn:
-    id: 'receiveAssetItem'
-    index: 0
-- assertVisible: 'This is your Native Segwit address.'
+    id: 'walletListAccountCard-0'
+- tapOn:
+    id: 'receiveAssetItem-native_segwit'
+- assertVisible:
+    id: 'addressTypeBadge-Native Segwit'
+- tapOn:
+    id: 'backButton'
+# make sure taproot is working
+- tapOn:
+    id: 'receiveAssetItem-taproot'
+- assertVisible:
+    id: 'receiveAssetDescription-taproot'
+- assertVisible:
+    id: 'addressTypeBadge-Taproot'
+- tapOn:
+    id: 'backButton'
+# make sure stacks is working
+- tapOn:
+    id: 'receiveAssetItem-stacks'
+- assertVisible:
+    id: 'receiveAssetDescription-stacks'
+# make sure share is working
+- tapOn:
+    id: 'receiveAssetShareButton'
+- assertVisible: 'Copy'
+- assertVisible: 'Save to Files'
+- tapOn:
+    id: UICloseButtonBackground
 - tapOn:
     id: 'backButton'
 - tapOn:
-    id: 'receiveAssetItem'
-    index: 1
-- assertVisible: "This is your Taproot address. Use it to receive tokens and collectibles\
-    \ on the bitcoin network."
-- tapOn:
     id: 'backButton'
-- tapOn:
-    id: 'receiveAssetItem'
-    index: 2
-- assertVisible: 'This is your Stacks address.'
-- tapOn:
-    id: 'backButton'
-- tapOn:
-    id: 'backButton'
-- assertVisible: 'Select account'
+- assertVisible:
+    id: 'selectAccountHeader'

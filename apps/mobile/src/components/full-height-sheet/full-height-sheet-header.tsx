@@ -8,17 +8,19 @@ interface FullHeightSheetHeaderProps {
   subtitle?: string;
   leftElement?: ReactNode;
   rightElement?: ReactNode;
+  testID?: string;
 }
 export function FullHeightSheetHeader({
   title,
   subtitle,
   leftElement,
   rightElement,
+  testID,
 }: FullHeightSheetHeaderProps) {
   return (
     <HeaderLayout
       leftElement={leftElement}
-      centerElement={<HeaderTitleWithSubtitle title={title} subtitle={subtitle} />}
+      centerElement={<HeaderTitleWithSubtitle title={title} subtitle={subtitle} testID={testID} />}
       rightElement={rightElement}
     />
   );

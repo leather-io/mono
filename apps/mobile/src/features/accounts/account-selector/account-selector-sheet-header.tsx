@@ -36,7 +36,7 @@ export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) 
             sheetRef.current?.close();
             router.navigate(AppRoutes.SettingsWallet);
           }}
-          testID={TestId.settingsWalletAndAccountsButton}
+          testID={TestId.accountSelectorSettingsButton}
           pressEffects={legacyTouchablePressEffect}
         >
           <SettingsGearIcon />

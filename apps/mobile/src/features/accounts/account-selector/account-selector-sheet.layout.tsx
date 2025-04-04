@@ -5,10 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Draggable } from '@/components/draggable';
 import { HEADER_HEIGHT } from '@/shared/constants';
+import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
-import { defaultIconTestId } from '@/utils/testing-utils';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
@@ -68,6 +68,7 @@ export function AccountSelectorSheetLayout({
                 <WalletLoader fingerprint={account.fingerprint} key={account.id}>
                   {wallet => (
                     <AccountCard
+                      testID={`${TestId.accountCard}-${idx}`}
                       caption={wallet.name}
                       primaryTitle={account.name}
                       secondaryTitle={
@@ -84,7 +85,6 @@ export function AccountSelectorSheetLayout({
                         />
                       }
                       icon={account.icon}
-                      iconTestID={defaultIconTestId(account.icon)}
                     />
                   )}
                 </WalletLoader>

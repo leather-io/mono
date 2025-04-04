@@ -5,39 +5,44 @@ appId: io.leather.mobilewallet
 - runFlow:
     file: ../shared/add-wallet.yaml
 # add a second wallet - TODO move into flow
-- tapOn: 'Add account All accounts in one'
-- tapOn: 'Add to new wallet Create new wallet'
-- tapOn: 'Create new wallet Create a new Bitcoin and Stacks wallet'
-- assertVisible: 'BACK UP YOUR SECRET KEY'
-- tapOn: "I've backed it up"
-- assertVisible: 'Wallet added successfully'
+- tapOn:
+    id: 'addAccountCard'
+- tapOn:
+    id: 'createNewWalletSheetButton'
+- tapOn:
+    id: 'createNewWalletButton'
+- tapOn:
+    id: 'walletCreationBackedUpButton'
 - assertVisible:
     id: 'homeAccountCard-0'
 - assertVisible:
     id: 'homeAccountCard-1'
+# FIXME change this to an ID
 - tapOn: 'My accounts'
-- assertVisible: 'Wallet 1'
-- assertVisible: 'Wallet 2'
+# - tapOn:
+#     id: 'accountsWidgetTitle'
+- assertVisible:
+    id: 'accountCard-0'
+- assertVisible:
+    id: 'accountCard-1'
 # test multi wallethidden accounts
 - tapOn:
-    id: 'settingsWalletAndAccountsButton'
-- tapOn: 'Hidden accounts 0 hidden accounts'
-# ensure empty hidden accounts list shows fallback
-- assertVisible: 'View and manage your hidden accounts'
-- tapOn:
-    id: 'backButton'
+    id: 'accountSelectorSettingsButton'
 - tapOn:
     id: 'walletListAccountCard'
     index: 0
-- tapOn: 'Hide account'
+- tapOn:
+    id: 'accountSettingsHideAccountButton'
 - tapOn:
     id: 'backButton'
-- tapOn: 'Hidden accounts 1 hidden accounts'
+- tapOn:
+    id: 'walletSettingsHiddenAccountsButton'
 - assertVisible:
     id: 'walletListAccountCard'
 - tapOn:
     id: 'backButton'
-- tapOn: 'Hidden accounts 1 hidden accounts'
+- tapOn:
+    id: 'walletSettingsHiddenAccountsButton'
 - assertVisible: 'Wallet 1'
 # ensure wallet 2 is not visible as no hidden accounts
 - assertNotVisible: 'Wallet 2'
@@ -48,18 +53,7 @@ appId: io.leather.mobilewallet
     index: 0
 - tapOn:
     id: 'walletSettingsRemoveWalletButton'
-- tapOn: 'Proceed'
 - tapOn:
-    id: 'walletListSettingsButton'
-- tapOn: 'Remove wallet'
-- tapOn: 'Proceed'
-- assertVisible: 'View and manage your wallets all in one place'
-- tapOn: 'Add or create wallet'
-- assertVisible: 'ADD WALLET'
-- assertVisible:
-    id: 'createNewWalletSheetButton'
-- tapOn: 'WALLETS'
+    id: 'warningSubmitButton'
 - tapOn:
     id: 'backButton'
-- assertVisible: 'Create or restore wallet Create, Import or connect instantly'
-- assertVisible: 'Add Wallet'

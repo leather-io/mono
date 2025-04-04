@@ -13,7 +13,7 @@ appId: io.leather.mobilewallet
 - tapOn:
     id: 'walletListAccountCard'
 - tapOn:
-    text: 'Avatar'
+    id: 'walletSettingsAccountAvatarCell'
 - tapOn:
     id: 'defaultAccountIcon_alien'
 - tapOn:
@@ -21,12 +21,12 @@ appId: io.leather.mobilewallet
 - assertVisible:
     id: 'defaultAccountIcon_sparkles'
 - tapOn:
-    text: 'Avatar'
+    id: 'walletSettingsAccountAvatarCell'
 - tapOn:
     id: 'defaultAccountIcon_alien'
 - tapOn:
-    text: 'Confirm'
-- assertVisible:
+    id: 'chooseAvatarButton'
+- tapOn:
     id: 'defaultAccountIcon_alien'
 - tapOn:
     id: 'backButton'

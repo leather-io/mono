@@ -10,7 +10,7 @@ export enum AppRoutes {
   Balances = '/balances',
   Collectibles = '/collectibles',
   CreateNewWallet = '/create-new-wallet',
-  RecoverWallet = '/recover-wallet',
+  RestoreWallet = '/restore-wallet',
   SecureYourWallet = '/secure-your-wallet',
   GeneratingWallet = '/generating-wallet',
   MpcWallets = '/mpc-wallets',

@@ -9,6 +9,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { EmptyWalletsScreen } from '@/features/settings/wallet-and-accounts/components/empty-wallets-screen';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { AppRoutes } from '@/routes';
+import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
@@ -51,6 +52,7 @@ export default function SettingsWalletScreen() {
                   onPress={() => {
                     router.navigate(AppRoutes.SettingsWalletHiddenAccounts);
                   }}
+                  testID={TestId.walletSettingsHiddenAccountsButton}
                 />
               )}
               <SettingsListItem

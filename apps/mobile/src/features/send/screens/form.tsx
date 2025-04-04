@@ -12,6 +12,7 @@ import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
@@ -61,6 +62,7 @@ export function Form() {
             })}
             leftElement={canGoBack() ? <HeaderBackButton onPress={goBack} /> : null}
             rightElement={<NetworkBadge />}
+            testID={TestId.sendFormHeader}
           />
         }
       >

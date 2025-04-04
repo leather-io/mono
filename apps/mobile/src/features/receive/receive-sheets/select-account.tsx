@@ -2,6 +2,7 @@ import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-heigh
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { AccountList } from '@/features/accounts/account-list/account-list';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
@@ -27,6 +28,7 @@ export function SelectAccount() {
             message: 'Select account',
           })}
           rightElement={<NetworkBadge />}
+          testID={TestId.selectAccountHeader}
         />
       }
     >

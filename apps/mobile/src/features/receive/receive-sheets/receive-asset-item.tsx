@@ -8,6 +8,7 @@ interface ReceiveAssetItemProps {
   addressType?: string;
   assetName: string;
   assetSymbol: string;
+  type: string;
   icon: React.ReactNode;
   onCopy: () => void;
   onPress: () => void;
@@ -16,6 +17,7 @@ export function ReceiveAssetItem({
   address,
   addressType,
   assetName,
+  type,
   icon,
   onCopy,
   onPress,
@@ -25,7 +27,7 @@ export function ReceiveAssetItem({
       pressable={true}
       disabled={!onPress}
       onPress={onPress}
-      testID={TestId.receiveAssetItem}
+      testID={`${TestId.receiveAssetItem}-${type}`}
     >
       <Cell.Icon>{icon}</Cell.Icon>
       <Cell.Content>

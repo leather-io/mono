@@ -19,11 +19,11 @@ import {
   setRecoveryMnemonic,
 } from './actions';
 import { constructErrorMessage } from './components/error-message';
-import { RecoverWalletLayout } from './recover-wallet.layout';
 import { initialState, reducer } from './reducer';
+import { RestoreWalletLayout } from './restore-wallet.layout';
 import { getInvalidMnemonicWords } from './utils';
 
-export function RecoverWallet() {
+export function RestoreWallet() {
   const inputRef = useRef<RNTextInput>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
 
@@ -85,7 +85,7 @@ export function RecoverWallet() {
   }
 
   return (
-    <RecoverWalletLayout
+    <RestoreWalletLayout
       passphrase={passphrase}
       isButtonDisabled={isButtonDisabled}
       onSubmit={onSubmit}
@@ -126,6 +126,6 @@ export function RecoverWallet() {
           testID={TestId.restoreWalletTextInput}
         />
       </Box>
-    </RecoverWalletLayout>
+    </RestoreWalletLayout>
   );
 }

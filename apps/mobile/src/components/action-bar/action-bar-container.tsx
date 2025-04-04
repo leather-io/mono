@@ -182,14 +182,23 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
 
   return (
     <ActionBar ref={ref}>
-      <ActionBarButton onPress={() => sendSheetRef.current?.present()} icon={<PaperPlaneIcon />} />
-      <ActionBarButton onPress={() => receiveSheetRef.current?.present()} icon={<InboxIcon />} />
+      <ActionBarButton
+        onPress={() => sendSheetRef.current?.present()}
+        icon={<PaperPlaneIcon />}
+        testID={TestId.actionBarSendButton}
+      />
+      <ActionBarButton
+        onPress={() => receiveSheetRef.current?.present()}
+        icon={<InboxIcon />}
+        testID={TestId.actionBarReceiveButton}
+      />
       {releaseBrowserFeature && (
         <ActionBarButton
           onPress={() => {
             browserSheetRef.current?.present();
           }}
           icon={<BrowserIcon />}
+          testID={TestId.actionBarBrowserButton}
         />
       )}
     </ActionBar>

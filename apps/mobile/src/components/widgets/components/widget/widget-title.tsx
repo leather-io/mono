@@ -6,12 +6,15 @@ import { Balance } from '../../../balance/balance';
 interface WidgetTitleProps {
   title: string;
   totalBalance?: Money;
+  testID?: string;
 }
 
-export function WidgetTitle({ title, totalBalance }: WidgetTitleProps) {
+export function WidgetTitle({ title, totalBalance, testID }: WidgetTitleProps) {
   return (
     <>
-      <Text variant="label01">{title}</Text>
+      <Text variant="label01" testID={testID}>
+        {title}
+      </Text>
       <ChevronRightIcon variant="small" color="ink.text-subdued" />
       {totalBalance && (
         <Box flex={1} justifyContent="flex-end" alignItems="flex-end">

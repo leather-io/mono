@@ -2,6 +2,7 @@ import { ComponentType, ReactNode } from 'react';
 import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
+import { TestId } from '@/shared/test-id';
 
 import {
   Box,
@@ -58,7 +59,8 @@ export function AccountCard({
       style={animatedStyle}
       {...props}
     >
-      <Box flexDirection="row" justifyContent="space-between">
+      {/* FIXME: without giving a testID to the Box, the AccountAvatar will not be visible in the test */}
+      <Box flexDirection="row" justifyContent="space-between" testID={TestId.defaultAccountIcon}>
         <AccountAvatar icon={icon} />
         {address}
       </Box>

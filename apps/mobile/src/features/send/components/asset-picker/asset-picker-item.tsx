@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HEADER_HEIGHT } from '@/shared/constants';
+import { TestId } from '@/shared/test-id';
 
 const parentTopPadding = 16;
 
@@ -34,6 +35,7 @@ export function AssetPickerItem({
     <View
       ref={pressableRef}
       onLayout={layoutEvent => setOffsetTopRelativeToParent(layoutEvent.nativeEvent.layout.y)}
+      testID={TestId.assetPickerItem}
     >
       {cloneElement(children as ReactElement, {
         onPress: handlePress,

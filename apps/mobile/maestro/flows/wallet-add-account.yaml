@@ -4,8 +4,10 @@ appId: io.leather.mobilewallet
 - runFlow: ../shared/clean-up.yaml
 - runFlow:
     file: ../shared/add-wallet.yaml
-- tapOn: 'Add account All accounts in one'
-- tapOn: 'Add to existing wallet Choose existing leather wallet'
+- tapOn:
+    id: 'addAccountCard'
+- tapOn:
+    id: 'createNewAccountButton'
 - assertVisible: 'WALLETS'
 - assertVisible:
     id: 'walletListAccountCard'

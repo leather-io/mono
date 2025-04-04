@@ -5,13 +5,14 @@ import { Box, Pressable, legacyTouchablePressEffect } from '@leather.io/ui/nativ
 interface WidgetHeaderProps {
   children: ReactNode;
   onPress?(): void;
+  dataTestId?: string;
 }
 
-export function WidgetHeader({ children, onPress }: WidgetHeaderProps) {
+export function WidgetHeader({ children, onPress, dataTestId }: WidgetHeaderProps) {
   if (onPress) {
     return (
       <Pressable onPress={onPress} pressEffects={legacyTouchablePressEffect}>
-        <Box flexDirection="row" gap="1" alignItems="center" px="5">
+        <Box flexDirection="row" gap="1" alignItems="center" px="5" testID={dataTestId}>
           {children}
         </Box>
       </Pressable>
@@ -19,7 +20,7 @@ export function WidgetHeader({ children, onPress }: WidgetHeaderProps) {
   }
 
   return (
-    <Box flexDirection="row" gap="1" alignItems="center" px="5">
+    <Box flexDirection="row" gap="1" alignItems="center" px="5" testID={dataTestId}>
       {children}
     </Box>
   );

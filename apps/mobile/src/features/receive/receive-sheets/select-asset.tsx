@@ -28,6 +28,7 @@ export interface SelectedAsset {
   address: string;
   addressType?: string;
   assetDescription: string;
+  type: string;
 }
 
 export function SelectAsset() {
@@ -49,39 +50,37 @@ export function SelectAsset() {
   const onCopyAddress = useCopyAddress();
 
   return (
-    <>
-      <FullHeightSheetLayout
-        header={
-          <FullHeightSheetHeader
-            title={t({
-              id: 'select_asset.header_title',
-              message: 'Select asset',
-            })}
-            subtitle={i18n._({
-              id: 'select_asset.header_subtitle',
-              message: '{subtitle}',
-              values: { subtitle: name },
-            })}
-            leftElement={
-              <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />
-            }
-            rightElement={<NetworkBadge />}
-          />
-        }
-      >
-        {assets.map(asset => (
-          <ReceiveAssetItem
-            key={asset.address}
-            address={truncateMiddle(asset.address)}
-            addressType={asset.addressType}
-            assetName={asset.assetName}
-            assetSymbol={asset.assetSymbol}
-            icon={<TokenIcon ticker={asset.assetSymbol} />}
-            onCopy={() => onCopyAddress(asset.address)}
-            onPress={() => onSelectAccount(asset)}
-          />
-        ))}
-      </FullHeightSheetLayout>
-    </>
+    <FullHeightSheetLayout
+      header={
+        <FullHeightSheetHeader
+          title={t({
+            id: 'select_asset.header_title',
+            message: 'Select asset',
+          })}
+          subtitle={i18n._({
+            id: 'select_asset.header_subtitle',
+            message: '{subtitle}',
+            values: { subtitle: name },
+          })}
+          leftElement={<HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />}
+          rightElement={<NetworkBadge />}
+          testID={TestId.selectAssetHeader}
+        />
+      }
+    >
+      {assets.map(asset => (
+        <ReceiveAssetItem
+          key={asset.address}
+          address={truncateMiddle(asset.address)}
+          addressType={asset.addressType}
+          assetName={asset.assetName}
+          assetSymbol={asset.assetSymbol}
+          type={asset.type}
+          icon={<TokenIcon ticker={asset.assetSymbol} />}
+          onCopy={() => onCopyAddress(asset.address)}
+          onPress={() => onSelectAccount(asset)}
+        />
+      ))}
+    </FullHeightSheetLayout>
   );
 }

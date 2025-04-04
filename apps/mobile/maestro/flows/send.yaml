@@ -4,10 +4,12 @@ appId: io.leather.mobilewallet
 - runFlow: ../shared/clean-up.yaml
 - runFlow:
     file: ../shared/add-wallet.yaml
-- tapOn: 'Send'
-- assertVisible: 'Select account'
-- tapOn: '$0.00'
-- assertVisible: 'Select asset'
-- tapOn: '$0.00'
-- assertVisible: 'Send'
-- assertVisible: 'Account 1'
+- tapOn:
+    id: 'actionBarSendButton'
+- assertVisible:
+    id: 'selectAssetHeader'
+- tapOn:
+    id: 'assetPickerItem'
+    index: 0
+- assertVisible:
+    id: 'sendFormHeader'
