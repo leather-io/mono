@@ -1,71 +1,28 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
-import { useCalculateStacksTxFees } from '@/queries/stacks/fees/fees.hooks';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { t } from '@lingui/macro';
-import { bytesToHex } from '@stacks/common';
-import {
-  PayloadType,
-  StacksTransactionWire,
-  cvToString,
-  deserializeTransaction,
-} from '@stacks/transactions';
+import { deserializeTransaction } from '@stacks/transactions';
 
-import { type CryptoCurrency, FeeTypes } from '@leather.io/models';
-import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
-import {
-  baseCurrencyAmountInQuoteWithFallback,
-  convertToMoneyTypeWithDefaultOfZero,
-  createMoney,
-} from '@leather.io/utils';
+import { Approver, Box, Text } from '@leather.io/ui/native';
+import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 import { ApproverAccountCard } from '../approver/components/approver-account-card';
 import { ApproverButtons } from '../approver/components/approver-buttons';
-import { StacksFeeCard } from '../approver/components/fees/stacks-fee-card';
-import { StacksFeesSheet } from '../approver/components/fees/stacks-fee-sheet';
-import { MemoCard } from '../approver/components/memo-card';
-import { MemoSheet } from '../approver/components/memo-sheet';
-import { NonceCard } from '../approver/components/nonce-card';
-import { NonceSheet } from '../approver/components/nonce-sheet';
 import { OutcomeAddressesCard } from '../approver/components/outcome-addresses-card';
 import { StacksOutcome } from '../approver/components/stacks-outcome';
-import { ApproverState } from '../approver/utils';
+import { MemoSection } from '../approver/memo.section';
+import { NonceSection } from '../approver/nonce.section';
+import { StacksFeesSection } from '../approver/stacks-fees.section';
+import { ApproverState, getFormReviewTxSummary, useTxOptions } from '../approver/utils';
 import { useBroadcastStxTransaction } from './use-broadcast-stx-transaction';
 
-interface ReviewTxSummaryProps {
-  tx: StacksTransactionWire;
-  symbol: CryptoCurrency;
-}
-function formReviewTxSummary({ tx, symbol }: ReviewTxSummaryProps) {
-  if (symbol !== 'STX') throw new Error('No support for SIP10');
-
-  const {
-    payload,
-    auth: {
-      spendingCondition: { fee },
-    },
-  } = tx;
-  if (payload.payloadType !== PayloadType.TokenTransfer) {
-    throw new Error('Unsupported payload type');
-  }
-  const { amount: txValue, recipient } = payload;
-  const totalSpendMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue + fee));
-  const feeMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(fee));
-
-  return {
-    recipient: cvToString(recipient),
-    feeMoney,
-    totalSpendMoney,
-    symbol: 'STX',
-  };
-}
 interface StacksTxSignerProps {
   txHex: string;
   onEdit(): void;
@@ -82,140 +39,23 @@ export function StacksTxSigner({
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
   const [txHex, setTxHex] = useState(_txHex);
   const tx = deserializeTransaction(txHex);
-  const { data: stxFees } = useCalculateStacksTxFees(tx);
   const { displayToast } = useToastContext();
-  const { fee } = tx.auth.spendingCondition;
-
-  function getFeeType() {
-    const estimates = stxFees?.estimates;
-    if (Number(fee) === estimates?.[1]?.fee.amount.toNumber()) {
-      return FeeTypes.Middle;
-    }
-    if (Number(fee) === estimates?.[0]?.fee.amount.toNumber()) {
-      return FeeTypes.Low;
-    }
-    if (Number(fee) === estimates?.[2]?.fee.amount.toNumber()) {
-      return FeeTypes.High;
-    }
-    return FeeTypes.Custom;
-  }
-
-  const feeSheetRef = useRef<SheetRef>(null);
-  const memoSheetRef = useRef<SheetRef>(null);
-  const nonceSheetRef = useRef<SheetRef>(null);
-
-  const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(getFeeType());
-  const fees = {
-    [FeeTypes.Low]: stxFees?.estimates[0]?.fee || createMoney(0, 'STX'),
-    [FeeTypes.Middle]: stxFees?.estimates[1]?.fee || createMoney(0, 'STX'),
-    [FeeTypes.High]: stxFees?.estimates[2]?.fee || createMoney(0, 'STX'),
-    [FeeTypes.Unknown]: createMoney(0, 'STX'),
-    [FeeTypes.Custom]: createMoney(0, 'STX'),
-  };
 
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 
   const { data: stxMarketData } = useStxMarketDataQuery();
-  const { recipient, feeMoney, totalSpendMoney } = formReviewTxSummary({
+  const { recipient, totalSpendMoney } = getFormReviewTxSummary({
     tx,
     symbol: 'STX',
   });
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const signer = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
-  if (!signer?.address) throw new Error('No address found');
-  if (!signer?.publicKey) throw new Error('No public key found');
+  if (!signer) throw new Error('No signer found');
 
   const account = useAccountByIndex(fingerprint, accountIndex);
 
-  const txOptions = {
-    publicKey: bytesToHex(signer?.publicKey),
-    network: stacksNetwork,
-  };
+  const txOptions = useTxOptions(signer);
 
-  async function onChangeFee(feeType: FeeTypes) {
-    try {
-      if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateStacksUnsignedTransaction({
-          txType: TransactionTypes.StxTokenTransfer,
-          amount: createMoney(tx.payload.amount, 'STX'),
-          fee: fees[feeType],
-          memo: tx.payload.memo.content,
-          nonce: Number(tx.auth.spendingCondition.nonce),
-          recipient: tx.payload.recipient,
-          ...txOptions,
-        });
-        const newTxHex = newTx.serialize();
-        setTxHex(newTxHex);
-        setSelectedFeeType(feeType);
-        displayToast({
-          title: t({
-            id: 'approver.send.stx.success.change-fee',
-            message: 'Fee updated',
-          }),
-          type: 'success',
-        });
-      }
-    } catch {
-      displayToast({
-        title: t({
-          id: 'approver.send.stx.error.change-fee',
-          message: 'Failed to change fee',
-        }),
-        type: 'error',
-      });
-    }
-  }
-
-  async function onChangeNonce(nonce: string) {
-    try {
-      if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateStacksUnsignedTransaction({
-          txType: TransactionTypes.StxTokenTransfer,
-          amount: createMoney(tx.payload.amount, 'STX'),
-          fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
-          memo: tx.payload.memo.content,
-          nonce: Number(nonce),
-          recipient: tx.payload.recipient,
-          ...txOptions,
-        });
-        const newTxHex = newTx.serialize();
-        setTxHex(newTxHex);
-      }
-    } catch {
-      displayToast({
-        title: t({
-          id: 'approver.send.stx.error.change-nonce',
-          message: 'Failed to change nonce',
-        }),
-        type: 'error',
-      });
-    }
-  }
-  async function onChangeMemo(memo: string) {
-    try {
-      if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateStacksUnsignedTransaction({
-          txType: TransactionTypes.StxTokenTransfer,
-          amount: createMoney(tx.payload.amount, 'STX'),
-          fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
-          nonce: Number(tx.auth.spendingCondition.nonce),
-          recipient: tx.payload.recipient,
-          memo,
-          ...txOptions,
-        });
-        const newTxHex = newTx.serialize();
-        setTxHex(newTxHex);
-      }
-    } catch {
-      displayToast({
-        title: t({
-          id: 'approver.send.stx.error.change-memo',
-          message: 'Failed to change memo',
-        }),
-        type: 'error',
-      });
-    }
-  }
   if (!account) throw new Error('No account found');
 
   const totalSpendUsd = baseCurrencyAmountInQuoteWithFallback(totalSpendMoney, stxMarketData);
@@ -270,34 +110,9 @@ export function StacksTxSigner({
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
-          <Approver.Section>
-            <Box />
-            <StacksFeeCard
-              feeType={selectedFeeType}
-              amount={feeMoney}
-              onPress={() => {
-                feeSheetRef.current?.present();
-              }}
-            />
-          </Approver.Section>
-          <Approver.Section>
-            <NonceCard
-              nonce={tx.auth.spendingCondition.nonce.toString()}
-              onPress={() => {
-                nonceSheetRef.current?.present();
-              }}
-            />
-          </Approver.Section>
-          {tx.payload.payloadType === PayloadType.TokenTransfer && (
-            <Approver.Section>
-              <MemoCard
-                memo={tx.payload.memo.content}
-                onPress={() => {
-                  memoSheetRef.current?.present();
-                }}
-              />
-            </Approver.Section>
-          )}
+          <StacksFeesSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} />
+          <NonceSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} />
+          <MemoSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} isMemoEditable />
         </Approver.Container>
         <Approver.Footer>
           <Box flexDirection="row" alignItems="center" justifyContent="space-between">
@@ -328,26 +143,6 @@ export function StacksTxSigner({
           />
         )}
       </Approver>
-      <StacksFeesSheet
-        sheetRef={feeSheetRef}
-        selectedFeeType={selectedFeeType}
-        onChangeFee={onChangeFee}
-        fees={fees}
-        currentFee={createMoney(tx.auth.spendingCondition.fee, 'STX')}
-      />
-
-      {tx.payload.payloadType === PayloadType.TokenTransfer && (
-        <MemoSheet
-          sheetRef={memoSheetRef}
-          memo={tx.payload.memo.content}
-          onChangeMemo={onChangeMemo}
-        />
-      )}
-      <NonceSheet
-        sheetRef={nonceSheetRef}
-        nonce={tx.auth.spendingCondition.nonce.toString()}
-        onChangeNonce={onChangeNonce}
-      />
     </>
   );
 }
