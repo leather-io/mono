@@ -9,7 +9,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   optimizeDeps: {
-    include: ['axios'],
+    exclude: ['axios'],
   },
   css: {
     postcss: {

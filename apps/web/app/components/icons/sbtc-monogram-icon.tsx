@@ -1,6 +1,6 @@
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
 
-export function SbtcIcon(props: HTMLStyledProps<'svg'>) {
+export function SbtcMonogramIcon(props: HTMLStyledProps<'svg'>) {
   return (
     <styled.svg
       xmlns="http://www.w3.org/2000/svg"

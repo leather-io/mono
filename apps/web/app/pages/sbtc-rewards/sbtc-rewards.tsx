@@ -1,37 +1,38 @@
-import { ReactNode } from 'react';
-
-import { Box, Flex, FlexProps, styled } from 'leather-styles/jsx';
-import { DummyIcon } from '~/components/dummy';
-import { PrimaryCellFiveGridLayout } from '~/components/layouts/primary-cell-five-grid.layout';
+import { Box, Flex, styled } from 'leather-styles/jsx';
+import { AlexLogo } from '~/components/icons/alex-logo';
+import { BitflowLogo } from '~/components/icons/bitflow-logo';
+import { SbtcLogo } from '~/components/icons/sbtc-logo';
+import { VelarLogo } from '~/components/icons/velar-logo';
+import { ZestLogo } from '~/components/icons/zest-logo';
 import { Page } from '~/features/page/page';
 
-import { Button, Hr } from '@leather.io/ui';
+import { Hr } from '@leather.io/ui';
 
-import { SbtcStep1AcquireGrid } from './components/sbtc-step-1-acquire';
+import { AcquireSbtcGrid } from './components/acquire-sbtc-grid';
+import { SbtcRewardHeroCard } from './components/sbtc-hero-card';
+import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 
-interface ValueDisplayerProps extends FlexProps {
-  name: ReactNode;
-  value: ReactNode;
+export interface RewardProtocolInfo {
+  id: string;
+  logo: JSX.Element;
+  title: string;
+  description: string;
+  tvl: string;
+  tvlUsd: string;
+  minCommitment: string;
+  minCommitmentUsd: string;
+  apr: string;
+  payoutToken: string;
 }
-function ValueDisplayer({ name, value }: ValueDisplayerProps) {
-  return (
-    <Flex flex={1} flexDir="column" justifyContent="space-between" p="space.05">
-      <styled.h4 color="ink.text-subdued" textStyle="label.03">
-        {name}
-      </styled.h4>
-      <styled.span textStyle="label.01">{value}</styled.span>
-    </Flex>
-  );
-}
 
-const pools = [
+const pools: RewardProtocolInfo[] = [
   {
     id: 'basic',
-    logo: '/path/to/sbtc-icon.png',
+    logo: <SbtcLogo size="32px" />,
     title: 'Basic sBTC rewards',
     description: 'Hold sBTC in your wallet to earn more sBTC passively, compounding over time',
     tvl: '40,000,000 BTC',
-    tvlUSD: '$40,000,000',
+    tvlUsd: '$40,000,000',
     minCommitment: '0.01 BTC',
     minCommitmentUsd: '$1,000.00',
     apr: '5%',
@@ -39,12 +40,12 @@ const pools = [
   },
   {
     id: 'alex',
-    logo: '/path/to/alex-icon.png',
+    logo: <AlexLogo size="32px" />,
     title: 'ALEX',
     description:
       'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
     tvl: '40,000,000 BTC',
-    tvlUSD: '$40,000,000',
+    tvlUsd: '$40,000,000',
     minCommitment: '0.01 BTC',
     minCommitmentUsd: '$1,000.00',
     apr: '5%',
@@ -52,12 +53,12 @@ const pools = [
   },
   {
     id: 'bitflow',
-    logo: '/path/to/bitflow-icon.png',
+    logo: <BitflowLogo size="32px" />,
     title: 'Bitflow',
     description:
       'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
     tvl: '40,000,000 BTC',
-    tvlUSD: '$40,000,000',
+    tvlUsd: '$40,000,000',
     minCommitment: '0.01 BTC',
     minCommitmentUsd: '$1,000.00',
     apr: '5%',
@@ -65,12 +66,12 @@ const pools = [
   },
   {
     id: 'velar',
-    logo: '/path/to/velar-icon.png',
+    logo: <VelarLogo size="32px" />,
     title: 'Velar',
     description:
       'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
     tvl: '40,000,000 BTC',
-    tvlUSD: '$40,000,000',
+    tvlUsd: '$40,000,000',
     minCommitment: '0.01 BTC',
     minCommitmentUsd: '$1,000.00',
     apr: '5%',
@@ -78,12 +79,12 @@ const pools = [
   },
   {
     id: 'zest',
-    logo: '/path/to/zest-icon.png',
+    logo: <ZestLogo size="32px" />,
     title: 'Zest',
     description:
       'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
     tvl: '40,000,000 BTC',
-    tvlUSD: '$40,000,000',
+    tvlUsd: '$40,000,000',
     minCommitment: '0.01 BTC',
     minCommitmentUsd: '$1,000.00',
     apr: '5%',
@@ -111,82 +112,18 @@ export function SbtcRewards() {
         </Box>
       </Flex>
 
-      <Page.Inset pos="relative" bg="black" color="white" mt="space.05" h="260px">
-        <Flex flexDir="column" pos="absolute" bottom={0} p={['space.04', 'space.05', 'space.07']}>
-          <styled.span textStyle="label.01">Historical APY</styled.span>
-          <styled.span textStyle="heading.02">5–8%</styled.span>
-        </Flex>
-      </Page.Inset>
+      <SbtcRewardHeroCard apyRange="5–8%" mt="space.05" />
 
       <styled.section mt="space.09">
         <styled.h3 textStyle="heading.04">1. Acquire sBTC</styled.h3>
-
-        <SbtcStep1AcquireGrid mt="space.03" />
+        <AcquireSbtcGrid mt="space.03" />
       </styled.section>
 
       <styled.section mt="space.08">
         <styled.h3 textStyle="heading.04">2. Choose rewards protocol</styled.h3>
 
         {pools.map(pool => (
-          <styled.article
-            key={pool.id}
-            display="flex"
-            flexDir={{ base: 'column', md: 'row' }}
-            mt="space.03"
-          >
-            <PrimaryCellFiveGridLayout
-              primaryCell={
-                <Flex
-                  flex={1}
-                  justifyContent="space-between"
-                  flexDir="column"
-                  p="space.05"
-                  minH="246px"
-                >
-                  <DummyIcon />
-                  <Box>
-                    <styled.h3 textStyle="heading.05" mt="space.05">
-                      {pool.title}
-                    </styled.h3>
-                    <styled.p textStyle="caption.01" mt="space.01">
-                      {pool.description}
-                    </styled.p>
-                    <Button size="xs" mt="space.04">
-                      Enroll
-                    </Button>
-                  </Box>
-                </Flex>
-              }
-              cells={[
-                <ValueDisplayer
-                  key={pool.id}
-                  name="Total Value Locked (TVL)"
-                  value={
-                    <>
-                      {pool.tvl}
-                      <Box textStyle="label.03">{pool.tvlUSD}</Box>
-                    </>
-                  }
-                />,
-                <ValueDisplayer key={`${pool.id}-apr`} name="Historical APR" value={pool.apr} />,
-                <ValueDisplayer
-                  key={`${pool.id}-minCommitment`}
-                  name="Minimum Commitment"
-                  value={
-                    <>
-                      {pool.minCommitment}
-                      <Box textStyle="label.03">{pool.minCommitmentUsd}</Box>
-                    </>
-                  }
-                />,
-                <ValueDisplayer
-                  key={`${pool.id}-token`}
-                  name="Payout token"
-                  value={pool.payoutToken}
-                />,
-              ]}
-            />
-          </styled.article>
+          <SbtcProtocolRewardGrid key={pool.id} mt="space.03" rewardProtocol={pool} />
         ))}
       </styled.section>
 

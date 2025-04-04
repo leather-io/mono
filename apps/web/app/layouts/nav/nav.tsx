@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
-import { SbtcIcon } from '~/components/icons/sbtc-icon';
+import { SbtcMonogramIcon } from '~/components/icons/sbtc-monogram-icon';
 import { StackingIcon } from '~/components/icons/stacking-icon';
 
 import {
@@ -25,7 +25,7 @@ export function NavContents() {
         sBTC
       </NavItem>
 
-      <NavItem href="/stacking" icon={<SbtcIcon />}>
+      <NavItem href="/stacking" icon={<SbtcMonogramIcon />}>
         Stacking
       </NavItem>
 
