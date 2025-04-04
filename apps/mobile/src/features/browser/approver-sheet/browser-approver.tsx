@@ -1,10 +1,17 @@
 import { App } from '@/store/apps/utils';
 
-import { RpcResponses, getAddresses, signMessage, signPsbt } from '@leather.io/rpc';
+import {
+  RpcResponses,
+  getAddresses,
+  signMessage,
+  signPsbt,
+  stxSignTransaction,
+} from '@leather.io/rpc';
 
 import { GetAddressesApprover } from './get-addresses/get-addresses';
 import { SignMessageApprover } from './sign-message/sign-message';
 import { SignPsbtApprover } from './sign-psbt';
+import { SignTransactionApprover } from './stx/sign-transaction/sign-transaction';
 import { BrowserMessage } from './utils';
 
 interface BrowserApproverProps {
@@ -41,6 +48,17 @@ export function BrowserApprover(props: BrowserApproverProps) {
     case signMessage.method: {
       return (
         <SignMessageApprover
+          app={props.app}
+          sendResult={props.sendResult}
+          origin={props.origin}
+          message={props.message}
+          closeApprover={props.closeApprover}
+        />
+      );
+    }
+    case stxSignTransaction.method: {
+      return (
+        <SignTransactionApprover
           app={props.app}
           sendResult={props.sendResult}
           origin={props.origin}

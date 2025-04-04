@@ -10,6 +10,7 @@ import {
   STACKS_MAINNET,
   STACKS_TESTNET,
   StacksNetwork,
+  StacksNetworkName,
   TransactionVersion,
 } from '@stacks/network';
 
@@ -18,7 +19,11 @@ import {
   accountDisplayPreferencesKeyedByType,
   bitcoinUnitsKeyedByName,
 } from '@leather.io/constants';
-import { defaultNetworksKeyedById } from '@leather.io/models';
+import {
+  NetworkConfiguration,
+  WalletDefaultNetworkConfigurationIds,
+  defaultNetworksKeyedById,
+} from '@leather.io/models';
 import { whenStacksChainId } from '@leather.io/stacks';
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -118,31 +123,44 @@ export function useAccountDisplayAddress(fingerprint: string, accountIndex: numb
   }
 }
 
+function getNetworkFromChainId(chainId: number) {
+  if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
+  if (chainId === ChainId.Testnet) return STACKS_TESTNET;
+  throw new Error(`Unknown chain ID: ${chainId}`);
+}
+
+function getNetworkFromNetworkName(stacksNetworkName: StacksNetworkName) {
+  if (stacksNetworkName === 'testnet')
+    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet4];
+  if (stacksNetworkName === 'mainnet')
+    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet];
+  throw new Error('This network is currently not supported');
+}
+
+function getStacksNetworkFromNetworkConfig(networkConfig: NetworkConfiguration) {
+  return {
+    ...getNetworkFromChainId(networkConfig.chain.stacks.chainId),
+    transactionVersion: whenStacksChainId(networkConfig.chain.stacks.chainId)({
+      [ChainId.Mainnet]: TransactionVersion.Mainnet,
+      [ChainId.Testnet]: TransactionVersion.Testnet,
+    }),
+    client: {
+      baseUrl: networkConfig.chain.stacks.url,
+    },
+    chainId: networkConfig.chain.stacks.subnetChainId ?? networkConfig.chain.stacks.chainId,
+    bnsLookupUrl: networkConfig.chain.stacks.url || '',
+  };
+}
+
+export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName) {
+  const networkConfig = getNetworkFromNetworkName(stacksNetworkName);
+  return getStacksNetworkFromNetworkConfig(networkConfig);
+}
+
 export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
   const { networkPreference } = useSettings();
 
-  function getNetworkFromChainId(chainId: number) {
-    if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
-    if (chainId === ChainId.Testnet) return STACKS_TESTNET;
-    throw new Error(`Unknown chain ID: ${chainId}`);
-  }
-
-  return useMemo(
-    () => ({
-      ...getNetworkFromChainId(networkPreference.chain.stacks.chainId),
-      transactionVersion: whenStacksChainId(networkPreference.chain.stacks.chainId)({
-        [ChainId.Mainnet]: TransactionVersion.Mainnet,
-        [ChainId.Testnet]: TransactionVersion.Testnet,
-      }),
-      client: {
-        baseUrl: networkPreference.chain.stacks.url,
-      },
-      chainId:
-        networkPreference.chain.stacks.subnetChainId ?? networkPreference.chain.stacks.chainId,
-      bnsLookupUrl: networkPreference.chain.stacks.url || '',
-    }),
-    [networkPreference]
-  );
+  return useMemo(() => getStacksNetworkFromNetworkConfig(networkPreference), [networkPreference]);
 }
 
 export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {

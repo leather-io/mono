@@ -1,13 +1,20 @@
-import { t } from '@lingui/macro';
+import { useMemo } from 'react';
 
-import { FeeTypes } from '@leather.io/models';
+import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { t } from '@lingui/macro';
+import { bytesToHex } from '@noble/hashes/utils';
+import { StacksNetwork } from '@stacks/network';
+import { PayloadType, StacksTransactionWire, cvToString } from '@stacks/transactions';
+
+import { CryptoCurrency, FeeTypes } from '@leather.io/models';
+import { StacksSigner } from '@leather.io/stacks';
 import {
   AnimalChameleonIcon,
   AnimalEagleIcon,
   AnimalRabbitIcon,
   AnimalSnailIcon,
 } from '@leather.io/ui/native';
-import { match } from '@leather.io/utils';
+import { convertToMoneyTypeWithDefaultOfZero, match } from '@leather.io/utils';
 
 export type ApproverState = 'start' | 'submitting' | 'submitted';
 
@@ -102,4 +109,50 @@ export function getStacksFeeData(feeType: FeeTypes) {
     title,
     time,
   };
+}
+
+interface ReviewTxSummaryProps {
+  tx: StacksTransactionWire;
+  symbol: CryptoCurrency;
+}
+export function getFormReviewTxSummary({ tx, symbol }: ReviewTxSummaryProps) {
+  if (symbol !== 'STX') throw new Error('No support for SIP10');
+
+  const {
+    payload,
+    auth: {
+      spendingCondition: { fee },
+    },
+  } = tx;
+  if (payload.payloadType !== PayloadType.TokenTransfer) {
+    throw new Error('Unsupported payload type');
+  }
+  const { amount: txValue, recipient } = payload;
+  const totalSpendMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue + fee));
+  const feeMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(fee));
+
+  return {
+    recipient: cvToString(recipient),
+    feeMoney,
+    totalSpendMoney,
+    symbol: 'STX',
+  };
+}
+
+export interface TxOptions {
+  publicKey: string;
+  network: StacksNetwork;
+}
+
+export function getTxOptions(signer: StacksSigner, stacksNetwork: StacksNetwork): TxOptions {
+  return {
+    publicKey: bytesToHex(signer.publicKey),
+    network: stacksNetwork,
+  };
+}
+
+export function useTxOptions(signer: StacksSigner): TxOptions {
+  const stacksNetwork = useNetworkPreferenceStacksNetwork();
+
+  return useMemo(() => getTxOptions(signer, stacksNetwork), [signer, stacksNetwork]);
 }
