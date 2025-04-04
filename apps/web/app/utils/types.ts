@@ -19,3 +19,7 @@ interface WhenStacksNetworkMap<T> {
 export function whenStacksNetwork(mode: StacksNetworkName) {
   return <T>(modeMap: WhenStacksNetworkMap<T>): T => modeMap[mode];
 }
+
+export interface ImageSizeProps {
+  size?: string | number;
+}

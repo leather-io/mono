@@ -1,0 +1,17 @@
+import { Flex, styled } from 'leather-styles/jsx';
+import { HTMLStyledProps } from 'leather-styles/types';
+import { Page } from '~/features/page/page';
+
+interface SbtcRewardHeroCardProps extends HTMLStyledProps<'div'> {
+  apyRange: string;
+}
+export function SbtcRewardHeroCard(props: SbtcRewardHeroCardProps) {
+  return (
+    <Page.Inset pos="relative" bg="black" color="white" h="260px" {...props}>
+      <Flex flexDir="column" pos="absolute" bottom={0} p={['space.04', 'space.05', 'space.07']}>
+        <styled.span textStyle="label.01">Historical APY</styled.span>
+        <styled.span textStyle="heading.02">{props.apyRange}</styled.span>
+      </Flex>
+    </Page.Inset>
+  );
+}
