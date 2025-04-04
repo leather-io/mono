@@ -701,6 +701,14 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.27.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.27.1...@leather.io/mobile-v2.27.2) (2025-04-04)
+
+
+### Bug Fixes
+
+* update currently failing unit tests to help them pass, ref ENG-6 ([ae55606](https://github.com/leather-io/mono/commit/ae556061a3c78aedce137e723443ce073ef207a9))
+* update mobile unit test runner to make sure it runs in CI, ref ENG-6 ([cab4328](https://github.com/leather-io/mono/commit/cab4328d9b3bd7b722e9cba686a9330e60f2f65a))
+
 ## [2.27.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.26.1...@leather.io/mobile-v2.27.0) (2025-04-02)
 
 
