@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   AnimatableValue,
   useAnimatedStyle,
@@ -59,23 +60,45 @@ export function usePressEffectStyle({
   pressEffects: PressEffects;
 }) {
   const theme = useTheme<Theme>();
-  const pressEffectsWithRawStyles = convertPressEffectRestyleValuesToRawStyles(pressEffects, theme);
-
-  return useAnimatedStyle(() => {
-    return Object.entries(pressEffectsWithRawStyles).reduce((result, [key, value]) => {
+  const animationEntries = useMemo(() => {
+    const pressEffectsWithRawStyles = convertPressEffectRestyleValuesToRawStyles(
+      pressEffects,
+      theme
+    );
+    return Object.entries(pressEffectsWithRawStyles).map(([key, value]) => {
       const { settings = defaultAnimationSettings } = value;
       const {
         type = defaultAnimationSettings.type,
         delay = defaultAnimationSettings.delay,
         config,
       } = settings;
-      const animationFunction = { spring: withSpring, timing: withTiming }[type] ?? withSpring;
+      const animationFunction = {
+        spring: withSpring,
+        timing: withTiming,
+      }[type];
+
+      return {
+        key,
+        from: value.from,
+        to: value.to,
+        delay,
+        animationFunction,
+        config,
+      };
+    });
+  }, [theme, pressEffects]);
+
+  return useAnimatedStyle(() => {
+    return animationEntries.reduce((result, entry) => {
       // only apply the delay when transitioning from default to pressed state.
-      const derivedDelay = delay && pressed ? delay : 0;
+      const derivedDelay = entry.delay && pressed ? entry.delay : 0;
 
       return {
         ...result,
-        [key]: withDelay(derivedDelay, animationFunction(pressed ? value.to : value.from, config)),
+        [entry.key]: withDelay(
+          derivedDelay,
+          entry.animationFunction(pressed ? entry.to : entry.from, entry.config)
+        ),
       };
     }, {});
   });
