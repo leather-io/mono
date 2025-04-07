@@ -4,6 +4,9 @@ on:
     paths:
       - 'apps/web/**'
       - 'packages/**'
+      - '!packages/ui/**/*.native.ts'
+      - '!packages/ui/**/*.native.tsx'
+
 
 jobs:
   test:
