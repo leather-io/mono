@@ -15,6 +15,8 @@
     "typecheck": "wrangler types && react-router typegen && tsc -b"
   },
   "dependencies": {
+    "@hookform/resolvers": "3.9.1",
+    "@leather.io/bitcoin": "workspace:*",
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
@@ -44,6 +46,8 @@
     "react-hook-form": "7.53.2",
     "react-router": "7.4.0",
     "safe-buffer": "5.2.1",
+    "url-join": "5.0.0",
+    "valid-url": "1.0.9",
     "vaul": "1.1.2",
     "zod": "3.24.2"
   },
@@ -59,6 +63,7 @@
     "@types/nprogress": "0.2.3",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
+    "@types/valid-url": "1.0.7",
     "browserify-fs": "1.0.0",
     "crypto-browserify": "3.12.1",
     "http-browserify": "1.7.0",

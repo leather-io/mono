@@ -21,7 +21,7 @@ export default defineConfig({
     alias: {
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
       // import from 'axios' fails in SSR
-      axios: path.resolve(__dirname, 'node_modules/axios/dist/browser/axios.cjs'),
+      axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
       // polyfill required packages
       'safe-process': 'process/browser', // vite marks "process" package as external, this is workaround
       crypto: 'crypto-browserify',

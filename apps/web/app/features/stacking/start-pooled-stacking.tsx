@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ClarityType } from '@stacks/transactions';
 import { Stack } from 'leather-styles/jsx';
 import { ChoosePoolingAmount } from '~/features/stacking/components/choose-pooling-amount';
 import { StackingFormInfoPanel } from '~/features/stacking/components/stacking-form-info-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import { getPoxContracts } from '~/features/stacking/utils/utils-preset-pools';
+import {
+  getPoxContracts,
+  getPoxWrapperContract2,
+} from '~/features/stacking/utils/utils-preset-pools';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
@@ -17,12 +21,18 @@ import { ChoosePoolingConditions } from './components/choose-pooling-conditions'
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
 import { PoolingDetails } from './components/pooling-details';
+import { pools } from './components/preset-pools';
 import { StackingFormItemTitle } from './components/stacking-form-item-title';
 import {
   useGetAllowanceContractCallersQuery,
+  useGetPoxInfoQuery,
   useGetSecondsUntilNextCycleQuery,
 } from './hooks/stacking.query';
-import { PoolWrapperAllowanceState, StackingFormValues } from './utils/types';
+import {
+  StackingPoolFormSchema,
+  createStackingPoolFormSchema,
+} from './utils/stacking-pool-form-schema';
+import { PoolWrapperAllowanceState } from './utils/types';
 import { PoolName } from './utils/types-preset-pools';
 
 interface StartPooledStackingProps {
@@ -43,20 +53,19 @@ export function StartPooledStacking({ poolName }: StartPooledStackingProps) {
   return <StartPooledStackingLayout poolName={poolName} />;
 }
 
-const initialStackingFormValues: Partial<StackingFormValues> = {
+const initialStackingFormValues: Partial<StackingPoolFormSchema> = {
   amount: '',
-  numberOfCycles: 1,
-  poolAddress: '',
+  // numberOfCycles: 1,
+  // poolAddress: '',
 };
 
 interface StartPooledStackingLayoutProps {
   poolName: PoolName;
 }
 
-// eslint-disable-next-line no-empty-pattern
-function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
+function StartPooledStackingLayout({ poolName }: StartPooledStackingLayoutProps) {
   const { stxAddress, btcAddressP2wpkh } = useLeatherConnect();
-  const { network, networkInstance } = useStacksNetwork();
+  const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = getPoxContracts(network);
 
   const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
@@ -87,6 +96,8 @@ function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
     network,
   });
 
+  const poxInfoQuery = useGetPoxInfoQuery();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasUserConfirmedPoolWrapperContract, setHasUserConfirmedPoolWrapperContract] =
     useState<PoolWrapperAllowanceState>({});
@@ -113,14 +124,26 @@ function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
     ]
   );
 
-  const formMethods = useForm<StackingFormValues>({
+  const schema = useMemo(
+    () => createStackingPoolFormSchema({ networkMode: networkPreference.chain.bitcoin.mode }),
+    [networkPreference]
+  );
+
+  const formMethods = useForm<StackingPoolFormSchema>({
     defaultValues: {
       ...initialStackingFormValues,
       rewardAddress: btcAddressP2wpkh?.address,
     },
+    resolver: zodResolver(schema),
   });
 
   if (getSecondsUntilNextCycleQuery.isLoading) return <Spinner />;
+
+  const pool = pools[poolName];
+  const poolStxAddress = pool.poolAddress?.[networkInstance];
+  const poxWrapperContract =
+    (pool?.poxContract ? getPoxWrapperContract2(networkInstance, pool.poxContract) : undefined) ||
+    poxInfoQuery.data?.contract_id;
 
   return (
     <FormProvider {...formMethods}>
@@ -145,7 +168,7 @@ function StartPooledStackingLayout({}: StartPooledStackingLayoutProps) {
 
               <Stack gap="space.02">
                 <StackingFormItemTitle title="Details" />
-                <PoolingDetails />
+                <PoolingDetails poolAddress={poolStxAddress} contractAddress={poxWrapperContract} />
               </Stack>
 
               <Stack gap="space.02">

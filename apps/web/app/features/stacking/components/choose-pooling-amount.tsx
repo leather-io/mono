@@ -1,6 +1,8 @@
 import { useFormContext } from 'react-hook-form';
 
 import { Box, Stack } from 'leather-styles/jsx';
+import { ErrorLabel } from '~/components/error-label';
+import { StackingPoolFormSchema } from '~/features/stacking/utils/stacking-pool-form-schema';
 import {
   useStxAvailableUnlockedBalance,
   useStxCryptoAssetBalance,
@@ -11,10 +13,8 @@ import { toHumanReadableStx } from '~/utils/unit-convert';
 import { Button, Input, Spinner } from '@leather.io/ui';
 import { microStxToStx } from '@leather.io/utils';
 
-import { StackingFormValues } from '../utils/types';
-
 export function ChoosePoolingAmount() {
-  const { getFieldState, setValue, register } = useFormContext<StackingFormValues>();
+  const { getFieldState, setValue, register } = useFormContext<StackingPoolFormSchema>();
 
   const { stxAddress } = useLeatherConnect();
 
@@ -26,6 +26,7 @@ export function ChoosePoolingAmount() {
   const totalAvailableBalance = useStxAvailableUnlockedBalance(stxAddress.address);
 
   const { isTouched, error } = getFieldState('amount');
+  const showError = isTouched && error;
 
   return (
     <Stack>
@@ -34,12 +35,8 @@ export function ChoosePoolingAmount() {
           <Input.Label>Amount of STX to Stack</Input.Label>
           <Input.Field id="stxAmount" {...register('amount')} />
         </Input.Root>
-        {
-          isTouched && error && `${error.message}`
-          // <ErrorLabel>
-          //   <ErrorText>{meta.error}</ErrorText>
-          // </ErrorLabel>
-        }
+
+        {showError && <ErrorLabel>{error.message}</ErrorLabel>}
       </Box>
 
       <Box textStyle="body.02" color="ink.text-subdued" aria-busy={isLoading}>
@@ -60,7 +57,6 @@ export function ChoosePoolingAmount() {
           </Button>
         ) : (
           'Failed to load'
-          // <ErrorAlert>Failed to load</ErrorAlert>
         )}
       </Box>
     </Stack>

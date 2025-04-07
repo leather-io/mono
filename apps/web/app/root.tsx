@@ -6,6 +6,7 @@ import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
+import { ErrorPage } from './features/page/error';
 
 // Polyfill global Buffer
 // (should be called before another code)
@@ -23,4 +24,8 @@ export function links() {
   ] satisfies Route.LinkDescriptors;
 }
 
-export { default, Layout, ErrorBoundary } from './app';
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  return <ErrorPage error={error} />;
+}
+
+export { default, Layout } from './app';

@@ -12,7 +12,7 @@ import {
   WrapperPrincipal,
 } from './types-preset-pools';
 
-export function getNetworkInstance(network: StacksNetwork) {
+export function getNetworkInstance(network: StacksNetwork): NetworkInstance {
   if (network.chainId === ChainId.Mainnet) {
     return 'mainnet';
   }
