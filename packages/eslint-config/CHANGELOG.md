@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.7.0...@leather.io/eslint-config-v0.8.0) (2025-04-07)
+
+
+### Features
+
+* **web:** sbtc page, closes LEA-2438 ([23d45d4](https://github.com/leather-io/mono/commit/23d45d4be6c0d4ede2d73dfa9b27ed655b41c133))
+
 ## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.6.1...@leather.io/eslint-config-v0.7.0) (2024-08-21)
 
 
