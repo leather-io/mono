@@ -70,6 +70,7 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
 
   return {
     form,
+    schema,
     maxSpend,
     onSetMax,
     onSubmit: handleSubmit,

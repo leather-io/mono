@@ -1,39 +1,17 @@
 import { useBoolVariation } from '@launchdarkly/react-native-client-sdk';
 
-import { featureFlagKeys } from './feature-flag';
-
 export function useReleasePushNotificationsFlag() {
-  const releasePushNotifications = useBoolVariation(
-    featureFlagKeys.releasePushNotifications.key,
-    featureFlagKeys.releasePushNotifications.defaultValue
-  );
-
-  return releasePushNotifications;
+  return useBoolVariation('release_push_notifications', false);
 }
 
 export function useReleaseBrowserFeatureFlag() {
-  const releaseBrowserFeature = useBoolVariation(
-    featureFlagKeys.releaseBrowserFeature.key,
-    featureFlagKeys.releaseBrowserFeature.defaultValue
-  );
-
-  return releaseBrowserFeature;
+  return useBoolVariation('release_browser_feature', false);
 }
 
 export function useReleaseLocaleFeatureFlag() {
-  const releaseLocaleFeature = useBoolVariation(
-    featureFlagKeys.releaseLocaleFeature.key,
-    featureFlagKeys.releaseLocaleFeature.defaultValue
-  );
-
-  return releaseLocaleFeature;
+  return useBoolVariation('release_locale_feature', false);
 }
 
-export function useReleaseNotificationsFeatureFlag() {
-  const releaseNotificationsFeature = useBoolVariation(
-    featureFlagKeys.releaseNotificationsFeature.key,
-    featureFlagKeys.releaseNotificationsFeature.defaultValue
-  );
-
-  return releaseNotificationsFeature;
+export function useNewRecipientFlowFeatureFlag() {
+  return useBoolVariation('advanced_recipient_field', false);
 }

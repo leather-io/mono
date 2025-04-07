@@ -208,6 +208,12 @@ export function assertUnreachable(value: never): never {
   throw new Error(`Unexpected value: ${JSON.stringify(value)}`);
 }
 
+export function assertExistence<T>(value: T, message: string): asserts value is NonNullable<T> {
+  if (value === null || value === undefined) {
+    throw new Error(message);
+  }
+}
+
 export function capitalize(val: string) {
   return val.charAt(0).toUpperCase() + val.slice(1);
 }

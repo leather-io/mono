@@ -4,7 +4,7 @@ import { AmountField } from '@/features/send/components/amount-field';
 import { AssetDisplay } from '@/features/send/components/asset-display';
 import { ErrorMessage } from '@/features/send/components/error-message';
 import { Numpad } from '@/features/send/components/numpad';
-import { Recipient } from '@/features/send/components/recipient';
+import { Recipient } from '@/features/send/components/recipient/recipient';
 import { SendFormContainer, SendFormFooter } from '@/features/send/components/send-form-layout';
 import { useBtcForm } from '@/features/send/forms/btc/use-btc-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
@@ -58,7 +58,7 @@ export function BtcForm({
     crypto: symbol,
     fiat: fiatCurrency,
   });
-  const { form, maxSpend, onSetMax, onSubmit } = useBtcForm({ account, feeRates, utxos });
+  const { form, schema, maxSpend, onSetMax, onSubmit } = useBtcForm({ account, feeRates, utxos });
 
   return (
     <SendFormContainer>
@@ -109,6 +109,7 @@ export function BtcForm({
             isDirty={isDirty}
             isTouched={isTouched}
             error={error}
+            recipientSchema={schema.sourceType().shape.recipient}
           />
         )}
       />
