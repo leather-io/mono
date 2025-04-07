@@ -25,11 +25,13 @@ export function ChoosePoolingConditions() {
   return (
     <Stack gap="space.04">
       {POOLING_CONDITIONS.map(condition => (
-        <HStack key={condition.title}>
+        <HStack key={condition.title} alignItems="flex-start">
           {condition.icon}
-          <Stack gap="space.01">
+          <Stack gap="0">
             <styled.span textStyle="label.03">{condition.title}</styled.span>
-            <styled.span textStyle="caption.01">{condition.description}</styled.span>
+            <styled.span textStyle="caption.01" color="ink.text-subdued">
+              {condition.description}
+            </styled.span>
           </Stack>
         </HStack>
       ))}

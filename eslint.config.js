@@ -48,6 +48,9 @@ export default tseslint.config(
     name: 'web',
     files: ['apps/web/app/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
+    rules: {
+      '@typescript-eslint/only-throw-error': 'off',
+    },
   },
   {
     name: 'mobile',
