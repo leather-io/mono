@@ -5,7 +5,7 @@ import { AssetDisplay } from '@/features/send/components/asset-display';
 import { ErrorMessage } from '@/features/send/components/error-message';
 import { Memo } from '@/features/send/components/memo';
 import { Numpad } from '@/features/send/components/numpad';
-import { Recipient } from '@/features/send/components/recipient';
+import { Recipient } from '@/features/send/components/recipient/recipient';
 import { SendFormContainer, SendFormFooter } from '@/features/send/components/send-form-layout';
 import { useStxForm } from '@/features/send/forms/stx/use-stx-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
@@ -55,7 +55,11 @@ export function StxForm({
     crypto: symbol,
     fiat: fiatCurrency,
   });
-  const { form, maxSpend, onSetMax, onSubmit } = useStxForm({ account, availableBalance, nonce });
+  const { form, schema, maxSpend, onSetMax, onSubmit } = useStxForm({
+    account,
+    availableBalance,
+    nonce,
+  });
 
   return (
     <SendFormContainer>
@@ -107,6 +111,7 @@ export function StxForm({
             isDirty={isDirty}
             isTouched={isTouched}
             error={error}
+            recipientSchema={schema.shape.recipient}
           />
         )}
       />

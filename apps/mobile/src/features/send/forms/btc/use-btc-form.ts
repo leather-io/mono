@@ -75,6 +75,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
 
   return {
     form,
+    schema,
     maxSpend,
     onSetMax,
     onSubmit: handleSubmit,
