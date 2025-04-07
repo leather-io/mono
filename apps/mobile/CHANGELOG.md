@@ -701,6 +701,14 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.27.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.27.2...@leather.io/mobile-v2.27.3) (2025-04-07)
+
+
+### Bug Fixes
+
+* android release track ([7ca6474](https://github.com/leather-io/mono/commit/7ca6474a69ebb4fe6153df60f535256a3a5de420))
+* **mobile:** fix sheet provider order ([4da9121](https://github.com/leather-io/mono/commit/4da912153fb905d5120a491271af1c68e3a6b8ba))
+
 ## [2.27.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.27.1...@leather.io/mobile-v2.27.2) (2025-04-04)
 
 
