@@ -72,11 +72,11 @@ export default function RootLayout() {
                         <ToastWrapper>
                           <SplashScreenGuard>
                             <HapticsProvider>
-                              <SheetProvider>
-                                <GlobalSheetProvider>
+                              <GlobalSheetProvider>
+                                <SheetProvider>
                                   <App />
-                                </GlobalSheetProvider>
-                              </SheetProvider>
+                                </SheetProvider>
+                              </GlobalSheetProvider>
                             </HapticsProvider>
                           </SplashScreenGuard>
                         </ToastWrapper>
