@@ -48,10 +48,9 @@ import { PoolName, WrapperPrincipal } from './utils/types-preset-pools';
 interface StartPooledStackingProps {
   poolName: PoolName;
 }
-
 export function StartPooledStacking({ poolName }: StartPooledStackingProps) {
   const { client } = useStackingClient();
-  const { stxAddress } = useLeatherConnect();
+  const { stacksAccount: stxAddress } = useLeatherConnect();
 
   if (!stxAddress || !client) {
     return 'You should connect STX wallet';
@@ -75,7 +74,7 @@ interface StartPooledStackingLayoutProps {
 }
 
 function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayoutProps) {
-  const { stxAddress, btcAddressP2wpkh } = useLeatherConnect();
+  const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = useMemo(() => getPoxContracts(network), [network]);
 
@@ -87,7 +86,7 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
     contractAddress,
     contractName,
     callingContract: poxContracts['WrapperFastPool'],
-    senderAddress: stxAddress ? stxAddress.address : null,
+    senderAddress: stacksAccount ? stacksAccount.address : null,
     network,
   });
 
@@ -95,7 +94,7 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
     contractAddress,
     contractName,
     callingContract: poxContracts['WrapperRestake'],
-    senderAddress: stxAddress ? stxAddress.address : null,
+    senderAddress: stacksAccount ? stacksAccount.address : null,
     network,
   });
 
@@ -103,7 +102,7 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
     contractAddress,
     contractName,
     callingContract: poxContracts['WrapperOneCycle'],
-    senderAddress: stxAddress ? stxAddress.address : null,
+    senderAddress: stacksAccount ? stacksAccount.address : null,
     network,
   });
 

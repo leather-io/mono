@@ -1,7 +1,7 @@
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 
-import { Button, Flag } from '@leather.io/ui';
+import { Flag } from '@leather.io/ui';
 
 import { RewardProtocolInfo } from '../sbtc-rewards';
 import { ValueDisplayer } from './reward-value-displayer';
@@ -11,7 +11,10 @@ interface RewardProtocolCellProps {
   rewardProtocol: RewardProtocolInfo;
 }
 
-function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
+function RewardProtocolEnrollCell({
+  rewardProtocol,
+  action,
+}: RewardProtocolCellProps & { action: React.ReactElement }) {
   return (
     <Flex flex={1} justifyContent="space-between" flexDir="column" p="space.05" minH="246px">
       {rewardProtocol.logo}
@@ -22,9 +25,7 @@ function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
         <styled.p textStyle="caption.01" mt="space.01">
           {rewardProtocol.description}
         </styled.p>
-        <Button width="100%" maxW="240px" size="xs" mt="space.04">
-          Enroll
-        </Button>
+        <Box mt="space.04">{action}</Box>
       </Box>
     </Flex>
   );
@@ -80,12 +81,18 @@ function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
 
 interface SbtcProtocolRewardGridProps extends GridProps {
   rewardProtocol: RewardProtocolInfo;
+  enrollAction: React.ReactElement;
 }
-
-export function SbtcProtocolRewardGrid({ rewardProtocol, ...props }: SbtcProtocolRewardGridProps) {
+export function SbtcProtocolRewardGrid({
+  rewardProtocol,
+  enrollAction,
+  ...props
+}: SbtcProtocolRewardGridProps) {
   return (
     <SbtcProtocolRewardGridLayout
-      primaryCell={<RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />}
+      primaryCell={
+        <RewardProtocolEnrollCell rewardProtocol={rewardProtocol} action={enrollAction} />
+      }
       cells={[
         <TotalValueLockedCell key={`${rewardProtocol.id}-tvl`} rewardProtocol={rewardProtocol} />,
         <HistoricalAprCell key={`${rewardProtocol.id}-apr`} rewardProtocol={rewardProtocol} />,
