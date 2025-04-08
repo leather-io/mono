@@ -9,6 +9,7 @@ export interface Events extends HistoricalEvents {
   app_unlocked: undefined;
   app_locked: undefined;
   submit_feature_waitlist: SubmitWaitlist;
+  legacy_request_initiated: { method: string };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
