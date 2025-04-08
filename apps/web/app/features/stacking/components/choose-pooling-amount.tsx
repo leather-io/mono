@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { Box, Stack } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
@@ -14,7 +14,7 @@ import { Button, Input, Spinner } from '@leather.io/ui';
 import { microStxToStx } from '@leather.io/utils';
 
 export function ChoosePoolingAmount() {
-  const { getFieldState, setValue, register } = useFormContext<StackingPoolFormSchema>();
+  const { setValue, control } = useFormContext<StackingPoolFormSchema>();
 
   const { stxAddress } = useLeatherConnect();
 
@@ -25,18 +25,30 @@ export function ChoosePoolingAmount() {
   } = useStxCryptoAssetBalance(stxAddress.address);
   const totalAvailableBalance = useStxAvailableUnlockedBalance(stxAddress.address);
 
-  const { isTouched, error } = getFieldState('amount');
-  const showError = isTouched && error;
-
   return (
     <Stack>
       <Box>
-        <Input.Root>
-          <Input.Label>Amount of STX to Stack</Input.Label>
-          <Input.Field id="stxAmount" {...register('amount')} />
-        </Input.Root>
-
-        {showError && <ErrorLabel>{error.message}</ErrorLabel>}
+        <Controller
+          control={control}
+          name="amount"
+          render={({ field: { onChange, onBlur, value, ref }, fieldState: { invalid, error } }) => (
+            <>
+              <Input.Root>
+                <Input.Label>Amount of STX to Stack</Input.Label>
+                <Input.Field
+                  id="amount"
+                  value={value}
+                  onChange={input => {
+                    onChange(input.target.value);
+                  }}
+                  onBlur={onBlur}
+                  ref={ref}
+                />
+              </Input.Root>
+              {invalid && error && <ErrorLabel>{error.message}</ErrorLabel>}
+            </>
+          )}
+        />
       </Box>
 
       <Box textStyle="body.02" color="ink.text-subdued" aria-busy={isLoading}>

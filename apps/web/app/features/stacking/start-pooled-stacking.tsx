@@ -7,6 +7,7 @@ import { Stack } from 'leather-styles/jsx';
 import { ChoosePoolingAmount } from '~/features/stacking/components/choose-pooling-amount';
 import { StackingFormInfoPanel } from '~/features/stacking/components/stacking-form-info-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
+import { StackingStepsCard } from '~/features/stacking/components/stacking-steps-card';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import {
   getPoxContracts,
@@ -130,6 +131,7 @@ function StartPooledStackingLayout({ poolName }: StartPooledStackingLayoutProps)
   );
 
   const formMethods = useForm<StackingPoolFormSchema>({
+    mode: 'onTouched',
     defaultValues: {
       ...initialStackingFormValues,
       rewardAddress: btcAddressP2wpkh?.address,
@@ -178,7 +180,11 @@ function StartPooledStackingLayout({ poolName }: StartPooledStackingLayoutProps)
             </Stack>
           </Form>
         }
-        stackingInfoPanel={<StackingFormInfoPanel>{/*<PoolingInfoCard />*/}</StackingFormInfoPanel>}
+        stackingInfoPanel={
+          <StackingFormInfoPanel>
+            <StackingStepsCard poolAmount="999,999.99" />
+          </StackingFormInfoPanel>
+        }
       />
     </FormProvider>
   );

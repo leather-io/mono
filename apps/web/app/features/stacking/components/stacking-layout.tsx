@@ -14,6 +14,7 @@ export function StartStackingLayout(props: StartStackingLayoutProps) {
       <Flex
         flexDirection={['column-reverse', 'column-reverse', 'row']}
         justifyContent="space-between"
+        alignItems="flex-start"
       >
         <Box maxWidth={[null, null, '544px']} mr={[null, null, 'space.05']}>
           <Box display={['block', null, 'none']} mt={['space.05', null, null, null, 'space.04']}>
