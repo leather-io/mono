@@ -1,4 +1,5 @@
 import { useLeatherConnect } from '~/store/addresses';
+import { openExternalLink } from '~/utils/external-links';
 
 import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 
@@ -6,7 +7,7 @@ import { ActiveAccountButtonLayout, SignInButtonLayout } from './sign-in-button.
 
 function InstallLeatherButton() {
   return (
-    <SignInButtonLayout onClick={() => window.open(LEATHER_EXTENSION_CHROME_STORE_URL, '_blank')}>
+    <SignInButtonLayout onClick={() => openExternalLink(LEATHER_EXTENSION_CHROME_STORE_URL)}>
       Install
     </SignInButtonLayout>
   );

@@ -16,7 +16,7 @@ import { microStxToStx } from '@leather.io/utils';
 export function ChoosePoolingAmount() {
   const { setValue, control } = useFormContext<StackingPoolFormSchema>();
 
-  const { stxAddress } = useLeatherConnect();
+  const { stacksAccount: stxAddress } = useLeatherConnect();
 
   if (!stxAddress) throw new Error('No stx address available');
 

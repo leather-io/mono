@@ -289,6 +289,8 @@ module.exports = {
         '.storybook',
         '.*.js$',
         '.*.config.ts',
+        '.wrangler',
+        '.react-router',
       ],
     },
 

@@ -6,3 +6,7 @@ export function isLeatherInstalled() {
 }
 
 export type ExtensionState = 'missing' | 'detected' | 'connected';
+
+export function whenExtensionState(state: ExtensionState) {
+  return <T>(cases: { missing: T; detected: T; connected: T }): T => cases[state];
+}

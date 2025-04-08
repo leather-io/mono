@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { leather } from '~/helpers/leather-sdk';
-import { type ExtensionState, isLeatherInstalled } from '~/helpers/utils';
+import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/helpers/utils';
 import { useStacksNetwork } from '~/store/stacks-network';
 
 type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
@@ -21,9 +21,9 @@ export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { networkName, setNetworkName } = useStacksNetwork();
-  const status = useAtomValue(extensionStateAtom);
+  const extensionState = useAtomValue(extensionStateAtom);
 
-  const stxAddress = useMemo(
+  const stacksAccount = useMemo(
     () => addresses.find(address => address.symbol === 'STX'),
     [addresses]
   );
@@ -41,10 +41,11 @@ export function useLeatherConnect() {
   return {
     addresses,
     setAddresses,
-    status,
-    stxAddress,
+    status: extensionState,
+    stacksAccount,
     btcAddressP2tr,
     btcAddressP2wpkh,
+    whenExtensionState: whenExtensionState(extensionState),
     openExtension() {
       void leather.open({ mode: 'fullpage' });
     },

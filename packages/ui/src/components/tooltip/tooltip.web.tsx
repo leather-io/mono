@@ -39,6 +39,7 @@ export const Tooltip = {
   Trigger,
   Content,
   Arrow,
+  Provider: RadixTooltip.Provider,
 };
 
 const defaultContentStyles = css({

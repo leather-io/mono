@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function StackingClientProvider({ children }: Props) {
-  const { stxAddress } = useLeatherConnect();
+  const { stacksAccount: stxAddress } = useLeatherConnect();
   const { network } = useStacksNetwork();
 
   const client = useMemo<StackingClient | null>(() => {
