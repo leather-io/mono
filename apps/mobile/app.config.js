@@ -95,6 +95,8 @@ export default () => {
         },
       },
       plugins: [
+        '@react-native-firebase/app',
+        '@react-native-firebase/messaging',
         [
           'expo-build-properties',
           {
@@ -126,8 +128,6 @@ export default () => {
             launchMode: 'most-recent',
           },
         ],
-        // '@react-native-firebase/app',
-        // '@react-native-firebase/messaging',
       ],
       extra: {
         router: {
