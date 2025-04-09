@@ -94,6 +94,14 @@ export default () => {
       },
       plugins: [
         [
+          'expo-build-properties',
+          {
+            ios: {
+              useFrameworks: 'static',
+            },
+          },
+        ],
+        [
           'expo-font',
           {
             fonts: [
@@ -109,12 +117,7 @@ export default () => {
         ],
         'expo-router',
         'expo-secure-store',
-        [
-          'expo-asset',
-          {
-            assets: ['src/scripts/injected-provider.js'],
-          },
-        ],
+        'expo-asset',
         [
           'expo-dev-client',
           {
