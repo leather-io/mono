@@ -654,8 +654,12 @@ importers:
         version: 7.5.0(@cloudflare/workers-types@4.20250409.0)(react-router@7.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.14.0))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.3)(yaml@2.6.0))(typescript@5.7.3)
 =======
         specifier: 7.4.0
+<<<<<<< HEAD
         version: 7.4.0(@cloudflare/workers-types@4.20250303.0)(react-router@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.5.3)(typescript@5.7.3)(yaml@2.6.0))(typescript@5.7.3)
 >>>>>>> 24bfa361 (fix(mobile): trying to get right version of packages to run ios pod install)
+=======
+        version: 7.4.0(@cloudflare/workers-types@4.20250303.0)(react-router@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.3)(yaml@2.6.0))(typescript@5.7.3)
+>>>>>>> a1444886 (chore(mobile): update deps, comment old code)
       '@react-router/dev':
         specifier: 7.5.0
         version: 7.5.0(@react-router/serve@7.5.0(react-router@7.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.3))(@types/node@22.14.0)(babel-plugin-macros@3.1.0)(jiti@1.21.6)(lightningcss@1.27.0)(react-router@7.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.36.0)(typescript@5.7.3)(vite@6.2.5(@types/node@22.14.0)(jiti@1.21.6)(lightningcss@1.27.0)(terser@5.36.0)(yaml@2.6.0))(wrangler@4.9.1(@cloudflare/workers-types@4.20250409.0))(yaml@2.6.0)
@@ -919,10 +923,14 @@ importers:
       tsup:
         specifier: 8.4.0
 <<<<<<< HEAD
+<<<<<<< HEAD
         version: 8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.14.0))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.5.3)(typescript@5.7.3)(yaml@2.6.0)
 =======
         version: 8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.3)(yaml@2.6.0)
 >>>>>>> 24bfa361 (fix(mobile): trying to get right version of packages to run ios pod install)
+=======
+        version: 8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.5.3)(typescript@5.7.3)(yaml@2.6.0)
+>>>>>>> a1444886 (chore(mobile): update deps, comment old code)
 
   packages/prettier-config:
     dependencies:
@@ -4014,7 +4022,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {node: '>=0.10.0'}
+    engines: {'0': node >=0.10.0}
 
   '@expo/cli@0.18.28':
     resolution: {integrity: sha512-fvbVPId6s6etindzP6Nzos/CS1NurMVy4JKozjebArHr63tBid5i/UY5Pp+4wTCAM20gB2SjRdwcwoL6HFC4Iw==}
@@ -4811,7 +4819,6 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
-    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -24183,6 +24190,7 @@ snapshots:
       warn-once: 0.1.1
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   '@react-router/cloudflare@7.5.0(@cloudflare/workers-types@4.20250409.0)(react-router@7.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.14.0))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.3)(yaml@2.6.0))(typescript@5.7.3)':
     dependencies:
       '@cloudflare/workers-types': 4.20250409.0
@@ -24195,6 +24203,13 @@ snapshots:
       react-router: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tsup: 8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.5.3)(typescript@5.7.3)(yaml@2.6.0)
 >>>>>>> 24bfa361 (fix(mobile): trying to get right version of packages to run ios pod install)
+=======
+  '@react-router/cloudflare@7.4.0(@cloudflare/workers-types@4.20250303.0)(react-router@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.3)(yaml@2.6.0))(typescript@5.7.3)':
+    dependencies:
+      '@cloudflare/workers-types': 4.20250303.0
+      react-router: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      tsup: 8.4.0(@microsoft/api-extractor@7.47.6(@types/node@22.13.13))(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.3)(yaml@2.6.0)
+>>>>>>> a1444886 (chore(mobile): update deps, comment old code)
     optionalDependencies:
       typescript: 5.7.3
 

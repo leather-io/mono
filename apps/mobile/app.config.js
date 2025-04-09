@@ -4,6 +4,7 @@ import path from 'path';
 // Setup EAS env variables for Firebase
 function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
+  // base64 encoded google-services.json can be removed once we move away from Github --local builds
   const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
     fs.copyFileSync(googleServicesPathAndroid, path.join(__dirname, './google-services.json'));
@@ -17,6 +18,7 @@ function setupFirebaseEnvVariablesAndroid() {
 
 function setupFirebaseEnvVariablesIos() {
   const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
+  // base64 encoded google-services.json can be removed once we move away from Github --local builds
   const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
     fs.copyFileSync(googleServicesPathIos, path.join(__dirname, './GoogleService-Info.plist'));
@@ -52,7 +54,9 @@ export default () => {
       },
       assetBundlePatterns: ['**/*'],
       ios: {
+        bundleIdentifier: 'io.leather.mobilewallet',
         googleServicesFile: './GoogleService-Info.plist',
+        supportsTablet: false,
         entitlements: {
           'aps-environment': 'production',
         },
@@ -62,8 +66,6 @@ export default () => {
             'This app uses the camera to scan QR codes for sending transactions.',
         },
         icon: './src/assets/icon.png',
-        bundleIdentifier: 'io.leather.mobilewallet',
-        supportsTablet: false,
         splash: {
           image: './src/assets/light-mode-splash.png',
           resizeMode: 'contain',
