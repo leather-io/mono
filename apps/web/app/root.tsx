@@ -1,6 +1,4 @@
 import { Buffer } from 'safe-buffer';
-// @ts-expect-error // import process using alias
-import process from 'safe-process';
 
 import leatherUiStyles from '@leather.io/ui/styles?url';
 
@@ -8,14 +6,9 @@ import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
 import { ErrorPage } from './features/page/error';
 
-// Polyfill global Buffer
-// (should be called before another code)
+// Buffer polyfill
 // @ts-expect-error // safe-buffer typings are too old
 globalThis.Buffer = Buffer;
-
-// Polyfill global process
-// (should be called before another code)
-globalThis.process = process;
 
 export function links() {
   return [

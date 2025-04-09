@@ -166,7 +166,7 @@
     "@types/jest": "29.5.12",
     "@types/lodash.groupby": "4.6.9",
     "@types/lodash.merge": "4.6.9",
-    "@types/node": "22.13.13",
+    "@types/node": "22.14.0",
     "@types/react": "18.2.79",
     "@types/react-dom": "18.2.25",
     "babel-jest": "29.7.0",
