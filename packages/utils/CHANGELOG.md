@@ -305,6 +305,13 @@
     * @leather.io/constants bumped to 0.19.1
     * @leather.io/models bumped to 0.31.0
 
+## [0.32.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.31.2...@leather.io/utils-v0.32.0) (2025-04-09)
+
+
+### Features
+
+* **mobile:** add the layout for advanced recipient flow ([70f5acc](https://github.com/leather-io/mono/commit/70f5acc66fecff8f79aa8d483b313df6a6a55723))
+
 ## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.30.0...@leather.io/utils-v0.31.0) (2025-03-21)
 
 
