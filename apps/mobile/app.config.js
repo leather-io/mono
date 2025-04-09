@@ -58,6 +58,8 @@ export default () => {
         },
         infoPlist: {
           UIBackgroundModes: ['remote-notification', 'fetch'],
+          NSCameraUsageDescription:
+            'This app uses the camera to scan QR codes for sending transactions.',
         },
         icon: './src/assets/icon.png',
         bundleIdentifier: 'io.leather.mobilewallet',
@@ -124,8 +126,8 @@ export default () => {
             launchMode: 'most-recent',
           },
         ],
-        '@react-native-firebase/app',
-        '@react-native-firebase/messaging',
+        // '@react-native-firebase/app',
+        // '@react-native-firebase/messaging',
       ],
       extra: {
         router: {
