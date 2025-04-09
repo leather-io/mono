@@ -27,7 +27,7 @@ export type ClientEndpointMap = Prettify<{
 
 type ExtractResult<Method extends keyof ClientEndpointMap> = ClientEndpointMap[Method]['result'];
 
-type LeatherSdk = {
+export type LeatherSdk = {
   [Method in keyof ClientEndpointMap]: ClientEndpointMap[Method]['request'] extends {
     params?: infer P;
   }

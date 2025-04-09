@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Box, Stack } from 'leather-styles/jsx';
+import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { StackingPoolFormSchema } from '~/features/stacking/utils/stacking-pool-form-schema';
 import {
@@ -37,7 +37,7 @@ export function ChoosePoolingAmount() {
                 <Input.Label>Amount of STX to Stack</Input.Label>
                 <Input.Field
                   id="amount"
-                  value={value}
+                  value={value ?? ''}
                   onChange={input => {
                     onChange(input.target.value);
                   }}
@@ -52,7 +52,7 @@ export function ChoosePoolingAmount() {
       </Box>
 
       <Box textStyle="body.02" color="ink.text-subdued" aria-busy={isLoading}>
-        Available balance:{' '}
+        <styled.span textStyle="caption">Available balance:</styled.span>
         {isLoading ? (
           <Spinner />
         ) : totalAvailableBalance ? (
@@ -62,7 +62,7 @@ export function ChoosePoolingAmount() {
             type="button"
             color="#12100F"
             onClick={() =>
-              setValue('amount', microStxToStx(totalAvailableBalance.amount).toString())
+              setValue('amount', microStxToStx(totalAvailableBalance.amount).toNumber())
             }
           >
             {toHumanReadableStx(totalAvailableBalance.amount)}{' '}

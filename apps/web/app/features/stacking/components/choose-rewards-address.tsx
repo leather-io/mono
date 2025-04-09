@@ -20,7 +20,7 @@ export function ChooseRewardsAddress() {
               <Input.Label>Address</Input.Label>
               <Input.Field
                 id="rewardAddress"
-                value={value}
+                value={value ?? ''}
                 onChange={input => {
                   onChange(input.target.value);
                 }}

@@ -9,7 +9,7 @@ interface AddressProps {
 
 export function Address({ address }: AddressProps) {
   return (
-    <styled.p mr="space.02" textStyle="label.02">
+    <styled.p mr="space.02" textStyle="label.02" textDecoration="underline">
       {truncateMiddle(address)}
     </styled.p>
   );
@@ -19,8 +19,8 @@ export function CopyAddress({ address }: AddressProps) {
   const { onCopy } = useClipboard(address);
 
   return (
-    <Flex alignItems="center">
-      <Box onClick={onCopy} display="inline-block" cursor="pointer">
+    <Flex alignItems="center" gap="space.01" onClick={onCopy} cursor="pointer">
+      <Box display="inline-block">
         <CopyIcon variant="small" />
       </Box>
       <Address address={address} />
@@ -36,7 +36,7 @@ interface ExternalAddressProps {
 export function ExternalAddress({ address, href }: ExternalAddressProps) {
   return (
     <styled.a href={href} target="_blank">
-      <Flex alignItems="center">
+      <Flex alignItems="center" gap="space.01">
         <Box display="inline-block">
           <ExternalLinkIcon variant="small" />
         </Box>
