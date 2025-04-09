@@ -2,7 +2,7 @@ import { NetworkInstance, PoolName, WrapperPrincipal } from './types-preset-pool
 
 // @TODO: Replace with StackingPoolFormSchema
 export interface StackingFormValues {
-  amount: string | number;
+  amount: number;
   rewardAddress: string;
   // TODO: should we remove these fields?
   poolName?: PoolName;

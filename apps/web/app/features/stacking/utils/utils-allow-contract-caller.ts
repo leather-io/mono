@@ -1,11 +1,16 @@
-import { Dispatch, SetStateAction } from 'react';
-
-import { StacksNetworkName } from '@stacks/network';
+import { StacksNetwork, StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { noneCV, principalCV, serializeCV } from '@stacks/transactions';
-import { StxCallContractParams, leather } from '~/helpers/leather-sdk';
+import { PoolWrapperAllowanceState } from '~/features/stacking/utils/types';
+import {
+  getNetworkInstance,
+  getPoxWrapperContract,
+} from '~/features/stacking/utils/utils-preset-pools';
+import { StxCallContractParams } from '~/helpers/leather-sdk';
 
-import { WrapperPrincipal } from './types-preset-pools';
+import { LeatherSdk } from '@leather.io/sdk';
+
+import { PoolName, WrapperPrincipal } from './types-preset-pools';
 
 function getOptions(
   poxWrapperContract: WrapperPrincipal,
@@ -21,41 +26,38 @@ function getOptions(
   };
 }
 
-export interface HandleAllowContractCallerArgs {
-  poxWrapperContract: WrapperPrincipal;
-  onFinish: () => void;
+export function isAllowContractCallerConfirmed(
+  poolName: PoolName,
+  network: StacksNetwork,
+  hasUserConfirmedPoolWrapperContract: PoolWrapperAllowanceState
+): boolean {
+  const poxWrapperContract = getPoxWrapperContract(poolName, network);
+  const networkInstance = getNetworkInstance(network);
+
+  return Boolean(hasUserConfirmedPoolWrapperContract[networkInstance]?.[poxWrapperContract]);
 }
+
 interface CreateHandleSubmitArgs {
+  leather: LeatherSdk;
   client: StackingClient;
   network: StacksNetworkName;
-  setIsContractCallExtensionPageOpen: Dispatch<SetStateAction<boolean>>;
+  poxWrapperContract: WrapperPrincipal;
 }
-export function createHandleSubmit({
+
+export function createAllowContractCallerSubmitMutationOptions({
+  leather,
   client,
   network,
-  setIsContractCallExtensionPageOpen,
+  poxWrapperContract,
 }: CreateHandleSubmitArgs) {
-  return async function handleSubmit({
-    poxWrapperContract,
-    onFinish,
-  }: HandleAllowContractCallerArgs) {
-    // TODO: handle thrown errors
-    const [stackingContract] = await Promise.all([client.getStackingContract()]);
+  return {
+    mutationKey: ['allow-contract-caller', leather, client, network, poxWrapperContract],
+    mutationFn: async () => {
+      const [stackingContract] = await Promise.all([client.getStackingContract()]);
 
-    const allowContractCallerOptions = getOptions(poxWrapperContract, stackingContract, network);
+      const allowContractCallerOptions = getOptions(poxWrapperContract, stackingContract, network);
 
-    setIsContractCallExtensionPageOpen(true);
-
-    try {
-      await leather.stxCallContract({
-        ...allowContractCallerOptions,
-      });
-      onFinish?.();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    } finally {
-      setIsContractCallExtensionPageOpen(false);
-    }
-  };
+      return leather.stxCallContract(allowContractCallerOptions);
+    },
+  } as const;
 }

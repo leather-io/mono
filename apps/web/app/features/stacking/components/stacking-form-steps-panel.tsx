@@ -1,6 +1,6 @@
 import { Flex, FlexProps } from 'leather-styles/jsx';
 
-export function StackingFormInfoPanel(props: FlexProps) {
+export function StackingFormStepsPanel(props: FlexProps) {
   return (
     <Flex
       flexDirection="column"
