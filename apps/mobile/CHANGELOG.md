@@ -701,6 +701,32 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.28.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.27.3...@leather.io/mobile-v2.28.0) (2025-04-09)
+
+
+### Features
+
+* **mobile:** add the layout for advanced recipient flow ([70f5acc](https://github.com/leather-io/mono/commit/70f5acc66fecff8f79aa8d483b313df6a6a55723))
+* stx_signTransaction ([a8a4204](https://github.com/leather-io/mono/commit/a8a4204dfeafcb4f528fd568504488a45855f75d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.4.2
+    * @leather.io/bitcoin bumped to 0.24.3
+    * @leather.io/crypto bumped to 1.6.56
+    * @leather.io/provider bumped to 1.2.7
+    * @leather.io/query bumped to 2.35.2
+    * @leather.io/rpc bumped to 2.10.4
+    * @leather.io/services bumped to 1.8.1
+    * @leather.io/stacks bumped to 1.8.1
+    * @leather.io/ui bumped to 1.59.0
+    * @leather.io/utils bumped to 0.32.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.24.3
+
 ## [2.27.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.27.2...@leather.io/mobile-v2.27.3) (2025-04-07)
 
 

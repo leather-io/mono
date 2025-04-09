@@ -389,6 +389,27 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.59.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.58.0...@leather.io/ui-v1.59.0) (2025-04-09)
+
+
+### Features
+
+* **mobile:** add the layout for advanced recipient flow ([70f5acc](https://github.com/leather-io/mono/commit/70f5acc66fecff8f79aa8d483b313df6a6a55723))
+* stx_signTransaction ([a8a4204](https://github.com/leather-io/mono/commit/a8a4204dfeafcb4f528fd568504488a45855f75d))
+* **ui:** add search and person icon, update close icon ([e61904a](https://github.com/leather-io/mono/commit/e61904a52a6e72ed52ea53702e8d978a65e6fe64))
+
+
+### Bug Fixes
+
+* **ui:** improve Pressable performance ([fc7cdad](https://github.com/leather-io/mono/commit/fc7cdada8705eb982d6ef77e7310ead8fbd0d1f5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.32.0
+
 ## [1.58.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.57.0...@leather.io/ui-v1.58.0) (2025-04-02)
 
 

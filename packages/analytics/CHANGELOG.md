@@ -66,6 +66,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.31.0
 
+## [3.4.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.4.1...@leather.io/analytics-v3.4.2) (2025-04-09)
+
+
+### Bug Fixes
+
+* tx request analytics event ([33f1bd0](https://github.com/leather-io/mono/commit/33f1bd0e4106e89c6b8dcd849bf33768a2b18a04))
+
 ## [3.4.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.3.3...@leather.io/analytics-v3.4.0) (2025-03-17)
 
 

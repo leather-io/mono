@@ -56,6 +56,20 @@
     * @leather.io/models bumped to 0.31.0
     * @leather.io/rpc bumped to 2.10.3
 
+## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.1.6...@leather.io/sdk-v1.2.0) (2025-04-09)
+
+
+### Features
+
+* **web:** add stacking steps ([481f298](https://github.com/leather-io/mono/commit/481f298994bab1fc85844a284729a3eaa5580986))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.10.4
+
 ## [1.1.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.0.3...@leather.io/sdk-v1.1.0) (2025-03-17)
 
 
