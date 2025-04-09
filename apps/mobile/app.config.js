@@ -6,15 +6,12 @@ function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
   const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
-    fs.copyFileSync(
-      googleServicesPathAndroid,
-      path.join(__dirname, './android/app/google-services.json')
-    );
+    fs.copyFileSync(googleServicesPathAndroid, path.join(__dirname, './google-services.json'));
   }
 
   if (googleServicesB64) {
     const decodedJson = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(path.join(__dirname, './android/app/google-services.json'), decodedJson);
+    fs.writeFileSync(path.join(__dirname, './google-services.json'), decodedJson);
   }
 }
 
@@ -22,18 +19,12 @@ function setupFirebaseEnvVariablesIos() {
   const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
   const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
-    fs.copyFileSync(
-      googleServicesPathIos,
-      path.join(__dirname, './ios/leatherwalletmobile/GoogleService-Info.plist')
-    );
+    fs.copyFileSync(googleServicesPathIos, path.join(__dirname, './GoogleService-Info.plist'));
   }
 
   if (googleServicesB64) {
     const decodedPlist = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(
-      path.join(__dirname, 'ios/leatherwalletmobile/GoogleService-Info.plist'),
-      decodedPlist
-    );
+    fs.writeFileSync(path.join(__dirname, './GoogleService-Info.plist'), decodedPlist);
   }
 }
 
@@ -43,7 +34,7 @@ export default () => {
 
   return {
     expo: {
-      name: 'Leather',
+      name: 'leather-wallet-mobile',
       owner: 'leather-wallet',
       slug: 'leather-wallet-mobile',
       version: '2.2.0',
@@ -61,13 +52,14 @@ export default () => {
       },
       assetBundlePatterns: ['**/*'],
       ios: {
-        googleServicesFile: './ios/leatherwalletmobile/GoogleService-Info.plist',
+        googleServicesFile: './GoogleService-Info.plist',
         entitlements: {
           'aps-environment': 'production',
         },
         infoPlist: {
           UIBackgroundModes: ['remote-notification', 'fetch'],
         },
+        icon: './src/assets/icon.png',
         bundleIdentifier: 'io.leather.mobilewallet',
         supportsTablet: false,
         splash: {
@@ -83,7 +75,7 @@ export default () => {
       },
       android: {
         package: 'io.leather.mobilewallet',
-        googleServicesFile: './android/app/google-services.json',
+        googleServicesFile: './google-services.json',
         icon: './src/assets/icon.png',
         adaptiveIcon: {
           foregroundImage: './src/assets/adaptive-icon.png',
@@ -105,12 +97,13 @@ export default () => {
           'expo-font',
           {
             fonts: [
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Regular.otf',
               'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Light.otf',
               'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Medium.otf',
+              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Regular.otf',
+              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf',
+              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf',
               'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/MarchePro-Super.otf',
+              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/SpaceMono-Regular.ttf',
             ],
           },
         ],
