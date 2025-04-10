@@ -119,6 +119,12 @@ export default () => {
         '@react-native-firebase/app',
         '@react-native-firebase/messaging',
         [
+          'expo-local-authentication',
+          {
+            faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID biometric data.',
+          },
+        ],
+        [
           'expo-build-properties',
           {
             ios: {
