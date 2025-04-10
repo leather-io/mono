@@ -18,3 +18,7 @@ runs:
     - name: Install dependencies
       run: pnpm install
       shell: bash
+
+    - name: Build local dependencies
+      run: pnpm turbo run build --force --no-cache
+      shell: bash

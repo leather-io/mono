@@ -81,9 +81,10 @@ jobs:
         - maestro/flows/
 
   maestro_test_ios_update:
-    name: Maestro Test iOS
+    name: Maestro Test iOS Update
     type: maestro
-    needs: [get_ios_build, run_eas_update]
+    needs: [get_ios_build]
+    if: ${{ needs.get_ios_build.outputs.build_id }}
     environment: development
     params:
       build_id: ${{ needs.get_ios_build.outputs.build_id }}
@@ -91,9 +92,10 @@ jobs:
         - maestro/flows/
 
   maestro_test_android_update:
-    name: Maestro Test Android
+    name: Maestro Test Android Update
     type: maestro
-    needs: [get_android_build, run_eas_update]
+    needs: [get_android_build]
+    if: ${{ needs.get_android_build.outputs.build_id }}
     environment: development
     params:
       build_id: ${{ needs.get_android_build.outputs.build_id }}
