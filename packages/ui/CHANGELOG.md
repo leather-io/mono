@@ -389,6 +389,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.60.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.59.0...@leather.io/ui-v1.60.0) (2025-04-10)
+
+
+### Features
+
+* **web:** sBTC enroll functionality, closes LEA-2456 ([862f43f](https://github.com/leather-io/mono/commit/862f43f868e9e3c05687a883fed28080f4a0b3de))
+
 ## [1.59.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.58.0...@leather.io/ui-v1.59.0) (2025-04-09)
 
 
