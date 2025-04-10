@@ -701,6 +701,20 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.28.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.0...@leather.io/mobile-v2.28.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* **mobile:** refactor feature flags, gate collectibles and waitlist, ref ENG-16 PRO-12 ([d05bdae](https://github.com/leather-io/mono/commit/d05bdae35b6cb440d84cd64d9968a4af50ad1b11))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.60.0
+
 ## [2.28.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.27.3...@leather.io/mobile-v2.28.0) (2025-04-09)
 
 
