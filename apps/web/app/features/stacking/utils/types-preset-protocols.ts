@@ -1,0 +1,68 @@
+import { z } from 'zod';
+
+import { NetworkInstance } from './types-preset-pools';
+
+export const ProtocolSlugToIdMap = {
+  'stacking-dao': 'stackingDao',
+  lisa: 'lisa',
+} as const;
+
+export const ProtocolIdToDisplayNameMap = {
+  stackingDao: 'Stacking DAO',
+  lisa: 'Lisa',
+} as const;
+
+export type ProtocolSlug = keyof typeof ProtocolSlugToIdMap;
+
+export const protocolSlugSchema = z.enum(
+  Object.keys(ProtocolSlugToIdMap) as [ProtocolSlug, ...ProtocolSlug[]]
+);
+
+export type ProtocolId = (typeof ProtocolSlugToIdMap)[ProtocolSlug];
+export type ProtocolName = (typeof ProtocolIdToDisplayNameMap)[ProtocolId];
+
+export const LiquidContractNameMap = {
+  WrapperStackingDAO: 'WrapperStackingDAO',
+  Lisa: 'Lisa',
+} as const;
+
+export type LiquidContractName = keyof typeof LiquidContractNameMap;
+
+export const NetworkInstanceToLiquidContractMap = {
+  devnet: {
+    WrapperStackingDAO: '',
+    Lisa: '',
+  },
+  testnet: {
+    WrapperStackingDAO: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.stacking-dao-core-v1',
+    Lisa: '',
+  },
+  mainnet: {
+    WrapperStackingDAO: 'SP4SZE494VC2YC5JYG7AYFQ44FQ4PYV7DVMDPBG.stacking-dao-core-v1',
+    Lisa: 'SM3KNVZS30WM7F89SXKVVFY4SN9RMPZZ9FX929N0V.auto-whitelist-mint-helper',
+  },
+} as const;
+
+export const LiquidTokenMap = {
+  ST_STX: 'stSTX',
+  LI_STX: 'LiSTX',
+  OTHER: 'OTHER',
+} as const;
+
+export type LiquidToken = keyof typeof LiquidTokenMap;
+
+type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
+export type LiquidContractType = ContractMapType[NetworkInstance];
+export type LiquidContractPrincipal = LiquidContractType[keyof LiquidContractType];
+
+export interface Protocol {
+  name: ProtocolName;
+  protocolAddress: Record<NetworkInstance, string> | undefined;
+  description: string;
+  website: string;
+  duration: number;
+  icon: JSX.Element;
+  liquidContract: LiquidContractName;
+  liquidToken: LiquidToken;
+  minimumDelegationAmount: number;
+}

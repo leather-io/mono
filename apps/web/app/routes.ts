@@ -4,7 +4,8 @@ export default [
   index('routes/home.tsx'),
   ...prefix('stacking', [
     index('routes/stacking/index.tsx'),
-    route(':slug', 'routes/stacking/stacking.tsx'),
+    route('pooled-stacking/:slug', 'routes/stacking/pooled-stacking.tsx'),
+    route('liquid-stacking/:slug', 'routes/stacking/liquid-stacking.tsx'),
   ]),
   route('docs', 'routes/docs.tsx'),
   route('sbtc-rewards', 'routes/sbtc-rewards.tsx'),
