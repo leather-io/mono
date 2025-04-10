@@ -57,10 +57,9 @@ export function SelectAsset() {
               id: 'select_asset.header_title',
               message: 'Select asset',
             })}
-            subtitle={i18n._({
-              id: 'select_asset.header_subtitle',
-              message: '{subtitle}',
-              values: { subtitle: name },
+            subtitle={t({
+              id: 'receive.select_asset.header_subtitle',
+              message: 'Receive',
             })}
             leftElement={
               <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />

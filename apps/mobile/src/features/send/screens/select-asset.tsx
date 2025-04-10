@@ -8,7 +8,6 @@ import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 
 export function SelectAsset() {
@@ -49,10 +48,9 @@ export function SelectAsset() {
             id: 'select_asset.header_title',
             message: 'Select asset',
           })}
-          subtitle={i18n._({
-            id: 'select_asset.header_subtitle',
-            message: '{subtitle}',
-            values: { subtitle: selectedAccount?.name },
+          subtitle={t({
+            id: 'send.select_asset.header_subtitle',
+            message: 'Send',
           })}
           leftElement={canGoBack ? <HeaderBackButton onPress={handleBackButtonPress} /> : null}
           rightElement={<NetworkBadge />}
