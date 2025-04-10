@@ -16,7 +16,7 @@ export function AppNavigationStack() {
       <Stack.Screen name="swap" options={{ header: () => <NakedHeader /> }} />
 
       {/* Account */}
-      <Stack.Screen name="account/[account]/index" options={{ header: () => <NakedHeader /> }} />
+      <Stack.Screen name="account/[account]/index" options={{ headerShown: false }} />
       <Stack.Screen name="account/[account]/activity" options={{ headerShown: false }} />
       <Stack.Screen name="account/[account]/collectibles" options={{ headerShown: false }} />
       <Stack.Screen name="account/[account]/balances" options={{ headerShown: false }} />
