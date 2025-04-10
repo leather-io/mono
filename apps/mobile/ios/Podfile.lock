@@ -250,7 +250,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalAuthentication (14.0.1):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.20):
+  - ExpoModulesCore (1.12.26):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1804,7 +1804,7 @@ DEPENDENCIES:
   - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@13.0.2_expo@51.0.26/node_modules/expo-keep-awake/ios`)"
   - "ExpoLinearGradient (from `../../../node_modules/.pnpm/expo-linear-gradient@13.0.2_expo@51.0.26/node_modules/expo-linear-gradient/ios`)"
   - "ExpoLocalAuthentication (from `../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26/node_modules/expo-local-authentication/ios`)"
-  - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core`)"
+  - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@1.12.26/node_modules/expo-modules-core`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=b2753e05d2293ca1584f223c366d82904c6efe44d9efd76d610b7080fe816754_expo@51.0.26/node_modules/expo-secure-store/ios`)"
   - "ExpoSharing (from `../../../node_modules/.pnpm/expo-sharing@12.0.1_expo@51.0.26/node_modules/expo-sharing/ios`)"
   - "ExpoSquircleView (from `../../../node_modules/.pnpm/expo-squircle-view@1.1.0_expo@51.0.26_react-native@0.74.1_@babel+core@7.24.6_@babel+pre_29058e40f55c91b6ad73a602246f895b/node_modules/expo-squircle-view/ios`)"
@@ -1965,7 +1965,7 @@ EXTERNAL SOURCES:
   ExpoLocalAuthentication:
     :path: "../../../node_modules/.pnpm/expo-local-authentication@14.0.1_expo@51.0.26/node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
-    :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.20/node_modules/expo-modules-core"
+    :path: "../../../node_modules/.pnpm/expo-modules-core@1.12.26/node_modules/expo-modules-core"
   ExpoSecureStore:
     :path: "../../../node_modules/.pnpm/expo-secure-store@13.0.2_patch_hash=b2753e05d2293ca1584f223c366d82904c6efe44d9efd76d610b7080fe816754_expo@51.0.26/node_modules/expo-secure-store/ios"
   ExpoSharing:
@@ -2146,7 +2146,7 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: dd02e65d49f1cfd9194640028ae2857e536eb1c9
   ExpoLinearGradient: 4c44b3803b441724874b232e6520b51ca6a50db1
   ExpoLocalAuthentication: b94db59f55df95350223200c746b4ddf0cb7cfc0
-  ExpoModulesCore: cad1227f619a67c82c52e0e71fc70514cd93def8
+  ExpoModulesCore: 9ac73e2f60e0ea1d30137ca96cfc8c2aa34ef2b2
   ExpoSecureStore: 6506992a9f53c94ea716c54d4a63144965945c2c
   ExpoSharing: 5e6b6cbc0c232084b79ffa7243459f7dcdc5b1cb
   ExpoSquircleView: 0f3abe8b83641f934ef6146db50edc391739b32c
@@ -2176,7 +2176,7 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PocketSVG: ca3bc53ea8d68336ba830c47b2e547790507b901
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
+  RCT-Folly: 5dc73daec3476616d19e8a53f0156176f7b55461
   RCTDeprecation: efb313d8126259e9294dc4ee0002f44a6f676aba
   RCTRequired: f49ea29cece52aee20db633ae7edc4b271435562
   RCTTypeSafety: a11979ff0570d230d74de9f604f7d19692157bc4
@@ -2244,7 +2244,7 @@ SPEC CHECKSUMS:
   segment-analytics-react-native: 2d70adc118685be8be40cb0e0b76c48ac8c38f29
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   sovran-react-native: 33ad07c36db34b27a10a7ea2a0b06af4bcae8682
-  Yoga: b9a182ab00cf25926e7f79657d08c5d23c2d03b0
+  Yoga: 348f8b538c3ed4423eb58a8e5730feec50bce372
 
 PODFILE CHECKSUM: 1335b53efc7b068f7d36e7fd7794eb32b5151c61
 

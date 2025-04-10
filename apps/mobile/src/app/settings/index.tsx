@@ -7,7 +7,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
 import { useAuthContext } from '@/components/splash-screen-guard/use-auth-context';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useReleasePushNotificationsFlag } from '@/features/feature-flags/use-feature-flags';
+import { useNotificationsFlag, useWaitlistFlag } from '@/features/feature-flags';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
@@ -45,7 +45,8 @@ export default function SettingsScreen() {
   const { displayToast } = useToastContext();
   const deviceId = useDeviceId();
   const { onCopy: onDeviceIdCopy } = useCopyToClipboard(deviceId ?? '');
-  const releasePushNotifications = useReleasePushNotificationsFlag();
+  const releasePushNotifications = useNotificationsFlag();
+  const releaseWaitlistFeatures = useWaitlistFlag();
   function handleCopyDeviceIdToClipboard() {
     void onDeviceIdCopy();
     displayToast({
@@ -150,39 +151,41 @@ export default function SettingsScreen() {
             testID={TestId.settingsHelpButton}
           />
         </SettingsList>
-        <Accordion
-          label={t({
-            id: 'settings.accordion_label',
-            message: 'More options',
-          })}
-          testID={TestId.settingsMoreOptionsButton}
-          content={
-            <SettingsList>
-              <SettingsListItem
-                title={t({
-                  id: 'settings.contacts.cell_title',
-                  message: 'Contacts',
-                })}
-                icon={<UsersTwoIcon />}
-                onPress={() => {
-                  contactsSheetRef.current?.present();
-                }}
-                testID={TestId.settingsContactsButton}
-              />
-              <SettingsListItem
-                title={t({
-                  id: 'settings.fees.cell_title',
-                  message: 'Fees',
-                })}
-                icon={<SettingsGearIcon />}
-                onPress={() => {
-                  feesSheetRef.current?.present();
-                }}
-                testID={TestId.settingsFeesButton}
-              />
-            </SettingsList>
-          }
-        />
+        {releaseWaitlistFeatures && (
+          <Accordion
+            label={t({
+              id: 'settings.accordion_label',
+              message: 'More options',
+            })}
+            testID={TestId.settingsMoreOptionsButton}
+            content={
+              <SettingsList>
+                <SettingsListItem
+                  title={t({
+                    id: 'settings.contacts.cell_title',
+                    message: 'Contacts',
+                  })}
+                  icon={<UsersTwoIcon />}
+                  onPress={() => {
+                    contactsSheetRef.current?.present();
+                  }}
+                  testID={TestId.settingsContactsButton}
+                />
+                <SettingsListItem
+                  title={t({
+                    id: 'settings.fees.cell_title',
+                    message: 'Fees',
+                  })}
+                  icon={<SettingsGearIcon />}
+                  onPress={() => {
+                    feesSheetRef.current?.present();
+                  }}
+                  testID={TestId.settingsFeesButton}
+                />
+              </SettingsList>
+            }
+          />
+        )}
 
         <Box>
           <Text variant="label02">

@@ -10,6 +10,7 @@ import {
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useWaitlistFlag } from '@/features/feature-flags';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
@@ -43,49 +44,44 @@ import {
 } from '@leather.io/ui/native';
 
 function getUnavailableFeatures({ iconColor }: { iconColor: keyof Theme['colors'] }) {
-  const addressReuseTitle = t({
-    id: 'configure_wallet.address_reuse.cell_title',
-    message: 'Address reuse',
-  });
-  const addressScanRangeTitle = t({
-    id: 'configure_wallet.address_scan_range.cell_title',
-    message: 'Address scan range',
-  });
-  const addressTypesTitle = t({
-    id: 'configure_wallet.address_types.cell_title',
-    message: 'Address types',
-  });
-  const exportXpubTitle = t({
-    id: 'configure_wallet.export_xpub.cell_title',
-    message: 'Export xPub',
-  });
-  const exportKeyTitle = t({
-    id: 'configure_wallet.export_key.cell_title',
-    message: 'Export key',
-  });
   return {
     addressReuse: {
-      title: addressReuseTitle,
+      title: t({
+        id: 'configure_wallet.address_reuse.cell_title',
+        message: 'Address reuse',
+      }),
       icon: <ArrowsRepeatLeftRightIcon color={iconColor} />,
       id: WaitlistIds.addressReuse,
     },
     addressScanRange: {
-      title: addressScanRangeTitle,
+      title: t({
+        id: 'configure_wallet.address_scan_range.cell_title',
+        message: 'Address scan range',
+      }),
       icon: <BarcodeIcon color={iconColor} />,
       id: WaitlistIds.capsule,
     },
     addressTypes: {
-      title: addressTypesTitle,
+      title: t({
+        id: 'configure_wallet.address_types.cell_title',
+        message: 'Address types',
+      }),
       icon: <InboxIcon color={iconColor} />,
       id: WaitlistIds.addressTypes,
     },
     exportXpub: {
-      title: exportXpubTitle,
+      title: t({
+        id: 'configure_wallet.export_xpub.cell_title',
+        message: 'Export xPub',
+      }),
       icon: <ArrowOutOfBoxIcon color={iconColor} />,
       id: WaitlistIds.exportXpub,
     },
     exportKey: {
-      title: exportKeyTitle,
+      title: t({
+        id: 'configure_wallet.export_key.cell_title',
+        message: 'Export key',
+      }),
       icon: <ArrowOutOfBoxIcon color={iconColor} />,
       id: WaitlistIds.exportKey,
     },
@@ -103,7 +99,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const dispatch = useAppDispatch();
   const { securityLevelPreference } = useSettings();
   const { authenticate } = useAuthentication();
-
+  const releaseWaitlistFeatures = useWaitlistFlag();
   const { displayToast } = useToastContext();
 
   function setName(name: string) {
@@ -214,29 +210,31 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               testID={TestId.walletSettingsRemoveWalletButton}
             />
           </SettingsList>
-          <Accordion
-            label={t({
-              id: 'configure_wallet.accordion_label',
-              message: 'More options',
-            })}
-            content={
-              <SettingsList>
-                {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
-                  feature => (
-                    <SettingsListItem
-                      key={feature.id}
-                      title={feature.title}
-                      icon={feature.icon}
-                      onPress={onOpenSheet({
-                        title: feature.title,
-                        id: feature.id,
-                      })}
-                    />
-                  )
-                )}
-              </SettingsList>
-            }
-          />
+          {releaseWaitlistFeatures && (
+            <Accordion
+              label={t({
+                id: 'configure_wallet.accordion_label',
+                message: 'More options',
+              })}
+              content={
+                <SettingsList>
+                  {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
+                    feature => (
+                      <SettingsListItem
+                        key={feature.id}
+                        title={feature.title}
+                        icon={feature.icon}
+                        onPress={onOpenSheet({
+                          title: feature.title,
+                          id: feature.id,
+                        })}
+                      />
+                    )
+                  )}
+                </SettingsList>
+              }
+            />
+          )}
         </Box>
         <Box mb="7">
           <Divider />

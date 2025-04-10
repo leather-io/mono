@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { useReleasePushNotificationsFlag } from '@/features/feature-flags/use-feature-flags';
+import { useNotificationsFlag } from '@/features/feature-flags';
 import { useRegisterNotificationMutation } from '@/queries/notifications/notifications.query';
 import { useBitcoinAddresses } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddresses } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -43,7 +43,7 @@ export function useRegisterNotifications(): RegisterNotifications {
   const { mutateAsync: registerToken } = useRegisterNotificationMutation();
   const stacksAddresses = useStacksSignerAddresses();
   const { displayToast } = useToastContext();
-  const releasePushNotifications = useReleasePushNotificationsFlag();
+  const releasePushNotifications = useNotificationsFlag();
 
   const registerNotificationsBtc = useCallback(async () => {
     const notificationToken = await messaging().getToken();
@@ -110,7 +110,7 @@ export function useRegisterNotifications(): RegisterNotifications {
 export function useWatchNotificationAddresses() {
   const btcAddresses = useBitcoinAddresses();
   const stacksAddresses = useStacksSignerAddresses();
-  const releasePushNotifications = useReleasePushNotificationsFlag();
+  const releasePushNotifications = useNotificationsFlag();
   const { notificationsPreference } = useSettings();
   const {
     requestUserPermissions,
@@ -170,7 +170,7 @@ export function useWatchNotificationAddresses() {
 export function useOnDetectNoNotificationPreference(callback: undefined | (() => void)) {
   const { hasWallets } = useWallets();
   const { notificationsPreference } = useSettings();
-  const releasePushNotifications = useReleasePushNotificationsFlag();
+  const releasePushNotifications = useNotificationsFlag();
 
   useEffect(() => {
     if (releasePushNotifications && hasWallets && notificationsPreference === 'not-selected') {

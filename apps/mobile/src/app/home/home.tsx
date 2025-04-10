@@ -6,6 +6,7 @@ import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
 import { BalancesWidget } from '@/components/widgets/balances/balances-widget';
 import { CollectiblesWidget } from '@/components/widgets/collectibles/collectibles-widget';
 import { AllAccountBalances } from '@/features/balances/balances';
+import { useCollectiblesFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { useTotalAccountAddresses } from '@/hooks/use-account-addresses';
@@ -28,6 +29,7 @@ export function Home() {
   const { data: activity, isLoading } = useTotalActivityQuery(accounts);
   const { totalBalance } = useTotalBalance();
   const collectibles = useTotalCollectibles();
+  const releaseCollectibles = useCollectiblesFlag();
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
   // TODO LEA-1726: Handle loading and error states
   if (totalBalance.state !== 'success') return;
@@ -50,7 +52,7 @@ export function Home() {
           onPressHeader={() => router.navigate(AppRoutes.Activity)}
         />
       )}
-      {collectibles && (
+      {collectibles && releaseCollectibles && (
         <CollectiblesWidget
           collectibles={collectibles}
           onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
