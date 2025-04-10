@@ -40,16 +40,15 @@ export function HeaderOptions() {
       >
         <SettingsGearIcon />
       </Pressable>
-      {!isProduction() && (
-        <Pressable
-          p="2"
-          onPress={() => router.navigate(AppRoutes.Activity)}
-          testID={TestId.homeActivityButton}
-          pressEffects={legacyTouchablePressEffect}
-        >
-          <PulseIcon />
-        </Pressable>
-      )}
+
+      <Pressable
+        p="2"
+        onPress={() => router.navigate(AppRoutes.Activity)}
+        testID={TestId.homeActivityButton}
+        pressEffects={legacyTouchablePressEffect}
+      >
+        <PulseIcon />
+      </Pressable>
     </Box>
   );
 }
