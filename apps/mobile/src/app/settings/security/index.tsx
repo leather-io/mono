@@ -37,14 +37,16 @@ export default function SettingsSecurityScreen() {
   const appAuthenticationSheetRef = useRef<SheetRef>(null);
   const settings = useSettings();
 
+  const pageTitle = t({
+    id: 'security.header_title',
+    message: 'Security',
+  });
   return (
     <>
       <AnimatedHeaderScreenLayout
         rightHeaderElement={<NetworkBadge />}
-        title={t({
-          id: 'security.header_title',
-          message: 'Security',
-        })}
+        title={pageTitle}
+        contentTitle={pageTitle}
       >
         <SettingsList>
           <SettingsListItem

@@ -81,15 +81,17 @@ export default function CreateNewWallet() {
     void tempMnemonicStore.setTemporaryMnemonic(tempMnemonic);
   }, []);
 
+  const pageTitle = t({
+    id: 'create_new_wallet.title',
+    message: 'Back up your secret key',
+  });
   return (
     <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
       <AnimatedHeaderScreenLayout
         // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
         // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
-        title={t({
-          id: 'create_new_wallet.title',
-          message: 'Back up your secret key',
-        })}
+        title={pageTitle}
+        contentTitle={pageTitle}
       >
         <Box>
           <Text variant="label01">

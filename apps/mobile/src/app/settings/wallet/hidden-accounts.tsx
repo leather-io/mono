@@ -3,13 +3,12 @@ import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-lis
 import { t } from '@lingui/macro';
 
 export default function HiddenAccountsScreen() {
+  const pageTitle = t({
+    id: 'hidden_accounts.header_title',
+    message: 'Hidden accounts',
+  });
   return (
-    <AnimatedHeaderScreenLayout
-      title={t({
-        id: 'hidden_accounts.header_title',
-        message: 'Hidden accounts',
-      })}
-    >
+    <AnimatedHeaderScreenLayout title={pageTitle} contentTitle={pageTitle}>
       <WalletsList variant="hidden" />
     </AnimatedHeaderScreenLayout>
   );

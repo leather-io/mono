@@ -85,15 +85,14 @@ export default function HardwareWalletListScreen() {
   function onCloseSheet() {
     setSheetData(null);
   }
+  const pageTitle = t({
+    id: 'hardware_wallets.title',
+    message: 'Connect device',
+  });
 
   return (
     <>
-      <AnimatedHeaderScreenLayout
-        title={t({
-          id: 'hardware_wallets.title',
-          message: 'Connect device',
-        })}
-      >
+      <AnimatedHeaderScreenLayout title={pageTitle} contentTitle={pageTitle}>
         <SettingsList>
           {Object.values(getUnavailableFeatures()).map(feature => {
             const hardwareWalletName = feature.title;

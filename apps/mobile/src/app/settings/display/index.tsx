@@ -45,14 +45,17 @@ export default function SettingsDisplayScreen() {
     changeHapticsPreference(hapticsPreference === 'enabled' ? 'disabled' : 'enabled');
   }
 
+  const pageTitle = t({
+    id: 'display.header_title',
+    message: 'Display',
+  });
+
   return (
     <>
       <AnimatedHeaderScreenLayout
         rightHeaderElement={<NetworkBadge />}
-        title={t({
-          id: 'display.header_title',
-          message: 'Display',
-        })}
+        title={pageTitle}
+        contentTitle={pageTitle}
       >
         <SettingsList>
           <SettingsListItem

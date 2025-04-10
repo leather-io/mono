@@ -49,13 +49,15 @@ export default function SettingsNetworksScreen() {
     });
   }
 
+  const pageTitle = t({
+    id: 'networks.header_title',
+    message: 'Networks',
+  });
   return (
     <AnimatedHeaderScreenLayout
       rightHeaderElement={<NetworkBadge />}
-      title={t({
-        id: 'networks.header_title',
-        message: 'Networks',
-      })}
+      title={pageTitle}
+      contentTitle={pageTitle}
     >
       <SettingsList>
         {defaultNetworkPreferences.map(network => (
