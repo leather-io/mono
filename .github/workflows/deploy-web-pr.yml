@@ -1,0 +1,91 @@
+name: Web PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    name: Deploy PR Preview
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build web app
+        run: pnpm turbo run build --filter="@leather.io/web"
+        env:
+          BUILD_TARGET: 'pull-request'
+
+      - name: Get PR metadata
+        id: pr-metadata
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
+          # Create a unique project name: leather-pr-{pr-number}
+          echo "PR_PROJECT=leather-pr-${PR_NUMBER}" >> $GITHUB_ENV
+          # Set timestamp for later cleanup reference
+          echo "DEPLOY_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+          # Set expiry date (7 days from now)
+          echo "EXPIRY_DATE=$(date -d '+7 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          workingDirectory: apps/web
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+          command: pages deploy ./build --project-name=${{ env.PR_PROJECT }} --commit-hash=${{ github.event.pull_request.head.sha }} --commit-message="PR #${{ env.PR_NUMBER }}: ${{ github.event.pull_request.title }}"
+
+      - name: Get deployment URL
+        id: deployment
+        run: |
+          # Extract the deployment URL from wrangler output
+          DEPLOYMENT_URL="${{ env.PR_PROJECT }}.pages.dev"
+          echo "DEPLOYMENT_URL=${DEPLOYMENT_URL}" >> $GITHUB_OUTPUT
+          echo "Deployment URL: https://${DEPLOYMENT_URL}"
+
+      - name: Save deployment info for cleanup
+        run: |
+          # Store deployment info in PR comment for later cleanup
+          cat > deployment-info.json <<EOF
+          {
+            "project": "${{ env.PR_PROJECT }}",
+            "url": "https://${{ steps.deployment.outputs.DEPLOYMENT_URL }}",
+            "timestamp": "${{ env.DEPLOY_TIMESTAMP }}",
+            "expiryDate": "${{ env.EXPIRY_DATE }}"
+          }
+          EOF
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const deployInfo = JSON.parse(fs.readFileSync('./deployment-info.json', 'utf8'));
+
+            const { issue: { number: issue_number }, repo: { owner, repo } } = context;
+            github.rest.issues.createComment({
+              issue_number,
+              owner,
+              repo,
+              body: `✅ **PR Preview deployed!**\n\n` +
+                    `📱 Preview URL: ${deployInfo.url}\n\n` +
+                    `⏰ This preview will be automatically deleted on ${deployInfo.expiryDate}\n\n` +
+                    `<details>\n` +
+                    `<summary>Deployment Details</summary>\n\n` +
+                    `- Project: ${deployInfo.project}\n` +
+                    `- Deployed: ${new Date().toISOString()}\n` +
+                    `- Build Target: pull-request\n` +
+                    `</details>`
+            })

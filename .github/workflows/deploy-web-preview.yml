@@ -33,7 +33,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
           command: pages deployment create --project-name=leather --branch=${{ github.head_ref }} --commit-hash=${{ github.sha }}
-          
+
       - name: Get deployment URL
         id: deployment
         run: |
@@ -41,7 +41,7 @@ jobs:
           DEPLOYMENT_URL=$(grep -o 'https://[^ ]*' $HOME/.wrangler/deployments.log | tail -1)
           echo "::set-output name=url::$DEPLOYMENT_URL"
           echo "Deployment URL: $DEPLOYMENT_URL"
-          
+
       - name: Comment on PR
         uses: actions/github-script@v7
         with:
