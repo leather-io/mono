@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
+import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
@@ -57,6 +58,7 @@ export function AddWalletSheetLayout({
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const router = useRouter();
+  const releaseWaitlistFeatures = useWaitlistFlag();
   const { whenTheme } = useSettings();
 
   function openOptions() {
@@ -129,15 +131,17 @@ export function AddWalletSheetLayout({
               testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
             />
-            <AddWalletCell
-              onPress={openOptions}
-              title={t({
-                id: 'add_wallet.options.cell_title',
-                message: 'More options',
-              })}
-              icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
-            />
-            {moreOptionsVisible && (
+            {releaseWaitlistFeatures && (
+              <AddWalletCell
+                onPress={openOptions}
+                title={t({
+                  id: 'add_wallet.options.cell_title',
+                  message: 'More options',
+                })}
+                icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
+              />
+            )}
+            {moreOptionsVisible && releaseWaitlistFeatures && (
               <>
                 <AddWalletCell
                   title={t({

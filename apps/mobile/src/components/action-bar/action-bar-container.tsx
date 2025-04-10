@@ -3,7 +3,7 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { useReleaseBrowserFeatureFlag } from '@/features/feature-flags/use-feature-flags';
+import { useBrowserFlag } from '@/features/feature-flags';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
@@ -157,7 +157,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
   const browserRef = useRef<SheetRef>(null);
-  const releaseBrowserFeature = useReleaseBrowserFeatureFlag();
+  const releaseBrowserFeature = useBrowserFlag();
 
   useOnMount(() => {
     browserRef.current?.present();

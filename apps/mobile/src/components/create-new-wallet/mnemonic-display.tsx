@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 
 import { NotifyUserSheetLayout } from '@/components/sheets/notify-user-sheet.layout';
+import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -35,7 +36,7 @@ export function MnemonicDisplay({
   const { displayToast } = useToastContext();
   const theme = useTheme<Theme>();
   const notifySheetRef = useRef<SheetRef>(null);
-
+  const releaseWaitlistFeatures = useWaitlistFlag();
   if (!mnemonic) return null;
   const mnemonicWords = mnemonic.split(' ');
 
@@ -68,16 +69,18 @@ export function MnemonicDisplay({
               message: `Copy`,
             })}
           />
-          <Button
-            onPress={() => notifySheetRef.current?.present()}
-            flex={1}
-            style={{ borderColor: theme.colors['ink.text-primary'] }}
-            buttonState="outline"
-            title={t({
-              id: 'create_new_wallet.mnemonic.save_button',
-              message: `Save to…`,
-            })}
-          />
+          {releaseWaitlistFeatures && (
+            <Button
+              onPress={() => notifySheetRef.current?.present()}
+              flex={1}
+              style={{ borderColor: theme.colors['ink.text-primary'] }}
+              buttonState="outline"
+              title={t({
+                id: 'create_new_wallet.mnemonic.save_button',
+                message: `Save to…`,
+              })}
+            />
+          )}
         </Box>
       </Box>
 
