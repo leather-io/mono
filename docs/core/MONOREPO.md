@@ -4,8 +4,10 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
 
 ## Contents
 
-- [Setup](#setup)
-- [License](#license)
+- [Package configuration](#package-configuration)
+  - [Contents](#contents)
+  - [Setup](#setup)
+  - [License](#license)
 
 ## Setup
 
@@ -38,7 +40,7 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
       "npm": "please-use-pnpm",
       "yarn": "please-use-pnpm"
     },
-    "packageManager": "pnpm@8.7.5"
+    "packageManager": "pnpm@10.4.0"
   }
   ```
 

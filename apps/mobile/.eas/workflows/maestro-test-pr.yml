@@ -1,4 +1,8 @@
 name: Maestro Tests - PR
+defaults:
+  tools:
+    node: 20.11.0
+    pnpm: 10.4.1
 
 on:
   pull_request:
