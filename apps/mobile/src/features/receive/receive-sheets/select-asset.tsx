@@ -7,7 +7,6 @@ import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 
 import { truncateMiddle } from '@leather.io/utils';
 
@@ -31,7 +30,6 @@ export interface SelectedAsset {
 }
 
 export function SelectAsset() {
-  const { i18n } = useLingui();
   const route = useReceiveSheetRoute<CurrentRoute>();
   const navigation = useReceiveSheetNavigation<CurrentRoute>();
 
@@ -39,7 +37,6 @@ export function SelectAsset() {
     navigation.navigate('receive-asset-details', { asset, accountName: account.name });
   }
   const account = route.params.account;
-  const { name } = account;
   const { nativeSegwitPayerAddress, taprootPayerAddress } =
     useBitcoinPayerAddressFromAccountIndex(account.fingerprint, account.accountIndex) ?? '';
   const stxAddress =
