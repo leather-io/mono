@@ -47,8 +47,7 @@ export function getAssets({
       }),
       assetDescription: t({
         id: 'asset_description.taproot',
-        message:
-          'This is your Taproot address. Use it to receive tokens and collectibles on the bitcoin network.',
+        message: 'This is your Taproot address. Use it to receive tokens on the bitcoin network.',
       }),
     },
     {

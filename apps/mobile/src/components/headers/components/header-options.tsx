@@ -1,5 +1,4 @@
 import { AppRoutes } from '@/routes';
-import { isProduction } from '@/shared/environment';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
