@@ -1,4 +1,5 @@
 import { Balance } from '@/components/balance/balance';
+import { NakedHeader } from '@/components/headers/naked-header';
 import { PageLayout } from '@/components/page/page.layout';
 import { BalancesWidget } from '@/components/widgets/balances/balances-widget';
 import { CollectiblesWidget } from '@/components/widgets/collectibles/collectibles-widget';
@@ -12,6 +13,7 @@ import { Account } from '@/store/accounts/accounts';
 import { router } from 'expo-router';
 
 import { Money } from '@leather.io/models';
+import { SettingsGearIcon } from '@leather.io/ui/native';
 
 import { ActivityWidget } from '../../activity/components/activity-widget';
 import { AccountOverview } from './account-overview-card';
@@ -28,6 +30,21 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
   const releaseCollectibles = useCollectiblesFlag();
   return (
     <PageLayout>
+      <NakedHeader
+        rightElement={
+          <SettingsGearIcon
+            onPress={() => {
+              router.navigate({
+                pathname: AppRoutes.SettingsWalletConfigureAccount,
+                params: {
+                  fingerprint: account.fingerprint,
+                  account: account.accountIndex,
+                },
+              });
+            }}
+          />
+        }
+      />
       <AccountOverview
         icon={account.icon}
         heading={<Balance balance={balance} variant="heading02" />}
