@@ -57,6 +57,7 @@ export default () => {
         bundleIdentifier: 'io.leather.mobilewallet',
         googleServicesFile: './GoogleService-Info.plist',
         supportsTablet: false,
+        usesNonExemptEncryption: false,
         entitlements: {
           'aps-environment': 'production',
         },
