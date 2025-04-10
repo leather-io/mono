@@ -5,11 +5,11 @@ import {
   PoolSlug,
   PoolSlugToIdMap,
 } from '~/features/stacking/utils/types-preset-pools';
-import { StackInPool } from '~/pages/stacking/stack-in-pool';
+import { PooledStacking } from '~/pages/stacking/pooled-stacking';
 
 import { delay } from '@leather.io/utils';
 
-import type { Route } from './+types/stacking';
+import { Route } from './+types/pooled-stacking';
 
 export async function loader({ params }: Route.LoaderArgs) {
   await delay(400);
@@ -32,10 +32,10 @@ export function meta({}: Route.MetaArgs) {
   return [{ title: 'Leather Earn - Stacking' }];
 }
 
-export default function EarnStackingRoute({ loaderData }: Route.ComponentProps) {
+export default function EarnPooledStackingRoute({ loaderData }: Route.ComponentProps) {
   return (
     <StackingClientProvider>
-      <StackInPool poolName={loaderData.poolName} />
+      <PooledStacking poolName={loaderData.poolName} />
     </StackingClientProvider>
   );
 }

@@ -17,6 +17,7 @@ import { StacksIcon } from '~/components/icons/stacks-icon';
 import { ImgFillLoader } from '~/components/img-loader';
 import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
 import { PoolSlug } from '~/features/stacking/utils/types-preset-pools';
+import { ProtocolSlug } from '~/features/stacking/utils/types-preset-protocols';
 
 import { Button, Flag } from '@leather.io/ui';
 
@@ -153,7 +154,10 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
               {info.getValue() as string}
             </Flag>
 
-            <Link to={`/stacking/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
+            <Link
+              to={`/stacking/pooled-stacking/${info.row.original.slug}`}
+              style={{ minWidth: 'fit-content' }}
+            >
               <Button size="xs" ml="space.04" minW="fit-content">
                 Start earning
               </Button>
@@ -229,6 +233,7 @@ interface LiquidStackingProvider {
   estApr: string;
   payout: string;
   icon: ReactElement;
+  slug: ProtocolSlug;
 }
 const liquidStackingProviders: LiquidStackingProvider[] = [
   {
@@ -236,12 +241,14 @@ const liquidStackingProviders: LiquidStackingProvider[] = [
     estApr: '5%',
     payout: 'stSTX',
     icon: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="black" />,
+    slug: 'stacking-dao',
   },
   {
     provider: 'LISA',
     estApr: '10%',
     payout: 'LiSTX',
     icon: <ImgFillLoader src="icons/lisa.webp" width="24" fill="#FB9DF1" />,
+    slug: 'lisa',
   },
 ];
 
@@ -285,9 +292,14 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
               {info.getValue() as string}
             </Flag>
 
-            <Button size="xs" ml="space.04" minW="fit-content">
-              Start earning
-            </Button>
+            <Link
+              to={`/stacking/liquid-stacking/${info.row.original.slug}`}
+              style={{ minWidth: 'fit-content' }}
+            >
+              <Button size="xs" ml="space.04" minW="fit-content">
+                Start earning
+              </Button>
+            </Link>
           </Flex>
         ),
         meta: { align: 'left' },

@@ -2,15 +2,14 @@ import { Page } from '~/features/page/page';
 import { StartPooledStacking } from '~/features/stacking/start-pooled-stacking';
 import { PoolName } from '~/features/stacking/utils/types-preset-pools';
 
-interface StackInPoolProps {
+interface PooledStackingProps {
   poolName: PoolName;
 }
 
-export function StackInPool({ poolName }: StackInPoolProps) {
+export function PooledStacking({ poolName }: PooledStackingProps) {
   return (
     <Page>
       <Page.Header title="Enroll" />
-
       <StartPooledStacking poolName={poolName} />
     </Page>
   );
