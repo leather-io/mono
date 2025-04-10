@@ -20,6 +20,14 @@ pnpm dev
 
 Your application will be available at `http://localhost:5173`.
 
+## Environment Variables
+
+- `BUILD_TARGET`: Controls build configuration. When set to `'pull-request'`, server-side rendering is disabled to optimize PR preview builds.
+
 ## Deployment
 
-TBD
+### Production Deployment
+Deployments to production are handled automatically when changes are merged to the `dev` branch.
+
+### PR Preview Deployments
+Every pull request automatically creates a preview deployment with server-side rendering disabled for faster builds and previews.

@@ -1,0 +1,56 @@
+name: Deploy PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    name: Deploy PR Preview
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build web app with SSR disabled for PR
+        run: pnpm turbo run build --filter="@leather.io/web"
+        env:
+          BUILD_TARGET: 'pull-request'
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          workingDirectory: apps/web
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+          command: pages deployment create --project-name=leather --branch=${{ github.head_ref }} --commit-hash=${{ github.sha }}
+          
+      - name: Get deployment URL
+        id: deployment
+        run: |
+          # Extract the deployment URL from the wrangler output
+          DEPLOYMENT_URL=$(grep -o 'https://[^ ]*' $HOME/.wrangler/deployments.log | tail -1)
+          echo "::set-output name=url::$DEPLOYMENT_URL"
+          echo "Deployment URL: $DEPLOYMENT_URL"
+          
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo } } = context;
+            github.rest.issues.createComment({
+              issue_number,
+              owner,
+              repo,
+              body: `✅ PR Preview deployed to: ${{ steps.deployment.outputs.url }}\n\n_Note: Server-side rendering is disabled in this preview build._`
+            });
