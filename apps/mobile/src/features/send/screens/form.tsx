@@ -13,7 +13,6 @@ import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
-import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
@@ -54,10 +53,9 @@ export function Form() {
               id: 'send_form.header_title',
               message: 'Send',
             })}
-            subtitle={i18n._({
+            subtitle={t({
               id: 'select_asset.header_subtitle',
-              message: '{subtitle}',
-              values: { subtitle: selectedAccount.name },
+              message: 'Send',
             })}
             leftElement={canGoBack() ? <HeaderBackButton onPress={goBack} /> : null}
             rightElement={<NetworkBadge />}

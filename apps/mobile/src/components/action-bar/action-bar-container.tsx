@@ -145,8 +145,10 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
         haptics="soft"
         testID={testID}
       >
-        {icon}
-        {label && <Text variant="label02">{label}</Text>}
+        <Box flexDirection="column" alignItems="center" gap="2">
+          {icon}
+          {label && <Text variant="label02">{label}</Text>}
+        </Box>
       </Pressable>
     </Box>
   );
@@ -182,14 +184,32 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
 
   return (
     <ActionBar ref={ref}>
-      <ActionBarButton onPress={() => sendSheetRef.current?.present()} icon={<PaperPlaneIcon />} />
-      <ActionBarButton onPress={() => receiveSheetRef.current?.present()} icon={<InboxIcon />} />
+      <ActionBarButton
+        onPress={() => sendSheetRef.current?.present()}
+        icon={<PaperPlaneIcon />}
+        label={t({
+          id: 'action_bar.send_label',
+          message: 'Send',
+        })}
+      />
+      <ActionBarButton
+        onPress={() => receiveSheetRef.current?.present()}
+        icon={<InboxIcon />}
+        label={t({
+          id: 'action_bar.receive_label',
+          message: 'Receive',
+        })}
+      />
       {releaseBrowserFeature && (
         <ActionBarButton
           onPress={() => {
             browserSheetRef.current?.present();
           }}
           icon={<BrowserIcon />}
+          label={t({
+            id: 'action_bar.browser_label',
+            message: 'Browse',
+          })}
         />
       )}
     </ActionBar>

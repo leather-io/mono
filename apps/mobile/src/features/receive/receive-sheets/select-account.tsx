@@ -26,6 +26,10 @@ export function SelectAccount() {
             id: 'select_account.header_title',
             message: 'Select account',
           })}
+          subtitle={t({
+            id: 'select_account.header_subtitle',
+            message: 'Receive',
+          })}
           rightElement={<NetworkBadge />}
         />
       }
