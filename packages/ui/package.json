@@ -120,11 +120,6 @@
     "dist-web",
     "dist-native"
   ],
-  "pnpm": {
-    "overrides": {
-      "@types/react:*": "18.2.79"
-    }
-  },
   "publishConfig": {
     "access": "public"
   }

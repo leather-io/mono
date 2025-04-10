@@ -322,7 +322,7 @@ importers:
         specifier: 3.0.7
         version: 3.0.7(expo@51.0.28)
       expo-updates:
-        specifier: ~0.25.28
+        specifier: 0.25.28
         version: 0.25.28(encoding@0.1.13)(expo@51.0.28)
       expo-web-browser:
         specifier: 13.0.3
