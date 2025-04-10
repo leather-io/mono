@@ -66,14 +66,17 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
     dispatch(userTogglesHideAccount({ accountId: account.id }));
   }
 
+  const pageTitle = t({
+    id: 'configure_account.header_title',
+    message: 'Configure account',
+  });
+
   return (
     <>
       <AnimatedHeaderScreenLayout
         rightHeaderElement={<NetworkBadge />}
-        title={t({
-          id: 'configure_account.header_title',
-          message: 'Configure account',
-        })}
+        title={pageTitle}
+        contentTitle={pageTitle}
       >
         <Box pb="3">
           <WalletLoader fingerprint={account.fingerprint} key={account.id}>

@@ -10,13 +10,15 @@ import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@lea
 import { GraduateCapIcon, MagicBookIcon, SupportIcon } from '@leather.io/ui/native';
 
 export default function SettingsHelpScreen() {
+  const pageTitle = t({
+    id: 'help.header_title',
+    message: 'Help',
+  });
   return (
     <AnimatedHeaderScreenLayout
       rightHeaderElement={<NetworkBadge />}
-      title={t({
-        id: 'help.header_title',
-        message: 'Help',
-      })}
+      title={pageTitle}
+      contentTitle={pageTitle}
     >
       <SettingsList>
         <SettingsListItem

@@ -17,6 +17,11 @@ export default function SecureYourWalletScreen() {
   const { createWallet } = useCreateWallet();
   const { callIfEnrolled } = useAuthentication();
 
+  const pageTitle = t({
+    id: 'secure_your_wallet.title',
+    message: 'Secure your wallet',
+  });
+
   return (
     <>
       <Box
@@ -27,10 +32,8 @@ export default function SecureYourWalletScreen() {
         <AnimatedHeaderScreenLayout
           // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
           // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
-          title={t({
-            id: 'secure_your_wallet.title',
-            message: 'Secure your wallet',
-          })}
+          title={pageTitle}
+          contentTitle={pageTitle}
         >
           <Box gap="3">
             <Text variant="label01">

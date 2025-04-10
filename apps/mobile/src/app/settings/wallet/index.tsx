@@ -23,14 +23,16 @@ export default function SettingsWalletScreen() {
   const hiddenAccountsLength = hiddenAccounts.list.length;
   const { list: walletsList } = useWallets();
   const hasWallets = walletsList.length > 0;
+  const pageTitle = t({
+    id: 'wallets.header_title',
+    message: 'Wallets',
+  });
   return (
     <>
       <AnimatedHeaderScreenLayout
         rightHeaderElement={<NetworkBadge />}
-        title={t({
-          id: 'wallets.header_title',
-          message: 'Wallets',
-        })}
+        title={pageTitle}
+        contentTitle={pageTitle}
       >
         {hasWallets ? (
           <>

@@ -58,14 +58,16 @@ export default function SettingsScreen() {
     });
   }
 
+  const pageTitle = t({
+    id: 'settings.header_title',
+    message: 'Settings',
+  });
   return (
     <>
       <AnimatedHeaderScreenLayout
         rightHeaderElement={<NetworkBadge />}
-        title={t({
-          id: 'settings.header_title',
-          message: 'Settings',
-        })}
+        title={pageTitle}
+        contentTitle={pageTitle}
       >
         <SettingsList>
           <SettingsListItem

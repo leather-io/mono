@@ -17,15 +17,14 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
 
   if (!mnemonic) return <Box flex={1} backgroundColor="ink.background-primary" />;
 
-  // TODO: get mnemonic key of wallet
+  const pageTitle = t({
+    id: 'view_secret_key.title',
+    message: 'SECRET KEY',
+  });
+
   return (
     <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
-      <AnimatedHeaderScreenLayout
-        title={t({
-          id: 'view_secret_key.title',
-          message: 'SECRET KEY',
-        })}
-      >
+      <AnimatedHeaderScreenLayout title={pageTitle} contentTitle={pageTitle}>
         <Box gap="3">
           <Text variant="label01">
             {t({

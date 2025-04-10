@@ -7,8 +7,6 @@ import { deserializeAccountId } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 import { useLocalSearchParams } from 'expo-router';
 
-import { Text } from '@leather.io/ui/native';
-
 import { configureAccountParamsSchema } from './index';
 
 export default function BalancesScreen() {
@@ -19,15 +17,16 @@ export default function BalancesScreen() {
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
   // TODO LEA-1726: Handle loading and error states
   if (totalBalance.state !== 'success') return;
+  const pageTitle = t({
+    id: 'balances.header_title',
+    message: 'My tokens',
+  });
   return (
     <AnimatedHeaderScreenLayout
       contentContainerStyles={{ paddingHorizontal: 0 }}
       rightHeaderElement={<NetworkBadge />}
-      title={
-        <Text variant="label01" color="ink.text-primary">
-          {t({ id: 'balances.header_title', message: 'My tokens' })}
-        </Text>
-      }
+      title={pageTitle}
+      contentTitle={pageTitle}
       subtitle={<Balance balance={totalBalance.value} variant="heading03" />}
       isHeaderReversible={true}
     >
