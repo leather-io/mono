@@ -1,0 +1,16 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index 1567b318b0b4ae57f4a96dea19bebf920d5254f6..0000000000000000000000000000000000000000
+diff --git a/android/src/main/java/com/segmentanalyticsreactnative/AnalyticsReactNativeModule.kt b/android/src/main/java/com/segmentanalyticsreactnative/AnalyticsReactNativeModule.kt
+index a6769bba57fc84816e36bb937371854f89533018..2fe3504ae24e42f567d002fefbcb35c80ec0185f 100644
+--- a/android/src/main/java/com/segmentanalyticsreactnative/AnalyticsReactNativeModule.kt
++++ b/android/src/main/java/com/segmentanalyticsreactnative/AnalyticsReactNativeModule.kt
+@@ -125,7 +125,7 @@ class AnalyticsReactNativeModule : ReactContextBaseJavaModule, ActivityEventList
+   @ReactMethod
+   fun getContextInfo(config: ReadableMap, promise: Promise) {
+     val appName: String = reactApplicationContext.applicationInfo.loadLabel(reactApplicationContext.packageManager).toString()
+-    val appVersion: String = pInfo.versionName
++    val appVersion: String? = pInfo.versionName
+     val buildNumber = getBuildNumber()
+     val bundleId = reactApplicationContext.packageName
+ 
