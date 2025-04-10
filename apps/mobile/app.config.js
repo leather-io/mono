@@ -67,6 +67,24 @@ export default () => {
             'This app uses the camera to scan QR codes for sending transactions.',
         },
         icon: './src/assets/icon.png',
+        privacyManifests: {
+          NSPrivacyAccessedAPITypes: [
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
+              NSPrivacyAccessedAPITypeReasons: ['C617.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPIType',
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategorySystemBootTime',
+              NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+            },
+          ],
+          NSPrivacyCollectedDataTypes: [],
+          NSPrivacyTracking: false,
+        },
         splash: {
           image: './src/assets/light-mode-splash.png',
           resizeMode: 'contain',
