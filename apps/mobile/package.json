@@ -15,7 +15,7 @@
     "crowdin:sync:sources": "crowdin push",
     "crowdin:sync:translations": "crowdin pull",
     "eas-build-post-install": "cd ../.. && pnpm install && pnpm build",
-    "eas-build-pre-install": "corepack enable",
+    "eas-build-pre-install": "corepack enable && echo node-linker=hoisted >> ../../.npmrc",
     "firebase:android": "firebase login && firebase apps:sdkconfig ANDROID --project leather-b5081 > ./google-services.json",
     "firebase:ios": "firebase login && firebase apps:sdkconfig IOS --project leather-b5081 > ./GoogleService-Info.plist",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
