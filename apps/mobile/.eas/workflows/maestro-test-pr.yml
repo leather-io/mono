@@ -1,0 +1,97 @@
+name: Maestro Tests - PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  initialize:
+    steps:
+      - uses: eas/checkout
+
+  fingerprint:
+    needs: [initialize]
+    name: Fingerprint
+    type: fingerprint
+
+  run_eas_update:
+    needs: [initialize]
+    name: EAS update
+    type: update
+    params:
+      platform: all
+      channel: maestro # A specific channel only for CI/CD to use.
+
+  get_android_build:
+    name: Check for existing android build
+    needs: [fingerprint]
+    type: get-build
+    params:
+      fingerprint_hash: ${{ needs.fingerprint.outputs.android_fingerprint_hash }}
+      profile: maestro
+
+  get_ios_build:
+    name: Check for existing ios build
+    needs: [fingerprint]
+    type: get-build
+    params:
+      fingerprint_hash: ${{ needs.fingerprint.outputs.ios_fingerprint_hash }}
+      profile: maestro
+
+  build_android:
+    name: Build Android
+    needs: [get_android_build]
+    if: ${{ !needs.get_android_build.outputs.build_id }}
+    type: build
+    params:
+      platform: android
+      profile: maestro
+
+  build_ios:
+    name: Build iOS
+    needs: [get_ios_build]
+    if: ${{ !needs.get_ios_build.outputs.build_id }}
+    type: build
+    params:
+      platform: ios
+      profile: maestro
+
+  maestro_test_android:
+    name: Maestro Test Android
+    type: maestro
+    needs: [build_android]
+    environment: development
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
+
+  maestro_test_ios:
+    name: Maestro Test iOS
+    type: maestro
+    needs: [build_ios]
+    environment: development
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
+
+  maestro_test_ios_update:
+    name: Maestro Test iOS
+    type: maestro
+    needs: [get_ios_build, run_eas_update]
+    environment: development
+    params:
+      build_id: ${{ needs.get_ios_build.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
+
+  maestro_test_android_update:
+    name: Maestro Test Android
+    type: maestro
+    needs: [get_android_build, run_eas_update]
+    environment: development
+    params:
+      build_id: ${{ needs.get_android_build.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
