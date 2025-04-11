@@ -5,34 +5,9 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "development": {
+    "base": {
       "node": "20.11.0",
       "pnpm": "10.4.1",
-      "channel": "development",
-      "distribution": "internal",
-      "developmentClient": true,
-      "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      }
-    },
-    "staging": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "distribution": "internal",
-      "channel": "staging",
-      "autoIncrement": true,
-      "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      }
-    },
-    "production": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "channel": "production",
-      "distribution": "store",
-      "autoIncrement": true,
       "ios": {
         "image": "latest",
         "cocoapods": "1.15.2"
@@ -41,35 +16,42 @@
         "image": "latest"
       }
     },
-    "maestro": {
+    "development": {
+      "extends": "base",
+      "channel": "development",
+      "distribution": "internal",
+      "developmentClient": true
+    },
+    "staging": {
+      "extends": "base",
       "node": "20.11.0",
       "pnpm": "10.4.1",
+      "distribution": "internal",
+      "channel": "staging",
+      "autoIncrement": true
+    },
+    "production": {
+      "extends": "base",
+      "channel": "production",
+      "distribution": "store",
+      "autoIncrement": true
+    },
+    "maestro": {
+      "extends": "base",
       "environment": "production",
       "withoutCredentials": true,
       "channel": "maestro",
       "distribution": "internal",
       "ios": {
-        "simulator": true,
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      },
-      "android": {
-        "buildType": "apk",
-        "image": "latest"
+        "simulator": true
       }
     },
     "preview": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
+      "extends": "base",
       "distribution": "internal",
       "channel": "preview",
       "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
+        "simulator": true
       }
     }
   },
