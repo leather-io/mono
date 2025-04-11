@@ -52,6 +52,10 @@ export function useNewRecipientFlowFlag() {
   return useBoolVariation('advanced_recipient_field', false);
 }
 
+export function useRunesFlag() {
+  return useBoolVariation('release_runes_feature', false);
+}
+
 export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }
