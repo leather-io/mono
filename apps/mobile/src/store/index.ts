@@ -1,4 +1,5 @@
 import { isProduction } from '@/shared/environment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import devToolsEnhancer from 'redux-devtools-expo-dev-plugin';
 import {
@@ -15,13 +16,14 @@ import z from 'zod';
 
 import { accountEntitySchema, accountsSlice } from './accounts/accounts.write';
 import { appsSlice } from './apps/apps.write';
+import { resetWallet } from './global-action';
 import { bitcoinKeychainSlice } from './keychains/bitcoin/bitcoin-keychains.write';
 import { bitcoinKeychainStoreSchema } from './keychains/bitcoin/utils';
 import { stacksKeychainSlice } from './keychains/stacks/stacks-keychains.write';
 import { stacksKeychainStoreSchema } from './keychains/stacks/utils';
 import { settingsSlice } from './settings/settings.write';
 import { settingsSchema } from './settings/utils';
-import { persistConfig } from './storage-persistors';
+import { deleteAllMnemonics, persistConfig } from './storage-persistors';
 import { walletEntitySchema } from './wallets/utils';
 import { walletSlice } from './wallets/wallets.write';
 
@@ -65,3 +67,9 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+export function clearAllPersistedStorage(fingerprints: string[]) {
+  void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);
+  store.dispatch(resetWallet());
+}
+export type StoreDispatch = typeof store.dispatch;

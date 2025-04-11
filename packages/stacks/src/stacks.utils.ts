@@ -144,7 +144,7 @@ export function getStacksAssetStringParts(identifier: string): {
   contractAssetName: string;
   contractName: string;
 } {
-  if (!identifier.includes('.') || !identifier.includes('::')) {
+  if (!identifier.includes('.') && !identifier.includes('::')) {
     return {
       contractAddress: identifier,
       contractAssetName: identifier,

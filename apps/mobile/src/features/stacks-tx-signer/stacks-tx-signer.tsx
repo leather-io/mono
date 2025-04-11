@@ -2,26 +2,31 @@ import { useState } from 'react';
 
 import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
+import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
+import { ApproverButtons } from '@/features/approver/components/approver-buttons';
+import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
+import { StacksOutcome } from '@/features/approver/components/stacks-outcome';
+import { MemoSection } from '@/features/approver/memo.section';
+import { NonceSection } from '@/features/approver/nonce.section';
+import { StacksFeesSection } from '@/features/approver/stacks-fees.section';
+import {
+  ApproverState,
+  assertTokenTransferPayload,
+  getTotalSpendMoney,
+  getTxRecipient,
+  useTxOptions,
+} from '@/features/approver/utils';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
+import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { t } from '@lingui/macro';
-import { deserializeTransaction } from '@stacks/transactions';
+import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
 import { Approver, Box, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
-
-import { ApproverAccountCard } from '../approver/components/approver-account-card';
-import { ApproverButtons } from '../approver/components/approver-buttons';
-import { OutcomeAddressesCard } from '../approver/components/outcome-addresses-card';
-import { StacksOutcome } from '../approver/components/stacks-outcome';
-import { MemoSection } from '../approver/memo.section';
-import { NonceSection } from '../approver/nonce.section';
-import { StacksFeesSection } from '../approver/stacks-fees.section';
-import { ApproverState, getFormReviewTxSummary, useTxOptions } from '../approver/utils';
-import { useBroadcastStxTransaction } from './use-broadcast-stx-transaction';
 
 interface StacksTxSignerProps {
   txHex: string;
@@ -39,15 +44,17 @@ export function StacksTxSigner({
   const stacksNetwork = useNetworkPreferenceStacksNetwork();
   const [txHex, setTxHex] = useState(_txHex);
   const tx = deserializeTransaction(txHex);
+
   const { displayToast } = useToastContext();
 
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 
   const { data: stxMarketData } = useStxMarketDataQuery();
-  const { recipient, totalSpendMoney } = getFormReviewTxSummary({
-    tx,
-    symbol: 'STX',
-  });
+
+  assertTokenTransferPayload(tx.payload);
+
+  const recipient = getTxRecipient(tx.payload);
+  const totalSpendMoney = getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee);
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const signer = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
   if (!signer) throw new Error('No signer found');
@@ -110,9 +117,11 @@ export function StacksTxSigner({
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
-          <StacksFeesSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} />
-          <NonceSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} />
-          <MemoSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} isMemoEditable />
+          <StacksFeesSection txHex={txHex} setTxHex={setTxHex} />
+          <NonceSection txHex={txHex} setTxHex={setTxHex} />
+          {tx.payload.payloadType === PayloadType.TokenTransfer && (
+            <MemoSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} isMemoEditable />
+          )}
         </Approver.Container>
         <Approver.Footer>
           <Box flexDirection="row" alignItems="center" justifyContent="space-between">

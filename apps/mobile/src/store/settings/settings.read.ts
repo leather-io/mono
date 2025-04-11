@@ -152,7 +152,7 @@ function getStacksNetworkFromNetworkConfig(networkConfig: NetworkConfiguration) 
   };
 }
 
-export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName) {
+export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName): StacksNetwork {
   const networkConfig = getNetworkFromNetworkName(stacksNetworkName);
   return getStacksNetworkFromNetworkConfig(networkConfig);
 }

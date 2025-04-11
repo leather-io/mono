@@ -4,48 +4,26 @@ import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
 import { useToastContext } from '@/components/toast/toast-context';
 import { t } from '@lingui/macro';
-import { PayloadType, deserializeTransaction } from '@stacks/transactions';
+import { deserializeTransaction } from '@stacks/transactions';
 
-import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
-import { createMoney } from '@leather.io/utils';
-
-import { TxOptions } from '../utils';
 
 interface NonceSheetProps {
   sheetRef: RefObject<SheetRef>;
   nonce: string;
   txHex: string;
   setTxHex(txHex: string): void;
-
-  txOptions: TxOptions;
 }
-export function NonceSheet({
-  sheetRef,
-  nonce: _nonce,
-  txHex,
-  setTxHex,
-  txOptions,
-}: NonceSheetProps) {
+export function NonceSheet({ sheetRef, nonce: _nonce, txHex, setTxHex }: NonceSheetProps) {
   const [nonce, setNonce] = useState(_nonce);
   const tx = deserializeTransaction(txHex);
   const { displayToast } = useToastContext();
 
-  async function onChangeNonce(nonce: string) {
+  function onChangeNonce(nonce: string) {
     try {
-      if (tx.payload.payloadType === PayloadType.TokenTransfer) {
-        const newTx = await generateStacksUnsignedTransaction({
-          txType: TransactionTypes.StxTokenTransfer,
-          amount: createMoney(tx.payload.amount, 'STX'),
-          fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
-          memo: tx.payload.memo.content,
-          nonce: Number(nonce),
-          recipient: tx.payload.recipient,
-          ...txOptions,
-        });
-        const newTxHex = newTx.serialize();
-        setTxHex(newTxHex);
-      }
+      tx.setNonce(Number(nonce));
+      const newTxHex = tx.serialize();
+      setTxHex(newTxHex);
     } catch {
       displayToast({
         title: t({
@@ -85,7 +63,7 @@ export function NonceSheet({
         buttonState="default"
         onPress={() => {
           sheetRef.current?.close();
-          void onChangeNonce(nonce);
+          onChangeNonce(nonce);
         }}
         title={t({
           id: 'approver.add_nonce.confirm_button',

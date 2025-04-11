@@ -1,21 +1,13 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import z from 'zod';
 
 import { AccountStore } from './accounts/utils';
-import { resetWallet } from './global-action';
-import { RootState, store } from './index';
-import { deleteAllMnemonics } from './storage-persistors';
+import type { RootState, StoreDispatch } from './index';
 
 export function filterObjectKeys(object: object, keys: string[]) {
   return Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
-}
-
-export function clearAllPersistedStorage(fingerprints: string[]) {
-  void Promise.all([deleteAllMnemonics(fingerprints), AsyncStorage.clear()]);
-  store.dispatch(resetWallet());
 }
 
 export type AppThunk<ReturnType = void> = ThunkAction<
@@ -25,7 +17,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   UnknownAction
 >;
 
-type AppDispatch = typeof store.dispatch & ((action: AppThunk) => void);
+type AppDispatch = StoreDispatch & ((action: AppThunk) => void);
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 

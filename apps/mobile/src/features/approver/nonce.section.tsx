@@ -6,14 +6,12 @@ import { Approver, SheetRef } from '@leather.io/ui/native';
 
 import { NonceCard } from './components/nonce-card';
 import { NonceSheet } from './components/nonce-sheet';
-import { TxOptions } from './utils';
 
 interface NonceSectionProps {
   txHex: string;
   setTxHex(txHex: string): void;
-  txOptions: TxOptions;
 }
-export function NonceSection({ txHex, setTxHex, txOptions }: NonceSectionProps) {
+export function NonceSection({ txHex, setTxHex }: NonceSectionProps) {
   const tx = deserializeTransaction(txHex);
   const nonceSheetRef = useRef<SheetRef>(null);
 
@@ -32,7 +30,6 @@ export function NonceSection({ txHex, setTxHex, txOptions }: NonceSectionProps) 
         nonce={tx.auth.spendingCondition.nonce.toString()}
         txHex={txHex}
         setTxHex={setTxHex}
-        txOptions={txOptions}
       />
     </>
   );

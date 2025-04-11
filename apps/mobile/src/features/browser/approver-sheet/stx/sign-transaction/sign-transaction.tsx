@@ -1,15 +1,11 @@
 import { useState } from 'react';
 
+import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
-import {
-  getStacksNetworkFromName,
-  useNetworkPreferenceStacksNetwork,
-} from '@/store/settings/settings.read';
-import { destructAccountIdentifier } from '@/store/utils';
-import { StacksNetworks } from '@stacks/network';
+import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { deserializeTransaction } from '@stacks/transactions';
 
 import {
@@ -19,7 +15,7 @@ import {
   stxSignTransaction,
 } from '@leather.io/rpc';
 
-import { SignTransactionApproverLayout } from './sign-transaction.layout';
+import { getNormalizedParams } from './utils';
 
 interface SignTransactionApproverProps {
   app: App;
@@ -36,59 +32,40 @@ export function SignTransactionApprover({
   sendResult,
 }: SignTransactionApproverProps) {
   const network = useNetworkPreferenceStacksNetwork();
-  function getNetwork() {
-    if (!message.params.network) {
-      return network;
-    }
-    const stacksNetworkName = StacksNetworks.find(n => n === message.params.network);
-    if (stacksNetworkName) {
-      return getStacksNetworkFromName(stacksNetworkName);
-    }
-    throw new Error('Wrong network');
-  }
+  const normalizedParams = getNormalizedParams(message, app);
 
-  function getDefaultAccountId() {
-    if (!('accountId' in app)) throw new Error('We should always have an accountId here');
-
-    return app.accountId;
-  }
-  function getTxHex() {
-    if ('txHex' in message.params) {
-      return message.params.txHex;
-    }
-    return message.params.transaction;
-  }
   const { list: accounts } = useAccounts();
-  const [txHex, setTxHex] = useState(getTxHex());
-  const defaultAccountId = getDefaultAccountId();
-  const { fingerprint, accountIndex } = destructAccountIdentifier(defaultAccountId);
-  const signer = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
+  const [txHex, setTxHex] = useState(normalizedParams.txHex);
+  const signer = useStacksSigners().fromAccountId(normalizedParams.accountId)[0];
   if (!signer) throw new Error('No signer found');
 
-  const txOptions = getTxOptions(signer, getNetwork());
+  const txOptions = getTxOptions(signer, network);
 
   const tx = deserializeTransaction(txHex);
 
+  async function onApprove() {
+    if (!signer) throw new Error('No signer found');
+    const signedTx = await signer?.sign(tx);
+
+    const response = createRpcSuccessResponse('stx_signTransaction', {
+      id: message.id,
+      result: {
+        txHex: signedTx.serialize(),
+        transaction: signedTx.serialize(),
+      },
+    });
+    sendResult(response);
+  }
+
   return (
-    <SignTransactionApproverLayout
+    <BaseStxTxApproverLayout
       txHex={txHex}
       setTxHex={setTxHex}
       txOptions={txOptions}
       onCloseApprover={closeApprover}
-      accountId={defaultAccountId}
+      accountId={normalizedParams.accountId}
       accounts={accounts}
-      onApprove={async () => {
-        const signedTx = await signer?.sign(tx);
-
-        const response = createRpcSuccessResponse('stx_signTransaction', {
-          id: message.id,
-          result: {
-            txHex: signedTx.serialize(),
-            transaction: signedTx.serialize(),
-          },
-        });
-        sendResult(response);
-      }}
+      onApprove={onApprove}
     />
   );
 }

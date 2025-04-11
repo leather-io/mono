@@ -5,7 +5,7 @@ export * from './stacks.utils';
 export * from './transactions/generate-unsigned-transaction';
 export * from './transactions/post-condition.utils';
 export * from './transactions/transaction.types';
-
+export * from './transactions/get-error-message';
 export * from './validation/stacks-error';
 export * from './validation/address-validation';
 export * from './validation/memo-validation';

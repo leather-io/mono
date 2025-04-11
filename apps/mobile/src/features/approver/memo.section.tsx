@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 
-import { PayloadType, deserializeTransaction } from '@stacks/transactions';
+import { deserializeTransaction } from '@stacks/transactions';
 
 import { Approver, SheetRef } from '@leather.io/ui/native';
 
 import { MemoCard } from './components/memo-card';
 import { MemoSheet } from './components/memo-sheet';
-import { TxOptions } from './utils';
+import { TxOptions, assertTokenTransferPayload } from './utils';
 
 interface MemoSectionProps {
   txHex: string;
@@ -18,14 +18,14 @@ interface MemoSectionProps {
 export function MemoSection({ txHex, setTxHex, txOptions, isMemoEditable }: MemoSectionProps) {
   const tx = deserializeTransaction(txHex);
   const memoSheetRef = useRef<SheetRef>(null);
-
-  if (tx.payload.payloadType !== PayloadType.TokenTransfer) return null;
+  assertTokenTransferPayload(tx.payload);
+  const { memo } = tx.payload;
 
   return (
     <>
       <Approver.Section>
         <MemoCard
-          memo={tx.payload.memo.content}
+          memo={memo.content}
           isEditable={isMemoEditable}
           onPress={() => {
             memoSheetRef.current?.present();
@@ -34,7 +34,7 @@ export function MemoSection({ txHex, setTxHex, txOptions, isMemoEditable }: Memo
       </Approver.Section>
       <MemoSheet
         sheetRef={memoSheetRef}
-        memo={tx.payload.memo.content}
+        memo={memo.content}
         txHex={txHex}
         setTxHex={setTxHex}
         txOptions={txOptions}
