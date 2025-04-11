@@ -701,6 +701,19 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.28.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.1...@leather.io/mobile-v2.28.2) (2025-04-11)
+
+
+### Bug Fixes
+
+* **mobile:** add new key for Stacks layer 2, ref PRO-23 ([177a9c5](https://github.com/leather-io/mono/commit/177a9c54f7a0e1f52a1ef026c6aab0edd90dd30f))
+* **mobile:** add text labels to action bar and sheet headers, ref PRO-13 ([89d69c3](https://github.com/leather-io/mono/commit/89d69c3ddebcac5b6c03f71ed0e5f4d448780a37))
+* **mobile:** allow users to access account settings from account page, ref PRO-17 ([2362f9f](https://github.com/leather-io/mono/commit/2362f9f3c57cb9ffdbffe8fbca1a8ffe22906be0))
+* **mobile:** change backup text to remove collectibles, ref PRO-24 ([5c54d2d](https://github.com/leather-io/mono/commit/5c54d2d3cda50c051dc0ef7007e8f8f901c67322))
+* **mobile:** fix animated headers, ref LEA-2461 ([c93b2d5](https://github.com/leather-io/mono/commit/c93b2d5422f1834961852fa2cfe8765d76fa1fce))
+* **mobile:** go to account page on press of account card on settings ([cdeb21d](https://github.com/leather-io/mono/commit/cdeb21d7e1ab23d35ae52b597073455a92eac331))
+* **mobile:** show home activity icon in all builds, ref PRO-25 ([0bd34c3](https://github.com/leather-io/mono/commit/0bd34c3c5a50782cb74cc9e6ffb667820dd46953))
+
 ## [2.28.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.0...@leather.io/mobile-v2.28.1) (2025-04-10)
 
 
