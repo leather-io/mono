@@ -3,6 +3,11 @@ import { Form, FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack } from 'leather-styles/jsx';
+import {
+  useStxAvailableUnlockedBalance,
+  useStxCryptoAssetBalance,
+} from '~/queries/balance/account-balance.hooks';
+import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
 import { ChoosePoolingAmount } from './components/choose-pooling-amount';
@@ -20,6 +25,15 @@ const initialStackingFormValues: Partial<StackingLiquidFormSchema> = {
 
 export function StartLiquidStacking({ protocolName }: StartLiquidStackingProps) {
   const { networkPreference } = useStacksNetwork();
+
+  const { stacksAccount: stxAddress } = useLeatherConnect();
+
+  if (!stxAddress) throw new Error('No stx address available');
+
+  const {
+    filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
+  } = useStxCryptoAssetBalance(stxAddress.address);
+  const totalAvailableBalance = useStxAvailableUnlockedBalance(stxAddress.address);
 
   const schema = useMemo(
     () =>
@@ -41,7 +55,10 @@ export function StartLiquidStacking({ protocolName }: StartLiquidStackingProps) 
         <Stack gap="space.07">
           <Stack gap="space.02">
             <StackingFormItemTitle title="Amount" />
-            <ChoosePoolingAmount />
+            <ChoosePoolingAmount
+              amount={totalAvailableBalance.amount}
+              isLoading={totalAvailableBalanceIsLoading}
+            />
           </Stack>
         </Stack>
       </Form>

@@ -2,15 +2,24 @@ import { css } from 'leather-styles/css';
 import { GridProps } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 
-interface SbtcProtocolRewardGridLayoutProps extends GridProps {
+interface StackingInfoGridLayoutProps extends GridProps {
   primaryCell: React.ReactNode;
-  cells: [React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode];
+  cells: [
+    React.ReactNode,
+    React.ReactNode,
+    React.ReactNode,
+    React.ReactNode,
+    React.ReactNode,
+    React.ReactNode,
+  ];
+  bottomCells?: [React.ReactNode, React.ReactNode];
 }
-export function SbtcProtocolRewardGridLayout({
+export function StackingInfoGridLayout({
   primaryCell,
   cells,
+  bottomCells,
   ...props
-}: SbtcProtocolRewardGridLayoutProps) {
+}: StackingInfoGridLayoutProps) {
   return (
     <InfoGrid
       width="100%"
@@ -33,6 +42,14 @@ export function SbtcProtocolRewardGridLayout({
       <InfoGrid.Cell gridColumnStart={[2, 2, 3]} gridRowStart={[4, 4, 2]}>
         {cells[3]}
       </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumnStart={[2, 2, 4]} gridRowStart={[5, 5, 1]}>
+        {cells[4]}
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumnStart={[2, 2, 4]} gridRowStart={[6, 6, 2]}>
+        {cells[5]}
+      </InfoGrid.Cell>
+      {bottomCells?.[0] && <InfoGrid.Cell>{bottomCells[0]}</InfoGrid.Cell>}
+      {bottomCells?.[1] && <InfoGrid.Cell>{bottomCells[1]}</InfoGrid.Cell>}
     </InfoGrid>
   );
 }

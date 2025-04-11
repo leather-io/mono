@@ -6,13 +6,9 @@ import {
 } from '~/features/stacking/utils/types-preset-protocols';
 import { LiquidStacking } from '~/pages/stacking/liquid-stacking';
 
-import { delay } from '@leather.io/utils';
-
 import { Route } from './+types/liquid-stacking';
 
-export async function loader({ params }: Route.LoaderArgs) {
-  await delay(400);
-
+export function loader({ params }: Route.LoaderArgs) {
   const { success, data: protocolSlug } = protocolSlugSchema.safeParse(params.slug);
 
   if (!success) {
