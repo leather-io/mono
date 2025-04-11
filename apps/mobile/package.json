@@ -8,6 +8,8 @@
     "android": "pnpm run firebase:android && expo run:android",
     "android:release": "pnpm run firebase:android && expo run:android --variant release",
     "build": "tsc --build",
+    "postinstall": "turbo build --filter=@leather.io/mobile",
+    "build:deps": "turbo build --filter=@leather.io/mobile",
     "build:watch": "tsc --build --watch --preserveWatchOutput",
     "check:cocoapods": "sh scripts/enforce-cocoapods-version.sh",
     "crowdin": "crowdin",
