@@ -11,15 +11,15 @@ on:
 jobs:
   fingerprint:
     name: Fingerprint
-    needs: [initialize]
     type: fingerprint
 
   run_eas_update:
     name: EAS update
-    needs: [initialize]
     steps:
       - uses: eas/checkout
-      - run: cd ../.. && pnpm i && pnpm build:packages && cd apps/mobile
+      - run: cd ../..
+      - run: pnpm i && pnpm build:packages
+      - run: cd apps/mobile
       - run: eas update --platform all --channel maestro
 
   get_android_build:
