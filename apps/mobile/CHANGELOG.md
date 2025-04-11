@@ -701,6 +701,13 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.28.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.2...@leather.io/mobile-v2.28.3) (2025-04-11)
+
+
+### Bug Fixes
+
+* **mobile:** feature flag runes pending long token handling, ref DES-28 PRO-14 ([944b663](https://github.com/leather-io/mono/commit/944b6633c66efe56d7489970efb5fcdbd769924f))
+
 ## [2.28.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.1...@leather.io/mobile-v2.28.2) (2025-04-11)
 
 
