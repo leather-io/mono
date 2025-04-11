@@ -13,13 +13,12 @@ interface NavItemProps {
   children: ReactNode;
 }
 export function NavItem({ children, icon, href }: NavItemProps) {
-  return (
-    <StyledNavLink
-      to={href}
+  const content = (
+    <Flag
+      spacing="space.04"
+      img={icon}
       userSelect="none"
-      prefetch="intent"
       role="link"
-      display="block"
       textStyle="label.02"
       pl="space.04"
       py="space.04"
@@ -27,9 +26,19 @@ export function NavItem({ children, icon, href }: NavItemProps) {
       _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ textDecoration: 'underline' }}
     >
-      <Flag spacing="space.04" img={icon}>
-        {children}
-      </Flag>
+      {children}
+    </Flag>
+  );
+  if (href.startsWith('https')) {
+    return (
+      <a href={href} rel="noopener noreferrer">
+        {content}
+      </a>
+    );
+  }
+  return (
+    <StyledNavLink to={href} prefetch="intent">
+      {content}
     </StyledNavLink>
   );
 }
