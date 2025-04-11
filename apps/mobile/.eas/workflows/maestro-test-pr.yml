@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: eas/checkout
       - uses: eas/install_node_modules
-      - run: cd ../.. && pnpm i && pnpm build && popd
+      - run: cd ../.. && pnpm i && pnpm build:packages && cd apps/mobile
 
   fingerprint:
     needs: [initialize]

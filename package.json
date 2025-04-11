@@ -6,7 +6,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "turbo run build --filter=!./apps/",
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter=\"./packages/*\"",
     "build:watch": "turbo run build:watch",
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
