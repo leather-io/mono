@@ -12,6 +12,7 @@ jobs:
   initialize:
     steps:
       - uses: eas/checkout
+      - uses: eas/install_node_modules
       - run: cd ../.. && pnpm i && pnpm build && popd
 
   fingerprint:
