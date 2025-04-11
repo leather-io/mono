@@ -12,6 +12,7 @@ jobs:
   initialize:
     steps:
       - uses: eas/checkout
+      - run: cd ../.. && pnpm i && pnpm build && popd
 
   fingerprint:
     needs: [initialize]
@@ -21,12 +22,10 @@ jobs:
   run_eas_update:
     needs: [initialize]
     name: EAS update
-    steps:
-      - run: cd ../.. && pnpm build && popd
-      - uses: eas/update
-        with:
-          platform: all
-          channel: maestro
+    type: update
+    params:
+      platform: all
+      channel: maestro
 
   get_android_build:
     name: Check for existing android build
