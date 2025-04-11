@@ -3,73 +3,84 @@ import { forwardRef } from 'react';
 import * as RadixAccordion from '@radix-ui/react-accordion';
 import { css } from 'leather-styles/css';
 
-import { ChevronDownIcon } from '../../icons/index.web';
-
-const accordionTriggerStyles = css({
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  width: '100%',
-  py: 'space.04',
-  textStyle: 'label.02',
-  transition: 'all 0.2s',
-  "&[data-state='open']": {
-    '& > .accordion-icon': {
-      transform: 'rotate(180deg)',
-    },
-  },
-  '& > .accordion-icon': {
-    transition: 'transform 0.2s',
-  },
-
-  _hover: {
-    color: 'ink.action-primary-hover',
-  },
-});
-
-const Trigger: typeof RadixAccordion.Trigger = forwardRef((props, ref) => (
-  <RadixAccordion.Header>
-    <RadixAccordion.Trigger className={accordionTriggerStyles} ref={ref} {...props}>
-      {props.children}
-      <ChevronDownIcon variant="small" className="accordion-icon" aria-hidden />
-    </RadixAccordion.Trigger>
-  </RadixAccordion.Header>
+const Root = forwardRef<HTMLDivElement, RadixAccordion.AccordionSingleProps>((props, ref) => (
+  <RadixAccordion.Root ref={ref} className={css({ textStyle: 'label.02' })} {...props}>
+    {props.children}
+  </RadixAccordion.Root>
 ));
 
-Trigger.displayName = 'Accordion.Trigger';
+Root.displayName = 'Accordion';
 
-const accordionContentStyles = css({
-  willChange: 'max-height',
-  py: 'space.03',
-  overflowY: 'hidden',
-  "&[data-state='open']": {
-    animation: 'slideDown 300ms ease-in',
-  },
-  "&[data-state='closed']": {
-    animation: 'slideUp 150ms',
-  },
-});
-
-const Content: typeof RadixAccordion.Content = forwardRef(({ className, ...props }, ref) => (
-  <RadixAccordion.Content
-    className={`${accordionContentStyles} ${className}`}
+export const Item = forwardRef<HTMLDivElement, RadixAccordion.AccordionItemProps>((props, ref) => (
+  <RadixAccordion.Item
     ref={ref}
+    {...props}
+    className={css({
+      '&[data-state="open"] + &[data-state="closed"]': {
+        borderTop: 'default',
+      },
+    })}
+  />
+));
+Item.displayName = 'AccordionItem';
+
+const Trigger = forwardRef<HTMLButtonElement, RadixAccordion.AccordionTriggerProps>(
+  (props, ref) => (
+    <RadixAccordion.Header>
+      <RadixAccordion.Trigger
+        ref={ref}
+        className={css({
+          textAlign: 'left',
+          width: '100%',
+          position: 'relative',
+          py: 'space.02',
+          cursor: 'pointer',
+          pl: 'space.08',
+          _before: {
+            position: 'absolute',
+            left: 0,
+          },
+          '&[data-state="open"]': {
+            _before: {
+              content: '"+"',
+            },
+          },
+          '&[data-state="closed"]': {
+            borderBottom: 'default',
+            _before: {
+              content: '"−"',
+            },
+          },
+        })}
+        {...props}
+      >
+        {props.children}
+      </RadixAccordion.Trigger>
+    </RadixAccordion.Header>
+  )
+);
+
+Trigger.displayName = 'AccordionTrigger';
+
+const Content = forwardRef<HTMLDivElement, RadixAccordion.AccordionContentProps>((props, ref) => (
+  <RadixAccordion.Content
+    ref={ref}
+    className={css({
+      overflow: 'hidden',
+      color: 'ink.text-subdued',
+      pl: 'space.08',
+      pt: 'space.01',
+      pb: 'space.05',
+    })}
     {...props}
   />
 ));
 
-Content.displayName = 'Accordion.Content';
-
-const Item: typeof RadixAccordion.Item = forwardRef((props, ref) => (
-  <RadixAccordion.Item ref={ref} {...props} />
-));
-
-Item.displayName = 'Accordion.Item';
+Content.displayName = 'AccordionContent';
 
 export const Accordion = {
-  Root: RadixAccordion.Root,
+  Root,
   Item,
-  Content,
   Trigger,
+  Content,
 };
