@@ -128,6 +128,15 @@ describe(getStacksAssetStringParts.name, () => {
     });
   });
 
+  test('should return parts of a fully qualified name (no asset name)', () => {
+    const result = getStacksAssetStringParts('SP1234.contract-name');
+    expect(result).toEqual({
+      contractAddress: 'SP1234',
+      contractAssetName: 'SP1234.contract-name',
+      contractName: 'contract-name',
+    });
+  });
+
   test('should return the same string for all parts if it does not contain . or ::', () => {
     const result = getStacksAssetStringParts('contract-name');
     expect(result).toEqual({

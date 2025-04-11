@@ -15,6 +15,7 @@ import {
 import { StacksSigner } from '@leather.io/stacks';
 import { isDefined } from '@leather.io/utils';
 
+import { destructAccountIdentifier } from '../utils';
 import { useBitcoinAccounts } from './bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from './stacks/stacks-keychains.read';
 
@@ -87,10 +88,16 @@ export function descriptorKeychainSelectors<T extends WithDescriptor>(
     return fromFingerprint(fingerprint).filter(filterKeychainsByAccountFn(accountIndex));
   }
 
+  function fromAccountId(accountId: string) {
+    const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
+    return fromAccountIndex(fingerprint, accountIndex);
+  }
+
   return {
     list: keychainList,
     fromFingerprint,
     fromAccountIndex,
+    fromAccountId,
   };
 }
 

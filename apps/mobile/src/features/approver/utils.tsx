@@ -4,9 +4,18 @@ import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.rea
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import { StacksNetwork } from '@stacks/network';
-import { PayloadType, StacksTransactionWire, cvToString } from '@stacks/transactions';
+import {
+  ContractCallPayload,
+  PayloadType,
+  PayloadWire,
+  StacksTransactionWire,
+  TokenTransferPayloadWire,
+  VersionedSmartContractPayloadWire,
+  addressToString,
+  cvToString,
+} from '@stacks/transactions';
 
-import { CryptoCurrency, FeeTypes } from '@leather.io/models';
+import { FeeTypes } from '@leather.io/models';
 import { StacksSigner } from '@leather.io/stacks';
 import {
   AnimalChameleonIcon,
@@ -111,32 +120,39 @@ export function getStacksFeeData(feeType: FeeTypes) {
   };
 }
 
-interface ReviewTxSummaryProps {
-  tx: StacksTransactionWire;
-  symbol: CryptoCurrency;
+export function getTxRecipient(payload: TokenTransferPayloadWire) {
+  return cvToString(payload.recipient);
 }
-export function getFormReviewTxSummary({ tx, symbol }: ReviewTxSummaryProps) {
-  if (symbol !== 'STX') throw new Error('No support for SIP10');
 
-  const {
-    payload,
-    auth: {
-      spendingCondition: { fee },
-    },
-  } = tx;
-  if (payload.payloadType !== PayloadType.TokenTransfer) {
-    throw new Error('Unsupported payload type');
-  }
-  const { amount: txValue, recipient } = payload;
-  const totalSpendMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(txValue + fee));
-  const feeMoney = convertToMoneyTypeWithDefaultOfZero('STX', Number(fee));
+export function getTotalSpendMoney(payload: TokenTransferPayloadWire, fee: bigint) {
+  return convertToMoneyTypeWithDefaultOfZero('STX', Number(payload.amount + fee));
+}
 
-  return {
-    recipient: cvToString(recipient),
-    feeMoney,
-    totalSpendMoney,
-    symbol: 'STX',
-  };
+export function getTxFeeMoney(tx: StacksTransactionWire) {
+  return convertToMoneyTypeWithDefaultOfZero('STX', Number(tx.auth.spendingCondition.fee));
+}
+
+export function getContractAddress(payload: ContractCallPayload) {
+  return addressToString(payload.contractAddress);
+}
+
+export function assertTokenTransferPayload(
+  payload: PayloadWire
+): asserts payload is TokenTransferPayloadWire {
+  if (payload.payloadType !== PayloadType.TokenTransfer)
+    throw new Error('This component should only be used for token transfers');
+}
+export function assertContractCallPayload(
+  payload: PayloadWire
+): asserts payload is ContractCallPayload {
+  if (payload.payloadType !== PayloadType.ContractCall)
+    throw new Error('This component should only be used for contract calls');
+}
+export function assertContractDeployPayload(
+  payload: PayloadWire
+): asserts payload is VersionedSmartContractPayloadWire {
+  if (payload.payloadType !== PayloadType.VersionedSmartContract)
+    throw new Error('This component should only be used for contract deploys');
 }
 
 export interface TxOptions {

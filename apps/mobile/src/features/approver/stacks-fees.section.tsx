@@ -9,20 +9,15 @@ import { createMoney } from '@leather.io/utils';
 
 import { StacksFeeCard } from './components/fees/stacks-fee-card';
 import { StacksFeesSheet } from './components/fees/stacks-fee-sheet';
-import { TxOptions, getFormReviewTxSummary } from './utils';
+import { getTxFeeMoney } from './utils';
 
 interface StacksFeesSectionProps {
   txHex: string;
   setTxHex(txHex: string): void;
-  txOptions: TxOptions;
 }
 
-export function StacksFeesSection({ txHex, setTxHex, txOptions }: StacksFeesSectionProps) {
+export function StacksFeesSection({ txHex, setTxHex }: StacksFeesSectionProps) {
   const tx = deserializeTransaction(txHex);
-  const { feeMoney } = getFormReviewTxSummary({
-    tx,
-    symbol: 'STX',
-  });
   const { data: stxFees } = useCalculateStacksTxFees(tx);
   const fee = tx.auth.spendingCondition.fee;
   function getFeeType() {
@@ -50,6 +45,7 @@ export function StacksFeesSection({ txHex, setTxHex, txOptions }: StacksFeesSect
     [FeeTypes.Unknown]: zeroMoney,
     [FeeTypes.Custom]: zeroMoney,
   };
+  const feeMoney = getTxFeeMoney(tx);
   return (
     <>
       <Approver.Section>
@@ -70,7 +66,6 @@ export function StacksFeesSection({ txHex, setTxHex, txOptions }: StacksFeesSect
         currentFee={createMoney(fee, 'STX')}
         txHex={txHex}
         setTxHex={setTxHex}
-        txOptions={txOptions}
       />
     </>
   );
