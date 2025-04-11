@@ -9,24 +9,18 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  initialize:
-    steps:
-      - uses: eas/checkout
-      - uses: eas/install_node_modules
-      - run: cd ../.. && pnpm i && pnpm build:packages && cd apps/mobile
-
   fingerprint:
-    needs: [initialize]
     name: Fingerprint
+    needs: [initialize]
     type: fingerprint
 
   run_eas_update:
-    needs: [initialize]
     name: EAS update
-    type: update
-    params:
-      platform: all
-      channel: maestro
+    needs: [initialize]
+    steps:
+      - uses: eas/checkout
+      - run: cd ../.. && pnpm i && pnpm build:packages && cd apps/mobile
+      - run: eas update --platform all --channel maestro
 
   get_android_build:
     name: Check for existing android build
