@@ -21,10 +21,12 @@ jobs:
   run_eas_update:
     needs: [initialize]
     name: EAS update
-    type: update
-    params:
-      platform: all
-      channel: maestro # A specific channel only for CI/CD to use.
+    steps:
+      - run: cd ../.. && pnpm build && popd
+      - uses: eas/update
+        with:
+          platform: all
+          channel: maestro
 
   get_android_build:
     name: Check for existing android build
