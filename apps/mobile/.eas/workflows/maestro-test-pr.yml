@@ -20,14 +20,6 @@ jobs:
       platform: all
       channel: maestro
 
-  # run_eas_update:
-  #   name: EAS update
-  #   steps:
-  #     - uses: eas/checkout
-  #     - run: pnpm i
-  #     - run: pnpm build:deps
-  #     - run: eas update --platform all --channel maestro
-
   get_android_build:
     name: Check for existing android build
     needs: [fingerprint]
