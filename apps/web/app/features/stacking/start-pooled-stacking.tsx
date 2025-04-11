@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StackingClient } from '@stacks/stacking';
@@ -25,6 +26,10 @@ import {
   requiresAllowContractCaller,
 } from '~/features/stacking/utils/utils-preset-pools';
 import { leather } from '~/helpers/leather-sdk';
+import {
+  useStxAvailableUnlockedBalance,
+  useStxCryptoAssetBalance,
+} from '~/queries/balance/account-balance.hooks';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
@@ -43,12 +48,18 @@ import {
 } from './hooks/stacking.query';
 import { StackingPoolFormSchema, createValidationSchema } from './utils/stacking-pool-form-schema';
 import { PoolWrapperAllowanceState } from './utils/types';
-import { PoolName, WrapperPrincipal } from './utils/types-preset-pools';
+import {
+  PoolIdToDisplayNameMap,
+  PoolSlug,
+  PoolSlugToIdMap,
+  WrapperPrincipal,
+} from './utils/types-preset-pools';
 
 interface StartPooledStackingProps {
-  poolName: PoolName;
+  poolSlug: PoolSlug;
 }
-export function StartPooledStacking({ poolName }: StartPooledStackingProps) {
+
+export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
   const { client } = useStackingClient();
   const { stacksAccount: stxAddress } = useLeatherConnect();
 
@@ -59,7 +70,7 @@ export function StartPooledStacking({ poolName }: StartPooledStackingProps) {
     return 'Expected client to be defined';
   }
 
-  return <StartPooledStackingLayout client={client} poolName={poolName} />;
+  return <StartPooledStackingLayout client={client} poolSlug={poolSlug} />;
 }
 
 const initialStackingFormValues: Partial<StackingPoolFormSchema> = {
@@ -69,14 +80,15 @@ const initialStackingFormValues: Partial<StackingPoolFormSchema> = {
 };
 
 interface StartPooledStackingLayoutProps {
-  poolName: PoolName;
+  poolSlug: PoolSlug;
   client: StackingClient;
 }
 
-function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayoutProps) {
+function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = useMemo(() => getPoxContracts(network), [network]);
+  const navigate = useNavigate();
 
   const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
 
@@ -106,8 +118,19 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
     network,
   });
 
+  const { stacksAccount: stxAddress } = useLeatherConnect();
+
+  if (!stxAddress) throw new Error('No stx address available');
+
+  const {
+    filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
+  } = useStxCryptoAssetBalance(stxAddress.address);
+  const totalAvailableBalance = useStxAvailableUnlockedBalance(stxAddress.address);
+
   const poxInfoQuery = useGetPoxInfoQuery();
 
+  const poolId = PoolSlugToIdMap[poolSlug];
+  const poolName = PoolIdToDisplayNameMap[poolId];
   const pool = pools[poolName];
   const poolStxAddress = pool.poolAddress?.[networkInstance];
   const poxWrapperContract =
@@ -115,8 +138,13 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
     (poxInfoQuery.data?.contract_id as WrapperPrincipal);
 
   const schema = useMemo(
-    () => createValidationSchema({ networkMode: networkPreference.chain.bitcoin.mode, poolName }),
-    [networkPreference.chain.bitcoin.mode, poolName]
+    () =>
+      createValidationSchema({
+        networkMode: networkPreference.chain.bitcoin.mode,
+        poolName,
+        availableBalance: totalAvailableBalance.amount,
+      }),
+    [networkPreference.chain.bitcoin.mode, poolName, totalAvailableBalance]
   );
 
   const {
@@ -206,12 +234,15 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
   function onSubmit(confirmation: ConfirmationStepType) {
     if (confirmation === 'terms') {
       setTermsConfirmed(v => !v);
+      return;
     }
     if (confirmation === 'allowContractCaller') {
       return handleAllowance();
     }
     if (confirmation === 'delegateStx') {
-      return handleDelegate();
+      return handleDelegate().then(() => {
+        return navigate(`/pooled-stacking/${poolSlug}/active`);
+      });
     }
 
     throw new Error(`Unknown confirmation type: ${confirmation}`);
@@ -225,7 +256,10 @@ function StartPooledStackingLayout({ poolName, client }: StartPooledStackingLayo
             <Stack gap="space.07">
               <Stack gap="space.02">
                 <StackingFormItemTitle title="Amount" />
-                <ChoosePoolingAmount />
+                <ChoosePoolingAmount
+                  amount={totalAvailableBalance.amount}
+                  isLoading={totalAvailableBalanceIsLoading}
+                />
               </Stack>
 
               <Stack gap="space.02">

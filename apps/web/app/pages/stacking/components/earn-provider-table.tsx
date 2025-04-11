@@ -155,7 +155,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
             </Flag>
 
             <Link
-              to={`/stacking/pooled-stacking/${info.row.original.slug}`}
+              to={`/pooled-stacking/${info.row.original.slug}`}
               style={{ minWidth: 'fit-content' }}
             >
               <Button size="xs" ml="space.04" minW="fit-content">
@@ -293,7 +293,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
             </Flag>
 
             <Link
-              to={`/stacking/liquid-stacking/${info.row.original.slug}`}
+              to={`/liquid-stacking/${info.row.original.slug}`}
               style={{ minWidth: 'fit-content' }}
             >
               <Button size="xs" ml="space.04" minW="fit-content">

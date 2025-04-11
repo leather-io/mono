@@ -1,9 +1,9 @@
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { validatePoolSlug } from '~/features/stacking/utils/stacking-pools-validator';
 import { PoolSlug } from '~/features/stacking/utils/types-preset-pools';
-import { PooledStacking } from '~/pages/stacking/pooled-stacking';
+import { PooledStackingActive } from '~/pages/stacking/pooled-stacking-active';
 
-import { Route } from './+types/pooled-stacking';
+import { Route } from './+types/pooled-stacking-active';
 
 export function loader({ params }: Route.LoaderArgs) {
   const isSlugValid = validatePoolSlug(params.slug);
@@ -22,10 +22,10 @@ export function meta({}: Route.MetaArgs) {
   return [{ title: 'Leather Earn - Stacking' }];
 }
 
-export default function EarnPooledStackingRoute({ loaderData }: Route.ComponentProps) {
+export default function EarnPooledStackingActiveRoute({ loaderData }: Route.ComponentProps) {
   return (
     <StackingClientProvider>
-      <PooledStacking poolSlug={loaderData.poolSlug} />
+      <PooledStackingActive poolSlug={loaderData.poolSlug} />
     </StackingClientProvider>
   );
 }

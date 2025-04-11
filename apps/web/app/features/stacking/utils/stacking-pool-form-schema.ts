@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/constants';
 import { pools } from '~/features/stacking/components/preset-pools';
@@ -16,17 +17,30 @@ function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
 interface SchemaCreationParams {
   networkMode: BitcoinNetworkModes;
   poolName: PoolName;
+  availableBalance: BigNumber | undefined;
 }
 
-export function createValidationSchema({ poolName, networkMode }: SchemaCreationParams) {
+export function createValidationSchema({
+  poolName,
+  networkMode,
+  availableBalance,
+}: SchemaCreationParams) {
   return z
     .object({
-      amount: stxAmountSchema().refine(value => {
-        if (value === undefined) return false;
-        const enteredAmount = stxToMicroStx(value);
-        return enteredAmount.isLessThanOrEqualTo(UI_IMPOSED_MAX_STACKING_AMOUNT_USTX);
-      }),
-
+      amount: stxAmountSchema()
+        .refine(value => {
+          if (value === undefined) return false;
+          const enteredAmount = stxToMicroStx(value);
+          return enteredAmount.isLessThanOrEqualTo(UI_IMPOSED_MAX_STACKING_AMOUNT_USTX);
+        })
+        .refine(
+          value => {
+            if (value === undefined || availableBalance === undefined) return false;
+            const enteredAmount = stxToMicroStx(value);
+            return enteredAmount.isLessThanOrEqualTo(availableBalance);
+          },
+          { message: `Available balance is ${toHumanReadableStx(availableBalance ?? 0)}` }
+        ),
       rewardAddress: z
         .string()
         .refine(isValidBitcoinAddress, 'Address is not valid') // TODO: invalidAddress

@@ -1,29 +1,21 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
+import BigNumber from 'bignumber.js';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { StackingPoolFormSchema } from '~/features/stacking/utils/stacking-pool-form-schema';
-import {
-  useStxAvailableUnlockedBalance,
-  useStxCryptoAssetBalance,
-} from '~/queries/balance/account-balance.hooks';
-import { useLeatherConnect } from '~/store/addresses';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
 import { Button, Input, Spinner } from '@leather.io/ui';
 import { microStxToStx } from '@leather.io/utils';
 
-export function ChoosePoolingAmount() {
+export interface ChoosePoolingAmountProps {
+  isLoading: boolean;
+  amount: BigNumber | undefined;
+}
+
+export function ChoosePoolingAmount({ isLoading, amount }: ChoosePoolingAmountProps) {
   const { setValue, control } = useFormContext<StackingPoolFormSchema>();
-
-  const { stacksAccount: stxAddress } = useLeatherConnect();
-
-  if (!stxAddress) throw new Error('No stx address available');
-
-  const {
-    filteredBalanceQuery: { isLoading },
-  } = useStxCryptoAssetBalance(stxAddress.address);
-  const totalAvailableBalance = useStxAvailableUnlockedBalance(stxAddress.address);
 
   return (
     <Stack>
@@ -55,17 +47,15 @@ export function ChoosePoolingAmount() {
         <styled.span textStyle="caption">Available balance:</styled.span>
         {isLoading ? (
           <Spinner />
-        ) : totalAvailableBalance ? (
+        ) : amount ? (
           <Button
             variant="ghost"
             size="sm"
             type="button"
             color="#12100F"
-            onClick={() =>
-              setValue('amount', microStxToStx(totalAvailableBalance.amount).toNumber())
-            }
+            onClick={() => setValue('amount', microStxToStx(amount).toNumber())}
           >
-            {toHumanReadableStx(totalAvailableBalance.amount)}{' '}
+            {toHumanReadableStx(amount)}{' '}
           </Button>
         ) : (
           'Failed to load'
