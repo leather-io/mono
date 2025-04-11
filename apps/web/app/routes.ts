@@ -8,4 +8,6 @@ export default [
   ]),
   route('docs', 'routes/docs.tsx'),
   route('sbtc-rewards', 'routes/sbtc-rewards.tsx'),
+  // Catch-all route for 404 pages - must be last
+  route('*', 'routes/error-not-found.tsx'),
 ] satisfies RouteConfig;
