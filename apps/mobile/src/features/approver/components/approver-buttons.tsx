@@ -30,7 +30,7 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
             buttonState="default"
             title={t({
               id: 'approver.button.approve',
-              message: 'Approve',
+              message: 'Confirm',
             })}
             flex={1}
             onPress={onApprove}
