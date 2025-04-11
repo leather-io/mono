@@ -55,6 +55,7 @@ interface EarnProvider {
   icon: ReactElement;
   slug: PoolSlug;
 }
+
 const earnProviders: EarnProvider[] = [
   {
     provider: 'Fast Pool',

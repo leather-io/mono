@@ -1,9 +1,6 @@
 import { Stacking } from '~/pages/stacking/stacking';
 
-import { delay } from '@leather.io/utils';
-
-export async function loader() {
-  await delay(400);
+export function loader() {
   return true;
 }
 

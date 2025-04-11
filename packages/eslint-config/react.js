@@ -16,6 +16,7 @@ export default [
       'react/function-component-definition': 'error',
       'react/prop-types': 'off',
       'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'ignore' }],
+      'react/no-unescaped-entities': 'off',
     },
   },
   {

@@ -4,6 +4,7 @@ import { Page } from '~/features/page/page';
 import { EarnProviderTable, LiquidStackingProviderTable } from './components/earn-provider-table';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
+import { StackingFaq } from './components/stacking-faq';
 
 export function Stacking() {
   return (
@@ -27,6 +28,12 @@ export function Stacking() {
       <LiquidStackingProviderTable mt="space.05" />
 
       <Page.Divider my="space.07" />
+
+      <styled.h2 textStyle="heading.05" mb="space.05">
+        Frequently asked questions
+      </styled.h2>
+
+      <StackingFaq mb="space.07" />
     </Page>
   );
 }
