@@ -104,19 +104,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for changes in app/mobile
-        id: check_changes
-        run: |
-          if git diff --name-only HEAD^ HEAD | grep -q "^app/mobile/"; then
-            echo "changes_detected=true" >> $GITHUB_OUTPUT
-          else
-            echo "changes_detected=false" >> $GITHUB_OUTPUT
-          fi
-
       - uses: ./.github/actions/provision
-        if: steps.check_changes.outputs.changes_detected == 'true'
 
       - name: Run lingui
-        if: steps.check_changes.outputs.changes_detected == 'true'
-        working-directory: ./app/mobile
-        run: pnpm lingui
+        working-directory: ./apps/mobile
+        run: pnpm lingui compile --strict
+      # TODO ENG-14 - this should only run on changes to the mobile app
+      # - name: Check for changes in mobile
+      #   id: check_changes
+      #   run: |
+      #     if git diff --name-only HEAD^ HEAD | grep -q "^apps/mobile/"; then
+      #       echo "changes_detected=true" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "changes_detected=false" >> $GITHUB_OUTPUT
+      #     fi
+
+      # - name: Run lingui
+      #   if: steps.check_changes.outputs.changes_detected == 'true'
+      #   working-directory: ./apps/mobile
+      #   run: pnpm lingui compile --strict

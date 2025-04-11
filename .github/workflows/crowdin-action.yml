@@ -1,3 +1,6 @@
+# FIXME ENG-14 - I can't see this running anywhere
+# the translations are not updating anyway
+# when we add a new key it creates a new empty translation in the crowdin dashboard
 name: Crowdin Action
 
 on:
@@ -24,6 +27,7 @@ jobs:
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
+          # maybe we should do this to set initial translations?
           upload_translations: false
           download_translations: false
           create_pull_request: false

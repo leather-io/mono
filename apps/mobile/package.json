@@ -24,7 +24,7 @@
     "ios:build": "pnpm run firebase:ios && expo run:ios --no-bundler",
     "knip": "knip",
     "lingui": "pnpm lingui:extract && pnpm lingui:compile",
-    "lingui:compile": "lingui compile",
+    "lingui:compile": "lingui compile --strict",
     "lingui:compile:watch": "lingui compile --watch --debounce 300",
     "lingui:extract": "lingui extract --clean",
     "lingui:extract:watch": "lingui extract --watch",
