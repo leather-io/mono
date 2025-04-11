@@ -55,6 +55,7 @@ export default () => {
       assetBundlePatterns: ['**/*'],
       ios: {
         bundleIdentifier: 'io.leather.mobilewallet',
+        icon: './src/assets/icon.png',
         googleServicesFile: './GoogleService-Info.plist',
         supportsTablet: false,
         usesNonExemptEncryption: false,
@@ -66,7 +67,6 @@ export default () => {
           NSCameraUsageDescription:
             'This app uses the camera to scan QR codes for sending transactions.',
         },
-        icon: './src/assets/icon.png',
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
             {
@@ -129,6 +129,7 @@ export default () => {
           {
             ios: {
               useFrameworks: 'static',
+              deploymentTarget: '13.4',
             },
             android: {
               compileSdkVersion: 34,
