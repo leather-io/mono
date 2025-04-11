@@ -72,7 +72,7 @@ export function Recipient({ value, onChange, onBlur, invalid, isTouched, error }
           value={value}
           onChangeText={onChange}
           placeholder={t({
-            id: 'recipient-sheet.recipient.input.placeholder',
+            id: 'recipient-sheet.v1.recipient.input.placeholder',
             message: 'Enter recipient',
           })}
           TextInputComponent={UIBottomSheetTextInput}

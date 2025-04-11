@@ -45,7 +45,7 @@ export function SelectAccount() {
             message: 'Select account',
           })}
           subtitle={t({
-            id: 'select_account.header_subtitle',
+            id: 'select_account.send.header_subtitle',
             message: 'Send',
           })}
           leftElement={canGoBack ? <HeaderBackButton onPress={handleBackButtonPress} /> : null}
