@@ -1,0 +1,53 @@
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+index 62a9908e1f70620d9e721ae681de43696c0c5395..282f412d2e77c3534b22ac72c9ffc8b921942f31 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+@@ -58,8 +58,10 @@ class AuthenticationHelper(
+ 
+   fun assertBiometricsSupport() {
+     val biometricManager = BiometricManager.from(context)
++    val biometricAuthenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
++                                  BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+     @SuppressLint("SwitchIntDef") // BiometricManager.BIOMETRIC_SUCCESS shouldn't do anything
+-    when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
++    when (biometricManager.canAuthenticate(biometricAuthenticators)) {
+       BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+         throw AuthenticationException("No hardware available for biometric authentication. Use expo-local-authentication to check if the device supports it")
+       }
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
+index e5729cc74a4d1066f9979e139b31d321e18f9a95..2455cdfc916f52a1b1fad5cfb679340d0cbf275d 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
+@@ -1,6 +1,7 @@
+ package expo.modules.securestore
+ 
+ import android.content.Context
++import androidx.biometric.BiometricManager
+ import androidx.biometric.BiometricPrompt
+ import androidx.biometric.BiometricPrompt.PromptInfo
+ import androidx.core.content.ContextCompat
+@@ -15,7 +16,10 @@ class AuthenticationPrompt(private val currentActivity: FragmentActivity, contex
+   private var executor: Executor = ContextCompat.getMainExecutor(context)
+   private var promptInfo = PromptInfo.Builder()
+     .setTitle(title)
+-    .setNegativeButtonText(context.getString(android.R.string.cancel))
++    .setAllowedAuthenticators(
++      BiometricManager.Authenticators.BIOMETRIC_STRONG or
++      BiometricManager.Authenticators.DEVICE_CREDENTIAL
++    )
+     .build()
+ 
+   suspend fun authenticate(cipher: Cipher): BiometricPrompt.AuthenticationResult? =
+diff --git a/ios/SecureStoreModule.swift b/ios/SecureStoreModule.swift
+index 787f9ac57d4dbdf4ad71afabb4e9e667b9f129f4..42ef9c9dfb742ce08915a7c3f21373bb3b10d4a0 100644
+--- a/ios/SecureStoreModule.swift
++++ b/ios/SecureStoreModule.swift
+@@ -104,7 +104,7 @@ public final class SecureStoreModule: Module {
+       }
+ 
+       var error: Unmanaged<CFError>? = nil
+-      guard let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, .biometryCurrentSet, &error) else {
++      guard let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, .userPresence, &error) else {
+         let errorCode = error.map { CFErrorGetCode($0.takeRetainedValue()) }
+         throw SecAccessControlError(errorCode)
+       }

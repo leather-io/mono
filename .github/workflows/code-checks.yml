@@ -1,6 +1,7 @@
 name: Code checks
 
 on:
+  workflow_call:
   merge_group:
   push:
     branches:

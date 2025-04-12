@@ -213,9 +213,10 @@
       }
     },
     "patchedDependencies": {
-      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch",
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
-      "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch"
+      "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch",
+      "expo-secure-store@14.0.1": "patches/expo-secure-store@14.0.1.patch",
+      "@segment/analytics-react-native@2.20.2": "patches/@segment__analytics-react-native@2.20.2.patch"
     }
   }
 }

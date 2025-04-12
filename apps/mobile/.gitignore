@@ -55,3 +55,7 @@ credentials.json
 *.ipa
 *.apk
 *.aab
+
+# Continuous Native Generation
+ios/
+android/
