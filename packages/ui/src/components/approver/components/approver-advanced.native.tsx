@@ -14,7 +14,7 @@ export function ApproverAdvanced({ children, titleOpened, titleClosed }: Approve
   const { isDisplayingAdvancedView, setIsDisplayingAdvancedView } = useApproverContext();
   useRegisterApproverChild('advanced');
   const buttonTitle = isDisplayingAdvancedView ? titleOpened : titleClosed;
-  const chevron = isDisplayingAdvancedView ? <ChevronUpIcon /> : <ChevronDownIcon />;
+  const ChevronIcon = isDisplayingAdvancedView ? ChevronUpIcon : ChevronDownIcon;
 
   return (
     <>
@@ -28,7 +28,7 @@ export function ApproverAdvanced({ children, titleOpened, titleClosed }: Approve
         onPress={() => setIsDisplayingAdvancedView(!isDisplayingAdvancedView)}
       >
         <Text variant="label01">{buttonTitle}</Text>
-        {chevron}
+        <ChevronIcon variant="small" />
       </Pressable>
 
       {isDisplayingAdvancedView && children}
