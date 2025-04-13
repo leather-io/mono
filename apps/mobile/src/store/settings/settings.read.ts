@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
-import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { createSelector } from '@reduxjs/toolkit';
 import {
@@ -25,10 +23,8 @@ import {
   defaultNetworksKeyedById,
 } from '@leather.io/models';
 import { whenStacksChainId } from '@leather.io/stacks';
-import { truncateMiddle } from '@leather.io/utils';
 
 import type { RootState } from '..';
-import { useAccountDisplayName } from '../../hooks/use-account-display-name';
 
 function selectSettings(state: RootState) {
   return state.settings;
@@ -91,36 +87,6 @@ export const selectLastActive = createSelector(selectSettings, state => state.la
 export function usePrivacyMode() {
   const privacyMode = useSelector(selectPrivacyModePreference);
   return privacyMode === 'hidden';
-}
-
-export function useAccountDisplayAddress(fingerprint: string, accountIndex: number) {
-  const { accountDisplayPreference } = useSettings();
-
-  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
-    fingerprint,
-    accountIndex
-  );
-
-  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
-  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
-
-  const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
-
-  const { data: bnsName } = useAccountDisplayName({
-    address: stxAddress,
-  });
-
-  switch (accountDisplayPreference.type) {
-    case 'native-segwit':
-      return truncateMiddle(nativeSegwitPayer.address);
-    case 'taproot':
-      return truncateMiddle(taprootPayer.address);
-    case 'bns':
-      return bnsName;
-    case 'stacks':
-    default:
-      return truncateMiddle(stxAddress);
-  }
 }
 
 function getNetworkFromChainId(chainId: number) {
