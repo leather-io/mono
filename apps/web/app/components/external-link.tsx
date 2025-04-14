@@ -1,9 +1,12 @@
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
+import { RotatedArrow } from './icons/rotated-icon';
+
 interface ExternalLinkProps extends HTMLStyledProps<'a'> {
   href: string;
   withIcon?: boolean;
 }
+
 export function ExternalLink({ href, withIcon, children, ...props }: ExternalLinkProps) {
   return (
     <styled.a
@@ -19,11 +22,7 @@ export function ExternalLink({ href, withIcon, children, ...props }: ExternalLin
       {...props}
     >
       {children}
-      {withIcon && (
-        <styled.span ml="space.01" display="inline-block" transform="rotate(45deg)">
-          ↑
-        </styled.span>
-      )}
+      {withIcon && <RotatedArrow />}
     </styled.a>
   );
 }

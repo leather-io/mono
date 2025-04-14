@@ -1,4 +1,3 @@
-import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
 
