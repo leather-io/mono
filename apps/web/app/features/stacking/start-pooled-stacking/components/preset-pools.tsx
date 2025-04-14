@@ -2,8 +2,12 @@ import { ReactElement } from 'react';
 
 import { AlexLogo } from '~/components/icons/alex-logo';
 import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/constants';
+import {
+  NetworkInstanceToPoxContractMap,
+  Pool,
+  PoolName,
+} from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 
-import { NetworkInstanceToPoxContractMap, Pool, PoolName } from '../utils/types-preset-pools';
 import { PoolIcon } from './pool-icon';
 
 export const pools: Record<PoolName, Pool> = {

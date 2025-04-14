@@ -1,7 +1,7 @@
 import { Box, GridProps } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
-import { PoolRewardProtocolInfo } from '~/features/stacking/components/preset-pools';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
+import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import { ValueDisplayer } from '~/pages/sbtc-rewards/components/reward-value-displayer';
 
 import { Flag } from '@leather.io/ui';

@@ -16,8 +16,8 @@ import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { ImgFillLoader } from '~/components/img-loader';
 import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
-import { PoolSlug } from '~/features/stacking/utils/types-preset-pools';
-import { ProtocolSlug } from '~/features/stacking/utils/types-preset-protocols';
+import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 
 import { Button, Flag } from '@leather.io/ui';
 

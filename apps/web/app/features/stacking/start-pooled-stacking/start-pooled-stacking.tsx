@@ -7,24 +7,22 @@ import { StackingClient } from '@stacks/stacking';
 import { ClarityType } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
 import { Stack, styled } from 'leather-styles/jsx';
-import { ChoosePoolingAmount } from '~/features/stacking/components/choose-pooling-amount';
+import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
-import {
-  ConfirmationStepType,
-  StackingStepsCard,
-} from '~/features/stacking/components/stacking-steps-card';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
+import { ChoosePoolingAmount } from '~/features/stacking/start-pooled-stacking/components/choose-pooling-amount';
+import { PooledStackingConfirmationSteps } from '~/features/stacking/start-pooled-stacking/components/pooled-stacking-confirmation-steps';
 import {
   createAllowContractCallerSubmitMutationOptions,
   isAllowContractCallerConfirmed,
-} from '~/features/stacking/utils/utils-allow-contract-caller';
-import { createDelegateStxMutationOptions } from '~/features/stacking/utils/utils-delegate-stx';
+} from '~/features/stacking/start-pooled-stacking/utils/utils-allow-contract-caller';
+import { createDelegateStxMutationOptions } from '~/features/stacking/start-pooled-stacking/utils/utils-delegate-stx';
 import {
   getPoxContracts,
   getPoxWrapperContract2,
   requiresAllowContractCaller,
-} from '~/features/stacking/utils/utils-preset-pools';
+} from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
 import { leather } from '~/helpers/leather-sdk';
 import {
   useStxAvailableUnlockedBalance,
@@ -35,17 +33,17 @@ import { useStacksNetwork } from '~/store/stacks-network';
 
 import { Hr, Spinner } from '@leather.io/ui';
 
-import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
-import { ChoosePoolingDuration } from './components/choose-pooling-duration';
-import { ChooseRewardsAddress } from './components/choose-rewards-address';
-import { PoolingDetails } from './components/pooling-details';
-import { pools } from './components/preset-pools';
-import { StackingFormItemTitle } from './components/stacking-form-item-title';
+import { StackingContractDetails } from '../components/stacking-contract-details';
+import { StackingFormItemTitle } from '../components/stacking-form-item-title';
 import {
   useGetAllowanceContractCallersQuery,
   useGetPoxInfoQuery,
   useGetSecondsUntilNextCycleQuery,
-} from './hooks/stacking.query';
+} from '../hooks/stacking.query';
+import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
+import { ChoosePoolingDuration } from './components/choose-pooling-duration';
+import { ChooseRewardsAddress } from './components/choose-rewards-address';
+import { pools } from './components/preset-pools';
 import { StackingPoolFormSchema, createValidationSchema } from './utils/stacking-pool-form-schema';
 import { PoolWrapperAllowanceState } from './utils/types';
 import {
@@ -61,13 +59,10 @@ interface StartPooledStackingProps {
 
 export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
   const { client } = useStackingClient();
-  const { stacksAccount: stxAddress } = useLeatherConnect();
+  const { stacksAccount } = useLeatherConnect();
 
-  if (!stxAddress || !client) {
+  if (!stacksAccount || !client) {
     return 'You should connect STX wallet';
-  }
-  if (!client) {
-    return 'Expected client to be defined';
   }
 
   return <StartPooledStackingLayout client={client} poolSlug={poolSlug} />;
@@ -86,6 +81,8 @@ interface StartPooledStackingLayoutProps {
 
 function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
+  if (!stacksAccount) throw new Error('No stx address available');
+
   const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = useMemo(() => getPoxContracts(network), [network]);
   const navigate = useNavigate();
@@ -98,7 +95,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     contractAddress,
     contractName,
     callingContract: poxContracts['WrapperFastPool'],
-    senderAddress: stacksAccount ? stacksAccount.address : null,
+    senderAddress: stacksAccount.address,
     network,
   });
 
@@ -106,7 +103,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     contractAddress,
     contractName,
     callingContract: poxContracts['WrapperRestake'],
-    senderAddress: stacksAccount ? stacksAccount.address : null,
+    senderAddress: stacksAccount.address,
     network,
   });
 
@@ -114,18 +111,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     contractAddress,
     contractName,
     callingContract: poxContracts['WrapperOneCycle'],
-    senderAddress: stacksAccount ? stacksAccount.address : null,
+    senderAddress: stacksAccount.address,
     network,
   });
 
-  const { stacksAccount: stxAddress } = useLeatherConnect();
-
-  if (!stxAddress) throw new Error('No stx address available');
-
   const {
     filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
-  } = useStxCryptoAssetBalance(stxAddress.address);
-  const totalAvailableBalance = useStxAvailableUnlockedBalance(stxAddress.address);
+  } = useStxCryptoAssetBalance(stacksAccount.address);
+  const totalAvailableBalance = useStxAvailableUnlockedBalance(stacksAccount.address);
 
   const poxInfoQuery = useGetPoxInfoQuery();
 
@@ -142,7 +135,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       createValidationSchema({
         networkMode: networkPreference.chain.bitcoin.mode,
         poolName,
-        availableBalance: totalAvailableBalance.amount,
+        availableBalance: totalAvailableBalance,
       }),
     [networkPreference.chain.bitcoin.mode, poolName, totalAvailableBalance]
   );
@@ -214,6 +207,8 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       delegationDurationType: 'limited',
       numberOfCycles: 1,
       poolAddress: poolStxAddress ?? '',
+    }).then(() => {
+      return navigate(`/pooled-stacking/${poolSlug}/active`);
     });
   });
 
@@ -231,7 +226,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   if (getSecondsUntilNextCycleQuery.isLoading) return <Spinner />;
 
-  function onSubmit(confirmation: ConfirmationStepType) {
+  function onSubmit(confirmation: PooledStackingConfirmationStepId) {
     if (confirmation === 'terms') {
       setTermsConfirmed(v => !v);
       return;
@@ -240,9 +235,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       return handleAllowance();
     }
     if (confirmation === 'delegateStx') {
-      return handleDelegate().then(() => {
-        return navigate(`/pooled-stacking/${poolSlug}/active`);
-      });
+      return handleDelegate();
     }
 
     throw new Error(`Unknown confirmation type: ${confirmation}`);
@@ -281,7 +274,11 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
               <Stack gap="space.02">
                 <StackingFormItemTitle title="Details" />
-                <PoolingDetails poolAddress={poolStxAddress} contractAddress={poxWrapperContract} />
+                <StackingContractDetails
+                  addressTitle="Pool address"
+                  address={poolStxAddress}
+                  contractAddress={poxWrapperContract}
+                />
               </Stack>
 
               <Hr />
@@ -295,7 +292,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
         }
         stackingStepsPanel={
           <StackingFormStepsPanel>
-            <StackingStepsCard
+            <PooledStackingConfirmationSteps
               onSubmit={onSubmit}
               confirmationState={{
                 terms: {

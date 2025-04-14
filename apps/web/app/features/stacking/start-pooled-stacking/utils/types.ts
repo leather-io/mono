@@ -1,6 +1,6 @@
 import { NetworkInstance, PoolName, WrapperPrincipal } from './types-preset-pools';
 
-// @TODO: Replace with StackingPoolFormSchema
+// TODO: Replace with StackingPoolFormSchema
 export interface StackingFormValues {
   amount: number;
   rewardAddress: string;

@@ -1,0 +1,194 @@
+import { useMemo, useState } from 'react';
+import { Form, FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { StackingClient } from '@stacks/stacking';
+import { useMutation } from '@tanstack/react-query';
+import { Stack } from 'leather-styles/jsx';
+import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
+import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
+import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
+import { useGetSecondsUntilNextCycleQuery } from '~/features/stacking/hooks/stacking.query';
+import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
+import { ChooseLiquidStackingConditions } from '~/features/stacking/start-liquid-stacking/components/choose-liquid-stacking-conditions';
+import { LiquidStackingConfirmationSteps } from '~/features/stacking/start-liquid-stacking/components/liquid-stacking-confirmation-steps';
+import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
+import {
+  StackingLiquidFormSchema,
+  createValidationSchema,
+} from '~/features/stacking/start-liquid-stacking/utils/stacking-liquid-schema';
+import {
+  ProtocolIdToDisplayNameMap,
+  ProtocolSlug,
+  ProtocolSlugToIdMap,
+} from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { createDepositStxMutationOptions } from '~/features/stacking/start-liquid-stacking/utils/utils-liquid-stacking-stx';
+import { leather } from '~/helpers/leather-sdk';
+import {
+  useStxAvailableUnlockedBalance,
+  useStxCryptoAssetBalance,
+} from '~/queries/balance/account-balance.hooks';
+import { useLeatherConnect } from '~/store/addresses';
+import { useStacksNetwork } from '~/store/stacks-network';
+
+import { Hr, Spinner } from '@leather.io/ui';
+
+import { StackingFormItemTitle } from '../components/stacking-form-item-title';
+import { ChoosePoolingAmount } from '../start-pooled-stacking/components/choose-pooling-amount';
+
+interface StartLiquidStackingProps {
+  protocolSlug: ProtocolSlug;
+}
+
+const initialStackingFormValues: Partial<StackingLiquidFormSchema> = {
+  // amount: '',
+};
+
+export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
+  const { client } = useStackingClient();
+  const { stacksAccount } = useLeatherConnect();
+
+  if (!stacksAccount || !client) {
+    return 'You should connect STX wallet';
+  }
+
+  return <StartLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
+}
+
+interface StartLiquidStackingLayoutProps {
+  protocolSlug: ProtocolSlug;
+  client: StackingClient;
+}
+
+function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutProps) {
+  const { stacksAccount } = useLeatherConnect();
+  if (!stacksAccount) throw new Error('No stx address available');
+
+  const { networkInstance } = useStacksNetwork();
+  const navigate = useNavigate();
+
+  const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
+
+  const {
+    filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
+  } = useStxCryptoAssetBalance(stacksAccount.address);
+  const totalAvailableBalance = useStxAvailableUnlockedBalance(stacksAccount.address);
+
+  const protocolId = ProtocolSlugToIdMap[protocolSlug];
+  const protocolName = ProtocolIdToDisplayNameMap[protocolId];
+  const protocol = protocols[protocolName];
+  const protocolStxAddress = protocol.protocolAddress?.[networkInstance];
+
+  const schema = useMemo(
+    () => createValidationSchema({ protocolName, availableBalance: totalAvailableBalance }),
+    [protocolName, totalAvailableBalance]
+  );
+
+  const {
+    data: depositStxResult,
+    mutateAsync: handleDepositStxSubmit,
+    isPending: handleDepositStxPending,
+  } = useMutation(
+    createDepositStxMutationOptions({
+      leather,
+      network: networkInstance,
+    })
+  );
+
+  const [termsConfirmed, setTermsConfirmed] = useState(false);
+
+  const formMethods = useForm<StackingLiquidFormSchema>({
+    mode: 'onTouched',
+    defaultValues: {
+      ...initialStackingFormValues,
+    },
+    resolver: zodResolver(schema),
+  });
+
+  const handleDeposit = formMethods.handleSubmit(values => {
+    return handleDepositStxSubmit({
+      ...values,
+      stxAddress: stacksAccount.address,
+      protocolName,
+    }).then(() => {
+      return navigate(`/liquid-stacking/${protocolSlug}/active`);
+    });
+  });
+
+  const stackingAmount = formMethods.watch('amount');
+
+  if (getSecondsUntilNextCycleQuery.isLoading) return <Spinner />;
+
+  function onSubmit(confirmation: LiquidStackingConfirmationStepId) {
+    if (confirmation === 'terms') {
+      setTermsConfirmed(v => !v);
+      return;
+    }
+    if (confirmation === 'depositStx') {
+      return handleDeposit();
+    }
+
+    throw new Error(`Unknown confirmation type: ${confirmation}`);
+  }
+
+  return (
+    <FormProvider {...formMethods}>
+      <StartStackingLayout
+        stackingForm={
+          <Form>
+            <Stack gap="space.07">
+              <Stack gap="space.02">
+                <StackingFormItemTitle title="Amount" />
+                <ChoosePoolingAmount
+                  amount={totalAvailableBalance.amount}
+                  isLoading={totalAvailableBalanceIsLoading}
+                />
+              </Stack>
+
+              <Hr />
+
+              <Stack gap="space.02">
+                <StackingFormItemTitle title="Details" />
+                {/* TODO: fix contractAddress value */}
+                <StackingContractDetails
+                  addressTitle="Protocol address"
+                  address={protocolStxAddress}
+                  contractAddress={protocolStxAddress}
+                />
+              </Stack>
+
+              <Hr />
+
+              <Stack gap="space.02">
+                <StackingFormItemTitle title="Liquid Stacking conditions" />
+                <ChooseLiquidStackingConditions />
+              </Stack>
+            </Stack>
+          </Form>
+        }
+        stackingStepsPanel={
+          <StackingFormStepsPanel>
+            <LiquidStackingConfirmationSteps
+              onSubmit={onSubmit}
+              confirmationState={{
+                terms: {
+                  accepted: termsConfirmed,
+                  loading: false,
+                  visible: true,
+                },
+                depositStx: {
+                  accepted: Boolean(depositStxResult),
+                  loading: handleDepositStxPending,
+                  visible: true,
+                },
+              }}
+              stackingAmount={stackingAmount}
+            />
+          </StackingFormStepsPanel>
+        }
+      />
+    </FormProvider>
+  );
+}

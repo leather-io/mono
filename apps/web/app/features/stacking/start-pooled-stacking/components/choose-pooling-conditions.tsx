@@ -1,8 +1,8 @@
-import { HStack, Stack, styled } from 'leather-styles/jsx';
+import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
 
 import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
 
-const POOLING_CONDITIONS = [
+const poolingConditions = [
   {
     icon: <BoxedCatLockedIcon />,
     title: "This transaction can't be reversed",
@@ -22,19 +22,5 @@ const POOLING_CONDITIONS = [
 ];
 
 export function ChoosePoolingConditions() {
-  return (
-    <Stack gap="space.04">
-      {POOLING_CONDITIONS.map(condition => (
-        <HStack key={condition.title} alignItems="flex-start">
-          {condition.icon}
-          <Stack gap="0">
-            <styled.span textStyle="label.03">{condition.title}</styled.span>
-            <styled.span textStyle="caption.01" color="ink.text-subdued">
-              {condition.description}
-            </styled.span>
-          </Stack>
-        </HStack>
-      ))}
-    </Stack>
-  );
+  return <StackingConditions conditions={poolingConditions} />;
 }

@@ -1,18 +1,15 @@
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
-import { validatePoolSlug } from '~/features/stacking/utils/stacking-pools-validator';
-import { PoolSlug } from '~/features/stacking/utils/types-preset-pools';
+import { poolSlugSchema } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { PooledStacking } from '~/pages/stacking/pooled-stacking';
 
 import { Route } from './+types/pooled-stacking';
 
 export function loader({ params }: Route.LoaderArgs) {
-  const isSlugValid = validatePoolSlug(params.slug);
+  const { success, data: poolSlug } = poolSlugSchema.safeParse(params.slug);
 
-  if (!isSlugValid) {
-    throw new Response(`Invalid pool slug: ${params.slug}`, { status: 404 });
+  if (!success) {
+    throw new Response(`Invalid pool slug: ${poolSlug}`, { status: 404 });
   }
-
-  const poolSlug = params.slug as PoolSlug;
 
   return { poolSlug };
 }

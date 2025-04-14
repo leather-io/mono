@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type NetworkInstance = 'mainnet' | 'testnet' | 'devnet';
 
 export const PoolSlugToIdMap = {
@@ -19,6 +21,9 @@ export const PoolIdToDisplayNameMap = {
 } as const;
 
 export type PoolSlug = keyof typeof PoolSlugToIdMap;
+
+export const poolSlugSchema = z.enum(Object.keys(PoolSlugToIdMap) as [PoolSlug, ...PoolSlug[]]);
+
 export type PoolId = (typeof PoolSlugToIdMap)[PoolSlug];
 export type PoolName = (typeof PoolIdToDisplayNameMap)[PoolId];
 

@@ -1,14 +1,16 @@
-import BigNumber from 'bignumber.js';
 import { z } from 'zod';
-import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/constants';
-import { pools } from '~/features/stacking/components/preset-pools';
-import { PoolName } from '~/features/stacking/utils/types-preset-pools';
+import { pools } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { PoolName } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { toHumanReadableStx } from '~/utils/unit-convert';
-import { stxAmountSchema } from '~/utils/validators/stx-amount-validator';
+import {
+  stxAmountSchema,
+  validateAvailableBalance,
+  validateMaxStackingAmount,
+  validateMinStackingAmount,
+} from '~/utils/validators/stx-amount-validator';
 
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
-import { BitcoinNetworkModes } from '@leather.io/models';
-import { stxToMicroStx } from '@leather.io/utils';
+import { BitcoinNetworkModes, Money } from '@leather.io/models';
 
 function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
@@ -17,7 +19,7 @@ function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
 interface SchemaCreationParams {
   networkMode: BitcoinNetworkModes;
   poolName: PoolName;
-  availableBalance: BigNumber | undefined;
+  availableBalance: Money;
 }
 
 export function createValidationSchema({
@@ -25,22 +27,14 @@ export function createValidationSchema({
   networkMode,
   availableBalance,
 }: SchemaCreationParams) {
+  const availableBalanceAmount = availableBalance.amount;
   return z
     .object({
       amount: stxAmountSchema()
-        .refine(value => {
-          if (value === undefined) return false;
-          const enteredAmount = stxToMicroStx(value);
-          return enteredAmount.isLessThanOrEqualTo(UI_IMPOSED_MAX_STACKING_AMOUNT_USTX);
-        })
-        .refine(
-          value => {
-            if (value === undefined || availableBalance === undefined) return false;
-            const enteredAmount = stxToMicroStx(value);
-            return enteredAmount.isLessThanOrEqualTo(availableBalance);
-          },
-          { message: `Available balance is ${toHumanReadableStx(availableBalance ?? 0)}` }
-        ),
+        .refine(value => validateMaxStackingAmount(value))
+        .refine(value => validateAvailableBalance(value, availableBalanceAmount), {
+          message: `Available balance is ${toHumanReadableStx(availableBalanceAmount ?? 0)}`,
+        }),
       rewardAddress: z
         .string()
         .refine(isValidBitcoinAddress, 'Address is not valid') // TODO: invalidAddress
@@ -49,8 +43,7 @@ export function createValidationSchema({
     .superRefine((data, ctx) => {
       const amount = data.amount;
       const minDelegatedStackingAmount = pools[poolName].minimumDelegationAmount || 0;
-      const enteredAmount = stxToMicroStx(amount || 0);
-      if (enteredAmount.isLessThan(minDelegatedStackingAmount)) {
+      if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',
           message: `You must delegate at least ${toHumanReadableStx(minDelegatedStackingAmount)}`,

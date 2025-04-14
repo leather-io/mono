@@ -1,11 +1,11 @@
 import { StacksNetwork, StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { noneCV, principalCV, serializeCV } from '@stacks/transactions';
-import { PoolWrapperAllowanceState } from '~/features/stacking/utils/types';
+import { PoolWrapperAllowanceState } from '~/features/stacking/start-pooled-stacking/utils/types';
 import {
   getNetworkInstance,
   getPoxWrapperContract,
-} from '~/features/stacking/utils/utils-preset-pools';
+} from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
 import { StxCallContractParams } from '~/helpers/leather-sdk';
 
 import { LeatherSdk } from '@leather.io/sdk';

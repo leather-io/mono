@@ -4,19 +4,24 @@ import { useStacksNetwork } from '~/store/stacks-network';
 import { makeExplorerTxLink } from '~/utils/external-links';
 
 export interface PoolingDetailsProps {
-  poolAddress: string | undefined;
+  addressTitle: string;
+  address: string | undefined;
   contractAddress: string | undefined;
 }
 
-export function PoolingDetails({ poolAddress, contractAddress }: PoolingDetailsProps) {
+export function StackingContractDetails({
+  addressTitle,
+  address,
+  contractAddress,
+}: PoolingDetailsProps) {
   const { networkInstance } = useStacksNetwork();
   return (
     <Stack>
       <Stack direction="row" justifyContent="space-between">
         <styled.p textStyle="label.03" color="ink.text-subdued">
-          Pool address
+          {addressTitle}
         </styled.p>
-        {poolAddress ? <CopyAddress address={poolAddress} /> : '—'}
+        {address ? <CopyAddress address={address} /> : '—'}
       </Stack>
       <Stack direction="row" justifyContent="space-between">
         <styled.p textStyle="label.03" color="ink.text-subdued">
