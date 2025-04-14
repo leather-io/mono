@@ -8,6 +8,7 @@ import {
   STACKS_MAINNET,
   STACKS_TESTNET,
   StacksNetwork,
+  StacksNetworkName,
   TransactionVersion,
 } from '@stacks/network';
 
@@ -16,7 +17,11 @@ import {
   accountDisplayPreferencesKeyedByType,
   bitcoinUnitsKeyedByName,
 } from '@leather.io/constants';
-import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import {
+  NetworkConfiguration,
+  WalletDefaultNetworkConfigurationIds,
+  defaultNetworksKeyedById,
+} from '@leather.io/models';
 import { whenStacksChainId } from '@leather.io/stacks';
 
 import type { RootState } from '..';
@@ -114,4 +119,17 @@ export function useNetworkPreferenceStacksNetwork(): StacksNetwork {
 export function useNetworkPreferenceBitcoinScureLibNetworkConfig() {
   const { networkPreference } = useSettings();
   return getBtcSignerLibNetworkConfigByMode(networkPreference.chain.bitcoin.mode);
+}
+
+function getNetworkFromNetworkName(stacksNetworkName: StacksNetworkName) {
+  if (stacksNetworkName === 'testnet')
+    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet4];
+  if (stacksNetworkName === 'mainnet')
+    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet];
+  throw new Error('This network is currently not supported');
+}
+
+export function getStacksNetworkFromName(stacksNetworkName: StacksNetworkName): StacksNetwork {
+  const networkConfig = getNetworkFromNetworkName(stacksNetworkName);
+  return getStacksNetworkFromNetworkConfig(networkConfig);
 }

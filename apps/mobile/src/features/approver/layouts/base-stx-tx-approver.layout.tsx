@@ -13,11 +13,14 @@ import {
   assertTokenTransferPayload,
   getTotalSpendMoney,
   getTxRecipient,
+  isContractCall,
+  isContractDeploy,
+  isTokenTransfer,
 } from '@/features/approver/utils';
 import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/macro';
-import { PayloadType, deserializeTransaction } from '@stacks/transactions';
+import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, Box, Button } from '@leather.io/ui/native';
@@ -92,13 +95,9 @@ export function BaseStxTxApproverLayout({
               )}
             />
           </Approver.Section>
-          {tx.payload.payloadType === PayloadType.ContractCall && (
-            <ContractCallSummarySection txHex={txHex} />
-          )}
-          {tx.payload.payloadType === PayloadType.VersionedSmartContract && (
-            <ContractDeploySummarySection txHex={txHex} />
-          )}
-          {tx.payload.payloadType === PayloadType.TokenTransfer && (
+          {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
+          {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
+          {isTokenTransferPayload(tx.payload) && (
             <Approver.Section>
               <StacksOutcome
                 amount={getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee)}
@@ -107,9 +106,8 @@ export function BaseStxTxApproverLayout({
               <OutcomeAddressesCard addresses={[getTxRecipient(tx.payload)]} />
             </Approver.Section>
           )}
-
           <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
-          {tx.payload.payloadType === PayloadType.TokenTransfer && (
+          {isTokenTransfer(tx.payload) && (
             <MemoSection
               memo={tx.payload.memo.content}
               isMemoEditable={false}
@@ -126,12 +124,8 @@ export function BaseStxTxApproverLayout({
               message: 'Hide advanced options',
             })}
           >
-            {tx.payload.payloadType === PayloadType.ContractCall && (
-              <ContractCallArgsSection txHex={txHex} />
-            )}
-            {tx.payload.payloadType === PayloadType.VersionedSmartContract && (
-              <ContractDeployCodeSection txHex={txHex} />
-            )}
+            {isContractCall(tx.payload) && <ContractCallArgsSection txHex={txHex} />}
+            {isContractDeploy(tx.payload) && <ContractDeployCodeSection txHex={txHex} />}
             <NonceSection
               nonce={tx.auth.spendingCondition.nonce.toString()}
               onChangeNonce={onChangeNonce}
