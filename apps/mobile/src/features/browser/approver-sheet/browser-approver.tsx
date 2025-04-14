@@ -1,10 +1,13 @@
 import { App } from '@/store/apps/utils';
+import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 
 import {
   RpcResponses,
   getAddresses,
   signMessage,
   signPsbt,
+  stxCallContract,
+  stxDeployContract,
   stxGetAddresses,
   stxSignMessage,
   stxSignStructuredMessage,
@@ -17,6 +20,8 @@ import {
 import { GetAddressesApprover } from './get-addresses/get-addresses';
 import { SignMessageApprover } from './sign-message/sign-message';
 import { SignPsbtApprover } from './sign-psbt';
+import { CallContractApprover } from './stx/call-contract/call-contract';
+import { DeployContractApprover } from './stx/deploy-contract/deploy-contract';
 import { StxGetAddressesApprover } from './stx/get-addresses/get-addresses';
 import { NonceLoader } from './stx/nonce-loader';
 import { StxSignMessageApprover } from './stx/sign-message/sign-message';
@@ -25,7 +30,7 @@ import { SignTransactionApprover } from './stx/sign-transaction/sign-transaction
 import { TransferSip9NftApprover } from './stx/transfer-sip9-nft/transfer-sip9-nft';
 import { TransferSip10FtApprover } from './stx/transfer-sip10-ft/transfer-sip10-ft';
 import { TransferStxApprover } from './stx/transfer-stx/transfer-stx';
-import { getAccountIdFromConnectedApp } from './stx/utils';
+import { getAccountIdFromConnectedApp, getAccountIdFromRequestParams } from './stx/utils';
 import { BrowserMessage } from './utils';
 
 interface BrowserApproverProps {
@@ -37,6 +42,7 @@ interface BrowserApproverProps {
 }
 
 export function BrowserApprover(props: BrowserApproverProps) {
+  const { list: stacksSigners } = useStacksSigners();
   switch (props.request?.method) {
     case getAddresses.method:
       return (
@@ -168,6 +174,52 @@ export function BrowserApprover(props: BrowserApproverProps) {
           closeApprover={props.closeApprover}
           accountId={accountId}
         />
+      );
+    }
+    case stxCallContract.method: {
+      const accountId = getAccountIdFromRequestParams({
+        params: props.request.params,
+        app: props.app,
+        stacksSigners,
+      });
+      return (
+        <NonceLoader accountId={accountId}>
+          {nonce => {
+            const parsedRequest = stxCallContract.request.parse(props.request);
+            return (
+              <CallContractApprover
+                sendResult={props.sendResult}
+                request={parsedRequest}
+                closeApprover={props.closeApprover}
+                accountId={accountId}
+                nonce={nonce}
+              />
+            );
+          }}
+        </NonceLoader>
+      );
+    }
+    case stxDeployContract.method: {
+      const accountId = getAccountIdFromRequestParams({
+        params: props.request.params,
+        app: props.app,
+        stacksSigners,
+      });
+      return (
+        <NonceLoader accountId={accountId}>
+          {nonce => {
+            const parsedRequest = stxDeployContract.request.parse(props.request);
+            return (
+              <DeployContractApprover
+                sendResult={props.sendResult}
+                request={parsedRequest}
+                closeApprover={props.closeApprover}
+                accountId={accountId}
+                nonce={nonce}
+              />
+            );
+          }}
+        </NonceLoader>
       );
     }
 

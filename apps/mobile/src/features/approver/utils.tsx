@@ -8,6 +8,7 @@ import {
   ContractCallPayload,
   PayloadType,
   PayloadWire,
+  SmartContractPayloadWire,
   StacksTransactionWire,
   TokenTransferPayloadWire,
   VersionedSmartContractPayloadWire,
@@ -150,9 +151,27 @@ export function assertContractCallPayload(
 }
 export function assertContractDeployPayload(
   payload: PayloadWire
-): asserts payload is VersionedSmartContractPayloadWire {
-  if (payload.payloadType !== PayloadType.VersionedSmartContract)
+): asserts payload is SmartContractPayloadWire | VersionedSmartContractPayloadWire {
+  if (
+    payload.payloadType !== PayloadType.VersionedSmartContract &&
+    payload.payloadType !== PayloadType.SmartContract
+  )
     throw new Error('This component should only be used for contract deploys');
+}
+
+export function isTokenTransfer(payload: PayloadWire): payload is TokenTransferPayloadWire {
+  return payload.payloadType === PayloadType.TokenTransfer;
+}
+export function isContractCall(payload: PayloadWire): payload is ContractCallPayload {
+  return payload.payloadType === PayloadType.ContractCall;
+}
+export function isContractDeploy(
+  payload: PayloadWire
+): payload is VersionedSmartContractPayloadWire | SmartContractPayloadWire {
+  return (
+    payload.payloadType === PayloadType.SmartContract ||
+    payload.payloadType === PayloadType.VersionedSmartContract
+  );
 }
 
 export interface TxOptions {
