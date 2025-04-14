@@ -37,7 +37,7 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
         onPressHeader={() =>
           router.navigate({
             pathname: AppRoutes.AccountBalances,
-            params: { accountId: account.id },
+            params: { accountId: account.id, account: account.id },
           })
         }
         totalBalance={balance}
@@ -55,7 +55,7 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
           onPressHeader={() =>
             router.navigate({
               pathname: AppRoutes.AccountActivity,
-              params: { accountId: account.id, accountName: account.name },
+              params: { accountId: account.id, accountName: account.name, account: account.id },
             })
           }
         />
@@ -67,7 +67,7 @@ export function AccountLayout({ account, balance }: AccountLayoutProps) {
           onPressHeader={() =>
             router.navigate({
               pathname: AppRoutes.AccountCollectibles,
-              params: { accountId: account.id, accountName: account.name },
+              params: { accountId: account.id, accountName: account.name, account: account.id },
             })
           }
         />

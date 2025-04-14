@@ -94,6 +94,7 @@ export function AccountsWidget() {
                       pathname: AppRoutes.Account,
                       params: {
                         accountId: account.id,
+                        account: account.id,
                       },
                     });
                   }}
@@ -117,7 +118,7 @@ export function AccountsWidget() {
           accountSelectorSheetRef.current?.close();
           router.navigate({
             pathname: AppRoutes.Account,
-            params: { accountId },
+            params: { accountId, account: accountId },
           });
         }}
       />

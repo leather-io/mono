@@ -43,6 +43,7 @@ export default () => {
       runtimeVersion: {
         policy: 'fingerprint',
       },
+      newArchEnabled: false,
       orientation: 'portrait',
       icon: './src/assets/icon.png',
       scheme: 'leather',
@@ -99,7 +100,7 @@ export default () => {
         package: 'io.leather.mobilewallet',
         googleServicesFile: './google-services.json',
         adaptiveIcon: {
-          foregroundImage: './src/assets/icon.png',
+          foregroundImage: './src/assets/adaptive-icon.png',
           backgroundColor: '#12100F',
         },
         notification: {
@@ -134,6 +135,7 @@ export default () => {
               deploymentTarget: '13.4',
             },
             android: {
+              kotlinVersion: '1.7.20',
               compileSdkVersion: 34,
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
