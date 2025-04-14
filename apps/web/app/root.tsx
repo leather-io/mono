@@ -6,8 +6,8 @@ import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
 import { ErrorPage } from './features/page/error';
 
-// Buffer polyfill
-// @ts-expect-error // safe-buffer typings are too old
+// Polyfill global Buffer
+// @ts-expect-error safe-buffer typings are too old
 globalThis.Buffer = Buffer;
 
 export function links() {
