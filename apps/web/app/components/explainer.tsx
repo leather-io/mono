@@ -4,6 +4,8 @@ import { ReactElement } from 'react';
 import { css } from 'leather-styles/css';
 import { Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 
+import { Button } from '@leather.io/ui';
+
 // easier way to handle the conditional border for the breakpoints
 const gridBorders = css({
   '& > .earn-step:not(:last-child)': {
@@ -46,17 +48,39 @@ interface EarnInstructionStepProps {
 }
 export function ExplainerStep({ index, title, description, img }: EarnInstructionStepProps) {
   return (
-    <Flex flexDir="column" p="space.05" className="earn-step">
+    <Flex
+      flexDir="column"
+      p="space.05"
+      className="earn-step"
+      justifyContent={['space-between', null, 'start']}
+    >
       <VStack gap="space.02" alignItems="left">
-        <styled.span textStyle="heading.05" color="ink.text-non-interactive">
-          0{index + 1}
-        </styled.span>
-        {img}
+        <VStack
+          gap="space.02"
+          flexDirection={['row', null, 'column']}
+          justifyContent="space-between"
+          alignItems={['center', null, 'start']}
+        >
+          <styled.span textStyle="heading.05" color="ink.text-non-interactive">
+            0{index + 1}
+          </styled.span>
+          {img}
+        </VStack>
         <styled.h4 textStyle="label.01">{title}</styled.h4>
       </VStack>
       <styled.p textStyle="caption.01" fontSize="13px">
         {description}
       </styled.p>
+
+      <Button
+        px="space.06"
+        mt={['space.08', 'space.03']}
+        size="sm"
+        width="100%"
+        display={['block', null, 'none']}
+      >
+        Button
+      </Button>
     </Flex>
   );
 }

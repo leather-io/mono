@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 
-import { HStack, VStack, styled } from 'leather-styles/jsx';
+import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 
 import { Button, CheckmarkCircleIcon, CircleIcon } from '@leather.io/ui';
 
@@ -40,11 +40,11 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
   return (
     <VStack
       alignItems="flex-start"
-      py="space.05"
-      borderWidth={1}
+      py={[null, null, 'space.03', 'space.05']}
+      borderWidth={[0, null, 1]}
       borderColor="ink.border-default"
       borderRadius="sm"
-      gap="space.03"
+      gap={[null, null, 'space.03']}
     >
       {preview}
       {confirmationSteps
@@ -54,7 +54,8 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
           return (
             <HStack
               key={confirmation.id}
-              p="space.05"
+              p={['space.05', null, 'space.03', 'space.05']}
+              w={['100%', null, 'auto']}
               borderBottomWidth={index === confirmationSteps.length - 1 ? 0 : 1}
               borderColor="ink.border-default"
               alignItems="flex-start"
@@ -69,11 +70,13 @@ export function ConfirmationSteps<T extends ConfirmationStepId>({
                   : 'pointer'
               }
             >
-              {confirmation.state.accepted ? (
-                <CheckmarkCircleIcon variant="medium" />
-              ) : (
-                <CircleIcon variant="medium" />
-              )}
+              <Box flexShrink={0}>
+                {confirmation.state.accepted ? (
+                  <CheckmarkCircleIcon variant="medium" />
+                ) : (
+                  <CircleIcon variant="medium" />
+                )}
+              </Box>
               <VStack alignItems="flex-start" gap="space.02">
                 <styled.span textStyle="label.02">{confirmation.text}</styled.span>
                 {isCurrent && (

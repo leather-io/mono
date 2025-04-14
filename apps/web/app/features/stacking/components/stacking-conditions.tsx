@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { HStack, Stack, styled } from 'leather-styles/jsx';
+import { Box, HStack, Stack, styled } from 'leather-styles/jsx';
 
 export interface StackingConditionItem {
   icon: ReactNode;
@@ -17,7 +17,7 @@ export function StackingConditions({ conditions }: StackingConditionsProps) {
     <Stack gap="space.04">
       {conditions.map(condition => (
         <HStack key={condition.title} alignItems="flex-start">
-          {condition.icon}
+          <Box flexShrink={0}>{condition.icon}</Box>
           <Stack gap="0">
             <styled.span textStyle="label.03">{condition.title}</styled.span>
             <styled.span textStyle="caption.01" color="ink.text-subdued">

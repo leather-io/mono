@@ -56,7 +56,13 @@ export function PooledStackingConfirmationSteps({
   return (
     <ConfirmationSteps
       preview={
-        <VStack alignItems="flex-start" px="space.05" gap="space.01">
+        <VStack
+          alignItems="flex-start"
+          px={['space.05', null, 'space.03', 'space.05']}
+          pt={['space.05', null, '0']}
+          pb={['space.03', null, '0']}
+          gap="space.01"
+        >
           <styled.h1 textStyle="label.01">You&apos;ll pool up to</styled.h1>
           <styled.span textStyle="heading.04" fontSize="26px" fontWeight={500}>
             {stxAmount.isNaN() ? '—' : toHumanReadableStx(stxAmount)}

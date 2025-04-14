@@ -6,10 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { StackingClient } from '@stacks/stacking';
 import { ClarityType } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
-import { Stack, styled } from 'leather-styles/jsx';
+import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
+import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import { ChoosePoolingAmount } from '~/features/stacking/start-pooled-stacking/components/choose-pooling-amount';
 import { PooledStackingConfirmationSteps } from '~/features/stacking/start-pooled-stacking/components/pooled-stacking-confirmation-steps';
@@ -31,7 +32,7 @@ import {
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
-import { Hr, Spinner } from '@leather.io/ui';
+import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
 import { StackingContractDetails } from '../components/stacking-contract-details';
 import { StackingFormItemTitle } from '../components/stacking-form-item-title';
@@ -86,6 +87,8 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = useMemo(() => getPoxContracts(network), [network]);
   const navigate = useNavigate();
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
 
@@ -224,7 +227,13 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const poolAmount = formMethods.watch('amount');
 
-  if (getSecondsUntilNextCycleQuery.isLoading) return <Spinner />;
+  if (getSecondsUntilNextCycleQuery.isLoading) {
+    return (
+      <Flex height="100vh" width="100%">
+        <LoadingSpinner />
+      </Flex>
+    );
+  }
 
   function onSubmit(confirmation: PooledStackingConfirmationStepId) {
     if (confirmation === 'terms') {
@@ -242,80 +251,121 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   }
 
   return (
-    <FormProvider {...formMethods}>
-      <StartStackingLayout
-        stackingForm={
-          <Form>
-            <Stack gap="space.07">
-              <Stack gap="space.02">
-                <StackingFormItemTitle title="Amount" />
-                <ChoosePoolingAmount
-                  amount={totalAvailableBalance.amount}
-                  isLoading={totalAvailableBalanceIsLoading}
-                />
+    <>
+      <FormProvider {...formMethods}>
+        <StartStackingLayout
+          stackingForm={
+            <Form>
+              <Stack
+                gap={['space.05', 'space.05', 'space.05', 'space.07']}
+                maxWidth={[null, null, '304px', 'none']}
+              >
+                <Stack gap="space.02">
+                  <StackingFormItemTitle title="Amount" />
+                  <ChoosePoolingAmount
+                    amount={totalAvailableBalance.amount}
+                    isLoading={totalAvailableBalanceIsLoading}
+                  />
+                </Stack>
+
+                <Stack gap="space.02">
+                  <StackingFormItemTitle title="Address to receive rewards" />
+                  <ChooseRewardsAddress />
+                  <styled.span textStyle="caption.01" color="ink.text-subdued">
+                    This is where the pool will deposit your rewards each cycle.
+                  </styled.span>
+                </Stack>
+
+                <Hr />
+
+                <Stack gap="space.02">
+                  <StackingFormItemTitle title="Duration" />
+                  <ChoosePoolingDuration />
+                </Stack>
+
+                <Hr />
+
+                <Stack gap="space.02">
+                  <StackingFormItemTitle title="Details" />
+                  <StackingContractDetails
+                    addressTitle="Pool address"
+                    address={poolStxAddress}
+                    contractAddress={poxWrapperContract}
+                  />
+                </Stack>
+
+                <Hr />
+
+                <Stack gap="space.02">
+                  <StackingFormItemTitle title="Pooling conditions" />
+                  <ChoosePoolingConditions />
+                </Stack>
+
+                <Button
+                  px="space.06"
+                  size="sm"
+                  width="100%"
+                  display={['block', null, 'none']}
+                  onClick={() => {
+                    setDrawerOpen(true);
+                  }}
+                >
+                  Review
+                </Button>
               </Stack>
+            </Form>
+          }
+          stackingStepsPanel={
+            <StackingFormStepsPanel>
+              <PooledStackingConfirmationSteps
+                onSubmit={onSubmit}
+                confirmationState={{
+                  terms: {
+                    accepted: termsConfirmed,
+                    loading: false,
+                    visible: true,
+                  },
+                  allowContractCaller: {
+                    accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
+                    loading: handleAllowContractCallerSubmitPending,
+                    visible: requiresAllowContractCaller(poolName),
+                  },
+                  delegateStx: {
+                    accepted: Boolean(delegateStxResult),
+                    loading: handleDelegateStxPending,
+                    visible: true,
+                  },
+                }}
+                poolAmount={poolAmount}
+              />
+            </StackingFormStepsPanel>
+          }
+        />
+      </FormProvider>
 
-              <Stack gap="space.02">
-                <StackingFormItemTitle title="Address to receive rewards" />
-                <ChooseRewardsAddress />
-                <styled.span textStyle="caption.01" color="ink.text-subdued">
-                  This is where the pool will deposit your rewards each cycle.
-                </styled.span>
-              </Stack>
-
-              <Hr />
-
-              <Stack gap="space.02">
-                <StackingFormItemTitle title="Duration" />
-                <ChoosePoolingDuration />
-              </Stack>
-
-              <Hr />
-
-              <Stack gap="space.02">
-                <StackingFormItemTitle title="Details" />
-                <StackingContractDetails
-                  addressTitle="Pool address"
-                  address={poolStxAddress}
-                  contractAddress={poxWrapperContract}
-                />
-              </Stack>
-
-              <Hr />
-
-              <Stack gap="space.02">
-                <StackingFormItemTitle title="Pooling conditions" />
-                <ChoosePoolingConditions />
-              </Stack>
-            </Stack>
-          </Form>
-        }
-        stackingStepsPanel={
-          <StackingFormStepsPanel>
-            <PooledStackingConfirmationSteps
-              onSubmit={onSubmit}
-              confirmationState={{
-                terms: {
-                  accepted: termsConfirmed,
-                  loading: false,
-                  visible: true,
-                },
-                allowContractCaller: {
-                  accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
-                  loading: handleAllowContractCallerSubmitPending,
-                  visible: requiresAllowContractCaller(poolName),
-                },
-                delegateStx: {
-                  accepted: Boolean(delegateStxResult),
-                  loading: handleDelegateStxPending,
-                  visible: true,
-                },
-              }}
-              poolAmount={poolAmount}
-            />
-          </StackingFormStepsPanel>
-        }
-      />
-    </FormProvider>
+      <StartStackingDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen}>
+        <PooledStackingConfirmationSteps
+          onSubmit={onSubmit}
+          confirmationState={{
+            terms: {
+              accepted: termsConfirmed,
+              loading: false,
+              visible: true,
+            },
+            allowContractCaller: {
+              accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
+              loading: handleAllowContractCallerSubmitPending,
+              visible: requiresAllowContractCaller(poolName),
+            },
+            delegateStx: {
+              accepted: Boolean(delegateStxResult),
+              loading: handleDelegateStxPending,
+              visible: true,
+            },
+          }}
+          poolAmount={poolAmount}
+        />
+      </StartStackingDrawer>
+    </>
   );
 }

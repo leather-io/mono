@@ -16,16 +16,16 @@ export function StackingContractDetails({
 }: PoolingDetailsProps) {
   const { networkInstance } = useStacksNetwork();
   return (
-    <Stack>
-      <Stack direction="row" justifyContent="space-between">
-        <styled.p textStyle="label.03" color="ink.text-subdued">
+    <Stack pt="space.03">
+      <Stack direction="row" justifyContent="space-between" gap="space.02">
+        <styled.p textStyle="label.03" color="ink.text-subdued" whiteSpace="nowrap">
           {addressTitle}
         </styled.p>
         {address ? <CopyAddress address={address} /> : '—'}
       </Stack>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between" gap="space.02">
         <styled.p textStyle="label.03" color="ink.text-subdued">
-          Contract address
+          Contract
         </styled.p>
         {contractAddress ? (
           <ExternalAddress
