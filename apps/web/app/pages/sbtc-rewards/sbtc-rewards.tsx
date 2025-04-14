@@ -17,6 +17,7 @@ import { Button, Hr } from '@leather.io/ui';
 import { AcquireSbtcGrid } from './components/acquire-sbtc-grid';
 import { SbtcRewardHeroCard } from './components/sbtc-hero-card';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
+import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
 
 export interface RewardProtocolInfo {
@@ -178,6 +179,12 @@ export function SbtcRewards() {
         <Page.Inset>
           <Hr my="space.09" />
         </Page.Inset>
+
+        <styled.h2 textStyle="heading.05" mb="space.05">
+          Frequently asked questions
+        </styled.h2>
+
+        <SbtcRewardsFaq mb="space.07" />
       </Page>
     </SbtcRewardContext.Provider>
   );
