@@ -1,6 +1,6 @@
 import { Page } from '~/features/page/page';
-import { StartPooledStacking } from '~/features/stacking/start-pooled-stacking';
-import { PoolSlug } from '~/features/stacking/utils/types-preset-pools';
+import { StartPooledStacking } from '~/features/stacking/start-pooled-stacking/start-pooled-stacking';
+import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 
 interface PooledStackingProps {
   poolSlug: PoolSlug;

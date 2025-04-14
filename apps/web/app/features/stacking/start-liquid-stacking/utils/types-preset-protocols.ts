@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { NetworkInstance } from './types-preset-pools';
+import { NetworkInstance } from '../../start-pooled-stacking/utils/types-preset-pools';
 
 export const ProtocolSlugToIdMap = {
   'stacking-dao': 'stackingDao',

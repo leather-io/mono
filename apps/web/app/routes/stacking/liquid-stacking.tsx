@@ -1,9 +1,5 @@
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
-import {
-  ProtocolIdToDisplayNameMap,
-  ProtocolSlugToIdMap,
-  protocolSlugSchema,
-} from '~/features/stacking/utils/types-preset-protocols';
+import { protocolSlugSchema } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { LiquidStacking } from '~/pages/stacking/liquid-stacking';
 
 import { Route } from './+types/liquid-stacking';
@@ -15,21 +11,18 @@ export function loader({ params }: Route.LoaderArgs) {
     throw new Response(`Invalid protocol slug: ${params.slug}`, { status: 404 });
   }
 
-  const protocolId = ProtocolSlugToIdMap[protocolSlug];
-  const protocolName = ProtocolIdToDisplayNameMap[protocolId];
-
-  return { protocolName };
+  return { protocolSlug };
 }
 
 // eslint-disable-next-line no-empty-pattern
 export function meta({}: Route.MetaArgs) {
-  return [{ title: 'Leather Earn - Stacking' }];
+  return [{ title: 'Leather Earn - Liquid Stacking' }];
 }
 
 export default function EarnLiquidStackingRoute({ loaderData }: Route.ComponentProps) {
   return (
     <StackingClientProvider>
-      <LiquidStacking protocolName={loaderData.protocolName} />
+      <LiquidStacking protocolSlug={loaderData.protocolSlug} />
     </StackingClientProvider>
   );
 }

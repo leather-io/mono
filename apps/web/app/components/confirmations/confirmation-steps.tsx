@@ -1,15 +1,19 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 import { HStack, VStack, styled } from 'leather-styles/jsx';
-import { toHumanReadableStx } from '~/utils/unit-convert';
 
 import { Button, CheckmarkCircleIcon, CircleIcon } from '@leather.io/ui';
-import { stxToMicroStx } from '@leather.io/utils';
 
-export type ConfirmationStepType = 'terms' | 'allowContractCaller' | 'delegateStx';
+export type PooledStackingConfirmationStepId = 'terms' | 'allowContractCaller' | 'delegateStx';
 
-export interface ConfirmationStep {
-  id: ConfirmationStepType;
+export type LiquidStackingConfirmationStepId = 'terms' | 'depositStx';
+
+export type ConfirmationStepId =
+  | PooledStackingConfirmationStepId
+  | LiquidStackingConfirmationStepId;
+
+export interface ConfirmationStep<T extends ConfirmationStepId> {
+  id: T;
   text: string;
   actionText: string;
   state: {
@@ -20,49 +24,18 @@ export interface ConfirmationStep {
   onClick: () => void;
 }
 
-export interface StackingStepsCardProps {
-  poolAmount: number;
-  confirmationState: Record<ConfirmationStepType, ConfirmationStep['state']>;
-  onSubmit: (confirmation: ConfirmationStepType) => void | Promise<void>;
+export interface ConfirmationStepsProps<T extends ConfirmationStepId> {
+  preview: ReactNode;
+  confirmationSteps: ConfirmationStep<T>[];
 }
 
-export function StackingStepsCard({
-  poolAmount,
-  onSubmit,
-  confirmationState,
-}: StackingStepsCardProps) {
-  const confirmationSteps = useMemo<ConfirmationStep[]>(
-    () => [
-      {
-        id: 'terms',
-        text: 'I have read and accepted the pool’s terms and conditions',
-        actionText: 'Confirm',
-        state: confirmationState['terms'],
-        onClick: () => onSubmit('terms'),
-      },
-      {
-        id: 'allowContractCaller',
-        text: 'Allow the pool contract to interact with your wallet',
-        actionText: 'Allow',
-        state: confirmationState['allowContractCaller'],
-        onClick: () => onSubmit('allowContractCaller'),
-      },
-      {
-        id: 'delegateStx',
-        text: 'Confirm and start pooling',
-        actionText: 'Confirm',
-        state: confirmationState['delegateStx'],
-        onClick: () => onSubmit('delegateStx'),
-      },
-    ],
-    [onSubmit, confirmationState]
-  );
-
-  const currentConfirmation = useMemo<(typeof confirmationSteps)[number] | undefined>(() => {
-    return confirmationSteps.find(confirmation => !confirmation.state.accepted);
+export function ConfirmationSteps<T extends ConfirmationStepId>({
+  confirmationSteps,
+  preview,
+}: ConfirmationStepsProps<T>) {
+  const currentConfirmationStep = useMemo<(typeof confirmationSteps)[number] | undefined>(() => {
+    return confirmationSteps.find(confirmationStep => !confirmationStep.state.accepted);
   }, [confirmationSteps]);
-
-  const stxAmount = stxToMicroStx(poolAmount);
 
   return (
     <VStack
@@ -73,16 +46,11 @@ export function StackingStepsCard({
       borderRadius="sm"
       gap="space.03"
     >
-      <VStack alignItems="flex-start" px="space.05" gap="space.01">
-        <styled.h1 textStyle="label.01">You&apos;ll pool up to</styled.h1>
-        <styled.span textStyle="heading.04" fontSize="26px" fontWeight={500}>
-          {stxAmount.isNaN() ? '—' : toHumanReadableStx(stxAmount)}
-        </styled.span>
-      </VStack>
+      {preview}
       {confirmationSteps
         .filter(confirmation => confirmation.state.visible)
         .map((confirmation, index) => {
-          const isCurrent = currentConfirmation?.id === confirmation.id;
+          const isCurrent = currentConfirmationStep?.id === confirmation.id;
           return (
             <HStack
               key={confirmation.id}

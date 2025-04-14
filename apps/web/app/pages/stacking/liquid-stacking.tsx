@@ -1,16 +1,16 @@
 import { Page } from '~/features/page/page';
-import { StartLiquidStacking } from '~/features/stacking/start-liquid-stacking';
-import { ProtocolName } from '~/features/stacking/utils/types-preset-protocols';
+import { StartLiquidStacking } from '~/features/stacking/start-liquid-stacking/start-liquid-stacking';
+import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 
 interface StackInPoolProps {
-  protocolName: ProtocolName;
+  protocolSlug: ProtocolSlug;
 }
 
-export function LiquidStacking({ protocolName }: StackInPoolProps) {
+export function LiquidStacking({ protocolSlug }: StackInPoolProps) {
   return (
     <Page>
       <Page.Header title="Enroll in liquid stacking" />
-      <StartLiquidStacking protocolName={protocolName} />
+      <StartLiquidStacking protocolSlug={protocolSlug} />
     </Page>
   );
 }

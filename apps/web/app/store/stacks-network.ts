@@ -1,7 +1,7 @@
 import { StacksNetworkName, networkFrom } from '@stacks/network';
 import { useAtom } from 'jotai/index';
 import { atomWithStorage } from 'jotai/utils';
-import { getNetworkInstance } from '~/features/stacking/utils/utils-preset-pools';
+import { getNetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
 
 import { defaultNetworksKeyedById } from '@leather.io/models';
 

@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import BigNumber from 'bignumber.js';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
-import { StackingPoolFormSchema } from '~/features/stacking/utils/stacking-pool-form-schema';
+import { StackingPoolFormSchema } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-form-schema';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
 import { Button, Input, Spinner } from '@leather.io/ui';

@@ -2,7 +2,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Box } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
-import { StackingPoolFormSchema } from '~/features/stacking/utils/stacking-pool-form-schema';
+import { StackingPoolFormSchema } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-form-schema';
 
 import { Input } from '@leather.io/ui';
 
