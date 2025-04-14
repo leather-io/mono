@@ -4,7 +4,7 @@ import { ArrowRotateRightLeftIcon, Flag } from '@leather.io/ui';
 
 export function ChoosePoolingDuration() {
   return (
-    <HStack pt="space.02">
+    <HStack pt="space.03">
       <Flag img={<ArrowRotateRightLeftIcon />} align="top">
         <Stack gap="space.01">
           <styled.p textStyle="label.03">Indefinite</styled.p>
