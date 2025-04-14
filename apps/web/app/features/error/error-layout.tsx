@@ -1,5 +1,6 @@
 import { isRouteErrorResponse } from 'react-router';
 
+import * as Sentry from '@sentry/react-router';
 import { Flex } from 'leather-styles/jsx';
 
 import type { Route } from '../../+types/root';
@@ -19,6 +20,7 @@ export function ErrorLayout({ error }: ErrorLayoutProps) {
       error.data ||
       (error.status === 404 ? 'The requested page could not be found.' : error.statusText) ||
       details;
+    Sentry.captureException(error);
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

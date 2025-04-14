@@ -1,9 +1,25 @@
 import { renderToReadableStream } from 'react-dom/server';
-import { type AppLoadContext, type EntryContext, ServerRouter } from 'react-router';
+import {
+  type AppLoadContext,
+  type EntryContext,
+  HandleErrorFunction,
+  ServerRouter,
+} from 'react-router';
 
+import * as Sentry from '@sentry/react-router';
 import { isbot } from 'isbot';
 
-export default async function handleRequest(
+// eslint-disable-next-line func-style
+export const handleError: HandleErrorFunction = (error, { request }) => {
+  // React Router may abort some interrupted requests, report those
+  if (!request.signal.aborted) {
+    Sentry.captureException(error);
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+};
+
+async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
@@ -43,3 +59,10 @@ export default async function handleRequest(
     status: responseStatusCode,
   });
 }
+
+export default handleRequest;
+
+// FIXME: Supposedly this is the way you should handle Sentry errors on the
+// server https://docs.sentry.io/platforms/javascript/guides/react-router/
+// This fn is undefined in the Sentry package as of v9.12.0
+// export default Sentry.sentryHandleRequest(handleRequest);
