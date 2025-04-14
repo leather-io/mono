@@ -8,7 +8,7 @@
     "android": "pnpm run firebase:android && expo run:android",
     "android:release": "pnpm run firebase:android && expo run:android --variant release",
     "build": "tsc --build",
-    "postinstall": "turbo build --filter=@leather.io/mobile",
+    "postinstall": "if [ \"$CI\" = \"1\" ]; then turbo build --filter=@leather.io/mobile; fi",
     "build:watch": "tsc --build --watch --preserveWatchOutput",
     "check:cocoapods": "sh scripts/enforce-cocoapods-version.sh",
     "crowdin": "crowdin",
@@ -66,7 +66,6 @@
     "@react-native-firebase/app": "21.7.1",
     "@react-native-firebase/messaging": "21.7.1",
     "@react-native/assets-registry": "0.73.1",
-    "@react-native/gradle-plugin": "0.74.87",
     "@react-native/metro-config": "0.73.5",
     "@react-navigation/native": "6.0.2",
     "@react-navigation/stack": "6.4.1",
@@ -188,6 +187,11 @@
   },
   "packageManager": "pnpm@10.4.0",
   "private": true,
+  "expo": {
+    "install": {
+      "exclude": []
+    }
+  },
   "publishConfig": {
     "access": "public"
   }

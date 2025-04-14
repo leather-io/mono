@@ -55,7 +55,6 @@ export default () => {
       assetBundlePatterns: ['**/*'],
       ios: {
         bundleIdentifier: 'io.leather.mobilewallet',
-        icon: './src/assets/icon.png',
         googleServicesFile: './GoogleService-Info.plist',
         supportsTablet: false,
         usesNonExemptEncryption: false,
@@ -99,10 +98,13 @@ export default () => {
       android: {
         package: 'io.leather.mobilewallet',
         googleServicesFile: './google-services.json',
-        icon: './src/assets/icon.png',
         adaptiveIcon: {
-          foregroundImage: './src/assets/adaptive-icon.png',
+          foregroundImage: './src/assets/icon.png',
           backgroundColor: '#12100F',
+        },
+        notification: {
+          icon: './src/assets/android-notification-icon.png',
+          color: '#12100F',
         },
         splash: {
           image: './src/assets/light-mode-splash.png',
