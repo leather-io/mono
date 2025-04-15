@@ -213,7 +213,6 @@
       }
     },
     "patchedDependencies": {
-      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch",
       "pofile@1.1.4": "patches/pofile@1.1.4.patch"
     }
   }

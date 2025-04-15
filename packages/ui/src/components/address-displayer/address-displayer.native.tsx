@@ -1,11 +1,11 @@
 import { isEven } from '@leather.io/utils';
 
-import { Box, BoxProps } from '../box/box.native';
-import { Text } from '../text/text.native';
+import { Box } from '../box/box.native';
+import { Text, TextProps } from '../text/text.native';
 import { AddressDisplayerBaseProps } from './address-displayer.types.shared';
 import { groupByFour } from './address-displayer.utils.shared';
 
-export type AddressDisplayerProps = AddressDisplayerBaseProps & BoxProps;
+export type AddressDisplayerProps = AddressDisplayerBaseProps & TextProps;
 
 export function AddressDisplayer({ address, ...props }: AddressDisplayerProps) {
   return (

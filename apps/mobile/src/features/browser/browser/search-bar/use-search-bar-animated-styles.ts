@@ -1,12 +1,18 @@
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import {
   Extrapolation,
+  SharedValue,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 
-export function useSearchBarAnimatedStyles() {
+export function useSearchBarAnimatedStyles(): {
+  searchBarStyle: { opacity: number; zIndex: number };
+  browserNavigationBarStyle: { opacity: number; zIndex: number };
+  keyboardAvoidingStyle: { bottom: number };
+  isUrlFocused: SharedValue<boolean>;
+} {
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const isUrlFocused = useSharedValue(false);
   const keyboardAvoidingStyle = useAnimatedStyle(() => ({

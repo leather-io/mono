@@ -8,7 +8,6 @@ const normalizedStories = [
     files: '**/*.native.stories.?(ts|tsx|js|jsx)',
     importPathMatcher:
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.native.stories\.(?:ts|tsx|js|jsx)?)$/,
-    // @ts-expect-error: Property 'context' does not exist on type 'NodeRequire'
     req: require.context(
       '../components',
       true,

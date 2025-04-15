@@ -31,7 +31,7 @@ type BaseInputProps<Theme extends BaseTheme> = OpacityProps<Theme> &
   SpacingShorthandProps<Theme> &
   LayoutProps<Theme>;
 
-type Props = BaseInputProps<Theme> & ComponentPropsWithoutRef<typeof RNTextInput>;
+type Props = BaseInputProps<Theme> & Omit<ComponentPropsWithoutRef<typeof RNTextInput>, 'style'>;
 const composedRestyleFunction = composeRestyleFunctions<Theme, Props>(inputRestyleFunctions);
 
 export type InputState = 'default' | 'focused' | 'error';

@@ -55,7 +55,7 @@ export default () => {
       },
       assetBundlePatterns: ['**/*'],
       ios: {
-        deploymentTarget: '9.0',
+        deploymentTarget: '15.1',
         bundleIdentifier: 'io.leather.mobilewallet',
         googleServicesFile: './GoogleService-Info.plist',
         supportsTablet: false,
@@ -133,7 +133,7 @@ export default () => {
           {
             ios: {
               useFrameworks: 'static',
-              deploymentTarget: '13.4',
+              deploymentTarget: '15.1',
             },
             android: {
               kotlinVersion: '1.7.20',

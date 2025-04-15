@@ -34,5 +34,5 @@ export default ({ config }) => ({
   web: {
     favicon: './src/assets-native/images/favicon.png',
   },
-  plugins: ['expo-font'],
+  plugins: ['expo-font', 'expo-asset'],
 });

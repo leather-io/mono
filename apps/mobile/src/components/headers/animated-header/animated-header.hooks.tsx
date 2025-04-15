@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { LayoutChangeEvent } from 'react-native';
 import {
+  AnimatedStyle,
+  SharedValue,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -13,7 +15,22 @@ import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 const blurOverlayVisibilityThreshold = 12;
 export const secondaryTitleVisibilityThreshold = 26;
 
-export function useAnimatedHeader(triggerAnimationYValue = secondaryTitleVisibilityThreshold) {
+interface AnimatedHeaderResult {
+  defaultStyles: ReturnType<typeof useScrollViewStyles>;
+  contentHeight: number;
+  viewHeight: number;
+  scrollY: SharedValue<number>;
+  secondaryTitleVisibilityThreshold: number;
+  onScrollHandler: ReturnType<typeof useAnimatedScrollHandler>;
+  animatedHeaderStyle: AnimatedStyle;
+  animatedBlurOverlayStyle: AnimatedStyle;
+  onContentSizeChange: (width: number, height: number) => void;
+  onLayoutChange: (event: LayoutChangeEvent) => void;
+}
+
+export function useAnimatedHeader(
+  triggerAnimationYValue = secondaryTitleVisibilityThreshold
+): AnimatedHeaderResult {
   const defaultStyles = useScrollViewStyles();
   const [contentHeight, setContentHeight] = useState(0);
   const [viewHeight, setViewHeight] = useState(0);

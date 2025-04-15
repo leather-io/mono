@@ -1,6 +1,7 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import 'react-native-svg';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
@@ -58,12 +59,12 @@ function App() {
 
 export default function RootLayout() {
   return (
-    <KeyboardProvider>
-      <LDProvider client={featureFlagClient}>
-        <ReduxProvider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <I18nProvider i18n={i18n}>
-              <SafeAreaProvider>
+    <SafeAreaProvider>
+      <KeyboardProvider>
+        <LDProvider client={featureFlagClient}>
+          <ReduxProvider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <I18nProvider i18n={i18n}>
                 <QueryClientProvider client={queryClient}>
                   <LeatherQueryProvider>
                     <ThemeProvider>
@@ -83,11 +84,11 @@ export default function RootLayout() {
                     </ThemeProvider>
                   </LeatherQueryProvider>
                 </QueryClientProvider>
-              </SafeAreaProvider>
-            </I18nProvider>
-          </PersistGate>
-        </ReduxProvider>
-      </LDProvider>
-    </KeyboardProvider>
+              </I18nProvider>
+            </PersistGate>
+          </ReduxProvider>
+        </LDProvider>
+      </KeyboardProvider>
+    </SafeAreaProvider>
   );
 }
