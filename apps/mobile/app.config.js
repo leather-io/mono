@@ -55,6 +55,7 @@ export default () => {
       },
       assetBundlePatterns: ['**/*'],
       ios: {
+        deploymentTarget: '9.0',
         bundleIdentifier: 'io.leather.mobilewallet',
         googleServicesFile: './GoogleService-Info.plist',
         supportsTablet: false,
