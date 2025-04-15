@@ -38,7 +38,7 @@ export const NetworkInstanceToLiquidContractMap = {
     Lisa: '',
   },
   mainnet: {
-    WrapperStackingDAO: 'SP4SZE494VC2YC5JYG7AYFQ44FQ4PYV7DVMDPBG.stacking-dao-core-v1',
+    WrapperStackingDAO: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.stacking-dao-core-v1',
     Lisa: 'SM3KNVZS30WM7F89SXKVVFY4SN9RMPZZ9FX929N0V.auto-whitelist-mint-helper',
   },
 } as const;

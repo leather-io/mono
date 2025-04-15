@@ -20,6 +20,42 @@ import { LeatherSdk } from '@leather.io/sdk';
 import { stxToMicroStx } from '@leather.io/utils';
 
 import { LiquidStackingFormValues } from './types';
+import { LiquidContractName } from './types-preset-protocols';
+
+interface GetFunctionDataArgs {
+  contractName: LiquidContractName;
+  stxAmount: string;
+  contractAddress: string;
+}
+
+function getLiquidStackingFunctionData({
+  contractName,
+  stxAmount,
+  contractAddress,
+}: GetFunctionDataArgs) {
+  if (contractName === 'WrapperStackingDAO') {
+    return {
+      functionArgs: [
+        contractPrincipalCV(contractAddress, 'reserve-v1'),
+        uintCV(stxAmount),
+        noneCV(),
+      ],
+      functionName: 'deposit',
+    };
+  }
+
+  if (contractName === 'Lisa') {
+    return {
+      functionArgs: [uintCV(stxAmount)],
+      functionName: 'request-mint',
+    };
+  }
+
+  return {
+    functionArgs: [],
+    functionName: 'deposit',
+  };
+}
 
 function getOptions(
   values: LiquidStackingFormValues,
@@ -33,19 +69,12 @@ function getOptions(
   const [contractAddress] = getLiquidContractAddressAndName(networkMode, protocol.liquidContract);
   const stxAmount = stxToMicroStx(values.amount).toString();
   const stxAddress = values.stxAddress;
-  const { functionArgs, functionName } =
-    protocol.liquidContract === 'WrapperStackingDAO'
-      ? {
-          functionArgs: [
-            contractPrincipalCV(contractAddress, 'reserve-v1'), // TODO: fails (SP4SZE494VC2YC5JYG7AYFQ44FQ4PYV7DVMDPBG) - Invalid c32check string: checksum mismatch
-            uintCV(stxAmount),
-            noneCV(),
-          ],
-          functionName: 'deposit',
-        }
-      : protocol.liquidContract === 'Lisa'
-        ? { functionArgs: [uintCV(stxAmount)], functionName: 'request-mint' }
-        : { functionArgs: [], functionName: 'deposit' };
+
+  const { functionArgs, functionName } = getLiquidStackingFunctionData({
+    contractName: protocol.liquidContract,
+    stxAmount,
+    contractAddress,
+  });
 
   const postConditions: StxPostCondition[] = [
     {
