@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",
+    "@leather.io/analytics": "workspace:*",
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
@@ -29,6 +30,7 @@
     "@leather.io/utils": "workspace:*",
     "@react-router/node": "7.5.3",
     "@react-router/serve": "7.5.3",
+    "@segment/analytics-next": "1.81.0",
     "@sentry/profiling-node": "9.14.0",
     "@sentry/react-router": "9.14.0",
     "@stacks/network": "7.0.2",

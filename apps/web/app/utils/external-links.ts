@@ -1,10 +1,12 @@
 import urljoin from 'url-join';
 import { isWebUri } from 'valid-url';
+import { analytics } from '~/features/analytics/analytics';
 
 import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 
 export function openExternalLink(url: string) {
   if (!isWebUri(url)) return;
+  void analytics.untypedTrack('external_link_clicked', { url });
   return window.open(url, '_blank', 'noopener,noreferrer');
 }
 

@@ -6,6 +6,8 @@ import { Flex, styled } from 'leather-styles/jsx';
 import type { LeatherProvider } from '@leather.io/rpc';
 import { Tooltip } from '@leather.io/ui';
 
+import { analytics } from './features/analytics/analytics';
+import { useOnRouteChange } from './features/analytics/use-on-route-change';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
@@ -46,6 +48,8 @@ export const queryClient = new QueryClient({
 });
 
 export default function App() {
+  useOnRouteChange(location => analytics.page(location.pathname));
+
   return (
     <QueryClientProvider client={queryClient}>
       <Tooltip.Provider delayDuration={320}>

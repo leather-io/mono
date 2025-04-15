@@ -13,6 +13,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
+    environment: 'web:production'
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
@@ -22,9 +23,8 @@ jobs:
           LEATHER_TARGET: staging
           LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
           LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
+          LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
         run: pnpm turbo run build --filter="@leather.io/web"
-
-      - run: ls -R apps/web/build
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3

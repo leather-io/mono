@@ -1,11 +1,18 @@
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { analytics } from '~/features/analytics/analytics';
 
 import { Accordion } from '@leather.io/ui';
 
 export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
   return (
     <styled.div {...props}>
-      <Accordion.Root type="single" defaultValue="what-is-sbtc">
+      <Accordion.Root
+        type="single"
+        defaultValue="what-is-sbtc"
+        onValueChange={value =>
+          void analytics.untypedTrack('sbtc_faq_accordion_item_clicked', { value })
+        }
+      >
         <Accordion.Item value="what-is-sbtc">
           <Accordion.Trigger>What is sBTC?</Accordion.Trigger>
           <Accordion.Content>

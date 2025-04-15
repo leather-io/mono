@@ -2,6 +2,7 @@ import { StacksNetworkName } from '@stacks/network';
 import { ExtendedAccountBalances, StackingClient } from '@stacks/stacking';
 import { serializeCV } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
+import { analytics } from '~/features/analytics/analytics';
 import { stxToMicroStxBigint } from '~/utils/unit-convert';
 
 import { LeatherSdk } from '@leather.io/sdk';
@@ -46,6 +47,7 @@ export function createIncreaseLiquidMutationOptions({
         authId: authId ? parseInt(authId, 10) : undefined,
       });
 
+      void analytics.untypedTrack('liquid_stacking_increased');
       return leather.stxCallContract({
         contract: formatContractId(
           stackIncreaseOptions.contractAddress,

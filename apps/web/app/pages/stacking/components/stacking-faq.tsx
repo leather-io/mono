@@ -1,12 +1,19 @@
 import { styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
+import { analytics } from '~/features/analytics/analytics';
 
 import { Accordion } from '@leather.io/ui';
 
 export function StackingFaq(props: HTMLStyledProps<'div'>) {
   return (
     <styled.div {...props}>
-      <Accordion.Root type="single" defaultValue="what-is-stacking">
+      <Accordion.Root
+        type="single"
+        defaultValue="what-is-stacking"
+        onValueChange={value =>
+          void analytics.untypedTrack('stacking_faq_accordion_item_clicked', { value })
+        }
+      >
         <Accordion.Item value="what-is-stacking">
           <Accordion.Trigger>What is stacking?</Accordion.Trigger>
           <Accordion.Content>
