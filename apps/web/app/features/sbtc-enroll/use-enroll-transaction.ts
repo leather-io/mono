@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 
+import { analytics } from '../analytics/analytics';
+
 interface EnrollContractIdentifier {
   contractAddress: string;
   contractName: string;
@@ -81,6 +83,7 @@ export function useSbtcEnroll() {
         const contractDetails = getEnrollContractCallByNetwork(network.networkName);
 
         try {
+          void analytics.untypedTrack('user_enrolled_sbtc');
           const result = await leather.stxCallContract({
             contract: contractDetails.contract,
             functionName: 'enroll',

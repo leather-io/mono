@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { analytics } from '~/features/analytics/analytics';
 import { leather } from '~/helpers/leather-sdk';
 import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/helpers/utils';
 import { useStacksNetwork } from '~/store/stacks-network';
@@ -44,13 +45,21 @@ export function useLeatherConnect() {
     btcAddressP2wpkh,
     whenExtensionState: whenExtensionState(extensionState),
     openExtension() {
+      void analytics.untypedTrack('open_extension_clicked');
       void leather.open({ mode: 'fullpage' });
     },
     async connect() {
-      const result = await leather.getAddresses();
-      setAddresses(result.addresses);
+      void analytics.untypedTrack('sign_in_clicked', { status: 'initiated' });
+      try {
+        const result = await leather.getAddresses();
+        void analytics.untypedTrack('sign_in_clicked', { status: 'success' });
+        setAddresses(result.addresses);
+      } catch {
+        void analytics.untypedTrack('sign_in_clicked', { status: 'error' });
+      }
     },
     disconnect() {
+      void analytics.untypedTrack('sign_out_clicked');
       setAddresses([]);
     },
   };

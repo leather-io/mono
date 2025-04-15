@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { principalCV } from '@stacks/transactions';
+import { analytics } from '~/features/analytics/analytics';
 import { StxCallContractParams, leather } from '~/helpers/leather-sdk';
 
 import { WrapperPrincipal } from './types-preset-pools';
@@ -35,13 +36,14 @@ export function createHandleSubmit({
     // TODO: handle thrown errors
     const [stackingContract] = await Promise.all([client.getStackingContract()]);
 
-    const disAllowContracCallerOptions = getOptions(poxWrapperContract, stackingContract, network);
+    const disallowContractCallerOptions = getOptions(poxWrapperContract, stackingContract, network);
 
     setIsContractCallExtensionPageOpen(true);
 
     try {
+      void analytics.untypedTrack('contract_caller_disallowed');
       await leather.stxCallContract({
-        ...disAllowContracCallerOptions,
+        ...disallowContractCallerOptions,
       });
     } catch (error) {
       // eslint-disable-next-line no-console

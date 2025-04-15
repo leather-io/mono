@@ -8,7 +8,7 @@ export const stxTransferStx = defineRpcEndpoint({
   params: z
     .object({
       recipient: z.string(),
-      amount: z.coerce.number(),
+      amount: z.coerce.number().int('Amount must be an integer describing µSTX'),
       memo: z.string().optional(),
     })
     .passthrough(),

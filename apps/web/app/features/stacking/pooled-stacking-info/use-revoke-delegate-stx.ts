@@ -1,6 +1,7 @@
 import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { serializeCV } from '@stacks/transactions';
+import { analytics } from '~/features/analytics/analytics';
 
 import { LeatherSdk } from '@leather.io/sdk';
 import { formatContractId } from '@leather.io/stacks';
@@ -21,6 +22,7 @@ export function createRevokeDelegateStxMutationOptions({
     mutationFn: async () => {
       const stackingContract = await client.getStackingContract();
       const revokeDelegationOptions = client.getRevokeDelegateStxOptions(stackingContract);
+      void analytics.untypedTrack('stacking_revoke_delegate');
       return leather.stxCallContract({
         contract: formatContractId(
           revokeDelegationOptions.contractAddress,

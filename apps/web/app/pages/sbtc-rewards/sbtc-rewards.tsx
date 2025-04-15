@@ -7,6 +7,7 @@ import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { VelarLogo } from '~/components/icons/velar-logo';
 import { ZestLogo } from '~/components/icons/zest-logo';
+import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
@@ -116,6 +117,7 @@ export function SbtcRewards() {
   }
 
   async function swapStxSbtc() {
+    void analytics.untypedTrack('swap_stx_sbtc_opened');
     await leather.openSwap({ base: 'STX', quote: 'sBTC' });
   }
 
