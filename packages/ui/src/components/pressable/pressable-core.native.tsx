@@ -53,7 +53,9 @@ export const AnimatedRestylePressable = Animated.createAnimatedComponent(
     ],
     RNPressable
   )
-);
+) as React.ForwardRefExoticComponent<
+  PressableCoreProps & React.RefAttributes<ElementRef<typeof RNPressable>>
+>;
 
 // react-native-reanimated incorrectly blanket-wraps input component props with their internal SharedValue
 // without filtering out non-animatable props like event handlers, the `key` prop, causing problems at usage points:

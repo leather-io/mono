@@ -61,11 +61,13 @@ export const textInputRestyleFunctions = [
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
-export function createTextInput<T extends ComponentType>(TextInputComponent: T) {
+type RestyleTextInput = ReturnType<typeof createRestyleComponent<TextInputProps<Theme>, Theme>>;
+
+export function createTextInput<T extends ComponentType>(TextInputComponent: T): RestyleTextInput {
   return createRestyleComponent<TextInputProps<Theme>, Theme>(
     textInputRestyleFunctions,
     TextInputComponent
   );
 }
 
-export const TextInput = createTextInput(RNTextInput);
+export const TextInput: RestyleTextInput = createTextInput(RNTextInput);

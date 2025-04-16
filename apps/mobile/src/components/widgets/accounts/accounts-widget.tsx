@@ -110,9 +110,9 @@ export function AccountsWidget() {
         </Widget.Body>
       </Widget>
 
-      <AddAccountSheet addAccountSheetRef={addAccountSheetRef} />
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
-      <AccountSelectorSheet
+      {/* <AddAccountSheet addAccountSheetRef={addAccountSheetRef} /> */}
+      {/* <AddWalletSheet addWalletSheetRef={addWalletSheetRef} /> */}
+      {/* <AccountSelectorSheet
         sheetRef={accountSelectorSheetRef}
         onAccountPress={(accountId: string) => {
           accountSelectorSheetRef.current?.close();
@@ -121,7 +121,7 @@ export function AccountsWidget() {
             params: { accountId, account: accountId },
           });
         }}
-      />
+      /> */}
     </>
   );
 }

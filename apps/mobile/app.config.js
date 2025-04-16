@@ -43,7 +43,7 @@ export default () => {
       runtimeVersion: {
         policy: 'fingerprint',
       },
-      newArchEnabled: false,
+      newArchEnabled: true,
       orientation: 'portrait',
       icon: './src/assets/icon.png',
       scheme: 'leather',

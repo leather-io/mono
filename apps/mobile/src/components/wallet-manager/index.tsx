@@ -1,5 +1,3 @@
-import { Text } from 'react-native';
-
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useKeyStore } from '@/store/key-store';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
@@ -7,6 +5,7 @@ import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read
 import { useWallets } from '@/store/wallets/wallets.read';
 
 import { AccountId, WalletId } from '@leather.io/models';
+import { Text } from '@leather.io/ui/native';
 
 import { AccountLayout } from './account-list';
 import { WalletListLayout } from './wallets';

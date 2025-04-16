@@ -1,3 +1,4 @@
+import { ComponentType } from 'react';
 import { ViewStyle } from 'react-native';
 
 import {
@@ -106,7 +107,7 @@ export const boxRestyleFunctions = [
 
 export type SquircleBoxProps = BoxProps & SquircleViewProps;
 
-export const SquircleBox = createRestyleComponent<BoxProps & SquircleViewProps, Theme>(
-  boxRestyleFunctions as RestyleFunctionContainer<BoxProps, Theme>[],
-  SquircleView
-);
+export const SquircleBox: ComponentType<BoxProps & SquircleViewProps> = createRestyleComponent<
+  BoxProps & SquircleViewProps,
+  Theme
+>(boxRestyleFunctions as RestyleFunctionContainer<BoxProps, Theme>[], SquircleView);

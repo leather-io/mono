@@ -29,14 +29,14 @@ export function AddAccountSheet({ addAccountSheetRef }: AddAccountSheetBaseProps
 
   return (
     <>
-      <AddAccountSheetLayout
+      {/* <AddAccountSheetLayout
         addToWallet={addToWallet}
         addToNewWallet={addToNewWallet}
         addAccountSheetRef={addAccountSheetRef}
         themeVariant={themeDerivedFromThemePreference}
       />
 
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
+      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} /> */}
     </>
   );
 }

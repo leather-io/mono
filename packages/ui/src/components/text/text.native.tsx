@@ -33,7 +33,13 @@ export const Text = forwardRef<TextElement, TextProps>(({ style, ...rest }, ref)
   const adjustmentStyle = getAdjustedTextStyle(rest.variant);
 
   return (
-    <RestyleText ref={ref} color="ink.text-primary" style={[adjustmentStyle, style]} {...rest} />
+    <RestyleText
+      ref={ref}
+      color="ink.text-primary"
+      style={[adjustmentStyle, style]}
+      {...rest}
+      allowFontScaling={false}
+    />
   );
 });
 

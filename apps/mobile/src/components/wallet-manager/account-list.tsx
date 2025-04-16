@@ -1,8 +1,10 @@
 import { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
+
+import { Text } from '@leather.io/ui/native';
 
 interface AccountLayoutProps {
   fingerprint: string;

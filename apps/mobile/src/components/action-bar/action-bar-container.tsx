@@ -175,7 +175,7 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
           })}
           testID={TestId.homeAddWalletButton}
         />
-        <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
+        {/* <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} /> */}
       </ActionBar>
     );
   }

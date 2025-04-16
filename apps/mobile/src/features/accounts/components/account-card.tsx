@@ -1,5 +1,5 @@
 import { ComponentType, ReactNode } from 'react';
-import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
 
@@ -35,8 +35,11 @@ export function AccountCard({
   ...props
 }: AccountCardProps) {
   const { pressed, onPressIn, onPressOut } = usePressedState(props);
+  const size = useSharedValue(pressed ? 0.95 : 1);
+
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(pressed ? 0.95 : 1) }],
+    transform: [{ scale: size.value }],
+    // transform: [{ scale: withSpring(size.value) }],
   }));
 
   return (

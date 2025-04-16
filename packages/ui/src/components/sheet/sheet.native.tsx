@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from 'react';
 import { Dimensions, Platform } from 'react-native';
 import { SharedValue, useSharedValue } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { EdgeInsets } from 'react-native-safe-area-context';
 
 import {
   BottomSheetModal,
@@ -32,11 +32,12 @@ export interface SheetProps extends BottomSheetModalProps {
   animatedIndex?: SharedValue<number>;
   themeVariant: ThemeVariant;
   children: ReactNode;
+  safeAreaInsets?: EdgeInsets;
 }
 
 export type SheetRef = BottomSheetModal;
 
-export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
+const _Sheet = forwardRef<BottomSheetModal, SheetProps>(
   (
     {
       shouldHaveContainer = true,
@@ -47,11 +48,12 @@ export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
       animatedIndex,
       onDismiss,
       themeVariant,
+      safeAreaInsets,
       ...props
     },
     ref
   ) => {
-    const { bottom, top } = useSafeAreaInsets();
+    const { bottom, top } = safeAreaInsets ?? { bottom: 0, top: 0, left: 0, right: 0 };
     const theme = useTheme<Theme>();
     const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
     const defaultAnimatedIndex = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
@@ -124,7 +126,15 @@ export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
   }
 );
 
-Sheet.displayName = 'Sheet';
+export const Sheet = forwardRef<SheetRef, SheetProps>((props, ref) => {
+  return <_Sheet {...props} ref={ref} />;
+});
+
+Sheet.displayName = 'SheetWrapper';
+
+_Sheet.displayName = 'Sheet';
 
 export const SheetProvider = BottomSheetModalProvider;
-export const UIBottomSheetTextInput = createTextInput(BottomSheetTextInput);
+export const UIBottomSheetTextInput: ReturnType<
+  typeof createTextInput<typeof BottomSheetTextInput>
+> = createTextInput(BottomSheetTextInput);
