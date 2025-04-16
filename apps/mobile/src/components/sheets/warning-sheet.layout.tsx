@@ -13,7 +13,7 @@ import {
   Text,
 } from '@leather.io/ui/native';
 
-export type WarningSheetVariant = 'normal' | 'critical';
+type WarningSheetVariant = 'normal' | 'critical';
 
 interface WarningSheetLayoutProps {
   sheetRef: RefObject<SheetRef>;

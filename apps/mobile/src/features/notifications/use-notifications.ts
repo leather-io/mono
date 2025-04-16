@@ -38,7 +38,7 @@ interface RegisterNotifications {
   registerInAppNotifications(): void;
 }
 
-export function useRegisterNotifications(): RegisterNotifications {
+function useRegisterNotifications(): RegisterNotifications {
   const bitcoinAddresses = useBitcoinAddresses();
   const { mutateAsync: registerToken } = useRegisterNotificationMutation();
   const stacksAddresses = useStacksSignerAddresses();

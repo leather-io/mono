@@ -13,8 +13,6 @@ interface SignOptions {
   allowedSighash?: number[];
 }
 
-export type SignTxFn = (tx: Uint8Array, options?: SignOptions) => Promise<btc.Transaction>;
-
 export async function signTx(tx: Uint8Array, options?: SignOptions) {
   const unsignedTx = btc.Transaction.fromPSBT(tx);
 

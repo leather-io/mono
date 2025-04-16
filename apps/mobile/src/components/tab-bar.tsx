@@ -1,6 +1,6 @@
 import { Box, Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
-export const tabBarHeight = 56;
+const tabBarHeight = 56;
 
 function getBorderColor(isActive: boolean) {
   return isActive ? 'ink.action-primary-default' : 'ink.border-default';
@@ -8,7 +8,7 @@ function getBorderColor(isActive: boolean) {
 function getTextColor(isActive: boolean) {
   return isActive ? 'ink.text-primary' : 'ink.text-subdued';
 }
-export interface Tab {
+interface Tab {
   isActive: boolean;
   onPress(): void;
   title: string;

@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 
 import { AccountDisplayPreference, AccountDisplayPreferenceInfo } from '@leather.io/models';
 
-export enum AccountDisplayPreferenceType {
+enum AccountDisplayPreferenceType {
   NativeSegwit = 'native-segwit',
   Taproot = 'taproot',
   Bns = 'bns',

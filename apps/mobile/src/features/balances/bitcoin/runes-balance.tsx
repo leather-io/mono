@@ -15,7 +15,7 @@ interface RunesTokenBalanceProps extends PressableProps {
   symbol: string;
   name: string;
 }
-export function RunesTokenBalance({
+function RunesTokenBalance({
   availableBalance,
   fiatBalance,
   name,

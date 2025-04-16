@@ -58,7 +58,7 @@ const mnemonicSchema = z.object({
   mnemonic: z.string(),
   passphrase: z.string().optional(),
 });
-export type Mnemonic = z.infer<typeof mnemonicSchema>;
+type Mnemonic = z.infer<typeof mnemonicSchema>;
 
 export function deleteAllMnemonics(fingerprintArr: string[]) {
   return Promise.all(

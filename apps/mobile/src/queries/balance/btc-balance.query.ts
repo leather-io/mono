@@ -1,8 +1,4 @@
-import {
-  useAccountAddresses,
-  useTotalAccountAddresses,
-  useWalletAccountAddresses,
-} from '@/hooks/use-account-addresses';
+import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { toFetchState } from '@/shared/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
@@ -15,17 +11,12 @@ export function useBtcTotalBalance() {
   return toFetchState(useBtcAggregateBalanceQuery(accounts));
 }
 
-export function useBtcWalletBalance(fingerprint: string) {
-  const accounts = useWalletAccountAddresses(fingerprint);
-  return toFetchState(useBtcAggregateBalanceQuery(accounts));
-}
-
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useBtcAccountBalanceQuery(account));
 }
 
-export function useBtcAccountBalanceQuery(account: AccountAddresses) {
+function useBtcAccountBalanceQuery(account: AccountAddresses) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['btc-balance-service-get-btc-account-balance', account, fiatCurrencyPreference],
@@ -40,7 +31,7 @@ export function useBtcAccountBalanceQuery(account: AccountAddresses) {
   });
 }
 
-export function useBtcAggregateBalanceQuery(accounts: AccountAddresses[]) {
+function useBtcAggregateBalanceQuery(accounts: AccountAddresses[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['btc-balance-service-get-btc-aggregate-balance', accounts, fiatCurrencyPreference],

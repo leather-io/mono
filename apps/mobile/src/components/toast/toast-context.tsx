@@ -5,11 +5,11 @@ import { HasChildren } from '@leather.io/ui/native';
 import { Toast } from '.';
 import { ToastData, ToastMethods } from './types';
 
-export interface ToastContextType {
+interface ToastContextType {
   displayToast({ title, type }: ToastData): unknown;
 }
 
-export const ToastContext = createContext<ToastContextType | null>(null);
+const ToastContext = createContext<ToastContextType | null>(null);
 
 export function useToastContext() {
   const context = useContext(ToastContext);

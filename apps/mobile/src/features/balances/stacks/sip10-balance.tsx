@@ -17,7 +17,7 @@ interface Sip10TokenBalanceProps {
   name: string;
   symbol: string;
 }
-export function Sip10TokenBalance({
+function Sip10TokenBalance({
   availableBalance,
   contractId,
   fiatBalance,

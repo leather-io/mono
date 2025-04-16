@@ -7,7 +7,7 @@ import { useTheme } from '@shopify/restyle';
 
 import { PlusIcon, Theme } from '@leather.io/ui/native';
 
-export interface CreateWalletCardProps {
+interface CreateWalletCardProps {
   onPress(): void;
 }
 

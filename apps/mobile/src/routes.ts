@@ -1,12 +1,8 @@
 export enum AppRoutes {
-  AllAssets = '/all-assets',
   Home = '/',
   DeveloperConsole = '/developer-console',
   DeveloperConsoleWalletManager = '/developer-console/wallet-manager',
   DeveloperBitcoinScratchPad = '/developer-console/bitcoin-scratch-pad',
-  Send = '/send',
-  Receive = '/receive',
-  Swap = '/swap',
   Balances = '/balances',
   Collectibles = '/collectibles',
   CreateNewWallet = '/create-new-wallet',

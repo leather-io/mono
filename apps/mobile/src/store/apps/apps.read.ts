@@ -7,7 +7,7 @@ import { AppStatus } from './utils';
 
 const selectors = appsAdapter.getSelectors((state: RootState) => state.apps);
 
-export function selectApps(status?: AppStatus) {
+function selectApps(status?: AppStatus) {
   return createSelector(selectors.selectAll, apps => {
     switch (status) {
       case 'recently_visited':

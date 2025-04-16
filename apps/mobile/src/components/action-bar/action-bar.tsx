@@ -13,8 +13,8 @@ import { useTheme } from '@shopify/restyle';
 
 import { BlurView, Box, Theme } from '@leather.io/ui/native';
 
-export const ACTION_BAR_HEIGHT = 70;
-export const ACTION_BAR_BOTTOM_OFFSET = 10;
+const ACTION_BAR_HEIGHT = 70;
+const ACTION_BAR_BOTTOM_OFFSET = 10;
 export const ACTION_BAR_TOTAL_HEIGHT = ACTION_BAR_HEIGHT + ACTION_BAR_BOTTOM_OFFSET;
 
 interface ActionBarProps {

@@ -6,4 +6,3 @@ const bitcoinKeychainSchema = z.object({
 });
 export type BitcoinKeychain = z.infer<typeof bitcoinKeychainSchema>;
 export const bitcoinKeychainStoreSchema = entitySchema(bitcoinKeychainSchema);
-export type BitcoinKeychainStore = z.infer<typeof bitcoinKeychainStoreSchema>;

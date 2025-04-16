@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, createContext, forwardRef, useContext, useRef } from 'react';
+import { ReactNode, RefObject, forwardRef, useRef } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
@@ -115,15 +115,6 @@ export function createOnScrollHandler({
     }
   };
 }
-
-export const ActionBarContext = createContext<{ ref: RefObject<ActionBarMethods> | null }>({
-  ref: null,
-});
-
-export function useActionBarContext() {
-  return useContext(ActionBarContext);
-}
-
 interface ActionBarButtonProps {
   onPress: () => void;
   icon: ReactNode;
@@ -154,7 +145,7 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
   );
 }
 
-export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
+const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const { browserSheetRef, sendSheetRef, receiveSheetRef } = useGlobalSheets();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);

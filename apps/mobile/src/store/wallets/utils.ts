@@ -7,17 +7,14 @@ const abstractWalletSchema = z.object({
   createdOn: z.string(),
   name: z.string(),
 });
-export type AbstractWalletStore = z.infer<typeof abstractWalletSchema>;
 
 const softwareWalletSchema = abstractWalletSchema.extend({
   type: z.literal('software'),
 });
-export type SoftwareWalletStore = z.infer<typeof softwareWalletSchema>;
 
 const ledgerWalletSchema = abstractWalletSchema.extend({
   type: z.literal('ledger'),
 });
-export type LedgerWalletStore = z.infer<typeof ledgerWalletSchema>;
 
 const walletStoreSchema = z.union([softwareWalletSchema, ledgerWalletSchema]);
 export type WalletStore = z.infer<typeof walletStoreSchema>;

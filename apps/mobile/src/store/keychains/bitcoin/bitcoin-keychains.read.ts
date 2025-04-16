@@ -25,7 +25,7 @@ import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../k
 import { bitcoinKeychainAdapter } from './bitcoin-keychains.write';
 import { BitcoinKeychain } from './utils';
 
-export const bitcoinKeychainSelectors = bitcoinKeychainAdapter.getSelectors(
+const bitcoinKeychainSelectors = bitcoinKeychainAdapter.getSelectors(
   (state: RootState) => state.keychains.bitcoin
 );
 
@@ -99,18 +99,6 @@ export function useBitcoinAccounts() {
       },
     };
   }, [list]);
-}
-
-export function useBitcoinPayerFromAccountIndex(fingerprint: string, accountIndex: number) {
-  const { nativeSegwit, taproot } = useBitcoinAccounts().accountIndexByPaymentType(
-    fingerprint,
-    accountIndex
-  );
-
-  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
-  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
-
-  return { taprootPayer, nativeSegwitPayer };
 }
 
 export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {

@@ -11,7 +11,7 @@ import BigNumber from 'bignumber.js';
 import { AccountId, AverageBitcoinFeeRates, MarketData, Money } from '@leather.io/models';
 import { Utxo } from '@leather.io/query';
 
-export interface BtcData {
+interface BtcData {
   availableBalance: Money;
   fiatBalance: Money;
   feeRates: AverageBitcoinFeeRates;
@@ -19,7 +19,7 @@ export interface BtcData {
   marketData: MarketData;
 }
 
-export function useBtcData({ fingerprint, accountIndex }: AccountId): FetchState<BtcData> {
+function useBtcData({ fingerprint, accountIndex }: AccountId): FetchState<BtcData> {
   const feeRates = useAverageBitcoinFeeRates();
   const accountUtxos = useAccountUtxos(fingerprint, accountIndex);
   const btcBalance = useBtcAccountBalance(fingerprint, accountIndex);

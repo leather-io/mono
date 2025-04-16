@@ -4,7 +4,7 @@ import * as Clipboard from 'expo-clipboard';
 
 const defaultSuccessStateDuration = 2000;
 
-export type UseCopyToClipboardStatus = 'idle' | 'success' | 'error';
+type UseCopyToClipboardStatus = 'idle' | 'success' | 'error';
 
 interface UseCopyToClipboardOptions {
   successStateDuration?: number;

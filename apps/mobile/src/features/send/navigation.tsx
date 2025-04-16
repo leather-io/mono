@@ -23,7 +23,7 @@ type SendStackParamList = {
   approval: { hex: string };
 };
 
-export type SendRouteKey = keyof SendStackParamList;
+type SendRouteKey = keyof SendStackParamList;
 
 export const SendStack = createStackNavigator<SendStackParamList>();
 

@@ -98,7 +98,7 @@ function getPsbtNetwork(network: BitcoinNetworkModes) {
   throw new Error('This network is currently not supported');
 }
 
-export function BasePsbtSigner({
+function BasePsbtSigner({
   psbtHex: _psbtHex,
   onBack,
   onSuccess,

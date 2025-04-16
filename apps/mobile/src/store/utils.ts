@@ -10,12 +10,7 @@ export function filterObjectKeys(object: object, keys: string[]) {
   return Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
 }
 
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  UnknownAction
->;
+type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, UnknownAction>;
 
 type AppDispatch = StoreDispatch & ((action: AppThunk) => void);
 

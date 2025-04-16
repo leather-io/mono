@@ -11,4 +11,3 @@ const stacksKeychainSchema = z.object({
 });
 export type StacksKeychain = z.infer<typeof stacksKeychainSchema>;
 export const stacksKeychainStoreSchema = entitySchema(stacksKeychainSchema);
-export type StacksKeychainStore = z.infer<typeof stacksKeychainStoreSchema>;
