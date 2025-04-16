@@ -9,7 +9,7 @@ import { AccountStatus } from './utils';
 
 const selectors = accountsAdapter.getSelectors((state: RootState) => state.accounts);
 
-export function selectAccounts(status?: AccountStatus) {
+function selectAccounts(status?: AccountStatus) {
   return createSelector(selectors.selectAll, accounts => {
     switch (status) {
       case 'active':
@@ -39,13 +39,13 @@ function selectByAccountIds(accountIds: string[]) {
   });
 }
 
-export function selectAccountsByFingerprint(fingerprint: string, status?: AccountStatus) {
+function selectAccountsByFingerprint(fingerprint: string, status?: AccountStatus) {
   return createSelector(selectAccounts(status), accounts =>
     accounts.filter(account => account.fingerprint === fingerprint)
   );
 }
 
-export function selectAccountByIndex(fingerprint: string, idx: number) {
+function selectAccountByIndex(fingerprint: string, idx: number) {
   return createSelector(
     selectAccountsByFingerprint(fingerprint),
     accounts => accounts.filter(account => account.accountIndex === idx)[0]

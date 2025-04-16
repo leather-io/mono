@@ -27,7 +27,7 @@ type DeriveNextAccountKeychainsProps =
       passphrase?: string;
     };
 
-export enum KEYCHAIN_ERROR {
+enum KEYCHAIN_ERROR {
   WALLET_ALREADY_EXISTS = 'WALLET_ALREADY_EXISTS',
 }
 

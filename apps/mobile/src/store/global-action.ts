@@ -22,5 +22,5 @@ export interface AddWalletAction {
 }
 export const userAddsWallet = createAction<AddWalletAction>('global/userAddsWallet');
 
-export type RemoveWalletAction = WalletId;
+type RemoveWalletAction = WalletId;
 export const userRemovesWallet = createAction<RemoveWalletAction>('global/userRemovesWallet');

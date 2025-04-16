@@ -35,7 +35,7 @@ function StacksAccounts({ fingerprint, accountIndex }: StacksAccountsProps) {
 }
 
 type AccountsProps = WalletId;
-export function Accounts({ fingerprint }: AccountsProps) {
+function Accounts({ fingerprint }: AccountsProps) {
   const keys = useKeyStore();
   const accounts = useAccountsByFingerprint(fingerprint);
 

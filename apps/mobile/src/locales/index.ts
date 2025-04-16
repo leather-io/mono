@@ -11,7 +11,7 @@ const prodHash = 'adcc836a66272410c0b94e9twcj'; // with po file format
 const devHash = 'a6b025ebb570b783a20df09twcj'; // with po file format
 const otaClient = new OtaClient(isProduction() ? prodHash : devHash);
 
-export const DEFAULT_LOCALE = 'en';
+const DEFAULT_LOCALE = 'en';
 let LOCALES: string[] = [];
 export function getAvailableLocales() {
   return LOCALES;

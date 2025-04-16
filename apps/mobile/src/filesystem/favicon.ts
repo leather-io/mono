@@ -1,6 +1,6 @@
 import * as FileSystem from 'expo-file-system';
 
-export function getFaviconPath(hostname: string) {
+function getFaviconPath(hostname: string) {
   return `${FileSystem.documentDirectory}${hostname}_favicon.png`;
 }
 

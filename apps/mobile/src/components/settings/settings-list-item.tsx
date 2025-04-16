@@ -39,7 +39,7 @@ interface ItemPropsRadio extends ItemBaseProps {
 // TODO: Unnecessarily complicated–narrow down to minimum set of props a setting list item might need
 type PickCellProps<P extends CellProps> = Omit<Extract<P, { pressable: true }>, 'pressable'>;
 
-export type SettingsListItemProps = (ItemPropsSimple | ItemPropsSwitch | ItemPropsRadio) &
+type SettingsListItemProps = (ItemPropsSimple | ItemPropsSwitch | ItemPropsRadio) &
   PickCellProps<CellProps>;
 
 export function SettingsListItem({

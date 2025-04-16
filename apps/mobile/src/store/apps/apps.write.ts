@@ -1,13 +1,12 @@
 import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { handleAppResetWithState } from '../global-action';
-import { entitySchema, handleEntityActionWith } from '../utils';
-import { App, appSchema } from './utils';
+import { handleEntityActionWith } from '../utils';
+import { App } from './utils';
 
 export const appsAdapter = createEntityAdapter<App, string>({
   selectId: app => app.origin,
 });
-export const appEntitySchema = entitySchema(appSchema);
 const initialState = appsAdapter.getInitialState();
 
 type UserAddsAppPayload = App;

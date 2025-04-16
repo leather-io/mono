@@ -14,8 +14,8 @@ const baseAppSchema = z.object({
   screenshot: z.union([z.string(), z.null()]),
   name: z.string(),
 });
-
-export const appSchema = z.intersection(
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const appSchema = z.intersection(
   baseAppSchema,
   z.union([connectedAppSchema, recentlyVisitedAppSchema])
 );

@@ -3,7 +3,7 @@ import { t } from '@lingui/macro';
 
 import { PlusIcon } from '@leather.io/ui/native';
 
-export interface AddAccountCardProps {
+interface AddAccountCardProps {
   onPress(): void;
 }
 

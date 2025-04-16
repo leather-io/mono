@@ -10,7 +10,7 @@ export function useAccountUtxos(fingerprint: string, accountIndex: number) {
   return toFetchState(useAccountUtxosQuery(account));
 }
 
-export function useAccountUtxosQuery(account: AccountAddresses) {
+function useAccountUtxosQuery(account: AccountAddresses) {
   return useQuery({
     queryKey: ['utxos-service-get-account-utxos', account],
     queryFn: ({ signal }: QueryFunctionContext) =>

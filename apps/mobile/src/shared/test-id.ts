@@ -26,7 +26,6 @@ export enum TestId {
   settingsNetworkButton = 'settingsNetworkButton',
   settingsNotificationsButton = 'settingsNotificationsButton',
   settingsSecurityButton = 'settingsSecurityButton',
-  settingsTitle = 'settingsTitle',
   settingsWalletAndAccountsButton = 'settingsWalletAndAccountsButton',
   toastContainer = 'toastContainer',
   tokenBalanceItem = 'tokenBalanceItem',

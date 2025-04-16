@@ -9,7 +9,7 @@ import { isUndefined } from '@leather.io/utils';
 import { useGetTransactionByIdListQuery } from '../transaction/transactions-by-id.query';
 import { useStacksClient } from './stacks-client';
 
-export function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
+function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
   const client = useStacksClient();
   const queries = useQueries({
     queries: addresses.map(address => ({

@@ -19,7 +19,7 @@ type StacksSigners = ReturnType<typeof useStacksSigners>;
 type AccountsByFingerprint = ReturnType<typeof useAccountsByFingerprint>;
 type BitcoinAccountsFromAccountIndex = ReturnType<BitcoinAccounts['fromAccountIndex']>;
 
-export function deriveTotalAccountAddresses(
+function deriveTotalAccountAddresses(
   wallets?: Wallets,
   bitcoinAccounts?: BitcoinAccounts,
   stacksSigners?: StacksSigners
@@ -50,7 +50,7 @@ export function deriveTotalAccountAddresses(
       });
 }
 
-export function deriveWalletAccountAddresses(
+function deriveWalletAccountAddresses(
   fingerprint: string,
   bitcoinAccounts?: BitcoinAccounts,
   accountsByFingerprint?: AccountsByFingerprint,
@@ -78,7 +78,7 @@ export function deriveWalletAccountAddresses(
         );
 }
 
-export function deriveAccountAddresses(
+function deriveAccountAddresses(
   fingerprint: string,
   accountIndex: number,
   keychains: BitcoinAccountsFromAccountIndex,

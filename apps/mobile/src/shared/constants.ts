@@ -11,7 +11,3 @@ export const LEATHER_GUIDES_MOBILE_BITCOIN_UNIT = `${LEATHER_GUIDES_URL}/mobile-
 // TODO: Add this to Leather Guides on Framer
 export const LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION = `${LEATHER_GUIDES_URL}/mobile-app-authentication`;
 export const LEATHER_GUIDES_MOBILE_REMOVE_WALLET = `${LEATHER_GUIDES_URL}/mobile-remove-wallet`;
-
-// TODO: On Framer but no direct link from App
-export const LEATHER_GUIDES_MOBILE_SWITCH_NETWORKS = `${LEATHER_GUIDES_URL}/mobile-switch-networks`;
-export const LEATHER_GUIDES_MOBILE_ADD_WALLET = `${LEATHER_GUIDES_URL}/mobile-add-wallet`;

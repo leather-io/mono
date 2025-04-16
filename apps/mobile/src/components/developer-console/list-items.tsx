@@ -1,5 +1,4 @@
 import {
-  Box,
   ChevronRightIcon,
   Pressable,
   Text,
@@ -30,15 +29,5 @@ export function PressableListItem({ onPress, title, testID }: PressableListItemP
       </Text>
       <ChevronRightIcon variant="small" />
     </Pressable>
-  );
-}
-
-export function TitleListItem({ title }: { title: string }) {
-  return (
-    <Box justifyContent="center" p="3">
-      <Text variant="label01" color="ink.text-subdued">
-        {title}
-      </Text>
-    </Box>
   );
 }

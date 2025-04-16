@@ -20,9 +20,9 @@ export interface ReceiveSheetNavigatorParamList {
   'receive-asset-details': { asset: SelectedAsset; accountName: string };
 }
 
-export type ReceiveSheetRouteKeys = keyof ReceiveSheetNavigatorParamList;
+type ReceiveSheetRouteKeys = keyof ReceiveSheetNavigatorParamList;
 
-export type ReceiveSheetRouteProp<RouteKey extends ReceiveSheetRouteKeys> = RouteProp<
+type ReceiveSheetRouteProp<RouteKey extends ReceiveSheetRouteKeys> = RouteProp<
   ReceiveSheetNavigatorParamList & ParamListBase,
   RouteKey
 >;
