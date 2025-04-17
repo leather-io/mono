@@ -136,16 +136,16 @@ function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps)
         haptics="soft"
         testID={testID}
       >
-        <Box flexDirection="column" alignItems="center" gap="2">
+        <Box flexDirection="column" alignItems="center" gap="1">
           {icon}
-          {label && <Text variant="label02">{label}</Text>}
+          {label && <Text variant="label03">{label}</Text>}
         </Box>
       </Pressable>
     </Box>
   );
 }
 
-const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
+export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const { browserSheetRef, sendSheetRef, receiveSheetRef } = useGlobalSheets();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
