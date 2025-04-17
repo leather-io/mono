@@ -1,4 +1,5 @@
 import { RefObject, memo, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecipientInput } from '@/features/send/components/recipient/v2/recipient-input';
 import { RecipientSuggestions } from '@/features/send/components/recipient/v2/recipient-suggestions';
@@ -21,9 +22,15 @@ function RecipientSheetImplementation({ sheetRef, value }: RecipientSheetProps) 
   const suggestions = useRecipientSuggestions();
   const hasSuggestions = suggestions.length > 0;
   const sheetBehaviorProps = getSheetBehaviorProps({ hasSuggestions });
+  const safeAreaInsets = useSafeAreaInsets();
 
   return (
-    <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference} {...sheetBehaviorProps}>
+    <Sheet
+      ref={sheetRef}
+      safeAreaInsets={safeAreaInsets}
+      themeVariant={themeDerivedFromThemePreference}
+      {...sheetBehaviorProps}
+    >
       <Box px="5" pt="5" pb="2">
         <RecipientInput
           value={editingValue}
@@ -52,8 +59,8 @@ function getSheetBehaviorProps({ hasSuggestions }: GetSheetSnapBehaviorParams) {
     shouldHaveContainer: false,
     enableDynamicSizing: false,
     snapPoints: ['90%'],
-    keyboardBehavior: 'extend',
-  } as const;
+    keyboardBehavior: 'extend' as const,
+  };
 }
 
 export const RecipientSheet = memo(RecipientSheetImplementation);

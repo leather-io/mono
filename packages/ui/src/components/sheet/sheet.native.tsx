@@ -126,7 +126,7 @@ const _Sheet = forwardRef<BottomSheetModal, SheetProps>(
   }
 );
 
-export const Sheet = forwardRef<SheetRef, SheetProps>((props, ref) => {
+export const Sheet = forwardRef<BottomSheetModal, SheetProps>((props, ref) => {
   return <_Sheet {...props} ref={ref} />;
 });
 
