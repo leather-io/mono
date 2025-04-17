@@ -34,7 +34,7 @@ export default () => {
 
   return {
     expo: {
-      name: 'leather-wallet-mobile',
+      name: 'Leather',
       slug: 'leather-wallet-mobile',
       owner: 'leather-wallet',
       version: '2.3.0',
@@ -148,7 +148,12 @@ export default () => {
             {
               ios: {
                 useFrameworks: 'static',
-                deploymentTarget: '15.1',
+                // extraPods: [
+                //   { name: 'Firebase', modular_headers: true },
+                //   { name: 'FirebaseCoreInternal', modular_headers: true },
+                //   { name: 'GoogleUtilities', modular_headers: true },
+                //   { name: 'FirebaseCore', modular_headers: true },
+                // ],
               },
               // android: {
               //   kotlinVersion: '1.7.20',

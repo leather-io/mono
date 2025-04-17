@@ -51,3 +51,6 @@ credentials.json
 *.ipa
 *.apk
 *.aab
+
+# android/
+ios/
