@@ -6,15 +6,12 @@ function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
   const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
-    fs.copyFileSync(
-      googleServicesPathAndroid,
-      path.join(__dirname, './android/app/google-services.json')
-    );
+    fs.copyFileSync(googleServicesPathAndroid, path.join(__dirname, './google-services.json'));
   }
 
   if (googleServicesB64) {
     const decodedJson = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(path.join(__dirname, './android/app/google-services.json'), decodedJson);
+    fs.writeFileSync(path.join(__dirname, './google-services.json'), decodedJson);
   }
 }
 
@@ -22,18 +19,12 @@ function setupFirebaseEnvVariablesIos() {
   const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
   const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
-    fs.copyFileSync(
-      googleServicesPathIos,
-      path.join(__dirname, './ios/leatherwalletmobile/GoogleService-Info.plist')
-    );
+    fs.copyFileSync(googleServicesPathIos, path.join(__dirname, './GoogleService-Info.plist'));
   }
 
   if (googleServicesB64) {
     const decodedPlist = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(
-      path.join(__dirname, 'ios/leatherwalletmobile/GoogleService-Info.plist'),
-      decodedPlist
-    );
+    fs.writeFileSync(path.join(__dirname, './GoogleService-Info.plist'), decodedPlist);
   }
 }
 
@@ -43,9 +34,14 @@ export default () => {
 
   return {
     expo: {
-      name: 'Leather',
+      name: 'leather-wallet-mobile',
       slug: 'leather-wallet-mobile',
-      version: '2.2.0',
+      owner: 'leather-wallet',
+      version: '2.3.0',
+      runtimeVersion: {
+        policy: 'fingerprint',
+      },
+      platforms: ['ios', 'android'],
       orientation: 'portrait',
       icon: './src/assets/icon.png',
       scheme: 'leather',
@@ -55,87 +51,126 @@ export default () => {
       },
       assetBundlePatterns: ['**/*'],
       ios: {
-        googleServicesFile: './ios/leatherwalletmobile/GoogleService-Info.plist',
+        name: 'leatherwalletmobile',
+        deploymentTarget: '13.4',
+        googleServicesFile: './GoogleService-Info.plist',
+        bundleIdentifier: 'io.leather.mobilewallet',
+        supportsTablet: false,
+        usesNonExemptEncryption: false,
         entitlements: {
           'aps-environment': 'production',
         },
         infoPlist: {
           UIBackgroundModes: ['remote-notification', 'fetch'],
-        },
-        bundleIdentifier: 'io.leather.mobilewallet',
-        supportsTablet: false,
-        splash: {
-          image: './src/assets/light-mode-splash.png',
-          resizeMode: 'contain',
-          backgroundColor: '#12100F',
-          dark: {
-            image: './src/assets/dark-mode-splash.png',
-            resizeMode: 'contain',
-            backgroundColor: '#716A60',
+          infoPlist: {
+            UIBackgroundModes: ['remote-notification', 'fetch'],
+            NSCameraUsageDescription:
+              'This app uses the camera to scan QR codes for sending transactions.',
           },
-        },
-      },
-      android: {
-        package: 'io.leather.mobilewallet',
-        googleServicesFile: './android/app/google-services.json',
-        icon: './src/assets/icon.png',
-        adaptiveIcon: {
-          foregroundImage: './src/assets/adaptive-icon.png',
-          backgroundColor: '#12100F',
-        },
-        splash: {
-          image: './src/assets/light-mode-splash.png',
-          resizeMode: 'contain',
-          backgroundColor: '#12100F',
-          dark: {
-            image: './src/assets/dark-mode-splash.png',
-            resizeMode: 'contain',
-            backgroundColor: '#716A60',
-          },
-        },
-      },
-      plugins: [
-        [
-          'expo-font',
-          {
-            fonts: [
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Regular.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Light.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Medium.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/MarchePro-Super.otf',
+          privacyManifests: {
+            NSPrivacyAccessedAPITypes: [
+              {
+                NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
+                NSPrivacyAccessedAPITypeReasons: ['C617.1'],
+              },
+              {
+                NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPIType',
+                NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+              },
+              {
+                NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategorySystemBootTime',
+                NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+              },
             ],
+            NSPrivacyCollectedDataTypes: [],
+            NSPrivacyTracking: false,
           },
-        ],
-        'expo-router',
-        'expo-secure-store',
-        [
+          bundleIdentifier: 'io.leather.mobilewallet',
+          supportsTablet: false,
+          splash: {
+            image: './src/assets/light-mode-splash.png',
+            resizeMode: 'contain',
+            backgroundColor: '#12100F',
+            dark: {
+              image: './src/assets/dark-mode-splash.png',
+              resizeMode: 'contain',
+              backgroundColor: '#716A60',
+            },
+          },
+        },
+        android: {
+          package: 'io.leather.mobilewallet',
+          googleServicesFile: './google-services.json',
+          icon: './src/assets/icon.png',
+          adaptiveIcon: {
+            foregroundImage: './src/assets/adaptive-icon.png',
+            backgroundColor: '#12100F',
+          },
+          splash: {
+            image: './src/assets/light-mode-splash.png',
+            resizeMode: 'contain',
+            backgroundColor: '#12100F',
+            dark: {
+              image: './src/assets/dark-mode-splash.png',
+              resizeMode: 'contain',
+              backgroundColor: '#716A60',
+            },
+          },
+        },
+        plugins: [
+          '@react-native-firebase/app',
+          '@react-native-firebase/messaging',
+          'expo-router',
+          'expo-secure-store',
           'expo-asset',
-          {
-            assets: ['src/scripts/injected-provider.js'],
-          },
+          [
+            'expo-font',
+            {
+              fonts: [
+                'src/assets/fonts/ABCDiatype-Light.otf',
+                'src/assets/fonts/ABCDiatype-Medium.otf',
+                'src/assets/fonts/ABCDiatype-Regular.otf',
+                'src/assets/fonts/FiraCode-Retina.otf',
+                'src/assets/fonts/FiraCode-Medium.otf',
+                'src/assets/fonts/MarchePro-Super.otf',
+                'src/assets/fonts/SpaceMono-Regular.ttf',
+              ],
+            },
+          ],
+          [
+            'expo-dev-client',
+            {
+              launchMode: 'most-recent',
+            },
+          ],
+          [
+            'expo-build-properties',
+            {
+              ios: {
+                useFrameworks: 'static',
+                deploymentTarget: '15.1',
+              },
+              // android: {
+              //   kotlinVersion: '1.7.20',
+              //   compileSdkVersion: 34,
+              //   targetSdkVersion: 34,
+              //   buildToolsVersion: '34.0.0',
+              // },
+            },
+          ],
         ],
-        [
-          'expo-dev-client',
-          {
-            launchMode: 'most-recent',
+        extra: {
+          router: {
+            origin: false,
           },
-        ],
-        '@react-native-firebase/app',
-        '@react-native-firebase/messaging',
-      ],
-      extra: {
-        router: {
-          origin: false,
+          eas: {
+            projectId: 'c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
+          },
         },
-        eas: {
-          projectId: 'c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
+        owner: 'leather-wallet',
+        experiments: {
+          typedRoutes: true,
         },
-      },
-      owner: 'leather-wallet',
-      experiments: {
-        typedRoutes: true,
       },
     },
   };
