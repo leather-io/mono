@@ -1,4 +1,5 @@
-import { AccountAvatar, AccountIcon } from '@/features/accounts/components/account-avatar';
+import { AccountAvatar } from '@/features/accounts/components/account-avatar';
+import { AccountIcon } from '@/store/accounts/utils';
 
 import { Box, Text } from '@leather.io/ui/native';
 

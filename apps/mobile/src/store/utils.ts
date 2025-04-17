@@ -3,7 +3,9 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import z from 'zod';
 
-import { AccountStore } from './accounts/utils';
+import { isDefined } from '@leather.io/utils';
+
+import { AccountIcon, AccountStore, accountIcons } from './accounts/utils';
 import type { RootState, StoreDispatch } from './index';
 
 export function filterObjectKeys(object: object, keys: string[]) {
@@ -41,13 +43,26 @@ export function getWalletAccountsByAccountId(
 ) {
   const { fingerprint: thisWalletFingerprint } = destructAccountIdentifier(accountId);
 
-  return state.ids.filter(id => {
-    if (state.entities[id]?.id) {
-      const { fingerprint } = destructAccountIdentifier(state.entities[id].id);
-      return fingerprint === thisWalletFingerprint;
-    }
-    return false;
-  });
+  return state.ids
+    .filter(id => destructAccountIdentifier(id).fingerprint === thisWalletFingerprint)
+    .map(id => state.entities[id])
+    .filter(isDefined);
+}
+
+export function selectNextDistinctAccountIcon(
+  alreadyUsed: AccountIcon[],
+  preceding?: AccountIcon
+): AccountIcon {
+  const isFirstWallet = alreadyUsed.length === 0;
+  const defaultFirstWalletIcon: AccountIcon = 'sparkles';
+
+  if (isFirstWallet) return defaultFirstWalletIcon;
+
+  const distinctFromPrevious = accountIcons.filter(icon => icon !== preceding);
+  const unused = distinctFromPrevious.filter(icon => !alreadyUsed.includes(icon));
+  const candidates = unused.length > 0 ? unused : distinctFromPrevious;
+
+  return candidates[Math.floor(Math.random() * candidates.length)] ?? defaultFirstWalletIcon;
 }
 
 type AdapterMethod<T> = (state: EntityState<T, string>, args: any) => void;

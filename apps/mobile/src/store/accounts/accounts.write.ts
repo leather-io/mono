@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro';
-import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { EntityState, createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { produce } from 'immer';
 
 import { AccountId } from '@leather.io/models';
@@ -13,6 +13,7 @@ import {
   getWalletAccountsByAccountId,
   handleEntityActionWith,
   makeAccountIdentifer,
+  selectNextDistinctAccountIcon,
 } from '../utils';
 import { AccountStatus, AccountStore, accountStoreSchema } from './utils';
 
@@ -22,15 +23,21 @@ export const accountsAdapter = createEntityAdapter<AccountStore, string>({
 export const accountEntitySchema = entitySchema(accountStoreSchema);
 
 function addAccountDefaults({
+  state,
   account,
   accountIdx,
 }: {
+  state: EntityState<AccountStore, string>;
   account: PartialAccountStore;
   accountIdx: number;
 }): AccountStore {
+  const currentWalletAccounts = getWalletAccountsByAccountId(state, account.id);
+  const usedIcons = Object.values(state.entities).map(account => account.icon);
+  const precedingIcon = currentWalletAccounts[currentWalletAccounts.length - 1]?.icon;
+
   const updatedAccount = produce(account, draftAccount => {
     if (!draftAccount.icon) {
-      draftAccount.icon = 'sparkles';
+      draftAccount.icon = selectNextDistinctAccountIcon(usedIcons, precedingIcon);
     }
     if (!draftAccount.name) {
       draftAccount.name = t({
@@ -59,7 +66,14 @@ export const accountsSlice = createSlice({
         const firstAccountIndex = 0;
         const id = makeAccountIdentifer(action.payload.wallet.fingerprint, firstAccountIndex);
 
-        accountsAdapter.addOne(state, addAccountDefaults({ account: { id }, accountIdx: 1 }));
+        accountsAdapter.addOne(
+          state,
+          addAccountDefaults({
+            state,
+            account: { id },
+            accountIdx: 1,
+          })
+        );
       })
 
       .addCase(userRemovesWallet, (state, action) => {
@@ -74,6 +88,7 @@ export const accountsSlice = createSlice({
         return accountsAdapter.addOne(
           state,
           addAccountDefaults({
+            state,
             account: action.payload.account,
             accountIdx: thisWalletsAccounts.length + 1,
           })
