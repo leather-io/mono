@@ -47,8 +47,8 @@
         "expo-build-properties",
         {
           "ios": {
-            // "useFrameworks": "static",
-            // "deploymentTarget": "13.4",
+            "useFrameworks": "static",
+            "deploymentTarget": "13.4",
             "extraPods": [
               { "name": "Firebase", "modular_headers": true },
               { "name": "FirebaseCoreInternal", "modular_headers": true },
