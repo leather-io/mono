@@ -1,0 +1,97 @@
+{
+  "expo": {
+    "name": "Leather",
+    "slug": "leather",
+    "owner": "leather-wallet",
+    "version": "2.3.0",
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "platforms": ["ios", "android"],
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "scheme": "leather",
+    "userInterfaceStyle": "automatic",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "io.leather.mobilewallet",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "io.leather.mobilewallet",
+      "googleServicesFile": "./google-services.json",
+      "icon": "./src/assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#12100F"
+      },
+      "splash": {
+        "image": "./src/assets/light-mode-splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#12100F",
+        "dark": {
+          "image": "./src/assets/dark-mode-splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#716A60"
+        }
+      }
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            // "useFrameworks": "static",
+            "deploymentTarget": "13.4",
+            "extraPods": [
+              { "name": "Firebase", "modular_headers": true },
+              { "name": "FirebaseCoreInternal", "modular_headers": true },
+              { "name": "FirebaseCore", "modular_headers": true },
+              { "name": "GoogleUtilities", "modular_headers": true }
+            ]
+          }
+        }
+      ],
+      "expo-router",
+      "expo-secure-store",
+      "expo-asset",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "src/assets/fonts/ABCDiatype-Light.otf",
+            "src/assets/fonts/ABCDiatype-Medium.otf",
+            "src/assets/fonts/ABCDiatype-Regular.otf",
+            "src/assets/fonts/FiraCode-Retina.otf",
+            "src/assets/fonts/FiraCode-Medium.otf",
+            "src/assets/fonts/MarchePro-Super.otf",
+            "src/assets/fonts/SpaceMono-Regular.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc"
+      }
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

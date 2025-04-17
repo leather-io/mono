@@ -29,7 +29,9 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "src/scripts/injected-provider.js"
+    "src/scripts/injected-provider.js",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ],
   "exclude": [
     "node_modules",
