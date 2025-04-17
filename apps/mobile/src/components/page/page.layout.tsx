@@ -3,7 +3,10 @@ import { RefreshControl } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { createOnScrollHandler } from '@/components/action-bar/action-bar-container';
+import {
+  ActionBarContainer,
+  createOnScrollHandler,
+} from '@/components/action-bar/action-bar-container';
 import { queryClient } from '@/queries/query';
 
 import { Box, HasChildren } from '@leather.io/ui/native';
@@ -26,24 +29,27 @@ export function PageLayout({ children }: HasChildren) {
   }, []);
 
   return (
-    <Box flex={1} bg="ink.background-primary">
-      <ScrollView
-        onScroll={createOnScrollHandler({
-          actionBarRef,
-          contentOffsetTop,
-          contentOffsetBottom,
-        })}
-        contentInset={{ bottom: contentOffsetBottom }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            progressViewOffset={contentOffsetTop}
-          />
-        }
-      >
-        {children}
-      </ScrollView>
-    </Box>
+    <>
+      <Box flex={1} bg="ink.background-primary">
+        <ScrollView
+          onScroll={createOnScrollHandler({
+            actionBarRef,
+            contentOffsetTop,
+            contentOffsetBottom,
+          })}
+          contentInset={{ bottom: contentOffsetBottom }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              progressViewOffset={contentOffsetTop}
+            />
+          }
+        >
+          {children}
+        </ScrollView>
+      </Box>
+      <ActionBarContainer ref={actionBarRef} />
+    </>
   );
 }
