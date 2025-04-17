@@ -94,7 +94,7 @@ export function TextInput({
         borderColor={borderColor}
         borderRadius="sm"
         height={64}
-        px="4"
+        p="4"
         color="ink.action-primary-default"
         {...props}
       />
