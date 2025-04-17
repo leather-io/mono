@@ -1,5 +1,7 @@
 import { ComponentType, ForwardRefExoticComponent } from 'react';
 
+import { AccountIcon } from '@/store/accounts/utils';
+
 import {
   AlienIcon,
   BankIcon,
@@ -26,7 +28,7 @@ import {
 } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
-export const accountIconMap: Record<string, ForwardRefExoticComponent<any>> = {
+export const accountIconMap: Record<AccountIcon, ForwardRefExoticComponent<any>> = {
   pizza: PizzaIcon,
   sparkles: SparklesIcon,
   piggyBank: PiggybankIcon,
@@ -48,8 +50,6 @@ export const accountIconMap: Record<string, ForwardRefExoticComponent<any>> = {
   heart: HeartIcon,
   flag: FlagIcon,
 } as const;
-
-export type AccountIcon = keyof typeof accountIconMap;
 
 interface AccountAvatarProps extends SquircleBoxProps {
   icon: AccountIcon | ComponentType;

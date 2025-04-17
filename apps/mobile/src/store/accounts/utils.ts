@@ -1,6 +1,29 @@
-import { AccountIcon } from '@/features/accounts/components/account-avatar';
 import z from 'zod';
 
+export const accountIcons = [
+  'pizza',
+  'sparkles',
+  'piggyBank',
+  'orange',
+  'car',
+  'alien',
+  'saturn',
+  'bank',
+  'rocket',
+  'folder',
+  'smile',
+  'code',
+  'zap',
+  'gift',
+  'colorPalette',
+  'home',
+  'space',
+  'box',
+  'heart',
+  'flag',
+];
+
+export type AccountIcon = (typeof accountIcons)[number];
 export type AccountStatus = 'active' | 'hidden';
 
 export const accountStoreSchema = z.object({
