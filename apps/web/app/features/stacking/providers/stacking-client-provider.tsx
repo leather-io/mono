@@ -5,6 +5,8 @@ import { validateStacksAddress as isValidStacksAddress } from '@stacks/transacti
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
+import { fetchFn } from './fetch-fn';
+
 interface StackingClientContext {
   client: null | StackingClient;
 }
@@ -22,7 +24,11 @@ export function StackingClientProvider({ children }: Props) {
 
   const client = useMemo<StackingClient | null>(() => {
     if (stxAddress && isValidStacksAddress(stxAddress.address)) {
-      return new StackingClient({ address: stxAddress.address, network });
+      return new StackingClient({
+        address: stxAddress.address,
+        network,
+        client: { fetch: fetchFn },
+      });
     }
 
     return null;
@@ -35,4 +41,17 @@ export function StackingClientProvider({ children }: Props) {
 
 export function useStackingClient() {
   return useContext(StackingClientContext);
+}
+
+export function useStackingClientRequired() {
+  const { client, ...hook } = useStackingClient();
+
+  if (!client) {
+    throw new Error('Expected to have a StackingClient available in the context.');
+  }
+
+  return {
+    ...hook,
+    client,
+  };
 }

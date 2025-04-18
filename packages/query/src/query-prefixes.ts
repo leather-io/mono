@@ -51,4 +51,5 @@ export enum StackingQueryPrefixes {
   GetCoreInfo = 'get-core-info',
   GetSecondsUntilNextCycle = 'get-seconds-until-next-cycle',
   GetPoxInfo = 'get-pox-info',
+  GetAccountExtendedBalances = 'get-account-extended-balances',
 }

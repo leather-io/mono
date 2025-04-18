@@ -108,3 +108,11 @@ export function createGetPoxInfoQueryOptions({ client }: StackingParams) {
     ...defaultQueryOptions,
   } satisfies UseQueryOptions;
 }
+
+export function createGetAccountExtendedBalancesQueryOptions({ client }: StackingParams) {
+  return {
+    queryKey: [StackingQueryPrefixes.GetAccountExtendedBalances, client],
+    queryFn: () => client.getAccountExtendedBalances(),
+    ...defaultQueryOptions,
+  } satisfies UseQueryOptions;
+}

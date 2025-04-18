@@ -1,5 +1,7 @@
 import { styled } from 'leather-styles/jsx';
+import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
+import { UserPositions } from '~/features/stacking/user-positions';
 
 import { EarnProviderTable, LiquidStackingProviderTable } from './components/earn-provider-table';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
@@ -10,6 +12,10 @@ export function Stacking() {
   return (
     <Page>
       <Page.Header title="Invest in Stacks" />
+
+      <StacksAccountLoader>
+        {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
+      </StacksAccountLoader>
 
       <styled.h2 textStyle="heading.05" mt="space.07">
         Stack in a pool

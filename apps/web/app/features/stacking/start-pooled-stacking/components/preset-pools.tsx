@@ -1,14 +1,14 @@
 import { ReactElement } from 'react';
 
+import { DummyIcon } from '~/components/dummy';
 import { AlexLogo } from '~/components/icons/alex-logo';
+import { ImgFillLoader } from '~/components/img-loader';
 import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/constants';
 import {
   NetworkInstanceToPoxContractMap,
   Pool,
   PoolName,
 } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
-
-import { PoolIcon } from './pool-icon';
 
 export const pools: Record<PoolName, Pool> = {
   'FAST Pool': {
@@ -29,7 +29,7 @@ export const pools: Record<PoolName, Pool> = {
     }, // pool address is the same as pool contract
     poxContract: 'WrapperFastPool',
     minimumDelegationAmount: 40_000_000,
-    icon: <PoolIcon src="/icons/32x32_FastPool.png" />,
+    icon: <ImgFillLoader src="icons/fastpool.webp" width="32" fill="black" />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
@@ -47,7 +47,7 @@ export const pools: Record<PoolName, Pool> = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 200_000_000,
-    icon: <PoolIcon src="/icons/32x32_PlanBetter.png" />,
+    icon: <ImgFillLoader src="icons/planbetter.webp" width="32" fill="black" />,
     allowCustomRewardAddress: false, // only for ledger users
     disabled: false,
   },
@@ -66,7 +66,7 @@ export const pools: Record<PoolName, Pool> = {
     }, // pool address is the same as pool contract
     poxContract: 'WrapperRestake',
     minimumDelegationAmount: 100_000_000,
-    icon: <PoolIcon src="/icons/32x32_Restake.png" />,
+    icon: <ImgFillLoader src="icons/restake.webp" width="32" fill="#124044" />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
@@ -85,7 +85,7 @@ export const pools: Record<PoolName, Pool> = {
     }, // pool address is the same as pool contract
     poxContract: 'WrapperStackingDao',
     minimumDelegationAmount: 500_000_000,
-    icon: <PoolIcon src="/icons/32x32_StackingDao.png" />,
+    icon: <ImgFillLoader src="icons/stacking-dao.webp" width="32" fill="#1C3830" />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
@@ -104,7 +104,7 @@ export const pools: Record<PoolName, Pool> = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 100_000_000,
-    icon: <PoolIcon src="/icons/32x32_Xverse.png" />,
+    icon: <ImgFillLoader src="icons/xverse.webp" width="32" fill="black" />,
     allowCustomRewardAddress: true,
     disabled: false,
   },
@@ -119,12 +119,15 @@ export const pools: Record<PoolName, Pool> = {
     poolAddress: undefined,
     poxContract: 'Pox4',
     minimumDelegationAmount: MIN_DELEGATED_STACKING_AMOUNT_USTX,
-    // icon: <IconEdit />,
-    icon: <PoolIcon src="/icons/32x32_Xverse.png" />, // FIXME
+    icon: <DummyIcon />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
 };
+
+export function getPoolByAddress(address: string) {
+  return Object.values(pools).find(pool => Object.values(pool.poolAddress ?? {}).includes(address));
+}
 
 export interface PoolRewardProtocolInfo {
   id: string;
