@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 
 import {
+  createGetAccountExtendedBalancesQueryOptions,
   createGetAllowanceContractCallersQueryOptions,
   createGetCoreInfoQueryOptions,
   createGetCycleDurationQueryOptions,
@@ -35,7 +36,7 @@ export function useGetPoxOperationInfoQuery() {
   return useQuery(createGetPoxOperationInfoQueryOptions({ client }));
 }
 
-export function useGetCoreInfo() {
+export function useGetCoreInfoQuery() {
   const { client } = useStackingClient();
   if (!client) throw new Error('Expected client to be defined.');
   return useQuery(createGetCoreInfoQueryOptions({ client }));
@@ -51,4 +52,10 @@ export function useGetPoxInfoQuery() {
   const { client } = useStackingClient();
   if (!client) throw new Error('Expected client to be defined.');
   return useQuery(createGetPoxInfoQueryOptions({ client }));
+}
+
+export function useGetAccountExtendedBalancesQuery() {
+  const { client } = useStackingClient();
+  if (!client) throw new Error('Expected client to be defined.');
+  return useQuery(createGetAccountExtendedBalancesQueryOptions({ client }));
 }

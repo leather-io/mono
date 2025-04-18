@@ -1,3 +1,4 @@
+import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { Stacking } from '~/pages/stacking/stacking';
 
 export function loader() {
@@ -13,5 +14,9 @@ export function meta({}) {
 }
 
 export default function HomeRoute() {
-  return <Stacking />;
+  return (
+    <StackingClientProvider>
+      <Stacking />
+    </StackingClientProvider>
+  );
 }

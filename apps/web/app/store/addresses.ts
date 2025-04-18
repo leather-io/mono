@@ -23,10 +23,7 @@ export function useLeatherConnect() {
   const { networkName, setNetworkName } = useStacksNetwork();
   const extensionState = useAtomValue(extensionStateAtom);
 
-  const stacksAccount = useMemo(
-    () => addresses.find(address => address.symbol === 'STX'),
-    [addresses]
-  );
+  const stacksAccount = useStacksAccount();
 
   const btcAddressP2tr = useMemo(
     () => addresses.find(address => address.type === 'p2tr'),
@@ -57,4 +54,14 @@ export function useLeatherConnect() {
       setAddresses([]);
     },
   };
+}
+
+export function useStacksAccount() {
+  const [addresses] = useAtom(addressesAtom);
+  const stacksAccount = useMemo(
+    () => addresses.find(address => address.symbol === 'STX'),
+    [addresses]
+  );
+
+  return stacksAccount;
 }
