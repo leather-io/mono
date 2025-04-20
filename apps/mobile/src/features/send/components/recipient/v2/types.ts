@@ -18,11 +18,9 @@ export type RecipientSuggestionEntry =
   | InternalRecipientSuggestionEntry
   | ExternalRecipientSuggestionEntry;
 
-export type RecipientSuggestions =
-  | { matching: RecipientSuggestionEntry[] }
-  | { accounts: InternalRecipientSuggestionEntry[]; recents: RecipientSuggestionEntry[] };
+export type RecipientSectionId = 'matching' | 'recents' | 'accounts';
 
 export interface RecipientSection {
-  title: string;
+  id: RecipientSectionId;
   data: RecipientSuggestionEntry[];
 }
