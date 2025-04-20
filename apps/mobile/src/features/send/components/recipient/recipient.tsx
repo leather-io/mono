@@ -5,6 +5,8 @@ import { Recipient as RecipientV1 } from '@/features/send/components/recipient/v
 import { Recipient as RecipientV2 } from '@/features/send/components/recipient/v2/recipient.v2';
 import { ZodSchema } from 'zod';
 
+import { FungibleCryptoAssetInfo } from '@leather.io/models';
+
 interface RecipientProps {
   value: string;
   onChange(value: string): void;
@@ -14,6 +16,7 @@ interface RecipientProps {
   isTouched: boolean;
   error: FieldError | undefined;
   recipientSchema: ZodSchema;
+  assetInfo: FungibleCryptoAssetInfo;
 }
 
 export function Recipient(props: RecipientProps) {

@@ -14,18 +14,12 @@ import { Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
 
-import {
-  CryptoAssetProtocol,
-  CryptoCurrency,
-  FiatCurrency,
-  MarketData,
-  Money,
-} from '@leather.io/models';
+import { stxCryptoAsset } from '@leather.io/constants';
+import { FiatCurrency, MarketData, Money } from '@leather.io/models';
 import { Button, StxAvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
-const protocol: CryptoAssetProtocol = 'nativeStx';
-const symbol: CryptoCurrency = 'STX';
+const assetInfo = stxCryptoAsset;
 
 interface StxFormProps {
   account: Account;
@@ -52,7 +46,7 @@ export function StxForm({
     state: { inputCurrencyMode },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: symbol,
+    crypto: assetInfo.symbol,
     fiat: fiatCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useStxForm({
@@ -64,14 +58,13 @@ export function StxForm({
   return (
     <SendFormContainer>
       <AssetDisplay
-        protocol={protocol}
-        availableBalance={availableBalance}
-        fiatBalance={fiatBalance}
         name={t({
           id: 'asset_name.stacks',
           message: 'Stacks',
         })}
-        symbol={symbol}
+        assetInfo={assetInfo}
+        availableBalance={availableBalance}
+        fiatBalance={fiatBalance}
         icon={<StxAvatarIcon />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}
@@ -80,7 +73,7 @@ export function StxForm({
         render={({ field: { value }, fieldState: { invalid, isValidating } }) => (
           <AmountField
             inputValue={value}
-            cryptoCurrency={symbol}
+            cryptoCurrency={assetInfo.symbol}
             fiatCurrency={fiatCurrency}
             marketData={marketData}
             invalid={invalid}
@@ -104,6 +97,7 @@ export function StxForm({
           fieldState: { invalid, isDirty, isTouched, error },
         }) => (
           <Recipient
+            assetInfo={assetInfo}
             value={value}
             onChange={onChange}
             onBlur={onBlur}

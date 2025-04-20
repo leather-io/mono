@@ -67,6 +67,7 @@ export default tseslint.config(
             'console.log',
             'console.warn',
             'console.error',
+            'assertExistence',
             'it',
             'describe',
             'test',

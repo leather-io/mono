@@ -36,6 +36,7 @@ export function RecipientInput({
       </Box>
       <Box flexGrow={1}>
         <TextInput
+          keyboardType="web-search"
           accessibilityRole="search"
           px="7"
           autoFocus={autoFocus}
@@ -46,7 +47,7 @@ export function RecipientInput({
           value={value}
           onChangeText={onChange}
           placeholder={t({
-            id: 'recipient-sheet.recipient.input.placeholder',
+            id: 'send-form.recipient.input.placeholder',
             message: 'Search for BNS name or address',
           })}
           TextInputComponent={UIBottomSheetTextInput}

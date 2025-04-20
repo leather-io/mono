@@ -150,6 +150,7 @@
     "react-redux": "9.1.2",
     "readable-stream": "4.5.2",
     "redux-persist": "6.0.0",
+    "remeda": "2.21.2",
     "uuid": "11.1.0",
     "zod": "3.24.2"
   },
