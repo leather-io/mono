@@ -13,10 +13,9 @@ import { type Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
 
+import { btcCryptoAsset } from '@leather.io/constants';
 import {
   type AverageBitcoinFeeRates,
-  CryptoAssetProtocol,
-  CryptoCurrency,
   type FiatCurrency,
   type MarketData,
   type Money,
@@ -25,8 +24,7 @@ import { type Utxo } from '@leather.io/query';
 import { BtcAvatarIcon, Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
-const protocol: CryptoAssetProtocol = 'nativeBtc';
-const symbol: CryptoCurrency = 'BTC';
+const assetInfo = btcCryptoAsset;
 
 interface BtcFormProps {
   account: Account;
@@ -55,7 +53,7 @@ export function BtcForm({
     state: { inputCurrencyMode },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: symbol,
+    crypto: assetInfo.symbol,
     fiat: fiatCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useBtcForm({ account, feeRates, utxos });
@@ -63,14 +61,13 @@ export function BtcForm({
   return (
     <SendFormContainer>
       <AssetDisplay
-        availableBalance={availableBalance}
-        protocol={protocol}
-        fiatBalance={fiatBalance}
         name={t({
           id: 'asset_name.bitcoin',
           message: 'Bitcoin',
         })}
-        symbol={symbol}
+        assetInfo={assetInfo}
+        availableBalance={availableBalance}
+        fiatBalance={fiatBalance}
         icon={<BtcAvatarIcon />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}
@@ -79,7 +76,7 @@ export function BtcForm({
         render={({ field: { value }, fieldState: { invalid, isValidating } }) => (
           <AmountField
             inputValue={value}
-            cryptoCurrency={symbol}
+            cryptoCurrency={assetInfo.symbol}
             fiatCurrency={fiatCurrency}
             marketData={marketData}
             invalid={invalid}
@@ -102,6 +99,7 @@ export function BtcForm({
           fieldState: { invalid, isDirty, isTouched, error },
         }) => (
           <Recipient
+            assetInfo={assetInfo}
             value={value}
             onChange={onChange}
             onBlur={onBlur}

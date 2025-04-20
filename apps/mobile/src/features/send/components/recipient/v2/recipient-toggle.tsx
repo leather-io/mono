@@ -47,7 +47,7 @@ export function RecipientToggle({ onPress, value, invalid }: RecipientToggleProp
         ) : (
           <Text variant="label02" color="ink.text-subdued">
             {t({
-              id: 'send_form.recipient.input.label',
+              id: 'send_form.recipient.toggle.label',
               message: 'Enter recipient',
             })}
           </Text>

@@ -7,15 +7,14 @@ import Animated, {
 
 import { TokenBalance } from '@/features/balances/token-balance';
 
-import { CryptoAssetProtocol, CryptoCurrency, Money } from '@leather.io/models';
+import { FungibleCryptoAssetInfo, Money } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 interface AssetDisplayProps {
-  protocol: CryptoAssetProtocol;
+  name: string;
+  assetInfo: FungibleCryptoAssetInfo;
   availableBalance: Money;
   fiatBalance: Money;
-  name: string;
-  symbol: CryptoCurrency;
   icon: ReactNode;
   assetItemElementInitialOffset?: number | null;
   onPress?(): void;
@@ -23,9 +22,8 @@ interface AssetDisplayProps {
 
 export function AssetDisplay({
   name,
+  assetInfo,
   icon,
-  protocol,
-  symbol,
   availableBalance,
   fiatBalance,
   assetItemElementInitialOffset,
@@ -43,10 +41,10 @@ export function AssetDisplay({
         borderTopStartRadius="sm"
         borderTopEndRadius="sm"
         borderWidth={1}
-        ticker={symbol}
+        ticker={assetInfo.symbol}
         icon={icon}
         tokenName={name}
-        protocol={protocol}
+        protocol={assetInfo.protocol}
         availableBalance={availableBalance}
         fiatBalance={fiatBalance}
         px="3"
