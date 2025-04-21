@@ -9,6 +9,7 @@
   "observability": {
     "enabled": false
   },
+  "routes": ["https://staging.leather.io/*"],
   "vars": {
     "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
   }
