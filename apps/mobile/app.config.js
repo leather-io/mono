@@ -4,36 +4,29 @@ import path from 'path';
 // Setup EAS env variables for Firebase
 function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
+  // base64 encoded google-services.json can be removed once we move away from Github --local builds
   const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
-    fs.copyFileSync(
-      googleServicesPathAndroid,
-      path.join(__dirname, './android/app/google-services.json')
-    );
+    fs.copyFileSync(googleServicesPathAndroid, path.join(__dirname, './google-services.json'));
   }
 
   if (googleServicesB64) {
     const decodedJson = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(path.join(__dirname, './android/app/google-services.json'), decodedJson);
+    fs.writeFileSync(path.join(__dirname, './google-services.json'), decodedJson);
   }
 }
 
 function setupFirebaseEnvVariablesIos() {
   const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
+  // base64 encoded google-services.json can be removed once we move away from Github --local builds
   const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
-    fs.copyFileSync(
-      googleServicesPathIos,
-      path.join(__dirname, './ios/leatherwalletmobile/GoogleService-Info.plist')
-    );
+    fs.copyFileSync(googleServicesPathIos, path.join(__dirname, './GoogleService-Info.plist'));
   }
 
   if (googleServicesB64) {
     const decodedPlist = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(
-      path.join(__dirname, 'ios/leatherwalletmobile/GoogleService-Info.plist'),
-      decodedPlist
-    );
+    fs.writeFileSync(path.join(__dirname, './GoogleService-Info.plist'), decodedPlist);
   }
 }
 
@@ -44,26 +37,54 @@ export default () => {
   return {
     expo: {
       name: 'Leather',
-      slug: 'leather-wallet-mobile',
+      owner: 'leather-wallet',
+      slug: 'leather-wallet',
       version: '2.2.0',
+      runtimeVersion: {
+        policy: 'fingerprint',
+      },
       orientation: 'portrait',
       icon: './src/assets/icon.png',
       scheme: 'leather',
       userInterfaceStyle: 'automatic',
+      platforms: ['ios', 'android'],
       updates: {
         fallbackToCacheTimeout: 0,
+        url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
       },
       assetBundlePatterns: ['**/*'],
       ios: {
-        googleServicesFile: './ios/leatherwalletmobile/GoogleService-Info.plist',
+        deploymentTarget: '15.1',
+        bundleIdentifier: 'io.leather.mobilewallet',
+        googleServicesFile: './GoogleService-Info.plist',
+        supportsTablet: false,
+        usesNonExemptEncryption: false,
         entitlements: {
           'aps-environment': 'production',
         },
         infoPlist: {
           UIBackgroundModes: ['remote-notification', 'fetch'],
+          NSCameraUsageDescription:
+            'This app uses the camera to scan QR codes for sending transactions.',
         },
-        bundleIdentifier: 'io.leather.mobilewallet',
-        supportsTablet: false,
+        privacyManifests: {
+          NSPrivacyAccessedAPITypes: [
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
+              NSPrivacyAccessedAPITypeReasons: ['C617.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPIType',
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategorySystemBootTime',
+              NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+            },
+          ],
+          NSPrivacyCollectedDataTypes: [],
+          NSPrivacyTracking: false,
+        },
         splash: {
           image: './src/assets/light-mode-splash.png',
           resizeMode: 'contain',
@@ -77,11 +98,14 @@ export default () => {
       },
       android: {
         package: 'io.leather.mobilewallet',
-        googleServicesFile: './android/app/google-services.json',
-        icon: './src/assets/icon.png',
+        googleServicesFile: './google-services.json',
         adaptiveIcon: {
           foregroundImage: './src/assets/adaptive-icon.png',
           backgroundColor: '#12100F',
+        },
+        notification: {
+          icon: './src/assets/android-notification-icon.png',
+          color: '#12100F',
         },
         splash: {
           image: './src/assets/light-mode-splash.png',
@@ -95,35 +119,52 @@ export default () => {
         },
       },
       plugins: [
+        '@react-native-firebase/app',
+        '@react-native-firebase/messaging',
+        [
+          'expo-local-authentication',
+          {
+            faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID biometric data.',
+          },
+        ],
+        [
+          'expo-build-properties',
+          {
+            ios: {
+              useFrameworks: 'static',
+              // deploymentTarget: '15.1',
+            },
+            android: {
+              kotlinVersion: '1.7.20',
+              compileSdkVersion: 34,
+              targetSdkVersion: 34,
+              buildToolsVersion: '34.0.0',
+            },
+          },
+        ],
         [
           'expo-font',
           {
             fonts: [
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Retina.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/FiraCode-Medium.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Regular.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Light.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/ABCDiatype-Medium.otf',
-              'node_modules/@leather.io/ui/dist-native/src/assets-native/fonts/MarchePro-Super.otf',
+              'src/assets/fonts/ABCDiatype-Light.otf',
+              'src/assets/fonts/ABCDiatype-Medium.otf',
+              'src/assets/fonts/ABCDiatype-Regular.otf',
+              'src/assets/fonts/FiraCode-Retina.otf',
+              'src/assets/fonts/FiraCode-Medium.otf',
+              'src/assets/fonts/MarchePro-Super.otf',
+              'src/assets/fonts/SpaceMono-Regular.ttf',
             ],
           },
         ],
         'expo-router',
         'expo-secure-store',
-        [
-          'expo-asset',
-          {
-            assets: ['src/scripts/injected-provider.js'],
-          },
-        ],
+        'expo-asset',
         [
           'expo-dev-client',
           {
             launchMode: 'most-recent',
           },
         ],
-        '@react-native-firebase/app',
-        '@react-native-firebase/messaging',
       ],
       extra: {
         router: {
@@ -133,7 +174,6 @@ export default () => {
           projectId: 'c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
         },
       },
-      owner: 'leather-wallet',
       experiments: {
         typedRoutes: true,
       },

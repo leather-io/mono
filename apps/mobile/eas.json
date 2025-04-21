@@ -5,98 +5,53 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "test": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release",
-        "withoutCredentials": true
-      },
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
-      }
-    },
-    "simulator-dev": {
+    "base": {
       "node": "20.11.0",
       "pnpm": "10.4.1",
-      "distribution": "internal",
       "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
-      }
-    },
-    "simulator-pr": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
+        "image": "latest",
+        "cocoapods": "1.15.2"
       },
       "android": {
         "image": "latest"
       }
     },
     "development": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "developmentClient": true,
+      "extends": "base",
+      "channel": "development",
       "distribution": "internal",
-      "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      }
+      "developmentClient": true
     },
-    "preview-simulator": {
+    "staging": {
+      "extends": "base",
       "node": "20.11.0",
       "pnpm": "10.4.1",
       "distribution": "internal",
+      "channel": "staging",
+      "autoIncrement": true
+    },
+    "production": {
+      "extends": "base",
+      "channel": "production",
+      "distribution": "store",
+      "autoIncrement": true
+    },
+    "maestro": {
+      "extends": "base",
+      "environment": "production",
+      "withoutCredentials": true,
+      "channel": "maestro",
+      "distribution": "internal",
       "ios": {
-        "image": "latest",
-        "simulator": true,
-        "cocoapods": "1.15.2"
+        "simulator": true
       }
     },
     "preview": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
+      "extends": "base",
       "distribution": "internal",
+      "channel": "preview",
       "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      }
-    },
-    "production": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "distribution": "store",
-      "autoIncrement": true,
-      "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      },
-      "android": {
-        "image": "latest"
-      }
-    },
-    "maestro": {
-      "node": "20.11.0",
-      "pnpm": "10.4.1",
-      "environment": "preview",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "image": "latest",
-        "cocoapods": "1.15.2"
-      },
-      "android": {
-        "buildType": "apk",
-        "image": "latest"
+        "simulator": true
       }
     }
   },

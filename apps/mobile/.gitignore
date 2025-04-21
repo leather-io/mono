@@ -55,3 +55,7 @@ credentials.json
 *.ipa
 *.apk
 *.aab
+
+# Expo Continuous Native Generation
+android/
+ios/
