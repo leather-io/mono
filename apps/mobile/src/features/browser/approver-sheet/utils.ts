@@ -85,3 +85,11 @@ export function addBip32DerivationFieldToInputs({
 }
 
 export type BrowserMessage = RpcRequests | null;
+
+// Disabling lingui eslint rule here as this is an error message for dApps
+export const RpcErrorMessage = {
+  InvalidParams: 'Invalid parameters',
+  NullOrigin: 'Origin is null',
+  UndefinedParams: 'Undefined parameters',
+  UserRejectedOperation: 'User rejected request',
+} as const;

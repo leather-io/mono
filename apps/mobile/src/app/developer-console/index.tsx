@@ -72,7 +72,7 @@ export default function DeveloperConsoleScreen() {
       </ScrollView>
       <ApproverSheet
         origin={LEATHER_URL}
-        message={getAddressesMessage}
+        request={getAddressesMessage}
         sendResult={() => setGetAddressesMessage(null)}
       />
       <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />

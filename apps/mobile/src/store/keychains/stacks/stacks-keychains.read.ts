@@ -8,6 +8,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { decomposeDescriptor } from '@leather.io/crypto';
 import {
+  StacksSigner,
   createSignFnFromMnemonic,
   initalizeStacksSigner,
   stacksChainIdToCoreNetworkMode,
@@ -55,4 +56,10 @@ export function useStacksSignerAddresses() {
 export function useStacksSignerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
   const signers = useStacksSigners().fromAccountIndex(fingerprint, accountIndex);
   return signers.map(signer => signer.address)[0];
+}
+
+export function stacksSignerFromAddress(address: string) {
+  return function (signer: StacksSigner) {
+    return signer.address === address;
+  };
 }

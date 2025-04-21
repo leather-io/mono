@@ -8,13 +8,22 @@ import { ContractDeploySummarySection } from '@/features/approver/contract-deplo
 import { MemoSection } from '@/features/approver/memo.section';
 import { NonceSection } from '@/features/approver/nonce.section';
 import { StacksFeesSection } from '@/features/approver/stacks-fees.section';
-import { TxOptions, getTotalSpendMoney, getTxRecipient } from '@/features/approver/utils';
+import {
+  TxOptions,
+  assertTokenTransferPayload,
+  getTotalSpendMoney,
+  getTxRecipient,
+} from '@/features/approver/utils';
 import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/macro';
 import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
+import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, Box, Button } from '@leather.io/ui/native';
+import { createMoney } from '@leather.io/utils';
+
+import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
   onApprove(): void;
@@ -36,6 +45,36 @@ export function BaseStxTxApproverLayout({
   txOptions,
 }: BaseStxTxApproverLayoutProps) {
   const tx = deserializeTransaction(txHex);
+  const { changeFeeToastHandler, changeMemoToastHandler, changeNonceToastHandler } =
+    useStxTransactionUpdatesHandler();
+
+  const onChangeMemo = changeMemoToastHandler(async (memo: string) => {
+    assertTokenTransferPayload(tx.payload);
+    const newTx = await generateStacksUnsignedTransaction({
+      txType: TransactionTypes.StxTokenTransfer,
+      amount: createMoney(tx.payload.amount, 'STX'),
+      fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
+      nonce: Number(tx.auth.spendingCondition.nonce),
+      recipient: tx.payload.recipient,
+      memo,
+      ...txOptions,
+    });
+    const newTxHex = newTx.serialize();
+    setTxHex(newTxHex);
+  });
+
+  const onChangeFee = changeFeeToastHandler((fee: number) => {
+    tx.setFee(fee);
+    const newTxHex = tx.serialize();
+    setTxHex(newTxHex);
+  });
+
+  const onChangeNonce = changeNonceToastHandler((nonce: string) => {
+    tx.setNonce(Number(nonce));
+    const newTxHex = tx.serialize();
+    setTxHex(newTxHex);
+  });
+
   return (
     <Box flex={1} backgroundColor="ink.background-secondary">
       <Approver>
@@ -69,13 +108,12 @@ export function BaseStxTxApproverLayout({
             </Approver.Section>
           )}
 
-          <StacksFeesSection txHex={txHex} setTxHex={setTxHex} />
+          <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
           {tx.payload.payloadType === PayloadType.TokenTransfer && (
             <MemoSection
-              txHex={txHex}
-              setTxHex={setTxHex}
-              txOptions={txOptions}
+              memo={tx.payload.memo.content}
               isMemoEditable={false}
+              onChangeMemo={onChangeMemo}
             />
           )}
           <Approver.Advanced
@@ -94,7 +132,10 @@ export function BaseStxTxApproverLayout({
             {tx.payload.payloadType === PayloadType.VersionedSmartContract && (
               <ContractDeployCodeSection txHex={txHex} />
             )}
-            <NonceSection txHex={txHex} setTxHex={setTxHex} />
+            <NonceSection
+              nonce={tx.auth.spendingCondition.nonce.toString()}
+              onChangeNonce={onChangeNonce}
+            />
           </Approver.Advanced>
         </Approver.Container>
         <Approver.Footer>

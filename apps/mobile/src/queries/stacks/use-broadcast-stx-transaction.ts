@@ -6,6 +6,7 @@ import { getErrorMessage } from '@leather.io/stacks';
 
 export function useBroadcastStxTransaction() {
   return useMutation({
+    mutationKey: ['broadcast-stx-transaction'],
     async mutationFn({
       tx,
       stacksNetwork,
@@ -17,6 +18,11 @@ export function useBroadcastStxTransaction() {
 
       if ('error' in response) {
         return Promise.reject(new Error(getErrorMessage(response.reason)));
+      }
+
+      // Sometimes we might get "API rate limit exceeded" with no txid
+      if (!response.txid) {
+        return Promise.reject(new Error('Something went wrong'));
       }
 
       return Promise.resolve(response);

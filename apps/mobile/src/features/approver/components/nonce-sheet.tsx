@@ -2,38 +2,17 @@ import { RefObject, useState } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
-import { useToastContext } from '@/components/toast/toast-context';
 import { t } from '@lingui/macro';
-import { deserializeTransaction } from '@stacks/transactions';
 
 import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface NonceSheetProps {
   sheetRef: RefObject<SheetRef>;
   nonce: string;
-  txHex: string;
-  setTxHex(txHex: string): void;
+  onChangeNonce(nonce: string): void;
 }
-export function NonceSheet({ sheetRef, nonce: _nonce, txHex, setTxHex }: NonceSheetProps) {
+export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceSheetProps) {
   const [nonce, setNonce] = useState(_nonce);
-  const tx = deserializeTransaction(txHex);
-  const { displayToast } = useToastContext();
-
-  function onChangeNonce(nonce: string) {
-    try {
-      tx.setNonce(Number(nonce));
-      const newTxHex = tx.serialize();
-      setTxHex(newTxHex);
-    } catch {
-      displayToast({
-        title: t({
-          id: 'approver.send.stx.error.change-nonce',
-          message: 'Failed to change nonce',
-        }),
-        type: 'error',
-      });
-    }
-  }
 
   return (
     <SheetLayout

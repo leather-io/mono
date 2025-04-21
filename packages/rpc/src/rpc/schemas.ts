@@ -33,11 +33,18 @@ export type RpcBaseProps = z.infer<typeof rpcBasePropsSchema>;
 // }
 export function createRpcRequestSchema<TMethod extends string>(
   method: TMethod
-): BaseRpcRequestSchema & z.ZodObject<{ method: z.ZodLiteral<TMethod> }>;
+): z.ZodObject<
+  z.objectUtil.extendShape<BaseRpcRequestSchema['shape'], { method: z.ZodLiteral<TMethod> }>
+>;
 export function createRpcRequestSchema<TMethod extends string, TParam extends z.ZodTypeAny>(
   method: TMethod,
   paramsSchema: TParam
-): BaseRpcRequestSchema & z.ZodObject<{ method: z.ZodLiteral<TMethod>; params: TParam }>;
+): z.ZodObject<
+  z.objectUtil.extendShape<
+    BaseRpcRequestSchema['shape'],
+    { method: z.ZodLiteral<TMethod>; params: TParam }
+  >
+>;
 export function createRpcRequestSchema<TMethod extends string, TParam extends z.ZodTypeAny>(
   method: TMethod,
   paramsSchema?: TParam
@@ -190,20 +197,20 @@ export function defineRpcEndpoint<
     | { method: Method; result: Result; error?: Error }
 ):
   | {
-      method: Method;
-      params: Params;
-      result: Result;
-      error: Error;
-      request: ReturnType<typeof createRpcRequestSchema<Method, Params>>;
-      response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
-    }
+    method: Method;
+    params: Params;
+    result: Result;
+    error: Error;
+    request: ReturnType<typeof createRpcRequestSchema<Method, Params>>;
+    response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
+  }
   | {
-      method: Method;
-      result: Result;
-      error: Error;
-      request: ReturnType<typeof createRpcRequestSchema<Method>>;
-      response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
-    } {
+    method: Method;
+    result: Result;
+    error: Error;
+    request: ReturnType<typeof createRpcRequestSchema<Method>>;
+    response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
+  } {
   const error = (props.error ?? defaultErrorSchema) as Error;
 
   if ('params' in props) {

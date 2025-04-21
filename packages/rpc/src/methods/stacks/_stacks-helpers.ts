@@ -24,3 +24,5 @@ export const baseStacksTransactionConfigSchema = z.object({
   postConditionMode: z.union([z.literal('allow'), z.literal('deny')]).optional(),
   sponsored: z.boolean().optional(),
 });
+
+export type BaseStacksTransactionRpcParams = z.infer<typeof baseStacksTransactionConfigSchema>;

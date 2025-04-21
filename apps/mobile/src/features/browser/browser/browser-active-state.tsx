@@ -100,7 +100,7 @@ export function BrowserActiveState({
 
       {origin && (
         <ApproverSheet
-          message={message}
+          request={message}
           origin={origin}
           sendResult={result => {
             postMessage(JSON.stringify(result));

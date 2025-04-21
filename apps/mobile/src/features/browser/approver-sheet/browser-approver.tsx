@@ -6,16 +6,24 @@ import {
   signMessage,
   signPsbt,
   stxSignTransaction,
+  stxTransferSip9Nft,
+  stxTransferSip10Ft,
+  stxTransferStx,
 } from '@leather.io/rpc';
 
 import { GetAddressesApprover } from './get-addresses/get-addresses';
 import { SignMessageApprover } from './sign-message/sign-message';
 import { SignPsbtApprover } from './sign-psbt';
+import { NonceLoader } from './stx/nonce-loader';
 import { SignTransactionApprover } from './stx/sign-transaction/sign-transaction';
+import { TransferSip9NftApprover } from './stx/transfer-sip9-nft/transfer-sip9-nft';
+import { TransferSip10FtApprover } from './stx/transfer-sip10-ft/transfer-sip10-ft';
+import { TransferStxApprover } from './stx/transfer-stx/transfer-stx';
+import { getAccountIdFromConnectedApp } from './stx/utils';
 import { BrowserMessage } from './utils';
 
 interface BrowserApproverProps {
-  message: BrowserMessage;
+  request: BrowserMessage;
   sendResult(result: RpcResponses): void;
   origin: string;
   app: App;
@@ -23,14 +31,14 @@ interface BrowserApproverProps {
 }
 
 export function BrowserApprover(props: BrowserApproverProps) {
-  switch (props.message?.method) {
+  switch (props.request?.method) {
     case getAddresses.method:
       return (
         <GetAddressesApprover
           app={props.app}
           sendResult={props.sendResult}
           origin={props.origin}
-          message={props.message}
+          request={props.request}
           closeApprover={props.closeApprover}
         />
       );
@@ -39,8 +47,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
         <SignPsbtApprover
           app={props.app}
           sendResult={props.sendResult}
-          origin={props.origin}
-          message={props.message}
+          request={props.request}
           closeApprover={props.closeApprover}
         />
       );
@@ -50,23 +57,81 @@ export function BrowserApprover(props: BrowserApproverProps) {
         <SignMessageApprover
           app={props.app}
           sendResult={props.sendResult}
-          origin={props.origin}
-          message={props.message}
+          request={props.request}
           closeApprover={props.closeApprover}
         />
       );
     }
     case stxSignTransaction.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
       return (
         <SignTransactionApprover
-          app={props.app}
           sendResult={props.sendResult}
-          origin={props.origin}
-          message={props.message}
+          request={props.request}
           closeApprover={props.closeApprover}
+          accountId={accountId}
         />
       );
     }
+
+    case stxTransferStx.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
+      return (
+        <NonceLoader accountId={accountId}>
+          {nonce => {
+            const parsedRequest = stxTransferStx.request.parse(props.request);
+            return (
+              <TransferStxApprover
+                sendResult={props.sendResult}
+                request={parsedRequest}
+                closeApprover={props.closeApprover}
+                accountId={accountId}
+                nonce={nonce}
+              />
+            );
+          }}
+        </NonceLoader>
+      );
+    }
+    case stxTransferSip9Nft.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
+      return (
+        <NonceLoader accountId={accountId}>
+          {nonce => {
+            const parsedRequest = stxTransferSip9Nft.request.parse(props.request);
+            return (
+              <TransferSip9NftApprover
+                sendResult={props.sendResult}
+                request={parsedRequest}
+                closeApprover={props.closeApprover}
+                accountId={accountId}
+                nonce={nonce}
+              />
+            );
+          }}
+        </NonceLoader>
+      );
+    }
+    case stxTransferSip10Ft.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
+      return (
+        <NonceLoader accountId={accountId}>
+          {nonce => {
+            const parsedRequest = stxTransferSip10Ft.request.parse(props.request);
+            return (
+              <TransferSip10FtApprover
+                sendResult={props.sendResult}
+                request={parsedRequest}
+                closeApprover={props.closeApprover}
+                accountId={accountId}
+                nonce={nonce}
+              />
+            );
+          }}
+        </NonceLoader>
+      );
+    }
+
     default:
       return null;
   }
