@@ -14,35 +14,34 @@ import {
 import { addBip32DerivationFieldToInputs } from './utils';
 
 interface SignPsbtApproverProps {
-  message: RpcRequest<typeof signPsbt>;
+  request: RpcRequest<typeof signPsbt>;
   sendResult(result: RpcResponse<typeof signPsbt>): void;
-  origin: string;
   app: App;
   closeApprover(): void;
 }
 
 export function SignPsbtApprover(props: SignPsbtApproverProps) {
   const { list: bitcoinAccounts } = useBitcoinAccounts();
-  const networkMode = bitcoinNetworkModesSchema.parse(props.message.params.network);
+  const networkMode = bitcoinNetworkModesSchema.parse(props.request.params.network);
   if (props.app.status === 'connected') {
     const infusedPsbt = addBip32DerivationFieldToInputs({
-      psbtHex: props.message.params.hex,
+      psbtHex: props.request.params.hex,
       networkMode,
       bitcoinAccounts,
       accountId: props.app.accountId,
-      signAtIndex: props.message.params.signAtIndex,
+      signAtIndex: props.request.params.signAtIndex,
     });
     return (
       <PsbtSigner
-        broadcast={props.message.params.broadcast}
-        allowedSighash={props.message.params.allowedSighash}
+        broadcast={props.request.params.broadcast}
+        allowedSighash={props.request.params.allowedSighash}
         signAtIndex={infusedPsbt.signAtIndex}
         psbtHex={infusedPsbt.psbtHex}
         network={networkMode}
         onBack={props.closeApprover}
         onSuccess={(result: RpcResult<typeof signPsbt>) => {
           const rpcSuccessResponse = createRpcSuccessResponse('signPsbt', {
-            id: props.message.id,
+            id: props.request.id,
             result,
           });
           props.sendResult(rpcSuccessResponse);

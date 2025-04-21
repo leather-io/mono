@@ -16,7 +16,7 @@ import { formatAddressesForGetAddresses } from './utils';
 
 interface GetAddressesApproverProps {
   app: App;
-  message: RpcRequest<typeof getAddresses>;
+  request: RpcRequest<typeof getAddresses>;
   sendResult(result: RpcResponse<typeof getAddresses>): void;
   origin: string;
   closeApprover(): void;
@@ -54,7 +54,7 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
     const result = { addresses: keysToIncludeInResponse };
     const response = createRpcSuccessResponse('getAddresses', {
       result,
-      id: props.message.id,
+      id: props.request.id,
     });
 
     if (props.origin) {

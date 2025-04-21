@@ -15,9 +15,8 @@ import { SignMessageApproverLayout } from './sign-message.layout';
 
 interface SignMessageApproverProps {
   app: App;
-  message: RpcRequest<typeof signMessage>;
+  request: RpcRequest<typeof signMessage>;
   sendResult(result: RpcResponse<typeof signMessage>): void;
-  origin: string;
   closeApprover(): void;
 }
 
@@ -28,7 +27,7 @@ export function SignMessageApprover(props: SignMessageApproverProps) {
   function getDefaultAccountId() {
     if (!('accountId' in props.app)) return null;
 
-    const requestedAccountIndex = props.message.params.account;
+    const requestedAccountIndex = props.request.params.account;
     const normalizedAccIdx = requestedAccountIndex ? requestedAccountIndex - 1 : undefined;
     if (
       normalizedAccIdx !== undefined &&
@@ -51,14 +50,14 @@ export function SignMessageApprover(props: SignMessageApproverProps) {
   async function onApprove() {
     if (!selectedAccountId) return;
     const result = await signBip322Message({
-      message: props.message,
+      message: props.request,
       accountId: selectedAccountId,
       network,
       accountIndexByPaymentType,
     });
     const response = createRpcSuccessResponse('signMessage', {
       result,
-      id: props.message.id,
+      id: props.request.id,
     });
 
     sendResult(response);
@@ -79,7 +78,7 @@ export function SignMessageApprover(props: SignMessageApproverProps) {
         onCloseApprover={props.closeApprover}
         accounts={accounts}
         selectedAccountId={selectedAccountId}
-        messageToSign={props.message.params.message}
+        messageToSign={props.request.params.message}
       />
       <AccountSelectorSheet sheetRef={accountSelecterSheetRef} onAccountPress={onAccountPress} />
     </>

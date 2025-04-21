@@ -9,6 +9,7 @@ import { StacksOutcome } from '@/features/approver/components/stacks-outcome';
 import { MemoSection } from '@/features/approver/memo.section';
 import { NonceSection } from '@/features/approver/nonce.section';
 import { StacksFeesSection } from '@/features/approver/stacks-fees.section';
+import { useStxTransactionUpdatesHandler } from '@/features/approver/stx/hooks';
 import {
   ApproverState,
   assertTokenTransferPayload,
@@ -20,13 +21,15 @@ import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.que
 import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
+import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { t } from '@lingui/macro';
 import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
+import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { Approver, Box, Text } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
+import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 interface StacksTxSignerProps {
   txHex: string;
@@ -57,7 +60,7 @@ export function StacksTxSigner({
   const totalSpendMoney = getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee);
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const signer = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
-  if (!signer) throw new Error('No signer found');
+  assertStacksSigner(signer);
 
   const account = useAccountByIndex(fingerprint, accountIndex);
 
@@ -70,9 +73,7 @@ export function StacksTxSigner({
   const [approverState, setApproverState] = useState<ApproverState>('start');
   async function onSubmitTransaction() {
     setApproverState('submitting');
-    if (!signer) {
-      throw new Error('No signer provided');
-    }
+    assertStacksSigner(signer);
 
     try {
       const signedTx = await signer?.sign(tx);
@@ -98,6 +99,36 @@ export function StacksTxSigner({
     }
   }
 
+  const { changeFeeToastHandler, changeMemoToastHandler, changeNonceToastHandler } =
+    useStxTransactionUpdatesHandler();
+
+  const onChangeMemo = changeMemoToastHandler(async (memo: string) => {
+    assertTokenTransferPayload(tx.payload);
+    const newTx = await generateStacksUnsignedTransaction({
+      txType: TransactionTypes.StxTokenTransfer,
+      amount: createMoney(tx.payload.amount, 'STX'),
+      fee: createMoney(tx.auth.spendingCondition.fee, 'STX'),
+      nonce: Number(tx.auth.spendingCondition.nonce),
+      recipient: tx.payload.recipient,
+      memo,
+      ...txOptions,
+    });
+    const newTxHex = newTx.serialize();
+    setTxHex(newTxHex);
+  });
+
+  const onChangeFee = changeFeeToastHandler((fee: number) => {
+    tx.setFee(fee);
+    const newTxHex = tx.serialize();
+    setTxHex(newTxHex);
+  });
+
+  const onChangeNonce = changeNonceToastHandler((nonce: string) => {
+    tx.setNonce(Number(nonce));
+    const newTxHex = tx.serialize();
+    setTxHex(newTxHex);
+  });
+
   return (
     <>
       <Approver requester="https://leather.io">
@@ -117,10 +148,17 @@ export function StacksTxSigner({
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
-          <StacksFeesSection txHex={txHex} setTxHex={setTxHex} />
-          <NonceSection txHex={txHex} setTxHex={setTxHex} />
+          <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
+          <NonceSection
+            nonce={tx.auth.spendingCondition.nonce.toString()}
+            onChangeNonce={onChangeNonce}
+          />
           {tx.payload.payloadType === PayloadType.TokenTransfer && (
-            <MemoSection txHex={txHex} setTxHex={setTxHex} txOptions={txOptions} isMemoEditable />
+            <MemoSection
+              memo={tx.payload.memo.content}
+              onChangeMemo={onChangeMemo}
+              isMemoEditable
+            />
           )}
         </Approver.Container>
         <Approver.Footer>

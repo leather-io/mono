@@ -1,6 +1,11 @@
 import { HDKey } from '@scure/bip32';
 import { ChainId } from '@stacks/network';
-import { AssetString, compressPrivateKey, privateKeyToPublic } from '@stacks/transactions';
+import {
+  AssetString,
+  ContractIdString,
+  compressPrivateKey,
+  privateKeyToPublic,
+} from '@stacks/transactions';
 
 import {
   DerivationPathDepth,
@@ -106,6 +111,17 @@ export function formatAssetString({
   assetName,
 }: FormatAssetStringArgs): AssetString {
   return `${contractAddress}.${contractName}::${assetName}`;
+}
+
+interface FormatContractIdStringArgs {
+  contractAddress: string;
+  contractName: string;
+}
+export function formatContractIdString({
+  contractAddress,
+  contractName,
+}: FormatContractIdStringArgs): ContractIdString {
+  return `${contractAddress}.${contractName}`;
 }
 
 /**

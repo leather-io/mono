@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
+import { useToastContext } from '@/components/toast/toast-context';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
+import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
@@ -12,31 +14,37 @@ import {
   RpcRequest,
   RpcResponse,
   createRpcSuccessResponse,
-  stxSignTransaction,
+  stxTransferSip9Nft,
 } from '@leather.io/rpc';
 
-import { getTxHexFromRequest } from './utils';
+import { useTransferSip9NftTxHex } from './hooks';
 
-interface SignTransactionApproverProps {
-  request: RpcRequest<typeof stxSignTransaction>;
-  sendResult(result: RpcResponse<typeof stxSignTransaction>): void;
+interface TransferSip9NftApproverProps {
+  request: RpcRequest<typeof stxTransferSip9Nft>;
+  sendResult(result: RpcResponse<typeof stxTransferSip9Nft>): void;
   closeApprover(): void;
   accountId: string;
+  nonce: number;
 }
 
-export function SignTransactionApprover({
+export function TransferSip9NftApprover({
   request,
   closeApprover,
   sendResult,
   accountId,
-}: SignTransactionApproverProps) {
+  nonce,
+}: TransferSip9NftApproverProps) {
+  const { displayToast } = useToastContext();
   const network = useNetworkPreferenceStacksNetwork();
-  const requestTxHex = getTxHexFromRequest(request);
 
   const { list: accounts } = useAccounts();
-  const [txHex, setTxHex] = useState(requestTxHex);
+  const [txHex, setTxHex] = useState<null | string>(null);
+  useTransferSip9NftTxHex({ request, accountId, setTxHex, nonce });
   const signer = useStacksSigners().fromAccountId(accountId)[0];
+  const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
+
   assertStacksSigner(signer);
+  if (!txHex) return null;
 
   const txOptions = getTxOptions(signer, network);
 
@@ -46,14 +54,24 @@ export function SignTransactionApprover({
     assertStacksSigner(signer);
     const signedTx = await signer?.sign(tx);
 
-    const response = createRpcSuccessResponse('stx_signTransaction', {
-      id: request.id,
-      result: {
-        txHex: signedTx.serialize(),
-        transaction: signedTx.serialize(),
-      },
-    });
-    sendResult(response);
+    await broadcastTransaction(
+      { tx: signedTx, stacksNetwork: network },
+      {
+        onError(err) {
+          displayToast({ type: 'error', title: err.message });
+        },
+        onSuccess(resp) {
+          const response = createRpcSuccessResponse('stx_transferSip9Nft', {
+            id: request.id,
+            result: {
+              transaction: signedTx.serialize(),
+              txid: resp.txid,
+            },
+          });
+          sendResult(response);
+        },
+      }
+    );
   }
 
   return (

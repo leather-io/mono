@@ -72,6 +72,12 @@ export default tseslint.config(
             'describe',
             'test',
           ],
+          ignoreProperty: [
+            'InvalidParams',
+            'NullOrigin',
+            'UndefinedParams',
+            'UserRejectedOperation',
+          ],
         },
       ],
     },

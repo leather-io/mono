@@ -3,6 +3,7 @@ export * from './mocks/mocks';
 export * from './signer/signer';
 export * from './stacks.utils';
 export * from './transactions/generate-unsigned-transaction';
+export * from './transactions/get-contract-fn-args';
 export * from './transactions/post-condition.utils';
 export * from './transactions/transaction.types';
 export * from './transactions/get-error-message';

@@ -13,10 +13,10 @@ import { getTxFeeMoney } from './utils';
 
 interface StacksFeesSectionProps {
   txHex: string;
-  setTxHex(txHex: string): void;
+  onChangeFee(fee: number): void;
 }
 
-export function StacksFeesSection({ txHex, setTxHex }: StacksFeesSectionProps) {
+export function StacksFeesSection({ txHex, onChangeFee }: StacksFeesSectionProps) {
   const tx = deserializeTransaction(txHex);
   const { data: stxFees } = useCalculateStacksTxFees(tx);
   const fee = tx.auth.spendingCondition.fee;
@@ -61,11 +61,12 @@ export function StacksFeesSection({ txHex, setTxHex }: StacksFeesSectionProps) {
       <StacksFeesSheet
         sheetRef={feeSheetRef}
         selectedFeeType={selectedFeeType}
-        setSelectedFeeType={setSelectedFeeType}
         fees={fees}
         currentFee={createMoney(fee, 'STX')}
-        txHex={txHex}
-        setTxHex={setTxHex}
+        onChangeFeeType={feeType => {
+          setSelectedFeeType(feeType);
+          onChangeFee(fees[feeType].amount.toNumber());
+        }}
       />
     </>
   );
