@@ -1,7 +1,7 @@
 import { StackingClient } from '@stacks/stacking';
 import { VStack } from 'leather-styles/jsx';
-import { StackingInfoGrid } from '~/features/stacking/components/stacking-info-grid';
 import { useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
+import { PooledStackingInfoGrid } from '~/features/stacking/pooled-stacking-info/pooled-stacking-info-grid';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import { poolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
@@ -39,7 +39,7 @@ function PooledStackingActiveInfoLayout({}: PooledStackingActiveInfoLayoutProps)
 
   return (
     <VStack alignItems="stretch" pt="12px">
-      <StackingInfoGrid rewardProtocol={poolRewardProtocol} />
+      <PooledStackingInfoGrid rewardProtocol={poolRewardProtocol} />
     </VStack>
   );
 }

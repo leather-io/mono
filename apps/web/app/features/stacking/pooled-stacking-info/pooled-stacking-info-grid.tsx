@@ -112,10 +112,11 @@ function RewardsTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
   );
 }
 
-interface StackingInfoGridProps extends GridProps {
+interface PooledStackingInfoGridProps extends GridProps {
   rewardProtocol: PoolRewardProtocolInfo;
 }
-export function StackingInfoGrid({ rewardProtocol, ...props }: StackingInfoGridProps) {
+
+export function PooledStackingInfoGrid({ rewardProtocol, ...props }: PooledStackingInfoGridProps) {
   return (
     <StackingInfoGridLayout
       primaryCell={<RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />}
