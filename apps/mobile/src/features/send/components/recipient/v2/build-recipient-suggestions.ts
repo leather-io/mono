@@ -17,7 +17,7 @@ export interface BuildRecipientSuggestionsParams {
   canSelfSend: boolean;
   activity: SendAssetActivity[];
   findAccountByAddress: (address: string) => Account | null;
-  getAddressByAccount: (fingerprint: string, accountIndex: number) => string;
+  getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
   performBnsLookup: (name: string) => Promise<string | null>;
   validateAddress: (value: string) => Promise<boolean>;
 }
@@ -123,7 +123,7 @@ export function getRecents({
 interface GetAccountsParams {
   accounts: Account[];
   selectedAccount: Account;
-  getAddressByAccount: (fingerprint: string, accountIndex: number) => string;
+  getAddressByAccount: (fingerprint: string, accountIndex: number) => string | null;
   canSelfSend: boolean;
 }
 
@@ -140,7 +140,7 @@ export function getAccounts({
       type: 'internal' as const,
       id: account.id,
       rawAccount: account,
-      address: getAddressByAccount(account.fingerprint, account.accountIndex),
+      address: getAddressByAccount(account.fingerprint, account.accountIndex) ?? '',
     }))
   );
 }
