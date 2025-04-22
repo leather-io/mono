@@ -3,7 +3,7 @@ import { FetchState, toFetchState } from '@/shared/fetch-state';
 import { Account } from '@/store/accounts/accounts';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
-import { filter, isShallowEqual, pipe } from 'remeda';
+import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
 
 import { Activity, FungibleCryptoAssetInfo, SendAssetActivity } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
@@ -25,14 +25,19 @@ export function useRelevantActivity(account: Account, assetInfo: FungibleCryptoA
       staleTime: 1 * 5000,
       gcTime: 1 * 5000,
       select: data => {
-        return pipe(data, filter(isSendActivity), filter(isRelevantSendActivity(assetInfo)));
+        return pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(assetInfo)));
       },
     })
   );
 }
 
-function isSendActivity(activity: Activity) {
-  return activity.type === 'sendAsset';
+function isValidSendActivity(activity: Activity): activity is SendAssetActivity {
+  return (
+    activity.type === 'sendAsset' &&
+    // Items from the API response sometimes erroneously contain no receivers or empty strings
+    isDefined(activity.receivers[0]) &&
+    activity.receivers[0].length !== 0
+  );
 }
 
 function isRelevantSendActivity(assetInfo: FungibleCryptoAssetInfo) {

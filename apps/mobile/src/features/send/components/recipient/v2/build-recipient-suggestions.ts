@@ -106,11 +106,10 @@ export function getRecents({
 
   return pipe(
     activity,
-    filter(activity => activity.receivers.length > 0),
     // Filter out contract targets
     filter(activity => activity.receivers.some(r => !r.includes('.'))),
     // Deliberately filter out own accounts from Recents. Unclear how to handle taproot addresses matching existing accounts.
-    filter(activity => findAccountByAddress(activity.receivers[0] ?? '') == null),
+    filter(activity => findAccountByAddress(activity.receivers[0] ?? '') === null),
     uniqueBy(activity => activity.receivers[0]),
     takeFirstBy(recentItemLimit, [prop('timestamp'), 'desc']),
     map(activity => ({
