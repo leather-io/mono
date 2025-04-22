@@ -1,16 +1,24 @@
 import { useState } from 'react';
 
+import {
+  isBnsLookupCandidate,
+  normalizeSearchTerm,
+} from '@/features/send/components/recipient/v2/build-recipient-suggestions';
 import { RecipientInput } from '@/features/send/components/recipient/v2/recipient-input';
+import { RecipientSelectorHeader } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-item';
+import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-search-empty-state';
 import { RecipientSelectorSectionHeader } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-section-header';
-import { useRecipientSuggestions } from '@/features/send/components/recipient/v2/use-recipient-suggestions';
+import {
+  matchSuggestionsResult,
+  useRecipientSuggestions,
+} from '@/features/send/components/recipient/v2/use-recipient-suggestions';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { type Account } from '@/store/accounts/accounts';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { type ZodSchema } from 'zod';
 
 import { type FungibleCryptoAssetInfo, type SendAssetActivity } from '@leather.io/models';
-import { Box } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
   onSelectAddress(address: string): void;
@@ -38,27 +46,41 @@ export function RecipientSelector({
     selectedAccount,
     assetInfo,
   });
-
-  const showLoadingIndicator = searchTerm.length > 0 && recipientSuggestions.isFetching;
+  const isPerformingSearch = normalizeSearchTerm(searchTerm).length > 0;
+  const isBnsLookup = isBnsLookupCandidate(normalizeSearchTerm(searchTerm));
 
   return (
     <>
-      <Box px="5" py="5" pb="4">
+      <RecipientSelectorHeader>
         <RecipientInput value={searchTerm} onChange={setSearchTerm} />
-      </Box>
-      {showLoadingIndicator && <SendFormLoadingSpinner />}
-      {!showLoadingIndicator && recipientSuggestions.isSuccess && (
-        <BottomSheetSectionList
-          sections={recipientSuggestions.data}
-          keyboardShouldPersistTaps="always"
-          keyExtractor={item => item.id}
-          stickySectionHeadersEnabled={false}
-          renderSectionHeader={({ section }) => <RecipientSelectorSectionHeader id={section.id} />}
-          renderItem={({ item }) => (
-            <RecipientSelectorItem entry={item} onSelect={onSelectAddress} />
-          )}
-        />
-      )}
+      </RecipientSelectorHeader>
+      {matchSuggestionsResult({
+        query: recipientSuggestions,
+        pending: <SendFormLoadingSpinner />,
+        // Avoid brief flickers by only showing a spinner when BNS lookup is in flight
+        fetching: isBnsLookup ? <SendFormLoadingSpinner /> : undefined,
+        error: () => <RecipientSelectorSearchEmptyState />,
+        success: sections => {
+          if (isPerformingSearch && sections.length === 0) {
+            return <RecipientSelectorSearchEmptyState />;
+          }
+
+          return (
+            <BottomSheetSectionList
+              sections={sections}
+              keyboardShouldPersistTaps="always"
+              keyExtractor={item => item.id}
+              stickySectionHeadersEnabled={false}
+              renderSectionHeader={({ section }) => (
+                <RecipientSelectorSectionHeader id={section.id} />
+              )}
+              renderItem={({ item }) => (
+                <RecipientSelectorItem entry={item} onSelect={onSelectAddress} />
+              )}
+            />
+          );
+        },
+      })}
     </>
   );
 }

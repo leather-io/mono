@@ -33,7 +33,7 @@ export async function buildRecipientSuggestions({
   performBnsLookup,
   validateAddress,
 }: BuildRecipientSuggestionsParams): Promise<RecipientSection[]> {
-  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+  const normalizedSearchTerm = normalizeSearchTerm(searchTerm);
   const recentEntries = getRecents({ activity, findAccountByAddress });
   const accountEntries = getAccounts({
     accounts,
@@ -172,7 +172,11 @@ function isLooseNameOrAddressMatch(searchTerm: string) {
   };
 }
 
-function isBnsLookupCandidate(input: string) {
+export function isBnsLookupCandidate(input: string) {
   const bnsNamePattern = /^[a-z0-9-]+\.([a-z0-9-]+)$/;
   return bnsNamePattern.test(input);
+}
+
+export function normalizeSearchTerm(input: string) {
+  return input.trim().toLowerCase();
 }
