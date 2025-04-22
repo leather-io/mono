@@ -9,7 +9,7 @@ import { FungibleCryptoAssetInfo } from '@leather.io/models';
 
 interface UseAccountHelpersResult {
   findAccountByAddress: (address: string) => Account | null;
-  getAddressByAccount: (fingerprint: string, index: number) => string;
+  getAddressByAccount: (fingerprint: string, index: number) => string | null;
 }
 
 export function useAccountHelpers(
@@ -36,7 +36,8 @@ export function useAccountHelpers(
   );
 
   const getStacksSignerAddress = useCallback(
-    (fingerprint: string, index: number) => fromAccountIndex(fingerprint, index)[0]?.address ?? '',
+    (fingerprint: string, index: number) =>
+      fromAccountIndex(fingerprint, index)[0]?.address ?? null,
     [fromAccountIndex]
   );
 
@@ -55,7 +56,7 @@ export function useAccountHelpers(
     [accounts, getSegwitAddress, getTaprootAddress, getStacksSignerAddress]
   );
 
-  const getAccountByAddress = useCallback(
+  const findAccountByAddress = useCallback(
     (address: string) => {
       const account = accountsWithAddresses.find(a => a.addresses.includes(address));
       if (!account) {
@@ -68,7 +69,7 @@ export function useAccountHelpers(
   );
 
   return {
-    findAccountByAddress: getAccountByAddress,
+    findAccountByAddress,
     getAddressByAccount: assetInfo.chain === 'stacks' ? getStacksSignerAddress : getSegwitAddress,
   };
 }
