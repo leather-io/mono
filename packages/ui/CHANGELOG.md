@@ -389,6 +389,19 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.61.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.60.0...@leather.io/ui-v1.61.0) (2025-04-22)
+
+
+### Features
+
+* **web:** accordion component 🪗, closes LEA-2321 ([0eed207](https://github.com/leather-io/mono/commit/0eed207780343c3c3adcaf493213cf77851d12f3))
+* **web:** sbtc rewards faq, closes LEA-2446 ([62ddc46](https://github.com/leather-io/mono/commit/62ddc46d26d3f88b95be3d19377eda71926ac6ca))
+
+
+### Bug Fixes
+
+* **ui:** fix chevron size in approver-advanced.native.tsx ([c7a3fe1](https://github.com/leather-io/mono/commit/c7a3fe157da8be54b1209ea48a98d576a804392e))
+
 ## [1.60.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.59.0...@leather.io/ui-v1.60.0) (2025-04-10)
 
 

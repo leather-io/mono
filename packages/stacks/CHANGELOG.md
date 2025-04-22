@@ -401,6 +401,13 @@
     * @leather.io/crypto bumped to 1.6.56
     * @leather.io/utils bumped to 0.32.0
 
+## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.8.1...@leather.io/stacks-v1.9.0) (2025-04-22)
+
+
+### Features
+
+* stx_signTransaction (part 2) ([8315231](https://github.com/leather-io/mono/commit/8315231d1ef4f305398b0ccf4a546e0e25582ee3))
+
 ## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.7.6...@leather.io/stacks-v1.8.0) (2025-04-02)
 
 
