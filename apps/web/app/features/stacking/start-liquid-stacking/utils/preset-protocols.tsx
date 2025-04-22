@@ -1,4 +1,5 @@
-import { PoolIcon } from '../../start-pooled-stacking/components/pool-icon';
+import { ImgFillLoader } from '~/components/img-loader';
+
 import {
   NetworkInstanceToLiquidContractMap,
   Protocol,
@@ -22,7 +23,7 @@ export const protocols: Record<ProtocolName, Protocol> = {
       devnet: NetworkInstanceToLiquidContractMap['devnet']['WrapperStackingDAO'],
     },
     minimumDelegationAmount: 1_000_000,
-    icon: <PoolIcon src="/32x32_StackingDao.png" />,
+    icon: <ImgFillLoader src="/icons/stacking-dao.webp" width="32" fill="black" />,
   },
   Lisa: {
     name: 'Lisa',
@@ -37,6 +38,6 @@ export const protocols: Record<ProtocolName, Protocol> = {
       devnet: NetworkInstanceToLiquidContractMap['devnet']['Lisa'],
     },
     minimumDelegationAmount: 1_000_000,
-    icon: <PoolIcon src="/32x32_Lisa.png" />,
+    icon: <ImgFillLoader src="/icons/lisa.webp" width="32" fill="black" />,
   },
 };

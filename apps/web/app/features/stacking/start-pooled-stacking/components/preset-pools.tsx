@@ -29,7 +29,7 @@ export const pools: Record<PoolName, Pool> = {
     }, // pool address is the same as pool contract
     poxContract: 'WrapperFastPool',
     minimumDelegationAmount: 40_000_000,
-    icon: <ImgFillLoader src="icons/fastpool.webp" width="32" fill="black" />,
+    icon: <ImgFillLoader src="/icons/fastpool.webp" width="32" fill="black" />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
@@ -47,7 +47,7 @@ export const pools: Record<PoolName, Pool> = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 200_000_000,
-    icon: <ImgFillLoader src="icons/planbetter.webp" width="32" fill="black" />,
+    icon: <ImgFillLoader src="/icons/planbetter.webp" width="32" fill="black" />,
     allowCustomRewardAddress: false, // only for ledger users
     disabled: false,
   },
@@ -66,7 +66,7 @@ export const pools: Record<PoolName, Pool> = {
     }, // pool address is the same as pool contract
     poxContract: 'WrapperRestake',
     minimumDelegationAmount: 100_000_000,
-    icon: <ImgFillLoader src="icons/restake.webp" width="32" fill="#124044" />,
+    icon: <ImgFillLoader src="/icons/restake.webp" width="32" fill="#124044" />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
@@ -85,7 +85,7 @@ export const pools: Record<PoolName, Pool> = {
     }, // pool address is the same as pool contract
     poxContract: 'WrapperStackingDao',
     minimumDelegationAmount: 500_000_000,
-    icon: <ImgFillLoader src="icons/stacking-dao.webp" width="32" fill="#1C3830" />,
+    icon: <ImgFillLoader src="/icons/stacking-dao.webp" width="32" fill="#1C3830" />,
     allowCustomRewardAddress: false,
     disabled: false,
   },
@@ -104,7 +104,7 @@ export const pools: Record<PoolName, Pool> = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 100_000_000,
-    icon: <ImgFillLoader src="icons/xverse.webp" width="32" fill="black" />,
+    icon: <ImgFillLoader src="/icons/xverse.webp" width="32" fill="black" />,
     allowCustomRewardAddress: true,
     disabled: false,
   },

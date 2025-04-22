@@ -1,3 +1,4 @@
+import { LiquidStackingInfo } from '~/features/stacking/direct-stacking-info/liquid-stacking-info';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { useStackingClient } from './providers/stacking-client-provider';
@@ -18,6 +19,5 @@ export function LiquidStackingActiveInfo({ protocolSlug }: LiquidStackingActiveI
     return 'Expected client to be defined';
   }
 
-  // return <PooledStackingActiveInfoLayout client={client} poolSlug={poolSlug} />;
-  return <>{protocolSlug}</>;
+  return <LiquidStackingInfo address={stxAddress.address} protocolSlug={protocolSlug} />;
 }

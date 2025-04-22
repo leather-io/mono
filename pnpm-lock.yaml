@@ -547,6 +547,9 @@ importers:
       '@leather.io/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@leather.io/stacks':
+        specifier: workspace:*
+        version: link:../../packages/stacks
       '@leather.io/ui':
         specifier: workspace:*
         version: link:../../packages/ui
