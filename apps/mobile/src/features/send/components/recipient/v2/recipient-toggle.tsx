@@ -42,7 +42,7 @@ export function RecipientToggle({ onPress, value, invalid }: RecipientToggleProp
       >
         {value ? (
           <Flag img={<Avatar icon={<UserIcon />} />}>
-            <AddressDisplayer address={value.toUpperCase()} />
+            <AddressDisplayer address={value} />
           </Flag>
         ) : (
           <Text variant="label02" color="ink.text-subdued">
