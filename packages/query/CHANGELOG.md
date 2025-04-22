@@ -519,6 +519,20 @@
     * @leather.io/stacks bumped to 1.8.1
     * @leather.io/utils bumped to 0.32.0
 
+## [2.36.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.35.2...@leather.io/query-v2.36.0) (2025-04-22)
+
+
+### Features
+
+* **web:** add stacked in pool user positions data ([d1382a5](https://github.com/leather-io/mono/commit/d1382a5e54ef9ab46b1c08e83430aa6470a4912a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.9.0
+
 ## [2.35.1](https://github.com/leather-io/mono/compare/@leather.io/query-v2.35.0...@leather.io/query-v2.35.1) (2025-04-02)
 
 

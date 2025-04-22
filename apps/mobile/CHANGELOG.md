@@ -701,6 +701,34 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.29.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.3...@leather.io/mobile-v2.29.0) (2025-04-22)
+
+
+### Features
+
+* **mobile:** add account icon randomization ([015a479](https://github.com/leather-io/mono/commit/015a47968193713f136474def4dc1698ce5dea25))
+* **mobile:** add display preference override to account address ([9ddec3a](https://github.com/leather-io/mono/commit/9ddec3ae6526850796195e7adff60099904a3794))
+* **mobile:** add recipient selector layout and a hook ([a988d93](https://github.com/leather-io/mono/commit/a988d93a98e7b2f536e8cf810e5f0d050cc236e2))
+* stx_signTransaction (part 2) ([8315231](https://github.com/leather-io/mono/commit/8315231d1ef4f305398b0ccf4a546e0e25582ee3))
+
+
+### Bug Fixes
+
+* **mobile:** add vertical padding to text input ([105a3b3](https://github.com/leather-io/mono/commit/105a3b350bd78e6cb7f47d0ac5484855b725b8a1))
+* **mobile:** bring back action bar, tweak the design ([3d3e808](https://github.com/leather-io/mono/commit/3d3e8087ae7f99340fd6e313bead1f8b0e8d5be9))
+* **mobile:** filter send flow account selection by selected asset ([c0156a8](https://github.com/leather-io/mono/commit/c0156a8b65abc0dfb8ac76e7f2bb623be8b93547))
+* **mobile:** fix lingui bug with duplicate translation ([4f68981](https://github.com/leather-io/mono/commit/4f68981199b59f8806bf5049cf17440eb8350b85))
+* **mobile:** run lingui compile in strict mode to catch errors ([5dfe730](https://github.com/leather-io/mono/commit/5dfe730e889dbfb46439eeb99cdec4baaaf8d1dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.36.0
+    * @leather.io/stacks bumped to 1.9.0
+    * @leather.io/ui bumped to 1.61.0
+
 ## [2.28.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.2...@leather.io/mobile-v2.28.3) (2025-04-11)
 
 
