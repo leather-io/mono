@@ -263,6 +263,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.32.0
 
+## [2.11.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.10.4...@leather.io/rpc-v2.11.0) (2025-04-23)
+
+
+### Features
+
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+
 ## [2.10.2](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.10.1...@leather.io/rpc-v2.10.2) (2025-04-01)
 
 

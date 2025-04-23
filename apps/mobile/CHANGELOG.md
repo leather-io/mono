@@ -701,6 +701,37 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.30.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.29.0...@leather.io/mobile-v2.30.0) (2025-04-23)
+
+
+### Features
+
+* **mobile:** add logic for recipient suggestions and search ([979f1fa](https://github.com/leather-io/mono/commit/979f1faa08da3c0ed7f504b74f76824acb8767f7))
+* **mobile:** add search empty state to the recipient flow ([ef3f5d9](https://github.com/leather-io/mono/commit/ef3f5d98d09a533d7fa07757dca3950053063cf8))
+* sip30 deploy and call contracts ([16d69dc](https://github.com/leather-io/mono/commit/16d69dc3658545a06ce0555fd46cdf1da139e26e))
+* sip30 get addresses ([b125082](https://github.com/leather-io/mono/commit/b1250823adddc123124fefe47c87bb5338703f8a))
+* sip30 message signing ([52f4239](https://github.com/leather-io/mono/commit/52f42397ad47db11b2dc826fd63bb01d0ab4c545))
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+
+
+### Bug Fixes
+
+* **mobile:** fix the recipient address validation helper ([ddf7f2a](https://github.com/leather-io/mono/commit/ddf7f2a72cbc3a2a1fb9fe15bee9249dfba378c9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.24.4
+    * @leather.io/provider bumped to 1.2.8
+    * @leather.io/query bumped to 2.36.1
+    * @leather.io/rpc bumped to 2.11.0
+    * @leather.io/services bumped to 1.8.2
+    * @leather.io/stacks bumped to 1.10.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.24.4
+
 ## [2.29.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.28.3...@leather.io/mobile-v2.29.0) (2025-04-22)
 
 
