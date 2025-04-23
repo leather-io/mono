@@ -93,7 +93,13 @@ describe('with empty search term', () => {
 
   it('transforms activity into recent entries with correct properties', async () => {
     const activity = [createActivityItem({ id: 'tx1', receiver: 'address-1' })];
-    const expectedEntry = { type: 'external', id: 'tx1', address: 'address-1' };
+    assert(activity[0]);
+    const expectedEntry = {
+      type: 'external',
+      id: 'tx1',
+      address: 'address-1',
+      timestamp: activity[0].timestamp,
+    };
     const sections = await invokeWithDefaults({
       activity,
     });
@@ -130,6 +136,7 @@ describe('with empty search term', () => {
         type: 'external',
         id: 'tx2',
         address: 'address-2',
+        timestamp: activity[1].timestamp,
       },
     ]);
   });
@@ -140,7 +147,7 @@ describe('with empty search term', () => {
     expect(sections[1].id).toBe('accounts');
   });
 
-  it('transforms activity into recent entries with correct properties', async () => {
+  it('transforms accounts into account entries with correct properties', async () => {
     const account = createAccount('fp/0', 'Account 1');
     const expectedEntry = { type: 'internal', id: 'fp/0', address: 'address', rawAccount: account };
     const sections = await invokeWithDefaults({
@@ -251,10 +258,22 @@ describe('with search term', () => {
     ];
     const sections = await invokeWithDefaults({ searchTerm: 'abc', activity });
     assert(sections[0]);
+    assert(activity[0]);
+    assert(activity[1]);
     expect(sections[0].id).toBe('matching');
     expect(sections[0].data).toHaveLength(2);
-    expect(sections[0].data).toContainEqual({ type: 'external', id: 'tx1', address: 'abc-1' });
-    expect(sections[0].data).toContainEqual({ type: 'external', id: 'tx2', address: 'abc-2' });
+    expect(sections[0].data).toContainEqual({
+      type: 'external',
+      id: 'tx1',
+      address: 'abc-1',
+      timestamp: activity[0].timestamp,
+    });
+    expect(sections[0].data).toContainEqual({
+      type: 'external',
+      id: 'tx2',
+      address: 'abc-2',
+      timestamp: activity[1].timestamp,
+    });
   });
 
   it('returns a matching entry for a valid, resolvable BNS name', async () => {

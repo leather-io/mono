@@ -25,10 +25,14 @@ import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { Box, SheetProvider } from '@leather.io/ui/native';
+
+dayjs.extend(relativeTime);
 
 // Catch any errors thrown by the Layout component
 export { ErrorBoundary } from 'expo-router';

@@ -8,9 +8,10 @@ import {
   RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/v2/types';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
+import dayjs from 'dayjs';
 
 import { Cell, PersonIcon } from '@leather.io/ui/native';
-import { assertUnreachable, truncateMiddle } from '@leather.io/utils';
+import { assertUnreachable } from '@leather.io/utils';
 
 interface RecipientSelectorItemProps {
   entry: RecipientSuggestionEntry;
@@ -63,8 +64,14 @@ interface ExternalRecipientItemProps extends RecipientSelectorItemProps {
 
 function ExternalRecipientItem({ entry, onSelect }: ExternalRecipientItemProps) {
   const { title, subtitle } = entry.bnsName
-    ? { title: entry.bnsName, subtitle: truncateMiddle(entry.address) }
-    : { title: truncateMiddle(entry.address) };
+    ? {
+        title: entry.bnsName,
+        subtitle: entry.address,
+      }
+    : {
+        title: entry.address,
+        subtitle: entry.timestamp ? dayjs.unix(entry.timestamp).fromNow() : undefined,
+      };
 
   return (
     <Cell.Root pressable={true} maxHeight={68} onPress={() => onSelect(entry.address)}>
@@ -72,10 +79,19 @@ function ExternalRecipientItem({ entry, onSelect }: ExternalRecipientItemProps) 
         <AccountAvatar icon={PersonIcon} />
       </Cell.Icon>
       <Cell.Content>
-        <Cell.Label numberOfLines={1} ellipsizeMode="middle" variant="primary">
+        <Cell.Label
+          variant="primary"
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={{ width: 240 }}
+        >
           {title}
         </Cell.Label>
-        {subtitle && <Cell.Label variant="secondary">{subtitle}</Cell.Label>}
+        {subtitle && (
+          <Cell.Label variant="secondary" numberOfLines={1} ellipsizeMode="middle">
+            {subtitle}
+          </Cell.Label>
+        )}
       </Cell.Content>
     </Cell.Root>
   );
