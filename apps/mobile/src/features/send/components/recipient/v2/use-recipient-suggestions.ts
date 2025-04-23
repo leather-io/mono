@@ -1,4 +1,8 @@
 import { buildRecipientSuggestions } from '@/features/send/components/recipient/v2/build-recipient-suggestions';
+import {
+  getLookupHelperByChain,
+  recipientSchemaResultContainsError,
+} from '@/features/send/components/recipient/v2/recipient.utils';
 import { RecipientSection } from '@/features/send/components/recipient/v2/types';
 import { useAccountHelpers } from '@/features/send/components/recipient/v2/use-shameful-account-helpers';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -8,7 +12,6 @@ import { UseQueryResult, keepPreviousData, useQuery } from '@tanstack/react-quer
 import { ZodSchema } from 'zod';
 
 import { FungibleCryptoAssetInfo, SendAssetActivity } from '@leather.io/models';
-import { fetchBtcNameOwner, fetchStacksNameOwner } from '@leather.io/query';
 
 interface UseRecipientSuggestionsParams {
   searchTerm: string;
@@ -45,18 +48,13 @@ export function useRecipientSuggestions({
         getAddressByAccount,
         findAccountByAddress,
         canSelfSend: assetInfo.chain === 'bitcoin',
-        performBnsLookup: (name: string) => bnsLookupHelper(bnsV2Client, name),
+        performBnsLookup: (name: string) => bnsLookupHelper(bnsV2Client, name.toLowerCase()),
         validateAddress: (value: string) =>
-          recipientSchema.safeParseAsync(value).then(result => result.success),
+          recipientSchema
+            .safeParseAsync(value)
+            .then(recipientSchemaResultContainsError('invalidAddress')),
       }),
   });
-}
-
-function getLookupHelperByChain(assetInfo: FungibleCryptoAssetInfo) {
-  return {
-    bitcoin: fetchBtcNameOwner,
-    stacks: fetchStacksNameOwner,
-  }[assetInfo.chain];
 }
 
 interface MatchSuggestionsResultParams {

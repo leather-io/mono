@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
-import {
-  isBnsLookupCandidate,
-  normalizeSearchTerm,
-} from '@/features/send/components/recipient/v2/build-recipient-suggestions';
 import { RecipientInput } from '@/features/send/components/recipient/v2/recipient-input';
 import { RecipientSelectorHeader } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-item';
 import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-search-empty-state';
 import { RecipientSelectorSectionHeader } from '@/features/send/components/recipient/v2/recipient-selector/recipient-selector-section-header';
+import {
+  isBnsLookupCandidate,
+  normalizeSearchTerm,
+} from '@/features/send/components/recipient/v2/recipient.utils';
 import {
   matchSuggestionsResult,
   useRecipientSuggestions,
