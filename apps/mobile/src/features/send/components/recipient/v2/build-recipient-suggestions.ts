@@ -121,6 +121,7 @@ export function getRecents({
       type: 'external' as const,
       id: activity.txid,
       address: activity.receivers[0] ?? '',
+      timestamp: activity.timestamp,
     }))
   );
 }

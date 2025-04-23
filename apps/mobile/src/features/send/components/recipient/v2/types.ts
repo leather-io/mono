@@ -12,6 +12,7 @@ export interface ExternalRecipientSuggestionEntry {
   id: string;
   address: string;
   bnsName?: string;
+  timestamp?: number;
 }
 
 export type RecipientSuggestionEntry =
