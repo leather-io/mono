@@ -401,6 +401,14 @@
     * @leather.io/crypto bumped to 1.6.56
     * @leather.io/utils bumped to 0.32.0
 
+## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.9.0...@leather.io/stacks-v1.10.0) (2025-04-23)
+
+
+### Features
+
+* sip30 message signing ([52f4239](https://github.com/leather-io/mono/commit/52f42397ad47db11b2dc826fd63bb01d0ab4c545))
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+
 ## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.8.1...@leather.io/stacks-v1.9.0) (2025-04-22)
 
 
