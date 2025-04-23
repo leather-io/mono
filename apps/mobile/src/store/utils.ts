@@ -12,10 +12,6 @@ import { isDefined } from '@leather.io/utils';
 import { AccountIcon, AccountStore, accountIcons } from './accounts/utils';
 import type { RootState, StoreDispatch } from './index';
 
-export function filterObjectKeys(object: object, keys: string[]) {
-  return Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
-}
-
 type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, UnknownAction>;
 
 type AppDispatch = StoreDispatch & ((action: AppThunk) => void);

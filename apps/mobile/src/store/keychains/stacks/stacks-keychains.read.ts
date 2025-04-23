@@ -17,9 +17,7 @@ import {
 import { descriptorKeychainSelectors, filterKeychainsByStacksAccount } from '../keychains';
 import { adapter } from './stacks-keychains.write';
 
-export const stacksKeychainSelectors = adapter.getSelectors(
-  (state: RootState) => state.keychains.stacks
-);
+const stacksKeychainSelectors = adapter.getSelectors((state: RootState) => state.keychains.stacks);
 
 function createSignFnFromBiometricMnemonicStore(descriptor: string) {
   const { keyOrigin, fingerprint } = decomposeDescriptor(descriptor);

@@ -10,8 +10,6 @@ import get from 'lodash.get';
 import { type DefaultMinMaxRangeFeeEstimations, type RemoteConfig } from '@leather.io/query';
 import { createMoney, isUndefined } from '@leather.io/utils';
 
-export { AvailableRegions } from '@leather.io/query';
-
 function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github']) {
   const IS_DEV_ENV = env === 'development';
   const IS_TESTING_ENV = env === 'testing';
@@ -31,7 +29,7 @@ function fetchLeatherMessages(env: string, leatherGh: LeatherEnvironment['github
   };
 }
 
-export function useRemoteConfig() {
+function useRemoteConfig() {
   const env = useLeatherEnv();
   const leatherGh = useLeatherGithub();
   const { data } = useQuery({
@@ -76,44 +74,9 @@ export function useConfigFeeEstimationsMinValues() {
   return config.feeEstimationsMinMax.minValues.map(value => createMoney(value, 'STX'));
 }
 
-export function useConfigNftMetadataEnabled() {
-  const config = useRemoteConfig();
-  return config?.nftMetadataEnabled ?? true;
-}
-
-export function useConfigOrdinalsbot() {
-  const config = useRemoteConfig();
-
-  return {
-    integrationEnabled: config?.ordinalsbot?.integrationEnabled ?? true,
-    mainnetApiUrl: config?.ordinalsbot?.mainnetApiUrl ?? 'https://api2.ordinalsbot.com',
-    signetApiUrl: config?.ordinalsbot?.signetApiUrl ?? 'https://signet.ordinalsbot.com',
-  };
-}
-
-export function useConfigRunesEnabled() {
-  const config = useRemoteConfig();
-  return get(config, 'runesEnabled', false);
-}
-
-export function useConfigSwapsEnabled() {
-  const config = useRemoteConfig();
-  return get(config, 'swapsEnabled', false);
-}
-
-export function useConfigTokensEnabledByDefault(): string[] {
-  const config = useRemoteConfig();
-  return get(config, 'tokensEnabledByDefault', []);
-}
-
 export function useConfigTokenTransferFeeEstimations() {
   const config = useRemoteConfig();
   return get(config, 'tokenTransferFeeEstimations', []);
-}
-
-export function useConfigSpamFilterWhitelist(): string[] {
-  const config = useRemoteConfig();
-  return get(config, 'spamFilterWhitelist', []);
 }
 
 export function useConfigStacksContractCallFeeEstimations():
