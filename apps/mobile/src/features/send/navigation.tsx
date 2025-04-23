@@ -44,7 +44,15 @@ export function SendNavigator({ children }: HasChildren) {
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: theme.colors['ink.background-primary'] },
-        cardStyleInterpolator,
+        cardStyleInterpolator({
+          current,
+        }: StackCardInterpolationProps): StackCardInterpolatedStyle {
+          return {
+            cardStyle: {
+              opacity: current.progress,
+            },
+          };
+        },
       }}
     >
       {children}
@@ -80,14 +88,4 @@ function getInitialRouteName({
   }
 
   return 'form';
-}
-
-export function cardStyleInterpolator({
-  current,
-}: StackCardInterpolationProps): StackCardInterpolatedStyle {
-  return {
-    cardStyle: {
-      opacity: current.progress,
-    },
-  };
 }

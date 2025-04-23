@@ -38,7 +38,7 @@ export function filterKeychainsToRemove<T extends { descriptor: string }>(
 interface WithDescriptor {
   descriptor: string;
 }
-
+/** @knipignore */
 export function filterKeychainsByFingerprint(fingerprint: string) {
   return (account: WithDescriptor) =>
     extractFingerprintFromDescriptor(account.descriptor) === fingerprint;

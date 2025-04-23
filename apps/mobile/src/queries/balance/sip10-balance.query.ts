@@ -13,10 +13,6 @@ export function useSip10TotalBalance() {
   return toFetchState(useSip10AggregateBalanceQuery(addresses));
 }
 
-export function useSip10AggregateBalance(addresses: string[]) {
-  return toFetchState(useSip10AggregateBalanceQuery(addresses));
-}
-
 export function useSip10AccountBalance(fingerprint: string, accountIndex: number) {
   const address = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
   if (!address) {
@@ -25,7 +21,7 @@ export function useSip10AccountBalance(fingerprint: string, accountIndex: number
   return toFetchState(useSip10AddressBalanceQuery(address));
 }
 
-export function useSip10AggregateBalanceQuery(addresses: string[]) {
+function useSip10AggregateBalanceQuery(addresses: string[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: [
@@ -44,7 +40,7 @@ export function useSip10AggregateBalanceQuery(addresses: string[]) {
   });
 }
 
-export function useSip10AddressBalanceQuery(address: string) {
+function useSip10AddressBalanceQuery(address: string) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['sip10-balances-service-get-sip10-address-balance', address, fiatCurrencyPreference],

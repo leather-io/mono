@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "tags": [
+    "-knipignore",
+    "-internal"
+  ],
+  "ignore": [
+    "*/**/*.spec.ts",
+    "*/**/*.test.ts",
+    "*/**/*.mocks.ts"
+  ]
+}

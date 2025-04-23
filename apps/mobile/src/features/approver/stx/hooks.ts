@@ -54,7 +54,7 @@ export function useStxTransactionUpdatesHandler() {
 
         displayToast({
           title: t({
-            id: 'approver.send.stx.error.change-fee',
+            id: 'approver.send.stx.success.change-nonce',
             message: 'Nonce updated',
           }),
           type: 'success',

@@ -15,7 +15,7 @@ export function useAccountCollectibles(fingerprint: string, accountIndex: number
   return toFetchState(useAccountCollectiblesQuery(account));
 }
 
-export function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
+function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
   return useQuery({
     queryKey: ['collectibles-service-get-total-collectibles', accounts],
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -29,7 +29,7 @@ export function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
   });
 }
 
-export function useAccountCollectiblesQuery(account: AccountAddresses) {
+function useAccountCollectiblesQuery(account: AccountAddresses) {
   return useQuery({
     queryKey: ['collectibles-service-get-account-collectibles', account],
     queryFn: ({ signal }: QueryFunctionContext) =>

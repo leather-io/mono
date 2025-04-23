@@ -227,8 +227,6 @@ PODS:
     - ExpoModulesCore
   - ExpoCrypto (13.0.2):
     - ExpoModulesCore
-  - ExpoDevice (6.0.2):
-    - ExpoModulesCore
   - ExpoFileSystem (17.0.1):
     - ExpoModulesCore
   - ExpoFont (12.0.5):
@@ -281,8 +279,6 @@ PODS:
     - ExpoModulesCore
     - PocketSVG (~> 2.7.3)
   - ExpoSystemUI (3.0.7):
-    - ExpoModulesCore
-  - ExpoWebBrowser (13.0.3):
     - ExpoModulesCore
   - EXSplashScreen (0.27.4):
     - DoubleConversion
@@ -1710,8 +1706,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNKeychain (8.2.0):
-    - React-Core
   - RNLocalize (3.4.1):
     - React-Core
   - RNReanimated (3.10.1):
@@ -1795,7 +1789,6 @@ DEPENDENCIES:
   - "ExpoBlur (from `../../../node_modules/.pnpm/expo-blur@13.0.2_patch_hash=8fe12a838f9b170ba9fb22195203dceefbeec0b500e2d47ec8c133ab4dcebf41_expo@51.0.26/node_modules/expo-blur/ios`)"
   - "ExpoClipboard (from `../../../node_modules/.pnpm/expo-clipboard@6.0.3_expo@51.0.26/node_modules/expo-clipboard/ios`)"
   - "ExpoCrypto (from `../../../node_modules/.pnpm/expo-crypto@13.0.2_expo@51.0.26/node_modules/expo-crypto/ios`)"
-  - "ExpoDevice (from `../../../node_modules/.pnpm/expo-device@6.0.2_expo@51.0.26/node_modules/expo-device/ios`)"
   - "ExpoFileSystem (from `../../../node_modules/.pnpm/expo-file-system@17.0.1_expo@51.0.26/node_modules/expo-file-system/ios`)"
   - "ExpoFont (from `../../../node_modules/.pnpm/expo-font@12.0.5_expo@51.0.26/node_modules/expo-font/ios`)"
   - "ExpoHaptics (from `../../../node_modules/.pnpm/expo-haptics@13.0.1_expo@51.0.26/node_modules/expo-haptics/ios`)"
@@ -1809,7 +1802,6 @@ DEPENDENCIES:
   - "ExpoSharing (from `../../../node_modules/.pnpm/expo-sharing@12.0.1_expo@51.0.26/node_modules/expo-sharing/ios`)"
   - "ExpoSquircleView (from `../../../node_modules/.pnpm/expo-squircle-view@1.1.0_expo@51.0.26_react-native@0.74.1_@babel+core@7.24.6_@babel+pre_29058e40f55c91b6ad73a602246f895b/node_modules/expo-squircle-view/ios`)"
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26/node_modules/expo-system-ui/ios`)"
-  - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26/node_modules/expo-web-browser/ios`)"
   - "EXSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@0.27.4_encoding@0.1.13_expo-modules-autolinking@1.11.1_expo@51.0.26/node_modules/expo-splash-screen/ios`)"
   - "EXUpdatesInterface (from `../../../node_modules/.pnpm/expo-updates-interface@0.16.2_expo@51.0.26/node_modules/expo-updates-interface/ios`)"
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1879,7 +1871,6 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1946,8 +1937,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-clipboard@6.0.3_expo@51.0.26/node_modules/expo-clipboard/ios"
   ExpoCrypto:
     :path: "../../../node_modules/.pnpm/expo-crypto@13.0.2_expo@51.0.26/node_modules/expo-crypto/ios"
-  ExpoDevice:
-    :path: "../../../node_modules/.pnpm/expo-device@6.0.2_expo@51.0.26/node_modules/expo-device/ios"
   ExpoFileSystem:
     :path: "../../../node_modules/.pnpm/expo-file-system@17.0.1_expo@51.0.26/node_modules/expo-file-system/ios"
   ExpoFont:
@@ -1974,8 +1963,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-squircle-view@1.1.0_expo@51.0.26_react-native@0.74.1_@babel+core@7.24.6_@babel+pre_29058e40f55c91b6ad73a602246f895b/node_modules/expo-squircle-view/ios"
   ExpoSystemUI:
     :path: "../../../node_modules/.pnpm/expo-system-ui@3.0.7_expo@51.0.26/node_modules/expo-system-ui/ios"
-  ExpoWebBrowser:
-    :path: "../../../node_modules/.pnpm/expo-web-browser@13.0.3_expo@51.0.26/node_modules/expo-web-browser/ios"
   EXSplashScreen:
     :path: "../../../node_modules/.pnpm/expo-splash-screen@0.27.4_encoding@0.1.13_expo-modules-autolinking@1.11.1_expo@51.0.26/node_modules/expo-splash-screen/ios"
   EXUpdatesInterface:
@@ -2103,8 +2090,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNKeychain:
-    :path: "../node_modules/react-native-keychain"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
   RNReanimated:
@@ -2137,7 +2122,6 @@ SPEC CHECKSUMS:
   ExpoBlur: d6023b4ccd20035624b60ae0bda541e65b9ece5c
   ExpoClipboard: 243e22ff4161bbffcd3d2db469ae860ddc1156be
   ExpoCrypto: c5c052d5f9f668c21975cb4caf072cec23c823fa
-  ExpoDevice: 84b3ed79df1234c17edfbf335f6ecf3c636f74de
   ExpoFileSystem: 2988caaf68b7cb706e36d382829d99811d9d76a5
   ExpoFont: 8b0bb99de4d164a7feca84a3f59739a9642bb335
   ExpoHaptics: 9f47be324f691b6291c17c216189ab832d1a4d69
@@ -2151,7 +2135,6 @@ SPEC CHECKSUMS:
   ExpoSharing: 5e6b6cbc0c232084b79ffa7243459f7dcdc5b1cb
   ExpoSquircleView: 0f3abe8b83641f934ef6146db50edc391739b32c
   ExpoSystemUI: 2072307375696c398a5d75633bdd5143fadc3d26
-  ExpoWebBrowser: cf10afe886891ab495877dada977fe6c269614a4
   EXSplashScreen: 3bd6cae5aab5067f60b4e9a25c1d6c55e58629ce
   EXUpdatesInterface: c3a9494c2173db6442c7d5ad4e5b984972760fd3
   FBLazyVector: 898d14d17bf19e2435cafd9ea2a1033efe445709
@@ -2232,7 +2215,6 @@ SPEC CHECKSUMS:
   RNFBApp: 6ea10ef8a45c43cd75d580599484c0931e6c3683
   RNFBMessaging: 10f37d2c5d9fe83e8f275322062803532faa4609
   RNGestureHandler: d08fd9149ee9610bbc7e0a34c20b3ffe6a5801b3
-  RNKeychain: bbe2f6d5cc008920324acb49ef86ccc03d3b38e4
   RNLocalize: 15463c4d79c7da45230064b4adcf5e9bb984667e
   RNReanimated: ef92b79016903fe8346598eed1a150952715931d
   RNScreens: a2d8a2555b4653d7a19706eb172f855657ac30d7

@@ -21,7 +21,7 @@ export function useStxAccountBalance(fingerprint: string, accountIndex: number) 
   return toFetchState(useStxAddressBalanceQuery(address));
 }
 
-export function useStxAggregateBalanceQuery(addresses: string[]) {
+function useStxAggregateBalanceQuery(addresses: string[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: ['stx-balances-service-get-stx-aggregate-balance', addresses, fiatCurrencyPreference],
