@@ -52,7 +52,7 @@ export function useRecipientSuggestions({
         validateAddress: (value: string) =>
           recipientSchema
             .safeParseAsync(value)
-            .then(recipientSchemaResultContainsError('invalidAddress')),
+            .then(result => !recipientSchemaResultContainsError(result, 'invalidAddress')),
       }),
   });
 }
