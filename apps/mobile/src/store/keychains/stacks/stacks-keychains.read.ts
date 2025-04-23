@@ -10,6 +10,8 @@ import { decomposeDescriptor } from '@leather.io/crypto';
 import {
   StacksSigner,
   createSignFnFromMnemonic,
+  createSignMessageFnFromMnemonic,
+  createSignStructuredDataMessageFnFromMnemonic,
   initalizeStacksSigner,
   stacksChainIdToCoreNetworkMode,
 } from '@leather.io/stacks';
@@ -23,6 +25,16 @@ function createSignFnFromBiometricMnemonicStore(descriptor: string) {
   const { keyOrigin, fingerprint } = decomposeDescriptor(descriptor);
   return createSignFnFromMnemonic(keyOrigin, () => mnemonicStore(fingerprint).getMnemonic());
 }
+function createSignMessageFnFromBiometricMnemonicStore(descriptor: string) {
+  const { keyOrigin, fingerprint } = decomposeDescriptor(descriptor);
+  return createSignMessageFnFromMnemonic(keyOrigin, () => mnemonicStore(fingerprint).getMnemonic());
+}
+function createSignStructuredMessageFnFromBiometricMnemonicStore(descriptor: string) {
+  const { keyOrigin, fingerprint } = decomposeDescriptor(descriptor);
+  return createSignStructuredDataMessageFnFromMnemonic(keyOrigin, () =>
+    mnemonicStore(fingerprint).getMnemonic()
+  );
+}
 
 const stacksSigners = createSelector(
   stacksKeychainSelectors.selectAll,
@@ -33,6 +45,10 @@ const stacksSigners = createSelector(
         descriptor: account.descriptor,
         network: stacksChainIdToCoreNetworkMode(network.chain.stacks.chainId),
         signFn: createSignFnFromBiometricMnemonicStore(account.descriptor),
+        signMessageFn: createSignMessageFnFromBiometricMnemonicStore(account.descriptor),
+        signStructuredMessageFn: createSignStructuredMessageFnFromBiometricMnemonicStore(
+          account.descriptor
+        ),
       })
     )
 );

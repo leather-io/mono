@@ -8,6 +8,11 @@ import { initalizeStacksSigner } from './signer';
 
 const testMnemonicKeychain = HDKey.fromMasterSeed(await deriveBip39SeedFromMnemonic(testMnemonic));
 
+const mockStructureData = {
+  signature: '',
+  publicKey: '',
+};
+
 describe(initalizeStacksSigner.name, () => {
   const descriptor = stacksRootKeychainToAccountDescriptor(testMnemonicKeychain, 0);
 
@@ -16,6 +21,8 @@ describe(initalizeStacksSigner.name, () => {
       descriptor,
       network: 'mainnet',
       signFn: tx => Promise.resolve(tx),
+      signMessageFn: () => Promise.resolve(mockStructureData),
+      signStructuredMessageFn: () => Promise.resolve(mockStructureData),
     });
     expect(account.address).toEqual('SP148VBW07WJ81V6B1FM0QP4AKB14QSRQQXERFRRV');
   });
@@ -25,6 +32,8 @@ describe(initalizeStacksSigner.name, () => {
       descriptor,
       network: 'testnet',
       signFn: tx => Promise.resolve(tx),
+      signMessageFn: () => Promise.resolve(mockStructureData),
+      signStructuredMessageFn: () => Promise.resolve(mockStructureData),
     });
     expect(account.address).toEqual('ST148VBW07WJ81V6B1FM0QP4AKB14QSRQQZ717SWG');
   });

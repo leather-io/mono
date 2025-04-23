@@ -5,6 +5,8 @@ import {
   getAddresses,
   signMessage,
   signPsbt,
+  stxSignMessage,
+  stxSignStructuredMessage,
   stxSignTransaction,
   stxTransferSip9Nft,
   stxTransferSip10Ft,
@@ -15,6 +17,8 @@ import { GetAddressesApprover } from './get-addresses/get-addresses';
 import { SignMessageApprover } from './sign-message/sign-message';
 import { SignPsbtApprover } from './sign-psbt';
 import { NonceLoader } from './stx/nonce-loader';
+import { StxSignMessageApprover } from './stx/sign-message/sign-message';
+import { StxSignStructuredMessageApprover } from './stx/sign-structured-message/sign-structured-message';
 import { SignTransactionApprover } from './stx/sign-transaction/sign-transaction';
 import { TransferSip9NftApprover } from './stx/transfer-sip9-nft/transfer-sip9-nft';
 import { TransferSip10FtApprover } from './stx/transfer-sip10-ft/transfer-sip10-ft';
@@ -129,6 +133,28 @@ export function BrowserApprover(props: BrowserApproverProps) {
             );
           }}
         </NonceLoader>
+      );
+    }
+    case stxSignMessage.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
+      return (
+        <StxSignMessageApprover
+          sendResult={props.sendResult}
+          request={props.request}
+          closeApprover={props.closeApprover}
+          accountId={accountId}
+        />
+      );
+    }
+    case stxSignStructuredMessage.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
+      return (
+        <StxSignStructuredMessageApprover
+          sendResult={props.sendResult}
+          request={props.request}
+          closeApprover={props.closeApprover}
+          accountId={accountId}
+        />
       );
     }
 
