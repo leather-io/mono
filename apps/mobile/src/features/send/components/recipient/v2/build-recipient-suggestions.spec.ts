@@ -188,7 +188,6 @@ describe('with search term', () => {
       type: 'external',
       address: address,
       id: address,
-      bnsName: undefined,
     });
   });
 
@@ -198,7 +197,7 @@ describe('with search term', () => {
       createAccount('fp/1', 'Account 2'),
       createAccount('fp/2', 'Random name'),
     ];
-    const sections = await invokeWithDefaults({ searchTerm: 'Account', accounts });
+    const sections = await invokeWithDefaults({ searchTerm: 'account', accounts });
     assert(sections[0]);
     expect(sections[0].id).toBe('matching');
     expect(sections[0].data).toHaveLength(2);

@@ -1,4 +1,8 @@
 import {
+  isBnsLookupCandidate,
+  normalizeSearchTerm,
+} from '@/features/send/components/recipient/v2/recipient.utils';
+import {
   type ExternalRecipientSuggestionEntry,
   type InternalRecipientSuggestionEntry,
   RecipientSection,
@@ -160,7 +164,7 @@ function createExternalEntry(address: string, bnsName?: string): ExternalRecipie
 
 function isEntryWithSameAddress(address: string) {
   return function (entry: RecipientSuggestionEntry) {
-    return entry.address.toLowerCase() === address;
+    return entry.address === address;
   };
 }
 
@@ -168,15 +172,6 @@ function isLooseNameOrAddressMatch(searchTerm: string) {
   return function (entry: RecipientSuggestionEntry) {
     const fields =
       entry.type === 'internal' ? [entry.rawAccount.name, entry.address] : [entry.address];
-    return fields.some(field => field.toLowerCase().startsWith(searchTerm));
+    return fields.some(field => field.toLowerCase().startsWith(searchTerm.toLowerCase()));
   };
-}
-
-export function isBnsLookupCandidate(input: string) {
-  const bnsNamePattern = /^[a-z0-9-]+\.([a-z0-9-]+)$/;
-  return bnsNamePattern.test(input);
-}
-
-export function normalizeSearchTerm(input: string) {
-  return input.trim().toLowerCase();
 }
