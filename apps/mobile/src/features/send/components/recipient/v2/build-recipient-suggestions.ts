@@ -10,7 +10,7 @@ import {
   type RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/v2/types';
 import { type Account } from '@/store/accounts/accounts';
-import { filter, isShallowEqual, map, pipe, prop, takeFirstBy, uniqueBy } from 'remeda';
+import { filter, isShallowEqual, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 
 import { SendAssetActivity } from '@leather.io/models';
 
@@ -115,7 +115,8 @@ export function getRecents({
     // Deliberately filter out own accounts from Recents. Unclear how to handle taproot addresses matching existing accounts.
     filter(activity => findAccountByAddress(activity.receivers[0] ?? '') === null),
     uniqueBy(activity => activity.receivers[0]),
-    takeFirstBy(recentItemLimit, [prop('timestamp'), 'desc']),
+    sortBy([prop('timestamp'), 'desc']),
+    take(recentItemLimit),
     map(activity => ({
       type: 'external' as const,
       id: activity.txid,
