@@ -8,7 +8,7 @@ import {
   signStructuredData,
 } from '@stacks/transactions';
 
-interface SignatureData {
+export interface SignatureData {
   signature: string;
   publicKey: string;
 }
