@@ -5,24 +5,27 @@ import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addr
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { App } from '@/store/apps/utils';
-import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
+import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
+import { useAppDispatch } from '@/store/utils';
+import { bytesToHex } from '@stacks/common';
 
-import { keyOriginToDerivationPath } from '@leather.io/crypto';
-import { RpcRequest, RpcResponse, createRpcSuccessResponse, getAddresses } from '@leather.io/rpc';
+import {
+  RpcRequest,
+  RpcResponse,
+  createRpcSuccessResponse,
+  stxGetAddresses,
+} from '@leather.io/rpc';
 import { SheetRef } from '@leather.io/ui/native';
 
-import { useGetAddressesAccount } from './get-addresses.hooks';
-import { formatAddressesForGetAddresses } from './utils';
-
-interface GetAddressesApproverProps {
+interface StxGetAddressesApproverProps {
   app: App;
-  request: RpcRequest<typeof getAddresses>;
-  sendResult(result: RpcResponse<typeof getAddresses>): void;
+  request: RpcRequest<typeof stxGetAddresses>;
+  sendResult(result: RpcResponse<typeof stxGetAddresses>): void;
   origin: string;
   closeApprover(): void;
 }
 
-export function GetAddressesApprover(props: GetAddressesApproverProps) {
+export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
   const { list: accounts } = useAccounts();
   const dispatch = useAppDispatch();
   const accountSelecterSheetRef = useRef<SheetRef>(null);
@@ -31,36 +34,28 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
   );
 
   const { sendResult } = props;
-  const account = useGetAddressesAccount(selectedAccountId);
+  const { fromAccountId: stacksAccountFromAccountId } = useStacksSigners();
 
   function onApprove() {
+    if (!selectedAccountId) return;
+    const account = stacksAccountFromAccountId(selectedAccountId)[0];
     if (!account) return;
-    const keysToIncludeInResponse = formatAddressesForGetAddresses({
-      taproot: {
-        address: account.taprootPayer.address,
-        publicKey: account.taprootPayer.publicKey,
-        derivationPath: keyOriginToDerivationPath(account.taprootPayer.keyOrigin),
-      },
-      nativeSegwit: {
-        address: account.nativeSegwitPayer.address,
-        publicKey: account.nativeSegwitPayer.publicKey,
-        derivationPath: keyOriginToDerivationPath(account.nativeSegwitPayer.keyOrigin),
-      },
-      stacksAccount: {
-        address: account.stacksAccount.address,
-        publicKey: account.stacksAccount.publicKey,
-      },
-    });
-    const result = { addresses: keysToIncludeInResponse };
-    const response = createRpcSuccessResponse('getAddresses', {
-      result,
+
+    const stacksAddressResponse = {
+      address: account.address,
+      publicKey: bytesToHex(account.publicKey),
+      derivationPath: account.derivationPath,
+    };
+
+    const response = createRpcSuccessResponse('stx_getAddresses', {
+      result: [stacksAddressResponse],
       id: props.request.id,
     });
 
     dispatch(
       userConnectsApp({
         origin: props.origin,
-        accountId: makeAccountIdentifer(account.fingerprint, account.accountIndex),
+        accountId: selectedAccountId,
       })
     );
 

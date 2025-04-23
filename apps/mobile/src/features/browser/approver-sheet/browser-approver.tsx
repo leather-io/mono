@@ -5,6 +5,7 @@ import {
   getAddresses,
   signMessage,
   signPsbt,
+  stxGetAddresses,
   stxSignMessage,
   stxSignStructuredMessage,
   stxSignTransaction,
@@ -16,6 +17,7 @@ import {
 import { GetAddressesApprover } from './get-addresses/get-addresses';
 import { SignMessageApprover } from './sign-message/sign-message';
 import { SignPsbtApprover } from './sign-psbt';
+import { StxGetAddressesApprover } from './stx/get-addresses/get-addresses';
 import { NonceLoader } from './stx/nonce-loader';
 import { StxSignMessageApprover } from './stx/sign-message/sign-message';
 import { StxSignStructuredMessageApprover } from './stx/sign-structured-message/sign-structured-message';
@@ -61,6 +63,17 @@ export function BrowserApprover(props: BrowserApproverProps) {
         <SignMessageApprover
           app={props.app}
           sendResult={props.sendResult}
+          request={props.request}
+          closeApprover={props.closeApprover}
+        />
+      );
+    }
+    case stxGetAddresses.method: {
+      return (
+        <StxGetAddressesApprover
+          app={props.app}
+          sendResult={props.sendResult}
+          origin={props.origin}
           request={props.request}
           closeApprover={props.closeApprover}
         />
