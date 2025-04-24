@@ -11,10 +11,15 @@ import { microStxToStx } from '@leather.io/utils';
 
 export interface ChoosePoolingAmountProps {
   isLoading: boolean;
-  amount: BigNumber | undefined;
+  availableAmount: BigNumber | undefined;
+  stackedAmount?: BigNumber;
 }
 
-export function ChoosePoolingAmount({ isLoading, amount }: ChoosePoolingAmountProps) {
+export function ChoosePoolingAmount({
+  isLoading,
+  availableAmount,
+  stackedAmount,
+}: ChoosePoolingAmountProps) {
   const { setValue, control } = useFormContext<StackingPoolFormSchema>();
 
   return (
@@ -47,20 +52,35 @@ export function ChoosePoolingAmount({ isLoading, amount }: ChoosePoolingAmountPr
         <styled.span textStyle="caption">Available balance:</styled.span>
         {isLoading ? (
           <Spinner />
-        ) : amount ? (
+        ) : availableAmount ? (
           <Button
             variant="ghost"
             size="sm"
             type="button"
             color="#12100F"
-            onClick={() => setValue('amount', microStxToStx(amount).toNumber())}
+            onClick={() => setValue('amount', microStxToStx(availableAmount).toNumber())}
           >
-            {toHumanReadableStx(amount)}{' '}
+            {toHumanReadableStx(availableAmount)}
           </Button>
         ) : (
           'Failed to load'
         )}
       </Box>
+
+      {stackedAmount?.isGreaterThan(0) && (
+        <Box textStyle="body.02" color="ink.text-subdued" aria-busy={isLoading}>
+          <styled.span textStyle="caption">Minimum amount:</styled.span>
+          <Button
+            variant="ghost"
+            size="sm"
+            type="button"
+            color="#12100F"
+            onClick={() => setValue('amount', microStxToStx(stackedAmount).toNumber())}
+          >
+            {toHumanReadableStx(stackedAmount)}
+          </Button>
+        </Box>
+      )}
     </Stack>
   );
 }

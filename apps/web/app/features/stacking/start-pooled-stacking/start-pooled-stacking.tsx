@@ -6,11 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { StackingClient } from '@stacks/stacking';
 import { ClarityType } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
+import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import { ChoosePoolingAmount } from '~/features/stacking/start-pooled-stacking/components/choose-pooling-amount';
 import { PooledStackingConfirmationSteps } from '~/features/stacking/start-pooled-stacking/components/pooled-stacking-confirmation-steps';
@@ -125,6 +127,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const poxInfoQuery = useGetPoxInfoQuery();
 
+  const delegationStatusQuery = useDelegationStatusQuery();
+  const stackedAmount = useMemo(() => {
+    if (delegationStatusQuery.data?.delegated) {
+      return new BigNumber(delegationStatusQuery.data.details.amount_micro_stx.toString());
+    }
+    return undefined;
+  }, [delegationStatusQuery.data]);
+
   const poolId = PoolSlugToIdMap[poolSlug];
   const poolName = PoolIdToDisplayNameMap[poolId];
   const pool = pools[poolName];
@@ -139,8 +149,9 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
         networkMode: networkPreference.chain.bitcoin.mode,
         poolName,
         availableBalance: totalAvailableBalance,
+        stackedAmount,
       }),
-    [networkPreference.chain.bitcoin.mode, poolName, totalAvailableBalance]
+    [networkPreference.chain.bitcoin.mode, poolName, totalAvailableBalance, stackedAmount]
   );
 
   const {
@@ -263,8 +274,9 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Amount" />
                   <ChoosePoolingAmount
-                    amount={totalAvailableBalance.amount}
+                    availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
+                    stackedAmount={stackedAmount}
                   />
                 </Stack>
 

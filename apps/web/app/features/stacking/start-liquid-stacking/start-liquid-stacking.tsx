@@ -155,7 +155,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Amount" />
                   <ChoosePoolingAmount
-                    amount={totalAvailableBalance.amount}
+                    availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
                   />
                 </Stack>
