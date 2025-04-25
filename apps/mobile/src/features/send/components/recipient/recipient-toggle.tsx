@@ -1,6 +1,6 @@
 import Animated, { withDelay, withTiming } from 'react-native-reanimated';
 
-import { AccountAvatar } from '@/features/accounts/components/account-avatar';
+import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { t } from '@lingui/macro';
 
 import {

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useTotalActivity } from '@/queries/activity/account-activity.query';
+import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -27,6 +29,9 @@ export function SplashScreenGuard({ children }: HasChildren) {
   const insets = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const colorScheme = useColorScheme();
+  // pre-load main queries
+  void useTotalBalance();
+  void useTotalActivity();
 
   const playSplash = useCallback(() => {
     splashRef.current?.play();

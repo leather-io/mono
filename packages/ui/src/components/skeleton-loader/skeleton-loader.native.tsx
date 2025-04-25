@@ -60,7 +60,14 @@ function SkeletonLoaderAnimation(props: React.ComponentProps<typeof Box>) {
   });
 
   return (
-    <Box backgroundColor="ink.text-non-interactive" borderRadius="sm" {...props} overflow="hidden">
+    <Box
+      flex={1}
+      backgroundColor="ink.text-non-interactive"
+      borderRadius="xs"
+      overflow="hidden"
+      opacity={0.4}
+      {...props}
+    >
       <AnimatedLinearGradient
         colors={[color, 'rgba(255, 255, 255, 0.75)', color]}
         start={{ x: 0.1, y: 1 }}

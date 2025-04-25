@@ -1,8 +1,7 @@
-import { Box } from 'native';
-
 import { CryptoAssetProtocol } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
+import { Box } from '../../../../native';
 import { CollectibleAudio } from './collectible-audio.native';
 import { CollectibleCaption } from './collectible-caption.native';
 import { CollectibleHtml } from './collectible-html.native';

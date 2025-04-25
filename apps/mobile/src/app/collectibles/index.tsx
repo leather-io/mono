@@ -1,17 +1,16 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { CollectiblesLayout } from '@/components/widgets/collectibles/collectibles.layout';
+import { Collectibles } from '@/features/collectibles';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { t } from '@lingui/macro';
 
 export default function CollectiblesScreen() {
-  const { value: collectibles, state } = useTotalCollectibles();
-  // TODO LEA-1726: Handle loading and error states
-  if (state !== 'success') return;
+  const collectibles = useTotalCollectibles();
   const pageTitle = t({
     id: 'collectibles.header_title',
     message: 'My collectibles',
   });
+
   return (
     <AnimatedHeaderScreenLayout
       contentContainerStyles={{ paddingHorizontal: 0 }}
@@ -19,7 +18,7 @@ export default function CollectiblesScreen() {
       title={pageTitle}
       contentTitle={pageTitle}
     >
-      <CollectiblesLayout collectibles={collectibles} />
+      <Collectibles collectibles={collectibles} />
     </AnimatedHeaderScreenLayout>
   );
 }

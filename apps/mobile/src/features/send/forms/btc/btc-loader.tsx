@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react';
 
+import { FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
-import { FetchState, toFetchState } from '@/shared/fetch-state';
 import BigNumber from 'bignumber.js';
 
 import { AccountId, AverageBitcoinFeeRates, MarketData, Money } from '@leather.io/models';

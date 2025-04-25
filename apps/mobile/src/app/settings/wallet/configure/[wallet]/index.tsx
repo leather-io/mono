@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 
-import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
@@ -14,6 +13,7 @@ import { useWaitlistFlag } from '@/features/feature-flags';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
+import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';

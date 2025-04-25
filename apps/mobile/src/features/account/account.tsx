@@ -1,0 +1,94 @@
+import { Balance } from '@/components/balance/balance';
+import { NakedHeader } from '@/components/headers/naked-header';
+import { FetchError } from '@/components/loading/error';
+import { PageLayout } from '@/components/page/page.layout';
+import { AccountOverview } from '@/features/account/components/account-overview-card';
+import { ActivityWidget } from '@/features/activity/activity-widget';
+import { AccountBalances } from '@/features/balances/balances';
+import { BalancesWidget } from '@/features/balances/balances-widget';
+import { TokenBalance } from '@/features/balances/token-balance';
+import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
+import { useCollectiblesFlag } from '@/features/feature-flags';
+import { useAccountActivity } from '@/queries/activity/account-activity.query';
+import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
+import { AppRoutes } from '@/routes';
+import { Account as AccountType } from '@/store/accounts/accounts';
+import { router } from 'expo-router';
+
+import { SettingsGearIcon } from '@leather.io/ui/native';
+
+interface AccountProps {
+  account: AccountType;
+  balance: TokenBalance;
+  isLoading: boolean;
+  isError: boolean;
+}
+
+export function Account({ account, balance, isLoading, isError }: AccountProps) {
+  const activity = useAccountActivity(account.fingerprint, account.accountIndex);
+  const collectibles = useAccountCollectibles(account.fingerprint, account.accountIndex);
+  const releaseCollectibles = useCollectiblesFlag();
+  return (
+    <PageLayout>
+      <NakedHeader
+        error={isError && <FetchError />}
+        rightElement={
+          <SettingsGearIcon
+            onPress={() => {
+              router.navigate({
+                pathname: AppRoutes.SettingsWalletConfigureAccount,
+                params: {
+                  fingerprint: account.fingerprint,
+                  account: account.accountIndex,
+                },
+              });
+            }}
+          />
+        }
+      />
+      <AccountOverview
+        isLoading={isLoading}
+        icon={account.icon}
+        heading={<Balance balance={balance} variant="heading02" isLoading={isLoading} />}
+        caption={account.name}
+      />
+      <BalancesWidget
+        onPressHeader={() =>
+          router.navigate({
+            pathname: AppRoutes.AccountBalances,
+            params: { accountId: account.id },
+          })
+        }
+        totalBalance={balance}
+        isLoading={isLoading}
+      >
+        <AccountBalances
+          hardCap
+          fingerprint={account.fingerprint}
+          accountIndex={account.accountIndex}
+        />
+      </BalancesWidget>
+      <ActivityWidget
+        activity={activity}
+        onPressHeader={() =>
+          router.navigate({
+            pathname: AppRoutes.AccountActivity,
+            params: { accountId: account.id, accountName: account.name },
+          })
+        }
+      />
+      {releaseCollectibles && hasCollectibles(collectibles) && (
+        <CollectiblesWidget
+          onPressHeader={() =>
+            router.navigate({
+              pathname: AppRoutes.AccountCollectibles,
+              params: { accountId: account.id, accountName: account.name },
+            })
+          }
+        >
+          <Collectibles collectibles={collectibles} />
+        </CollectiblesWidget>
+      )}
+    </PageLayout>
+  );
+}

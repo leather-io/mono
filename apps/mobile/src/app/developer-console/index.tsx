@@ -2,10 +2,10 @@ import { useRef, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AddWalletSheet } from '@/components/add-wallet/';
 import { PressableListItem } from '@/components/developer-console/list-items';
 import { ApproverSheet } from '@/features/browser/approver-sheet/approver-sheet';
 import { BrowserMessage } from '@/features/browser/approver-sheet/utils';
+import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';

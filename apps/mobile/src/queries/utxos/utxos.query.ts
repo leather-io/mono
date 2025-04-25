@@ -1,5 +1,5 @@
+import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { toFetchState } from '@/shared/fetch-state';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
 import { AccountAddresses } from '@leather.io/models';

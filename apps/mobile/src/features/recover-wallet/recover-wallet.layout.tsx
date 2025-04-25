@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedHeaderScreenWithKeyboardLayout } from '@/components/headers/animated-header/animated-header-screen-with-keyboard.layout';
-import { RecoverWalletSheet } from '@/components/recover-wallet/recover-wallet-sheet';
+import { RecoverWalletSheet } from '@/features/wallet-manager/recover-wallet/recover-wallet-sheet';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';

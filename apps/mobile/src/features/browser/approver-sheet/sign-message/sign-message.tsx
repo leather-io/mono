@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { AccountSelectorSheet } from '@/features/accounts/account-selector/account-selector-sheet';
+import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { App } from '@/store/apps/utils';
