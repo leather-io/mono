@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 
-import { ActivityWidget } from '@/app/activity/components/activity-widget';
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
+import { ActivityWidget } from '@/components/widgets/activity/activity-widget';
 import { BalancesWidget } from '@/components/widgets/balances/balances-widget';
 import { CollectiblesWidget } from '@/components/widgets/collectibles/collectibles-widget';
 import { AllAccountBalances } from '@/features/balances/balances';

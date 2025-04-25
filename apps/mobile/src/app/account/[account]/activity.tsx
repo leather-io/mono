@@ -1,10 +1,10 @@
+import { ActivityLayout } from '@/app/activity/activity.layout';
+import { ActivityListItem } from '@/components/activity/activity-list-item';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useAccountActivityQuery } from '@/queries/activity/account-activity.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { useLocalSearchParams } from 'expo-router';
 
-import { ActivityLayout } from '../../activity/activity.layout';
-import { ActivityCell } from '../../activity/components/activity-cell';
 import { configureAccountParamsSchema } from './index';
 
 export default function AccountActivityScreen() {
@@ -20,7 +20,7 @@ export default function AccountActivityScreen() {
   return (
     <ActivityLayout accountName={accountName}>
       {activity?.map((activity, index) => (
-        <ActivityCell key={`activity.${index}`} activity={activity} />
+        <ActivityListItem key={`activity.${index}`} activity={activity} />
       ))}
     </ActivityLayout>
   );

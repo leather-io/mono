@@ -1,8 +1,8 @@
+import { ActivityListItem } from '@/components/activity/activity-list-item';
 import { useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useTotalActivityQuery } from '@/queries/activity/account-activity.query';
 
 import { ActivityLayout } from './activity.layout';
-import { ActivityCell } from './components/activity-cell';
 
 export default function ActivityScreen() {
   const accounts = useTotalAccountAddresses();
@@ -15,7 +15,7 @@ export default function ActivityScreen() {
   return (
     <ActivityLayout>
       {activity?.map((activity, index) => (
-        <ActivityCell key={`activity.${index}`} activity={activity} />
+        <ActivityListItem key={`activity.${index}`} activity={activity} />
       ))}
     </ActivityLayout>
   );

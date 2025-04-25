@@ -1,9 +1,8 @@
+import { formatActivityType } from '@/app/activity/utils/format-activity';
 import { Balance } from '@/components/balance/balance';
 
 import { Activity } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
-
-import { formatActivityType } from '../utils/format-activity';
 
 interface ActivityCardContentProps {
   activity: Activity;
