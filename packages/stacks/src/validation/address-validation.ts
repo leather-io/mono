@@ -17,7 +17,7 @@ export function isValidStacksAddress(address: string) {
 }
 
 export function isValidAddressChain(address: string, chainId: ChainId) {
-  if (!isValidStacksAddress(address)) {
+  if (!address) {
     return false;
   }
 
@@ -33,11 +33,9 @@ export function isValidAddressChain(address: string, chainId: ChainId) {
 }
 
 export function validatePayerNotRecipient(senderAddress: string, recipientAddress: string) {
-  if (!isValidStacksAddress(senderAddress) || !isValidStacksAddress(recipientAddress)) {
+  if (!senderAddress || !recipientAddress) {
     return false;
   }
-  if (senderAddress === recipientAddress) {
-    return false;
-  }
-  return true;
+
+  return senderAddress !== recipientAddress;
 }
