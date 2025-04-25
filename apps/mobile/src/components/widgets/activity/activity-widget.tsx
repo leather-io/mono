@@ -8,11 +8,15 @@ import { useTheme } from '@shopify/restyle';
 import { Activity } from '@leather.io/models';
 import { Box, Theme } from '@leather.io/ui/native';
 
+// FIXME LEA-2310: temporary hard cap for widget view pending performance improvements
+const temporaryMaxItemCap = 5;
+
 interface ActivityWidgetProps {
   activity: Activity[];
   isLoading: boolean;
   onPressHeader: () => void;
 }
+
 export function ActivityWidget({ activity, isLoading, onPressHeader }: ActivityWidgetProps) {
   const theme = useTheme<Theme>();
 
@@ -40,12 +44,9 @@ export function ActivityWidget({ activity, isLoading, onPressHeader }: ActivityW
             overflow: 'visible',
           }}
         >
-          {activity?.map((activity, index) => {
-            // FIXME LEA-2310: temporary hard cap for widget view pending performance improvements
-            if (index >= 5) return null;
-
-            return <ActivityCard key={`activity.${index}`} activity={activity} />;
-          })}
+          {activity.slice(0, temporaryMaxItemCap).map((activity, index) => (
+            <ActivityCard key={`activity.${index}`} activity={activity} />
+          ))}
         </ScrollView>
       </Widget.Body>
     </Widget>
