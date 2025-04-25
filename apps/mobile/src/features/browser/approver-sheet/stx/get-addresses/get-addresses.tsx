@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { AccountSelectorSheet } from '@/features/accounts/account-selector/account-selector-sheet';
+import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addresses.layout';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';

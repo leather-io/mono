@@ -1,20 +1,25 @@
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
-import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
 
-import { TokenBalance } from '../token-balance';
+import {
+  EmptyBalance,
+  TokenBalance,
+  type TokenBalance as TokenBalanceType,
+} from '../token-balance';
 
 interface BitcoinTokenBalanceProps extends PressableProps {
-  availableBalance: Money;
-  fiatBalance: Money;
+  availableBalance: TokenBalanceType;
+  fiatBalance: TokenBalanceType;
   onPress?(): void;
+  isLoading?: boolean;
 }
 export function BitcoinTokenBalance({
   availableBalance,
   fiatBalance,
   onPress,
+  isLoading,
   ...rest
 }: BitcoinTokenBalanceProps) {
   return (
@@ -29,6 +34,7 @@ export function BitcoinTokenBalance({
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}
+      isLoading={isLoading}
       {...rest}
     />
   );
@@ -40,12 +46,17 @@ interface BitcoinBalanceProps {
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const balance = useBtcTotalBalance();
-  // TODO LEA-1726: handle balance loading & error states
-  if (balance.state !== 'success') return;
+
+  const availableBalance =
+    balance.state === 'success' ? balance.value.btc.availableBalance : EmptyBalance;
+  const fiatBalance =
+    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+
   return (
     <BitcoinTokenBalance
-      availableBalance={balance.value.btc.availableBalance}
-      fiatBalance={balance.value.fiat.availableBalance}
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
+      isLoading={balance.state === 'loading'}
       onPress={onPress}
     />
   );
@@ -62,13 +73,18 @@ export function BitcoinBalanceByAccount({
   onPress,
 }: BitcoinBalanceByAccountProps) {
   const balance = useBtcAccountBalance(fingerprint, accountIndex);
-  // TODO LEA-1726: handle balance loading & error states
-  if (balance.state !== 'success') return;
+
+  const availableBalance =
+    balance.state === 'success' ? balance.value.btc.availableBalance : EmptyBalance;
+  const fiatBalance =
+    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+
   return (
     <BitcoinTokenBalance
-      availableBalance={balance.value.btc.availableBalance}
-      fiatBalance={balance.value.fiat.availableBalance}
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
       onPress={onPress}
+      isLoading={balance.state === 'loading'}
     />
   );
 }

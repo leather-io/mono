@@ -4,9 +4,9 @@ import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { AccountAddress } from '@/features/accounts/components/account-address';
-import { AccountBalance } from '@/features/accounts/components/account-balance';
-import { AccountCard } from '@/features/accounts/components/account-card';
+import { AccountAddress } from '@/features/account/components/account-address';
+import { AccountBalance } from '@/features/account/components/account-balance';
+import { AccountCard } from '@/features/account/components/account-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { AppRoutes } from '@/routes';

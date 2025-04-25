@@ -1,16 +1,16 @@
 import { useRef } from 'react';
 
-import { ActivityWidget } from '@/app/activity/components/activity-widget';
 import { PageLayout } from '@/components/page/page.layout';
-import { AccountsWidget } from '@/components/widgets/accounts/accounts-widget';
-import { BalancesWidget } from '@/components/widgets/balances/balances-widget';
-import { CollectiblesWidget } from '@/components/widgets/collectibles/collectibles-widget';
+import { AccountsWidget } from '@/features/account/accounts-widget';
+import { ActivityWidget } from '@/features/activity/activity-widget';
 import { AllAccountBalances } from '@/features/balances/balances';
+import { BalancesWidget } from '@/features/balances/balances-widget';
+import { EmptyBalance } from '@/features/balances/token-balance';
+import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
 import { useCollectiblesFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
-import { useTotalAccountAddresses } from '@/hooks/use-account-addresses';
-import { useTotalActivityQuery } from '@/queries/activity/account-activity.query';
+import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AppRoutes } from '@/routes';
@@ -24,39 +24,44 @@ export function Home() {
   useLingui();
   const { hasWallets } = useWallets();
   const notificationSheetRef = useRef<SheetRef>(null);
-
-  const accounts = useTotalAccountAddresses();
-  const { data: activity, isLoading } = useTotalActivityQuery(accounts);
-  const { totalBalance } = useTotalBalance();
+  const activity = useTotalActivity();
+  const { totalBalance: aggregatedTotalBalance } = useTotalBalance();
   const collectibles = useTotalCollectibles();
   const releaseCollectibles = useCollectiblesFlag();
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
-  // TODO LEA-1726: Handle loading and error states
-  if (totalBalance.state !== 'success') return;
+
+  const totalBalance =
+    aggregatedTotalBalance.state === 'success' ? aggregatedTotalBalance.value : EmptyBalance;
+  const isLoadingTotalBalance = aggregatedTotalBalance.state === 'loading';
+  const isErrorTotalBalance = aggregatedTotalBalance.state === 'error';
 
   return (
     <PageLayout>
-      <AccountsWidget />
+      <AccountsWidget
+        totalBalance={totalBalance}
+        isLoadingTotalBalance={isLoadingTotalBalance}
+        fetchError={isErrorTotalBalance}
+      />
       {hasWallets && (
-        <BalancesWidget
-          onPressHeader={() => router.navigate(AppRoutes.Balances)}
-          totalBalance={totalBalance.value}
-        >
-          <AllAccountBalances hardCap />
-        </BalancesWidget>
-      )}
-      {activity && (
-        <ActivityWidget
-          activity={activity}
-          isLoading={isLoading}
-          onPressHeader={() => router.navigate(AppRoutes.Activity)}
-        />
-      )}
-      {collectibles && releaseCollectibles && (
-        <CollectiblesWidget
-          collectibles={collectibles}
-          onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
-        />
+        <>
+          <BalancesWidget
+            onPressHeader={() => router.navigate(AppRoutes.Balances)}
+            totalBalance={totalBalance}
+            isLoading={isLoadingTotalBalance}
+          >
+            <AllAccountBalances hardCap />
+          </BalancesWidget>
+          <ActivityWidget
+            activity={activity}
+            onPressHeader={() => router.navigate(AppRoutes.Activity)}
+          />
+
+          {releaseCollectibles && hasCollectibles(collectibles) && (
+            <CollectiblesWidget onPressHeader={() => router.navigate(AppRoutes.Collectibles)}>
+              <Collectibles collectibles={collectibles} mode="widget" />
+            </CollectiblesWidget>
+          )}
+        </>
       )}
       <NotificationsSheet sheetRef={notificationSheetRef} />
     </PageLayout>

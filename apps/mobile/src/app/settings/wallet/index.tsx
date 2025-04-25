@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 
-import { AddWalletSheet } from '@/components/add-wallet/';
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
@@ -8,6 +7,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { EmptyWalletsScreen } from '@/features/settings/wallet-and-accounts/components/empty-wallets-screen';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
+import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';

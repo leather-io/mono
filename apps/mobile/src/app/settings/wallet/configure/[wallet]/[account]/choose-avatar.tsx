@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { accountIconMap } from '@/features/accounts/components/account-avatar';
+import { accountIconMap } from '@/features/account/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 import { Account } from '@/store/accounts/accounts';

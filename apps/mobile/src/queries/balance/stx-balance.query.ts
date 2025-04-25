@@ -1,4 +1,4 @@
-import { toFetchState } from '@/shared/fetch-state';
+import { toFetchState } from '@/components/loading/fetch-state';
 import {
   useStacksSignerAddressFromAccountIndex,
   useStacksSignerAddresses,

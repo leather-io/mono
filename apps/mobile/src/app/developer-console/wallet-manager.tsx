@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { WalletList } from '@/components/wallet-manager';
+import { WalletList } from '@/features/wallet-manager';
 import { TestId } from '@/shared/test-id';
 import { clearAllPersistedStorage } from '@/store';
 import { useKeyStore } from '@/store/key-store';

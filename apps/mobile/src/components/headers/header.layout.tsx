@@ -10,12 +10,14 @@ interface HeaderLayoutProps {
   centerElement?: ReactNode;
   rightElement?: ReactNode;
   bottomElement?: ReactNode;
+  error?: ReactNode;
 }
 export function HeaderLayout({
   leftElement,
   centerElement,
   rightElement,
   bottomElement,
+  error,
 }: HeaderLayoutProps) {
   const insets = useSafeAreaInsets();
 
@@ -26,6 +28,7 @@ export function HeaderLayout({
       width="100%"
       style={{ paddingTop: insets.top }}
     >
+      {error}
       <Box
         flexDirection="row"
         alignItems="center"

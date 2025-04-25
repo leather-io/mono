@@ -1,18 +1,15 @@
 import { PrivateText } from '@/components/private-text';
+import {
+  EmptyBalance,
+  type TokenBalance as TokenBalanceType,
+} from '@/features/balances/token-balance';
 import { usePrivacyMode } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 
 import { currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
-import { BulletSeparator, Text, TextProps } from '@leather.io/ui/native';
+import { BulletSeparator, SkeletonLoader, Text, TextProps } from '@leather.io/ui/native';
 import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
-
-interface BalanceProps extends TextProps {
-  balance: Money;
-  lockedBalance?: string;
-  operator?: string;
-}
 
 interface FormatBalanceProps {
   balance: Money;
@@ -30,22 +27,35 @@ export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps)
     : formatMoneyWithoutSymbol(balance);
 }
 
+interface BalanceProps extends TextProps {
+  balance: TokenBalanceType;
+  lockedBalance?: string;
+  operator?: string;
+  isLoading?: boolean;
+}
 export function Balance({
   balance,
   lockedBalance,
   operator,
   variant = 'label01',
   color = 'ink.text-primary',
+  isLoading,
 }: BalanceProps) {
-  const { i18n } = useLingui();
   const isPrivate = usePrivacyMode();
-  const isFiat = balance.symbol in currencyNameMap;
-  const formattedBalance = formatBalance({ balance, isFiat, operator });
-  const privateText = isFiat ? undefined : `*${i18n._(balance.symbol)}`;
+  if (isLoading) {
+    return <SkeletonLoader height={20} width={100} isLoading={true} />;
+  }
+  const hasBalance = balance !== EmptyBalance && typeof balance !== 'string';
+  const isFiat = hasBalance && balance.symbol in currencyNameMap;
+  const balanceSymbol = hasBalance ? balance.symbol : undefined;
+  const maskedCurrencySymbol = !isFiat ? `*${balanceSymbol}` : undefined;
+
+  const formattedBalance =
+    balance === EmptyBalance ? EmptyBalance : formatBalance({ balance, isFiat, operator });
 
   if (!lockedBalance) {
     return (
-      <PrivateText mask={privateText} color={color} variant={variant}>
+      <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant}>
         {formattedBalance}
       </PrivateText>
     );
@@ -53,7 +63,7 @@ export function Balance({
 
   return (
     <BulletSeparator color={color}>
-      <PrivateText mask={privateText} color={color} variant={variant}>
+      <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant}>
         {formattedBalance}
       </PrivateText>
       {!isPrivate ? (
