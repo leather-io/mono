@@ -1,13 +1,12 @@
+import { formatActivityType } from '@/app/activity/utils/format-activity';
+import { goToStacksExplorer } from '@/app/activity/utils/go-to-stacks-explorer';
+import { ActivityIcon } from '@/components/activity/activity-icon';
 import { Balance } from '@/components/balance/balance';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import dayjs from 'dayjs';
 
 import { Activity } from '@leather.io/models';
 import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
-
-import { formatActivityType } from '../utils/format-activity';
-import { goToStacksExplorer } from '../utils/go-to-stacks-explorer';
-import { ActivityIcon } from './activity-icon';
 
 interface ActivityCellProps {
   activity: Activity;
@@ -27,7 +26,7 @@ function getBalanceColor(activity: Activity) {
   return undefined;
 }
 
-export function ActivityCell({ activity }: ActivityCellProps) {
+export function ActivityListItem({ activity }: ActivityCellProps) {
   const { mode } = useCurrentNetworkState();
 
   const txid = 'txid' in activity ? activity.txid : undefined;

@@ -1,13 +1,12 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { ActivityCard } from '@/components/widgets/activity/components/activity-card';
 import { Widget } from '@/components/widgets/components/widget';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Activity } from '@leather.io/models';
 import { Box, Theme } from '@leather.io/ui/native';
-
-import { ActivityCard } from './activity-card';
 
 interface ActivityWidgetProps {
   activity: Activity[];

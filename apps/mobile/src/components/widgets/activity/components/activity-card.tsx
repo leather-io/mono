@@ -1,11 +1,11 @@
+import { goToStacksExplorer } from '@/app/activity/utils/go-to-stacks-explorer';
+import { ActivityIcon } from '@/components/activity/activity-icon';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 
 import { Activity } from '@leather.io/models';
 import { Box, Pressable, usePressedState } from '@leather.io/ui/native';
 
-import { goToStacksExplorer } from '../utils/go-to-stacks-explorer';
 import { ActivityCardContent } from './activity-card-content';
-import { ActivityIcon } from './activity-icon';
 
 interface ActivityCardProps {
   activity: Activity;
