@@ -701,6 +701,32 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.31.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.30.0...@leather.io/mobile-v2.31.0) (2025-04-25)
+
+
+### Features
+
+* **mobile:** add relative date to recipient recents ([e3e09d3](https://github.com/leather-io/mono/commit/e3e09d37d0a4264bf5346f0326cc0d911509c918))
+
+
+### Bug Fixes
+
+* **mobile:** fix recent recipient suggestion order ([8535474](https://github.com/leather-io/mono/commit/853547444149b90a64305bfea4c830b22cb9d436))
+* **mobile:** fix the recipient address validation helper again ([4d3b10c](https://github.com/leather-io/mono/commit/4d3b10c7994af42ff2420952fffa4396d9240a52))
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.24.5
+    * @leather.io/query bumped to 2.36.2
+    * @leather.io/services bumped to 1.8.3
+    * @leather.io/stacks bumped to 1.10.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.24.5
+
 ## [2.30.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.29.0...@leather.io/mobile-v2.30.0) (2025-04-23)
 
 
