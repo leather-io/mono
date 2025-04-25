@@ -401,6 +401,13 @@
     * @leather.io/crypto bumped to 1.6.56
     * @leather.io/utils bumped to 0.32.0
 
+## [1.10.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.10.0...@leather.io/stacks-v1.10.1) (2025-04-25)
+
+
+### Bug Fixes
+
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+
 ## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.9.0...@leather.io/stacks-v1.10.0) (2025-04-23)
 
 

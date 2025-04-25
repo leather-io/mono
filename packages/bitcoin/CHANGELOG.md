@@ -686,6 +686,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.11.0
 
+## [0.24.5](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.24.4...@leather.io/bitcoin-v0.24.5) (2025-04-25)
+
+
+### Bug Fixes
+
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+
 ## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.23.2...@leather.io/bitcoin-v0.24.0) (2025-04-01)
 
 
