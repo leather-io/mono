@@ -20,9 +20,5 @@ export function isValidBitcoinAddress(address: string) {
 }
 
 export function isValidBitcoinNetworkAddress(address: string, network: BitcoinNetworkModes) {
-  if (!isValidBitcoinAddress(address) || !network) {
-    return false;
-  }
-
   return validate(address, getBitcoinAddressNetworkType(network));
 }
