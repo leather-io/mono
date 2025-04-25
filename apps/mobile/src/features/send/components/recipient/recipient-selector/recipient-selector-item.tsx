@@ -1,7 +1,7 @@
-import { AccountListItem } from '@/features/accounts/account-list/account-list-item';
-import { AccountAddress } from '@/features/accounts/components/account-address';
-import { AccountAvatar } from '@/features/accounts/components/account-avatar';
-import { AccountBalance } from '@/features/accounts/components/account-balance';
+import { AccountListItem } from '@/features/account/account-list/account-list-item';
+import { AccountAddress } from '@/features/account/components/account-address';
+import { AccountAvatar } from '@/features/account/components/account-avatar';
+import { AccountBalance } from '@/features/account/components/account-balance';
 import {
   ExternalRecipientSuggestionEntry,
   InternalRecipientSuggestionEntry,

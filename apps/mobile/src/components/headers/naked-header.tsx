@@ -7,8 +7,9 @@ import { HeaderLayout } from './header.layout';
 interface NakedHeaderProps {
   onGoBack?: () => void;
   rightElement?: React.ReactNode;
+  error?: React.ReactNode;
 }
-export function NakedHeader({ onGoBack, rightElement }: NakedHeaderProps) {
+export function NakedHeader({ onGoBack, rightElement, error }: NakedHeaderProps) {
   const router = useRouter();
 
   function goBack() {
@@ -17,6 +18,7 @@ export function NakedHeader({ onGoBack, rightElement }: NakedHeaderProps) {
 
   return (
     <HeaderLayout
+      error={error}
       leftElement={<HeaderBackButton onPress={onGoBack ?? goBack} testID={TestId.backButton} />}
       rightElement={rightElement}
     />

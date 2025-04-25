@@ -1,18 +1,23 @@
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
-import { Money } from '@leather.io/models';
 import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
 
-import { TokenBalance } from '../token-balance';
+import {
+  EmptyBalance,
+  TokenBalance,
+  type TokenBalance as TokenBalanceType,
+} from '../token-balance';
 
 interface StacksTokenBalanceProps extends PressableProps {
-  availableBalance: Money;
-  fiatBalance: Money;
+  availableBalance: TokenBalanceType;
+  fiatBalance: TokenBalanceType;
+  isLoading?: boolean;
 }
 export function StacksTokenBalance({
   availableBalance,
   fiatBalance,
+  isLoading,
   ...rest
 }: StacksTokenBalanceProps) {
   return (
@@ -26,6 +31,7 @@ export function StacksTokenBalance({
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
+      isLoading={isLoading}
       {...rest}
     />
   );
@@ -37,13 +43,18 @@ interface StacksBalanceProps {
 
 export function StacksBalance({ onPress }: StacksBalanceProps) {
   const balance = useStxTotalBalance();
-  // TODO LEA-1726: handle balance loading & error states
-  if (balance.state !== 'success') return;
+
+  const availableBalance =
+    balance.state === 'success' ? balance.value.stx.availableBalance : EmptyBalance;
+  const fiatBalance =
+    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+
   return (
     <StacksTokenBalance
-      availableBalance={balance.value.stx.availableBalance}
-      fiatBalance={balance.value.fiat.availableBalance}
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
       onPress={onPress}
+      isLoading={balance.state === 'loading'}
     />
   );
 }
@@ -59,13 +70,18 @@ export function StacksBalanceByAccount({
   onPress,
 }: StacksBalanceByAccountProps) {
   const balance = useStxAccountBalance(fingerprint, accountIndex);
-  // TODO LEA-1726: handle balance loading & error states
-  if (balance.state !== 'success') return;
+
+  const availableBalance =
+    balance.state === 'success' ? balance.value.stx.availableBalance : EmptyBalance;
+  const fiatBalance =
+    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+
   return (
     <StacksTokenBalance
-      availableBalance={balance.value.stx.availableBalance}
-      fiatBalance={balance.value.fiat.availableBalance}
+      availableBalance={availableBalance}
+      fiatBalance={fiatBalance}
       onPress={onPress}
+      isLoading={balance.state === 'loading'}
     />
   );
 }

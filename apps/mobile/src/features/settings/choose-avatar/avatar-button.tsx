@@ -1,4 +1,4 @@
-import { AccountAvatar } from '@/features/accounts/components/account-avatar';
+import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountIcon } from '@/store/accounts/utils';
 import { defaultIconTestId } from '@/utils/testing-utils';
 

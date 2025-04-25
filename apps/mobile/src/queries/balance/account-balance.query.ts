@@ -1,5 +1,5 @@
+import { FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
-import { FetchState, toFetchState } from '@/shared/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 
 import { AccountId, Money } from '@leather.io/models';
@@ -15,7 +15,7 @@ import { useBtcAccountBalance } from './btc-balance.query';
 import { useRunesAccountBalance } from './runes-balance.query';
 import { useSip10AccountBalance } from './sip10-balance.query';
 
-interface AccountBalance {
+export interface AccountBalance {
   btc: FetchState<BtcAccountBalance>;
   stx: FetchState<StxAddressBalance>;
   sip10: FetchState<Sip10AddressBalance>;

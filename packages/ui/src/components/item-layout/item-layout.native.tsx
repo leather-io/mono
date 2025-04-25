@@ -1,5 +1,8 @@
 import { ReactNode, isValidElement } from 'react';
 
+import { ResponsiveValue } from '@shopify/restyle';
+import { Theme } from 'native';
+
 import { isString } from '@leather.io/utils';
 
 import { Box } from '../box/box.native';
@@ -11,6 +14,7 @@ export interface ItemLayoutProps {
   captionRight?: ReactNode;
   titleLeft: ReactNode;
   titleRight?: ReactNode;
+  gap?: ResponsiveValue<keyof Theme['spacing'], Theme['breakpoints']>;
 }
 export function ItemLayout({
   actionIcon,
@@ -18,12 +22,13 @@ export function ItemLayout({
   captionRight,
   titleLeft,
   titleRight,
+  gap = '2',
 }: ItemLayoutProps) {
   const hasRightElement = titleRight || captionRight;
 
   return (
-    <Box flex={1} alignItems="center" flexDirection="row" justifyContent="space-between">
-      <Box alignItems="flex-start" flex={1} mr="3" overflow="hidden" style={{ gap: 2 }}>
+    <Box flex={1} alignItems="center" flexDirection="row" justifyContent="space-between" gap={gap}>
+      <Box alignItems="flex-start" flex={1} mr="3" overflow="hidden" gap={gap}>
         {isValidElement(titleLeft) ? titleLeft : <Text variant="label02">{titleLeft}</Text>}
         {captionLeft && isValidElement(captionLeft) && captionLeft}
         {captionLeft && isString(captionLeft) && (
@@ -33,7 +38,7 @@ export function ItemLayout({
         )}
       </Box>
       {hasRightElement && (
-        <Box flex={1} alignItems="flex-end" style={{ gap: 2 }}>
+        <Box flex={1} alignItems="flex-end" gap={gap}>
           {isValidElement(titleRight) ? titleRight : <Text variant="label02">{titleRight}</Text>}
           {captionRight && isValidElement(captionRight) && captionRight}
           {captionRight && isString(captionRight) && (

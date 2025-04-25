@@ -4,9 +4,10 @@ import { Balance } from '@/components/balance/balance';
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
-import { AccountListItem } from '@/features/accounts/account-list/account-list-item';
-import { AccountAddress } from '@/features/accounts/components/account-address';
-import { AccountAvatar } from '@/features/accounts/components/account-avatar';
+import { AccountListItem } from '@/features/account/account-list/account-list-item';
+import { AccountAddress } from '@/features/account/components/account-address';
+import { AccountAvatar } from '@/features/account/components/account-avatar';
+import { EmptyBalance } from '@/features/balances/token-balance';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
@@ -82,15 +83,11 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
     fingerprint: account.fingerprint,
   })[asset];
 
-  // TODO LEA-1726: handle balance loading & error states
-  if (balance.state !== 'success') {
-    return null;
-  }
-
   if (balance.state === 'success' && balance.value.fiat.availableBalance.amount.isZero()) {
     return null;
   }
-
+  const availableBalance =
+    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
   return (
     <AccountListItem
       onPress={() => onSelectAccount(account)}
@@ -99,7 +96,7 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
       address={
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
-      balance={<Balance balance={balance.value.fiat.availableBalance} />}
+      balance={<Balance balance={availableBalance} />}
       icon={<AccountAvatar icon={account.icon} />}
     />
   );

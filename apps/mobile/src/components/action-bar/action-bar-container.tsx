@@ -4,6 +4,7 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useBrowserFlag } from '@/features/feature-flags';
+import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
@@ -21,8 +22,6 @@ import {
   useOnMount,
 } from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
-
-import { AddWalletSheet } from '../add-wallet';
 
 const scrollUntilClosed = 50;
 const scrollPaddingBottom = 50;

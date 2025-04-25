@@ -1,13 +1,15 @@
+import { FetchState, FetchWrapper } from '@/components/loading';
 import {
   useRunesAccountBalance,
   useRunesTotalBalance,
 } from '@/queries/balance/runes-balance.query';
 
 import { AccountId, Money } from '@leather.io/models';
+import { RunesAccountBalance, RunesAggregateBalance } from '@leather.io/services';
 import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
 
 import { HardCap } from '../balances';
-import { TokenBalance } from '../token-balance';
+import { EmptyBalance, TokenBalance } from '../token-balance';
 
 interface RunesTokenBalanceProps extends PressableProps {
   availableBalance: Money;
@@ -32,43 +34,54 @@ function RunesTokenBalance({
     />
   );
 }
+
+function RunesTokenBalanceError() {
+  return (
+    <TokenBalance
+      ticker=""
+      icon={<RunesAvatarIcon />}
+      tokenName=""
+      protocol="rune"
+      fiatBalance={EmptyBalance}
+      availableBalance={EmptyBalance}
+    />
+  );
+}
+
+interface RunesBalanceWrapperProps {
+  data: FetchState<RunesAggregateBalance | RunesAccountBalance>;
+  hardCap?: boolean;
+}
+function RunesBalanceWrapper({ data, hardCap }: RunesBalanceWrapperProps) {
+  return (
+    <FetchWrapper data={data} error={<RunesTokenBalanceError />}>
+      {data.state === 'success' &&
+        data.value.runes.map((balance, index) => {
+          // FIXME LEA-2310: temporary hard cap for widget view pending sorting
+          if (hardCap && index >= 1) return null;
+
+          return (
+            <RunesTokenBalance
+              key={`${balance.asset.symbol}-${index}`}
+              symbol={balance.asset.symbol}
+              name={balance.asset.runeName}
+              availableBalance={balance.crypto.availableBalance}
+              fiatBalance={balance.fiat.availableBalance}
+            />
+          );
+        })}
+    </FetchWrapper>
+  );
+}
+
 export function RunesBalance({ hardCap }: HardCap) {
   const data = useRunesTotalBalance();
 
-  // TODO LEA-1726: handle balance loading & error states
-  if (data.state !== 'success') return;
-
-  return data.value.runes.map((balance, index) => {
-    // FIXME LEA-2310: temporary hard cap for widget view pending sorting
-    if (hardCap && index >= 1) return null;
-    return (
-      <RunesTokenBalance
-        key={`${balance.asset.symbol}-${index}`}
-        symbol={balance.asset.symbol}
-        name={balance.asset.runeName}
-        availableBalance={balance.crypto.availableBalance}
-        fiatBalance={balance.fiat.totalBalance}
-      />
-    );
-  });
+  return <RunesBalanceWrapper data={data} hardCap={hardCap} />;
 }
 
 export function RunesBalanceByAccount({ hardCap, fingerprint, accountIndex }: AccountId & HardCap) {
   const data = useRunesAccountBalance(fingerprint, accountIndex);
 
-  // TODO LEA-1726: handle balance loading & error states
-  if (data.state !== 'success') return;
-  return data.value.runes.map((balance, index) => {
-    // FIXME LEA-2310: temporary hard cap for widget view pending sorting
-    if (hardCap && index >= 1) return null;
-    return (
-      <RunesTokenBalance
-        key={`${balance.asset.symbol}-${index}`}
-        symbol={balance.asset.symbol}
-        name={balance.asset.spacedRuneName}
-        availableBalance={balance.crypto.availableBalance}
-        fiatBalance={balance.fiat.availableBalance}
-      />
-    );
-  });
+  return <RunesBalanceWrapper data={data} hardCap={hardCap} />;
 }
