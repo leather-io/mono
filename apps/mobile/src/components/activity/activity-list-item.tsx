@@ -6,7 +6,7 @@ import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import dayjs from 'dayjs';
 
 import { Activity } from '@leather.io/models';
-import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { Cell } from '@leather.io/ui/native';
 
 interface ActivityCellProps {
   activity: Activity;
@@ -36,33 +36,37 @@ export function ActivityListItem({ activity }: ActivityCellProps) {
   const activityAsset = asset && 'symbol' in asset ? asset : undefined;
 
   return (
-    <Pressable
-      flexDirection="row"
+    <Cell.Root
+      pressable
       disabled={!txid}
       onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined}
     >
-      <Flag
-        img={<ActivityIcon type={activity.type} asset={activityAsset} status={status} />}
-        px="5"
-        py="3"
-      >
-        <ItemLayout
-          titleLeft={formatActivityType(activity.type)}
-          titleRight={
-            value?.crypto ? (
-              <Balance
-                operator={getBalanceOperator(activity)}
-                balance={value.crypto}
-                color={getBalanceColor(activity)}
-              />
-            ) : undefined
-          }
-          captionLeft={dayjs(activity.timestamp * 1000).format('MMM D, YYYY')}
-          captionRight={
-            value?.fiat ? <Balance balance={value.fiat} color="ink.text-subdued" /> : undefined
-          }
-        />
-      </Flag>
-    </Pressable>
+      <Cell.Icon>
+        <ActivityIcon type={activity.type} asset={activityAsset} status={status} />
+      </Cell.Icon>
+      <Cell.Content>
+        <Cell.Label variant="primary">{formatActivityType(activity.type)}</Cell.Label>
+        <Cell.Label variant="secondary">
+          {dayjs(activity.timestamp * 1000).format('MMM D, YYYY')}
+        </Cell.Label>
+      </Cell.Content>
+      <Cell.Aside>
+        <Cell.Label variant="primary">
+          {value?.crypto ? (
+            <Balance
+              variant="label02"
+              operator={getBalanceOperator(activity)}
+              balance={value.crypto}
+              color={getBalanceColor(activity)}
+            />
+          ) : undefined}
+        </Cell.Label>
+        <Cell.Label variant="secondary">
+          {value?.fiat ? (
+            <Balance variant="caption01" balance={value.fiat} color="ink.text-subdued" />
+          ) : undefined}
+        </Cell.Label>
+      </Cell.Aside>
+    </Cell.Root>
   );
 }
