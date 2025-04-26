@@ -68,7 +68,7 @@ export function RecipientSelector({
           return (
             <BottomSheetSectionList
               sections={sections}
-              keyboardShouldPersistTaps="always"
+              keyboardShouldPersistTaps="handled"
               keyExtractor={item => item.id}
               stickySectionHeadersEnabled={false}
               renderSectionHeader={({ section }) => (
