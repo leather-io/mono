@@ -2,7 +2,7 @@ import { ReactNode, RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 
-import { Sheet, SheetRef } from '@leather.io/ui/native';
+import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 
 interface RecipientSheetProps {
   sheetRef: RefObject<SheetRef>;
@@ -21,7 +21,14 @@ export function RecipientSheet({ sheetRef, children }: RecipientSheetProps) {
       keyboardBehavior="extend"
       snapPoints={['90%']}
     >
-      {children}
+      <Box
+        flex={1}
+        backgroundColor="ink.background-primary"
+        borderTopLeftRadius="lg"
+        borderTopRightRadius="lg"
+      >
+        {children}
+      </Box>
     </Sheet>
   );
 }
