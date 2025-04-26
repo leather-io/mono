@@ -121,4 +121,6 @@ async function rawAddressComplianceValidator({
   return isAddressCompliant({ address, chain });
 }
 
-export const addressComplianceValidator = memoize(rawAddressComplianceValidator);
+export const addressComplianceValidator = memoize(rawAddressComplianceValidator, {
+  cacheKey: ([argument]) => argument.address,
+});

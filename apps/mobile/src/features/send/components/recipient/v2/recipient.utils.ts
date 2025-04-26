@@ -1,7 +1,9 @@
 import { errorMessages } from '@/features/send/error-messages';
+import { Account } from '@/store/accounts/accounts';
+import { isDefined } from 'remeda';
 import { SafeParseReturnType } from 'zod';
 
-import { FungibleCryptoAssetInfo } from '@leather.io/models';
+import { FungibleCryptoAssetInfo, SendAssetActivity } from '@leather.io/models';
 import { fetchBtcNameOwner, fetchStacksNameOwner } from '@leather.io/query';
 
 export function recipientSchemaResultContainsError(
@@ -27,4 +29,20 @@ export function isBnsLookupCandidate(input: string) {
 
 export function normalizeSearchTerm(input: string) {
   return input.trim();
+}
+
+export function activityContainsRecipient(activity: SendAssetActivity[], recipientAddress: string) {
+  return activity.some(
+    activity => isDefined(activity.receivers[0]) && activity.receivers[0] === recipientAddress
+  );
+}
+
+export interface IsNewAddressParams {
+  address: string;
+  findAccountByAddress: (address: string) => Account | null;
+  activity?: SendAssetActivity[];
+}
+
+export function isNewAddress({ address, activity = [], findAccountByAddress }: IsNewAddressParams) {
+  return !activityContainsRecipient(activity, address) && !findAccountByAddress(address);
 }

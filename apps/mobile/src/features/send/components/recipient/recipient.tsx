@@ -15,6 +15,7 @@ interface RecipientProps {
   isDirty: boolean;
   isTouched: boolean;
   error: FieldError | undefined;
+
   recipientSchema: ZodSchema;
   assetInfo: FungibleCryptoAssetInfo;
 }

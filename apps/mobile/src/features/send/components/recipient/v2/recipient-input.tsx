@@ -36,7 +36,6 @@ export function RecipientInput({
       </Box>
       <Box flexGrow={1}>
         <TextInput
-          keyboardType="web-search"
           accessibilityRole="search"
           px="7"
           autoFocus={autoFocus}
@@ -53,7 +52,6 @@ export function RecipientInput({
           TextInputComponent={UIBottomSheetTextInput}
           textVariant="label02"
           returnKeyType="done"
-          blurOnSubmit={false}
           onSubmitEditing={onSubmitEditing}
         />
       </Box>

@@ -1,14 +1,14 @@
 import {
-  isBnsLookupCandidate,
-  normalizeSearchTerm,
-} from '@/features/send/components/recipient/v2/recipient.utils';
-import {
   type ExternalRecipientSuggestionEntry,
   type InternalRecipientSuggestionEntry,
   RecipientSection,
   RecipientSectionId,
   type RecipientSuggestionEntry,
-} from '@/features/send/components/recipient/v2/types';
+} from '@/features/send/components/recipient/v2/recipient.types';
+import {
+  isBnsLookupCandidate,
+  normalizeSearchTerm,
+} from '@/features/send/components/recipient/v2/recipient.utils';
 import { type Account } from '@/store/accounts/accounts';
 import { filter, isShallowEqual, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 
