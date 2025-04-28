@@ -1,9 +1,26 @@
-import { TouchableOpacity } from 'react-native';
+import { ReactNode } from 'react';
 
-interface IconButtonProps {
-  icon: React.ReactNode;
-  onPress(): void;
+import {
+  Pressable,
+  type PressableProps,
+  legacyTouchablePressEffect,
+} from '../pressable/pressable.native';
+
+interface IconButtonProps extends Omit<PressableProps, 'accessibilityLabel'> {
+  label: string;
+  icon: ReactNode;
 }
-export function IconButton({ icon, onPress }: IconButtonProps) {
-  return <TouchableOpacity onPress={onPress}>{icon}</TouchableOpacity>;
+export function IconButton({ icon, label, disabled, ...pressableProps }: IconButtonProps) {
+  return (
+    <Pressable
+      p="2"
+      opacity={disabled ? 0.5 : 1}
+      accessibilityLabel={label}
+      disabled={disabled}
+      pressEffects={legacyTouchablePressEffect}
+      {...pressableProps}
+    >
+      {icon}
+    </Pressable>
+  );
 }
