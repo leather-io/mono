@@ -2,7 +2,7 @@ import { defineConfig } from '@pandacss/dev';
 
 import { globalLoaderCss } from './app/layouts/nav/global-loader.styles';
 
-const navbar = { navbar: { value: '142px' } };
+const navbar = { navbar: { value: '164px' } };
 
 export default defineConfig({
   preflight: true,

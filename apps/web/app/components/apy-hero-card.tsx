@@ -2,10 +2,10 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { Page } from '~/features/page/page';
 
-interface SbtcRewardHeroCardProps extends HTMLStyledProps<'div'> {
+interface ApyRewardHeroCardProps extends HTMLStyledProps<'div'> {
   apyRange: string;
 }
-export function SbtcRewardHeroCard({ apyRange, ...props }: SbtcRewardHeroCardProps) {
+export function ApyRewardHeroCard({ apyRange, ...props }: ApyRewardHeroCardProps) {
   return (
     <Page.Inset pos="relative" bg="black" color="white" h="260px" {...props}>
       <Flex flexDir="column" pos="absolute" bottom={0} p={['space.04', 'space.05', 'space.07']}>

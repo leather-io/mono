@@ -5,7 +5,7 @@ import { test } from '.';
 test.describe('sBTC Rewards page', () => {
   test('loads correctly and displays expected content', async ({ page }) => {
     // Navigate to the sBTC Rewards page
-    await page.goto('/sbtc-rewards');
+    await page.goto('/sbtc');
 
     await expect(page.getByRole('heading', { name: 'sBTC Rewards', level: 1 })).toBeVisible();
 

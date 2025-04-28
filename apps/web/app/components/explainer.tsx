@@ -1,11 +1,9 @@
-// This is some pretty funky border code I am not a fan of, but didn't find an
 import { ReactElement } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 
-import { Button } from '@leather.io/ui';
-
+// This is some pretty funky border code I am not a fan of, but didn't find an
 // easier way to handle the conditional border for the breakpoints
 const gridBorders = css({
   '& > .earn-step:not(:last-child)': {
@@ -71,16 +69,6 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
       <styled.p textStyle="caption.01" fontSize="13px">
         {description}
       </styled.p>
-
-      <Button
-        px="space.06"
-        mt={['space.08', 'space.03']}
-        size="sm"
-        width="100%"
-        display={['block', null, 'none']}
-      >
-        Button
-      </Button>
     </Flex>
   );
 }

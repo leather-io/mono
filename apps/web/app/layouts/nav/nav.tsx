@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
@@ -26,15 +26,15 @@ export function NavContents() {
         Stacking
       </NavItem>
 
-      <NavItem href="/sbtc-rewards" icon={<StackingIcon />}>
+      <NavItem href="/sbtc" icon={<StackingIcon />}>
         sBTC
       </NavItem>
 
       <NavItem href={externalLeatherNavigator.blog} icon={<NewspaperIcon variant="small" />}>
-        Blog
+        Wallet
       </NavItem>
       <NavItem href={externalLeatherNavigator.guides} icon={<GlassesIcon variant="small" />}>
-        Guides
+        Apps
       </NavItem>
 
       <styled.div mt="auto" mb={[null, null, 'space.06']}>
@@ -72,13 +72,13 @@ export function Nav() {
         minHeight="fit-content"
       >
         <Flex>
-          <Link to="/">
+          <styled.a href={externalLeatherNavigator.home}>
             <styled.svg
               flexShrink={0}
               m="space.04"
-              mb="space.08"
               // To baseline align with the text in the header
-              mt="18px"
+              mt="17px"
+              mb="57px"
               xmlns="http://www.w3.org/2000/svg"
               width="83"
               height="18"
@@ -90,7 +90,7 @@ export function Nav() {
                 fill="#12100F"
               />
             </styled.svg>
-          </Link>
+          </styled.a>
         </Flex>
         <NavContents />
       </styled.nav>

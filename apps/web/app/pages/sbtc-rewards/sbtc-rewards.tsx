@@ -14,8 +14,8 @@ import { openExternalLink } from '~/utils/external-links';
 
 import { Button, Hr } from '@leather.io/ui';
 
+import { ApyRewardHeroCard } from '../../components/apy-hero-card';
 import { AcquireSbtcGrid } from './components/acquire-sbtc-grid';
-import { SbtcRewardHeroCard } from './components/sbtc-hero-card';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
@@ -133,20 +133,20 @@ export function SbtcRewards() {
 
         <Flex mt="space.05" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
           <Box flex={1}>
-            <styled.h2 textStyle="heading.03" maxW="400px">
+            <Page.Title textStyle="heading.03" maxW="400px">
               Earn yield with bitcoin on stacks
-            </styled.h2>
+            </Page.Title>
           </Box>
           <Box flex={1}>
-            <styled.p textStyle="label.01" mt={['space.03', 'space.03', 0]}>
+            <Page.Subtitle mt={['space.03', 'space.03', 0]}>
               Acquire BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield
               from a variety of reward protocols without sacrificing Bitcoin’s underlying security
               and self-sovereignty.
-            </styled.p>
+            </Page.Subtitle>
           </Box>
         </Flex>
 
-        <SbtcRewardHeroCard apyRange="5–8%" mt="space.05" />
+        <ApyRewardHeroCard apyRange="5–8%" mt="space.05" />
 
         <styled.section mt="space.09">
           <styled.h3 textStyle="heading.04">1. Acquire sBTC</styled.h3>
