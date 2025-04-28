@@ -19,6 +19,7 @@ jobs:
 
       - name: Build web app
         env:
+          LEATHER_TARGET: staging
           LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
           LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
         run: pnpm turbo run build --filter="@leather.io/web"

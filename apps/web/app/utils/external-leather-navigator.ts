@@ -1,8 +1,14 @@
+import { whenEnvTarget } from '~/constants/environment';
+
+const stagedFramerSite = 'https://prosperous-combination-099461.framer.app/earn-new';
+
 export function createExternalLeatherNavigator() {
-  const externalUrl =
-    import.meta.env.MODE === 'production'
-      ? 'https://leather.io'
-      : 'https://prosperous-combination-099461.framer.app/earn-new';
+  const externalUrl = whenEnvTarget({
+    development: stagedFramerSite,
+    branch: stagedFramerSite,
+    staging: stagedFramerSite,
+    production: 'https://leather.io',
+  });
 
   return {
     home: `${externalUrl}/home`,
