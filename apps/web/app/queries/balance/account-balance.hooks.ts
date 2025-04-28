@@ -12,13 +12,13 @@ function useStxBalanceQuery(address: string) {
   const client = useStacksClient();
   const { networkPreference } = useStacksNetwork();
 
-  return useQuery({
-    ...createGetStxAddressBalanceQueryOptions({
+  return useQuery(
+    createGetStxAddressBalanceQueryOptions({
       address,
       client,
       network: networkPreference.chain.stacks.url,
-    }),
-  });
+    })
+  );
 }
 
 export function useStxCryptoAssetBalance(address: string) {

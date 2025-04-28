@@ -1,12 +1,17 @@
 export function createExternalLeatherNavigator() {
-  const baseUrl = 'https://leather.io';
+  const externalUrl =
+    import.meta.env.MODE === 'production'
+      ? 'https://leather.io'
+      : 'https://prosperous-combination-099461.framer.app/earn-new';
 
   return {
-    home: baseUrl,
-    blog: `${baseUrl}/blog`,
-    support: `${baseUrl}/support`,
-    guides: `${baseUrl}/guides`,
+    home: `${externalUrl}/home`,
+    blog: `${externalUrl}/blog`,
+    support: `${externalUrl}/support`,
+    guides: `${externalUrl}/guides`,
     docs: 'https://leather.gitbook.io',
+    wallet: `${externalUrl}/wallet`,
+    apps: `${externalUrl}/apps`,
   };
 }
 

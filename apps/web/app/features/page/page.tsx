@@ -49,6 +49,16 @@ export function PageDivider(props: HTMLStyledProps<'hr'>) {
   );
 }
 
+export function PageTitle({ ...props }: HTMLStyledProps<'h2'>) {
+  return <styled.h2 textStyle="heading.03" {...props} />;
+}
+
+export function PageSubtitle({ ...props }: HTMLStyledProps<'h3'>) {
+  return <styled.h3 textStyle="label.01" {...props} />;
+}
+
 Page.Divider = PageDivider;
 Page.Header = PageHeader;
+Page.Title = PageTitle;
+Page.Subtitle = PageSubtitle;
 Page.Inset = PageInset;

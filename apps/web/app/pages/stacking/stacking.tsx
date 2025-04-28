@@ -1,4 +1,5 @@
-import { styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
+import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
 import { UserPositions } from '~/features/stacking/user-positions';
@@ -11,23 +12,39 @@ import { StackingFaq } from './components/stacking-faq';
 export function Stacking() {
   return (
     <Page>
-      <Page.Header title="Invest in Stacks" />
+      <Page.Header title="Stacking" />
+
+      <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
+        <Box flex={1}>
+          <Page.Title textStyle="heading.03" maxW="400px">
+            Earn yield from stacking on stacks
+          </Page.Title>
+        </Box>
+        <Box flex={1}>
+          <Page.Subtitle mt={['space.03', 'space.03', 0]}>
+            Earn yield from the native consensus mechanism of Stacks—the leading L2 for Bitcoin—by
+            either locking your STX via a pool or converting your STX to a liquid Stacking token.
+          </Page.Subtitle>
+        </Box>
+      </Flex>
+
+      <ApyRewardHeroCard
+        apyRange="6–10%"
+        backgroundImage="url('/images/orange-stacks-coins.png')"
+        backgroundRepeat="no-repeat"
+        bgPosition="right"
+      />
 
       <StacksAccountLoader>
         {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
       </StacksAccountLoader>
 
-      <styled.h2 textStyle="heading.05" mt="space.07">
-        Stack in a pool
-      </styled.h2>
-
-      <StackingExplainer mt="space.04" />
+      <Page.Title mt="space.07">Pooled stacking</Page.Title>
+      <StackingExplainer mt="space.05" />
 
       <EarnProviderTable mt="space.05" />
 
-      <styled.h2 textStyle="heading.05" mt="space.09">
-        Liquid stacking
-      </styled.h2>
+      <Page.Title mt="space.09">Liquid stacking</Page.Title>
 
       <LiquidStackingExplainer mt="space.04" />
 

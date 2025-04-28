@@ -10,6 +10,6 @@ export default [
     index('routes/stacking/liquid-stacking.tsx'),
     route('active', 'routes/stacking/liquid-stacking-active.tsx'),
   ]),
-  route('sbtc-rewards', 'routes/sbtc-rewards.tsx'),
+  route('sbtc', 'routes/sbtc.tsx'),
   route('*', 'routes/error-not-found.tsx'),
 ] satisfies RouteConfig;
