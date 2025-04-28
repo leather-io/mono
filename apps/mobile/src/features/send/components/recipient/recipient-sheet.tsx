@@ -7,9 +7,10 @@ import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 interface RecipientSheetProps {
   sheetRef: RefObject<SheetRef>;
   children: ReactNode;
+  onDismiss?(): void;
 }
 
-export function RecipientSheet({ sheetRef, children }: RecipientSheetProps) {
+export function RecipientSheet({ sheetRef, onDismiss, children }: RecipientSheetProps) {
   const { themeDerivedFromThemePreference } = useSettings();
 
   return (
@@ -20,6 +21,7 @@ export function RecipientSheet({ sheetRef, children }: RecipientSheetProps) {
       enableDynamicSizing={false}
       keyboardBehavior="extend"
       snapPoints={['90%']}
+      onDismiss={onDismiss}
     >
       <Box
         flex={1}

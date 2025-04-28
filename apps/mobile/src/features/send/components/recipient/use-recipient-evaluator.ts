@@ -1,12 +1,13 @@
-import { recipientSchemaResultContainsError } from '@/features/send/components/recipient/recipient.utils';
+import {
+  isNewAddress,
+  recipientSchemaResultContainsError,
+} from '@/features/send/components/recipient/recipient.utils';
+import { useAccountHelpers } from '@/features/send/components/recipient/use-shameful-account-helpers';
+import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 import { ZodSchema } from 'zod';
 
-interface CreateRecipientEvaluatorParams {
-  schema: ZodSchema;
-  isNewAddress: (address: string) => boolean;
-  canSelfSend: boolean;
-}
+import { FungibleCryptoAssetInfo, SendAssetActivity } from '@leather.io/models';
 
 type GuardReason =
   | 'newRecipient'
@@ -29,6 +30,12 @@ interface GuardResultWarnOrBlock {
 }
 
 export type GuardResult = GuardResultOk | GuardResultWarnOrBlock;
+
+interface CreateRecipientEvaluatorParams {
+  schema: ZodSchema;
+  isNewAddress: (address: string) => boolean;
+  canSelfSend: boolean;
+}
 
 export function createRecipientEvaluator({
   canSelfSend,
@@ -82,9 +89,9 @@ export function createRecipientEvaluator({
           message: 'Address from another network',
         }),
         description: t({
-          id: 'send-form.send-form.guard.incorrect_network_address_description',
+          id: 'send-form.guard.incorrect_network_address_description',
           message:
-            'This address belongs to a different network. Enter an address that matches the active network.',
+            'This address belongs to a different network. Use an address that matches the active network.',
         }),
       };
     }
@@ -99,7 +106,7 @@ export function createRecipientEvaluator({
           message: 'Address blocked',
         }),
         description: t({
-          id: 'send-form.send-form.guard.non_compliant_address_description',
+          id: 'send-form.guard.non_compliant_address_description',
           message:
             'This address is linked to activity that violates compliance policies. You can’t send funds to it',
         }),
@@ -127,4 +134,29 @@ export function createRecipientEvaluator({
       severity: 'none',
     };
   };
+}
+
+interface UseRecipientEvaluatorParams {
+  accounts: Account[];
+  assetInfo: FungibleCryptoAssetInfo;
+  recipientSchema: ZodSchema;
+  activity?: SendAssetActivity[];
+}
+
+export function useRecipientEvaluator({
+  accounts,
+  activity = [],
+  assetInfo,
+  recipientSchema,
+}: UseRecipientEvaluatorParams) {
+  const { findAccountByAddress } = useAccountHelpers(accounts, assetInfo);
+
+  const evaluateRecipient = createRecipientEvaluator({
+    schema: recipientSchema,
+    canSelfSend: assetInfo.chain === 'bitcoin',
+    isNewAddress: (address: string) =>
+      isNewAddress({ address, findAccountByAddress, activity: activity }),
+  });
+
+  return { evaluateRecipient };
 }

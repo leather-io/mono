@@ -78,6 +78,7 @@ export default tseslint.config(
             'UndefinedParams',
             'UserRejectedOperation',
           ],
+          ignoreAttribute: ['d'],
         },
       ],
     },
