@@ -701,6 +701,26 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.32.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.31.0...@leather.io/mobile-v2.32.0) (2025-04-28)
+
+
+### Features
+
+* **mobile:** add recipient selector guard ([53d1c12](https://github.com/leather-io/mono/commit/53d1c1265d897b2cedd0c54b1d4478832c54a075))
+
+
+### Bug Fixes
+
+* **mobile:** fix recipient sheet background color ([af81731](https://github.com/leather-io/mono/commit/af81731003710adc13e52531a4b24570b4dcc42e))
+* **web:** adjust styles, upgrade packages, closes ENG-50 ENG-45 ([17bb885](https://github.com/leather-io/mono/commit/17bb8858a1d51f6df6b274142a1fc5a505a8b97c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.61.1
+
 ## [2.31.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.30.0...@leather.io/mobile-v2.31.0) (2025-04-25)
 
 

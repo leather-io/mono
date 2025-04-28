@@ -216,6 +216,13 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.16.0
 
+## [0.12.2](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.12.1...@leather.io/panda-preset-v0.12.2) (2025-04-28)
+
+
+### Bug Fixes
+
+* **web:** adjust styles, upgrade packages, closes ENG-50 ENG-45 ([17bb885](https://github.com/leather-io/mono/commit/17bb8858a1d51f6df6b274142a1fc5a505a8b97c))
+
 ## [0.12.0](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.11.0...@leather.io/panda-preset-v0.12.0) (2025-03-27)
 
 
