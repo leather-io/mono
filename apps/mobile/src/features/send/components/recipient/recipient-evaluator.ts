@@ -1,4 +1,4 @@
-import { recipientSchemaResultContainsError } from '@/features/send/components/recipient/v2/recipient.utils';
+import { recipientSchemaResultContainsError } from '@/features/send/components/recipient/recipient.utils';
 import { t } from '@lingui/macro';
 import { ZodSchema } from 'zod';
 

@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
-import { GuardResult } from '@/features/send/components/recipient/v2/recipient-evaluator';
+import { GuardResult } from '@/features/send/components/recipient/recipient-evaluator';
 import { t } from '@lingui/macro';
 
 import {
