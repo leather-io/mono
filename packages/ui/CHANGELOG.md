@@ -389,6 +389,20 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.61.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.61.0...@leather.io/ui-v1.61.1) (2025-04-28)
+
+
+### Bug Fixes
+
+* **web:** adjust styles, upgrade packages, closes ENG-50 ENG-45 ([17bb885](https://github.com/leather-io/mono/commit/17bb8858a1d51f6df6b274142a1fc5a505a8b97c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.12.2
+
 ## [1.61.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.60.0...@leather.io/ui-v1.61.0) (2025-04-22)
 
 
