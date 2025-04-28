@@ -122,6 +122,12 @@ export default () => {
             launchMode: 'most-recent',
           },
         ],
+        [
+          'expo-camera',
+          {
+            cameraPermission: 'Camera access enables scanning addresses or opening websites.',
+          },
+        ],
         '@react-native-firebase/app',
         '@react-native-firebase/messaging',
       ],

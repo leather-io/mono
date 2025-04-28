@@ -1,28 +1,18 @@
-import { memo, useRef, useState } from 'react';
-import { Keyboard } from 'react-native';
+import { memo } from 'react';
 
-import {
-  GuardResult,
-  createRecipientEvaluator,
-} from '@/features/send/components/recipient/recipient-evaluator';
 import { RecipientGuardSheet } from '@/features/send/components/recipient/recipient-guard-sheet';
+import { RecipientQrScanner } from '@/features/send/components/recipient/recipient-qr-scanner';
+import { RecipientQrSheet } from '@/features/send/components/recipient/recipient-qr-sheet';
 import { RecipientSelector } from '@/features/send/components/recipient/recipient-selector/recipient-selector';
 import { RecipientSelectorError } from '@/features/send/components/recipient/recipient-selector/recipient-selector-error';
 import { RecipientSheet } from '@/features/send/components/recipient/recipient-sheet';
 import { RecipientToggle } from '@/features/send/components/recipient/recipient-toggle';
-import { isNewAddress } from '@/features/send/components/recipient/recipient.utils';
-import {
-  matchRelevantActivityResult,
-  useRelevantActivity,
-} from '@/features/send/components/recipient/use-relevant-activity';
-import { useAccountHelpers } from '@/features/send/components/recipient/use-shameful-account-helpers';
+import { useRecipientState } from '@/features/send/components/recipient/use-recipient-state';
+import { matchRelevantActivityResult } from '@/features/send/components/recipient/use-relevant-activity';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { type ZodSchema } from 'zod';
 
 import { type FungibleCryptoAssetInfo } from '@leather.io/models';
-import { type SheetRef } from '@leather.io/ui/native';
-import { assertExistence } from '@leather.io/utils';
 
 interface RecipientProps {
   value: string;
@@ -32,45 +22,33 @@ interface RecipientProps {
 }
 
 export const Recipient = memo(({ value, onChange, assetInfo, recipientSchema }: RecipientProps) => {
-  const sheetRef = useRef<SheetRef>(null);
-  const guardSheetRef = useRef<SheetRef>(null);
   const {
-    state: { accounts, selectedAccount },
-  } = useSendFlowContext();
-  assertExistence(selectedAccount, "'selectedAccount' is required in the recipient flow");
-  const { findAccountByAddress } = useAccountHelpers(accounts, assetInfo);
-  const relevantActivityResult = useRelevantActivity(selectedAccount, assetInfo);
-  const [guardResult, setGuardResult] = useState<GuardResult>({ severity: 'none' });
-  const evaluateRecipient = createRecipientEvaluator({
-    schema: recipientSchema,
-    canSelfSend: assetInfo.chain === 'bitcoin',
-    isNewAddress: (address: string) =>
-      isNewAddress({ address, findAccountByAddress, activity: relevantActivityResult.value }),
-  });
+    accounts,
+    selectedAccount,
+    relevantActivityResult,
+    confirmAddressSelection,
+    onSelectAddress,
+    guardResult,
+    guardSheetRef,
+    sheetRef,
+    openRecipientSheet,
+    openScannerSheet,
+    scannerSheetRef,
+    closeScannerSheet,
+    onQrScanned,
+  } = useRecipientState({ assetInfo, recipientSchema, onChange });
 
-  function confirmAddressSelection(address: string) {
-    onChange(address);
-    sheetRef.current?.dismiss();
-    guardSheetRef.current?.dismiss();
+  function onTogglePress() {
+    openRecipientSheet();
   }
 
-  async function handleSelectAddress(address: string) {
-    Keyboard.dismiss();
-
-    const evaluationResult = await evaluateRecipient(address);
-
-    if (evaluationResult.severity !== 'none') {
-      setGuardResult(evaluationResult);
-      guardSheetRef.current?.present();
-      return;
-    }
-
-    confirmAddressSelection(address);
+  function onQrButtonPress() {
+    openScannerSheet();
   }
 
   return (
     <>
-      <RecipientToggle value={value} onPress={() => sheetRef.current?.present()} invalid={false} />
+      <RecipientToggle value={value} onPress={onTogglePress} onQrButtonPress={onQrButtonPress} />
       <RecipientSheet sheetRef={sheetRef}>
         {matchRelevantActivityResult({
           result: relevantActivityResult,
@@ -78,16 +56,20 @@ export const Recipient = memo(({ value, onChange, assetInfo, recipientSchema }: 
           error: () => <RecipientSelectorError />,
           success: data => (
             <RecipientSelector
+              onQrButtonPress={onQrButtonPress}
               assetInfo={assetInfo}
               activity={data}
               accounts={accounts}
               selectedAccount={selectedAccount}
-              onSelectAddress={handleSelectAddress}
+              onSelectAddress={onSelectAddress}
               recipientSchema={recipientSchema}
             />
           ),
         })}
       </RecipientSheet>
+      <RecipientQrSheet sheetRef={scannerSheetRef}>
+        <RecipientQrScanner onClose={closeScannerSheet} onScanned={onQrScanned} />
+      </RecipientQrSheet>
       <RecipientGuardSheet
         sheetRef={guardSheetRef}
         config={guardResult}

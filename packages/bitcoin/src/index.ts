@@ -1,3 +1,4 @@
+export * from './bip21/bip21';
 export * from './bip322/bip322-utils';
 export * from './bip322/sign-message-bip322-bitcoinjs';
 

@@ -16,17 +16,20 @@ import {
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { type Account } from '@/store/accounts/accounts';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
+import { t } from '@lingui/macro';
 import { type ZodSchema } from 'zod';
 
 import { type FungibleCryptoAssetInfo, type SendAssetActivity } from '@leather.io/models';
+import { Box, IconButton, QrCodeIcon } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
-  onSelectAddress(address: string): void;
   activity: SendAssetActivity[];
   accounts: Account[];
   selectedAccount: Account;
   recipientSchema: ZodSchema;
   assetInfo: FungibleCryptoAssetInfo;
+  onSelectAddress(address: string): void;
+  onQrButtonPress(): void;
 }
 
 export function RecipientSelector({
@@ -36,6 +39,7 @@ export function RecipientSelector({
   recipientSchema,
   assetInfo,
   onSelectAddress,
+  onQrButtonPress,
 }: RecipientSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const recipientSuggestions = useRecipientSuggestions({
@@ -52,7 +56,23 @@ export function RecipientSelector({
   return (
     <>
       <RecipientSelectorHeader>
-        <RecipientInput value={searchTerm} onChange={setSearchTerm} />
+        <Box>
+          <RecipientInput value={searchTerm} onChange={setSearchTerm} />
+          {searchTerm.length === 0 && (
+            <IconButton
+              label={t({
+                id: 'send-form.recipient.qr_button',
+                message: 'Scan a QR code',
+              })}
+              position="absolute"
+              top={12}
+              right={8}
+              hitSlop={8}
+              onPress={onQrButtonPress}
+              icon={<QrCodeIcon />}
+            />
+          )}
+        </Box>
       </RecipientSelectorHeader>
       {matchSuggestionsResult({
         query: recipientSuggestions,

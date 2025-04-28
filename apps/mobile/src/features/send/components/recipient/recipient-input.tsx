@@ -6,10 +6,9 @@ import { t } from '@lingui/macro';
 import {
   Box,
   CloseIcon,
-  Pressable,
+  IconButton,
   SearchIcon,
   UIBottomSheetTextInput,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 interface RecipientInputProps {
@@ -56,15 +55,17 @@ export function RecipientInput({
         />
       </Box>
       {value.length > 0 && (
-        <Pressable
-          pressEffects={legacyTouchablePressEffect}
+        <IconButton
+          label={t({
+            id: 'send-form.recipient.input.clear',
+            message: 'Clear search',
+          })}
           position="absolute"
-          right={16}
-          hitSlop={24}
+          right={8}
+          hitSlop={8}
           onPress={clearValue}
-        >
-          <CloseIcon variant="small" />
-        </Pressable>
+          icon={<CloseIcon variant="small" />}
+        />
       )}
     </Box>
   );
