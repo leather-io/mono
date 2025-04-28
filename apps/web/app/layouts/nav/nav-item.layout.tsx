@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import { NavLink } from 'react-router';
 
-import { styled } from 'leather-styles/jsx';
+import { Box, styled } from 'leather-styles/jsx';
 
 import { Flag } from '@leather.io/ui';
 
@@ -15,14 +15,18 @@ interface NavItemProps {
 export function NavItem({ children, icon, href }: NavItemProps) {
   const content = (
     <Flag
-      spacing="space.04"
-      img={icon}
+      spacing="space.03"
+      img={
+        <Box ml="1px" width="16px" height="16">
+          {icon}
+        </Box>
+      }
       userSelect="none"
       role="link"
       textStyle="label.02"
       pl="space.04"
       py="space.04"
-      lineHeight="1.12"
+      lineHeight="1.05"
       outline="none"
       _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ textDecoration: 'underline' }}

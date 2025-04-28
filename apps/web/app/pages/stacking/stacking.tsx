@@ -1,4 +1,4 @@
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
@@ -14,19 +14,10 @@ export function Stacking() {
     <Page>
       <Page.Header title="Stacking" />
 
-      <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
-        <Box flex={1}>
-          <Page.Title textStyle="heading.03" maxW="400px">
-            Earn yield from stacking on stacks
-          </Page.Title>
-        </Box>
-        <Box flex={1}>
-          <Page.Subtitle mt={['space.03', 'space.03', 0]}>
-            Earn yield from the native consensus mechanism of Stacks—the leading L2 for Bitcoin—by
-            either locking your STX via a pool or converting your STX to a liquid Stacking token.
-          </Page.Subtitle>
-        </Box>
-      </Flex>
+      <Page.Heading
+        title="Earn yield from stacking on Stacks"
+        subtitle="Earn yield from the native consensus mechanism of Stacks—the leading L2 for Bitcoin—by either locking your STX via a pool or converting your STX to a liquid Stacking token."
+      />
 
       <ApyRewardHeroCard
         apyRange="6–10%"

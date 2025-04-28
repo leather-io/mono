@@ -1,5 +1,5 @@
 import { css } from 'leather-styles/css';
-import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 
 import { SignInButton } from '../sign-in-button/sign-in-button';
@@ -12,6 +12,25 @@ export function Page(props: HTMLStyledProps<'div'>) {
 
 export function PageInset(props: HTMLStyledProps<'div'>) {
   return <styled.div className={insetPageMarginX} {...props} />;
+}
+
+interface PageHeadingProps {
+  title: string;
+  subtitle: string;
+}
+export function PageHeading({ title, subtitle }: PageHeadingProps) {
+  return (
+    <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
+      <Box flex={1}>
+        <Page.Title textStyle="heading.03" maxW="400px">
+          {title}
+        </Page.Title>
+      </Box>
+      <Box flex={1}>
+        <Page.Subtitle mt={['space.03', 'space.03', 0]}>{subtitle}</Page.Subtitle>
+      </Box>
+    </Flex>
+  );
 }
 
 interface PageHeaderProps {
@@ -59,6 +78,7 @@ export function PageSubtitle({ ...props }: HTMLStyledProps<'h3'>) {
 
 Page.Divider = PageDivider;
 Page.Header = PageHeader;
+Page.Heading = PageHeading;
 Page.Title = PageTitle;
 Page.Subtitle = PageSubtitle;
 Page.Inset = PageInset;

@@ -12,7 +12,7 @@ pnpm install
 
 ### Development
 
-Start the development server with HMR:
+Start the development server:
 
 ```bash
 pnpm dev
@@ -22,4 +22,4 @@ Your application will be available at `http://localhost:5173`.
 
 ## Deployment
 
-TBD
+Site is deployed on Cloudflare workers. See [deployment workflow](../../../.github/workflows/deploy-web.yml) for details.

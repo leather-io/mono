@@ -8,14 +8,7 @@ import { SbtcMonogramIcon } from '~/components/icons/sbtc-monogram-icon';
 import { StackingIcon } from '~/components/icons/stacking-icon';
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
-import {
-  BarsTwoIcon,
-  GlassesIcon,
-  IconButton,
-  NewspaperIcon,
-  SupportIcon,
-  TerminalIcon,
-} from '@leather.io/ui';
+import { BarsTwoIcon, GridIcon, IconButton, SupportIcon, WalletIcon } from '@leather.io/ui';
 
 import { NavItem } from './nav-item.layout';
 
@@ -30,20 +23,20 @@ export function NavContents() {
         sBTC
       </NavItem>
 
-      <NavItem href={externalLeatherNavigator.blog} icon={<NewspaperIcon variant="small" />}>
+      <NavItem href={externalLeatherNavigator.wallet} icon={<WalletIcon variant="small" />}>
         Wallet
       </NavItem>
-      <NavItem href={externalLeatherNavigator.guides} icon={<GlassesIcon variant="small" />}>
+      <NavItem href={externalLeatherNavigator.apps} icon={<GridIcon variant="small" />}>
         Apps
       </NavItem>
 
       <styled.div mt="auto" mb={[null, null, 'space.06']}>
-        <NavItem href={externalLeatherNavigator.docs} icon={<TerminalIcon variant="small" />}>
+        {/* <NavItem href={externalLeatherNavigator.docs} icon={<TerminalIcon variant="small" />}>
           Developers
-        </NavItem>
+        </NavItem> */}
 
         <NavItem href={externalLeatherNavigator.support} icon={<SupportIcon variant="small" />}>
-          Support
+          Help
         </NavItem>
       </styled.div>
     </>
@@ -72,13 +65,16 @@ export function Nav() {
         minHeight="fit-content"
       >
         <Flex>
-          <styled.a href={externalLeatherNavigator.home}>
+          <styled.a
+            href={externalLeatherNavigator.home}
+            // To baseline align with the text in the header
+            mt="2px"
+            p="space.04"
+            display="inline-block"
+            mb="41px"
+          >
             <styled.svg
               flexShrink={0}
-              m="space.04"
-              // To baseline align with the text in the header
-              mt="17px"
-              mb="57px"
               xmlns="http://www.w3.org/2000/svg"
               width="83"
               height="18"

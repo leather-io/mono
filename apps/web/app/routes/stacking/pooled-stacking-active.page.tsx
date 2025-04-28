@@ -2,7 +2,7 @@ import { StackingClientProvider } from '~/features/stacking/providers/stacking-c
 import { poolSlugSchema } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { PooledStackingActive } from '~/pages/stacking/pooled-stacking-active';
 
-import { Route } from './+types/pooled-stacking-active';
+import { Route } from './+types/pooled-stacking-active.page';
 
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: poolSlug } = poolSlugSchema.safeParse(params.slug);

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { styled } from 'leather-styles/jsx';
 import { AlexLogo } from '~/components/icons/alex-logo';
 import { BitflowLogo } from '~/components/icons/bitflow-logo';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
@@ -131,20 +131,10 @@ export function SbtcRewards() {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <Flex mt="space.05" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
-          <Box flex={1}>
-            <Page.Title textStyle="heading.03" maxW="400px">
-              Earn yield with bitcoin on stacks
-            </Page.Title>
-          </Box>
-          <Box flex={1}>
-            <Page.Subtitle mt={['space.03', 'space.03', 0]}>
-              Acquire BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield
-              from a variety of reward protocols without sacrificing Bitcoin’s underlying security
-              and self-sovereignty.
-            </Page.Subtitle>
-          </Box>
-        </Flex>
+        <Page.Heading
+          title="Earn yield with Bitcoin on Stacks"
+          subtitle="Acquire BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield from a variety of reward protocols without sacrificing Bitcoin’s underlying security and self-sovereignty."
+        />
 
         <ApyRewardHeroCard apyRange="5–8%" mt="space.05" />
 

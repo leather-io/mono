@@ -2,7 +2,7 @@ import { StackingClientProvider } from '~/features/stacking/providers/stacking-c
 import { protocolSlugSchema } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { LiquidStackingActive } from '~/pages/stacking/liquid-stacking-active';
 
-import { Route } from './+types/liquid-stacking-active';
+import { Route } from './+types/liquid-stacking-active.page';
 
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: protocolSlug } = protocolSlugSchema.safeParse(params.slug);
