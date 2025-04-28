@@ -92,19 +92,11 @@ export function StxForm({
       <Controller
         control={form.control}
         name="recipient"
-        render={({
-          field: { value, onChange, onBlur },
-          fieldState: { invalid, isDirty, isTouched, error },
-        }) => (
+        render={({ field: { value, onChange } }) => (
           <Recipient
             assetInfo={assetInfo}
             value={value}
             onChange={onChange}
-            onBlur={onBlur}
-            invalid={invalid}
-            isDirty={isDirty}
-            isTouched={isTouched}
-            error={error}
             recipientSchema={schema.shape.recipient}
           />
         )}

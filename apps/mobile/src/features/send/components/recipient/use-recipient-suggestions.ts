@@ -1,10 +1,10 @@
-import { buildRecipientSuggestions } from '@/features/send/components/recipient/v2/build-recipient-suggestions';
-import { RecipientSection } from '@/features/send/components/recipient/v2/recipient.types';
+import { buildRecipientSuggestions } from '@/features/send/components/recipient/build-recipient-suggestions';
+import { RecipientSection } from '@/features/send/components/recipient/recipient.types';
 import {
   getLookupHelperByChain,
   recipientSchemaResultContainsError,
-} from '@/features/send/components/recipient/v2/recipient.utils';
-import { useAccountHelpers } from '@/features/send/components/recipient/v2/use-shameful-account-helpers';
+} from '@/features/send/components/recipient/recipient.utils';
+import { useAccountHelpers } from '@/features/send/components/recipient/use-shameful-account-helpers';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useBnsV2Client } from '@/queries/stacks/bns/bns-v2-client';
 import { Account } from '@/store/accounts/accounts';

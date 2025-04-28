@@ -4,11 +4,11 @@ import {
   RecipientSection,
   RecipientSectionId,
   type RecipientSuggestionEntry,
-} from '@/features/send/components/recipient/v2/recipient.types';
+} from '@/features/send/components/recipient/recipient.types';
 import {
   isBnsLookupCandidate,
   normalizeSearchTerm,
-} from '@/features/send/components/recipient/v2/recipient.utils';
+} from '@/features/send/components/recipient/recipient.utils';
 import { type Account } from '@/store/accounts/accounts';
 import { filter, isShallowEqual, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 

@@ -6,7 +6,7 @@ import {
   ExternalRecipientSuggestionEntry,
   InternalRecipientSuggestionEntry,
   RecipientSuggestionEntry,
-} from '@/features/send/components/recipient/v2/recipient.types';
+} from '@/features/send/components/recipient/recipient.types';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
 import dayjs from 'dayjs';
 

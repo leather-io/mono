@@ -1,7 +1,7 @@
 import {
   BuildRecipientSuggestionsParams,
   buildRecipientSuggestions,
-} from '@/features/send/components/recipient/v2/build-recipient-suggestions';
+} from '@/features/send/components/recipient/build-recipient-suggestions';
 import { Account, deserializeAccountId } from '@/store/accounts/accounts';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
