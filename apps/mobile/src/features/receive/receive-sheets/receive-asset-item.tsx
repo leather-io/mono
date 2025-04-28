@@ -1,5 +1,6 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
 import { TestId } from '@/shared/test-id';
+import { t } from '@lingui/macro';
 
 import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
 
@@ -40,7 +41,15 @@ export function ReceiveAssetItem({
         <Cell.Label variant="secondary">{address}</Cell.Label>
       </Cell.Content>
       <Cell.Aside>
-        <IconButton icon={<CopyIcon />} onPress={onCopy} />
+        <IconButton
+          label={t({
+            id: 'receive.copy_address_label',
+            message: 'Copy address',
+          })}
+          mr="-2"
+          icon={<CopyIcon />}
+          onPress={onCopy}
+        />
       </Cell.Aside>
     </Cell.Root>
   );

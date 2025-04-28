@@ -1,16 +1,16 @@
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
+import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
 import {
   Box,
   Eye1ClosedIcon,
   Eye1Icon,
-  Pressable,
+  IconButton,
   PulseIcon,
   SettingsGearIcon,
-  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 export function HeaderOptions() {
@@ -23,31 +23,45 @@ export function HeaderOptions() {
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
-      <Pressable
-        p="2"
+      <IconButton
+        label={getPrivacyLabel(privacyModePreference)}
+        icon={privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
         onPress={() => onUpdatePrivacyMode()}
         testID={TestId.homePrivacyButton}
-        pressEffects={legacyTouchablePressEffect}
-      >
-        {privacyModePreference === 'visible' ? <Eye1Icon /> : <Eye1ClosedIcon />}
-      </Pressable>
-      <Pressable
-        p="2"
+      />
+
+      <IconButton
+        label={t({
+          id: 'header.settings_label',
+          message: 'Settings',
+        })}
+        icon={<SettingsGearIcon />}
         onPress={() => router.navigate(AppRoutes.Settings)}
         testID={TestId.homeSettingsButton}
-        pressEffects={legacyTouchablePressEffect}
-      >
-        <SettingsGearIcon />
-      </Pressable>
+      />
 
-      <Pressable
-        p="2"
+      <IconButton
+        label={t({
+          id: 'header.activity_label',
+          message: 'Activity',
+        })}
+        icon={<PulseIcon />}
         onPress={() => router.navigate(AppRoutes.Activity)}
         testID={TestId.homeActivityButton}
-        pressEffects={legacyTouchablePressEffect}
-      >
-        <PulseIcon />
-      </Pressable>
+      />
     </Box>
   );
+}
+
+function getPrivacyLabel(privacyModePreference: 'visible' | 'hidden') {
+  return {
+    visible: t({
+      id: 'header.privacy_label_hide',
+      message: 'Hide balances',
+    }),
+    hidden: t({
+      id: 'header.privacy_label_show',
+      message: 'Show balances',
+    }),
+  }[privacyModePreference];
 }

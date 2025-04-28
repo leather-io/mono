@@ -79,7 +79,15 @@ export function ReceiveAssetDetails() {
               <AddressDisplayer address={address} />
             </Cell.Content>
             <Cell.Aside>
-              <IconButton icon={<CopyIcon />} onPress={() => onCopyAddress(address)} />
+              <IconButton
+                label={t({
+                  id: 'receive.copy_address_label',
+                  message: 'Copy address',
+                })}
+                icon={<CopyIcon />}
+                mr="-2"
+                onPress={() => onCopyAddress(address)}
+              />
             </Cell.Aside>
           </Cell.Root>
         </Box>
