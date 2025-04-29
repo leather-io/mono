@@ -3,6 +3,7 @@ import { ReactElement } from 'react';
 import { styled } from 'leather-styles/jsx';
 import { AlexLogo } from '~/components/icons/alex-logo';
 import { BitflowLogo } from '~/components/icons/bitflow-logo';
+import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { VelarLogo } from '~/components/icons/velar-logo';
 import { ZestLogo } from '~/components/icons/zest-logo';
@@ -156,7 +157,7 @@ export function SbtcRewards() {
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="xs" fullWidth onClick={() => openExternalLink(pool.url)}>
-                  Explore
+                  Explore <RotatedArrow />
                 </Button>
               }
               key={pool.id}
