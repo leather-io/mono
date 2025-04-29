@@ -22,7 +22,7 @@ export function ExternalLink({ href, withIcon, children, ...props }: ExternalLin
       {...props}
     >
       {children}
-      {withIcon && <RotatedArrow />}
+      {withIcon && <RotatedArrow ml="space.01" />}
     </styled.a>
   );
 }
