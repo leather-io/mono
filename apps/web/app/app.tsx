@@ -6,6 +6,8 @@ import { Flex, styled } from 'leather-styles/jsx';
 import type { LeatherProvider } from '@leather.io/rpc';
 import { Tooltip } from '@leather.io/ui';
 
+import { ClientHintCheck } from './components/client-hints';
+import { useTheme } from './helpers/theme-switcher';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
@@ -17,9 +19,12 @@ declare global {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const theme = useTheme();
+  console.log('Theme:', theme);
   return (
-    <html lang="en">
+    <html lang="en" className={theme} style={{ colorScheme: theme }}>
       <head>
+        <ClientHintCheck />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
