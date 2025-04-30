@@ -13,7 +13,6 @@ import type { SettingsService } from '../../settings/settings.service';
 import {
   bisBrc20MarketInfoSchema,
   bisInscriptionSchema,
-  bisRuneTickerInfoSchema,
   bisRuneValidOutputsSchema,
 } from './best-in-slot-api.schema';
 import { getBestInSlotBasePath } from './best-in-slot-api.utils';
@@ -23,7 +22,6 @@ interface BestInSlotApiResponse<T> {
   data: T;
 }
 
-export type BisRuneTickerInfo = z.infer<typeof bisRuneTickerInfoSchema>;
 export type BisBrc20MarketInfo = z.infer<typeof bisBrc20MarketInfoSchema>;
 export type BisInscription = z.infer<typeof bisInscriptionSchema>;
 export type BisRuneValidOutput = z.infer<typeof bisRuneValidOutputsSchema>;
@@ -58,31 +56,6 @@ export class BestInSlotApiClient {
         return bisBrc20MarketInfoSchema.parse(res.data.data);
       },
       { ttl: HttpCacheTimeMs.twoMinutes }
-    );
-  }
-
-  public async fetchRuneTickerInfo(
-    runeName: string,
-    signal?: AbortSignal
-  ): Promise<BisRuneTickerInfo> {
-    const network = bitcoinNetworkModeToCoreNetworkMode(
-      selectBitcoinNetworkMode(this.settingsService.getSettings())
-    );
-    return await this.cache.fetchWithCache(
-      ['best-in-slot-rune-ticker-info', network, runeName],
-      async () => {
-        const res = await this.limiter.add(
-          RateLimiterType.BestInSlot,
-          () =>
-            axios.get<BestInSlotApiResponse<BisRuneTickerInfo>>(
-              `${getBestInSlotBasePath(network)}/runes/ticker_info?rune_name=${runeName}`,
-              { signal }
-            ),
-          { signal }
-        );
-        return bisRuneTickerInfoSchema.parse(res.data.data);
-      },
-      { ttl: HttpCacheTimeMs.oneMonth }
     );
   }
 

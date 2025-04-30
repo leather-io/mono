@@ -9,12 +9,10 @@ import {
 } from '@leather.io/models';
 import { getTicker, isUndefined } from '@leather.io/utils';
 
-import {
-  HiroFtMetadataResponse,
-  HiroNftMetadataResponse,
-} from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { HiroNftMetadataResponse } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 
-export function isTransferableSip10Token(token: Partial<HiroFtMetadataResponse>) {
+export function isTransferableSip10Token(token: LeatherApiSip10Token) {
   return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);
 }
 
@@ -72,24 +70,21 @@ export function createSip9CryptoAssetInfo(
   };
 }
 
-export function createSip10CryptoAssetInfo(
-  assetIdentifier: string,
-  metadata: HiroFtMetadataResponse
-): Sip10CryptoAssetInfo {
-  const assetName = getAssetNameFromIdentifier(assetIdentifier);
-  const name = metadata.name ?? assetName;
+export function createSip10CryptoAssetInfo(sip10Token: LeatherApiSip10Token): Sip10CryptoAssetInfo {
+  const assetName = getAssetNameFromIdentifier(sip10Token.assetIdentifier);
+  const name = sip10Token.name ?? assetName;
 
   return {
     chain: CryptoAssetChains.stacks,
     category: CryptoAssetCategories.fungible,
     protocol: CryptoAssetProtocols.sip10,
-    canTransfer: isTransferableSip10Token(metadata),
-    assetId: assetIdentifier,
-    contractId: getContractPrincipalFromAssetIdentifier(assetIdentifier),
-    decimals: metadata.decimals ?? 0,
-    hasMemo: isTransferableSip10Token(metadata),
-    imageCanonicalUri: metadata.image_canonical_uri ?? '',
+    canTransfer: isTransferableSip10Token(sip10Token),
+    assetId: sip10Token.assetIdentifier,
+    contractId: sip10Token.principal,
+    decimals: sip10Token.decimals ?? 0,
+    hasMemo: isTransferableSip10Token(sip10Token),
+    imageCanonicalUri: sip10Token.image ?? '',
     name,
-    symbol: metadata.symbol || getTicker(name),
+    symbol: sip10Token.symbol || getTicker(name),
   };
 }

@@ -61,11 +61,11 @@ export class MarketDataService {
     currency: NativeCryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const prices = await this.leatherApiClient.fetchCryptoPrices(signal);
+    const priceMap = await this.leatherApiClient.fetchNativeTokenPriceMap(signal);
     return await this.buildFiatCurrencyPreferenceMarketData(
       currency.symbol,
       convertAmountToFractionalUnit(
-        initBigNumber(prices.prices[currency.symbol]),
+        initBigNumber(priceMap[currency.symbol].price),
         currencyDecimalsMap.USD
       )
     );
@@ -78,13 +78,14 @@ export class MarketDataService {
     asset: Sip10CryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const tokenPrices = await this.leatherApiClient.fetchSip10Prices(signal);
-    const tokenPriceMatch = tokenPrices.prices.find(price => price.principal === asset.contractId);
-    if (!tokenPriceMatch)
+    const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap(signal);
+    const tokenPriceMatch = tokenPriceMap[asset.contractId];
+    if (!tokenPriceMatch) {
       return createMarketData(
         createMarketPair(asset.symbol, this.settingsService.getSettings().fiatCurrency),
         createMoney(0, this.settingsService.getSettings().fiatCurrency)
       );
+    }
 
     const assetPrice = convertAmountToFractionalUnit(
       initBigNumber(tokenPriceMatch.price),
@@ -101,19 +102,15 @@ export class MarketDataService {
     asset: RuneCryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const btcMarketData = await this.getNativeAssetMarketData(btcCryptoAsset, signal);
-    const runeTickerInfo = await this.bestInSlotApiClient.fetchRuneTickerInfo(
-      asset.runeName,
-      signal
-    );
-    const runeFiatPrice = baseCurrencyAmountInQuote(
-      createMoney(initBigNumber(runeTickerInfo.avg_unit_price_in_sats ?? 0), 'BTC'),
-      btcMarketData
-    );
+    const runePriceMap = await this.leatherApiClient.fetchRunePriceMap(signal);
+
+    const runePrice = runePriceMap[asset.runeName]
+      ? runePriceMap[asset.runeName]
+      : await this.leatherApiClient.fetchRunePrice(asset.runeName, signal);
 
     return await this.buildFiatCurrencyPreferenceMarketData(
-      runeTickerInfo.rune_name,
-      runeFiatPrice.amount
+      asset.runeName,
+      initBigNumber(runePrice.price)
     );
   }
 

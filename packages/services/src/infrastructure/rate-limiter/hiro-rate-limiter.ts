@@ -4,8 +4,8 @@ import { PriorityQueue } from './priority-queue';
 import { RateLimiterQueueOptions } from './rate-limiter.service';
 
 export const hiroStacksApiLimiterSettings: RateLimiterQueueOptions = {
-  interval: 1200,
-  intervalCap: 6,
+  interval: 1000,
+  intervalCap: 10,
   timeout: 60000,
 };
 

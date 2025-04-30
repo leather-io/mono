@@ -1,6 +1,6 @@
 import { CryptoAssetCategories, CryptoAssetChains, CryptoAssetProtocols } from '@leather.io/models';
 
-import { HiroFtMetadataResponse } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 import {
   createSip10CryptoAssetInfo,
   getAddressFromAssetIdentifier,
@@ -10,25 +10,16 @@ import {
 } from './stacks-asset.utils';
 
 describe('isTransferableSip10Token', () => {
-  let mockTokenMetadata: Partial<HiroFtMetadataResponse>;
+  let mockTokenMetadata: LeatherApiSip10Token;
   beforeEach(() => {
     mockTokenMetadata = {
       decimals: 6,
       name: 'Mock Token',
       symbol: 'MOCK',
+      assetIdentifier: 'assetIdentifier',
+      image: 'image',
+      principal: 'principal',
     };
-  });
-  it('returns false when decimals field is missing', () => {
-    delete mockTokenMetadata.decimals;
-    expect(isTransferableSip10Token(mockTokenMetadata)).toBe(false);
-  });
-  it('returns false when name field is missing', () => {
-    delete mockTokenMetadata.name;
-    expect(isTransferableSip10Token(mockTokenMetadata)).toBe(false);
-  });
-  it('returns false when symbol field is missing', () => {
-    delete mockTokenMetadata.symbol;
-    expect(isTransferableSip10Token(mockTokenMetadata)).toBe(false);
   });
   it('returns true when metadata all required fields are defined', () => {
     expect(isTransferableSip10Token(mockTokenMetadata)).toBe(true);
@@ -62,20 +53,21 @@ describe('getAddressFromAssetIdentifier', () => {
 
 describe('createSip10CryptoAssetInfo', () => {
   const assetIdentifier = 'SP123.token-contract::TOKEN';
-  let metadata: HiroFtMetadataResponse;
+  let sip10Token: LeatherApiSip10Token;
 
   beforeEach(() => {
-    metadata = {
+    sip10Token = {
+      assetIdentifier,
       name: 'Test Token',
       symbol: 'TEST',
+      principal: 'SP123.token-contract',
       decimals: 6,
-      image_canonical_uri: 'https://test.com/image.png',
-      total_supply: '1000000',
-    } as HiroFtMetadataResponse;
+      image: 'https://test.com/image.png',
+    };
   });
 
   it('creates Sip10CryptoAssetInfo instance using provided data', () => {
-    const asset = createSip10CryptoAssetInfo(assetIdentifier, metadata);
+    const asset = createSip10CryptoAssetInfo(sip10Token);
     expect(asset).toEqual({
       chain: CryptoAssetChains.stacks,
       category: CryptoAssetCategories.fungible,
@@ -89,11 +81,5 @@ describe('createSip10CryptoAssetInfo', () => {
       name: 'Test Token',
       symbol: 'TEST',
     });
-  });
-
-  it('uses asset name when metadata name is missing', () => {
-    delete metadata.name;
-    const result = createSip10CryptoAssetInfo(assetIdentifier, metadata);
-    expect(result.name).toBe('TOKEN');
   });
 });
