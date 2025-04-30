@@ -11,7 +11,7 @@ import {
   Transaction,
   TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
@@ -52,11 +52,20 @@ export type HiroNftHolding = NonFungibleTokenHolding;
 
 @injectable()
 export class HiroStacksApiClient {
+  private readonly _axios: AxiosInstance;
+
   constructor(
     @inject(Types.CacheService) private readonly cache: HttpCacheService,
     @inject(Types.SettingsService) private readonly settings: SettingsService,
     private readonly limiter: RateLimiterService
-  ) {}
+  ) {
+    this._axios = axios.create({
+      headers: {
+        'X-Partner': 'Leather',
+      },
+      timeout: 30000,
+    });
+  }
 
   public async getAddressBalances(
     address: string,
@@ -72,9 +81,11 @@ export class HiroStacksApiClient {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<HiroAddressBalanceResponse>(
+            this._axios.get<HiroAddressBalanceResponse>(
               `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/balances`,
-              { signal }
+              {
+                signal,
+              }
             ),
           {
             priority: hiroApiRequestsPriorityLevels.getAccountBalance,
@@ -108,7 +119,7 @@ export class HiroStacksApiClient {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<HiroAddressTransactionsResponse>(
+            this._axios.get<HiroAddressTransactionsResponse>(
               `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/addresses/${address}/transactions?${pageParams.toString()}`,
               { signal }
             ),
@@ -161,7 +172,7 @@ export class HiroStacksApiClient {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<HiroTransactionEventsResponse>(
+            this._axios.get<HiroTransactionEventsResponse>(
               `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/assets?${pageParams.toString()}`,
               { signal }
             ),
@@ -205,7 +216,7 @@ export class HiroStacksApiClient {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<MempoolTransactionListResponse>(
+            this._axios.get<MempoolTransactionListResponse>(
               `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`,
               { signal }
             ),
@@ -218,36 +229,6 @@ export class HiroStacksApiClient {
         return res.data;
       },
       { ttl: HttpCacheTimeMs.fiveSeconds }
-    );
-  }
-
-  public async getFungibleTokenMetadata(
-    principal: string,
-    signal?: AbortSignal
-  ): Promise<HiroFtMetadataResponse> {
-    return await this.cache.fetchWithCache(
-      [
-        'hiro-stacks-get-ft-token-metadata',
-        principal,
-        selectStacksChainId(this.settings.getSettings()),
-      ],
-      async () => {
-        const res = await this.limiter.add(
-          RateLimiterType.HiroStacks,
-          () =>
-            axios.get<HiroFtMetadataResponse>(
-              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/ft/${principal}`,
-              { signal }
-            ),
-          {
-            priority: hiroApiRequestsPriorityLevels.getFtMetadata,
-            signal,
-            throwOnTimeout: true,
-          }
-        );
-        return res.data;
-      },
-      { ttl: HttpCacheTimeMs.infinity }
     );
   }
 
@@ -266,7 +247,7 @@ export class HiroStacksApiClient {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<HiroNftMetadataResponse>(
+            this._axios.get<HiroNftMetadataResponse>(
               `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
               { signal }
             ),
@@ -296,7 +277,7 @@ export class HiroStacksApiClient {
         const res = await this.limiter.add(
           RateLimiterType.HiroStacks,
           () =>
-            axios.get<NonFungibleTokenHoldingsList>(
+            this._axios.get<NonFungibleTokenHoldingsList>(
               `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?principal=${principal}&${pageParams.toString()}`,
               { signal }
             ),

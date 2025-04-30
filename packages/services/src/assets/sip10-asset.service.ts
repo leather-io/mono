@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 
 import { Sip10CryptoAssetInfo } from '@leather.io/models';
 
-import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import {
   createSip10CryptoAssetInfo,
   getContractPrincipalFromAssetIdentifier,
@@ -10,7 +10,7 @@ import {
 
 @injectable()
 export class Sip10AssetService {
-  constructor(private readonly stacksApiClient: HiroStacksApiClient) {}
+  constructor(private readonly leatherApiClient: LeatherApiClient) {}
   /**
    * Gets full asset information for given SIP10 identifier.
    * Expected identifier format: \<address\>.\<contract-name\>::\<asset-name\>
@@ -20,7 +20,10 @@ export class Sip10AssetService {
     signal?: AbortSignal
   ): Promise<Sip10CryptoAssetInfo> {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
-    const metadata = await this.stacksApiClient.getFungibleTokenMetadata(principal, signal);
-    return createSip10CryptoAssetInfo(assetIdentifier, metadata);
+    const tokenMap = await this.leatherApiClient.fetchSip10TokenMap(signal);
+    const sip10Token = tokenMap[principal]
+      ? { ...tokenMap[principal], principal }
+      : await this.leatherApiClient.fetchSip10Token(principal, signal);
+    return createSip10CryptoAssetInfo(sip10Token);
   }
 }

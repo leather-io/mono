@@ -22,7 +22,12 @@ export function PageLayout({ children }: HasChildren) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    void queryClient.invalidateQueries();
+    void queryClient.invalidateQueries({
+      predicate: query =>
+        query.queryKey[0] !== 'hiro-stacks-get-nft-token-metadata' &&
+        query.queryKey[0] !== 'leather-api-rune' &&
+        query.queryKey[0] !== 'leather-api-sip10-token',
+    });
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
