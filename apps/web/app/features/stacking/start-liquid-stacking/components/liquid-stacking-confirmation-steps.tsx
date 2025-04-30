@@ -12,9 +12,11 @@ import { stxToMicroStx } from '@leather.io/utils';
 
 export interface LiquidStackingConfirmationStepsProps {
   stackingAmount: number;
-  confirmationState: Record<
-    LiquidStackingConfirmationStepId,
-    ConfirmationStep<LiquidStackingConfirmationStepId>['state']
+  confirmationState: Partial<
+    Record<
+      LiquidStackingConfirmationStepId,
+      ConfirmationStep<LiquidStackingConfirmationStepId>['state']
+    >
   >;
   onSubmit: (confirmation: LiquidStackingConfirmationStepId) => void | Promise<void>;
 }
@@ -25,22 +27,23 @@ export function LiquidStackingConfirmationSteps({
   confirmationState,
 }: LiquidStackingConfirmationStepsProps) {
   const confirmationSteps = useMemo<ConfirmationStep<LiquidStackingConfirmationStepId>[]>(
-    () => [
-      {
-        id: 'terms',
-        text: 'I have read and accepted the protocol’s terms and conditions',
-        actionText: 'Confirm',
-        state: confirmationState['terms'],
-        onClick: () => onSubmit('terms'),
-      },
-      {
-        id: 'depositStx',
-        text: 'Confirm and start liquid stacking',
-        actionText: 'Confirm',
-        state: confirmationState['depositStx'],
-        onClick: () => onSubmit('depositStx'),
-      },
-    ],
+    () =>
+      [
+        confirmationState['terms'] && {
+          id: 'terms',
+          text: 'I have read and accepted the protocol’s terms and conditions',
+          actionText: 'Confirm',
+          state: confirmationState['terms'],
+          onClick: () => onSubmit('terms'),
+        },
+        confirmationState['depositStx'] && {
+          id: 'depositStx',
+          text: 'Confirm and start liquid stacking',
+          actionText: 'Confirm',
+          state: confirmationState['depositStx'],
+          onClick: () => onSubmit('depositStx'),
+        },
+      ].filter(Boolean) as ConfirmationStep<LiquidStackingConfirmationStepId>[],
     [onSubmit, confirmationState]
   );
 

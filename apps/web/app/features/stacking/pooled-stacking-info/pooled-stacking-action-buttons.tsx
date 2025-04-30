@@ -34,7 +34,7 @@ export function PooledStackingActionButtons({ poolSlug }: PooledStackingActionBu
     });
   }
 
-  async function handleExtendStackingClick() {
+  async function handleIncreaseStackingClick() {
     return navigate(`/pooled-stacking/${poolSlug}`);
   }
 
@@ -43,7 +43,7 @@ export function PooledStackingActionButtons({ poolSlug }: PooledStackingActionBu
       <Button fullWidth variant="ghost" onClick={handleStopStackingClick} disabled={isPending}>
         Stop pooling
       </Button>
-      <Button fullWidth onClick={handleExtendStackingClick}>
+      <Button fullWidth onClick={handleIncreaseStackingClick}>
         Increase stacking
       </Button>
     </Flex>

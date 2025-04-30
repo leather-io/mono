@@ -9,6 +9,7 @@ export default [
   ...prefix('liquid-stacking/:slug', [
     index('routes/stacking/liquid-stacking.page.tsx'),
     route('active', 'routes/stacking/liquid-stacking-active.page.tsx'),
+    route('increase', 'routes/stacking/liquid-stacking-increase.page.tsx'),
   ]),
   route('sbtc', 'routes/sbtc.page.tsx'),
   route('*', 'routes/error-not-found.page.tsx'),

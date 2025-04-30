@@ -6,10 +6,14 @@ import {
   NetworkInstance,
   NetworkInstanceToPoxContractMap,
   Pool,
+  PoolIdToDisplayNameMap,
   PoolName,
+  PoolSlug,
+  PoolSlugToIdMap,
   PoxContractName,
   PoxContractType,
   WrapperPrincipal,
+  poolSlugSchema,
 } from './types-preset-pools';
 
 export function getNetworkInstance(network: StacksNetwork): NetworkInstance {
@@ -85,4 +89,17 @@ export function getPoxContractAddressAndName(
   poxContract: PoxContractName
 ) {
   return getPoxContract(networkInstance, poxContract).split('.');
+}
+
+export function getPoolByAddress(address: string) {
+  return Object.values(pools).find(pool => Object.values(pool.poolAddress ?? {}).includes(address));
+}
+
+export function getPoolSlugByPoolName(poolName: PoolName): PoolSlug | undefined {
+  const [poolId] =
+    Object.entries(PoolIdToDisplayNameMap).find(([, name]) => name === poolName) ?? [];
+  const [poolSlug] = Object.entries(PoolSlugToIdMap).find(([, name]) => name === poolId) ?? [];
+
+  const result = poolSlugSchema.safeParse(poolSlug);
+  return result.success ? result.data : undefined;
 }

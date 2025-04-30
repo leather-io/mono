@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { css } from 'leather-styles/css';
 import { Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
@@ -5,11 +7,14 @@ import { InfoGrid } from '~/components/info-grid/info-grid';
 import { useGetCoreInfoQuery, useGetStatusQuery } from '~/features/stacking/hooks/stacking.query';
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
-import { getPoolByAddress } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import {
+  getPoolByAddress,
+  getPoolSlugByPoolName,
+} from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
 import { ValueDisplayer } from '~/pages/sbtc-rewards/components/reward-value-displayer';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
-import { Spinner } from '@leather.io/ui';
+import { LoadingSpinner } from '@leather.io/ui';
 
 interface UserPositionsProps {
   stacksAddress: string;
@@ -29,7 +34,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
     getPoolAddressQuery.isLoading ||
     getPoolAddressQuery.isFetching
   ) {
-    return <Spinner />;
+    return <LoadingSpinner />;
   }
 
   const isError =
@@ -67,6 +72,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   }
 
   const pool = getPoolByAddress(poolAddress); // TODO: Detect custom pool
+  const poolSlug = pool ? getPoolSlugByPoolName(pool.name) : undefined;
 
   const delegationInfoDetails = delegationStatusQuery.data.delegated
     ? delegationStatusQuery.data.details
@@ -96,7 +102,15 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <VStack gap="space.05" alignItems="left" p="space.05">
             {pool ? pool.icon : <DummyIcon />}
-            <styled.h4 textStyle="label.01">{pool ? pool.name : 'Unknown pool'}</styled.h4>
+            {pool && poolSlug ? (
+              <Link to={`/pooled-stacking/${poolSlug}/active`} style={{ maxWidth: 'fit-content' }}>
+                <styled.h4 textStyle="label.01" borderBottom="1px solid">
+                  {pool.name}
+                </styled.h4>
+              </Link>
+            ) : (
+              <styled.h4 textStyle="label.01">Unknown pool</styled.h4>
+            )}
           </VStack>
         </InfoGrid.Cell>
         <InfoGrid.Cell>
