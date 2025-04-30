@@ -46,24 +46,22 @@ export function ActivityListItem({ activity }: ActivityCellProps) {
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">{formatActivityType(activity.type)}</Cell.Label>
-        <Cell.Label variant="secondary">
-          {dayjs(activity.timestamp * 1000).format('MMM D, YYYY')}
-        </Cell.Label>
+        <Cell.Label variant="secondary">{dayjs(activity.timestamp * 1000).fromNow()}</Cell.Label>
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          {value?.crypto ? (
+          {value?.fiat ? (
             <Balance
               variant="label02"
               operator={getBalanceOperator(activity)}
-              balance={value.crypto}
+              balance={value.fiat}
               color={getBalanceColor(activity)}
             />
           ) : undefined}
         </Cell.Label>
         <Cell.Label variant="secondary">
-          {value?.fiat ? (
-            <Balance variant="caption01" balance={value.fiat} color="ink.text-subdued" />
+          {value?.crypto ? (
+            <Balance variant="caption01" balance={value.crypto} color="ink.text-subdued" />
           ) : undefined}
         </Cell.Label>
       </Cell.Aside>
