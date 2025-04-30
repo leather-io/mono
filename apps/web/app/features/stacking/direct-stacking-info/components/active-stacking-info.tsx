@@ -2,6 +2,7 @@ import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Address } from '~/features/stacking/components/address';
+import { LiquidStackingActionButtons } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-action-buttons';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
@@ -12,7 +13,6 @@ import { Hr } from '@leather.io/ui';
 import { PendingStackExtendAlert } from '../../components/pending-stack-extend-alert';
 import { StackExtendInfo } from '../get-has-pending-stack-extend';
 import { StackIncreaseInfo } from '../get-has-pending-stack-increase';
-import { ActionButtonsRow } from './action-buttons-row';
 
 type ActiveStackerInfo = StackerInfo & {
   stacked: true;
@@ -98,7 +98,7 @@ export function ActiveStackingInfo({
                   <styled.p textStyle="label.02">Bitcoin address</styled.p>
                   <Address address={poxAddress} />
                 </Box>
-                <ActionButtonsRow protocolSlug={protocolSlug} />
+                <LiquidStackingActionButtons protocolSlug={protocolSlug} />
               </Box>
             </Box>
           </Flex>

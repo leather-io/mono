@@ -1,6 +1,6 @@
 import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 import { PendingStackExtendAlert } from '~/features/stacking/components/pending-stack-extend-alert';
-import { ActionButtonsRow } from '~/features/stacking/direct-stacking-info/components/action-buttons-row';
+import { LiquidStackingActionButtons } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-action-buttons';
 import { LiquidStackingInfoGrid } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-info-grid';
 import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
@@ -119,7 +119,7 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
           {protocol.icon}
           <styled.h4 textStyle="label.01">{protocol.name}</styled.h4>
         </VStack>
-        <ActionButtonsRow protocolSlug={protocolSlug} />
+        <LiquidStackingActionButtons protocolSlug={protocolSlug} />
       </HStack>
 
       <LiquidStackingInfoGrid

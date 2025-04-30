@@ -5,45 +5,54 @@ import { useNavigate } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
-import { Flex, Stack } from 'leather-styles/jsx';
+import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { STACKING_CONTRACT_CALL_TX_BYTES } from '~/constants/constants';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
-import { useGetSecondsUntilNextCycleQuery } from '~/features/stacking/hooks/stacking.query';
+import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
+import {
+  useGetAccountExtendedBalancesQuery,
+  useGetPoxInfoQuery,
+  useGetStatusQuery,
+} from '~/features/stacking/hooks/stacking.query';
+import {
+  IncreaseLiquidFormSchema,
+  createIncreaseLiquidMutationOptions,
+  getAvailableAmountUstx,
+} from '~/features/stacking/increase-liquid-stacking/utils/utils-increase-liquid-stacking';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import { ChooseLiquidStackingConditions } from '~/features/stacking/start-liquid-stacking/components/choose-liquid-stacking-conditions';
 import { LiquidStackingConfirmationSteps } from '~/features/stacking/start-liquid-stacking/components/liquid-stacking-confirmation-steps';
-import {
-  StackingLiquidFormSchema,
-  createValidationSchema,
-} from '~/features/stacking/start-liquid-stacking/utils/stacking-liquid-schema';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { createDepositStxMutationOptions } from '~/features/stacking/start-liquid-stacking/utils/utils-liquid-stacking-stx';
 import { leather } from '~/helpers/leather-sdk';
-import {
-  useStxAvailableUnlockedBalance,
-  useStxCryptoAssetBalance,
-} from '~/queries/balance/account-balance.hooks';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { microStxToStxRounded } from '~/utils/unit-convert';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
 import { StackingFormItemTitle } from '../components/stacking-form-item-title';
+import { useCalculateFee } from '../hooks/use-calculate-fee';
+import { getProtocolBySlug } from '../start-liquid-stacking/utils/utils-preset-protocols';
 import { ChoosePoolingAmount } from '../start-pooled-stacking/components/choose-pooling-amount';
-import { getProtocolBySlug } from './utils/utils-preset-protocols';
+import { createValidationSchema } from './utils/increase-liquid-schema';
 
 interface StartLiquidStackingProps {
   protocolSlug: ProtocolSlug;
 }
 
-const initialStackingFormValues: Partial<StackingLiquidFormSchema> = {
+const initialStackingFormValues: Partial<IncreaseLiquidFormSchema> = {
+  signerKey: '',
+  signerSignature: '',
+  maxAmount: '',
+  authId: '',
   // amount: '',
 };
 
-export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
+export function IncreaseLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
 
@@ -51,7 +60,7 @@ export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) 
     return 'You should connect STX wallet';
   }
 
-  return <StartLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
+  return <IncreaseLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
 }
 
 interface StartLiquidStackingLayoutProps {
@@ -59,68 +68,78 @@ interface StartLiquidStackingLayoutProps {
   client: StackingClient;
 }
 
-function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutProps) {
+function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStackingLayoutProps) {
   const { stacksAccount } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No stx address available');
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { networkInstance } = useStacksNetwork();
+  const { networkInstance, networkName } = useStacksNetwork();
   const navigate = useNavigate();
 
-  const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
+  const calcFee = useCalculateFee();
+  const transactionFeeUStx = calcFee(STACKING_CONTRACT_CALL_TX_BYTES);
 
-  const {
-    filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
-  } = useStxCryptoAssetBalance(stacksAccount.address);
-  const totalAvailableBalance = useStxAvailableUnlockedBalance(stacksAccount.address);
+  const getStatusQuery = useGetStatusQuery();
+  const getAccountExtendedBalancesQuery = useGetAccountExtendedBalancesQuery();
+  const { getHasPendingStackIncreaseQuery } = useGetHasPendingStackingTransactionQuery();
+  const getPoxInfoQuery = useGetPoxInfoQuery();
 
   const protocol = getProtocolBySlug(protocolSlug);
   const protocolStxAddress = protocol.protocolAddress?.[networkInstance];
 
+  const extendedStxBalances = getAccountExtendedBalancesQuery.data?.stx;
+  const availableBalanceUStx = extendedStxBalances
+    ? getAvailableAmountUstx(extendedStxBalances, getHasPendingStackIncreaseQuery.data)
+    : undefined;
+
   const schema = useMemo(
     () =>
       createValidationSchema({
-        protocolName: protocol.name,
-        availableBalance: totalAvailableBalance,
+        availableBalanceUStx,
+        transactionFeeUStx,
+        stackerInfo: getStatusQuery.data,
+        network: networkName,
+        rewardCycleId: getPoxInfoQuery.data?.reward_cycle_id,
       }),
-    [protocol.name, totalAvailableBalance]
+    [
+      availableBalanceUStx,
+      getPoxInfoQuery.data?.reward_cycle_id,
+      getStatusQuery.data,
+      networkName,
+      transactionFeeUStx,
+    ]
   );
 
   const {
-    data: depositStxResult,
-    mutateAsync: handleDepositStxSubmit,
-    isPending: handleDepositStxPending,
+    data: increaseLiquidResult,
+    mutateAsync: handleIncreaseLiquidSubmit,
+    isPending: handleIncreaseLiquidPending,
   } = useMutation(
-    createDepositStxMutationOptions({
+    createIncreaseLiquidMutationOptions({
       leather,
       network: networkInstance,
+      client,
     })
   );
 
-  const [termsConfirmed, setTermsConfirmed] = useState(false);
-
-  const formMethods = useForm<StackingLiquidFormSchema>({
+  const formMethods = useForm<IncreaseLiquidFormSchema>({
     mode: 'onTouched',
     defaultValues: {
       ...initialStackingFormValues,
+      increaseBy: availableBalanceUStx
+        ? microStxToStxRounded(availableBalanceUStx).toNumber()
+        : undefined,
     },
     resolver: zodResolver(schema),
   });
 
-  const handleDeposit = formMethods.handleSubmit(values => {
-    return handleDepositStxSubmit({
-      ...values,
-      stxAddress: stacksAccount.address,
-      protocolName: protocol.name,
-    }).then(() => {
-      return navigate(`/liquid-stacking/${protocolSlug}/active`);
-    });
-  });
-
-  const stackingAmount = formMethods.watch('amount');
-
-  if (getSecondsUntilNextCycleQuery.isLoading) {
+  if (
+    getStatusQuery.isLoading ||
+    getAccountExtendedBalancesQuery.isLoading ||
+    getHasPendingStackIncreaseQuery.isLoading ||
+    getPoxInfoQuery.isLoading
+  ) {
     return (
       <Flex height="100vh" width="100%">
         <LoadingSpinner />
@@ -128,13 +147,40 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
     );
   }
 
+  if (
+    getStatusQuery.isError ||
+    !getStatusQuery.data ||
+    getPoxInfoQuery.isError ||
+    !getPoxInfoQuery.data ||
+    getAccountExtendedBalancesQuery.isError ||
+    !getAccountExtendedBalancesQuery.data ||
+    getHasPendingStackIncreaseQuery.isError ||
+    getHasPendingStackIncreaseQuery.data === undefined ||
+    !client
+  ) {
+    const msg = 'Error while loading data, try reloading the page.';
+    // eslint-disable-next-line no-console
+    console.error(msg);
+    return (
+      <Flex height="100vh" width="100%">
+        <styled.p>{msg}</styled.p>
+      </Flex>
+    );
+  }
+
+  const handleIncreaseLiquid = formMethods.handleSubmit(values => {
+    return handleIncreaseLiquidSubmit({
+      ...values,
+    }).then(() => {
+      return navigate(`/liquid-stacking/${protocolSlug}/active`);
+    });
+  });
+
+  const increaseBy = formMethods.watch('increaseBy');
+
   function onSubmit(confirmation: LiquidStackingConfirmationStepId) {
-    if (confirmation === 'terms') {
-      setTermsConfirmed(v => !v);
-      return;
-    }
     if (confirmation === 'depositStx') {
-      return handleDeposit();
+      return handleIncreaseLiquid();
     }
 
     throw new Error(`Unknown confirmation type: ${confirmation}`);
@@ -151,10 +197,11 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 maxWidth={[null, null, '304px', 'none']}
               >
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" />
+                  <StackingFormItemTitle title="Adding amount" />
                   <ChoosePoolingAmount
-                    availableAmount={totalAvailableBalance.amount}
-                    isLoading={totalAvailableBalanceIsLoading}
+                    controlName="increaseBy"
+                    availableAmount={availableBalanceUStx}
+                    isLoading={getAccountExtendedBalancesQuery.isLoading}
                   />
                 </Stack>
 
@@ -196,18 +243,13 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
               <LiquidStackingConfirmationSteps
                 onSubmit={onSubmit}
                 confirmationState={{
-                  terms: {
-                    accepted: termsConfirmed,
-                    loading: false,
-                    visible: true,
-                  },
                   depositStx: {
-                    accepted: Boolean(depositStxResult),
-                    loading: handleDepositStxPending,
+                    accepted: Boolean(increaseLiquidResult),
+                    loading: handleIncreaseLiquidPending,
                     visible: true,
                   },
                 }}
-                stackingAmount={stackingAmount}
+                stackingAmount={increaseBy}
               />
             </StackingFormStepsPanel>
           }
@@ -218,18 +260,13 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
         <LiquidStackingConfirmationSteps
           onSubmit={onSubmit}
           confirmationState={{
-            terms: {
-              accepted: termsConfirmed,
-              loading: false,
-              visible: true,
-            },
             depositStx: {
-              accepted: Boolean(depositStxResult),
-              loading: handleDepositStxPending,
+              accepted: Boolean(increaseLiquidResult),
+              loading: handleIncreaseLiquidPending,
               visible: true,
             },
           }}
-          stackingAmount={stackingAmount}
+          stackingAmount={increaseBy}
         />
       </StartStackingDrawer>
     </>

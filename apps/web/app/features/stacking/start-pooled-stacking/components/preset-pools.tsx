@@ -125,10 +125,6 @@ export const pools: Record<PoolName, Pool> = {
   },
 };
 
-export function getPoolByAddress(address: string) {
-  return Object.values(pools).find(pool => Object.values(pool.poolAddress ?? {}).includes(address));
-}
-
 export interface PoolRewardProtocolInfo {
   id: string;
   url?: string;
