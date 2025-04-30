@@ -16,8 +16,24 @@ const requestHandler = createRequestHandler(
 
 export default {
   async fetch(request, env, ctx) {
-    return requestHandler(request, {
+    const resp = await requestHandler(request, {
       cloudflare: { env, ctx },
+    });
+
+    const headers = new Headers(resp.headers);
+    headers.set(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+    );
+    headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    headers.set('X-Content-Type-Options', 'nosniff');
+    headers.set('X-Frame-Options', 'DENY');
+    headers.set('Referrer-Policy', 'no-referrer');
+    headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+
+    return new Response(resp.body, {
+      ...resp,
+      headers,
     });
   },
 } satisfies ExportedHandler<Env>;
