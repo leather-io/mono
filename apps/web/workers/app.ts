@@ -26,8 +26,6 @@ export default {
       "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
     );
     headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
-    headers.set('X-Content-Type-Options', 'nosniff');
-    headers.set('X-Frame-Options', 'DENY');
     headers.set('Referrer-Policy', 'no-referrer');
     headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 
