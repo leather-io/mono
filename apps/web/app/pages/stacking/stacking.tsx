@@ -21,7 +21,7 @@ export function Stacking() {
 
       <ApyRewardHeroCard
         apyRange="6–10%"
-        backgroundImage="url('/images/orange-stacks-coins.png')"
+        backgroundImage="url('/images/orange-stacks-coins.webp')"
         backgroundRepeat="no-repeat"
         bgPosition="right"
       />
