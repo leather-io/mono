@@ -77,7 +77,7 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/panda-preset": "workspace:*",
     "@microsoft/api-extractor": "7.47.6",
-    "@pandacss/dev": "0.53.4",
+    "@pandacss/dev": "0.53.6",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@storybook/addon-actions": "8.3.2",
     "@storybook/addon-docs": "8.3.2",
