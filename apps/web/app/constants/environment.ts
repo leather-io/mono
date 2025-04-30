@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { z } from 'zod';
 
 // +-----------+------------+------------+--------------------+------------+
@@ -12,7 +11,6 @@ const envModeSchema = z.enum(['development', 'production']);
 type EnvMode = z.infer<typeof envModeSchema>;
 
 const MODE = envModeSchema.parse(import.meta.env.MODE);
-console.log('[MODE] ', MODE);
 
 type WhenEnvModeMap<T> = Record<EnvMode, T>;
 export function whenEnvMode<T>(envModeMap: WhenEnvModeMap<T>): T {
@@ -23,7 +21,6 @@ const envTargetSchema = z.enum(['development', 'branch', 'staging', 'production'
 type EnvTarget = z.infer<typeof envTargetSchema>;
 
 const TARGET = envTargetSchema.default('production').parse(import.meta.env.LEATHER_TARGET);
-console.log('[TARGET] ', TARGET);
 
 // New type for the map
 export type WhenEnvTargetMap<T> = Record<EnvTarget, T>;

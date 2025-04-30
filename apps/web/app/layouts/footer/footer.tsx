@@ -14,14 +14,14 @@ function AppFooter() {
             Discord
           </Footer.Link>
           <Footer.Link withIcon href="https://www.youtube.com/@Leather-io">
-            Youtube
+            YouTube
           </Footer.Link>
           <Footer.Link withIcon href="https://github.com/leather-io">
-            Github
+            GitHub
           </Footer.Link>
         </Footer.Column>
 
-        <Footer.Column title="Legal & Policies">
+        <Footer.Column title="Company">
           <Footer.Link href="https://leather.io/privacy-policy">Privacy Policy</Footer.Link>
           <Footer.Link href="https://leather.io/terms">Terms of Service</Footer.Link>
           <Footer.Link href="https://trustmachines.notion.site/Public-assets-00144dc5c69142199b00788ff61d721c">
@@ -30,12 +30,13 @@ function AppFooter() {
         </Footer.Column>
 
         <Footer.Column title="Earn">
-          {/* 
-            TODO: Add links to the following pages
-          */}
-          <Footer.Link href="">Pool administration</Footer.Link>
-          <Footer.Link href="">Signer key signature</Footer.Link>
-          <Footer.Link href="">Stack independently</Footer.Link>
+          <Footer.Link href="https://earn.leather.io/pool-admin">Pool administration</Footer.Link>
+          <Footer.Link href="https://earn.leather.io/signer/generate-signature">
+            Signer key signature
+          </Footer.Link>
+          <Footer.Link href="https://earn.leather.io/choose-stacking-method">
+            Stack independently
+          </Footer.Link>
         </Footer.Column>
       </Footer.Grid>
 

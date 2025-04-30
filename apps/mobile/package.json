@@ -149,7 +149,7 @@
     "@lingui/format-po": "5.0.0",
     "@lingui/macro": "4.11.1",
     "@types/jest": "29.5.12",
-    "@types/node": "22.14.0",
+    "@types/node": "22.15.3",
     "@types/react": "18.2.79",
     "babel-plugin-macros": "3.1.0",
     "babel-preset-expo": "11.0.6",
