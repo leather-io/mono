@@ -9,7 +9,7 @@ interface PooledStackingProps {
 export function PooledStacking({ poolSlug }: PooledStackingProps) {
   return (
     <Page>
-      <Page.Header title="Enroll" />
+      <Page.Header title="Stack in a pool" />
       <StartPooledStacking poolSlug={poolSlug} />
     </Page>
   );
