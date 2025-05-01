@@ -701,6 +701,22 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.33.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.32.0...@leather.io/mobile-v2.33.0) (2025-05-01)
+
+
+### Features
+
+* integrate consolidated token api endpoints ([5b096f3](https://github.com/leather-io/mono/commit/5b096f35a22bd048ddc3716529924c33da2f3151))
+* **mobile:** update native icon button ([70ae491](https://github.com/leather-io/mono/commit/70ae491ff48ee47b302f033d62e1c95589c1769e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.9.0
+    * @leather.io/ui bumped to 1.62.0
+
 ## [2.32.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.31.0...@leather.io/mobile-v2.32.0) (2025-04-28)
 
 
