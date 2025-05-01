@@ -9,6 +9,8 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { PoolOverview } from '~/components/pool-overview';
+import { Page } from '~/features/page/page';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
@@ -262,7 +264,11 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   }
 
   return (
-    <>
+    <Stack>
+      <Page.Inset>
+        <PoolOverview pool={pool} poolSlug={poolSlug} />
+      </Page.Inset>
+
       <FormProvider {...formMethods}>
         <StartStackingLayout
           stackingForm={
@@ -378,6 +384,6 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
           poolAmount={poolAmount}
         />
       </StartStackingDrawer>
-    </>
+    </Stack>
   );
 }
