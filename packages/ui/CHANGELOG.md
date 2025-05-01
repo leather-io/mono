@@ -389,6 +389,18 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.62.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.61.1...@leather.io/ui-v1.62.0) (2025-05-01)
+
+
+### Features
+
+* **mobile:** update native icon button ([70ae491](https://github.com/leather-io/mono/commit/70ae491ff48ee47b302f033d62e1c95589c1769e))
+
+
+### Bug Fixes
+
+* **web:** adjust nav like framer, closes ENG-62 ([ccbcf31](https://github.com/leather-io/mono/commit/ccbcf3117328e3096a25c82ce6ba072f99426f87))
+
 ## [1.61.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.61.0...@leather.io/ui-v1.61.1) (2025-04-28)
 
 

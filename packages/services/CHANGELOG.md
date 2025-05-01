@@ -269,6 +269,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.24.5
 
+## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.8.3...@leather.io/services-v1.9.0) (2025-05-01)
+
+
+### Features
+
+* integrate consolidated token api endpoints ([5b096f3](https://github.com/leather-io/mono/commit/5b096f35a22bd048ddc3716529924c33da2f3151))
+
 ## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.7.6...@leather.io/services-v1.8.0) (2025-04-02)
 
 
