@@ -5,7 +5,6 @@ import { atomWithStorage } from 'jotai/utils';
 import { analytics } from '~/features/analytics/analytics';
 import { leather } from '~/helpers/leather-sdk';
 import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/helpers/utils';
-import { useStacksNetwork } from '~/store/stacks-network';
 
 type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
 
@@ -18,10 +17,17 @@ export const extensionStateAtom = atom<ExtensionState>(get => {
   return 'missing';
 });
 
+export const stacksAccountAtom = atom(get => {
+  const addresses = get(addressesAtom);
+  return addresses.find(address => address.symbol === 'STX');
+});
+
+export function useStacksAccount() {
+  return useAtomValue(stacksAccountAtom);
+}
+
 export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { networkName, setNetworkName } = useStacksNetwork();
   const extensionState = useAtomValue(extensionStateAtom);
 
   const stacksAccount = useStacksAccount();
@@ -36,13 +42,13 @@ export function useLeatherConnect() {
     [addresses]
   );
 
+  const accounts = { stacksAccount, btcAddressP2tr, btcAddressP2wpkh };
+
   return {
     addresses,
     setAddresses,
     status: extensionState,
-    stacksAccount,
-    btcAddressP2tr,
-    btcAddressP2wpkh,
+    ...accounts,
     whenExtensionState: whenExtensionState(extensionState),
     openExtension() {
       void analytics.untypedTrack('open_extension_clicked');
@@ -63,14 +69,4 @@ export function useLeatherConnect() {
       setAddresses([]);
     },
   };
-}
-
-export function useStacksAccount() {
-  const [addresses] = useAtom(addressesAtom);
-  const stacksAccount = useMemo(
-    () => addresses.find(address => address.symbol === 'STX'),
-    [addresses]
-  );
-
-  return stacksAccount;
 }

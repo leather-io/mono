@@ -71,33 +71,38 @@ export function useEnrolledStatus() {
 }
 
 export function useSbtcEnroll() {
-  const { stacksAccount } = useLeatherConnect();
+  const { stacksAccount, connect } = useLeatherConnect();
 
-  return useMemo(
-    () => ({
-      async createSbtcYieldEnrollContractCall() {
-        // if (network.networkName === 'mocknet') throw new Error('Mocknet not supported');
+  return useMemo(() => {
+    async function createSbtcYieldEnrollContractCall(currentAccount) {
+      // if (network.networkName === 'mocknet') throw new Error('Mocknet not supported');
+      if (!stacksAccount) {
+        await connect();
+        await createSbtcYieldEnrollContractCall();
+        return;
+      }
 
-        if (!stacksAccount) throw new Error('No address');
+      const contractDetails = getEnrollContractCallByNetwork(network.networkName);
 
-        const contractDetails = getEnrollContractCallByNetwork(network.networkName);
+      try {
+        void analytics.untypedTrack('user_enrolled_sbtc');
 
-        try {
-          void analytics.untypedTrack('user_enrolled_sbtc');
-          const result = await leather.stxCallContract({
-            contract: contractDetails.contract,
-            functionName: 'enroll',
-            functionArgs: [serializeCV(Cl.some(Cl.principal(stacksAccount.address)))],
-            network: network.networkName,
-          });
-          // eslint-disable-next-line no-console
-          console.log(result);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.log('Error creating sbtc yield enroll contract call', e);
-        }
-      },
-    }),
-    [stacksAccount]
-  );
+        const result = await leather.stxCallContract({
+          contract: contractDetails.contract,
+          functionName: 'enroll',
+          functionArgs: [serializeCV(Cl.some(Cl.principal(stacksAccount.address)))],
+          network: network.networkName,
+        });
+        // eslint-disable-next-line no-console
+        console.log(result);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('Error creating sbtc yield enroll contract call', e);
+      }
+    }
+
+    return {
+      createSbtcYieldEnrollContractCall,
+    };
+  }, [connect, stacksAccount]);
 }
