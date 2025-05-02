@@ -1,3 +1,5 @@
+import { MetaDescriptor } from 'react-router';
+
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { protocolSlugSchema } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { LiquidStackingIncrease } from '~/pages/stacking/liquid-stacking-increase';
@@ -14,9 +16,8 @@ export function loader({ params }: Route.LoaderArgs) {
   return { protocolSlug };
 }
 
-// eslint-disable-next-line no-empty-pattern
-export function meta({}: Route.MetaArgs) {
-  return [{ title: 'Leather Earn - Liquid Stacking - Increase' }];
+export function meta() {
+  return [{ title: 'Liquid Stacking – Increase – Leather' }] satisfies MetaDescriptor[];
 }
 
 export default function EarnLiquidStackingIncreaseRoute({ loaderData }: Route.ComponentProps) {

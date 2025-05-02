@@ -71,14 +71,12 @@ export function useEnrolledStatus() {
 }
 
 export function useSbtcEnroll() {
-  const { stacksAccount, connect } = useLeatherConnect();
+  const { stacksAccount } = useLeatherConnect();
 
   return useMemo(() => {
-    async function createSbtcYieldEnrollContractCall(currentAccount) {
+    async function createSbtcYieldEnrollContractCall() {
       // if (network.networkName === 'mocknet') throw new Error('Mocknet not supported');
       if (!stacksAccount) {
-        await connect();
-        await createSbtcYieldEnrollContractCall();
         return;
       }
 
@@ -104,5 +102,5 @@ export function useSbtcEnroll() {
     return {
       createSbtcYieldEnrollContractCall,
     };
-  }, [connect, stacksAccount]);
+  }, [stacksAccount]);
 }
