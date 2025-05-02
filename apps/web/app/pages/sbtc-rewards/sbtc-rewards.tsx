@@ -40,7 +40,7 @@ const sbtcEnroll = {
   id: 'basic',
   logo: <SbtcLogo size="32px" />,
   title: 'Basic sBTC rewards',
-  description: 'Hold sBTC in your wallet to earn more sBTC passively, compounding over time',
+  description: 'Hold sBTC in your wallet to passively earn more sBTC, as it compounds over time.',
   tvl: '2,150 BTC',
   tvlUsd: '$130,050,000',
   minCommitment: '0.005 BTC',
@@ -142,16 +142,20 @@ export function SbtcRewards() {
         <ApyRewardHeroCard apyRange="5–8%" mt="space.05" />
 
         <styled.section mt="space.09">
-          <styled.h3 textStyle="heading.04">1. Acquire sBTC</styled.h3>
-          <AcquireSbtcGrid mt="space.03" />
+          <styled.h3 textStyle="heading.03">Step 1: Acquire sBTC</styled.h3>
+          <styled.p textStyle="label.03" mt="space.02">
+            You can acquire sBTC either by bridging BTC to the Stacks blockchain or by swapping
+            another asset on Stacks on the L2 itself.
+          </styled.p>
+          <AcquireSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">
-          <styled.h3 textStyle="heading.04">2. Choose rewards protocol</styled.h3>
+          <styled.h3 textStyle="heading.03">Step 2: Choose reward protocol</styled.h3>
 
           <SbtcProtocolRewardGrid
             enrollAction={<SbtcEnrollButton />}
-            mt="space.03"
+            mt="space.05"
             rewardProtocol={sbtcEnroll}
           />
 
@@ -163,7 +167,7 @@ export function SbtcRewards() {
                 </Button>
               }
               key={pool.id}
-              mt="space.03"
+              mt="space.06"
               rewardProtocol={pool}
             />
           ))}
