@@ -6,6 +6,7 @@ import { Flex, styled } from 'leather-styles/jsx';
 import type { LeatherProvider } from '@leather.io/rpc';
 import { Tooltip } from '@leather.io/ui';
 
+import { defaultMetaTags } from './constants/default-meta-tags';
 import { analytics } from './features/analytics/analytics';
 import { useOnRouteChange } from './features/analytics/use-on-route-change';
 import { Footer } from './layouts/footer/footer';
@@ -22,8 +23,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {defaultMetaTags.map(meta => (
+          <meta key={meta.name} {...meta} />
+        ))}
         <Meta />
         <Links />
       </head>

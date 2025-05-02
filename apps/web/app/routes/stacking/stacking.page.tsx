@@ -1,3 +1,5 @@
+import { MetaDescriptor } from 'react-router';
+
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { Stacking } from '~/pages/stacking/stacking';
 
@@ -5,12 +7,11 @@ export function loader() {
   return true;
 }
 
-// eslint-disable-next-line no-empty-pattern
-export function meta({}) {
+export function meta() {
   return [
-    { title: 'Leather Earn' },
+    { title: 'Stacking – Leather' },
     { name: 'description', content: 'Bitcoin for the rest of us' },
-  ];
+  ] satisfies MetaDescriptor[];
 }
 
 export default function HomeRoute() {

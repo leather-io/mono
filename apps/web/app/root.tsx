@@ -14,6 +14,7 @@ export function links() {
   return [
     { rel: 'stylesheet', href: stylesheet },
     { rel: 'stylesheet', href: leatherUiStyles },
+    { rel: 'preconnect', href: 'https://lskjdflksjdfklsdfjlss.com' },
   ] satisfies Route.LinkDescriptors;
 }
 
