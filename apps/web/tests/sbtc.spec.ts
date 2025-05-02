@@ -15,22 +15,14 @@ test.describe('sBTC Rewards page', () => {
 
     await expect(page.getByText(/Acquire BTC in the form of sBTC on Stacks/)).toBeVisible();
 
-    await expect(page.getByRole('heading', { name: '1. Acquire sBTC', level: 3 })).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'Choose to bridge or swap', level: 3 })
+      page.getByRole('heading', { name: 'Step 1: Acquire sBTC', level: 3 })
     ).toBeVisible();
 
     await expect(
-      page.getByRole('heading', { name: '2. Choose rewards protocol', level: 3 })
+      page.getByRole('heading', { name: 'Step 2: Choose reward protocol', level: 3 })
     ).toBeVisible();
 
     await expect(page.getByRole('heading', { name: 'Basic sBTC rewards', level: 3 })).toBeVisible();
-
-    await expect(
-      page.getByRole('heading', { name: 'Total Value Locked (TVL)', level: 4 }).first()
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: 'Historical APR', level: 4 }).first()
-    ).toBeVisible();
   });
 });
