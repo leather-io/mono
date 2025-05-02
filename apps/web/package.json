@@ -68,7 +68,7 @@
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/valid-url": "1.0.7",
-    "react-router-devtools": "1.1.10",
+    "react-router-devtools": "5.0.0",
     "rollup-plugin-node-polyfills": "0.2.1",
     "tty-browserify": "0.0.1",
     "typescript": "5.7.3",
