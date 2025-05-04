@@ -1,4 +1,4 @@
-import { Pressable, Share } from 'react-native';
+import { Share } from 'react-native';
 
 import { AddressTypeBadge } from '@/components/address-type-badge';
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
@@ -13,10 +13,11 @@ import {
   AddressDisplayer,
   ArrowOutOfBoxIcon,
   Box,
-  Cell,
+  Button,
   CopyIcon,
-  IconButton,
+  Pressable,
   Text,
+  legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
 import {
@@ -34,7 +35,7 @@ export function AssetDetails() {
   const navigation = useReceiveSheetNavigation<CurrentRoute>();
   const asset = route.params.asset;
   const accountName = route.params.accountName;
-  const { name, description, address, addressType } = asset;
+  const { name, address, addressType, description } = asset;
   const onCopyAddress = useCopyAddress();
 
   return (
@@ -55,69 +56,44 @@ export function AssetDetails() {
         />
       }
     >
-      <Box gap="6" px="5">
-        <Box flexDirection="column" gap="2">
-          <Box alignItems="center" flexDirection="row" gap="1">
-            <Text variant="label02">{name}</Text>
+      <Box gap="5" px="5" flex={1}>
+        <Box gap="2">
+          <Box flexDirection="row" alignItems="center" gap="1">
+            <Text variant="label01">{name}</Text>
             {addressType && <AddressTypeBadge type={addressType} />}
           </Box>
-          <Box>
-            <Text variant="label02" color="ink.text-subdued">
-              {description}
-            </Text>
-          </Box>
-        </Box>
-        <Box>
-          <Cell.Root
-            pressable={false}
-            borderRadius="xs"
-            borderWidth={1}
-            borderColor="ink.border-default"
-            padding="2"
-          >
-            <Cell.Content>
-              <AddressDisplayer address={address} />
-            </Cell.Content>
-            <Cell.Aside>
-              <IconButton
-                label={t({
-                  id: 'receive.copy_address_label',
-                  message: 'Copy address',
-                })}
-                icon={<CopyIcon />}
-                mr="-2"
-                onPress={() => onCopyAddress(address)}
-              />
-            </Cell.Aside>
-          </Cell.Root>
+
+          <Text variant="label02" color="ink.text-subdued">
+            {description}
+          </Text>
         </Box>
 
         <Pressable
-          onPress={async () =>
-            await Share.share({
-              message: address,
-            })
-          }
+          flexDirection="row"
+          px="4"
+          py="3"
+          borderRadius="xs"
+          borderWidth={1}
+          borderColor="ink.border-default"
+          alignItems="center"
+          justifyContent="space-between"
+          gap="2"
+          pressEffects={legacyTouchablePressEffect}
+          onPress={() => void onCopyAddress(address)}
         >
-          <Box
-            borderRadius="xs"
-            borderWidth={1}
-            borderColor="ink.border-default"
-            p="3"
-            justifyContent="center"
-            alignItems="center"
-            flexDirection="row"
-            gap="2"
-          >
-            <ArrowOutOfBoxIcon />
-            <Text variant="label02">
-              {t({
-                id: 'receive_asset.share_button',
-                message: 'Share',
-              })}
-            </Text>
+          <Box flex={1}>
+            <AddressDisplayer address={address} />
           </Box>
+          <CopyIcon />
         </Pressable>
+
+        <Button
+          title={t({ id: 'receive_asset.share_button', message: 'Share' })}
+          buttonState="outline"
+          icon={<ArrowOutOfBoxIcon />}
+          style={{ marginTop: 'auto' }}
+          onPress={() => void Share.share({ message: address })}
+        />
       </Box>
     </FullHeightSheetLayout>
   );

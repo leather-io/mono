@@ -3,10 +3,6 @@ import { SendableAsset } from '@/features/send/types';
 import { Account } from '@/store/accounts/accounts';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import type {
-  StackCardInterpolatedStyle,
-  StackCardInterpolationProps,
-} from '@react-navigation/stack/src/types';
 import { useTheme } from '@shopify/restyle';
 
 import { HasChildren, Theme } from '@leather.io/ui/native';
@@ -44,15 +40,9 @@ export function SendNavigator({ children }: HasChildren) {
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: theme.colors['ink.background-primary'] },
-        cardStyleInterpolator({
-          current,
-        }: StackCardInterpolationProps): StackCardInterpolatedStyle {
-          return {
-            cardStyle: {
-              opacity: current.progress,
-            },
-          };
-        },
+        cardStyleInterpolator: ({ current }) => ({
+          cardStyle: { opacity: current.progress },
+        }),
       }}
     >
       {children}

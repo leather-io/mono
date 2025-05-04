@@ -16,7 +16,7 @@ export function AddressTypeBadge({ type }: AddressTypeBadgeProps) {
       borderWidth={1}
       px="1"
     >
-      <Text color="ink.text-subdued" fontSize={11} fontWeight={500} lineHeight={12}>
+      <Text color="ink.text-subdued" fontSize={11} fontWeight={600} lineHeight={14}>
         {i18n._({
           id: 'address_type_badge.label',
           message: '{type}',
