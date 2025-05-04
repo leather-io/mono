@@ -19,16 +19,16 @@ export function getAssets({
     {
       type: AssetType.NativeSegwit,
       address: nativeSegwitPayerAddress,
-      assetName: t({
+      name: t({
         id: 'asset_name.bitcoin',
         message: 'Bitcoin',
       }),
-      assetSymbol: 'BTC',
+      symbol: 'BTC',
       addressType: t({
         id: 'address_type.native_segwit',
         message: 'Native Segwit',
       }),
-      assetDescription: t({
+      description: t({
         id: 'asset_description.native_segwit',
         message: 'This is your Native Segwit address.',
       }),
@@ -36,16 +36,16 @@ export function getAssets({
     {
       type: AssetType.Taproot,
       address: taprootPayerAddress,
-      assetName: t({
+      name: t({
         id: 'asset_name.bitcoin',
         message: 'Bitcoin',
       }),
-      assetSymbol: 'BTC',
+      symbol: 'BTC',
       addressType: t({
         id: 'address_type.taproot',
         message: 'Taproot',
       }),
-      assetDescription: t({
+      description: t({
         id: 'asset_description.taproot',
         message: 'This is your Taproot address. Use it to receive tokens on the bitcoin network.',
       }),
@@ -53,12 +53,12 @@ export function getAssets({
     {
       type: AssetType.Stacks,
       address: stxAddress,
-      assetName: t({
+      name: t({
         id: 'asset_name.stacks',
         message: 'Stacks',
       }),
-      assetSymbol: 'STX',
-      assetDescription: t({
+      symbol: 'STX',
+      description: t({
         id: 'asset_description.stacks',
         message: 'This is your Stacks address.',
       }),
