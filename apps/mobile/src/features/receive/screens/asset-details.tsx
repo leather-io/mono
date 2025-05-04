@@ -4,6 +4,7 @@ import { AddressTypeBadge } from '@/components/address-type-badge';
 import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { QrCard } from '@/features/receive/components/qr-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
@@ -57,6 +58,10 @@ export function AssetDetails() {
       }
     >
       <Box gap="5" px="5" flex={1}>
+        <Box mt="5" mb="6">
+          <QrCard value={address} />
+        </Box>
+
         <Box gap="2">
           <Box flexDirection="row" alignItems="center" gap="1">
             <Text variant="label01">{name}</Text>
