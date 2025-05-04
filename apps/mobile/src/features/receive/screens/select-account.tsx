@@ -12,7 +12,7 @@ type CurrentRoute = CreateCurrentReceiveRoute<'select-account'>;
 
 export function SelectAccount() {
   const navigation = useReceiveSheetNavigation<CurrentRoute>();
-  const accounts = useAccounts();
+  const accounts = useAccounts('active');
 
   function onSelectAccount(account: Account) {
     navigation.navigate('select-asset', { account });
