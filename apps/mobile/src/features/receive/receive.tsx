@@ -24,6 +24,9 @@ export function Receive() {
             backgroundColor: theme.colors['ink.background-primary'],
             overflow: 'visible',
           },
+          cardStyleInterpolator: ({ current }) => ({
+            cardStyle: { opacity: current.progress },
+          }),
         }}
       >
         <Stack.Screen name="select-account" component={SelectAccount} />
