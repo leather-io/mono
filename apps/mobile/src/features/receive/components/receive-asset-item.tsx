@@ -7,8 +7,8 @@ import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
 interface ReceiveAssetItemProps {
   address: string;
   addressType?: string;
-  assetName: string;
-  assetSymbol: string;
+  name: string;
+  symbol: string;
   icon: React.ReactNode;
   onCopy: () => void;
   onPress: () => void;
@@ -16,7 +16,7 @@ interface ReceiveAssetItemProps {
 export function ReceiveAssetItem({
   address,
   addressType,
-  assetName,
+  name,
   icon,
   onCopy,
   onPress,
@@ -33,7 +33,7 @@ export function ReceiveAssetItem({
         <Cell.Label variant="primary">
           {
             <Box alignItems="center" flexDirection="row" gap="1">
-              <Text variant="label02">{assetName}</Text>
+              <Text variant="label02">{name}</Text>
               {addressType && <AddressTypeBadge type={addressType} />}
             </Box>
           }

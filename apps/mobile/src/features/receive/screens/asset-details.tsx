@@ -26,15 +26,15 @@ import {
   useReceiveSheetRoute,
 } from '../utils';
 
-type CurrentRoute = CreateCurrentReceiveRoute<'receive-asset-details'>;
+type CurrentRoute = CreateCurrentReceiveRoute<'asset-details'>;
 
-export function ReceiveAssetDetails() {
+export function AssetDetails() {
   const { i18n } = useLingui();
   const route = useReceiveSheetRoute<CurrentRoute>();
   const navigation = useReceiveSheetNavigation<CurrentRoute>();
   const asset = route.params.asset;
   const accountName = route.params.accountName;
-  const { assetName, address, addressType, assetDescription } = asset;
+  const { name, description, address, addressType } = asset;
   const onCopyAddress = useCopyAddress();
 
   return (
@@ -58,12 +58,12 @@ export function ReceiveAssetDetails() {
       <Box gap="6" px="5">
         <Box flexDirection="column" gap="2">
           <Box alignItems="center" flexDirection="row" gap="1">
-            <Text variant="label02">{assetName}</Text>
+            <Text variant="label02">{name}</Text>
             {addressType && <AddressTypeBadge type={addressType} />}
           </Box>
           <Box>
             <Text variant="label02" color="ink.text-subdued">
-              {assetDescription}
+              {description}
             </Text>
           </Box>
         </Box>

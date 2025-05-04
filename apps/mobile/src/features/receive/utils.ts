@@ -12,12 +12,12 @@ import {
 } from '@react-navigation/native';
 import * as Clipboard from 'expo-clipboard';
 
-import { SelectedAsset } from './receive-sheets/select-asset';
+import { SelectedAsset } from './screens/select-asset';
 
 export interface ReceiveSheetNavigatorParamList {
-  'receive-select-account': undefined;
-  'receive-select-asset': { account: Account };
-  'receive-asset-details': { asset: SelectedAsset; accountName: string };
+  'select-account': undefined;
+  'select-asset': { account: Account };
+  'asset-details': { asset: SelectedAsset; accountName: string };
 }
 
 type ReceiveSheetRouteKeys = keyof ReceiveSheetNavigatorParamList;

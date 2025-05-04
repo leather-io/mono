@@ -10,23 +10,23 @@ import { t } from '@lingui/macro';
 
 import { truncateMiddle } from '@leather.io/utils';
 
+import { ReceiveAssetItem } from '../components/receive-asset-item';
+import { getAssets } from '../get-assets';
 import {
   CreateCurrentReceiveRoute,
   useCopyAddress,
   useReceiveSheetNavigation,
   useReceiveSheetRoute,
 } from '../utils';
-import { getAssets } from './get-assets';
-import { ReceiveAssetItem } from './receive-asset-item';
 
-type CurrentRoute = CreateCurrentReceiveRoute<'receive-select-asset'>;
+type CurrentRoute = CreateCurrentReceiveRoute<'select-asset'>;
 
 export interface SelectedAsset {
-  assetSymbol: string;
-  assetName: string;
+  symbol: string;
+  name: string;
   address: string;
   addressType?: string;
-  assetDescription: string;
+  description: string;
 }
 
 export function SelectAsset() {
@@ -34,7 +34,7 @@ export function SelectAsset() {
   const navigation = useReceiveSheetNavigation<CurrentRoute>();
 
   function onSelectAccount(asset: SelectedAsset) {
-    navigation.navigate('receive-asset-details', { asset, accountName: account.name });
+    navigation.navigate('asset-details', { asset, accountName: account.name });
   }
   const account = route.params.account;
   const { nativeSegwitPayerAddress, taprootPayerAddress } =
@@ -70,9 +70,9 @@ export function SelectAsset() {
             key={asset.address}
             address={truncateMiddle(asset.address)}
             addressType={asset.addressType}
-            assetName={asset.assetName}
-            assetSymbol={asset.assetSymbol}
-            icon={<TokenIcon ticker={asset.assetSymbol} />}
+            name={asset.name}
+            symbol={asset.symbol}
+            icon={<TokenIcon ticker={asset.symbol} />}
             onCopy={() => onCopyAddress(asset.address)}
             onPress={() => onSelectAccount(asset)}
           />
