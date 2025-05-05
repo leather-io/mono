@@ -86,7 +86,7 @@ interface StartPooledStackingLayoutProps {
 
 function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
-  if (!stacksAccount) throw new Error('No stx address available');
+  if (!stacksAccount) throw new Error('No STX address available');
 
   const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = useMemo(() => getPoxContracts(network), [network]);
@@ -223,9 +223,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       delegationDurationType: 'limited',
       numberOfCycles: 1,
       poolAddress: poolStxAddress ?? '',
-    }).then(() => {
-      return navigate(`/pooled-stacking/${poolSlug}/active`);
-    });
+    }).then(() => navigate(`/pooled-stacking/${poolSlug}/active`));
   });
 
   const allowContractCallerConfirmed = useMemo(() => {
