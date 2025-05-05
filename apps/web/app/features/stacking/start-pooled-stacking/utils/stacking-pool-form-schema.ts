@@ -5,7 +5,6 @@ import { PoolName } from '~/features/stacking/start-pooled-stacking/utils/types-
 import { toHumanReadableStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
-  validateAvailableBalance,
   validateMaxStackingAmount,
   validateMinStackingAmount,
 } from '~/utils/validators/stx-amount-validator';
@@ -27,17 +26,12 @@ interface SchemaCreationParams {
 export function createValidationSchema({
   poolName,
   networkMode,
-  availableBalance,
   stackedAmount,
 }: SchemaCreationParams) {
-  const availableBalanceAmount = availableBalance.amount;
   return z
     .object({
       amount: stxAmountSchema()
         .refine(value => validateMaxStackingAmount(value))
-        .refine(value => validateAvailableBalance(value, availableBalanceAmount), {
-          message: `Available balance is ${toHumanReadableStx(availableBalanceAmount ?? 0)}`,
-        })
         .refine(
           value => {
             if (stackedAmount?.isGreaterThan(0)) {

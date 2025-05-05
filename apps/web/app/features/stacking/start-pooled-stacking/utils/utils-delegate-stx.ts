@@ -69,6 +69,7 @@ function getOptions(
   let functionArgs: ClarityValue[];
   switch (pool.poxContract) {
     case 'WrapperOneCycle':
+    case 'WrapperStackingDao':
       functionArgs = [
         uintCV(stxToMicroStx(values.amount).toString()),
         principalCV(delegateTo),
