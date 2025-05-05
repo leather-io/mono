@@ -1,10 +1,10 @@
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
+import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 
 import { Flag } from '@leather.io/ui';
 
 import { RewardProtocolInfo } from '../sbtc-rewards';
-import { ValueDisplayer } from './reward-value-displayer';
 import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout';
 
 interface RewardProtocolCellProps {

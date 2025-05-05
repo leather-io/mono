@@ -2,8 +2,8 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
 import { InfoGrid } from '~/components/info-grid/info-grid';
+import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { Pool } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
-import { ValueDisplayer } from '~/pages/sbtc-rewards/components/reward-value-displayer';
 
 interface RewardTokenCellProps {
   token?: string;
