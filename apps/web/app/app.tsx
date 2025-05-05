@@ -23,8 +23,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        {defaultMetaTags.map(meta => (
-          <meta key={meta.name} {...meta} />
+        {defaultMetaTags.map((meta, i) => (
+          <meta key={'meta' + i} {...meta} />
         ))}
         <Meta />
         <Links />
