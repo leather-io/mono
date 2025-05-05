@@ -1,9 +1,14 @@
 import { Link } from 'react-router';
 
 import { css } from 'leather-styles/css';
-import { Stack, VStack, styled } from 'leather-styles/jsx';
+import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
+import { StacksIcon } from '~/components/icons/stacks-icon';
 import { InfoGrid } from '~/components/info-grid/info-grid';
+import {
+  ValueDisplayerWithCustomLoader,
+  ValueDisplayerWithLoader,
+} from '~/components/value-displayer/value-displayer-with-loader';
 import { useGetCoreInfoQuery, useGetStatusQuery } from '~/features/stacking/hooks/stacking.query';
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
@@ -11,10 +16,11 @@ import {
   getPoolByAddress,
   getPoolSlugByPoolName,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
-import { ValueDisplayer } from '~/pages/sbtc-rewards/components/reward-value-displayer';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
-import { LoadingSpinner } from '@leather.io/ui';
+import { LoadingSpinner, SkeletonLoader } from '@leather.io/ui';
+
+import { useUserPositionsFakeLoading } from './hooks/use-user-positions-fake-loading';
 
 interface UserPositionsProps {
   stacksAddress: string;
@@ -27,14 +33,26 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   const getCoreInfoQuery = useGetCoreInfoQuery();
   const getPoolAddressQuery = useGetPoolAddress();
 
-  if (
+  const isLoading =
     delegationStatusQuery.isLoading ||
     getStatusQuery.isLoading ||
     getCoreInfoQuery.isLoading ||
     getPoolAddressQuery.isLoading ||
-    getPoolAddressQuery.isFetching
-  ) {
-    return <LoadingSpinner />;
+    getPoolAddressQuery.isFetching;
+
+  const { fakeLoading } = useUserPositionsFakeLoading(isLoading);
+
+  if (isLoading) {
+    return (
+      <Flex mt="space.07" pb="space.05" justifyContent="start" alignItems="center" gap="space.02">
+        <Box>
+          <LoadingSpinner fill="ink.text-subdued" />
+        </Box>
+        <styled.span textStyle="heading.05" color="ink.text-subdued">
+          Looking for positions...
+        </styled.span>
+      </Flex>
+    );
   }
 
   const isError =
@@ -67,8 +85,15 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
       ? delegationStatusQuery.data.details.delegated_to
       : undefined);
 
+  // no positions
   if ((!delegationStatusQuery.data.delegated && !isStacking) || !poolAddress) {
-    return null; // no positions
+    return (
+      <Box mt="space.07" pb="space.05">
+        <styled.span textStyle="heading.05" color="ink.text-subdued">
+          No position found
+        </styled.span>
+      </Box>
+    );
   }
 
   const pool = getPoolByAddress(poolAddress); // TODO: Detect custom pool
@@ -101,21 +126,30 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
       >
         <InfoGrid.Cell>
           <VStack gap="space.05" alignItems="left" p="space.05">
-            {pool ? pool.icon : <DummyIcon />}
-            {pool && poolSlug ? (
-              <Link to={`/pooled-stacking/${poolSlug}/active`} style={{ maxWidth: 'fit-content' }}>
-                <styled.h4 textStyle="label.01" borderBottom="1px solid">
-                  {pool.name}
-                </styled.h4>
-              </Link>
-            ) : (
-              <styled.h4 textStyle="label.01">Unknown pool</styled.h4>
-            )}
+            <SkeletonLoader width="32" height="32" isLoading={fakeLoading}>
+              {pool ? pool.icon : <DummyIcon />}
+            </SkeletonLoader>
+
+            <SkeletonLoader height="15" width="80" isLoading={fakeLoading}>
+              {pool && poolSlug ? (
+                <Link
+                  to={`/pooled-stacking/${poolSlug}/active`}
+                  style={{ maxWidth: 'fit-content' }}
+                >
+                  <styled.h4 textStyle="label.01" borderBottom="1px solid">
+                    {pool.name}
+                  </styled.h4>
+                </Link>
+              ) : (
+                <styled.h4 textStyle="label.01">Unknown pool</styled.h4>
+              )}
+            </SkeletonLoader>
           </VStack>
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayer
+          <ValueDisplayerWithLoader
             name="Amount"
+            isLoading={fakeLoading}
             value={
               delegationInfoDetails
                 ? toHumanReadableStx(delegationInfoDetails.amount_micro_stx)
@@ -124,13 +158,33 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayer name="APR" value="~10%" />
+          <ValueDisplayerWithLoader name="APR" isLoading={fakeLoading} value="~10%" />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayer name="Next rewards" value="~10 days" />
+          <ValueDisplayerWithLoader name="Next rewards" isLoading={fakeLoading} value="~10 days" />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayer name="Rewards token" value="STX" />
+          <ValueDisplayerWithCustomLoader
+            name="Rewards token"
+            isLoading={fakeLoading}
+            value={
+              <Flex gap="space.02" alignItems="center">
+                <StacksIcon />
+                STX
+              </Flex>
+            }
+            customSkeletonLayout={
+              <Flex gap="space.02" alignItems="center">
+                <SkeletonLoader
+                  height="24"
+                  width="24"
+                  borderRadius="round"
+                  isLoading={fakeLoading}
+                />
+                <SkeletonLoader height="15" width="80" isLoading={fakeLoading} />
+              </Flex>
+            }
+          />
         </InfoGrid.Cell>
       </InfoGrid>
     </Stack>

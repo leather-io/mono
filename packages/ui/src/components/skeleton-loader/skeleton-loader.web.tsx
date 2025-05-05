@@ -1,29 +1,23 @@
-import { Box } from 'leather-styles/jsx';
+import { Box, BoxProps } from 'leather-styles/jsx';
 
 import { shimmerStyles } from './shimmer.styles.web';
 
-interface SkeletonLoaderProps {
+interface SkeletonLoaderProps extends Omit<BoxProps, 'className' | 'bgColor'> {
   isLoading: boolean;
   children?: React.ReactNode;
-  width?: string;
-  height?: string;
 }
 
-export function SkeletonLoader({
-  children,
-  width = '30px',
-  height = '30px',
-  isLoading,
-}: SkeletonLoaderProps) {
+export function SkeletonLoader({ children, isLoading, ...boxProps }: SkeletonLoaderProps) {
   if (isLoading) {
     return (
       <Box
-        width={width}
-        height={height}
-        bgColor="ink.text-non-interactive"
-        data-state="loading"
+        width="30px"
+        height="30px"
         borderRadius="sm"
         className={shimmerStyles}
+        bgColor="ink.text-non-interactive"
+        data-state="loading"
+        {...boxProps}
       />
     );
   }

@@ -1,12 +1,12 @@
 import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { Box, GridProps } from 'leather-styles/jsx';
+import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { LiquidStackingInfoGridLayout } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-info-grid.layout';
 import { StackExtendInfo } from '~/features/stacking/direct-stacking-info/get-has-pending-stack-extend';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import { ValueDisplayer } from '~/pages/sbtc-rewards/components/reward-value-displayer';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
 import { toHumanReadableStx } from '~/utils/unit-convert';
