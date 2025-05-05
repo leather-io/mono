@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-import * as RadixSwitch from '@radix-ui/react-switch';
 import { css } from 'leather-styles/css';
+import { Switch as RadixSwitch } from 'radix-ui';
 
 const switchRootStyles = css({
   width: '42px',

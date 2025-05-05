@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-import * as RadixToast from '@radix-ui/react-toast';
 import { css } from 'leather-styles/css';
+import { Toast as RadixToast } from 'radix-ui';
 
 export type ToastVariant = 'info' | 'success' | 'error';
 

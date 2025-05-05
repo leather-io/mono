@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import * as RadixTooltip from '@radix-ui/react-tooltip';
+import { Tooltip as RadixTooltip } from 'radix-ui';
 
 import { Tooltip } from './tooltip.web';
 

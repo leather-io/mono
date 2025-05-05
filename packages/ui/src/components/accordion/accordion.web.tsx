@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-import * as RadixAccordion from '@radix-ui/react-accordion';
 import { css } from 'leather-styles/css';
+import { Accordion as RadixAccordion } from 'radix-ui';
 
 const Root = forwardRef<HTMLDivElement, RadixAccordion.AccordionSingleProps>((props, ref) => (
   <RadixAccordion.Root ref={ref} className={css({ textStyle: 'label.02' })} {...props}>

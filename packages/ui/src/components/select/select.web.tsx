@@ -1,8 +1,8 @@
 import { ReactNode, forwardRef } from 'react';
 
-import * as RadixSelect from '@radix-ui/react-select';
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
+import { Select as RadixSelect } from 'radix-ui';
 
 import { pressableBaseStyles, pressableStyles } from '../../components/pressable/pressable.web';
 
