@@ -1,5 +1,5 @@
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Box, Circle, styled } from 'leather-styles/jsx';
+import { Tooltip } from 'radix-ui';
 
 import { InfoCircleIcon } from '../../../icons/index.web';
 import { Button } from '../../button/button.web';
@@ -17,11 +17,11 @@ export function ApproverDemo() {
         <Approver.Header
           title="Some prompt that breks onto two lines"
           info={
-            <TooltipProvider delayDuration={300}>
+            <Tooltip.Provider delayDuration={300}>
               <BasicTooltip label="Some tooltip">
                 <InfoCircleIcon color="ink.action-primary-default" variant="small" />
               </BasicTooltip>
-            </TooltipProvider>
+            </Tooltip.Provider>
           }
         />
         <Callout title="Some callout">Hey watch out for this sketchy app</Callout>

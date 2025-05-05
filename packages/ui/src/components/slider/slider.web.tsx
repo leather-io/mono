@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-import * as RadixSlider from '@radix-ui/react-slider';
 import { css } from 'leather-styles/css';
+import { Slider as RadixSlider } from 'radix-ui';
 
 const sliderRootStyles = css({
   position: 'relative',

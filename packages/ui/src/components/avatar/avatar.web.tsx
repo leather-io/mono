@@ -6,8 +6,8 @@ import {
   forwardRef,
 } from 'react';
 
-import * as RadixAvatar from '@radix-ui/react-avatar';
 import { styled } from 'leather-styles/jsx';
+import { Avatar as RadixAvatar } from 'radix-ui';
 
 import { isDefined } from '@leather.io/utils';
 

@@ -1,8 +1,8 @@
 import { ReactNode, forwardRef } from 'react';
 
-import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 
 import { pressableBaseStyles, pressableStyles } from '../../components/pressable/pressable.web';
 import { ChevronDownIcon } from '../../icons/index.web';

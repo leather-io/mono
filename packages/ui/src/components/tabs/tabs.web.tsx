@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-import * as RadixTabs from '@radix-ui/react-tabs';
 import { css } from 'leather-styles/css';
+import { Tabs as RadixTabs } from 'radix-ui';
 
 const tabRootStyles = css({
   display: 'flex',

@@ -1,9 +1,9 @@
 import { JSXElementConstructor, ReactElement, ReactNode, cloneElement } from 'react';
 
-import * as RadixDialog from '@radix-ui/react-dialog';
 import { css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
+import { Dialog as RadixDialog } from 'radix-ui';
 
 import { pxStringToNumber } from '@leather.io/utils';
 

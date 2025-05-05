@@ -1,4 +1,4 @@
-import * as AccessibleIconPrimitive from '@radix-ui/react-accessible-icon';
+import { AccessibleIcon as AccessibleIconPrimitive } from 'radix-ui';
 
 type Props = AccessibleIconPrimitive.AccessibleIconProps;
 

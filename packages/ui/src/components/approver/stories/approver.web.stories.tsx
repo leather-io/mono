@@ -1,6 +1,6 @@
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Meta, StoryObj } from '@storybook/react';
 import { Box, Circle, Flex } from 'leather-styles/jsx';
+import { Tooltip } from 'radix-ui';
 import { BasicTooltip, QuestionCircleIcon } from 'src/exports.web';
 
 import { ZapIcon } from '../../../icons/zap-icon.web';
@@ -23,13 +23,13 @@ const meta: Meta<typeof Approver> = {
     },
   },
   render: ({ children, requester, ...args }) => (
-    <TooltipProvider>
+    <Tooltip.Provider>
       <Flex maxW="390px" h="680px" border="1px solid lightgrey" overflowY="auto">
         <Approver requester="https://gamma.io" width="100%" {...args}>
           {children}
         </Approver>
       </Flex>
-    </TooltipProvider>
+    </Tooltip.Provider>
   ),
 };
 
