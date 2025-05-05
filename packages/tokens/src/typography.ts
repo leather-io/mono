@@ -102,36 +102,42 @@ function getTextVariants({ platform }: { platform: Platform }) {
     fontWeight: transformWeight(500),
     lineHeight: transformSize(24),
     letterSpacing: 0.16,
+    fontVariantLigatures: 'none',
   };
   const label02 = {
     ...commonDiatypeStyles,
     fontSize: transformSize(15),
     fontWeight: transformWeight(500),
     lineHeight: transformSize(20),
+    fontVariantLigatures: 'none',
   };
   const label03 = {
     ...commonDiatypeStyles,
     fontSize: transformSize(13),
     fontWeight: transformWeight(500),
     lineHeight: transformSize(16),
+    fontVariantLigatures: 'none',
   };
   const body01 = {
     ...commonDiatypeStyles,
     fontSize: transformSize(17),
     fontWeight: transformWeight(400),
     lineHeight: transformSize(24),
+    fontVariantLigatures: 'none',
   };
   const body02 = {
     ...commonDiatypeStyles,
     fontSize: transformSize(15),
     fontWeight: transformWeight(400),
     lineHeight: transformSize(20),
+    fontVariantLigatures: 'none',
   };
   const caption01 = {
     ...commonDiatypeStyles,
     fontSize: transformSize(13),
     fontWeight: transformWeight(400),
     lineHeight: transformSize(20),
+    fontVariantLigatures: 'none',
   };
 
   const code = {
