@@ -30,7 +30,6 @@ export * from './src/common/alex-sdk/alex-sdk.utils';
 export * from './src/common/market-data/market-data.utils';
 export * from './src/common/market-data/market-data.query';
 export * from './src/common/market-data/vendors/binance-market-data.query';
-export * from './src/common/market-data/vendors/coincap-market-data.query';
 export * from './src/common/market-data/vendors/coingecko-market-data.query';
 export * from './src/common/remote-config/remote-config.types';
 export * from './src/query-config';
