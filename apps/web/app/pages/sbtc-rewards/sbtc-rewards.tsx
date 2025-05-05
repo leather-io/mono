@@ -17,7 +17,7 @@ import { openExternalLink } from '~/utils/external-links';
 import { Button, Hr } from '@leather.io/ui';
 
 import { ApyRewardHeroCard } from '../../components/apy-hero-card';
-import { AcquireSbtcGrid } from './components/acquire-sbtc-grid';
+import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
@@ -136,18 +136,18 @@ export function SbtcRewards() {
 
         <Page.Heading
           title="Earn yield with Bitcoin on Stacks"
-          subtitle="Acquire BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield from a variety of reward protocols without sacrificing Bitcoin’s underlying security and self-sovereignty."
+          subtitle="Get BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield from a variety of reward protocols without sacrificing Bitcoin’s underlying security and self-sovereignty."
         />
 
         <ApyRewardHeroCard apyRange="5–8%" mt="space.05" />
 
         <styled.section mt="space.09">
-          <styled.h3 textStyle="heading.03">Step 1: Acquire sBTC</styled.h3>
+          <styled.h3 textStyle="heading.03">Step 1: Get sBTC</styled.h3>
           <styled.p textStyle="label.03" mt="space.02">
-            You can acquire sBTC either by bridging BTC to the Stacks blockchain or by swapping
-            another asset on Stacks on the L2 itself.
+            You can get sBTC either by bridging BTC to the Stacks blockchain or by swapping another
+            asset on Stacks on the L2 itself.
           </styled.p>
-          <AcquireSbtcGrid mt="space.05" />
+          <GetSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">

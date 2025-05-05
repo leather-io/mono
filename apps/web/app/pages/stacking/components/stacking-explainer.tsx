@@ -8,7 +8,7 @@ export function StackingExplainer(props: HTMLStyledProps<'section'>) {
       <Explainer.Step
         index={0}
         title="Own STX"
-        description="Acquire or hold STX in your wallet, ready to stack"
+        description="Get or hold STX in your wallet, ready to stack"
         img={<DummyIcon />}
       />
       <Explainer.Step
