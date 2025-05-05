@@ -31,14 +31,12 @@ export function ChoosePoolingAmount({
           name={controlName}
           render={({ field: { onChange, onBlur, value, ref }, fieldState: { invalid, error } }) => (
             <>
-              <Input.Root>
+              <Input.Root data-shrink={!!value}>
                 <Input.Label>Amount of STX to Stack</Input.Label>
                 <Input.Field
                   id={controlName}
                   value={value ?? ''}
-                  onChange={input => {
-                    onChange(input.target.value);
-                  }}
+                  onChange={input => onChange(input.target.value)}
                   onBlur={onBlur}
                   ref={ref}
                 />
