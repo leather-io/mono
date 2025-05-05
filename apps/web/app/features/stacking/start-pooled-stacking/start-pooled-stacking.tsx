@@ -322,9 +322,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                   size="sm"
                   width="100%"
                   display={['block', null, 'none']}
-                  onClick={() => {
-                    setDrawerOpen(true);
-                  }}
+                  onClick={() => setDrawerOpen(true)}
                 >
                   Review
                 </Button>
