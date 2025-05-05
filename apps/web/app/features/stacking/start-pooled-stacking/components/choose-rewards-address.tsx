@@ -19,6 +19,8 @@ export function ChooseRewardsAddress() {
             <Input.Root>
               <Input.Label>Address</Input.Label>
               <Input.Field
+                autoComplete="off"
+                data-1p-ignore
                 id="rewardAddress"
                 value={value ?? ''}
                 onChange={input => {

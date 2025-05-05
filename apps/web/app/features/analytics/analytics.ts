@@ -9,19 +9,23 @@ export const analytics = configureAnalyticsClient({
   defaultProperties: { platform: 'web' },
 });
 
-analytics.client.load(
-  { writeKey: import.meta.env.LEATHER_SEGMENT_WRITE_KEY },
-  {
-    integrations: {
-      'Segment.io': {
-        deliveryStrategy: {
-          strategy: 'batching',
-          config: {
-            size: 10,
-            timeout: 5000,
+const writeKey = import.meta.env.LEATHER_SEGMENT_WRITE_KEY;
+
+if (writeKey) {
+  analytics.client.load(
+    { writeKey },
+    {
+      integrations: {
+        'Segment.io': {
+          deliveryStrategy: {
+            strategy: 'batching',
+            config: {
+              size: 10,
+              timeout: 5000,
+            },
           },
         },
       },
-    },
-  }
-);
+    }
+  );
+}
