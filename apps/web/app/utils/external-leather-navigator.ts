@@ -1,6 +1,6 @@
 import { whenEnvTarget } from '~/constants/environment';
 
-const stagedFramerSite = 'https://prosperous-combination-099461.framer.app/earn-new';
+const stagedFramerSite = 'https://prosperous-combination-099461.framer.app';
 
 export function createExternalLeatherNavigator() {
   const externalUrl = whenEnvTarget({
@@ -11,7 +11,7 @@ export function createExternalLeatherNavigator() {
   });
 
   return {
-    home: `${externalUrl}/home`,
+    home: `${externalUrl}`,
     blog: `${externalUrl}/blog`,
     support: `${externalUrl}/support`,
     guides: `${externalUrl}/guides`,
