@@ -34,7 +34,7 @@ export function EarnInstructions(props: HTMLStyledProps<'section'>) {
         <EarnInstructionStep
           index={0}
           title="Own STX"
-          description="Acquire or hold STX in your wallet, ready to stack."
+          description="Get or hold STX in your wallet, ready to stack."
           img={<DummyIcon />}
         />
         <EarnInstructionStep

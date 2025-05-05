@@ -2,7 +2,7 @@ import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
-import { AcquireSbtcGridLayout } from '~/pages/sbtc-rewards/components/acquire-sbtc-grid.layout';
+import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
 
 import { Badge, Button } from '@leather.io/ui';
 
@@ -101,9 +101,9 @@ function SwapStxToSbtcCell() {
   );
 }
 
-export function AcquireSbtcGrid(props: GridProps) {
+export function GetSbtcGrid(props: GridProps) {
   return (
-    <AcquireSbtcGridLayout
+    <GetSbtcGridLayout
       cells={[<BridgeToSbtcCell key={0} />, <SwapStxToSbtcCell key={1} />]}
       {...props}
     />

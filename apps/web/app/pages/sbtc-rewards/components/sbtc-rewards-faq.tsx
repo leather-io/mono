@@ -25,10 +25,10 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
             decentralization through the Stacks consensus model, Proof of Transfer (PoX).
           </Accordion.Content>
         </Accordion.Item>
-        <Accordion.Item value="how-do-i-acquire-sbtc">
-          <Accordion.Trigger>How do I acquire sBTC?</Accordion.Trigger>
+        <Accordion.Item value="how-do-i-get-sbtc">
+          <Accordion.Trigger>How do I get sBTC?</Accordion.Trigger>
           <Accordion.Content>
-            To acquire sBTC, you typically lock your real BTC in a decentralized manner through a
+            To get sBTC, you typically lock your real BTC in a decentralized manner through a
             process facilitated by the Stacks network and a group of participants called Stackers or
             signers, who manage the peg system. This process involves sending BTC to a special
             address controlled by the network, which then mints an equivalent amount of sBTC on the
@@ -42,15 +42,15 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
         <Accordion.Item value="where-does-the-btc-go">
           <Accordion.Trigger>Where does the BTC go?</Accordion.Trigger>
           <Accordion.Content>
-            When you acquire sBTC by depositing BTC, the actual Bitcoin (BTC) is held in a
-            decentralized manner by a network of Stackers or signers who participate in the peg
-            mechanism on the Stacks blockchain. These participants are responsible for securely
-            holding the BTC in multisig addresses or smart contract-controlled wallets on the
-            Bitcoin network. The BTC remains locked there while the equivalent amount of sBTC is
-            minted on the Stacks chain. This design ensures that sBTC is always backed 1:1 by real
-            BTC. When you later decide to redeem your sBTC, the process burns your sBTC on Stacks
-            and triggers the release of the equivalent BTC from the locked pool back to your Bitcoin
-            wallet, maintaining the peg's integrity and decentralization.
+            When you get sBTC by depositing BTC, the actual Bitcoin (BTC) is held in a decentralized
+            manner by a network of Stackers or signers who participate in the peg mechanism on the
+            Stacks blockchain. These participants are responsible for securely holding the BTC in
+            multisig addresses or smart contract-controlled wallets on the Bitcoin network. The BTC
+            remains locked there while the equivalent amount of sBTC is minted on the Stacks chain.
+            This design ensures that sBTC is always backed 1:1 by real BTC. When you later decide to
+            redeem your sBTC, the process burns your sBTC on Stacks and triggers the release of the
+            equivalent BTC from the locked pool back to your Bitcoin wallet, maintaining the peg's
+            integrity and decentralization.
           </Accordion.Content>
         </Accordion.Item>
       </Accordion.Root>
