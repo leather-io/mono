@@ -686,6 +686,20 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.11.0
 
+## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.24.5...@leather.io/bitcoin-v0.25.0) (2025-05-06)
+
+
+### Features
+
+* **mobile:** add QR scanning to Send ([fb4c703](https://github.com/leather-io/mono/commit/fb4c703af9c8394e3fae45a5e04ef5716d240b1f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/rpc bumped to 2.12.0
+
 ## [0.24.5](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.24.4...@leather.io/bitcoin-v0.24.5) (2025-04-25)
 
 

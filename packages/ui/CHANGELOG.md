@@ -389,6 +389,22 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.63.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.62.0...@leather.io/ui-v1.63.0) (2025-05-06)
+
+
+### Features
+
+* **web:** add user pos loader ([dad4a1e](https://github.com/leather-io/mono/commit/dad4a1e4a64922272644a043ca44ec3acb4c5862))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.16.1
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.12.3
+
 ## [1.62.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.61.1...@leather.io/ui-v1.62.0) (2025-05-01)
 
 
