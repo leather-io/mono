@@ -19,7 +19,7 @@ describe('initNonce', () => {
     const nonce = '123';
     const result = initNonce(nonce);
     expect(result).toBeInstanceOf(BigNumber);
-    expect(result.toString()).toBe('123');
+    expect(result?.toString()).toBe('123');
   });
 });
 

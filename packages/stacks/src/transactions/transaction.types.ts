@@ -23,17 +23,17 @@ export function isTransactionTypeSupported(txType: TransactionTypes) {
 export type StacksUnsignedContractCallOptions = ReplaceTypes<
   UnsignedContractCallOptions,
   {
-    fee: Money;
+    fee?: Money;
     functionArgs: string[];
-    nonce: number | string;
+    nonce?: number | string;
   }
 > & { txType: TransactionTypes.ContractCall };
 
 export type StacksUnsignedContractDeployOptions = ReplaceTypes<
   UnsignedContractDeployOptions,
   {
-    fee: Money;
-    nonce: number | string;
+    fee?: Money;
+    nonce?: number | string;
   }
 > & { txType: TransactionTypes.ContractDeploy };
 
@@ -41,8 +41,8 @@ export type StacksUnsignedTokenTransferOptions = ReplaceTypes<
   UnsignedTokenTransferOptions,
   {
     amount: Money;
-    fee: Money;
-    nonce: number | string;
+    fee?: Money;
+    nonce?: number | string;
   }
 > & { txType: TransactionTypes.StxTokenTransfer };
 

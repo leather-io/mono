@@ -1,16 +1,20 @@
 import { z } from 'zod';
 
 import { defineRpcEndpoint } from '../../rpc/schemas';
-import { stacksTransactionDetailsSchema } from './_stacks-helpers';
+import {
+  baseStacksTransactionConfigSchema,
+  stacksTransactionDetailsSchema,
+} from './_stacks-helpers';
 
 export const stxTransferSip10Ft = defineRpcEndpoint({
   method: 'stx_transferSip10Ft',
-  params: z
-    .object({
+  params: z.intersection(
+    z.object({
       recipient: z.string(),
       asset: z.string(),
       amount: z.coerce.number(),
-    })
-    .passthrough(),
+    }),
+    baseStacksTransactionConfigSchema
+  ),
   result: stacksTransactionDetailsSchema,
 });

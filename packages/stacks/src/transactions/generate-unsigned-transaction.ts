@@ -20,16 +20,16 @@ import {
   isTransactionTypeSupported,
 } from './transaction.types';
 
-export function initNonce(nonce: number | string) {
-  return new BigNumber(nonce, 10);
+export function initNonce(nonce?: number | string) {
+  return nonce !== undefined ? new BigNumber(nonce, 10) : undefined;
 }
 
 export function getUnsignedContractCallParsedOptions(options: StacksUnsignedContractCallOptions) {
   return {
     ...options,
-    fee: options.fee.amount.toString(),
+    fee: options.fee?.amount.toString(),
     functionArgs: options.functionArgs.map(arg => deserializeCV(hexToBytes(cleanHex(arg)))),
-    nonce: initNonce(options.nonce).toString(),
+    nonce: initNonce(options.nonce)?.toString(),
     postConditions: options.postConditions,
   };
 }
@@ -39,8 +39,8 @@ export function getUnsignedContractDeployParsedOptions(
 ) {
   return {
     ...options,
-    fee: options.fee.amount.toString(),
-    nonce: initNonce(options.nonce).toString(),
+    fee: options.fee?.amount.toString(),
+    nonce: initNonce(options.nonce)?.toString(),
     postConditions: getPostConditions(
       options.postConditions?.map(pc => ensurePostConditionWireFormat(pc))
     ),
@@ -53,8 +53,8 @@ export function getUnsignedStxTokenTransferParsedOptions(
   return {
     ...options,
     amount: options.amount.amount.toString(),
-    fee: options.fee.amount.toString(),
-    nonce: initNonce(options.nonce).toString(),
+    fee: options.fee?.amount.toString(),
+    nonce: initNonce(options.nonce)?.toString(),
   };
 }
 
