@@ -11,7 +11,6 @@ import {
 } from '@tanstack/react-table';
 import { css } from 'leather-styles/css';
 import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { DummyIcon } from '~/components/dummy';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { ImgFillLoader } from '~/components/img-loader';
@@ -281,17 +280,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         header: () => <SortableHeader>Liquid token</SortableHeader>,
         cell: info => (
           <Flex justifyContent="space-between" alignItems="center">
-            <Flag
-              spacing="space.02"
-              img={
-                <>
-                  {info.getValue() === 'LiSTX' && <DummyIcon />}
-                  {info.getValue() === 'stSTX' && <DummyIcon />}
-                </>
-              }
-            >
-              {info.getValue() as string}
-            </Flag>
+            <Flag spacing="space.02">{info.getValue() as string}</Flag>
 
             <Link
               to={`/liquid-stacking/${info.row.original.slug}`}

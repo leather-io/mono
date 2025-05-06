@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
+import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 
 // This is some pretty funky border code I am not a fan of, but didn't find an
 // easier way to handle the conditional border for the breakpoints
@@ -42,8 +42,9 @@ interface EarnInstructionStepProps {
   index: number;
   title: string;
   description: string;
-  img: ReactElement;
+  img?: ReactElement;
 }
+
 export function ExplainerStep({ index, title, description, img }: EarnInstructionStepProps) {
   return (
     <Flex
@@ -52,7 +53,7 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
       className="earn-step"
       justifyContent={['space-between', null, 'start']}
     >
-      <VStack gap="space.02" alignItems="left">
+      <VStack gap="space.02" alignItems="left" justifyContent="space-between">
         <VStack
           gap="space.02"
           flexDirection={['row', null, 'column']}
@@ -62,7 +63,7 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
           <styled.span textStyle="heading.05" color="ink.text-non-interactive">
             0{index + 1}
           </styled.span>
-          {img}
+          {img ?? <Box width="32px" height="32px" />}
         </VStack>
         <styled.h3 textStyle="label.01">{title}</styled.h3>
       </VStack>
