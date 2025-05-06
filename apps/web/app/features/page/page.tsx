@@ -7,7 +7,7 @@ import { SignInButton } from '../sign-in-button/sign-in-button';
 export const insetPageMarginX = css({ mx: ['-space.04', '-space.05', '-space.06'] });
 
 export function Page(props: HTMLStyledProps<'div'>) {
-  return <styled.main mx={['space.04', 'space.05', 'space.06']} {...props} />;
+  return <styled.div mx={['space.04', 'space.05', 'space.06']} {...props} />;
 }
 
 export function PageInset(props: HTMLStyledProps<'div'>) {

@@ -65,9 +65,11 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
           </styled.span>
           {img ?? <Box width="32px" height="32px" />}
         </VStack>
-        <styled.h3 textStyle="label.01">{title}</styled.h3>
+        <styled.h3 mt="space.02" textStyle="label.01">
+          {title}
+        </styled.h3>
       </VStack>
-      <styled.p textStyle="caption.01" fontSize="13px">
+      <styled.p color="ink.text-subdued" textStyle="caption.01" fontSize="13px">
         {description}
       </styled.p>
     </Flex>
