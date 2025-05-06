@@ -2,7 +2,7 @@ import { ReactElement, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import {
-  type ColumnDef,
+  ColumnDef,
   type SortingState,
   flexRender,
   getCoreRowModel,
@@ -10,22 +10,27 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { css } from 'leather-styles/css';
-import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { ImgFillLoader } from '~/components/img-loader';
 import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { pools } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import {
+  PoolName,
+  PoolSlug,
+} from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 
 import { Button, Flag } from '@leather.io/ui';
 
-const offsetMinAmountColumm = css({
+const offsetMinAmountColumn = css({
   transform: [null, null, 'translateX(-15%)'],
   maxWidth: '120px',
 });
 
-const offsetEstAprColumm = css({
+const offsetEstAprColumn = css({
   transform: [null, 'translateX(-40%)', 'translateX(-70%)'],
   maxWidth: '120px',
 });
@@ -48,6 +53,7 @@ const tableRowActiveStyles = css({
 
 interface EarnProvider {
   provider: string;
+  poolName: PoolName;
   minAmount: string | null;
   estApr: string;
   payout: string;
@@ -58,6 +64,7 @@ interface EarnProvider {
 const earnProviders: EarnProvider[] = [
   {
     provider: 'Fast Pool',
+    poolName: 'FAST Pool',
     icon: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
     minAmount: null,
     estApr: '5%',
@@ -66,6 +73,7 @@ const earnProviders: EarnProvider[] = [
   },
   {
     provider: 'PlanBetter',
+    poolName: 'PlanBetter',
     icon: <ImgFillLoader src="icons/planbetter.webp" width="24" fill="black" />,
     minAmount: '200 STX',
     estApr: '10%',
@@ -74,6 +82,7 @@ const earnProviders: EarnProvider[] = [
   },
   {
     provider: 'Restake',
+    poolName: 'Restake',
     icon: <ImgFillLoader src="icons/restake.webp" width="24" fill="#124044" />,
     minAmount: '100 STX',
     estApr: '11%',
@@ -82,6 +91,7 @@ const earnProviders: EarnProvider[] = [
   },
   {
     provider: 'Xverse Pool',
+    poolName: 'Xverse',
     icon: <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
     minAmount: '100 STX',
     estApr: '10%',
@@ -90,6 +100,7 @@ const earnProviders: EarnProvider[] = [
   },
   {
     provider: 'Stacking DAO',
+    poolName: 'Stacking DAO',
     icon: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
     minAmount: '100 STX',
     estApr: '16%',
@@ -100,6 +111,7 @@ const earnProviders: EarnProvider[] = [
 
 export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+
   const columns = useMemo<ColumnDef<EarnProvider>[]>(
     () => [
       {
@@ -111,17 +123,19 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
         ),
         header: () => <SortableHeader>Provider</SortableHeader>,
         meta: { align: 'left' },
-        size: 12,
+        size: 14,
       },
       {
         accessorKey: 'minAmount',
         cell: info => (
-          <styled.div className={offsetMinAmountColumm}>
+          <styled.div display={['none', 'none', 'block']} className={offsetMinAmountColumn}>
             {info.getValue() === null ? '—' : (info.getValue() as string)}
           </styled.div>
         ),
         header: () => (
-          <SortableHeader className={offsetMinAmountColumm}>Minimum Amount</SortableHeader>
+          <SortableHeader display={['none', 'none', 'block']} className={offsetMinAmountColumn}>
+            Minimum Amount
+          </SortableHeader>
         ),
         sortUndefined: 'last',
         sortDescFirst: false,
@@ -132,40 +146,46 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'estApr',
         cell: info => (
-          <styled.div className={offsetEstAprColumm}>{info.getValue() as string}</styled.div>
+          <styled.div display={['none', 'none', 'block']} className={offsetEstAprColumn}>
+            {info.getValue() as string}
+          </styled.div>
         ),
-        header: () => <SortableHeader className={offsetEstAprColumm}>Est. APR</SortableHeader>,
+        header: () => (
+          <SortableHeader display={['none', 'none', 'block']} className={offsetEstAprColumn}>
+            Est. APR
+          </SortableHeader>
+        ),
         meta: { align: 'right' },
       },
       {
         accessorKey: 'payout',
-        header: () => <SortableHeader>Payout</SortableHeader>,
         cell: info => (
-          <Flex justifyContent="space-between" alignItems="center">
-            <Flag
-              spacing="space.02"
-              img={
-                <>
-                  {info.getValue() === 'STX' && <StacksIcon />}
-                  {info.getValue() === 'BTC' && <BitcoinIcon />}
-                </>
-              }
-            >
-              {info.getValue() as string}
-            </Flag>
-
-            <Link
-              to={`/pooled-stacking/${info.row.original.slug}`}
-              style={{ minWidth: 'fit-content' }}
-            >
-              <Button size="xs" ml="space.04" minW="fit-content">
-                Start earning
-              </Button>
-            </Link>
-          </Flex>
+          <Flag
+            display={['none', 'none', 'flex']}
+            spacing="space.02"
+            img={
+              <>
+                {info.getValue() === 'STX' && <StacksIcon />}
+                {info.getValue() === 'BTC' && <BitcoinIcon />}
+              </>
+            }
+          >
+            {info.getValue() as string}
+          </Flag>
         ),
+        header: () => <SortableHeader display={['none', 'none', 'block']}>Payout</SortableHeader>,
         meta: { align: 'left' },
-        size: 35,
+      },
+      {
+        accessorKey: 'actions',
+        cell: info => (
+          <StartEarningButton
+            slug={info.row.original.slug}
+            poolAddresses={pools[info.row.original.poolName].poolAddress}
+          />
+        ),
+        header: () => null,
+        meta: { align: 'right' },
       },
     ],
     []
@@ -270,30 +290,43 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'estApr',
         cell: info => (
-          <styled.div className={offsetEstAprColumm}>{info.getValue() as string}</styled.div>
+          <styled.div display={['none', 'none', 'block']} className={offsetEstAprColumn}>
+            {info.getValue() as string}
+          </styled.div>
         ),
-        header: () => <SortableHeader className={offsetEstAprColumm}>Est. APR</SortableHeader>,
+        header: () => (
+          <SortableHeader display={['none', 'none', 'block']} className={offsetEstAprColumn}>
+            Est. APR
+          </SortableHeader>
+        ),
         meta: { align: 'right' },
       },
       {
         accessorKey: 'payout',
-        header: () => <SortableHeader>Liquid token</SortableHeader>,
+        header: () => (
+          <SortableHeader display={['none', 'none', 'block']}>Liquid token</SortableHeader>
+        ),
         cell: info => (
-          <Flex justifyContent="space-between" alignItems="center">
-            <Flag spacing="space.02">{info.getValue() as string}</Flag>
-
-            <Link
-              to={`/liquid-stacking/${info.row.original.slug}`}
-              style={{ minWidth: 'fit-content' }}
-            >
-              <Button size="xs" ml="space.04" minW="fit-content">
-                Start earning
-              </Button>
-            </Link>
-          </Flex>
+          <Flag display={['none', 'none', 'flex']} spacing="space.02">
+            {info.getValue() as string}
+          </Flag>
         ),
         meta: { align: 'left' },
-        size: 35,
+      },
+      {
+        accessorKey: 'actions',
+        header: () => null,
+        cell: info => (
+          <Link
+            to={`/liquid-stacking/${info.row.original.slug}`}
+            style={{ minWidth: 'fit-content' }}
+          >
+            <Button size="xs" whiteSpace="nowrap" minW="fit-content">
+              Start earning
+            </Button>
+          </Link>
+        ),
+        meta: { align: 'right' },
       },
     ],
     []
