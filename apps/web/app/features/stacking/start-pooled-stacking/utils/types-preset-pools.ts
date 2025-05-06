@@ -66,7 +66,7 @@ export type WrapperPrincipal = PoxContractType[keyof PoxContractType];
 
 export interface Pool {
   name: PoolName;
-  poolAddress: Record<NetworkInstance, string> | undefined;
+  poolAddress: PoolAddress | undefined;
   description: string;
   website: string;
   duration: number;
@@ -77,3 +77,5 @@ export interface Pool {
   allowCustomRewardAddress: boolean;
   disabled: boolean;
 }
+
+export type PoolAddress = Record<NetworkInstance, string>;
