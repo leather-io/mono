@@ -263,6 +263,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.32.0
 
+## [2.12.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.11.0...@leather.io/rpc-v2.12.0) (2025-05-06)
+
+
+### Features
+
+* **web:** add segment, events, closes ENG-67 ([d5222cd](https://github.com/leather-io/mono/commit/d5222cd33f730da05c5ce31300daa9b9e2849e5b))
+
 ## [2.11.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.10.4...@leather.io/rpc-v2.11.0) (2025-04-23)
 
 

@@ -132,6 +132,14 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.5
 
+## [0.16.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.16.0...@leather.io/tokens-v0.16.1) (2025-05-06)
+
+
+### Bug Fixes
+
+* **web:** analytics, type ligatures ([8616045](https://github.com/leather-io/mono/commit/861604571155c06fab78b7a4bce64fd3a75186b8))
+* **web:** update framer url ([b5cc636](https://github.com/leather-io/mono/commit/b5cc636ab9c6d3b665e0c31797d8512b7f2fe02b))
+
 ## [0.16.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.15.0...@leather.io/tokens-v0.16.0) (2025-03-28)
 
 

@@ -701,6 +701,35 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.34.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.33.0...@leather.io/mobile-v2.34.0) (2025-05-06)
+
+
+### Features
+
+* **mobile:** add QR code to receive ([eb69887](https://github.com/leather-io/mono/commit/eb69887c819a70da53e4e71c7fe985ef84dac118))
+* **mobile:** add QR scanning to Send ([fb4c703](https://github.com/leather-io/mono/commit/fb4c703af9c8394e3fae45a5e04ef5716d240b1f))
+
+
+### Bug Fixes
+
+* **mobile:** filter hidden accounts from receive ([967905e](https://github.com/leather-io/mono/commit/967905e511d7669062b831c4f89385043c2e4e74))
+* **mobile:** update asset details screen in Receive to match the design ([49d7cf0](https://github.com/leather-io/mono/commit/49d7cf0d7284e02887c6f88d40139a6491b35a80))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.25.0
+    * @leather.io/provider bumped to 1.2.9
+    * @leather.io/query bumped to 2.36.3
+    * @leather.io/rpc bumped to 2.12.0
+    * @leather.io/services bumped to 1.9.1
+    * @leather.io/tokens bumped to 0.16.1
+    * @leather.io/ui bumped to 1.63.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.25.0
+
 ## [2.33.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.32.0...@leather.io/mobile-v2.33.0) (2025-05-01)
 
 
