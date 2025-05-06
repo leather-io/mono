@@ -7,9 +7,5 @@ export interface ErrorPageProps {
 }
 
 export function ErrorPage({ error }: ErrorPageProps) {
-  return (
-    <main>
-      <ErrorLayout error={error} />
-    </main>
-  );
+  return <ErrorLayout error={error} />;
 }
