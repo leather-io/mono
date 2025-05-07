@@ -66,7 +66,7 @@ const earnProviders: EarnProvider[] = [
     provider: 'Fast Pool',
     poolName: 'FAST Pool',
     icon: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
-    minAmount: null,
+    minAmount: '40 STX',
     estApr: '5%',
     payout: 'STX',
     slug: 'fast-pool',

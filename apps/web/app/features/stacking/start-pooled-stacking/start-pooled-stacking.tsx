@@ -262,7 +262,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   }
 
   return (
-    <Stack>
+    <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       <Page.Inset>
         <PoolOverview pool={pool} poolSlug={poolSlug} />
       </Page.Inset>
@@ -271,10 +271,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
         <StartStackingLayout
           stackingForm={
             <Form>
-              <Stack
-                gap={['space.05', 'space.05', 'space.05', 'space.07']}
-                maxWidth={[null, null, '304px', 'none']}
-              >
+              <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Amount" />
                   <ChoosePoolingAmount
@@ -312,7 +309,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
                 <Hr />
 
-                <Stack gap="space.02">
+                <Stack gap="space.04">
                   <StackingFormItemTitle title="Pooling conditions" />
                   <ChoosePoolingConditions />
                 </Stack>

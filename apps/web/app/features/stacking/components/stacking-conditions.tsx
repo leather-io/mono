@@ -14,9 +14,9 @@ export interface StackingConditionsProps {
 
 export function StackingConditions({ conditions }: StackingConditionsProps) {
   return (
-    <Stack gap="space.04">
+    <Stack gap="space.00">
       {conditions.map(condition => (
-        <HStack key={condition.title} alignItems="flex-start">
+        <HStack py="space.03" gap="space.03" key={condition.title} alignItems="flex-start">
           <Box flexShrink={0}>{condition.icon}</Box>
           <Stack gap="0">
             <styled.span textStyle="label.03">{condition.title}</styled.span>
