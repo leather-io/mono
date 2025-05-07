@@ -389,6 +389,22 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.64.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.63.0...@leather.io/ui-v1.64.0) (2025-05-07)
+
+
+### Features
+
+* **ui:** hover card component ([abd3d11](https://github.com/leather-io/mono/commit/abd3d1133561d8aa7fdf2180cc84f6e260372f23))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.17.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.12.4
+
 ## [1.63.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.62.0...@leather.io/ui-v1.63.0) (2025-05-06)
 
 
