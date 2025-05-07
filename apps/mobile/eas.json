@@ -12,8 +12,8 @@
       },
       "ios": {
         "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
+        "cocoapods": "1.16.2",
+        "image": "sdk-51"
       }
     },
     "simulator-dev": {
@@ -22,8 +22,8 @@
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
+        "cocoapods": "1.16.2",
+        "image": "sdk-51"
       },
       "android": {
         "image": "latest"
@@ -35,8 +35,8 @@
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "cocoapods": "1.15.2",
-        "image": "latest"
+        "cocoapods": "1.16.2",
+        "image": "sdk-51"
       },
       "android": {
         "image": "latest"
@@ -48,8 +48,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
+        "image": "sdk-51",
+        "cocoapods": "1.16.2"
       }
     },
     "preview-simulator": {
@@ -57,9 +57,9 @@
       "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
-        "image": "latest",
+        "image": "sdk-51",
         "simulator": true,
-        "cocoapods": "1.15.2"
+        "cocoapods": "1.16.2"
       }
     },
     "preview": {
@@ -67,8 +67,8 @@
       "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
+        "image": "sdk-51",
+        "cocoapods": "1.16.2"
       }
     },
     "production": {
@@ -77,8 +77,8 @@
       "distribution": "store",
       "autoIncrement": true,
       "ios": {
-        "image": "latest",
-        "cocoapods": "1.15.2"
+        "image": "sdk-51",
+        "cocoapods": "1.16.2"
       },
       "android": {
         "image": "latest"
@@ -91,8 +91,8 @@
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "image": "latest",
-        "cocoapods": "1.15.2"
+        "image": "sdk-51",
+        "cocoapods": "1.16.2"
       },
       "android": {
         "buildType": "apk",
