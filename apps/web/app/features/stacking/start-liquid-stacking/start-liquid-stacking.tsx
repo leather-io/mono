@@ -7,6 +7,8 @@ import { StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { ProtocolOverview } from '~/components/protocol-overview';
+import { Page } from '~/features/page/page';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
@@ -141,15 +143,15 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
   }
 
   return (
-    <>
+    <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
+      <Page.Inset>
+        <ProtocolOverview protocol={protocol} protocolSlug={protocolSlug} />
+      </Page.Inset>
       <FormProvider {...formMethods}>
         <StartStackingLayout
           stackingForm={
             <Form>
-              <Stack
-                gap={['space.05', 'space.05', 'space.05', 'space.07']}
-                maxWidth={[null, null, '304px', 'none']}
-              >
+              <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Amount" />
                   <ChoosePoolingAmount
@@ -232,6 +234,6 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
           stackingAmount={stackingAmount}
         />
       </StartStackingDrawer>
-    </>
+    </Stack>
   );
 }

@@ -2,7 +2,7 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { Pool } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -26,7 +26,7 @@ interface LockupPeriodCellProps {
   lockupPeriod?: string;
 }
 function LockupPeriodCell({ lockupPeriod = '1 Cycle' }: LockupPeriodCellProps) {
-  return <ValueDisplayer name="Minimum lockup period" value={<>{lockupPeriod}</>} />;
+  return <ValueDisplayer name="Minimum lockup period" value={lockupPeriod} />;
 }
 
 interface DaysUntilNextCycleCellProps {
@@ -51,14 +51,14 @@ interface MinimumCommitmentCellProps {
 function MinimumCommitmentCell({
   minimumCommitment = '40,000,000.00 STX',
 }: MinimumCommitmentCellProps) {
-  return <ValueDisplayer name="Minimum commitment" value={<>{minimumCommitment}</>} />;
+  return <ValueDisplayer name="Minimum commitment" value={minimumCommitment} />;
 }
 
 interface HistoricalAprCellProps {
   historicalApr?: string;
 }
 function HistoricalAprCell({ historicalApr = '10%' }: HistoricalAprCellProps) {
-  return <ValueDisplayer name="Historical APR" value={<>{historicalApr}</>} />;
+  return <ValueDisplayer name="Historical APR" value={historicalApr} />;
 }
 
 interface TotalValueLockedCellProps {
@@ -81,23 +81,23 @@ function TotalValueLockedCell({
   );
 }
 
-interface PoolOverviewProps {
-  pool: Pool;
-  poolSlug: string;
+interface ProtocolOverviewProps {
+  protocol: Protocol;
+  protocolSlug: string;
 }
-function PoolCell({ pool }: PoolOverviewProps) {
+function ProtocolCell({ protocol }: ProtocolOverviewProps) {
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      {pool.icon}
+      {protocol.icon}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {pool.name}
+        {protocol.name}
       </styled.h4>
-      <styled.p textStyle="caption.01">{pool.description}</styled.p>
+      <styled.p textStyle="caption.01">{protocol.description}</styled.p>
     </VStack>
   );
 }
 
-export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
+export function ProtocolOverview({ protocol, protocolSlug }: ProtocolOverviewProps) {
   return (
     <InfoGrid
       width="100%"
@@ -111,7 +111,7 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
       borderRadius="0px"
     >
       <InfoGrid.Cell gridColumn={['span 2', 'span 2', 'auto']} gridRow={['1', '1', 'span 2']}>
-        <PoolCell pool={pool} poolSlug={poolSlug} />
+        <ProtocolCell protocol={protocol} protocolSlug={protocolSlug} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
         <HistoricalAprCell />

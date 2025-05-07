@@ -187,15 +187,12 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
   }
 
   return (
-    <>
+    <Stack mt="space.09" gap={[null, null, 'space.06', 'space.09']} mb="space.07">
       <FormProvider {...formMethods}>
         <StartStackingLayout
           stackingForm={
             <Form>
-              <Stack
-                gap={['space.05', 'space.05', 'space.05', 'space.07']}
-                maxWidth={[null, null, '304px', 'none']}
-              >
+              <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Adding amount" />
                   <ChoosePoolingAmount
@@ -269,6 +266,6 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
           stackingAmount={increaseBy}
         />
       </StartStackingDrawer>
-    </>
+    </Stack>
   );
 }
