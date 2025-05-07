@@ -1,6 +1,10 @@
 import { StackingClient } from '@stacks/stacking';
-import { HStack, VStack, styled } from 'leather-styles/jsx';
-import { useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
+import { Flex, HStack, VStack, styled } from 'leather-styles/jsx';
+import {
+  useGetCoreInfoQuery,
+  useGetPoxInfoQuery,
+  useGetStatusQuery,
+} from '~/features/stacking/hooks/stacking.query';
 import { PooledStackingActionButtons } from '~/features/stacking/pooled-stacking-info/pooled-stacking-action-buttons';
 import { PooledStackingInfoGrid } from '~/features/stacking/pooled-stacking-info/pooled-stacking-info-grid';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
@@ -14,6 +18,15 @@ import {
   PoolSlugToIdMap,
 } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { useLeatherConnect } from '~/store/addresses';
+import { useStacksNetwork } from '~/store/stacks-network';
+import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
+
+import { Money } from '@leather.io/models';
+import { LoadingSpinner } from '@leather.io/ui';
+import { createMoney } from '@leather.io/utils';
+
+import { useDelegationStatusQuery } from './pooled-stacking-info/use-delegation-status-query';
+import { useGetPoolAddress } from './pooled-stacking-info/use-get-pool-address-query';
 
 interface PooledStackingActiveInfoProps {
   poolSlug: PoolSlug;
@@ -40,13 +53,57 @@ interface PooledStackingActiveInfoLayoutProps {
 
 function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLayoutProps) {
   const poxInfoQuery = useGetPoxInfoQuery();
+  const delegationStatusQuery = useDelegationStatusQuery();
+  const getStatusQuery = useGetStatusQuery();
+  const getCoreInfoQuery = useGetCoreInfoQuery();
+  const getPoolAddressQuery = useGetPoolAddress();
+  const { network } = useStacksNetwork();
 
-  if (poxInfoQuery.isLoading) return null;
-  if (poxInfoQuery.isError || !poxInfoQuery.data) return <>Failed to load Pox data</>;
+  if (
+    poxInfoQuery.isLoading ||
+    getPoolAddressQuery.isLoading ||
+    delegationStatusQuery.isLoading ||
+    getStatusQuery.isLoading ||
+    getCoreInfoQuery.isLoading
+  ) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
+
+  if (
+    poxInfoQuery.isError ||
+    !poxInfoQuery.data ||
+    delegationStatusQuery.isError ||
+    !delegationStatusQuery.data
+  )
+    return <>Failed to load Pox data</>;
 
   const poolId = PoolSlugToIdMap[poolSlug];
   const poolName = PoolIdToDisplayNameMap[poolId];
   const pool = pools[poolName];
+
+  console.log('pool', pool);
+  console.log('poxInfoQuery.data', poxInfoQuery.data);
+  console.log('delegationStatusQuery.data', delegationStatusQuery.data);
+  console.log('getStatusQuery.data', getStatusQuery.data);
+  console.log('getCoreInfoQuery.data', getCoreInfoQuery.data);
+  console.log('getPoolAddressQuery.data', getPoolAddressQuery.data);
+
+  const poxAddress = getStatusQuery.data?.stacked ? getStatusQuery.data.details.pox_address : null;
+
+  const pooledStackingInfo = {
+    status: getStatusQuery.data?.stacked ? 'Active' : 'Waiting on pool',
+    tvl: createMoney(poxInfoQuery.data.current_cycle.stacked_ustx, 'STX'),
+    poolAddress: getPoolAddressQuery.data?.poolAddress,
+    rewardsToken: 'STX',
+    minLockupPeriodCycles: 15,
+    rewardAddress: poxAddress ? formatPoxAddressToNetwork(network, poxAddress) : null,
+  };
+
+  // console.log('pooledStackingInfo', pooledStackingInfo);
 
   return (
     <VStack alignItems="stretch" pt="12px">
@@ -58,7 +115,7 @@ function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLa
         <PooledStackingActionButtons poolSlug={poolSlug} />
       </HStack>
 
-      <PooledStackingInfoGrid rewardProtocol={poolRewardProtocol} />
+      <PooledStackingInfoGrid rewardProtocol={pooledStackingInfo} />
     </VStack>
   );
 }
