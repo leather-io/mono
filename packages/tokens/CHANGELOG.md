@@ -132,6 +132,18 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.5
 
+## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.16.1...@leather.io/tokens-v0.17.0) (2025-05-07)
+
+
+### Features
+
+* **ui:** hover card component ([abd3d11](https://github.com/leather-io/mono/commit/abd3d1133561d8aa7fdf2180cc84f6e260372f23))
+
+
+### Bug Fixes
+
+* mobile builds ([66d31cb](https://github.com/leather-io/mono/commit/66d31cb3052e0254d16756cf38d20a2d71bf5903))
+
 ## [0.16.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.16.0...@leather.io/tokens-v0.16.1) (2025-05-06)
 
 

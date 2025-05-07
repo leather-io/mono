@@ -701,6 +701,22 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.34.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.34.0...@leather.io/mobile-v2.34.1) (2025-05-07)
+
+
+### Bug Fixes
+
+* eas builds ([7d5e7ba](https://github.com/leather-io/mono/commit/7d5e7ba68f03256b886ccb5df5fc3189de852b88))
+* mobile builds ([66d31cb](https://github.com/leather-io/mono/commit/66d31cb3052e0254d16756cf38d20a2d71bf5903))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.17.0
+    * @leather.io/ui bumped to 1.64.0
+
 ## [2.34.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.33.0...@leather.io/mobile-v2.34.0) (2025-05-06)
 
 
