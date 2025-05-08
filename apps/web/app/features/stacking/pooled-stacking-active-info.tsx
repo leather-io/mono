@@ -1,5 +1,6 @@
 import { StackingClient } from '@stacks/stacking';
 import { HStack, VStack, styled } from 'leather-styles/jsx';
+import { ProviderIcon } from '~/components/icons/provider-icon';
 import { useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
 import { PooledStackingActionButtons } from '~/features/stacking/pooled-stacking-info/pooled-stacking-action-buttons';
 import { PooledStackingInfoGrid } from '~/features/stacking/pooled-stacking-info/pooled-stacking-info-grid';
@@ -8,8 +9,7 @@ import { dummyPoolRewardProtocol } from '~/features/stacking/start-pooled-stacki
 import {
   PoolSlug,
   getPoolFromSlug,
-} from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
-import { ProviderIcon } from '~/pages/stacking/components/earn-provider-table';
+} from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { useLeatherConnect } from '~/store/addresses';
 
 interface PooledStackingActiveInfoProps {

@@ -4,10 +4,13 @@ import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
 import { UserPositions } from '~/features/stacking/user-positions';
 
-import { EarnProviderTable, LiquidStackingProviderTable } from './components/earn-provider-table';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
 import { StackingFaq } from './components/stacking-faq';
+import {
+  EarnProviderTable,
+  LiquidStackingProviderTable,
+} from './components/stacking-provider-table';
 
 export function Stacking() {
   return (

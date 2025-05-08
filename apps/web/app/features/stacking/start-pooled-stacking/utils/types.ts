@@ -1,11 +1,9 @@
-import { NetworkMode } from './types-preset-pools';
+import { NetworkMode } from './stacking-pool-types';
 
 // TODO: Replace with StackingPoolFormSchema
 export interface StackingFormValues {
   amount: number;
   rewardAddress: string;
-  // TODO: should we remove these fields?
-  poolName?: string;
   providerId: string;
   poolAddress: string;
   delegationDurationType?: string;

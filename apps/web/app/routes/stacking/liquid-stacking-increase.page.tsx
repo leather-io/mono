@@ -9,9 +9,7 @@ import { Route } from './+types/liquid-stacking-increase.page';
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: protocolSlug } = protocolSlugSchema.safeParse(params.slug);
 
-  if (!success) {
-    throw new Response(`Invalid protocol slug: ${protocolSlug}`, { status: 404 });
-  }
+  if (!success) throw new Response(`Invalid protocol slug: ${protocolSlug}`, { status: 404 });
 
   return { protocolSlug };
 }

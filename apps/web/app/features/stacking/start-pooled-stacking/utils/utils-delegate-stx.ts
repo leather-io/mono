@@ -8,21 +8,20 @@ import {
   someCV,
   uintCV,
 } from '@stacks/transactions';
+import { StackingProviderId } from '~/data/data';
 import { StxCallContractParams } from '~/helpers/leather-sdk';
 import { cyclesToBurnChainHeight } from '~/utils/calculate-burn-height';
 
 import { LeatherSdk } from '@leather.io/sdk';
 import { stxToMicroStx } from '@leather.io/utils';
 
+import { getStackingPoolById } from './stacking-pool-types';
 import { StackingFormValues } from './types';
-import { PoolId, getStackingPoolById } from './types-preset-pools';
-import { getNetworkInstanceByName, getPoxContract } from './utils-preset-pools';
+import { getNetworkInstanceByName, getPoxContract } from './utils-stacking-pools';
 
-function getOptions(
+function getDelegateStxOptions(
   values: StackingFormValues,
   poxInfo: PoxInfo,
-  stackingContract: string,
-  client: StackingClient,
   network: StacksNetworkName
 ): StxCallContractParams {
   const untilBurnBlockHeight =
@@ -34,35 +33,35 @@ function getOptions(
           firstBurnchainBlockHeight: poxInfo.first_burnchain_block_height,
         })
       : undefined;
-  const pool = getStackingPoolById(values.providerId as PoolId);
+  const pool = getStackingPoolById(values.providerId as StackingProviderId);
   if (!pool) throw new Error('Invalid Pool Name');
   const networkMode = getNetworkInstanceByName(network);
   const delegateTo = pool.poolAddress?.[networkMode] || values.poolAddress;
 
-  if (values.poolName === 'Custom Pool') {
-    const options = client.getDelegateOptions(
-      {
-        contract: stackingContract,
-        amountMicroStx: stxToMicroStx(values.amount).toString(),
-        delegateTo,
-        untilBurnBlockHeight,
-      }
-      // Type coercion necessary because the `network` property returned by
-      // `client.getStackingContract()` has a wider type than allowed by `showContractCall`. Despite
-      // the wider type, the actual value of `network` is always of the type `StacksNetwork`
-      // expected by `showContractCall`.
-      //
-      // See
-      // https://github.com/hirosystems/stacks.js/blob/0e1f9f19dfa45788236c9e481f9a476d9948d86d/packages/stacking/src/index.ts#L1054
-    );
+  // if (values.name === 'Custom Pool') {
+  //   const options = client.getDelegateOptions(
+  //     {
+  //       contract: stackingContract,
+  //       amountMicroStx: stxToMicroStx(values.amount).toString(),
+  //       delegateTo,
+  //       untilBurnBlockHeight,
+  //     }
+  //     // Type coercion necessary because the `network` property returned by
+  //     // `client.getStackingContract()` has a wider type than allowed by `showContractCall`. Despite
+  //     // the wider type, the actual value of `network` is always of the type `StacksNetwork`
+  //     // expected by `showContractCall`.
+  //     //
+  //     // See
+  //     // https://github.com/hirosystems/stacks.js/blob/0e1f9f19dfa45788236c9e481f9a476d9948d86d/packages/stacking/src/index.ts#L1054
+  //   );
 
-    return {
-      contract: stackingContract,
-      functionName: options.functionName,
-      functionArgs: options.functionArgs.map(arg => serializeCV(arg)),
-      network,
-    } satisfies StxCallContractParams;
-  }
+  //   return {
+  //     contract: stackingContract,
+  //     functionName: options.functionName,
+  //     functionArgs: options.functionArgs.map(arg => serializeCV(arg)),
+  //     network,
+  //   } satisfies StxCallContractParams;
+  // }
 
   const contract = getPoxContract(networkMode, pool.poxContract);
 
@@ -108,12 +107,9 @@ export function createDelegateStxMutationOptions({
   return {
     mutationKey: ['delegate-stx', leather, client, network],
     mutationFn: async (values: StackingFormValues) => {
-      const [poxInfo, stackingContract] = await Promise.all([
-        client.getPoxInfo(),
-        client.getStackingContract(),
-      ]);
+      const [poxInfo] = await Promise.all([client.getPoxInfo(), client.getStackingContract()]);
 
-      const delegateStxOptions = getOptions(values, poxInfo, stackingContract, client, network);
+      const delegateStxOptions = getDelegateStxOptions(values, poxInfo, network);
 
       return leather.stxCallContract(delegateStxOptions);
     },

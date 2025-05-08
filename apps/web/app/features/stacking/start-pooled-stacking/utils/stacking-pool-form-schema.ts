@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
+import { StackingProviderId } from '~/data/data';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
@@ -10,7 +11,7 @@ import {
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { BitcoinNetworkModes, Money } from '@leather.io/models';
 
-import { PoolId, getStackingPoolById } from './types-preset-pools';
+import { getStackingPoolById } from './stacking-pool-types';
 
 function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
@@ -18,7 +19,7 @@ function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
 
 interface SchemaCreationParams {
   networkMode: BitcoinNetworkModes;
-  providerId: PoolId;
+  providerId: StackingProviderId;
   availableBalance: Money;
   stackedAmount?: BigNumber;
 }

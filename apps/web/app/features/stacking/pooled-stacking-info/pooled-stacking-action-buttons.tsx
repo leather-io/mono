@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Flex } from 'leather-styles/jsx';
 import { createRevokeDelegateStxMutationOptions } from '~/features/stacking/pooled-stacking-info/use-revoke-delegate-stx';
 import { useStackingClientRequired } from '~/features/stacking/providers/stacking-client-provider';
-import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { leather } from '~/helpers/leather-sdk';
 import { useStacksNetwork } from '~/store/stacks-network';
 
