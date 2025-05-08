@@ -1,7 +1,5 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
-import { pools } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import { PoolName } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
@@ -12,19 +10,21 @@ import {
 import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import { BitcoinNetworkModes, Money } from '@leather.io/models';
 
+import { PoolId, getStackingPoolById } from './types-preset-pools';
+
 function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
 }
 
 interface SchemaCreationParams {
   networkMode: BitcoinNetworkModes;
-  poolName: PoolName;
+  providerId: PoolId;
   availableBalance: Money;
   stackedAmount?: BigNumber;
 }
 
 export function createValidationSchema({
-  poolName,
+  providerId,
   networkMode,
   stackedAmount,
 }: SchemaCreationParams) {
@@ -50,7 +50,8 @@ export function createValidationSchema({
     })
     .superRefine((data, ctx) => {
       const amount = data.amount;
-      const minDelegatedStackingAmount = pools[poolName].minimumDelegationAmount || 0;
+      const minDelegatedStackingAmount =
+        getStackingPoolById(providerId).minimumDelegationAmount || 0;
       if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',

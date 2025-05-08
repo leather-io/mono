@@ -11,10 +11,8 @@ import { StxCallContractParams } from '~/helpers/leather-sdk';
 
 import { LeatherSdk } from '@leather.io/sdk';
 
-import { PoolName, WrapperPrincipal } from './types-preset-pools';
-
 function getOptions(
-  poxWrapperContract: WrapperPrincipal,
+  poxWrapperContract: string,
   stackingContract: string,
   network: StacksNetworkName
 ): StxCallContractParams {
@@ -28,11 +26,11 @@ function getOptions(
 }
 
 export function isAllowContractCallerConfirmed(
-  poolName: PoolName,
+  providerId: string,
   network: StacksNetwork,
   hasUserConfirmedPoolWrapperContract: PoolWrapperAllowanceState
 ): boolean {
-  const poxWrapperContract = getPoxWrapperContract(poolName, network);
+  const poxWrapperContract = getPoxWrapperContract(providerId, network);
   const networkInstance = getNetworkInstance(network);
 
   return Boolean(hasUserConfirmedPoolWrapperContract[networkInstance]?.[poxWrapperContract]);
@@ -42,9 +40,8 @@ interface CreateHandleSubmitArgs {
   leather: LeatherSdk;
   client: StackingClient;
   network: StacksNetworkName;
-  poxWrapperContract: WrapperPrincipal;
+  poxWrapperContract: string;
 }
-
 export function createAllowContractCallerSubmitMutationOptions({
   leather,
   client,

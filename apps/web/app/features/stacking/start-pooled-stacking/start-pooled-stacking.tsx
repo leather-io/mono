@@ -24,7 +24,7 @@ import {
 } from '~/features/stacking/start-pooled-stacking/utils/utils-allow-contract-caller';
 import { createDelegateStxMutationOptions } from '~/features/stacking/start-pooled-stacking/utils/utils-delegate-stx';
 import {
-  getPoxContracts,
+  getPoxContractsByNetwork,
   getPoxWrapperContract2,
   requiresAllowContractCaller,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
@@ -48,15 +48,9 @@ import {
 import { ChoosePoolingConditions } from './components/choose-pooling-conditions';
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
-import { pools } from './components/preset-pools';
 import { StackingPoolFormSchema, createValidationSchema } from './utils/stacking-pool-form-schema';
 import { PoolWrapperAllowanceState } from './utils/types';
-import {
-  PoolIdToDisplayNameMap,
-  PoolSlug,
-  PoolSlugToIdMap,
-  WrapperPrincipal,
-} from './utils/types-preset-pools';
+import { PoolSlug, getPoolFromSlug } from './utils/types-preset-pools';
 
 interface StartPooledStackingProps {
   poolSlug: PoolSlug;
@@ -89,14 +83,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   if (!stacksAccount) throw new Error('No STX address available');
 
   const { network, networkInstance, networkPreference } = useStacksNetwork();
-  const poxContracts = useMemo(() => getPoxContracts(network), [network]);
+  const poxContracts = useMemo(() => getPoxContractsByNetwork(network), [network]);
   const navigate = useNavigate();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
 
-  const [contractAddress, contractName] = getPoxContracts(network)['Pox4'].split('.');
+  const [contractAddress, contractName] = getPoxContractsByNetwork(network)['Pox4'].split('.');
 
   const getAllowanceContractCallersFastPoolQuery = useGetAllowanceContractCallersQuery({
     contractAddress,
@@ -137,24 +131,24 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     return undefined;
   }, [delegationStatusQuery.data]);
 
-  const poolId = PoolSlugToIdMap[poolSlug];
-  const poolName = PoolIdToDisplayNameMap[poolId];
-  const pool = pools[poolName];
+  const pool = getPoolFromSlug(poolSlug);
   const poolStxAddress = pool.poolAddress?.[networkInstance];
   const poxWrapperContract =
     (pool?.poxContract ? getPoxWrapperContract2(networkInstance, pool.poxContract) : undefined) ||
-    (poxInfoQuery.data?.contract_id as WrapperPrincipal);
+    poxInfoQuery.data?.contract_id;
 
   const schema = useMemo(
     () =>
       createValidationSchema({
         networkMode: networkPreference.chain.bitcoin.mode,
-        poolName,
+        providerId: pool.providerId,
         availableBalance: totalAvailableBalance,
         stackedAmount,
       }),
-    [networkPreference.chain.bitcoin.mode, poolName, totalAvailableBalance, stackedAmount]
+    [networkPreference.chain.bitcoin.mode, pool.providerId, totalAvailableBalance, stackedAmount]
   );
+
+  if (!poxWrapperContract) throw new Error('No POX wrapper contract available');
 
   const {
     data: allowContractCallerResult,
@@ -219,7 +213,8 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   const handleDelegate = formMethods.handleSubmit(values => {
     return handleDelegateStxSubmit({
       ...values,
-      poolName,
+      poolName: pool.name,
+      providerId: pool.providerId,
       delegationDurationType: 'limited',
       numberOfCycles: 1,
       poolAddress: poolStxAddress ?? '',
@@ -228,13 +223,13 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const allowContractCallerConfirmed = useMemo(() => {
     const confirmed = isAllowContractCallerConfirmed(
-      poolName,
+      pool.providerId,
       network,
       hasUserConfirmedPoolWrapperContract
     );
 
     return confirmed;
-  }, [hasUserConfirmedPoolWrapperContract, network, poolName]);
+  }, [hasUserConfirmedPoolWrapperContract, network, pool.providerId]);
 
   const poolAmount = formMethods.watch('amount');
 
@@ -339,7 +334,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                   allowContractCaller: {
                     accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
                     loading: handleAllowContractCallerSubmitPending,
-                    visible: requiresAllowContractCaller(poolName),
+                    visible: requiresAllowContractCaller(pool.name),
                   },
                   delegateStx: {
                     accepted: Boolean(delegateStxResult),
@@ -366,7 +361,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
             allowContractCaller: {
               accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
               loading: handleAllowContractCallerSubmitPending,
-              visible: requiresAllowContractCaller(poolName),
+              visible: requiresAllowContractCaller(pool.name),
             },
             delegateStx: {
               accepted: Boolean(delegateStxResult),

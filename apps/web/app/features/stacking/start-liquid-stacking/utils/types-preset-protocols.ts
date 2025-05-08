@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { NetworkInstance } from '../../start-pooled-stacking/utils/types-preset-pools';
+import { NetworkMode } from '../../start-pooled-stacking/utils/types-preset-pools';
 
 export const ProtocolSlugToIdMap = {
   'stacking-dao': 'stackingDao',
@@ -52,12 +52,12 @@ export const LiquidTokenMap = {
 export type LiquidToken = keyof typeof LiquidTokenMap;
 
 type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
-export type LiquidContractType = ContractMapType[NetworkInstance];
+export type LiquidContractType = ContractMapType[NetworkMode];
 export type LiquidContractPrincipal = LiquidContractType[keyof LiquidContractType];
 
 export interface Protocol {
   name: ProtocolName;
-  protocolAddress: Record<NetworkInstance, string> | undefined;
+  protocolAddress: Record<NetworkMode, string> | undefined;
   description: string;
   website: string;
   duration: number;

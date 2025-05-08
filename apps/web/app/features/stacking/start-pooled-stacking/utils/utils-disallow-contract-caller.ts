@@ -6,10 +6,8 @@ import { principalCV } from '@stacks/transactions';
 import { analytics } from '~/features/analytics/analytics';
 import { StxCallContractParams, leather } from '~/helpers/leather-sdk';
 
-import { WrapperPrincipal } from './types-preset-pools';
-
 function getOptions(
-  poxWrapperContract: WrapperPrincipal,
+  poxWrapperContract: string,
   stackingContract: string,
   network: StacksNetworkName
 ): StxCallContractParams {
@@ -32,7 +30,7 @@ export function createHandleSubmit({
   network,
   setIsContractCallExtensionPageOpen,
 }: CreateHandleSubmitArgs) {
-  return async function handleSubmit(poxWrapperContract: WrapperPrincipal) {
+  return async function handleSubmit(poxWrapperContract: string) {
     // TODO: handle thrown errors
     const [stackingContract] = await Promise.all([client.getStackingContract()]);
 

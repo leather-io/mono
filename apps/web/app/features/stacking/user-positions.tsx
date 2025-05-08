@@ -16,6 +16,7 @@ import {
   getPoolByAddress,
   getPoolSlugByPoolName,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
+import { ProviderIcon } from '~/pages/stacking/components/earn-provider-table';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
 import { LoadingSpinner, SkeletonLoader } from '@leather.io/ui';
@@ -97,7 +98,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   }
 
   const pool = getPoolByAddress(poolAddress); // TODO: Detect custom pool
-  const poolSlug = pool ? getPoolSlugByPoolName(pool.name) : undefined;
+  const poolSlug = pool ? getPoolSlugByPoolName(pool.providerId) : undefined;
 
   const delegationInfoDetails = delegationStatusQuery.data.delegated
     ? delegationStatusQuery.data.details
@@ -127,7 +128,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <VStack gap="space.05" alignItems="left" p="space.05">
             <SkeletonLoader width="32" height="32" isLoading={fakeLoading}>
-              {pool ? pool.icon : <DummyIcon />}
+              {pool ? <ProviderIcon providerId={pool.providerId} /> : <DummyIcon />}
             </SkeletonLoader>
 
             <SkeletonLoader height="15" width="80" isLoading={fakeLoading}>

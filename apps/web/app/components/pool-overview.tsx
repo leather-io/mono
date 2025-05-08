@@ -2,7 +2,8 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { Pool } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { StackingProvider } from '~/data/data';
+import { ProviderIcon } from '~/pages/stacking/components/earn-provider-table';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -82,13 +83,13 @@ function TotalValueLockedCell({
 }
 
 interface PoolOverviewProps {
-  pool: Pool;
+  pool: StackingProvider;
   poolSlug: string;
 }
 function PoolCell({ pool }: PoolOverviewProps) {
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      {pool.icon}
+      <ProviderIcon providerId={pool.providerId} />
       <styled.h4 textDecoration="underline" textStyle="label.01">
         {pool.name}
       </styled.h4>

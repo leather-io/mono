@@ -1,22 +1,22 @@
 import { ChainId, StacksNetwork, StacksNetworkName } from '@stacks/network';
 import { DEFAULT_DEVNET_SERVER } from '~/constants/constants';
-
-import { pools } from '../components/preset-pools';
 import {
-  NetworkInstance,
-  NetworkInstanceToPoxContractMap,
-  Pool,
-  PoolIdToDisplayNameMap,
-  PoolName,
-  PoolSlug,
-  PoolSlugToIdMap,
   PoxContractName,
-  PoxContractType,
-  WrapperPrincipal,
-  poolSlugSchema,
+  StackingProvider,
+  poxContractMap,
+  stackingProviderData,
+  stackingProvidersList,
+} from '~/data/data';
+
+import {
+  NetworkMode,
+  PoolId,
+  PoolSlug,
+  getStackingPoolById,
+  poolSlugToIdMap,
 } from './types-preset-pools';
 
-export function getNetworkInstance(network: StacksNetwork): NetworkInstance {
+export function getNetworkInstance(network: StacksNetwork): NetworkMode {
   if (network.chainId === ChainId.Mainnet) {
     return 'mainnet';
   }
@@ -36,70 +36,66 @@ export function getNetworkInstanceByName(networkName: StacksNetworkName) {
   return 'testnet';
 }
 
-export function getPoxContracts(network: StacksNetwork): PoxContractType {
+export function getPoxContractsByNetwork(network: StacksNetwork) {
   const mode = getNetworkInstance(network);
-  return NetworkInstanceToPoxContractMap[mode];
+  return poxContractMap[mode];
 }
 
-export function usesPoxWrapperContract(pool: Pool) {
+export function isPoxWrapperContract(pool: StackingProvider) {
   return pool.poxContract !== 'Pox4';
 }
 
-export function requiresAllowContractCaller(poolName: PoolName) {
-  if (poolName === 'Custom Pool') return false;
-  const pool = pools[poolName];
-  return usesPoxWrapperContract(pool);
+export function requiresAllowContractCaller(providerId: string) {
+  if (providerId === 'Custom Pool') return false;
+  const pool = getStackingPoolById(providerId as PoolId);
+  return isPoxWrapperContract(pool);
 }
 
-export function getPoxWrapperContract(
-  poolName: PoolName,
-  network: StacksNetwork
-): WrapperPrincipal {
-  const poxContracts = getPoxContracts(network);
-  const poxContract = pools[poolName].poxContract satisfies PoxContractName;
-
+export function getPoxWrapperContract(providerId: string, network: StacksNetwork): string {
+  const poxContracts = getPoxContractsByNetwork(network);
+  const poxContract = getStackingPoolById(providerId as PoolId)
+    .poxContract satisfies PoxContractName;
   return poxContracts[poxContract];
 }
 
 export function getPoxWrapperContract2(
-  networkInstance: NetworkInstance,
+  networkInstance: NetworkMode,
   poxContractName: PoxContractName
-): WrapperPrincipal {
-  return NetworkInstanceToPoxContractMap[networkInstance][poxContractName];
+): string {
+  return poxContractMap[networkInstance][poxContractName];
 }
 
 export function isSelfServicePool(poolAddress: string) {
   const allSelfServicePools: string[] = [
-    NetworkInstanceToPoxContractMap['mainnet']['WrapperFastPool'],
-    NetworkInstanceToPoxContractMap['testnet']['WrapperFastPool'],
-    NetworkInstanceToPoxContractMap['devnet']['WrapperFastPool'],
-    NetworkInstanceToPoxContractMap['mainnet']['WrapperRestake'],
-    NetworkInstanceToPoxContractMap['testnet']['WrapperRestake'],
-    NetworkInstanceToPoxContractMap['devnet']['WrapperRestake'],
+    stackingProviderData.fastpool.poolAddress.mainnet,
+    stackingProviderData.fastpool.poolAddress.testnet,
+    stackingProviderData.fastpool.poolAddress.devnet,
+    stackingProviderData.restake.poolAddress.mainnet,
+    stackingProviderData.restake.poolAddress.testnet,
+    stackingProviderData.restake.poolAddress.devnet,
   ];
   return allSelfServicePools.includes(poolAddress);
 }
 
-export function getPoxContract(networkInstance: NetworkInstance, poxContract: PoxContractName) {
-  return NetworkInstanceToPoxContractMap[networkInstance][poxContract];
+export function getPoxContract(networkInstance: NetworkMode, poxContract: PoxContractName) {
+  return poxContractMap[networkInstance][poxContract];
 }
 
 export function getPoxContractAddressAndName(
-  networkInstance: NetworkInstance,
+  networkInstance: NetworkMode,
   poxContract: PoxContractName
 ) {
   return getPoxContract(networkInstance, poxContract).split('.');
 }
 
 export function getPoolByAddress(address: string) {
-  return Object.values(pools).find(pool => Object.values(pool.poolAddress ?? {}).includes(address));
+  return stackingProvidersList.find(pool =>
+    Object.values(pool.poolAddress ?? {}).includes(address as any)
+  );
 }
 
-export function getPoolSlugByPoolName(poolName: PoolName): PoolSlug | undefined {
-  const [poolId] =
-    Object.entries(PoolIdToDisplayNameMap).find(([, name]) => name === poolName) ?? [];
-  const [poolSlug] = Object.entries(PoolSlugToIdMap).find(([, name]) => name === poolId) ?? [];
-
-  const result = poolSlugSchema.safeParse(poolSlug);
-  return result.success ? result.data : undefined;
+export function getPoolSlugByPoolName(poolId: PoolId): PoolSlug | undefined {
+  return Object.entries(poolSlugToIdMap).find(([, id]) => id === poolId)?.[0] as
+    | PoolSlug
+    | undefined;
 }

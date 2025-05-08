@@ -9,7 +9,6 @@ import { Flag } from '@leather.io/ui';
 interface RewardProtocolCellProps {
   rewardProtocol: PoolRewardProtocolInfo;
 }
-
 function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
