@@ -27,7 +27,7 @@ import {
   getPoxContractsByNetwork,
   getPoxWrapperContract2,
   requiresAllowContractCaller,
-} from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
+} from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 import { leather } from '~/helpers/leather-sdk';
 import {
   useStxAvailableUnlockedBalance,
@@ -49,8 +49,8 @@ import { ChoosePoolingConditions } from './components/choose-pooling-conditions'
 import { ChoosePoolingDuration } from './components/choose-pooling-duration';
 import { ChooseRewardsAddress } from './components/choose-rewards-address';
 import { StackingPoolFormSchema, createValidationSchema } from './utils/stacking-pool-form-schema';
+import { PoolSlug, getPoolFromSlug } from './utils/stacking-pool-types';
 import { PoolWrapperAllowanceState } from './utils/types';
-import { PoolSlug, getPoolFromSlug } from './utils/types-preset-pools';
 
 interface StartPooledStackingProps {
   poolSlug: PoolSlug;
@@ -60,9 +60,7 @@ export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
 
-  if (!stacksAccount || !client) {
-    return 'You should connect STX wallet';
-  }
+  if (!stacksAccount || !client) return 'You need to connect Leather';
 
   return <StartPooledStackingLayout client={client} poolSlug={poolSlug} />;
 }
@@ -78,6 +76,7 @@ interface StartPooledStackingLayoutProps {
   client: StackingClient;
 }
 
+// This is not a layout component
 function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
@@ -90,7 +89,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
 
-  const [contractAddress, contractName] = getPoxContractsByNetwork(network)['Pox4'].split('.');
+  const [contractAddress, contractName] = getPoxContractsByNetwork(network).Pox4.split('.');
 
   const getAllowanceContractCallersFastPoolQuery = useGetAllowanceContractCallersQuery({
     contractAddress,
@@ -213,7 +212,6 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   const handleDelegate = formMethods.handleSubmit(values => {
     return handleDelegateStxSubmit({
       ...values,
-      poolName: pool.name,
       providerId: pool.providerId,
       delegationDurationType: 'limited',
       numberOfCycles: 1,
@@ -334,7 +332,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                   allowContractCaller: {
                     accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
                     loading: handleAllowContractCallerSubmitPending,
-                    visible: requiresAllowContractCaller(pool.name),
+                    visible: requiresAllowContractCaller(pool.providerId),
                   },
                   delegateStx: {
                     accepted: Boolean(delegateStxResult),
@@ -361,7 +359,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
             allowContractCaller: {
               accepted: Boolean(allowContractCallerConfirmed || allowContractCallerResult),
               loading: handleAllowContractCallerSubmitPending,
-              visible: requiresAllowContractCaller(pool.name),
+              visible: requiresAllowContractCaller(pool.providerId),
             },
             delegateStx: {
               accepted: Boolean(delegateStxResult),

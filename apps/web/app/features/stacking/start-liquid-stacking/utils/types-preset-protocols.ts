@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { NetworkMode } from '../../start-pooled-stacking/utils/types-preset-pools';
+import { NetworkMode } from '../../start-pooled-stacking/utils/stacking-pool-types';
 
 export const ProtocolSlugToIdMap = {
   'stacking-dao': 'stackingDao',

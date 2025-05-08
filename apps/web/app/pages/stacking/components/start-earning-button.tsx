@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
-import { PoolAddress } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { PoolAddress } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 

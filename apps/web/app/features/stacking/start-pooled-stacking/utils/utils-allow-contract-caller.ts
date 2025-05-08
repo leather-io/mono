@@ -6,7 +6,7 @@ import { PoolWrapperAllowanceState } from '~/features/stacking/start-pooled-stac
 import {
   getNetworkInstance,
   getPoxWrapperContract,
-} from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
+} from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 import { StxCallContractParams } from '~/helpers/leather-sdk';
 
 import { LeatherSdk } from '@leather.io/sdk';

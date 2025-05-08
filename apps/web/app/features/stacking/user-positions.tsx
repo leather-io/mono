@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
+import { ProviderIcon } from '~/components/icons/provider-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import {
@@ -15,8 +16,7 @@ import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-
 import {
   getPoolByAddress,
   getPoolSlugByPoolName,
-} from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
-import { ProviderIcon } from '~/pages/stacking/components/earn-provider-table';
+} from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
 import { LoadingSpinner, SkeletonLoader } from '@leather.io/ui';

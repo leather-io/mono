@@ -13,7 +13,7 @@ import {
   getLiquidContract,
   getLiquidContractAddressAndName,
 } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
-import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
+import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 import { StxCallContractParams } from '~/helpers/leather-sdk';
 
 import { LeatherSdk } from '@leather.io/sdk';

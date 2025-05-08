@@ -1,43 +1,67 @@
+import { z } from 'zod';
 import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/constants';
 
-export const poxContractMap = {
-  devnet: {
-    Pox4: 'ST000000000000000000002AMW42H.pox-4',
-    WrapperOneCycle: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-pools',
-    WrapperFastPool: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-self-service',
-    WrapperFastPoolV2: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
-    WrapperRestake: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-self-service',
-    WrapperStackingDao: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+// Providers are partner entities that offer yeild based services
+const providers = {
+  xverse: {
+    providerId: 'xverse',
+    name: 'Xverse',
+    url: 'https://xverse.app',
   },
-  testnet: {
-    Pox4: 'ST000000000000000000002AMW42H.pox-4',
-    WrapperOneCycle: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-pools',
-    WrapperFastPool: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
-    WrapperFastPoolV2: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
-    WrapperRestake: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
-    WrapperStackingDao: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+  fastPool: {
+    providerId: 'fastPool',
+    name: 'Fast Pool',
+    url: 'https://fastpool.org',
   },
-  mainnet: {
-    Pox4: 'SP000000000000000000002Q6VF78.pox-4',
-    WrapperOneCycle: 'SP001SFSMC2ZY76PD4M68P3WGX154XCH7NE3TYMX.pox4-pools',
-    WrapperFastPool: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox4-fast-pool-v3',
-    WrapperFastPoolV2: 'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.pox4-multi-pool-v1',
-    WrapperRestake: 'SPZV5RJN5XTJHA76E0VHEFB0WPEH7E11NZZ4CGBK.restake-self-service-pool-v1',
-    WrapperStackingDao: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+  planbetter: {
+    providerId: 'planbetter',
+    name: 'PlanBetter',
+    url: 'https://planbetter.org',
+  },
+  restake: {
+    providerId: 'restake',
+    name: 'Restake',
+    url: 'https://restake.net/stacks-pool',
+  },
+  stackingDao: {
+    providerId: 'stackingDao',
+    name: 'Stacking DAO',
+    url: 'https://www.stackingdao.com',
+  },
+  lisa: {
+    providerId: 'lisa',
+    name: 'LISA',
+    url: 'https://www.lisalab.io',
   },
 } as const;
 
-export type PoxContractName = keyof (typeof poxContractMap)['mainnet'];
+export type ProviderId = keyof typeof providers;
+export const providerIdSchema = z.enum(Object.keys(providers) as [ProviderId, ...ProviderId[]]);
 
-export interface StackingProvider {
-  providerId: string;
+export const yieldStrategies = {
+  liquid: {
+    name: 'Liquid Stacking',
+    description:
+      'Liquid Stacking allows you to earn STX rewards while keeping your STX liquid. You can use your stSTX or LiSTX to trade, lend, or borrow.',
+  },
+  pooled: {
+    name: 'Pooled Stacking',
+    description:
+      'Pooled Stacking allows you to earn STX rewards by pooling your tokens with a trusted infrastructure operator. Your STX will be locked for a period of time.',
+  },
+} as const;
+
+export type YieldStrategy = keyof typeof yieldStrategies;
+
+export interface StackingPool {
+  providerId: ProviderId;
   name: string;
+  url: string;
   minAmount: string | null;
   estApr: string;
   payout: string;
   disabled: boolean;
   description: string;
-  url: string;
   duration: number;
   poolAddress?: {
     mainnet: string;
@@ -48,10 +72,9 @@ export interface StackingProvider {
   minimumDelegationAmount: number;
   allowCustomRewardAddress: boolean;
 }
-export const stackingProviderData = {
-  fastpool: {
-    providerId: 'fastpool',
-    name: 'FAST Pool',
+export const stackingPoolData = {
+  fastPool: {
+    ...providers.fastPool,
     minAmount: null,
     estApr: '5%',
     payout: 'STX',
@@ -62,7 +85,6 @@ export const stackingProviderData = {
       'You can increase the locking amount for the next cycle.' +
       ' ' +
       'Locked STX will unlock 1 day after the end of the cycle.',
-    url: 'https://fastpool.org',
     poolAddress: {
       mainnet: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox4-fast-pool-v3',
       testnet: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
@@ -74,14 +96,12 @@ export const stackingProviderData = {
     duration: 1,
   },
   planbetter: {
-    providerId: 'planbetter',
-    name: 'PlanBetter',
+    ...providers.planbetter,
     minAmount: '200 STX',
     estApr: '10%',
     payout: 'STX',
     description: 'Earn non-custodial Bitcoin yield. No wrapped tokens. Native BTC.',
     duration: 1,
-    url: 'https://planbetter.org',
     poolAddress: {
       mainnet: 'SP3TDKYYRTYFE32N19484838WEJ25GX40Z24GECPZ',
       testnet: 'SP3TDKYYRTYFE32N19484838WEJ25GX40Z24GECPZ',
@@ -93,15 +113,13 @@ export const stackingProviderData = {
     disabled: false,
   },
   restake: {
-    providerId: 'restake',
-    name: 'Restake',
+    ...providers.restake,
     minAmount: '100 STX',
     estApr: '11%',
     payout: 'STX',
     description:
       'Earn STX rewards by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
     duration: 1,
-    url: 'https://restake.net/stacks-pool',
     poolAddress: {
       mainnet: 'SPZV5RJN5XTJHA76E0VHEFB0WPEH7E11NZZ4CGBK.restake-self-service-pool-v1',
       testnet: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
@@ -113,8 +131,7 @@ export const stackingProviderData = {
     disabled: false,
   },
   xverse: {
-    providerId: 'xverse',
-    name: 'Xverse',
+    ...providers.xverse,
     minAmount: '100 STX',
     estApr: '10%',
     payout: 'BTC',
@@ -133,15 +150,13 @@ export const stackingProviderData = {
     disabled: false,
   },
   stackingDao: {
-    providerId: 'stackingDao',
-    name: 'Stacking DAO',
+    ...providers.stackingDao,
     minAmount: '100 STX',
     estApr: '16%',
     payout: 'STX',
     description:
       'Enter the STX address of the pool with which you’d like to Stack without your STX leaving your wallet.',
     duration: -1,
-    url: 'https://www.stacks.co/learn/stacking',
     poolAddress: {
       mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
       testnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
@@ -152,6 +167,66 @@ export const stackingProviderData = {
     allowCustomRewardAddress: false,
     disabled: false,
   },
-} as const satisfies Record<string, StackingProvider>;
+} as const satisfies Record<string, StackingPool>;
 
-export const stackingProvidersList = Object.values(stackingProviderData);
+export const stackingPoolList = Object.values(stackingPoolData);
+
+export type StackingProviderId = keyof typeof stackingPoolData;
+
+export const stackingProviderIdSchema = z.enum(
+  Object.keys(stackingPoolData) as [StackingProviderId, ...StackingProviderId[]]
+);
+
+export interface LiquidStackingPool {
+  providerId: ProviderId;
+  name: string;
+  url: string;
+  estApr: string;
+  payout: string;
+  slug: string;
+}
+export const liquidStackingPoolData = {
+  stackingDao: {
+    ...providers.stackingDao,
+    slug: 'stacking-dao',
+    estApr: '5%',
+    payout: 'stSTX',
+  },
+  lisa: {
+    ...providers.lisa,
+    slug: 'lisa',
+    estApr: '10%',
+    payout: 'LiSTX',
+  },
+} as const satisfies Record<string, LiquidStackingPool>;
+
+export const liquidStackingProvidersList = Object.values(liquidStackingPoolData);
+
+export const stackingContractMap = {
+  mainnet: {
+    Pox4: 'SP000000000000000000002Q6VF78.pox-4',
+    WrapperOneCycle: 'SP001SFSMC2ZY76PD4M68P3WGX154XCH7NE3TYMX.pox4-pools',
+    WrapperFastPool: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox4-fast-pool-v3',
+    WrapperFastPoolV2: 'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.pox4-multi-pool-v1',
+    WrapperRestake: 'SPZV5RJN5XTJHA76E0VHEFB0WPEH7E11NZZ4CGBK.restake-self-service-pool-v1',
+    WrapperStackingDao: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+  },
+  testnet: {
+    Pox4: 'ST000000000000000000002AMW42H.pox-4',
+    WrapperOneCycle: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-pools',
+    WrapperFastPool: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
+    WrapperFastPoolV2: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
+    WrapperRestake: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
+    WrapperStackingDao: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+  },
+  devnet: {
+    Pox4: 'ST000000000000000000002AMW42H.pox-4',
+    WrapperOneCycle: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-pools',
+    WrapperFastPool: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-self-service',
+    WrapperFastPoolV2: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
+    WrapperRestake: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.pox4-self-service',
+    WrapperStackingDao: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+  },
+} as const;
+
+export type PoxContractName = keyof (typeof stackingContractMap)['mainnet'];

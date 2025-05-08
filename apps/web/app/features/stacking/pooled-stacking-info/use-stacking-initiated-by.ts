@@ -1,7 +1,7 @@
 import { ContractCallTransaction } from '@stacks/stacks-blockchain-api-types';
 import { useQuery } from '@tanstack/react-query';
 import { useGetAccountExtendedBalancesQuery } from '~/features/stacking/hooks/stacking.query';
-import { isSelfServicePool } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
+import { isSelfServicePool } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
 

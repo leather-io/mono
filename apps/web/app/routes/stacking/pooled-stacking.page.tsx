@@ -1,7 +1,7 @@
 import { MetaDescriptor } from 'react-router';
 
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
-import { poolSlugSchema } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { poolSlugSchema } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { PooledStacking } from '~/pages/stacking/pooled-stacking';
 
 import { Route } from './+types/pooled-stacking.page';

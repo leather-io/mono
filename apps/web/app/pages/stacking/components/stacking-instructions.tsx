@@ -22,8 +22,7 @@ const gridBorders = css({
   },
 });
 
-// interface EarnInstructionsProps extends HTMLStyledProps<'section'> {}
-export function EarnInstructions(props: HTMLStyledProps<'section'>) {
+export function StackingInstructions(props: HTMLStyledProps<'section'>) {
   return (
     <styled.section border="default" borderRadius="sm" {...props}>
       <Grid
@@ -31,25 +30,25 @@ export function EarnInstructions(props: HTMLStyledProps<'section'>) {
         gap={0}
         gridTemplateColumns={['repeat(2, 1fr)', 'repeat(2, 1fr)', 'repeat(4, 1fr)']}
       >
-        <EarnInstructionStep
+        <StackingInstructionStep
           index={0}
           title="Own STX"
           description="Get or hold STX in your wallet, ready to stack."
           img={<DummyIcon />}
         />
-        <EarnInstructionStep
+        <StackingInstructionStep
           index={1}
           title="Choose a provider"
           description="Pick a protocol from the table below"
           img={<DummyIcon />}
         />
-        <EarnInstructionStep
+        <StackingInstructionStep
           index={2}
           title="Lock STX"
           description="Delegate and lock your STX into the chosen pool"
           img={<DummyIcon />}
         />
-        <EarnInstructionStep
+        <StackingInstructionStep
           index={3}
           title="Begin earning"
           description="Receive regular rewards without lifting a finger"
@@ -60,13 +59,18 @@ export function EarnInstructions(props: HTMLStyledProps<'section'>) {
   );
 }
 
-interface EarnInstructionStepProps {
+interface StackingInstructionStepProps {
   index: number;
   title: string;
   description: string;
   img: ReactElement;
 }
-export function EarnInstructionStep({ index, title, description, img }: EarnInstructionStepProps) {
+export function StackingInstructionStep({
+  index,
+  title,
+  description,
+  img,
+}: StackingInstructionStepProps) {
   return (
     <Flex flexDir="column" p="space.05" className="earn-step">
       <VStack gap="space.02" alignItems="left">

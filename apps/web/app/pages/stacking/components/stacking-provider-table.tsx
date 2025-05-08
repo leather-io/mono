@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -12,11 +12,15 @@ import {
 import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
+import { ProviderIcon } from '~/components/icons/provider-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
-import { ImgFillLoader } from '~/components/img-loader';
 import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
-import { StackingProvider, stackingProvidersList } from '~/data/data';
-import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import {
+  LiquidStackingPool,
+  StackingPool,
+  liquidStackingProvidersList,
+  stackingPoolList,
+} from '~/data/data';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 
 import { Button, Flag } from '@leather.io/ui';
@@ -47,20 +51,8 @@ const tableRowActiveStyles = css({
   },
 });
 
-const stackingProviderIcons: Record<string, ReactElement> = {
-  fastpool: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
-  planbetter: <ImgFillLoader src="icons/planbetter.webp" width="24" fill="black" />,
-  restake: <ImgFillLoader src="icons/restake.webp" width="24" fill="#124044" />,
-  xverse: <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
-  stackingDao: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
-};
-
-export function ProviderIcon({ providerId }: { providerId: string }): ReactElement | null {
-  return stackingProviderIcons[providerId] || null;
-}
-
 const providerSlugMap = {
-  fastpool: 'fast-pool',
+  fastPool: 'fast-pool',
   planbetter: 'plan-better',
   restake: 'restake',
   xverse: 'xverse',
@@ -70,12 +62,15 @@ const providerSlugMap = {
 export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo<ColumnDef<StackingProvider>[]>(
+  const columns = useMemo<ColumnDef<StackingPool>[]>(
     () => [
       {
-        accessorKey: 'providerName',
+        accessorKey: 'name',
         cell: info => (
-          <Flag img={stackingProviderIcons[info.row.original.name]} color="ink.text-primary">
+          <Flag
+            img={<ProviderIcon providerId={info.row.original.providerId} />}
+            color="ink.text-primary"
+          >
             {info.getValue() as string}
           </Flag>
         ),
@@ -151,7 +146,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
 
   const table = useReactTable({
     columns,
-    data: stackingProvidersList,
+    data: stackingPoolList,
     debugTable: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -206,38 +201,17 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
   );
 }
 
-interface LiquidStackingProvider {
-  provider: string;
-  estApr: string;
-  payout: string;
-  icon: ReactElement;
-  slug: ProtocolSlug;
-}
-const liquidStackingProviders: LiquidStackingProvider[] = [
-  {
-    provider: 'StackingDAO',
-    estApr: '5%',
-    payout: 'stSTX',
-    icon: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="black" />,
-    slug: 'stacking-dao',
-  },
-  {
-    provider: 'LISA',
-    estApr: '10%',
-    payout: 'LiSTX',
-    icon: <ImgFillLoader src="icons/lisa.webp" width="24" fill="#FB9DF1" />,
-    slug: 'lisa',
-  },
-];
-
 export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const columns = useMemo<ColumnDef<LiquidStackingProvider>[]>(
+  const columns = useMemo<ColumnDef<LiquidStackingPool>[]>(
     () => [
       {
-        accessorKey: 'provider',
+        accessorKey: 'name',
         cell: info => (
-          <Flag img={info.row.original.icon} color="ink.text-primary">
+          <Flag
+            img={<ProviderIcon providerId={info.row.original.providerId} />}
+            color="ink.text-primary"
+          >
             {info.getValue() as string}
           </Flag>
         ),
@@ -292,7 +266,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
 
   const table = useReactTable({
     columns,
-    data: liquidStackingProviders,
+    data: liquidStackingProvidersList,
     debugTable: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),

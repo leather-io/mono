@@ -2,14 +2,15 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { StackingProvider } from '~/data/data';
-import { ProviderIcon } from '~/pages/stacking/components/earn-provider-table';
+import { StackingPool } from '~/data/data';
+
+import { ProviderIcon } from './icons/provider-icon';
 
 interface RewardTokenCellProps {
   token?: string;
   value?: string;
 }
-function RewardTokenCell({ token = 'STX', value = '$36,212,756' }: RewardTokenCellProps) {
+function RewardTokenCell({ token = 'STX', value }: RewardTokenCellProps) {
   return (
     <ValueDisplayer
       name="Rewards token"
@@ -39,7 +40,7 @@ function DaysUntilNextCycleCell({ daysUntilNextCycle = '2 days' }: DaysUntilNext
       name="Days until next cycle"
       value={
         <>
-          {daysUntilNextCycle} <Box textStyle="label.03">Cycle 104 - 254 blocks</Box>
+          {daysUntilNextCycle} <Box textStyle="label.03">Null</Box>
         </>
       }
     />
@@ -58,7 +59,7 @@ function MinimumCommitmentCell({
 interface HistoricalAprCellProps {
   historicalApr?: string;
 }
-function HistoricalAprCell({ historicalApr = '10%' }: HistoricalAprCellProps) {
+function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
   return <ValueDisplayer name="Historical APR" value={<>{historicalApr}</>} />;
 }
 
@@ -83,7 +84,7 @@ function TotalValueLockedCell({
 }
 
 interface PoolOverviewProps {
-  pool: StackingProvider;
+  pool: StackingPool;
   poolSlug: string;
 }
 function PoolCell({ pool }: PoolOverviewProps) {

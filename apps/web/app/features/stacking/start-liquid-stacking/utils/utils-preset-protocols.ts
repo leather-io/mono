@@ -1,7 +1,7 @@
 import { StacksNetwork } from '@stacks/network';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
-import { NetworkMode } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
-import { getNetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
+import { NetworkMode } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
+import { getNetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 
 import {
   LiquidContractName,
