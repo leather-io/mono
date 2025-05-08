@@ -2,6 +2,10 @@ import { RefObject, useEffect, useRef, useState } from 'react';
 import ViewShot from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
+import {
+  BrowserLoading,
+  BrowserLoadingMethods,
+} from '@/features/accounts/components/browser-loading';
 import { getFaviconAndSave } from '@/filesystem/favicon';
 import { userAddsApp } from '@/store/apps/apps.write';
 import { useAppDispatch } from '@/store/utils';
@@ -35,7 +39,13 @@ export function BrowserActiveState({
   const theme = useTheme<Theme>();
   const [message, setMessage] = useState<BrowserMessage>(null);
 
+  const browserLoadingRef = useRef<BrowserLoadingMethods>(null);
   useEffect(() => {
+    if (navState?.loading) {
+      browserLoadingRef.current?.activate();
+    } else {
+      browserLoadingRef.current?.deactivate();
+    }
     if (navState) {
       setOrigin(new URL(navState.url).origin);
     } else {
@@ -78,6 +88,7 @@ export function BrowserActiveState({
 
   return (
     <Box flex={1} bg="ink.background-primary">
+      <BrowserLoading ref={browserLoadingRef} />
       <ViewShot ref={viewShotRef} style={{ flex: 1 }}>
         <WebView
           nestedScrollEnabled
