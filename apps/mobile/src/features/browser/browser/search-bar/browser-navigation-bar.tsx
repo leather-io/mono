@@ -19,6 +19,7 @@ interface BrowserNavigationBarProps {
   canGoBack: boolean;
   canGoForward: boolean;
   onPressUrl(): void;
+  resetBrowser(): void;
 }
 export function BrowserNavigationBar({
   searchUrl,
@@ -27,15 +28,16 @@ export function BrowserNavigationBar({
   canGoBack,
   canGoForward,
   onPressUrl,
+  resetBrowser,
 }: BrowserNavigationBarProps) {
   const hostname = new URL(searchUrl).hostname;
   return (
     <BrowserNavigationBarContainer>
       <Pressable
         p="3"
-        onPress={onGoBack}
-        disabled={!canGoBack}
+        onPress={canGoBack ? onGoBack : resetBrowser}
         pressEffects={legacyTouchablePressEffect}
+        onLongPress={resetBrowser}
       >
         <ChevronLeftIcon style={{ opacity: getIconOpacity(canGoBack) }} variant="large" />
       </Pressable>
