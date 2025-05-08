@@ -76,6 +76,7 @@ export function SearchBar({
             onPressUrl={() => textInputRef.current?.focus()}
             canGoBack={!!navState?.canGoBack}
             canGoForward={!!navState?.canGoForward}
+            resetBrowser={resetBrowser}
           />
         </AnimatedBox>
       )}
