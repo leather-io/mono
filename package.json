@@ -7,7 +7,9 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "build:mobile": "turbo run build --filter=!./apps/web",
     "build:watch": "turbo run build:watch",
+    "build:web": "turbo run build --filter=!./apps/mobile",
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
     "dev": "turbo run build:watch",
