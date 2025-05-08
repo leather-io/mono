@@ -147,7 +147,6 @@ export function mapTxAssetTransfersToActivity(
   transfers: StacksAssetTransferWithInfo[]
 ): OnChainActivity[] {
   const activity = [];
-
   const commonProps = {
     timestamp: mapStacksTxBlockTime(tx),
     level: ActivityLevels.account,
