@@ -14,8 +14,8 @@ import { cyclesToBurnChainHeight } from '~/utils/calculate-burn-height';
 import { LeatherSdk } from '@leather.io/sdk';
 import { stxToMicroStx } from '@leather.io/utils';
 
-import { pools } from '../components/preset-pools';
 import { StackingFormValues } from './types';
+import { PoolId, getStackingPoolById } from './types-preset-pools';
 import { getNetworkInstanceByName, getPoxContract } from './utils-preset-pools';
 
 function getOptions(
@@ -34,7 +34,7 @@ function getOptions(
           firstBurnchainBlockHeight: poxInfo.first_burnchain_block_height,
         })
       : undefined;
-  const pool = values.poolName ? pools[values.poolName] : undefined;
+  const pool = getStackingPoolById(values.providerId as PoolId);
   if (!pool) throw new Error('Invalid Pool Name');
   const networkMode = getNetworkInstanceByName(network);
   const delegateTo = pool.poolAddress?.[networkMode] || values.poolAddress;

@@ -9,7 +9,7 @@ import {
   ProtocolSlug,
   ProtocolSlugToIdMap,
 } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { poolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { dummyPoolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import { useStxCryptoAssetBalance } from '~/queries/balance/account-balance.hooks';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { toHumanReadableStx } from '~/utils/unit-convert';
@@ -123,7 +123,7 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
       </HStack>
 
       <LiquidStackingInfoGrid
-        rewardProtocol={poolRewardProtocol}
+        rewardProtocol={dummyPoolRewardProtocol}
         rewardCycleId={getPoxInfoQuery.data.reward_cycle_id}
         lockedAmount={getAccountBalanceLockedQuery.data.availableBalance.amount}
         stackerInfoDetails={getStatusQuery.data.details}

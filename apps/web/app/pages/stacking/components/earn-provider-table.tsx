@@ -15,12 +15,8 @@ import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { ImgFillLoader } from '~/components/img-loader';
 import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
+import { StackingProvider, stackingProvidersList } from '~/data/data';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { pools } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import {
-  PoolName,
-  PoolSlug,
-} from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 
 import { Button, Flag } from '@leather.io/ui';
@@ -51,73 +47,35 @@ const tableRowActiveStyles = css({
   },
 });
 
-interface EarnProvider {
-  provider: string;
-  poolName: PoolName;
-  minAmount: string | null;
-  estApr: string;
-  payout: string;
-  icon: ReactElement;
-  slug: PoolSlug;
+const stackingProviderIcons: Record<string, ReactElement> = {
+  fastpool: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
+  planbetter: <ImgFillLoader src="icons/planbetter.webp" width="24" fill="black" />,
+  restake: <ImgFillLoader src="icons/restake.webp" width="24" fill="#124044" />,
+  xverse: <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
+  stackingDao: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
+};
+
+export function ProviderIcon({ providerId }: { providerId: string }): ReactElement | null {
+  return stackingProviderIcons[providerId] || null;
 }
 
-const earnProviders: EarnProvider[] = [
-  {
-    provider: 'Fast Pool',
-    poolName: 'FAST Pool',
-    icon: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
-    minAmount: '40 STX',
-    estApr: '5%',
-    payout: 'STX',
-    slug: 'fast-pool',
-  },
-  {
-    provider: 'PlanBetter',
-    poolName: 'PlanBetter',
-    icon: <ImgFillLoader src="icons/planbetter.webp" width="24" fill="black" />,
-    minAmount: '200 STX',
-    estApr: '10%',
-    payout: 'STX',
-    slug: 'plan-better',
-  },
-  {
-    provider: 'Restake',
-    poolName: 'Restake',
-    icon: <ImgFillLoader src="icons/restake.webp" width="24" fill="#124044" />,
-    minAmount: '100 STX',
-    estApr: '11%',
-    payout: 'STX',
-    slug: 'restake',
-  },
-  {
-    provider: 'Xverse Pool',
-    poolName: 'Xverse',
-    icon: <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
-    minAmount: '100 STX',
-    estApr: '10%',
-    payout: 'BTC',
-    slug: 'xverse',
-  },
-  {
-    provider: 'Stacking DAO',
-    poolName: 'Stacking DAO',
-    icon: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
-    minAmount: '100 STX',
-    estApr: '16%',
-    payout: 'STX',
-    slug: 'stacking-dao',
-  },
-];
+const providerSlugMap = {
+  fastpool: 'fast-pool',
+  planbetter: 'plan-better',
+  restake: 'restake',
+  xverse: 'xverse',
+  stackingDao: 'stacking-dao',
+} as const;
 
 export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo<ColumnDef<EarnProvider>[]>(
+  const columns = useMemo<ColumnDef<StackingProvider>[]>(
     () => [
       {
-        accessorKey: 'provider',
+        accessorKey: 'providerName',
         cell: info => (
-          <Flag img={info.row.original.icon} color="ink.text-primary">
+          <Flag img={stackingProviderIcons[info.row.original.name]} color="ink.text-primary">
             {info.getValue() as string}
           </Flag>
         ),
@@ -180,8 +138,8 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
         accessorKey: 'actions',
         cell: info => (
           <StartEarningButton
-            slug={info.row.original.slug}
-            poolAddresses={pools[info.row.original.poolName].poolAddress}
+            slug={providerSlugMap[info.row.original.providerId as keyof typeof providerSlugMap]}
+            poolAddresses={info.row.original.poolAddress}
           />
         ),
         header: () => null,
@@ -193,7 +151,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
 
   const table = useReactTable({
     columns,
-    data: earnProviders,
+    data: stackingProvidersList,
     debugTable: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),

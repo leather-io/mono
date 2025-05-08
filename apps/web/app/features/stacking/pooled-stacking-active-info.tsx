@@ -4,15 +4,12 @@ import { useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
 import { PooledStackingActionButtons } from '~/features/stacking/pooled-stacking-info/pooled-stacking-action-buttons';
 import { PooledStackingInfoGrid } from '~/features/stacking/pooled-stacking-info/pooled-stacking-info-grid';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
+import { dummyPoolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import {
-  poolRewardProtocol,
-  pools,
-} from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import {
-  PoolIdToDisplayNameMap,
   PoolSlug,
-  PoolSlugToIdMap,
+  getPoolFromSlug,
 } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { ProviderIcon } from '~/pages/stacking/components/earn-provider-table';
 import { useLeatherConnect } from '~/store/addresses';
 
 interface PooledStackingActiveInfoProps {
@@ -23,12 +20,8 @@ export function PooledStackingActiveInfo({ poolSlug }: PooledStackingActiveInfoP
   const { client } = useStackingClient();
   const { stacksAccount: stxAddress } = useLeatherConnect();
 
-  if (!stxAddress || !client) {
-    return 'You should connect STX wallet';
-  }
-  if (!client) {
-    return 'Expected client to be defined';
-  }
+  if (!stxAddress || !client) return 'You should connect STX wallet';
+  if (!client) return 'Expected client to be defined';
 
   return <PooledStackingActiveInfoLayout client={client} poolSlug={poolSlug} />;
 }
@@ -37,28 +30,25 @@ interface PooledStackingActiveInfoLayoutProps {
   poolSlug: PoolSlug;
   client: StackingClient;
 }
-
 function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLayoutProps) {
   const poxInfoQuery = useGetPoxInfoQuery();
 
   if (poxInfoQuery.isLoading) return null;
   if (poxInfoQuery.isError || !poxInfoQuery.data) return <>Failed to load Pox data</>;
 
-  const poolId = PoolSlugToIdMap[poolSlug];
-  const poolName = PoolIdToDisplayNameMap[poolId];
-  const pool = pools[poolName];
+  const pool = getPoolFromSlug(poolSlug);
 
   return (
     <VStack alignItems="stretch" pt="12px">
       <HStack justifyContent="space-between">
         <VStack gap="space.05" alignItems="left" p="space.05">
-          {pool.icon}
+          <ProviderIcon providerId={pool.providerId} />
           <styled.h4 textStyle="label.01">{pool.name}</styled.h4>
         </VStack>
         <PooledStackingActionButtons poolSlug={poolSlug} />
       </HStack>
 
-      <PooledStackingInfoGrid rewardProtocol={poolRewardProtocol} />
+      <PooledStackingInfoGrid rewardProtocol={dummyPoolRewardProtocol} />
     </VStack>
   );
 }

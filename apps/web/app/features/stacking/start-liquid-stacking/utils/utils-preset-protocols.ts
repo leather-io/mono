@@ -1,6 +1,6 @@
 import { StacksNetwork } from '@stacks/network';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
-import { NetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
+import { NetworkMode } from '~/features/stacking/start-pooled-stacking/utils/types-preset-pools';
 import { getNetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/utils-preset-pools';
 
 import {
@@ -21,14 +21,14 @@ export function getPoxContracts(network: StacksNetwork): LiquidContractType {
 }
 
 export function getLiquidContract(
-  networkInstance: NetworkInstance,
+  networkInstance: NetworkMode,
   poxContractName: LiquidContractName
 ): LiquidContractPrincipal {
   return NetworkInstanceToLiquidContractMap[networkInstance][poxContractName];
 }
 
 export function getLiquidContractAddressAndName(
-  networkInstance: NetworkInstance,
+  networkInstance: NetworkMode,
   poxContractName: LiquidContractName
 ) {
   return getLiquidContract(networkInstance, poxContractName).split('.');

@@ -14,7 +14,7 @@ import { ClarityType, ClarityValue, cvToString, hexToCV } from '@stacks/transact
 import { StacksClient } from '@leather.io/query';
 
 import { getHasPendingTransaction } from '../direct-stacking-info/utils-pending-txs';
-import { getPoxContracts } from '../start-pooled-stacking/utils/utils-preset-pools';
+import { getPoxContractsByNetwork } from '../start-pooled-stacking/utils/utils-preset-pools';
 
 function isDelegateOrRevokeDelegate(t: ContractCallTransactionMetadata) {
   return ['delegate-stx', 'revoke-delegate-stx'].includes(t.contract_call.function_name);
@@ -35,7 +35,7 @@ function getDelegationStatusFromTransaction(network: StacksNetwork) {
   return (
     transaction: ContractCallTransaction | MempoolContractCallTransaction
   ): DelegationInfo => {
-    const poxContracts = getPoxContracts(network);
+    const poxContracts = getPoxContractsByNetwork(network);
 
     if (transaction.contract_call.function_name === 'revoke-delegate-stx') {
       return { delegated: false } as const;
