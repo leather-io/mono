@@ -1,5 +1,5 @@
 import { FetchWrapper } from '@/components/loading';
-import { ActivityCell, ActivityLayout, hasActivity } from '@/features/activity';
+import { ActivityLayout, ActivityList, hasActivity } from '@/features/activity';
 import { ActivityEmpty } from '@/features/activity/activity-empty';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 
@@ -12,13 +12,7 @@ export default function ActivityScreen() {
     <ActivityLayout>
       <FetchWrapper data={activity}>
         {hasActivity(activity) ? (
-          activity.state === 'success' &&
-          activity.value?.map((activity, index) => {
-            // FIXME LEA-2310: temporary hard cap for widget view pending performance improvements
-            if (index >= 5) return null;
-
-            return <ActivityCell key={`activity.${index}`} activity={activity} />;
-          })
+          activity.state === 'success' && <ActivityList activity={activity.value} />
         ) : (
           <Box px="5">
             <ActivityEmpty />

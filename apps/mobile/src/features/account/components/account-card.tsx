@@ -2,7 +2,6 @@ import { ComponentType, ReactNode } from 'react';
 import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { Loading } from '@/components/loading/loading';
-import { LoadingWidget } from '@/components/loading/loading-widget';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountIcon } from '@/store/accounts/utils';
 
@@ -45,7 +44,7 @@ export function AccountCard({
   }));
 
   if (isLoading) {
-    return <Loading view="widget" />;
+    return <Loading mode="widget" />;
   }
 
   return (

@@ -9,7 +9,7 @@ import { ActivityIcon } from './activity-icon';
 import { formatActivityType } from './utils/format-activity';
 import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
 
-interface ActivityCellProps {
+interface ActivityListItemProps {
   activity: Activity;
 }
 
@@ -27,7 +27,7 @@ function getBalanceColor(activity: Activity) {
   return undefined;
 }
 
-export function ActivityCell({ activity }: ActivityCellProps) {
+export function ActivityListItem({ activity }: ActivityListItemProps) {
   const { mode } = useCurrentNetworkState();
 
   const txid = 'txid' in activity ? activity.txid : undefined;

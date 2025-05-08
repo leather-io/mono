@@ -10,6 +10,7 @@ import { Box, Theme } from '@leather.io/ui/native';
 
 import { ActivityCard } from './activity-card';
 import { ActivityEmpty } from './activity-empty';
+import { ActivityList } from './activity-list';
 
 export function hasActivity(activity: FetchState<Activity[]>) {
   return activity.state === 'success' && activity.value.length > 0;
@@ -47,13 +48,9 @@ export function ActivityWidget({ activity, onPressHeader }: ActivityWidgetProps)
         >
           <FetchWrapper data={activity}>
             {hasActivity(activity) ? (
-              activity.state === 'success' &&
-              activity.value?.map((activity, index) => {
-                // FIXME LEA-2310: temporary hard cap for widget view pending performance improvements
-                if (index >= 5) return null;
-
-                return <ActivityCard key={`activity.${index}`} activity={activity} />;
-              })
+              activity.state === 'success' && (
+                <ActivityList activity={activity.value} mode="widget" />
+              )
             ) : (
               <ActivityEmpty />
             )}
