@@ -64,7 +64,7 @@ export function BrowserConnectedTab({ goToUrl }: ConnectedProps) {
         })}
       </Text>
       <Box flexDirection="row" flexWrap="wrap" gap="5">
-        {appList.map(app => (
+        {appList.reverse().map(app => (
           <ScreenshotCard
             key={app.origin}
             app={app}
