@@ -24,7 +24,11 @@ function getBalanceOperator(activity: Activity) {
 // add new empty state
 // then check for other easy win UI issues related to activity list
 > Pete - actually steaming ahead here. try and finish most of this stuff tomorrow
-> then can try do Token View / 
+> then can try do Token View / Token List
+
+-> probably better finishing work here and then picking commits cleanly to a new branch / multiple? 
+-> hit a nasty rebase issue
+
 
 
 function getBalanceColor(activity: Activity) {
