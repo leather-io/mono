@@ -2,7 +2,7 @@
 import { forwardRef } from 'react';
 
 import { css } from 'leather-styles/css';
-import { HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Flex, FlexProps, HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 export const theadBorderBottom = css({
   _after: {
@@ -75,3 +75,7 @@ export const Table = {
   Row: TableRow,
   Body: TableBody,
 };
+
+export function ForceRowHeight(props: FlexProps) {
+  return <Flex alignItems="center" height="40px" {...props} />;
+}

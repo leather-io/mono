@@ -41,7 +41,7 @@ export function Flag({
   return (
     <Flex
       flexDirection={reverse ? 'row-reverse' : 'row'}
-      width="100%"
+      width="fit-content"
       data-align={align}
       className={flagStyles}
       {...props}

@@ -11,23 +11,33 @@ import {
 } from '@tanstack/react-table';
 import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { BasicHoverCard } from '~/components/basic-hover-card';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
-import { SortableHeader, Table, rowPadding, theadBorderBottom } from '~/components/table';
+import { InfoLabel } from '~/components/info-label';
+import {
+  ForceRowHeight,
+  SortableHeader,
+  Table,
+  rowPadding,
+  theadBorderBottom,
+} from '~/components/table';
+import { content } from '~/data/content';
 import {
   LiquidStackingPool,
   StackingPool,
   liquidStackingProvidersList,
   stackingPoolList,
 } from '~/data/data';
+import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 
 import { Button, Flag } from '@leather.io/ui';
 
 const offsetMinAmountColumn = css({
   transform: [null, null, 'translateX(-15%)'],
-  maxWidth: '120px',
+  maxWidth: '150px',
 });
 
 const offsetEstAprColumn = css({
@@ -59,39 +69,70 @@ const providerSlugMap = {
   stackingDao: 'stacking-dao',
 } as const;
 
-export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
+export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo<ColumnDef<StackingPool>[]>(
+  const isLargeViewport = useViewportMinWidth('md');
+
+  const leadingColumn = useMemo<ColumnDef<StackingPool>>(
+    () => ({
+      accessorKey: 'name',
+      cell: info => (
+        <Flag
+          img={<ProviderIcon providerId={info.row.original.providerId} />}
+          color="ink.text-primary"
+        >
+          {info.getValue() as string}
+        </Flag>
+      ),
+      header: () => (
+        <ForceRowHeight>
+          <BasicHoverCard content={content.stacking.providerDescription}>
+            <InfoLabel>
+              <SortableHeader>Provider</SortableHeader>
+            </InfoLabel>
+          </BasicHoverCard>
+        </ForceRowHeight>
+      ),
+      meta: { align: 'left' },
+      size: 14,
+    }),
+    []
+  );
+
+  const trailingColumn = useMemo<ColumnDef<StackingPool>>(
+    () => ({
+      accessorKey: 'actions',
+      cell: info => (
+        <StartEarningButton
+          slug={providerSlugMap[info.row.original.providerId as keyof typeof providerSlugMap]}
+          poolAddresses={info.row.original.poolAddress}
+        />
+      ),
+      header: () => null,
+      meta: { align: 'right' },
+    }),
+    []
+  );
+
+  const extendedColumns = useMemo<ColumnDef<StackingPool>[]>(
     () => [
-      {
-        accessorKey: 'name',
-        cell: info => (
-          <Flag
-            img={<ProviderIcon providerId={info.row.original.providerId} />}
-            color="ink.text-primary"
-          >
-            {info.getValue() as string}
-          </Flag>
-        ),
-        header: () => <SortableHeader>Provider</SortableHeader>,
-        meta: { align: 'left' },
-        size: 14,
-      },
       {
         accessorKey: 'minAmount',
         cell: info => (
-          <styled.div display={['none', 'none', 'block']} className={offsetMinAmountColumn}>
+          <styled.div className={offsetMinAmountColumn}>
             {info.getValue() === null ? '—' : (info.getValue() as string)}
           </styled.div>
         ),
         header: () => (
-          <SortableHeader display={['none', 'none', 'block']} className={offsetMinAmountColumn}>
-            Minimum Amount
-          </SortableHeader>
+          <styled.div className={offsetMinAmountColumn}>
+            <BasicHoverCard content={content.stacking.minimumAmountToStackDescription}>
+              <InfoLabel>
+                <SortableHeader>Minimum Amount</SortableHeader>
+              </InfoLabel>
+            </BasicHoverCard>
+          </styled.div>
         ),
-        sortUndefined: 'last',
-        sortDescFirst: false,
         meta: { align: 'right' },
         size: 14,
         maxSize: 14,
@@ -99,14 +140,16 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'estApr',
         cell: info => (
-          <styled.div display={['none', 'none', 'block']} className={offsetEstAprColumn}>
-            {info.getValue() as string}
-          </styled.div>
+          <styled.div className={offsetEstAprColumn}>{info.getValue() as string}</styled.div>
         ),
         header: () => (
-          <SortableHeader display={['none', 'none', 'block']} className={offsetEstAprColumn}>
-            Est. APR
-          </SortableHeader>
+          <styled.div className={offsetEstAprColumn}>
+            <BasicHoverCard content={content.stacking.aprDescription}>
+              <InfoLabel>
+                <SortableHeader>Est. APR</SortableHeader>
+              </InfoLabel>
+            </BasicHoverCard>
+          </styled.div>
         ),
         meta: { align: 'right' },
       },
@@ -126,28 +169,22 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
             {info.getValue() as string}
           </Flag>
         ),
-        header: () => <SortableHeader display={['none', 'none', 'block']}>Payout</SortableHeader>,
-        meta: { align: 'left' },
-      },
-      {
-        accessorKey: 'actions',
-        cell: info => (
-          <StartEarningButton
-            slug={providerSlugMap[info.row.original.providerId as keyof typeof providerSlugMap]}
-            poolAddresses={info.row.original.poolAddress}
-          />
+        header: () => (
+          <BasicHoverCard content={content.stacking.payoutDescription}>
+            <InfoLabel>
+              <SortableHeader>Payout</SortableHeader>
+            </InfoLabel>
+          </BasicHoverCard>
         ),
-        header: () => null,
-        meta: { align: 'right' },
+        meta: { align: 'left' },
       },
     ],
     []
   );
 
   const table = useReactTable({
-    columns,
+    columns: [leadingColumn, ...(isLargeViewport ? extendedColumns : []), trailingColumn],
     data: stackingPoolList,
-    debugTable: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
@@ -158,7 +195,7 @@ export function EarnProviderTable(props: HTMLStyledProps<'div'>) {
   return (
     <Table.Root {...props}>
       <Table.Table>
-        <Table.Head height="40px" className={theadBorderBottom}>
+        <Table.Head className={theadBorderBottom}>
           {table.getHeaderGroups().map(headerGroup => (
             <Table.Row key={headerGroup.id} className={rowPadding}>
               {headerGroup.headers.map(header => (
@@ -211,33 +248,34 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
           <Flag
             img={<ProviderIcon providerId={info.row.original.providerId} />}
             color="ink.text-primary"
+            w="100%"
           >
             {info.getValue() as string}
           </Flag>
         ),
-        header: () => <SortableHeader>Provider</SortableHeader>,
+        header: () => (
+          <ForceRowHeight>
+            <BasicHoverCard content={content.stacking.providerDescription}>
+              <InfoLabel>
+                <SortableHeader>Provider</SortableHeader>
+              </InfoLabel>
+            </BasicHoverCard>
+          </ForceRowHeight>
+        ),
         meta: { align: 'left' },
         size: 12,
       },
       {
         accessorKey: 'estApr',
         cell: info => (
-          <styled.div display={['none', 'none', 'block']} className={offsetEstAprColumn}>
-            {info.getValue() as string}
-          </styled.div>
+          <styled.div className={offsetEstAprColumn}>{info.getValue() as string}</styled.div>
         ),
-        header: () => (
-          <SortableHeader display={['none', 'none', 'block']} className={offsetEstAprColumn}>
-            Est. APR
-          </SortableHeader>
-        ),
+        header: () => <SortableHeader className={offsetEstAprColumn}>Est. APR</SortableHeader>,
         meta: { align: 'right' },
       },
       {
         accessorKey: 'payout',
-        header: () => (
-          <SortableHeader display={['none', 'none', 'block']}>Liquid token</SortableHeader>
-        ),
+        header: () => <SortableHeader>Liquid token</SortableHeader>,
         cell: info => (
           <Flag display={['none', 'none', 'flex']} spacing="space.02">
             {info.getValue() as string}
@@ -278,7 +316,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   return (
     <Table.Root {...props}>
       <Table.Table>
-        <Table.Head height="40px" className={theadBorderBottom}>
+        <Table.Head className={theadBorderBottom}>
           {table.getHeaderGroups().map(headerGroup => (
             <Table.Row key={headerGroup.id} className={rowPadding}>
               {headerGroup.headers.map(header => (
