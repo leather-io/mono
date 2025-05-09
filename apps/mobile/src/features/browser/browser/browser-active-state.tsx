@@ -12,11 +12,12 @@ import { useAppDispatch } from '@/store/utils';
 import { useTheme } from '@shopify/restyle';
 
 import injectedProvider from '@leather.io/provider/mobile';
+import { RpcResponses, getInfo, parseEndpointRequest, supportedMethods } from '@leather.io/rpc';
 import { Box, Theme } from '@leather.io/ui/native';
 
 import { ApproverSheet } from '../approver-sheet/approver-sheet';
 import { BrowserMessage } from '../approver-sheet/utils';
-import { captureScreenshot, messagePartialZodObject } from './utils';
+import { captureScreenshot, createGetInfoResponse, createSupportedMethodsResponse } from './utils';
 
 interface BrowserActiveStateProps {
   webViewRef: RefObject<WebView>;
@@ -73,17 +74,32 @@ export function BrowserActiveState({
       );
     }
   }
+  function postMessage(result: string) {
+    webViewRef.current?.injectJavaScript(`window.onMessageFromRN(${result});`);
+  }
+
+  function sendResult(result: RpcResponses) {
+    postMessage(JSON.stringify(result));
+    setMessage(null);
+  }
 
   function onMessageHandler(event: WebViewMessageEvent) {
     const newMessage = JSON.parse(event.nativeEvent.data);
+    const parsedMessage = parseEndpointRequest(newMessage);
 
-    if (messagePartialZodObject.safeParse(newMessage).success) {
-      setMessage(newMessage);
+    if (!parsedMessage) return;
+
+    const getInfoMessage = getInfo.request.safeParse(parsedMessage);
+    if (getInfoMessage.success) {
+      return sendResult(createGetInfoResponse(getInfoMessage.data));
     }
-  }
 
-  function postMessage(result: string) {
-    webViewRef.current?.injectJavaScript(`window.onMessageFromRN(${result});`);
+    const supportedMethodsMessage = supportedMethods.request.safeParse(parsedMessage);
+    if (supportedMethodsMessage.success) {
+      return sendResult(createSupportedMethodsResponse(supportedMethodsMessage.data));
+    }
+
+    return setMessage(parsedMessage);
   }
 
   return (
@@ -108,17 +124,7 @@ export function BrowserActiveState({
           onNavigationStateChange={handleWebViewNavigationStateChange}
         />
       </ViewShot>
-
-      {origin && (
-        <ApproverSheet
-          request={message}
-          origin={origin}
-          sendResult={result => {
-            postMessage(JSON.stringify(result));
-            setMessage(null);
-          }}
-        />
-      )}
+      {origin && <ApproverSheet request={message} origin={origin} sendResult={sendResult} />}
     </Box>
   );
 }
