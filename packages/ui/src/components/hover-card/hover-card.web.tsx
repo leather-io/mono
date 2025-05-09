@@ -9,6 +9,7 @@ const hoverCardContentStyles = css({
   bg: 'ink.background-primary',
   maxWidth: '320px',
   textStyle: 'caption.01',
+  zIndex: 1000,
   boxShadow:
     '0px 0px 2px 0px rgba(18, 16, 15, 0.12), 0px 4px 8px 0px rgba(18, 16, 15, 0.08), 0px 12px 24px 0px rgba(18, 16, 15, 0.08)',
   animationDuration: '320ms',

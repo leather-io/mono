@@ -15,6 +15,7 @@ interface NavItemProps {
 export function NavItem({ children, icon, href }: NavItemProps) {
   const content = (
     <Flag
+      width="100%"
       spacing="space.03"
       img={
         <Box ml="1px" width="16px" height="16">

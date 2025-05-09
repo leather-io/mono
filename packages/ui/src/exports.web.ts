@@ -42,3 +42,4 @@ export * from './components/tooltip';
 export * from './components/typography/index.web';
 export * from './icons/index.web';
 export * from './utils/has-children.shared';
+export { HoverCard } from './components/hover-card/hover-card.web';

@@ -8,8 +8,8 @@ import { LiquidStackingExplainer } from './components/liquid-stacking-explainer'
 import { StackingExplainer } from './components/stacking-explainer';
 import { StackingFaq } from './components/stacking-faq';
 import {
-  EarnProviderTable,
   LiquidStackingProviderTable,
+  StackingProviderTable,
 } from './components/stacking-provider-table';
 
 export function Stacking() {
@@ -36,7 +36,7 @@ export function Stacking() {
       <Page.Title mt="space.07">Pooled stacking</Page.Title>
       <StackingExplainer mt="space.05" />
 
-      <EarnProviderTable mt="space.05" />
+      <StackingProviderTable mt="space.05" />
 
       <Page.Title mt="space.09">Liquid stacking</Page.Title>
 

@@ -1,5 +1,7 @@
 export const content = {
   stacking: {
+    providerDescription:
+      'Providers are external parties that offer yield-earning services based on the Proof of Transfer (PoX) protocol. Leather is not liable for the conduct of third parties.',
     payoutDescription:
       'The type of reward you’ll receive from the pool — either BTC or STX — depending on the provider’s configuration.',
     minimumAmountToStackDescription:
