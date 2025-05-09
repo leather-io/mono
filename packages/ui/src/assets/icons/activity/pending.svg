@@ -1,0 +1,16 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_17607_383)">
+<rect width="16" height="16" rx="8" fill="white"/>
+<mask id="mask0_17607_383" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+<g clip-path="url(#paint0_angular_17607_383_clip_path)" data-figma-skip-parse="true"><g transform="matrix(0 -0.007875 0.007875 0 8 8)"><foreignObject x="-1111.11" y="-1111.11" width="2222.22" height="2222.22"><div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,rgba(18, 16, 15, 0) 0deg,rgba(18, 16, 15, 1) 360deg);height:100%;width:100%;opacity:1"></div></foreignObject></g></g><path d="M8 13.75C4.82436 13.75 2.25 11.1756 2.25 8L0.25 8C0.25 12.2802 3.71979 15.75 8 15.75L8 13.75ZM2.25 8C2.25 4.82436 4.82436 2.25 8 2.25L8 0.25C3.71979 0.25 0.25 3.71979 0.25 8L2.25 8ZM8 2.25C11.1756 2.25 13.75 4.82436 13.75 8L15.75 8C15.75 3.71979 12.2802 0.25 8 0.25L8 2.25ZM13.75 8C13.75 11.1756 11.1756 13.75 8 13.75L8 15.75C12.2802 15.75 15.75 12.2802 15.75 8L13.75 8Z" data-figma-gradient-fill="{&#34;type&#34;:&#34;GRADIENT_ANGULAR&#34;,&#34;stops&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.070588238537311554,&#34;g&#34;:0.062745101749897003,&#34;b&#34;:0.058823529630899429,&#34;a&#34;:0.0},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.070588238537311554,&#34;g&#34;:0.062745101749897003,&#34;b&#34;:0.058823529630899429,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;stopsVar&#34;:[],&#34;transform&#34;:{&#34;m00&#34;:-1.8781653920996177e-07,&#34;m01&#34;:15.750,&#34;m02&#34;:0.12500071525573730,&#34;m10&#34;:-15.750,&#34;m11&#34;:-1.8781666710765421e-07,&#34;m12&#34;:15.8750},&#34;opacity&#34;:1.0,&#34;blendMode&#34;:&#34;NORMAL&#34;,&#34;visible&#34;:true}"/>
+</mask>
+<g mask="url(#mask0_17607_383)">
+<circle cx="8" cy="8" r="6.75" transform="rotate(90 8 8)" stroke="#12100F" stroke-width="2" stroke-linecap="square"/>
+</g>
+</g>
+<defs>
+<clipPath id="paint0_angular_17607_383_clip_path"><path d="M8 13.75C4.82436 13.75 2.25 11.1756 2.25 8L0.25 8C0.25 12.2802 3.71979 15.75 8 15.75L8 13.75ZM2.25 8C2.25 4.82436 4.82436 2.25 8 2.25L8 0.25C3.71979 0.25 0.25 3.71979 0.25 8L2.25 8ZM8 2.25C11.1756 2.25 13.75 4.82436 13.75 8L15.75 8C15.75 3.71979 12.2802 0.25 8 0.25L8 2.25ZM13.75 8C13.75 11.1756 11.1756 13.75 8 13.75L8 15.75C12.2802 15.75 15.75 12.2802 15.75 8L13.75 8Z"/></clipPath><clipPath id="clip0_17607_383">
+<rect width="16" height="16" rx="8" fill="white"/>
+</clipPath>
+</defs>
+</svg>
