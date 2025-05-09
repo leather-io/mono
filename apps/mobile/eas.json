@@ -13,7 +13,7 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.16.2",
-        "image": "sdk-51"
+        "image": "macos-sequoia-15.3-xcode-16.2"
       }
     },
     "simulator-dev": {
@@ -23,7 +23,7 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.16.2",
-        "image": "sdk-51"
+        "image": "macos-sequoia-15.3-xcode-16.2"
       },
       "android": {
         "image": "latest"
@@ -36,7 +36,7 @@
       "ios": {
         "simulator": true,
         "cocoapods": "1.16.2",
-        "image": "sdk-51"
+        "image": "macos-sequoia-15.3-xcode-16.2"
       },
       "android": {
         "image": "latest"
@@ -48,7 +48,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "image": "sdk-51",
+        "image": "macos-sequoia-15.3-xcode-16.2",
         "cocoapods": "1.16.2"
       }
     },
@@ -57,7 +57,7 @@
       "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
-        "image": "sdk-51",
+        "image": "macos-sequoia-15.3-xcode-16.2",
         "simulator": true,
         "cocoapods": "1.16.2"
       }
@@ -67,7 +67,7 @@
       "pnpm": "10.4.1",
       "distribution": "internal",
       "ios": {
-        "image": "sdk-51",
+        "image": "macos-sequoia-15.3-xcode-16.2",
         "cocoapods": "1.16.2"
       }
     },
@@ -77,7 +77,7 @@
       "distribution": "store",
       "autoIncrement": true,
       "ios": {
-        "image": "sdk-51",
+        "image": "macos-sequoia-15.3-xcode-16.2",
         "cocoapods": "1.16.2"
       },
       "android": {
@@ -91,7 +91,7 @@
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "image": "sdk-51",
+        "image": "macos-sequoia-15.3-xcode-16.2",
         "cocoapods": "1.16.2"
       },
       "android": {
