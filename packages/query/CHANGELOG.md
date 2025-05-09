@@ -541,6 +541,13 @@
     * @leather.io/bitcoin bumped to 0.25.0
     * @leather.io/rpc bumped to 2.12.0
 
+## [2.36.4](https://github.com/leather-io/mono/compare/@leather.io/query-v2.36.3...@leather.io/query-v2.36.4) (2025-05-09)
+
+
+### Bug Fixes
+
+* remove coincap query ([e8314cd](https://github.com/leather-io/mono/commit/e8314cdc42216e6102b469b9fef1543f93d53d25))
+
 ## [2.36.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.35.2...@leather.io/query-v2.36.0) (2025-04-22)
 
 

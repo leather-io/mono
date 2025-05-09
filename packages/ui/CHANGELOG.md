@@ -389,6 +389,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.64.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.64.0...@leather.io/ui-v1.64.1) (2025-05-09)
+
+
+### Bug Fixes
+
+* **mobile:** loading states, balance error handling and expo route refactor, ref LEA-1726 ([7f2485d](https://github.com/leather-io/mono/commit/7f2485d048f3694482fbcc8a7add393cd947f3d9))
+
 ## [1.64.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.63.0...@leather.io/ui-v1.64.0) (2025-05-07)
 
 
