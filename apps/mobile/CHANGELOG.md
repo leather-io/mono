@@ -701,6 +701,31 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.36.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.35.0...@leather.io/mobile-v2.36.0) (2025-05-09)
+
+
+### Features
+
+* show app icons ([955f97f](https://github.com/leather-io/mono/commit/955f97f7b41d6208cc3540662147b2dc90c43f64))
+
+
+### Bug Fixes
+
+* build ios app on xcode 16 ([1b21c09](https://github.com/leather-io/mono/commit/1b21c09a772eadf87283edbe5e3d54300be9a73d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.25.1
+    * @leather.io/provider bumped to 1.2.10
+    * @leather.io/query bumped to 2.36.5
+    * @leather.io/rpc bumped to 2.13.0
+    * @leather.io/services bumped to 1.9.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.25.1
+
 ## [2.35.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.34.1...@leather.io/mobile-v2.35.0) (2025-05-09)
 
 
