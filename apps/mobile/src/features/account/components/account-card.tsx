@@ -47,7 +47,7 @@ export function AccountCard({
   }));
 
   if (isLoading) {
-    return <Loading view="widget" />;
+    return <Loading mode="widget" />;
   }
 
   return (
