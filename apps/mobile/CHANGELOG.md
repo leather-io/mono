@@ -701,6 +701,16 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.36.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.36.0...@leather.io/mobile-v2.36.1) (2025-05-09)
+
+
+### Bug Fixes
+
+* **mobile:** add wallet name to account page, ref LEA-2497 ([38f9de5](https://github.com/leather-io/mono/commit/38f9de58537a012a5f7b2d6eaba7be447657bbee))
+* **mobile:** feature flag FeeBadge until fully implemented, ref PRO-77 ([7ba7bd5](https://github.com/leather-io/mono/commit/7ba7bd5babd57415f6a9b33f1ae4ca1b14023bd4))
+* **mobile:** fix padding of network label and settings icon, ref LEA-2471 ([db4fcf5](https://github.com/leather-io/mono/commit/db4fcf5edcf8a30c9cf9951dc1381c55306f7d71))
+* **mobile:** update ui copy, ref LEA-2595 ([a5f93b5](https://github.com/leather-io/mono/commit/a5f93b5fceeb6137eb6ed39690dbf48d7141b144))
+
 ## [2.36.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.35.0...@leather.io/mobile-v2.36.0) (2025-05-09)
 
 
