@@ -1,6 +1,9 @@
+import { ReactNode } from 'react';
+
 import { Box, GridProps } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 
@@ -12,6 +15,7 @@ interface RewardProtocolCellProps {
 function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Status"
       value={
         <Box textStyle="label.03" color="green.action-primary-default">
@@ -22,9 +26,28 @@ function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
   );
 }
 
+interface PoolNameProps {
+  icon: ReactNode;
+  name: string;
+}
+function PoolNameCell({ icon, name }: PoolNameProps) {
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name={icon}
+      value={
+        <Box textStyle="label.03" textDecoration="underline">
+          {name}
+        </Box>
+      }
+    />
+  );
+}
+
 function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Total Value Locked (TVL)"
       value={
         <>
@@ -37,20 +60,33 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
 }
 
 function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
-  return <ValueDisplayer name="Historical APR" value={rewardProtocol.apr} />;
+  return <ValueDisplayer gap="space.04" name="Historical APR" value={rewardProtocol.apr} />;
 }
 
 function PoolAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
-  return <ValueDisplayer name="Pool address" value={rewardProtocol.poolAddress} />;
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name="Pool address"
+      value={<CopyAddress address={rewardProtocol.poolAddress} />}
+    />
+  );
 }
 
 function RewardAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
-  return <ValueDisplayer name="Reward address" value={rewardProtocol.rewardAddress} />;
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name="Reward address"
+      value={<CopyAddress address={rewardProtocol.rewardAddress} />}
+    />
+  );
 }
 
 function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Minimum Commitment"
       value={
         <>
@@ -65,6 +101,7 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
 function MinimumLockupPeriodCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Minimum lockup period"
       value={
         <>
@@ -82,6 +119,7 @@ function MinimumLockupPeriodCell({ rewardProtocol }: RewardProtocolCellProps) {
 function NextCycleCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Days until next cycle"
       value={
         <>
@@ -98,6 +136,7 @@ function NextCycleCell({ rewardProtocol }: RewardProtocolCellProps) {
 function RewardsTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Rewards token"
       value={
         <Flag
@@ -112,37 +151,59 @@ function RewardsTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
 }
 
 interface PooledStackingInfoGridProps extends GridProps {
+  poolIcon: ReactNode;
+  poolName: string;
   rewardProtocol: PoolRewardProtocolInfo;
 }
 
-export function PooledStackingInfoGrid({ rewardProtocol, ...props }: PooledStackingInfoGridProps) {
+export function PooledStackingInfoGrid({
+  poolIcon,
+  poolName,
+  rewardProtocol,
+  ...props
+}: PooledStackingInfoGridProps) {
   return (
     <StackingInfoGridLayout
-      primaryCell={<RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />}
-      cells={[
-        <HistoricalAprCell key={`${rewardProtocol.id}-apr`} rewardProtocol={rewardProtocol} />,
-        <MinimumLockupPeriodCell
-          key={`${rewardProtocol.id}-minimum-lockup-period`}
-          rewardProtocol={rewardProtocol}
-        />,
-        <TotalValueLockedCell key={`${rewardProtocol.id}-tvl`} rewardProtocol={rewardProtocol} />,
-        <NextCycleCell key={`${rewardProtocol.id}-next-cycle`} rewardProtocol={rewardProtocol} />,
-        <RewardsTokenCell key={`${rewardProtocol.id}-token`} rewardProtocol={rewardProtocol} />,
-        <MinimumCommitmentCell
-          key={`${rewardProtocol.id}-minCommitment`}
-          rewardProtocol={rewardProtocol}
-        />,
-      ]}
-      bottomCells={[
-        <PoolAddressCell
-          key={`${rewardProtocol.id}-pool-address`}
-          rewardProtocol={rewardProtocol}
-        />,
-        <RewardAddressCell
-          key={`${rewardProtocol.id}-reward-address`}
-          rewardProtocol={rewardProtocol}
-        />,
-      ]}
+      cells={{
+        name: <PoolNameCell icon={poolIcon} name={poolName} />,
+        status: <RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />,
+        historicalApr: (
+          <HistoricalAprCell key={`${rewardProtocol.id}-apr`} rewardProtocol={rewardProtocol} />
+        ),
+        minimumLockupPeriod: (
+          <MinimumLockupPeriodCell
+            key={`${rewardProtocol.id}-minimum-lockup-period`}
+            rewardProtocol={rewardProtocol}
+          />
+        ),
+        totalValueLocked: (
+          <TotalValueLockedCell key={`${rewardProtocol.id}-tvl`} rewardProtocol={rewardProtocol} />
+        ),
+        daysUntilNextCycle: (
+          <NextCycleCell key={`${rewardProtocol.id}-next-cycle`} rewardProtocol={rewardProtocol} />
+        ),
+        rewardsToken: (
+          <RewardsTokenCell key={`${rewardProtocol.id}-token`} rewardProtocol={rewardProtocol} />
+        ),
+        minimumCommitment: (
+          <MinimumCommitmentCell
+            key={`${rewardProtocol.id}-minCommitment`}
+            rewardProtocol={rewardProtocol}
+          />
+        ),
+        poolAddress: (
+          <PoolAddressCell
+            key={`${rewardProtocol.id}-pool-address`}
+            rewardProtocol={rewardProtocol}
+          />
+        ),
+        rewardAddress: (
+          <RewardAddressCell
+            key={`${rewardProtocol.id}-reward-address`}
+            rewardProtocol={rewardProtocol}
+          />
+        ),
+      }}
       {...props}
     />
   );

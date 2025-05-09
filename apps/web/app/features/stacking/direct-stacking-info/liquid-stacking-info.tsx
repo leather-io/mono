@@ -1,6 +1,5 @@
 import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 import { PendingStackExtendAlert } from '~/features/stacking/components/pending-stack-extend-alert';
-import { LiquidStackingActionButtons } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-action-buttons';
 import { LiquidStackingInfoGrid } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-info-grid';
 import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
@@ -114,15 +113,18 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
 
   return (
     <VStack alignItems="stretch" pt="12px">
-      <HStack justifyContent="space-between">
+      <HStack display={['none', 'none', 'flex']} justifyContent="space-between">
         <VStack gap="space.05" alignItems="left" p="space.05">
           {protocol.icon}
-          <styled.h4 textStyle="label.01">{protocol.name}</styled.h4>
+          <styled.h4 textDecoration="underline" textStyle="label.01">
+            {protocol.name}
+          </styled.h4>
         </VStack>
-        <LiquidStackingActionButtons protocolSlug={protocolSlug} />
       </HStack>
 
       <LiquidStackingInfoGrid
+        protocolName={protocol.name}
+        protocolIcon={protocol.icon}
         rewardProtocol={dummyPoolRewardProtocol}
         rewardCycleId={getPoxInfoQuery.data.reward_cycle_id}
         lockedAmount={getAccountBalanceLockedQuery.data.availableBalance.amount}

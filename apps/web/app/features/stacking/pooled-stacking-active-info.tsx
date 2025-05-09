@@ -39,16 +39,26 @@ function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLa
   const pool = getPoolFromSlug(poolSlug);
 
   return (
-    <VStack alignItems="stretch" pt="12px">
+    <VStack
+      flexDirection={['column-reverse', 'column-reverse', 'column']}
+      alignItems="stretch"
+      py="space.03"
+    >
       <HStack justifyContent="space-between">
-        <VStack gap="space.05" alignItems="left" p="space.05">
+        <VStack display={['none', 'none', 'flex']} gap="space.05" alignItems="left" p="space.05">
           <ProviderIcon providerId={pool.providerId} />
-          <styled.h4 textStyle="label.01">{pool.name}</styled.h4>
+          <styled.h4 textDecoration="underline" textStyle="label.01">
+            {pool.name}
+          </styled.h4>
         </VStack>
-        <PooledStackingActionButtons poolSlug={poolSlug} />
+        <PooledStackingActionButtons width={['100%', '100%', 'unset']} poolSlug={poolSlug} />
       </HStack>
 
-      <PooledStackingInfoGrid rewardProtocol={dummyPoolRewardProtocol} />
+      <PooledStackingInfoGrid
+        poolIcon={<ProviderIcon providerId={pool.providerId} />}
+        poolName={pool.name}
+        rewardProtocol={dummyPoolRewardProtocol}
+      />
     </VStack>
   );
 }

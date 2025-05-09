@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import { useMutation } from '@tanstack/react-query';
-import { Flex } from 'leather-styles/jsx';
+import { Flex, FlexProps } from 'leather-styles/jsx';
 import { createRevokeDelegateStxMutationOptions } from '~/features/stacking/pooled-stacking-info/use-revoke-delegate-stx';
 import { useStackingClientRequired } from '~/features/stacking/providers/stacking-client-provider';
 import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
@@ -10,11 +10,14 @@ import { useStacksNetwork } from '~/store/stacks-network';
 
 import { Button } from '@leather.io/ui';
 
-export interface PooledStackingActionButtonsProps {
+export interface PooledStackingActionButtonsProps extends FlexProps {
   poolSlug: PoolSlug;
 }
 
-export function PooledStackingActionButtons({ poolSlug }: PooledStackingActionButtonsProps) {
+export function PooledStackingActionButtons({
+  poolSlug,
+  ...flexProps
+}: PooledStackingActionButtonsProps) {
   const navigate = useNavigate();
 
   const { client } = useStackingClientRequired();
@@ -39,12 +42,12 @@ export function PooledStackingActionButtons({ poolSlug }: PooledStackingActionBu
   }
 
   return (
-    <Flex mt="space.04" gap="space.04">
-      <Button fullWidth variant="ghost" onClick={handleStopStackingClick} disabled={isPending}>
+    <Flex gap="space.04" {...flexProps}>
+      <Button fullWidth variant="outline" onClick={handleStopStackingClick} disabled={isPending}>
         Stop pooling
       </Button>
       <Button fullWidth onClick={handleIncreaseStackingClick}>
-        Increase stacking
+        Increase pooling amount
       </Button>
     </Flex>
   );

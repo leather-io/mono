@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { Box, GridProps } from 'leather-styles/jsx';
@@ -18,6 +20,7 @@ interface RewardProtocolCellProps {
 function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Status"
       value={
         <Box textStyle="label.03" color="green.action-primary-default">
@@ -28,8 +31,32 @@ function RewardProtocolEnrollCell({ rewardProtocol }: RewardProtocolCellProps) {
   );
 }
 
+interface ProtocolNameProps {
+  icon: ReactNode;
+  name: string;
+}
+function ProtocolNameCell({ icon, name }: ProtocolNameProps) {
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name={icon}
+      value={
+        <Box textStyle="label.03" textDecoration="underline">
+          {name}
+        </Box>
+      }
+    />
+  );
+}
+
 function StackingCell({ lockedAmount }: Pick<LiquidStackingInfoGridProps, 'lockedAmount'>) {
-  return <ValueDisplayer name="You're stacking" value={toHumanReadableStx(lockedAmount)} />;
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name="You're stacking"
+      value={toHumanReadableStx(lockedAmount)}
+    />
+  );
 }
 
 function DurationCell({
@@ -46,6 +73,7 @@ function DurationCell({
   );
   return (
     <ValueDisplayer
+      gap="space.04"
       name="Duration"
       value={`${elapsedStackingCycles} / ${stackerInfoDetails.lock_period}`}
     />
@@ -55,7 +83,13 @@ function DurationCell({
 function StartCycleCell({
   stackerInfoDetails,
 }: Pick<LiquidStackingInfoGridProps, 'stackerInfoDetails'>) {
-  return <ValueDisplayer name="Start" value={`Cycle ${stackerInfoDetails.first_reward_cycle}`} />;
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name="Start"
+      value={`Cycle ${stackerInfoDetails.first_reward_cycle}`}
+    />
+  );
 }
 
 function EndCycleCell({
@@ -63,6 +97,7 @@ function EndCycleCell({
 }: Pick<LiquidStackingInfoGridProps, 'stackerInfoDetails'>) {
   return (
     <ValueDisplayer
+      gap="space.04"
       name="End"
       value={`Cycle ${stackerInfoDetails.first_reward_cycle + stackerInfoDetails.lock_period - 1}`}
     />
@@ -74,7 +109,13 @@ function BitcoinAddressCell({
 }: Pick<LiquidStackingInfoGridProps, 'stackerInfoDetails'>) {
   const { network } = useStacksNetwork();
   const poxAddress = formatPoxAddressToNetwork(network, stackerInfoDetails.pox_address);
-  return <ValueDisplayer name="Bitcoin address" value={<CopyAddress address={poxAddress} />} />;
+  return (
+    <ValueDisplayer
+      gap="space.04"
+      name="Bitcoin address"
+      value={<CopyAddress address={poxAddress} />}
+    />
+  );
 }
 
 type ActiveStackerInfo = StackerInfo & {
@@ -82,6 +123,8 @@ type ActiveStackerInfo = StackerInfo & {
 };
 
 interface LiquidStackingInfoGridProps extends GridProps {
+  protocolName: string;
+  protocolIcon: ReactNode;
   rewardProtocol: PoolRewardProtocolInfo;
   lockedAmount: BigNumber;
   stackerInfoDetails: ActiveStackerInfo['details'];
@@ -91,6 +134,8 @@ interface LiquidStackingInfoGridProps extends GridProps {
 }
 
 export function LiquidStackingInfoGrid({
+  protocolIcon,
+  protocolName,
   rewardProtocol,
   lockedAmount,
   rewardCycleId,
@@ -99,30 +144,39 @@ export function LiquidStackingInfoGrid({
 }: LiquidStackingInfoGridProps) {
   return (
     <LiquidStackingInfoGridLayout
-      primaryCell={<RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />}
-      cells={[
-        <StackingCell key={`${rewardProtocol.id}-stacking`} lockedAmount={lockedAmount} />,
-        <DurationCell
-          key={`${rewardProtocol.id}-duration`}
-          rewardCycleId={rewardCycleId}
-          stackerInfoDetails={stackerInfoDetails}
-        />,
-        <StartCycleCell
-          key={`${rewardProtocol.id}-start-cycle`}
-          stackerInfoDetails={stackerInfoDetails}
-        />,
-        <EndCycleCell
-          key={`${rewardProtocol.id}-end-cycle`}
-          stackerInfoDetails={stackerInfoDetails}
-        />,
-      ]}
-      bottomCells={[
-        <BitcoinAddressCell
-          key={`${rewardProtocol.id}-bitcoin-address`}
-          stackerInfoDetails={stackerInfoDetails}
-        />,
-        undefined,
-      ]}
+      cells={{
+        status: <RewardProtocolEnrollCell rewardProtocol={rewardProtocol} />,
+        name: <ProtocolNameCell icon={protocolIcon} name={protocolName} />,
+        stacking: (
+          <StackingCell key={`${rewardProtocol.id}-stacking`} lockedAmount={lockedAmount} />
+        ),
+        estimatedRewards: (
+          <DurationCell
+            key={`${rewardProtocol.id}-duration`}
+            rewardCycleId={rewardCycleId}
+            stackerInfoDetails={stackerInfoDetails}
+          />
+        ),
+        currentCycle: (
+          <StartCycleCell
+            key={`${rewardProtocol.id}-start-cycle`}
+            stackerInfoDetails={stackerInfoDetails}
+          />
+        ),
+        nextCycle: (
+          <EndCycleCell
+            key={`${rewardProtocol.id}-end-cycle`}
+            stackerInfoDetails={stackerInfoDetails}
+          />
+        ),
+        poolAddress: (
+          <BitcoinAddressCell
+            key={`${rewardProtocol.id}-bitcoin-address`}
+            stackerInfoDetails={stackerInfoDetails}
+          />
+        ),
+        rewardAddress: undefined,
+      }}
       {...props}
     />
   );
