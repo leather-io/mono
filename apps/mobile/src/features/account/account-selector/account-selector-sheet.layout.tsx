@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Draggable } from '@/components/draggable';
 import { HEADER_HEIGHT } from '@/shared/constants';
 import { Account } from '@/store/accounts/accounts';
+import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
 import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
@@ -38,6 +39,8 @@ export function AccountSelectorSheetLayout({
   const direction = useSharedValue<'down' | 'up'>('down');
   const { themeDerivedFromThemePreference } = useSettings();
   const theme = useTheme<Theme>();
+  const { list: connectedApps } = useApps('connected');
+  const connectedAppsToAccountIdMap = getConnectedAppsToAccountIdMap(connectedApps);
 
   return (
     <Sheet
@@ -70,6 +73,7 @@ export function AccountSelectorSheetLayout({
                     <AccountCard
                       caption={wallet.name}
                       primaryTitle={account.name}
+                      appIcons={connectedAppsToAccountIdMap[account.id]?.map(app => app.icon)}
                       secondaryTitle={
                         <AccountBalance
                           variant="label01"

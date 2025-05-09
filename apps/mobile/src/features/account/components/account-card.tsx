@@ -3,6 +3,7 @@ import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { Loading } from '@/components/loading/loading';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
+import { AppIcons } from '@/features/accounts/components/app-icons';
 import { AccountIcon } from '@/store/accounts/utils';
 
 import {
@@ -25,6 +26,7 @@ interface AccountCardProps extends PressableProps {
   onLongPress?(): void;
   testID?: string;
   iconTestID?: string;
+  appIcons?: string[];
   isLoading?: boolean;
 }
 
@@ -35,6 +37,7 @@ export function AccountCard({
   icon,
   address,
   onPress,
+  appIcons,
   isLoading,
   ...props
 }: AccountCardProps) {
@@ -87,6 +90,7 @@ export function AccountCard({
         </Box>
         <Title>{secondaryTitle}</Title>
       </Box>
+      {appIcons && <AppIcons appIcons={appIcons} />}
     </Pressable>
   );
 }
