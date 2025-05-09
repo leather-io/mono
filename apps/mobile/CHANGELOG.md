@@ -701,6 +701,29 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.35.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.34.1...@leather.io/mobile-v2.35.0) (2025-05-09)
+
+
+### Features
+
+* browser back button ([65f0801](https://github.com/leather-io/mono/commit/65f08014d925aea9cf928ee32f9d8fd1b6e9c6eb))
+* browser loading ([587a622](https://github.com/leather-io/mono/commit/587a6224e859f11e61d6390e4dc44110a2444eb8))
+* delete search text button ([1d8ab42](https://github.com/leather-io/mono/commit/1d8ab42b7dcf1b611acca4d6cf6a6f238b71c096))
+* latest web searches first ([2d2cb92](https://github.com/leather-io/mono/commit/2d2cb923f78bfff88705c5929d933c1a55c8a59d))
+
+
+### Bug Fixes
+
+* **mobile:** loading states, balance error handling and expo route refactor, ref LEA-1726 ([7f2485d](https://github.com/leather-io/mono/commit/7f2485d048f3694482fbcc8a7add393cd947f3d9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/query bumped to 2.36.4
+    * @leather.io/ui bumped to 1.64.1
+
 ## [2.34.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.34.0...@leather.io/mobile-v2.34.1) (2025-05-07)
 
 
