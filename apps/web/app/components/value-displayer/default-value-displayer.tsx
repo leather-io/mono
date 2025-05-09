@@ -1,14 +1,16 @@
 import { ReactNode } from 'react';
 
+import { FlexProps } from 'leather-styles/jsx';
+
 import { ValueDisplayerBase } from './reward-value-displayer';
 
-export interface ValueDisplayerProps {
+export interface ValueDisplayerProps extends FlexProps {
   name: ReactNode;
   value: ReactNode;
 }
-export function ValueDisplayer({ name, value }: ValueDisplayerProps) {
+export function ValueDisplayer({ name, value, ...flexProps }: ValueDisplayerProps) {
   return (
-    <ValueDisplayerBase>
+    <ValueDisplayerBase {...flexProps}>
       <ValueDisplayerBase.Name name={name} />
       <ValueDisplayerBase.Value value={value} />
     </ValueDisplayerBase>

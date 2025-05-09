@@ -71,11 +71,12 @@ export interface StackingPool {
   poxContract: string;
   minimumDelegationAmount: number;
   allowCustomRewardAddress: boolean;
+  icon?: React.ReactNode;
 }
 export const stackingPoolData = {
   fastPool: {
     ...providers.fastPool,
-    minAmount: null,
+    minAmount: '40 STX',
     estApr: '5%',
     payout: 'STX',
     disabled: false,
@@ -94,6 +95,30 @@ export const stackingPoolData = {
     minimumDelegationAmount: 40_000_000,
     allowCustomRewardAddress: false,
     duration: 1,
+    // icon: <ImgFillLoader src="/icons/fastpool.webp" width="32" fill="black" />,
+  },
+  fastPoolV2: {
+    ...providers.fastPool,
+    name: 'FAST Pool v2',
+    minAmount: '40 STX',
+    estApr: '5%',
+    description:
+      'Enjoy a better swim experience in the upgraded pool.' +
+      ' ' +
+      'You can increase the locking amount for the next cycle.' +
+      ' ' +
+      'Locked STX will unlock 1 day after the end of the cycle.',
+    duration: 1,
+    payout: 'STX',
+    poolAddress: {
+      mainnet: 'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.pox4-multi-pool-v1',
+      testnet: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
+      devnet: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
+    },
+    poxContract: 'WrapperFastPoolV2',
+    minimumDelegationAmount: 40_000_000,
+    allowCustomRewardAddress: false,
+    disabled: false,
   },
   planbetter: {
     ...providers.planbetter,

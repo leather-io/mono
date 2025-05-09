@@ -1,42 +1,73 @@
-import { css } from 'leather-styles/css';
-import { GridProps } from 'leather-styles/jsx';
+import { ReactNode } from 'react';
+
+import { GridProps, VStack } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 
 interface LiquidStackingInfoGridLayoutProps extends GridProps {
-  primaryCell: React.ReactNode;
-  cells: [React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode];
-  bottomCells?: [React.ReactNode | undefined, React.ReactNode | undefined];
+  cells: {
+    status: ReactNode;
+    name: ReactNode;
+    stacking: ReactNode;
+    estimatedRewards: ReactNode;
+    currentCycle: ReactNode;
+    nextCycle: ReactNode;
+    poolAddress?: ReactNode;
+    rewardAddress?: ReactNode;
+  };
 }
+
 export function LiquidStackingInfoGridLayout({
-  primaryCell,
   cells,
-  bottomCells,
   ...props
 }: LiquidStackingInfoGridLayoutProps) {
   return (
-    <InfoGrid
-      width="100%"
-      gridTemplateColumns={['repeat(2, 1fr)', 'repeat(2, 1fr)', 'repeat(3, 1fr)']}
-      gridTemplateRows={['repeat(2, 1fr)', 'repeat(2, 1fr)', 'repeat(2, 1fr)']}
-      height="fit-content"
-      className={css({ '& > *:not(:first-child)': { height: ['120px', null, 'unset'] } })}
-      {...props}
-    >
-      <InfoGrid.Cell gridRow={['span 4 / span 4', 'span 4 / span 4', 'span 2']}>
-        {primaryCell}
-      </InfoGrid.Cell>
-      <InfoGrid.Cell>{cells[0]}</InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn="2" gridRow="2">
-        {cells[1]}
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumnStart={[2, 2, 3]} gridRowStart={[3, 3, 1]}>
-        {cells[2]}
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumnStart={[2, 2, 3]} gridRowStart={[4, 4, 2]}>
-        {cells[3]}
-      </InfoGrid.Cell>
-      {bottomCells?.[0] && <InfoGrid.Cell>{bottomCells[0]}</InfoGrid.Cell>}
-      {bottomCells?.[1] && <InfoGrid.Cell>{bottomCells[1]}</InfoGrid.Cell>}
-    </InfoGrid>
+    <VStack gap="0">
+      <InfoGrid
+        width="100%"
+        borderBottomRadius={['sm', 'sm', '0']}
+        gridTemplateColumns={['repeat(2, 1fr)', 'repeat(3, 1fr)', '248px repeat(2, 1fr)']}
+        {...props}
+      >
+        <InfoGrid.Cell gridColumn={[2, 2, 1]} gridRow={[1, 1, '1 / span 2']}>
+          {cells.status}
+        </InfoGrid.Cell>
+        <InfoGrid.Cell
+          display={['flex', 'flex', 'none']}
+          gridColumn={[1, 1, 'none']}
+          gridRow={[1, 1, 'none']}
+        >
+          {cells.name}
+        </InfoGrid.Cell>
+
+        <InfoGrid.Cell gridColumnStart={[1, 3, 2]} gridRowStart={[2, 1, 1]}>
+          {cells.stacking}
+        </InfoGrid.Cell>
+
+        <InfoGrid.Cell gridColumnStart={[2, 1, 3]} gridRowStart={[2, 2, 1]}>
+          {cells.estimatedRewards}
+        </InfoGrid.Cell>
+
+        <InfoGrid.Cell gridColumnStart={[1, 2, 2]} gridRowStart={[3, 2, 2]}>
+          {cells.currentCycle}
+        </InfoGrid.Cell>
+
+        <InfoGrid.Cell gridColumnStart={[2, 3, 3]} gridRowStart={[3, 2, 2]}>
+          {cells.nextCycle}
+        </InfoGrid.Cell>
+      </InfoGrid>
+      <InfoGrid
+        borderTop="none"
+        borderTopRadius="0"
+        mt="0"
+        width="100%"
+        display={['none', 'none', 'grid']}
+        gridTemplateColumns="repeat(2, 1fr)"
+        gridTemplateRows="auto"
+        height="fit-content"
+      >
+        {cells?.poolAddress && <InfoGrid.Cell>{cells.poolAddress}</InfoGrid.Cell>}
+        {cells?.rewardAddress && <InfoGrid.Cell>{cells.rewardAddress}</InfoGrid.Cell>}
+      </InfoGrid>
+    </VStack>
   );
 }

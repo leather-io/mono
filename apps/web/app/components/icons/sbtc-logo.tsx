@@ -7,7 +7,7 @@ export function SbtcLogo(props: HTMLStyledProps<'img'> & ImageSizeProps) {
     <styled.img
       width={props.size ?? props.width}
       height={props.size ?? props.height}
-      src="icons/sbtc.svg"
+      src="/icons/sbtc.svg"
       alt="Sbtc Logo"
       {...props}
     />

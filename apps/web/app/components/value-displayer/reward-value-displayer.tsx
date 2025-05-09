@@ -5,9 +5,9 @@ import { Flex, FlexProps, styled } from 'leather-styles/jsx';
 interface ValueDisplayerProps extends FlexProps {
   children: ReactNode;
 }
-export function ValueDisplayerBase({ children }: ValueDisplayerProps) {
+export function ValueDisplayerBase({ children, ...flexProps }: ValueDisplayerProps) {
   return (
-    <Flex flex={1} flexDir="column" justifyContent="space-between" p="space.05">
+    <Flex flex={1} flexDir="column" justifyContent="space-between" p="space.05" {...flexProps}>
       {children}
     </Flex>
   );
