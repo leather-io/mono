@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { useDynamicFeeFlag } from '@/features/feature-flags';
 import { FeeBadge } from '@/features/send/components/fee-badge';
 import { t } from '@lingui/macro';
 
@@ -19,6 +20,7 @@ interface BaseFeeCardProps {
 
 export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: BaseFeeCardProps) {
   const fiatAmount = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
+  const releaseDynamicFee = useDynamicFeeFlag();
 
   return (
     <>
@@ -29,7 +31,8 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
             message: 'Fee',
           })}
         </Text>
-        <FeeBadge type="normal" />
+        {/* PRO-77 hide fee badge until dynamic fee is implemented */}
+        {releaseDynamicFee && <FeeBadge type="normal" />}
       </Box>
       <Box mx="-5">
         <Cell.Root pressable onPress={onPress}>

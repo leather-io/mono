@@ -59,3 +59,7 @@ export function useRunesFlag() {
 export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }
+
+export function useDynamicFeeFlag() {
+  return useBoolVariation('release_dynamic_fee_feature', false);
+}
