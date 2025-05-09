@@ -13,6 +13,7 @@ import { useAccountActivity } from '@/queries/activity/account-activity.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AppRoutes } from '@/routes';
 import { Account as AccountType } from '@/store/accounts/accounts';
+import { t } from '@lingui/macro';
 import { router } from 'expo-router';
 
 import { SettingsGearIcon } from '@leather.io/ui/native';
@@ -61,6 +62,7 @@ export function Account({ account, balance, isLoading, isError }: AccountProps) 
         }
         totalBalance={balance}
         isLoading={isLoading}
+        title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
       >
         <AccountBalances
           hardCap
@@ -76,6 +78,7 @@ export function Account({ account, balance, isLoading, isError }: AccountProps) 
             params: { accountId: account.id, accountName: account.name },
           })
         }
+        title={t({ id: 'account.activity.header_title', message: 'Activity' })}
       />
       {releaseCollectibles && hasCollectibles(collectibles) && (
         <CollectiblesWidget
@@ -85,6 +88,7 @@ export function Account({ account, balance, isLoading, isError }: AccountProps) 
               params: { accountId: account.id, accountName: account.name },
             })
           }
+          title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
         >
           <Collectibles collectibles={collectibles} />
         </CollectiblesWidget>

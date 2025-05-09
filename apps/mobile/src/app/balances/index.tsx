@@ -11,7 +11,7 @@ export default function BalancesScreen() {
 
   const pageTitle = t({
     id: 'balances.header_title',
-    message: 'My tokens',
+    message: 'All tokens',
   });
 
   const balance = totalBalance.state === 'success' ? totalBalance.value : EmptyBalance;

@@ -2,7 +2,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
-import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { Activity } from '@leather.io/models';
@@ -18,8 +17,9 @@ export function hasActivity(activity: FetchState<Activity[]>) {
 interface ActivityWidgetProps {
   activity: FetchState<Activity[]>;
   onPressHeader?: () => void;
+  title: string;
 }
-export function ActivityWidget({ activity, onPressHeader }: ActivityWidgetProps) {
+export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidgetProps) {
   const theme = useTheme<Theme>();
   // Don't render anything if loading or no activity
   if (activity.state === 'loading' || !hasActivity(activity)) {
@@ -29,7 +29,7 @@ export function ActivityWidget({ activity, onPressHeader }: ActivityWidgetProps)
     <Widget>
       <Box>
         <Widget.Header onPress={onPressHeader}>
-          <Widget.Title title={t({ id: 'activity.widget.header_title', message: 'My activity' })} />
+          <Widget.Title title={title} />
         </Widget.Header>
       </Box>
       <Widget.Body>

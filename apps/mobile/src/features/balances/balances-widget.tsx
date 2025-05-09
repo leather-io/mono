@@ -1,5 +1,4 @@
 import { TokenBalance } from '@/features/balances/token-balance';
-import { t } from '@lingui/macro';
 
 import { HasChildren } from '@leather.io/ui/native';
 
@@ -9,6 +8,7 @@ interface BalancesWidgetProps extends HasChildren {
   onPressHeader: () => void;
   totalBalance: TokenBalance;
   isLoading: boolean;
+  title: string;
 }
 
 export function BalancesWidget({
@@ -16,15 +16,12 @@ export function BalancesWidget({
   onPressHeader,
   totalBalance,
   isLoading,
+  title,
 }: BalancesWidgetProps) {
   return (
     <Widget>
       <Widget.Header onPress={onPressHeader}>
-        <Widget.Title
-          title={t({ id: 'balances.header_title', message: 'My tokens' })}
-          totalBalance={totalBalance}
-          isLoading={isLoading}
-        />
+        <Widget.Title title={title} totalBalance={totalBalance} isLoading={isLoading} />
       </Widget.Header>
       <Widget.Body>{children}</Widget.Body>
     </Widget>
