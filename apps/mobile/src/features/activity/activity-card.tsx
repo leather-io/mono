@@ -1,10 +1,9 @@
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 
 import { Activity } from '@leather.io/models';
-import { Box, Pressable, usePressedState } from '@leather.io/ui/native';
+import { ActivityAvatarIcon, Box, Pressable, usePressedState } from '@leather.io/ui/native';
 
 import { ActivityCardContent } from './activity-card-content';
-import { ActivityIcon } from './activity-icon';
 import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
 
 interface ActivityCardProps {
@@ -41,7 +40,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       }}
     >
       <Box flexDirection="row" justifyContent="space-between">
-        <ActivityIcon type={activity.type} asset={activityAsset} status={status} />
+        <ActivityAvatarIcon type={activity.type} asset={activityAsset} status={status} />
       </Box>
       <ActivityCardContent activity={activity} />
     </Pressable>
