@@ -1,8 +1,18 @@
 import { RefObject } from 'react';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 
+import * as Application from 'expo-application';
 import * as FileSystem from 'expo-file-system';
 import { z } from 'zod';
+
+import {
+  RpcRequest,
+  RpcResponse,
+  createRpcSuccessResponse,
+  endpoints,
+  getInfo,
+  supportedMethods,
+} from '@leather.io/rpc';
 
 export type BrowserSheetTab = 'suggested' | 'connected' | 'recent';
 
@@ -52,4 +62,38 @@ export async function captureScreenshot(viewShotRef: RefObject<ViewShot>, hostna
     console.error('Error capturing screenshot:', error);
     return;
   }
+}
+
+const unsupportedMethods = ['stxGetNetworks', 'stxUpdateProfile', 'open', 'openSwap'];
+
+const supportedMethodsLinks = Object.keys(endpoints)
+  .filter(method => !unsupportedMethods.includes(method))
+  .map(method => ({
+    name: method,
+    docsUrl: 'https://leather.gitbook.io/developers',
+  }));
+
+export function createSupportedMethodsResponse(
+  request: RpcRequest<typeof supportedMethods>
+): RpcResponse<typeof supportedMethods> {
+  return createRpcSuccessResponse(supportedMethods.method, {
+    id: request.id,
+    result: {
+      documentation: 'https://leather.gitbook.io/developers/home/welcome',
+      methods: supportedMethodsLinks,
+    },
+  });
+}
+
+export function createGetInfoResponse(
+  request: RpcRequest<typeof getInfo>
+): RpcResponse<typeof getInfo> {
+  return createRpcSuccessResponse(getInfo.method, {
+    id: request.id,
+    result: {
+      platform: 'mobile',
+      version: `${Application.nativeApplicationVersion}/${Application.nativeBuildVersion}`,
+      supportedMethods: supportedMethodsLinks.map(method => method.name),
+    },
+  });
 }

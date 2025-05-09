@@ -153,3 +153,9 @@ export function createRpcErrorResponse<T extends RpcMethodNames>(
 ) {
   return { jsonrpc: '2.0', ...error } as RpcEndpointMap[T]['response'];
 }
+
+export function parseEndpointRequest(data: unknown): RpcRequests | undefined {
+  const endpointRequests = Object.values(endpoints).map(endpoint => endpoint.request);
+  const endpoint = endpointRequests.find(req => req.safeParse(data).success);
+  return endpoint?.safeParse(data).data;
+}
