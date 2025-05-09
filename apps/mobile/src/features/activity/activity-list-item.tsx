@@ -2,9 +2,8 @@ import { Balance } from '@/components/balance/balance';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 
 import { Activity } from '@leather.io/models';
-import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { ActivityAvatarIcon, Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
-import { ActivityIcon } from './activity-icon';
 import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
 import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
 
@@ -40,7 +39,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined}
     >
       <Flag
-        img={<ActivityIcon type={activity.type} asset={activityAsset} status={status} />}
+        img={<ActivityAvatarIcon type={activity.type} asset={activityAsset} status={status} />}
         px="5"
         py="3"
       >
