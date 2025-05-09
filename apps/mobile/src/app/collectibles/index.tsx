@@ -8,7 +8,7 @@ export default function CollectiblesScreen() {
   const collectibles = useTotalCollectibles();
   const pageTitle = t({
     id: 'collectibles.header_title',
-    message: 'My collectibles',
+    message: 'All collectibles',
   });
 
   return (

@@ -9,6 +9,7 @@ import { BalancesWidget } from '@/features/balances/balances-widget';
 import { TokenBalance } from '@/features/balances/token-balance';
 import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
 import { useCollectiblesFlag } from '@/features/feature-flags';
+import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AppRoutes } from '@/routes';
@@ -16,7 +17,7 @@ import { Account as AccountType } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 import { router } from 'expo-router';
 
-import { SettingsGearIcon } from '@leather.io/ui/native';
+import { Box, SettingsGearIcon } from '@leather.io/ui/native';
 
 interface AccountProps {
   account: AccountType;
@@ -27,7 +28,6 @@ interface AccountProps {
 }
 
 export function Account({ account, walletName, balance, isLoading, isError }: AccountProps) {
-  console.log('account', account);
   const activity = useAccountActivity(account.fingerprint, account.accountIndex);
   const collectibles = useAccountCollectibles(account.fingerprint, account.accountIndex);
   const releaseCollectibles = useCollectiblesFlag();
@@ -36,17 +36,20 @@ export function Account({ account, walletName, balance, isLoading, isError }: Ac
       <NakedHeader
         error={isError && <FetchError />}
         rightElement={
-          <SettingsGearIcon
-            onPress={() => {
-              router.navigate({
-                pathname: AppRoutes.SettingsWalletConfigureAccount,
-                params: {
-                  fingerprint: account.fingerprint,
-                  account: account.accountIndex,
-                },
-              });
-            }}
-          />
+          <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
+            <NetworkBadge />
+            <SettingsGearIcon
+              onPress={() => {
+                router.navigate({
+                  pathname: AppRoutes.SettingsWalletConfigureAccount,
+                  params: {
+                    fingerprint: account.fingerprint,
+                    account: account.accountIndex,
+                  },
+                });
+              }}
+            />
+          </Box>
         }
       />
       <AccountOverview

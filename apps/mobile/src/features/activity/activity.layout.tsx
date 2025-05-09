@@ -14,7 +14,7 @@ function getTitle(accountName?: string) {
       })
     : t({
         id: 'activity.header_title',
-        message: 'All Activity',
+        message: 'All activity',
       });
 }
 
@@ -27,7 +27,7 @@ function getContentTitle(accountName?: string) {
       })
     : t({
         id: 'activity.header_title',
-        message: 'All Activity',
+        message: 'All activity',
       });
 }
 

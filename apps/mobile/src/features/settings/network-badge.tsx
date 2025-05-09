@@ -23,6 +23,7 @@ export function NetworkBadge(props: NetworkBadgeProps) {
           message: '{network}',
           values: { network: networkPreference.name },
         })}
+        mr="2"
         {...props}
       />
     </Pressable>
