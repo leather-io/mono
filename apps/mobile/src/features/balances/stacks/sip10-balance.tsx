@@ -30,6 +30,8 @@ function Sip10TokenBalance({
   name,
   symbol,
 }: Sip10TokenBalanceProps) {
+  //  if sBTC show sBTC icon
+  // LEA-2589
   return (
     <TokenBalance
       ticker={symbol}

@@ -6,7 +6,7 @@ import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 import { ActivityIcon } from './activity-icon';
 import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
-import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
+import { goToExplorer } from './utils/go-to-explorer';
 
 interface ActivityListItemProps {
   activity: Activity;
@@ -19,9 +19,13 @@ function getBalanceOperator(activity: Activity) {
 }
 
 // Pete - check design and fix this and other issues mentioned in LEA-2473
+// > next up - new icons and check widget styles
 // then implement FlashList + remove header
 // add new empty state
 // then check for other easy win UI issues related to activity list
+> Pete - actually steaming ahead here. try and finish most of this stuff tomorrow
+> then can try do Token View / 
+
 
 function getBalanceColor(activity: Activity) {
   const isSendOrReceive = activity.type === 'sendAsset' || activity.type === 'receiveAsset';
@@ -38,6 +42,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
   const asset = 'asset' in activity ? activity.asset : undefined;
   const status = 'status' in activity ? activity.status : undefined;
   const activityAsset = asset && 'symbol' in asset ? asset : undefined;
+  const activityChain = activityAsset && 'chain' in activityAsset ? activityAsset.chain : undefined;
 
   //   account: { accountIndex: 0, fingerprint: 'efd01538' },
   //   fromAmount: '200000',
@@ -154,7 +159,9 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
     <Pressable
       flexDirection="row"
       disabled={!txid}
-      onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined}
+      onPress={
+        txid && activityChain ? () => goToExplorer({ activityChain, txid, mode }) : undefined
+      }
     >
       <Flag
         img={<ActivityIcon type={activity.type} asset={activityAsset} status={status} />}

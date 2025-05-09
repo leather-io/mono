@@ -13,7 +13,8 @@ export default function BalancesScreen() {
     id: 'balances.header_title',
     message: 'My tokens',
   });
-
+  // TODO - refactor this to make a new TotalBalance component
+  // https://github.com/leather-io/mono/pull/1130#discussion_r2080396119
   const balance = totalBalance.state === 'success' ? totalBalance.value : EmptyBalance;
 
   return (

@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { FeeBadge } from '@/features/send/components/fee-badge';
 import { t } from '@lingui/macro';
 
 import { MarketData, Money } from '@leather.io/models';
@@ -29,7 +28,8 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
             message: 'Fee',
           })}
         </Text>
-        <FeeBadge type="normal" />
+        {/*  PRO-77 hide fee badge until dynamic fee is implemented
+        <FeeBadge type="normal" /> */}
       </Box>
       <Box mx="-5">
         <Cell.Root pressable onPress={onPress}>

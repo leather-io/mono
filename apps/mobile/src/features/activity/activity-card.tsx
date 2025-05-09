@@ -5,7 +5,7 @@ import { Box, Pressable, usePressedState } from '@leather.io/ui/native';
 
 import { ActivityCardContent } from './activity-card-content';
 import { ActivityIcon } from './activity-icon';
-import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
+import { goToStacksExplorer } from './utils/go-to-explorer';
 
 interface ActivityCardProps {
   activity: Activity;
