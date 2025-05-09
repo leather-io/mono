@@ -1,15 +1,14 @@
 import { Balance } from '@/components/balance/balance';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
-import dayjs from 'dayjs';
 
 import { Activity } from '@leather.io/models';
 import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 import { ActivityIcon } from './activity-icon';
-import { formatActivityType } from './utils/format-activity';
+import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
 import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
 
-interface ActivityCellProps {
+interface ActivityListItemProps {
   activity: Activity;
 }
 
@@ -20,14 +19,12 @@ function getBalanceOperator(activity: Activity) {
 }
 
 function getBalanceColor(activity: Activity) {
-  if (activity.type === 'receiveAsset' && activity.status === 'success')
-    return 'green.action-primary-default';
-  if (activity.type === 'sendAsset' && activity.status === 'success')
-    return 'red.action-primary-default';
+  const isSendOrReceive = activity.type === 'sendAsset' || activity.type === 'receiveAsset';
+  if (isSendOrReceive && activity.status === 'success') return 'green.action-primary-default';
   return undefined;
 }
 
-export function ActivityCell({ activity }: ActivityCellProps) {
+export function ActivityListItem({ activity }: ActivityListItemProps) {
   const { mode } = useCurrentNetworkState();
 
   const txid = 'txid' in activity ? activity.txid : undefined;
@@ -48,19 +45,33 @@ export function ActivityCell({ activity }: ActivityCellProps) {
         py="3"
       >
         <ItemLayout
-          titleLeft={formatActivityType(activity.type)}
+          titleLeft={getActivityTitle(activity)}
           titleRight={
-            value?.crypto ? (
+            value?.fiat ? (
               <Balance
                 operator={getBalanceOperator(activity)}
-                balance={value.crypto}
+                balance={value.fiat}
                 color={getBalanceColor(activity)}
               />
             ) : undefined
           }
-          captionLeft={dayjs(activity.timestamp * 1000).format('MMM D, YYYY')}
+          captionLeft={
+            // FIXME LEA-2473 - should pre-filter all activities
+            // to only include these types - onChain using OnChainActivity type / BaseOnChainActivity
+            activity.type === 'sendAsset' ||
+            activity.type === 'receiveAsset' ||
+            activity.type === 'swapAssets' ||
+            activity.type === 'executeSmartContract' ||
+            activity.type === 'deploySmartContract'
+              ? formatActivityCaption({
+                  activityType: activity.type,
+                  status: activity.status,
+                  timestamp: activity.timestamp,
+                })
+              : undefined
+          }
           captionRight={
-            value?.fiat ? <Balance balance={value.fiat} color="ink.text-subdued" /> : undefined
+            value?.crypto ? <Balance balance={value.crypto} color="ink.text-subdued" /> : undefined
           }
         />
       </Flag>
