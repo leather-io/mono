@@ -20,12 +20,14 @@ import { SettingsGearIcon } from '@leather.io/ui/native';
 
 interface AccountProps {
   account: AccountType;
+  walletName: string;
   balance: TokenBalance;
   isLoading: boolean;
   isError: boolean;
 }
 
-export function Account({ account, balance, isLoading, isError }: AccountProps) {
+export function Account({ account, walletName, balance, isLoading, isError }: AccountProps) {
+  console.log('account', account);
   const activity = useAccountActivity(account.fingerprint, account.accountIndex);
   const collectibles = useAccountCollectibles(account.fingerprint, account.accountIndex);
   const releaseCollectibles = useCollectiblesFlag();
@@ -51,7 +53,8 @@ export function Account({ account, balance, isLoading, isError }: AccountProps) 
         isLoading={isLoading}
         icon={account.icon}
         heading={<Balance balance={balance} variant="heading02" isLoading={isLoading} />}
-        caption={account.name}
+        accountName={account.name}
+        walletName={walletName}
       />
       <BalancesWidget
         onPressHeader={() =>

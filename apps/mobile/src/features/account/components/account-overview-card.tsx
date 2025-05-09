@@ -4,13 +4,20 @@ import { AccountIcon } from '@/store/accounts/utils';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 export interface AccountOverviewProps {
-  caption: string;
   heading: React.ReactNode;
   icon: AccountIcon;
   isLoading: boolean;
+  accountName: string;
+  walletName: string;
 }
 
-export function AccountOverview({ caption, icon, heading, isLoading }: AccountOverviewProps) {
+export function AccountOverview({
+  icon,
+  heading,
+  isLoading,
+  accountName,
+  walletName,
+}: AccountOverviewProps) {
   if (isLoading) {
     return (
       <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
@@ -27,11 +34,14 @@ export function AccountOverview({ caption, icon, heading, isLoading }: AccountOv
     <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
       <Box mx="5" py="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
         <AccountAvatar icon={icon} />
+        {heading}
         <Box gap="1" flexDirection="column" alignItems="center">
-          <Text variant="label02" textAlign="center">
-            {caption}
+          <Text variant="label01" textAlign="center">
+            {accountName}
           </Text>
-          {heading}
+          <Text variant="caption01" textAlign="center">
+            {walletName}
+          </Text>
         </Box>
       </Box>
     </Box>
