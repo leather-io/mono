@@ -15,8 +15,8 @@ export default function CollectiblesScreen() {
   const collectibles = useAccountCollectibles(fingerprint, accountIndex);
 
   const pageTitle = t({
-    id: 'collectibles.header_title',
-    message: 'My collectibles',
+    id: 'account.collectibles.header_title',
+    message: 'Collectibles',
   });
 
   return (
