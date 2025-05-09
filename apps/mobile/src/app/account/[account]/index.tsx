@@ -2,6 +2,7 @@ import { Account } from '@/features/account/account';
 import { EmptyBalance } from '@/features/balances/token-balance';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { AccountLoader, deserializeAccountId } from '@/store/accounts/accounts';
+import { WalletLoader } from '@/store/wallets/wallets.read';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 
@@ -19,15 +20,20 @@ export default function AccountScreen() {
   const isErrorTotalBalance = aggregateBalance.state === 'error';
   const totalBalance = aggregateBalance.state === 'success' ? aggregateBalance.value : EmptyBalance;
   return (
-    <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
-      {account => (
-        <Account
-          account={account}
-          balance={totalBalance}
-          isLoading={isLoadingTotalBalance}
-          isError={isErrorTotalBalance}
-        />
+    <WalletLoader fingerprint={fingerprint}>
+      {wallet => (
+        <AccountLoader fingerprint={fingerprint} accountIndex={accountIndex}>
+          {account => (
+            <Account
+              walletName={wallet.name}
+              account={account}
+              balance={totalBalance}
+              isLoading={isLoadingTotalBalance}
+              isError={isErrorTotalBalance}
+            />
+          )}
+        </AccountLoader>
       )}
-    </AccountLoader>
+    </WalletLoader>
   );
 }
