@@ -263,6 +263,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.32.0
 
+## [2.13.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.12.0...@leather.io/rpc-v2.13.0) (2025-05-09)
+
+
+### Features
+
+* add platform to getInfo response ([5576be5](https://github.com/leather-io/mono/commit/5576be517dc981842acad6a30088de43536d306b))
+
 ## [2.12.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.11.0...@leather.io/rpc-v2.12.0) (2025-05-06)
 
 
