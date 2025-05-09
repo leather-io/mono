@@ -55,7 +55,7 @@ export function AccountsWidget({
               wallets.hasWallets ? () => accountSelectorSheetRef.current?.present() : undefined
             }
           >
-            <Widget.Title title={t({ id: 'accounts.header_title', message: 'My accounts' })} />
+            <Widget.Title title={t({ id: 'accounts.header_title', message: 'All accounts' })} />
           </Widget.Header>
           {wallets.hasWallets && (
             <Box px="5">

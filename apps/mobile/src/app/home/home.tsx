@@ -15,6 +15,7 @@ import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AppRoutes } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
+import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { router } from 'expo-router';
 
@@ -48,16 +49,21 @@ export function Home() {
             onPressHeader={() => router.navigate(AppRoutes.Balances)}
             totalBalance={totalBalance}
             isLoading={isLoadingTotalBalance}
+            title={t({ id: 'balances.header_title', message: 'All tokens' })}
           >
             <AllAccountBalances hardCap />
           </BalancesWidget>
           <ActivityWidget
             activity={activity}
             onPressHeader={() => router.navigate(AppRoutes.Activity)}
+            title={t({ id: 'activity.header_title', message: 'All activity' })}
           />
 
           {releaseCollectibles && hasCollectibles(collectibles) && (
-            <CollectiblesWidget onPressHeader={() => router.navigate(AppRoutes.Collectibles)}>
+            <CollectiblesWidget
+              onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
+              title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
+            >
               <Collectibles collectibles={collectibles} mode="widget" />
             </CollectiblesWidget>
           )}

@@ -25,7 +25,7 @@ export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) 
         <Text variant="heading05">
           {t({
             id: 'account_selector.header_title',
-            message: 'Accounts',
+            message: 'All accounts',
           })}
         </Text>
       </Box>
