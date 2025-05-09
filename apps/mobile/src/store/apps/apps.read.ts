@@ -3,7 +3,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { useAppSelector } from '../utils';
 import { appsAdapter } from './apps.write';
-import { AppStatus } from './utils';
+import { App, AppStatus } from './utils';
 
 const selectors = appsAdapter.getSelectors((state: RootState) => state.apps);
 
@@ -30,4 +30,22 @@ export function useApps(status?: AppStatus) {
     list,
     hasAccounts: list.length > 0,
   };
+}
+
+export type ConnectedAppAccountIdMap = Record<string, App[]>;
+
+function connectedAppsToAccountIdMap(acc: ConnectedAppAccountIdMap, app: App) {
+  if (app.status === 'connected') {
+    const appsByAccount = acc[app.accountId];
+    if (appsByAccount) {
+      acc[app.accountId] = [...appsByAccount, app];
+    } else {
+      acc[app.accountId] = [app];
+    }
+  }
+  return acc;
+}
+
+export function getConnectedAppsToAccountIdMap(apps: App[]) {
+  return apps.reduce(connectedAppsToAccountIdMap, {});
 }
