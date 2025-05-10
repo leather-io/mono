@@ -68,6 +68,7 @@ export interface StackingPool {
     testnet: string;
     devnet: string;
   };
+  fee: string;
   poxContract: string;
   minimumDelegationAmount: number;
   allowCustomRewardAddress: boolean;
@@ -122,6 +123,7 @@ export const stackingPoolData = {
   },
   planbetter: {
     ...providers.planbetter,
+    fee: '5%',
     minAmount: '200 STX',
     estApr: '10%',
     payout: 'STX',
@@ -139,6 +141,7 @@ export const stackingPoolData = {
   },
   restake: {
     ...providers.restake,
+    fee: '5%',
     minAmount: '100 STX',
     estApr: '11%',
     payout: 'STX',
@@ -157,6 +160,7 @@ export const stackingPoolData = {
   },
   xverse: {
     ...providers.xverse,
+    fee: '5%',
     minAmount: '100 STX',
     estApr: '10%',
     payout: 'BTC',
@@ -176,6 +180,7 @@ export const stackingPoolData = {
   },
   stackingDao: {
     ...providers.stackingDao,
+    fee: '5%',
     minAmount: '100 STX',
     estApr: '16%',
     payout: 'STX',
@@ -209,18 +214,21 @@ export interface LiquidStackingPool {
   estApr: string;
   payout: string;
   slug: string;
+  fee: string;
 }
 export const liquidStackingPoolData = {
   stackingDao: {
     ...providers.stackingDao,
     slug: 'stacking-dao',
     estApr: '5%',
+    fee: '5%',
     payout: 'stSTX',
   },
   lisa: {
     ...providers.lisa,
     slug: 'lisa',
     estApr: '10%',
+    fee: '5%',
     payout: 'LiSTX',
   },
 } as const satisfies Record<string, LiquidStackingPool>;
