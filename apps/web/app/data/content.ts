@@ -8,5 +8,7 @@ export const content = {
       '     The minimum amount of STX required to participate in this provider’s pool. You cannot stack with less than this.',
     aprDescription:
       'APR (Annual Percentage Rate) represents the annualized return participants earn on their stacked assets, excluding compounding.',
+    feeDescription:
+      'The fee is a percentage of the rewards you earn from the pool. It is deducted from your rewards before they are distributed to you.',
   },
 } as const;
