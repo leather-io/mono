@@ -14,7 +14,7 @@ export function ActivityCardContent({ activity }: ActivityCardContentProps) {
       <Box alignItems="flex-start" gap="1" alignSelf="stretch">
         <Text variant="label02">
           {formatActivityStatus({
-            activityType: activity.type,
+            type: activity.type,
             status: activity.status,
           })}
         </Text>
