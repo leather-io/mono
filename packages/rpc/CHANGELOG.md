@@ -263,6 +263,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.32.0
 
+## [2.14.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.13.0...@leather.io/rpc-v2.14.0) (2025-05-12)
+
+
+### Features
+
+* implement getInfo and supportedMethods sip30 ([305f084](https://github.com/leather-io/mono/commit/305f08405973944f1f0ed0caae62179f6093c827))
+
 ## [2.13.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.12.0...@leather.io/rpc-v2.13.0) (2025-05-09)
 
 

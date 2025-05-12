@@ -701,6 +701,26 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.37.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.36.1...@leather.io/mobile-v2.37.0) (2025-05-12)
+
+
+### Features
+
+* implement getInfo and supportedMethods sip30 ([305f084](https://github.com/leather-io/mono/commit/305f08405973944f1f0ed0caae62179f6093c827))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.25.2
+    * @leather.io/provider bumped to 1.2.11
+    * @leather.io/query bumped to 2.36.6
+    * @leather.io/rpc bumped to 2.14.0
+    * @leather.io/services bumped to 1.9.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.25.2
+
 ## [2.36.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.36.0...@leather.io/mobile-v2.36.1) (2025-05-09)
 
 
