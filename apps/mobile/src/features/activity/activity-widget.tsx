@@ -4,19 +4,18 @@ import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
 import { useTheme } from '@shopify/restyle';
 
-import { Activity } from '@leather.io/models';
+import { OnChainActivity } from '@leather.io/models';
 import { Box, Theme } from '@leather.io/ui/native';
 
-import { ActivityCard } from './activity-card';
 import { ActivityEmpty } from './activity-empty';
 import { ActivityList } from './activity-list';
 
-export function hasActivity(activity: FetchState<Activity[]>) {
+export function hasActivity(activity: FetchState<OnChainActivity[]>) {
   return activity.state === 'success' && activity.value.length > 0;
 }
 
 interface ActivityWidgetProps {
-  activity: FetchState<Activity[]>;
+  activity: FetchState<OnChainActivity[]>;
   onPressHeader?: () => void;
   title: string;
 }
