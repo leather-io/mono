@@ -4,10 +4,10 @@ import { WhenClient } from '~/components/client-only';
 
 import { SignInButton } from '../sign-in-button/sign-in-button';
 
-export const insetPageMarginX = css({ mx: ['-space.04', '-space.05', '-space.06'] });
+export const insetPageMarginX = css({ mx: ['-space.04', '-space.05', '-space.07'] });
 
 export function Page(props: HTMLStyledProps<'div'>) {
-  return <styled.div mx={['space.04', 'space.05', 'space.06']} {...props} />;
+  return <styled.div mx={['space.04', 'space.05', 'space.07']} {...props} />;
 }
 
 export function PageInset(props: HTMLStyledProps<'div'>) {
@@ -46,7 +46,7 @@ export function PageHeader({ title }: PageHeaderProps) {
       borderBottom="default"
       alignItems="center"
     >
-      <styled.h1 textStyle="heading.05" mx={['space.04', 'space.05', 'space.06']}>
+      <styled.h1 textStyle="heading.05" mx={['space.04', 'space.05', 'space.07']}>
         {title}
       </styled.h1>
 

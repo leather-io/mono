@@ -79,6 +79,7 @@ export const stackingPoolData = {
     ...providers.fastPool,
     minAmount: '40 STX',
     estApr: '5%',
+    fee: '5%',
     payout: 'STX',
     disabled: false,
     description:
@@ -96,13 +97,13 @@ export const stackingPoolData = {
     minimumDelegationAmount: 40_000_000,
     allowCustomRewardAddress: false,
     duration: 1,
-    // icon: <ImgFillLoader src="/icons/fastpool.webp" width="32" fill="black" />,
   },
   fastPoolV2: {
     ...providers.fastPool,
-    name: 'FAST Pool v2',
+    name: 'Fast Pool v2',
     minAmount: '40 STX',
     estApr: '5%',
+    fee: '5%',
     description:
       'Enjoy a better swim experience in the upgraded pool.' +
       ' ' +
