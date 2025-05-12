@@ -143,7 +143,7 @@ export function SbtcRewards() {
 
         <styled.section mt="space.09">
           <styled.h3 textStyle="heading.03">Step 1: Get sBTC</styled.h3>
-          <styled.p textStyle="label.03" mt="space.02">
+          <styled.p textStyle="label.03" mt="space.02" maxW="390px">
             You can get sBTC either by bridging BTC to the Stacks blockchain or by swapping another
             asset on Stacks on the L2 itself.
           </styled.p>

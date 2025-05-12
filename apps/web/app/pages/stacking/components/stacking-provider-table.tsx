@@ -9,7 +9,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { css } from 'leather-styles/css';
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { BasicHoverCard } from '~/components/basic-hover-card';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
@@ -207,12 +206,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         </Table.Head>
         <Table.Body>
           {table.getRowModel().rows.map(row => (
-            <Table.Row
-              key={row.id}
-              height="64px"
-              className={rowPadding}
-              _hover={{ bg: 'ink.component-background-hover' }}
-            >
+            <Table.Row key={row.id} height="64px" className={rowPadding}>
               {row.getVisibleCells().map(cell => (
                 <styled.td
                   style={{ width: cell.column.getSize() + '%' }}
@@ -375,12 +369,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         </Table.Head>
         <Table.Body>
           {table.getRowModel().rows.map(row => (
-            <Table.Row
-              key={row.id}
-              height="64px"
-              className={rowPadding}
-              _hover={{ bg: 'ink.component-background-hover' }}
-            >
+            <Table.Row key={row.id} height="64px" className={rowPadding}>
               {row.getVisibleCells().map(cell => (
                 <styled.td
                   style={{ width: `${cell.column.getSize()}%` }}
