@@ -1,66 +1,66 @@
 import { t } from '@lingui/macro';
 import dayjs from 'dayjs';
 
-import { Activity, ActivityType, BaseOnChainActivity } from '@leather.io/models';
+import { BaseOnChainActivity, OnChainActivity } from '@leather.io/models';
 
 interface FormatActivityStatusProps {
-  activityType: ActivityType;
+  type: OnChainActivity['type'];
   status: BaseOnChainActivity['status'];
 }
 
-export function formatActivityStatus({ activityType, status }: FormatActivityStatusProps) {
+export function formatActivityStatus({ type, status }: FormatActivityStatusProps) {
   switch (true) {
-    case activityType === 'sendAsset' && status === 'success':
+    case type === 'sendAsset' && status === 'success':
       return t({
         id: 'activity.status.sent',
         message: 'Sent',
       });
-    case activityType === 'sendAsset' && status === 'failed':
+    case type === 'sendAsset' && status === 'failed':
       return t({
         id: 'activity.status.send-failed',
         message: 'Send Failed',
       });
-    case activityType === 'sendAsset' && status === 'pending':
+    case type === 'sendAsset' && status === 'pending':
       return t({
         id: 'activity.status.sending',
         message: 'Sending',
       });
-    case activityType === 'receiveAsset' && status === 'success':
+    case type === 'receiveAsset' && status === 'success':
       return t({
         id: 'activity.status.received',
         message: 'Received',
       });
-    case activityType === 'receiveAsset' && status === 'failed':
+    case type === 'receiveAsset' && status === 'failed':
       return t({
         id: 'activity.status.receive-failed',
         message: 'Receive fail',
       });
-    case activityType === 'executeSmartContract' && status === 'success':
+    case type === 'executeSmartContract' && status === 'success':
       return t({
         id: 'activity.status.executed',
         message: 'Executed',
       });
-    case activityType === 'executeSmartContract' && status === 'pending':
+    case type === 'executeSmartContract' && status === 'pending':
       return t({
         id: 'activity.status.executing',
         message: 'Executing',
       });
-    case activityType === 'executeSmartContract' && status === 'failed':
+    case type === 'executeSmartContract' && status === 'failed':
       return t({
         id: 'activity.status.execute-failed',
         message: 'Execution failed',
       });
-    case activityType === 'deploySmartContract' && status === 'success':
+    case type === 'deploySmartContract' && status === 'success':
       return t({
         id: 'activity.status.deployed',
         message: 'Deployed',
       });
-    case activityType === 'deploySmartContract' && status === 'pending':
+    case type === 'deploySmartContract' && status === 'pending':
       return t({
         id: 'activity.status.deploying',
         message: 'Deploying',
       });
-    case activityType === 'deploySmartContract' && status === 'failed':
+    case type === 'deploySmartContract' && status === 'failed':
       return t({
         id: 'activity.status.deploy-failed',
         message: 'Deployment failed',
@@ -71,16 +71,12 @@ export function formatActivityStatus({ activityType, status }: FormatActivitySta
 }
 
 interface FormatActivityCaptionProps {
-  activityType: ActivityType;
+  type: OnChainActivity['type'];
   status: BaseOnChainActivity['status'];
   timestamp: number;
 }
 
-export function formatActivityCaption({
-  activityType,
-  status,
-  timestamp,
-}: FormatActivityCaptionProps) {
+export function formatActivityCaption({ type, status, timestamp }: FormatActivityCaptionProps) {
   const isRecent = dayjs(timestamp).isAfter(dayjs().subtract(1, 'hour'));
   const time = dayjs(timestamp * 1000).format('MMM D, YYYY');
 
@@ -91,16 +87,16 @@ export function formatActivityCaption({
       })}`
     : time;
 
-  const statusText = formatActivityStatus({ activityType, status });
+  const statusText = formatActivityStatus({ type, status });
   return statusText ? `${statusText} ${timestampText}` : timestampText;
 }
 
-export function getActivityTitle(activity: Activity) {
+export function getActivityTitle(activity: OnChainActivity) {
   switch (activity.type) {
     case 'sendAsset':
     case 'receiveAsset':
       if (!activity.value?.crypto?.symbol) {
-        // TODO LEA-2473 - find out about sBTC rewards
+        // TODO ENG-37 - find out about sBTC rewards - Asked design
         // we can have type `sendAsset` / `receiveAsset` with an empty symbol/ unknown token
         // e.g. assetId 'SM1793C4R5PZ4NS4VQ4WMP7SKKYVH8JZEWSZ9HCCR.xyk-pool-sbtc-stx-v-1-1::pool-token'
         // could be an API issue / need to format as sBTC. extension says 'Token transfer'
@@ -112,16 +108,18 @@ export function getActivityTitle(activity: Activity) {
       return activity.value?.crypto?.symbol;
     case 'deploySmartContract':
     case 'executeSmartContract':
-      return activity.contractId.split('.').pop() || 'Unknown';
+      return (
+        activity.contractId.split('.').pop() ||
+        t({
+          id: 'activity.type.unknown',
+          message: 'Unknown',
+        })
+      );
     case 'swapAssets':
       return t({
         id: 'activity.type.swapAssets',
         message: 'Swap Assets',
       });
-    case 'connectApp':
-    case 'signMessage':
-    case 'walletAdded':
-    case 'receiveAnnouncement':
     case 'lockAsset':
       return t({
         id: 'activity.type.lockAsset',
