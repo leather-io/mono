@@ -1,26 +1,26 @@
 import { Balance } from '@/components/balance/balance';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 
-import { Activity } from '@leather.io/models';
-import { ActivityAvatarIcon, Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { OnChainActivity } from '@leather.io/models';
+import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
 
 import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
 import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
 
 interface ActivityListItemProps {
-  activity: Activity;
+  activity: OnChainActivity;
 }
 
-function getBalanceOperator(activity: Activity) {
+function getBalanceOperator(activity: OnChainActivity) {
   if (activity.type === 'receiveAsset') return '+';
   if (activity.type === 'sendAsset') return '-';
   return undefined;
 }
 
-function getBalanceColor(activity: Activity) {
+function getBalanceColor(activity: OnChainActivity) {
   const isSendOrReceive = activity.type === 'sendAsset' || activity.type === 'receiveAsset';
   if (isSendOrReceive && activity.status === 'success') return 'green.action-primary-default';
-  return undefined;
+  return 'ink.text-primary';
 }
 
 export function ActivityListItem({ activity }: ActivityListItemProps) {
@@ -44,7 +44,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
         py="3"
       >
         <ItemLayout
-          titleLeft={getActivityTitle(activity)}
+          titleLeft={<Text variant="label01">{getActivityTitle(activity)}</Text>}
           titleRight={
             value?.fiat ? (
               <Balance
@@ -55,22 +55,24 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
             ) : undefined
           }
           captionLeft={
-            // FIXME LEA-2473 - should pre-filter all activities
-            // to only include these types - onChain using OnChainActivity type / BaseOnChainActivity
-            activity.type === 'sendAsset' ||
-            activity.type === 'receiveAsset' ||
-            activity.type === 'swapAssets' ||
-            activity.type === 'executeSmartContract' ||
-            activity.type === 'deploySmartContract'
-              ? formatActivityCaption({
-                  activityType: activity.type,
-                  status: activity.status,
-                  timestamp: activity.timestamp,
-                })
-              : undefined
+            <Text variant="caption01" color="ink.text-subdued" lineHeight={16} fontSize={13}>
+              {formatActivityCaption({
+                type: activity.type,
+                status: activity.status,
+                timestamp: activity.timestamp,
+              })}
+            </Text>
           }
           captionRight={
-            value?.crypto ? <Balance balance={value.crypto} color="ink.text-subdued" /> : undefined
+            value?.crypto ? (
+              <Balance
+                balance={value.crypto}
+                variant="caption01"
+                color="ink.text-subdued"
+                lineHeight={16}
+                fontSize={13}
+              />
+            ) : undefined
           }
         />
       </Flag>

@@ -32,7 +32,6 @@ export function AccountCard({
   onPress,
   appIcons,
   isLoading,
-  ...props
 }: AccountCardProps) {
   if (isLoading) {
     return <Loading mode="widget" />;
