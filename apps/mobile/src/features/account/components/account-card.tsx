@@ -1,19 +1,12 @@
 import { ComponentType, ReactNode } from 'react';
-import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { Loading } from '@/components/loading/loading';
+import { WidgetCard } from '@/components/widget';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AppIcons } from '@/features/accounts/components/app-icons';
 import { AccountIcon } from '@/store/accounts/utils';
 
-import {
-  Box,
-  HasChildren,
-  Pressable,
-  PressableProps,
-  Text,
-  usePressedState,
-} from '@leather.io/ui/native';
+import { Box, HasChildren, PressableProps, Text } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
 interface AccountCardProps extends PressableProps {
@@ -41,34 +34,12 @@ export function AccountCard({
   isLoading,
   ...props
 }: AccountCardProps) {
-  const { pressed, onPressIn, onPressOut } = usePressedState(props);
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(pressed ? 0.95 : 1) }],
-  }));
-
   if (isLoading) {
     return <Loading mode="widget" />;
   }
 
   return (
-    <Pressable
-      height={156}
-      p="4"
-      justifyContent="space-between"
-      bg="ink.background-primary"
-      borderWidth={1}
-      borderStyle="solid"
-      borderColor="ink.border-default"
-      borderRadius="md"
-      shadowOpacity={0.04}
-      shadowOffset={{ width: 0, height: 2 }}
-      shadowRadius={6}
-      onPress={onPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      style={animatedStyle}
-      {...props}
-    >
+    <WidgetCard height={156} onPress={onPress}>
       <Box flexDirection="row" justifyContent="space-between">
         <AccountAvatar icon={icon} />
         {address}
@@ -91,7 +62,7 @@ export function AccountCard({
         <Title>{secondaryTitle}</Title>
       </Box>
       {appIcons && <AppIcons appIcons={appIcons} />}
-    </Pressable>
+    </WidgetCard>
   );
 }
 

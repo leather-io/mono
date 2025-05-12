@@ -19,12 +19,12 @@ interface FormatBalanceProps {
 export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps) {
   if (isFiat) {
     const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
-    return i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals);
+    return operator
+      ? `${operator} ${i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals)}`
+      : i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals);
   }
 
-  return operator
-    ? `${operator} ${formatMoneyWithoutSymbol(balance)}`
-    : formatMoneyWithoutSymbol(balance);
+  return formatMoneyWithoutSymbol(balance);
 }
 
 interface BalanceProps extends TextProps {
@@ -40,6 +40,7 @@ export function Balance({
   variant = 'label01',
   color = 'ink.text-primary',
   isLoading,
+  ...props
 }: BalanceProps) {
   const isPrivate = usePrivacyMode();
   if (isLoading) {
@@ -63,11 +64,11 @@ export function Balance({
 
   return (
     <BulletSeparator color={color}>
-      <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant}>
+      <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
         {formattedBalance}
       </PrivateText>
       {!isPrivate ? (
-        <Text color={color} variant={variant}>
+        <Text color={color} variant={variant} {...props}>
           {lockedBalance}
           {t({
             id: 'locked',

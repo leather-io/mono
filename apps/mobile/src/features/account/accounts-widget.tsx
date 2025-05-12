@@ -85,7 +85,6 @@ export function AccountsWidget({
               .map((account, i) => (
                 <AccountCard
                   isLoading={isLoadingTotalBalance}
-                  width={200}
                   testID={`${TestId.homeAccountCard}-${i}`}
                   caption={i18n._({
                     id: 'accounts.account.cell_caption',
