@@ -1,6 +1,5 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
-import { type Account } from '@/store/accounts/accounts';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
 import { ChainId, type StacksNetwork } from '@stacks/network';
@@ -42,10 +41,6 @@ export function createCoinSelectionUtxos(utxos: Utxo[]): CoinSelectionUtxo[] {
 
 export function isUserInputEffectivelyZero(input: string) {
   return input === '0' || /^0\.0*$/.test(input);
-}
-
-export function getInitialRelevantAccounts(accounts: Account[]) {
-  return accounts.filter(account => account.status !== 'hidden');
 }
 
 export function validateDecimalPlaces(value: string, maxDecimalPlaces: number) {

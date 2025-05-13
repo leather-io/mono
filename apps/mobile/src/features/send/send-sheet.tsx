@@ -16,7 +16,7 @@ export function SendSheet() {
 
   return (
     <FullHeightSheet sheetRef={sendSheetRef} onAnimate={handleAnimatedPositionChange}>
-      <Send />
+      {data => <Send accountId={data?.data.accountId} />}
     </FullHeightSheet>
   );
 }

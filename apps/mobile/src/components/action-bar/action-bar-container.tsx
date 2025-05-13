@@ -5,9 +5,11 @@ import { ActionBar, ActionBarMethods } from '@/components/action-bar/action-bar'
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useBrowserFlag } from '@/features/feature-flags';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
+import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
+import { useLocalSearchParams, usePathname } from 'expo-router';
 
 import {
   Box,
@@ -19,7 +21,6 @@ import {
   SheetRef,
   Text,
   legacyTouchablePressEffect,
-  useOnMount,
 } from '@leather.io/ui/native';
 import { isEmptyArray } from '@leather.io/utils';
 
@@ -148,12 +149,9 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   const { browserSheetRef, sendSheetRef, receiveSheetRef } = useGlobalSheets();
   const wallets = useWallets();
   const addWalletSheetRef = useRef<SheetRef>(null);
-  const browserRef = useRef<SheetRef>(null);
   const releaseBrowserFeature = useBrowserFlag();
-
-  useOnMount(() => {
-    browserRef.current?.present();
-  });
+  const pathname = usePathname();
+  const params = useLocalSearchParams();
 
   if (isEmptyArray(wallets.list)) {
     return (
@@ -175,7 +173,11 @@ export const ActionBarContainer = forwardRef<ActionBarMethods>((_, ref) => {
   return (
     <ActionBar ref={ref}>
       <ActionBarButton
-        onPress={() => sendSheetRef.current?.present()}
+        onPress={() =>
+          sendSheetRef.current?.present({
+            accountId: pathname === AppRoutes.Account ? params.accountId : undefined,
+          })
+        }
         icon={<PaperPlaneIcon />}
         label={t({
           id: 'action_bar.send_label',
