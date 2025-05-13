@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef } from 'react';
+import { ReactElement, forwardRef } from 'react';
 import { Dimensions, Platform } from 'react-native';
 import { SharedValue, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
-import { match } from '@leather.io/utils';
+import { isFunction, match } from '@leather.io/utils';
 
 import { Box, Theme, createTextInput } from '../../../native';
 import { ThemeVariant } from '../../theme-native';
@@ -31,7 +31,6 @@ export interface SheetProps extends BottomSheetModalProps {
   animatedPosition?: SharedValue<number>;
   animatedIndex?: SharedValue<number>;
   themeVariant: ThemeVariant;
-  children: ReactNode;
 }
 
 export type SheetRef = BottomSheetModal;
@@ -105,20 +104,25 @@ export const Sheet = forwardRef<BottomSheetModal, SheetProps>(
         })}
         {...props}
       >
-        {shouldHaveContainer && (
-          <BottomSheetComponent
-            style={{
-              backgroundColor: theme.colors['ink.background-primary'],
-              paddingBottom: bottom,
-              borderTopLeftRadius: theme.borderRadii.lg,
-              borderTopRightRadius: theme.borderRadii.lg,
-              overflow: 'hidden',
-            }}
-          >
-            {children}
-          </BottomSheetComponent>
-        )}
-        {!shouldHaveContainer && children}
+        {data => {
+          if (shouldHaveContainer) {
+            return (
+              <BottomSheetComponent
+                style={{
+                  backgroundColor: theme.colors['ink.background-primary'],
+                  paddingBottom: bottom,
+                  borderTopLeftRadius: theme.borderRadii.lg,
+                  borderTopRightRadius: theme.borderRadii.lg,
+                  overflow: 'hidden',
+                }}
+              >
+                {isFunction(children) ? children(data) : (children as ReactElement)}
+              </BottomSheetComponent>
+            );
+          } else {
+            return isFunction(children) ? children(data) : (children as ReactElement);
+          }
+        }}
       </BottomSheetModal>
     );
   }

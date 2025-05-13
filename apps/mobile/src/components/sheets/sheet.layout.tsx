@@ -1,12 +1,13 @@
-import { ReactElement, RefObject } from 'react';
+import { ReactElement, ReactNode, RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 
 import { Avatar, Box, Sheet, SheetHeader, SheetProps, SheetRef } from '@leather.io/ui/native';
 
-interface SheetLayoutProps extends Omit<SheetProps, 'themeVariant'> {
+interface SheetLayoutProps extends Omit<SheetProps, 'themeVariant' | 'children'> {
   icon: ReactElement;
   sheetRef: RefObject<SheetRef>;
+  children: ReactNode;
   title: string;
 }
 export function SheetLayout({ children, icon, sheetRef, title, ...sheetProps }: SheetLayoutProps) {
