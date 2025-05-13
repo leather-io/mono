@@ -1,11 +1,13 @@
 import { type ReactNode } from 'react';
 
 import { FetchState, toFetchState } from '@/components/loading/fetch-state';
+import { ErrorState } from '@/features/send/components/error-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
+import { useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 import { AccountId, AverageBitcoinFeeRates, MarketData, Money } from '@leather.io/models';
@@ -67,6 +69,7 @@ interface BtcDataLoaderProps {
 }
 
 export function BtcDataLoader({ account, children }: BtcDataLoaderProps) {
+  const queryClient = useQueryClient();
   const btcDataQuery = useBtcData(account);
 
   if (btcDataQuery.state === 'loading') {
@@ -74,8 +77,7 @@ export function BtcDataLoader({ account, children }: BtcDataLoaderProps) {
   }
 
   if (btcDataQuery.state === 'error') {
-    // TODO: error state needs design
-    return null;
+    return <ErrorState onRetry={() => queryClient.refetchQueries()} />;
   }
 
   return children(btcDataQuery.value);

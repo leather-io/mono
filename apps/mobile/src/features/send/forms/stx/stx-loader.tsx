@@ -1,9 +1,11 @@
 import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
+import { ErrorState } from '@/features/send/components/error-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useStxAddressBalanceQuery } from '@/queries/balance/stx-balance.query';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { AccountId, MarketData, Money } from '@leather.io/models';
 
@@ -53,6 +55,7 @@ interface StxDataLoaderProps {
 }
 
 export function StxDataLoader({ account, children }: StxDataLoaderProps) {
+  const queryClient = useQueryClient();
   const stxDataQuery = useStxData(account);
 
   if (stxDataQuery.state === 'loading') {
@@ -60,8 +63,7 @@ export function StxDataLoader({ account, children }: StxDataLoaderProps) {
   }
 
   if (stxDataQuery.state === 'error') {
-    // TODO: error state needs design
-    return null;
+    return <ErrorState onRetry={() => queryClient.refetchQueries()} />;
   }
 
   return children(stxDataQuery.value);
