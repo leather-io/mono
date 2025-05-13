@@ -1,10 +1,15 @@
 import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { serializeCV } from '@stacks/transactions';
+import { useMutation } from '@tanstack/react-query';
 import { analytics } from '~/features/analytics/analytics';
+import { leather } from '~/helpers/leather-sdk';
+import { useStacksNetwork } from '~/store/stacks-network';
 
 import { LeatherSdk } from '@leather.io/sdk';
 import { formatContractId } from '@leather.io/stacks';
+
+import { useStackingClientRequired } from '../providers/stacking-client-provider';
 
 export interface CreateRevokeDelegateStxMutationArgs {
   leather: LeatherSdk;
@@ -34,4 +39,17 @@ export function createRevokeDelegateStxMutationOptions({
       });
     },
   } as const;
+}
+
+export function useRevokeDelegateStxMutation() {
+  const { networkName } = useStacksNetwork();
+  const { client } = useStackingClientRequired();
+
+  return useMutation(
+    createRevokeDelegateStxMutationOptions({
+      client,
+      leather,
+      network: networkName,
+    })
+  );
 }

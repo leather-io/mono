@@ -1,12 +1,8 @@
 import { useNavigate } from 'react-router';
 
-import { useMutation } from '@tanstack/react-query';
 import { Flex, FlexProps } from 'leather-styles/jsx';
-import { createRevokeDelegateStxMutationOptions } from '~/features/stacking/pooled-stacking-info/use-revoke-delegate-stx';
-import { useStackingClientRequired } from '~/features/stacking/providers/stacking-client-provider';
+import { useRevokeDelegateStxMutation } from '~/features/stacking/pooled-stacking-info/use-revoke-delegate-stx';
 import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
-import { leather } from '~/helpers/leather-sdk';
-import { useStacksNetwork } from '~/store/stacks-network';
 
 import { Button } from '@leather.io/ui';
 
@@ -20,21 +16,10 @@ export function PooledStackingActionButtons({
 }: PooledStackingActionButtonsProps) {
   const navigate = useNavigate();
 
-  const { client } = useStackingClientRequired();
-  const { networkName } = useStacksNetwork();
-
-  const { mutateAsync, isPending } = useMutation(
-    createRevokeDelegateStxMutationOptions({
-      client,
-      leather,
-      network: networkName,
-    })
-  );
+  const { mutateAsync: revokeDelegateStx, isPending } = useRevokeDelegateStxMutation();
 
   async function handleStopStackingClick() {
-    return mutateAsync().then(() => {
-      return navigate('/');
-    });
+    return revokeDelegateStx().then(() => navigate('/'));
   }
 
   async function handleIncreaseStackingClick() {
