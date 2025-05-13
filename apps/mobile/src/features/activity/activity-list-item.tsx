@@ -44,6 +44,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
         py="3"
       >
         <ItemLayout
+          gap="0"
           titleLeft={<Text variant="label01">{getActivityTitle(activity)}</Text>}
           titleRight={
             value?.fiat ? (
