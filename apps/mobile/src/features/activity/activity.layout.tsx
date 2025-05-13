@@ -1,10 +1,11 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { PageLayout } from '@/components/page/page.layout';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 
 import { HasChildren } from '@leather.io/ui/native';
+
+import { NetworkBadge } from '../settings/network-badge';
 
 function getTitle(accountName?: string) {
   return accountName
@@ -36,7 +37,7 @@ interface ActivityLayoutProps extends HasChildren {
 }
 export function ActivityLayout({ children, accountName }: ActivityLayoutProps) {
   return (
-    <PageLayout>
+    <PageLayout scrollable={false}>
       <AnimatedHeaderScreenLayout
         contentContainerStyles={{ paddingHorizontal: 0 }}
         rightHeaderElement={<NetworkBadge />}
@@ -44,6 +45,7 @@ export function ActivityLayout({ children, accountName }: ActivityLayoutProps) {
         subtitle={accountName ? accountName : undefined}
         contentTitle={getContentTitle(accountName)}
         contentTitleStyles={{ paddingLeft: '5' }}
+        scrollable={false} // TODO: ENG-37 - remove this once the header is implemented - cannot mix animated header with FlatList
       >
         {children}
       </AnimatedHeaderScreenLayout>

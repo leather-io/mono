@@ -1,4 +1,4 @@
-import { WidgetCard } from '@/components/widget';
+import { Card } from '@/components/card';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 
 import { OnChainActivity } from '@leather.io/models';
@@ -18,11 +18,11 @@ export function ActivityCard({ activity }: ActivityCardProps) {
   const asset = 'asset' in activity ? activity.asset : undefined;
   const activityAsset = asset && 'symbol' in asset ? asset : undefined;
   return (
-    <WidgetCard onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined}>
+    <Card onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined} width={200}>
       <Box flexDirection="row" justifyContent="space-between">
         <ActivityAvatarIcon type={type} asset={activityAsset} status={status} />
       </Box>
       <ActivityCardContent activity={activity} />
-    </WidgetCard>
+    </Card>
   );
 }

@@ -1,4 +1,5 @@
 import { ActivityType, FungibleCryptoAssetInfo, OnChainActivityStatus } from '@leather.io/models';
+import { assertUnreachable } from '@leather.io/utils';
 
 import FailedIcon from '../../assets/icons/activity/failed.svg';
 import PendingIcon from '../../assets/icons/activity/pending.svg';
@@ -11,9 +12,9 @@ import { StxAvatarIcon } from './stx-avatar-icon.native';
 
 interface StatusIndicatorProps {
   type: ActivityType;
-  status?: OnChainActivityStatus;
+  status: OnChainActivityStatus;
 }
-function StatusIndicator({ type, status }: StatusIndicatorProps): JSX.Element | null {
+function StatusIndicator({ type, status }: StatusIndicatorProps): JSX.Element {
   switch (status) {
     case 'pending':
       return <PendingIcon width={16} height={16} />;
@@ -25,9 +26,8 @@ function StatusIndicator({ type, status }: StatusIndicatorProps): JSX.Element | 
       }
     case 'failed':
       return <FailedIcon width={16} height={16} />;
-    case undefined:
     default:
-      return null;
+      assertUnreachable(status);
   }
 }
 
@@ -54,7 +54,7 @@ function getActivityIcon(type: ActivityType, asset?: FungibleCryptoAssetInfo) {
 interface ActivityIconProps {
   type: ActivityType;
   asset?: FungibleCryptoAssetInfo;
-  status?: OnChainActivityStatus;
+  status: OnChainActivityStatus;
 }
 export function ActivityAvatarIcon({ type, asset, status }: ActivityIconProps) {
   return (

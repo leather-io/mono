@@ -26,10 +26,9 @@ function getBalanceColor(activity: OnChainActivity) {
 export function ActivityListItem({ activity }: ActivityListItemProps) {
   const { mode } = useCurrentNetworkState();
 
-  const txid = 'txid' in activity ? activity.txid : undefined;
+  const { txid, status, type, timestamp } = activity;
   const value = 'value' in activity ? activity.value : undefined;
   const asset = 'asset' in activity ? activity.asset : undefined;
-  const status = 'status' in activity ? activity.status : undefined;
   const activityAsset = asset && 'symbol' in asset ? asset : undefined;
 
   return (
@@ -39,7 +38,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined}
     >
       <Flag
-        img={<ActivityAvatarIcon type={activity.type} asset={activityAsset} status={status} />}
+        img={<ActivityAvatarIcon type={type} asset={activityAsset} status={status} />}
         px="5"
         py="3"
       >
@@ -58,9 +57,9 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
           captionLeft={
             <Text variant="caption01" color="ink.text-subdued" lineHeight={16} fontSize={13}>
               {formatActivityCaption({
-                type: activity.type,
-                status: activity.status,
-                timestamp: activity.timestamp,
+                type: type,
+                status: status,
+                timestamp: timestamp,
               })}
             </Text>
           }

@@ -1,73 +1,53 @@
+import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 import dayjs from 'dayjs';
 
 import { BaseOnChainActivity, OnChainActivity } from '@leather.io/models';
 
-interface FormatActivityStatusProps {
+interface getActivityStatusLabelProps {
   type: OnChainActivity['type'];
   status: BaseOnChainActivity['status'];
 }
 
-export function formatActivityStatus({ type, status }: FormatActivityStatusProps) {
-  switch (true) {
-    case type === 'sendAsset' && status === 'success':
-      return t({
-        id: 'activity.status.sent',
-        message: 'Sent',
-      });
-    case type === 'sendAsset' && status === 'failed':
-      return t({
-        id: 'activity.status.send-failed',
-        message: 'Send Failed',
-      });
-    case type === 'sendAsset' && status === 'pending':
-      return t({
-        id: 'activity.status.sending',
-        message: 'Sending',
-      });
-    case type === 'receiveAsset' && status === 'success':
-      return t({
-        id: 'activity.status.received',
-        message: 'Received',
-      });
-    case type === 'receiveAsset' && status === 'failed':
-      return t({
-        id: 'activity.status.receive-failed',
-        message: 'Receive fail',
-      });
-    case type === 'executeSmartContract' && status === 'success':
-      return t({
-        id: 'activity.status.executed',
-        message: 'Executed',
-      });
-    case type === 'executeSmartContract' && status === 'pending':
-      return t({
-        id: 'activity.status.executing',
-        message: 'Executing',
-      });
-    case type === 'executeSmartContract' && status === 'failed':
-      return t({
-        id: 'activity.status.execute-failed',
-        message: 'Execution failed',
-      });
-    case type === 'deploySmartContract' && status === 'success':
-      return t({
-        id: 'activity.status.deployed',
-        message: 'Deployed',
-      });
-    case type === 'deploySmartContract' && status === 'pending':
-      return t({
-        id: 'activity.status.deploying',
-        message: 'Deploying',
-      });
-    case type === 'deploySmartContract' && status === 'failed':
-      return t({
-        id: 'activity.status.deploy-failed',
-        message: 'Deployment failed',
-      });
-    default:
-      return undefined;
-  }
+type ActivityStatusMap = Record<
+  OnChainActivity['type'],
+  Record<BaseOnChainActivity['status'], string>
+>;
+const activityStatusMap: ActivityStatusMap = {
+  sendAsset: {
+    success: i18n._({ id: 'activity.status.sent', message: 'Sent' }),
+    failed: i18n._({ id: 'activity.status.send-failed', message: 'Send Failed' }),
+    pending: i18n._({ id: 'activity.status.sending', message: 'Sending' }),
+  },
+  receiveAsset: {
+    success: i18n._({ id: 'activity.status.received', message: 'Received' }),
+    pending: '', // there is no pending status for receiveAsset
+    failed: i18n._({ id: 'activity.status.receive-failed', message: 'Receive fail' }),
+  },
+  executeSmartContract: {
+    success: i18n._({ id: 'activity.status.executed', message: 'Executed' }),
+    pending: i18n._({ id: 'activity.status.executing', message: 'Executing' }),
+    failed: i18n._({ id: 'activity.status.execute-failed', message: 'Execution failed' }),
+  },
+  deploySmartContract: {
+    success: i18n._({ id: 'activity.status.deployed', message: 'Deployed' }),
+    pending: i18n._({ id: 'activity.status.deploying', message: 'Deploying' }),
+    failed: i18n._({ id: 'activity.status.deploy-failed', message: 'Deployment failed' }),
+  },
+  // TODO: ENG-37 - ask for designs for lockAsset and swapAssets statuses
+  lockAsset: {
+    success: i18n._({ id: 'activity.status.locked', message: 'Locked' }),
+    pending: i18n._({ id: 'activity.status.locking', message: 'Locking' }),
+    failed: i18n._({ id: 'activity.status.lock-failed', message: 'Lock failed' }),
+  },
+  swapAssets: {
+    success: i18n._({ id: 'activity.status.swapped', message: 'Swapped' }),
+    pending: i18n._({ id: 'activity.status.swapping', message: 'Swapping' }),
+    failed: i18n._({ id: 'activity.status.swap-failed', message: 'Swap failed' }),
+  },
+};
+export function getActivityStatusLabel({ type, status }: getActivityStatusLabelProps) {
+  return activityStatusMap[type][status];
 }
 
 interface FormatActivityCaptionProps {
@@ -77,17 +57,18 @@ interface FormatActivityCaptionProps {
 }
 
 export function formatActivityCaption({ type, status, timestamp }: FormatActivityCaptionProps) {
-  const isRecent = dayjs(timestamp).isAfter(dayjs().subtract(1, 'hour'));
-  const time = dayjs(timestamp * 1000).format('MMM D, YYYY');
+  const timestampInSeconds = timestamp * 1000;
+  const isRecent = dayjs(timestampInSeconds).isAfter(dayjs().subtract(1, 'hour'));
+  const time = dayjs(timestampInSeconds).format('MMM D, YYYY');
 
   const timestampText = isRecent
-    ? `${dayjs().diff(dayjs(timestamp * 1000), 'minute')} ${t({
+    ? `${dayjs().diff(dayjs(timestampInSeconds), 'minute')} ${t({
         id: 'activity.time.minutes-ago',
         message: 'minutes ago',
       })}`
     : time;
 
-  const statusText = formatActivityStatus({ type, status });
+  const statusText = getActivityStatusLabel({ type, status });
   return statusText ? `${statusText} ${timestampText}` : timestampText;
 }
 
@@ -96,7 +77,7 @@ export function getActivityTitle(activity: OnChainActivity) {
     case 'sendAsset':
     case 'receiveAsset':
       if (!activity.value?.crypto?.symbol) {
-        // TODO ENG-37 - find out about sBTC rewards - Asked design
+        // TODO LEA-2622 - Add new design for contract execution and sBTC rewards
         // we can have type `sendAsset` / `receiveAsset` with an empty symbol/ unknown token
         // e.g. assetId 'SM1793C4R5PZ4NS4VQ4WMP7SKKYVH8JZEWSZ9HCCR.xyk-pool-sbtc-stx-v-1-1::pool-token'
         // could be an API issue / need to format as sBTC. extension says 'Token transfer'
