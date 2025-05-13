@@ -17,13 +17,19 @@ export function AppNavigationStack() {
 
       {/* Account */}
       <Stack.Screen name="account/[account]/index" options={{ headerShown: false }} />
-      <Stack.Screen name="account/[account]/activity" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="account/[account]/activity"
+        options={{ header: () => <NakedHeader rightElement={<NetworkBadge />} /> }}
+      />
       <Stack.Screen name="account/[account]/collectibles" options={{ headerShown: false }} />
       <Stack.Screen name="account/[account]/balances" options={{ headerShown: false }} />
       <Stack.Screen name="balances/index" options={{ headerShown: false }} />
 
       {/* Activity */}
-      <Stack.Screen name="activity/index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="activity/index"
+        options={{ header: () => <NakedHeader rightElement={<NetworkBadge />} /> }}
+      />
 
       {/* Collectibles */}
       <Stack.Screen name="collectibles/index" options={{ headerShown: false }} />

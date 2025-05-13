@@ -71,6 +71,7 @@
     "@scure/btc-signer": "1.6.0",
     "@segment/analytics-react-native": "2.20.2",
     "@segment/sovran-react-native": "1.1.2",
+    "@shopify/flash-list": "1.8.0",
     "@shopify/restyle": "2.4.2",
     "@stacks/common": "7.0.2",
     "@stacks/network": "7.0.2",

@@ -1,22 +1,9 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { ContentTitle } from '@/components/headers/components/content-title';
 import { PageLayout } from '@/components/page/page.layout';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 
-import { HasChildren } from '@leather.io/ui/native';
-
-function getTitle(accountName?: string) {
-  return accountName
-    ? t({
-        id: 'activity.account.header_title',
-        message: 'Activity',
-      })
-    : t({
-        id: 'activity.header_title',
-        message: 'All activity',
-      });
-}
+import { Box, HasChildren } from '@leather.io/ui/native';
 
 function getContentTitle(accountName?: string) {
   return accountName
@@ -31,22 +18,31 @@ function getContentTitle(accountName?: string) {
       });
 }
 
+interface ActivityHeaderProps extends HasChildren {
+  accountName?: string;
+}
+// TODO: LEA-2461 refactor AnimatedHeaderScreenLayout
+// Removed from ActivityList to implement FlashList
+const ActivityHeader = ({ accountName, children }: ActivityHeaderProps) => {
+  return (
+    <Box bg="ink.background-primary" flex={1}>
+      <Box flexDirection="row" justifyContent="space-between" paddingBottom="5">
+        <Box alignItems="flex-start" flex={1} maxWidth={320}>
+          <ContentTitle title={getContentTitle(accountName)} paddingLeft="5" />
+        </Box>
+      </Box>
+      {children}
+    </Box>
+  );
+};
+
 interface ActivityLayoutProps extends HasChildren {
   accountName?: string;
 }
 export function ActivityLayout({ children, accountName }: ActivityLayoutProps) {
   return (
     <PageLayout>
-      <AnimatedHeaderScreenLayout
-        contentContainerStyles={{ paddingHorizontal: 0 }}
-        rightHeaderElement={<NetworkBadge />}
-        title={getTitle(accountName)}
-        subtitle={accountName ? accountName : undefined}
-        contentTitle={getContentTitle(accountName)}
-        contentTitleStyles={{ paddingLeft: '5' }}
-      >
-        {children}
-      </AnimatedHeaderScreenLayout>
+      <ActivityHeader accountName={accountName}>{children}</ActivityHeader>
     </PageLayout>
   );
 }
