@@ -6,23 +6,22 @@ import { SelectAccount } from '@/features/send/screens/select-account';
 import { SelectAsset } from '@/features/send/screens/select-asset';
 import { SendFlowProvider } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
-import { getInitialRelevantAccounts } from '@/features/send/utils';
-import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 
 interface SendProps {
-  account?: Account;
+  accountId?: string;
   asset?: SendableAsset;
 }
 
-export function Send({ account, asset }: SendProps) {
-  const accounts = useAccounts();
+export function Send({ accountId, asset }: SendProps) {
+  const accounts = useAccounts('active');
+  const selectedAccount = accounts.list.find(account => account.id === accountId);
 
   return (
     <SendFlowProvider
       initialData={{
-        accounts: getInitialRelevantAccounts(accounts.list),
-        selectedAccount: account,
+        accounts: accounts.list,
+        selectedAccount,
         selectedAsset: asset,
       }}
     >
