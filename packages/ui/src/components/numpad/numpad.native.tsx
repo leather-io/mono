@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 
+import { assertUnreachable } from '@leather.io/utils';
+
 import { ArrowLeftIcon } from '../../icons/arrow-left-icon.native';
 import { Box } from '../box/box.native';
 import { NumpadKey, NumpadKeySlot } from './numpad-key.native';
-
-const FALLBACK_LOCALE_IDENTIFIER = 'en';
 
 type Mode = 'numeric' | 'decimal';
 type DecimalSeparator = '.' | ',';
@@ -29,9 +29,7 @@ interface Key {
   element: ReactNode;
 }
 
-function getAllKeys(locale: string): Record<KeyId, Key> {
-  const decimalSeparator = getDecimalSeparator(locale);
-
+function getAllKeys(decimalSeparator: DecimalSeparator): Record<KeyId, Key> {
   return {
     '1': { id: '1', accessibilityLabel: '1', element: '1' },
     '2': { id: '2', accessibilityLabel: '2', element: '2' },
@@ -67,23 +65,14 @@ const layouts: Record<Mode, Layout> = {
   ],
 };
 
-function getLayout(mode: Mode, locale: string): (Key | null)[] {
+function getLayout(mode: Mode, decimalSeparator: DecimalSeparator): (Key | null)[] {
   return layouts[mode].flat().map(id => {
     if (!id) {
       return null;
     }
 
-    return getAllKeys(locale)[id];
+    return getAllKeys(decimalSeparator)[id];
   });
-}
-
-function getDecimalSeparator(locale: string): DecimalSeparator {
-  try {
-    const formatter = new Intl.NumberFormat(locale);
-    return formatter.format(1.1).includes(',') ? ',' : '.';
-  } catch {
-    return '.';
-  }
 }
 
 function updateValue(currentValue: string, id: KeyId, decimalSeparator: DecimalSeparator) {
@@ -106,15 +95,14 @@ function updateValue(currentValue: string, id: KeyId, decimalSeparator: DecimalS
     case 'delete':
       return currentValue.length === 1 ? '0' : currentValue.slice(0, -1);
     default:
-      // TODO: Assert exhaustiveness
-      return currentValue;
+      return assertUnreachable(id);
   }
 }
 
 export interface NumpadProps {
   value: string;
   onChange: (value: string) => void;
-  locale?: string;
+  decimalSeparator?: DecimalSeparator;
   allowNextValue?: (value: string) => boolean;
   mode?: Mode;
 }
@@ -122,12 +110,10 @@ export interface NumpadProps {
 export function Numpad({
   value,
   onChange,
-  locale = FALLBACK_LOCALE_IDENTIFIER,
+  decimalSeparator = '.',
   mode = 'decimal',
   allowNextValue,
 }: NumpadProps) {
-  const decimalSeparator = getDecimalSeparator(locale);
-
   function handlePress(key: Key) {
     const updatedValue = updateValue(value, key.id, decimalSeparator);
     return () => {
@@ -148,7 +134,7 @@ export function Numpad({
 
   return (
     <Box flexDirection="row" flexWrap="wrap" gap="2" px="2">
-      {getLayout(mode, locale).map((keyItem, index) => {
+      {getLayout(mode, decimalSeparator).map((keyItem, index) => {
         return (
           <NumpadKeySlot key={keyItem ? keyItem.id : `empty-slot-${index}`}>
             {keyItem ? (

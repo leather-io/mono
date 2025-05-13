@@ -7,9 +7,9 @@ import { Memo } from '@/features/send/components/memo';
 import { Numpad } from '@/features/send/components/numpad';
 import { Recipient } from '@/features/send/components/recipient/recipient';
 import { SendFormContainer, SendFormFooter } from '@/features/send/components/send-form-layout';
+import { locale } from '@/features/send/constants';
 import { useStxForm } from '@/features/send/forms/stx/use-stx-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { locale } from '@/features/send/temporary-constants';
 import { Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
@@ -139,7 +139,6 @@ export function StxForm({
               value={value}
               onChange={onChange}
               onBlur={onBlur}
-              locale={locale}
             />
           )}
         />

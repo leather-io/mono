@@ -51,8 +51,5 @@ export const NumpadStory = {
       },
       options: ['numeric', 'decimal'],
     },
-    locale: {
-      type: 'string',
-    },
   },
 } satisfies StoryObj<typeof Numpad>;
