@@ -1,7 +1,7 @@
 import { ComponentType, ReactNode } from 'react';
 
+import { Card } from '@/components/card';
 import { Loading } from '@/components/loading/loading';
-import { WidgetCard } from '@/components/widget';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AppIcons } from '@/features/accounts/components/app-icons';
 import { AccountIcon } from '@/store/accounts/utils';
@@ -21,6 +21,7 @@ interface AccountCardProps extends PressableProps {
   iconTestID?: string;
   appIcons?: string[];
   isLoading?: boolean;
+  width?: number;
 }
 
 export function AccountCard({
@@ -32,13 +33,21 @@ export function AccountCard({
   onPress,
   appIcons,
   isLoading,
+  width,
 }: AccountCardProps) {
   if (isLoading) {
     return <Loading mode="widget" />;
   }
 
   return (
-    <WidgetCard height={156} onPress={onPress}>
+    <Card
+      height={156}
+      onPress={onPress}
+      width={width}
+      shadowOpacity={0.04}
+      shadowOffset={{ width: 0, height: 2 }}
+      shadowRadius={6}
+    >
       <Box flexDirection="row" justifyContent="space-between">
         <AccountAvatar icon={icon} />
         {address}
@@ -61,7 +70,7 @@ export function AccountCard({
         <Title>{secondaryTitle}</Title>
       </Box>
       {appIcons && <AppIcons appIcons={appIcons} />}
-    </WidgetCard>
+    </Card>
   );
 }
 
