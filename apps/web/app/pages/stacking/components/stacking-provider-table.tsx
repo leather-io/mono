@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -31,7 +31,7 @@ import {
 import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 
-import { Button, Flag } from '@leather.io/ui';
+import { Button, Flag, useOnMount } from '@leather.io/ui';
 
 const providerSlugMap = {
   fastPool: 'fast-pool',
@@ -43,8 +43,12 @@ const providerSlugMap = {
 
 export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-
+  const [isMounted, setIsMounted] = useState(false);
   const isLargeViewport = useViewportMinWidth('md');
+
+  useOnMount(() => {
+    setIsMounted(true);
+  });
 
   const leadingColumn = useMemo<ColumnDef<StackingPool>>(
     () => ({
@@ -168,7 +172,11 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   );
 
   const table = useReactTable({
-    columns: [leadingColumn, ...(isLargeViewport ? extendedColumns : []), ...trailingColumn],
+    columns: [
+      leadingColumn,
+      ...(isMounted && isLargeViewport ? extendedColumns : []),
+      ...trailingColumn,
+    ],
     data: stackingPoolList,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -227,6 +235,12 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
 
 export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [isMounted, setIsMounted] = useState(false);
+  const isLargeViewport = useViewportMinWidth('md');
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const leadingColumn = useMemo<ColumnDef<LiquidStackingPool>>(
     () => ({
@@ -331,7 +345,11 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   );
 
   const table = useReactTable({
-    columns: [leadingColumn, ...(useViewportMinWidth('md') ? extendedColumns : []), trailingColumn],
+    columns: [
+      leadingColumn,
+      ...(isMounted && isLargeViewport ? extendedColumns : []),
+      trailingColumn,
+    ],
     data: liquidStackingProvidersList,
     debugTable: false,
     getCoreRowModel: getCoreRowModel(),
