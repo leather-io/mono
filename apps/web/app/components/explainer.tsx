@@ -53,7 +53,7 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
       className="earn-step"
       justifyContent={['space-between', null, 'start']}
     >
-      <VStack gap="space.02" alignItems="left" justifyContent="space-between">
+      <VStack gap="space.02" alignItems="left" justifyContent="space-between" height="100%">
         <VStack
           gap="space.02"
           flexDirection={['row', null, 'column']}

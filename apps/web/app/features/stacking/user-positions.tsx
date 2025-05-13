@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
@@ -19,9 +19,20 @@ import {
 } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
 import { toHumanReadableStx } from '~/utils/unit-convert';
 
-import { LoadingSpinner, SkeletonLoader } from '@leather.io/ui';
+import {
+  ChevronDownIcon,
+  CloseIcon,
+  DropdownMenu,
+  Flag,
+  InfoCircleIcon,
+  LoadingSpinner,
+  PlusIcon,
+  QuestionCircleIcon,
+  SkeletonLoader,
+} from '@leather.io/ui';
 
 import { useUserPositionsFakeLoading } from './hooks/use-user-positions-fake-loading';
+import { useRevokeDelegateStxMutation } from './pooled-stacking-info/use-revoke-delegate-stx';
 
 interface UserPositionsProps {
   stacksAddress: string;
@@ -29,6 +40,13 @@ interface UserPositionsProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function UserPositions({ stacksAddress }: UserPositionsProps) {
+  const navigate = useNavigate();
+  const { mutateAsync: revokeDelegateStx } = useRevokeDelegateStxMutation();
+
+  async function openRevokeStackingContractCall() {
+    return revokeDelegateStx().then(() => navigate('/'));
+  }
+
   const delegationStatusQuery = useDelegationStatusQuery();
   const getStatusQuery = useGetStatusQuery();
   const getCoreInfoQuery = useGetCoreInfoQuery();
@@ -104,7 +122,8 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
     ? delegationStatusQuery.data.details
     : undefined;
 
-  // I beleive we'd like to show this in the UI
+  // Logic like this should not live in UI components
+  // I believe we'd like to show this in the UI
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isExpired =
     delegationStatusQuery.data.delegated &&
@@ -133,14 +152,38 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
 
             <SkeletonLoader height="15" width="80" isLoading={fakeLoading}>
               {pool && poolSlug ? (
-                <Link
-                  to={`/pooled-stacking/${poolSlug}/active`}
-                  style={{ maxWidth: 'fit-content' }}
-                >
-                  <styled.h4 textStyle="label.01" borderBottom="1px solid">
-                    {pool.name}
-                  </styled.h4>
-                </Link>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger>
+                    <Flag reverse img={<ChevronDownIcon variant="small" />} spacing="space.01">
+                      <styled.h4 userSelect="none" textStyle="label.01" textAlign="left">
+                        {pool.name}
+                      </styled.h4>
+                    </Flag>
+                  </DropdownMenu.Trigger>
+
+                  <DropdownMenu.Content align="start">
+                    <Box p="space.02" textStyle="label.02">
+                      <DropdownMenu.Item
+                        onSelect={() => void navigate(`/pooled-stacking/${poolSlug}/active`)}
+                      >
+                        <Flag img={<InfoCircleIcon variant="small" />}>View position details</Flag>
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        onSelect={() => void navigate(`/pooled-stacking/${poolSlug}`)}
+                      >
+                        <Flag img={<PlusIcon variant="small" />}>Increase pooling amount</Flag>
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item onSelect={() => openRevokeStackingContractCall()}>
+                        <Flag
+                          color="red.action-primary-default"
+                          img={<CloseIcon color="red.action-primary-default" variant="small" />}
+                        >
+                          Stop pooling
+                        </Flag>
+                      </DropdownMenu.Item>
+                    </Box>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
               ) : (
                 <styled.h4 textStyle="label.01">Unknown pool</styled.h4>
               )}
@@ -154,7 +197,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             value={
               delegationInfoDetails
                 ? toHumanReadableStx(delegationInfoDetails.amount_micro_stx)
-                : '--'
+                : '—'
             }
           />
         </InfoGrid.Cell>
@@ -188,6 +231,17 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
           />
         </InfoGrid.Cell>
       </InfoGrid>
+
+      {!pool && !poolSlug && (
+        <styled.p textStyle="caption.01" color="ink.text-subdued">
+          <Flag
+            img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
+            spacing="space.01"
+          >
+            After unpooling your previous position remains visible until the current cycle completes
+          </Flag>
+        </styled.p>
+      )}
     </Stack>
   );
 }
