@@ -6,9 +6,9 @@ import { ErrorMessage } from '@/features/send/components/error-message';
 import { Numpad } from '@/features/send/components/numpad';
 import { Recipient } from '@/features/send/components/recipient/recipient';
 import { SendFormContainer, SendFormFooter } from '@/features/send/components/send-form-layout';
+import { locale } from '@/features/send/constants';
 import { useBtcForm } from '@/features/send/forms/btc/use-btc-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { locale } from '@/features/send/temporary-constants';
 import { type Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
@@ -122,7 +122,6 @@ export function BtcForm({
               value={value}
               onBlur={onBlur}
               onChange={onChange}
-              locale={locale}
             />
           )}
         />

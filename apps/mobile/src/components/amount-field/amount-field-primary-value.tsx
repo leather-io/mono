@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
 
-import { formatPrimaryValue } from '@/components/amount-field/amount-field.utils';
 import { InputCurrencyMode } from '@/utils/types';
-import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
 import { CryptoCurrency, FiatCurrency } from '@leather.io/models';
 import { Box, Text, TextProps, Theme } from '@leather.io/ui/native';
@@ -26,32 +24,16 @@ interface AmountFieldPrimaryValueProps {
   fiatCurrency: FiatCurrency;
 }
 
-export function AmountFieldPrimaryValue({
-  value,
-  color,
-  locale,
-  inputCurrencyMode,
-  fiatCurrency,
-  cryptoCurrency,
-}: AmountFieldPrimaryValueProps) {
+export function AmountFieldPrimaryValue({ value, color }: AmountFieldPrimaryValueProps) {
   const [dynamicFontSize, setDynamicFontSize] = useState(maxFontSize);
   // Maintain the relative lineHeight to prevent text shifting down as font size decreases
   const staticLineHeight = maxFontSize * lineHeightRatio;
   const dynamicLineHeight = dynamicFontSize * lineHeightRatio;
-  const displayValue = formatPrimaryValue({
-    value,
-    currency: whenInputCurrencyMode(inputCurrencyMode)({
-      crypto: cryptoCurrency,
-      fiat: fiatCurrency,
-    }),
-    showCurrency: inputCurrencyMode === 'fiat',
-    locale,
-  });
 
   return (
     <Box height={staticLineHeight} flexShrink={1}>
       <Box flexDirection="row" position="absolute" top={3}>
-        {displayValue.split('').map((character, index) => (
+        {value.split('').map((character, index) => (
           <Text
             color={color}
             key={index}
@@ -63,7 +45,7 @@ export function AmountFieldPrimaryValue({
         ))}
       </Box>
       <TextMeasurementProxy
-        value={displayValue}
+        value={value}
         onFontSizeChange={setDynamicFontSize}
         textProps={commonTextProps}
       />
