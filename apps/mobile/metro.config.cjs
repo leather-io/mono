@@ -25,6 +25,7 @@ config.resolver = {
 
 config.resolver.extraNodeModules = {
   stream: require.resolve('readable-stream'),
+  tslib: path.resolve(__dirname, 'node_modules/tslib'),
 };
 
 // #1 - Watch all files in the monorepo

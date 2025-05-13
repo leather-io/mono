@@ -23,6 +23,7 @@ interface AnimatedHeaderScreenLayoutProps extends HasChildren {
   subtitle?: string | React.ReactNode;
   contentContainerStyles?: ScrollViewStylesProps;
   isHeaderReversible?: boolean;
+  scrollable?: boolean;
 }
 
 export function AnimatedHeaderScreenLayout({
@@ -35,18 +36,21 @@ export function AnimatedHeaderScreenLayout({
   subtitle,
   contentContainerStyles,
   isHeaderReversible = false,
+  scrollable = true,
 }: AnimatedHeaderScreenLayoutProps) {
-  const {
-    defaultStyles,
-    contentHeight,
-    viewHeight,
-    onScrollHandler,
-    animatedHeaderStyle,
-    animatedBlurOverlayStyle,
-    onContentSizeChange,
-    onLayoutChange,
-    scrollY,
-  } = useAnimatedHeader();
+  const { animatedHeaderStyle, animatedBlurOverlayStyle, onLayoutChange, scrollY } =
+    useAnimatedHeader();
+
+  const header = (
+    <Header
+      isHeaderReversible={isHeaderReversible}
+      title={title}
+      subtitle={subtitle}
+      contentTitle={contentTitle}
+      contentTitleStyles={contentTitleStyles}
+      rightTitleElement={rightTitleElement}
+    />
+  );
 
   return (
     <>
@@ -60,29 +64,60 @@ export function AnimatedHeaderScreenLayout({
         isHeaderReversible={isHeaderReversible}
       />
       <Box bg="ink.background-primary" flex={1} onLayout={onLayoutChange}>
-        <Animated.ScrollView
-          contentContainerStyle={{
-            ...defaultStyles,
-            ...contentContainerStyles,
-          }}
-          onContentSizeChange={onContentSizeChange}
-          onScroll={onScrollHandler}
-          scrollEnabled={contentHeight > viewHeight}
-          scrollEventThrottle={16}
-        >
-          <Box flexDirection="row" justifyContent="space-between" paddingBottom="5">
-            <Box alignItems="flex-start" flex={1} maxWidth={320}>
-              {isHeaderReversible ? (
-                <ReversibleHeader title={title} subtitle={subtitle} scrollY={scrollY} />
-              ) : (
-                <ContentTitle title={contentTitle} {...contentTitleStyles} />
-              )}
-            </Box>
-            <Box alignItems="flex-end">{rightTitleElement}</Box>
-          </Box>
-          {children}
-        </Animated.ScrollView>
+        {scrollable ? (
+          <AnimatedScrollView contentContainerStyles={contentContainerStyles} title={title}>
+            {header}
+            {children}
+          </AnimatedScrollView>
+        ) : (
+          <>
+            {header}
+            {children}
+          </>
+        )}
       </Box>
     </>
+  );
+}
+
+function Header({
+  isHeaderReversible,
+  title,
+  subtitle,
+  contentTitle,
+  contentTitleStyles,
+  rightTitleElement,
+}: AnimatedHeaderScreenLayoutProps) {
+  const { scrollY } = useAnimatedHeader();
+  return (
+    <Box flexDirection="row" justifyContent="space-between" paddingBottom="5">
+      <Box alignItems="flex-start" flex={1} maxWidth={320}>
+        {isHeaderReversible ? (
+          <ReversibleHeader title={title} subtitle={subtitle} scrollY={scrollY} />
+        ) : (
+          <ContentTitle title={contentTitle} {...contentTitleStyles} />
+        )}
+      </Box>
+      <Box alignItems="flex-end">{rightTitleElement}</Box>
+    </Box>
+  );
+}
+
+function AnimatedScrollView({ children, contentContainerStyles }: AnimatedHeaderScreenLayoutProps) {
+  const { defaultStyles, contentHeight, viewHeight, onScrollHandler, onContentSizeChange } =
+    useAnimatedHeader();
+  return (
+    <Animated.ScrollView
+      contentContainerStyle={{
+        ...defaultStyles,
+        ...contentContainerStyles,
+      }}
+      onContentSizeChange={onContentSizeChange}
+      onScroll={onScrollHandler}
+      scrollEnabled={contentHeight > viewHeight}
+      scrollEventThrottle={16}
+    >
+      {children}
+    </Animated.ScrollView>
   );
 }

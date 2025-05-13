@@ -3,7 +3,7 @@ import { Balance } from '@/components/balance/balance';
 import { OnChainActivity } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
-import { formatActivityStatus } from './utils/format-activity';
+import { getActivityStatusLabel } from './utils/format-activity';
 
 interface ActivityCardContentProps {
   activity: OnChainActivity;
@@ -13,7 +13,7 @@ export function ActivityCardContent({ activity }: ActivityCardContentProps) {
     <Box flexDirection="column" alignItems="flex-start" flexShrink={0} alignSelf="stretch">
       <Box alignItems="flex-start" gap="1" alignSelf="stretch">
         <Text variant="label02">
-          {formatActivityStatus({
+          {getActivityStatusLabel({
             type: activity.type,
             status: activity.status,
           })}

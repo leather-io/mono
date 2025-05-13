@@ -84,6 +84,7 @@ export function AccountsWidget({
               .filter(account => account.status !== 'hidden')
               .map((account, i) => (
                 <AccountCard
+                  width={200}
                   isLoading={isLoadingTotalBalance}
                   testID={`${TestId.homeAccountCard}-${i}`}
                   caption={i18n._({
