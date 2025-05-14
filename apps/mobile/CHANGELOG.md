@@ -701,6 +701,32 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.38.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.37.0...@leather.io/mobile-v2.38.0) (2025-05-14)
+
+
+### Features
+
+* **mobile:** add send form error view ([ffc0f23](https://github.com/leather-io/mono/commit/ffc0f233f2bc9931a183659050dfb59f234d8907))
+* **ui:** preselect account when opening Send from account screen ([5b50352](https://github.com/leather-io/mono/commit/5b503525bc09ff5d14334c691fd785655c3d4082))
+
+
+### Bug Fixes
+
+* **mobile:** activity ui updates, ref ENG-37 ([1b2415a](https://github.com/leather-io/mono/commit/1b2415a4b527f16ad8d7e524990b7feaf8361eed))
+* **mobile:** add FlashList to Activity to improve performance ([2f6d4fc](https://github.com/leather-io/mono/commit/2f6d4fc472cd6ef137f03e7dff9d9aa025968816))
+* **mobile:** remove gap in ItemLayout for activity list ([5a72a3a](https://github.com/leather-io/mono/commit/5a72a3a96e5eb49ac7c106a62aa3d490cff88c5a))
+* **mobile:** replace activity status indicator icons, ref ENG-37 ([e3663ab](https://github.com/leather-io/mono/commit/e3663ab9d0b2964470d38363285b6eb3f2f9a0b1))
+* **mobile:** simplify activity implementation restricting to OnChain types, ref LEA-2473 ([67abe59](https://github.com/leather-io/mono/commit/67abe59823c45f86e8567ffe25172fd6f5f47d4a))
+* **mobile:** update activity widget styles, ref LEA-2473 ([7ae695d](https://github.com/leather-io/mono/commit/7ae695d224bbc707ce751bf8f128722e09351e7b))
+* **ui:** support children as render prop in bottom sheet ([fa70b4d](https://github.com/leather-io/mono/commit/fa70b4dce414e06593981a9fe012ea014adfdeaf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.65.0
+
 ## [2.37.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.36.1...@leather.io/mobile-v2.37.0) (2025-05-12)
 
 
