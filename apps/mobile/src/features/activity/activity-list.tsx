@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { ViewMode } from '@/shared/types';
 // NOTE: '/src' is necessary to fix an import issue with FlashList
 // https://github.com/Shopify/flash-list/issues/942
-import { FlashList } from '@shopify/flash-list/src';
+// @ts-ignore
+import { FlashList } from '@shopify/flash-list/src/index';
 
 import { Activity, OnChainActivity, OnChainActivityTypes } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
@@ -16,6 +17,17 @@ interface ActivityListProps {
   activity: Activity[];
   mode?: ViewMode;
 }
+
+// type FlashListProps = {
+//   data: OnChainActivity[];
+//   renderItem: ({ item }: { item: OnChainActivity }) => React.ReactElement;
+//   estimatedItemSize: number;
+//   keyExtractor: (item: OnChainActivity, index: number) => string;
+//   showsVerticalScrollIndicator?: boolean;
+//   onEndReached?: () => void;
+//   onEndReachedThreshold?: number;
+//   ListEmptyComponent?: React.ComponentType | React.ReactElement;
+// };
 
 export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   const [renderLimit, setRenderLimit] = useState(10);
@@ -37,7 +49,10 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
     <Box flex={1} height="100%">
       <FlashList
         data={filteredActivities}
-        renderItem={({ item }) => <ActivityListItem activity={item} />}
+        renderItem={({ item }: { item: OnChainActivity }) => (
+          // @ts-ignore
+          <ActivityListItem activity={item} />
+        )}
         estimatedItemSize={80}
         keyExtractor={(_, index) => `activity.${index}`}
         showsVerticalScrollIndicator={false}
