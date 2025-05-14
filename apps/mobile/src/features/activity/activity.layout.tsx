@@ -41,7 +41,7 @@ interface ActivityLayoutProps extends HasChildren {
 }
 export function ActivityLayout({ children, accountName }: ActivityLayoutProps) {
   return (
-    <PageLayout>
+    <PageLayout scrollable={false}>
       <ActivityHeader accountName={accountName}>{children}</ActivityHeader>
     </PageLayout>
   );
