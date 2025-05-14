@@ -48,10 +48,6 @@ export function useNotificationsFlag() {
   return useBoolVariation('release_push_notifications', false);
 }
 
-export function useNewRecipientFlowFlag() {
-  return useBoolVariation('advanced_recipient_field', false);
-}
-
 export function useRunesFlag() {
   return useBoolVariation('release_runes_feature', false);
 }
