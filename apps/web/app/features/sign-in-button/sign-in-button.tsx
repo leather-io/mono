@@ -19,10 +19,10 @@ function ConnectLeatherButton() {
 }
 
 function ActiveAccountButton() {
-  const { addresses, connect, openExtension, disconnect } = useLeatherConnect();
+  const { stacksAccount, connect, openExtension, disconnect } = useLeatherConnect();
   return (
     <ActiveAccountButtonLayout
-      address={addresses[2].address}
+      address={stacksAccount?.address ?? ''}
       onSwitchAccount={connect}
       onOpenExtension={openExtension}
       onSignout={disconnect}
