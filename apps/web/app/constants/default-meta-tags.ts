@@ -8,6 +8,11 @@ export const defaultMetaTags = [
     name: 'viewport',
     content: 'width=device-width, initial-scale=1',
   },
+  // Prevents iOS from automatically changing DOM
+  {
+    name: 'format-detection',
+    content: 'telephone=no, date=no, email=no, address=no',
+  },
   {
     name: 'twitter:creator',
     content: '@leatherBTC',
