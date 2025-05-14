@@ -11,7 +11,7 @@ import {
   Transaction,
   TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
@@ -236,29 +236,38 @@ export class HiroStacksApiClient {
     principal: string,
     tokenId: number,
     signal?: AbortSignal
-  ): Promise<HiroNftMetadataResponse> {
+  ): Promise<HiroNftMetadataResponse | null> {
     return await this.cache.fetchWithCache(
       [
         'hiro-stacks-get-nft-token-metadata',
         principal,
         selectStacksChainId(this.settings.getSettings()),
       ],
-      async () => {
-        const res = await this.limiter.add(
+      async () =>
+        await this.limiter.add(
           RateLimiterType.HiroStacks,
-          () =>
-            this._axios.get<HiroNftMetadataResponse>(
-              `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
-              { signal }
-            ),
+          async () => {
+            try {
+              const res = await this._axios.get<HiroNftMetadataResponse>(
+                `${selectStacksApiUrl(this.settings.getSettings())}/metadata/v1/nft/${principal}/${tokenId}`,
+                { signal }
+              );
+              return res.data;
+            } catch (error) {
+              if (
+                error instanceof AxiosError &&
+                (error.request?.status === 404 || error.request?.status === 422)
+              )
+                return null;
+              throw error;
+            }
+          },
           {
             priority: hiroApiRequestsPriorityLevels.getNftMetadata,
             signal,
             throwOnTimeout: true,
           }
-        );
-        return res.data;
-      },
+        ),
       { ttl: HttpCacheTimeMs.infinity }
     );
   }

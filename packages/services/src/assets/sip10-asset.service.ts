@@ -24,6 +24,7 @@ export class Sip10AssetService {
     const sip10Token = tokenMap[principal]
       ? { ...tokenMap[principal], principal }
       : await this.leatherApiClient.fetchSip10Token(principal, signal);
+    if (!sip10Token) throw new Error(`Sip10 Token Not Found: ${assetIdentifier}`);
     return createSip10CryptoAssetInfo(sip10Token);
   }
 }
