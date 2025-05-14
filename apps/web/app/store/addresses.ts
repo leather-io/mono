@@ -6,6 +6,8 @@ import { analytics } from '~/features/analytics/analytics';
 import { leather } from '~/helpers/leather-sdk';
 import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/helpers/utils';
 
+import { delay } from '@leather.io/utils';
+
 type GetAddressesResult = Awaited<ReturnType<typeof leather.getAddresses>>['addresses'];
 
 export const addressesAtom = atomWithStorage<GetAddressesResult>('addresses', []);
@@ -22,13 +24,22 @@ export const stacksAccountAtom = atom(get => {
   return addresses.find(address => address.symbol === 'STX');
 });
 
+export const showMissingStacksKeysDialogAtom = atom(false);
+
 export function useStacksAccount() {
   return useAtomValue(stacksAccountAtom);
+}
+
+async function waitForExtensionConnectAnimationToFinish() {
+  await delay(750);
 }
 
 export function useLeatherConnect() {
   const [addresses, setAddresses] = useAtom(addressesAtom);
   const extensionState = useAtomValue(extensionStateAtom);
+  const [showMissingStacksKeysDialog, setShowMissingStacksKeysDialog] = useAtom(
+    showMissingStacksKeysDialogAtom
+  );
 
   const stacksAccount = useStacksAccount();
 
@@ -47,6 +58,8 @@ export function useLeatherConnect() {
   return {
     addresses,
     setAddresses,
+    showMissingStacksKeysDialog,
+    setShowMissingStacksKeysDialog,
     status: extensionState,
     ...accounts,
     whenExtensionState: whenExtensionState(extensionState),
@@ -55,13 +68,34 @@ export function useLeatherConnect() {
       void leather.open({ mode: 'fullpage' });
     },
     async connect() {
+      const startTime = performance.now();
       void analytics.untypedTrack('sign_in_clicked', { status: 'initiated' });
       try {
         const result = await leather.getAddresses();
-        void analytics.untypedTrack('sign_in_clicked', { status: 'success' });
+
+        if (!result.addresses.some(address => address.symbol === 'STX')) {
+          await waitForExtensionConnectAnimationToFinish();
+          setShowMissingStacksKeysDialog(true);
+
+          void analytics.untypedTrack('sign_in_clicked', {
+            status: 'error',
+            error: 'no_stacks_account',
+            duration: performance.now() - startTime,
+          });
+          return;
+        }
+
+        void analytics.untypedTrack('sign_in_clicked', {
+          status: 'success',
+          duration: performance.now() - startTime,
+        });
         setAddresses(result.addresses);
       } catch {
-        void analytics.untypedTrack('sign_in_clicked', { status: 'error' });
+        void analytics.untypedTrack('sign_in_clicked', {
+          status: 'error',
+          reason: 'user_rejected',
+          duration: performance.now() - startTime,
+        });
       }
     },
     disconnect() {

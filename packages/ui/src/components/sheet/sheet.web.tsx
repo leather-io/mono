@@ -3,7 +3,7 @@ import { JSXElementConstructor, ReactElement, ReactNode, cloneElement } from 're
 import { css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
-import { Dialog as RadixDialog } from 'radix-ui';
+import { Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
 
 import { pxStringToNumber } from '@leather.io/utils';
 
@@ -47,6 +47,9 @@ export function Sheet({
   return (
     <RadixDialog.Root open={isShowing}>
       <RadixDialog.Portal>
+        <VisuallyHidden.Root>
+          <RadixDialog.Title>Dialog</RadixDialog.Title>
+        </VisuallyHidden.Root>
         <RadixDialog.Overlay
           className={css({
             bg: 'overlay',
@@ -58,6 +61,7 @@ export function Sheet({
         >
           <RadixDialog.Content
             onPointerDownOutside={onClose}
+            onEscapeKeyDown={onClose}
             className={css({
               display: 'flex',
               flexDirection: 'column',
