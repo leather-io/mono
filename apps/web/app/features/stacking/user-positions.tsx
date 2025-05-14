@@ -44,7 +44,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   const { mutateAsync: revokeDelegateStx } = useRevokeDelegateStxMutation();
 
   async function openRevokeStackingContractCall() {
-    return revokeDelegateStx().then(() => navigate('/'));
+    return revokeDelegateStx().then(() => navigate('/stacking'));
   }
 
   const delegationStatusQuery = useDelegationStatusQuery();
@@ -164,12 +164,12 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
                   <DropdownMenu.Content align="start">
                     <Box p="space.02" textStyle="label.02">
                       <DropdownMenu.Item
-                        onSelect={() => void navigate(`/pooled-stacking/${poolSlug}/active`)}
+                        onSelect={() => void navigate(`/stacking/pool/${poolSlug}/active`)}
                       >
                         <Flag img={<InfoCircleIcon variant="small" />}>View position details</Flag>
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
-                        onSelect={() => void navigate(`/pooled-stacking/${poolSlug}`)}
+                        onSelect={() => void navigate(`/stacking/pool/${poolSlug}`)}
                       >
                         <Flag img={<PlusIcon variant="small" />}>Increase pooling amount</Flag>
                       </DropdownMenu.Item>

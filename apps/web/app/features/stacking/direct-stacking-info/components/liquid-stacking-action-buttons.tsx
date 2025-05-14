@@ -13,7 +13,7 @@ export function LiquidStackingActionButtons({ protocolSlug }: LiquidStackingActi
   const navigate = useNavigate();
 
   async function handleIncreaseStackingClick() {
-    return navigate(`/liquid-stacking/${protocolSlug}/increase`);
+    return navigate(`/stacking/liquid/${protocolSlug}/increase`);
   }
 
   return (

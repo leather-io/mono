@@ -172,7 +172,7 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
     return handleIncreaseLiquidSubmit({
       ...values,
     }).then(() => {
-      return navigate(`/liquid-stacking/${protocolSlug}/active`);
+      return navigate(`/stacking/liquid/${protocolSlug}/active`);
     });
   });
 

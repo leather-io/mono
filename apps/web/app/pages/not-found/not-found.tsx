@@ -18,7 +18,7 @@ export function NotFound() {
         <VStack gap="space.06" alignItems="center" maxWidth="640px" textAlign="center">
           <styled.h1 textStyle="heading.04">Oops! It seems like you took a wrong turn.</styled.h1>
           <styled.div>
-            <Link to="/">
+            <Link to="/stacking">
               <Button variant="outline">Return home</Button>
             </Link>
           </styled.div>
