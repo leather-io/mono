@@ -389,6 +389,23 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.65.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.64.1...@leather.io/ui-v1.65.0) (2025-05-14)
+
+
+### Features
+
+* **ui:** preselect account when opening Send from account screen ([5b50352](https://github.com/leather-io/mono/commit/5b503525bc09ff5d14334c691fd785655c3d4082))
+
+
+### Bug Fixes
+
+* **mobile:** add FlashList to Activity to improve performance ([2f6d4fc](https://github.com/leather-io/mono/commit/2f6d4fc472cd6ef137f03e7dff9d9aa025968816))
+* **mobile:** replace activity status indicator icons, ref ENG-37 ([e3663ab](https://github.com/leather-io/mono/commit/e3663ab9d0b2964470d38363285b6eb3f2f9a0b1))
+* **mobile:** use our own sBTC svg icon to ensure it always shows, ref LEA-2589 ([3f4ece9](https://github.com/leather-io/mono/commit/3f4ece9dfcc1c27bffeace5fb76bcaaa5eb52b66))
+* **ui:** support children as render prop in bottom sheet ([fa70b4d](https://github.com/leather-io/mono/commit/fa70b4dce414e06593981a9fe012ea014adfdeaf))
+* **web:** adjust urls, closes LEA-2372 ([281cd84](https://github.com/leather-io/mono/commit/281cd841b51d724ec4e5fef2138983e056ae280c))
+* **web:** handle edge case where no stacks keys are present, prevent sign in ([2e8a102](https://github.com/leather-io/mono/commit/2e8a10223328e97bfe5a14303d421c222228de01))
+
 ## [1.64.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.64.0...@leather.io/ui-v1.64.1) (2025-05-09)
 
 
