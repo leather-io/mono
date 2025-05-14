@@ -10,5 +10,6 @@ export const content = {
       'APR (Annual Percentage Rate) represents the annualized return participants earn on their stacked assets, excluding compounding.',
     feeDescription:
       'The fee is a percentage of the rewards you earn from the pool. It is deducted from your rewards before they are distributed to you.',
+    missingIndependentStackingDescription: `We're working hard to integrate independent stacking here. In the meantime, you can use our legacy earn experience.`,
   },
 } as const;
