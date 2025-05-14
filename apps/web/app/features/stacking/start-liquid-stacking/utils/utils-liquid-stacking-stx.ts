@@ -37,7 +37,11 @@ function getLiquidStackingFunctionData({
     return {
       functionArgs: [
         contractPrincipalCV(contractAddress, 'reserve-v1'),
+        contractPrincipalCV(contractAddress, 'commission-v2'),
+        contractPrincipalCV(contractAddress, 'staking-v0'),
+        contractPrincipalCV(contractAddress, 'direct-helpers-v3'),
         uintCV(stxAmount),
+        noneCV(),
         noneCV(),
       ],
       functionName: 'deposit',
