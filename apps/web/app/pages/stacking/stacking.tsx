@@ -1,12 +1,12 @@
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
-import { BasicHoverCard } from '~/components/basic-hover-card';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
 import { UserPositions } from '~/features/stacking/user-positions';
 
-import { Flag, HoverCard, Link, QuestionCircleIcon } from '@leather.io/ui';
+import { HoverCard } from '@leather.io/ui';
 
+import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
 import { StackingFaq } from './components/stacking-faq';
@@ -42,16 +42,8 @@ export function Stacking() {
       <StackingProviderTable mt="space.05" />
 
       <HoverCard.Root openDelay={600}>
-        <HoverCard.Trigger>
-          <Link
-            display="inline-block"
-            textStyle="caption.01"
-            color="ink.text-subdued"
-            mt="space.02"
-            href="https://earn.leather.io/sign-in?chain=mainnet#:~:text=Stack%20liquid-,Stack%20independently,-When%20you%20stack"
-          >
-            Looking to stack independently?
-          </Link>
+        <HoverCard.Trigger asChild>
+          <IndependentStackingLink />
         </HoverCard.Trigger>
         <HoverCard.Portal>
           <HoverCard.Content side="top">
