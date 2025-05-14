@@ -11,6 +11,7 @@ import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
 import type { Environment } from '../../environment';
 import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
+import { LeatherApiError } from './leather-api.error';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
@@ -42,9 +43,7 @@ export class LeatherApiClient {
       },
       onResponse({ response }) {
         if (!response.ok) {
-          throw new Error(
-            `Leather API (${response.url}): ${response.status} ${response.statusText}`
-          );
+          throw new LeatherApiError(response.url, response.status, response.statusText);
         }
       },
     });
@@ -289,11 +288,21 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-sip10-token', principal],
       async () => {
-        const { data } = await this.client.GET('/v1/tokens/sip10s/{principal}', {
-          signal,
-          params: { path: { principal } },
-        });
-        return data!;
+        try {
+          const { data } = await this.client.GET('/v1/tokens/sip10s/{principal}', {
+            signal,
+            params: { path: { principal } },
+          });
+          return data!;
+        } catch (error) {
+          if (
+            LeatherApiError.isLeatherApiError(error) &&
+            (error.isNotFound() || error.isUnprocessableEntity())
+          ) {
+            return null;
+          }
+          throw error;
+        }
       },
       { ttl: HttpCacheTimeMs.oneMonth }
     );

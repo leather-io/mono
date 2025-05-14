@@ -28,6 +28,7 @@ export class Sip9AssetService {
       tokenId,
       signal
     );
+    if (!metadata) throw new Error(`Sip9 Metadata Not Found: ${assetIdentifier}`);
     return createSip9CryptoAssetInfo(assetIdentifier, tokenId, metadata);
   }
 }
