@@ -3,10 +3,6 @@ import { MetaDescriptor } from 'react-router';
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { Stacking } from '~/pages/stacking/stacking';
 
-export function loader() {
-  return true;
-}
-
 export function meta() {
   return [
     { title: 'Stacking – Leather' },
