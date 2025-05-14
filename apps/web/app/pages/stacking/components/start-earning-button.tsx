@@ -37,8 +37,8 @@ function StartEarningPoolCheck({ slug, poolAddresses }: StartEarningButtonProps)
     getPoolAddressQuery.isLoading ||
     getPoolAddressQuery.isFetching;
 
-  const toStartEarn = `/pooled-stacking/${slug}`;
-  const toViewActive = `/pooled-stacking/${slug}/active`;
+  const toStartEarn = `/stacking/pool/${slug}`;
+  const toViewActive = `/stacking/pool/${slug}/active`;
 
   if (isLoading) {
     return <StartEarningButtonLayout to={toStartEarn} aria-busy />;
@@ -63,7 +63,7 @@ export function StartEarningButton({ slug, poolAddresses }: StartEarningButtonPr
   const [isClient, setIsClient] = useState(false);
   useOnMount(() => setIsClient(true));
 
-  const toStartEarn = `/pooled-stacking/${slug}`;
+  const toStartEarn = `/stacking/pool/${slug}`;
 
   if (!isClient) {
     return <StartEarningButtonLayout to={toStartEarn} aria-busy />;

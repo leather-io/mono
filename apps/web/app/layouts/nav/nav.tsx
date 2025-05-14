@@ -24,7 +24,7 @@ function LeatherLogoHomeLink(props: HTMLStyledProps<'a'>) {
 export function NavContents() {
   return (
     <>
-      <NavItem href="/" icon={<SbtcMonogramIcon />}>
+      <NavItem href="/stacking" icon={<SbtcMonogramIcon />}>
         Stacking
       </NavItem>
 

@@ -116,7 +116,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
       stxAddress: stacksAccount.address,
       protocolName: protocol.name,
     }).then(() => {
-      return navigate(`/liquid-stacking/${protocolSlug}/active`);
+      return navigate(`/stacking/liquid/${protocolSlug}/active`);
     });
   });
 

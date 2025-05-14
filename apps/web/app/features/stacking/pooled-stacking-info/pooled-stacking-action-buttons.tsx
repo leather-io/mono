@@ -19,11 +19,11 @@ export function PooledStackingActionButtons({
   const { mutateAsync: revokeDelegateStx, isPending } = useRevokeDelegateStxMutation();
 
   async function handleStopStackingClick() {
-    return revokeDelegateStx().then(() => navigate('/'));
+    return revokeDelegateStx().then(() => navigate('/stacking'));
   }
 
   async function handleIncreaseStackingClick() {
-    return navigate(`/pooled-stacking/${poolSlug}`);
+    return navigate(`/stacking/pool/${poolSlug}`);
   }
 
   return (

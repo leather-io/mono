@@ -216,7 +216,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       delegationDurationType: 'limited',
       numberOfCycles: 1,
       poolAddress: poolStxAddress ?? '',
-    }).then(() => navigate(`/pooled-stacking/${poolSlug}/active`));
+    }).then(() => navigate(`/stacking/pool/${poolSlug}/active`));
   });
 
   const allowContractCallerConfirmed = useMemo(() => {
