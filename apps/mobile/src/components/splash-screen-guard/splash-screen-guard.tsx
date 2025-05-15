@@ -9,13 +9,11 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
-import LottieView from 'lottie-react-native';
 
 import { colorThemes } from '@leather.io/tokens';
 import { Box, Button, HasChildren, Theme, useOnMount } from '@leather.io/ui/native';
 
-import { LeatherLockedSplash } from '../animations/leather-locked-splash';
-import { LeatherSplash } from '../animations/leather-splash';
+import { LeatherSplash, SplashLottieView } from '../animations/leather-splash';
 import { AuthContext } from './use-auth-context';
 import { useAuthState } from './use-auth-state';
 
@@ -23,8 +21,8 @@ const DEFAULT_ANIMATION_FINISHED = false;
 
 export function SplashScreenGuard({ children }: HasChildren) {
   const [animationFinished, setAnimationFinished] = useState(DEFAULT_ANIMATION_FINISHED);
-  const splashRef = useRef<LottieView>(null);
-  const lockedSplashRef = useRef<LottieView>(null);
+  const splashRef = useRef<SplashLottieView>(null);
+  const lockedSplashRef = useRef<SplashLottieView>(null);
   const { whenTheme } = useSettings();
   const insets = useSafeAreaInsets();
   const theme = useTheme<Theme>();
@@ -34,8 +32,8 @@ export function SplashScreenGuard({ children }: HasChildren) {
   void useTotalActivity();
 
   const playSplash = useCallback(() => {
-    splashRef.current?.play();
-    lockedSplashRef.current?.play();
+    splashRef.current?.start();
+    lockedSplashRef.current?.start();
   }, []);
 
   const { tryAuthentication, authState, lockApp } = useAuthState({
@@ -69,15 +67,15 @@ export function SplashScreenGuard({ children }: HasChildren) {
   const splash =
     authState === 'cold-start' || authState === 'started' || authState === 'passed-on-first' ? (
       <LeatherSplash
-        ref={splashRef}
-        onAnimationEnd={() => setAnimationFinished(true)}
-        autoPlay={false}
+        splashRef={splashRef}
+        type="unlocked"
+        onAnimationFinish={() => setAnimationFinished(true)}
       />
     ) : (
-      <LeatherLockedSplash
-        ref={lockedSplashRef}
-        onAnimationEnd={() => setAnimationFinished(true)}
-        autoPlay={false}
+      <LeatherSplash
+        splashRef={lockedSplashRef}
+        type="locked"
+        onAnimationFinish={() => setAnimationFinished(true)}
       />
     );
 

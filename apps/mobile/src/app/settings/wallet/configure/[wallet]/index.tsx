@@ -182,7 +182,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               onPress={() => {
                 router.navigate({
                   pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
-                  params: { fingerprint: wallet.fingerprint },
+                  params: { fingerprint: wallet.fingerprint, wallet: wallet.fingerprint },
                 });
               }}
               testID={TestId.walletSettingsViewSecretKeyButton}

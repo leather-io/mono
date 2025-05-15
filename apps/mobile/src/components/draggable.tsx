@@ -19,7 +19,7 @@ interface DraggableProps {
   cardId: string;
   cardsLength: number;
   placeholderIdx: SharedValue<null | number>;
-  scrollViewRef: RefObject<ScrollView>;
+  scrollViewRef: RefObject<ScrollView | null>;
   direction: SharedValue<'down' | 'up'>;
   onCardPress(cardId: string): void;
   swapCardIndexes(idx1: number | null, idx2: number | null): void;

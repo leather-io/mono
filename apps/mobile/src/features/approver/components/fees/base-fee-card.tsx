@@ -6,14 +6,14 @@ import { FeeBadge } from '@/features/send/components/fee-badge';
 import { t } from '@lingui/macro';
 
 import { MarketData, Money } from '@leather.io/models';
-import { Avatar, Box, Cell, ChevronRightIcon, Text } from '@leather.io/ui/native';
+import { Avatar, Box, Cell, ChevronRightIcon, IconProps, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 interface BaseFeeCardProps {
   amount: Money;
   onPress(): void;
   marketData: MarketData | undefined;
-  icon: ReactElement;
+  icon: ReactElement<IconProps>;
   title: string;
   time: string;
 }

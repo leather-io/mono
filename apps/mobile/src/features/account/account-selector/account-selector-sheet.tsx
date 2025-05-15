@@ -9,7 +9,7 @@ import { SheetRef } from '@leather.io/ui/native';
 import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 
 interface AccountSelectedSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   onAccountPress: (accountId: string) => void;
 }
 

@@ -32,7 +32,7 @@ function getAccountDisplayPrefDescription(preference: AccountDisplayPreference) 
 }
 
 interface AccountIdentifierSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps) {
   const settings = useSettings();

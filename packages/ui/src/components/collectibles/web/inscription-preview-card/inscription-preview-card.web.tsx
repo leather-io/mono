@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { Flag } from '../../../../exports.web';
 import { InscriptionMetadata } from './components/inscription-metadata.web';
 
@@ -5,8 +7,8 @@ interface InscriptionPreviewCardProps {
   action?(): void;
   actionLabel?: string;
   hideBorder?: boolean;
-  icon?: React.JSX.Element;
-  image: React.JSX.Element;
+  icon?: ReactElement;
+  image: ReactElement;
   subtitle: string;
   title: string;
 }

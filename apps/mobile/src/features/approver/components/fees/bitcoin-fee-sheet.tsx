@@ -13,7 +13,7 @@ import { FeeSheetLayout } from './fee-sheet.layout';
 const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
 
 interface FeesSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   selectedFeeType: FeeTypes;
   fees: AverageBitcoinFeeRates | undefined;
   txSize: number;

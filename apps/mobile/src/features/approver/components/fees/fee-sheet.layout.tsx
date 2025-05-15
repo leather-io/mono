@@ -7,7 +7,7 @@ import { useTheme } from '@shopify/restyle';
 import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
 
 interface FeeSheetLayoutProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   children: ReactNode;
 }
 

@@ -35,7 +35,7 @@ export function AssetPickerItem({
       ref={pressableRef}
       onLayout={layoutEvent => setOffsetTopRelativeToParent(layoutEvent.nativeEvent.layout.y)}
     >
-      {cloneElement(children as ReactElement, {
+      {cloneElement(children as ReactElement<Partial<{ onPress(): void }>>, {
         onPress: handlePress,
       })}
     </View>

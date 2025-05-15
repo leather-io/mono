@@ -6,7 +6,7 @@ import { t } from '@lingui/macro';
 import { SheetRef } from '@leather.io/ui/native';
 
 interface SkipSecureWalletSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   onSubmit(): void;
 }
 export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSheetProps) {

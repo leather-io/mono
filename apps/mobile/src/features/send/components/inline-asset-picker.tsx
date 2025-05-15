@@ -8,7 +8,7 @@ import { useSettings } from '@/store/settings/settings';
 import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
 
 interface InlineAssetPickerProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   account: Account;
   onSelectAsset(asset: SendableAsset): void;
 }

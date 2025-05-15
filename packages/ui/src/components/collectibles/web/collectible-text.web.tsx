@@ -1,8 +1,10 @@
+import { ReactElement } from 'react';
+
 import { CollectibleItemLayout, CollectibleItemLayoutProps } from './collectible-item.layout.web';
 import { CollectibleTextLayout } from './collectible-text.layout.web';
 
 interface CollectibleTextProps extends Omit<CollectibleItemLayoutProps, 'children'> {
-  icon: React.JSX.Element;
+  icon: ReactElement;
   content: string;
 }
 export function CollectibleText(props: CollectibleTextProps) {

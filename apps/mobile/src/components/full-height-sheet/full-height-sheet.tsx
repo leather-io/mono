@@ -4,14 +4,14 @@ import { useSettings } from '@/store/settings/settings';
 
 import { Sheet, SheetProps, SheetRef } from '@leather.io/ui/native';
 
-interface FullHeightSheetProps extends Omit<SheetProps, 'themeVariant'> {
-  sheetRef: RefObject<SheetRef>;
+interface FullHeightSheetProps<T = unknown> extends Omit<SheetProps<T>, 'themeVariant'> {
+  sheetRef: RefObject<SheetRef | null>;
 }
-export function FullHeightSheet({ sheetRef, ...sheetProps }: FullHeightSheetProps) {
+export function FullHeightSheet<T = unknown>({ sheetRef, ...sheetProps }: FullHeightSheetProps<T>) {
   const { themeDerivedFromThemePreference } = useSettings();
 
   return (
-    <Sheet
+    <Sheet<T>
       ref={sheetRef}
       snapPointVariant="fullHeightWithNotch"
       shouldHaveContainer={false}

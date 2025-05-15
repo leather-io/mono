@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export function useElementHeightListener(
-  ref: React.RefObject<HTMLDivElement>,
+  ref: React.RefObject<HTMLDivElement | null>,
   listener: (height: number) => void
 ) {
   useEffect(() => {

@@ -7,7 +7,7 @@ import { t } from '@lingui/macro';
 import { PassportIcon, SheetRef } from '@leather.io/ui/native';
 
 interface WalletNameSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   name: string;
   setName(name: string): { success: boolean };
 }

@@ -7,7 +7,7 @@ import { t } from '@lingui/macro';
 import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface MemoSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   memo: string;
   onChangeMemo(memo: string): void;
 }

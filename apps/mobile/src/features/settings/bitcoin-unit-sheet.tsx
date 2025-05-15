@@ -16,7 +16,7 @@ import { BitcoinCircleIcon, SheetRef } from '@leather.io/ui/native';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface BitcoinUnitSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const settings = useSettings();

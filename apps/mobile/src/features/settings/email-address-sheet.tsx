@@ -11,7 +11,7 @@ import { emailAddressSchema } from '@leather.io/models';
 import { Button, EmailIcon, SheetRef, Text, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface EmailAddressSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
   const [emailAddress, setEmailAddress] = useState('');

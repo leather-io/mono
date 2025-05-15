@@ -1,10 +1,12 @@
+import { ReactElement } from 'react';
+
 import { Stack, styled } from 'leather-styles/jsx';
 
 import { Button, type ButtonProps } from '../button/button.web';
 import AccessibleIcon from './accessible-icon.web';
 
 interface IconButtonProps extends ButtonProps {
-  icon: React.JSX.Element;
+  icon: ReactElement<any, any>;
   label?: string;
 }
 export function IconButton({ icon, label, disabled, ...rest }: IconButtonProps) {

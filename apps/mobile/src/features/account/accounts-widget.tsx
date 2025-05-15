@@ -106,6 +106,7 @@ export function AccountsWidget({
                     router.navigate({
                       pathname: AppRoutes.Account,
                       params: {
+                        account: account.id,
                         accountId: account.id,
                       },
                     });
@@ -130,7 +131,7 @@ export function AccountsWidget({
           accountSelectorSheetRef.current?.close();
           router.navigate({
             pathname: AppRoutes.Account,
-            params: { accountId },
+            params: { account: accountId, accountId },
           });
         }}
       />

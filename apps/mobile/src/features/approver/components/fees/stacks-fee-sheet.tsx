@@ -12,7 +12,7 @@ import { StacksFeeOption } from './stacks-fee-option';
 const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
 
 interface FeesSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   selectedFeeType: FeeTypes;
   fees: Record<FeeTypes, Money>;
   currentFee: Money;

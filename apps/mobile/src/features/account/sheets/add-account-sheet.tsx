@@ -10,7 +10,7 @@ import { SheetRef } from '@leather.io/ui/native';
 import { AddAccountSheetLayout } from './add-account-sheet.layout';
 
 interface AddAccountSheetBaseProps {
-  addAccountSheetRef: RefObject<SheetRef>;
+  addAccountSheetRef: RefObject<SheetRef | null>;
 }
 
 export function AddAccountSheet({ addAccountSheetRef }: AddAccountSheetBaseProps) {

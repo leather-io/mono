@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { z } from 'zod';
 
 import { NetworkMode } from '../../start-pooled-stacking/utils/stacking-pool-types';
@@ -61,7 +63,7 @@ export interface Protocol {
   description: string;
   website: string;
   duration: number;
-  icon: JSX.Element;
+  icon: ReactElement;
   liquidContract: LiquidContractName;
   liquidToken: LiquidToken;
   minimumDelegationAmount: number;

@@ -6,15 +6,17 @@ runs:
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:
-        version: '10.4.1'
+        version: '10.10.0'
 
     - name: Set up node
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: 22
         registry-url: 'https://registry.npmjs.org/'
         cache: 'pnpm'
 
     - name: Install dependencies
+      env:
+        CI: "1"
       run: pnpm install
       shell: bash

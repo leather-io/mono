@@ -58,7 +58,7 @@ export function TextInput({
   ...rest
 }: Props & {
   inputState: InputState;
-  inputRef?: RefObject<RNTextInput>;
+  inputRef?: RefObject<RNTextInput | null>;
   errorMessage?: string;
   textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;

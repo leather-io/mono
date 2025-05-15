@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { SharedValue } from 'react-native-reanimated';
 
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
@@ -18,8 +18,8 @@ import { HeaderLayout } from '../header.layout';
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface AnimatedTitleHeaderProps {
-  animatedStyle: ReturnType<typeof useAnimatedStyle>;
-  animatedBlurOverlayStyle: ReturnType<typeof useAnimatedStyle>;
+  animatedStyle: { opacity: number };
+  animatedBlurOverlayStyle: { opacity: number };
   title: string | ReactNode;
   subtitle?: string | ReactNode;
   scrollY?: SharedValue<number>;

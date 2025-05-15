@@ -15,8 +15,11 @@ export function SendSheet() {
   }
 
   return (
-    <FullHeightSheet sheetRef={sendSheetRef} onAnimate={handleAnimatedPositionChange}>
-      {data => <Send accountId={data?.data.accountId} />}
+    <FullHeightSheet<{ accountId: string }>
+      sheetRef={sendSheetRef}
+      onAnimate={handleAnimatedPositionChange}
+    >
+      {data => <Send accountId={data?.data?.accountId} />}
     </FullHeightSheet>
   );
 }

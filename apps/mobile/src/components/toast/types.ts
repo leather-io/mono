@@ -10,5 +10,5 @@ export interface ToastMethods {
   display({ title, type }: ToastData): unknown;
 }
 export interface ToastProps {
-  toastRef: RefObject<ToastMethods>;
+  toastRef: RefObject<ToastMethods | null>;
 }

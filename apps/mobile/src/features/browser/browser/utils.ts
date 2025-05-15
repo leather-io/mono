@@ -37,7 +37,7 @@ function getScreenshotPath(hostname: string) {
   return `${FileSystem.documentDirectory}${hostname}_screenshot.jpg`;
 }
 // Capture screenshot using react-native-view-shot
-export async function captureScreenshot(viewShotRef: RefObject<ViewShot>, hostname: string) {
+export async function captureScreenshot(viewShotRef: RefObject<ViewShot | null>, hostname: string) {
   if (!viewShotRef.current) return;
 
   try {

@@ -8,7 +8,7 @@ import { t } from '@lingui/macro';
 import { SheetRef } from '@leather.io/ui/native';
 
 interface RemoveWalletSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   onSubmit(): unknown;
 }
 export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps) {

@@ -18,7 +18,7 @@ import { SearchInput } from './search-input';
 import { useSearchBarAnimatedStyles } from './use-search-bar-animated-styles';
 
 interface SearchBarProps {
-  webViewRef: RefObject<WebView>;
+  webViewRef: RefObject<WebView | null>;
   textUrl: string;
   setTextUrl(url: string): void;
   searchUrl: string;
@@ -99,13 +99,13 @@ export function SearchBar({
       >
         {browserType === 'active' && (
           <SearchBarToolbar
-            onClickApps={() => {
+            onClickApps={async () => {
               resetBrowser();
-              KeyboardController.dismiss();
+              await KeyboardController.dismiss();
             }}
-            onRefresh={() => {
+            onRefresh={async () => {
               refresh();
-              KeyboardController.dismiss();
+              await KeyboardController.dismiss();
             }}
             onPaste={async () => {
               const copiedString = await Clipboard.getStringAsync();
@@ -113,7 +113,7 @@ export function SearchBar({
             }}
             onShare={async () => {
               if (navState?.url) await Sharing.shareAsync(navState?.url);
-              KeyboardController.dismiss();
+              await KeyboardController.dismiss();
             }}
           />
         )}

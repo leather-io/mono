@@ -6,7 +6,7 @@ import { t } from '@lingui/macro';
 import { LockIcon, SheetRef } from '@leather.io/ui/native';
 
 interface RecoverWalletSheetProps {
-  recoverWalletSheetRef: RefObject<SheetRef>;
+  recoverWalletSheetRef: RefObject<SheetRef | null>;
   passphrase: string;
   setPassphrase(passphrase: string): unknown;
 }

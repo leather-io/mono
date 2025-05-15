@@ -13,7 +13,7 @@ import { SheetRef } from '@leather.io/ui/native';
 import { AddWalletSheetLayout } from './add-wallet-sheet.layout';
 
 interface AddWalletSheetBaseProps {
-  addWalletSheetRef: RefObject<SheetRef>;
+  addWalletSheetRef: RefObject<SheetRef | null>;
   opensFully?: boolean;
 }
 

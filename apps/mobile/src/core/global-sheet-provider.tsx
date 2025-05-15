@@ -3,9 +3,9 @@ import { createContext, useContext, useRef } from 'react';
 import { HasChildren, SheetRef } from '@leather.io/ui/native';
 
 interface GlobalSheetContextValue {
-  sendSheetRef: React.RefObject<SheetRef>;
-  receiveSheetRef: React.RefObject<SheetRef>;
-  browserSheetRef: React.RefObject<SheetRef>;
+  sendSheetRef: React.RefObject<SheetRef | null>;
+  receiveSheetRef: React.RefObject<SheetRef | null>;
+  browserSheetRef: React.RefObject<SheetRef | null>;
 }
 
 const GlobalSheetContext = createContext<GlobalSheetContextValue | null>(null);

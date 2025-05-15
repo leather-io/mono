@@ -5,6 +5,7 @@ import {
   Cell,
   CellProps,
   ChevronRightIcon,
+  IconProps,
   RadioButton,
   Switch,
 } from '@leather.io/ui/native';
@@ -15,7 +16,7 @@ interface ItemBaseProps {
   type?: ItemType;
   title: string;
   caption?: string;
-  icon?: ReactElement;
+  icon?: ReactElement<IconProps>;
   switchValue?: boolean | undefined;
   onSwitchValueChange?: (value: boolean) => Promise<void> | void | undefined;
   isRadioSelected?: boolean | undefined;

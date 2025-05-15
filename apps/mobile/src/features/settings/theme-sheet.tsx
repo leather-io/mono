@@ -14,7 +14,7 @@ import { capitalize } from '@leather.io/utils';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface ThemeSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   const settings = useSettings();
