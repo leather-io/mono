@@ -4,6 +4,8 @@ import { useMutation } from '@tanstack/react-query';
 
 import { getErrorMessage } from '@leather.io/stacks';
 
+import { fetchFn } from './fetch-fn';
+
 export function useBroadcastStxTransaction() {
   return useMutation({
     mutationKey: ['broadcast-stx-transaction'],
@@ -14,7 +16,13 @@ export function useBroadcastStxTransaction() {
       tx: StacksTransactionWire;
       stacksNetwork: StacksNetwork;
     }) {
-      const response = await broadcastTransaction({ transaction: tx, network: stacksNetwork });
+      const response = await broadcastTransaction({
+        transaction: tx,
+        network: stacksNetwork,
+        client: {
+          fetch: fetchFn,
+        },
+      });
 
       if ('error' in response) {
         return Promise.reject(new Error(getErrorMessage(response.reason)));
