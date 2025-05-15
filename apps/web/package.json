@@ -13,7 +13,8 @@
     "preview": "npm run build && vite preview",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
-    "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b"
+    "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b",
+    "fetch-posts": "node app/scripts/fetch-posts.js"
   },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",
@@ -70,6 +71,7 @@
     "@types/valid-url": "1.0.7",
     "react-router-devtools": "5.0.5",
     "rollup-plugin-node-polyfills": "0.2.1",
+    "ts-node": "10.9.2",
     "tty-browserify": "0.0.1",
     "typescript": "5.7.3",
     "vite": "6.3.5",

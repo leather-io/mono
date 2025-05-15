@@ -13,6 +13,8 @@ import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
+import { content } from '~/data/content';
+import { formatPostPrompt, formatPostSentence } from '~/utils/post-utils';
 
 import { Button, Hr } from '@leather.io/ui';
 
@@ -40,7 +42,7 @@ const sbtcEnroll = {
   id: 'basic',
   logo: <SbtcLogo size="32px" />,
   title: 'Basic sBTC rewards',
-  description: 'Hold sBTC in your wallet to passively earn more sBTC, as it compounds over time.',
+  description: formatPostPrompt(content.posts["sbtc-rewards-basic"]?.Prompt || ''),
   tvl: '2,150 BTC',
   tvlUsd: '$130,050,000',
   minCommitment: '0.005 BTC',
@@ -111,6 +113,7 @@ const pools = [
 
 export function SbtcRewards() {
   const { status, whenExtensionState } = useLeatherConnect();
+  const postSlug = 'sbtc-rewards';
 
   function bridgeSbtc() {
     // Cannot bridge, cap reached
@@ -135,8 +138,10 @@ export function SbtcRewards() {
         <Page.Header title="sBTC Rewards" />
 
         <Page.Heading
-          title="Earn yield with Bitcoin on Stacks"
-          subtitle="Get BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield from a variety of reward protocols without sacrificing Bitcoin’s underlying security and self-sovereignty."
+          title={formatPostPrompt(content.posts[postSlug]?.Prompt || '')}
+          subtitle={formatPostSentence(content.posts[postSlug]?.Sentence || '')}
+          disclaimer={content.posts[postSlug]?.Disclaimer || ''}
+          postSlug={content.posts[postSlug]?.Slug || postSlug}
         />
 
         <ApyRewardHeroCard apyRange="5–8%" mt="space.05" />

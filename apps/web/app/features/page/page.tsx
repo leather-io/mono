@@ -1,6 +1,8 @@
 import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
+import { Link, Hr } from '@leather.io/ui';
+import { content } from '~/data/content';
 
 import { SignInButton } from '../sign-in-button/sign-in-button';
 
@@ -17,8 +19,21 @@ export function PageInset(props: HTMLStyledProps<'div'>) {
 interface PageHeadingProps {
   title: string;
   subtitle: string;
+  disclaimer: string;
+  postSlug?: string;
 }
-export function PageHeading({ title, subtitle }: PageHeadingProps) {
+export function PageHeading({ title, subtitle, disclaimer, postSlug }: PageHeadingProps) {
+  const needsPeriod = subtitle && !subtitle.endsWith('.') && !subtitle.endsWith('!') && !subtitle.endsWith('?');
+  
+  const learnMoreLink = postSlug ? (
+    <>
+      {subtitle && needsPeriod ? '. ' : ' '}
+      <Link href={`https://leather.io/posts/${postSlug}`} target="_blank" rel="noopener">
+        Learn more
+      </Link>
+    </>
+  ) : null;
+
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
       <Box flex={1}>
@@ -27,7 +42,19 @@ export function PageHeading({ title, subtitle }: PageHeadingProps) {
         </Page.Title>
       </Box>
       <Box flex={1}>
-        <Page.Subtitle mt={['space.03', 'space.03', 0]}>{subtitle}</Page.Subtitle>
+        <Page.Subtitle mt={['space.03', 'space.03', 0]}>
+          {subtitle}
+          {learnMoreLink}
+        </Page.Subtitle>
+        
+        {disclaimer && (
+          <>
+            <Hr my="space.03" />
+            <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.02">
+              ⚠️ {disclaimer}
+            </styled.div>
+          </>
+        )}
       </Box>
     </Flex>
   );
