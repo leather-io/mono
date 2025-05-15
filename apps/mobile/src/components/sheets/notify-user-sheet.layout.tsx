@@ -16,7 +16,7 @@ export interface NotifyUserSheetData {
 interface NotifyUserSheetLayoutProps {
   onCloseSheet?(): unknown;
   sheetData: NotifyUserSheetData | null;
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function NotifyUserSheetLayout({
   onCloseSheet,

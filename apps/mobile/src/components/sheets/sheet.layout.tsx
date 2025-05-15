@@ -2,11 +2,19 @@ import { ReactElement, ReactNode, RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 
-import { Avatar, Box, Sheet, SheetHeader, SheetProps, SheetRef } from '@leather.io/ui/native';
+import {
+  Avatar,
+  Box,
+  IconProps,
+  Sheet,
+  SheetHeader,
+  SheetProps,
+  SheetRef,
+} from '@leather.io/ui/native';
 
 interface SheetLayoutProps extends Omit<SheetProps, 'themeVariant' | 'children'> {
-  icon: ReactElement;
-  sheetRef: RefObject<SheetRef>;
+  icon: ReactElement<IconProps>;
+  sheetRef: RefObject<SheetRef | null>;
   children: ReactNode;
   title: string;
 }

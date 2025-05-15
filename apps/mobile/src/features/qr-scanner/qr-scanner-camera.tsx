@@ -10,11 +10,11 @@ import { useCameraPermission } from '@/features/qr-scanner/use-camera-permission
 import {
   BarcodePoint,
   type BarcodeScanningResult,
-  type CameraProps,
   CameraView,
+  type CameraViewProps,
 } from 'expo-camera';
 
-interface QrScannerCameraProps extends CameraProps {
+interface QrScannerCameraProps extends CameraViewProps {
   onBarcodeScanned: (result: BarcodeScanningResult) => void;
 }
 

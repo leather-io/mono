@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { Flex, styled } from 'leather-styles/jsx';
 
 import { Link } from '../../../../link/link.web';
@@ -5,7 +7,7 @@ import { Link } from '../../../../link/link.web';
 interface InscriptionMetadataProps {
   action?(): void;
   actionLabel?: string;
-  icon?: React.JSX.Element;
+  icon?: ReactElement;
   subtitle: string;
   title: string;
 }

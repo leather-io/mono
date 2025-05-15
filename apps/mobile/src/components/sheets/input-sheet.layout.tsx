@@ -6,6 +6,7 @@ import {
   Avatar,
   Box,
   Button,
+  IconProps,
   Sheet,
   SheetHeader,
   SheetRef,
@@ -15,10 +16,10 @@ import {
 import { TextInput } from '../text-input';
 
 interface InputSheetLayoutProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   initialValue: string;
   title: string;
-  icon: ReactElement;
+  icon: ReactElement<IconProps>;
   placeholder: string;
   submitTitle: string;
   onSubmit(newVal: string): void;

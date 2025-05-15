@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 
 import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
 
-export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef> }) {
+export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef | null> }) {
   const { themeDerivedFromThemePreference, changeNotificationsPreference } = useSettings();
 
   return (

@@ -141,3 +141,4 @@ export * from './connection-icon.native';
 export * from './clock-icon.native';
 export * from './sparkle-icon.native';
 export * from './arrow-refresh-icon.native';
+export { type IconProps } from './icon/create-icon.native';

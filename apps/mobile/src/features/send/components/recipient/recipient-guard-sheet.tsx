@@ -14,7 +14,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface RecipientWarningSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   config: GuardResult;
   onConfirm: (address: string) => void;
 }

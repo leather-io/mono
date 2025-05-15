@@ -44,6 +44,7 @@ export function Account({ account, walletName, balance, isLoading, isError }: Ac
                   pathname: AppRoutes.SettingsWalletConfigureAccount,
                   params: {
                     fingerprint: account.fingerprint,
+                    wallet: account.fingerprint,
                     account: account.accountIndex,
                   },
                 });
@@ -63,7 +64,7 @@ export function Account({ account, walletName, balance, isLoading, isError }: Ac
         onPressHeader={() =>
           router.navigate({
             pathname: AppRoutes.AccountBalances,
-            params: { accountId: account.id },
+            params: { account: account.id, accountId: account.id },
           })
         }
         totalBalance={balance}
@@ -81,7 +82,7 @@ export function Account({ account, walletName, balance, isLoading, isError }: Ac
         onPressHeader={() =>
           router.navigate({
             pathname: AppRoutes.AccountActivity,
-            params: { accountId: account.id, accountName: account.name },
+            params: { account: account.id, accountId: account.id, accountName: account.name },
           })
         }
         title={t({ id: 'account.activity.header_title', message: 'Activity' })}
@@ -91,7 +92,7 @@ export function Account({ account, walletName, balance, isLoading, isError }: Ac
           onPressHeader={() =>
             router.navigate({
               pathname: AppRoutes.AccountCollectibles,
-              params: { accountId: account.id, accountName: account.name },
+              params: { account: account.id, accountId: account.id, accountName: account.name },
             })
           }
           title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}

@@ -6,15 +6,12 @@ function setupFirebaseEnvVariablesAndroid() {
   const googleServicesPathAndroid = process.env.GOOGLE_SERVICES_JSON;
   const googleServicesB64 = process.env.GOOGLE_SERVICES_JSON_B64;
   if (googleServicesPathAndroid && fs.existsSync(googleServicesPathAndroid)) {
-    fs.copyFileSync(
-      googleServicesPathAndroid,
-      path.join(__dirname, './android/app/google-services.json')
-    );
+    fs.copyFileSync(googleServicesPathAndroid, path.join(__dirname, './google-services.json'));
   }
 
   if (googleServicesB64) {
     const decodedJson = Buffer.from(googleServicesB64, 'base64').toString('utf-8');
-    fs.writeFileSync(path.join(__dirname, './android/app/google-services.json'), decodedJson);
+    fs.writeFileSync(path.join(__dirname, './google-services.json'), decodedJson);
   }
 }
 
@@ -22,10 +19,7 @@ function setupFirebaseEnvVariablesIos() {
   const googleServicesPathIos = process.env.GOOGLE_SERVICES_INFO_PLIST;
   const googleServicesB64 = process.env.GOOGLE_SERVICES_INFO_PLIST_B64;
   if (googleServicesPathIos && fs.existsSync(googleServicesPathIos)) {
-    fs.copyFileSync(
-      googleServicesPathIos,
-      path.join(__dirname, './ios/leatherwalletmobile/GoogleService-Info.plist')
-    );
+    fs.copyFileSync(googleServicesPathIos, path.join(__dirname, './GoogleService-Info.plist'));
   }
 
   if (googleServicesB64) {
@@ -44,26 +38,56 @@ export default () => {
   return {
     expo: {
       name: 'Leather',
+      owner: 'leather-wallet',
       slug: 'leather-wallet-mobile',
       version: '2.2.0',
+      runtimeVersion: {
+        policy: 'fingerprint',
+      },
       orientation: 'portrait',
       icon: './src/assets/icon.png',
       scheme: 'leather',
       userInterfaceStyle: 'automatic',
+      platforms: ['ios', 'android'],
       updates: {
         fallbackToCacheTimeout: 0,
+        url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
       },
       assetBundlePatterns: ['**/*'],
       ios: {
-        googleServicesFile: './ios/leatherwalletmobile/GoogleService-Info.plist',
+        config: {
+          usesNonExemptEncryption: false,
+        },
+        deploymentTarget: '15.1',
+        bundleIdentifier: 'io.leather.mobilewallet',
+        googleServicesFile: './GoogleService-Info.plist',
+        supportsTablet: false,
         entitlements: {
           'aps-environment': 'production',
         },
         infoPlist: {
           UIBackgroundModes: ['remote-notification', 'fetch'],
+          NSCameraUsageDescription:
+            'This app uses the camera to scan QR codes for sending transactions.',
         },
-        bundleIdentifier: 'io.leather.mobilewallet',
-        supportsTablet: false,
+        privacyManifests: {
+          NSPrivacyAccessedAPITypes: [
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
+              NSPrivacyAccessedAPITypeReasons: ['C617.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPIType',
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategorySystemBootTime',
+              NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+            },
+          ],
+          NSPrivacyCollectedDataTypes: [],
+          NSPrivacyTracking: false,
+        },
         splash: {
           image: './src/assets/light-mode-splash.png',
           resizeMode: 'contain',
@@ -77,11 +101,15 @@ export default () => {
       },
       android: {
         package: 'io.leather.mobilewallet',
-        googleServicesFile: './android/app/google-services.json',
-        icon: './src/assets/icon.png',
+        googleServicesFile: './google-services.json',
+        edgeToEdgeEnabled: true,
         adaptiveIcon: {
           foregroundImage: './src/assets/adaptive-icon.png',
           backgroundColor: '#12100F',
+        },
+        notification: {
+          icon: './src/assets/android-notification-icon.png',
+          color: '#12100F',
         },
         splash: {
           image: './src/assets/light-mode-splash.png',
@@ -95,6 +123,23 @@ export default () => {
         },
       },
       plugins: [
+        '@react-native-firebase/app',
+        '@react-native-firebase/messaging',
+        [
+          'expo-local-authentication',
+          {
+            faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID biometric data.',
+          },
+        ],
+        [
+          'expo-build-properties',
+          {
+            ios: {
+              useFrameworks: 'static',
+              deploymentTarget: '15.1',
+            },
+          },
+        ],
         [
           'expo-font',
           {
@@ -110,12 +155,7 @@ export default () => {
         ],
         'expo-router',
         'expo-secure-store',
-        [
-          'expo-asset',
-          {
-            assets: ['src/scripts/injected-provider.js'],
-          },
-        ],
+        ['expo-asset'],
         [
           'expo-dev-client',
           {
@@ -128,8 +168,6 @@ export default () => {
             cameraPermission: 'Camera access enables scanning addresses or opening websites.',
           },
         ],
-        '@react-native-firebase/app',
-        '@react-native-firebase/messaging',
       ],
       extra: {
         router: {
@@ -139,9 +177,9 @@ export default () => {
           projectId: 'c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
         },
       },
-      owner: 'leather-wallet',
       experiments: {
         typedRoutes: true,
+        buildCacheProvider: 'eas',
       },
     },
   };

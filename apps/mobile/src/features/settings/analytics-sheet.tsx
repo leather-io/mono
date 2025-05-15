@@ -13,7 +13,7 @@ import { CookieIcon, SheetRef } from '@leather.io/ui/native';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface AnalyticsSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
   const settings = useSettings();

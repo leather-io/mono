@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 
-import { Avatar, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { Avatar, IconProps, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 interface BaseFeeOptionProps {
   onPress(): void;
   isSelected: boolean;
   disabled: boolean;
-  icon: ReactElement;
+  icon: ReactElement<IconProps>;
   title: string;
   time: string;
   formattedFeeAmount: string;

@@ -47,13 +47,15 @@ export function QrScanner<T>({ onClose, onScanned, parse }: QrScannerProps<T>) {
 
 function useTransientQrError() {
   const autoClearDelay = 150;
-  const errorTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const errorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const triggerHaptics = useHaptics();
   const shouldTriggerHapticsRef = useRef(true);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   function showError(message: string) {
-    clearTimeout(errorTimeoutRef.current);
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
 
     errorTimeoutRef.current = setTimeout(() => {
       setErrorMessage(undefined);

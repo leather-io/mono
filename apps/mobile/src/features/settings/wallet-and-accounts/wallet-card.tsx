@@ -45,7 +45,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   function onSelectAccount(account: Account) {
     router.navigate({
       pathname: AppRoutes.SettingsWalletConfigureAccount,
-      params: { fingerprint, account: account.accountIndex },
+      params: { fingerprint, wallet: fingerprint, account: account.accountIndex },
     });
   }
 
@@ -76,7 +76,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               onPress={() => {
                 router.navigate({
                   pathname: AppRoutes.SettingsWalletConfigureWallet,
-                  params: { fingerprint },
+                  params: { fingerprint, wallet: fingerprint },
                 });
               }}
               py="3"

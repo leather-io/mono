@@ -1,4 +1,4 @@
-import { ElementRef, ReactElement, cloneElement, forwardRef, useEffect, useState } from 'react';
+import { ReactElement, cloneElement, forwardRef, useEffect, useState } from 'react';
 
 import { ResponsiveValue } from '@shopify/restyle';
 import { Image, ImageProps } from 'expo-image';
@@ -30,12 +30,13 @@ const sizeStyles: Record<AvatarSize, BoxProps> = {
   xl: { width: 48, height: 48 },
 };
 
-type AvatarElement = ElementRef<typeof Box>;
+// Using ComponentRef instead of ElementRef for React 19 compatibility
+type AvatarElement = React.ComponentRef<typeof Box>;
 
 interface AvatarProps extends BoxProps {
   size?: AvatarSize;
   variant?: AvatarVariant;
-  icon?: ReactElement;
+  icon?: ReactElement<IconProps>;
   indicator?: ReactElement;
   image?: ImageProps['source'];
   imageAlt?: string;
@@ -125,7 +126,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
 Avatar.displayName = 'Avatar';
 
 interface AvatarIconProps {
-  icon?: ReactElement;
+  icon?: ReactElement<IconProps>;
   avatarSize: AvatarSize;
 }
 function AvatarIcon({ icon, avatarSize }: AvatarIconProps) {

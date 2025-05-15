@@ -19,6 +19,9 @@ inputs:
   IS_MAIN_BRANCH:
     description: 'Boolean value to identify if this is running on the main branch or not'
     required: true
+  GOOGLE_SERVICES_INFO_PLIST_B64:
+    description: 'gservices b64 config'
+    required: true
 
 runs:
   using: 'composite'
@@ -46,6 +49,16 @@ runs:
       env:
         APPLE_ID: ${{ inputs.APPLE_ID }}
         ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
+
+    - name: Decode GOOGLE_SERVICES_INFO_PLIST
+      shell: bash
+      working-directory: ./apps/mobile
+      run: |
+        echo $GOOGLE_SERVICES_INFO_PLIST_B64 | base64 --decode > ./GoogleService-Info.plist
+        ls -l ./GoogleService-Info.plist
+      env:
+        GOOGLE_SERVICES_INFO_PLIST_B64: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+
 
     # Wait for build to either succeed or fail
     - name: 🛫 Build for iOS Simulator 🛫

@@ -51,15 +51,15 @@ index 3a12dc996a27c1d97ac110d808f1cdf98e5379b9..d76addfd8d616a2e8d8dae3489936971
  
      val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, keyStore.provider)
 diff --git a/ios/SecureStoreModule.swift b/ios/SecureStoreModule.swift
-index 7af7fe54431edbdf4be6ffecaa5b17f90deebbf8..2a55fc26393e85ebc773be11d77bcc802de59579 100644
+index 439b08dec63f7774ce160b149a6cfb189cde0f9b..625fa30955680f082416d46c2d8e0f8abb57cd35 100644
 --- a/ios/SecureStoreModule.swift
 +++ b/ios/SecureStoreModule.swift
-@@ -96,7 +96,7 @@ public final class SecureStoreModule: Module {
-       guard let _ = Bundle.main.infoDictionary?["NSFaceIDUsageDescription"] as? String else {
-         throw MissingPlistKeyException()
+@@ -104,7 +104,7 @@ public final class SecureStoreModule: Module {
        }
--      let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, SecAccessControlCreateFlags.biometryCurrentSet, nil)
-+      let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, SecAccessControlCreateFlags.userPresence, nil)
-       setItemQuery[kSecAttrAccessControl as String] = accessOptions
-     }
  
+       var error: Unmanaged<CFError>? = nil
+-      guard let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, .biometryCurrentSet, &error) else {
++      guard let accessOptions = SecAccessControlCreateWithFlags(kCFAllocatorDefault, accessibility, .userPresence, &error) else {
+         let errorCode = error.map { CFErrorGetCode($0.takeRetainedValue()) }
+         throw SecAccessControlError(errorCode)
+       }

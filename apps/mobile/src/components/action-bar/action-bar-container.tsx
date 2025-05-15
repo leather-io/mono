@@ -64,7 +64,7 @@ export function createOnScrollHandler({
   contentOffsetTop,
   contentOffsetBottom,
 }: {
-  actionBarRef: RefObject<ActionBarMethods> | null;
+  actionBarRef: RefObject<ActionBarMethods | null>;
   contentOffsetTop: number;
   contentOffsetBottom: number;
 }) {

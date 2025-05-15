@@ -8,6 +8,7 @@ import {
   Avatar,
   Box,
   HasChildren,
+  IconProps,
   Sheet,
   SheetHeader,
   SheetRef,
@@ -15,8 +16,8 @@ import {
 } from '@leather.io/ui/native';
 
 interface SettingsSheetLayoutProps extends HasChildren {
-  icon: ReactElement;
-  sheetRef: RefObject<SheetRef>;
+  icon: ReactElement<IconProps>;
+  sheetRef: RefObject<SheetRef | null>;
   title: string;
   onPressSupport?: () => void;
 }

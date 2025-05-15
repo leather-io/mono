@@ -16,7 +16,7 @@ import {
 type WarningSheetVariant = 'normal' | 'critical';
 
 interface WarningSheetLayoutProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   title: string;
   description: string;
   onSubmit(): unknown;

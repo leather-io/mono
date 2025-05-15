@@ -93,7 +93,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                 onPress={() => {
                   router.navigate({
                     pathname: AppRoutes.Account,
-                    params: { accountId: account.id },
+                    params: { account: account.id, accountId: account.id },
                   });
                 }}
               />

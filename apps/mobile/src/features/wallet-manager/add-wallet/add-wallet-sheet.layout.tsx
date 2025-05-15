@@ -37,7 +37,7 @@ import { AddWalletCell } from './add-wallet-cell';
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface AddWalletSheetBaseProps {
-  addWalletSheetRef: RefObject<SheetRef>;
+  addWalletSheetRef: RefObject<SheetRef | null>;
 }
 
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {

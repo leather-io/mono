@@ -16,7 +16,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface SearchInputProps {
-  textInputRef: RefObject<RNTextInput>;
+  textInputRef: RefObject<RNTextInput | null>;
   isUrlFocused: SharedValue<boolean>;
   textUrl: string;
   setTextUrl(textUrl: string): void;
@@ -38,8 +38,8 @@ export function SearchInput({
         onFocus={() => {
           isUrlFocused.value = true;
         }}
-        onBlur={() => {
-          KeyboardController.dismiss();
+        onBlur={async () => {
+          await KeyboardController.dismiss();
           isUrlFocused.value = false;
         }}
         keyboardType="web-search"

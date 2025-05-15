@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { Square, SquareProps } from 'leather-styles/jsx';
 import { useFocus, useHover } from 'use-events';
 
@@ -39,7 +41,7 @@ interface StateReturnProps {
   isFocused: boolean;
 }
 
-type UsePressableReturn = [React.JSX.Element, DefaultSpreadProps, StateReturnProps];
+type UsePressableReturn = [ReactElement, DefaultSpreadProps, StateReturnProps];
 
 export function usePressable(isPressable?: boolean): UsePressableReturn {
   const [isHovered, bind] = useHover();

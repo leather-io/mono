@@ -1,6 +1,6 @@
 import {
   ComponentPropsWithoutRef,
-  ElementRef,
+  ComponentRef,
   ReactElement,
   cloneElement,
   forwardRef,
@@ -14,12 +14,12 @@ import { isDefined } from '@leather.io/utils';
 import { IconProps } from '../../icons/icon/create-icon.web';
 import { AvatarSize, AvatarVariant, defaultFallbackDelay, iconSizeMap } from './avatar.shared';
 
-type AvatarElement = ElementRef<typeof AvatarRoot>;
+type AvatarElement = ComponentRef<typeof AvatarRoot>;
 
 export interface AvatarProps extends ComponentPropsWithoutRef<typeof AvatarRoot> {
   size?: AvatarSize;
   variant?: AvatarVariant;
-  icon?: ReactElement;
+  icon?: ReactElement<IconProps>;
   indicator?: ReactElement;
   image?: string;
   imageAlt?: string;
@@ -124,7 +124,7 @@ const AvatarRoot = styled(RadixAvatar.Root, {
 });
 
 interface AvatarIconProps {
-  icon?: ReactElement;
+  icon?: ReactElement<IconProps>;
   avatarSize: AvatarSize;
 }
 

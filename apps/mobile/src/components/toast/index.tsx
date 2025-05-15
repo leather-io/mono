@@ -39,13 +39,15 @@ function getIcon(type: ToastType) {
 export function Toast({ toastRef }: ToastProps) {
   const [toastData, setToastData] = useState<ToastData | null>(null);
   const top = useSharedValue<number>(TOP_POSITION.closed);
-  const timeout = useRef<NodeJS.Timeout>();
+  const timeout = useRef<ReturnType<typeof setTimeout>>(null);
 
   useImperativeHandle<ToastMethods, ToastMethods>(toastRef, () => ({
     display(data) {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
       setToastData(data);
       top.value = withTiming(TOP_POSITION.opened);
-      clearTimeout(timeout.current);
       timeout.current = setTimeout(() => {
         top.value = withTiming(TOP_POSITION.closed);
       }, TOAST_OPEN_DURATION);

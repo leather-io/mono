@@ -7,7 +7,7 @@ import { t } from '@lingui/macro';
 import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface NonceSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   nonce: string;
   onChangeNonce(nonce: string): void;
 }

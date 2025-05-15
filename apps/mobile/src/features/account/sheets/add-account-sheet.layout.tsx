@@ -14,7 +14,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface AddAccountSheetBaseProps {
-  addAccountSheetRef: RefObject<SheetRef>;
+  addAccountSheetRef: RefObject<SheetRef | null>;
 }
 
 interface AddAccountSheetLayoutProps extends AddAccountSheetBaseProps {

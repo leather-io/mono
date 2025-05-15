@@ -24,7 +24,7 @@ interface AccountSelectorSheetLayoutProps {
   accounts: Account[];
   onAccountPress: (accountId: string) => void;
   swapAccountIndexes: (from: number, to: number) => void;
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 
 export function AccountSelectorSheetLayout({

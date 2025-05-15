@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { ActivityType, FungibleCryptoAssetInfo, OnChainActivityStatus } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -14,7 +16,7 @@ interface StatusIndicatorProps {
   type: ActivityType;
   status: OnChainActivityStatus;
 }
-function StatusIndicator({ type, status }: StatusIndicatorProps): JSX.Element {
+function StatusIndicator({ type, status }: StatusIndicatorProps): ReactElement {
   switch (status) {
     case 'pending':
       return <PendingIcon width={16} height={16} />;

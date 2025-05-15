@@ -54,21 +54,22 @@
     "prettier": "3.5.1",
     "syncpack": "13.0.0",
     "turbo": "2.4.2",
-    "typescript": "5.7.3",
+    "typescript": "5.8.3",
     "typescript-eslint": "8.18.0",
     "vitest": "2.1.9"
   },
   "engines": {
-    "node": ">=20.11.0",
-    "pnpm": ">=10.4.0",
+    "node": ">=22.15.0",
+    "pnpm": ">=10.10.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },
   "keywords": [],
-  "packageManager": "pnpm@10.4.1",
+  "packageManager": "pnpm@10.10.0",
   "pnpm": {
     "overrides": {
       "cross-spawn": "7.0.5",
+      "@microsoft/api-extractor": "7.52.8",
       "@shopify/flash-list>tslib": "2.4.0"
     },
     "packageExtensions": {
@@ -218,9 +219,8 @@
       }
     },
     "patchedDependencies": {
-      "expo-secure-store@13.0.2": "patches/expo-secure-store@13.0.2.patch",
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
-      "expo-blur@13.0.2": "patches/expo-blur@13.0.2.patch"
+      "expo-secure-store@14.2.3": "patches/expo-secure-store@14.2.3.patch"
     }
   }
 }

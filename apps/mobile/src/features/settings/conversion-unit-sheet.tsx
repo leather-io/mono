@@ -14,7 +14,7 @@ import { DollarCircleIcon, SheetRef } from '@leather.io/ui/native';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface ConversionUnitSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
   const settings = useSettings();

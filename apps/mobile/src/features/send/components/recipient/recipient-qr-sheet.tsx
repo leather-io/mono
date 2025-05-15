@@ -5,7 +5,7 @@ import { useSettings } from '@/store/settings/settings';
 import { Sheet, SheetRef } from '@leather.io/ui/native';
 
 interface RecipientQrSheetProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
   children: ReactNode;
 }
 

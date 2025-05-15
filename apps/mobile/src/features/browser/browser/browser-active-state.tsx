@@ -20,7 +20,7 @@ import { BrowserMessage } from '../approver-sheet/utils';
 import { captureScreenshot, createGetInfoResponse, createSupportedMethodsResponse } from './utils';
 
 interface BrowserActiveStateProps {
-  webViewRef: RefObject<WebView>;
+  webViewRef: RefObject<WebView | null>;
   searchUrl: string;
   navState: WebViewNavigation | null;
   setNavState: (navState: WebViewNavigation | null) => void;

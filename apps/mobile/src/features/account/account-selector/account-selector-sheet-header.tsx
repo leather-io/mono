@@ -15,7 +15,7 @@ import {
 } from '@leather.io/ui/native';
 
 interface AccountSelectorHeaderProps {
-  sheetRef: RefObject<SheetRef>;
+  sheetRef: RefObject<SheetRef | null>;
 }
 // TODO: refactor HeaderLayout so that we can use it here
 export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) {
