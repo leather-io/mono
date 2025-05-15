@@ -701,6 +701,20 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.39.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.38.0...@leather.io/mobile-v2.39.0) (2025-05-15)
+
+
+### Features
+
+* prevent missing metadata refetch ([955dcfc](https://github.com/leather-io/mono/commit/955dcfcf79a17a9fc956f150644d9f2e09430fba))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.10.0
+
 ## [2.38.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.37.0...@leather.io/mobile-v2.38.0) (2025-05-14)
 
 
