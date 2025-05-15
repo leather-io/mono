@@ -1,0 +1,67 @@
+name: iOS E2E Tests
+
+defaults:
+  tools:
+    node: 22.15.0
+    cocoapods: 1.16.2
+    corepack: true
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  fingerprint:
+    name: Fingerprint
+    type: fingerprint
+
+  get_ios_build:
+    name: Check for existing ios build
+    needs: [fingerprint]
+    type: get-build
+    params:
+      fingerprint_hash: ${{ needs.fingerprint.outputs.ios_fingerprint_hash }}
+      channel: maestro
+
+  publish_ios_update:
+    name: Publish iOS Update
+    type: update
+    needs: [get_ios_build]
+    if: ${{ needs.get_ios_build.outputs.build_id }}
+    params:
+      platform: ios
+      channel: maestro
+
+  maestro_test_ios_update:
+    name: Maestro Test iOS Update
+    type: maestro
+    needs: [get_ios_build, publish_ios_update]
+    if: ${{ needs.get_ios_build.outputs.build_id }}
+    environment: development
+    params:
+      build_id: ${{ needs.get_ios_build.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
+
+  build_ios:
+    name: Build iOS
+    needs: [get_ios_build]
+    if: ${{ !needs.get_ios_build.outputs.build_id }}
+    type: build
+    params:
+      platform: ios
+      profile: maestro
+
+  maestro_test_ios:
+    name: Maestro Test iOS
+    type: maestro
+    needs: [build_ios]
+    environment: development
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
