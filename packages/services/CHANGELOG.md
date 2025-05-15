@@ -293,6 +293,13 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.14.0
 
+## [1.10.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.9.3...@leather.io/services-v1.10.0) (2025-05-15)
+
+
+### Features
+
+* prevent missing metadata refetch ([955dcfc](https://github.com/leather-io/mono/commit/955dcfcf79a17a9fc956f150644d9f2e09430fba))
+
 ## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.8.3...@leather.io/services-v1.9.0) (2025-05-01)
 
 
