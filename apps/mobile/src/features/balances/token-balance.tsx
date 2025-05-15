@@ -8,22 +8,23 @@ import { TestId } from '@/shared/test-id';
 import { CryptoAssetProtocol, Money } from '@leather.io/models';
 import { Cell, type PressableProps, Text } from '@leather.io/ui/native';
 
-export const EmptyBalance = '-.--';
-export type TokenBalance = Money | typeof EmptyBalance;
-
 interface TokenBalanceProps extends PressableProps {
   ticker: string;
   icon: ReactNode;
   tokenName: string;
-  availableBalance: TokenBalance;
+  availableBalance?: Money;
+  fiatBalance?: Money;
+  lockedBalance?: Money;
+  fiatLockedBalance?: Money;
   protocol: CryptoAssetProtocol;
-  fiatBalance: TokenBalance;
   isLoading?: boolean;
 }
 export function TokenBalance({
   icon,
   tokenName,
   availableBalance,
+  lockedBalance,
+  fiatLockedBalance,
   protocol,
   fiatBalance,
   onPress,
@@ -51,11 +52,12 @@ export function TokenBalance({
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          <Balance balance={availableBalance} variant="label02" />
+          <Balance balance={availableBalance} lockedBalance={lockedBalance} variant="label02" />
         </Cell.Label>
         <Cell.Label variant="secondary">
           <Balance
             balance={fiatBalance}
+            lockedBalance={fiatLockedBalance}
             variant="caption01"
             color="ink.text-subdued"
             lineHeight={16}

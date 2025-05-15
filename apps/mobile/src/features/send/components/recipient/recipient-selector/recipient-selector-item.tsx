@@ -1,7 +1,7 @@
 import { AccountListItem } from '@/features/account/account-list/account-list-item';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
-import { AccountBalance } from '@/features/account/components/account-balance';
+import { AccountBalance } from '@/features/balances/total-balance';
 import {
   ExternalRecipientSuggestionEntry,
   InternalRecipientSuggestionEntry,

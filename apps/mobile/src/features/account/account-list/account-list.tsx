@@ -1,11 +1,11 @@
 import { AccountAvatar } from '@/features/account/components/account-avatar';
+import { AccountBalance } from '@/features/balances/total-balance';
 import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 
 import { AccountAddress } from '../components/account-address';
-import { AccountBalance } from '../components/account-balance';
 import { AccountListItem } from './account-list-item';
 
 interface AccountListProps {

@@ -1,22 +1,23 @@
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
+import { Money } from '@leather.io/models';
 import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
 
-import {
-  EmptyBalance,
-  TokenBalance,
-  type TokenBalance as TokenBalanceType,
-} from '../token-balance';
+import { TokenBalance } from '../token-balance';
 
 interface StacksTokenBalanceProps extends PressableProps {
-  availableBalance: TokenBalanceType;
-  fiatBalance: TokenBalanceType;
+  availableBalance?: Money;
+  fiatBalance?: Money;
+  lockedBalance?: Money;
+  fiatLockedBalance?: Money;
   isLoading?: boolean;
 }
 export function StacksTokenBalance({
   availableBalance,
   fiatBalance,
+  lockedBalance,
+  fiatLockedBalance,
   isLoading,
   ...rest
 }: StacksTokenBalanceProps) {
@@ -31,6 +32,8 @@ export function StacksTokenBalance({
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
+      lockedBalance={lockedBalance}
+      fiatLockedBalance={fiatLockedBalance}
       isLoading={isLoading}
       {...rest}
     />
@@ -42,19 +45,21 @@ interface StacksBalanceProps {
 }
 
 export function StacksBalance({ onPress }: StacksBalanceProps) {
-  const balance = useStxTotalBalance();
+  const { state, value } = useStxTotalBalance();
 
-  const availableBalance =
-    balance.state === 'success' ? balance.value.stx.availableBalance : EmptyBalance;
-  const fiatBalance =
-    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+  const availableBalance = value?.stx.availableBalance;
+  const fiatBalance = value?.fiat.availableBalance;
+  const lockedBalance = value?.stx.lockedBalance;
+  const fiatLockedBalance = value?.fiat.lockedBalance;
 
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
+      lockedBalance={lockedBalance}
+      fiatLockedBalance={fiatLockedBalance}
       onPress={onPress}
-      isLoading={balance.state === 'loading'}
+      isLoading={state === 'loading'}
     />
   );
 }
@@ -69,19 +74,21 @@ export function StacksBalanceByAccount({
   fingerprint,
   onPress,
 }: StacksBalanceByAccountProps) {
-  const balance = useStxAccountBalance(fingerprint, accountIndex);
+  const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
 
-  const availableBalance =
-    balance.state === 'success' ? balance.value.stx.availableBalance : EmptyBalance;
-  const fiatBalance =
-    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+  const availableBalance = value?.stx.availableBalance;
+  const fiatBalance = value?.fiat.availableBalance;
+  const lockedBalance = value?.stx.lockedBalance;
+  const fiatLockedBalance = value?.fiat.lockedBalance;
 
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
+      lockedBalance={lockedBalance}
+      fiatLockedBalance={fiatLockedBalance}
       onPress={onPress}
-      isLoading={balance.state === 'loading'}
+      isLoading={state === 'loading'}
     />
   );
 }

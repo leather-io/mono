@@ -3,7 +3,7 @@ import { Error, FetchState, Loading } from '@/components/loading';
 import { assertUnreachable } from '@leather.io/utils';
 
 interface FetchWrapperProps {
-  data: FetchState<any>;
+  data: FetchState<unknown>;
   loader?: React.ReactNode;
   error?: React.ReactNode;
   children: React.ReactNode;

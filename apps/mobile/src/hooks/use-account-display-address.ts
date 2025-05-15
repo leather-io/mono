@@ -1,4 +1,5 @@
 import { useAccountDisplayName } from '@/hooks/use-account-display-name';
+import { AccountLookup } from '@/shared/types';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
@@ -6,9 +7,7 @@ import { useSettings } from '@/store/settings/settings';
 import { AccountDisplayPreference } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
-interface UseAccountDisplayAddressProps {
-  fingerprint: string;
-  accountIndex: number;
+interface UseAccountDisplayAddressProps extends AccountLookup {
   displayPreference?: AccountDisplayPreference;
 }
 

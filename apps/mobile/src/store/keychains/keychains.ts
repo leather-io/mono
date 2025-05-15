@@ -1,3 +1,4 @@
+import { AccountLookup } from '@/shared/types';
 import { EntityState, EntityStateAdapter } from '@reduxjs/toolkit';
 
 import { BitcoinAccountKeychain } from '@leather.io/bitcoin';
@@ -95,9 +96,7 @@ export function descriptorKeychainSelectors<T extends WithDescriptor>(
   };
 }
 
-interface BitcoinAccountLoaderProps {
-  fingerprint: string;
-  accountIndex: number;
+interface BitcoinAccountLoaderProps extends AccountLookup {
   fallback?: React.ReactNode;
   children({
     nativeSegwit,

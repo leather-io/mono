@@ -5,8 +5,8 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/account/components/account-address';
-import { AccountBalance } from '@/features/account/components/account-balance';
 import { AccountCard } from '@/features/account/components/account-card';
+import { AccountBalance } from '@/features/balances/total-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { AppRoutes } from '@/routes';
@@ -84,7 +84,11 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               <AccountCard
                 address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
                 secondaryTitle={
-                  <AccountBalance fingerprint={fingerprint} accountIndex={accountIndex} />
+                  <AccountBalance
+                    fingerprint={fingerprint}
+                    accountIndex={accountIndex}
+                    variant="label01"
+                  />
                 }
                 icon={account.icon}
                 iconTestID={defaultIconTestId(account.icon)}

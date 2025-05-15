@@ -9,11 +9,11 @@ import { RunesAccountBalance, RunesAggregateBalance } from '@leather.io/services
 import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
 
 import { HardCap } from '../balances';
-import { EmptyBalance, TokenBalance } from '../token-balance';
+import { TokenBalance } from '../token-balance';
 
 interface RunesTokenBalanceProps extends PressableProps {
-  availableBalance: Money;
-  fiatBalance: Money;
+  availableBalance?: Money;
+  fiatBalance?: Money;
   symbol: string;
   name: string;
 }
@@ -42,8 +42,8 @@ function RunesTokenBalanceError() {
       icon={<RunesAvatarIcon />}
       tokenName=""
       protocol="rune"
-      fiatBalance={EmptyBalance}
-      availableBalance={EmptyBalance}
+      fiatBalance={undefined}
+      availableBalance={undefined}
     />
   );
 }
@@ -56,10 +56,7 @@ function RunesBalanceWrapper({ data, hardCap }: RunesBalanceWrapperProps) {
   return (
     <FetchWrapper data={data} error={<RunesTokenBalanceError />}>
       {data.state === 'success' &&
-        data.value.runes.map((balance, index) => {
-          // FIXME LEA-2310: temporary hard cap for widget view pending sorting
-          if (hardCap && index >= 1) return null;
-
+        data.value.runes.slice(0, hardCap ? 1 : undefined).map((balance, index) => {
           return (
             <RunesTokenBalance
               key={`${balance.asset.symbol}-${index}`}

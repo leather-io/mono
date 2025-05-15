@@ -4,6 +4,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Draggable } from '@/components/draggable';
+import { AccountBalance } from '@/features/balances/total-balance';
 import { HEADER_HEIGHT } from '@/shared/constants';
 import { Account } from '@/store/accounts/accounts';
 import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
@@ -16,7 +17,6 @@ import { useTheme } from '@shopify/restyle';
 import { Box, Sheet, SheetRef, Theme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
-import { AccountBalance } from '../components/account-balance';
 import { AccountCard } from '../components/account-card';
 import { AccountSelectorHeader } from './account-selector-sheet-header';
 
