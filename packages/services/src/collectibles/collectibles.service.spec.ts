@@ -46,7 +46,7 @@ describe(CollectiblesService.name, () => {
   } as unknown as BestInSlotApiClient;
 
   const mockStacksApiClient = {
-    getNonFungibleHoldings: vi.fn().mockResolvedValue([
+    getNftHoldings: vi.fn().mockResolvedValue([
       {
         asset_identifier: 'SP000.nft-1',
         value: { hex: '0x01' },
@@ -97,7 +97,7 @@ describe(CollectiblesService.name, () => {
       const collectibles = await collectiblesService.getTotalCollectibles(accounts);
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(2);
-      expect(mockStacksApiClient.getNonFungibleHoldings).toHaveBeenCalledTimes(2);
+      expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledTimes(2);
       expect(mockSip9AssetService.getAssetInfo).toHaveBeenCalledTimes(4);
 
       expect(collectibles).toHaveLength(8);
@@ -133,7 +133,7 @@ describe(CollectiblesService.name, () => {
       const collectibles = await collectiblesService.getTotalCollectibles(accounts);
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(1);
-      expect(mockStacksApiClient.getNonFungibleHoldings).not.toHaveBeenCalled();
+      expect(mockStacksApiClient.getNftHoldings).not.toHaveBeenCalled();
       expect(collectibles).toHaveLength(2);
       expect(collectibles[0].protocol).toEqual('inscription');
       expect(collectibles[1].protocol).toEqual('inscription');
@@ -149,7 +149,7 @@ describe(CollectiblesService.name, () => {
 
       const collectibles = await collectiblesService.getTotalCollectibles(accounts);
 
-      expect(mockStacksApiClient.getNonFungibleHoldings).toHaveBeenCalledTimes(1);
+      expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledTimes(1);
       expect(mockBisApiClient.fetchInscriptions).not.toHaveBeenCalled();
       expect(collectibles).toHaveLength(2);
       expect(collectibles[0].protocol).toEqual('sip9');
@@ -172,7 +172,7 @@ describe(CollectiblesService.name, () => {
       const collectibles = await collectiblesService.getAccountCollectibles(account);
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(1);
-      expect(mockStacksApiClient.getNonFungibleHoldings).toHaveBeenCalledTimes(1);
+      expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledTimes(1);
       expect(collectibles).toHaveLength(4);
       // Stacks NFTs first, then Inscriptions
       expect(collectibles[0].protocol).toEqual('sip9');
@@ -209,7 +209,7 @@ describe(CollectiblesService.name, () => {
       const collectibles = await collectiblesService.getAccountCollectibles(account);
 
       expect(mockBisApiClient.fetchInscriptions).not.toHaveBeenCalled();
-      expect(mockStacksApiClient.getNonFungibleHoldings).not.toHaveBeenCalled();
+      expect(mockStacksApiClient.getNftHoldings).not.toHaveBeenCalled();
       expect(collectibles).toHaveLength(0);
     });
   });
@@ -234,9 +234,7 @@ describe(CollectiblesService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockStacksApiClient, 'getNonFungibleHoldings').mockRejectedValueOnce(
-        'Stacks API error'
-      );
+      vi.spyOn(mockStacksApiClient, 'getNftHoldings').mockRejectedValueOnce('Stacks API error');
 
       const collectibles = await collectiblesService.getAccountCollectibles(account);
 

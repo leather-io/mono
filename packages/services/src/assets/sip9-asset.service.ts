@@ -23,11 +23,7 @@ export class Sip9AssetService {
   ): Promise<Sip9CryptoAssetInfo> {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const tokenId = getNonFungibleTokenId(tokenHexValue);
-    const metadata = await this.stacksApiClient.getNonFungibleTokenMetadata(
-      principal,
-      tokenId,
-      signal
-    );
+    const metadata = await this.stacksApiClient.getNftMetadata(principal, tokenId, signal);
     if (!metadata) throw new Error(`Sip9 Metadata Not Found: ${assetIdentifier}`);
     return createSip9CryptoAssetInfo(assetIdentifier, tokenId, metadata);
   }

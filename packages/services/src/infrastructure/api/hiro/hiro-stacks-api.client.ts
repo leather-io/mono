@@ -17,8 +17,7 @@ import { inject, injectable } from 'inversify';
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
 
 import { Types } from '../../../inversify.types';
-import type { HttpCacheService } from '../../cache/http-cache.service';
-import { HttpCacheTimeMs } from '../../cache/http-cache.utils';
+import { HttpCacheService } from '../../cache/http-cache.service';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
@@ -94,8 +93,7 @@ export class HiroStacksApiClient {
           }
         );
         return res.data;
-      },
-      { ttl: HttpCacheTimeMs.tenSeconds }
+      }
     );
   }
 
@@ -133,8 +131,7 @@ export class HiroStacksApiClient {
           ...res.data,
           results: res.data.results.map(filterVerboseUnusedTransactionWithTransfersData),
         };
-      },
-      { ttl: HttpCacheTimeMs.tenSeconds }
+      }
     );
   }
 
@@ -183,8 +180,7 @@ export class HiroStacksApiClient {
           }
         );
         return res.data;
-      },
-      { ttl: HttpCacheTimeMs.tenSeconds }
+      }
     );
   }
 
@@ -227,22 +223,17 @@ export class HiroStacksApiClient {
           }
         );
         return res.data;
-      },
-      { ttl: HttpCacheTimeMs.fiveSeconds }
+      }
     );
   }
 
-  public async getNonFungibleTokenMetadata(
+  public async getNftMetadata(
     principal: string,
     tokenId: number,
     signal?: AbortSignal
   ): Promise<HiroNftMetadataResponse | null> {
     return await this.cache.fetchWithCache(
-      [
-        'hiro-stacks-get-nft-token-metadata',
-        principal,
-        selectStacksChainId(this.settings.getSettings()),
-      ],
+      ['hiro-stacks-get-nft-metadata', principal, selectStacksChainId(this.settings.getSettings())],
       async () =>
         await this.limiter.add(
           RateLimiterType.HiroStacks,
@@ -267,15 +258,11 @@ export class HiroStacksApiClient {
             signal,
             throwOnTimeout: true,
           }
-        ),
-      { ttl: HttpCacheTimeMs.infinity }
+        )
     );
   }
 
-  public async getNonFungibleHoldings(
-    principal: string,
-    signal?: AbortSignal
-  ): Promise<HiroNftHolding[]> {
+  public async getNftHoldings(principal: string, signal?: AbortSignal): Promise<HiroNftHolding[]> {
     const pageParams = new URLSearchParams({
       limit: '100',
       offset: '0',
@@ -297,8 +284,7 @@ export class HiroStacksApiClient {
           }
         );
         return res.data.results;
-      },
-      { ttl: HttpCacheTimeMs.tenSeconds }
+      }
     );
   }
 }

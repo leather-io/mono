@@ -5,6 +5,7 @@ export * from './balances/sip10-balances.service';
 export * from './balances/stx-balances.service';
 export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
+export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/settings/settings.service';
 export * from './inversify.config';
 export * from './market-data/market-data.service';
