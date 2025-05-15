@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@crowdin/ota-client": "2.0.0",
+    "@expo/fingerprint": "~0.12.4",
     "@expo/metro-config": "0.20.0",
     "@gorhom/bottom-sheet": "5.1.4",
     "@hookform/resolvers": "3.9.1",
@@ -118,6 +119,7 @@
     "expo-standard-web-crypto": "1.8.1",
     "expo-status-bar": "2.2.3",
     "expo-system-ui": "5.0.7",
+    "expo-updates": "~0.28.13",
     "fast-text-encoding": "1.0.6",
     "immer": "10.1.1",
     "just-memoize": "2.2.0",
