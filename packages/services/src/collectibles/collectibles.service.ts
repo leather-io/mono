@@ -71,7 +71,7 @@ export class CollectiblesService {
     signal?: AbortSignal
   ): Promise<{ asset: Sip9CryptoAssetInfo; blockHeight: number }[]> {
     try {
-      const nftHoldings = await this.stacksApiClient.getNonFungibleHoldings(stxAddress, signal);
+      const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, signal);
       const BATCH_SIZE = 6;
       const sip9s = [];
       for (let i = 0; i < nftHoldings.length; i += BATCH_SIZE) {

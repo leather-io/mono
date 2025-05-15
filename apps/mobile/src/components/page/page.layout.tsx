@@ -9,6 +9,7 @@ import {
 } from '@/components/action-bar/action-bar-container';
 import { queryClient } from '@/queries/query';
 
+import { HttpCacheService } from '@leather.io/services';
 import { Box, HasChildren } from '@leather.io/ui/native';
 
 import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar/action-bar';
@@ -20,9 +21,7 @@ export function useRefreshHandler() {
     setRefreshing(true);
     void queryClient.invalidateQueries({
       predicate: query =>
-        query.queryKey[0] !== 'hiro-stacks-get-nft-token-metadata' &&
-        query.queryKey[0] !== 'leather-api-rune' &&
-        query.queryKey[0] !== 'leather-api-sip10-token',
+        !(query.queryKey[0] as string).startsWith(HttpCacheService.CACHE_KEY_PREFIX),
     });
     setTimeout(() => {
       setRefreshing(false);
