@@ -15,7 +15,7 @@ export const IndependentStackingLink = forwardRef<
     href="https://earn.leather.io/sign-in?chain=mainnet#:~:text=Stack%20liquid-,Stack%20independently,-When%20you%20stack"
     {...props}
   >
-    Looking to stack independently?
+    Stack independently
   </Link>
 ));
 

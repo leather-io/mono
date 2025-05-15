@@ -4,8 +4,6 @@ import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
 import { UserPositions } from '~/features/stacking/user-positions';
 
-import { HoverCard } from '@leather.io/ui';
-
 import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
@@ -41,17 +39,7 @@ export function Stacking() {
 
       <StackingProviderTable mt="space.05" />
 
-      <HoverCard.Root openDelay={600}>
-        <HoverCard.Trigger asChild>
-          <IndependentStackingLink />
-        </HoverCard.Trigger>
-        <HoverCard.Portal>
-          <HoverCard.Content side="top">
-            We're working hard to integrate independent stacking here. In the meantime, you can use
-            our legacy earn experience.
-          </HoverCard.Content>
-        </HoverCard.Portal>
-      </HoverCard.Root>
+      <IndependentStackingLink />
 
       <Page.Title mt="space.09">Liquid stacking</Page.Title>
 
