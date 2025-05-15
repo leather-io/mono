@@ -1,0 +1,67 @@
+name: Android E2E Tests
+
+defaults:
+  tools:
+    node: 22.15.0
+    pnpm: 10.10.0
+    corepack: true
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  fingerprint:
+    name: Fingerprint
+    type: fingerprint
+
+  get_android_build:
+    name: Check for existing android build
+    needs: [fingerprint]
+    type: get-build
+    params:
+      fingerprint_hash: ${{ needs.fingerprint.outputs.android_fingerprint_hash }}
+      channel: maestro
+
+  publish_android_update:
+    name: Publish Android Update
+    type: update
+    needs: [get_android_build]
+    if: ${{ needs.get_android_build.outputs.build_id }}
+    params:
+      platform: android
+      channel: maestro
+
+  maestro_test_android_update:
+    name: Maestro Test Android Update
+    type: maestro
+    needs: [get_android_build, publish_android_update]
+    if: ${{ needs.get_android_build.outputs.build_id }}
+    environment: development
+    params:
+      build_id: ${{ needs.get_android_build.outputs.build_id }}
+      flow_path:
+        - maestro/flows/
+
+  build_android:
+    type: build
+    name: Build Android
+    needs: [get_android_build]
+    if: ${{ !needs.get_android_build.outputs.build_id }}
+    params:
+      platform: android
+      profile: maestro
+
+  maestro_test_android:
+    name: Maestro Test Android
+    type: maestro
+    needs: [build_android]
+    environment: development
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      flow_path:
+        - maestro/flows/

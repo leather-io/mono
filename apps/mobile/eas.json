@@ -19,8 +19,8 @@
     },
     "maestro": {
       "extends": "base",
-      "environment": "production",
       "channel": "maestro",
+      "environment": "preview",
       "distribution": "internal",
       "ios": {
         "simulator": true
@@ -34,8 +34,8 @@
     },
     "staging": {
       "extends": "base",
-      "distribution": "internal",
       "channel": "staging",
+      "distribution": "internal",
       "autoIncrement": true
     },
     "production": {
