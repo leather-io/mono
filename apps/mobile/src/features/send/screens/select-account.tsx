@@ -85,11 +85,6 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
     return null;
   }
 
-  // const unlockedBalance = 'availableUnlockedBalance' in balance.value;
-  // const availableBalance = unlockedBalance
-  //   ? balance.value.fiat.availableUnlockedBalance
-  //   : balance.value.fiat.availableBalance;
-
   if (balance.value.fiat.availableBalance.amount.isZero()) {
     return null;
   }

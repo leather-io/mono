@@ -52,21 +52,18 @@ export function Balance({
   }
 
   const isFiat = balance && balance.symbol in currencyNameMap;
-  const balanceSymbol = balance ? balance.symbol : undefined;
-  const maskedCurrencySymbol = !isFiat ? `*${balanceSymbol}` : undefined;
+  const maskedCurrencySymbol = !isFiat ? `*${balance.symbol}` : undefined;
 
   const formattedBalance = formatBalance({ balance, isFiat, operator });
 
   if (!lockedBalance) {
     return (
-      <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant}>
-        {formattedBalance}
+      <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
+        {formatBalance({ balance, isFiat, operator })}
       </PrivateText>
     );
   }
 
-  // > PEte hardcoded this balance. Fix this and refactor this whole thing.
-  // Maybe do that first? Only STX needs this locked balance thing
   const lockedBalanceFormatted = formatBalance({ balance: lockedBalance, isFiat, operator });
 
   return (
@@ -74,14 +71,14 @@ export function Balance({
       <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
         {formattedBalance}
       </PrivateText>
-      {!isPrivate ? (
+      {!isPrivate && (
         <Text color={color} variant={variant} {...props}>
           {`${lockedBalanceFormatted} ${t({
             id: 'locked',
             message: 'locked',
           })}`}
         </Text>
-      ) : null}
+      )}
     </BulletSeparator>
   );
 }
