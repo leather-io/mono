@@ -62,7 +62,10 @@ export function createLeatherClient(clientConfig?: LeatherClientConfig) {
     (client, [fnName, endpoint]) => ({
       ...client,
       async [fnName](params?: object) {
-        if ('params' in endpoint && params) return getProvider()?.request(endpoint.method, params);
+        if ('params' in endpoint && params)
+          return getProvider()
+            ?.request(endpoint.method, params)
+            .then(({ result }) => result);
         return getProvider()
           ?.request(endpoint.method)
           .then(({ result }) => result);
