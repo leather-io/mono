@@ -4,20 +4,17 @@ import {
   useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
 
+import { Money } from '@leather.io/models';
 import { Sip10AddressBalance, Sip10AggregateBalance } from '@leather.io/services';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
 import { HardCap } from '../balances';
-import {
-  EmptyBalance,
-  TokenBalance,
-  type TokenBalance as TokenBalanceType,
-} from '../token-balance';
+import { TokenBalance } from '../token-balance';
 
 interface Sip10TokenBalanceProps {
-  availableBalance: TokenBalanceType;
+  availableBalance?: Money;
   contractId: string;
-  fiatBalance: TokenBalanceType;
+  fiatBalance?: Money;
   imageCanonicalUri: string;
   name: string;
   symbol: string;
@@ -55,8 +52,8 @@ function Sip10TokenBalanceError() {
       icon={<Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />}
       tokenName=""
       protocol="sip10"
-      fiatBalance={EmptyBalance}
-      availableBalance={EmptyBalance}
+      fiatBalance={undefined}
+      availableBalance={undefined}
     />
   );
 }
@@ -69,9 +66,7 @@ function Sip10BalanceWrapper({ data, hardCap }: Sip10BalanceWrapperProps) {
   return (
     <FetchWrapper data={data} error={<Sip10TokenBalanceError />}>
       {data.state === 'success' &&
-        data.value.sip10s.map((balance, index) => {
-          // FIXME LEA-2310: temporary hard cap for widget view pending sorting
-          if (hardCap && index >= 2) return null;
+        data.value.sip10s.slice(0, hardCap ? 2 : undefined).map((balance, index) => {
           return (
             <Sip10TokenBalance
               key={`${balance.asset.symbol}-${index}`}

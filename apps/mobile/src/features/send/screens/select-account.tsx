@@ -7,7 +7,6 @@ import { HeaderBackButton } from '@/components/headers/components/header-back-bu
 import { AccountListItem } from '@/features/account/account-list/account-list-item';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
-import { EmptyBalance } from '@/features/balances/token-balance';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
@@ -82,12 +81,19 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
     accountIndex: account.accountIndex,
     fingerprint: account.fingerprint,
   })[asset];
-
-  if (balance.state === 'success' && balance.value.fiat.availableBalance.amount.isZero()) {
+  if (balance.state !== 'success') {
     return null;
   }
-  const availableBalance =
-    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+
+  // const unlockedBalance = 'availableUnlockedBalance' in balance.value;
+  // const availableBalance = unlockedBalance
+  //   ? balance.value.fiat.availableUnlockedBalance
+  //   : balance.value.fiat.availableBalance;
+
+  if (balance.value.fiat.availableBalance.amount.isZero()) {
+    return null;
+  }
+  const availableBalance = balance.value.fiat.availableBalance;
   return (
     <AccountListItem
       onPress={() => onSelectAccount(account)}

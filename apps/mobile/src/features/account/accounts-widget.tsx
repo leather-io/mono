@@ -1,14 +1,13 @@
 import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { Balance } from '@/components/balance/balance';
 import { FetchError } from '@/components/loading/error';
 import { Widget } from '@/components/widget';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
-import { AccountBalance } from '@/features/account/components/account-balance';
 import { AccountCard } from '@/features/account/components/account-card';
-import { TokenBalance } from '@/features/balances/token-balance';
+import { AccountBalance, TotalBalance } from '@/features/balances/total-balance';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
+import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
@@ -25,29 +24,22 @@ import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
 import { AddAccountSheet } from './sheets/add-account-sheet';
 
-interface AccountsWidgetProps {
-  totalBalance: TokenBalance;
-  isLoadingTotalBalance: boolean;
-  fetchError?: boolean;
-}
-
-export function AccountsWidget({
-  totalBalance,
-  isLoadingTotalBalance,
-  fetchError,
-}: AccountsWidgetProps) {
+export function AccountsWidget() {
   const accountSelectorSheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
   const router = useRouter();
   const wallets = useWallets();
   const accounts = useAccounts();
+  const { totalBalance } = useTotalBalance();
   const { i18n } = useLingui();
   const theme = useTheme<Theme>();
 
+  const isLoadingTotalBalance = totalBalance.state === 'loading';
+  const isErrorTotalBalance = totalBalance.state === 'error';
   return (
     <>
-      {fetchError && <FetchError />}
+      {isErrorTotalBalance && <FetchError />}
       <Widget>
         <Box>
           <Widget.Header
@@ -62,7 +54,7 @@ export function AccountsWidget({
               {isLoadingTotalBalance ? (
                 <SkeletonLoader height={44} width={132} isLoading={true} />
               ) : (
-                <Balance balance={totalBalance} variant="heading03" />
+                <TotalBalance variant="heading03" />
               )}
             </Box>
           )}

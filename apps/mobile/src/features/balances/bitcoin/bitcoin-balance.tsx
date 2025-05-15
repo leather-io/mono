@@ -1,17 +1,14 @@
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
+import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
 
-import {
-  EmptyBalance,
-  TokenBalance,
-  type TokenBalance as TokenBalanceType,
-} from '../token-balance';
+import { TokenBalance } from '../token-balance';
 
 interface BitcoinTokenBalanceProps extends PressableProps {
-  availableBalance: TokenBalanceType;
-  fiatBalance: TokenBalanceType;
+  availableBalance?: Money;
+  fiatBalance?: Money;
   onPress?(): void;
   isLoading?: boolean;
 }
@@ -45,18 +42,16 @@ interface BitcoinBalanceProps {
 }
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
-  const balance = useBtcTotalBalance();
+  const { state, value } = useBtcTotalBalance();
 
-  const availableBalance =
-    balance.state === 'success' ? balance.value.btc.availableBalance : EmptyBalance;
-  const fiatBalance =
-    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+  const availableBalance = value?.btc.availableBalance;
+  const fiatBalance = value?.fiat.availableBalance;
 
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
-      isLoading={balance.state === 'loading'}
+      isLoading={state === 'loading'}
       onPress={onPress}
     />
   );
@@ -72,19 +67,17 @@ export function BitcoinBalanceByAccount({
   fingerprint,
   onPress,
 }: BitcoinBalanceByAccountProps) {
-  const balance = useBtcAccountBalance(fingerprint, accountIndex);
+  const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
 
-  const availableBalance =
-    balance.state === 'success' ? balance.value.btc.availableBalance : EmptyBalance;
-  const fiatBalance =
-    balance.state === 'success' ? balance.value.fiat.availableBalance : EmptyBalance;
+  const availableBalance = value?.btc.availableBalance;
+  const fiatBalance = value?.fiat.availableBalance;
 
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
       onPress={onPress}
-      isLoading={balance.state === 'loading'}
+      isLoading={state === 'loading'}
     />
   );
 }

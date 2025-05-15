@@ -1,8 +1,4 @@
 import { PrivateText } from '@/components/private-text';
-import {
-  EmptyBalance,
-  type TokenBalance as TokenBalanceType,
-} from '@/features/balances/token-balance';
 import { usePrivacyMode } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';
 
@@ -11,6 +7,7 @@ import { Money } from '@leather.io/models';
 import { BulletSeparator, SkeletonLoader, Text, TextProps } from '@leather.io/ui/native';
 import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
 
+const EmptyBalanceDisplay = '-.--';
 interface FormatBalanceProps {
   balance: Money;
   isFiat: boolean;
@@ -28,8 +25,8 @@ export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps)
 }
 
 interface BalanceProps extends TextProps {
-  balance: TokenBalanceType;
-  lockedBalance?: string;
+  balance?: Money;
+  lockedBalance?: Money;
   operator?: string;
   isLoading?: boolean;
 }
@@ -46,13 +43,19 @@ export function Balance({
   if (isLoading) {
     return <SkeletonLoader height={20} width={100} isLoading={true} />;
   }
-  const hasBalance = balance !== EmptyBalance && typeof balance !== 'string';
-  const isFiat = hasBalance && balance.symbol in currencyNameMap;
-  const balanceSymbol = hasBalance ? balance.symbol : undefined;
+  if (!balance) {
+    return (
+      <PrivateText color={color} variant={variant}>
+        {EmptyBalanceDisplay}
+      </PrivateText>
+    );
+  }
+
+  const isFiat = balance && balance.symbol in currencyNameMap;
+  const balanceSymbol = balance ? balance.symbol : undefined;
   const maskedCurrencySymbol = !isFiat ? `*${balanceSymbol}` : undefined;
 
-  const formattedBalance =
-    balance === EmptyBalance ? EmptyBalance : formatBalance({ balance, isFiat, operator });
+  const formattedBalance = formatBalance({ balance, isFiat, operator });
 
   if (!lockedBalance) {
     return (
@@ -62,6 +65,10 @@ export function Balance({
     );
   }
 
+  // > PEte hardcoded this balance. Fix this and refactor this whole thing.
+  // Maybe do that first? Only STX needs this locked balance thing
+  const lockedBalanceFormatted = formatBalance({ balance: lockedBalance, isFiat, operator });
+
   return (
     <BulletSeparator color={color}>
       <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
@@ -69,11 +76,10 @@ export function Balance({
       </PrivateText>
       {!isPrivate ? (
         <Text color={color} variant={variant} {...props}>
-          {lockedBalance}
-          {t({
+          {`${lockedBalanceFormatted} ${t({
             id: 'locked',
             message: 'locked',
-          })}
+          })}`}
         </Text>
       ) : null}
     </BulletSeparator>

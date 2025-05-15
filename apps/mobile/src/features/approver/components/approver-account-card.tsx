@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { AccountListItem } from '@/features/account/account-list/account-list-item';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
-import { AccountBalance } from '@/features/account/components/account-balance';
+import { AccountBalance } from '@/features/balances/total-balance';
 import { Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
@@ -27,7 +27,11 @@ function AccountItem({ account, onPress }: { account: Account; onPress?: () => v
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
       balance={
-        <AccountBalance accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
+        <AccountBalance
+          accountIndex={account.accountIndex}
+          fingerprint={account.fingerprint}
+          variant="label01"
+        />
       }
       icon={<AccountAvatar icon={account.icon} />}
       walletName={walletName}
