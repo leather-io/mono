@@ -50,9 +50,9 @@ export function Account({ account, walletName }: AccountProps) {
                 router.navigate({
                   pathname: AppRoutes.SettingsWalletConfigureAccount,
                   params: {
-                    fingerprint: account.fingerprint,
-                    wallet: account.fingerprint,
-                    account: account.accountIndex,
+                    fingerprint: fingerprint,
+                    wallet: fingerprint,
+                    account: accountIndex,
                   },
                 });
               }}
@@ -63,7 +63,7 @@ export function Account({ account, walletName }: AccountProps) {
       <AccountOverview
         isLoading={isLoadingTotalBalance}
         icon={icon}
-        balance={
+        heading={
           <AccountBalance
             fingerprint={fingerprint}
             accountIndex={accountIndex}
@@ -77,7 +77,8 @@ export function Account({ account, walletName }: AccountProps) {
         onPressHeader={() =>
           router.navigate({
             pathname: AppRoutes.AccountBalances,
-            params: { account: account.id, accountId: account.id },})
+            params: { account: id, accountId: id },
+          })
         }
         balance={
           <AccountBalance
@@ -95,11 +96,7 @@ export function Account({ account, walletName }: AccountProps) {
         onPressHeader={() =>
           router.navigate({
             pathname: AppRoutes.AccountActivity,
-<<<<<<< HEAD
-            params: { account: account.id, accountId: account.id, accountName: account.name },
-=======
-            params: { accountId: id, accountName: name },
->>>>>>> 9e285002 (refactor(mobile): refactor Balance component to avoid repetition, ref LEA-1726)
+            params: { account: id, accountId: id, accountName: name },
           })
         }
         title={t({ id: 'account.activity.header_title', message: 'Activity' })}
@@ -109,10 +106,10 @@ export function Account({ account, walletName }: AccountProps) {
           onPressHeader={() =>
             router.navigate({
               pathname: AppRoutes.AccountCollectibles,
-              params: { account: account.id, accountId: account.id, accountName: account.name },
+              params: { account: id, accountId: id, accountName: name },
             })
           }
-          title={t({ id: 'collectibles.header_title', message: 'Collectibles' })}
+          title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
         >
           <Collectibles collectibles={collectibles} />
         </CollectiblesWidget>
