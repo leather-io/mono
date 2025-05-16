@@ -42,6 +42,15 @@ export function Account({ account, walletName }: AccountProps) {
     <PageLayout>
       <NakedHeader
         error={isErrorTotalBalance && <FetchError />}
+        onGoBack={
+          account.status === 'hidden'
+            ? () => {
+                router.navigate({
+                  pathname: AppRoutes.Home,
+                });
+              }
+            : undefined
+        }
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
             <NetworkBadge />
