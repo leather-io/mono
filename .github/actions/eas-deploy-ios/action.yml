@@ -59,7 +59,6 @@ runs:
       env:
         GOOGLE_SERVICES_INFO_PLIST_B64: ${{ inputs.GOOGLE_SERVICES_INFO_PLIST_B64 }}
 
-
     # Wait for build to either succeed or fail
     - name: 🛫 Build for iOS Simulator 🛫
       id: simulator_build
@@ -68,7 +67,7 @@ runs:
         if [[ "$IS_MAIN_BRANCH" == "true" ]]
         then
           # No wait on simulator version build of the app if we are on a dev branch
-          eas build --platform ios --profile=simulator-dev --non-interactive --no-wait
+          eas build --platform ios --profile=preview --non-interactive --no-wait
         else
           # set temporary command output 
           setTmpOutput () { tee /tmp/capture.out; }
@@ -76,7 +75,7 @@ runs:
           # get temporary command output 
           getTmpOutput () { cat /tmp/capture.out; }
           
-          eas build --platform ios --profile=simulator-pr --non-interactive | setTmpOutput 
+          eas build --platform ios --profile=preview --non-interactive | setTmpOutput 
 
           # Last line of the build output is the link to the expo build
           UNSAFE_BUILD_LINK=$(getTmpOutput | tail -n 1)
