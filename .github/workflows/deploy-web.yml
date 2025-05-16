@@ -33,6 +33,8 @@ jobs:
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
+        env:
+          CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
         with:
           environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
           workingDirectory: apps/web
