@@ -305,6 +305,24 @@
     * @leather.io/constants bumped to 0.19.1
     * @leather.io/models bumped to 0.31.0
 
+## [0.33.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.32.0...@leather.io/utils-v0.33.0) (2025-05-16)
+
+
+### Features
+
+* consolidate http cache config ([7226d99](https://github.com/leather-io/mono/commit/7226d998f8cfa83ce78c5055ea25f5a4165532a9))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.20.0
+    * @leather.io/models bumped to 0.32.0
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.7.0
+
 ## [0.32.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.31.2...@leather.io/utils-v0.32.0) (2025-04-09)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.6.1...@leather.io/tsconfig-config-v0.7.0) (2025-05-16)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
 ## [0.6.1](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.6.0...@leather.io/tsconfig-config-v0.6.1) (2025-02-21)
 
 

@@ -132,6 +132,12 @@
   * devDependencies
     * @leather.io/utils bumped to 0.27.5
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.7.0
+
 ## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.16.1...@leather.io/tokens-v0.17.0) (2025-05-07)
 
 

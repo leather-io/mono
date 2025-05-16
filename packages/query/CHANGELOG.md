@@ -555,6 +555,27 @@
     * @leather.io/bitcoin bumped to 0.25.2
     * @leather.io/rpc bumped to 2.14.0
 
+## [2.37.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.36.6...@leather.io/query-v2.37.0) (2025-05-16)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.0
+    * @leather.io/constants bumped to 0.20.0
+    * @leather.io/models bumped to 0.32.0
+    * @leather.io/rpc bumped to 2.14.1
+    * @leather.io/stacks bumped to 1.10.2
+    * @leather.io/utils bumped to 0.33.0
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.7.0
+
 ## [2.36.4](https://github.com/leather-io/mono/compare/@leather.io/query-v2.36.3...@leather.io/query-v2.36.4) (2025-05-09)
 
 

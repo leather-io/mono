@@ -389,6 +389,24 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.66.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.65.0...@leather.io/ui-v1.66.0) (2025-05-16)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.17.1
+    * @leather.io/utils bumped to 0.33.0
+  * devDependencies
+    * @leather.io/models bumped to 0.32.0
+    * @leather.io/panda-preset bumped to 0.12.5
+
 ## [1.65.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.64.1...@leather.io/ui-v1.65.0) (2025-05-14)
 
 

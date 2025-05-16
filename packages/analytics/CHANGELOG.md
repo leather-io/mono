@@ -66,6 +66,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.31.0
 
+## [3.5.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.4.2...@leather.io/analytics-v3.5.0) (2025-05-16)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.32.0
+
 ## [3.4.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.4.1...@leather.io/analytics-v3.4.2) (2025-04-09)
 
 
