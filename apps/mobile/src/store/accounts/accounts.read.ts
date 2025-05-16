@@ -58,7 +58,7 @@ export function useAccountsByFingerprint(fingerprint: string, status?: AccountSt
   };
 }
 
-export function useAccounts(status?: AccountStatus) {
+export function useAccounts(status: AccountStatus = 'active') {
   const accountsList = useSelector(selectAccounts(status));
   function fromFingerprint(fingerprint: string) {
     return accountsList.filter(account => account.fingerprint === fingerprint);
