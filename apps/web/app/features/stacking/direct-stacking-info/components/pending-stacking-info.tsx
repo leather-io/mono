@@ -1,7 +1,7 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Address, ExternalAddress } from '~/features/stacking/components/address';
 import { makeExplorerTxLink } from '~/utils/external-links';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Hr } from '@leather.io/ui';
 
@@ -21,7 +21,7 @@ export function PendingStackingInfo({ data, transactionId, networkName }: Props)
             <Flex flexDirection="column" pt="space.04" pb="space.04">
               <styled.h2 textStyle="heading.02">You&apos;re stacking</styled.h2>
               <styled.p textStyle="heading.02" fontSize="24px" fontWeight={500}>
-                {toHumanReadableStx(data.amountMicroStx)}
+                {toHumanReadableMicroStx(data.amountMicroStx)}
               </styled.p>
 
               <Box pb="space.04">

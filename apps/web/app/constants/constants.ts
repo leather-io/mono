@@ -38,3 +38,7 @@ export const VERSION = packageJson.version;
 
 export const GITHUB_ORG = 'leather-io';
 export const GITHUB_REPO = 'mono';
+
+export const STACKS_BLOCKS_PER_DAY = 144;
+
+export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';

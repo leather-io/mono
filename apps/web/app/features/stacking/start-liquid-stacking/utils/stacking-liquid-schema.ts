@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import { ProtocolName } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
   validateAvailableBalance,
@@ -23,7 +23,7 @@ export function createValidationSchema({ protocolName, availableBalance }: Schem
       amount: stxAmountSchema()
         .refine(value => validateMaxStackingAmount(value))
         .refine(value => validateAvailableBalance(value, availableBalanceAmount), {
-          message: `Available balance is ${toHumanReadableStx(availableBalanceAmount ?? 0)}`,
+          message: `Available balance is ${toHumanReadableMicroStx(availableBalanceAmount ?? 0)}`,
         }),
     })
     .superRefine((data, ctx) => {
@@ -32,7 +32,7 @@ export function createValidationSchema({ protocolName, availableBalance }: Schem
       if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',
-          message: `You must stack at least ${toHumanReadableStx(minDelegatedStackingAmount)}`,
+          message: `You must stack at least ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
           path: ['amount'],
         });
       }

@@ -11,7 +11,7 @@ import {
 import { dummyPoolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import { useStxCryptoAssetBalance } from '~/queries/balance/account-balance.hooks';
 import { useStacksNetwork } from '~/store/stacks-network';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Spinner } from '@leather.io/ui';
 
@@ -143,7 +143,8 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
           <styled.p>
             A stacking request was successfully submitted to the blockchain. Once confirmed, an
             additional amount of{' '}
-            {toHumanReadableStx(getHasPendingStackIncreaseQuery.data.increaseBy)} will be stacking.
+            {toHumanReadableMicroStx(getHasPendingStackIncreaseQuery.data.increaseBy)} will be
+            stacking.
           </styled.p>
         </Box>
       )}

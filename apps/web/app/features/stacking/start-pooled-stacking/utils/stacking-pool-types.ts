@@ -1,10 +1,11 @@
 import { z } from 'zod';
-import { StackingProviderId, stackingPoolData } from '~/data/data';
+import { ProviderId, StackingProviderId, stackingPoolData } from '~/data/data';
 
 export type NetworkMode = 'mainnet' | 'testnet' | 'devnet';
 
 export const poolSlugToIdMap = {
   'fast-pool': 'fastPool',
+  'fast-pool-v2': 'fastPoolV2',
   'plan-better': 'planbetter',
   'stacking-dao': 'stackingDao',
   xverse: 'xverse',
@@ -14,6 +15,12 @@ export const poolSlugToIdMap = {
 
 export function poolSlugToId(slug: string) {
   return poolSlugToIdMap[slug as keyof typeof poolSlugToIdMap];
+}
+
+export function providerIdToSlug(providerId: ProviderId) {
+  return (
+    (Object.entries(poolSlugToIdMap).find(([, id]) => providerId === id)?.[0] as PoolSlug) || null
+  );
 }
 
 export function getStackingPoolById(id: StackingProviderId) {

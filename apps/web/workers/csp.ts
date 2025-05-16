@@ -11,6 +11,13 @@ export const csp = builder({
     baseUri: [`'self'`],
     frameAncestors: [`'none'`],
     workerSrc: [`'self'`, 'blob:'],
-    connectSrc: [`'self'`, '*.hiro.so', '*.ingest.us.sentry.io', '*.segment.com', '*.segment.io'],
+    connectSrc: [
+      `'self'`,
+      '*.hiro.so',
+      '*.ingest.us.sentry.io',
+      '*.segment.com',
+      '*.segment.io',
+      '*.stacking-tracker.com',
+    ],
   },
 });

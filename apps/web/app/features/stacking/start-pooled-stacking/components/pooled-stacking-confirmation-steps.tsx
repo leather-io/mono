@@ -6,7 +6,7 @@ import {
   ConfirmationSteps,
   PooledStackingConfirmationStepId,
 } from '~/components/confirmations/confirmation-steps';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { stxToMicroStx } from '@leather.io/utils';
 
@@ -65,7 +65,7 @@ export function PooledStackingConfirmationSteps({
         >
           <styled.h1 textStyle="label.01">You&apos;ll pool up to</styled.h1>
           <styled.span textStyle="heading.04" fontSize="26px" fontWeight={500}>
-            {stxAmount.isNaN() ? '—' : toHumanReadableStx(stxAmount)}
+            {stxAmount.isNaN() ? '—' : toHumanReadableMicroStx(stxAmount)}
           </styled.span>
         </VStack>
       }

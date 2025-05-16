@@ -14,6 +14,7 @@ import { Page } from '~/features/page/page';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
+import { usePoolInfo } from '~/features/stacking/hooks/use-pool-info';
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import { ChoosePoolingAmount } from '~/features/stacking/start-pooled-stacking/components/choose-pooling-amount';
@@ -80,6 +81,8 @@ interface StartPooledStackingLayoutProps {
 function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
+
+  const poolInfo = usePoolInfo(poolSlug);
 
   const { network, networkInstance, networkPreference } = useStacksNetwork();
   const poxContracts = useMemo(() => getPoxContractsByNetwork(network), [network]);
@@ -231,7 +234,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const poolAmount = formMethods.watch('amount');
 
-  if (getSecondsUntilNextCycleQuery.isLoading) {
+  if (getSecondsUntilNextCycleQuery.isLoading || poolInfo.isLoading) {
     return (
       <Flex height="100vh" width="100%">
         <LoadingSpinner />
@@ -257,7 +260,9 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       <Page.Inset>
-        <PoolOverview pool={pool} poolSlug={poolSlug} />
+        <PoolOverview
+          pool={poolInfo.poolRewardProtocolInfo || poolInfo.hardcodePoolRewardProtocolInfo}
+        />
       </Page.Inset>
 
       <FormProvider {...formMethods}>

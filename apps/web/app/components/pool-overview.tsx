@@ -2,9 +2,8 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { StackingPool } from '~/data/data';
-
-import { ProviderIcon } from './icons/provider-icon';
+import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -25,22 +24,44 @@ function RewardTokenCell({ token = 'STX', value }: RewardTokenCellProps) {
 }
 
 interface LockupPeriodCellProps {
-  lockupPeriod?: string;
+  minLockupPeriodDays: number;
 }
-function LockupPeriodCell({ lockupPeriod = '1 Cycle' }: LockupPeriodCellProps) {
-  return <ValueDisplayer name="Minimum lockup period" value={<>{lockupPeriod}</>} />;
+function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
+  return (
+    <ValueDisplayer
+      name="Minimum lockup period"
+      value={
+        <>
+          <Box textStyle="label.01">1 Cycle</Box>
+          <Box textStyle="label.03">
+            {toHumanReadableWeeks(daysToWeek(minLockupPeriodDays))} (~
+            {toHumanReadableDays(minLockupPeriodDays)})
+          </Box>
+        </>
+      }
+    />
+  );
 }
 
 interface DaysUntilNextCycleCellProps {
-  daysUntilNextCycle?: string;
+  daysUntilNextCycle: number;
+  nextCycleNumber: number;
+  nextCycleBlocks: number;
 }
-function DaysUntilNextCycleCell({ daysUntilNextCycle = '2 days' }: DaysUntilNextCycleCellProps) {
+function DaysUntilNextCycleCell({
+  daysUntilNextCycle,
+  nextCycleBlocks,
+  nextCycleNumber,
+}: DaysUntilNextCycleCellProps) {
   return (
     <ValueDisplayer
       name="Days until next cycle"
       value={
         <>
-          {daysUntilNextCycle} <Box textStyle="label.03">Null</Box>
+          <Box textStyle="label.01">{toHumanReadableDays(daysUntilNextCycle)}</Box>
+          <Box textStyle="label.03">
+            Cycle {nextCycleNumber} - {nextCycleBlocks} blocks
+          </Box>
         </>
       }
     />
@@ -48,28 +69,26 @@ function DaysUntilNextCycleCell({ daysUntilNextCycle = '2 days' }: DaysUntilNext
 }
 
 interface MinimumCommitmentCellProps {
-  minimumCommitment?: string;
+  minimumCommitment: string;
 }
-function MinimumCommitmentCell({
-  minimumCommitment = '40,000,000.00 STX',
-}: MinimumCommitmentCellProps) {
+function MinimumCommitmentCell({ minimumCommitment }: MinimumCommitmentCellProps) {
   return <ValueDisplayer name="Minimum commitment" value={<>{minimumCommitment}</>} />;
 }
 
 interface HistoricalAprCellProps {
-  historicalApr?: string;
+  historicalApr: string;
 }
 function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
   return <ValueDisplayer name="Historical APR" value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {
-  totalValueLocked?: string;
-  totalValueLockedUsd?: string;
+  totalValueLocked: string;
+  totalValueLockedUsd: string;
 }
 function TotalValueLockedCell({
-  totalValueLocked = '51,784,293 STX',
-  totalValueLockedUsd = '$36,212,756',
+  totalValueLocked,
+  totalValueLockedUsd,
 }: TotalValueLockedCellProps) {
   return (
     <ValueDisplayer
@@ -84,22 +103,21 @@ function TotalValueLockedCell({
 }
 
 interface PoolOverviewProps {
-  pool: StackingPool;
-  poolSlug: string;
+  pool: PoolRewardProtocolInfo;
 }
 function PoolCell({ pool }: PoolOverviewProps) {
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      <ProviderIcon providerId={pool.providerId} />
+      {pool.logo}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {pool.name}
+        {pool.title}
       </styled.h4>
       <styled.p textStyle="caption.01">{pool.description}</styled.p>
     </VStack>
   );
 }
 
-export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
+export function PoolOverview({ pool }: PoolOverviewProps) {
   return (
     <InfoGrid
       width="100%"
@@ -113,25 +131,29 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
       borderRadius="0px"
     >
       <InfoGrid.Cell gridColumn={['span 2', 'span 2', 'auto']} gridRow={['1', '1', 'span 2']}>
-        <PoolCell pool={pool} poolSlug={poolSlug} />
+        <PoolCell pool={pool} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
-        <HistoricalAprCell />
+        <HistoricalAprCell historicalApr={pool.apr} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '2']} gridRow={['2', '2', '2']}>
-        <LockupPeriodCell />
+        <LockupPeriodCell minLockupPeriodDays={pool.minLockupPeriodDays} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
-        <TotalValueLockedCell />
+        <TotalValueLockedCell totalValueLocked={pool.tvl} totalValueLockedUsd={pool.tvlUsd} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
-        <DaysUntilNextCycleCell />
+        <DaysUntilNextCycleCell
+          daysUntilNextCycle={pool.nextCycleDays}
+          nextCycleBlocks={pool.nextCycleBlocks}
+          nextCycleNumber={pool.nextCycleNumber}
+        />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '4']} gridRow={['4', '4', '1']}>
         <RewardTokenCell />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
-        <MinimumCommitmentCell />
+        <MinimumCommitmentCell minimumCommitment={pool.minCommitment} />
       </InfoGrid.Cell>
     </InfoGrid>
   );

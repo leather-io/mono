@@ -13,6 +13,11 @@ const providers = {
     name: 'Fast Pool',
     url: 'https://fastpool.org',
   },
+  fastPoolV2: {
+    providerId: 'fastPoolV2',
+    name: 'Fast Pool V2',
+    url: 'https://fastpool.org',
+  },
   planbetter: {
     providerId: 'planbetter',
     name: 'PlanBetter',
@@ -72,6 +77,8 @@ export interface StackingPool {
   poxContract: string;
   minimumDelegationAmount: number;
   allowCustomRewardAddress: boolean;
+  tvlUsd: string;
+  minCommitmentUsd: string;
   icon?: React.ReactNode;
 }
 export const stackingPoolData = {
@@ -80,6 +87,8 @@ export const stackingPoolData = {
     minAmount: '40 STX',
     estApr: '5%',
     fee: '5%',
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
     payout: 'STX',
     disabled: false,
     description:
@@ -99,11 +108,13 @@ export const stackingPoolData = {
     duration: 1,
   },
   fastPoolV2: {
-    ...providers.fastPool,
+    ...providers.fastPoolV2,
     name: 'Fast Pool v2',
     minAmount: '40 STX',
     estApr: '5%',
     fee: '5%',
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
     description:
       'Enjoy a better swim experience in the upgraded pool.' +
       ' ' +
@@ -127,7 +138,9 @@ export const stackingPoolData = {
     fee: '5%',
     minAmount: '200 STX',
     estApr: '10%',
-    payout: 'STX',
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
+    payout: 'BTC',
     description: 'Earn non-custodial Bitcoin yield. No wrapped tokens. Native BTC.',
     duration: 1,
     poolAddress: {
@@ -142,9 +155,11 @@ export const stackingPoolData = {
   },
   restake: {
     ...providers.restake,
-    fee: '5%',
+    fee: '5.00%',
     minAmount: '100 STX',
     estApr: '11%',
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
     payout: 'STX',
     description:
       'Earn STX rewards by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
@@ -164,6 +179,8 @@ export const stackingPoolData = {
     fee: '5%',
     minAmount: '100 STX',
     estApr: '10%',
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
     payout: 'BTC',
     description:
       'Xverse pool is a non-custodial stacking pool service from the makers of Xverse wallet.',
@@ -184,7 +201,9 @@ export const stackingPoolData = {
     fee: '5%',
     minAmount: '100 STX',
     estApr: '16%',
-    payout: 'STX',
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
+    payout: 'BTC',
     description:
       'Enter the STX address of the pool with which you’d like to Stack without your STX leaving your wallet.',
     duration: -1,

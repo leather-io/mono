@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 import { StackingProviderId } from '~/data/data';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
   validateMaxStackingAmount,
@@ -41,7 +41,7 @@ export function createValidationSchema({
             return true;
           },
           {
-            message: `You must delegate more than you've already stacked (${toHumanReadableStx(stackedAmount ?? 0)})`,
+            message: `You must delegate more than you've already stacked (${toHumanReadableMicroStx(stackedAmount ?? 0)})`,
           }
         ),
       rewardAddress: z
@@ -56,7 +56,7 @@ export function createValidationSchema({
       if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',
-          message: `You must delegate at least ${toHumanReadableStx(minDelegatedStackingAmount)}`,
+          message: `You must delegate at least ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
           path: ['amount'],
         });
       }
