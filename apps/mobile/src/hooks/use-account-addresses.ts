@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
-import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
+import { Account } from '@/store/accounts/accounts';
+import { useAccounts, useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import {
   useStacksSignerAddressFromAccountIndex,
@@ -98,14 +99,32 @@ function deriveAccountAddresses(
   );
 }
 
+function filterAccountsByActiveAccounts(
+  derivedAccountAddresses: AccountAddresses[],
+  activeAccounts: Account[]
+) {
+  return derivedAccountAddresses.filter(account =>
+    activeAccounts.some(
+      active =>
+        active.fingerprint === account.id.fingerprint &&
+        active.accountIndex === account.id.accountIndex
+    )
+  );
+}
+
 export function useTotalAccountAddresses() {
   const wallets = useWallets();
   const bitcoinAccounts = useBitcoinAccounts();
   const stacksSigners = useStacksSigners();
+  const activeAccounts = useAccounts('active');
 
   return useMemo(
-    () => deriveTotalAccountAddresses(wallets, bitcoinAccounts, stacksSigners),
-    [wallets, bitcoinAccounts, stacksSigners]
+    () =>
+      filterAccountsByActiveAccounts(
+        deriveTotalAccountAddresses(wallets, bitcoinAccounts, stacksSigners),
+        activeAccounts.list
+      ),
+    [wallets, bitcoinAccounts, stacksSigners, activeAccounts]
   );
 }
 
@@ -113,16 +132,20 @@ export function useWalletAccountAddresses(fingerprint: string) {
   const bitcoinAccounts = useBitcoinAccounts();
   const accountsByFingerprint = useAccountsByFingerprint(fingerprint);
   const stacksSigners = useStacksSigners();
+  const activeAccounts = useAccounts('active');
 
   return useMemo(
     () =>
-      deriveWalletAccountAddresses(
-        fingerprint,
-        bitcoinAccounts,
-        accountsByFingerprint,
-        stacksSigners
+      filterAccountsByActiveAccounts(
+        deriveWalletAccountAddresses(
+          fingerprint,
+          bitcoinAccounts,
+          accountsByFingerprint,
+          stacksSigners
+        ),
+        activeAccounts.list
       ),
-    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint]
+    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint, activeAccounts]
   );
 }
 
