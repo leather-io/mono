@@ -20,10 +20,20 @@ export function whenEnvMode<T>(envModeMap: WhenEnvModeMap<T>): T {
 const envTargetSchema = z.enum(['development', 'branch', 'staging', 'production']);
 type EnvTarget = z.infer<typeof envTargetSchema>;
 
-const TARGET = envTargetSchema.default('production').parse(import.meta.env.LEATHER_TARGET);
+const TARGET = envTargetSchema
+  .default('production')
+  .parse(import.meta.env.CLOUDFLARE_ENV ?? import.meta.env.LEATHER_TARGET);
 
 // New type for the map
 export type WhenEnvTargetMap<T> = Record<EnvTarget, T>;
 export function whenEnvTarget<T>(envTargetMap: WhenEnvTargetMap<T>): T {
   return envTargetMap[TARGET];
+}
+
+if (typeof window !== 'undefined') {
+  (window as any).LEATHER_ENV = {
+    MODE,
+    TARGET,
+    CLOUDFLARE_ENV: import.meta.env.CLOUDFLARE_ENV,
+  };
 }

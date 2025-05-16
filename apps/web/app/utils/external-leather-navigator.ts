@@ -7,7 +7,7 @@ export function createExternalLeatherNavigator() {
     development: stagedFramerSite,
     branch: stagedFramerSite,
     staging: stagedFramerSite,
-    production: stagedFramerSite,
+    production: 'https://leather.io',
   });
 
   return {

@@ -12,14 +12,14 @@ pnpm install
 
 ### Development
 
-Start the development server:
+Start the development server with
 
 ```bash
 pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+and open `http://localhost:5173`.
 
-## Deployment
+## Environments
 
-Site is deployed on Cloudflare workers. See [deployment workflow](../../../.github/workflows/deploy-web.yml) for details.
+Site is deployed on Cloudflare workers. See [deployment workflow](../../.github/workflows/deploy-web.yml) for details.

@@ -10,7 +10,7 @@ export function stxAmountSchema() {
       required_error: 'Enter an amount of STX',
       invalid_type_error: 'STX amount must be a number',
     })
-    .positive('You must stack something');
+    .positive('You must stack an amount');
 }
 
 export function validateMinStackingAmount(value: number, minimumDelegationAmount: number) {

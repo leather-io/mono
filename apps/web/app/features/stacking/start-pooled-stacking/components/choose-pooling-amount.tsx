@@ -6,7 +6,7 @@ import { ErrorLabel } from '~/components/error-label';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Button, Input, Spinner } from '@leather.io/ui';
-import { microStxToStx } from '@leather.io/utils';
+import { isDefined, microStxToStx } from '@leather.io/utils';
 
 export interface ChoosePoolingAmountProps {
   controlName?: string;
@@ -31,7 +31,7 @@ export function ChoosePoolingAmount({
           name={controlName}
           render={({ field: { onChange, onBlur, value, ref }, fieldState: { invalid, error } }) => (
             <>
-              <Input.Root data-shrink={!!value}>
+              <Input.Root data-shrink={isDefined(value)}>
                 <Input.Label>Amount of STX to Stack</Input.Label>
                 <Input.Field
                   id={controlName}
@@ -41,7 +41,7 @@ export function ChoosePoolingAmount({
                   ref={ref}
                 />
               </Input.Root>
-              {invalid && error && <ErrorLabel>{error.message}</ErrorLabel>}
+              {invalid && error && <ErrorLabel mt="space.02">{error.message}</ErrorLabel>}
             </>
           )}
         />

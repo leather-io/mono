@@ -35,6 +35,7 @@ export default defineConfig(config => ({
   define: {
     // required for some libs (e.g. pbkdf2)
     global: 'globalThis',
+    'import.meta.env.CLOUDFLARE_ENV': JSON.stringify(process.env.CLOUDFLARE_ENV),
   },
   plugins: [
     cloudflare({ viteEnvironment: { name: 'ssr' } }),
