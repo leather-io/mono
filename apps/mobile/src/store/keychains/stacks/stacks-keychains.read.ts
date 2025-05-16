@@ -74,7 +74,7 @@ function filterActiveAddresses(stacksSigners: StacksSigner[], accounts: Account[
 
 export function useStacksSignerAddresses() {
   const { list: stacksSigners } = useStacksSigners();
-  const activeAccounts = useAccounts('active');
+  const activeAccounts = useAccounts();
   return useMemo(
     () => filterActiveAddresses(stacksSigners, activeAccounts.list).map(signer => signer.address),
     [stacksSigners, activeAccounts]

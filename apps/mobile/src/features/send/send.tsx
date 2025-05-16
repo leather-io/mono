@@ -14,7 +14,7 @@ interface SendProps {
 }
 
 export function Send({ accountId, asset }: SendProps) {
-  const accounts = useAccounts('active');
+  const accounts = useAccounts();
   const selectedAccount = accounts.list.find(account => account.id === accountId);
 
   return (

@@ -116,7 +116,7 @@ export function useTotalAccountAddresses() {
   const wallets = useWallets();
   const bitcoinAccounts = useBitcoinAccounts();
   const stacksSigners = useStacksSigners();
-  const activeAccounts = useAccounts('active');
+  const activeAccounts = useAccounts();
 
   return useMemo(
     () =>
@@ -132,7 +132,7 @@ export function useWalletAccountAddresses(fingerprint: string) {
   const bitcoinAccounts = useBitcoinAccounts();
   const accountsByFingerprint = useAccountsByFingerprint(fingerprint);
   const stacksSigners = useStacksSigners();
-  const activeAccounts = useAccounts('active');
+  const activeAccounts = useAccounts();
 
   return useMemo(
     () =>
