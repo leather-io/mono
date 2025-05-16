@@ -39,7 +39,7 @@ export function Home() {
             balance={<TotalBalance color="ink.text-subdued" />}
             title={t({ id: 'balances.header_title', message: 'All tokens' })}
           >
-            <AllAccountBalances hardCap />
+            <AllAccountBalances mode="widget" />
           </BalancesWidget>
           <ActivityWidget
             activity={activity}

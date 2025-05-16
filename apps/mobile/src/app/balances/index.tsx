@@ -19,7 +19,7 @@ export default function BalancesScreen() {
       subtitle={<TotalBalance variant="heading03" />}
       isHeaderReversible={true}
     >
-      <AllAccountBalances />
+      <AllAccountBalances mode="full" />
     </AnimatedHeaderScreenLayout>
   );
 }

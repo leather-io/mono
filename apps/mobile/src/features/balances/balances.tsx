@@ -6,45 +6,37 @@ import { RunesBalance, RunesBalanceByAccount } from '@/features/balances/bitcoin
 import { Sip10Balance, Sip10BalanceByAccount } from '@/features/balances/stacks/sip10-balance';
 import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance';
 import { useRunesFlag } from '@/features/feature-flags';
+import { ViewMode } from '@/shared/types';
 
 import { AccountId } from '@leather.io/models';
+import { Box } from '@leather.io/ui/native';
 
-export interface HardCap {
-  hardCap?: boolean;
+export interface BalanceViewProps {
+  mode: ViewMode;
 }
 
-// FIXME LEA-2310: introduce hardCap prop to balances pending sorting
-export function AllAccountBalances({ hardCap }: HardCap) {
+export function AllAccountBalances({ mode }: BalanceViewProps) {
   const runesFlag = useRunesFlag();
   return (
-    <>
+    <Box flex={1} height="100%">
       <BitcoinBalance />
       <StacksBalance />
-      <Sip10Balance hardCap={hardCap} />
-      {runesFlag && <RunesBalance hardCap={hardCap} />}
-    </>
+      <Sip10Balance mode={mode} />
+      {runesFlag && <RunesBalance mode={mode} />}
+    </Box>
   );
 }
 
-// FIXME LEA-2310: introduce hardCap prop to balances pending sorting
-export function AccountBalances({ hardCap, fingerprint, accountIndex }: AccountId & HardCap) {
+export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId & BalanceViewProps) {
   const runesFlag = useRunesFlag();
   return (
-    <>
+    <Box>
       <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
       <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
-      <Sip10BalanceByAccount
-        hardCap={hardCap}
-        fingerprint={fingerprint}
-        accountIndex={accountIndex}
-      />
+      <Sip10BalanceByAccount mode={mode} fingerprint={fingerprint} accountIndex={accountIndex} />
       {runesFlag && (
-        <RunesBalanceByAccount
-          hardCap={hardCap}
-          fingerprint={fingerprint}
-          accountIndex={accountIndex}
-        />
+        <RunesBalanceByAccount mode={mode} fingerprint={fingerprint} accountIndex={accountIndex} />
       )}
-    </>
+    </Box>
   );
 }

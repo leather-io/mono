@@ -89,7 +89,7 @@ export function Account({ account, walletName }: AccountProps) {
         }
         title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
       >
-        <AccountBalances hardCap fingerprint={fingerprint} accountIndex={accountIndex} />
+        <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
       </BalancesWidget>
       <ActivityWidget
         activity={activity}

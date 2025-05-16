@@ -42,7 +42,7 @@ export default function BalancesScreen() {
       }
       isHeaderReversible={true}
     >
-      <AccountBalances fingerprint={fingerprint} accountIndex={accountIndex} />
+      <AccountBalances mode="full" fingerprint={fingerprint} accountIndex={accountIndex} />
     </AnimatedHeaderScreenLayout>
   );
 }

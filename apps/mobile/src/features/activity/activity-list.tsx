@@ -38,7 +38,7 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
       <FlashList
         data={filteredActivities}
         renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
-        estimatedItemSize={80}
+        estimatedItemSize={72}
         keyExtractor={(_, index) => `activity.${index}`}
         showsVerticalScrollIndicator={false}
         onEndReached={() => setRenderLimit(renderLimit + 10)}

@@ -1,14 +1,15 @@
 import { FetchState, FetchWrapper } from '@/components/loading';
+import { BalanceViewProps } from '@/features/balances/balances';
 import {
   useRunesAccountBalance,
   useRunesTotalBalance,
 } from '@/queries/balance/runes-balance.query';
+import { ViewMode } from '@/shared/types';
 
 import { AccountId, Money } from '@leather.io/models';
 import { RunesAccountBalance, RunesAggregateBalance } from '@leather.io/services';
 import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
 
-import { HardCap } from '../balances';
 import { TokenBalance } from '../token-balance';
 
 interface RunesTokenBalanceProps extends PressableProps {
@@ -50,13 +51,14 @@ function RunesTokenBalanceError() {
 
 interface RunesBalanceWrapperProps {
   data: FetchState<RunesAggregateBalance | RunesAccountBalance>;
-  hardCap?: boolean;
+  mode: ViewMode;
 }
-function RunesBalanceWrapper({ data, hardCap }: RunesBalanceWrapperProps) {
+function RunesBalanceWrapper({ data, mode = 'full' }: RunesBalanceWrapperProps) {
+  const displayLimit = mode === 'widget' ? 1 : undefined;
   return (
     <FetchWrapper data={data} error={<RunesTokenBalanceError />}>
       {data.state === 'success' &&
-        data.value.runes.slice(0, hardCap ? 1 : undefined).map((balance, index) => {
+        data.value.runes.slice(0, displayLimit).map((balance, index) => {
           return (
             <RunesTokenBalance
               key={`${balance.asset.symbol}-${index}`}
@@ -71,14 +73,18 @@ function RunesBalanceWrapper({ data, hardCap }: RunesBalanceWrapperProps) {
   );
 }
 
-export function RunesBalance({ hardCap }: HardCap) {
+export function RunesBalance({ mode }: BalanceViewProps) {
   const data = useRunesTotalBalance();
 
-  return <RunesBalanceWrapper data={data} hardCap={hardCap} />;
+  return <RunesBalanceWrapper data={data} mode={mode} />;
 }
 
-export function RunesBalanceByAccount({ hardCap, fingerprint, accountIndex }: AccountId & HardCap) {
+export function RunesBalanceByAccount({
+  mode,
+  fingerprint,
+  accountIndex,
+}: AccountId & BalanceViewProps) {
   const data = useRunesAccountBalance(fingerprint, accountIndex);
 
-  return <RunesBalanceWrapper data={data} hardCap={hardCap} />;
+  return <RunesBalanceWrapper data={data} mode={mode} />;
 }
