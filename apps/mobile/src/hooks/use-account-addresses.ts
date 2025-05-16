@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
+import { useAccounts, useAccountsByFingerprint } from '@/store/accounts/accounts.read';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import {
   useStacksSignerAddressFromAccountIndex,
@@ -9,7 +9,7 @@ import {
 import { useWallets } from '@/store/wallets/wallets.read';
 
 import { getDescriptorFromKeychain } from '@leather.io/bitcoin';
-import { extractAccountIndexFromPath } from '@leather.io/crypto';
+import { extractAccountIndexFromPath, keyOriginToDerivationPath } from '@leather.io/crypto';
 import { AccountAddresses } from '@leather.io/models';
 import { createAccountAddresses, isDefined, uniqueArray } from '@leather.io/utils';
 
@@ -24,6 +24,15 @@ function deriveTotalAccountAddresses(
   bitcoinAccounts?: BitcoinAccounts,
   stacksSigners?: StacksSigners
 ): AccountAddresses[] {
+  // const accounts = useAccounts('active');
+  // const activeAccounts = accounts.list.map(account => {
+  //   return { accountIndex: account.accountIndex, fingerprint: account.fingerprint };
+  // });
+  // console.log('activeAccounts', activeAccounts);
+  // map the keyOrigin to the derivation path
+  // keyOriginToDerivationPath(keyOrigin);
+  // then can get accountIndex from derivation path with
+
   return !wallets || !stacksSigners || !bitcoinAccounts
     ? []
     : wallets.list.flatMap(wallet => {
@@ -39,7 +48,7 @@ function deriveTotalAccountAddresses(
               accountIndex,
             },
             walletKeychains
-              .filter(key => extractAccountIndexFromPath(key.keyOrigin) === accountIndex)
+              .filter(key => extractAccountIndexFromPath(key.keyOrigin) === accountIndex) // and accountIndex in accounts
               .map(getDescriptorFromKeychain)
               .filter(isDefined),
             stacksSigners
@@ -102,10 +111,21 @@ export function useTotalAccountAddresses() {
   const wallets = useWallets();
   const bitcoinAccounts = useBitcoinAccounts();
   const stacksSigners = useStacksSigners();
+  const accounts = useAccounts('active');
+  const activeAccounts = accounts.list.map(account => {
+    return { accountIndex: account.accountIndex, fingerprint: account.fingerprint };
+  });
 
   return useMemo(
-    () => deriveTotalAccountAddresses(wallets, bitcoinAccounts, stacksSigners),
-    [wallets, bitcoinAccounts, stacksSigners]
+    () =>
+      deriveTotalAccountAddresses(wallets, bitcoinAccounts, stacksSigners).filter(account =>
+        activeAccounts.some(
+          activeAccount =>
+            activeAccount.accountIndex === account.id.accountIndex &&
+            activeAccount.fingerprint === account.id.fingerprint
+        )
+      ),
+    [wallets, bitcoinAccounts, stacksSigners, activeAccounts]
   );
 }
 
@@ -113,6 +133,10 @@ export function useWalletAccountAddresses(fingerprint: string) {
   const bitcoinAccounts = useBitcoinAccounts();
   const accountsByFingerprint = useAccountsByFingerprint(fingerprint);
   const stacksSigners = useStacksSigners();
+  const accounts = useAccounts('active');
+  const activeAccounts = accounts.list.map(account => {
+    return { accountIndex: account.accountIndex, fingerprint: account.fingerprint };
+  });
 
   return useMemo(
     () =>
@@ -121,8 +145,14 @@ export function useWalletAccountAddresses(fingerprint: string) {
         bitcoinAccounts,
         accountsByFingerprint,
         stacksSigners
+      ).filter(account =>
+        activeAccounts.some(
+          activeAccount =>
+            activeAccount.accountIndex === account.id.accountIndex &&
+            activeAccount.fingerprint === account.id.fingerprint
+        )
       ),
-    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint]
+    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint, activeAccounts]
   );
 }
 
