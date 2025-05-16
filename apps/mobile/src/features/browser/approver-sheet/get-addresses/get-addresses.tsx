@@ -23,7 +23,7 @@ interface GetAddressesApproverProps {
 }
 
 export function GetAddressesApprover(props: GetAddressesApproverProps) {
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const dispatch = useAppDispatch();
   const accountSelecterSheetRef = useRef<SheetRef>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(

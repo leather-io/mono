@@ -42,7 +42,7 @@ export function CallContractApprover({
   const [txHex, setTxHex] = useState<null | string>(null);
   useCallContractTxHex({ request, stxRequestParams, setTxHex, accountId });
 
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
 

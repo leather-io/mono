@@ -33,7 +33,7 @@ export function SignTransactionApprover({
   const network = useNetworkPreferenceStacksNetwork();
   const requestTxHex = getTxHexFromRequest(request);
 
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const [txHex, setTxHex] = useState(requestTxHex);
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   assertStacksSigner(signer);

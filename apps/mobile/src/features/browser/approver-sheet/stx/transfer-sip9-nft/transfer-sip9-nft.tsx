@@ -37,7 +37,7 @@ export function TransferSip9NftApprover({
   const { displayToast } = useToastContext();
   const network = useNetworkPreferenceStacksNetwork();
 
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const [txHex, setTxHex] = useState<null | string>(null);
   useTransferSip9NftTxHex({ request, accountId, setTxHex, nonce });
   const signer = useStacksSigners().fromAccountId(accountId)[0];

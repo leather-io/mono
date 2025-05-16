@@ -20,7 +20,7 @@ export function StxSignMessageApprover({
   sendResult,
   accountId,
 }: StxSignMessageApproverProps) {
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   assertStacksSigner(signer);
 

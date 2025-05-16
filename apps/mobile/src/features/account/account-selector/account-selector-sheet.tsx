@@ -14,7 +14,7 @@ interface AccountSelectedSheetProps {
 }
 
 export function AccountSelectorSheet({ sheetRef, onAccountPress }: AccountSelectedSheetProps) {
-  const accounts = useAccounts().list;
+  const accounts = useAccounts('active').list;
   const dispatch = useAppDispatch();
   const checkIdxWithinBounds = useCallback(
     (id: number) => {
@@ -45,7 +45,7 @@ export function AccountSelectorSheet({ sheetRef, onAccountPress }: AccountSelect
 
   return (
     <AccountSelectorSheetLayout
-      accounts={accounts.filter(account => account.status !== 'hidden')}
+      accounts={accounts}
       onAccountPress={onAccountPress}
       swapAccountIndexes={swapAccountIndexes}
       sheetRef={sheetRef}

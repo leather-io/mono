@@ -26,7 +26,7 @@ interface StxGetAddressesApproverProps {
 }
 
 export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const dispatch = useAppDispatch();
   const accountSelecterSheetRef = useRef<SheetRef>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(

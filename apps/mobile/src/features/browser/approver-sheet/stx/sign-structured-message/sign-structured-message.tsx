@@ -24,7 +24,7 @@ export function StxSignStructuredMessageApprover({
   sendResult,
   accountId,
 }: StxSignStructuredMessageApproverProps) {
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   assertStacksSigner(signer);
 

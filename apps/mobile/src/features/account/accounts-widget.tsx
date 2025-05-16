@@ -30,7 +30,7 @@ export function AccountsWidget() {
   const addWalletSheetRef = useRef<SheetRef>(null);
   const router = useRouter();
   const wallets = useWallets();
-  const accounts = useAccounts();
+  const accounts = useAccounts('active');
   const { totalBalance } = useTotalBalance();
   const { i18n } = useLingui();
   const theme = useTheme<Theme>();
@@ -72,39 +72,37 @@ export function AccountsWidget() {
               overflow: 'visible',
             }}
           >
-            {accounts.list
-              .filter(account => account.status !== 'hidden')
-              .map((account, i) => (
-                <AccountCard
-                  width={200}
-                  isLoading={isLoadingTotalBalance}
-                  testID={`${TestId.homeAccountCard}-${i}`}
-                  caption={i18n._({
-                    id: 'accounts.account.cell_caption',
-                    message: '{name}',
-                    values: { name: account.name || '' },
-                  })}
-                  primaryTitle={
-                    <AccountBalance
-                      variant="label01"
-                      accountIndex={account.accountIndex}
-                      fingerprint={account.fingerprint}
-                    />
-                  }
-                  icon={account.icon}
-                  iconTestID={defaultIconTestId(account.icon)}
-                  key={account.id}
-                  onPress={() => {
-                    router.navigate({
-                      pathname: AppRoutes.Account,
-                      params: {
-                        account: account.id,
-                        accountId: account.id,
-                      },
-                    });
-                  }}
-                />
-              ))}
+            {accounts.list.map((account, i) => (
+              <AccountCard
+                width={200}
+                isLoading={isLoadingTotalBalance}
+                testID={`${TestId.homeAccountCard}-${i}`}
+                caption={i18n._({
+                  id: 'accounts.account.cell_caption',
+                  message: '{name}',
+                  values: { name: account.name || '' },
+                })}
+                primaryTitle={
+                  <AccountBalance
+                    variant="label01"
+                    accountIndex={account.accountIndex}
+                    fingerprint={account.fingerprint}
+                  />
+                }
+                icon={account.icon}
+                iconTestID={defaultIconTestId(account.icon)}
+                key={account.id}
+                onPress={() => {
+                  router.navigate({
+                    pathname: AppRoutes.Account,
+                    params: {
+                      account: account.id,
+                      accountId: account.id,
+                    },
+                  });
+                }}
+              />
+            ))}
 
             {accounts.hasAccounts ? (
               <AddAccountCard onPress={() => addAccountSheetRef.current?.present()} />

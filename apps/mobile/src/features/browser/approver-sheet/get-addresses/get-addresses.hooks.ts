@@ -6,7 +6,7 @@ import { destructAccountIdentifier } from '@/store/utils';
 export function useGetAddressesAccount(accountId: string | null) {
   const { fromAccountIndex: stacksAccountFromAccountIndex } = useStacksSigners();
   const { accountIndexByPaymentType } = useBitcoinAccounts();
-  const { fromAccountIndex: accountFromAccountIndex } = useAccounts();
+  const { fromAccountIndex: accountFromAccountIndex } = useAccounts('active');
   if (!accountId) return null;
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const account = accountFromAccountIndex(fingerprint, accountIndex);

@@ -21,7 +21,7 @@ interface SignMessageApproverProps {
 }
 
 export function SignMessageApprover(props: SignMessageApproverProps) {
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const accountSelecterSheetRef = useRef<SheetRef>(null);
 
   function getDefaultAccountId() {

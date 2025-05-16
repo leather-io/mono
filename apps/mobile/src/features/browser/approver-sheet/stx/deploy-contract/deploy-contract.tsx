@@ -44,7 +44,7 @@ export function DeployContractApprover({
   const { mutateAsync: broadcastTransaction } = useBroadcastStxTransaction();
   const { displayToast } = useToastContext();
 
-  const { list: accounts } = useAccounts();
+  const { list: accounts } = useAccounts('active');
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   assertStacksSigner(signer);
 
