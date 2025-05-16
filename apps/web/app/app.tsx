@@ -1,4 +1,4 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Flex, styled } from 'leather-styles/jsx';
@@ -46,6 +46,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   useOnRouteChange(location => analytics.page(location.pathname));
+
+  const navigate = useNavigate();
+  useOnRouteChange(
+    location => location.pathname === '/' && navigate('/stacking', { replace: true })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
