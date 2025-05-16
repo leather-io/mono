@@ -24,6 +24,20 @@
   * devDependencies
     * @leather.io/eslint-config bumped to 0.7.0
 
+## [0.32.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.31.0...@leather.io/models-v0.32.0) (2025-05-16)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.7.0
+
 ## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.30.0...@leather.io/models-v0.31.0) (2025-04-02)
 
 

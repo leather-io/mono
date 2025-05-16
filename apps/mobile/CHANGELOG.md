@@ -701,6 +701,41 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.40.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.39.0...@leather.io/mobile-v2.40.0) (2025-05-16)
+
+
+### Features
+
+* authenticate tx broadcast requests to hiro ([bf85738](https://github.com/leather-io/mono/commit/bf85738b804a4db65cfd4daa39cd5fa45211c325))
+* consolidate http cache config ([7226d99](https://github.com/leather-io/mono/commit/7226d998f8cfa83ce78c5055ea25f5a4165532a9))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Bug Fixes
+
+* **mobile:** display locked STX balance, ref LEA-2627 ([5a6f421](https://github.com/leather-io/mono/commit/5a6f4213a5f3fda9f1557985a56fcefc975393d7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.5.0
+    * @leather.io/bitcoin bumped to 0.26.0
+    * @leather.io/constants bumped to 0.20.0
+    * @leather.io/crypto bumped to 1.6.57
+    * @leather.io/models bumped to 0.32.0
+    * @leather.io/provider bumped to 1.2.12
+    * @leather.io/query bumped to 2.37.0
+    * @leather.io/rpc bumped to 2.14.1
+    * @leather.io/services bumped to 1.11.0
+    * @leather.io/stacks bumped to 1.10.2
+    * @leather.io/tokens bumped to 0.17.1
+    * @leather.io/ui bumped to 1.66.0
+    * @leather.io/utils bumped to 0.33.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.0
+
 ## [2.39.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.38.0...@leather.io/mobile-v2.39.0) (2025-05-15)
 
 

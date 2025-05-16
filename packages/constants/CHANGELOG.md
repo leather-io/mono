@@ -157,6 +157,22 @@
   * dependencies
     * @leather.io/models bumped to 0.31.0
 
+## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.19.1...@leather.io/constants-v0.20.0) (2025-05-16)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.32.0
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.7.0
+
 ## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.18.1...@leather.io/constants-v0.19.0) (2025-03-27)
 
 
