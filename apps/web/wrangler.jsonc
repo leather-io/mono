@@ -1,16 +1,22 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "leather-web",
   "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2025-04-04",
   "main": "./workers/app.ts",
   "workers_dev": true,
   "send_metrics": false,
+  "name": "leather-web",
   "observability": {
-    "enabled": false
+    "enabled": true
   },
-  "routes": ["https://staging.app.leather.io/*"],
-  "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
+  "env": {
+    "staging": {
+      "name": "leather-web-staging",
+      "routes": ["https://staging.app.leather.io/*"]
+    },
+    "production": {
+      "name": "leather-web-production",
+      "routes": ["https://app.leather.io/*"]
+    }
   }
 }

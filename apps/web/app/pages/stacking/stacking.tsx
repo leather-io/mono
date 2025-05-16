@@ -34,7 +34,7 @@ export function Stacking() {
         {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
       </StacksAccountLoader>
 
-      <Page.Title mt="space.07">Pooled stacking</Page.Title>
+      <Page.Title mt="space.09">Pooled stacking</Page.Title>
       <StackingExplainer mt="space.05" />
 
       <StackingProviderTable mt="space.05" />

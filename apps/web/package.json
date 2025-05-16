@@ -5,7 +5,7 @@
   "scripts": {
     "build": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router build",
     "cf-typegen": "wrangler types",
-    "deploy": "pnpm build && wrangler deploy",
+    "deploy": "pnpm build && CLOUDFLARE_ENV=production wrangler deploy",
     "dev": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router dev",
     "format": "prettier --write \"app/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",
     "format:check": "prettier --check \"app/**/*.{ts,tsx}\" --ignore-path ../../.prettierignore",

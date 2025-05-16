@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - main
 
 permissions:
   contents: read
@@ -13,14 +14,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
-    environment: 'web:production'
+    environment: ${{ github.ref == 'refs/heads/main' && 'web:production' || github.ref == 'refs/heads/dev' && 'web:staging' }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
+      - run: echo ${{ github.ref }}
+
       - name: Build web app
         env:
-          LEATHER_TARGET: staging
+          CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
+          LEATHER_TARGET: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
+          steps:
           LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
           LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
           LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
@@ -29,6 +34,7 @@ jobs:
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
+          environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
           workingDirectory: apps/web
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
