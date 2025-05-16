@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import BigNumber from 'bignumber.js';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Button, Input, Spinner } from '@leather.io/ui';
 import { microStxToStx } from '@leather.io/utils';
@@ -59,7 +59,7 @@ export function ChoosePoolingAmount({
             color="#12100F"
             onClick={() => setValue(controlName, microStxToStx(availableAmount).toNumber())}
           >
-            {toHumanReadableStx(availableAmount)}
+            {toHumanReadableMicroStx(availableAmount)}
           </Button>
         ) : (
           'Failed to load'
@@ -76,7 +76,7 @@ export function ChoosePoolingAmount({
             color="#12100F"
             onClick={() => setValue(controlName, microStxToStx(stackedAmount).toNumber())}
           >
-            {toHumanReadableStx(stackedAmount)}
+            {toHumanReadableMicroStx(stackedAmount)}
           </Button>
         </Box>
       )}

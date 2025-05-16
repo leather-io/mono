@@ -11,7 +11,7 @@ import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/ty
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 interface RewardProtocolCellProps {
   rewardProtocol: PoolRewardProtocolInfo;
@@ -54,7 +54,7 @@ function StackingCell({ lockedAmount }: Pick<LiquidStackingInfoGridProps, 'locke
     <ValueDisplayer
       gap="space.04"
       name="You're stacking"
-      value={toHumanReadableStx(lockedAmount)}
+      value={toHumanReadableMicroStx(lockedAmount)}
     />
   );
 }

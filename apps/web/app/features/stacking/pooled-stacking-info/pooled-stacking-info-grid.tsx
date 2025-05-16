@@ -6,6 +6,7 @@ import { ValueDisplayer } from '~/components/value-displayer/default-value-displ
 import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
 
 import { Flag } from '@leather.io/ui';
 
@@ -98,7 +99,9 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
   );
 }
 
-function MinimumLockupPeriodCell({ rewardProtocol }: RewardProtocolCellProps) {
+function MinimumLockupPeriodCell({
+  rewardProtocol: { minLockupPeriodDays },
+}: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
       gap="space.04"
@@ -107,8 +110,8 @@ function MinimumLockupPeriodCell({ rewardProtocol }: RewardProtocolCellProps) {
         <>
           <Box textStyle="label.01">1 Cycle</Box>
           <Box textStyle="label.03">
-            {Math.round(rewardProtocol.minLockupPeriodDays / 7)} weeks (~
-            {rewardProtocol.minLockupPeriodDays} days)
+            {toHumanReadableWeeks(daysToWeek(minLockupPeriodDays))} (~
+            {toHumanReadableDays(minLockupPeriodDays)})
           </Box>
         </>
       }
@@ -123,7 +126,7 @@ function NextCycleCell({ rewardProtocol }: RewardProtocolCellProps) {
       name="Days until next cycle"
       value={
         <>
-          <Box textStyle="label.01">{rewardProtocol.nextCycleDays} days</Box>
+          <Box textStyle="label.01">{toHumanReadableDays(rewardProtocol.nextCycleDays)}</Box>
           <Box textStyle="label.03">
             Cycle {rewardProtocol.nextCycleNumber} - {rewardProtocol.nextCycleBlocks} blocks
           </Box>

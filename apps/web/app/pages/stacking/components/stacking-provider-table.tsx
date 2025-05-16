@@ -28,13 +28,18 @@ import {
   liquidStackingProvidersList,
   stackingPoolList,
 } from '~/data/data';
+import { providerIdToSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
+import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
+import { toHumanReadablePercent } from '~/utils/unit-convert';
 
-import { Button, Flag, useOnMount } from '@leather.io/ui';
+import { Button, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
+import { isUndefined } from '@leather.io/utils';
 
 const providerSlugMap = {
   fastPool: 'fast-pool',
+  fastPoolV2: 'fast-pool-v2',
   planbetter: 'plan-better',
   restake: 'restake',
   xverse: 'xverse',
@@ -121,7 +126,21 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'estApr',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => {
+          const slug = providerIdToSlug(info.row.original.providerId);
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { data, isLoading, isError } = useStackingTrackerPool(slug);
+
+          if (isLoading) {
+            return <SkeletonLoader isLoading w={40} h={16} />;
+          }
+
+          if (isError || !data?.entity.apr) {
+            return <styled.div>{info.getValue() as string}</styled.div>;
+          }
+
+          return <styled.div>{toHumanReadablePercent(data.entity.apr)}</styled.div>;
+        },
         header: () => (
           <styled.div>
             <BasicHoverCard content={content.stacking.aprDescription}>
@@ -136,7 +155,21 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'fee',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => {
+          const slug = providerIdToSlug(info.row.original.providerId);
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { data, isLoading, isError } = useStackingTrackerPool(slug);
+
+          if (isLoading) {
+            return <SkeletonLoader isLoading w={40} h={16} />;
+          }
+
+          if (isError || isUndefined(data?.entity.fee)) {
+            return <styled.div>{info.getValue() as string}</styled.div>;
+          }
+
+          return <styled.div>{toHumanReadablePercent(data.entity.fee * 100)}</styled.div>;
+        },
         header: () => (
           <styled.div>
             <BasicHoverCard content={content.stacking.feeDescription}>

@@ -6,7 +6,7 @@ import { LiquidStackingActionButtons } from '~/features/stacking/direct-stacking
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Hr } from '@leather.io/ui';
 
@@ -48,7 +48,7 @@ export function ActiveStackingInfo({
           <Flex flexDirection="column" pt="space.06" pb="space.05">
             <styled.h2 textStyle="heading.02">You&apos;re stacking</styled.h2>
             <styled.p textStyle="heading.02" fontSize="24px" fontWeight={500}>
-              {toHumanReadableStx(lockedAmount)}
+              {toHumanReadableMicroStx(lockedAmount)}
             </styled.p>
 
             {isBeforeFirstRewardCycle && (
@@ -66,8 +66,8 @@ export function ActiveStackingInfo({
                 <styled.p textStyle="label.02">Waiting for transaction confirmation</styled.p>
                 <styled.p>
                   A stacking request was successfully submitted to the blockchain. Once confirmed,
-                  an additional amount of {toHumanReadableStx(pendingStackIncrease.increaseBy)} will
-                  be stacking.
+                  an additional amount of {toHumanReadableMicroStx(pendingStackIncrease.increaseBy)}{' '}
+                  will be stacking.
                 </styled.p>
               </Box>
             )}

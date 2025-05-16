@@ -17,7 +17,7 @@ import {
   getPoolByAddress,
   getPoolSlugByPoolName,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import {
   ChevronDownIcon,
@@ -43,7 +43,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   const navigate = useNavigate();
   const { mutateAsync: revokeDelegateStx } = useRevokeDelegateStxMutation();
 
-  async function openRevokeStackingContractCall() {
+  function openRevokeStackingContractCall() {
     return revokeDelegateStx().then(() => navigate('/stacking'));
   }
 
@@ -196,7 +196,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             isLoading={fakeLoading}
             value={
               delegationInfoDetails
-                ? toHumanReadableStx(delegationInfoDetails.amount_micro_stx)
+                ? toHumanReadableMicroStx(delegationInfoDetails.amount_micro_stx)
                 : '—'
             }
           />

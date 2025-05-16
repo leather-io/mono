@@ -1,16 +1,12 @@
-import { StackingClient } from '@stacks/stacking';
-import { HStack, VStack, styled } from 'leather-styles/jsx';
-import { ProviderIcon } from '~/components/icons/provider-icon';
-import { useGetPoxInfoQuery } from '~/features/stacking/hooks/stacking.query';
+import { Flex, HStack, VStack, styled } from 'leather-styles/jsx';
+import { usePoolInfo } from '~/features/stacking/hooks/use-pool-info';
 import { PooledStackingActionButtons } from '~/features/stacking/pooled-stacking-info/pooled-stacking-action-buttons';
 import { PooledStackingInfoGrid } from '~/features/stacking/pooled-stacking-info/pooled-stacking-info-grid';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import { dummyPoolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import {
-  PoolSlug,
-  getPoolFromSlug,
-} from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
+import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { useLeatherConnect } from '~/store/addresses';
+
+import { LoadingSpinner } from '@leather.io/ui';
 
 interface PooledStackingActiveInfoProps {
   poolSlug: PoolSlug;
@@ -23,20 +19,35 @@ export function PooledStackingActiveInfo({ poolSlug }: PooledStackingActiveInfoP
   if (!stxAddress || !client) return 'You should connect STX wallet';
   if (!client) return 'Expected client to be defined';
 
-  return <PooledStackingActiveInfoLayout client={client} poolSlug={poolSlug} />;
+  return <PooledStackingActiveInfoLayout poolSlug={poolSlug} />;
 }
 
 interface PooledStackingActiveInfoLayoutProps {
   poolSlug: PoolSlug;
-  client: StackingClient;
 }
 function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLayoutProps) {
-  const poxInfoQuery = useGetPoxInfoQuery();
+  const {
+    isLoading,
+    isError,
+    stackingTrackerPool,
+    poolRewardProtocolInfo,
+    hardcodePoolRewardProtocolInfo,
+  } = usePoolInfo(poolSlug);
 
-  if (poxInfoQuery.isLoading) return null;
-  if (poxInfoQuery.isError || !poxInfoQuery.data) return <>Failed to load Pox data</>;
+  if (isLoading) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100%">
+        <LoadingSpinner fill="ink.text-subdued" />
+      </Flex>
+    );
+  }
 
-  const pool = getPoolFromSlug(poolSlug);
+  // for use mocked data
+  if (isError && stackingTrackerPool?.data) {
+    return <>Failed to load Pox data</>;
+  }
+
+  const info = poolRewardProtocolInfo || hardcodePoolRewardProtocolInfo;
 
   return (
     <VStack
@@ -46,19 +57,17 @@ function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLa
     >
       <HStack justifyContent="space-between">
         <VStack display={['none', 'none', 'flex']} gap="space.05" alignItems="left" p="space.05">
-          <ProviderIcon providerId={pool.providerId} />
+          {info?.logo}
           <styled.h4 textDecoration="underline" textStyle="label.01">
-            {pool.name}
+            {info?.title}
           </styled.h4>
         </VStack>
         <PooledStackingActionButtons width={['100%', '100%', 'unset']} poolSlug={poolSlug} />
       </HStack>
 
-      <PooledStackingInfoGrid
-        poolIcon={<ProviderIcon providerId={pool.providerId} />}
-        poolName={pool.name}
-        rewardProtocol={dummyPoolRewardProtocol}
-      />
+      {info && (
+        <PooledStackingInfoGrid poolIcon={info.logo} poolName={info.title} rewardProtocol={info} />
+      )}
     </VStack>
   );
 }

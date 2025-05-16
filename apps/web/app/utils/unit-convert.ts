@@ -18,9 +18,20 @@ export function microStxToStxRounded(microStx: string | number | bigint | BigNum
   return amount.dividedToIntegerBy(10 ** 6);
 }
 
-export function toHumanReadableStx(microStx: string | number | bigint | BigNumber): string {
+export function toHumanReadableMicroStx(
+  microStx: string | number | bigint | BigNumber,
+  decimalPlaces?: number
+): string {
   const amount = microStxToStx(initBigNumber(microStx));
-  return amount.toFormat() + ' STX';
+  return amount.toFormat(decimalPlaces) + ' STX';
+}
+
+export function toHumanReadableStx(
+  stx: string | number | bigint | BigNumber,
+  decimalPlaces?: number
+): string {
+  const amount = initBigNumber(stx);
+  return amount.toFormat(decimalPlaces) + ' STX';
 }
 
 // Max U128 is too large for BigNumber
@@ -31,4 +42,27 @@ export function stxToMicroStxBigint(stx: bigint | string | number): string {
 // Max U128 is too large for BigNumber
 export function microStxToStxBigint(microStx: bigint | string | number): string {
   return parseNumber(microStx).shiftedBy(-6).decimalPlaces(6).toString(10);
+}
+
+export function daysToWeek(daysNumber: bigint | string | number | BigNumber) {
+  return Number(parseNumber(daysNumber).dividedBy(7).toFixed(0));
+}
+
+export function toHumanReadableDays(daysNumber: number): string {
+  const parsedDaysNumber = parseNumber(daysNumber);
+
+  return (
+    parseNumber(parsedDaysNumber).toFixed(0, BigNumber.ROUND_CEIL) +
+    ' day' +
+    (parsedDaysNumber.gt(1) ? 's' : '')
+  );
+}
+
+export function toHumanReadableWeeks(weeksNumber: number): string {
+  const parsedWeekNumber = parseNumber(weeksNumber);
+  return parsedWeekNumber.toFixed(0) + ' week' + (parsedWeekNumber.gt(1) ? 's' : '');
+}
+
+export function toHumanReadablePercent(amount: bigint | string | number | BigNumber): string {
+  return parseNumber(amount).toFixed(2) + '%';
 }
