@@ -1,81 +1,13 @@
 {
   "cli": {
-    "version": ">= 15.0.10",
+    "version": ">= 16.6.1",
     "promptToConfigurePushNotifications": false,
     "appVersionSource": "remote"
   },
   "build": {
-    "test": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release",
-        "withoutCredentials": true
-      },
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.16.2",
-        "image": "latest"
-      }
-    },
-    "simulator-dev": {
+    "base": {
       "node": "22.15.0",
       "pnpm": "10.10.0",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.16.2",
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
-      }
-    },
-    "simulator-pr": {
-      "node": "22.15.0",
-      "pnpm": "10.10.0",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "cocoapods": "1.16.2",
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
-      }
-    },
-    "development": {
-      "node": "22.15.0",
-      "pnpm": "10.10.0",
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "image": "latest",
-        "cocoapods": "1.16.2"
-      }
-    },
-    "preview-simulator": {
-      "node": "22.15.0",
-      "pnpm": "10.10.0",
-      "distribution": "internal",
-      "ios": {
-        "image": "latest",
-        "simulator": true,
-        "cocoapods": "1.16.2"
-      }
-    },
-    "preview": {
-      "node": "22.15.0",
-      "pnpm": "10.10.0",
-      "distribution": "internal",
-      "ios": {
-        "image": "latest",
-        "cocoapods": "1.16.2"
-      }
-    },
-    "production": {
-      "node": "22.15.0",
-      "pnpm": "10.10.0",
-      "distribution": "store",
-      "autoIncrement": true,
       "ios": {
         "image": "latest",
         "cocoapods": "1.16.2"
@@ -85,18 +17,36 @@
       }
     },
     "maestro": {
-      "node": "22.15.0",
-      "pnpm": "10.10.0",
-      "environment": "preview",
+      "extends": "base",
+      "environment": "production",
+      "withoutCredentials": true,
+      "channel": "maestro",
+      "distribution": "internal"
+    },
+    "development": {
+      "extends": "base",
+      "channel": "development",
       "distribution": "internal",
+      "developmentClient": true
+    },
+    "staging": {
+      "extends": "base",
+      "distribution": "internal",
+      "channel": "staging",
+      "autoIncrement": true
+    },
+    "production": {
+      "extends": "base",
+      "channel": "production",
+      "distribution": "store",
+      "autoIncrement": true
+    },
+    "preview": {
+      "extends": "base",
+      "distribution": "internal",
+      "channel": "preview",
       "ios": {
-        "simulator": true,
-        "image": "latest",
-        "cocoapods": "1.16.2"
-      },
-      "android": {
-        "buildType": "apk",
-        "image": "latest"
+        "simulator": true
       }
     }
   },

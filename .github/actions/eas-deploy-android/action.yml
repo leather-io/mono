@@ -37,7 +37,7 @@ runs:
         if [[ "$IS_MAIN_BRANCH" == "true" ]]
         then
           # No wait on simulator version build of the app if we are on a dev branch
-          eas build --platform android --profile=simulator-dev --non-interactive --no-wait
+          eas build --platform android --profile=preview --non-interactive --no-wait
         else
           # set temporary command output 
           setTmpOutput () { tee /tmp/capture.out; }
@@ -45,7 +45,7 @@ runs:
           # get temporary command output 
           getTmpOutput () { cat /tmp/capture.out; }
           
-          eas build --platform android --profile=simulator-pr --non-interactive | setTmpOutput 
+          eas build --platform android --profile=preview --non-interactive | setTmpOutput 
 
           # Last line of the build output is the link to the expo build
           UNSAFE_BUILD_LINK=$(getTmpOutput | tail -n 1)
