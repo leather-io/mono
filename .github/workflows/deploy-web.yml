@@ -19,8 +19,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - run: echo ${{ github.ref }}
-
       - name: Build web app
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
@@ -36,7 +34,6 @@ jobs:
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
         with:
-          environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
           workingDirectory: apps/web
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
