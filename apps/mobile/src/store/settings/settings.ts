@@ -180,6 +180,7 @@ export function useSettings() {
     },
 
     // TODO: Remove when live, debug only
+    // ?? ask Fara about this - did we plan to not release testnet?
     toggleNetwork() {
       const network =
         networkPreference.chain.bitcoin.bitcoinNetwork === 'mainnet' ? 'testnet' : 'mainnet';

@@ -1,11 +1,11 @@
 import { Balance } from '@/components/balance/balance';
-import { useCurrentNetworkState } from '@/queries/leather-query-provider';
+import { useSettings } from '@/store/settings/settings';
 
 import { OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
 
 import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
-import { goToStacksExplorer } from './utils/go-to-stacks-explorer';
+import { onPressActivity } from './utils/go-to-activity-explorer';
 
 interface ActivityListItemProps {
   activity: OnChainActivity;
@@ -24,24 +24,20 @@ function getBalanceColor(activity: OnChainActivity) {
 }
 
 export function ActivityListItem({ activity }: ActivityListItemProps) {
-  const { mode } = useCurrentNetworkState();
+  const { networkPreference } = useSettings();
 
   const { txid, status, type, timestamp } = activity;
   const value = 'value' in activity ? activity.value : undefined;
-  const asset = 'asset' in activity ? activity.asset : undefined;
-  const activityAsset = asset && 'symbol' in asset ? asset : undefined;
+  const activityHasAsset = 'asset' in activity;
+  const asset = activityHasAsset && 'symbol' in activity.asset ? activity.asset : undefined;
 
   return (
     <Pressable
       flexDirection="row"
       disabled={!txid}
-      onPress={txid ? () => goToStacksExplorer(txid, mode) : undefined}
+      onPress={() => onPressActivity({ txid, networkPreference, asset })}
     >
-      <Flag
-        img={<ActivityAvatarIcon type={type} asset={activityAsset} status={status} />}
-        px="5"
-        py="3"
-      >
+      <Flag img={<ActivityAvatarIcon type={type} asset={asset} status={status} />} px="5" py="3">
         <ItemLayout
           gap="0"
           titleLeft={<Text variant="label01">{getActivityTitle(activity)}</Text>}

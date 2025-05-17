@@ -65,12 +65,19 @@ export interface NetworkState extends NetworkConfiguration {
   mode: NetworkModes;
 }
 
+function isStacksTestnet(network: NetworkConfiguration) {
+  return network.chain.stacks.chainId === ChainId.Testnet;
+}
+export function getStacksNetworkMode(network: NetworkConfiguration) {
+  return isStacksTestnet(network) ? 'testnet' : 'mainnet';
+}
+
 export function useCurrentNetworkState(): NetworkState {
   const currentNetwork = useLeatherNetwork();
-
+  // SMELL: does this even support Bitcoin testnet?
   return useMemo(() => {
-    const isTestnet = currentNetwork.chain.stacks.chainId === ChainId.Testnet;
-    const mode = isTestnet ? 'testnet' : 'mainnet';
+    const isTestnet = isStacksTestnet(currentNetwork);
+    const mode = getStacksNetworkMode(currentNetwork);
     return { ...currentNetwork, isTestnet, mode };
   }, [currentNetwork]);
 }

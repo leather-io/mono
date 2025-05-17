@@ -10,6 +10,7 @@ import {
 } from '@leather.io/models';
 
 export const defaultNetworkPreferences = ['mainnet', 'testnet4', 'signet'] as const;
+export type DefaultNetworkPreference = (typeof defaultNetworkPreferences)[number];
 export const defaultThemePreferences = ['light', 'dark', 'system'] as const;
 
 export type ThemePreference = (typeof defaultThemePreferences)[number];
