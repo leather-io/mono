@@ -3,6 +3,7 @@ import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -51,12 +52,13 @@ export function QrScannerCamera({ onBarcodeScanned }: QrScannerCameraProps) {
 
 function useCameraFadeInAnimation() {
   const opacity = useSharedValue(0);
+  // On most phones (including higher-end) expo-camera initializes the CameraView in 0.5-1s.
+  // This combination of delay and duration (based on trial and error) prevents erratic camera startup flickers on iPhones and smoothens entry on Android.
+  const delay = 500;
+  const duration = 200;
 
   function startAnimating() {
-    opacity.value = withTiming(1, {
-      duration: 280,
-      easing: Easing.quad,
-    });
+    opacity.value = withDelay(delay, withTiming(1, { duration, easing: Easing.quad }));
   }
 
   const animatedStyle = useAnimatedStyle(() => {
