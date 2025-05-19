@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import { ActionBar } from '@/components/action-bar/action-bar';
+import { ErrorBoundary } from '@/components/error/error-boundary';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
@@ -74,14 +75,16 @@ function App() {
 
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
-      <StatusBar />
-      <AppNavigationStack />
-      <ActionBar />
-      <SendSheet />
-      <ReceiveSheet />
-      <BrowserSheet />
-      <AddAccountSheet />
-      <AddWalletSheet />
+      <ErrorBoundary>
+        <StatusBar />
+        <AppNavigationStack />
+        <ActionBar />
+        <SendSheet />
+        <ReceiveSheet />
+        <BrowserSheet />
+        <AddAccountSheet />
+        <AddWalletSheet />
+      </ErrorBoundary>
     </Box>
   );
 }
