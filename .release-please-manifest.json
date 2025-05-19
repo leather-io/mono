@@ -1,5 +1,5 @@
 {
-  "apps/mobile": "2.40.0",
+  "apps/mobile": "2.40.1",
   "packages/analytics": "3.5.0",
   "packages/bitcoin": "0.26.0",
   "packages/constants": "0.20.0",
@@ -17,5 +17,5 @@
   "packages/stacks": "1.10.2",
   "packages/services": "1.11.0",
   "packages/provider": "1.2.12",
-  "packages/sdk": "1.2.5"
+  "packages/sdk": "1.2.6"
 }

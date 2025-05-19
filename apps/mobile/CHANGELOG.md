@@ -701,6 +701,18 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.40.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.40.0...@leather.io/mobile-v2.40.1) (2025-05-19)
+
+
+### Bug Fixes
+
+* **mobile:** ensure that deriveTotalAccountAddresses is filtered by active accounts, ref LEA-2623 ([24bd714](https://github.com/leather-io/mono/commit/24bd7147e401213f57360809b59f5a9b389dd3a3))
+* **mobile:** if account hidden go home on back from account page, ref LEA-2623 ([4b04855](https://github.com/leather-io/mono/commit/4b0485526918ed78684707b28444484829d5288b))
+* **mobile:** make explorer links adapt to network, ref LEA-2582 ([5aa152d](https://github.com/leather-io/mono/commit/5aa152d027a1813def4f40f727eb9ec1cdff8c0d))
+* **mobile:** make explorer links adapt to network, ref LEA-2582 ([633e424](https://github.com/leather-io/mono/commit/633e424735c0314f28f208ac6c41ed4f0f35677b))
+* **mobile:** sort tokens, add FlashList for performance, ref LEA-2310 ([633e424](https://github.com/leather-io/mono/commit/633e424735c0314f28f208ac6c41ed4f0f35677b))
+* **mobile:** sort tokens, add FlashList for performance, ref LEA-2310 ([3be69b7](https://github.com/leather-io/mono/commit/3be69b7bdb2cc97c5a408de2345ed8d0db666a3a))
+
 ## [2.40.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.39.0...@leather.io/mobile-v2.40.0) (2025-05-16)
 
 
