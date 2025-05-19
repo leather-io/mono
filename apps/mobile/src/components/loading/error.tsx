@@ -30,7 +30,7 @@ export function FetchError() {
       }
     >
       <Text variant="label02">
-        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull to refresh' })}
+        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull this page to refresh' })}
       </Text>
     </Callout>
   );

@@ -3,6 +3,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
+import { ErrorBoundary } from '@/components/error-boundary';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
@@ -34,9 +35,6 @@ import { Box, SheetProvider } from '@leather.io/ui/native';
 
 dayjs.extend(relativeTime);
 
-// Catch any errors thrown by the Layout component
-export { ErrorBoundary } from 'expo-router';
-
 // Ensure that reloading on `/modal` keeps a back button present
 export const unstable_settings = { initialRouteName: '/' };
 
@@ -51,11 +49,13 @@ function App() {
 
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
-      <StatusBar />
-      <AppNavigationStack />
-      <SendSheet />
-      <ReceiveSheet />
-      <BrowserSheet />
+      <ErrorBoundary>
+        <StatusBar />
+        <AppNavigationStack />
+        <SendSheet />
+        <ReceiveSheet />
+        <BrowserSheet />
+      </ErrorBoundary>
     </Box>
   );
 }

@@ -62,8 +62,9 @@ function ScrollableContent({ children }: HasChildren) {
 
 interface PageLayoutProps extends HasChildren {
   scrollable?: boolean;
+  actionBar?: boolean;
 }
-export function PageLayout({ children, scrollable = true }: PageLayoutProps) {
+export function PageLayout({ children, scrollable = true, actionBar = true }: PageLayoutProps) {
   const actionBarRef = useRef<ActionBarMethods>(null);
 
   return (
@@ -71,7 +72,7 @@ export function PageLayout({ children, scrollable = true }: PageLayoutProps) {
       <Box flex={1} bg="ink.background-primary">
         {scrollable ? <ScrollableContent>{children}</ScrollableContent> : children}
       </Box>
-      <ActionBarContainer ref={actionBarRef} />
+      {actionBar && <ActionBarContainer ref={actionBarRef} />}
     </>
   );
 }
