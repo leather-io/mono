@@ -701,6 +701,24 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.40.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.40.1...@leather.io/mobile-v2.40.2) (2025-05-19)
+
+
+### Bug Fixes
+
+* **mobile:** add fill animation to QR reticle ([da91e46](https://github.com/leather-io/mono/commit/da91e467c7564fb27a9f416010d914866f150c99))
+* **mobile:** ensure QR scanning error only triggers once ([725a84e](https://github.com/leather-io/mono/commit/725a84ece6d034845f916485024d51c569d0c3f1))
+* **mobile:** fix QR camera entry animation ([4c6bde7](https://github.com/leather-io/mono/commit/4c6bde7815b663858afde49b574f75944d26fab7))
+* **mobile:** fix QR scanner reticle positioning ([0b36e12](https://github.com/leather-io/mono/commit/0b36e12eef28a46af25beabab7b9c950c39757d0))
+* sheet children unmount issue ([68f886d](https://github.com/leather-io/mono/commit/68f886de82bed710652e58fd58d7ef90ae1526fa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.66.1
+
 ## [2.40.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.40.0...@leather.io/mobile-v2.40.1) (2025-05-19)
 
 
