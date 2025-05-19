@@ -389,6 +389,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.66.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.66.0...@leather.io/ui-v1.66.1) (2025-05-19)
+
+
+### Bug Fixes
+
+* sheet children unmount issue ([68f886d](https://github.com/leather-io/mono/commit/68f886de82bed710652e58fd58d7ef90ae1526fa))
+
 ## [1.66.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.65.0...@leather.io/ui-v1.66.0) (2025-05-16)
 
 
