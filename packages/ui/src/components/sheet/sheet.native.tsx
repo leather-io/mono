@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, RefObject } from 'react';
+import { ReactNode, RefObject } from 'react';
 import { Dimensions, Platform } from 'react-native';
 import { SharedValue, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useTheme } from '@shopify/restyle';
 
-import { isFunction, match } from '@leather.io/utils';
+import { match } from '@leather.io/utils';
 
 import { Box, Theme, createTextInput } from '../../../native';
 import { ThemeVariant } from '../../theme-native';
@@ -24,19 +24,19 @@ export const CLOSED_ANIMATED_SHARED_VALUE = -888;
 
 type SnapPointVariant = 'fullHeightWithNotch' | 'fullHeightWithoutNotch' | 'none';
 
-export interface SheetProps<T = unknown> extends Omit<BottomSheetModalProps, 'children'> {
+export interface SheetProps extends Omit<BottomSheetModalProps, 'children'> {
   shouldHaveContainer?: boolean;
   snapPointVariant?: SnapPointVariant;
   isScrollView?: boolean;
   animatedPosition?: SharedValue<number>;
   animatedIndex?: SharedValue<number>;
   themeVariant: ThemeVariant;
-  children: ReactNode | ReactNode[] | ((props?: { data?: T }) => ReactNode);
+  children: ReactNode | ReactNode[];
 }
 
 export type SheetRef = BottomSheetModal;
 
-export function Sheet<T = unknown>({
+export function Sheet({
   shouldHaveContainer = true,
   snapPointVariant = 'none',
   isScrollView,
@@ -47,7 +47,7 @@ export function Sheet<T = unknown>({
   themeVariant,
   ref,
   ...props
-}: { ref: RefObject<SheetRef | null> } & SheetProps<T>) {
+}: { ref: RefObject<SheetRef | null> } & SheetProps) {
   const { bottom, top } = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const defaultAnimatedPosition = useSharedValue(CLOSED_ANIMATED_SHARED_VALUE);
@@ -67,7 +67,7 @@ export function Sheet<T = unknown>({
     none: 0,
   });
   return (
-    <BottomSheetModal<T>
+    <BottomSheetModal
       animatedIndex={internalAnimatedIndex}
       stackBehavior="push"
       onDismiss={onDismiss}
@@ -102,25 +102,20 @@ export function Sheet<T = unknown>({
       })}
       {...props}
     >
-      {data => {
-        if (shouldHaveContainer) {
-          return (
-            <BottomSheetComponent
-              style={{
-                backgroundColor: theme.colors['ink.background-primary'],
-                paddingBottom: bottom,
-                borderTopLeftRadius: theme.borderRadii.lg,
-                borderTopRightRadius: theme.borderRadii.lg,
-                overflow: 'hidden',
-              }}
-            >
-              {isFunction(children) ? children(data) : (children as ReactElement)}
-            </BottomSheetComponent>
-          );
-        } else {
-          return isFunction(children) ? children(data) : (children as ReactElement);
-        }
-      }}
+      {shouldHaveContainer && (
+        <BottomSheetComponent
+          style={{
+            backgroundColor: theme.colors['ink.background-primary'],
+            paddingBottom: bottom,
+            borderTopLeftRadius: theme.borderRadii.lg,
+            borderTopRightRadius: theme.borderRadii.lg,
+            overflow: 'hidden',
+          }}
+        >
+          {children}
+        </BottomSheetComponent>
+      )}
+      {!shouldHaveContainer && children}
     </BottomSheetModal>
   );
 }
