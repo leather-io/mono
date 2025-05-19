@@ -45,6 +45,10 @@ export default (): ExpoConfig => {
     },
     orientation: 'portrait',
     icon: './src/assets/icon.png',
+    notification: {
+      icon: './src/assets/adaptive-icon.png',
+      color: '#12100F',
+    },
     scheme: 'leather',
     userInterfaceStyle: 'automatic',
     platforms: ['ios', 'android'],
@@ -96,10 +100,6 @@ export default (): ExpoConfig => {
           backgroundColor: '#716A60',
         },
       },
-    },
-    notification: {
-      icon: './src/assets/adaptive-icon.png',
-      color: '#12100F',
     },
     android: {
       package: 'io.leather.mobilewallet',

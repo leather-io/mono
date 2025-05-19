@@ -3,12 +3,13 @@ name: iOS E2E Tests
 defaults:
   tools:
     node: 22.15.0
+    pnpm: 10.10.0
     cocoapods: 1.16.2
     corepack: true
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  # pull_request:
+  #   types: [opened, synchronize]
   push:
     branches:
       - dev

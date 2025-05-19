@@ -179,6 +179,12 @@
     "vitest": "2.1.9"
   },
   "packageManager": "pnpm@10.10.0",
+  "engines": {
+    "node": ">=22.15.0",
+    "pnpm": ">=10.10.0",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
   "private": true,
   "publishConfig": {
     "access": "public"
