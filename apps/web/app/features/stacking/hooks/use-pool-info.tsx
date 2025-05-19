@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { STACKS_BLOCKS_PER_DAY } from '~/constants/constants';
 import { useGetPoxInfoQuery, useGetStatusQuery } from '~/features/stacking/hooks/stacking.query';
@@ -21,11 +22,12 @@ import {
   i18nFormatCurrency,
 } from '@leather.io/utils';
 
-export function usePoolInfo(poolSlug: PoolSlug) {
+export function usePoolInfo(poolSlug: PoolSlug | null) {
   const poxInfoQuery = useGetPoxInfoQuery();
   const getStatusQuery = useGetStatusQuery();
   const getPoolAddressQuery = useGetPoolAddress();
   const stacksNetwork = useStacksNetwork();
+
   const stackingTrackerPool = useStackingTrackerPool(poolSlug);
   const { data: stxMarketData, isLoading: isStxMarketDataLoading } = useStxMarketDataQuery();
 
@@ -47,10 +49,10 @@ export function usePoolInfo(poolSlug: PoolSlug) {
     !stackingTrackerPool.data ||
     !stxMarketData;
 
-  const pool = useMemo(() => getPoolFromSlug(poolSlug), [poolSlug]);
+  const pool = useMemo(() => poolSlug && getPoolFromSlug(poolSlug), [poolSlug]);
 
   const poolRewardProtocolInfo = useMemo(() => {
-    if (isLoading || isError) {
+    if (isLoading || isError || !pool) {
       return null;
     }
 
@@ -63,7 +65,10 @@ export function usePoolInfo(poolSlug: PoolSlug) {
       : '100,000,000 STX';
 
     const tvlBaseCurrencyAmount = baseCurrencyAmountInQuote(
-      createMoneyFromDecimal(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0, 'STX'),
+      createMoneyFromDecimal(
+        stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0,
+        pool.payout
+      ),
       stxMarketData
     );
 
@@ -100,6 +105,7 @@ export function usePoolInfo(poolSlug: PoolSlug) {
       nextCycleDays: poxInfoQuery.data.next_cycle.blocks_until_reward_phase / STACKS_BLOCKS_PER_DAY,
       nextCycleNumber: poxInfoQuery.data.next_cycle.id,
       nextCycleBlocks: poxInfoQuery.data.next_cycle.blocks_until_reward_phase,
+      rewardTokenIcon: <ChainLogoIcon symbol={pool.payout} />,
     } as PoolRewardProtocolInfo;
   }, [
     pool,
@@ -114,35 +120,38 @@ export function usePoolInfo(poolSlug: PoolSlug) {
     stxMarketData,
   ]);
 
-  const hardcodePoolRewardProtocolInfo = useMemo(
-    () =>
-      ({
-        apr: pool.estApr,
-        description: pool.description,
-        id: pool.providerId,
-        logo: <ProviderIcon providerId={pool.providerId} />,
-        minCommitment: pool.minAmount,
-        minCommitmentUsd: pool.minCommitmentUsd,
-        minLockupPeriodDays: 1,
-        nextCycleBlocks: 220,
-        nextCycleDays: 15,
-        nextCycleNumber: 110,
-        poolAddress: pool.poolAddress['mainnet'],
-        rewardAddress: pool.poolAddress['mainnet'],
-        rewardsToken: pool.payout,
-        status: 'Active',
-        title: pool.name,
-        tvl: '50,000,000 STX',
-        tvlUsd: pool.tvlUsd,
-      }) as PoolRewardProtocolInfo,
-    [pool]
-  );
+  const hardcodePoolRewardProtocolInfo = useMemo(() => {
+    if (!pool) {
+      return null;
+    }
+
+    return {
+      apr: pool.estApr,
+      description: pool.description,
+      id: pool.providerId,
+      logo: <ProviderIcon providerId={pool.providerId} />,
+      minCommitment: pool.minAmount,
+      minCommitmentUsd: pool.minCommitmentUsd,
+      minLockupPeriodDays: 1,
+      nextCycleBlocks: 220,
+      nextCycleDays: 15,
+      nextCycleNumber: 110,
+      poolAddress: pool.poolAddress['mainnet'],
+      rewardAddress: pool.poolAddress['mainnet'],
+      rewardsToken: pool.payout,
+      status: 'Active',
+      title: pool.name,
+      tvl: '50,000,000 STX',
+      tvlUsd: pool.tvlUsd,
+      rewardTokenIcon: <ChainLogoIcon symbol={pool.payout} />,
+    } as PoolRewardProtocolInfo;
+  }, [pool]);
 
   if (isLoading) {
     return { isLoading: true, hardcodePoolRewardProtocolInfo } as const;
   }
 
-  if (isError) {
+  if (isError || !hardcodePoolRewardProtocolInfo) {
     return { isLoading: false, isError: true, hardcodePoolRewardProtocolInfo } as const;
   }
 

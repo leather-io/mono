@@ -329,7 +329,21 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'estApr',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => {
+          const slug = providerIdToSlug(info.row.original.providerId);
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { data, isLoading, isError } = useStackingTrackerPool(slug);
+
+          if (isLoading) {
+            return <SkeletonLoader isLoading w={40} h={16} />;
+          }
+
+          if (isError || !data?.entity.apr) {
+            return <styled.div>{info.getValue() as string}</styled.div>;
+          }
+
+          return <styled.div>{toHumanReadablePercent(data.entity.apr)}</styled.div>;
+        },
         header: () => (
           <BasicHoverCard content={content.stacking.aprDescription}>
             <InfoLabel>

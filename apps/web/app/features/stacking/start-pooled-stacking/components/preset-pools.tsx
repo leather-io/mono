@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 
+import { DummyIcon } from '~/components/dummy';
 import { AlexLogo } from '~/components/icons/alex-logo';
 
 export interface PoolRewardProtocolInfo {
@@ -21,12 +22,20 @@ export interface PoolRewardProtocolInfo {
   nextCycleDays: number;
   nextCycleNumber: number;
   nextCycleBlocks: number;
+  rewardTokenIcon: ReactElement;
+}
+
+export interface ActivePoolRewardProtocolInfo extends PoolRewardProtocolInfo {
+  delegatedAmountMicroStx?: number | bigint;
+  isStacking: boolean;
+  isExpired: boolean;
 }
 
 export const dummyPoolRewardProtocol: PoolRewardProtocolInfo = {
   id: 'alex',
   url: 'https://app.alexlab.co/pool',
   logo: <AlexLogo size="32px" />,
+  rewardTokenIcon: <DummyIcon />,
   title: 'ALEX',
   description:
     'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',

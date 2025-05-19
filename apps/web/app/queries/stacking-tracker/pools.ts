@@ -79,7 +79,7 @@ export interface StackingTrackerPool {
   rewards_amount_usd?: number;
 }
 
-export interface StackingTrackerCycle {
+export interface StackingTrackerPoolCycle {
   cycle_number: number;
   stacked_amount: number;
   rewards_amount: number;
@@ -88,11 +88,11 @@ export interface StackingTrackerCycle {
   pools: StackingTrackerPool[];
 }
 
-export interface StackingTrackerCycleWithOnePool extends Omit<StackingTrackerCycle, 'pools'> {
+export interface StackingTrackerCycleWithOnePool extends Omit<StackingTrackerPoolCycle, 'pools'> {
   pool: StackingTrackerPool;
 }
 
-export interface StackingTrackerEntity {
+export interface StackingTrackerPoolEntity {
   name: string;
   fee: number;
   feeDisclosed: boolean;
@@ -110,6 +110,6 @@ export interface StackingTrackerEntity {
 }
 
 export interface StackingTrackerPoolsResponse {
-  cycles: StackingTrackerCycle[];
-  entities: StackingTrackerEntity[];
+  cycles: StackingTrackerPoolCycle[];
+  entities: StackingTrackerPoolEntity[];
 }

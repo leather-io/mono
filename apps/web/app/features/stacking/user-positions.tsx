@@ -3,21 +3,13 @@ import { useNavigate } from 'react-router';
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
-import { ProviderIcon } from '~/components/icons/provider-icon';
-import { StacksIcon } from '~/components/icons/stacks-icon';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import {
   ValueDisplayerWithCustomLoader,
   ValueDisplayerWithLoader,
 } from '~/components/value-displayer/value-displayer-with-loader';
-import { useGetCoreInfoQuery, useGetStatusQuery } from '~/features/stacking/hooks/stacking.query';
-import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
-import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
-import {
-  getPoolByAddress,
-  getPoolSlugByPoolName,
-} from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
-import { toHumanReadableMicroStx } from '~/utils/unit-convert';
+import { useActivePoolInfo } from '~/features/stacking/hooks/use-active-pool-info';
+import { toHumanReadableDays, toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import {
   ChevronDownIcon,
@@ -42,26 +34,14 @@ interface UserPositionsProps {
 export function UserPositions({ stacksAddress }: UserPositionsProps) {
   const navigate = useNavigate();
   const { mutateAsync: revokeDelegateStx } = useRevokeDelegateStxMutation();
+  const poolInfo = useActivePoolInfo();
+  const { fakeLoading } = useUserPositionsFakeLoading(poolInfo.isLoading);
 
   function openRevokeStackingContractCall() {
     return revokeDelegateStx().then(() => navigate('/stacking'));
   }
 
-  const delegationStatusQuery = useDelegationStatusQuery();
-  const getStatusQuery = useGetStatusQuery();
-  const getCoreInfoQuery = useGetCoreInfoQuery();
-  const getPoolAddressQuery = useGetPoolAddress();
-
-  const isLoading =
-    delegationStatusQuery.isLoading ||
-    getStatusQuery.isLoading ||
-    getCoreInfoQuery.isLoading ||
-    getPoolAddressQuery.isLoading ||
-    getPoolAddressQuery.isFetching;
-
-  const { fakeLoading } = useUserPositionsFakeLoading(isLoading);
-
-  if (isLoading) {
+  if (poolInfo.isLoading) {
     return (
       <Flex mt="space.07" pb="space.05" justifyContent="start" alignItems="center" gap="space.02">
         <Box>
@@ -74,38 +54,21 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
     );
   }
 
-  const isError =
-    delegationStatusQuery.isError ||
-    getStatusQuery.isError ||
-    getPoolAddressQuery.isError ||
-    getCoreInfoQuery.isError;
-
-  if (isError) {
+  if (poolInfo.isError) {
     const msg = 'Error while loading data, try reloading the page.';
     // eslint-disable-next-line no-console
     console.error(msg);
     return msg;
   }
 
-  const hasData =
-    getStatusQuery.data &&
-    getCoreInfoQuery.data &&
-    getPoolAddressQuery.data &&
-    delegationStatusQuery.data;
-
-  if (!hasData) {
-    return null;
-  }
-
-  const isStacking = getStatusQuery.data.stacked;
-  const poolAddress =
-    getPoolAddressQuery.data.address ||
-    (delegationStatusQuery.data.delegated
-      ? delegationStatusQuery.data.details.delegated_to
-      : undefined);
+  const activePoolRewardProtocolInfo = poolInfo.activePoolRewardProtocolInfo;
 
   // no positions
-  if ((!delegationStatusQuery.data.delegated && !isStacking) || !poolAddress) {
+  if (
+    (!poolInfo.delegationStatusQuery.data.delegated && !activePoolRewardProtocolInfo?.isStacking) ||
+    !activePoolRewardProtocolInfo ||
+    !activePoolRewardProtocolInfo?.poolAddress
+  ) {
     return (
       <Box mt="space.07" pb="space.05">
         <styled.span textStyle="heading.05" color="ink.text-subdued">
@@ -114,22 +77,6 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
       </Box>
     );
   }
-
-  const pool = getPoolByAddress(poolAddress); // TODO: Detect custom pool
-  const poolSlug = pool ? getPoolSlugByPoolName(pool.providerId) : undefined;
-
-  const delegationInfoDetails = delegationStatusQuery.data.delegated
-    ? delegationStatusQuery.data.details
-    : undefined;
-
-  // Logic like this should not live in UI components
-  // I believe we'd like to show this in the UI
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const isExpired =
-    delegationStatusQuery.data.delegated &&
-    delegationStatusQuery.data.details.until_burn_ht !== undefined &&
-    !Number.isNaN(delegationStatusQuery.data.details.until_burn_ht) &&
-    delegationStatusQuery.data.details.until_burn_ht < getCoreInfoQuery.data.burn_block_height;
 
   return (
     <Stack>
@@ -147,16 +94,16 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <VStack gap="space.05" alignItems="left" p="space.05">
             <SkeletonLoader width="32" height="32" isLoading={fakeLoading}>
-              {pool ? <ProviderIcon providerId={pool.providerId} /> : <DummyIcon />}
+              {activePoolRewardProtocolInfo ? activePoolRewardProtocolInfo.logo : <DummyIcon />}
             </SkeletonLoader>
 
             <SkeletonLoader height="15" width="80" isLoading={fakeLoading}>
-              {pool && poolSlug ? (
+              {activePoolRewardProtocolInfo ? (
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger>
                     <Flag reverse img={<ChevronDownIcon variant="small" />} spacing="space.01">
                       <styled.h4 userSelect="none" textStyle="label.01" textAlign="left">
-                        {pool.name}
+                        {activePoolRewardProtocolInfo.title}
                       </styled.h4>
                     </Flag>
                   </DropdownMenu.Trigger>
@@ -164,12 +111,16 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
                   <DropdownMenu.Content align="start">
                     <Box p="space.02" textStyle="label.02">
                       <DropdownMenu.Item
-                        onSelect={() => void navigate(`/stacking/pool/${poolSlug}/active`)}
+                        onSelect={() =>
+                          void navigate(`/stacking/pool/${activePoolRewardProtocolInfo.id}/active`)
+                        }
                       >
                         <Flag img={<InfoCircleIcon variant="small" />}>View position details</Flag>
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
-                        onSelect={() => void navigate(`/stacking/pool/${poolSlug}`)}
+                        onSelect={() =>
+                          void navigate(`/stacking/pool/${activePoolRewardProtocolInfo.id}`)
+                        }
                       >
                         <Flag img={<PlusIcon variant="small" />}>Increase pooling amount</Flag>
                       </DropdownMenu.Item>
@@ -195,17 +146,25 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             name="Amount"
             isLoading={fakeLoading}
             value={
-              delegationInfoDetails
-                ? toHumanReadableMicroStx(delegationInfoDetails.amount_micro_stx)
+              activePoolRewardProtocolInfo.delegatedAmountMicroStx
+                ? toHumanReadableMicroStx(activePoolRewardProtocolInfo.delegatedAmountMicroStx)
                 : '—'
             }
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayerWithLoader name="APR" isLoading={fakeLoading} value="~10%" />
+          <ValueDisplayerWithLoader
+            name="APR"
+            isLoading={fakeLoading}
+            value={activePoolRewardProtocolInfo.apr}
+          />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayerWithLoader name="Next rewards" isLoading={fakeLoading} value="~10 days" />
+          <ValueDisplayerWithLoader
+            name="Next rewards"
+            isLoading={fakeLoading}
+            value={`~${toHumanReadableDays(activePoolRewardProtocolInfo.nextCycleDays)}`}
+          />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithCustomLoader
@@ -213,8 +172,8 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             isLoading={fakeLoading}
             value={
               <Flex gap="space.02" alignItems="center">
-                <StacksIcon />
-                STX
+                {activePoolRewardProtocolInfo.rewardTokenIcon}
+                {activePoolRewardProtocolInfo.rewardsToken}
               </Flex>
             }
             customSkeletonLayout={
@@ -232,7 +191,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
       </InfoGrid>
 
-      {!pool && !poolSlug && (
+      {!activePoolRewardProtocolInfo.id && (
         <styled.p textStyle="caption.01" color="ink.text-subdued">
           <Flag
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
