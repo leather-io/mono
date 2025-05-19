@@ -87,6 +87,14 @@
     * @leather.io/models bumped to 0.32.0
     * @leather.io/rpc bumped to 2.14.1
 
+## [1.2.6](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.2.5...@leather.io/sdk-v1.2.6) (2025-05-19)
+
+
+### Bug Fixes
+
+* **sdk:** return results when passing params ([c979efc](https://github.com/leather-io/mono/commit/c979efc7680a25598913b73ecf55ffc57c1af103))
+* **web:** stack independently copy ([7711abb](https://github.com/leather-io/mono/commit/7711abbb7b2fd734b0b77d1f4a17e9dced58a8f9))
+
 ## [1.2.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.1.6...@leather.io/sdk-v1.2.0) (2025-04-09)
 
 
