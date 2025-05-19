@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts, useAccountsByFingerprint } from '@/store/accounts/accounts.read';
+import { AccountStatus } from '@/store/accounts/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import {
   useStacksSignerAddressFromAccountIndex,
@@ -112,27 +113,34 @@ function filterAccountsByActiveAccounts(
   );
 }
 
-export function useTotalAccountAddresses() {
+export function useTotalAccountAddresses(status: AccountStatus = 'active') {
   const wallets = useWallets();
   const bitcoinAccounts = useBitcoinAccounts();
   const stacksSigners = useStacksSigners();
-  const activeAccounts = useAccounts();
+  const accounts = useAccounts(status);
 
   return useMemo(
     () =>
       filterAccountsByActiveAccounts(
         deriveTotalAccountAddresses(wallets, bitcoinAccounts, stacksSigners),
-        activeAccounts.list
+        accounts.list
       ),
-    [wallets, bitcoinAccounts, stacksSigners, activeAccounts]
+    [wallets, bitcoinAccounts, stacksSigners, accounts]
   );
 }
 
-export function useWalletAccountAddresses(fingerprint: string) {
+interface UseWalletAccountAddressesArgs {
+  fingerprint: string;
+  status: AccountStatus;
+}
+export function useWalletAccountAddresses({
+  fingerprint,
+  status = 'active',
+}: UseWalletAccountAddressesArgs) {
   const bitcoinAccounts = useBitcoinAccounts();
   const accountsByFingerprint = useAccountsByFingerprint(fingerprint);
   const stacksSigners = useStacksSigners();
-  const activeAccounts = useAccounts();
+  const accounts = useAccounts(status);
 
   return useMemo(
     () =>
@@ -143,9 +151,9 @@ export function useWalletAccountAddresses(fingerprint: string) {
           accountsByFingerprint,
           stacksSigners
         ),
-        activeAccounts.list
+        accounts.list
       ),
-    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint, activeAccounts]
+    [accountsByFingerprint, stacksSigners, bitcoinAccounts, fingerprint, accounts]
   );
 }
 
