@@ -139,7 +139,14 @@ export function SbtcRewards() {
           subtitle="Get BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield from a variety of reward protocols without sacrificing Bitcoin’s underlying security and self-sovereignty."
         />
 
-        <ApyRewardHeroCard apyRange="5–8%" mt="space.05" />
+        <ApyRewardHeroCard
+          apyRange="5–8%"
+          mt="space.05"
+          backgroundImage="url(/images/sbtc-hero.png)"
+          backgroundRepeat="no-repeat"
+          backgroundSize="contain"
+          backgroundPosition="right"
+        />
 
         <styled.section mt="space.09">
           <styled.h3 textStyle="heading.03">Step 1: Get sBTC</styled.h3>
