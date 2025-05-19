@@ -2,7 +2,7 @@ import { t } from '@lingui/macro';
 
 import { Box, Callout, CloudOffIcon, Text } from '@leather.io/ui/native';
 
-import { EmptyLayout } from './empty-layout';
+import { EmptyLayout } from '../loading/empty-layout';
 
 interface ErrorProps {
   errorMessage?: string;
@@ -30,7 +30,7 @@ export function FetchError() {
       }
     >
       <Text variant="label02">
-        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull to refresh' })}
+        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull this page to refresh' })}
       </Text>
     </Callout>
   );

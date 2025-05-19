@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { FetchError } from '@/components/loading/error';
+import { FetchError } from '@/components/error/fetch-error';
 import { Widget } from '@/components/widget';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
