@@ -14,7 +14,7 @@ const sentryConfig: SentryReactRouterBuildOptions = {
   authToken: process.env.LEATHER_SENTRY_AUTH_TOKEN,
 };
 
-export default defineConfig(config => ({
+export default defineConfig(({ command, mode, isSsrBuild }) => ({
   envPrefix: 'LEATHER_',
   optimizeDeps: {
     exclude: ['axios'],
@@ -28,7 +28,6 @@ export default defineConfig(config => ({
   resolve: {
     alias: {
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
-      // import from 'axios' fails in SSR
       axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
     },
   },
@@ -41,7 +40,7 @@ export default defineConfig(config => ({
     svgr({ include: '**/*.svg' }),
     viteCommonjs(),
     reactRouter(),
-    sentryReactRouter(sentryConfig, config),
+    sentryReactRouter(sentryConfig, { command, mode, isSsrBuild }),
     tsconfigPaths(),
   ],
   sentryConfig,

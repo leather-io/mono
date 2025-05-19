@@ -3,8 +3,8 @@ import { MIN_DELEGATED_STACKING_AMOUNT_USTX } from '~/constants/constants';
 
 // Providers are partner entities that offer yeild based services
 const providers = {
-  xverse: {
-    providerId: 'xverse',
+  'xverse-pool': {
+    providerId: 'xverse-pool',
     name: 'Xverse',
     url: 'https://xverse.app',
   },
@@ -23,8 +23,8 @@ const providers = {
     name: 'Restake',
     url: 'https://restake.net/stacks-pool',
   },
-  stackingDao: {
-    providerId: 'stackingDao',
+  'stacking-dao': {
+    providerId: 'stacking-dao',
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
   },
@@ -159,8 +159,8 @@ export const stackingPoolData = {
     allowCustomRewardAddress: false,
     disabled: false,
   },
-  xverse: {
-    ...providers.xverse,
+  'xverse-pool': {
+    ...providers['xverse-pool'],
     fee: '5%',
     minAmount: '100 STX',
     estApr: '10%',
@@ -179,14 +179,13 @@ export const stackingPoolData = {
     allowCustomRewardAddress: true,
     disabled: false,
   },
-  stackingDao: {
-    ...providers.stackingDao,
+  'stacking-dao': {
+    ...providers['stacking-dao'],
     fee: '5%',
     minAmount: '100 STX',
     estApr: '16%',
     payout: 'STX',
-    description:
-      'Enter the STX address of the pool with which you’d like to Stack without your STX leaving your wallet.',
+    description: "Enter the STX address of the pool with which you'd like to Stack without your STX leaving your wallet.",
     duration: -1,
     poolAddress: {
       mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
@@ -218,8 +217,8 @@ export interface LiquidStackingPool {
   fee: string;
 }
 export const liquidStackingPoolData = {
-  stackingDao: {
-    ...providers.stackingDao,
+  'stacking-dao': {
+    ...providers['stacking-dao'],
     slug: 'stacking-dao',
     estApr: '5%',
     fee: '5%',

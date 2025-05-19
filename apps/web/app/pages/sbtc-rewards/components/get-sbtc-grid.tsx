@@ -7,13 +7,15 @@ import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid
 import { Badge, Button } from '@leather.io/ui';
 
 import { BridgingStatus, useSbtcRewardContext } from '../sbtc-rewards-context';
+import { content } from '~/data/content';
+import { getLearnMoreLink } from '~/features/page/page';
 
 function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
   if (bridgingStatus !== 'disabled') return null;
   return (
     <Badge
-      // Not sure why importants are needed here
-      mt={['space.03', 'unset', 'space.02', 'unset']}
+      mt="space.03"
+      mb="space.03"
       variant="info"
       label="Max bridging capacity reached"
     />
@@ -22,6 +24,7 @@ function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
 
 function BridgeToSbtcCell() {
   const { onBridgeSbtc, bridgingStatus, whenExtensionState } = useSbtcRewardContext();
+  const sbtcBridgePost = content.posts['sbtc-bridge'];
   return (
     <Flex flexDir={['column', 'row', 'column', 'row']} justifyContent="space-between" p="space.05">
       <Flex flexDir="column" flex={1} justifyContent="space-between">
@@ -29,15 +32,17 @@ function BridgeToSbtcCell() {
 
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Bridge BTC to sBTC</styled.h4>
-          <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-            Bitcoin to Stacks via a trust-minimizing protocol
-          </styled.p>
+          <MaxCapacity bridgingStatus={bridgingStatus} />
+          {sbtcBridgePost && (
+            <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
+              {sbtcBridgePost.Prompt}
+              {getLearnMoreLink(sbtcBridgePost.Slug, sbtcBridgePost.Prompt)}
+            </styled.p>
+          )}
         </Box>
       </Flex>
 
       <Flex flexDir="column" justifyContent="space-between" alignItems="flex-end">
-        <MaxCapacity bridgingStatus={bridgingStatus} />
-
         <WhenClient>
           <Button
             onClick={onBridgeSbtc}
@@ -59,6 +64,7 @@ function BridgeToSbtcCell() {
 
 function SwapStxToSbtcCell() {
   const { onSwapStxSbtc, whenExtensionState } = useSbtcRewardContext();
+  const stacksSwapsPost = content.posts['stacks-swaps'];
   return (
     <Flex
       flexDir={['column', 'row', 'column', 'row']}
@@ -71,10 +77,12 @@ function SwapStxToSbtcCell() {
 
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Swap Stacks tokens for sBTC</styled.h4>
-
-          <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-            On Stacks via decentralized liquidity pools
-          </styled.p>
+          {stacksSwapsPost && (
+            <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
+              {stacksSwapsPost.Prompt}
+              {getLearnMoreLink(stacksSwapsPost.Slug, stacksSwapsPost.Prompt)}
+            </styled.p>
+          )}
         </Box>
       </Flex>
       <Flex alignItems="flex-end">

@@ -1,8 +1,11 @@
 import { styled } from 'leather-styles/jsx';
-import { ApyRewardHeroCard } from '~/components/apy-hero-card';
+import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
+import { PostPageHeading } from '~/components/post-page-heading';
+import { content } from '~/data/content';
 import { UserPositions } from '~/features/stacking/user-positions';
+import { PostSectionHeading } from '~/components/post-section-heading';
 
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
 import { StackingExplainer } from './components/stacking-explainer';
@@ -17,29 +20,25 @@ export function Stacking() {
     <Page>
       <Page.Header title="Stacking" />
 
-      <Page.Heading
-        title="Earn yield from stacking on Stacks"
-        subtitle="Earn yield from the native consensus mechanism of Stacks—the leading L2 for Bitcoin—by either locking your STX via a pool or converting your STX to a liquid Stacking token."
-      />
+      <PostPageHeading post={content.posts['stacking']} />
 
-      <ApyRewardHeroCard
-        apyRange="6–10%"
-        backgroundImage="url('/images/orange-stacks-coins.webp')"
-        backgroundRepeat="no-repeat"
-        bgPosition="right"
-      />
+      <Page.Inset pos="relative" bg="black" color="white" h="260px" backgroundImage="url('/images/orange-stacks-coins.webp')" backgroundRepeat="no-repeat" bgPosition="right">
+        <styled.div style={{ position: 'absolute', bottom: 0, width: '100%' }} p={['space.04', 'space.05', 'space.07']}>
+          <PostValueHoverCard postKey="historical-yield" value="6–10%" />
+        </styled.div>
+      </Page.Inset>
 
       <StacksAccountLoader>
         {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
       </StacksAccountLoader>
 
-      <Page.Title mt="space.07">Pooled stacking</Page.Title>
+      <PostSectionHeading post={content.posts['pooled-stacking']} />
       <StackingExplainer mt="space.05" />
 
       <StackingProviderTable mt="space.05" />
 
-      <Page.Title mt="space.09">Liquid stacking</Page.Title>
 
+      <PostSectionHeading post={content.posts['liquid-stacking']} />
       <LiquidStackingExplainer mt="space.04" />
 
       <LiquidStackingProviderTable mt="space.05" />

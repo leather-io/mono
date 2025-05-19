@@ -6,7 +6,7 @@ const poolingConditions = [
   {
     icon: <BoxedCatLockedIcon />,
     title: "This transaction can't be reversed",
-    description: "Your STX will stay locked for the full duration of the pool's stacking cycle.",
+    description: "Your STX will stay locked for the full duration of the pool's commitment.",
   },
   {
     icon: <MagnifyingGlassIcon />,
@@ -17,7 +17,7 @@ const poolingConditions = [
     icon: <StacksIcon />,
     title: "Stacking with the pool's contract",
     description:
-      "The pool's smart contract manages stacking, and using it means agreeing to its terms.",
+      "The pool's smart contract manages Stacking and using it means agreeing to its terms.",
   },
 ];
 

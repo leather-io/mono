@@ -60,7 +60,7 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
 }
 
 function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
-  return <ValueDisplayer gap="space.04" name="Historical APR" value={rewardProtocol.apr} />;
+  return <ValueDisplayer gap="space.04" name="Historical yield" value={rewardProtocol.apr} />;
 }
 
 function PoolAddressCell({ rewardProtocol }: RewardProtocolCellProps) {

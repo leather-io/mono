@@ -22,6 +22,8 @@ import { toHumanReadableStx } from '~/utils/unit-convert';
 import { LoadingSpinner, SkeletonLoader } from '@leather.io/ui';
 
 import { useUserPositionsFakeLoading } from './hooks/use-user-positions-fake-loading';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { content } from '~/data/content';
 
 interface UserPositionsProps {
   stacksAddress: string;
@@ -149,7 +151,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-            name="Amount"
+            name={<PostLabelHoverCard postKey="stacking-amount" label={(content.posts as Record<string, any>)["stacking-amount"]?.Title || "Amount"} textStyle="label.03" />}
             isLoading={fakeLoading}
             value={
               delegationInfoDetails
@@ -159,14 +161,22 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayerWithLoader name="APR" isLoading={fakeLoading} value="~10%" />
+          <ValueDisplayerWithLoader
+            name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "APR"} textStyle="label.03" />}
+            isLoading={fakeLoading}
+            value="~10%"
+          />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
-          <ValueDisplayerWithLoader name="Next rewards" isLoading={fakeLoading} value="~10 days" />
+          <ValueDisplayerWithLoader
+            name={<PostLabelHoverCard postKey="pooled-stacking-upcoming-rewards" label={(content.posts as Record<string, any>)["pooled-stacking-upcoming-rewards"]?.Title || "Next rewards"} textStyle="label.03" />}
+            isLoading={fakeLoading}
+            value="~10 days"
+          />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithCustomLoader
-            name="Rewards token"
+            name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={(content.posts as Record<string, any>)["stacking-rewards-tokens"]?.Title || "Rewards token"} textStyle="label.03" />}
             isLoading={fakeLoading}
             value={
               <Flex gap="space.02" alignItems="center">

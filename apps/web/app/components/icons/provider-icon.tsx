@@ -8,8 +8,8 @@ const stackingProviderIcons: Record<ProviderId, ReactElement> = {
   fastPool: <ImgFillLoader src="icons/fastpool.webp" width="24" fill="black" />,
   planbetter: <ImgFillLoader src="icons/planbetter.webp" width="24" fill="black" />,
   restake: <ImgFillLoader src="icons/restake.webp" width="24" fill="#124044" />,
-  xverse: <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
-  stackingDao: <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
+  'xverse-pool': <ImgFillLoader src="icons/xverse.webp" width="24" fill="black" />,
+  'stacking-dao': <ImgFillLoader src="icons/stacking-dao.webp" width="24" fill="#1C3830" />,
   lisa: <ImgFillLoader src="icons/lisa.webp" width="24" fill="#FB9DF1" />,
 };
 

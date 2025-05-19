@@ -8,72 +8,37 @@ The system fetches posts from the CMS API at https://cms.leather.io/posts and st
 
 ## Files
 
-- `content.ts` - The main content file that exports all content including posts
+- `content.ts` - The main content file that exports all content including posts and stacking explainer step data
 - `posts.json` - The static JSON file containing all posts from the CMS
 - `post-types.ts` - TypeScript type definitions for post data
 
-## Fetching Posts
+## Posts Sourcing
 
-To update the posts data from the CMS:
+At build time, posts are downloaded from [https://leather-cms.s3.amazonaws.com/posts.json](https://leather-cms.s3.amazonaws.com/posts.json) using a script. The file is saved as `apps/web/app/data/posts.json`, which is ignored by git and not committed to the repo. This allows synchronous imports for fast local and SSR usage.
+
+To fetch the latest posts before building, run:
 
 ```bash
-# From the apps/web directory
-./fetch-posts.sh
+node scripts/fetch-remote-posts.cjs
 ```
 
-This will:
-1. Run the fetch-posts.js script
-2. Iterate through all pages of posts in the CMS
-3. Save them to posts.json indexed by their slug
+This is run automatically in the `prebuild` step.
 
-## Using Posts in Code
+## Stacking Explainer Content
 
-Import the utility functions from `utils/posts.ts`:
+The `content.ts` file now exports two additional arrays for use in stacking explainers:
 
-```typescript
-import { getPostBySlug, getAllPosts, getPostsByCategory } from '../utils/posts';
+- `stackingExplainer`: An array of step objects for the pooled stacking explainer.
+- `liquidStackingExplainer`: An array of step objects for the liquid stacking explainer.
 
-// Get a specific post by slug
-const post = getPostBySlug('my-post-slug');
+Each step object has the following structure:
 
-// Get all posts
-const allPosts = getAllPosts();
-
-// Get posts by category
-const explainers = getPostsByCategory('Explainers');
-```
-
-Or access directly through the content object:
-
-```typescript
-import { content } from '../data/content';
-
-// Access a post by slug
-const post = content.posts['my-post-slug'];
-```
-
-## Post Structure
-
-Each post has the following structure:
-
-```typescript
-interface Post {
-  id: string;
-  Title: string;
-  Slug: string;
-  Body: string;
-  Date: string;
-  Status: string;
-  Category: string;
-  Subcategory: string;
-  Featured: boolean;
-  Hidden: boolean;
-  // ...and more fields
+```ts
+{
+  title: string;         // Step title (e.g. "Get STX")
+  postKey: string;       // Key to look up the related post in content.posts
+  description: string;   // Description for the step
 }
 ```
 
-See `post-types.ts` for the complete type definition.
-
-## Testing
-
-A test page is available at `/test-posts` that demonstrates the posts are being loaded and shows basic post information. This is a good place to verify that the CMS integration is working correctly after fetching new posts. 
+These arrays are used to render the stacking explainers in the UI, ensuring all step data is sourced from a single location.

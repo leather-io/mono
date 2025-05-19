@@ -32,12 +32,13 @@ import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 
 import { Button, Flag } from '@leather.io/ui';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 
 const providerSlugMap = {
   fastPool: 'fast-pool',
   planbetter: 'plan-better',
   restake: 'restake',
-  xverse: 'xverse',
+  'xverse-pool': 'xverse-pool',
   stackingDao: 'stacking-dao',
 } as const;
 
@@ -49,7 +50,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   const leadingColumn = useMemo<ColumnDef<StackingPool>>(
     () => ({
       accessorKey: 'name',
-      cell: info => (
+      cell: (info: any) => (
         <Flag
           img={<ProviderIcon providerId={info.row.original.providerId} />}
           color="ink.text-primary"
@@ -59,11 +60,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       ),
       header: () => (
         <ForceRowHeight>
-          <BasicHoverCard content={content.stacking.providerDescription}>
-            <InfoLabel>
-              <SortableHeader>Provider</SortableHeader>
-            </InfoLabel>
-          </BasicHoverCard>
+          <PostLabelHoverCard postKey="stacking-providers" label="Provider" textStyle="label.03" />
         </ForceRowHeight>
       ),
       meta: { align: 'left' },
@@ -78,13 +75,11 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'payout',
         header: () => (
-          <BasicHoverCard content={content.stacking.payoutDescription}>
-            <InfoLabel>
-              <SortableHeader>Payout</SortableHeader>
-            </InfoLabel>
-          </BasicHoverCard>
+          <styled.div textAlign="left" whiteSpace="nowrap">
+            <PostLabelHoverCard postKey="stacking-rewards-tokens" label="Rewards token" textStyle="label.03" />
+          </styled.div>
         ),
-        cell: info => (
+        cell: (info: any) => (
           <Flag
             display={['none', 'none', 'flex']}
             spacing="space.02"
@@ -98,18 +93,14 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'minAmount',
-        cell: info => (
-          <styled.div maxW="fit-content">
+        cell: (info: any) => (
+          <styled.div maxW="fit-content" textAlign="right" color="black">
             {info.getValue() === null ? '—' : (info.getValue() as string)}
           </styled.div>
         ),
         header: () => (
-          <styled.div maxW="fit-content">
-            <BasicHoverCard content={content.stacking.minimumAmountToStackDescription}>
-              <InfoLabel>
-                <SortableHeader>Minimum Amount</SortableHeader>
-              </InfoLabel>
-            </BasicHoverCard>
+          <styled.div maxW="fit-content" whiteSpace="nowrap" textAlign="right">
+            <PostLabelHoverCard postKey="stacking-minimum-commitment" label="Minimum commitment" textStyle="label.03" />
           </styled.div>
         ),
         meta: { align: 'right' },
@@ -117,14 +108,10 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'estApr',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: (info: any) => <styled.div textAlign="right" color="black">{info.getValue() as string}</styled.div>,
         header: () => (
-          <styled.div>
-            <BasicHoverCard content={content.stacking.aprDescription}>
-              <InfoLabel>
-                <SortableHeader>Est. APR</SortableHeader>
-              </InfoLabel>
-            </BasicHoverCard>
+          <styled.div whiteSpace="nowrap" textAlign="right">
+            <PostLabelHoverCard postKey="historical-yield" label="Historical yield" textStyle="label.03" />
           </styled.div>
         ),
         meta: { align: 'right' },
@@ -132,14 +119,10 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'fee',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: (info: any) => <styled.div textAlign="right" color="black">{info.getValue() as string}</styled.div>,
         header: () => (
-          <styled.div>
-            <BasicHoverCard content={content.stacking.feeDescription}>
-              <InfoLabel>
-                <SortableHeader>Pool fee</SortableHeader>
-              </InfoLabel>
-            </BasicHoverCard>
+          <styled.div textAlign="right" whiteSpace="nowrap">
+            <PostLabelHoverCard postKey="stacking-pool-fees" label="Fee" textStyle="label.03" />
           </styled.div>
         ),
         meta: { align: 'right' },
@@ -154,7 +137,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'actions',
         header: () => null,
-        cell: info => (
+        cell: (info: any) => (
           <StartEarningButton
             slug={providerSlugMap[info.row.original.providerId as keyof typeof providerSlugMap]}
             poolAddresses={info.row.original.poolAddress}
@@ -181,9 +164,9 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
     <Table.Root {...props}>
       <Table.Table>
         <Table.Head className={theadBorderBottom}>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup: any) => (
             <Table.Row key={headerGroup.id} className={rowPadding}>
-              {headerGroup.headers.map(header => (
+              {headerGroup.headers.map((header: any) => (
                 <Table.Header
                   key={header.id}
                   colSpan={header.colSpan}
@@ -205,14 +188,15 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
           ))}
         </Table.Head>
         <Table.Body>
-          {table.getRowModel().rows.map(row => (
+          {table.getRowModel().rows.map((row: any) => (
             <Table.Row key={row.id} height="64px" className={rowPadding}>
-              {row.getVisibleCells().map(cell => (
+              {row.getVisibleCells().map((cell: any) => (
                 <styled.td
-                  style={{ width: cell.column.getSize() + '%' }}
+                  style={{ width: cell.column.getSize() + '%', textAlign: (cell.column.columnDef.meta as any)?.align === 'right' ? 'right' : 'left' }}
                   px="space.04"
                   key={cell.id}
                   align={(cell.column.columnDef.meta as any)?.align}
+                  color="black"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </styled.td>
@@ -242,11 +226,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       ),
       header: () => (
         <ForceRowHeight>
-          <BasicHoverCard content={content.stacking.providerDescription}>
-            <InfoLabel>
-              <SortableHeader>Provider</SortableHeader>
-            </InfoLabel>
-          </BasicHoverCard>
+          <PostLabelHoverCard postKey="stacking-providers" label="Provider" textStyle="label.03" />
         </ForceRowHeight>
       ),
       meta: { align: 'left' },
@@ -261,11 +241,9 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       {
         accessorKey: 'payout',
         header: () => (
-          <BasicHoverCard content={content.stacking.payoutDescription}>
-            <InfoLabel>
-              <SortableHeader>Payout</SortableHeader>
-            </InfoLabel>
-          </BasicHoverCard>
+          <styled.div textAlign="left" whiteSpace="nowrap">
+            <PostLabelHoverCard postKey="stacking-rewards-tokens" label="Rewards token" textStyle="label.03" />
+          </styled.div>
         ),
         cell: info => (
           <Flag
@@ -282,13 +260,9 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'estApr',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => <styled.div color="black">{info.getValue() as string}</styled.div>,
         header: () => (
-          <BasicHoverCard content={content.stacking.aprDescription}>
-            <InfoLabel>
-              <SortableHeader>Est. APR</SortableHeader>
-            </InfoLabel>
-          </BasicHoverCard>
+          <PostLabelHoverCard postKey="historical-yield" label="Historical yield" textStyle="label.03" />
         ),
         meta: { align: 'right' },
         size: 15,
@@ -296,15 +270,9 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'fee',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => <styled.div color="black">{info.getValue() as string}</styled.div>,
         header: () => (
-          <styled.div>
-            <BasicHoverCard content={content.stacking.feeDescription}>
-              <InfoLabel>
-                <SortableHeader>Pool fee</SortableHeader>
-              </InfoLabel>
-            </BasicHoverCard>
-          </styled.div>
+          <PostLabelHoverCard postKey="stacking-pool-fees" label="Fee" textStyle="label.03" />
         ),
         meta: { align: 'right' },
         size: 15,
@@ -314,8 +282,9 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
     []
   );
 
-  const trailingColumn = useMemo<ColumnDef<LiquidStackingPool>>(
-    () => ({
+  const trailingColumn = useMemo<ColumnDef<LiquidStackingPool>[]>(
+    () => [
+      {
       accessorKey: 'actions',
       header: () => null,
       cell: info => (
@@ -326,12 +295,13 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         </Link>
       ),
       meta: { align: 'right' },
-    }),
+      },
+    ],
     []
   );
 
   const table = useReactTable({
-    columns: [leadingColumn, ...(useViewportMinWidth('md') ? extendedColumns : []), trailingColumn],
+    columns: [leadingColumn, ...(useViewportMinWidth('md') ? extendedColumns : []), ...trailingColumn],
     data: liquidStackingProvidersList,
     debugTable: false,
     getCoreRowModel: getCoreRowModel(),
@@ -372,10 +342,11 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
             <Table.Row key={row.id} height="64px" className={rowPadding}>
               {row.getVisibleCells().map(cell => (
                 <styled.td
-                  style={{ width: `${cell.column.getSize()}%` }}
+                  style={{ width: cell.column.getSize() + '%', textAlign: (cell.column.columnDef.meta as any)?.align === 'right' ? 'right' : 'left' }}
                   px="space.04"
                   key={cell.id}
                   align={(cell.column.columnDef.meta as any)?.align}
+                  color="black"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </styled.td>

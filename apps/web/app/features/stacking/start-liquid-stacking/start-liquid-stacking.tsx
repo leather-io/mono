@@ -175,7 +175,6 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Liquid Stacking conditions" />
                   <ChooseLiquidStackingConditions />
                 </Stack>
 
