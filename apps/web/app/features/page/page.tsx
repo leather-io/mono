@@ -3,6 +3,8 @@ import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 import { Link, Hr } from '@leather.io/ui';
 import { content } from '~/data/content';
+import { getPostHref } from '~/utils/post-link';
+import { ReactNode } from 'react';
 
 import { SignInButton } from '../sign-in-button/sign-in-button';
 
@@ -18,45 +20,48 @@ export function PageInset(props: HTMLStyledProps<'div'>) {
 
 interface PageHeadingProps {
   title: string;
-  subtitle: string;
-  disclaimer: string;
+  subtitle?: string;
+  disclaimer?: string;
   postSlug?: string;
 }
-export function PageHeading({ title, subtitle, disclaimer, postSlug }: PageHeadingProps) {
+export function PageHeading({ title, subtitle = '', disclaimer, postSlug }: PageHeadingProps) {
   const needsPeriod = subtitle && !subtitle.endsWith('.') && !subtitle.endsWith('!') && !subtitle.endsWith('?');
-  
-  const learnMoreLink = postSlug ? (
-    <>
-      {subtitle && needsPeriod ? '. ' : ' '}
-      <Link href={`https://leather.io/posts/${postSlug}`} target="_blank" rel="noopener">
-        Learn more
-      </Link>
-    </>
-  ) : null;
+
+  const learnMoreLink = getLearnMoreLink(postSlug || '', subtitle);
 
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
       <Box flex={1}>
-        <Page.Title textStyle="heading.03" maxW="400px">
+        <Page.Title textStyle="heading.02" maxW="400px">
           {title}
         </Page.Title>
       </Box>
       <Box flex={1}>
-        <Page.Subtitle mt={['space.03', 'space.03', 0]}>
+        <Page.Subtitle mt={['space.03', 'space.03', 0]} style={{ whiteSpace: 'pre-line' }}>
           {subtitle}
           {learnMoreLink}
         </Page.Subtitle>
-        
         {disclaimer && (
           <>
-            <Hr my="space.03" />
-            <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.02">
-              ⚠️ {disclaimer}
-            </styled.div>
+            <styled.hr color="ink.border-default" border="none" borderBottom="1px solid var(--colors-ink-border-default)" width="100%" mb="space.02" mt="space.03" />
+            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02" borderRadius="sm">
+              {disclaimer}
+            </styled.p>
           </>
         )}
       </Box>
     </Flex>
+  );
+}
+
+export function getLearnMoreLink(postSlug: string, subtitle?: string): ReactNode {
+  if (!postSlug) return null;
+  const needsPeriod = subtitle && !subtitle.endsWith('.') && !subtitle.endsWith('!') && !subtitle.endsWith('?');
+  return (
+    <>
+      {subtitle && needsPeriod ? '. ' : ' '}
+      <Link href={getPostHref(postSlug)} style={{ fontSize: 'inherit' }}>{'Learn more'}</Link>
+    </>
   );
 }
 

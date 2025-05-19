@@ -9,6 +9,7 @@ import { VelarLogo } from '~/components/icons/velar-logo';
 import { ZestLogo } from '~/components/icons/zest-logo';
 import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
+import { PostPageHeading } from '~/components/post-page-heading';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
@@ -18,11 +19,12 @@ import { formatPostPrompt, formatPostSentence } from '~/utils/post-utils';
 
 import { Button, Hr } from '@leather.io/ui';
 
-import { ApyRewardHeroCard } from '../../components/apy-hero-card';
+import { PostValueHoverCard } from '../../components/post-value-hover-card';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
+import { PostSectionHeading } from '~/components/post-section-heading';
 
 export interface RewardProtocolInfo {
   id: string;
@@ -137,12 +139,7 @@ export function SbtcRewards() {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <Page.Heading
-          title={formatPostPrompt(content.posts[postSlug]?.Prompt || '')}
-          subtitle={formatPostSentence(content.posts[postSlug]?.Sentence || '')}
-          disclaimer={content.posts[postSlug]?.Disclaimer || ''}
-          postSlug={content.posts[postSlug]?.Slug || postSlug}
-        />
+        <PostPageHeading post={content.posts[postSlug]} />
 
         <ApyRewardHeroCard
           apyRange="5–8%"
@@ -153,17 +150,14 @@ export function SbtcRewards() {
           backgroundPosition="right"
         />
 
+
         <styled.section mt="space.09">
-          <styled.h3 textStyle="heading.03">Step 1: Get sBTC</styled.h3>
-          <styled.p textStyle="label.03" mt="space.02" maxW="390px">
-            You can get sBTC either by bridging BTC to the Stacks blockchain or by swapping another
-            asset on Stacks on the L2 itself.
-          </styled.p>
+          <PostSectionHeading post={(content.posts as Record<string, any>)['get-sbtc']} prefix="Step 1: " />
           <GetSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">
-          <styled.h3 textStyle="heading.03">Step 2: Choose reward protocol</styled.h3>
+          <PostSectionHeading post={(content.posts as Record<string, any>)['sbtc-rewards-provider']} prefix="Step 2: " />
 
           <SbtcProtocolRewardGrid
             enrollAction={<SbtcEnrollButton />}

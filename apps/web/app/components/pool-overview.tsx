@@ -2,17 +2,29 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+<<<<<<< HEAD
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
+=======
+import { StackingPool } from '~/data/data';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { content } from '~/data/content';
+import { PostValueHoverCard } from '~/components/post-value-hover-card';
+import { getLearnMoreLink } from '~/features/page/page';
+import { usePost } from '~/utils/post-hooks';
+
+import { ProviderIcon } from './icons/provider-icon';
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
 
 interface RewardTokenCellProps {
   token?: string;
   value?: string;
+  textStyle?: string;
 }
-function RewardTokenCell({ token = 'STX', value }: RewardTokenCellProps) {
+function RewardTokenCell({ token = 'STX', value, textStyle }: RewardTokenCellProps) {
   return (
     <ValueDisplayer
-      name="Rewards token"
+      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={(content.posts as Record<string, any>)["stacking-rewards-tokens"]?.Title || "Rewards token"} textStyle={textStyle} />}
       value={
         <>
           {token}
@@ -24,6 +36,7 @@ function RewardTokenCell({ token = 'STX', value }: RewardTokenCellProps) {
 }
 
 interface LockupPeriodCellProps {
+<<<<<<< HEAD
   minLockupPeriodDays: number;
 }
 function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
@@ -53,15 +66,33 @@ function DaysUntilNextCycleCell({
   nextCycleBlocks,
   nextCycleNumber,
 }: DaysUntilNextCycleCellProps) {
+=======
+  lockupPeriod?: string;
+  textStyle?: string;
+}
+function LockupPeriodCell({ lockupPeriod = '1 Cycle', textStyle }: LockupPeriodCellProps) {
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="stacking-minimum-lockup-period" label={(content.posts as Record<string, any>)["stacking-minimum-lockup-period"]?.Title || "Minimum lockup period"} textStyle={textStyle} />} value={<>{lockupPeriod}</>} />;
+}
+
+interface DaysUntilNextCycleCellProps {
+  daysUntilNextCycle?: string;
+  textStyle?: string;
+}
+function DaysUntilNextCycleCell({ daysUntilNextCycle = '2 days', textStyle }: DaysUntilNextCycleCellProps) {
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
   return (
     <ValueDisplayer
-      name="Days until next cycle"
+      name={<PostLabelHoverCard postKey="stacking-upcoming-cycle" label={(content.posts as Record<string, any>)["stacking-upcoming-cycle"]?.Title || "Days until next cycle"} textStyle={textStyle} />}
       value={
         <>
+<<<<<<< HEAD
           <Box textStyle="label.01">{toHumanReadableDays(daysUntilNextCycle)}</Box>
           <Box textStyle="label.03">
             Cycle {nextCycleNumber} - {nextCycleBlocks} blocks
           </Box>
+=======
+          {daysUntilNextCycle} <Box textStyle="label.03">Cycle 104 - 254 blocks</Box>
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
         </>
       }
     />
@@ -69,6 +100,7 @@ function DaysUntilNextCycleCell({
 }
 
 interface MinimumCommitmentCellProps {
+<<<<<<< HEAD
   minimumCommitment: string;
 }
 function MinimumCommitmentCell({ minimumCommitment }: MinimumCommitmentCellProps) {
@@ -77,22 +109,48 @@ function MinimumCommitmentCell({ minimumCommitment }: MinimumCommitmentCellProps
 
 interface HistoricalAprCellProps {
   historicalApr: string;
+=======
+  minimumCommitment?: string;
+  textStyle?: string;
 }
-function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
-  return <ValueDisplayer name="Historical APR" value={<>{historicalApr}</>} />;
+function MinimumCommitmentCell({
+  minimumCommitment = '40,000,000.00 STX',
+  textStyle,
+}: MinimumCommitmentCellProps) {
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="stacking-minimum-commitment" label={(content.posts as Record<string, any>)["stacking-minimum-commitment"]?.Title || "Minimum commitment"} textStyle={textStyle} />} value={<>{minimumCommitment}</>} />;
+}
+
+interface HistoricalAprCellProps {
+  historicalApr?: string;
+  textStyle?: string;
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+}
+function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical APR"} textStyle={textStyle} />} value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {
+<<<<<<< HEAD
   totalValueLocked: string;
   totalValueLockedUsd: string;
 }
 function TotalValueLockedCell({
   totalValueLocked,
   totalValueLockedUsd,
+=======
+  totalValueLocked?: string;
+  totalValueLockedUsd?: string;
+  textStyle?: string;
+}
+function TotalValueLockedCell({
+  totalValueLocked = '51,784,293 STX',
+  totalValueLockedUsd = '$36,212,756',
+  textStyle,
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
 }: TotalValueLockedCellProps) {
   return (
     <ValueDisplayer
-      name="Total value locked"
+      name={<PostLabelHoverCard postKey="total-locked-value-tvl" label={(content.posts as Record<string, any>)["total-locked-value-tvl"]?.Title || "Total value locked"} textStyle={textStyle} />}
       value={
         <>
           {totalValueLocked} <Box textStyle="label.03">{totalValueLockedUsd}</Box>
@@ -103,21 +161,61 @@ function TotalValueLockedCell({
 }
 
 interface PoolOverviewProps {
+<<<<<<< HEAD
   pool: PoolRewardProtocolInfo;
+=======
+  pool: StackingPool;
+  poolSlug: string;
+  textStyle?: string;
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
 }
-function PoolCell({ pool }: PoolOverviewProps) {
+function getPostSlugForPool(poolSlug: string): string | undefined {
+  switch (poolSlug) {
+    case 'fast-pool':
+    case 'fast-pool-v2':
+      return 'fast-pool';
+    case 'plan-better':
+      return 'planbetter';
+    case 'restake':
+      return 'restake';
+    case 'xverse-pool':
+      return 'xverse-pool';
+    case 'stacking-dao':
+      return 'stacking-dao';
+    default:
+      return undefined;
+  }
+}
+function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
+  const postSlug = getPostSlugForPool(poolSlug);
+  const post = usePost(postSlug || '');
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
+<<<<<<< HEAD
       {pool.logo}
       <styled.h4 textDecoration="underline" textStyle="label.01">
         {pool.title}
       </styled.h4>
       <styled.p textStyle="caption.01">{pool.description}</styled.p>
+=======
+      <ProviderIcon providerId={pool.providerId} />
+      <styled.h4 textStyle="label.01">{pool.name}</styled.h4>
+      {post && (
+        <styled.p textStyle="caption.01">
+          {post.Sentence}
+          {getLearnMoreLink(post.Slug, post.Sentence)}
+        </styled.p>
+      )}
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
     </VStack>
   );
 }
 
+<<<<<<< HEAD
 export function PoolOverview({ pool }: PoolOverviewProps) {
+=======
+export function PoolOverview({ pool, poolSlug, textStyle = "label.03" }: PoolOverviewProps) {
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
   return (
     <InfoGrid
       width="100%"
@@ -131,6 +229,7 @@ export function PoolOverview({ pool }: PoolOverviewProps) {
       borderRadius="0px"
     >
       <InfoGrid.Cell gridColumn={['span 2', 'span 2', 'auto']} gridRow={['1', '1', 'span 2']}>
+<<<<<<< HEAD
         <PoolCell pool={pool} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
@@ -148,13 +247,97 @@ export function PoolOverview({ pool }: PoolOverviewProps) {
           nextCycleBlocks={pool.nextCycleBlocks}
           nextCycleNumber={pool.nextCycleNumber}
         />
+=======
+        <PoolCell pool={pool} poolSlug={poolSlug} textStyle={textStyle} />
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
+        <HistoricalAprCell textStyle={textStyle} />
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumn={['2', '2', '2']} gridRow={['2', '2', '2']}>
+        <LockupPeriodCell textStyle={textStyle} />
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
+        <TotalValueLockedCell textStyle={textStyle} />
+      </InfoGrid.Cell>
+      <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
+        <DaysUntilNextCycleCell textStyle={textStyle} />
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '4']} gridRow={['4', '4', '1']}>
-        <RewardTokenCell />
+        <RewardTokenCell textStyle={textStyle} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
+<<<<<<< HEAD
         <MinimumCommitmentCell minimumCommitment={pool.minCommitment} />
+=======
+        <MinimumCommitmentCell textStyle={textStyle} />
+>>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
       </InfoGrid.Cell>
     </InfoGrid>
+  );
+}
+
+// Add a component for the stacking-amount post label
+export function StackingAmountLabel({ textStyle = "label.03", tagName = "h1" }: { textStyle?: string; tagName?: keyof JSX.IntrinsicElements }) {
+  const label = (content.posts as Record<string, any>)["stacking-amount"]?.Title || "Amount";
+  return (
+    <PostLabelHoverCard
+      postKey="stacking-amount"
+      label={label}
+      textStyle={textStyle}
+      tagName={tagName}
+    />
+  );
+}
+
+// Add a component for the stacking-rewards-address post label
+export function StackingRewardsAddressLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
+  const label = (content.posts as Record<string, any>)["stacking-rewards-address"]?.Title || "Rewards address";
+  return (
+    <PostLabelHoverCard
+      postKey="stacking-rewards-address"
+      label={label}
+      textStyle={textStyle}
+      tagName={tagName}
+    />
+  );
+}
+
+// Add a component for the stacking-duration post label
+export function StackingDurationLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
+  const label = (content.posts as Record<string, any>)["stacking-duration"]?.Title || "Duration";
+  return (
+    <PostLabelHoverCard
+      postKey="stacking-duration"
+      label={label}
+      textStyle={textStyle}
+      tagName={tagName}
+    />
+  );
+}
+
+// Add a component for the stacking-contract-details post label
+export function StackingContractDetailsLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
+  const label = (content.posts as Record<string, any>)["stacking-contract-details"]?.Title || "Details";
+  return (
+    <PostLabelHoverCard
+      postKey="stacking-contract-details"
+      label={label}
+      textStyle={textStyle}
+      tagName={tagName}
+    />
+  );
+}
+
+// Add a component for the pooled-stacking-conditions post label
+export function PooledStackingConditionsLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
+  const label = (content.posts as Record<string, any>)["pooled-stacking-conditions"]?.Title || "Pooling conditions";
+  return (
+    <PostLabelHoverCard
+      postKey="pooled-stacking-conditions"
+      label={label}
+      textStyle={textStyle}
+      tagName={tagName}
+    />
   );
 }

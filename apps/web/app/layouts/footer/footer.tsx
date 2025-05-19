@@ -1,4 +1,5 @@
 import { FooterLayout as Footer } from './footer.layout';
+import { getLearnMoreLink } from '~/features/page/page';
 
 function AppFooter() {
   return (
@@ -22,8 +23,8 @@ function AppFooter() {
         </Footer.Column>
 
         <Footer.Column title="Company">
-          <Footer.Link href="https://leather.io/privacy-policy">Privacy Policy</Footer.Link>
-          <Footer.Link href="https://leather.io/terms">Terms of Service</Footer.Link>
+          <Footer.Link href="https://leather.io/posts/privacy-policy">Privacy Policy</Footer.Link>
+          <Footer.Link href="https://leather.io/posts/terms-of-service">Terms of Service</Footer.Link>
           <Footer.Link href="https://trustmachines.notion.site/Public-assets-00144dc5c69142199b00788ff61d721c">
             Brand assets
           </Footer.Link>
@@ -39,12 +40,6 @@ function AppFooter() {
           </Footer.Link>
         </Footer.Column>
       </Footer.Grid>
-
-      <Footer.Disclaimer>
-        This website provides the interface to connect with a directory of yield and Stacking
-        service providers. We do not provide the Stacking service ourselves or operate the protocols
-        that provide yield. Read our Guide and review our Terms to learn more.
-      </Footer.Disclaimer>
 
       <Footer.LegalText
         product="A Trust Machines product"

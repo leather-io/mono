@@ -29,9 +29,4 @@ export interface Post {
 
 export interface PostsCollection {
   [slug: string]: Post;
-}
-
-declare module './posts.json' {
-  const posts: PostsCollection;
-  export default posts;
 } 
