@@ -19,7 +19,7 @@ import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { router } from 'expo-router';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { Box, SheetRef } from '@leather.io/ui/native';
 
 export function Home() {
   useLingui();
@@ -33,32 +33,34 @@ export function Home() {
 
   return (
     <PageLayout>
-      <AccountsWidget />
-      {hasWallets && (
-        <>
-          <BalancesWidget
-            onPressHeader={() => router.navigate(AppRoutes.Balances)}
-            balance={<TotalBalance color="ink.text-subdued" />}
-            title={t({ id: 'balances.header_title', message: 'All tokens' })}
-          >
-            <AllAccountBalances mode="widget" />
-          </BalancesWidget>
-          <ActivityWidget
-            activity={activity}
-            onPressHeader={() => router.navigate(AppRoutes.Activity)}
-            title={t({ id: 'activity.header_title', message: 'All activity' })}
-          />
-          {releaseEarn && <EarnWidget />}
-          {releaseCollectibles && hasCollectibles(collectibles) && (
-            <CollectiblesWidget
-              onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
-              title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
+      <Box gap="8" mt="5">
+        <AccountsWidget />
+        {hasWallets && (
+          <>
+            <BalancesWidget
+              onPressHeader={() => router.navigate(AppRoutes.Balances)}
+              balance={<TotalBalance color="ink.text-subdued" />}
+              title={t({ id: 'balances.header_title', message: 'All tokens' })}
             >
-              <Collectibles collectibles={collectibles} mode="widget" />
-            </CollectiblesWidget>
-          )}
-        </>
-      )}
+              <AllAccountBalances mode="widget" />
+            </BalancesWidget>
+            <ActivityWidget
+              activity={activity}
+              onPressHeader={() => router.navigate(AppRoutes.Activity)}
+              title={t({ id: 'activity.header_title', message: 'All activity' })}
+            />
+            {releaseEarn && <EarnWidget />}
+            {releaseCollectibles && hasCollectibles(collectibles) && (
+              <CollectiblesWidget
+                onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
+                title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
+              >
+                <Collectibles collectibles={collectibles} mode="widget" />
+              </CollectiblesWidget>
+            )}
+          </>
+        )}
+      </Box>
       <NotificationsSheet sheetRef={notificationSheetRef} />
     </PageLayout>
   );
