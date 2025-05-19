@@ -627,7 +627,7 @@ importers:
         version: 1.52.0
       '@react-router/cloudflare':
         specifier: 7.6.0
-        version: 7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
+        version: 7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
       '@react-router/dev':
         specifier: 7.6.0
         version: 7.6.0(@react-router/serve@7.6.0(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.8.3))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(lightningcss@1.27.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.39.2)(yaml@2.8.0))(wrangler@4.14.4(@cloudflare/workers-types@4.20250510.0))(yaml@2.8.0)
@@ -893,7 +893,7 @@ importers:
         version: link:../tokens
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
 
   packages/prettier-config:
     dependencies:
@@ -1300,8 +1300,8 @@ importers:
         specifier: 1.3.14
         version: 1.3.14(@react-native/metro-config@0.73.5(@babel/core@7.27.1)(@babel/preset-env@7.27.2(@babel/core@7.27.1))(encoding@0.1.13))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       '@rnx-kit/metro-resolver-symlinks':
-        specifier: 0.1.35
-        version: 0.1.35
+        specifier: 0.2.3
+        version: 0.2.3
       '@shopify/restyle':
         specifier: 2.4.2
         version: 2.4.2(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -1345,11 +1345,11 @@ importers:
         specifier: 0.80.5
         version: 0.80.5
       metro-config:
-        specifier: 0.80.5
-        version: 0.80.5(encoding@0.1.13)
+        specifier: 0.82.3
+        version: 0.82.3
       metro-resolver:
-        specifier: 0.80.5
-        version: 0.80.5
+        specifier: 0.82.3
+        version: 0.82.3
       prism-react-renderer:
         specifier: 2.4.1
         version: 2.4.1(react@19.0.0)
@@ -4278,7 +4278,6 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
-    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -6162,9 +6161,6 @@ packages:
     peerDependenciesMeta:
       '@react-native/metro-config':
         optional: true
-
-  '@rnx-kit/metro-resolver-symlinks@0.1.35':
-    resolution: {integrity: sha512-DgpFPIVngiWvCclO5MEdhd9HW81GZJ/9g/pUtPs8lF8H1VGOPg1tuX7rOtDdMXEEcKnnFemctqwV8ExZX3g6nw==}
 
   '@rnx-kit/metro-resolver-symlinks@0.2.3':
     resolution: {integrity: sha512-bixzWs66R326sWrDVFXYyanPrStzYXJwh6LHbQSyub/T7PAYDWcBkbp3oCkWJvY2Zv8TWnvjIJNk8SZKaXB35w==}
@@ -18127,9 +18123,9 @@ snapshots:
       lan-network: 0.1.6
       lodash: 4.17.21
       metro: 0.80.5(encoding@0.1.13)
-      metro-config: 0.80.5(encoding@0.1.13)
+      metro-config: 0.82.3
       metro-core: 0.82.3
-      metro-resolver: 0.80.5
+      metro-resolver: 0.82.3
       metro-runtime: 0.82.3
       minimatch: 9.0.5
       node-forge: 1.3.1
@@ -21443,11 +21439,11 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
-  '@react-router/cloudflare@7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
+  '@react-router/cloudflare@7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
     dependencies:
       '@cloudflare/workers-types': 4.20250510.0
       react-router: 7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -21615,13 +21611,6 @@ snapshots:
       react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)
     optionalDependencies:
       '@react-native/metro-config': 0.73.5(@babel/core@7.27.1)(@babel/preset-env@7.27.2(@babel/core@7.27.1))(encoding@0.1.13)
-
-  '@rnx-kit/metro-resolver-symlinks@0.1.35':
-    dependencies:
-      '@rnx-kit/console': 1.1.0
-      '@rnx-kit/tools-node': 2.1.2
-      '@rnx-kit/tools-react-native': 1.4.2
-      enhanced-resolve: 5.18.1
 
   '@rnx-kit/metro-resolver-symlinks@0.2.3':
     dependencies:
