@@ -2,19 +2,15 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-<<<<<<< HEAD
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
-=======
-import { StackingPool } from '~/data/data';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { content } from '~/data/content';
 import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { getLearnMoreLink } from '~/features/page/page';
 import { usePost } from '~/utils/post-hooks';
-
-import { ProviderIcon } from './icons/provider-icon';
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
+import { ProviderIcon } from '~/components/icons/provider-icon';
+import type { StackingPool } from '~/data/data';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -24,7 +20,7 @@ interface RewardTokenCellProps {
 function RewardTokenCell({ token = 'STX', value, textStyle }: RewardTokenCellProps) {
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={(content.posts as Record<string, any>)["stacking-rewards-tokens"]?.Title || "Rewards token"} textStyle={textStyle} />}
+      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={(content.posts as Record<string, any>)["stacking-rewards-tokens"]?.Title || "Rewards token"} textStyle="label.03" />}
       value={
         <>
           {token}
@@ -36,24 +32,10 @@ function RewardTokenCell({ token = 'STX', value, textStyle }: RewardTokenCellPro
 }
 
 interface LockupPeriodCellProps {
-<<<<<<< HEAD
   minLockupPeriodDays: number;
 }
 function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
-  return (
-    <ValueDisplayer
-      name="Minimum lockup period"
-      value={
-        <>
-          <Box textStyle="label.01">1 Cycle</Box>
-          <Box textStyle="label.03">
-            {toHumanReadableWeeks(daysToWeek(minLockupPeriodDays))} (~
-            {toHumanReadableDays(minLockupPeriodDays)})
-          </Box>
-        </>
-      }
-    />
-  );
+  return <ValueDisplayer name="Minimum lockup period" value={<>{minLockupPeriodDays} Cycle(s)</>} />;
 }
 
 interface DaysUntilNextCycleCellProps {
@@ -61,38 +43,13 @@ interface DaysUntilNextCycleCellProps {
   nextCycleNumber: number;
   nextCycleBlocks: number;
 }
-function DaysUntilNextCycleCell({
-  daysUntilNextCycle,
-  nextCycleBlocks,
-  nextCycleNumber,
-}: DaysUntilNextCycleCellProps) {
-=======
-  lockupPeriod?: string;
-  textStyle?: string;
-}
-function LockupPeriodCell({ lockupPeriod = '1 Cycle', textStyle }: LockupPeriodCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="stacking-minimum-lockup-period" label={(content.posts as Record<string, any>)["stacking-minimum-lockup-period"]?.Title || "Minimum lockup period"} textStyle={textStyle} />} value={<>{lockupPeriod}</>} />;
-}
-
-interface DaysUntilNextCycleCellProps {
-  daysUntilNextCycle?: string;
-  textStyle?: string;
-}
-function DaysUntilNextCycleCell({ daysUntilNextCycle = '2 days', textStyle }: DaysUntilNextCycleCellProps) {
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+function DaysUntilNextCycleCell({ daysUntilNextCycle, nextCycleNumber, nextCycleBlocks }: DaysUntilNextCycleCellProps) {
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-upcoming-cycle" label={(content.posts as Record<string, any>)["stacking-upcoming-cycle"]?.Title || "Days until next cycle"} textStyle={textStyle} />}
+      name={<PostLabelHoverCard postKey="stacking-upcoming-cycle" label={(content.posts as Record<string, any>)["stacking-upcoming-cycle"]?.Title || "Days until next cycle"} textStyle="label.03" />}
       value={
         <>
-<<<<<<< HEAD
-          <Box textStyle="label.01">{toHumanReadableDays(daysUntilNextCycle)}</Box>
-          <Box textStyle="label.03">
-            Cycle {nextCycleNumber} - {nextCycleBlocks} blocks
-          </Box>
-=======
-          {daysUntilNextCycle} <Box textStyle="label.03">Cycle 104 - 254 blocks</Box>
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+          {daysUntilNextCycle} days (Cycle {nextCycleNumber}, {nextCycleBlocks} blocks)
         </>
       }
     />
@@ -100,57 +57,32 @@ function DaysUntilNextCycleCell({ daysUntilNextCycle = '2 days', textStyle }: Da
 }
 
 interface MinimumCommitmentCellProps {
-<<<<<<< HEAD
-  minimumCommitment: string;
+  minimumCommitment?: string;
 }
-function MinimumCommitmentCell({ minimumCommitment }: MinimumCommitmentCellProps) {
+function MinimumCommitmentCell({
+  minimumCommitment = '40,000,000.00 STX',
+}: MinimumCommitmentCellProps) {
   return <ValueDisplayer name="Minimum commitment" value={<>{minimumCommitment}</>} />;
 }
 
 interface HistoricalAprCellProps {
-  historicalApr: string;
-=======
-  minimumCommitment?: string;
-  textStyle?: string;
-}
-function MinimumCommitmentCell({
-  minimumCommitment = '40,000,000.00 STX',
-  textStyle,
-}: MinimumCommitmentCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="stacking-minimum-commitment" label={(content.posts as Record<string, any>)["stacking-minimum-commitment"]?.Title || "Minimum commitment"} textStyle={textStyle} />} value={<>{minimumCommitment}</>} />;
-}
-
-interface HistoricalAprCellProps {
   historicalApr?: string;
-  textStyle?: string;
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
 }
-function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical APR"} textStyle={textStyle} />} value={<>{historicalApr}</>} />;
+function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical APR"} textStyle="label.03" />} value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {
-<<<<<<< HEAD
-  totalValueLocked: string;
-  totalValueLockedUsd: string;
-}
-function TotalValueLockedCell({
-  totalValueLocked,
-  totalValueLockedUsd,
-=======
   totalValueLocked?: string;
   totalValueLockedUsd?: string;
-  textStyle?: string;
 }
 function TotalValueLockedCell({
   totalValueLocked = '51,784,293 STX',
   totalValueLockedUsd = '$36,212,756',
-  textStyle,
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
 }: TotalValueLockedCellProps) {
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="total-locked-value-tvl" label={(content.posts as Record<string, any>)["total-locked-value-tvl"]?.Title || "Total value locked"} textStyle={textStyle} />}
+      name={<PostLabelHoverCard postKey="total-locked-value-tvl" label={(content.posts as Record<string, any>)["total-locked-value-tvl"]?.Title || "Total value locked"} textStyle="label.03" />}
       value={
         <>
           {totalValueLocked} <Box textStyle="label.03">{totalValueLockedUsd}</Box>
@@ -161,61 +93,27 @@ function TotalValueLockedCell({
 }
 
 interface PoolOverviewProps {
-<<<<<<< HEAD
-  pool: PoolRewardProtocolInfo;
-=======
   pool: StackingPool;
   poolSlug: string;
-  textStyle?: string;
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
 }
-function getPostSlugForPool(poolSlug: string): string | undefined {
-  switch (poolSlug) {
-    case 'fast-pool':
-    case 'fast-pool-v2':
-      return 'fast-pool';
-    case 'plan-better':
-      return 'planbetter';
-    case 'restake':
-      return 'restake';
-    case 'xverse-pool':
-      return 'xverse-pool';
-    case 'stacking-dao':
-      return 'stacking-dao';
-    default:
-      return undefined;
-  }
-}
-function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
-  const postSlug = getPostSlugForPool(poolSlug);
-  const post = usePost(postSlug || '');
+function PoolCell({ pool }: PoolOverviewProps) {
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-<<<<<<< HEAD
-      {pool.logo}
+      <ProviderIcon providerId={pool.providerId} />
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {pool.title}
+        {pool.name || pool.title}
       </styled.h4>
       <styled.p textStyle="caption.01">{pool.description}</styled.p>
-=======
-      <ProviderIcon providerId={pool.providerId} />
-      <styled.h4 textStyle="label.01">{pool.name}</styled.h4>
-      {post && (
-        <styled.p textStyle="caption.01">
-          {post.Sentence}
-          {getLearnMoreLink(post.Slug, post.Sentence)}
-        </styled.p>
-      )}
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
     </VStack>
   );
 }
 
-<<<<<<< HEAD
-export function PoolOverview({ pool }: PoolOverviewProps) {
-=======
-export function PoolOverview({ pool, poolSlug, textStyle = "label.03" }: PoolOverviewProps) {
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
+  // Demo/default values for required props
+  const minLockupPeriodDays = 1;
+  const daysUntilNextCycle = 2;
+  const nextCycleNumber = 10;
+  const nextCycleBlocks = 100;
   return (
     <InfoGrid
       width="100%"
@@ -229,49 +127,25 @@ export function PoolOverview({ pool, poolSlug, textStyle = "label.03" }: PoolOve
       borderRadius="0px"
     >
       <InfoGrid.Cell gridColumn={['span 2', 'span 2', 'auto']} gridRow={['1', '1', 'span 2']}>
-<<<<<<< HEAD
-        <PoolCell pool={pool} />
+        <PoolCell pool={pool} poolSlug={poolSlug} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
         <HistoricalAprCell historicalApr={pool.apr} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '2']} gridRow={['2', '2', '2']}>
-        <LockupPeriodCell minLockupPeriodDays={pool.minLockupPeriodDays} />
+        <LockupPeriodCell minLockupPeriodDays={minLockupPeriodDays} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
-        <TotalValueLockedCell totalValueLocked={pool.tvl} totalValueLockedUsd={pool.tvlUsd} />
+        <TotalValueLockedCell />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
-        <DaysUntilNextCycleCell
-          daysUntilNextCycle={pool.nextCycleDays}
-          nextCycleBlocks={pool.nextCycleBlocks}
-          nextCycleNumber={pool.nextCycleNumber}
-        />
-=======
-        <PoolCell pool={pool} poolSlug={poolSlug} textStyle={textStyle} />
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
-        <HistoricalAprCell textStyle={textStyle} />
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['2', '2', '2']} gridRow={['2', '2', '2']}>
-        <LockupPeriodCell textStyle={textStyle} />
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
-        <TotalValueLockedCell textStyle={textStyle} />
-      </InfoGrid.Cell>
-      <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
-        <DaysUntilNextCycleCell textStyle={textStyle} />
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+        <DaysUntilNextCycleCell daysUntilNextCycle={daysUntilNextCycle} nextCycleNumber={nextCycleNumber} nextCycleBlocks={nextCycleBlocks} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '4']} gridRow={['4', '4', '1']}>
-        <RewardTokenCell textStyle={textStyle} />
+        <RewardTokenCell textStyle="label.03" />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
-<<<<<<< HEAD
-        <MinimumCommitmentCell minimumCommitment={pool.minCommitment} />
-=======
-        <MinimumCommitmentCell textStyle={textStyle} />
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
+        <MinimumCommitmentCell />
       </InfoGrid.Cell>
     </InfoGrid>
   );

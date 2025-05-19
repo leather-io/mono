@@ -207,7 +207,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
             spacing="space.01"
           >
-            After unpooling your previous position remains visible until the current cycle completes
+            {content.stacking.unpoolingInfo}
           </Flag>
         </styled.p>
       )}

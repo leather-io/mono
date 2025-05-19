@@ -14,20 +14,21 @@ export const content = {
     feeDescription:
       'The fee is a percentage of the rewards you earn from the pool. It is deducted from your rewards before they are distributed to you.',
     missingIndependentStackingDescription: `We're working hard to integrate independent stacking here. In the meantime, you can use our legacy earn experience.`,
+    unpoolingInfo: `After unpooling your previous position remains visible until the current cycle completes.`,
   },
   stackingExplainer: [
     {
       title: 'Get STX',
-      postKey: 'stacking-amount',
+      postKey: 'stacks-token-stx',
       description: 'Hold at least the minimum required STX to participate.',
     },
     {
-      title: 'APR',
-      postKey: 'stacking-provider-apr',
+      title: 'Choose a provider',
+      postKey: 'stacking-providers',
       description: 'Pick a pool provider from the table below.',
     },
     {
-      title: 'Next rewards',
+      title: 'Delegate STX',
       postKey: 'pooled-stacking-delegation',
       description: 'Delegate your STX into the chosen pool for locking.',
     },

@@ -162,7 +162,7 @@ export const stackingPoolData = {
     minCommitmentUsd: '$1',
     payout: 'STX',
     description:
-      'Earn STX rewards by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
+      'Earn STX rewadrds by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
     duration: 1,
     poolAddress: {
       mainnet: 'SPZV5RJN5XTJHA76E0VHEFB0WPEH7E11NZZ4CGBK.restake-self-service-pool-v1',
@@ -201,16 +201,8 @@ export const stackingPoolData = {
     fee: '5%',
     minAmount: '100 STX',
     estApr: '16%',
-<<<<<<< HEAD
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
-    payout: 'BTC',
-    description:
-      'Enter the STX address of the pool with which you’d like to Stack without your STX leaving your wallet.',
-=======
     payout: 'STX',
     description: "Enter the STX address of the pool with which you'd like to Stack without your STX leaving your wallet.",
->>>>>>> a1323f29 (feat(web): refactor sBTC/Stacking pages to use dynamic content and content-driven UI)
     duration: -1,
     poolAddress: {
       mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
@@ -221,8 +213,11 @@ export const stackingPoolData = {
     minimumDelegationAmount: MIN_DELEGATED_STACKING_AMOUNT_USTX,
     allowCustomRewardAddress: false,
     disabled: false,
+    tvlUsd: '$40,000,000',
+    minCommitmentUsd: '$1',
   },
 } as const satisfies Record<string, StackingPool>;
+console.log(stackingPoolData);
 
 export const stackingPoolList = Object.values(stackingPoolData);
 

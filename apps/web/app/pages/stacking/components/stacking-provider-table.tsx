@@ -58,6 +58,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
 
   const leadingColumn = useMemo<ColumnDef<StackingPool>>(
     () => ({
+      id: 'name',
       accessorKey: 'name',
       cell: (info: any) => (
         <Flag
@@ -82,6 +83,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   const extendedColumns = useMemo<ColumnDef<StackingPool>[]>(
     () => [
       {
+        id: 'payout',
         accessorKey: 'payout',
         header: () => (
           <styled.div textAlign="left" whiteSpace="nowrap">
@@ -101,6 +103,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 12,
       },
       {
+        id: 'minAmount',
         accessorKey: 'minAmount',
         cell: (info: any) => (
           <styled.div maxW="fit-content" textAlign="right" color="black">
@@ -116,6 +119,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 12,
       },
       {
+        id: 'estApr',
         accessorKey: 'estApr',
         cell: info => {
           const slug = providerIdToSlug(info.row.original.providerId);
@@ -141,6 +145,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 12,
       },
       {
+        id: 'fee',
         accessorKey: 'fee',
         cell: info => {
           const slug = providerIdToSlug(info.row.original.providerId);
@@ -172,6 +177,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   const trailingColumn = useMemo<ColumnDef<StackingPool>[]>(
     () => [
       {
+        id: 'actions',
         accessorKey: 'actions',
         header: () => null,
         cell: (info: any) => (
@@ -261,6 +267,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
 
   const leadingColumn = useMemo<ColumnDef<LiquidStackingPool>>(
     () => ({
+      id: 'name',
       accessorKey: 'name',
       cell: info => (
         <Flag
@@ -286,6 +293,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   const extendedColumns = useMemo<ColumnDef<LiquidStackingPool>[]>(
     () => [
       {
+        id: 'payout',
         accessorKey: 'payout',
         header: () => (
           <styled.div textAlign="left" whiteSpace="nowrap">
@@ -306,6 +314,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
       {
+        id: 'estApr',
         accessorKey: 'estApr',
         cell: info => {
           const slug = providerIdToSlug(info.row.original.providerId);
@@ -330,6 +339,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
       {
+        id: 'fee',
         accessorKey: 'fee',
         cell: info => <styled.div color="black">{info.getValue() as string}</styled.div>,
         header: () => (
@@ -346,16 +356,17 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   const trailingColumn = useMemo<ColumnDef<LiquidStackingPool>[]>(
     () => [
       {
-      accessorKey: 'actions',
-      header: () => null,
-      cell: info => (
-        <Link to={`/stacking/liquid/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
-          <Button size="xs" whiteSpace="nowrap" minW="fit-content">
-            Start earning
-          </Button>
-        </Link>
-      ),
-      meta: { align: 'right' },
+        id: 'actions',
+        accessorKey: 'actions',
+        header: () => null,
+        cell: info => (
+          <Link to={`/stacking/liquid/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
+            <Button size="xs" whiteSpace="nowrap" minW="fit-content">
+              Start earning
+            </Button>
+          </Link>
+        ),
+        meta: { align: 'right' },
       },
     ],
     []
@@ -365,7 +376,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
     columns: [
       leadingColumn,
       ...(isMounted && isLargeViewport ? extendedColumns : []),
-      trailingColumn,
+      ...trailingColumn,
     ],
     data: liquidStackingProvidersList,
     debugTable: false,
