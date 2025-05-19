@@ -18,6 +18,7 @@ export const csp = builder({
       '*.segment.com',
       '*.segment.io',
       '*.stacking-tracker.com',
+      '*.api.leather.io',
     ],
   },
 });

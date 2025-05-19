@@ -25,6 +25,7 @@
     "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/sdk": "workspace:*",
+    "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",

@@ -10,7 +10,10 @@ import { z } from 'zod';
 const envModeSchema = z.enum(['development', 'production']);
 type EnvMode = z.infer<typeof envModeSchema>;
 
-const MODE = envModeSchema.parse(import.meta.env.MODE);
+export const MODE = envModeSchema.parse(import.meta.env.MODE);
+
+const leatherApiUrlSchema = z.string().url().optional();
+export const LEATHER_API_URL = leatherApiUrlSchema.parse(import.meta.env.LEATHER_API_URL);
 
 type WhenEnvModeMap<T> = Record<EnvMode, T>;
 export function whenEnvMode<T>(envModeMap: WhenEnvModeMap<T>): T {

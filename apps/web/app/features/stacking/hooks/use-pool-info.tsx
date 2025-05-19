@@ -9,17 +9,17 @@ import {
   PoolSlug,
   getPoolFromSlug,
 } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
+import { useStxMarketDataQuery } from '~/queries/market-data/stx-market-data.query';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
 import { toHumanReadablePercent, toHumanReadableStx } from '~/utils/unit-convert';
 
-import { createMarketData, createMarketPair } from '@leather.io/models';
-import { baseCurrencyAmountInQuote, createMoney, i18nFormatCurrency } from '@leather.io/utils';
-
-// hardcoded market data for now
-// TODO: get market data from service package
-const marketData = createMarketData(createMarketPair('STX', 'USD'), createMoney(90000000, 'USD'));
+import {
+  baseCurrencyAmountInQuote,
+  createMoneyFromDecimal,
+  i18nFormatCurrency,
+} from '@leather.io/utils';
 
 export function usePoolInfo(poolSlug: PoolSlug) {
   const poxInfoQuery = useGetPoxInfoQuery();
@@ -27,12 +27,14 @@ export function usePoolInfo(poolSlug: PoolSlug) {
   const getPoolAddressQuery = useGetPoolAddress();
   const stacksNetwork = useStacksNetwork();
   const stackingTrackerPool = useStackingTrackerPool(poolSlug);
+  const { data: stxMarketData, isLoading: isStxMarketDataLoading } = useStxMarketDataQuery();
 
   const isLoading =
     poxInfoQuery.isLoading ||
     getStatusQuery.isLoading ||
     getPoolAddressQuery.isLoading ||
-    stackingTrackerPool.isLoading;
+    stackingTrackerPool.isLoading ||
+    isStxMarketDataLoading;
 
   const isError =
     poxInfoQuery.isError ||
@@ -42,7 +44,8 @@ export function usePoolInfo(poolSlug: PoolSlug) {
     getPoolAddressQuery.isError ||
     !getPoolAddressQuery.data ||
     stackingTrackerPool.isError ||
-    !stackingTrackerPool.data;
+    !stackingTrackerPool.data ||
+    !stxMarketData;
 
   const pool = useMemo(() => getPoolFromSlug(poolSlug), [poolSlug]);
 
@@ -60,8 +63,8 @@ export function usePoolInfo(poolSlug: PoolSlug) {
       : '100,000,000 STX';
 
     const tvlBaseCurrencyAmount = baseCurrencyAmountInQuote(
-      createMoney(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0, 'STX'),
-      marketData
+      createMoneyFromDecimal(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0, 'STX'),
+      stxMarketData
     );
 
     const tvlUsd = i18nFormatCurrency(tvlBaseCurrencyAmount);
@@ -108,6 +111,7 @@ export function usePoolInfo(poolSlug: PoolSlug) {
     stacksNetwork.network,
     stackingTrackerPool.data,
     getPoolAddressQuery.data,
+    stxMarketData,
   ]);
 
   const hardcodePoolRewardProtocolInfo = useMemo(
