@@ -1,12 +1,6 @@
-import { ReactElement } from 'react';
-
 import { styled } from 'leather-styles/jsx';
-import { AlexLogo } from '~/components/icons/alex-logo';
-import { BitflowLogo } from '~/components/icons/bitflow-logo';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { SbtcLogo } from '~/components/icons/sbtc-logo';
-import { VelarLogo } from '~/components/icons/velar-logo';
-import { ZestLogo } from '~/components/icons/zest-logo';
+import { sbtcEnroll, sbtcPools } from '~/data/data';
 import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
@@ -21,93 +15,6 @@ import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
-
-export interface RewardProtocolInfo {
-  id: string;
-  url?: string;
-  logo: ReactElement;
-  title: string;
-  description: string;
-  tvl: string;
-  tvlUsd: string;
-  minCommitment: string;
-  minCommitmentUsd: string;
-  apr: string;
-  payoutToken: string;
-}
-
-const sbtcEnroll = {
-  id: 'basic',
-  logo: <SbtcLogo size="32px" />,
-  title: 'Basic sBTC rewards',
-  description: 'Hold sBTC in your wallet to passively earn more sBTC, as it compounds over time.',
-  tvl: '2,150 BTC',
-  tvlUsd: '$130,050,000',
-  minCommitment: '0.005 BTC',
-  minCommitmentUsd: '$302.50',
-  apr: '4.9%',
-  payoutToken: 'sBTC',
-} as const;
-
-// Fakes values, to be updated
-const pools = [
-  {
-    id: 'alex',
-    url: 'https://app.alexlab.co/pool',
-    logo: <AlexLogo size="32px" />,
-    title: 'ALEX',
-    description:
-      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
-    tvl: '1,880 BTC',
-    tvlUsd: '$113,960,000',
-    minCommitment: '0.01 BTC',
-    minCommitmentUsd: '$605.00',
-    apr: '5.2%',
-    payoutToken: 'sBTC',
-  } as const,
-  {
-    id: 'bitflow',
-    url: 'https://app.bitflow.finance/sbtc#earn3',
-    logo: <BitflowLogo size="32px" />,
-    title: 'Bitflow',
-    description:
-      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
-    tvl: '1,420 BTC',
-    tvlUsd: '$86,020,000',
-    minCommitment: '0.008 BTC',
-    minCommitmentUsd: '$484.00',
-    apr: '5.1%',
-    payoutToken: 'sBTC',
-  } as const,
-  {
-    id: 'velar',
-    logo: <VelarLogo size="32px" />,
-    url: 'https://app.velar.com/pool',
-    title: 'Velar',
-    description:
-      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
-    tvl: '3,100 BTC',
-    tvlUsd: '$187,050,000',
-    minCommitment: '0.015 BTC',
-    minCommitmentUsd: '$907.50',
-    apr: '5.0%',
-    payoutToken: 'sBTC',
-  } as const,
-  {
-    id: 'zest',
-    url: 'https://app.zestprotocol.com',
-    logo: <ZestLogo size="32px" />,
-    title: 'Zest',
-    description:
-      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
-    tvl: '950 BTC',
-    tvlUsd: '$57,950,000',
-    minCommitment: '0.007 BTC',
-    minCommitmentUsd: '$423.50',
-    apr: '5.3%',
-    payoutToken: 'sBTC',
-  } as const,
-] satisfies RewardProtocolInfo[];
 
 export function SbtcRewards() {
   const { status, whenExtensionState } = useLeatherConnect();
@@ -166,7 +73,7 @@ export function SbtcRewards() {
             rewardProtocol={sbtcEnroll}
           />
 
-          {pools.map(pool => (
+          {sbtcPools.map(pool => (
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="xs" fullWidth onClick={() => openExternalLink(pool.url)}>

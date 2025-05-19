@@ -1,11 +1,13 @@
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { RewardProtocolInfo } from '~/data/data';
 
 import { Flag } from '@leather.io/ui';
+import { ensureArray } from '@leather.io/utils';
 
-import { RewardProtocolInfo } from '../sbtc-rewards';
 import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout';
+import { SbtcProviderIcon } from './sbtc-provider-icon';
 
 interface RewardProtocolCellProps {
   rewardProtocol: RewardProtocolInfo;
@@ -17,7 +19,7 @@ function RewardProtocolEnrollCell({
 }: RewardProtocolCellProps & { action: React.ReactElement }) {
   return (
     <Flex flex={1} justifyContent="space-between" flexDir="column" p="space.05" minH="246px">
-      {rewardProtocol.logo}
+      {<SbtcProviderIcon id={rewardProtocol.id} />}
       <Box>
         <styled.h3 textStyle="heading.05" mt="space.05">
           {rewardProtocol.title}
@@ -68,12 +70,17 @@ function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
     <ValueDisplayer
       name="Payout token"
       value={
-        <Flag
-          spacing="space.02"
-          img={rewardProtocol.payoutToken === 'sBTC' && <SbtcLogo size={24} />}
-        >
-          {rewardProtocol.payoutToken}
-        </Flag>
+        <Flex gap="space.02">
+          {ensureArray(rewardProtocol.payoutToken).map(token =>
+            token == 'sBTC' ? (
+              <Flag key={token} spacing="space.02" img={<SbtcLogo size={24} />}>
+                {token}
+              </Flag>
+            ) : (
+              <Box key={token}>{token}</Box>
+            )
+          )}
+        </Flex>
       }
     />
   );
