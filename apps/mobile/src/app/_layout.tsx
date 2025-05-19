@@ -26,6 +26,7 @@ import { persistor, store } from '@/store';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
+import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -36,6 +37,17 @@ import { Box, SheetProvider } from '@leather.io/ui/native';
 
 dayjs.extend(relativeTime);
 
+Sentry.init({
+  dsn: 'https://873049e06da26c641d8b46a9aeb50203@o4504203991318528.ingest.us.sentry.io/4509349474992128',
+  environment: process.env.EXPO_PUBLIC_NODE_ENV ?? 'development',
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+  integrations: [Sentry.feedbackIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 // Catch any errors thrown by the Layout component
 export { ErrorBoundary } from 'expo-router';
 
@@ -63,7 +75,7 @@ function App() {
   );
 }
 
-export default function RootLayout() {
+function RootLayout() {
   return (
     <KeyboardProvider>
       <LDProvider client={featureFlagClient}>
@@ -100,3 +112,5 @@ export default function RootLayout() {
     </KeyboardProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);

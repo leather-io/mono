@@ -58,3 +58,5 @@ credentials.json
 *.ipa
 *.apk
 *.aab
+
+.env.local
