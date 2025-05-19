@@ -74,47 +74,49 @@ export function Account({ account, walletName }: AccountProps) {
         accountName={name}
         walletName={walletName}
       />
-      <BalancesWidget
-        onPressHeader={() =>
-          router.navigate({
-            pathname: AppRoutes.AccountBalances,
-            params: { account: id, accountId: id },
-          })
-        }
-        balance={
-          <AccountBalance
-            fingerprint={fingerprint}
-            accountIndex={accountIndex}
-            color="ink.text-subdued"
-          />
-        }
-        title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
-      >
-        <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
-      </BalancesWidget>
-      <ActivityWidget
-        activity={activity}
-        onPressHeader={() =>
-          router.navigate({
-            pathname: AppRoutes.AccountActivity,
-            params: { account: id, accountId: id, accountName: name },
-          })
-        }
-        title={t({ id: 'account.activity.header_title', message: 'Activity' })}
-      />
-      {releaseCollectibles && hasCollectibles(collectibles) && (
-        <CollectiblesWidget
+      <Box gap="8">
+        <BalancesWidget
           onPressHeader={() =>
             router.navigate({
-              pathname: AppRoutes.AccountCollectibles,
+              pathname: AppRoutes.AccountBalances,
+              params: { account: id, accountId: id },
+            })
+          }
+          balance={
+            <AccountBalance
+              fingerprint={fingerprint}
+              accountIndex={accountIndex}
+              color="ink.text-subdued"
+            />
+          }
+          title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
+        >
+          <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
+        </BalancesWidget>
+        <ActivityWidget
+          activity={activity}
+          onPressHeader={() =>
+            router.navigate({
+              pathname: AppRoutes.AccountActivity,
               params: { account: id, accountId: id, accountName: name },
             })
           }
-          title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
-        >
-          <Collectibles collectibles={collectibles} />
-        </CollectiblesWidget>
-      )}
+          title={t({ id: 'account.activity.header_title', message: 'Activity' })}
+        />
+        {releaseCollectibles && hasCollectibles(collectibles) && (
+          <CollectiblesWidget
+            onPressHeader={() =>
+              router.navigate({
+                pathname: AppRoutes.AccountCollectibles,
+                params: { account: id, accountId: id, accountName: name },
+              })
+            }
+            title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
+          >
+            <Collectibles collectibles={collectibles} />
+          </CollectiblesWidget>
+        )}
+      </Box>
     </PageLayout>
   );
 }

@@ -5,7 +5,7 @@ import { WidgetTitle } from './widget-title';
 
 export function Widget({ children }: HasChildren) {
   return (
-    <Box paddingVertical="5" flexDirection="column" gap="3">
+    <Box flexDirection="column" gap="3">
       {children}
     </Box>
   );
