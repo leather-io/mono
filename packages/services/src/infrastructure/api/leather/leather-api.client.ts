@@ -8,6 +8,8 @@ import { SupportedBlockchains } from '@leather.io/models';
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
 import type { Environment } from '../../environment';
+import { leatherApiPriorities } from '../../rate-limiter/leather-rate-limiter';
+import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
 import { selectBitcoinNetwork } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { LeatherApiError } from './leather-api.error';
@@ -26,7 +28,8 @@ export class LeatherApiClient {
   constructor(
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService,
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
-    @inject(Types.Environment) env: Environment
+    @inject(Types.Environment) env: Environment,
+    private readonly rateLimiter: RateLimiterService
   ) {
     const clientId = uuidv4();
     this.client = createClient<paths>({
@@ -53,10 +56,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-utxos', network, descriptor],
       async () => {
-        const { data } = await this.client.GET(`/v1/utxos/{descriptor}`, {
-          params: { path: { descriptor }, query: { network } },
-          signal,
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET(`/v1/utxos/{descriptor}`, {
+              params: { path: { descriptor }, query: { network } },
+              signal,
+            }),
+          {
+            priority: leatherApiPriorities.utxos,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -72,17 +83,25 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-transactions', descriptor, params.toString()],
       async () => {
-        const { data } = await this.client.GET(`/v1/transactions/{descriptor}`, {
-          params: {
-            path: { descriptor },
-            query: {
-              network,
-              page: pageRequest.page.toString(),
-              pageSize: pageRequest.pageSize.toString(),
-            },
-          },
-          signal,
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET(`/v1/transactions/{descriptor}`, {
+              params: {
+                path: { descriptor },
+                query: {
+                  network,
+                  page: pageRequest.page.toString(),
+                  pageSize: pageRequest.pageSize.toString(),
+                },
+              },
+              signal,
+            }),
+          {
+            priority: leatherApiPriorities.bitcoinTransactions,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -90,7 +109,14 @@ export class LeatherApiClient {
 
   async fetchFiatExchangeRates(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-fiat-exchange-rates'], async () => {
-      const { data } = await this.client.GET('/v1/market/fiat-rates', { signal });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/market/fiat-rates', { signal }),
+        {
+          priority: leatherApiPriorities.fiatExchangeRates,
+          signal,
+        }
+      );
       return data!;
     });
   }
@@ -99,7 +125,14 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-native-token-price-list'],
       async () => {
-        const { data } = await this.client.GET('/v1/market/prices/native', { signal });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () => this.client.GET('/v1/market/prices/native', { signal }),
+          {
+            priority: leatherApiPriorities.nativeTokenPriceList,
+            signal,
+          }
+        );
         if (data?.format !== 'list') {
           throw new Error('Unrecognized collection format');
         }
@@ -112,12 +145,20 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-native-token-price-map'],
       async () => {
-        const { data } = await this.client.GET('/v1/market/prices/native', {
-          signal,
-          params: {
-            query: { format: 'map' },
-          },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/market/prices/native', {
+              signal,
+              params: {
+                query: { format: 'map' },
+              },
+            }),
+          {
+            priority: leatherApiPriorities.nativeTokenPriceMap,
+            signal,
+          }
+        );
         if (data?.format !== 'map') {
           throw new Error('Unrecognized collection format');
         }
@@ -130,10 +171,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-native-token-price', symbol],
       async () => {
-        const { data } = await this.client.GET('/v1/market/prices/native/{symbol}', {
-          signal,
-          params: { path: { symbol } },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/market/prices/native/{symbol}', {
+              signal,
+              params: { path: { symbol } },
+            }),
+          {
+            priority: leatherApiPriorities.nativeTokenPrice,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -143,10 +192,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-native-token-description', symbol],
       async () => {
-        const { data } = await this.client.GET('/v1/tokens/native/{symbol}/description', {
-          signal,
-          params: { path: { symbol } },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/tokens/native/{symbol}/description', {
+              signal,
+              params: { path: { symbol } },
+            }),
+          {
+            priority: leatherApiPriorities.nativeTokenDescription,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -154,7 +211,14 @@ export class LeatherApiClient {
 
   async fetchRunePriceList(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-rune-price-list'], async () => {
-      const { data } = await this.client.GET('/v1/market/prices/runes', { signal });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/market/prices/runes', { signal }),
+        {
+          priority: leatherApiPriorities.runePriceList,
+          signal,
+        }
+      );
       if (data?.format !== 'list') {
         throw new Error('Unrecognized collection format');
       }
@@ -164,10 +228,18 @@ export class LeatherApiClient {
 
   async fetchRunePriceMap(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-rune-price-map'], async () => {
-      const { data } = await this.client.GET('/v1/market/prices/runes', {
-        signal,
-        params: { query: { format: 'map' } },
-      });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/runes', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.runePriceMap,
+          signal,
+        }
+      );
       if (data?.format !== 'map') {
         throw new Error('Unrecognized collection format');
       }
@@ -179,10 +251,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-rune-price', runeName],
       async () => {
-        const { data } = await this.client.GET('/v1/market/prices/runes/{runeName}', {
-          signal,
-          params: { path: { runeName } },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/market/prices/runes/{runeName}', {
+              signal,
+              params: { path: { runeName } },
+            }),
+          {
+            priority: leatherApiPriorities.runePrice,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -190,7 +270,14 @@ export class LeatherApiClient {
 
   async fetchRuneList(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-rune-list'], async () => {
-      const { data } = await this.client.GET('/v1/tokens/runes', { signal });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/tokens/runes', { signal }),
+        {
+          priority: leatherApiPriorities.runeList,
+          signal,
+        }
+      );
       if (data?.format !== 'list') {
         throw new Error('Unrecognized collection format');
       }
@@ -200,10 +287,18 @@ export class LeatherApiClient {
 
   async fetchRuneMap(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-rune-map'], async () => {
-      const { data } = await this.client.GET('/v1/tokens/runes', {
-        signal,
-        params: { query: { format: 'map' } },
-      });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/tokens/runes', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.runeMap,
+          signal,
+        }
+      );
       if (data?.format !== 'map') {
         throw new Error('Unrecognized collection format');
       }
@@ -213,10 +308,18 @@ export class LeatherApiClient {
 
   async fetchRune(runeName: string, signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-rune', runeName], async () => {
-      const { data } = await this.client.GET('/v1/tokens/runes/{runeName}', {
-        signal,
-        params: { path: { runeName } },
-      });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/tokens/runes/{runeName}', {
+            signal,
+            params: { path: { runeName } },
+          }),
+        {
+          priority: leatherApiPriorities.rune,
+          signal,
+        }
+      );
       return data!;
     });
   }
@@ -225,10 +328,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-rune-description', runeName],
       async () => {
-        const { data } = await this.client.GET('/v1/tokens/runes/{runeName}/description', {
-          signal,
-          params: { path: { runeName } },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/tokens/runes/{runeName}/description', {
+              signal,
+              params: { path: { runeName } },
+            }),
+          {
+            priority: leatherApiPriorities.runeDescription,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -236,7 +347,14 @@ export class LeatherApiClient {
 
   async fetchSip10PriceList(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-sip10-price-list'], async () => {
-      const { data } = await this.client.GET('/v1/market/prices/sip10s', { signal });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/market/prices/sip10s', { signal }),
+        {
+          priority: leatherApiPriorities.sip10PriceList,
+          signal,
+        }
+      );
       if (data?.format !== 'list') {
         throw new Error('Unrecognized collection format');
       }
@@ -246,10 +364,18 @@ export class LeatherApiClient {
 
   async fetchSip10PriceMap(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-sip10-price-map'], async () => {
-      const { data } = await this.client.GET('/v1/market/prices/sip10s', {
-        signal,
-        params: { query: { format: 'map' } },
-      });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/market/prices/sip10s', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.sip10PriceMap,
+          signal,
+        }
+      );
       if (data?.format !== 'map') {
         throw new Error('Unrecognized collection format');
       }
@@ -261,10 +387,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-sip10-price', principal],
       async () => {
-        const { data } = await this.client.GET('/v1/market/prices/sip10s/{principal}', {
-          signal,
-          params: { path: { principal } },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/market/prices/sip10s/{principal}', {
+              signal,
+              params: { path: { principal } },
+            }),
+          {
+            priority: leatherApiPriorities.sip10Price,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -272,7 +406,14 @@ export class LeatherApiClient {
 
   async fetchSip10TokenList(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-sip10-token-list'], async () => {
-      const { data } = await this.client.GET('/v1/tokens/sip10s', { signal });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () => this.client.GET('/v1/tokens/sip10s', { signal }),
+        {
+          priority: leatherApiPriorities.sip10TokenList,
+          signal,
+        }
+      );
       if (data?.format !== 'list') {
         throw new Error('Unrecognized collection format');
       }
@@ -282,10 +423,18 @@ export class LeatherApiClient {
 
   async fetchSip10TokenMap(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-sip10-token-map'], async () => {
-      const { data } = await this.client.GET('/v1/tokens/sip10s', {
-        signal,
-        params: { query: { format: 'map' } },
-      });
+      const { data } = await this.rateLimiter.add(
+        RateLimiterType.Leather,
+        () =>
+          this.client.GET('/v1/tokens/sip10s', {
+            signal,
+            params: { query: { format: 'map' } },
+          }),
+        {
+          priority: leatherApiPriorities.sip10TokenMap,
+          signal,
+        }
+      );
       if (data?.format !== 'map') {
         throw new Error('Unrecognized collection format');
       }
@@ -298,10 +447,18 @@ export class LeatherApiClient {
       ['leather-api-sip10-token', principal],
       async () => {
         try {
-          const { data } = await this.client.GET('/v1/tokens/sip10s/{principal}', {
-            signal,
-            params: { path: { principal } },
-          });
+          const { data } = await this.rateLimiter.add(
+            RateLimiterType.Leather,
+            () =>
+              this.client.GET('/v1/tokens/sip10s/{principal}', {
+                signal,
+                params: { path: { principal } },
+              }),
+            {
+              priority: leatherApiPriorities.sip10Token,
+              signal,
+            }
+          );
           return data!;
         } catch (error) {
           if (
@@ -320,10 +477,18 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-sip10-token-description', principal],
       async () => {
-        const { data } = await this.client.GET('/v1/tokens/sip10s/{principal}/description', {
-          signal,
-          params: { path: { principal } },
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/tokens/sip10s/{principal}/description', {
+              signal,
+              params: { path: { principal } },
+            }),
+          {
+            priority: leatherApiPriorities.sip10TokenDescription,
+            signal,
+          }
+        );
         return data!;
       }
     );
@@ -344,15 +509,23 @@ export class LeatherApiClient {
     return await this.cacheService.fetchWithCache(
       ['leather-api-register-notifications', addresses, notificationToken, chain],
       async () => {
-        const { data } = await this.client.POST('/v1/notifications/register', {
-          body: {
-            addresses,
-            notificationToken,
-            chain,
-            network: 'mainnet',
-          },
-          signal,
-        });
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.POST('/v1/notifications/register', {
+              body: {
+                addresses,
+                notificationToken,
+                chain,
+                network: 'mainnet',
+              },
+              signal,
+            }),
+          {
+            priority: leatherApiPriorities.registerAddresses,
+            signal,
+          }
+        );
         return data!;
       }
     );
