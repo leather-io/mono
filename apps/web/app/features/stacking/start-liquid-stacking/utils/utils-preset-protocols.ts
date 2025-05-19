@@ -1,4 +1,5 @@
 import { StacksNetwork } from '@stacks/network';
+import { ProviderId } from '~/data/data';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import { NetworkMode } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { getNetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
@@ -32,6 +33,14 @@ export function getLiquidContractAddressAndName(
   poxContractName: LiquidContractName
 ) {
   return getLiquidContract(networkInstance, poxContractName).split('.');
+}
+
+export function getProtocolSlugByProviderId(providerId: ProviderId): ProtocolSlug | null {
+  return (
+    (Object.entries(ProtocolSlugToIdMap).find(
+      ([, id]) => providerId === id
+    )?.[0] as ProtocolSlug) || null
+  );
 }
 
 export function getProtocolBySlug(protocolSlug: ProtocolSlug) {

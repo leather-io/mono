@@ -259,11 +259,11 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
-      <Page.Inset>
-        <PoolOverview
-          pool={poolInfo.poolRewardProtocolInfo || poolInfo.hardcodePoolRewardProtocolInfo}
-        />
-      </Page.Inset>
+      {poolInfo.poolRewardProtocolInfo && (
+        <Page.Inset>
+          <PoolOverview pool={poolInfo.poolRewardProtocolInfo} />
+        </Page.Inset>
+      )}
 
       <FormProvider {...formMethods}>
         <StartStackingLayout
