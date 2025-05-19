@@ -7,9 +7,8 @@ import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { content } from '~/data/content';
 import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { getLearnMoreLink } from '~/features/page/page';
-import { usePost } from '~/utils/post-hooks';
-import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
-import { ProviderIcon } from '~/components/icons/provider-icon';
+import { usePost } from '~/utils/post-utils';
+import { ProviderIcon } from './icons/provider-icon';
 import type { StackingPool } from '~/data/data';
 
 interface RewardTokenCellProps {
@@ -68,8 +67,8 @@ function MinimumCommitmentCell({
 interface HistoricalAprCellProps {
   historicalApr?: string;
 }
-function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical APR"} textStyle="label.03" />} value={<>{historicalApr}</>} />;
+function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical yield"} textStyle={textStyle} />} value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {

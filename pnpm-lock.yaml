@@ -57,6 +57,9 @@ importers:
       '@ls-lint/ls-lint':
         specifier: 2.2.3
         version: 2.2.3
+      '@playwright/test':
+        specifier: 1.52.0
+        version: 1.52.0
       '@tanstack/eslint-plugin-query':
         specifier: 5.62.1
         version: 5.62.1(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3)
