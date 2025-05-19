@@ -8,6 +8,7 @@ import { Types } from '../../inversify.types';
 import type { SettingsService } from '../settings/settings.service';
 import { bestInSlotMainnetApiLimiter, bestInSlotTestnetApiLimiter } from './best-in-slot-limiter';
 import { hiroStacksMainnetApiLimiter, hiroStacksTestnetApiLimiter } from './hiro-rate-limiter';
+import { leatherApiLimiter } from './leather-rate-limiter';
 
 // AbortController polyfill for React Native
 if (!AbortSignal.prototype.throwIfAborted) {
@@ -21,6 +22,7 @@ if (!AbortSignal.prototype.throwIfAborted) {
 export enum RateLimiterType {
   BestInSlot,
   HiroStacks,
+  Leather,
 }
 
 export interface RateLimiterQueueOptions {
@@ -42,6 +44,8 @@ export class RateLimiterService {
     [this.getLimiterKey(RateLimiterType.BestInSlot, 'testnet'), bestInSlotTestnetApiLimiter],
     [this.getLimiterKey(RateLimiterType.HiroStacks, 'mainnet'), hiroStacksMainnetApiLimiter],
     [this.getLimiterKey(RateLimiterType.HiroStacks, 'testnet'), hiroStacksTestnetApiLimiter],
+    [this.getLimiterKey(RateLimiterType.Leather, 'mainnet'), leatherApiLimiter],
+    [this.getLimiterKey(RateLimiterType.Leather, 'testnet'), leatherApiLimiter],
   ]);
 
   constructor(@inject(Types.SettingsService) private readonly settingsService: SettingsService) {}
