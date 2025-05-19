@@ -46,7 +46,7 @@ export function QrScanner<T>({ onClose, onScanned, parse }: QrScannerProps<T>) {
 }
 
 function useTransientQrError() {
-  const autoClearDelay = 150;
+  const autoClearDelay = 750;
   const errorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const triggerHaptics = useHaptics();
   const shouldTriggerHapticsRef = useRef(true);
