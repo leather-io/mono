@@ -1,18 +1,13 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import {
-  ActionBarContainer,
-  createOnScrollHandler,
-} from '@/components/action-bar/action-bar-container';
+import { useActionBarOffset } from '@/components/action-bar/action-bar';
 import { queryClient } from '@/queries/query';
 
 import { HttpCacheService } from '@leather.io/services';
 import { Box, HasChildren } from '@leather.io/ui/native';
-
-import { ACTION_BAR_TOTAL_HEIGHT, ActionBarMethods } from '../action-bar/action-bar';
 
 export function useRefreshHandler() {
   const [refreshing, setRefreshing] = useState(false);
@@ -32,21 +27,15 @@ export function useRefreshHandler() {
 }
 
 function ScrollableContent({ children }: HasChildren) {
-  const { bottom, top } = useSafeAreaInsets();
-  const actionBarRef = useRef<ActionBarMethods>(null);
-  const contentOffsetBottom = bottom + ACTION_BAR_TOTAL_HEIGHT;
+  const { actionBarOffset } = useActionBarOffset();
+  const { top } = useSafeAreaInsets();
   const contentOffsetTop = top;
 
   const { refreshing, onRefresh } = useRefreshHandler();
 
   return (
     <ScrollView
-      onScroll={createOnScrollHandler({
-        actionBarRef,
-        contentOffsetTop,
-        contentOffsetBottom,
-      })}
-      contentInset={{ bottom: contentOffsetBottom }}
+      contentInset={{ bottom: actionBarOffset }}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -64,14 +53,11 @@ interface PageLayoutProps extends HasChildren {
   scrollable?: boolean;
 }
 export function PageLayout({ children, scrollable = true }: PageLayoutProps) {
-  const actionBarRef = useRef<ActionBarMethods>(null);
-
   return (
     <>
       <Box flex={1} bg="ink.background-primary">
         {scrollable ? <ScrollableContent>{children}</ScrollableContent> : children}
       </Box>
-      <ActionBarContainer ref={actionBarRef} />
     </>
   );
 }

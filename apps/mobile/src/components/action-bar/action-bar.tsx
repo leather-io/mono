@@ -1,110 +1,220 @@
-import { type ReactNode, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { Platform } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { ReactNode, useMemo, useRef } from 'react';
+import { ViewStyle } from 'react-native';
+import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useActionBar } from '@/components/action-bar/use-action-bar';
+import { AddWalletSheet } from '@/features/wallet-manager/add-wallet';
+import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import { BlurView, Box, Theme } from '@leather.io/ui/native';
+import {
+  Box,
+  BrowserIcon,
+  Button,
+  InboxIcon,
+  PaperPlaneIcon,
+  PlusIcon,
+  Pressable,
+  SheetRef,
+  Text,
+  Theme,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
 
-const ACTION_BAR_HEIGHT = 70;
-const ACTION_BAR_BOTTOM_OFFSET = 10;
-export const ACTION_BAR_TOTAL_HEIGHT = ACTION_BAR_HEIGHT + ACTION_BAR_BOTTOM_OFFSET;
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-interface ActionBarProps {
-  children?: ReactNode;
-}
+const actionBarHeight = 64;
+const minimumBottomOffset = 24;
+const buttonBaseWidth = 52;
+const blurIntensity = 50;
+const androidBlurReductionFactor = 4;
 
-export interface ActionBarMethods {
-  hide(): void;
-  show(): void;
-  isShown: boolean;
-}
+export function ActionBar() {
+  const {
+    isActionBarVisible,
+    hasWallets,
+    isBrowserEnabled,
+    onOpenBrowser,
+    onOpenReceive,
+    onOpenSend,
+  } = useActionBar();
+  const addWalletSheetRef = useRef<SheetRef>(null);
 
-export const ActionBar = forwardRef<ActionBarMethods, ActionBarProps>(function (props, ref) {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
-  const { themeDerivedFromThemePreference } = useSettings();
-  const animatedBottom = useSharedValue(ACTION_BAR_BOTTOM_OFFSET + bottom);
-  const animatedOpacity = useSharedValue(1);
+  if (!isActionBarVisible) {
+    return null;
+  }
 
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    bottom: animatedBottom.value,
-    opacity: animatedOpacity.value,
-  }));
-
-  const [isShown, setIsShown] = useState(true);
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      hide() {
-        setIsShown(false);
-      },
-      show() {
-        setIsShown(true);
-      },
-      isShown,
-    }),
-    [isShown]
-  );
-
-  useEffect(() => {
-    if (isShown) {
-      animatedBottom.value = withTiming(ACTION_BAR_BOTTOM_OFFSET + bottom, { duration: 300 });
-      animatedOpacity.value = withTiming(1, {
-        duration: 300,
-        easing: Easing.in(Easing.poly(6)),
-      });
-    } else {
-      animatedBottom.value = withTiming(-200, { duration: 300 });
-      animatedOpacity.value = withTiming(0, {
-        duration: 300,
-        easing: Easing.out(Easing.poly(6)),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShown]);
+  if (hasWallets) {
+    return (
+      <ActionBarContainer>
+        <ActionBarButton
+          onPress={onOpenSend}
+          icon={<PaperPlaneIcon />}
+          label={t({ id: 'action_bar.send_label', message: 'Send' })}
+        />
+        <ActionBarButton
+          onPress={onOpenReceive}
+          icon={<InboxIcon />}
+          label={t({ id: 'action_bar.receive_label', message: 'Receive' })}
+        />
+        {isBrowserEnabled && (
+          <ActionBarButton
+            onPress={onOpenBrowser}
+            icon={<BrowserIcon />}
+            label={t({ id: 'action_bar.browser_label', message: 'Browse' })}
+          />
+        )}
+      </ActionBarContainer>
+    );
+  }
 
   return (
-    <Animated.View
-      style={[
-        {
-          width: '100%',
-          position: 'absolute',
-          height: ACTION_BAR_HEIGHT,
-        },
-        containerAnimatedStyle,
-      ]}
-    >
-      <Box
-        borderRadius="sm"
-        overflow="hidden"
-        borderColor="ink.border-transparent"
-        borderWidth={1}
-        style={{ marginHorizontal: theme.spacing[5] - 1 }}
-      >
-        <BlurView
-          experimentalBlurMethod="dimezisBlurView"
-          themeVariant={themeDerivedFromThemePreference}
-          intensity={Platform.OS === 'ios' ? 95 : 80}
-          style={{
-            flexDirection: 'row',
-            paddingHorizontal: theme.spacing[5],
-            height: 64,
-          }}
-        >
-          {props.children}
-        </BlurView>
-      </Box>
-    </Animated.View>
+    <ActionBarContainer>
+      <Button
+        width="100%"
+        buttonState="ghost"
+        icon={<PlusIcon variant="small" />}
+        title={t({ id: 'action_bar.add_wallet_label', message: 'Add Wallet' })}
+        testID={TestId.homeAddWalletButton}
+        onPress={() => addWalletSheetRef.current?.present()}
+      />
+      <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
+    </ActionBarContainer>
   );
-});
+}
 
-ActionBar.displayName = 'ActionBar';
+interface ActionBarContainerProps {
+  children: ReactNode;
+}
+
+function ActionBarContainer({ children }: ActionBarContainerProps) {
+  const { bottom } = useSafeAreaInsets();
+  const bottomOffset = getActionBarBottomOffset(bottom);
+  const theme = useTheme<Theme>();
+
+  return (
+    <AnimatedBox entering={FadeInDown} exiting={FadeOutDown}>
+      <GradientBackdrop height={bottomOffset + actionBarHeight} />
+      <BlurView
+        experimentalBlurMethod="dimezisBlurView"
+        intensity={blurIntensity}
+        blurReductionFactor={androidBlurReductionFactor}
+        style={{
+          position: 'absolute',
+          bottom: bottomOffset,
+          flexDirection: 'row',
+          alignSelf: 'center',
+          gap: theme.spacing[6],
+          height: actionBarHeight,
+          marginHorizontal: theme.spacing[5],
+          paddingHorizontal: theme.spacing[6],
+          paddingVertical: theme.spacing[2],
+          overflow: 'hidden',
+          borderRadius: theme.borderRadii['sm'],
+          borderColor: theme.colors['ink.border-transparent'],
+          borderWidth: 1,
+        }}
+      >
+        <BlurBackdrop />
+        {children}
+      </BlurView>
+    </AnimatedBox>
+  );
+}
+
+interface ActionBarButtonProps {
+  onPress: () => void;
+  icon: ReactNode;
+  label?: string;
+  testID?: string;
+}
+
+function ActionBarButton({ onPress, icon, label, testID }: ActionBarButtonProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      justifyContent="center"
+      alignItems="center"
+      gap="1"
+      height="100%"
+      pressEffects={legacyTouchablePressEffect}
+      haptics="soft"
+      testID={testID}
+      minWidth={buttonBaseWidth}
+    >
+      {icon}
+      {label && (
+        <Text variant="label03" numberOfLines={1}>
+          {label}
+        </Text>
+      )}
+    </Pressable>
+  );
+}
+
+export function GradientBackdrop({ height }: { height: number }) {
+  const { themeDerivedFromThemePreference } = useSettings();
+  const theme = useTheme<Theme>();
+  const transparentStopColor =
+    themeDerivedFromThemePreference === 'light' ? 'rgba(255,255,255,0)' : 'rgba(27,26,23,0)';
+  const style = useMemo<ViewStyle>(
+    () => ({
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height,
+    }),
+    [height]
+  );
+
+  return (
+    <>
+      <LinearGradient
+        pointerEvents="none"
+        colors={[transparentStopColor, 'white']}
+        locations={[0.35, 0.9]}
+        style={style}
+      />
+      <LinearGradient
+        colors={[transparentStopColor, theme.colors['ink.background-primary']]}
+        locations={[0.1, 0.8]}
+        style={style}
+      />
+    </>
+  );
+}
+
+export function BlurBackdrop() {
+  return (
+    <Box
+      bg="red.background-secondary"
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      backgroundColor="ink.background-primary"
+      opacity={0.7}
+    />
+  );
+}
+
+function getActionBarBottomOffset(safeAreaBottom: number): number {
+  return Math.max(safeAreaBottom, minimumBottomOffset);
+}
+
+export function useActionBarOffset() {
+  const { bottom } = useSafeAreaInsets();
+  const bottomOffset = getActionBarBottomOffset(bottom);
+  const topOffset = 24;
+
+  return {
+    actionBarOffset: topOffset + actionBarHeight + bottomOffset,
+  };
+}

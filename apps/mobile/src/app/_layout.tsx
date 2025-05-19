@@ -3,6 +3,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
+import { ActionBar } from '@/components/action-bar/action-bar';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
@@ -53,6 +54,7 @@ function App() {
     <Box backgroundColor="ink.background-secondary" flex={1}>
       <StatusBar />
       <AppNavigationStack />
+      <ActionBar />
       <SendSheet />
       <ReceiveSheet />
       <BrowserSheet />
