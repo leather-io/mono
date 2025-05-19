@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -51,6 +52,17 @@ export default function App() {
   useOnRouteChange(
     location => location.pathname === '/' && navigate('/stacking', { replace: true })
   );
+
+  useEffect(() => {
+    import('~/services/init-app-services')
+      .then(({ initAppServices }) => {
+        initAppServices();
+      })
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      });
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
