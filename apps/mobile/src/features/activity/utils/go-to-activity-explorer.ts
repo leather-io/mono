@@ -23,9 +23,9 @@ interface OnPressActivityArgs {
   networkPreference: NetworkConfiguration;
   asset?: CryptoAssetInfo;
 }
-export function onPressActivity({ txid, networkPreference, asset }: OnPressActivityArgs) {
+export async function onPressActivity({ txid, networkPreference, asset }: OnPressActivityArgs) {
   if (txid && asset) {
-    goToActivityExplorer({
+    await goToActivityExplorer({
       asset,
       txid,
       networkPreference,
