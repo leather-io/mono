@@ -32,7 +32,6 @@ export function PostInfoHoverIcon({ postKey, children, iconColor = 'black' }: Po
         {children}
         <a
           href={getPostHref(post.Slug)}
-          target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
           style={{ display: 'inline-flex', color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}

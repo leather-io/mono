@@ -7,7 +7,7 @@ import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { content } from '~/data/content';
 import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { getLearnMoreLink } from '~/features/page/page';
-import { usePost } from '~/utils/post-hooks';
+import { usePost } from '~/utils/post-utils';
 
 import { ProviderIcon } from './icons/provider-icon';
 
@@ -71,7 +71,7 @@ interface HistoricalAprCellProps {
   textStyle?: string;
 }
 function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical APR"} textStyle={textStyle} />} value={<>{historicalApr}</>} />;
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical yield"} textStyle={textStyle} />} value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {

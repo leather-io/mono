@@ -4,7 +4,7 @@ import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { getLearnMoreLink } from '~/features/page/page';
-import { usePost } from '~/utils/post-hooks';
+import { usePost } from '~/utils/post-utils';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 
 interface RewardTokenCellProps {

@@ -23,6 +23,7 @@ import {
 } from '../hooks/stacking.query';
 import { NoStackingInfo } from './components/no-stacking-info';
 import { PendingStackingInfo } from './components/pending-stacking-info';
+import { content } from '~/data/content';
 
 export interface DirectStackingInfoProps {
   address: string;
@@ -139,22 +140,17 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
 
       {getHasPendingStackIncreaseQuery.data && (
         <Box pb="space.04">
-          <styled.p textStyle="label.02">Waiting for transaction confirmation</styled.p>
+          <styled.p textStyle="label.02">{content.statusMessages.waitingForTxConfirmation}</styled.p>
           <styled.p>
-            A stacking request was successfully submitted to the blockchain. Once confirmed, an
-            additional amount of{' '}
-            {toHumanReadableStx(getHasPendingStackIncreaseQuery.data.increaseBy)} will be stacking.
+            {content.statusMessages.stackingSubmitted.replace('an additional amount', `an additional amount of ${toHumanReadableStx(getHasPendingStackIncreaseQuery.data.increaseBy)}`)}
           </styled.p>
         </Box>
       )}
 
       {isBeforeFirstRewardCycle && (
         <Box pb="space.04">
-          <styled.p textStyle="label.02">Waiting for the cycle to start</styled.p>
-          <styled.p>
-            Your STX are ready for stacking. Once the next cycle starts the network will determine
-            if and how many slots are claimed.
-          </styled.p>
+          <styled.p textStyle="label.02">{content.statusMessages.waitingForCycleToStart}</styled.p>
+          <styled.p>{content.statusMessages.stackingReady}</styled.p>
         </Box>
       )}
     </VStack>
