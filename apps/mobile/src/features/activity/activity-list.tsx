@@ -34,7 +34,7 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   }
 
   return (
-    <Box flex={1} height="100%">
+    <Box flex={1} minHeight={200} width="100%">
       <FlashList
         data={filteredActivities}
         renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}

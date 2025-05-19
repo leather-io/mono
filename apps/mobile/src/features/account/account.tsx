@@ -1,5 +1,5 @@
+import { FetchError } from '@/components/error/fetch-error';
 import { NakedHeader } from '@/components/headers/naked-header';
-import { FetchError } from '@/components/loading/error';
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountOverview } from '@/features/account/components/account-overview-card';
 import { ActivityWidget } from '@/features/activity/activity-widget';
