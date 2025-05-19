@@ -283,3 +283,83 @@ export const stackingContractMap = {
 } as const;
 
 export type PoxContractName = keyof (typeof stackingContractMap)['mainnet'];
+
+export interface RewardProtocolInfo {
+  id: string;
+  url?: string;
+  title: string;
+  description: string;
+  tvl: string;
+  tvlUsd: string;
+  minCommitment: string;
+  minCommitmentUsd: string;
+  apr: string;
+  payoutToken: string | string[];
+}
+
+export const sbtcEnroll = {
+  id: 'basic',
+  title: 'Basic sBTC rewards',
+  description: 'Hold sBTC in your wallet to passively earn more sBTC, as it compounds over time.',
+  tvl: '2,150 BTC',
+  tvlUsd: '$130,050,000',
+  minCommitment: '0.005 BTC',
+  minCommitmentUsd: '$302.50',
+  apr: '4.9%',
+  payoutToken: 'sBTC',
+} as const;
+
+export const sbtcPools = [
+  {
+    id: 'alex',
+    url: 'https://app.alexlab.co/pool',
+    title: 'ALEX',
+    description:
+      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
+    tvl: ' 2.878995042 BTC',
+    tvlUsd: '$297,000',
+    minCommitment: '—',
+    minCommitmentUsd: '—',
+    apr: '0.34%',
+    payoutToken: ['sBTC', 'aBTC'],
+  } as const,
+  {
+    id: 'bitflow',
+    url: 'https://app.bitflow.finance/sbtc#earn3',
+    title: 'Bitflow',
+    description:
+      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
+    tvl: '35.245878696 BTC',
+    tvlUsd: '$3,600,000',
+    minCommitment: '—',
+    minCommitmentUsd: '—',
+    apr: '11.06%',
+    payoutToken: ['sBTC', 'pBTC'],
+  } as const,
+  {
+    id: 'velar',
+    url: 'https://app.velar.com/pool',
+    title: 'Velar',
+    description:
+      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
+    tvl: '2.84710314 BTC',
+    tvlUsd: '$293,000',
+    minCommitment: '—',
+    minCommitmentUsd: '—',
+    apr: '11.06%',
+    payoutToken: ['sBTC', 'PLAY', 'STONE'],
+  } as const,
+  {
+    id: 'zest',
+    url: 'https://app.zestprotocol.com',
+    title: 'Zest',
+    description:
+      'Commit sBTC to liquidity pools to earn fees and LP tokens in addition to basic sBTC rewards',
+    tvl: '—',
+    tvlUsd: '—',
+    minCommitment: '—',
+    minCommitmentUsd: '—',
+    apr: '4.41%',
+    payoutToken: 'sBTC',
+  } as const,
+] satisfies RewardProtocolInfo[];
