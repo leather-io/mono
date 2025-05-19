@@ -3,6 +3,7 @@ name: Android E2E Tests
 defaults:
   tools:
     node: 22.15.0
+    pnpm: 10.10.0
     corepack: true
 
 on:
