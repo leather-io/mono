@@ -126,6 +126,14 @@ export default () => {
         '@react-native-firebase/app',
         '@react-native-firebase/messaging',
         [
+          '@sentry/react-native/expo',
+          {
+            url: 'https://sentry.io/',
+            project: 'leather-mobile',
+            organization: 'trust-machines',
+          },
+        ],
+        [
           'expo-local-authentication',
           {
             faceIDPermission: 'Allow $(PRODUCT_NAME) to use Face ID biometric data.',
