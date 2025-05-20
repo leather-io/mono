@@ -1,3 +1,5 @@
+import { Navigate } from 'react-router';
+
 import { LiquidStackingInfo } from '~/features/stacking/direct-stacking-info/liquid-stacking-info';
 import { useLeatherConnect } from '~/store/addresses';
 
@@ -7,17 +9,15 @@ import { ProtocolSlug } from './start-liquid-stacking/utils/types-preset-protoco
 interface LiquidStackingActiveInfoProps {
   protocolSlug: ProtocolSlug;
 }
-
 export function LiquidStackingActiveInfo({ protocolSlug }: LiquidStackingActiveInfoProps) {
   const { client } = useStackingClient();
-  const { stacksAccount: stxAddress } = useLeatherConnect();
+  const { stacksAccount } = useLeatherConnect();
 
-  if (!stxAddress || !client) {
-    return 'You should connect STX wallet';
-  }
+  if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
+
   if (!client) {
     return 'Expected client to be defined';
   }
 
-  return <LiquidStackingInfo address={stxAddress.address} protocolSlug={protocolSlug} />;
+  return <LiquidStackingInfo address={stacksAccount.address} protocolSlug={protocolSlug} />;
 }

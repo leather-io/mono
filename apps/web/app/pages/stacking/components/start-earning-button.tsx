@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
@@ -10,16 +10,13 @@ import { useStacksNetwork } from '~/store/stacks-network';
 import { Button, ButtonProps, useOnMount } from '@leather.io/ui';
 
 interface StartEarningButtonLayoutProps extends ButtonProps {
-  to: string;
   children?: ReactNode;
 }
-function StartEarningButtonLayout({ children, to, ...buttonProps }: StartEarningButtonLayoutProps) {
+function StartEarningButtonLayout({ children, ...buttonProps }: StartEarningButtonLayoutProps) {
   return (
-    <Link to={to} style={{ minWidth: 'fit-content' }}>
-      <Button width="100" size="xs" minW="fit-content" {...buttonProps}>
-        {children || 'Start earning'}
-      </Button>
-    </Link>
+    <Button width="100" size="xs" minW="fit-content" {...buttonProps}>
+      {children || 'Start earning'}
+    </Button>
   );
 }
 
@@ -41,37 +38,54 @@ function StartEarningPoolCheck({ slug, poolAddresses }: StartEarningButtonProps)
   const toViewActive = `/stacking/pool/${slug}/active`;
 
   if (isLoading) {
-    return <StartEarningButtonLayout to={toStartEarn} aria-busy />;
+    return (
+      <Link to={toStartEarn}>
+        <StartEarningButtonLayout aria-busy />
+      </Link>
+    );
   }
 
   const resolvedAddress = getPoolAddressQuery.data?.poolAddress;
 
   if (!resolvedAddress) {
-    return <StartEarningButtonLayout to={toStartEarn} />;
+    return (
+      <Link to={toStartEarn}>
+        <StartEarningButtonLayout />
+      </Link>
+    );
   }
 
-  if (networkName === 'mocknet' || poolAddresses?.[networkName] !== resolvedAddress) {
-    return <StartEarningButtonLayout to={toStartEarn} disabled />;
-  }
+  if (networkName === 'mocknet' || poolAddresses?.[networkName] !== resolvedAddress)
+    return <StartEarningButtonLayout disabled />;
 
-  return <StartEarningButtonLayout to={toViewActive}>View pooling</StartEarningButtonLayout>;
+  return (
+    <Link to={toViewActive}>
+      <StartEarningButtonLayout>View pooling</StartEarningButtonLayout>
+    </Link>
+  );
 }
 
 export function StartEarningButton({ slug, poolAddresses }: StartEarningButtonProps) {
-  const { whenExtensionState } = useLeatherConnect();
+  const { whenExtensionState, setShowInstallLeatherDialog, connect } = useLeatherConnect();
+  const navigate = useNavigate();
 
   const [isClient, setIsClient] = useState(false);
   useOnMount(() => setIsClient(true));
 
-  const toStartEarn = `/stacking/pool/${slug}`;
-
   if (!isClient) {
-    return <StartEarningButtonLayout to={toStartEarn} aria-busy />;
+    return <StartEarningButtonLayout aria-busy />;
   }
 
   return whenExtensionState({
     connected: <StartEarningPoolCheck slug={slug} poolAddresses={poolAddresses} />,
-    detected: <StartEarningButtonLayout to={toStartEarn} disabled />,
-    missing: <StartEarningButtonLayout to={toStartEarn} disabled />,
+    detected: (
+      <StartEarningButtonLayout
+        onClick={async () => {
+          await connect();
+          void navigate(`/stacking/pool/${slug}`);
+        }}
+      />
+    ),
+    missing: <StartEarningButtonLayout onClick={() => setShowInstallLeatherDialog(true)} />,
   });
 }

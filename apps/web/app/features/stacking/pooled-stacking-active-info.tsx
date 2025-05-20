@@ -1,3 +1,5 @@
+import { Navigate } from 'react-router';
+
 import { Flex, HStack, VStack, styled } from 'leather-styles/jsx';
 import { usePoolInfo } from '~/features/stacking/hooks/use-pool-info';
 import { PooledStackingActionButtons } from '~/features/stacking/pooled-stacking-info/pooled-stacking-action-buttons';
@@ -16,7 +18,7 @@ export function PooledStackingActiveInfo({ poolSlug }: PooledStackingActiveInfoP
   const { client } = useStackingClient();
   const { stacksAccount: stxAddress } = useLeatherConnect();
 
-  if (!stxAddress || !client) return 'You should connect STX wallet';
+  if (!stxAddress || !client) return <Navigate to="/stacking" replace />;
   if (!client) return 'Expected client to be defined';
 
   return <PooledStackingActiveInfoLayout poolSlug={poolSlug} />;

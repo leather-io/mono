@@ -26,6 +26,8 @@ export const stacksAccountAtom = atom(get => {
 
 export const showMissingStacksKeysDialogAtom = atom(false);
 
+export const showInstallLeatherDialogAtom = atom(false);
+
 export function useStacksAccount() {
   return useAtomValue(stacksAccountAtom);
 }
@@ -39,6 +41,9 @@ export function useLeatherConnect() {
   const extensionState = useAtomValue(extensionStateAtom);
   const [showMissingStacksKeysDialog, setShowMissingStacksKeysDialog] = useAtom(
     showMissingStacksKeysDialogAtom
+  );
+  const [showInstallLeatherDialog, setShowInstallLeatherDialog] = useAtom(
+    showInstallLeatherDialogAtom
   );
 
   const stacksAccount = useStacksAccount();
@@ -60,6 +65,8 @@ export function useLeatherConnect() {
     setAddresses,
     showMissingStacksKeysDialog,
     setShowMissingStacksKeysDialog,
+    showInstallLeatherDialog,
+    setShowInstallLeatherDialog,
     status: extensionState,
     ...accounts,
     whenExtensionState: whenExtensionState(extensionState),

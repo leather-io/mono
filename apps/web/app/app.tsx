@@ -11,6 +11,7 @@ import { Tooltip } from '@leather.io/ui';
 import { defaultMetaTags } from './constants/default-meta-tags';
 import { analytics } from './features/analytics/analytics';
 import { useOnRouteChange } from './features/analytics/use-on-route-change';
+import { InstallDialog } from './features/install-dialog/install-dialog';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
@@ -38,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <styled.main flex={1}>{children}</styled.main>
           <Footer />
         </Flex>
+        <InstallDialog />
         <ScrollRestoration />
         <Scripts />
       </styled.body>
