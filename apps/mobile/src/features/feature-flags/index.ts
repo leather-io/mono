@@ -60,5 +60,5 @@ export function useDynamicFeeFlag() {
   return useBoolVariation('release_dynamic_fee_feature', false);
 }
 export function useEarnFlag() {
-  return useBoolVariation('release_earn_feature', true);
+  return useBoolVariation('release_earn_feature', false);
 }
