@@ -3,6 +3,7 @@ import { Accordion, Link } from '@leather.io/ui';
 import { content } from '~/data/content';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
+import type { Post } from '~/data/post-types';
 
 // List of sBTC-related post keys in order of appearance on the page
 const sbtcFaqPostKeysRaw = [
@@ -27,25 +28,25 @@ const sbtcFaqPostKeysRaw = [
 const sbtcFaqPostKeys = Array.from(new Set(sbtcFaqPostKeysRaw));
 
 export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
-  // Filter posts to only those with a Question and Summary
+  // Filter posts to only those with a question and summary
   const faqPosts = sbtcFaqPostKeys
-    .map(key => (content.posts as Record<string, any>)[key])
-    .filter(post => post && post.Question && post.Summary);
+    .map(key => content.posts[key] as Post)
+    .filter(post => post && post.question && post.summary);
 
   return (
     <styled.div {...props}>
       <Accordion.Root
         type="single"
-        defaultValue={faqPosts.length ? faqPosts[0].Slug : undefined}
+        defaultValue={faqPosts.length ? faqPosts[0].slug : undefined}
         collapsible
       >
         {faqPosts.map(post => (
-          <Accordion.Item value={post.Slug} key={post.Slug}>
-            <Accordion.Trigger>{sanitizeContent(post.Question)}</Accordion.Trigger>
+          <Accordion.Item value={post.slug} key={post.slug}>
+            <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
               <styled.p textStyle="body.02" mb="space.02" style={{ whiteSpace: 'pre-line', color: 'black' }}>
-                {sanitizeContent(post.Summary)}{' '}
-                <Link href={getPostHref(post.Slug)} style={{ fontSize: 'inherit' }}>Learn more</Link>
+                {sanitizeContent(post.summary)}{' '}
+                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>Learn more</Link>
               </styled.p>
             </Accordion.Content>
           </Accordion.Item>

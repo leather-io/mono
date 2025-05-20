@@ -35,8 +35,8 @@ function BridgeToSbtcCell() {
           <MaxCapacity bridgingStatus={bridgingStatus} />
           {sbtcBridgePost && (
             <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-              {sbtcBridgePost.Prompt}
-              {getLearnMoreLink(sbtcBridgePost.Slug, sbtcBridgePost.Prompt)}
+              {sbtcBridgePost.prompt}
+              {getLearnMoreLink(sbtcBridgePost.slug, sbtcBridgePost.prompt)}
             </styled.p>
           )}
         </Box>
@@ -79,8 +79,8 @@ function SwapStxToSbtcCell() {
           <styled.h4 textStyle="heading.05">Swap Stacks tokens for sBTC</styled.h4>
           {stacksSwapsPost && (
             <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-              {stacksSwapsPost.Prompt}
-              {getLearnMoreLink(stacksSwapsPost.Slug, stacksSwapsPost.Prompt)}
+              {stacksSwapsPost.prompt}
+              {getLearnMoreLink(stacksSwapsPost.slug, stacksSwapsPost.prompt)}
             </styled.p>
           )}
         </Box>

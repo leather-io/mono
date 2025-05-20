@@ -49,7 +49,7 @@ export function usePost(slug: string): Post | undefined {
  */
 export function usePostPrompt(slug: string): string {
   const post = usePost(slug);
-  return formatPostPrompt(post?.Prompt);
+  return formatPostPrompt(post?.prompt);
 }
 
 /**
@@ -57,7 +57,7 @@ export function usePostPrompt(slug: string): string {
  */
 export function usePostSentence(slug: string): string {
   const post = usePost(slug);
-  return formatPostSentence(post?.Sentence);
+  return formatPostSentence(post?.sentence);
 }
 
 /**
@@ -91,19 +91,19 @@ export function getAllPosts(): Post[] {
  * Get posts filtered by a specific category
  */
 export function getPostsByCategory(category: string): Post[] {
-  return getAllPosts().filter(post => post.Category === category);
+  return getAllPosts().filter(post => post.category === category);
 }
 
 /**
  * Get featured posts
  */
 export function getFeaturedPosts(): Post[] {
-  return getAllPosts().filter(post => post.Featured);
+  return getAllPosts().filter(post => post.featured);
 }
 
 /**
  * Get non-hidden posts
  */
 export function getVisiblePosts(): Post[] {
-  return getAllPosts().filter(post => !post.Hidden);
+  return getAllPosts().filter(post => !post.hidden);
 } 

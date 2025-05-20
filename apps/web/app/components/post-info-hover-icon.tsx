@@ -19,19 +19,19 @@ export function PostInfoHoverIcon({ postKey, children, iconColor = 'black' }: Po
   const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
   const handleIconClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.location.assign(getPostHref(post.Slug));
+    window.location.assign(getPostHref(post.slug));
   };
   return (
     <BasicHoverCard align="start" content={
       <styled.span display="block">
-        {sanitizeContent(post.Sentence)}
-        {getLearnMoreLink(post.Slug, post.Sentence)}
+        {sanitizeContent(post.sentence)}
+        {getLearnMoreLink(post.slug, post.sentence)}
       </styled.span>
     }>
       <Flex alignItems="center" gap="space.02">
         {children}
         <a
-          href={getPostHref(post.Slug)}
+          href={getPostHref(post.slug)}
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
           style={{ display: 'inline-flex', color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}

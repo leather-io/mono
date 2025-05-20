@@ -1,5 +1,6 @@
 import type { PostsCollection } from './post-types';
 import postsData from './posts.json';
+import { normalizePosts } from './post-types';
 
 export const content = {
   stacking: {
@@ -61,12 +62,36 @@ export const content = {
     },
   ],
   posts: {
-    ...postsData,
+    ...normalizePosts(postsData),
     'choose-pooling-duration': {
-      Title: 'Indefinite',
-      Sentence: `The pool commits your STX for Stacking for up to 12 cycles (with about two weeks per cycle). You can revoke anytime, but they stay locked until the pool's commitment ends. Revoke before the pool's next commitment to regain access at the end of the current commitment period.`,
+      title: 'Indefinite',
+      sentence: `The pool commits your STX for Stacking for up to 12 cycles (with about two weeks per cycle). You can revoke anytime, but they stay locked until the pool's commitment ends. Revoke before the pool's next commitment to regain access at the end of the current commitment period.`,
+      id: '',
+      slug: 'choose-pooling-duration',
+      body: '',
+      date: '',
+      status: '',
+      category: '',
+      subcategory: '',
+      featured: false,
+      hidden: false,
+      question: '',
+      prompt: '',
+      images: [],
+      views: [],
+      earnProviders: [],
+      dataPointInstructions: '',
+      aliases: '',
+      dataPointSource: '',
+      summary: '',
+      website: '',
+      disclaimer: '',
+      order: 0,
+      icon: [],
+      dataPointValue: '',
+      createdTime: '',
     },
-  } as unknown as PostsCollection,
+  },
 
   // --- Consolidated content below ---
 

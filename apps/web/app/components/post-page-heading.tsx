@@ -12,10 +12,10 @@ export function PostPageHeading({ post }: PostPageHeadingProps) {
   if (!post) return null;
   return (
     <Page.Heading
-      title={sanitizeContent(post.Prompt || post.Title)}
-      subtitle={sanitizeContent(post.Sentence || '')}
-      disclaimer={sanitizeContent(post.Disclaimer || '')}
-      postSlug={post.Slug}
+      title={sanitizeContent(post.prompt || post.title)}
+      subtitle={sanitizeContent(post.sentence || '')}
+      disclaimer={sanitizeContent(post.disclaimer || '')}
+      postSlug={post.slug}
     />
   );
 } 

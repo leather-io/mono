@@ -107,8 +107,8 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
       </styled.h4>
       {post && (
         <styled.p textStyle="caption.01">
-          {post.Sentence}
-          {getLearnMoreLink(post.Slug, post.Sentence)}
+          {post.sentence}
+          {getLearnMoreLink(post.slug, post.sentence)}
         </styled.p>
       )}
     </VStack>

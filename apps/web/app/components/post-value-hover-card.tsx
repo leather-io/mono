@@ -12,12 +12,12 @@ interface PostValueHoverCardProps {
 }
 
 export function PostValueHoverCard({ postKey, value, label }: PostValueHoverCardProps) {
-  const post = (content.posts as Record<string, Post>)[postKey];
+  const post: Post | undefined = content.posts[postKey];
   if (!post) return null;
   return (
     <Flex flexDir="column">
       <PostInfoHoverIcon postKey={postKey}>
-        <styled.span textStyle="label.01">{sanitizeContent(label ?? post.Title)}</styled.span>
+        <styled.span textStyle="label.01">{sanitizeContent(label ?? post.title)}</styled.span>
       </PostInfoHoverIcon>
       {typeof value === 'string' ? (
         <styled.span textStyle="heading.02">{sanitizeContent(value)}</styled.span>

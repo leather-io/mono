@@ -5,6 +5,7 @@ import { PostInfoHoverIcon } from './post-info-hover-icon';
 import { content } from '~/data/content';
 import React from 'react';
 import { sanitizeContent } from '~/utils/sanitize-content';
+import type { Post } from '~/data/post-types';
 
 interface PostLabelHoverCardProps {
   postKey: string;
@@ -14,12 +15,12 @@ interface PostLabelHoverCardProps {
 }
 
 export function PostLabelHoverCard({ postKey, label, textStyle = 'label.01', tagName = 'span' }: PostLabelHoverCardProps) {
-  const post: any = (content.posts as Record<string, any>)[postKey];
+  const post: Post | undefined = content.posts[postKey];
   if (!post) return null;
   const Tag = styled[tagName as keyof typeof styled];
   return (
     <PostInfoHoverIcon postKey={postKey}>
-      <Tag textStyle={textStyle}>{sanitizeContent(String(label ?? post.Title))}</Tag>
+      <Tag textStyle={textStyle}>{sanitizeContent(String(label ?? post.title))}</Tag>
     </PostInfoHoverIcon>
   );
 } 

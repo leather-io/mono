@@ -13,7 +13,6 @@ export function StackingExplainer(props: HTMLStyledProps<'section'>) {
           key={step.title}
           index={idx}
           title={step.title}
-          post={content.posts[step.postKey]}
           description={sanitizeContent(step.description)}
         />
       ))}

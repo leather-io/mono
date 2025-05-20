@@ -37,8 +37,8 @@ function RewardProtocolEnrollCell({
         </styled.h3>
         {post && (
           <styled.p textStyle="caption.01" mt="space.01">
-            {post.Prompt}
-            {getLearnMoreLink(post.Slug, post.Prompt)}
+            {post.prompt}
+            {getLearnMoreLink(post.slug, post.prompt)}
           </styled.p>
         )}
         {!post && (

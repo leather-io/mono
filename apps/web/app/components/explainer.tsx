@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
@@ -43,13 +43,12 @@ export function Explainer({ children, ...props }: ExplainerProps) {
 
 interface EarnInstructionStepProps {
   index: number;
-  title: ReactNode;
+  title: string;
   description: string;
   img?: ReactElement;
-  post?: Post;
 }
 
-export function ExplainerStep({ index, title, description, img, post }: EarnInstructionStepProps) {
+export function ExplainerStep({ index, title, description, img }: EarnInstructionStepProps) {
   return (
     <Flex
       flexDir="column"
@@ -70,7 +69,7 @@ export function ExplainerStep({ index, title, description, img, post }: EarnInst
           {img ?? <Box width="32px" height="32px" />}
         </VStack>
         <styled.h3 mt="space.02" textStyle="label.01">
-          {post ? <PostLabelHoverCard postKey={post.Slug} label={String(title)} /> : title}
+          {title}
         </styled.h3>
       </VStack>
       <styled.p color="black" textStyle="caption.01" fontSize="13px">
