@@ -9,7 +9,7 @@ interface StackInPoolProps {
 export function LiquidStackingIncrease({ protocolSlug }: StackInPoolProps) {
   return (
     <Page>
-      <Page.Header title="Increase liquid stacking" />
+      <Page.Header title="Increase liquid Stacking" />
       <IncreaseLiquidStacking protocolSlug={protocolSlug} />
     </Page>
   );

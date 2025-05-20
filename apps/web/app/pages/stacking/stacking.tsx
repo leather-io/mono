@@ -1,6 +1,9 @@
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
+import { PostPageHeading } from '~/components/post-page-heading';
+import { PostSectionHeading } from '~/components/post-section-heading';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
+import { content } from '~/data/content';
 import { Page } from '~/features/page/page';
 import { UserPositions } from '~/features/stacking/user-positions/user-positions';
 
@@ -18,10 +21,7 @@ export function Stacking() {
     <Page>
       <Page.Header title="Stacking" />
 
-      <Page.Heading
-        title="Earn yield from stacking on Stacks"
-        subtitle="Earn yield from the native consensus mechanism of Stacks—the leading L2 for Bitcoin—by either locking your STX via a pool or converting your STX to a liquid Stacking token."
-      />
+      <PostPageHeading post={content.posts['stacking']} />
 
       <ApyRewardHeroCard
         apyRange="6–10%"
@@ -35,17 +35,12 @@ export function Stacking() {
         {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
       </StacksAccountLoader>
 
-      <Page.Title mt="space.09">Pooled stacking</Page.Title>
+      <PostSectionHeading post={content.posts['pooled-stacking']} />
       <StackingExplainer mt="space.05" />
-
       <StackingProviderTable mt="space.05" />
-
       <IndependentStackingLink />
-
-      <Page.Title mt="space.09">Liquid stacking</Page.Title>
-
+      <PostSectionHeading post={content.posts['liquid-stacking']} />
       <LiquidStackingExplainer mt="space.04" />
-
       <LiquidStackingProviderTable mt="space.05" />
 
       <Page.Divider my="space.07" />
