@@ -4,6 +4,7 @@ import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read
 import {
   RpcResponses,
   getAddresses,
+  sendTransfer,
   signMessage,
   signPsbt,
   stxCallContract,
@@ -18,6 +19,7 @@ import {
 } from '@leather.io/rpc';
 
 import { GetAddressesApprover } from './get-addresses/get-addresses';
+import { SendTransferApprover } from './send-transfer';
 import { SignMessageApprover } from './sign-message/sign-message';
 import { SignPsbtApprover } from './sign-psbt';
 import { CallContractApprover } from './stx/call-contract/call-contract';
@@ -60,6 +62,18 @@ export function BrowserApprover(props: BrowserApproverProps) {
           app={props.app}
           sendResult={props.sendResult}
           request={props.request}
+          closeApprover={props.closeApprover}
+        />
+      );
+    }
+    case sendTransfer.method: {
+      const accountId = getAccountIdFromConnectedApp(props.app);
+      return (
+        <SendTransferApprover
+          app={props.app}
+          sendResult={props.sendResult}
+          request={props.request}
+          accountId={accountId}
           closeApprover={props.closeApprover}
         />
       );
