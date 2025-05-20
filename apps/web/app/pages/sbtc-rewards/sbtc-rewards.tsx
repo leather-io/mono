@@ -16,6 +16,7 @@ import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 import { content } from '~/data/content';
 import { formatPostPrompt, formatPostSentence } from '~/utils/post-utils';
+import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 
 import { Button, Hr } from '@leather.io/ui';
 

@@ -41,10 +41,10 @@ import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 const providerSlugMap = {
   fastPool: 'fast-pool',
   fastPoolV2: 'fast-pool-v2',
-  planbetter: 'plan-better',
+  planbetter: 'planbetter',
   restake: 'restake',
   'xverse-pool': 'xverse-pool',
-  stackingDao: 'stacking-dao',
+  'stacking-dao': 'stacking-dao',
 } as const;
 
 export function StackingProviderTable(props: HTMLStyledProps<'div'>) {

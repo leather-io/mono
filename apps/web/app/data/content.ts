@@ -60,7 +60,13 @@ export const content = {
       description: 'Use your liquid Stacking token in DeFi and swap back anytime while earning.',
     },
   ],
-  posts: postsData as unknown as PostsCollection,
+  posts: {
+    ...postsData,
+    'choose-pooling-duration': {
+      Title: 'Indefinite',
+      Sentence: `The pool commits your STX for Stacking for up to 12 cycles (with about two weeks per cycle). You can revoke anytime, but they stay locked until the pool's commitment ends. Revoke before the pool's next commitment to regain access at the end of the current commitment period.`,
+    },
+  } as unknown as PostsCollection,
 
   // --- Consolidated content below ---
 

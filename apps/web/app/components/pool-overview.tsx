@@ -10,6 +10,7 @@ import { getLearnMoreLink } from '~/features/page/page';
 import { usePost } from '~/utils/post-utils';
 import { ProviderIcon } from './icons/provider-icon';
 import type { StackingPool } from '~/data/data';
+import { getPostSlugForProvider } from '~/data/data';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -68,7 +69,7 @@ interface HistoricalAprCellProps {
   historicalApr?: string;
 }
 function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical yield"} textStyle={textStyle} />} value={<>{historicalApr}</>} />;
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical yield"} textStyle="label.03" />} value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {
@@ -95,14 +96,21 @@ interface PoolOverviewProps {
   pool: StackingPool;
   poolSlug: string;
 }
-function PoolCell({ pool }: PoolOverviewProps) {
+function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
+  const postSlug = getPostSlugForProvider(poolSlug);
+  const post = usePost(postSlug);
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      <ProviderIcon providerId={pool.providerId} />
+      {pool.logo}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {pool.name || pool.title}
+        {pool.title}
       </styled.h4>
-      <styled.p textStyle="caption.01">{pool.description}</styled.p>
+      {post && (
+        <styled.p textStyle="caption.01">
+          {post.Sentence}
+          {getLearnMoreLink(post.Slug, post.Sentence)}
+        </styled.p>
+      )}
     </VStack>
   );
 }
@@ -129,7 +137,7 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
         <PoolCell pool={pool} poolSlug={poolSlug} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
-        <HistoricalAprCell historicalApr={pool.apr} />
+        <HistoricalAprCell historicalApr={pool.estApr} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '2']} gridRow={['2', '2', '2']}>
         <LockupPeriodCell minLockupPeriodDays={minLockupPeriodDays} />

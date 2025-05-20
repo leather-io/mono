@@ -5,9 +5,9 @@ test.describe('ProtocolOverview', () => {
   const testCases = [
     { slug: 'fast-pool', expectedPost: 'fast-pool' },
     { slug: 'fast-pool-v2', expectedPost: 'fast-pool' },
-    { slug: 'plan-better', expectedPost: 'planbetter' },
+    { slug: 'planbetter', expectedPost: 'planbetter' },
     { slug: 'restake', expectedPost: 'restake' },
-    { slug: 'xverse', expectedPost: 'xverse' },
+    { slug: 'xverse', expectedPost: 'xverse-pool' },
     { slug: 'stacking-dao', expectedPost: 'stacking-dao' },
     { slug: 'lisa', expectedPost: 'lisa' },
     { slug: 'unknown', expectedPost: undefined },

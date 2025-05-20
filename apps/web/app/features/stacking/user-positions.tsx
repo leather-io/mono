@@ -156,7 +156,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-            name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical yield"} textStyle="label.03" />}
+            name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "APR"} textStyle="label.03" />}
             isLoading={fakeLoading}
            
             value={activePoolRewardProtocolInfo.apr}

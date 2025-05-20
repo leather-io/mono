@@ -54,13 +54,20 @@ export function PageHeading({ title, subtitle = '', disclaimer, postSlug }: Page
   );
 }
 
-export function getLearnMoreLink(postSlug: string, subtitle?: string): ReactNode {
-  if (!postSlug) return null;
-  const needsPeriod = subtitle && !subtitle.endsWith('.') && !subtitle.endsWith('!') && !subtitle.endsWith('?');
+/**
+ * destination: can be a postSlug (string) or a full URL (string starting with http/https)
+ * precedingText: text that comes before the link, used for punctuation logic
+ */
+export function getLearnMoreLink(destination: string, precedingText?: string): ReactNode {
+  if (!destination) return null;
+  const needsPeriod = precedingText && !precedingText.trim().endsWith('.') && !precedingText.trim().endsWith('!') && !precedingText.trim().endsWith('?');
+  // Simple URL check
+  const isUrl = /^https?:\/\//.test(destination);
+  const href = isUrl ? destination : getPostHref(destination);
   return (
     <>
-      {subtitle && needsPeriod ? '. ' : ' '}
-      <Link href={getPostHref(postSlug)} style={{ fontSize: 'inherit' }}>{'Learn more'}</Link>
+      {precedingText && needsPeriod ? '. ' : ' '}
+      <Link href={href} style={{ fontSize: 'inherit' }}>{'Learn more'}</Link>
     </>
   );
 }

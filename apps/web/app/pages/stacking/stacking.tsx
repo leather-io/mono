@@ -6,6 +6,7 @@ import { PostPageHeading } from '~/components/post-page-heading';
 import { content } from '~/data/content';
 import { UserPositions } from '~/features/stacking/user-positions';
 import { PostSectionHeading } from '~/components/post-section-heading';
+import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 
 import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
