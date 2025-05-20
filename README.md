@@ -82,3 +82,8 @@ This is applied in all FAQ, explainer, hover card, and heading components that r
 ## Integration & E2E Security Tests
 
 Integration and E2E tests are recommended (and being added) to verify that no unsanitized HTML or scripts from CMS content are ever rendered in the DOM. This ensures XSS protection is enforced in all user-facing routes and components.
+
+## Interface Capabilities
+
+- The sBTC Rewards page now safely accesses dynamic post slugs from `content.posts` using type assertions, allowing for flexible post content rendering.
+- The page is covered by E2E tests that verify dynamic post rendering for 'sbtc-rewards' and 'sbtc-rewards-basic', and ensure graceful handling of missing post slugs.

@@ -45,7 +45,7 @@ const sbtcEnroll = {
   id: 'basic',
   logo: <SbtcLogo size="32px" />,
   title: 'Basic sBTC rewards',
-  description: formatPostPrompt(content.posts["sbtc-rewards-basic"]?.Prompt || ''),
+  description: formatPostPrompt((content.posts as Record<string, any>)["sbtc-rewards-basic"]?.Prompt || ''),
   tvl: '2,150 BTC',
   tvlUsd: '$130,050,000',
   minCommitment: '0.005 BTC',
@@ -91,7 +91,7 @@ export function SbtcRewards() {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <PostPageHeading post={content.posts[postSlug]} />
+        <PostPageHeading post={(content.posts as Record<string, any>)[postSlug]} />
 
         <ApyRewardHeroCard
           apyRange="5–8%"

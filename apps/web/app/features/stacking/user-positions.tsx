@@ -60,7 +60,13 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
     const msg = 'Error while loading data, try reloading the page.';
     // eslint-disable-next-line no-console
     console.error(msg);
-    return msg;
+    return (
+      <Box mt="space.07">
+        <styled.span textStyle="heading.05" color="ink.text-subdued">
+          {msg}
+        </styled.span>
+      </Box>
+    );
   }
 
   const activePoolRewardProtocolInfo = poolInfo.activePoolRewardProtocolInfo;

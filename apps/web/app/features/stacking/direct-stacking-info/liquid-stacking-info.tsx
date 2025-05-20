@@ -74,7 +74,11 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
     const msg = 'Error while loading data, try reloading the page.';
     // eslint-disable-next-line no-console
     console.error(msg);
-    return msg;
+    return (
+      <styled.div mt="space.07">
+        {msg}
+      </styled.div>
+    );
   }
 
   const isStacking = getStatusQuery.data.stacked;

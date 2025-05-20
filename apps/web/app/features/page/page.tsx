@@ -21,13 +21,10 @@ export function PageInset(props: HTMLStyledProps<'div'>) {
 interface PageHeadingProps {
   title: string;
   subtitle?: string;
-  disclaimer?: string;
-  postSlug?: string;
+  children?: ReactNode;
 }
-export function PageHeading({ title, subtitle = '', disclaimer, postSlug }: PageHeadingProps) {
+export function PageHeading({ title, subtitle = '', children }: PageHeadingProps) {
   const needsPeriod = subtitle && !subtitle.endsWith('.') && !subtitle.endsWith('!') && !subtitle.endsWith('?');
-
-  const learnMoreLink = getLearnMoreLink(postSlug || '', subtitle);
 
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
@@ -39,16 +36,8 @@ export function PageHeading({ title, subtitle = '', disclaimer, postSlug }: Page
       <Box flex={1}>
         <Page.Subtitle mt={['space.03', 'space.03', 0]} style={{ whiteSpace: 'pre-line' }}>
           {subtitle}
-          {learnMoreLink}
         </Page.Subtitle>
-        {disclaimer && (
-          <>
-            <styled.hr color="ink.border-default" border="none" borderBottom="1px solid var(--colors-ink-border-default)" width="100%" mb="space.02" mt="space.03" />
-            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02" borderRadius="sm">
-              {disclaimer}
-            </styled.p>
-          </>
-        )}
+        {children}
       </Box>
     </Flex>
   );
