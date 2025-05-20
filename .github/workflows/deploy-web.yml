@@ -28,13 +28,8 @@ jobs:
           LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
         run: pnpm turbo run build --filter="@leather.io/web"
 
-      - name: Deploy
-        uses: cloudflare/wrangler-action@v3
+      - name: Deploy web app
+        working-directory: apps/web
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
-        with:
-          environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
-          workingDirectory: apps/web
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
-          gitHubToken: ${{ secrets.LEATHER_BOT }}
+        run: pnpm run deploy
