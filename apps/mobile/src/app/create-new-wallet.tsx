@@ -146,6 +146,7 @@ export default function CreateNewWallet() {
       </AnimatedHeaderScreenLayout>
       <Box px="5" gap="4">
         <Button
+          disabled={isHidden}
           onPress={() => void navigateAndCreateWallet()}
           buttonState="default"
           title={t({
