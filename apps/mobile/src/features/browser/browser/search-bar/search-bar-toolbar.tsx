@@ -24,9 +24,9 @@ export function SearchBarToolbar({
   onShare,
 }: SearchBarToolbarProps) {
   return (
-    <Box flexDirection="row" justifyContent="space-between" px="5" my="5">
+    <Box flexDirection="row" justifyContent="space-between" mt="5">
       <ToolbarButton
-        icon={<SparkleIcon />}
+        icon={<SparkleIcon variant="small" />}
         onPress={onClickApps}
         label={t({
           id: 'browser.toolbox.apps',
@@ -34,7 +34,7 @@ export function SearchBarToolbar({
         })}
       />
       <ToolbarButton
-        icon={<ArrowRefreshIcon />}
+        icon={<ArrowRefreshIcon variant="small" />}
         onPress={onRefresh}
         label={t({
           id: 'browser.toolbox.refresh',
@@ -42,7 +42,7 @@ export function SearchBarToolbar({
         })}
       />
       <ToolbarButton
-        icon={<NoteEmptyIcon />}
+        icon={<NoteEmptyIcon variant="small" />}
         onPress={onPaste}
         label={t({
           id: 'browser.toolbox.paste',
@@ -50,7 +50,7 @@ export function SearchBarToolbar({
         })}
       />
       <ToolbarButton
-        icon={<ArrowOutOfBoxIcon />}
+        icon={<ArrowOutOfBoxIcon variant="small" />}
         onPress={onShare}
         label={t({
           id: 'browser.toolbox.share',

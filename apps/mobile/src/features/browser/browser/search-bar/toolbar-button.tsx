@@ -13,13 +13,14 @@ export function ToolbarButton({ onPress, icon, label }: ToolbarButtonProps) {
     <Pressable
       pressEffects={legacyTouchablePressEffect}
       onPress={onPress}
-      p="1"
+      py="3"
       gap="1"
+      flexDirection="row"
       justifyContent="center"
       alignItems="center"
     >
       {icon}
-      <Text>{label}</Text>
+      <Text variant="label03">{label}</Text>
     </Pressable>
   );
 }
