@@ -85,6 +85,7 @@ export function Toast({ toastRef }: ToastProps) {
         bg="ink.text-primary"
         borderRadius="xs"
         p="3"
+        pr="4"
         alignSelf="center"
         gap="3"
         flexDirection="row"
