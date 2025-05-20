@@ -14,7 +14,7 @@ export function RadioButton({ isSelected, ...props }: RadioButtonProps) {
       <Box
         alignItems="center"
         borderRadius="round"
-        borderColor="ink.text-primary"
+        borderColor="ink.border-default"
         borderWidth={1}
         backgroundColor="ink.background-primary"
         height={20}
