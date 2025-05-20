@@ -86,7 +86,7 @@ export interface StackingPool {
 export const stackingPoolData = {
   fastPool: {
     ...providers.fastPool,
-    website: "https://yahoo.com", //getPostBySlug('fast-pool')?.Website ?? providers.fastPool.url,
+    website: getPostBySlug('fast-pool')?.Website ?? providers.fastPool.url,
     minAmount: '40 STX',
     estApr: '5%',
     fee: '5%',

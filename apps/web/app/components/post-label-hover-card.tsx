@@ -3,7 +3,6 @@ import type { JSX } from 'react';
 import { Flex, styled } from 'leather-styles/jsx';
 import { PostInfoHoverIcon } from './post-info-hover-icon';
 import { content } from '~/data/content';
-import React from 'react';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
 

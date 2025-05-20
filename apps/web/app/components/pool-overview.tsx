@@ -18,16 +18,16 @@ interface RewardTokenCellProps {
   value?: string;
   textStyle?: string;
 }
-function RewardTokenCell({ token = 'STX', value, textStyle }: RewardTokenCellProps) {
+function RewardTokenCell({ token = 'STX', value, textStyle = 'label.03' }: RewardTokenCellProps) {
   const posts = content.posts as unknown as PostsCollection;
   const label = posts['stacking-rewards-tokens']?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={label} textStyle="label.03" />}
+      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={label} textStyle={textStyle} />}
       value={
         <>
           {token}
-          <Box textStyle="label.03">{value}</Box>
+          <Box textStyle={textStyle}>{value}</Box>
         </>
       }
     />
@@ -38,7 +38,7 @@ interface LockupPeriodCellProps {
   minLockupPeriodDays: number;
 }
 function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
-  return <ValueDisplayer name="Minimum lockup period" value={<>{minLockupPeriodDays} Cycle(s)</>} />;
+  return <ValueDisplayer name="Minimum lockup period" value={<>{minLockupPeriodDays} ycle(s)</>} />;
 }
 
 interface DaysUntilNextCycleCellProps {

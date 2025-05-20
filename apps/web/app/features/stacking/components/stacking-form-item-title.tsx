@@ -1,5 +1,4 @@
 import { HStack, styled } from 'leather-styles/jsx';
-import React from 'react';
 
 import { InfoCircleIcon } from '@leather.io/ui';
 import { StackingAmountLabel, StackingRewardsAddressLabel, StackingDurationLabel, StackingContractDetailsLabel, PooledStackingConditionsLabel } from '~/components/pool-overview';

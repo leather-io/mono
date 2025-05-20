@@ -2,7 +2,6 @@ import { ReactElement } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
-import { Post } from '~/data/post-types';
 import { PostValueHoverCard } from './post-value-hover-card';
 import { PostLabelHoverCard } from './post-label-hover-card';
 

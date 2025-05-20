@@ -32,6 +32,3 @@ Dynamic HTML content is sanitized using a universal utility (`sanitizeContent`).
 
 **Note:** For maximum security, always sanitize untrusted content on the client. SSR sanitization is basic and should not be solely relied upon for untrusted sources.
 
-### Migration from isomorphic-dompurify
-- `isomorphic-dompurify` and JSDOM-based SSR sanitization have been removed for full Cloudflare compatibility.
-- All imports of the old sanitizer now use the new universal utility.
