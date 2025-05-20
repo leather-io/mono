@@ -34,7 +34,7 @@ import {
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
-import { RpcParams, RpcResult, signPsbt } from '@leather.io/rpc';
+import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
@@ -59,7 +59,7 @@ interface PsbtSignerProps {
   psbtHex: string;
   broadcast: RpcParams<typeof signPsbt>['broadcast'];
   onBack(): void;
-  onSuccess(result: RpcResult<typeof signPsbt>): void;
+  onResult(result: { hex: string; txid?: string }): void;
   allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
   signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
   network?: BitcoinNetworkModes;
@@ -101,7 +101,7 @@ function getPsbtNetwork(network: BitcoinNetworkModes) {
 function BasePsbtSigner({
   psbtHex: _psbtHex,
   onBack,
-  onSuccess,
+  onResult,
   feeRates,
   signAtIndex,
   allowedSighash,
@@ -218,7 +218,7 @@ function BasePsbtSigner({
       signedTx.finalize();
 
       if (!broadcast) {
-        onSuccess({
+        onResult({
           hex: signedTx.hex,
         });
         return;
@@ -228,10 +228,10 @@ function BasePsbtSigner({
         // TODO: for now
         skipSpendableCheckUtxoIds: 'all',
         tx: signedTx.hex,
-        onSuccess(txid) {
+        onResult(txid) {
           setApproverState('submitted');
           setTimeout(() => {
-            onSuccess({
+            onResult({
               hex: signedTx.hex,
               txid,
             });

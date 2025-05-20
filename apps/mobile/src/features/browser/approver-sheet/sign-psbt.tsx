@@ -39,7 +39,7 @@ export function SignPsbtApprover(props: SignPsbtApproverProps) {
         psbtHex={infusedPsbt.psbtHex}
         network={networkMode}
         onBack={props.closeApprover}
-        onSuccess={(result: RpcResult<typeof signPsbt>) => {
+        onResult={(result: RpcResult<typeof signPsbt>) => {
           const rpcSuccessResponse = createRpcSuccessResponse('signPsbt', {
             id: props.request.id,
             result,

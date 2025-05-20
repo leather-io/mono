@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '@/store';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
+import { destructAccountIdentifier } from '@/store/utils';
 import { createSelector } from '@reduxjs/toolkit';
 import memoize from 'just-memoize';
 
@@ -92,11 +93,17 @@ export function useBitcoinAccounts() {
 
   return useMemo(() => {
     const defaultSelectors = descriptorKeychainSelectors(list, filterKeychainsByAccountIndex);
+    function accountIndexByPaymentType(fingerprint: string, accountIndex: number) {
+      return splitByPaymentTypes(defaultSelectors.fromAccountIndex(fingerprint, accountIndex));
+    }
+    function accountIdByPaymentType(accountId: string) {
+      const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
+      return accountIndexByPaymentType(fingerprint, accountIndex);
+    }
     return {
       ...defaultSelectors,
-      accountIndexByPaymentType(fingerprint: string, accountIndex: number) {
-        return splitByPaymentTypes(defaultSelectors.fromAccountIndex(fingerprint, accountIndex));
-      },
+      accountIndexByPaymentType,
+      accountIdByPaymentType,
     };
   }, [list]);
 }

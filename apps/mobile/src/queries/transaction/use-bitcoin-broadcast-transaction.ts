@@ -13,7 +13,7 @@ interface BroadcastCallbackArgs {
   tx: string;
   skipSpendableCheckUtxoIds?: string[] | 'all';
   delayTime?: number;
-  onSuccess?(txid: string): void;
+  onResult?(txid: string): void;
   onError?(error: Error): void;
   onFinally?(): void;
 }
@@ -26,7 +26,7 @@ export function useBitcoinBroadcastTransaction() {
   const broadcastTx = useCallback(
     async ({
       tx,
-      onSuccess,
+      onResult,
       onError,
       onFinally,
       skipSpendableCheckUtxoIds = [],
@@ -53,7 +53,7 @@ export function useBitcoinBroadcastTransaction() {
         await delay(delayTime);
         if (!resp.ok) throw new Error(await resp.text());
         const txid = await resp.text();
-        onSuccess?.(txid);
+        onResult?.(txid);
         return txid;
       } catch (e) {
         onError?.(e as Error);

@@ -24,7 +24,7 @@ export function Approval() {
         broadcast
         psbtHex={txHex}
         onBack={goBack}
-        onSuccess={() => {
+        onResult={() => {
           sendSheetRef.current?.close();
         }}
       />
