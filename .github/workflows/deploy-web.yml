@@ -33,7 +33,7 @@ jobs:
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
         with:
-          environment:
+          environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
           workingDirectory: apps/web
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
