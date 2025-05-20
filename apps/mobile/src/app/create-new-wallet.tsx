@@ -85,6 +85,7 @@ export default function CreateNewWallet() {
     id: 'create_new_wallet.title',
     message: 'Back up your secret key',
   });
+
   return (
     <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
       <AnimatedHeaderScreenLayout
@@ -101,40 +102,46 @@ export default function CreateNewWallet() {
                 'Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.',
             })}
           </Text>
-        </Box>
 
-        <Box my="5">
-          {isHidden && (
-            <SecretBanner isHidden={isHidden}>
-              <Pressable
-                onPress={() => setIsHidden(false)}
-                height="100%"
-                flexDirection="row"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
-                pressEffects={legacyTouchablePressEffect}
-                testID={TestId.walletCreationTapToReveal}
-              >
-                <PointerHandIcon />
-                <Box>
-                  <Text variant="label02">
-                    {t({
-                      id: 'create_new_wallet.view_secret_key_label_a',
-                      message: 'Tap to view Secret Key',
-                    })}
-                  </Text>
-                  <Text variant="label02" color="red.action-primary-default">
-                    {t({
-                      id: 'create_new_wallet.view_secret_key_label_b',
-                      message: 'For your eyes only',
-                    })}
-                  </Text>
-                </Box>
-              </Pressable>
-            </SecretBanner>
-          )}
-          <MnemonicDisplay mnemonic={mnemonic} />
+          <Box
+            my="5"
+            borderWidth={1}
+            borderColor="ink.border-default"
+            borderRadius="xs"
+            overflow="hidden"
+          >
+            {isHidden && (
+              <SecretBanner isHidden={isHidden}>
+                <Pressable
+                  onPress={() => setIsHidden(false)}
+                  height="100%"
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  gap="2"
+                  pressEffects={legacyTouchablePressEffect}
+                  testID={TestId.walletCreationTapToReveal}
+                >
+                  <PointerHandIcon />
+                  <Box>
+                    <Text variant="label02">
+                      {t({
+                        id: 'create_new_wallet.view_secret_key_label_a',
+                        message: 'Tap to view Secret Key',
+                      })}
+                    </Text>
+                    <Text variant="label02" color="red.action-primary-default">
+                      {t({
+                        id: 'create_new_wallet.view_secret_key_label_b',
+                        message: 'For your eyes only',
+                      })}
+                    </Text>
+                  </Box>
+                </Pressable>
+              </SecretBanner>
+            )}
+            <MnemonicDisplay mnemonic={mnemonic} />
+          </Box>
         </Box>
       </AnimatedHeaderScreenLayout>
       <Box px="5" gap="4">
