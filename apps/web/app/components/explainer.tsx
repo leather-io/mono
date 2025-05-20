@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
@@ -42,7 +42,7 @@ export function Explainer({ children, ...props }: ExplainerProps) {
 
 interface EarnInstructionStepProps {
   index: number;
-  title: string;
+  title: ReactNode;
   description: string;
   img?: ReactElement;
 }

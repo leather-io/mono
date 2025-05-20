@@ -8,8 +8,8 @@ export function ChoosePoolingDuration() {
     <HStack pt="space.03">
       <Flag img={<ArrowRotateRightLeftIcon />} align="top">
         <Stack gap="space.01">
-          <styled.p textStyle="label.03">{post?.Title}</styled.p>
-          <styled.p textStyle="caption.01">{post?.Sentence}</styled.p>
+          <styled.p textStyle="label.03">{post?.title}</styled.p>
+          <styled.p textStyle="caption.01">{post?.sentence}</styled.p>
         </Stack>
       </Flag>
     </HStack>

@@ -20,7 +20,7 @@ export const content = {
   stackingExplainer: [
     {
       title: `Get STX`,
-      postKey: `stacking-token-stx`,
+      postKey: `stacks-token-stx`,
       description: `Hold at least the minimum required STX to participate.`,
     },
     {

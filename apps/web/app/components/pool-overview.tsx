@@ -38,7 +38,14 @@ interface LockupPeriodCellProps {
   minLockupPeriodDays: number;
 }
 function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
-  return <ValueDisplayer name="Minimum lockup period" value={<>{minLockupPeriodDays} ycle(s)</>} />;
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-minimum-lockup-period']?.title ?? 'Minimum lockup period';
+  return (
+    <ValueDisplayer
+      name={<PostLabelHoverCard postKey="stacking-minimum-lockup-period" label={label} textStyle="label.03" />}
+      value={<>{minLockupPeriodDays} cycle(s)</>}
+    />
+  );
 }
 
 interface DaysUntilNextCycleCellProps {
@@ -67,7 +74,14 @@ interface MinimumCommitmentCellProps {
 function MinimumCommitmentCell({
   minimumCommitment = '40,000,000.00 STX',
 }: MinimumCommitmentCellProps) {
-  return <ValueDisplayer name="Minimum commitment" value={<>{minimumCommitment}</>} />;
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-minimum-commitment']?.title ?? 'Minimum commitment';
+  return (
+    <ValueDisplayer
+      name={<PostLabelHoverCard postKey="stacking-minimum-commitment" label={label} textStyle="label.03" />}
+      value={<>{minimumCommitment}</>}
+    />
+  );
 }
 
 interface HistoricalAprCellProps {

@@ -12,7 +12,7 @@ export function StackingExplainer(props: HTMLStyledProps<'section'>) {
         <Explainer.Step
           key={step.title}
           index={idx}
-          title={step.title}
+          title={<PostLabelHoverCard postKey={step.postKey} label={step.title} textStyle="label.01" tagName="h3" />}
           description={sanitizeContent(step.description)}
         />
       ))}
