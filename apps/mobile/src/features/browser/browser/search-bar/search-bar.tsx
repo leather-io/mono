@@ -45,7 +45,7 @@ export function SearchBar({
   const textInputRef = useRef<RNTextInput>(null);
 
   const { keyboardAvoidingStyle, searchBarStyle, isUrlFocused, browserNavigationBarStyle } =
-    useSearchBarAnimatedStyles();
+    useSearchBarAnimatedStyles({ browserType });
 
   function goBack() {
     webViewRef.current?.goBack();
@@ -83,12 +83,12 @@ export function SearchBar({
       <AnimatedBox
         style={[
           keyboardAvoidingStyle,
-          browserType === 'active' ? searchBarStyle : null,
           {
             paddingHorizontal: theme.spacing['5'],
             paddingTop: theme.spacing['4'],
             paddingBottom: theme.spacing['4'] + bottom,
           },
+          searchBarStyle,
         ]}
         borderTopRightRadius="lg"
         borderTopLeftRadius="lg"
