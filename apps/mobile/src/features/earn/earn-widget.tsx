@@ -9,7 +9,9 @@ import { useTheme } from '@shopify/restyle';
 import { StxBalance } from '@leather.io/services';
 import { Box, Text, Theme } from '@leather.io/ui/native';
 
-import { EarnCard } from './earn-card';
+import { LockedBalanceCard } from './locked-balance-card';
+import { SbtcCard } from './sbtc-card';
+import { StackingCard } from './stacking-card';
 
 export function isStacking(stxBalance: FetchState<StxBalance>) {
   return stxBalance.state === 'success' && stxBalance.value.stx.lockedBalance.amount.gt(0);
@@ -34,8 +36,8 @@ export function EarnWidget() {
       </Box>
       <Widget.Body>
         <FetchWrapper data={stxBalance}>
-          {stxBalance.state === 'success' && isStacking(stxBalance) ? (
-            <EarnCard
+          {stxBalance.state == 'success' && isStacking(stxBalance) ? (
+            <LockedBalanceCard
               fiatLockedBalance={stxBalance.value?.fiat.lockedBalance}
               stxLockedBalance={stxBalance.value?.stx.lockedBalance}
             />
@@ -52,13 +54,9 @@ export function EarnWidget() {
                 overflow: 'visible',
               }}
             >
-              <Box>
-                <Text variant="label03">
-                  {t({
-                    id: 'earn.no_staking',
-                    message: 'No staking',
-                  })}
-                </Text>
+              <Box flexDirection="row" gap="3">
+                <SbtcCard />
+                <StackingCard />
               </Box>
             </ScrollView>
           )}
