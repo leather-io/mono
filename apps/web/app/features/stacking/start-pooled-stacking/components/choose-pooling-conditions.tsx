@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
+
+import { content } from '~/data/content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
 
 import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
-import { content } from '~/data/content';
 
-const iconMap: Record<string, JSX.Element> = {
+const iconMap: Record<string, ReactNode> = {
   BoxedCatLockedIcon: <BoxedCatLockedIcon />,
   MagnifyingGlassIcon: <MagnifyingGlassIcon />,
   StacksIcon: <StacksIcon />,
