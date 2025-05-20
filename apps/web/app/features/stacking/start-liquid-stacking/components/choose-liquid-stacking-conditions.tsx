@@ -1,28 +1,27 @@
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { content } from '~/data/content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
+import { mapConditionsWithIcons } from '~/shared/stacking-icon-map';
+import { getPosts } from '~/utils/post-utils';
 
-import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
-
-const liquidStackingConditions = [
-  {
-    icon: <BoxedCatLockedIcon />,
-    title: "This transaction can't be reversed",
-    description:
-      'You are converting STX to the Stacking token of your chosen provider. You may or may not be able to convert back to STX later depending on the provider.',
-  },
-  {
-    icon: <MagnifyingGlassIcon />,
-    title: 'Research your protocol',
-    description:
-      'Accumulating the value of rewards is at the discretion of the protocol. Make sure you’ve researched and trust the protocol you’re using.',
-  },
-  {
-    icon: <StacksIcon />,
-    title: 'Stacking with the Protocol Contract',
-    description:
-      'The protocol uses a smart contract that handles your Stacking. By allowing the contract to call Stacking functions, you agree to the rules of the protocol’s contract.',
-  },
-];
-
+/**
+ * Component for choosing liquid stacking conditions
+ * Uses shared icon mapping to display condition icons
+ */
 export function ChooseLiquidStackingConditions() {
-  return <StackingConditions conditions={liquidStackingConditions} />;
+  const liquidStackingConditions = mapConditionsWithIcons(content.liquidStackingConditions);
+  const posts = getPosts();
+  const post = posts.liquidStackingConditions;
+
+  return (
+    <>
+      <PostLabelHoverCard
+        post={post}
+        label="Liquid Stacking Conditions"
+        textStyle="label.01"
+        tagName="h1"
+      />
+      <StackingConditions conditions={liquidStackingConditions} />
+    </>
+  );
 }

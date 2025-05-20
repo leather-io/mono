@@ -1,6 +1,9 @@
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { getLearnMoreLink } from '~/features/page/page';
+import { getPosts } from '~/utils/post-utils';
 
 import { Flag } from '@leather.io/ui';
 
@@ -15,6 +18,17 @@ function RewardProtocolEnrollCell({
   rewardProtocol,
   action,
 }: RewardProtocolCellProps & { action: React.ReactElement }) {
+  // Map protocol id to post key in camelCase
+  const protocolKeyMap: Record<string, string> = {
+    basic: 'sbtcRewardsBasic',
+    alex: 'alexSbtcPools',
+    bitflow: 'bitflowSbtcPools',
+    velar: 'velarSbtcPools',
+    zest: 'zestSbtcPools',
+  };
+  const posts = getPosts();
+  const postKey = protocolKeyMap[rewardProtocol.id];
+  const post = postKey ? posts[postKey] : undefined;
   return (
     <Flex flex={1} justifyContent="space-between" flexDir="column" p="space.05" minH="246px">
       {rewardProtocol.logo}
@@ -22,9 +36,17 @@ function RewardProtocolEnrollCell({
         <styled.h3 textStyle="heading.05" mt="space.05">
           {rewardProtocol.title}
         </styled.h3>
-        <styled.p textStyle="caption.01" mt="space.01">
-          {rewardProtocol.description}
-        </styled.p>
+        {post && (
+          <styled.p textStyle="caption.01" mt="space.01">
+            {post.prompt}
+            {getLearnMoreLink(post.slug, post.prompt)}
+          </styled.p>
+        )}
+        {!post && (
+          <styled.p textStyle="caption.01" mt="space.01">
+            {rewardProtocol.description}
+          </styled.p>
+        )}
         <Box mt="space.04">{action}</Box>
       </Box>
     </Flex>
@@ -32,41 +54,59 @@ function RewardProtocolEnrollCell({
 }
 
 function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.totalLockedValueTvl;
   return (
     <ValueDisplayer
-      name="Total Value Locked (TVL)"
+      name={
+        <PostLabelHoverCard post={post} label="Total Value Locked (TVL)" textStyle="label.03" />
+      }
       value={
         <>
           {rewardProtocol.tvl}
           <Box textStyle="label.03">{rewardProtocol.tvlUsd}</Box>
         </>
       }
+      textAlign="left"
     />
   );
 }
 
 function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
-  return <ValueDisplayer name="Historical APR" value={rewardProtocol.apr} />;
+  const posts = getPosts();
+  const post = posts.historicalYield;
+  return (
+    <ValueDisplayer
+      name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.03" />}
+      value={rewardProtocol.apr}
+      textAlign="left"
+    />
+  );
 }
 
 function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.sbtcRewardsMinimumCommitment;
   return (
     <ValueDisplayer
-      name="Minimum Commitment"
+      name={<PostLabelHoverCard post={post} label="Minimum commitment" textStyle="label.03" />}
       value={
         <>
           {rewardProtocol.minCommitment}
           <Box textStyle="label.03">{rewardProtocol.minCommitmentUsd}</Box>
         </>
       }
+      textAlign="left"
     />
   );
 }
 
 function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.sbtcRewardsTokens;
   return (
     <ValueDisplayer
-      name="Payout token"
+      name={<PostLabelHoverCard post={post} label="Rewards token" textStyle="label.03" />}
       value={
         <Flag
           spacing="space.02"
@@ -75,6 +115,7 @@ function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
           {rewardProtocol.payoutToken}
         </Flag>
       }
+      textAlign="left"
     />
   );
 }

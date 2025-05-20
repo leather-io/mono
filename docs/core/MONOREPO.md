@@ -27,7 +27,7 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
     "scripts": {
       "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
       "install:fresh": "pnpm install:clean && pnpm i",
-      "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh"
+      "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     },
 
     // Only allow pnpm as package manager
@@ -36,9 +36,9 @@ The purpose of this monorepo is to host various **[npm packages ↗](https://doc
       "node": ">=14.16.0",
       "pnpm": ">=7.10.0",
       "npm": "please-use-pnpm",
-      "yarn": "please-use-pnpm"
+      "yarn": "please-use-pnpm",
     },
-    "packageManager": "pnpm@8.7.5"
+    "packageManager": "pnpm@8.7.5",
   }
   ```
 

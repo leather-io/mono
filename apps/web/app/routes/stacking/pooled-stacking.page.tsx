@@ -9,7 +9,7 @@ import { Route } from './+types/pooled-stacking.page';
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: poolSlug } = poolSlugSchema.safeParse(params.slug);
 
-  if (!success) throw new Response(`Invalid pool slug: ${poolSlug}`, { status: 404 });
+  if (!success) throw new Error(`Invalid pool slug: ${poolSlug}`);
 
   return { poolSlug };
 }

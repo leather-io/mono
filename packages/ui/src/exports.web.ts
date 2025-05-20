@@ -29,6 +29,7 @@ export { Tabs } from './components/tabs/tabs.web';
 export { useClipboard } from './utils/use-clipboard.web';
 export { useOnMount } from './utils/use-on-mount.shared';
 export { usePressable } from './hooks/use-pressable.web';
+export { sanitizeContent } from './utils/sanitize-content';
 export * from './components/approver/approver.web';
 export * from './components/avatar';
 export * from './components/collectibles/index.web';

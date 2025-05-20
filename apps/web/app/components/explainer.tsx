@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
@@ -40,7 +40,7 @@ export function Explainer({ children, ...props }: ExplainerProps) {
 
 interface EarnInstructionStepProps {
   index: number;
-  title: string;
+  title: ReactNode;
   description: string;
   img?: ReactElement;
 }
@@ -69,7 +69,7 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
           {title}
         </styled.h3>
       </VStack>
-      <styled.p color="ink.text-subdued" textStyle="caption.01" fontSize="13px">
+      <styled.p color="ink.text-primary" textStyle="caption.01" fontSize="13px">
         {description}
       </styled.p>
     </Flex>
