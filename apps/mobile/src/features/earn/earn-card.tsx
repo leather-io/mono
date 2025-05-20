@@ -2,8 +2,7 @@ import { Balance } from '@/components/balance/balance';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
-import { ItemLayout } from '@leather.io/ui/native';
-import { Box, Flag, Text } from '@leather.io/ui/native';
+import { Box, ItemLayout, Text } from '@leather.io/ui/native';
 
 interface EarnCardProps {
   fiatLockedBalance: Money;
