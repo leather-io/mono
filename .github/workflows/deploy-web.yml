@@ -23,7 +23,6 @@ jobs:
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
           LEATHER_TARGET: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
-          steps:
           LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
           LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
           LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
@@ -34,6 +33,7 @@ jobs:
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
         with:
+          environment:
           workingDirectory: apps/web
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
