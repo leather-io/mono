@@ -53,7 +53,7 @@ export const LiquidTokenMap = {
 
 export type LiquidToken = keyof typeof LiquidTokenMap;
 
-type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
+export type ContractMapType = typeof NetworkInstanceToLiquidContractMap;
 export type LiquidContractType = ContractMapType[NetworkMode];
 export type LiquidContractPrincipal = LiquidContractType[keyof LiquidContractType];
 

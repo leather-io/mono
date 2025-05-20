@@ -34,6 +34,25 @@ export function toHumanReadableStx(
   return amount.toFormat(decimalPlaces) + ' STX';
 }
 
+export function toHumanReadableShortMicroStx(
+  microStx: string | number | bigint | BigNumber
+): string {
+  const stx = parseNumber(microStx).dividedBy(1e6);
+
+  return toHumanReadableShortStx(stx);
+}
+
+export function toHumanReadableShortStx(userStx: string | number | bigint | BigNumber): string {
+  const stx = parseNumber(userStx);
+  if (stx.lt(1e6)) {
+    return `${stx.toFixed(0)} STX`;
+  }
+  if (stx.lt(1e9)) {
+    return `${stx.dividedBy(1e6).toFixed(2)}M STX`;
+  }
+  return `${stx.dividedBy(1e9).toFixed(2)}B STX`;
+}
+
 // Max U128 is too large for BigNumber
 export function stxToMicroStxBigint(stx: bigint | string | number): string {
   return parseNumber(stx).shiftedBy(6).decimalPlaces(0).toString(10);

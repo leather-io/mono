@@ -150,7 +150,7 @@ export function PoolOverview({ pool }: PoolOverviewProps) {
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '4']} gridRow={['4', '4', '1']}>
-        <RewardTokenCell />
+        <RewardTokenCell token={pool.rewardsToken} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
         <MinimumCommitmentCell minimumCommitment={pool.minCommitment} />

@@ -28,11 +28,14 @@ import {
   liquidStackingProvidersList,
   stackingPoolList,
 } from '~/data/data';
+import { getProtocolSlugByProviderId } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
 import { providerIdToSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
+import { useDAOFee } from '~/queries/protocols/dao/fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
-import { toHumanReadablePercent } from '~/utils/unit-convert';
+import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
+import { toHumanReadablePercent, toHumanReadableShortStx } from '~/utils/unit-convert';
 
 import { Button, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
 import { isUndefined } from '@leather.io/utils';
@@ -104,6 +107,36 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         ),
         meta: { align: 'left' },
         maxSize: 12,
+      },
+
+      {
+        accessorKey: 'tvl',
+        cell: info => {
+          const slug = providerIdToSlug(info.row.original.providerId);
+
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { isLoading, isError, data } = useStackingTrackerPool(slug);
+
+          if (isLoading) {
+            return <SkeletonLoader isLoading w={40} h={16} />;
+          }
+
+          if (isError || isUndefined(data?.lastCycle?.pool.stacked_amount)) {
+            return <styled.div>{(info.getValue() as string) || '-'}</styled.div>;
+          }
+
+          return (
+            <styled.div>{toHumanReadableShortStx(data.lastCycle.pool.stacked_amount)}</styled.div>
+          );
+        },
+        header: () => (
+          <styled.div>
+            <SortableHeader>Tvl</SortableHeader>
+          </styled.div>
+        ),
+        meta: { align: 'left' },
+        size: 15,
+        maxSize: 15,
       },
       {
         accessorKey: 'minAmount',
@@ -303,7 +336,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
     []
   );
 
-  const extendedColumns = useMemo<ColumnDef<LiquidStackingPool>[]>(
+  const largeViewportColumns = useMemo<ColumnDef<LiquidStackingPool>[]>(
     () => [
       {
         accessorKey: 'payout',
@@ -328,11 +361,40 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
       {
+        accessorKey: 'tvl',
+        cell: info => {
+          const slug = getProtocolSlugByProviderId(info.row.original.providerId);
+
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { isLoading, isError, data } = useStackingTrackerProtocol(slug);
+
+          if (isLoading) {
+            return <SkeletonLoader isLoading w={40} h={16} />;
+          }
+
+          if (isError || isUndefined(data?.lastCycle?.token.stacked_amount)) {
+            return <styled.div>{info.getValue() as string}</styled.div>;
+          }
+
+          return (
+            <styled.div>{toHumanReadableShortStx(data.lastCycle.token.stacked_amount)}</styled.div>
+          );
+        },
+        header: () => (
+          <styled.div>
+            <SortableHeader>Tvl</SortableHeader>
+          </styled.div>
+        ),
+        meta: { align: 'left' },
+        size: 15,
+        maxSize: 15,
+      },
+      {
         accessorKey: 'estApr',
         cell: info => {
-          const slug = providerIdToSlug(info.row.original.providerId);
+          const slug = getProtocolSlugByProviderId(info.row.original.providerId);
           // eslint-disable-next-line react-hooks/rules-of-hooks
-          const { data, isLoading, isError } = useStackingTrackerPool(slug);
+          const { data, isLoading, isError } = useStackingTrackerProtocol(slug);
 
           if (isLoading) {
             return <SkeletonLoader isLoading w={40} h={16} />;
@@ -357,12 +419,30 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       },
       {
         accessorKey: 'fee',
-        cell: info => <styled.div>{info.getValue() as string}</styled.div>,
+        cell: info => {
+          const slug = getProtocolSlugByProviderId(info.row.original.providerId);
+          if (slug !== 'stacking-dao') {
+            return <styled.div>{info.getValue() as string}</styled.div>;
+          }
+
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { isLoading, isError, data: fee } = useDAOFee();
+
+          if (isLoading) {
+            return <SkeletonLoader isLoading w={40} h={16} />;
+          }
+
+          if (isError || isUndefined(fee)) {
+            return <styled.div>{info.getValue() as string}</styled.div>;
+          }
+
+          return <styled.div>{toHumanReadablePercent(fee.multipliedBy(100))}</styled.div>;
+        },
         header: () => (
           <styled.div>
             <BasicHoverCard content={content.stacking.feeDescription}>
               <InfoLabel>
-                <SortableHeader>Pool fee</SortableHeader>
+                <SortableHeader>Fee</SortableHeader>
               </InfoLabel>
             </BasicHoverCard>
           </styled.div>
@@ -394,7 +474,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
   const table = useReactTable({
     columns: [
       leadingColumn,
-      ...(isMounted && isLargeViewport ? extendedColumns : []),
+      ...(isMounted && isLargeViewport ? largeViewportColumns : []),
       trailingColumn,
     ],
     data: liquidStackingProvidersList,

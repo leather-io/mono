@@ -248,7 +248,7 @@ export const liquidStackingPoolData = {
     ...providers.lisa,
     slug: 'lisa',
     estApr: '10%',
-    fee: '5%',
+    fee: '0.00%',
     payout: 'LiSTX',
   },
 } as const satisfies Record<string, LiquidStackingPool>;
