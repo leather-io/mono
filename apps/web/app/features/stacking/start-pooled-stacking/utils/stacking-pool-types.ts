@@ -6,9 +6,9 @@ export type NetworkMode = 'mainnet' | 'testnet' | 'devnet';
 export const poolSlugToIdMap = {
   'fast-pool': 'fastPool',
   'fast-pool-v2': 'fastPoolV2',
-  'plan-better': 'planbetter',
+  'planbetter': 'planbetter',
   'stacking-dao': 'stackingDao',
-  xverse: 'xverse',
+  'xverse-pool': 'xverse-pool',
   restake: 'restake',
   // custom: 'custom',
 } as const;

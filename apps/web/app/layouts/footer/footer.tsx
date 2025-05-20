@@ -1,6 +1,7 @@
 import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
 
 import { FooterLayout as Footer } from './footer.layout';
+import { getLearnMoreLink } from '~/features/page/page';
 
 function AppFooter() {
   return (
