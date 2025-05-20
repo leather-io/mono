@@ -50,6 +50,8 @@ export default tseslint.config(
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
     rules: {
       '@typescript-eslint/only-throw-error': 'off',
+      'no-duplicate-imports': 'off',
+      '@typescript-eslint/no-duplicate-imports': ['error'],
     },
   },
   {
