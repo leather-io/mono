@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ComponentType } from 'react';
+import { ComponentPropsWithRef, ComponentType } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
 import {
@@ -32,7 +32,7 @@ import {
 
 import { Theme } from '../../theme-native';
 
-export type TextInputProps<Theme extends BaseTheme> = ComponentPropsWithoutRef<typeof RNTextInput> &
+export type TextInputProps<Theme extends BaseTheme> = ComponentPropsWithRef<typeof RNTextInput> &
   VariantProps<Theme, 'textVariants', 'textVariant'> &
   OpacityProps<Theme> &
   VisibleProps<Theme> &

@@ -34,23 +34,23 @@ export function BrowserNavigationBar({
   return (
     <BrowserNavigationBarContainer>
       <Pressable
-        p="3"
+        p="4"
         onPress={canGoBack ? onGoBack : resetBrowser}
         pressEffects={legacyTouchablePressEffect}
         onLongPress={resetBrowser}
       >
-        <ChevronLeftIcon style={{ opacity: getIconOpacity(canGoBack) }} variant="large" />
+        <ChevronLeftIcon variant="small" />
       </Pressable>
       <Pressable p="4" onPress={onPressUrl} pressEffects={legacyTouchablePressEffect}>
         <Text variant="caption01">{hostname}</Text>
       </Pressable>
       <Pressable
-        p="3"
+        p="4"
         onPress={onGoForward}
         disabled={!canGoForward}
         pressEffects={legacyTouchablePressEffect}
       >
-        <ChevronRightIcon style={{ opacity: getIconOpacity(canGoForward) }} variant="large" />
+        <ChevronRightIcon style={{ opacity: getIconOpacity(canGoForward) }} variant="small" />
       </Pressable>
     </BrowserNavigationBarContainer>
   );

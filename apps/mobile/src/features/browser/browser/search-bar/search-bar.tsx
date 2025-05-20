@@ -2,7 +2,6 @@ import { RefObject, useRef } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 import { KeyboardController } from 'react-native-keyboard-controller';
 import Animated from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
 import { useTheme } from '@shopify/restyle';
@@ -14,7 +13,8 @@ import { Box, Theme } from '@leather.io/ui/native';
 import { BrowserType } from '../utils';
 import { BrowserNavigationBar } from './browser-navigation-bar';
 import { SearchBarToolbar } from './search-bar-toolbar';
-import { SearchInput } from './search-input';
+import { ActiveBrowserSearchInput } from './search-input/active-browser-search-input';
+import { InactiveBrowserSearchInput } from './search-input/inactive-browser-search-input';
 import { useSearchBarAnimatedStyles } from './use-search-bar-animated-styles';
 
 interface SearchBarProps {
@@ -41,7 +41,6 @@ export function SearchBar({
   resetBrowser,
 }: SearchBarProps) {
   const theme = useTheme<Theme>();
-  const { bottom } = useSafeAreaInsets();
   const textInputRef = useRef<RNTextInput>(null);
 
   const { keyboardAvoidingStyle, searchBarStyle, isUrlFocused, browserNavigationBarStyle } =
@@ -59,6 +58,9 @@ export function SearchBar({
     webViewRef.current?.reload();
   }
 
+  const SearchInput =
+    browserType === 'active' ? ActiveBrowserSearchInput : InactiveBrowserSearchInput;
+
   return (
     <>
       {browserType === 'active' && (
@@ -68,6 +70,14 @@ export function SearchBar({
           position="absolute"
           right={0}
           left={0}
+          shadowColor="ink.background-overlay"
+          shadowOffset={{
+            width: 0,
+            height: 12,
+          }}
+          shadowRadius={24}
+          shadowOpacity={0.08}
+          elevation={1}
         >
           <BrowserNavigationBar
             searchUrl={searchUrl}
@@ -86,7 +96,7 @@ export function SearchBar({
           {
             paddingHorizontal: theme.spacing['5'],
             paddingTop: theme.spacing['4'],
-            paddingBottom: theme.spacing['4'] + bottom,
+            paddingBottom: theme.spacing['4'],
           },
           searchBarStyle,
         ]}
@@ -97,6 +107,13 @@ export function SearchBar({
         right={0}
         left={0}
       >
+        <SearchInput
+          textInputRef={textInputRef}
+          isUrlFocused={isUrlFocused}
+          textUrl={textUrl}
+          setTextUrl={setTextUrl}
+          onSubmit={onSubmit}
+        />
         {browserType === 'active' && (
           <SearchBarToolbar
             onClickApps={async () => {
@@ -117,14 +134,6 @@ export function SearchBar({
             }}
           />
         )}
-
-        <SearchInput
-          textInputRef={textInputRef}
-          isUrlFocused={isUrlFocused}
-          textUrl={textUrl}
-          setTextUrl={setTextUrl}
-          onSubmit={onSubmit}
-        />
       </AnimatedBox>
     </>
   );
