@@ -11,7 +11,7 @@ export const ProtocolSlugToIdMap = {
 
 export const ProtocolIdToDisplayNameMap = {
   stackingDao: 'Stacking DAO',
-  lisa: 'Lisa',
+  lisa: 'LISA',
 } as const;
 
 export type ProtocolSlug = keyof typeof ProtocolSlugToIdMap;
@@ -25,7 +25,7 @@ export type ProtocolName = (typeof ProtocolIdToDisplayNameMap)[ProtocolId];
 
 export const LiquidContractNameMap = {
   WrapperStackingDAO: 'WrapperStackingDAO',
-  Lisa: 'Lisa',
+  lisa: 'LISA',
 } as const;
 
 export type LiquidContractName = keyof typeof LiquidContractNameMap;
@@ -33,15 +33,15 @@ export type LiquidContractName = keyof typeof LiquidContractNameMap;
 export const NetworkInstanceToLiquidContractMap = {
   devnet: {
     WrapperStackingDAO: '',
-    Lisa: '',
+    lisa: '',
   },
   testnet: {
     WrapperStackingDAO: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.stacking-dao-core-v1',
-    Lisa: '',
+    lisa: '',
   },
   mainnet: {
     WrapperStackingDAO: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.stacking-dao-core-v4',
-    Lisa: 'SM3KNVZS30WM7F89SXKVVFY4SN9RMPZZ9FX929N0V.lqstx-mint-endpoint-v2-01',
+    lisa: 'SM3KNVZS30WM7F89SXKVVFY4SN9RMPZZ9FX929N0V.lqstx-mint-endpoint-v2-01',
   },
 } as const;
 

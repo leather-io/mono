@@ -28,11 +28,13 @@
   "dependencies": {
     "@leather.io/constants": "workspace:*",
     "@leather.io/models": "workspace:*",
-    "bignumber.js": "9.1.2"
+    "bignumber.js": "9.1.2",
+    "dompurify": "3.2.4"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
+    "@types/dompurify": "3.0.5",
     "prettier": "3.5.1",
     "tsup": "8.4.0",
     "typescript": "5.8.3",

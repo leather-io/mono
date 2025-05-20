@@ -1,15 +1,15 @@
 import { MetaDescriptor } from 'react-router';
 
 import { SbtcRewards } from '~/pages/sbtc-rewards/sbtc-rewards';
-import { content } from '~/data/content';
-import { formatPostPrompt } from '~/utils/post-utils';
+import { formatPostPrompt, getPosts } from '~/utils/post-utils';
 
 export function meta() {
+  const posts = getPosts();
   return [
     { title: 'sBTC Rewards – Leather' },
     {
       name: 'description',
-      content: formatPostPrompt(content.posts["sbtc-rewards-basic"]?.Prompt || ''),
+      content: formatPostPrompt(posts.sbtcRewardsBasic?.prompt || ''),
     },
   ] satisfies MetaDescriptor[];
 }

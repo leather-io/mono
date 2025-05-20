@@ -1,5 +1,6 @@
 import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
 import { ProtocolOverview } from '~/components/protocol-overview';
+import { content } from '~/data/content';
 import { PendingStackExtendAlert } from '~/features/stacking/components/pending-stack-extend-alert';
 import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
@@ -17,7 +18,6 @@ import { Spinner } from '@leather.io/ui';
 import { useGetPoxInfoQuery, useGetStatusQuery } from '../hooks/stacking.query';
 import { NoStackingInfo } from './components/no-stacking-info';
 import { PendingStackingInfo } from './components/pending-stacking-info';
-import { content } from '~/data/content';
 
 export interface DirectStackingInfoProps {
   address: string;
@@ -59,11 +59,7 @@ export function LiquidStackingInfo({ protocolSlug }: DirectStackingInfoProps) {
     const msg = 'Error while loading data, try reloading the page.';
     // eslint-disable-next-line no-console
     console.error(msg);
-    return (
-      <styled.div mt="space.07">
-        {msg}
-      </styled.div>
-    );
+    return <styled.div mt="space.07">{msg}</styled.div>;
   }
 
   const isStacking = getStatusQuery.data.stacked;
@@ -120,9 +116,14 @@ export function LiquidStackingInfo({ protocolSlug }: DirectStackingInfoProps) {
 
       {getHasPendingStackIncreaseQuery.data && (
         <Box pb="space.04">
-          <styled.p textStyle="label.02">{content.statusMessages.waitingForTxConfirmation}</styled.p>
+          <styled.p textStyle="label.02">
+            {content.statusMessages.waitingForTxConfirmation}
+          </styled.p>
           <styled.p>
-            {content.statusMessages.stackingSubmitted.replace('an additional amount', `an additional amount of ${toHumanReadableMicroStx(getHasPendingStackIncreaseQuery.data.increaseBy)}`)}
+            {content.statusMessages.stackingSubmitted.replace(
+              'an additional amount',
+              `an additional amount of ${toHumanReadableMicroStx(getHasPendingStackIncreaseQuery.data.increaseBy)}`
+            )}
           </styled.p>
         </Box>
       )}

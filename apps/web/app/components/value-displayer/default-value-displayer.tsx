@@ -7,11 +7,12 @@ import { ValueDisplayerBase } from './reward-value-displayer';
 export interface ValueDisplayerProps extends FlexProps {
   name: ReactNode;
   value: ReactNode;
-  textAlign?: 'left' | 'right' | 'center';
+  // textAlign is already included in FlexProps
 }
-export function ValueDisplayer({ name, value, textAlign, ...flexProps }: ValueDisplayerProps) {
+
+export function ValueDisplayer({ name, value, ...flexProps }: ValueDisplayerProps) {
   return (
-    <ValueDisplayerBase {...flexProps} style={textAlign ? { textAlign } : undefined}>
+    <ValueDisplayerBase {...flexProps}>
       <ValueDisplayerBase.Name name={name} />
       <ValueDisplayerBase.Value value={value} />
     </ValueDisplayerBase>

@@ -1,10 +1,20 @@
-import { removeTrailingPeriod } from './string-utils';
 import { content } from '~/data/content';
-import type { Post } from '~/data/post-types';
+import type { Post, PostsCollection } from '~/data/post-types';
+
+import { removeTrailingPeriod } from './string-utils';
 
 // --------------------
 // Formatting Helpers
 // --------------------
+
+/**
+ * Converts kebab-case strings to camelCase
+ * @param str The string in kebab-case format
+ * @returns The string in camelCase format
+ */
+export function toCamelCase(str: string): string {
+  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}
 
 /**
  * Get a formatted post prompt without trailing periods
@@ -33,6 +43,33 @@ export function formatPostContent(text: string | undefined | null): string {
   return removeTrailingPeriod(text);
 }
 
+/**
+ * Safe access to the posts collection with proper typing
+ * @returns The validated posts collection
+ */
+export function getPosts(): PostsCollection {
+  return content.posts;
+}
+
+/**
+ * Get a post by its key, automatically converting from kebab-case to camelCase if needed
+ * @param key The post key in kebab-case or camelCase
+ * @returns The post if found, undefined otherwise
+ */
+export function getPostByKey(key: string): Post | undefined {
+  const posts = getPosts();
+  // Try direct access first
+  if (posts[key]) return posts[key];
+
+  // Try converting to camelCase if it looks like a kebab-case key
+  if (key.includes('-')) {
+    const camelCaseKey = toCamelCase(key);
+    return posts[camelCaseKey];
+  }
+
+  return undefined;
+}
+
 // --------------------
 // React Hooks
 // --------------------
@@ -41,7 +78,7 @@ export function formatPostContent(text: string | undefined | null): string {
  * Get a post by its slug (hook)
  */
 export function usePost(slug: string): Post | undefined {
-  return content.posts[slug];
+  return getPostByKey(slug);
 }
 
 /**
@@ -66,7 +103,7 @@ export function usePostSentence(slug: string): string {
 export function usePostContent(slug: string, field: keyof Post): string {
   const post = usePost(slug);
   if (!post || typeof post[field] !== 'string') return '';
-  return formatPostContent(post[field] as string);
+  return formatPostContent(post[field]);
 }
 
 // --------------------
@@ -77,14 +114,14 @@ export function usePostContent(slug: string, field: keyof Post): string {
  * Get a post by its slug
  */
 export function getPostBySlug(slug: string): Post | undefined {
-  return content.posts[slug];
+  return getPostByKey(slug);
 }
 
 /**
  * Get all posts
  */
 export function getAllPosts(): Post[] {
-  return Object.values(content.posts);
+  return Object.values(getPosts());
 }
 
 /**
@@ -106,4 +143,4 @@ export function getFeaturedPosts(): Post[] {
  */
 export function getVisiblePosts(): Post[] {
   return getAllPosts().filter(post => !post.hidden);
-} 
+}

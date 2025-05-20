@@ -1,29 +1,74 @@
+import { ReactElement } from 'react';
+
 import { styled } from 'leather-styles/jsx';
+import { ApyRewardHeroCard } from '~/components/apy-hero-card';
+import { AlexLogo } from '~/components/icons/alex-logo';
+import { BitflowLogo } from '~/components/icons/bitflow-logo';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { sbtcEnroll, sbtcPools } from '~/data/data';
+import { SbtcLogo } from '~/components/icons/sbtc-logo';
+import { VelarLogo } from '~/components/icons/velar-logo';
+import { ZestLogo } from '~/components/icons/zest-logo';
+import { PostPageHeading } from '~/components/post-page-heading';
+import { PostSectionHeading } from '~/components/post-section-heading';
+import { content } from '~/data/content';
 import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
-import { PostPageHeading } from '~/components/post-page-heading';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
-import { content } from '~/data/content';
-import { formatPostPrompt, formatPostSentence } from '~/utils/post-utils';
-import { ApyRewardHeroCard } from '~/components/apy-hero-card';
+import { formatPostPrompt, getPosts } from '~/utils/post-utils';
 
 import { Button, Hr } from '@leather.io/ui';
 
-import { PostValueHoverCard } from '../../components/post-value-hover-card';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
-import { PostSectionHeading } from '~/components/post-section-heading';
 
-export function SbtcRewards() {
+export interface RewardProtocolInfo {
+  id: string;
+  url?: string;
+  logo: ReactElement;
+  title: string;
+  description: string;
+  tvl: string;
+  tvlUsd: string;
+  minCommitment: string;
+  minCommitmentUsd: string;
+  apr: string;
+  payoutToken: string;
+}
+
+const posts = getPosts();
+
+const sbtcEnroll = {
+  id: 'basic',
+  logo: <SbtcLogo size="32px" />,
+  title: 'Basic sBTC rewards',
+  description: formatPostPrompt(posts.sbtcRewardsBasic?.prompt || ''),
+  tvl: '2,150 BTC',
+  tvlUsd: '$130,050,000',
+  minCommitment: '0.005 BTC',
+  minCommitmentUsd: '$302.50',
+  apr: '4.9%',
+  payoutToken: 'sBTC',
+} as const;
+
+const logoMap: Record<string, ReactElement> = {
+  AlexLogo: <AlexLogo size="32px" />,
+  BitflowLogo: <BitflowLogo size="32px" />,
+  VelarLogo: <VelarLogo size="32px" />,
+  ZestLogo: <ZestLogo size="32px" />,
+};
+const sbtcPools = content.sbtcPools.map(pool => ({
+  ...pool,
+  logo: logoMap[pool.logoKey] || null,
+}));
+
+export function SbtcRewards(): ReactElement {
   const { status, whenExtensionState } = useLeatherConnect();
-  const postSlug = 'sbtc-rewards';
+  const postSlug = 'sbtcRewards';
 
   function bridgeSbtc() {
     // Cannot bridge, cap reached
@@ -47,7 +92,7 @@ export function SbtcRewards() {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <PostPageHeading post={(content.posts as Record<string, any>)[postSlug]} />
+        <PostPageHeading post={posts[postSlug]} />
 
         <ApyRewardHeroCard
           apyRange="5–8%"
@@ -58,14 +103,13 @@ export function SbtcRewards() {
           backgroundPosition="right"
         />
 
-
         <styled.section mt="space.09">
-          <PostSectionHeading post={(content.posts as Record<string, any>)['get-sbtc']} prefix="Step 1: " />
+          <PostSectionHeading post={posts.getSbtc} prefix="Step 1: " />
           <GetSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">
-          <PostSectionHeading post={(content.posts as Record<string, any>)['sbtc-rewards-provider']} prefix="Step 2: " />
+          <PostSectionHeading post={posts.sbtcRewardsProvider} prefix="Step 2: " />
 
           <SbtcProtocolRewardGrid
             enrollAction={<SbtcEnrollButton />}

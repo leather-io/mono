@@ -61,10 +61,10 @@ export function useStackingTrackerPool(slug?: PoolSlug | null) {
 const poolSlugToStackingTrackerSlug: Record<PoolSlug, string | null> = {
   'fast-pool': 'fast-pool',
   'fast-pool-v2': 'fast-pool-v2',
-  'planbetter': 'planbetter-pool',
+  planbetter: 'planbetter-pool',
   'stacking-dao': 'stackingdao-pool',
-  xverse: 'xverse-pool',
-  restake: 'null',
+  'xverse-pool': 'xverse-pool',
+  restake: null,
 };
 
 export interface StackingTrackerPool {

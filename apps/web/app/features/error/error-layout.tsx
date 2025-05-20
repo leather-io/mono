@@ -2,6 +2,7 @@ import { isRouteErrorResponse } from 'react-router';
 
 import * as Sentry from '@sentry/react-router';
 import { Flex } from 'leather-styles/jsx';
+import { content } from '~/data/content';
 
 import type { Route } from '../../+types/root';
 
@@ -10,15 +11,15 @@ export interface ErrorLayoutProps {
 }
 
 export function ErrorLayout({ error }: ErrorLayoutProps) {
-  let message = 'Oops!';
-  let details = 'An unexpected error occurred.';
+  let message: string = content.errorMessages.oops;
+  let details: string = content.errorMessages.unexpected;
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? '404' : 'Error';
+    message = error.status === 404 ? content.errorMessages.error404 : content.errorMessages.error;
     details =
       error.data ||
-      (error.status === 404 ? 'The requested page could not be found.' : error.statusText) ||
+      (error.status === 404 ? content.errorMessages.notFound : error.statusText) ||
       details;
     Sentry.captureException(error);
   } else if (import.meta.env.DEV && error && error instanceof Error) {

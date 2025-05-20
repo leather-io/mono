@@ -25,7 +25,6 @@
     "composite": false,
     "declaration": true,
     "declarationMap": true,
-    "isolatedModules": true,
-    "types": ["jest"]
+    "isolatedModules": true
   }
 }

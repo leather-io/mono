@@ -37,6 +37,7 @@ import {
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
@@ -232,6 +233,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const poolAmount = formMethods.watch('amount');
 
+  // Get posts with direct access
+  const posts = getPosts();
+  const stackingAmountPost = posts.stackingAmount;
+  const stackingRewardsAddressPost = posts.stackingRewardsAddress;
+  const stackingDurationPost = posts.stackingDuration;
+  const stackingContractDetailsPost = posts.stackingContractDetails;
+  const pooledStackingConditionsPost = posts.pooledStackingConditions;
+
   if (getSecondsUntilNextCycleQuery.isLoading || poolInfo.isLoading) {
     return (
       <Flex height="100vh" width="100%">
@@ -255,11 +264,56 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     throw new Error(`Unknown confirmation type: ${confirmation}`);
   }
 
+  // Helper to map PoolRewardProtocolInfo to StackingPool
+  function mapPoolRewardProtocolInfoToStackingPool(info: any): import('~/data/data').StackingPool {
+    const minimumDelegationAmount = info.minCommitment
+      ? Math.round(info.minCommitment * 1000000)
+      : 0;
+
+    const mappedPool = {
+      providerId: info.id || '',
+      name: info.title || '',
+      url: info.url || '',
+      minAmount: info.minCommitment || null, // This stays in STX units
+      estApr: info.apr || '',
+      payout: info.rewardsToken || '',
+      disabled: false,
+      description: info.description || '',
+      duration: info.minLockupPeriodDays || 1,
+      poolAddress: {
+        mainnet: info.poolAddress,
+        testnet: info.poolAddress,
+        devnet: info.poolAddress,
+      },
+      fee: '',
+      poxContract: '',
+      rewardsToken: info.rewardsToken || '',
+      minimumDelegationAmount: minimumDelegationAmount, // This needs to be in microSTX
+      allowCustomRewardAddress: false,
+      tvlUsd: info.tvlUsd || '',
+      minCommitmentUsd: info.minCommitmentUsd || '',
+      icon: info.logo,
+      website: info.url || '',
+
+      // Add the missing fields needed for PoolOverview
+      nextCycleBlocks: info.nextCycleBlocks || 0,
+      nextCycleDays: info.nextCycleDays || 0,
+      nextCycleNumber: info.nextCycleNumber || 0,
+      minLockupPeriodDays: info.minLockupPeriodDays || 1,
+      tvl: info.tvl || '',
+    };
+
+    return mappedPool;
+  }
+
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       {poolInfo.poolRewardProtocolInfo && (
         <Page.Inset>
-          <PoolOverview pool={poolInfo.poolRewardProtocolInfo} poolSlug={poolSlug} />
+          <PoolOverview
+            pool={mapPoolRewardProtocolInfoToStackingPool(poolInfo.poolRewardProtocolInfo)}
+            poolSlug={poolSlug}
+          />
         </Page.Inset>
       )}
 
@@ -269,7 +323,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" postKey="stacking-amount" />
+                  <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
                   <ChoosePoolingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -278,7 +332,10 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 </Stack>
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Address to receive rewards" postKey="stacking-rewards-address" />
+                  <StackingFormItemTitle
+                    title="Address to receive rewards"
+                    post={stackingRewardsAddressPost}
+                  />
                   <ChooseRewardsAddress />
                   <styled.span textStyle="caption.01" color="ink.text-subdued">
                     This is where the pool will deposit your rewards each cycle.
@@ -288,14 +345,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Duration" postKey="stacking-duration" />
+                  <StackingFormItemTitle title="Duration" post={stackingDurationPost} />
                   <ChoosePoolingDuration />
                 </Stack>
 
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" postKey="stacking-contract-details" />
+                  <StackingFormItemTitle title="Details" post={stackingContractDetailsPost} />
                   <StackingContractDetails
                     addressTitle="Pool address"
                     address={poolStxAddress}
@@ -306,7 +363,10 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.04">
-                  <StackingFormItemTitle title="Pooling conditions" postKey="pooled-stacking-conditions" />
+                  <StackingFormItemTitle
+                    title="Pooling conditions"
+                    post={pooledStackingConditionsPost}
+                  />
                   <ChoosePoolingConditions />
                 </Stack>
 

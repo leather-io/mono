@@ -2,6 +2,7 @@ import { StacksNetworkName } from '@stacks/network';
 import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
+import { content } from '~/data/content';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
@@ -22,7 +23,7 @@ export function createValidationSchema({ availableBalanceUStx }: CreateValidatio
     increaseBy: stxAmountSchema()
       .refine(value => validateMaxStackingAmount(value))
       .refine(value => validateAvailableBalance(value, availableBalanceUStx), {
-        message: `Available balance is ${toHumanReadableMicroStx(availableBalanceUStx ?? 0)}`,
+        message: `${content.validationMessages.availableBalance} ${toHumanReadableMicroStx(availableBalanceUStx ?? 0)}`,
       }),
   });
 }

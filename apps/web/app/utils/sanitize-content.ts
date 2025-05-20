@@ -1,1 +1,1 @@
-export { sanitizeContent } from '@leather.io/utils/sanitize-content'; 
+export { sanitizeContent } from '@leather.io/ui';
