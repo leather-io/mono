@@ -9,15 +9,11 @@ import { TokenBalance } from '../token-balance';
 interface StacksTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
   fiatBalance?: Money;
-  lockedBalance?: Money;
-  fiatLockedBalance?: Money;
   isLoading?: boolean;
 }
 export function StacksTokenBalance({
   availableBalance,
   fiatBalance,
-  lockedBalance,
-  fiatLockedBalance,
   isLoading,
   ...rest
 }: StacksTokenBalanceProps) {
@@ -32,8 +28,6 @@ export function StacksTokenBalance({
       protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
-      lockedBalance={lockedBalance}
-      fiatLockedBalance={fiatLockedBalance}
       isLoading={isLoading}
       {...rest}
     />
@@ -47,17 +41,13 @@ interface StacksBalanceProps {
 export function StacksBalance({ onPress }: StacksBalanceProps) {
   const { state, value } = useStxTotalBalance();
 
-  const availableBalance = value?.stx.availableBalance;
-  const fiatBalance = value?.fiat.availableBalance;
-  const lockedBalance = value?.stx.lockedBalance;
-  const fiatLockedBalance = value?.fiat.lockedBalance;
+  const availableBalance = value?.stx.availableUnlockedBalance;
+  const fiatBalance = value?.fiat.availableUnlockedBalance;
 
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
-      lockedBalance={lockedBalance}
-      fiatLockedBalance={fiatLockedBalance}
       onPress={onPress}
       isLoading={state === 'loading'}
     />
@@ -76,17 +66,13 @@ export function StacksBalanceByAccount({
 }: StacksBalanceByAccountProps) {
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
 
-  const availableBalance = value?.stx.availableBalance;
-  const fiatBalance = value?.fiat.availableBalance;
-  const lockedBalance = value?.stx.lockedBalance;
-  const fiatLockedBalance = value?.fiat.lockedBalance;
+  const availableBalance = value?.stx.availableUnlockedBalance;
+  const fiatBalance = value?.fiat.availableUnlockedBalance;
 
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       fiatBalance={fiatBalance}
-      lockedBalance={lockedBalance}
-      fiatLockedBalance={fiatLockedBalance}
       onPress={onPress}
       isLoading={state === 'loading'}
     />

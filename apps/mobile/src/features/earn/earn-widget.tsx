@@ -1,6 +1,5 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { Balance } from '@/components/balance/balance';
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
@@ -8,7 +7,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { StxBalance } from '@leather.io/services';
-import { Box, Flag, ItemLayout, Text, Theme } from '@leather.io/ui/native';
+import { Box, Text, Theme } from '@leather.io/ui/native';
 
 import { EarnCard } from './earn-card';
 

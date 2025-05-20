@@ -14,8 +14,6 @@ interface TokenBalanceProps extends PressableProps {
   tokenName: string;
   availableBalance?: Money;
   fiatBalance?: Money;
-  lockedBalance?: Money;
-  fiatLockedBalance?: Money;
   protocol: CryptoAssetProtocol;
   isLoading?: boolean;
 }
@@ -23,8 +21,6 @@ export function TokenBalance({
   icon,
   tokenName,
   availableBalance,
-  lockedBalance,
-  fiatLockedBalance,
   protocol,
   fiatBalance,
   onPress,
@@ -52,12 +48,11 @@ export function TokenBalance({
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          <Balance balance={availableBalance} lockedBalance={lockedBalance} variant="label02" />
+          <Balance balance={availableBalance} variant="label02" />
         </Cell.Label>
         <Cell.Label variant="secondary">
           <Balance
             balance={fiatBalance}
-            lockedBalance={fiatLockedBalance}
             variant="caption01"
             color="ink.text-subdued"
             lineHeight={16}
