@@ -2,29 +2,22 @@ import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
+import { content } from '~/data/content';
+import { getLearnMoreLink } from '~/features/page/page';
 import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
 
 import { Badge, Button } from '@leather.io/ui';
 
 import { BridgingStatus, useSbtcRewardContext } from '../sbtc-rewards-context';
-import { content } from '~/data/content';
-import { getLearnMoreLink } from '~/features/page/page';
 
 function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
   if (bridgingStatus !== 'disabled') return null;
-  return (
-    <Badge
-      mt="space.03"
-      mb="space.03"
-      variant="info"
-      label="Max bridging capacity reached"
-    />
-  );
+  return <Badge mt="space.03" mb="space.03" variant="info" label="Max bridging capacity reached" />;
 }
 
 function BridgeToSbtcCell() {
   const { onBridgeSbtc, bridgingStatus, whenExtensionState } = useSbtcRewardContext();
-  const sbtcBridgePost = content.posts['sbtc-bridge'];
+  const sbtcBridgePost = content.posts.sbtcBridge;
   return (
     <Flex flexDir={['column', 'row', 'column', 'row']} justifyContent="space-between" p="space.05">
       <Flex flexDir="column" flex={1} justifyContent="space-between">
@@ -64,7 +57,7 @@ function BridgeToSbtcCell() {
 
 function SwapStxToSbtcCell() {
   const { onSwapStxSbtc, whenExtensionState } = useSbtcRewardContext();
-  const stacksSwapsPost = content.posts['stacks-swaps'];
+  const stacksSwapsPost = content.posts.stacksSwaps;
   return (
     <Flex
       flexDir={['column', 'row', 'column', 'row']}

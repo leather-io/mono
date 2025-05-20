@@ -1,25 +1,36 @@
-import { ReactNode } from 'react';
-import type { JSX } from 'react';
-import { Flex, styled } from 'leather-styles/jsx';
-import { PostInfoHoverIcon } from './post-info-hover-icon';
-import { content } from '~/data/content';
-import { sanitizeContent } from '~/utils/sanitize-content';
+import { ReactElement } from 'react';
+
+import { styled } from 'leather-styles/jsx';
 import type { Post } from '~/data/post-types';
+import { TextElementTag, isValidTextElementTag } from '~/shared/types';
+import { sanitizeContent } from '~/utils/sanitize-content';
+
+import { PostInfoHoverIcon } from './post-info-hover-icon';
 
 interface PostLabelHoverCardProps {
-  postKey: string;
+  post: Post | undefined;
   label?: string;
   textStyle?: string;
-  tagName?: string;
+  tagName?: TextElementTag;
 }
 
-export function PostLabelHoverCard({ postKey, label, textStyle = 'label.01', tagName = 'span' }: PostLabelHoverCardProps) {
-  const post: Post | undefined = content.posts[postKey];
+/**
+ * Displays a label with hover functionality showing more information about a post
+ */
+export function PostLabelHoverCard({
+  post,
+  label,
+  textStyle = 'label.01',
+  tagName = 'span',
+}: PostLabelHoverCardProps): ReactElement | null {
   if (!post) return null;
-  const Tag = styled[tagName as keyof typeof styled];
+  if (!isValidTextElementTag(tagName)) {
+    tagName = 'span';
+  }
+  const Tag = styled[tagName];
   return (
-    <PostInfoHoverIcon postKey={postKey}>
+    <PostInfoHoverIcon post={post}>
       <Tag textStyle={textStyle}>{sanitizeContent(String(label ?? post.title))}</Tag>
     </PostInfoHoverIcon>
   );
-} 
+}

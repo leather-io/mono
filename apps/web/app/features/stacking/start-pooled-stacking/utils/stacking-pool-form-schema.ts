@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
+import { content } from '~/data/content';
 import { StackingProviderId } from '~/data/data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
@@ -41,13 +42,16 @@ export function createValidationSchema({
             return true;
           },
           {
-            message: `You must delegate more than you've already stacked (${toHumanReadableMicroStx(stackedAmount ?? 0)})`,
+            message: `${content.validationMessages.mustDelegateMore} (${toHumanReadableMicroStx(stackedAmount ?? 0)})`,
           }
         ),
       rewardAddress: z
         .string()
-        .refine(isValidBitcoinAddress, 'Address is not valid') // TODO: invalidAddress
-        .refine(btcAddressNetworkValidator(networkMode), 'Address is for incorrect network'), // incorrectNetworkAddress
+        .refine(isValidBitcoinAddress, content.validationMessages.addressNotValid) // TODO: invalidAddress
+        .refine(
+          btcAddressNetworkValidator(networkMode),
+          content.validationMessages.addressIncorrectNetwork
+        ), // incorrectNetworkAddress
     })
     .superRefine((data, ctx) => {
       const amount = data.amount;
@@ -56,7 +60,7 @@ export function createValidationSchema({
       if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',
-          message: `You must delegate at least ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
+          message: `${content.validationMessages.mustDelegateAtLeast} ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
           path: ['amount'],
         });
       }

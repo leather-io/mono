@@ -27,8 +27,8 @@ Site is deployed on Cloudflare workers. See [deployment workflow](../../.github/
 ## Universal Content Sanitization
 
 Dynamic HTML content is sanitized using a universal utility (`sanitizeContent`).
+
 - **Client (browser):** Uses DOMPurify for robust XSS protection.
 - **SSR/Cloudflare Workers:** Uses a simple string-based sanitizer (removes <script> tags) for compatibility, since DOMPurify/JSDOM are not available in Workers.
 
 **Note:** For maximum security, always sanitize untrusted content on the client. SSR sanitization is basic and should not be solely relied upon for untrusted sources.
-

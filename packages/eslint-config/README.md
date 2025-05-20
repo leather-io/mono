@@ -3,8 +3,8 @@
 This package provides shared `eslint` configurations with eslint 9 flat config. It includes two
 presets:
 
-* `base` - A standard configuration for TypeScript projects at Leather.
-* `react` - An additional setup for React projects to use with `base`.
+- `base` - A standard configuration for TypeScript projects at Leather.
+- `react` - An additional setup for React projects to use with `base`.
 
 ---
 
@@ -18,23 +18,23 @@ presets:
 
 ### Inside @leather.io/mono
 
-You don’t need to install or link this package within monorepo packages. The base config 
-is applied to all packages and apps by default. To add custom configurations (e.g., React) for a 
-new package or app, add a new configuration object into `eslint-config.js` file at the root of the 
+You don’t need to install or link this package within monorepo packages. The base config
+is applied to all packages and apps by default. To add custom configurations (e.g., React) for a
+new package or app, add a new configuration object into `eslint-config.js` file at the root of the
 monorepo:
 
 ```js
 export default tseslint.config(
-  {...existingConfigs},
+  { ...existingConfigs },
   {
     name: 'your-new-package-name',
     files: ['packages/your-package-path/src/**/*.{ts,tsx}'],
     extends: [reactConfig],
     rules: {
       // additional rules for the package
-    }
+    },
   }
-)
+);
 ```
 
 ### In external repositories
@@ -45,8 +45,8 @@ export default tseslint.config(
 npm install --save-dev @leather.io/eslint-config
 ```
 
-2. Make sure all peer dependencies for this package are installed in your repository as 
-   devDependencies. The list of dependencies can be found [here](https://github.com/leather-io/mono/blob/dev/packages/eslint-config/package.json) 
+2. Make sure all peer dependencies for this package are installed in your repository as
+   devDependencies. The list of dependencies can be found [here](https://github.com/leather-io/mono/blob/dev/packages/eslint-config/package.json)
    or by running the following command:
 
 ```sh
@@ -55,7 +55,7 @@ npm info "@leather.io/eslint-config@latest" peerDependencies
 ```
 
 3. Configure `eslint.config.js`:
-   
+
 ```js
 import { baseConfig, reactConfig } from '@leather.io/eslint-config';
 

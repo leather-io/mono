@@ -1,5 +1,6 @@
-import { defineProject } from 'vitest/config';
 import path from 'node:path';
+import { defineProject } from 'vitest/config';
+
 import { defaultVitestUnitTestingConfig } from '../../config/vitest-configs';
 
 export default defineProject({

@@ -1,37 +1,39 @@
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { Accordion, Link } from '@leather.io/ui';
-import { content } from '~/data/content';
-import { getPostHref } from '~/utils/post-link';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
+import { getPostHref } from '~/utils/post-link';
+import { getPosts } from '~/utils/post-utils';
+import { sanitizeContent } from '~/utils/sanitize-content';
+
+import { Accordion, Link } from '@leather.io/ui';
 
 // List of sBTC-related post keys in order of appearance on the page
 const sbtcFaqPostKeysRaw = [
   // Main heading
-  'sbtc-rewards',
+  'sbtcRewards',
   // TVL and yield in value cards and tables
-  'historical-yield',
+  'historicalYield',
   // Step 1: Get sBTC
-  'sbtc-bridge',
-  'stacks-swaps',
+  'sbtcBridge',
+  'stacksSwaps',
   // Step 2: Choose reward protocol (protocol grid)
-  'sbtc-rewards-basic',
-  'alex-sbtc-pools',
-  'bitflow-sbtc-pools',
-  'velar-sbtc-pools',
-  'zest-sbtc-pools',
+  'sbtcRewardsBasic',
+  'alexSbtcPools',
+  'bitflowSbtcPools',
+  'velarSbtcPools',
+  'zestSbtcPools',
   // Table posts
-  'total-locked-value-tvl',
-  'sbtc-rewards-minimum-commitment',
-  'sbtc-rewards-tokens',
+  'totalLockedValueTvl',
+  'sbtcRewardsMinimumCommitment',
+  'sbtcRewardsTokens',
 ];
 const sbtcFaqPostKeys = Array.from(new Set(sbtcFaqPostKeysRaw));
 
 export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
-  // Filter posts to only those with a question and summary
+  // Get posts and filter out undefined/invalid posts
+  const posts = getPosts();
   const faqPosts = sbtcFaqPostKeys
-    .map(key => content.posts[key] as Post)
-    .filter(post => post && post.question && post.summary);
+    .map(key => posts[key])
+    .filter((post): post is Post => Boolean(post && post.question && post.summary));
 
   return (
     <styled.div {...props}>
@@ -44,9 +46,15 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
           <Accordion.Item value={post.slug} key={post.slug}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
-              <styled.p textStyle="body.02" mb="space.02" style={{ whiteSpace: 'pre-line', color: 'black' }}>
+              <styled.p
+                textStyle="body.02"
+                mb="space.02"
+                style={{ whiteSpace: 'pre-line', color: 'black' }}
+              >
                 {sanitizeContent(post.summary)}{' '}
-                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>Learn more</Link>
+                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>
+                  Learn more
+                </Link>
               </styled.p>
             </Accordion.Content>
           </Accordion.Item>

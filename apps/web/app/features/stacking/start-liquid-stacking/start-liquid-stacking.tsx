@@ -31,6 +31,7 @@ import {
 import { useProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
@@ -121,6 +122,11 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   const stackingAmount = formMethods.watch('amount');
 
+  // Get posts with direct access
+  const posts = getPosts();
+  const stackingAmountPost = posts.stackingAmount;
+  const stackingContractDetailsPost = posts.stackingContractDetails;
+
   if (getSecondsUntilNextCycleQuery.isLoading || protocolInfo.isLoading) {
     return (
       <Flex height="100vh" width="100%">
@@ -152,7 +158,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" postKey="stacking-amount" />
+                  <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
                   <ChoosePoolingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -162,7 +168,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" postKey="stacking-contract-details" />
+                  <StackingFormItemTitle title="Details" post={stackingContractDetailsPost} />
                   {/* TODO: fix contractAddress value */}
                   <StackingContractDetails
                     addressTitle="Protocol address"

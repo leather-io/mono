@@ -35,9 +35,9 @@ Each step object has the following structure:
 
 ```ts
 {
-  title: string;         // Step title (e.g. "Get STX")
-  postKey: string;       // Key to look up the related post in content.posts
-  description: string;   // Description for the step
+  title: string; // Step title (e.g. "Get STX")
+  postKey: string; // Key to look up the related post in content.posts
+  description: string; // Description for the step
 }
 ```
 

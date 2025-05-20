@@ -1,39 +1,41 @@
 import { styled } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
-import { Accordion, Link } from '@leather.io/ui';
-import { content } from '~/data/content';
-import { getPostHref } from '~/utils/post-link';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
+import { getPostHref } from '~/utils/post-link';
+import { getPosts } from '~/utils/post-utils';
+import { sanitizeContent } from '~/utils/sanitize-content';
+
+import { Accordion, Link } from '@leather.io/ui';
 
 // List of stacking-related post keys to use in the FAQ, ordered by appearance on the page
 const stackingFaqPostKeysRaw = [
   // Main section headings
   'stacking',
-  'pooled-stacking',
-  'liquid-stacking',
+  'pooledStacking',
+  'liquidStacking',
   // Explainer steps (traditional and liquid)
-  'stacks-token-stx',
-  'stacking-providers',
-  'stacking-lock-stx',
-  'stacking-rewards',
-  'stacking-liquid-token',
+  'stacksTokenStx',
+  'stackingProviders',
+  'stackingLockStx',
+  'stackingRewards',
+  'stackingLiquidToken',
   // Table posts (in order of table columns)
-  'stacking-providers',
-  'stacking-rewards-tokens',
-  'stacking-minimum-commitment',
-  'historical-yield',
-  'stacking-pool-fees',
+  'stackingProviders',
+  'stackingRewardsTokens',
+  'stackingMinimumCommitment',
+  'historicalYield',
+  'stackingPoolFees',
 ];
 
 // Remove duplicates while preserving order
 const stackingFaqPostKeys = Array.from(new Set(stackingFaqPostKeysRaw));
 
 export function StackingFaq(props: HTMLStyledProps<'div'>) {
-  // Filter posts to only those with a question and summary
+  // Get posts and filter out undefined/invalid posts
+  const posts = getPosts();
   const faqPosts = stackingFaqPostKeys
-    .map(key => content.posts[key] as Post)
-    .filter(post => post && post.question && post.summary);
+    .map(key => posts[key])
+    .filter((post): post is Post => Boolean(post && post.question && post.summary));
 
   return (
     <styled.div {...props}>
@@ -46,9 +48,15 @@ export function StackingFaq(props: HTMLStyledProps<'div'>) {
           <Accordion.Item value={post.slug} key={post.slug}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
-              <styled.p textStyle="body.02" mb="space.02" style={{ whiteSpace: 'pre-line', color: 'black' }}>
+              <styled.p
+                textStyle="body.02"
+                mb="space.02"
+                style={{ whiteSpace: 'pre-line', color: 'black' }}
+              >
                 {sanitizeContent(post.summary)}{' '}
-                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>Learn more</Link>
+                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>
+                  Learn more
+                </Link>
               </styled.p>
             </Accordion.Content>
           </Accordion.Item>

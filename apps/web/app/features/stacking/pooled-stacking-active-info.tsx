@@ -40,7 +40,7 @@ function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLa
 
   // for use mocked data
   if (isError && stackingTrackerPool?.data) {
-    return <>Failed to load Pox data</>;
+    return 'Failed to load Pox data';
   }
 
   const info = poolRewardProtocolInfo;

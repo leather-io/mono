@@ -48,40 +48,11 @@ export default tseslint.config(
     name: 'web',
     files: ['apps/web/app/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
-    rules: {
-      '@typescript-eslint/only-throw-error': 'off',
-    },
   },
   {
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
-    rules: {
-      'lingui/no-unlocalized-strings': [
-        'error',
-        {
-          ignoreFunction: [
-            'Error',
-            'StacksError',
-            'BitcoinError',
-            'console.log',
-            'console.warn',
-            'console.error',
-            'assertExistence',
-            'it',
-            'describe',
-            'test',
-          ],
-          ignoreProperty: [
-            'InvalidParams',
-            'NullOrigin',
-            'UndefinedParams',
-            'UserRejectedOperation',
-          ],
-          ignoreAttribute: ['d'],
-        },
-      ],
-    },
   },
   {
     name: 'test-files',

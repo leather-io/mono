@@ -7,7 +7,6 @@ on:
       - '!packages/ui/**/*.native.ts'
       - '!packages/ui/**/*.native.tsx'
 
-
 jobs:
   test:
     timeout-minutes: 60

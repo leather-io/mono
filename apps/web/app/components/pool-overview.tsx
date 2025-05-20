@@ -1,39 +1,33 @@
+import { ReactElement } from 'react';
+
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { content } from '~/data/content';
-import type { StackingPool } from '~/data/data';
-import { getPostSlugForProvider } from '~/data/data';
-import type { PostsCollection } from '~/data/post-types';
-import { getLearnMoreLink } from '~/features/page/page';
 import { DASH } from '~/constants/constants';
-import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import {
-  daysToWeek,
-  toHumanReadableDays,
-  toHumanReadableStx,
-  toHumanReadableWeeks,
-} from '~/utils/unit-convert';
-import { usePost } from '~/utils/post-utils';
-
-import { ProviderIcon } from './icons/provider-icon';
+import { StackingPool, getPostSlugForProvider } from '~/data/data';
+import { getLearnMoreLink } from '~/features/page/page';
+import { TextElementTag } from '~/shared/types';
+import { getPosts, usePost } from '~/utils/post-utils';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 interface RewardTokenCellProps {
   token?: string;
   value?: string;
   textStyle?: string;
 }
-function RewardTokenCell({ token = 'STX', value, textStyle = 'label.03' }: RewardTokenCellProps) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-rewards-tokens']?.title ?? 'Rewards token';
+function RewardTokenCell({
+  token = 'STX',
+  value,
+  textStyle = 'label.03',
+}: RewardTokenCellProps): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingRewardsTokens;
+  const label = post?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard postKey="stacking-rewards-tokens" label={label} textStyle={textStyle} />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle={textStyle} />}
       value={
         <>
           {token}
@@ -47,19 +41,14 @@ function RewardTokenCell({ token = 'STX', value, textStyle = 'label.03' }: Rewar
 interface LockupPeriodCellProps {
   minLockupPeriodDays: number;
 }
-function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-minimum-lockup-period']?.title ?? 'Minimum lockup period';
+function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingMinimumLockupPeriod;
+  const label = post?.title ?? 'Minimum lockup period';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          postKey="stacking-minimum-lockup-period"
-          label={label}
-          textStyle="label.03"
-        />
-      }
-      value={<>{minLockupPeriodDays} cycle(s)</>}
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
+      value={<>{minLockupPeriodDays} days</>}
     />
   );
 }
@@ -73,17 +62,19 @@ function DaysUntilNextCycleCell({
   daysUntilNextCycle,
   nextCycleNumber,
   nextCycleBlocks,
-}: DaysUntilNextCycleCellProps) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-upcoming-cycle']?.title ?? 'Days until next cycle';
+}: DaysUntilNextCycleCellProps): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingUpcomingCycle;
+  const label = post?.title ?? 'Days until next cycle';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard postKey="stacking-upcoming-cycle" label={label} textStyle="label.03" />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
-          {daysUntilNextCycle} days (Cycle {nextCycleNumber}, {nextCycleBlocks} blocks)
+          {daysUntilNextCycle} days
+          <Box textStyle="label.03">
+            (Cycle {nextCycleNumber}, {nextCycleBlocks} blocks)
+          </Box>
         </>
       }
     />
@@ -95,26 +86,21 @@ interface MinimumCommitmentCellProps {
   minimumCommitmentUsd?: string;
 }
 function MinimumCommitmentCell({
-  minimumCommitment = '40,000,000.00 STX',
+  minimumCommitment,
   minimumCommitmentUsd,
-}: MinimumCommitmentCellProps) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-minimum-commitment']?.title ?? 'Minimum commitment';
-  
-  // Handle numeric minimumCommitment by converting it
-  const displayValue = typeof minimumCommitment === 'number' 
-    ? toHumanReadableStx(minimumCommitment)
-    : minimumCommitment;
-    
+}: MinimumCommitmentCellProps): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingMinimumCommitment;
+  const label = post?.title ?? 'Minimum commitment';
+
+  const displayValue =
+    typeof minimumCommitment === 'number'
+      ? toHumanReadableMicroStx(minimumCommitment)
+      : minimumCommitment;
+
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          postKey="stacking-minimum-commitment"
-          label={label}
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
           {displayValue}{' '}
@@ -127,14 +113,14 @@ function MinimumCommitmentCell({
 
 interface HistoricalAprCellProps {
   historicalApr?: string | null;
-  textStyle?: string;
 }
-function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['historical-yield']?.title ?? 'Historical yield';
+function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps): ReactElement {
+  const posts = getPosts();
+  const post = posts.historicalYield;
+  const label = post?.title ?? 'Historical yield';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="historical-yield" label={label} textStyle="label.03" />}
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={<>{historicalApr || DASH}</>}
     />
   );
@@ -145,16 +131,15 @@ interface TotalValueLockedCellProps {
   totalValueLockedUsd?: string | null;
 }
 function TotalValueLockedCell({
-  totalValueLocked = '51,784,293 STX',
-  totalValueLockedUsd = '$36,212,756',
-}: TotalValueLockedCellProps) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['total-locked-value-tvl']?.title ?? 'Total value locked';
+  totalValueLocked,
+  totalValueLockedUsd,
+}: TotalValueLockedCellProps): ReactElement {
+  const posts = getPosts();
+  const post = posts.totalLockedValueTvl;
+  const label = post?.title ?? 'Total value locked';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard postKey="total-locked-value-tvl" label={label} textStyle="label.03" />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
           {totalValueLocked || DASH}{' '}
@@ -169,14 +154,14 @@ interface PoolOverviewProps {
   pool: StackingPool;
   poolSlug: string;
 }
-function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
+function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
   const postSlug = getPostSlugForProvider(poolSlug) ?? '';
   const post = usePost(postSlug);
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      {'logo' in pool ? (pool as any).logo : null}
+      {'icon' in pool ? (pool as any).icon : null}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {'title' in pool ? (pool as any).title : ''}
+        {post?.title || ''}
       </styled.h4>
       {post && (
         <styled.p textStyle="caption.01">
@@ -188,18 +173,23 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
   );
 }
 
-export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
-  // Demo/default values for required props
-  const minLockupPeriodDays = 1;
-  const daysUntilNextCycle = 2;
-  const nextCycleNumber = 10;
-  const nextCycleBlocks = 100;
-  
-  // Calculate the human-readable minimum commitment amount from minimumDelegationAmount
-  const displayMinCommitment = typeof pool.minimumDelegationAmount === 'number' 
-    ? toHumanReadableStx(pool.minimumDelegationAmount)
-    : '';
-  
+export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElement {
+  // Get values from pool object and round to whole numbers
+  const minLockupPeriodDays = Math.round((pool as any).minLockupPeriodDays || pool.duration);
+  const daysUntilNextCycle = Math.round((pool as any).nextCycleDays);
+  const nextCycleNumber = (pool as any).nextCycleNumber;
+  const nextCycleBlocks = (pool as any).nextCycleBlocks;
+
+  // minimumDelegationAmount is always in microSTX (1 STX = 1,000,000 microSTX)
+  const displayMinCommitment =
+    typeof pool.minimumDelegationAmount === 'number'
+      ? toHumanReadableMicroStx(pool.minimumDelegationAmount)
+      : '';
+
+  // Format TVL values without special cases
+  const formattedTvl = (pool as any).tvl || DASH;
+  const formattedTvlUsd = (pool as any).tvlUsd;
+
   return (
     <InfoGrid
       width="100%"
@@ -222,7 +212,10 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
         <LockupPeriodCell minLockupPeriodDays={minLockupPeriodDays} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
-        <TotalValueLockedCell totalValueLocked={(pool as any).tvl} totalValueLockedUsd={(pool as any).tvlUsd} />
+        <TotalValueLockedCell
+          totalValueLocked={formattedTvl}
+          totalValueLockedUsd={formattedTvlUsd}
+        />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
         <DaysUntilNextCycleCell
@@ -250,18 +243,12 @@ export function StackingAmountLabel({
   tagName = 'h1',
 }: {
   textStyle?: string;
-  tagName?: keyof React.JSX.IntrinsicElements;
-}) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-amount']?.title ?? 'Amount';
-  return (
-    <PostLabelHoverCard
-      postKey="stacking-amount"
-      label={label}
-      textStyle={textStyle}
-      tagName={tagName}
-    />
-  );
+  tagName?: TextElementTag;
+}): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingAmount;
+  const label = post?.title ?? 'Amount';
+  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
 }
 
 // Add a component for the stacking-rewards-address post label
@@ -270,18 +257,12 @@ export function StackingRewardsAddressLabel({
   tagName = 'h1',
 }: {
   textStyle?: string;
-  tagName?: keyof React.JSX.IntrinsicElements;
-}) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-rewards-address']?.title ?? 'Rewards address';
-  return (
-    <PostLabelHoverCard
-      postKey="stacking-rewards-address"
-      label={label}
-      textStyle={textStyle}
-      tagName={tagName}
-    />
-  );
+  tagName?: TextElementTag;
+}): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingRewardsAddress;
+  const label = post?.title ?? 'Rewards address';
+  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
 }
 
 // Add a component for the stacking-duration post label
@@ -290,18 +271,12 @@ export function StackingDurationLabel({
   tagName = 'h1',
 }: {
   textStyle?: string;
-  tagName?: keyof React.JSX.IntrinsicElements;
-}) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-duration']?.title ?? 'Duration';
-  return (
-    <PostLabelHoverCard
-      postKey="stacking-duration"
-      label={label}
-      textStyle={textStyle}
-      tagName={tagName}
-    />
-  );
+  tagName?: TextElementTag;
+}): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingDuration;
+  const label = post?.title ?? 'Duration';
+  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
 }
 
 // Add a component for the stacking-contract-details post label
@@ -310,18 +285,12 @@ export function StackingContractDetailsLabel({
   tagName = 'h1',
 }: {
   textStyle?: string;
-  tagName?: keyof React.JSX.IntrinsicElements;
-}) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['stacking-contract-details']?.title ?? 'Details';
-  return (
-    <PostLabelHoverCard
-      postKey="stacking-contract-details"
-      label={label}
-      textStyle={textStyle}
-      tagName={tagName}
-    />
-  );
+  tagName?: TextElementTag;
+}): ReactElement {
+  const posts = getPosts();
+  const post = posts.stackingContractDetails;
+  const label = post?.title ?? 'Details';
+  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
 }
 
 // Add a component for the pooled-stacking-conditions post label
@@ -330,16 +299,10 @@ export function PooledStackingConditionsLabel({
   tagName = 'h1',
 }: {
   textStyle?: string;
-  tagName?: keyof React.JSX.IntrinsicElements;
-}) {
-  const posts = content.posts as unknown as PostsCollection;
-  const label = posts['pooled-stacking-conditions']?.title ?? 'Pooling conditions';
-  return (
-    <PostLabelHoverCard
-      postKey="pooled-stacking-conditions"
-      label={label}
-      textStyle={textStyle}
-      tagName={tagName}
-    />
-  );
+  tagName?: TextElementTag;
+}): ReactElement {
+  const posts = getPosts();
+  const post = posts.pooledStackingConditions;
+  const label = post?.title ?? 'Pooling conditions';
+  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
 }

@@ -35,7 +35,7 @@ export function createGetLisaBalanceQueryOptions({
     queryKey: ['lisa-mint-requests', address, networkUrl, networkMode],
     enabled: !!address,
     queryFn: async () => {
-      const lisaContract = getLiquidContract(networkMode, 'Lisa').split('.');
+      const lisaContract = getLiquidContract(networkMode, 'lisa').split('.');
       const [contractAddress, contractName] = lisaContract || [];
       if (!contractAddress || !contractName) {
         return null;

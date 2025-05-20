@@ -48,7 +48,7 @@ function getLiquidStackingFunctionData({
     };
   }
 
-  if (contractName === 'Lisa') {
+  if (contractName === 'lisa') {
     return {
       functionArgs: [uintCV(stxAmount)],
       functionName: 'request-mint',

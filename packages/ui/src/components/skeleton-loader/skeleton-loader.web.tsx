@@ -22,5 +22,5 @@ export function SkeletonLoader({ children, isLoading, ...boxProps }: SkeletonLoa
     );
   }
 
-  return <>{children}</>;
+  return children ?? null;
 }

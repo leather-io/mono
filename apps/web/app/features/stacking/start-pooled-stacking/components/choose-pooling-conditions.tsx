@@ -1,18 +1,12 @@
-import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
-
-import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
 import { content } from '~/data/content';
+import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
+import { mapConditionsWithIcons } from '~/shared/stacking-icon-map';
 
-const iconMap: Record<string, JSX.Element> = {
-  BoxedCatLockedIcon: <BoxedCatLockedIcon />,
-  MagnifyingGlassIcon: <MagnifyingGlassIcon />,
-  StacksIcon: <StacksIcon />,
-};
-const poolingConditions = content.stackingConditions.map(cond => ({
-  ...cond,
-  icon: iconMap[cond.iconKey] || null,
-}));
-
+/**
+ * Component for choosing pooled stacking conditions
+ * Uses shared icon mapping to display condition icons
+ */
 export function ChoosePoolingConditions() {
+  const poolingConditions = mapConditionsWithIcons(content.stackingConditions);
   return <StackingConditions conditions={poolingConditions} />;
 }
