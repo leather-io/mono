@@ -3,18 +3,20 @@ import { ProviderId, StackingProviderId, stackingPoolData } from '~/data/data';
 
 export type NetworkMode = 'mainnet' | 'testnet' | 'devnet';
 
+export type PoolSlug = keyof typeof poolSlugToIdMap;
+
 export const poolSlugToIdMap = {
   'fast-pool': 'fastPool',
   'fast-pool-v2': 'fastPoolV2',
-  'planbetter': 'planbetter',
-  'stacking-dao': 'stackingDao',
+  planbetter: 'planbetter',
+  'stacking-dao': 'stacking-dao',
   'xverse-pool': 'xverse-pool',
   restake: 'restake',
   // custom: 'custom',
 } as const;
 
-export function poolSlugToId(slug: string) {
-  return poolSlugToIdMap[slug as keyof typeof poolSlugToIdMap];
+export function poolSlugToId(slug: PoolSlug) {
+  return poolSlugToIdMap[slug];
 }
 
 export function providerIdToSlug(providerId: ProviderId) {
@@ -30,7 +32,6 @@ export function getPoolFromSlug(slug: PoolSlug) {
   return getStackingPoolById(poolSlugToId(slug));
 }
 
-export type PoolSlug = keyof typeof poolSlugToIdMap;
 export const poolSlugSchema = z.enum(Object.keys(poolSlugToIdMap) as [PoolSlug, ...PoolSlug[]]);
 
 export type PayoutMethod = 'BTC' | 'STX' | 'OTHER';

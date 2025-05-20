@@ -76,6 +76,7 @@ export interface StackingPool {
   };
   fee: string;
   poxContract: string;
+  rewardsToken: string;
   minimumDelegationAmount: number;
   allowCustomRewardAddress: boolean;
   tvlUsd: string;
@@ -86,17 +87,18 @@ export interface StackingPool {
 export const stackingPoolData = {
   fastPool: {
     ...providers.fastPool,
-    website: getPostBySlug('fast-pool')?.Website ?? providers.fastPool.url,
+    website: getPostBySlug('fast-pool')?.website ?? providers.fastPool.url,
     minAmount: '40 STX',
     estApr: '5%',
     fee: '5%',
     tvlUsd: '$40,000,000',
     minCommitmentUsd: '$1',
+    rewardsToken: 'BTC',
     payout: 'STX',
     disabled: false,
-    description: getPostBySlug('fast-pool')?.Sentence ?? (
-      'Enjoy automatic pool operations. You can increase the locking amount for the next cycle. Locked STX will unlock 1 day after the end of the cycle.'
-    ),
+    description:
+      getPostBySlug('fast-pool')?.sentence ??
+      'Enjoy automatic pool operations. You can increase the locking amount for the next cycle. Locked STX will unlock 1 day after the end of the cycle.',
     poolAddress: {
       mainnet: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox4-fast-pool-v3',
       testnet: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
@@ -109,16 +111,17 @@ export const stackingPoolData = {
   },
   fastPoolV2: {
     ...providers.fastPoolV2,
-    website: getPostBySlug('fast-pool')?.Website ?? providers.fastPoolV2.url,
+    website: getPostBySlug('fast-pool')?.website ?? providers.fastPoolV2.url,
     name: 'Fast Pool v2',
     minAmount: '40 STX',
+    rewardsToken: 'BTC',
     estApr: '5%',
     fee: '5%',
     tvlUsd: '$40,000,000',
     minCommitmentUsd: '$1',
-    description: getPostBySlug('fast-pool')?.Sentence ?? (
-      'Enjoy a better swim experience in the upgraded pool. You can increase the locking amount for the next cycle. Locked STX will unlock 1 day after the end of the cycle.'
-    ),
+    description:
+      getPostBySlug('fast-pool')?.sentence ??
+      'Enjoy a better swim experience in the upgraded pool. You can increase the locking amount for the next cycle. Locked STX will unlock 1 day after the end of the cycle.',
     duration: 1,
     payout: 'STX',
     poolAddress: {
@@ -133,14 +136,17 @@ export const stackingPoolData = {
   },
   planbetter: {
     ...providers.planbetter,
-    website: getPostBySlug('planbetter')?.Website ?? providers.planbetter.url,
+    website: getPostBySlug('planbetter')?.website ?? providers.planbetter.url,
     fee: '5%',
     minAmount: '200 STX',
     estApr: '10%',
     tvlUsd: '$40,000,000',
+    rewardsToken: 'BTC',
     minCommitmentUsd: '$1',
     payout: 'BTC',
-    description: getPostBySlug('planbetter')?.Sentence ?? 'Earn non-custodial Bitcoin yield. No wrapped tokens. Native BTC.',
+    description:
+      getPostBySlug('planbetter')?.sentence ??
+      'Earn non-custodial Bitcoin yield. No wrapped tokens. Native BTC.',
     duration: 1,
     poolAddress: {
       mainnet: 'SP3TDKYYRTYFE32N19484838WEJ25GX40Z24GECPZ',
@@ -154,14 +160,17 @@ export const stackingPoolData = {
   },
   restake: {
     ...providers.restake,
-    website: getPostBySlug('restake')?.Website ?? providers.restake.url,
+    website: getPostBySlug('restake')?.website ?? providers.restake.url,
     fee: '5.00%',
     minAmount: '100 STX',
+    rewardsToken: 'BTC',
     estApr: '11%',
     tvlUsd: '$40,000,000',
     minCommitmentUsd: '$1',
     payout: 'STX',
-    description: getPostBySlug('restake')?.Sentence ?? 'Earn STX rewards by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
+    description:
+      getPostBySlug('restake')?.sentence ??
+      'Earn STX rewards by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
     duration: 1,
     poolAddress: {
       mainnet: 'SPZV5RJN5XTJHA76E0VHEFB0WPEH7E11NZZ4CGBK.restake-self-service-pool-v1',
@@ -175,14 +184,17 @@ export const stackingPoolData = {
   },
   'xverse-pool': {
     ...providers['xverse-pool'],
-    website: getPostBySlug('xverse-pool')?.Website ?? providers['xverse-pool'].url,
+    website: getPostBySlug('xverse-pool')?.website ?? providers['xverse-pool'].url,
     fee: '5%',
     minAmount: '100 STX',
+    rewardsToken: 'BTC',
     estApr: '10%',
     tvlUsd: '$40,000,000',
     minCommitmentUsd: '$1',
     payout: 'BTC',
-    description: getPostBySlug('xverse-pool')?.Sentence ?? 'Xverse pool is a non-custodial stacking pool service from the makers of Xverse wallet.',
+    description:
+      getPostBySlug('xverse-pool')?.sentence ??
+      'Xverse pool is a non-custodial stacking pool service from the makers of Xverse wallet.',
     duration: 1,
     url: 'https://pool.xverse.app/',
     poolAddress: {
@@ -197,12 +209,15 @@ export const stackingPoolData = {
   },
   'stacking-dao': {
     ...providers['stacking-dao'],
-    website: getPostBySlug('stacking-dao')?.Website ?? providers['stacking-dao'].url,
+    website: getPostBySlug('stacking-dao')?.website ?? providers['stacking-dao'].url,
     fee: '5%',
     minAmount: '100 STX',
+    rewardsToken: 'BTC',
     estApr: '16%',
     payout: 'STX',
-    description: getPostBySlug('stacking-dao')?.Sentence ?? "Enter the STX address of the pool with which you'd like to Stack without your STX leaving your wallet.",
+    description:
+      getPostBySlug('stacking-dao')?.sentence ??
+      "Enter the STX address of the pool with which you'd like to Stack without your STX leaving your wallet.",
     duration: -1,
     poolAddress: {
       mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
@@ -217,7 +232,6 @@ export const stackingPoolData = {
     minCommitmentUsd: '$1',
   },
 } as const satisfies Record<string, StackingPool>;
-
 
 export const stackingPoolList = Object.values(stackingPoolData);
 
