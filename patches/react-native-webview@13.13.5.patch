@@ -1,0 +1,20 @@
+diff --git a/src/RNCWebViewNativeComponent.ts b/src/RNCWebViewNativeComponent.ts
+index be8ba0869c14d40d9194c489a769bf2432e3874b..f556d795ee4991b37490fa79793237e239e40970 100644
+--- a/src/RNCWebViewNativeComponent.ts
++++ b/src/RNCWebViewNativeComponent.ts
+@@ -290,6 +290,15 @@ export interface NativeProps extends ViewProps {
+     html?: string;
+     baseUrl?: string;
+   }>;
++  source: Readonly<{
++    uri?: string;
++    method?: string;
++    body?: string;
++
++    headers?: ReadonlyArray<Readonly<{ name: string; value: string }>>;
++    html?: string;
++    baseUrl?: string;
++  }>;
+   userAgent?: string;
+   injectedJavaScriptObject?: string;
+ }
