@@ -169,7 +169,9 @@ export function StacksTxSigner({
                 message: 'Total spend',
               })}
             </Text>
-            <Text variant="label02">{formatBalance({ balance: totalSpendUsd, isFiat: true })}</Text>
+            <Text variant="label02">
+              {formatBalance({ balance: totalSpendUsd, isQuoteCurrency: true })}
+            </Text>
           </Box>
           <Approver.Actions>
             <ApproverButtons

@@ -25,8 +25,8 @@ export interface AccountBalance {
 
 export function useAccountBalance(accountId: AccountId): AccountBalance {
   const { fingerprint, accountIndex } = accountId;
-  const { fiatCurrencyPreference } = useSettings();
-  const zeroMoneyFiat = createMoney(0, fiatCurrencyPreference);
+  const { quoteCurrencyPreference } = useSettings();
+  const zeroMoneyFiat = createMoney(0, quoteCurrencyPreference);
 
   const btcAccountBalance = useBtcAccountBalance(fingerprint, accountIndex);
   const stxAccountBalance = useStxAccountBalance(fingerprint, accountIndex);
@@ -46,10 +46,10 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
   const accountBalance = sumMoney(
     [
       zeroMoneyFiat,
-      btcAccountBalance.value?.fiat.availableBalance,
-      stxAccountBalance.value?.fiat.availableBalance,
-      sip10AccountBalance.value?.fiat.availableBalance,
-      runesAccountBalance.value?.fiat.availableBalance,
+      btcAccountBalance.value?.quote.availableBalance,
+      stxAccountBalance.value?.quote.availableBalance,
+      sip10AccountBalance.value?.quote.availableBalance,
+      runesAccountBalance.value?.quote.availableBalance,
     ].filter(isDefined)
   );
 

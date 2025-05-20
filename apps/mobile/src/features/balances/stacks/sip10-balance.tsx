@@ -81,7 +81,7 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
               <Sip10TokenBalance
                 availableBalance={item.crypto.availableBalance}
                 contractId={item.asset.contractId}
-                fiatBalance={item.fiat.totalBalance}
+                fiatBalance={item.quote.totalBalance}
                 imageCanonicalUri={item.asset.imageCanonicalUri}
                 name={item.asset.name}
                 symbol={item.asset.symbol}

@@ -35,9 +35,9 @@ export function useActivityByAsset(
 }
 
 export function useTotalActivityQuery(accounts: AccountAddresses[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['activity-service-get-total-activity', accounts, fiatCurrencyPreference],
+    queryKey: ['activity-service-get-total-activity', accounts, quoteCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getTotalActivity(accounts, signal),
     refetchOnReconnect: false,
@@ -50,9 +50,9 @@ export function useTotalActivityQuery(accounts: AccountAddresses[]) {
 }
 
 export function useAccountActivityQuery(account: AccountAddresses) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['activity-service-get-account-activity', account, fiatCurrencyPreference],
+    queryKey: ['activity-service-get-account-activity', account, quoteCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getAccountActivity(account, signal),
     refetchOnReconnect: false,
@@ -68,9 +68,9 @@ export function useAccountActivityQuery(account: AccountAddresses) {
  * Keeping this as an example of services usage
  * @knipignore */
 export function useActivityByAssetQuery(account: AccountAddresses, asset: CryptoAssetInfo) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['activity-service-get-activity-by-asset', account, asset, fiatCurrencyPreference],
+    queryKey: ['activity-service-get-activity-by-asset', account, asset, quoteCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivityByAsset(account, asset, signal),
     refetchOnReconnect: false,

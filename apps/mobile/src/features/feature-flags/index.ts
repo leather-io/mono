@@ -75,3 +75,7 @@ export function useDappSuggestions() {
 export function useSendPasteButton() {
   return useBoolVariation('send_paste_button', false);
 }
+
+export function useBtcConversionUnitFlag() {
+  return useBoolVariation('release_btc_conversion_unit_feature', false);
+}

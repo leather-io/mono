@@ -11,7 +11,7 @@ describe(StxBalancesService.name, () => {
 
   const mockSettingsService = {
     getSettings: vi.fn().mockResolvedValue({
-      fiatCurrency: 'USD',
+      quoteCurrency: 'USD',
     }),
   } as unknown as SettingsService;
 
@@ -73,14 +73,14 @@ describe(StxBalancesService.name, () => {
     it('uses market data to calculate usd-denominated balances', async () => {
       const balance = await stxBalancesService.getStxAddressBalance(stacksAddress);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalled();
-      expect(balance.fiat.totalBalance.amount).toEqual(initBigNumber(500));
-      expect(balance.fiat.lockedBalance.amount).toEqual(initBigNumber(100));
-      expect(balance.fiat.unlockedBalance.amount).toEqual(initBigNumber(400));
-      expect(balance.fiat.outboundBalance.amount).toEqual(initBigNumber(0));
-      expect(balance.fiat.inboundBalance.amount).toEqual(initBigNumber(100));
-      expect(balance.fiat.availableBalance.amount).toEqual(initBigNumber(500));
-      expect(balance.fiat.pendingBalance.amount).toEqual(initBigNumber(600));
-      expect(balance.fiat.availableUnlockedBalance.amount).toEqual(initBigNumber(400));
+      expect(balance.quote.totalBalance.amount).toEqual(initBigNumber(500));
+      expect(balance.quote.lockedBalance.amount).toEqual(initBigNumber(100));
+      expect(balance.quote.unlockedBalance.amount).toEqual(initBigNumber(400));
+      expect(balance.quote.outboundBalance.amount).toEqual(initBigNumber(0));
+      expect(balance.quote.inboundBalance.amount).toEqual(initBigNumber(100));
+      expect(balance.quote.availableBalance.amount).toEqual(initBigNumber(500));
+      expect(balance.quote.pendingBalance.amount).toEqual(initBigNumber(600));
+      expect(balance.quote.availableUnlockedBalance.amount).toEqual(initBigNumber(400));
     });
   });
 
@@ -105,14 +105,16 @@ describe(StxBalancesService.name, () => {
       expect(aggregateBalance.stx.availableUnlockedBalance.amount).toEqual(
         initBigNumber(4000000 * 3)
       );
-      expect(aggregateBalance.fiat.totalBalance.amount).toEqual(initBigNumber(500 * 3));
-      expect(aggregateBalance.fiat.lockedBalance.amount).toEqual(initBigNumber(100 * 3));
-      expect(aggregateBalance.fiat.unlockedBalance.amount).toEqual(initBigNumber(400 * 3));
-      expect(aggregateBalance.fiat.outboundBalance.amount).toEqual(initBigNumber(0));
-      expect(aggregateBalance.fiat.inboundBalance.amount).toEqual(initBigNumber(100 * 3));
-      expect(aggregateBalance.fiat.availableBalance.amount).toEqual(initBigNumber(500 * 3));
-      expect(aggregateBalance.fiat.pendingBalance.amount).toEqual(initBigNumber(600 * 3));
-      expect(aggregateBalance.fiat.availableUnlockedBalance.amount).toEqual(initBigNumber(400 * 3));
+      expect(aggregateBalance.quote.totalBalance.amount).toEqual(initBigNumber(500 * 3));
+      expect(aggregateBalance.quote.lockedBalance.amount).toEqual(initBigNumber(100 * 3));
+      expect(aggregateBalance.quote.unlockedBalance.amount).toEqual(initBigNumber(400 * 3));
+      expect(aggregateBalance.quote.outboundBalance.amount).toEqual(initBigNumber(0));
+      expect(aggregateBalance.quote.inboundBalance.amount).toEqual(initBigNumber(100 * 3));
+      expect(aggregateBalance.quote.availableBalance.amount).toEqual(initBigNumber(500 * 3));
+      expect(aggregateBalance.quote.pendingBalance.amount).toEqual(initBigNumber(600 * 3));
+      expect(aggregateBalance.quote.availableUnlockedBalance.amount).toEqual(
+        initBigNumber(400 * 3)
+      );
     });
   });
 });

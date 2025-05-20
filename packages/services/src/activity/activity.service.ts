@@ -327,7 +327,7 @@ export class ActivityService {
           ...activity,
           value: {
             crypto: cryptoValue,
-            fiat: baseCurrencyAmountInQuote(cryptoValue, assetMarketData),
+            quote: baseCurrencyAmountInQuote(cryptoValue, assetMarketData),
           },
         };
       }
@@ -350,7 +350,7 @@ export class ActivityService {
         );
         fromAssetValue = {
           crypto: cryptoFromValue,
-          fiat: baseCurrencyAmountInQuote(cryptoFromValue, fromAssetMarketData),
+          quote: baseCurrencyAmountInQuote(cryptoFromValue, fromAssetMarketData),
         };
       }
       if (isSwapToAssetFungible) {
@@ -365,7 +365,7 @@ export class ActivityService {
         );
         toAssetValue = {
           crypto: cryptoToValue,
-          fiat: baseCurrencyAmountInQuote(cryptoToValue, toAssetMarketData),
+          quote: baseCurrencyAmountInQuote(cryptoToValue, toAssetMarketData),
         };
       }
       return {

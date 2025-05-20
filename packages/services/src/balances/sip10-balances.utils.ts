@@ -13,24 +13,24 @@ export function combineSip10Balances(addressBalances: Sip10AddressBalance[]): Si
           existingBalance.crypto,
           tokenBalance.crypto,
         ]);
-        existingBalance.fiat = aggregateBaseCryptoAssetBalances([
-          existingBalance.fiat,
-          tokenBalance.fiat,
+        existingBalance.quote = aggregateBaseCryptoAssetBalances([
+          existingBalance.quote,
+          tokenBalance.quote,
         ]);
       } else {
         acc.push({
           asset: tokenBalance.asset,
           crypto: tokenBalance.crypto,
-          fiat: tokenBalance.fiat,
+          quote: tokenBalance.quote,
         });
       }
       return acc;
     }, [] as Sip10Balance[]);
 }
 
-export function sortByAvailableFiatBalance(
-  a: { fiat: CryptoAssetBalance },
-  b: { fiat: CryptoAssetBalance }
+export function sortByAvailableQuoteBalance(
+  a: { quote: CryptoAssetBalance },
+  b: { quote: CryptoAssetBalance }
 ) {
-  return b.fiat.availableBalance.amount.minus(a.fiat.availableBalance.amount).toNumber();
+  return b.quote.availableBalance.amount.minus(a.quote.availableBalance.amount).toNumber();
 }

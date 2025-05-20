@@ -9,7 +9,7 @@ import {
   AnalyticsPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
-  FiatCurrency,
+  QuoteCurrency,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 
@@ -58,7 +58,7 @@ export const initialState: SettingsState = {
   bitcoinUnitPreference: 'bitcoin',
   createdOn: new Date().toISOString(),
   emailAddressPreference: '',
-  fiatCurrencyPreference: 'USD',
+  fiatCurrencyPreference: 'USD', // TODO: migrate to quoteCurrencyPreference
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
   hapticsPreference: 'enabled',
@@ -76,7 +76,7 @@ export function useSettings() {
   const analyticsPreference = useSelector(selectAnalyticsPreference);
   const bitcoinUnitPreference = useSelector(selectBitcoinUnitPreference);
   const emailAddressPreference = useSelector(selectEmailAddressPreference);
-  const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
+  const quoteCurrencyPreference = useSelector(selectCurrencyPreference);
   const privacyModePreference = useSelector(selectPrivacyModePreference);
   const hapticsPreference = useSelector(selectHapticsPreference);
   const networkPreference = useSelector(selectNetworkPreference);
@@ -93,7 +93,7 @@ export function useSettings() {
     analyticsPreference,
     bitcoinUnitPreference,
     emailAddressPreference,
-    fiatCurrencyPreference,
+    quoteCurrencyPreference,
     networkPreference,
     privacyModePreference,
     hapticsPreference,
@@ -133,7 +133,7 @@ export function useSettings() {
         has_email_address: !!address,
       });
     },
-    changeFiatCurrencyPreference(unit: FiatCurrency) {
+    changeQuoteCurrencyPreference(unit: QuoteCurrency) {
       void analytics?.track('user_setting_updated', {
         fiat_currency: unit,
       });

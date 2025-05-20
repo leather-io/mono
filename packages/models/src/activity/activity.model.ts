@@ -51,7 +51,7 @@ export interface LockAssetActivity extends BaseOnChainActivity {
   readonly amount: BigNumber;
   readonly value?: {
     crypto: Money;
-    fiat: Money;
+    quote: Money;
   };
 }
 
@@ -62,7 +62,7 @@ export interface SendAssetActivity extends BaseOnChainActivity {
   readonly amount: BigNumber;
   readonly value?: {
     crypto: Money;
-    fiat: Money;
+    quote: Money;
   };
 }
 
@@ -73,7 +73,7 @@ export interface ReceiveAssetActivity extends BaseOnChainActivity {
   readonly amount: BigNumber;
   readonly value?: {
     crypto: Money;
-    fiat: Money;
+    quote: Money;
   };
 }
 
@@ -83,13 +83,13 @@ export interface SwapAssetsActivity extends BaseOnChainActivity {
   readonly fromAmount: BigNumber;
   readonly fromValue?: {
     crypto: Money;
-    fiat: Money;
+    quote: Money;
   };
   readonly toAsset: CryptoAssetInfo;
   readonly toAmount: BigNumber;
   readonly toValue?: {
     crypto: Money;
-    fiat: Money;
+    quote: Money;
   };
 }
 

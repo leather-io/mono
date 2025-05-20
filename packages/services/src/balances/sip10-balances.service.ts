@@ -13,16 +13,16 @@ import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
-import { combineSip10Balances, sortByAvailableFiatBalance } from './sip10-balances.utils';
+import { combineSip10Balances, sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface Sip10Balance {
   asset: Sip10CryptoAssetInfo;
-  fiat: CryptoAssetBalance;
+  quote: CryptoAssetBalance;
   crypto: CryptoAssetBalance;
 }
 
 export interface Sip10AggregateBalance {
-  fiat: CryptoAssetBalance;
+  quote: CryptoAssetBalance;
   sip10s: Sip10Balance[];
 }
 
@@ -40,7 +40,7 @@ export class Sip10BalancesService {
   ) {}
 
   /**
-   * Gets combined SIP10 token balances of provided Stacks address list. Includes cumulative fiat value.
+   * Gets combined SIP10 token balances of provided Stacks address list. Includes cumulative quote currency value.
    */
   public async getSip10AggregateBalance(
     addresses: string[],
@@ -50,21 +50,21 @@ export class Sip10BalancesService {
       addresses.map(address => this.getSip10AddressBalance(address, signal))
     );
 
-    const cumulativeFiatBalance =
+    const cumulativeQuoteBalance =
       addressBalances.length > 0
-        ? aggregateBaseCryptoAssetBalances(addressBalances.map(r => r.fiat))
+        ? aggregateBaseCryptoAssetBalances(addressBalances.map(r => r.quote))
         : createBaseCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+            createMoney(0, this.settingsService.getSettings().quoteCurrency)
           );
 
     return {
-      fiat: cumulativeFiatBalance,
-      sip10s: combineSip10Balances(addressBalances).sort(sortByAvailableFiatBalance),
+      quote: cumulativeQuoteBalance,
+      sip10s: combineSip10Balances(addressBalances).sort(sortByAvailableQuoteBalance),
     };
   }
 
   /**
-   * Gets all SIP10 balances for given address. Includes cumulative fiat value.
+   * Gets all SIP10 balances for given address. Includes cumulative quote currency value.
    */
   public async getSip10AddressBalance(
     address: string,
@@ -89,17 +89,17 @@ export class Sip10BalancesService {
       .filter(result => result.status === 'fulfilled')
       .map(result => result.value);
 
-    const cumulativeFiatBalance =
+    const cumulativeQuoteBalance =
       sip10Balances.length > 0
-        ? aggregateBaseCryptoAssetBalances(sip10Balances.map(b => b.fiat))
+        ? aggregateBaseCryptoAssetBalances(sip10Balances.map(b => b.quote))
         : createBaseCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+            createMoney(0, this.settingsService.getSettings().quoteCurrency)
           );
 
     return {
       address,
-      fiat: cumulativeFiatBalance,
-      sip10s: sip10Balances.sort(sortByAvailableFiatBalance),
+      quote: cumulativeQuoteBalance,
+      sip10s: sip10Balances.sort(sortByAvailableQuoteBalance),
     };
   }
 
@@ -114,7 +114,7 @@ export class Sip10BalancesService {
 
     return {
       asset,
-      fiat: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
+      quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, marketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };
   }

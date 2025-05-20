@@ -8,7 +8,7 @@ import { selectBitcoinNetworkMode, selectStacksApiUrl } from './settings.selecto
 import { UserSettings } from './settings.service';
 
 const userSettings: UserSettings = {
-  fiatCurrency: 'USD',
+  quoteCurrency: 'USD',
   network: defaultNetworksKeyedById.mainnet,
 };
 

@@ -43,7 +43,7 @@ export function EarnWidget() {
         <FetchWrapper data={stxBalance}>
           {userIsStacking ? (
             <LockedBalanceCard
-              fiatLockedBalance={stxBalance.value?.fiat.lockedBalance}
+              fiatLockedBalance={stxBalance.value?.quote.lockedBalance}
               stxLockedBalance={stxBalance.value?.stx.lockedBalance}
             />
           ) : (

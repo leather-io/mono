@@ -52,6 +52,7 @@ export const currencyNameMap = {
   CNY: 'Chinese Yuan',
   JPY: 'Japanese Yen',
   KRW: 'South Korean Won',
+  BTC: 'Bitcoin',
 } as const;
 
 // https://bitcoin.stackexchange.com/a/41082/139277

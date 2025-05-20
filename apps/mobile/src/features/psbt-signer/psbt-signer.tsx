@@ -312,7 +312,9 @@ function BasePsbtSigner({
                 message: 'Total spend',
               })}
             </Text>
-            <Text variant="label02">{formatBalance({ balance: totalSpend, isFiat: true })}</Text>
+            <Text variant="label02">
+              {formatBalance({ balance: totalSpend, isQuoteCurrency: true })}
+            </Text>
           </Box>
           <Approver.Actions>
             <ApproverButtons

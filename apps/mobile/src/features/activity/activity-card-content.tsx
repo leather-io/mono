@@ -22,7 +22,7 @@ export function ActivityCardContent({ activity }: ActivityCardContentProps) {
           <Box alignItems="flex-start" gap="1" alignSelf="stretch">
             <Balance balance={activity.value.crypto} variant="label02" />
             <Balance
-              balance={activity.value.fiat}
+              balance={activity.value.quote}
               variant="caption01"
               color="ink.text-subdued"
               fontWeight="400"

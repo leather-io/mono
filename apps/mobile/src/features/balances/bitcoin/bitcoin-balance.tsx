@@ -44,7 +44,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const { state, value } = useBtcTotalBalance();
 
   const availableBalance = value?.btc.availableBalance;
-  const fiatBalance = value?.fiat.availableBalance;
+  const fiatBalance = value?.quote.availableBalance;
 
   return (
     <BitcoinTokenBalance
@@ -69,7 +69,7 @@ export function BitcoinBalanceByAccount({
   const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.btc.availableBalance;
-  const fiatBalance = value?.fiat.availableBalance;
+  const fiatBalance = value?.quote.availableBalance;
 
   return (
     <BitcoinTokenBalance

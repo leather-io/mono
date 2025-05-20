@@ -5,7 +5,7 @@ import {
   AnalyticsPreference,
   BitcoinUnit,
   DefaultNetworkConfigurations,
-  FiatCurrency,
+  QuoteCurrency,
 } from '@leather.io/models';
 
 import { handleAppResetWithState } from '../global-action';
@@ -35,7 +35,7 @@ export const settingsSlice = createSlice({
     userChangedEmailAddressPreference(state, action: PayloadAction<string>) {
       state.emailAddressPreference = action.payload;
     },
-    userChangedFiatCurrencyPreference(state, action: PayloadAction<FiatCurrency>) {
+    userChangedFiatCurrencyPreference(state, action: PayloadAction<QuoteCurrency>) {
       state.fiatCurrencyPreference = action.payload;
     },
     userChangedNetworkPreference(state, action: PayloadAction<DefaultNetworkConfigurations>) {

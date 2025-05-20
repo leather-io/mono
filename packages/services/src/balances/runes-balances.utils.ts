@@ -33,15 +33,15 @@ export function combineRunesBalances(accountBalances: RunesAccountBalance[]): Ru
           existingBalance.crypto,
           runeBalance.crypto,
         ]);
-        existingBalance.fiat = aggregateBaseCryptoAssetBalances([
-          existingBalance.fiat,
-          runeBalance.fiat,
+        existingBalance.quote = aggregateBaseCryptoAssetBalances([
+          existingBalance.quote,
+          runeBalance.quote,
         ]);
       } else {
         acc.push({
           asset: runeBalance.asset,
           crypto: runeBalance.crypto,
-          fiat: runeBalance.fiat,
+          quote: runeBalance.quote,
         });
       }
       return acc;

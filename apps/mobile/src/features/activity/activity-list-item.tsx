@@ -49,10 +49,10 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
           gap="0"
           titleLeft={<Text variant="label01">{getActivityTitle(activity)}</Text>}
           titleRight={
-            value?.fiat ? (
+            value?.quote ? (
               <Balance
                 operator={getBalanceOperator(activity)}
-                balance={value.fiat}
+                balance={value.quote}
                 color={getBalanceColor(activity)}
               />
             ) : undefined

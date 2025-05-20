@@ -16,16 +16,16 @@ import type { SettingsService } from '../infrastructure/settings/settings.servic
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
 import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances.utils';
-import { sortByAvailableFiatBalance } from './sip10-balances.utils';
+import { sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface RuneBalance {
   asset: RuneCryptoAssetInfo;
-  fiat: CryptoAssetBalance;
+  quote: CryptoAssetBalance;
   crypto: CryptoAssetBalance;
 }
 
 export interface RunesAggregateBalance {
-  fiat: CryptoAssetBalance;
+  quote: CryptoAssetBalance;
   runes: RuneBalance[];
 }
 
@@ -42,7 +42,7 @@ export class RunesBalancesService {
     private readonly runeAssetService: RuneAssetService
   ) {}
   /**
-   * Gets combined Runes balances of provided Bitcoin accounts list. Includes cumulative fiat value.
+   * Gets combined Runes balances of provided Bitcoin accounts list. Includes cumulative quote currency value.
    */
   public async getRunesAggregateBalance(
     accounts: AccountAddresses[],
@@ -52,21 +52,21 @@ export class RunesBalancesService {
       accounts.map(account => this.getRunesAccountBalance(account, signal))
     );
 
-    const cumulativeFiatBalance =
+    const cumulativeQuoteBalance =
       accountBalances.length > 0
-        ? aggregateBaseCryptoAssetBalances(accountBalances.map(r => r.fiat))
+        ? aggregateBaseCryptoAssetBalances(accountBalances.map(r => r.quote))
         : createBaseCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+            createMoney(0, this.settingsService.getSettings().quoteCurrency)
           );
 
     return {
-      fiat: cumulativeFiatBalance,
-      runes: combineRunesBalances(accountBalances).sort(sortByAvailableFiatBalance),
+      quote: cumulativeQuoteBalance,
+      runes: combineRunesBalances(accountBalances).sort(sortByAvailableQuoteBalance),
     };
   }
 
   /**
-   * Gets all Rune balances for given account. Includes cumulative fiat value.
+   * Gets all Rune balances for given account. Includes cumulative quote currency value.
    */
   public async getRunesAccountBalance(
     account: AccountAddresses,
@@ -86,17 +86,17 @@ export class RunesBalancesService {
       .filter(result => result.status === 'fulfilled')
       .map(b => b.value);
 
-    const cumulativeFiatBalance =
+    const cumulativeQuoteBalance =
       runesBalances.length > 0
-        ? aggregateBaseCryptoAssetBalances(runesBalances.map(b => b.fiat))
+        ? aggregateBaseCryptoAssetBalances(runesBalances.map(b => b.quote))
         : createBaseCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+            createMoney(0, this.settingsService.getSettings().quoteCurrency)
           );
 
     return {
       account,
-      fiat: cumulativeFiatBalance,
-      runes: runesBalances.sort(sortByAvailableFiatBalance),
+      quote: cumulativeQuoteBalance,
+      runes: runesBalances.sort(sortByAvailableQuoteBalance),
     };
   }
 
@@ -110,7 +110,7 @@ export class RunesBalancesService {
     const runeMarketData = await this.marketDataService.getRuneMarketData(runeInfo, signal);
     return {
       asset: runeInfo,
-      fiat: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),
+      quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),
       crypto: createBaseCryptoAssetBalance(totalBalance),
     };
   }

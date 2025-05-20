@@ -89,7 +89,7 @@ const mockRuneAssetBalance: RuneBalance = {
     hasMemo: false,
   },
   crypto: mockRuneBalance,
-  fiat: mockRuneBalance,
+  quote: mockRuneBalance,
 };
 
 const mockAccountBalances: RunesAccountBalance[] = [
@@ -100,7 +100,7 @@ const mockAccountBalances: RunesAccountBalance[] = [
         ...mockRuneAssetBalance,
       },
     ],
-    fiat: mockRuneBalance,
+    quote: mockRuneBalance,
   },
   {
     account: mockAccountAddresses,
@@ -112,7 +112,7 @@ const mockAccountBalances: RunesAccountBalance[] = [
         },
       },
     ],
-    fiat: mockRuneBalance,
+    quote: mockRuneBalance,
   },
 ];
 
@@ -127,7 +127,7 @@ describe('combineRunesBalances', () => {
     expect(result[0].crypto.outboundBalance.amount.toNumber()).toBe(7);
     expect(result[0].crypto.pendingBalance.amount.toNumber()).toBe(158);
     expect(result[0].crypto.availableBalance.amount.toNumber()).toBe(143);
-    expect(result[0].fiat.totalBalance.amount.toNumber()).toBe(200);
+    expect(result[0].quote.totalBalance.amount.toNumber()).toBe(200);
   });
 
   it('should handle empty address balances', () => {

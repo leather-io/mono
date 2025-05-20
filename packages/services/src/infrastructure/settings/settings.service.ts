@@ -1,8 +1,8 @@
-import { FiatCurrency, NetworkConfiguration } from '@leather.io/models';
+import { NetworkConfiguration, QuoteCurrency } from '@leather.io/models';
 
 export interface UserSettings {
   network: NetworkConfiguration;
-  fiatCurrency: FiatCurrency;
+  quoteCurrency: QuoteCurrency;
 }
 
 export interface SettingsService {
