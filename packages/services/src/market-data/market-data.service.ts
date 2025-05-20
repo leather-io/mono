@@ -23,6 +23,7 @@ import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
+import { calculateBtcUsdEchangeRate, calculateSatsUsdEchangeRate } from './market-data.utils';
 
 @injectable()
 export class MarketDataService {
@@ -64,10 +65,7 @@ export class MarketDataService {
     const priceMap = await this.leatherApiClient.fetchNativeTokenPriceMap(signal);
     return await this.buildFiatCurrencyPreferenceMarketData(
       currency.symbol,
-      convertAmountToFractionalUnit(
-        initBigNumber(priceMap[currency.symbol].price),
-        currencyDecimalsMap.USD
-      )
+      initBigNumber(priceMap[currency.symbol].price)
     );
   }
 
@@ -87,12 +85,10 @@ export class MarketDataService {
       );
     }
 
-    const assetPrice = convertAmountToFractionalUnit(
-      initBigNumber(tokenPriceMatch.price),
-      currencyDecimalsMap.USD
+    return await this.buildFiatCurrencyPreferenceMarketData(
+      asset.symbol,
+      initBigNumber(tokenPriceMatch.price)
     );
-
-    return await this.buildFiatCurrencyPreferenceMarketData(asset.symbol, assetPrice);
   }
 
   /**
@@ -135,23 +131,36 @@ export class MarketDataService {
     assetSymbol: string,
     assetPriceUsd: BigNumber
   ) {
-    return createMarketData(
+    const assetPriceBase = convertAmountToFractionalUnit(
+      assetPriceUsd,
+      currencyDecimalsMap[this.settingsService.getSettings().fiatCurrency]
+    );
+    const fiatCurrencyMarketData = createMarketData(
       createMarketPair(assetSymbol, this.settingsService.getSettings().fiatCurrency),
       createMoney(
         this.settingsService.getSettings().fiatCurrency === 'USD'
-          ? assetPriceUsd
-          : assetPriceUsd.times(await this.readFiatCurrencyPreferenceExchangeRate()),
+          ? assetPriceBase
+          : assetPriceBase.times(await this.readFiatCurrencyPreferenceExchangeRate()),
         this.settingsService.getSettings().fiatCurrency
       )
     );
+    return fiatCurrencyMarketData;
   }
 
   private async readFiatCurrencyPreferenceExchangeRate() {
-    const exchangeRates = await this.leatherApiClient.fetchFiatExchangeRates();
-    return initBigNumber(
-      exchangeRates.rates[
-        this.settingsService.getSettings().fiatCurrency as keyof typeof exchangeRates.rates
-      ]
-    );
+    const fiatCurrencyPreference = this.settingsService.getSettings().fiatCurrency;
+    if (fiatCurrencyPreference === 'XBT' || fiatCurrencyPreference === 'sats') {
+      const btcPriceUsd = initBigNumber(
+        (await this.leatherApiClient.fetchNativeTokenPriceMap())['BTC'].price
+      );
+      return fiatCurrencyPreference === 'XBT'
+        ? calculateBtcUsdEchangeRate(btcPriceUsd)
+        : calculateSatsUsdEchangeRate(btcPriceUsd);
+    } else {
+      const exchangeRates = await this.leatherApiClient.fetchFiatExchangeRates();
+      return initBigNumber(
+        exchangeRates.rates[fiatCurrencyPreference as keyof typeof exchangeRates.rates]
+      );
+    }
   }
 }

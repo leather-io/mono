@@ -2,7 +2,7 @@ import { PrivateText } from '@/components/private-text';
 import { usePrivacyMode } from '@/store/settings/settings.read';
 import { t } from '@lingui/macro';
 
-import { currencyNameMap } from '@leather.io/constants';
+import { currencyDecimalsMap, currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { BulletSeparator, SkeletonLoader, Text, TextProps } from '@leather.io/ui/native';
 import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
@@ -14,6 +14,15 @@ interface FormatBalanceProps {
   operator?: string;
 }
 export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps) {
+  if ((isFiat && balance.symbol === 'XBT') || balance.symbol === 'sats') {
+    const formattedAmount = balance.amount
+      .shiftedBy(-balance.decimals)
+      .toFixed(currencyDecimalsMap[balance.symbol]!);
+    return operator
+      ? `${operator} ${formattedAmount} ${balance.symbol === 'XBT' ? 'BTC' : balance.symbol}`
+      : `${formattedAmount} ${balance.symbol === 'XBT' ? 'BTC' : balance.symbol}`;
+  }
+
   if (isFiat) {
     const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
     return operator
