@@ -65,10 +65,7 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       : '100,000,000 STX';
 
     const tvlBaseCurrencyAmount = baseCurrencyAmountInQuote(
-      createMoneyFromDecimal(
-        stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0,
-        pool.payout
-      ),
+      createMoneyFromDecimal(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0, 'STX'),
       stxMarketData
     );
 

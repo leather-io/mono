@@ -2,7 +2,7 @@ import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { Page } from '~/features/page/page';
-import { UserPositions } from '~/features/stacking/user-positions';
+import { UserPositions } from '~/features/stacking/user-positions/user-positions';
 
 import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
