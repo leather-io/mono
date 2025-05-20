@@ -42,7 +42,7 @@ export function MnemonicDisplay({
 
   return (
     <>
-      <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" p="3">
+      <Box p="3">
         <Box pb="2" flexDirection="row" flexWrap="wrap" gap="2">
           {mnemonicWords.map((word, idx) => (
             <MnemonicWordBox key={word + idx} wordIdx={idx + 1} word={word} />
