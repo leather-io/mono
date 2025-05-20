@@ -7,7 +7,8 @@ import { AllAccountBalances } from '@/features/balances/balances';
 import { BalancesWidget } from '@/features/balances/balances-widget';
 import { TotalBalance } from '@/features/balances/total-balance';
 import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
-import { useCollectiblesFlag } from '@/features/feature-flags';
+import { EarnWidget } from '@/features/earn/earn-widget';
+import { useCollectiblesFlag, useEarnFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
@@ -27,6 +28,7 @@ export function Home() {
   const activity = useTotalActivity();
   const collectibles = useTotalCollectibles();
   const releaseCollectibles = useCollectiblesFlag();
+  const releaseEarn = useEarnFlag();
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
 
   return (
@@ -46,7 +48,7 @@ export function Home() {
             onPressHeader={() => router.navigate(AppRoutes.Activity)}
             title={t({ id: 'activity.header_title', message: 'All activity' })}
           />
-
+          {releaseEarn && <EarnWidget />}
           {releaseCollectibles && hasCollectibles(collectibles) && (
             <CollectiblesWidget
               onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
