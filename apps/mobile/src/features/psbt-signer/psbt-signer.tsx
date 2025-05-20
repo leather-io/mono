@@ -44,6 +44,7 @@ import {
 } from '@leather.io/utils';
 
 import { ApproverButtons } from '../approver/components/approver-buttons';
+import { ApproverWrapper } from '../approver/components/approver-wrapper';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
 import { signTx } from './signer';
@@ -261,7 +262,7 @@ function BasePsbtSigner({
   }
 
   return (
-    <Box flex={1} backgroundColor="ink.background-secondary">
+    <ApproverWrapper>
       <Approver>
         <Approver.Container>
           <Approver.Header
@@ -340,6 +341,6 @@ function BasePsbtSigner({
         txSize={txVBytes}
         currentFeeRate={Math.round(psbtDetails.fee.amount.toNumber() / txVBytes)}
       />
-    </Box>
+    </ApproverWrapper>
   );
 }

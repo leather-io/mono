@@ -3,8 +3,9 @@ import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/macro';
 
-import { Approver, Box, Button, Cell, Text } from '@leather.io/ui/native';
+import { Approver, Button, Cell, Text } from '@leather.io/ui/native';
 
+import { ApproverWrapper } from '../components/approver-wrapper';
 import { StructuredMessageSection } from '../structured-message.section';
 
 interface BaseStxMessageApproverLayoutProps {
@@ -32,7 +33,7 @@ export function BaseStxMessageApproverLayout({
   messageToSign,
 }: BaseStxMessageApproverLayoutProps) {
   return (
-    <Box flex={1} backgroundColor="ink.background-secondary">
+    <ApproverWrapper>
       <Approver>
         <Approver.Container>
           <Approver.Header
@@ -90,6 +91,6 @@ export function BaseStxMessageApproverLayout({
           </Approver.Actions>
         </Approver.Footer>
       </Approver>
-    </Box>
+    </ApproverWrapper>
   );
 }

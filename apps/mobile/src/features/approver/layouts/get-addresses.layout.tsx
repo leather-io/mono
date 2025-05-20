@@ -4,7 +4,9 @@ import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
 import { t } from '@lingui/macro';
 
-import { Approver, Box, Button, Cell, ChevronRightIcon } from '@leather.io/ui/native';
+import { Approver, Button, Cell, ChevronRightIcon } from '@leather.io/ui/native';
+
+import { ApproverWrapper } from '../components/approver-wrapper';
 
 interface GetAddressesApproverLayoutProps {
   onApprove(): void;
@@ -22,7 +24,7 @@ export function GetAddressesApproverLayout({
   accounts,
 }: GetAddressesApproverLayoutProps) {
   return (
-    <Box flex={1} backgroundColor="ink.background-secondary">
+    <ApproverWrapper>
       <Approver>
         <Approver.Container>
           <Approver.Header
@@ -83,6 +85,6 @@ export function GetAddressesApproverLayout({
           </Approver.Actions>
         </Approver.Footer>
       </Approver>
-    </Box>
+    </ApproverWrapper>
   );
 }

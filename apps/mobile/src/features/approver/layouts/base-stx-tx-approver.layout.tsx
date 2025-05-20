@@ -26,6 +26,7 @@ import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io
 import { Approver, Box, Button } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
+import { ApproverWrapper } from '../components/approver-wrapper';
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
@@ -79,7 +80,7 @@ export function BaseStxTxApproverLayout({
   });
 
   return (
-    <Box flex={1} backgroundColor="ink.background-secondary">
+    <ApproverWrapper>
       <Approver>
         <Approver.Container>
           <Approver.Header
@@ -155,6 +156,6 @@ export function BaseStxTxApproverLayout({
           </Approver.Actions>
         </Approver.Footer>
       </Approver>
-    </Box>
+    </ApproverWrapper>
   );
 }
