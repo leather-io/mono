@@ -9,7 +9,7 @@ import {
 } from 'leather-styles/jsx';
 import { ExternalLink } from '~/components/external-link';
 
-import { LeatherLettermarkIcon } from '@leather.io/ui';
+import { Flag, FlagProps, LeatherLettermarkIcon } from '@leather.io/ui';
 
 export function FooterLayout(props: HTMLStyledProps<'footer'>) {
   return (
@@ -56,42 +56,23 @@ function FooterColumn({ title, children, ...props }: FooterColumnProps) {
   );
 }
 
-function FooterDisclaimer(props: HTMLStyledProps<'p'>) {
-  return (
-    <styled.p
-      textStyle="caption.01"
-      fontSize="12px"
-      color="ink.text-subdued"
-      maxW={['80%', undefined, '50%']}
-      mt="space.09"
-      {...props}
-    />
-  );
-}
-
-interface FooterLegalTextProps extends FlexProps {
+interface FooterLegalTextProps extends FlagProps {
   product: string;
   copyright: string;
 }
 function FooterLegalText({ product, copyright, ...props }: FooterLegalTextProps) {
   return (
-    <Flex
-      mt="space.07"
-      gap="space.07"
-      textStyle="caption.01"
-      fontSize="12px"
-      color="ink.text-subdued"
-      {...props}
-    >
-      <styled.span>{product}</styled.span>
-      <styled.span>{copyright}</styled.span>
-    </Flex>
+    <Flag spacing="space.05" img={<LeatherLettermarkIcon />} {...props}>
+      <Flex flexDir="column" textStyle="caption.01" fontSize="12px" color="ink.text-subdued">
+        <styled.span>{product}</styled.span>
+        <styled.span>{copyright}</styled.span>
+      </Flex>
+    </Flag>
   );
 }
 
 FooterLayout.Grid = FooterGrid;
 FooterLayout.Column = FooterColumn;
 FooterLayout.Link = ExternalLink;
-FooterLayout.Disclaimer = FooterDisclaimer;
 FooterLayout.LegalText = FooterLegalText;
 FooterLayout.LeatherIcon = FooterLeatherIcon;

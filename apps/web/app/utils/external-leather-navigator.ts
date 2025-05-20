@@ -18,6 +18,7 @@ export function createExternalLeatherNavigator() {
     docs: 'https://leather.gitbook.io',
     wallet: `${externalUrl}/wallet`,
     apps: `${externalUrl}/apps`,
+    news: `${externalUrl}/news`,
   };
 }
 
