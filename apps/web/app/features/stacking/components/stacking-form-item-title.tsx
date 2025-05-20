@@ -3,6 +3,7 @@ import React from 'react';
 
 import { InfoCircleIcon } from '@leather.io/ui';
 import { StackingAmountLabel, StackingRewardsAddressLabel, StackingDurationLabel, StackingContractDetailsLabel, PooledStackingConditionsLabel } from '~/components/pool-overview';
+import { content } from '~/data/content';
 
 interface StackingFormItemTitleProps {
   title: string;
@@ -12,21 +13,17 @@ interface StackingFormItemTitleProps {
 export function StackingFormItemTitle(props: StackingFormItemTitleProps) {
   const { title, labelTagName = 'h1' } = props;
   const Tag = styled[labelTagName];
-  return (
-    <HStack gap="space.02">
-      {title === 'Amount' ? (
-        <StackingAmountLabel tagName={labelTagName} textStyle="label.01" />
-      ) : title === 'Address to receive rewards' ? (
-        <StackingRewardsAddressLabel tagName={labelTagName} textStyle="label.01" />
-      ) : title === 'Duration' ? (
-        <StackingDurationLabel tagName={labelTagName} textStyle="label.01" />
-      ) : title === 'Details' ? (
-        <StackingContractDetailsLabel tagName={labelTagName} textStyle="label.01" />
-      ) : title === 'Pooling conditions' ? (
-        <PooledStackingConditionsLabel tagName={labelTagName} textStyle="label.01" />
-      ) : (
-        <Tag textStyle="label.01">{title}</Tag>
-      )}
-    </HStack>
-  );
+  if (title === (content.posts['stacking-amount']?.title ?? 'Amount')) {
+    return <StackingAmountLabel tagName={labelTagName} textStyle="label.01" />;
+  } else if (title === (content.posts['stacking-rewards-address']?.title ?? 'Address to receive rewards')) {
+    return <StackingRewardsAddressLabel tagName={labelTagName} textStyle="label.01" />;
+  } else if (title === (content.posts['stacking-duration']?.title ?? 'Duration')) {
+    return <StackingDurationLabel tagName={labelTagName} textStyle="label.01" />;
+  } else if (title === (content.posts['stacking-contract-details']?.title ?? 'Details')) {
+    return <StackingContractDetailsLabel tagName={labelTagName} textStyle="label.01" />;
+  } else if (title === (content.posts['pooled-stacking-conditions']?.title ?? 'Pooling conditions')) {
+    return <PooledStackingConditionsLabel tagName={labelTagName} textStyle="label.01" />;
+  } else {
+    return <Tag textStyle="label.01">{title}</Tag>;
+  }
 }

@@ -63,8 +63,8 @@ export function normalizePost(raw: any): Post {
   };
 }
 
-export function normalizePosts(rawPosts: Record<string, any>): { [slug: string]: Post } {
-  const normalized: { [slug: string]: Post } = {};
+export function normalizePosts(rawPosts: Record<string, any>): PostsCollection {
+  const normalized: PostsCollection = {};
   for (const slug in rawPosts) {
     normalized[slug] = normalizePost(rawPosts[slug]);
   }

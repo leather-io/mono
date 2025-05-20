@@ -11,6 +11,7 @@ import { usePost } from '~/utils/post-utils';
 import { ProviderIcon } from './icons/provider-icon';
 import type { StackingPool } from '~/data/data';
 import { getPostSlugForProvider } from '~/data/data';
+import type { PostsCollection } from '~/data/post-types';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -18,9 +19,11 @@ interface RewardTokenCellProps {
   textStyle?: string;
 }
 function RewardTokenCell({ token = 'STX', value, textStyle }: RewardTokenCellProps) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-rewards-tokens']?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={(content.posts as Record<string, any>)["stacking-rewards-tokens"]?.Title || "Rewards token"} textStyle="label.03" />}
+      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={label} textStyle="label.03" />}
       value={
         <>
           {token}
@@ -44,9 +47,11 @@ interface DaysUntilNextCycleCellProps {
   nextCycleBlocks: number;
 }
 function DaysUntilNextCycleCell({ daysUntilNextCycle, nextCycleNumber, nextCycleBlocks }: DaysUntilNextCycleCellProps) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-upcoming-cycle']?.title ?? 'Days until next cycle';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-upcoming-cycle" label={(content.posts as Record<string, any>)["stacking-upcoming-cycle"]?.Title || "Days until next cycle"} textStyle="label.03" />}
+      name={<PostLabelHoverCard postKey="stacking-upcoming-cycle" label={label} textStyle="label.03" />}
       value={
         <>
           {daysUntilNextCycle} days (Cycle {nextCycleNumber}, {nextCycleBlocks} blocks)
@@ -67,9 +72,12 @@ function MinimumCommitmentCell({
 
 interface HistoricalAprCellProps {
   historicalApr?: string;
+  textStyle?: string;
 }
 function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
-  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "Historical yield"} textStyle="label.03" />} value={<>{historicalApr}</>} />;
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['historical-yield']?.title ?? 'Historical yield';
+  return <ValueDisplayer name={<PostLabelHoverCard postKey="historical-yield" label={label} textStyle="label.03" />} value={<>{historicalApr}</>} />;
 }
 
 interface TotalValueLockedCellProps {
@@ -80,9 +88,11 @@ function TotalValueLockedCell({
   totalValueLocked = '51,784,293 STX',
   totalValueLockedUsd = '$36,212,756',
 }: TotalValueLockedCellProps) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['total-locked-value-tvl']?.title ?? 'Total value locked';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="total-locked-value-tvl" label={(content.posts as Record<string, any>)["total-locked-value-tvl"]?.Title || "Total value locked"} textStyle="label.03" />}
+      name={<PostLabelHoverCard postKey="total-locked-value-tvl" label={label} textStyle="label.03" />}
       value={
         <>
           {totalValueLocked} <Box textStyle="label.03">{totalValueLockedUsd}</Box>
@@ -97,13 +107,13 @@ interface PoolOverviewProps {
   poolSlug: string;
 }
 function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
-  const postSlug = getPostSlugForProvider(poolSlug);
+  const postSlug = getPostSlugForProvider(poolSlug) ?? '';
   const post = usePost(postSlug);
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      {pool.logo}
+      {'logo' in pool ? (pool as any).logo : null}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {pool.title}
+        {'title' in pool ? (pool as any).title : ''}
       </styled.h4>
       {post && (
         <styled.p textStyle="caption.01">
@@ -159,8 +169,9 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
 }
 
 // Add a component for the stacking-amount post label
-export function StackingAmountLabel({ textStyle = "label.03", tagName = "h1" }: { textStyle?: string; tagName?: keyof JSX.IntrinsicElements }) {
-  const label = (content.posts as Record<string, any>)["stacking-amount"]?.Title || "Amount";
+export function StackingAmountLabel({ textStyle = "label.03", tagName = "h1" }: { textStyle?: string; tagName?: keyof React.JSX.IntrinsicElements }) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-amount']?.title ?? 'Amount';
   return (
     <PostLabelHoverCard
       postKey="stacking-amount"
@@ -172,8 +183,9 @@ export function StackingAmountLabel({ textStyle = "label.03", tagName = "h1" }: 
 }
 
 // Add a component for the stacking-rewards-address post label
-export function StackingRewardsAddressLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
-  const label = (content.posts as Record<string, any>)["stacking-rewards-address"]?.Title || "Rewards address";
+export function StackingRewardsAddressLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: keyof React.JSX.IntrinsicElements }) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-rewards-address']?.title ?? 'Rewards address';
   return (
     <PostLabelHoverCard
       postKey="stacking-rewards-address"
@@ -185,8 +197,9 @@ export function StackingRewardsAddressLabel({ textStyle = "label.01", tagName = 
 }
 
 // Add a component for the stacking-duration post label
-export function StackingDurationLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
-  const label = (content.posts as Record<string, any>)["stacking-duration"]?.Title || "Duration";
+export function StackingDurationLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: keyof React.JSX.IntrinsicElements }) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-duration']?.title ?? 'Duration';
   return (
     <PostLabelHoverCard
       postKey="stacking-duration"
@@ -198,8 +211,9 @@ export function StackingDurationLabel({ textStyle = "label.01", tagName = "h1" }
 }
 
 // Add a component for the stacking-contract-details post label
-export function StackingContractDetailsLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
-  const label = (content.posts as Record<string, any>)["stacking-contract-details"]?.Title || "Details";
+export function StackingContractDetailsLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: keyof React.JSX.IntrinsicElements }) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['stacking-contract-details']?.title ?? 'Details';
   return (
     <PostLabelHoverCard
       postKey="stacking-contract-details"
@@ -211,8 +225,9 @@ export function StackingContractDetailsLabel({ textStyle = "label.01", tagName =
 }
 
 // Add a component for the pooled-stacking-conditions post label
-export function PooledStackingConditionsLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' }) {
-  const label = (content.posts as Record<string, any>)["pooled-stacking-conditions"]?.Title || "Pooling conditions";
+export function PooledStackingConditionsLabel({ textStyle = "label.01", tagName = "h1" }: { textStyle?: string; tagName?: keyof React.JSX.IntrinsicElements }) {
+  const posts = content.posts as unknown as PostsCollection;
+  const label = posts['pooled-stacking-conditions']?.title ?? 'Pooling conditions';
   return (
     <PostLabelHoverCard
       postKey="pooled-stacking-conditions"

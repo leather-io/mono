@@ -35,6 +35,9 @@ importers:
       radix-ui:
         specifier: 1.3.4
         version: 1.3.4(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-router-dom:
+        specifier: 7.6.0
+        version: 7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       '@babel/runtime':
         specifier: 7.26.0
@@ -646,7 +649,7 @@ importers:
         version: 1.52.0
       '@react-router/cloudflare':
         specifier: 7.6.0
-        version: 7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
+        version: 7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
       '@react-router/dev':
         specifier: 7.6.0
         version: 7.6.0(@react-router/serve@7.6.0(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.8.3))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(lightningcss@1.27.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.39.2)(yaml@2.8.0))(wrangler@4.14.4(@cloudflare/workers-types@4.20250510.0))(yaml@2.8.0)
@@ -918,7 +921,7 @@ importers:
         version: link:../tokens
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
 
   packages/prettier-config:
     dependencies:
@@ -4230,6 +4233,7 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -13836,6 +13840,13 @@ packages:
       react-router: '>=7.0.0'
       vite: '>=5.0.0 || >=6.0.0'
 
+  react-router-dom@7.6.0:
+    resolution: {integrity: sha512-DYgm6RDEuKdopSyGOWZGtDfSm7Aofb8CCzgkliTjtu/eDuB0gcsv6qdFhhi8HdtmA+KHkt5MfZ5K2PdzjugYsA==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+
   react-router@7.6.0:
     resolution: {integrity: sha512-GGufuHIVCJDbnIAXP3P9Sxzq3UUsddG3rrI3ut1q6m0FI6vxVBF3JoPQ38+W/blslLH4a5Yutp8drkEpXoddGQ==}
     engines: {node: '>=20.0.0'}
@@ -21232,11 +21243,11 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
-  '@react-router/cloudflare@7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
+  '@react-router/cloudflare@7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
     dependencies:
       '@cloudflare/workers-types': 4.20250510.0
       react-router: 7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
+      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -30995,6 +31006,12 @@ snapshots:
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - supports-color
+
+  react-router-dom@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-router: 7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
   react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
