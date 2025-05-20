@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StackingClient } from '@stacks/stacking';
@@ -56,10 +56,7 @@ export function IncreaseLiquidStacking({ protocolSlug }: StartLiquidStackingProp
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
 
-  if (!stacksAccount || !client) {
-    return 'You should connect STX wallet';
-  }
-
+  if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
   return <IncreaseLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
 }
 

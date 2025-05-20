@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StackingClient } from '@stacks/stacking';
@@ -40,7 +40,6 @@ import { getProtocolBySlug } from './utils/utils-preset-protocols';
 interface StartLiquidStackingProps {
   protocolSlug: ProtocolSlug;
 }
-
 const initialStackingFormValues: Partial<StackingLiquidFormSchema> = {
   // amount: '',
 };
@@ -49,9 +48,7 @@ export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) 
   const { client } = useStackingClient();
   const { stacksAccount } = useLeatherConnect();
 
-  if (!stacksAccount || !client) {
-    return 'You should connect STX wallet';
-  }
+  if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
 
   return <StartLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
 }
