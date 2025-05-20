@@ -16,10 +16,10 @@ import { t } from '@lingui/macro';
 import { btcCryptoAsset } from '@leather.io/constants';
 import {
   type AverageBitcoinFeeRates,
-  type FiatCurrency,
   type MarketData,
   type Money,
   type OwnedUtxo,
+  type QuoteCurrency,
 } from '@leather.io/models';
 import { BtcAvatarIcon, Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
@@ -33,7 +33,7 @@ interface BtcFormProps {
   feeRates: AverageBitcoinFeeRates;
   utxos: OwnedUtxo[];
   marketData: MarketData;
-  fiatCurrency: FiatCurrency;
+  quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
   onOpenAssetPicker(): void;
 }
@@ -45,7 +45,7 @@ export function BtcForm({
   account,
   utxos,
   feeRates,
-  fiatCurrency,
+  quoteCurrency: quoteCurrency,
   onOpenAssetPicker,
   assetItemAnimationOffsetTop,
 }: BtcFormProps) {
@@ -54,7 +54,7 @@ export function BtcForm({
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: assetInfo.symbol,
-    fiat: fiatCurrency,
+    quote: quoteCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useBtcForm({ account, feeRates, utxos });
 
@@ -77,7 +77,7 @@ export function BtcForm({
           <AmountField
             inputValue={value}
             cryptoCurrency={assetInfo.symbol}
-            fiatCurrency={fiatCurrency}
+            quoteCurrency={quoteCurrency}
             marketData={marketData}
             invalid={invalid}
             isValidating={isValidating}

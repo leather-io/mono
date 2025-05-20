@@ -85,10 +85,10 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
     return null;
   }
 
-  if (balance.value.fiat.availableBalance.amount.isZero()) {
+  if (balance.value.quote.availableBalance.amount.isZero()) {
     return null;
   }
-  const availableBalance = balance.value.fiat.availableBalance;
+  const availableBalance = balance.value.quote.availableBalance;
   return (
     <AccountListItem
       onPress={() => onSelectAccount(account)}

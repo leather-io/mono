@@ -5,7 +5,7 @@ import {
 import { InputCurrencyMode } from '@/utils/types';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 
-import { CryptoCurrency, FiatCurrency, MarketData } from '@leather.io/models';
+import { CryptoCurrency, MarketData, QuoteCurrency } from '@leather.io/models';
 import { ArrowTopBottomIcon, Box, Pressable, Text } from '@leather.io/ui/native';
 
 interface AmountFieldSecondaryValueProps {
@@ -15,7 +15,7 @@ interface AmountFieldSecondaryValueProps {
   locale: string;
   inputCurrencyMode: InputCurrencyMode;
   cryptoCurrency: CryptoCurrency;
-  fiatCurrency: FiatCurrency;
+  quoteCurrency: QuoteCurrency;
   marketData: MarketData;
 }
 
@@ -24,7 +24,7 @@ export function AmountFieldSecondaryValue({
   onInputCurrencyModeChange,
   inputCurrencyModeChangeEnabled,
   inputCurrencyMode,
-  fiatCurrency,
+  quoteCurrency,
   cryptoCurrency,
   marketData,
   locale,
@@ -37,8 +37,8 @@ export function AmountFieldSecondaryValue({
   const displayValue = formatSecondaryValue({
     value: secondaryValue,
     currency: whenInputCurrencyMode(inputCurrencyMode)({
-      crypto: fiatCurrency,
-      fiat: cryptoCurrency,
+      crypto: quoteCurrency,
+      quote: cryptoCurrency,
     }),
     locale,
   });
@@ -46,8 +46,8 @@ export function AmountFieldSecondaryValue({
   function handleToggleInputCurrencyMode() {
     if (onInputCurrencyModeChange) {
       const nextMode = whenInputCurrencyMode<InputCurrencyMode>(inputCurrencyMode)({
-        crypto: 'fiat',
-        fiat: 'crypto',
+        crypto: 'quote',
+        quote: 'crypto',
       });
       onInputCurrencyModeChange(nextMode, secondaryValue);
     }

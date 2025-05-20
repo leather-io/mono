@@ -27,7 +27,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(200000000000000000, 'stSTX'),
       totalBalance: createMoney(3700000000000000000, 'stSTX'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(0, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -57,7 +57,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(1, 'sBTC'),
       totalBalance: createMoney(1, 'sBTC'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(5, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -87,7 +87,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'ALUX'),
       totalBalance: createMoney(180000000, 'ALUX'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(0, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -116,7 +116,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'ALEX'),
       totalBalance: createMoney(180000000, 'ALEX'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(3, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -145,7 +145,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'USDA'),
       totalBalance: createMoney(180000000, 'USDA'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(0, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -174,7 +174,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'LiSTX'),
       totalBalance: createMoney(180000000, 'LiSTX'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(4, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -203,7 +203,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'LEO'),
       totalBalance: createMoney(180000000, 'LEO'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(0, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -232,7 +232,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'aUSD'),
       totalBalance: createMoney(180000000, 'aUSD'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(0, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -262,7 +262,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'WELSH'),
       totalBalance: createMoney(180000000, 'WELSH'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(5, 'USD'),
       inboundBalance: createMoney(5, 'USD'),
       outboundBalance: createMoney(5, 'USD'),
@@ -291,7 +291,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'aBTC'),
       totalBalance: createMoney(180000000, 'aBTC'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(0, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),
@@ -320,7 +320,7 @@ const mockBalances: Sip10AggregateBalance['sip10s'] = [
       pendingBalance: createMoney(10000000, 'BANANA'),
       totalBalance: createMoney(180000000, 'BANANA'),
     },
-    fiat: {
+    quote: {
       availableBalance: createMoney(3, 'USD'),
       inboundBalance: createMoney(0, 'USD'),
       outboundBalance: createMoney(0, 'USD'),

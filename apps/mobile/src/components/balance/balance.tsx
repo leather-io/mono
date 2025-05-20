@@ -1,18 +1,27 @@
 import { PrivateText } from '@/components/private-text';
 
-import { currencyNameMap } from '@leather.io/constants';
+import { currencyDecimalsMap, currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { SkeletonLoader, TextProps } from '@leather.io/ui/native';
 import { formatMoney, i18nFormatCurrency } from '@leather.io/utils';
 
+import { useBtcConversionUnitFlag } from '../../features/feature-flags';
+
 const EmptyBalanceDisplay = '-.--';
 interface FormatBalanceProps {
   balance: Money;
-  isFiat: boolean;
+  isQuoteCurrency: boolean;
   operator?: string;
 }
-export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps) {
-  if (isFiat) {
+export function formatBalance({ balance, isQuoteCurrency, operator }: FormatBalanceProps) {
+  if (isQuoteCurrency && balance.symbol === 'BTC') {
+    const formattedAmount = balance.amount
+      .shiftedBy(-balance.decimals)
+      .toFixed(currencyDecimalsMap[balance.symbol]!);
+    return operator ? `${operator} ${formattedAmount} BTC` : `${formattedAmount} BTC`;
+  }
+
+  if (isQuoteCurrency) {
     const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
     return operator
       ? `${operator} ${i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals)}`
@@ -40,6 +49,7 @@ export function Balance({
   isLoading,
   ...props
 }: BalanceProps) {
+  const btcConversionUnitFlag = useBtcConversionUnitFlag();
   if (isLoading) {
     return <SkeletonLoader height={20} width={100} isLoading={true} />;
   }
@@ -51,12 +61,14 @@ export function Balance({
     );
   }
 
-  const isFiat = balance && balance.symbol in currencyNameMap;
-  const maskedCurrencySymbol = !isFiat ? `*${balance.symbol}` : undefined;
+  const isQuoteCurrency = btcConversionUnitFlag
+    ? balance && balance.symbol in currencyNameMap
+    : balance && balance.symbol in currencyNameMap && balance.symbol !== 'BTC';
+  const maskedCurrencySymbol = !isQuoteCurrency ? `*${balance.symbol}` : undefined;
 
   return (
     <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
-      {formatBalance({ balance, isFiat, operator })}
+      {formatBalance({ balance, isQuoteCurrency, operator })}
     </PrivateText>
   );
 }

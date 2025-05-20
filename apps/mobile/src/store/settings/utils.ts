@@ -6,7 +6,7 @@ import {
   BitcoinUnit,
   DefaultNetworkConfigurations,
   EmailAddress,
-  FiatCurrency,
+  QuoteCurrency,
 } from '@leather.io/models';
 
 export const defaultNetworkPreferences = ['mainnet', 'testnet4', 'signet'] as const;
@@ -27,7 +27,7 @@ export interface SettingsState {
   bitcoinUnitPreference: BitcoinUnit;
   createdOn: string;
   emailAddressPreference: EmailAddress;
-  fiatCurrencyPreference: FiatCurrency;
+  fiatCurrencyPreference: QuoteCurrency;
   networkPreference: DefaultNetworkConfigurations;
   privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;

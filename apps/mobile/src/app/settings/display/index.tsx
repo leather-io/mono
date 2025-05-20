@@ -35,7 +35,7 @@ export default function SettingsDisplayScreen() {
     accountDisplayPreference,
     bitcoinUnitPreference,
     changeHapticsPreference,
-    fiatCurrencyPreference,
+    quoteCurrencyPreference,
     hapticsPreference,
     themePreference,
   } = useSettings();
@@ -115,7 +115,7 @@ export default function SettingsDisplayScreen() {
             caption={i18n._({
               id: 'display.conversion_unit.cell_caption',
               message: '{currency}',
-              values: { currency: fiatCurrencyPreference },
+              values: { currency: quoteCurrencyPreference },
             })}
             icon={<DollarCircleIcon />}
             onPress={() => {

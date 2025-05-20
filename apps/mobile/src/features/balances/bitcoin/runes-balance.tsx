@@ -63,7 +63,7 @@ function RunesBalanceWrapper({ data, mode = 'full' }: RunesBalanceWrapperProps) 
               symbol={balance.asset.symbol}
               name={balance.asset.runeName}
               availableBalance={balance.crypto.availableBalance}
-              fiatBalance={balance.fiat.availableBalance}
+              fiatBalance={balance.quote.availableBalance}
             />
           );
         })}

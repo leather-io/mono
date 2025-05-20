@@ -6,7 +6,7 @@ import { SettingsService } from '@leather.io/services';
 export class MobileSettingsService implements SettingsService {
   getSettings() {
     return {
-      fiatCurrency: selectCurrencyPreference(store.getState()),
+      quoteCurrency: selectCurrencyPreference(store.getState()),
       network: selectNetworkPreference(store.getState()),
     };
   }

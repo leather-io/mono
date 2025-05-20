@@ -3,7 +3,7 @@ import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
 
 import { InputCurrencyMode } from '@/utils/types';
 
-import { CryptoCurrency, FiatCurrency } from '@leather.io/models';
+import { CryptoCurrency, QuoteCurrency } from '@leather.io/models';
 import { Box, Text, TextProps, Theme } from '@leather.io/ui/native';
 
 const maxFontSize = 44;
@@ -21,7 +21,7 @@ interface AmountFieldPrimaryValueProps {
   locale: string;
   inputCurrencyMode: InputCurrencyMode;
   cryptoCurrency: CryptoCurrency;
-  fiatCurrency: FiatCurrency;
+  quoteCurrency: QuoteCurrency;
 }
 
 export function AmountFieldPrimaryValue({ value, color }: AmountFieldPrimaryValueProps) {

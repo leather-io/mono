@@ -38,7 +38,7 @@ function useStxData({ fingerprint, accountIndex }: AccountId): FetchState<StxDat
     data: isReady
       ? {
           availableBalance: balance.data.stx.availableUnlockedBalance,
-          fiatBalance: balance.data.fiat.availableUnlockedBalance,
+          fiatBalance: balance.data.quote.availableUnlockedBalance,
           nonce: nextNonce.data?.nonce,
           marketData: marketData.data,
         }

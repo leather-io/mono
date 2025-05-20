@@ -8,21 +8,23 @@ import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import { currencyNameMap } from '@leather.io/constants';
-import { FiatCurrency } from '@leather.io/models';
+import { QuoteCurrency } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 
+import { useBtcConversionUnitFlag } from '../feature-flags';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface ConversionUnitSheetProps {
   sheetRef: RefObject<SheetRef | null>;
 }
 export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
+  const btcConversionUnitFlag = useBtcConversionUnitFlag();
   const settings = useSettings();
   const { displayToast } = useToastContext();
   const { i18n } = useLingui();
 
-  function onUpdateConversionUnit(unit: FiatCurrency) {
-    settings.changeFiatCurrencyPreference(unit);
+  function onUpdateConversionUnit(unit: QuoteCurrency) {
+    settings.changeQuoteCurrencyPreference(unit);
     displayToast({
       title: t({
         id: 'conversion_unit.toast_title',
@@ -41,24 +43,26 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
       })}
     >
       <SettingsList gap="0">
-        {Object.entries(currencyNameMap).map(([symbol, name]) => (
-          <SettingsListItem
-            key={symbol}
-            title={i18n._({
-              id: 'conversion_unit.cell_title',
-              message: '{name}',
-              values: { name },
-            })}
-            caption={i18n._({
-              id: 'conversion_unit.cell_caption',
-              message: '{symbol}',
-              values: { symbol },
-            })}
-            onPress={() => onUpdateConversionUnit(symbol)}
-            type="radio"
-            isRadioSelected={settings.fiatCurrencyPreference === symbol}
-          />
-        ))}
+        {Object.entries(currencyNameMap)
+          .filter(([symbol]) => btcConversionUnitFlag || symbol !== 'BTC')
+          .map(([symbol, name]) => (
+            <SettingsListItem
+              key={symbol}
+              title={i18n._({
+                id: 'conversion_unit.cell_title',
+                message: '{name}',
+                values: { name },
+              })}
+              caption={i18n._({
+                id: 'conversion_unit.cell_caption',
+                message: '{symbol}',
+                values: { symbol },
+              })}
+              onPress={() => onUpdateConversionUnit(symbol)}
+              type="radio"
+              isRadioSelected={settings.quoteCurrencyPreference === symbol}
+            />
+          ))}
       </SettingsList>
     </SettingsSheetLayout>
   );

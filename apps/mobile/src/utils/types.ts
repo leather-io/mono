@@ -1,1 +1,1 @@
-export type InputCurrencyMode = 'crypto' | 'fiat';
+export type InputCurrencyMode = 'crypto' | 'quote';

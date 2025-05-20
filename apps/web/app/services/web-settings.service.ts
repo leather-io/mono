@@ -1,5 +1,5 @@
 import { getDefaultStore } from 'jotai';
-import { fiatCurrencyAtom } from '~/store/fiat-currency';
+import { quoteCurrencyAtom } from '~/store/quote-currency';
 import { networkNameAtom } from '~/store/stacks-network';
 
 import { defaultNetworksKeyedById } from '@leather.io/models';
@@ -8,7 +8,7 @@ import { SettingsService } from '@leather.io/services';
 export class WebSettingsService implements SettingsService {
   getSettings() {
     const store = getDefaultStore();
-    const fiatCurrency = store.get(fiatCurrencyAtom);
+    const quoteCurrency = store.get(quoteCurrencyAtom);
     const network = store.get(networkNameAtom);
 
     if (network === 'mocknet') {
@@ -16,7 +16,7 @@ export class WebSettingsService implements SettingsService {
     }
 
     return {
-      fiatCurrency,
+      quoteCurrency,
       network: defaultNetworksKeyedById[network],
     };
   }

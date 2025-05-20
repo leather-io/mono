@@ -30,8 +30,8 @@ export function StacksFeeOption({
       icon={getStacksFeeData(feeType).icon}
       title={getStacksFeeData(feeType).title}
       time={getStacksFeeData(feeType).time}
-      formattedFeeAmount={formatBalance({ balance: fee, isFiat: false })}
-      formattedFiatFeeAmount={formatBalance({ balance: fiatFee, isFiat: true })}
+      formattedFeeAmount={formatBalance({ balance: fee, isQuoteCurrency: false })}
+      formattedFiatFeeAmount={formatBalance({ balance: fiatFee, isQuoteCurrency: true })}
     />
   );
 }

@@ -18,13 +18,13 @@ export function useRunesAccountBalance(fingerprint: string, accountIndex: number
 }
 
 function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: [
       'runes-balances-service-get-runes-aggregate-balance',
       accounts,
-      fiatCurrencyPreference,
+      quoteCurrencyPreference,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAggregateBalance(accounts, signal),
@@ -39,10 +39,14 @@ function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
 }
 
 function useRunesAccountBalanceQuery(account: AccountAddresses) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   const runeFlag = useRunesFlag();
   return useQuery({
-    queryKey: ['runes-balances-service-get-runes-account-balance', account, fiatCurrencyPreference],
+    queryKey: [
+      'runes-balances-service-get-runes-account-balance',
+      account,
+      quoteCurrencyPreference,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(account, signal),
     enabled: runeFlag,

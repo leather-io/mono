@@ -22,9 +22,13 @@ export function useStxAccountBalance(fingerprint: string, accountIndex: number) 
 }
 
 function useStxAggregateBalanceQuery(addresses: string[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-aggregate-balance', addresses, fiatCurrencyPreference],
+    queryKey: [
+      'stx-balances-service-get-stx-aggregate-balance',
+      addresses,
+      quoteCurrencyPreference,
+    ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAggregateBalance(addresses, signal),
     refetchOnReconnect: false,
@@ -37,9 +41,9 @@ function useStxAggregateBalanceQuery(addresses: string[]) {
 }
 
 export function useStxAddressBalanceQuery(address: string) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['stx-balances-service-get-stx-address-balance', address, fiatCurrencyPreference],
+    queryKey: ['stx-balances-service-get-stx-address-balance', address, quoteCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getStxBalancesService().getStxAddressBalance(address, signal),
     refetchOnReconnect: false,

@@ -22,7 +22,7 @@ import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-b
 
 export interface StxBalance {
   stx: StxCryptoAssetBalance;
-  fiat: StxCryptoAssetBalance;
+  quote: StxCryptoAssetBalance;
 }
 
 export interface StxAddressBalance extends StxBalance {
@@ -41,7 +41,7 @@ export class StxBalancesService {
   ) {}
 
   /**
-   * Gets cumulative STX balance of Stacks address list, denominated in both STX and fiat.
+   * Gets cumulative STX balance of Stacks address list, denominated in both STX and quote currency.
    */
   public async getStxAggregateBalance(
     addresses: string[],
@@ -56,21 +56,21 @@ export class StxBalancesService {
         ? aggregateStxCryptoAssetBalances(addressBalances.map(r => r.stx))
         : stxCryptoAssetZeroBalance;
 
-    const cumulativeFiatBalance =
+    const cumulativeQuoteBalance =
       addressBalances.length > 0
-        ? aggregateStxCryptoAssetBalances(addressBalances.map(r => r.fiat))
+        ? aggregateStxCryptoAssetBalances(addressBalances.map(r => r.quote))
         : createStxCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+            createMoney(0, this.settingsService.getSettings().quoteCurrency)
           );
 
     return {
       stx: cumulativeStxBalance,
-      fiat: cumulativeFiatBalance,
+      quote: cumulativeQuoteBalance,
     };
   }
 
   /**
-   * Gets STX balance of given address, denominated in both STX and Fiat.
+   * Gets STX balance of given address, denominated in both STX and quote currency.
    */
   public async getStxAddressBalance(
     address: string,
@@ -95,7 +95,7 @@ export class StxBalancesService {
         outboundBalanceStx,
         lockedBalanceStx
       ),
-      fiat: createStxCryptoAssetBalance(
+      quote: createStxCryptoAssetBalance(
         baseCurrencyAmountInQuote(totalBalanceStx, stxMarketData),
         baseCurrencyAmountInQuote(inboundBalanceStx, stxMarketData),
         baseCurrencyAmountInQuote(outboundBalanceStx, stxMarketData),

@@ -6,7 +6,7 @@ describe('RateLimiterService', () => {
   const mockSettingsService = {
     getSettings: () =>
       ({
-        fiatCurrency: 'USD',
+        quoteCurrency: 'USD',
         network: {
           chain: {
             bitcoin: {

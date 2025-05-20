@@ -24,8 +24,8 @@ interface TotalBalance {
 }
 
 export function useTotalBalance(): TotalBalance {
-  const { fiatCurrencyPreference } = useSettings();
-  const zeroMoneyFiat = createMoney(0, fiatCurrencyPreference);
+  const { quoteCurrencyPreference } = useSettings();
+  const zeroMoneyFiat = createMoney(0, quoteCurrencyPreference);
 
   const btcTotalBalance = useBtcTotalBalance();
   const stxTotalBalance = useStxTotalBalance();
@@ -45,10 +45,10 @@ export function useTotalBalance(): TotalBalance {
   const accountBalance = sumMoney(
     [
       zeroMoneyFiat,
-      btcTotalBalance.value?.fiat.availableBalance,
-      stxTotalBalance.value?.fiat.availableBalance,
-      sip10TotalBalance.value?.fiat.availableBalance,
-      runesTotalBalance.value?.fiat.availableBalance,
+      btcTotalBalance.value?.quote.availableBalance,
+      stxTotalBalance.value?.quote.availableBalance,
+      sip10TotalBalance.value?.quote.availableBalance,
+      runesTotalBalance.value?.quote.availableBalance,
     ].filter(isDefined)
   );
 

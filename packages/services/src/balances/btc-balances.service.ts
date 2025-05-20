@@ -17,7 +17,7 @@ import { sumUtxoValues } from '../utxos/utxos.utils';
 
 export interface BtcBalance {
   btc: BtcCryptoAssetBalance;
-  fiat: BtcCryptoAssetBalance;
+  quote: BtcCryptoAssetBalance;
 }
 
 export interface BtcAccountBalance extends BtcBalance {
@@ -39,7 +39,7 @@ export class BtcBalancesService {
     private readonly marketDataService: MarketDataService
   ) {}
   /**
-   * Gets cumulative BTC balance of requested Bitcoin accounts list, denominated in both BTC and fiat.
+   * Gets cumulative BTC balance of requested Bitcoin accounts list, denominated in both BTC and quote currency.
    */
   public async getBtcAggregateBalance(
     balanceRequests: BtcAccountBalanceRequest[],
@@ -54,21 +54,21 @@ export class BtcBalancesService {
         ? aggregateBtcCryptoAssetBalances(accountBalances.map(r => r.btc))
         : btcCryptoAssetZeroBalance;
 
-    const cumulativeFiatBalance =
+    const cumulativeQuoteBalance =
       accountBalances.length > 0
-        ? aggregateBtcCryptoAssetBalances(accountBalances.map(r => r.fiat))
+        ? aggregateBtcCryptoAssetBalances(accountBalances.map(r => r.quote))
         : createBtcCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().fiatCurrency)
+            createMoney(0, this.settingsService.getSettings().quoteCurrency)
           );
 
     return {
       btc: cumulativeBtcBalance,
-      fiat: cumulativeFiatBalance,
+      quote: cumulativeQuoteBalance,
     };
   }
 
   /**
-   * Gets BTC balance for given account, denominated in both BTC and fiat.
+   * Gets BTC balance for given account, denominated in both BTC and quote currency.
    *
    * Balance reflects combined balance of all taproot (m/86') and segwit (m/84') addresses under provided account index.
    *
@@ -103,7 +103,7 @@ export class BtcBalancesService {
         uneconomicalBalance,
         unspendableBalance
       ),
-      fiat: createBtcCryptoAssetBalance(
+      quote: createBtcCryptoAssetBalance(
         baseCurrencyAmountInQuote(totalBalance, btcMarketData),
         baseCurrencyAmountInQuote(inboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(outboundBalance, btcMarketData),

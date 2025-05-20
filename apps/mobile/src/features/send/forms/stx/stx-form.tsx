@@ -15,7 +15,7 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
 
 import { stxCryptoAsset } from '@leather.io/constants';
-import { FiatCurrency, MarketData, Money } from '@leather.io/models';
+import { MarketData, Money, QuoteCurrency } from '@leather.io/models';
 import { Button, StxAvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
@@ -27,7 +27,7 @@ interface StxFormProps {
   fiatBalance: Money;
   nonce: number | undefined;
   marketData: MarketData;
-  fiatCurrency: FiatCurrency;
+  quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
   onOpenAssetPicker(): void;
 }
@@ -36,7 +36,7 @@ export function StxForm({
   assetItemAnimationOffsetTop,
   availableBalance,
   fiatBalance,
-  fiatCurrency,
+  quoteCurrency,
   marketData,
   nonce,
   onOpenAssetPicker,
@@ -47,7 +47,7 @@ export function StxForm({
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
     crypto: assetInfo.symbol,
-    fiat: fiatCurrency,
+    quote: quoteCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useStxForm({
     account,
@@ -74,7 +74,7 @@ export function StxForm({
           <AmountField
             inputValue={value}
             cryptoCurrency={assetInfo.symbol}
-            fiatCurrency={fiatCurrency}
+            quoteCurrency={quoteCurrency}
             marketData={marketData}
             invalid={invalid}
             isValidating={isValidating}

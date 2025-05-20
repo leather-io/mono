@@ -41,7 +41,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
   const { state, value } = useStxTotalBalance();
 
   const availableBalance = value?.stx.availableUnlockedBalance;
-  const fiatBalance = value?.fiat.availableUnlockedBalance;
+  const fiatBalance = value?.quote.availableUnlockedBalance;
 
   return (
     <StacksTokenBalance
@@ -66,7 +66,7 @@ export function StacksBalanceByAccount({
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.stx.availableUnlockedBalance;
-  const fiatBalance = value?.fiat.availableUnlockedBalance;
+  const fiatBalance = value?.quote.availableUnlockedBalance;
 
   return (
     <StacksTokenBalance

@@ -1,7 +1,7 @@
 import { AmountSendMaxButton } from '@/components/amount-field/amount-send-max-button';
 import { InputCurrencyMode } from '@/utils/types';
 
-import { CryptoCurrency, FiatCurrency, MarketData } from '@leather.io/models';
+import { CryptoCurrency, MarketData, QuoteCurrency } from '@leather.io/models';
 import { Box, Theme } from '@leather.io/ui/native';
 
 import { AmountFieldPrimaryValue } from './amount-field-primary-value';
@@ -19,7 +19,7 @@ export interface AmountFieldProps {
   canSendMax?: boolean;
   isSendingMax?: boolean;
   onSetIsSendingMax?(): void;
-  fiatCurrency: FiatCurrency;
+  quoteCurrency: QuoteCurrency;
   cryptoCurrency: CryptoCurrency;
   marketData: MarketData;
   locale: string;
@@ -36,7 +36,7 @@ export function AmountField({
   cryptoCurrency,
   marketData,
   canSendMax,
-  fiatCurrency,
+  quoteCurrency,
   locale,
 }: AmountFieldProps) {
   const state = evaluateInternalState({ inputValue, invalid, isValidating });
@@ -63,7 +63,7 @@ export function AmountField({
         <AmountFieldPrimaryValue
           color={textColor}
           value={inputValue}
-          fiatCurrency={fiatCurrency}
+          quoteCurrency={quoteCurrency}
           inputCurrencyMode={inputCurrencyMode}
           cryptoCurrency={cryptoCurrency}
           locale={locale}
@@ -74,7 +74,7 @@ export function AmountField({
         onInputCurrencyModeChange={onInputCurrencyModeChange}
         inputCurrencyModeChangeEnabled={inputCurrencyModeChangeEnabled}
         primaryValue={inputValue}
-        fiatCurrency={fiatCurrency}
+        quoteCurrency={quoteCurrency}
         inputCurrencyMode={inputCurrencyMode}
         cryptoCurrency={cryptoCurrency}
         locale={locale}

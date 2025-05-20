@@ -10,14 +10,18 @@ import { getActivityService } from '@leather.io/services';
 
 export function useRelevantActivity(account: Account, assetInfo: FungibleCryptoAssetInfo) {
   const { fingerprint, accountIndex } = account;
-  const { fiatCurrencyPreference } = useSettings();
+  const { quoteCurrencyPreference } = useSettings();
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
 
   // TODO: Duplicate of useActivityQuery with the same key but different selection.
   //       Look into removing this by enabling passing options into custom query hooks.
   return toFetchState(
     useQuery({
-      queryKey: ['activity-service-get-account-activity', accountAddresses, fiatCurrencyPreference],
+      queryKey: [
+        'activity-service-get-account-activity',
+        accountAddresses,
+        quoteCurrencyPreference,
+      ],
       queryFn: ({ signal }: QueryFunctionContext) =>
         getActivityService().getAccountActivity(accountAddresses, signal),
       refetchOnReconnect: false,
