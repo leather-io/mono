@@ -10,7 +10,7 @@ interface ExternalLinkProps extends HTMLStyledProps<'a'> {
 export function ExternalLink({ href, withIcon, children, ...props }: ExternalLinkProps) {
   return (
     <styled.a
-      textStyle="label.03"
+      textStyle="label.02"
       borderBottom="1px solid"
       borderColor="ink.text-non-interactive"
       href={href}
