@@ -48,9 +48,17 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName.startsWith('@/')) {
     return context.resolveRequest(context, moduleName, platform);
   }
-
-  if (moduleName === 'axios') {
-    return context.resolveRequest(context, moduleName, platform);
+  // Use the browser version of the package for React Native
+  // Tracking here: https://github.com/axios/axios/issues/6899#issuecomment-2864940687
+  if (moduleName === 'axios' || moduleName.startsWith('axios/')) {
+    return context.resolveRequest(
+      {
+        ...context,
+        unstable_conditionNames: ['browser'],
+      },
+      moduleName,
+      platform
+    );
   }
 
   // Ensures resolution of the browser version of `@noble/hashes`s exports.
