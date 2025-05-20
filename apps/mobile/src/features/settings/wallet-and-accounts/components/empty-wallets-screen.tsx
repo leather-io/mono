@@ -9,12 +9,12 @@ interface EmptyWalletsScreenProps {
 
 export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenProps) {
   return (
-    <Box width="100%" alignItems="center" justifyContent="center" gap="4">
+    <Box width="100%" alignItems="center" justifyContent="center" gap="4" py="7">
       <Image
         style={{ height: 200, width: 200 }}
         source={require('@/assets/sticker_no_wallets.png')}
       />
-      <Text variant="label01" style={{ width: 177 }} textAlign="center">
+      <Text variant="label01" style={{ width: 200 }} textAlign="center">
         {t({
           id: 'wallets_list.empty_wallets_title',
           message: 'View and manage your wallets all in one place',
