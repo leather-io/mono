@@ -2,10 +2,10 @@ import { ReactElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
-import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { AlexLogo } from '~/components/icons/alex-logo';
 import { BitflowLogo } from '~/components/icons/bitflow-logo';
+import { RotatedArrow } from '~/components/icons/rotated-icon';
+import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { VelarLogo } from '~/components/icons/velar-logo';
 import { ZestLogo } from '~/components/icons/zest-logo';
 import { PostPageHeading } from '~/components/post-page-heading';

@@ -3,14 +3,14 @@ import { ReactElement, ReactNode } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { CopyAddress } from '~/features/stacking/components/address';
-import { ProtocolInfo } from '~/queries/protocols/use-protocol-info';
-import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { getLearnMoreLink } from '~/features/page/page';
-import { usePost, getPosts } from '~/utils/post-utils';
+import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { getPostSlugForProvider } from '~/data/data';
+import { getLearnMoreLink } from '~/features/page/page';
+import { CopyAddress } from '~/features/stacking/components/address';
+import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { ProtocolInfo } from '~/queries/protocols/use-protocol-info';
+import { getPosts, usePost } from '~/utils/post-utils';
 import {
   toHumanReadableDays,
   toHumanReadablePercent,
@@ -26,7 +26,7 @@ interface RewardTokenCellProps {
 function RewardTokenCell({ icon, symbol }: RewardTokenCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsTokens;
-  
+
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label="Rewards token" textStyle="label.02" />}
@@ -45,11 +45,13 @@ interface LockupPeriodCellProps {
 function LockupPeriodCell({ lockupPeriod = '1 Cycle' }: LockupPeriodCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumLockupPeriod;
-  
-  return <ValueDisplayer 
-    name={<PostLabelHoverCard post={post} label="Minimum lockup period" textStyle="label.02" />} 
-    value={lockupPeriod} 
-  />;
+
+  return (
+    <ValueDisplayer
+      name={<PostLabelHoverCard post={post} label="Minimum lockup period" textStyle="label.02" />}
+      value={lockupPeriod}
+    />
+  );
 }
 
 interface DaysUntilNextCycleCellProps {
@@ -64,7 +66,7 @@ function DaysUntilNextCycleCell({
 }: DaysUntilNextCycleCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingUpcomingCycle;
-  
+
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label="Days until next cycle" textStyle="label.02" />}
@@ -90,7 +92,7 @@ function MinimumCommitmentCell({
 }: MinimumCommitmentCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumCommitment;
-  
+
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label="Minimum commitment" textStyle="label.02" />}
@@ -110,11 +112,13 @@ interface HistoricalAprCellProps {
 function HistoricalAprCell({ apr }: HistoricalAprCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.historicalYield;
-  
-  return <ValueDisplayer 
-    name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.02" />} 
-    value={toHumanReadablePercent(apr || 0)} 
-  />;
+
+  return (
+    <ValueDisplayer
+      name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.02" />}
+      value={toHumanReadablePercent(apr || 0)}
+    />
+  );
 }
 
 interface TotalValueLockedCellProps {
@@ -127,7 +131,7 @@ function TotalValueLockedCell({
 }: TotalValueLockedCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.totalLockedValueTvl;
-  
+
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label="Total value locked" textStyle="label.02" />}
@@ -150,7 +154,7 @@ interface ProtocolCellProps {
 function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps): ReactElement {
   const post = usePost(postSlug || '');
   const hasValidPost = !!postSlug && !!post;
-  
+
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
       {icon}
@@ -206,10 +210,15 @@ export interface ProtocolOverviewProps {
   isStackingPage?: boolean;
 }
 
-export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug }: ProtocolOverviewProps): ReactElement {
+export function ProtocolOverview({
+  isStackingPage,
+  info,
+  protocol,
+  protocolSlug,
+}: ProtocolOverviewProps): ReactElement {
   const isStackingPageOrUndefined = isStackingPage ? true : undefined;
   const posts = getPosts();
-  
+
   // Handle case where we have a protocol object from the new interface
   if (protocol && protocolSlug) {
     return (
@@ -225,42 +234,68 @@ export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug 
         borderRadius="0px"
       >
         <InfoGrid.Cell gridColumn={['span 1', 'span 1', 'auto']} gridRow={['1', '1', 'span 2']}>
-          <ProtocolCell 
-            icon={protocol.icon} 
-            name={protocol.name} 
+          <ProtocolCell
+            icon={protocol.icon}
+            name={protocol.name}
             description={protocol.description || ''}
-            postSlug={getPostSlugForProvider(protocolSlug)} 
+            postSlug={getPostSlugForProvider(protocolSlug)}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={posts.historicalYield} label="Historical yield" textStyle="label.02" />}
-            value={(protocol as any).estApr || "—"}
+            name={
+              <PostLabelHoverCard
+                post={posts.historicalYield}
+                label="Historical yield"
+                textStyle="label.02"
+              />
+            }
+            value={(protocol as any).estApr || '—'}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={posts.totalLockedValueTvl} label="Total value locked" textStyle="label.02" />}
-            value={(protocol as any).tvl || "—"}
+            name={
+              <PostLabelHoverCard
+                post={posts.totalLockedValueTvl}
+                label="Total value locked"
+                textStyle="label.02"
+              />
+            }
+            value={(protocol as any).tvl || '—'}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['4', '4', '2']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={posts.stackingRewardsTokens} label="Rewards token" textStyle="label.02" />}
+            name={
+              <PostLabelHoverCard
+                post={posts.stackingRewardsTokens}
+                label="Rewards token"
+                textStyle="label.02"
+              />
+            }
             value={
               <>
                 {protocol.liquidToken}
-                <Box textStyle="label.03">{"-"}</Box>
+                <Box textStyle="label.03">{'-'}</Box>
               </>
             }
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['5', '5', '2']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={posts.stackingMinimumCommitment} label="Minimum commitment" textStyle="label.02" />}
-            value={typeof protocol.minimumDelegationAmount === 'number' ? 
-              toHumanReadableStx(protocol.minimumDelegationAmount) : 
-              String(protocol.minimumDelegationAmount || '')}
+            name={
+              <PostLabelHoverCard
+                post={posts.stackingMinimumCommitment}
+                label="Minimum commitment"
+                textStyle="label.02"
+              />
+            }
+            value={
+              typeof protocol.minimumDelegationAmount === 'number'
+                ? toHumanReadableStx(protocol.minimumDelegationAmount)
+                : String(protocol.minimumDelegationAmount || '')
+            }
           />
         </InfoGrid.Cell>
       </InfoGrid>

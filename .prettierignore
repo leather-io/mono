@@ -10,3 +10,4 @@ package.json
 CHANGELOG.md
 messages.js
 storybook-static/
+coverage/

@@ -13,12 +13,7 @@ import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import {
-  ForceRowHeight,
-  Table,
-  rowPadding,
-  theadBorderBottom,
-} from '~/components/table';
+import { ForceRowHeight, Table, rowPadding, theadBorderBottom } from '~/components/table';
 import { DASH } from '~/constants/constants';
 import { content } from '~/data/content';
 import {
@@ -34,12 +29,12 @@ import { StartEarningButton } from '~/pages/stacking/components/start-earning-bu
 import { useProtocolFee } from '~/queries/protocols/use-protocol-fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
+import { getPosts } from '~/utils/post-utils';
 import {
   toHumanReadableMicroStx,
   toHumanReadablePercent,
   toHumanReadableShortStx,
 } from '~/utils/unit-convert';
-import { getPosts } from '~/utils/post-utils';
 
 import { Button, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
 import { isNumber, isUndefined } from '@leather.io/utils';
@@ -160,7 +155,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
               </styled.div>
             );
           }
-          
+
           const value = info.getValue();
           return (
             <styled.div maxW="fit-content">
