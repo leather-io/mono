@@ -29,8 +29,8 @@
     "syncpack:lint": "syncpack lint",
     "test": "turbo run test",
     "test:coverage": "pnpm -r test:coverage",
-    "test:unit": "pnpm -r test:unit",
     "test:e2e": "playwright test",
+    "test:unit": "pnpm -r test:unit",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {

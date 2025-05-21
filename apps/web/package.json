@@ -16,8 +16,8 @@
     "prepare": "pnpm cf-typegen && panda codegen",
     "preview": "npm run build && vite preview",
     "test:coverage": "vitest run --coverage",
-    "test:unit": "vitest run",
     "test:e2e": "playwright test",
+    "test:unit": "vitest run",
     "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b"
   },
   "dependencies": {

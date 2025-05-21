@@ -276,7 +276,11 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
       disabled: false, // Not available on PoolRewardProtocolInfo
       description: info.description || '',
       duration: info.minLockupPeriodDays || 1,
-      poolAddress: { mainnet: info.poolAddress, testnet: info.poolAddress, devnet: info.poolAddress },
+      poolAddress: {
+        mainnet: info.poolAddress,
+        testnet: info.poolAddress,
+        devnet: info.poolAddress,
+      },
       fee: '', // Not available on PoolRewardProtocolInfo
       poxContract: '', // Not available on PoolRewardProtocolInfo
       rewardsToken: info.rewardsToken || '',
@@ -293,7 +297,10 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       {poolInfo.poolRewardProtocolInfo && (
         <Page.Inset>
-          <PoolOverview pool={mapPoolRewardProtocolInfoToStackingPool(poolInfo.poolRewardProtocolInfo)} poolSlug={poolSlug} />
+          <PoolOverview
+            pool={mapPoolRewardProtocolInfoToStackingPool(poolInfo.poolRewardProtocolInfo)}
+            poolSlug={poolSlug}
+          />
         </Page.Inset>
       )}
 
