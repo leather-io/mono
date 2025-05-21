@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useImperativeHandle, useRef, useState } from 'react';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import { useBrowser } from '@/core/browser-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useSettings } from '@/store/settings/settings';
 
@@ -13,6 +14,7 @@ import { useBrowserSearchState } from './use-browser-search-state';
 
 export function BrowserSheet() {
   const { browserSheetRef } = useGlobalSheets();
+  const { linkingRef } = useBrowser();
   const { browserSearchState, goToUrl, resetSearchBar, setTextUrl } = useBrowserSearchState();
   const [browserNavigationBarHeight, setBrowserNavigationBarHeight] = useState(0);
 
@@ -20,6 +22,12 @@ export function BrowserSheet() {
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
 
   const { themeDerivedFromThemePreference } = useSettings();
+  useImperativeHandle(linkingRef, () => ({
+    openURL(url) {
+      browserSheetRef.current?.present();
+      goToUrl(url);
+    },
+  }));
 
   return (
     <Sheet

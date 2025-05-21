@@ -1,11 +1,12 @@
 import { Balance } from '@/components/balance/balance';
+import { useBrowser } from '@/core/browser-provider';
 import { useSettings } from '@/store/settings/settings';
 
 import { OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
 
 import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
-import { onPressActivity } from './utils/go-to-activity-explorer';
+import { makeActivityLink } from './utils/make-activity-link';
 
 interface ActivityListItemProps {
   activity: OnChainActivity;
@@ -25,6 +26,7 @@ function getBalanceColor(activity: OnChainActivity) {
 
 export function ActivityListItem({ activity }: ActivityListItemProps) {
   const { networkPreference } = useSettings();
+  const { linkingRef } = useBrowser();
 
   const { txid, status, type, timestamp } = activity;
   const value = 'value' in activity ? activity.value : undefined;
@@ -35,7 +37,12 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
     <Pressable
       flexDirection="row"
       disabled={!txid}
-      onPress={() => onPressActivity({ txid, networkPreference, asset })}
+      onPress={() => {
+        const activityLink = makeActivityLink({ txid, networkPreference, asset });
+        if (activityLink) {
+          linkingRef.current?.openURL(activityLink);
+        }
+      }}
     >
       <Flag img={<ActivityAvatarIcon type={type} asset={asset} status={status} />} px="5" py="3">
         <ItemLayout

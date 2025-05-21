@@ -16,7 +16,7 @@ export function useGlobalSheets() {
   return context;
 }
 
-export default function GlobalSheetProvider({ children }: HasChildren) {
+export function GlobalSheetProvider({ children }: HasChildren) {
   const sendSheetRef = useRef<SheetRef>(null);
   const receiveSheetRef = useRef<SheetRef>(null);
   const browserSheetRef = useRef<SheetRef>(null);

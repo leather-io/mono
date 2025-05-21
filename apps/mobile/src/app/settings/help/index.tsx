@@ -1,8 +1,7 @@
-import { Linking } from 'react-native';
-
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
+import { useBrowser } from '@/core/browser-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
 
@@ -10,6 +9,7 @@ import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@lea
 import { GraduateCapIcon, MagicBookIcon, SupportIcon } from '@leather.io/ui/native';
 
 export default function SettingsHelpScreen() {
+  const { linkingRef } = useBrowser();
   const pageTitle = t({
     id: 'help.header_title',
     message: 'Help',
@@ -31,7 +31,7 @@ export default function SettingsHelpScreen() {
             message: 'Contact our support team',
           })}
           icon={<SupportIcon />}
-          onPress={() => void Linking.openURL(LEATHER_SUPPORT_URL)}
+          onPress={() => linkingRef.current?.openURL(LEATHER_SUPPORT_URL)}
         />
         <SettingsListItem
           title={t({
@@ -43,7 +43,7 @@ export default function SettingsHelpScreen() {
             message: 'Dive into feature details',
           })}
           icon={<MagicBookIcon />}
-          onPress={() => void Linking.openURL(LEATHER_GUIDES_URL)}
+          onPress={() => linkingRef.current?.openURL(LEATHER_GUIDES_URL)}
         />
         <SettingsListItem
           title={t({
@@ -55,7 +55,7 @@ export default function SettingsHelpScreen() {
             message: 'Expand your knowledge',
           })}
           icon={<GraduateCapIcon />}
-          onPress={() => void Linking.openURL(LEATHER_LEARN_URL)}
+          onPress={() => linkingRef.current?.openURL(LEATHER_LEARN_URL)}
         />
       </SettingsList>
     </AnimatedHeaderScreenLayout>

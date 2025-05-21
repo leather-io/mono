@@ -8,7 +8,8 @@ import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-scree
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
 import { AppNavigationStack } from '@/core/app-navigation-stack';
-import GlobalSheetProvider from '@/core/global-sheet-provider';
+import { BrowserProvider } from '@/core/browser-provider';
+import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
 import { ThemeProvider } from '@/core/theme-provider';
@@ -78,9 +79,11 @@ export default function RootLayout() {
                           <SplashScreenGuard>
                             <HapticsProvider>
                               <GlobalSheetProvider>
-                                <SheetProvider>
-                                  <App />
-                                </SheetProvider>
+                                <BrowserProvider>
+                                  <SheetProvider>
+                                    <App />
+                                  </SheetProvider>
+                                </BrowserProvider>
                               </GlobalSheetProvider>
                             </HapticsProvider>
                           </SplashScreenGuard>

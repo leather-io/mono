@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
-import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useBrowser } from '@/core/browser-provider';
 import { LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER } from '@/shared/constants';
 import { getAccountDisplayPreferencesKeyedByType } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
@@ -37,6 +37,7 @@ interface AccountIdentifierSheetProps {
 export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
+  const { linkingRef } = useBrowser();
 
   function onUpdateAccountDisplayPreference(identifier: AccountDisplayPreference) {
     settings.changeAccountDisplayPreference(identifier);
@@ -58,7 +59,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
         message: 'Account identifier',
       })}
       onPressSupport={() => {
-        void Linking.openURL(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
+        linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
       }}
     >
       <SettingsList gap="0">

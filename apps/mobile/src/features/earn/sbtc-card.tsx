@@ -1,10 +1,14 @@
-import { Image, Linking } from 'react-native';
+import { Image } from 'react-native';
 
+import { useBrowser } from '@/core/browser-provider';
 import { t } from '@lingui/macro';
+
+import { LEATHER_EARN_URL } from '@leather.io/constants';
 
 import { EarnCard } from './earn-card';
 
 export function SbtcCard() {
+  const { linkingRef } = useBrowser();
   return (
     <EarnCard
       title={t({
@@ -41,14 +45,7 @@ export function SbtcCard() {
       }
       // FIXME LEA-2525: ask design this is not perfect and needs to be fixed
       // this button cannot be clicked due to positioning of the stacking card images
-      onPress={() =>
-        void Linking.openURL(
-          t({
-            id: 'earn.sbtc.on-press-url',
-            message: 'https://earn.leather.io/',
-          })
-        )
-      }
+      onPress={() => linkingRef.current?.openURL(LEATHER_EARN_URL)}
     />
   );
 }

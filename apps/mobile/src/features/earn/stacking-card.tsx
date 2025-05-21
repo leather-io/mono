@@ -1,10 +1,14 @@
-import { Image, Linking } from 'react-native';
+import { Image } from 'react-native';
 
+import { useBrowser } from '@/core/browser-provider';
 import { t } from '@lingui/macro';
+
+import { LEATHER_EARN_URL } from '@leather.io/constants';
 
 import { EarnCard } from './earn-card';
 
 export function StackingCard() {
+  const { linkingRef } = useBrowser();
   return (
     <EarnCard
       title={t({
@@ -56,15 +60,7 @@ export function StackingCard() {
           />
         </>
       }
-      // Links added via crowdin so we can update them to go to page sections when ready
-      onPress={() =>
-        void Linking.openURL(
-          t({
-            id: 'earn.stacking.on-press-url',
-            message: 'https://earn.leather.io/',
-          })
-        )
-      }
+      onPress={() => linkingRef.current?.openURL(LEATHER_EARN_URL)}
     />
   );
 }
