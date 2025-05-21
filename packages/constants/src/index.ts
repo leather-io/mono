@@ -140,3 +140,11 @@ export const stxCryptoAsset: StxCryptoAssetInfo = {
   decimals: 6,
   hasMemo: false,
 };
+
+export const ALEX_LINK = 'https://alexgo.io/';
+export const ZEST_LINK = 'https://www.zestprotocol.com/';
+export const ARKADIKO_LINK = 'https://app.arkadiko.finance/';
+export const GRANITE_LINK = 'https://www.granite.world/';
+export const HERMETICA_LINK = 'https://www.hermetica.fi/';
+export const BITFLOW_LINK = 'https://app.bitflow.finance/';
+export const VELAR_LINK = 'https://www.velar.co/';
