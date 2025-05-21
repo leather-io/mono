@@ -4,7 +4,6 @@ import { test, expect } from '@playwright/test';
 test.describe('XSS Protection', () => {
   test('script tags in CMS content are not rendered as HTML', async ({ page }) => {
     // Simulate a post with a script tag in the summary
-    const maliciousSummary = 'Safe text <script>window.__xss_executed = true</script> more text';
     // Ideally, you would mock the network or localStorage to inject this post
     // For demonstration, we check that the FAQ page never renders <script> from post content
     await page.goto('/stacking/faq');

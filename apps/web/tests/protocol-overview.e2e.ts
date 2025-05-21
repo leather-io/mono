@@ -18,7 +18,7 @@ test.describe('ProtocolOverview', () => {
       await page.goto(`/protocol/${slug}`); // Adjust route as needed for your app
       if (expectedPost) {
         await expect(page.getByText(new RegExp(`Sentence for ${expectedPost}`))).toBeVisible();
-        const learnMore = await page.getByText('Learn more');
+        const learnMore = page.getByText('Learn more');
         expect(await learnMore.getAttribute('href')).toContain(expectedPost);
       } else {
         const sentence = await page.$('text=/Sentence for/');
