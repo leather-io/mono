@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { HasChildren } from '../../../utils/has-children.shared';
 import {
   ApproverActionAnimation,
   ApproverActionsAnimationContainer,
@@ -12,8 +11,9 @@ import { useApproverContext, useRegisterApproverChild } from '../approver-contex
 
 const stretchChildrenStyles = css({ '& > *': { flex: 1 } });
 
-interface ApproverActionsProps extends HasChildren {
+interface ApproverActionsProps {
   actions: React.ReactNode[];
+  children?: React.ReactNode;
 }
 export function ApproverActions({ children, actions }: ApproverActionsProps) {
   useRegisterApproverChild('actions');

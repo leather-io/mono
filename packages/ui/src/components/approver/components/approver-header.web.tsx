@@ -6,13 +6,13 @@ import { isFunction, isString } from '@leather.io/utils';
 
 import { Favicon } from '../../../components/favicon/favicon.web';
 import { Flag } from '../../../components/flag/flag.web';
-import { HasChildren } from '../../../utils/has-children.shared';
 import { ApproverHeaderAnimation } from '../animations/approver-animation.web';
 import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
-interface ApproverHeaderProps extends HasChildren {
+interface ApproverHeaderProps {
   title: ReactNode;
   info?: ReactNode;
+  children?: ReactNode;
   onPressRequestedByLink?(e: React.MouseEvent<HTMLAnchorElement>): void;
 }
 export function ApproverHeader({ title, info, onPressRequestedByLink }: ApproverHeaderProps) {

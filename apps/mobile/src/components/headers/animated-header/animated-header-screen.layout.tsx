@@ -2,7 +2,7 @@ import Animated from 'react-native-reanimated';
 
 import { AnimatedTitleHeader } from '@/components/headers/animated-header/animated-title-header';
 
-import { Box, HasChildren, TextProps } from '@leather.io/ui/native';
+import { Box, TextProps } from '@leather.io/ui/native';
 
 import { ReversibleHeader } from '../components/animated-reversible-header';
 import { ContentTitle } from '../components/content-title';
@@ -14,7 +14,8 @@ interface ScrollViewStylesProps {
   paddingHorizontal?: number;
 }
 
-interface AnimatedHeaderScreenLayoutProps extends HasChildren {
+interface AnimatedHeaderScreenLayoutProps {
+  children?: React.ReactNode;
   rightHeaderElement?: React.ReactNode;
   rightTitleElement?: React.ReactNode;
   title: string | React.ReactNode;
