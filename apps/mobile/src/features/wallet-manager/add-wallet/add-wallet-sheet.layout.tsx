@@ -11,7 +11,6 @@ import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
-import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -20,7 +19,7 @@ import {
   ArrowRotateClockwiseIcon,
   Box,
   CLOSED_ANIMATED_SHARED_VALUE,
-  EllipsisHIcon,
+  EllipsisVIcon,
   EmailIcon,
   Eye2Icon,
   PaletteIcon,
@@ -59,7 +58,6 @@ export function AddWalletSheetLayout({
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
   const router = useRouter();
   const releaseWaitlistFeatures = useWaitlistFlag();
-  const { whenTheme } = useSettings();
 
   function openOptions() {
     setMoreOptionsVisible(!moreOptionsVisible);
@@ -81,14 +79,7 @@ export function AddWalletSheetLayout({
       }}
     >
       <AnimatedBox style={animatedStyle}>
-        <Box
-          width="100%"
-          style={{ height: 200, overflow: 'hidden' }}
-          bg={whenTheme({
-            dark: 'ink.background-secondary' as const,
-            light: 'ink.text-primary' as const,
-          })}
-        >
+        <Box width="100%" style={{ height: 184, overflow: 'hidden' }}>
           <Image
             style={{ height: '100%' }}
             contentFit="cover"
@@ -96,7 +87,7 @@ export function AddWalletSheetLayout({
           />
         </Box>
         <Box>
-          <Box p="5">
+          <Box px="5" py="4">
             <Text variant="heading03">
               {t({
                 id: 'add_wallet.header_title',
@@ -138,7 +129,7 @@ export function AddWalletSheetLayout({
                   id: 'add_wallet.options.cell_title',
                   message: 'More options',
                 })}
-                icon={moreOptionsVisible ? undefined : <EllipsisHIcon />}
+                icon={moreOptionsVisible ? undefined : <EllipsisVIcon />}
               />
             )}
             {moreOptionsVisible && releaseWaitlistFeatures && (
