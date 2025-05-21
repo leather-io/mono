@@ -74,8 +74,7 @@
   "pnpm": {
     "overrides": {
       "cross-spawn": "7.0.5",
-      "@microsoft/api-extractor": "7.52.8",
-      "@shopify/flash-list>tslib": "2.4.0"
+      "@microsoft/api-extractor": "7.52.8"
     },
     "packageExtensions": {
       "@expo/cli@*": {
