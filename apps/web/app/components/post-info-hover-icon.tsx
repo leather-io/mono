@@ -20,10 +20,10 @@ interface PostInfoHoverIconProps {
 /**
  * Displays content with a hover icon to show additional information about a post
  */
-export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostInfoHoverIconProps): ReactElement {
+export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostInfoHoverIconProps) {
   const navigate = useNavigate();
   
-  if (!post) return <Fragment>{children}</Fragment>;
+  if (!post) return children;
   
   const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
   

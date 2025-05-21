@@ -1,4 +1,4 @@
-import { ReactNode, ReactElement, Fragment } from 'react';
+import { ReactNode, ReactElement } from 'react';
 import type { JSX } from 'react';
 import { Flex, styled } from 'leather-styles/jsx';
 import { PostInfoHoverIcon } from './post-info-hover-icon';
@@ -22,8 +22,8 @@ export function PostLabelHoverCard({
   label, 
   textStyle = 'label.01', 
   tagName = 'span' 
-}: PostLabelHoverCardProps): ReactElement {
-  if (!post) return <Fragment />;
+}: PostLabelHoverCardProps): ReactElement | null {
+  if (!post) return null;
   
   if (!isValidTextElementTag(tagName)) {
     console.warn(`Invalid tag name: ${tagName}. Falling back to span.`);
