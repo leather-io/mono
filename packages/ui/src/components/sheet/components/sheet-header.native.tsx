@@ -1,6 +1,6 @@
 import { Box, QuestionCircleIcon, Text, TouchableOpacity } from '../../../../native';
 
-const SHEET_HEADER_HEIGHT = 72;
+const SHEET_HEADER_HEIGHT = 64;
 
 interface SheetHeaderProps {
   title: string;
