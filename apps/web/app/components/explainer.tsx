@@ -72,7 +72,7 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
         </styled.h3>
       </VStack>
       <styled.p color="black" textStyle="caption.01" fontSize="13px">
-        {String(description || '')}
+        {description}
       </styled.p>
     </Flex>
   );
