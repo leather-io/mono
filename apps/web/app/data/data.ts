@@ -62,35 +62,20 @@ export interface StackingPool {
   providerId: ProviderId;
   name: string;
   url: string;
-  minAmount: string | null;
-  estApr: string;
   payout: string;
-  disabled: boolean;
   description: string;
-  duration: number;
   poolAddress?: {
     mainnet: string;
     testnet: string;
     devnet: string;
   };
-  fee: string;
   poxContract: string;
   minimumDelegationAmount: number;
-  allowCustomRewardAddress: boolean;
-  tvlUsd: string;
-  minCommitmentUsd: string;
-  icon?: React.ReactNode;
 }
 export const stackingPoolData = {
   fastPool: {
     ...providers.fastPool,
-    minAmount: '40 STX',
-    estApr: '5%',
-    fee: '5%',
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
     payout: 'STX',
-    disabled: false,
     description:
       'Enjoy automatic pool operations.' +
       ' ' +
@@ -104,24 +89,16 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperFastPool',
     minimumDelegationAmount: 40_000_000,
-    allowCustomRewardAddress: false,
-    duration: 1,
   },
   fastPoolV2: {
     ...providers.fastPoolV2,
     name: 'Fast Pool v2',
-    minAmount: '40 STX',
-    estApr: '5%',
-    fee: '5%',
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
     description:
       'Enjoy a better swim experience in the upgraded pool.' +
       ' ' +
       'You can increase the locking amount for the next cycle.' +
       ' ' +
       'Locked STX will unlock 1 day after the end of the cycle.',
-    duration: 1,
     payout: 'STX',
     poolAddress: {
       mainnet: 'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.pox4-multi-pool-v1',
@@ -130,19 +107,11 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperFastPoolV2',
     minimumDelegationAmount: 40_000_000,
-    allowCustomRewardAddress: false,
-    disabled: false,
   },
   planbetter: {
     ...providers.planbetter,
-    fee: '5%',
-    minAmount: '200 STX',
-    estApr: '10%',
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
     payout: 'BTC',
     description: 'Earn non-custodial Bitcoin yield. No wrapped tokens. Native BTC.',
-    duration: 1,
     poolAddress: {
       mainnet: 'SP3TDKYYRTYFE32N19484838WEJ25GX40Z24GECPZ',
       testnet: 'SP3TDKYYRTYFE32N19484838WEJ25GX40Z24GECPZ',
@@ -150,20 +119,12 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 200_000_000,
-    allowCustomRewardAddress: false, // only for ledger users
-    disabled: false,
   },
   restake: {
     ...providers.restake,
-    fee: '5.00%',
-    minAmount: '100 STX',
-    estApr: '11%',
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
     payout: 'STX',
     description:
       'Earn STX rewards by pooling your tokens with Restake, a non-custodial infrastructure operator trusted by institutions.',
-    duration: 1,
     poolAddress: {
       mainnet: 'SPZV5RJN5XTJHA76E0VHEFB0WPEH7E11NZZ4CGBK.restake-self-service-pool-v1',
       testnet: 'ST2PABAF9FTAJYNFZH93XENAJ8FVY99RRM4DF2YCW.pox4-self-service',
@@ -171,20 +132,12 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperRestake',
     minimumDelegationAmount: 100_000_000,
-    allowCustomRewardAddress: false,
-    disabled: false,
   },
   xverse: {
     ...providers.xverse,
-    fee: '5%',
-    minAmount: '100 STX',
-    estApr: '10%',
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
     payout: 'BTC',
     description:
       'Xverse pool is a non-custodial stacking pool service from the makers of Xverse wallet.',
-    duration: 1,
     url: 'https://pool.xverse.app/',
     poolAddress: {
       mainnet: 'SPXVRSEH2BKSXAEJ00F1BY562P45D5ERPSKR4Q33',
@@ -193,20 +146,12 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 100_000_000,
-    allowCustomRewardAddress: true,
-    disabled: false,
   },
   stackingDao: {
     ...providers.stackingDao,
-    fee: '5%',
-    minAmount: '100 STX',
-    estApr: '16%',
-    tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
     payout: 'BTC',
     description:
       'Enter the STX address of the pool with which you’d like to Stack without your STX leaving your wallet.',
-    duration: -1,
     poolAddress: {
       mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
       testnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
@@ -214,8 +159,6 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperStackingDao',
     minimumDelegationAmount: MIN_DELEGATED_STACKING_AMOUNT_USTX,
-    allowCustomRewardAddress: false,
-    disabled: false,
   },
 } as const satisfies Record<string, StackingPool>;
 

@@ -14,7 +14,7 @@ import { useStxMarketDataQuery } from '~/queries/market-data/stx-market-data.que
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
-import { toHumanReadablePercent, toHumanReadableStx } from '~/utils/unit-convert';
+import { parseNumber, toHumanReadablePercent, toHumanReadableStx } from '~/utils/unit-convert';
 
 import {
   baseCurrencyAmountInQuote,
@@ -45,14 +45,12 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
     !getStatusQuery.data ||
     getPoolAddressQuery.isError ||
     !getPoolAddressQuery.data ||
-    stackingTrackerPool.isError ||
-    !stackingTrackerPool.data ||
     !stxMarketData;
 
   const pool = useMemo(() => poolSlug && getPoolFromSlug(poolSlug), [poolSlug]);
 
   const poolRewardProtocolInfo = useMemo(() => {
-    if (isLoading || isError || !pool) {
+    if (isLoading || isError || !pool || !poolSlug) {
       return null;
     }
 
@@ -60,34 +58,41 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       ? getStatusQuery.data.details.pox_address
       : null;
 
-    const tvl = stackingTrackerPool.data.lastCycle?.pool?.stacked_amount
-      ? toHumanReadableStx(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount, 0)
-      : '100,000,000 STX';
+    const tvl =
+      stackingTrackerPool.data?.lastCycle?.pool?.stacked_amount !== undefined
+        ? toHumanReadableStx(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount, 0)
+        : null;
 
-    const tvlBaseCurrencyAmount = baseCurrencyAmountInQuote(
-      createMoneyFromDecimal(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0, 'STX'),
-      stxMarketData
-    );
-    const tvlUsd = i18nFormatCurrency(tvlBaseCurrencyAmount);
+    const tvlBaseCurrencyAmount =
+      stackingTrackerPool.data &&
+      baseCurrencyAmountInQuote(
+        createMoneyFromDecimal(
+          stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0,
+          'STX'
+        ),
+        stxMarketData
+      );
+    const tvlUsd = tvlBaseCurrencyAmount && i18nFormatCurrency(tvlBaseCurrencyAmount);
 
-    const title = stackingTrackerPool.data.entity.name || pool.name;
-    const url = stackingTrackerPool.data.entity.website || pool.url;
-    const apr = stackingTrackerPool.data.entity.apr
+    const title = stackingTrackerPool.data?.entity.name || pool.name;
+    const url = stackingTrackerPool.data?.entity.website || pool.url;
+    const apr = stackingTrackerPool.data?.entity.apr
       ? toHumanReadablePercent(stackingTrackerPool.data.entity.apr)
-      : pool.estApr;
+      : null;
 
     const rewardAddress =
-      stackingTrackerPool.data.lastCycle?.pool.pox_address ||
+      stackingTrackerPool.data?.lastCycle?.pool.pox_address ||
       (poxAddress && formatPoxAddressToNetwork(stacksNetwork.network, poxAddress));
 
-    const minCommitment = +pool.minAmount.split(' ')[0];
+    const minCommitmentMicroSTX = pool.minimumDelegationAmount;
+    const minCommitment = parseNumber(minCommitmentMicroSTX).dividedBy(1e6).toNumber();
     const minCommitmentBaseCurrencyAmount = baseCurrencyAmountInQuote(
       createMoneyFromDecimal(minCommitment ?? 0, 'STX'),
       stxMarketData
     );
     const minCommitmentUsd = i18nFormatCurrency(minCommitmentBaseCurrencyAmount);
 
-    return {
+    const result: PoolRewardProtocolInfo = {
       id: poolSlug,
 
       logo: <ProviderIcon providerId={pool.providerId} />,
@@ -109,7 +114,9 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       nextCycleNumber: poxInfoQuery.data.next_cycle.id,
       nextCycleBlocks: poxInfoQuery.data.next_cycle.blocks_until_reward_phase,
       rewardTokenIcon: <ChainLogoIcon symbol={pool.payout} />,
-    } as PoolRewardProtocolInfo;
+    };
+
+    return result;
   }, [
     pool,
     isError,
@@ -123,39 +130,12 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
     stxMarketData,
   ]);
 
-  const hardcodePoolRewardProtocolInfo = useMemo(() => {
-    if (!pool) {
-      return null;
-    }
-
-    return {
-      apr: pool.estApr,
-      description: pool.description,
-      id: pool.providerId,
-      logo: <ProviderIcon providerId={pool.providerId} />,
-      minCommitment: +pool.minAmount.split(' ')[0],
-      minCommitmentUsd: pool.minCommitmentUsd,
-      minLockupPeriodDays: 1,
-      nextCycleBlocks: 220,
-      nextCycleDays: 15,
-      nextCycleNumber: 110,
-      poolAddress: pool.poolAddress['mainnet'],
-      rewardAddress: pool.poolAddress['mainnet'],
-      rewardsToken: pool.payout,
-      status: 'Active',
-      title: pool.name,
-      tvl: '50,000,000 STX',
-      tvlUsd: pool.tvlUsd,
-      rewardTokenIcon: <ChainLogoIcon symbol={pool.payout} />,
-    } as PoolRewardProtocolInfo;
-  }, [pool]);
-
   if (isLoading) {
-    return { isLoading: true, hardcodePoolRewardProtocolInfo } as const;
+    return { isLoading: true } as const;
   }
 
-  if (isError || !hardcodePoolRewardProtocolInfo) {
-    return { isLoading: false, isError: true, hardcodePoolRewardProtocolInfo } as const;
+  if (isError) {
+    return { isLoading: false, isError: true } as const;
   }
 
   return {
@@ -163,7 +143,6 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
     getStatusQuery,
     getPoolAddressQuery,
     stacksNetwork,
-    hardcodePoolRewardProtocolInfo,
     stackingTrackerPool,
     poolRewardProtocolInfo,
     isLoading: false,

@@ -28,13 +28,7 @@ interface PooledStackingActiveInfoLayoutProps {
   poolSlug: PoolSlug;
 }
 function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLayoutProps) {
-  const {
-    isLoading,
-    isError,
-    stackingTrackerPool,
-    poolRewardProtocolInfo,
-    hardcodePoolRewardProtocolInfo,
-  } = usePoolInfo(poolSlug);
+  const { isLoading, isError, stackingTrackerPool, poolRewardProtocolInfo } = usePoolInfo(poolSlug);
 
   if (isLoading) {
     return (
@@ -49,7 +43,7 @@ function PooledStackingActiveInfoLayout({ poolSlug }: PooledStackingActiveInfoLa
     return <>Failed to load Pox data</>;
   }
 
-  const info = poolRewardProtocolInfo || hardcodePoolRewardProtocolInfo;
+  const info = poolRewardProtocolInfo;
 
   return (
     <VStack
