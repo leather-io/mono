@@ -6,7 +6,7 @@ test.describe('PostSectionHeading', () => {
     await page.goto('/section-slug'); // Adjust route as needed for your app
     await expect(page.getByText('This is a test sentence')).toBeVisible();
     await expect(page.getByText('Learn more')).toBeVisible();
-    const learnMore = await page.getByText('Learn more');
+    const learnMore = page.getByText('Learn more');
     expect(await learnMore.getAttribute('href')).toContain('section-slug');
   });
 
