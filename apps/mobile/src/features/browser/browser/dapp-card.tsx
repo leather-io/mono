@@ -17,14 +17,10 @@ interface CaptionWrapperProps {
 // TODO: this is used until we figure out the BlurView for android
 function CaptionWrapper({ children }: CaptionWrapperProps) {
   const { themeDerivedFromThemePreference } = useSettings();
-  switch (Platform.OS) {
-    case 'android':
-      return <Box backgroundColor="ink.background-primary">{children}</Box>;
-    case 'ios':
-      return <BlurView themeVariant={themeDerivedFromThemePreference}>{children}</BlurView>;
-    default:
-      return null;
-  }
+  return Platform.select({
+    ios: <BlurView themeVariant={themeDerivedFromThemePreference}>{children}</BlurView>,
+    android: <Box backgroundColor="ink.background-overlay">{children}</Box>,
+  });
 }
 
 interface DappCardProps {
