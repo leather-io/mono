@@ -2,6 +2,7 @@ import { RefObject, useEffect, useRef, useState } from 'react';
 import ViewShot from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import {
   BrowserLoading,
   BrowserLoadingMethods,
@@ -18,6 +19,8 @@ import { Box, Theme } from '@leather.io/ui/native';
 import { ApproverSheet } from '../approver-sheet/approver-sheet';
 import { BrowserMessage } from '../approver-sheet/utils';
 import { captureScreenshot, createGetInfoResponse, createSupportedMethodsResponse } from './utils';
+
+const CONTENT_OFFSET_FOR_BROWSER_CLOSE = 150;
 
 interface BrowserActiveStateProps {
   webViewRef: RefObject<WebView | null>;
@@ -43,6 +46,8 @@ export function BrowserActiveState({
   const [message, setMessage] = useState<BrowserMessage>(null);
 
   const browserLoadingRef = useRef<BrowserLoadingMethods>(null);
+  const { browserSheetRef } = useGlobalSheets();
+
   useEffect(() => {
     if (navState?.loading) {
       browserLoadingRef.current?.activate();
@@ -109,6 +114,11 @@ export function BrowserActiveState({
       <BrowserLoading ref={browserLoadingRef} />
       <ViewShot ref={viewShotRef} style={{ flex: 1, paddingBottom: browserNavigationBarHeight }}>
         <WebView
+          onScroll={({ nativeEvent }) => {
+            if (nativeEvent.contentOffset.y < -CONTENT_OFFSET_FOR_BROWSER_CLOSE) {
+              browserSheetRef.current?.close();
+            }
+          }}
           nestedScrollEnabled
           onMessage={onMessageHandler}
           allowsInlineMediaPlayback={true}
