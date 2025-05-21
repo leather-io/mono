@@ -4,34 +4,36 @@ import { content } from '~/data/content';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
+import { getPosts } from '~/utils/post-utils';
 
 // List of sBTC-related post keys in order of appearance on the page
 const sbtcFaqPostKeysRaw = [
   // Main heading
-  'sbtc-rewards',
+  'sbtcRewards',
   // TVL and yield in value cards and tables
-  'historical-yield',
+  'historicalYield',
   // Step 1: Get sBTC
-  'sbtc-bridge',
-  'stacks-swaps',
+  'sbtcBridge',
+  'stacksSwaps',
   // Step 2: Choose reward protocol (protocol grid)
-  'sbtc-rewards-basic',
-  'alex-sbtc-pools',
-  'bitflow-sbtc-pools',
-  'velar-sbtc-pools',
-  'zest-sbtc-pools',
+  'sbtcRewardsBasic',
+  'alexSbtcPools',
+  'bitflowSbtcPools',
+  'velarSbtcPools',
+  'zestSbtcPools',
   // Table posts
-  'total-locked-value-tvl',
-  'sbtc-rewards-minimum-commitment',
-  'sbtc-rewards-tokens',
+  'totalLockedValueTvl',
+  'sbtcRewardsMinimumCommitment',
+  'sbtcRewardsTokens',
 ];
 const sbtcFaqPostKeys = Array.from(new Set(sbtcFaqPostKeysRaw));
 
 export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
-  // Filter posts to only those with a question and summary
+  // Get posts and filter out undefined/invalid posts
+  const posts = getPosts();
   const faqPosts = sbtcFaqPostKeys
-    .map(key => content.posts[key] as Post)
-    .filter(post => post && post.question && post.summary);
+    .map(key => posts[key])
+    .filter((post): post is Post => Boolean(post && post.question && post.summary));
 
   return (
     <styled.div {...props}>

@@ -27,6 +27,7 @@ import { useUserPositionsFakeLoading } from './hooks/use-user-positions-fake-loa
 import { useRevokeDelegateStxMutation } from './pooled-stacking-info/use-revoke-delegate-stx';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { content } from '~/data/content';
+import { getPosts } from '~/utils/post-utils';
 
 interface UserPositionsProps {
   stacksAddress: string;
@@ -38,6 +39,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
   const { mutateAsync: revokeDelegateStx } = useRevokeDelegateStxMutation();
   const poolInfo = useActivePoolInfo();
   const { fakeLoading } = useUserPositionsFakeLoading(poolInfo.isLoading);
+  const posts = getPosts();
 
   function openRevokeStackingContractCall() {
     return revokeDelegateStx().then(() => navigate('/stacking'));
@@ -151,7 +153,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-            name={<PostLabelHoverCard postKey="stacking-amount" label={(content.posts as Record<string, any>)["stacking-amount"]?.Title || "Amount"} textStyle="label.03" />}
+            name={<PostLabelHoverCard post={posts.stackingAmount} label={posts.stackingAmount?.title || "Amount"} textStyle="label.03" />}
             isLoading={fakeLoading}
             value={
               activePoolRewardProtocolInfo.delegatedAmountMicroStx
@@ -162,7 +164,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-            name={<PostLabelHoverCard postKey="historical-yield" label={(content.posts as Record<string, any>)["historical-yield"]?.Title || "APR"} textStyle="label.03" />}
+            name={<PostLabelHoverCard post={posts.historicalYield} label={posts.historicalYield?.title || "APR"} textStyle="label.03" />}
             isLoading={fakeLoading}
            
             value={activePoolRewardProtocolInfo.apr}
@@ -172,7 +174,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
            
-            name={<PostLabelHoverCard postKey="pooled-stacking-upcoming-rewards" label={(content.posts as Record<string, any>)["pooled-stacking-upcoming-rewards"]?.Title || "Next rewards"} textStyle="label.03" />}
+            name={<PostLabelHoverCard post={posts.pooledStackingUpcomingRewards} label={posts.pooledStackingUpcomingRewards?.title || "Next rewards"} textStyle="label.03" />}
            
             isLoading={fakeLoading}
            
@@ -182,7 +184,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithCustomLoader
-            name={<PostLabelHoverCard postKey="stacking-rewards-tokens" label={(content.posts as Record<string, any>)["stacking-rewards-tokens"]?.Title || "Rewards token"} textStyle="label.03" />}
+            name={<PostLabelHoverCard post={posts.stackingRewardsTokens} label={posts.stackingRewardsTokens?.title || "Rewards token"} textStyle="label.03" />}
             isLoading={fakeLoading}
             value={
               <Flex gap="space.02" alignItems="center">

@@ -1,25 +1,26 @@
-import { ReactNode } from 'react';
-
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { content } from '~/data/content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
+import { mapConditionsWithIcons } from '~/shared/stacking-icon-map';
+import { getPosts } from '~/utils/post-utils';
 
-import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
-
-const iconMap: Record<string, ReactNode> = {
-  BoxedCatLockedIcon: <BoxedCatLockedIcon />,
-  MagnifyingGlassIcon: <MagnifyingGlassIcon />,
-  StacksIcon: <StacksIcon />,
-};
-const liquidStackingConditions = content.liquidStackingConditions.map(cond => ({
-  ...cond,
-  icon: iconMap[cond.iconKey] || null,
-}));
-
+/**
+ * Component for choosing liquid stacking conditions
+ * Uses shared icon mapping to display condition icons
+ */
 export function ChooseLiquidStackingConditions() {
+  const liquidStackingConditions = mapConditionsWithIcons(content.liquidStackingConditions);
+  const posts = getPosts();
+  const post = posts.liquidStackingConditions;
+  
   return (
     <>
-      <PostLabelHoverCard postKey="liquid-stacking-conditions" textStyle="label.01" tagName="h1" />
+      <PostLabelHoverCard 
+        post={post}
+        label="Liquid Stacking Conditions"
+        textStyle="label.01" 
+        tagName="h1" 
+      />
       <StackingConditions conditions={liquidStackingConditions} />
     </>
   );

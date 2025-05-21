@@ -36,6 +36,7 @@ import {
 } from '~/queries/balance/account-balance.hooks';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
@@ -234,6 +235,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const poolAmount = formMethods.watch('amount');
 
+  // Get posts with direct access
+  const posts = getPosts();
+  const stackingAmountPost = posts.stackingAmount;
+  const stackingRewardsAddressPost = posts.stackingRewardsAddress;
+  const stackingDurationPost = posts.stackingDuration;
+  const stackingContractDetailsPost = posts.stackingContractDetails;
+  const pooledStackingConditionsPost = posts.pooledStackingConditions;
+
   if (getSecondsUntilNextCycleQuery.isLoading || poolInfo.isLoading) {
     return (
       <Flex height="100vh" width="100%">
@@ -271,7 +280,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" postKey="stacking-amount" />
+                  <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
                   <ChoosePoolingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -280,7 +289,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 </Stack>
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Address to receive rewards" postKey="stacking-rewards-address" />
+                  <StackingFormItemTitle title="Address to receive rewards" post={stackingRewardsAddressPost} />
                   <ChooseRewardsAddress />
                   <styled.span textStyle="caption.01" color="ink.text-subdued">
                     This is where the pool will deposit your rewards each cycle.
@@ -290,14 +299,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Duration" postKey="stacking-duration" />
+                  <StackingFormItemTitle title="Duration" post={stackingDurationPost} />
                   <ChoosePoolingDuration />
                 </Stack>
 
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" postKey="stacking-contract-details" />
+                  <StackingFormItemTitle title="Details" post={stackingContractDetailsPost} />
                   <StackingContractDetails
                     addressTitle="Pool address"
                     address={poolStxAddress}
@@ -308,7 +317,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.04">
-                  <StackingFormItemTitle title="Pooling conditions" postKey="pooled-stacking-conditions" />
+                  <StackingFormItemTitle title="Pooling conditions" post={pooledStackingConditionsPost} />
                   <ChoosePoolingConditions />
                 </Stack>
 

@@ -15,7 +15,7 @@ import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 import { content } from '~/data/content';
-import { formatPostPrompt, formatPostSentence } from '~/utils/post-utils';
+import { formatPostPrompt, formatPostSentence, getPosts } from '~/utils/post-utils';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 
 import { Button, Hr } from '@leather.io/ui';
@@ -41,11 +41,13 @@ export interface RewardProtocolInfo {
   payoutToken: string;
 }
 
+const posts = getPosts();
+
 const sbtcEnroll = {
   id: 'basic',
   logo: <SbtcLogo size="32px" />,
   title: 'Basic sBTC rewards',
-  description: formatPostPrompt((content.posts as Record<string, any>)["sbtc-rewards-basic"]?.Prompt || ''),
+  description: formatPostPrompt(posts.sbtcRewardsBasic?.prompt || ''),
   tvl: '2,150 BTC',
   tvlUsd: '$130,050,000',
   minCommitment: '0.005 BTC',
@@ -67,7 +69,7 @@ const pools = content.sbtcPools.map(pool => ({
 
 export function SbtcRewards() {
   const { status, whenExtensionState } = useLeatherConnect();
-  const postSlug = 'sbtc-rewards';
+  const postSlug = 'sbtcRewards';
 
   function bridgeSbtc() {
     // Cannot bridge, cap reached
@@ -91,7 +93,7 @@ export function SbtcRewards() {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <PostPageHeading post={(content.posts as Record<string, any>)[postSlug]} />
+        <PostPageHeading post={posts[postSlug]} />
 
         <ApyRewardHeroCard
           apyRange="5–8%"
@@ -104,12 +106,12 @@ export function SbtcRewards() {
 
 
         <styled.section mt="space.09">
-          <PostSectionHeading post={(content.posts as Record<string, any>)['get-sbtc']} prefix="Step 1: " />
+          <PostSectionHeading post={posts.getSbtc} prefix="Step 1: " />
           <GetSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">
-          <PostSectionHeading post={(content.posts as Record<string, any>)['sbtc-rewards-provider']} prefix="Step 2: " />
+          <PostSectionHeading post={posts.sbtcRewardsProvider} prefix="Step 2: " />
 
           <SbtcProtocolRewardGrid
             enrollAction={<SbtcEnrollButton />}

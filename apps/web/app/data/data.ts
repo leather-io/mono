@@ -4,8 +4,8 @@ import { getPostBySlug } from '~/utils/post-utils';
 
 // Providers are partner entities that offer yeild based services
 const providers = {
-  'xverse-pool': {
-    providerId: 'xverse-pool',
+  xversePool: {
+    providerId: 'xversePool',
     name: 'Xverse',
     url: 'https://xverse.app',
   },
@@ -29,8 +29,8 @@ const providers = {
     name: 'Restake',
     url: 'https://restake.net/stacks-pool',
   },
-  'stacking-dao': {
-    providerId: 'stacking-dao',
+  stackingDao: {
+    providerId: 'stackingDao',
     name: 'Stacking DAO',
     url: 'https://www.stackingdao.com',
   },
@@ -182,9 +182,9 @@ export const stackingPoolData = {
     allowCustomRewardAddress: false,
     disabled: false,
   },
-  'xverse-pool': {
-    ...providers['xverse-pool'],
-    website: getPostBySlug('xverse-pool')?.website ?? providers['xverse-pool'].url,
+  xversePool: {
+    ...providers.xversePool,
+    website: getPostBySlug('xverse-pool')?.website ?? providers.xversePool.url,
     fee: '5%',
     minAmount: '100 STX',
     rewardsToken: 'BTC',
@@ -207,9 +207,9 @@ export const stackingPoolData = {
     allowCustomRewardAddress: true,
     disabled: false,
   },
-  'stacking-dao': {
-    ...providers['stacking-dao'],
-    website: getPostBySlug('stacking-dao')?.website ?? providers['stacking-dao'].url,
+  stackingDao: {
+    ...providers.stackingDao,
+    website: getPostBySlug('stacking-dao')?.website ?? providers.stackingDao.url,
     fee: '5%',
     minAmount: '100 STX',
     rewardsToken: 'BTC',
@@ -251,8 +251,8 @@ export interface LiquidStackingPool {
   fee: string;
 }
 export const liquidStackingPoolData = {
-  'stacking-dao': {
-    ...providers['stacking-dao'],
+  stackingDao: {
+    ...providers.stackingDao,
     slug: 'stacking-dao',
     estApr: '5%',
     fee: '5%',
