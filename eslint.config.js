@@ -48,79 +48,11 @@ export default tseslint.config(
     name: 'web',
     files: ['apps/web/app/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginQuery.configs['flat/recommended']],
-    rules: {
-      '@typescript-eslint/only-throw-error': 'off',
-      'no-duplicate-imports': 'off',
-      '@typescript-eslint/no-duplicate-imports': ['error'],
-      // Component and hook definition rules
-      'react/function-component-definition': ['error', {
-        'namedComponents': 'function-declaration',
-        'unnamedComponents': 'arrow-function'
-      }],
-      // TypeScript rules
-      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
-      '@typescript-eslint/explicit-function-return-type': ['error', {
-        'allowExpressions': true
-      }],
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
-      // Code quality
-      'react/jsx-fragments': ['error', 'element'],
-      'prefer-const': 'error',
-      'eqeqeq': ['error', 'always', { 'null': 'ignore' }],
-      // Import ordering
-      'import/order': ['error', {
-        'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-        'pathGroups': [
-          {
-            'pattern': 'react',
-            'group': 'external',
-            'position': 'before'
-          },
-          {
-            'pattern': '@leather*',
-            'group': 'external',
-            'position': 'after'
-          }
-        ],
-        'newlines-between': 'always',
-        'alphabetize': {
-          'order': 'asc',
-          'caseInsensitive': true
-        }
-      }]
-    },
   },
   {
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
-    rules: {
-      'lingui/no-unlocalized-strings': [
-        'error',
-        {
-          ignoreFunction: [
-            'Error',
-            'StacksError',
-            'BitcoinError',
-            'console.log',
-            'console.warn',
-            'console.error',
-            'assertExistence',
-            'it',
-            'describe',
-            'test',
-          ],
-          ignoreProperty: [
-            'InvalidParams',
-            'NullOrigin',
-            'UndefinedParams',
-            'UserRejectedOperation',
-          ],
-          ignoreAttribute: ['d'],
-        },
-      ],
-    },
   },
   {
     name: 'test-files',

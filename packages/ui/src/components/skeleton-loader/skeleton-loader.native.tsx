@@ -88,7 +88,7 @@ export function SkeletonLoader({ children, isLoading, ...rest }: SkeletonLoaderP
     return <SkeletonLoaderAnimation {...rest} />;
   }
 
-  return children;
+  return children ?? null;
 }
 
 const styles = StyleSheet.create({
