@@ -136,7 +136,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
     <VStack gap="space.05" alignItems="left" p="space.05">
       {'logo' in pool ? (pool as any).logo : null}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {'title' in pool ? (pool as any).title : ''}
+        {post.title} 
       </styled.h4>
       {post && (
         <styled.p textStyle="caption.01">
