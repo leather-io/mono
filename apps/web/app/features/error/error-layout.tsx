@@ -11,8 +11,8 @@ export interface ErrorLayoutProps {
 }
 
 export function ErrorLayout({ error }: ErrorLayoutProps) {
-  let message = content.errorMessages.oops;
-  let details = content.errorMessages.unexpected;
+  let message: string = content.errorMessages.oops;
+  let details: string = content.errorMessages.unexpected;
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {

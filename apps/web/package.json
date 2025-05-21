@@ -17,6 +17,7 @@
     "preview": "npm run build && vite preview",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run",
+    "test:e2e": "playwright test",
     "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b"
   },
   "dependencies": {

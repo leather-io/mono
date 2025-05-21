@@ -30,6 +30,7 @@
     "test": "turbo run test",
     "test:coverage": "pnpm -r test:coverage",
     "test:unit": "pnpm -r test:unit",
+    "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {

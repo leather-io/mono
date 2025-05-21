@@ -266,11 +266,36 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     throw new Error(`Unknown confirmation type: ${confirmation}`);
   }
 
+  // Helper to map PoolRewardProtocolInfo to StackingPool
+  function mapPoolRewardProtocolInfoToStackingPool(info: any): import('~/data/data').StackingPool {
+    return {
+      providerId: info.id || '',
+      name: info.title || '',
+      url: info.url || '',
+      minAmount: info.minCommitment || null,
+      estApr: info.apr || '',
+      payout: '', // Not available on PoolRewardProtocolInfo
+      disabled: false, // Not available on PoolRewardProtocolInfo
+      description: info.description || '',
+      duration: info.minLockupPeriodDays || 1,
+      poolAddress: { mainnet: info.poolAddress, testnet: info.poolAddress, devnet: info.poolAddress },
+      fee: '', // Not available on PoolRewardProtocolInfo
+      poxContract: '', // Not available on PoolRewardProtocolInfo
+      rewardsToken: info.rewardsToken || '',
+      minimumDelegationAmount: 0, // Not available on PoolRewardProtocolInfo
+      allowCustomRewardAddress: false, // Not available on PoolRewardProtocolInfo
+      tvlUsd: info.tvlUsd || '',
+      minCommitmentUsd: info.minCommitmentUsd || '',
+      icon: info.logo,
+      website: info.url || '',
+    };
+  }
+
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       {poolInfo.poolRewardProtocolInfo && (
         <Page.Inset>
-          <PoolOverview pool={poolInfo.poolRewardProtocolInfo} poolSlug={poolSlug} />
+          <PoolOverview pool={mapPoolRewardProtocolInfoToStackingPool(poolInfo.poolRewardProtocolInfo)} poolSlug={poolSlug} />
         </Page.Inset>
       )}
 
