@@ -1,11 +1,9 @@
-import { ScrollView } from 'react-native-gesture-handler';
-
+import { HorizontalScrollView } from '@/components/horizontal-scroll-view';
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
-import { useTheme } from '@shopify/restyle';
 
 import { Activity } from '@leather.io/models';
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box } from '@leather.io/ui/native';
 
 import { ActivityEmpty } from './activity-empty';
 import { ActivityList } from './activity-list';
@@ -20,7 +18,6 @@ interface ActivityWidgetProps {
   title: string;
 }
 export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidgetProps) {
-  const theme = useTheme<Theme>();
   // Don't render anything if loading or no activity
   if (activity.state === 'loading' || !hasActivity(activity)) {
     return null;
@@ -33,18 +30,7 @@ export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidge
         </Widget.Header>
       </Box>
       <Widget.Body>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            gap: theme.spacing['2'],
-            paddingHorizontal: theme.spacing['5'],
-          }}
-          style={{
-            // prevent card shadows being cut off
-            overflow: 'visible',
-          }}
-        >
+        <HorizontalScrollView>
           <FetchWrapper data={activity}>
             {hasActivity(activity) ? (
               activity.state === 'success' && (
@@ -54,7 +40,7 @@ export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidge
               <ActivityEmpty />
             )}
           </FetchWrapper>
-        </ScrollView>
+        </HorizontalScrollView>
       </Widget.Body>
     </Widget>
   );

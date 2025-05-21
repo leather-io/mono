@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 
+import { HorizontalScrollView } from '@/components/horizontal-scroll-view';
 import { FetchError } from '@/components/loading/error';
 import { Widget } from '@/components/widget';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
@@ -15,7 +15,6 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
 import { Box, SheetRef, SkeletonLoader, Theme } from '@leather.io/ui/native';
@@ -33,7 +32,6 @@ export function AccountsWidget() {
   const accounts = useAccounts();
   const { totalBalance } = useTotalBalance();
   const { i18n } = useLingui();
-  const theme = useTheme<Theme>();
 
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
@@ -60,18 +58,7 @@ export function AccountsWidget() {
           )}
         </Box>
         <Widget.Body>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: theme.spacing['2'],
-              paddingHorizontal: theme.spacing['5'],
-            }}
-            style={{
-              // prevent card shadows being cut off
-              overflow: 'visible',
-            }}
-          >
+          <HorizontalScrollView>
             {accounts.list
               .filter(account => account.status !== 'hidden')
               .map((account, i) => (
@@ -111,7 +98,7 @@ export function AccountsWidget() {
             ) : (
               <CreateWalletCard onPress={() => addWalletSheetRef.current?.present()} />
             )}
-          </ScrollView>
+          </HorizontalScrollView>
         </Widget.Body>
       </Widget>
 

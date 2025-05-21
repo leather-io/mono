@@ -1,5 +1,4 @@
-import { ScrollView } from 'react-native-gesture-handler';
-
+import { HorizontalScrollView } from '@/components/horizontal-scroll-view';
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
@@ -42,23 +41,12 @@ export function EarnWidget() {
               stxLockedBalance={stxBalance.value?.stx.lockedBalance}
             />
           ) : (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                gap: theme.spacing['2'],
-                paddingHorizontal: theme.spacing['5'],
-              }}
-              style={{
-                // prevent card shadows being cut off
-                overflow: 'visible',
-              }}
-            >
+            <HorizontalScrollView>
               <Box flexDirection="row" gap="3">
                 <SbtcCard />
                 <StackingCard />
               </Box>
-            </ScrollView>
+            </HorizontalScrollView>
           )}
         </FetchWrapper>
       </Widget.Body>
