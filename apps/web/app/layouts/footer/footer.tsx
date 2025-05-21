@@ -22,11 +22,13 @@ function AppFooter() {
         </Footer.Column>
 
         <Footer.Column title="Earn">
-          <Footer.Link href="https://earn.leather.io/pool-admin">Pool administration</Footer.Link>
-          <Footer.Link href="https://earn.leather.io/signer/generate-signature">
+          <Footer.Link withIcon href="https://earn.leather.io/pool-admin">
+            Pool administration
+          </Footer.Link>
+          <Footer.Link withIcon href="https://earn.leather.io/signer/generate-signature">
             Signer key signature
           </Footer.Link>
-          <Footer.Link href="https://earn.leather.io/choose-stacking-method">
+          <Footer.Link withIcon href="https://earn.leather.io/choose-stacking-method">
             Stack independently
           </Footer.Link>
         </Footer.Column>
