@@ -82,7 +82,7 @@ function BaseSendTransferApprover(
     [accountIdByPaymentType, props.accountId]
   );
   const nativeSegwitPayer = useMemo(
-    () => bitcoinAccount.nativeSegwit.derivePayer({ addressIndex: 0 }),
+    () => bitcoinAccount.nativeSegwit?.derivePayer({ addressIndex: 0 }),
     [bitcoinAccount.nativeSegwit]
   );
   const networkMode = useMemo(
@@ -91,6 +91,8 @@ function BaseSendTransferApprover(
   );
   const tx = useMemo(
     () =>
+      // if all wallets deleted, nativeSegwitPayer will be undefined
+      nativeSegwitPayer &&
       generateBitcoinUnsignedTransactionNativeSegwit({
         payerAddress: createBitcoinAddress(nativeSegwitPayer.address),
         payerPublicKey: bytesToHex(nativeSegwitPayer.publicKey),
@@ -109,7 +111,9 @@ function BaseSendTransferApprover(
       props.utxos.available,
     ]
   );
-  const psbtHex = bytesToHex(tx.psbt);
+  // if all wallets deleted, tx will be undefined
+  const psbtHex = tx ? bytesToHex(tx.psbt) : undefined;
+  if (!psbtHex) return null;
   return (
     <PsbtSigner
       broadcast

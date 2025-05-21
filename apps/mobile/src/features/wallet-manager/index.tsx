@@ -14,7 +14,9 @@ import { WalletListLayout } from './wallets';
 type BitcoinAccountsProps = AccountId;
 
 function BitcoinAccounts({ fingerprint, accountIndex }: BitcoinAccountsProps) {
+  const { hasWallets } = useWallets();
   const accounts = useBitcoinAccounts().fromAccountIndex(fingerprint, accountIndex);
+  if (!hasWallets) return null;
 
   return accounts.map(keychain => (
     <Text key={keychain.descriptor} style={{ marginLeft: 12, marginBottom: 8 }}>
