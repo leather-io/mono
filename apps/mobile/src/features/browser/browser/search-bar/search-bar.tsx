@@ -26,6 +26,7 @@ interface SearchBarProps {
   navState: WebViewNavigation | null;
   browserType: BrowserType;
   resetBrowser(): void;
+  setBrowserNavigationBarHeight(height: number): void;
 }
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -39,6 +40,7 @@ export function SearchBar({
   navState,
   onSubmit,
   resetBrowser,
+  setBrowserNavigationBarHeight,
 }: SearchBarProps) {
   const theme = useTheme<Theme>();
   const textInputRef = useRef<RNTextInput>(null);
@@ -78,6 +80,9 @@ export function SearchBar({
           shadowRadius={24}
           shadowOpacity={0.08}
           elevation={1}
+          onLayout={e => {
+            setBrowserNavigationBarHeight(e.nativeEvent.layout.height);
+          }}
         >
           <BrowserNavigationBar
             searchUrl={searchUrl}

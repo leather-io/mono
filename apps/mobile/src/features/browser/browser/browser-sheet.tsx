@@ -14,6 +14,7 @@ import { useBrowserSearchState } from './use-browser-search-state';
 export function BrowserSheet() {
   const { browserSheetRef } = useGlobalSheets();
   const { browserSearchState, goToUrl, resetSearchBar, setTextUrl } = useBrowserSearchState();
+  const [browserNavigationBarHeight, setBrowserNavigationBarHeight] = useState(0);
 
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
@@ -36,10 +37,12 @@ export function BrowserSheet() {
           setNavState={setNavState}
           searchUrl={browserSearchState.searchUrl}
           goToUrl={goToUrl}
+          browserNavigationBarHeight={browserNavigationBarHeight}
         />
       )}
 
       <SearchBar
+        setBrowserNavigationBarHeight={setBrowserNavigationBarHeight}
         webViewRef={webViewRef}
         browserType={browserSearchState.browserType}
         textUrl={browserSearchState.textUrl}

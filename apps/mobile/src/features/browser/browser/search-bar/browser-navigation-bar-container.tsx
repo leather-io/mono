@@ -21,8 +21,8 @@ export function BrowserNavigationBarContainer({ children }: BrowserNavigationBar
       ({
         width: '100%',
         paddingHorizontal: theme.spacing['5'],
-        paddingTop: theme.spacing['4'],
-        paddingBottom: theme.spacing['4'] + bottom,
+        paddingTop: theme.spacing['2'],
+        paddingBottom: theme.spacing['2'] + bottom,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
