@@ -208,6 +208,7 @@ export interface ProtocolOverviewProps {
 
 export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug }: ProtocolOverviewProps) {
   const isStackingPageOrUndefined = isStackingPage ? true : undefined;
+  const posts = getPosts();
   
   // Handle case where we have a protocol object from the new interface
   if (protocol && protocolSlug) {
@@ -233,19 +234,19 @@ export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug 
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={getPosts().historicalYield} label="Historical yield" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={posts.historicalYield} label="Historical yield" textStyle="label.02" />}
             value={(protocol as any).estApr || "—"}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={getPosts().totalLockedValueTvl} label="Total value locked" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={posts.totalLockedValueTvl} label="Total value locked" textStyle="label.02" />}
             value={(protocol as any).tvl || "—"}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['4', '4', '2']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={getPosts().stackingRewardsTokens} label="Rewards token" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={posts.stackingRewardsTokens} label="Rewards token" textStyle="label.02" />}
             value={
               <>
                 {protocol.liquidToken}
@@ -256,7 +257,7 @@ export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug 
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['5', '5', '2']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard post={getPosts().stackingMinimumCommitment} label="Minimum commitment" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={posts.stackingMinimumCommitment} label="Minimum commitment" textStyle="label.02" />}
             value={typeof protocol.minimumDelegationAmount === 'number' ? 
               toHumanReadableStx(protocol.minimumDelegationAmount) : 
               String(protocol.minimumDelegationAmount || '')}

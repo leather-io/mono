@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { toCamelCase, getPostByKey, getPosts } from './post-utils';
-import { content } from '~/data/content';
+import { describe, it, expect, vi } from 'vitest';
+import { toCamelCase, getPostByKey } from './post-utils';
 
 // Mock the content.posts
 vi.mock('~/data/content', () => ({

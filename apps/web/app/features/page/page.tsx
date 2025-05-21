@@ -1,8 +1,7 @@
 import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
-import { Link, Hr } from '@leather.io/ui';
-import { content } from '~/data/content';
+import { Link } from '@leather.io/ui';
 import { getPostHref } from '~/utils/post-link';
 import { ReactNode } from 'react';
 

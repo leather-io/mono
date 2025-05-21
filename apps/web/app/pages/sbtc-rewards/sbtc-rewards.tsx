@@ -16,12 +16,11 @@ import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 import { content } from '~/data/content';
-import { formatPostPrompt, formatPostSentence, getPosts } from '~/utils/post-utils';
+import { formatPostPrompt, getPosts } from '~/utils/post-utils';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 
 import { Button, Hr } from '@leather.io/ui';
 
-import { PostValueHoverCard } from '../../components/post-value-hover-card';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';

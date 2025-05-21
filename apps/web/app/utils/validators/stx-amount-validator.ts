@@ -1,16 +1,17 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
 import { UI_IMPOSED_MAX_STACKING_AMOUNT_USTX } from '~/constants/constants';
+import { content } from '~/data/content';
 
 import { stxToMicroStx } from '@leather.io/utils';
 
 export function stxAmountSchema() {
   return z.coerce
     .number({
-      required_error: 'Enter an amount of STX',
-      invalid_type_error: 'STX amount must be a number',
+      required_error: content.validationMessages.enterAmount,
+      invalid_type_error: content.validationMessages.invalidAmount,
     })
-    .positive('You must stack an amount');
+    .positive(content.validationMessages.mustStackAmount);
 }
 
 export function validateMinStackingAmount(value: number, minimumDelegationAmount: number) {

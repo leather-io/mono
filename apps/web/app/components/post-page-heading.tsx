@@ -1,7 +1,6 @@
-import { Page } from '~/features/page/page';
+import { Page, getLearnMoreLink } from '~/features/page/page';
 import { Post } from '~/data/post-types';
 import { sanitizeContent } from '~/utils/sanitize-content';
-import { getLearnMoreLink } from '~/features/page/page';
 import { styled } from 'leather-styles/jsx';
 
 interface PostPageHeadingProps {

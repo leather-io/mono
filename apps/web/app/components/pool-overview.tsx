@@ -1,23 +1,16 @@
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled, HTMLStyledProps } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { content } from '~/data/content';
-import type { StackingPool } from '~/data/data';
-import { getPostSlugForProvider } from '~/data/data';
-import type { PostsCollection } from '~/data/post-types';
-import { getLearnMoreLink } from '~/features/page/page';
 import { DASH } from '~/constants/constants';
-import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { getPostSlugForProvider, StackingPool } from '~/data/data';
+import { getLearnMoreLink } from '~/features/page/page';
 import {
-  daysToWeek,
   toHumanReadableDays,
   toHumanReadableStx,
-  toHumanReadableWeeks,
 } from '~/utils/unit-convert';
 import { usePost, getPosts } from '~/utils/post-utils';
 import { TextElementTag } from '~/shared/types';
@@ -260,11 +253,10 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
 export function StackingAmountLabel({
   textStyle = 'label.03',
   tagName = 'h1',
-  ...props
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-} & HTMLStyledProps<'span'>) {
+}) {
   const posts = getPosts();
   const post = posts.stackingAmount;
   const label = post?.title ?? 'Amount';
@@ -274,7 +266,6 @@ export function StackingAmountLabel({
       label={label}
       textStyle={textStyle}
       tagName={tagName}
-      {...props}
     />
   );
 }
@@ -283,11 +274,10 @@ export function StackingAmountLabel({
 export function StackingRewardsAddressLabel({
   textStyle = 'label.01',
   tagName = 'h1',
-  ...props
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-} & HTMLStyledProps<'span'>) {
+}) {
   const posts = getPosts();
   const post = posts.stackingRewardsAddress;
   const label = post?.title ?? 'Rewards address';
@@ -297,7 +287,6 @@ export function StackingRewardsAddressLabel({
       label={label}
       textStyle={textStyle}
       tagName={tagName}
-      {...props}
     />
   );
 }
@@ -306,11 +295,10 @@ export function StackingRewardsAddressLabel({
 export function StackingDurationLabel({
   textStyle = 'label.01',
   tagName = 'h1',
-  ...props
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-} & HTMLStyledProps<'span'>) {
+}) {
   const posts = getPosts();
   const post = posts.stackingDuration;
   const label = post?.title ?? 'Duration';
@@ -320,7 +308,6 @@ export function StackingDurationLabel({
       label={label}
       textStyle={textStyle}
       tagName={tagName}
-      {...props}
     />
   );
 }
@@ -329,11 +316,10 @@ export function StackingDurationLabel({
 export function StackingContractDetailsLabel({
   textStyle = 'label.01',
   tagName = 'h1',
-  ...props
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-} & HTMLStyledProps<'span'>) {
+}) {
   const posts = getPosts();
   const post = posts.stackingContractDetails;
   const label = post?.title ?? 'Details';
@@ -343,7 +329,6 @@ export function StackingContractDetailsLabel({
       label={label}
       textStyle={textStyle}
       tagName={tagName}
-      {...props}
     />
   );
 }
@@ -352,11 +337,10 @@ export function StackingContractDetailsLabel({
 export function PooledStackingConditionsLabel({
   textStyle = 'label.01',
   tagName = 'h1',
-  ...props
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-} & HTMLStyledProps<'span'>) {
+}) {
   const posts = getPosts();
   const post = posts.pooledStackingConditions;
   const label = post?.title ?? 'Pooling conditions';
@@ -366,7 +350,6 @@ export function PooledStackingConditionsLabel({
       label={label}
       textStyle={textStyle}
       tagName={tagName}
-      {...props}
     />
   );
 }

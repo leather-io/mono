@@ -8,6 +8,7 @@ import {
   validateAvailableBalance,
   validateMaxStackingAmount,
 } from '~/utils/validators/stx-amount-validator';
+import { content } from '~/data/content';
 
 interface CreateValidationSchemaArgs {
   availableBalanceUStx?: BigNumber;
@@ -22,7 +23,7 @@ export function createValidationSchema({ availableBalanceUStx }: CreateValidatio
     increaseBy: stxAmountSchema()
       .refine(value => validateMaxStackingAmount(value))
       .refine(value => validateAvailableBalance(value, availableBalanceUStx), {
-        message: `Available balance is ${toHumanReadableMicroStx(availableBalanceUStx ?? 0)}`,
+        message: `${content.validationMessages.availableBalance} ${toHumanReadableMicroStx(availableBalanceUStx ?? 0)}`,
       }),
   });
 }

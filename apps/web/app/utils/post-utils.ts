@@ -102,7 +102,7 @@ export function usePostSentence(slug: string): string {
 export function usePostContent(slug: string, field: keyof Post): string {
   const post = usePost(slug);
   if (!post || typeof post[field] !== 'string') return '';
-  return formatPostContent(post[field] as string);
+  return formatPostContent(post[field]);
 }
 
 // --------------------

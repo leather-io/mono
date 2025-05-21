@@ -9,7 +9,6 @@ import { ensureArray } from '@leather.io/utils';
 import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout';
 import { SbtcProviderIcon } from './sbtc-provider-icon';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { content } from '~/data/content';
 import { getLearnMoreLink } from '~/features/page/page';
 import { getPosts } from '~/utils/post-utils';
 

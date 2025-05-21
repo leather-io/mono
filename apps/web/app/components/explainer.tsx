@@ -2,8 +2,6 @@ import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
-import { PostValueHoverCard } from './post-value-hover-card';
-import { PostLabelHoverCard } from './post-label-hover-card';
 
 // This is some pretty funky border code I am not a fan of, but didn't find an
 // easier way to handle the conditional border for the breakpoints

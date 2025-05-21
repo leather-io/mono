@@ -1,4 +1,4 @@
-import { ReactNode, ReactElement, Fragment } from 'react';
+import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { InfoCircleIcon } from '@leather.io/ui';
@@ -9,7 +9,6 @@ import type { Post } from '~/data/post-types';
 import { getLearnMoreLink } from '~/features/page/page';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import { getPostHref } from '~/utils/post-link';
-import { getPosts } from '~/utils/post-utils';
 
 interface PostInfoHoverIconProps {
   post: Post | undefined;
@@ -27,10 +26,10 @@ export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostI
   
   const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
   
-  const handleIconClick = (e: React.MouseEvent): void => {
+  function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
-    void navigate(getPostHref(post.slug));
-  };
+    void navigate(getPostHref(post!.slug));
+  }
   
   return (
     <BasicHoverCard align="start" content={

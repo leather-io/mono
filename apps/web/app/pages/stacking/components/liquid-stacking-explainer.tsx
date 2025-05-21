@@ -3,16 +3,13 @@ import { Explainer } from '~/components/explainer';
 import { content } from '~/data/content';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { getPostByKey, getPosts } from '~/utils/post-utils';
+import { getPostByKey } from '~/utils/post-utils';
 
 export function LiquidStackingExplainer(props: HTMLStyledProps<'section'>) {
-  const posts = getPosts();
-
   return (
     <Explainer {...props}>
       {content.liquidStackingExplainer.map((step, idx) => {
         const post = getPostByKey(step.postKey);
-        
         return (
           <Explainer.Step
             key={step.title}
