@@ -1,6 +1,4 @@
-import { expect } from '@playwright/test';
-
-import { test } from '.';
+import { expect, test } from '@playwright/test';
 
 test.describe('PostSectionHeading', () => {
   test('renders sentence and Learn more link', async ({ page }) => {

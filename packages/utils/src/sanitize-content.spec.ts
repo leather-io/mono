@@ -1,6 +1,7 @@
-import { sanitizeContent } from './sanitize-content';
 import DOMPurify from 'dompurify';
 import { vi } from 'vitest';
+
+import { sanitizeContent } from './sanitize-content';
 
 vi.mock('dompurify');
 

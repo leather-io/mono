@@ -1,6 +1,4 @@
-import { expect } from '@playwright/test';
-
-import { test } from '.';
+import { expect, test } from '@playwright/test';
 
 test.describe('PostValueHoverCard', () => {
   test('renders the value', async ({ page }) => {

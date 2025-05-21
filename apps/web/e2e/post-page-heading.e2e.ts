@@ -1,6 +1,4 @@
-import { expect } from '@playwright/test';
-
-import { test } from '.';
+import { expect, test } from '@playwright/test';
 
 test.describe('PostPageHeading', () => {
   test('renders title, subtitle, and disclaimer', async ({ page }) => {
@@ -17,7 +15,7 @@ test.describe('PostPageHeading', () => {
     const disclaimer = page.getByText('Test disclaimer');
     const disclaimerPrev = await disclaimer.evaluateHandle(node => node.previousElementSibling);
     if (disclaimerPrev) {
-      const tagName = await disclaimerPrev.evaluate(node => node.tagName);
+      const tagName = await disclaimerPrev.evaluate(node => node?.tagName);
       expect(tagName).not.toBe('HR');
     }
   });
