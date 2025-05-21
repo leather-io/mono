@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: 'http://127.0.0.1:8787',
+    baseURL: 'http://localhost:5173/',
     trace: 'on-first-retry',
   },
 
@@ -36,8 +36,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm wrangler dev',
-    url: 'http://127.0.0.1:8787',
+    command: 'pnpm --filter web dev',
+    url: 'http://localhost:5173/',
     reuseExistingServer: !process.env.CI,
   },
 });

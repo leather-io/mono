@@ -1,7 +1,9 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
+import { PostValueHoverCard } from './post-value-hover-card';
+import { PostLabelHoverCard } from './post-label-hover-card';
 
 // This is some pretty funky border code I am not a fan of, but didn't find an
 // easier way to handle the conditional border for the breakpoints
@@ -40,7 +42,7 @@ export function Explainer({ children, ...props }: ExplainerProps) {
 
 interface EarnInstructionStepProps {
   index: number;
-  title: string;
+  title: ReactNode;
   description: string;
   img?: ReactElement;
 }
@@ -69,8 +71,8 @@ export function ExplainerStep({ index, title, description, img }: EarnInstructio
           {title}
         </styled.h3>
       </VStack>
-      <styled.p color="ink.text-subdued" textStyle="caption.01" fontSize="13px">
-        {description}
+      <styled.p color="black" textStyle="caption.01" fontSize="13px">
+        {String(description || '')}
       </styled.p>
     </Flex>
   );

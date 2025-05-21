@@ -56,19 +56,6 @@ function FooterColumn({ title, children, ...props }: FooterColumnProps) {
   );
 }
 
-function FooterDisclaimer(props: HTMLStyledProps<'p'>) {
-  return (
-    <styled.p
-      textStyle="caption.01"
-      fontSize="12px"
-      color="ink.text-subdued"
-      maxW={['80%', undefined, '50%']}
-      mt="space.09"
-      {...props}
-    />
-  );
-}
-
 interface FooterLegalTextProps extends FlexProps {
   product: string;
   copyright: string;
@@ -92,6 +79,5 @@ function FooterLegalText({ product, copyright, ...props }: FooterLegalTextProps)
 FooterLayout.Grid = FooterGrid;
 FooterLayout.Column = FooterColumn;
 FooterLayout.Link = ExternalLink;
-FooterLayout.Disclaimer = FooterDisclaimer;
 FooterLayout.LegalText = FooterLegalText;
 FooterLayout.LeatherIcon = FooterLeatherIcon;

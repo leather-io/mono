@@ -1,29 +1,22 @@
 import { type HTMLStyledProps } from 'leather-styles/jsx';
 import { Explainer } from '~/components/explainer';
+import { content } from '~/data/content';
+import { sanitizeContent } from '~/utils/sanitize-content';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import type { PostsCollection } from '~/data/post-types';
 
 export function LiquidStackingExplainer(props: HTMLStyledProps<'section'>) {
+  const posts = content.posts as unknown as PostsCollection;
   return (
     <Explainer {...props}>
-      <Explainer.Step
-        index={0}
-        title="Own STX"
-        description="Get or hold STX in your wallet, ready to stack"
-      />
-      <Explainer.Step
-        index={1}
-        title="Choose a provider"
-        description="Pick a protocol from the table below"
-      />
-      <Explainer.Step
-        index={2}
-        title="Lock STX"
-        description="Lock your STX and receive a token (e.g. stSTX), maintaining liquidity"
-      />
-      <Explainer.Step
-        index={3}
-        title="Begin earning"
-        description="Use your derivative in DeFi and swap back anytime while earning"
-      />
+      {content.liquidStackingExplainer.map((step, idx) => (
+        <Explainer.Step
+          key={step.title}
+          index={idx}
+          title={<PostLabelHoverCard postKey={step.postKey} label={step.title} textStyle="label.01" tagName="h3" />}
+          description={sanitizeContent(step.description)}
+        />
+      ))}
     </Explainer>
   );
 }

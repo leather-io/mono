@@ -21,7 +21,8 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./sanitize-content": "./dist/index.js"
   },
   "bugs": "https://github.com/leather-io/mono/issues",
   "dependencies": {
