@@ -4,8 +4,6 @@ import { sanitizeContent } from '~/utils/sanitize-content';
 import { getLearnMoreLink } from '~/features/page/page';
 import { styled } from 'leather-styles/jsx';
 
-// Universal sanitizer for dynamic content
-
 interface PostPageHeadingProps {
   post: Post;
 }
