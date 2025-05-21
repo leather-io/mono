@@ -270,6 +270,13 @@
     * @leather.io/models bumped to 0.32.0
     * @leather.io/utils bumped to 0.33.0
 
+## [2.15.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.14.1...@leather.io/rpc-v2.15.0) (2025-05-21)
+
+
+### Features
+
+* sip30 sendTransfer ([4fc910e](https://github.com/leather-io/mono/commit/4fc910e5b44e839669a2695a6ff0c720a9ccc145))
+
 ## [2.14.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.13.0...@leather.io/rpc-v2.14.0) (2025-05-12)
 
 
