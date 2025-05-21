@@ -24,8 +24,8 @@ export function useAccountDisplayAddress({
     accountIndex
   );
 
-  const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
-  const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+  const taprootPayer = taproot?.derivePayer({ addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit?.derivePayer({ addressIndex: 0 });
 
   const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
 
@@ -35,9 +35,9 @@ export function useAccountDisplayAddress({
 
   switch (preference) {
     case 'native-segwit':
-      return truncateMiddle(nativeSegwitPayer.address);
+      return truncateMiddle(nativeSegwitPayer?.address ?? '');
     case 'taproot':
-      return truncateMiddle(taprootPayer.address);
+      return truncateMiddle(taprootPayer?.address ?? '');
     case 'bns':
       return bnsName;
     case 'stacks':

@@ -48,12 +48,16 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       feeRate: feeRates.halfHourFee.toNumber(),
     },
   });
+
   const maxSpend = calculateMaxBtcSpend({
     recipient: form.watch('recipient'),
     feeRate: form.watch('feeRate'),
   });
   const { onSetMax } = useSendMax(maxSpend.spendableBitcoin, form);
-
+  // PETE do this a better way as causes even more build errors. if not wallets they shouldn't even be able to get here
+  // protect it at a higher level
+  // if all wallets deleted, nativeSegwit will be undefined
+  if (!nativeSegwit) return null;
   const handleSubmit = form.handleSubmit(values =>
     btcFormValuesToPsbtHex(
       values,
