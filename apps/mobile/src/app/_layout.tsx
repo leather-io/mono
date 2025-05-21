@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -23,6 +24,7 @@ import { initiateI18n } from '@/locales';
 import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
+import { trackFirstAppOpen } from '@/utils/analytics';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
@@ -62,6 +64,10 @@ void setupFeatureFlags();
 function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
+
+  useEffect(() => {
+    void trackFirstAppOpen();
+  }, []);
 
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
