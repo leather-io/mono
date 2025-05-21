@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+
 import { test } from '.';
 
 test.describe('PostSectionHeading', () => {
@@ -25,4 +26,4 @@ test.describe('PostSectionHeading', () => {
     const el = await page.$('text=Step 1: Section Title');
     expect(el).toBeNull();
   });
-}); 
+});

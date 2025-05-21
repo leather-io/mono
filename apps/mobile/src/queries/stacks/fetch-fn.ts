@@ -1,4 +1,3 @@
-/* eslint-disable lingui/no-unlocalized-strings */
 export async function fetchFn(input: RequestInfo | URL, init?: RequestInit) {
   const url =
     input instanceof URL ? input.toString() : typeof input === 'string' ? input : input.url;

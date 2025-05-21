@@ -6,16 +6,16 @@ export const styleTokens = {
   whiteSpace: {
     preLine: 'pre-line',
     nowrap: 'nowrap',
-    normal: 'normal'
+    normal: 'normal',
   },
   textDecoration: {
     underline: 'underline',
-    none: 'none'
+    none: 'none',
   },
   borderStyle: {
     solid: 'solid',
     dashed: 'dashed',
     dotted: 'dotted',
-    none: 'none'
-  }
-} as const; 
+    none: 'none',
+  },
+} as const;

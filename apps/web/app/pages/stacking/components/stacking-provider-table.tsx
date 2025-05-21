@@ -13,12 +13,7 @@ import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import {
-  ForceRowHeight,
-  Table,
-  rowPadding,
-  theadBorderBottom,
-} from '~/components/table';
+import { ForceRowHeight, Table, rowPadding, theadBorderBottom } from '~/components/table';
 import { content } from '~/data/content';
 import {
   LiquidStackingPool,
@@ -33,8 +28,8 @@ import { StartEarningButton } from '~/pages/stacking/components/start-earning-bu
 import { useDAOFee } from '~/queries/protocols/dao/fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
-import { toHumanReadablePercent, toHumanReadableShortStx } from '~/utils/unit-convert';
 import { getPosts } from '~/utils/post-utils';
+import { toHumanReadablePercent, toHumanReadableShortStx } from '~/utils/unit-convert';
 
 import { Button, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
 import { isUndefined } from '@leather.io/utils';
@@ -224,7 +219,13 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 12,
       },
     ],
-    [posts.stackingRewardsTokens, posts.stackingPoolFees, posts.historicalYield, posts.totalLockedValueTvl, posts.stackingMinimumCommitment]
+    [
+      posts.stackingRewardsTokens,
+      posts.stackingPoolFees,
+      posts.historicalYield,
+      posts.totalLockedValueTvl,
+      posts.stackingMinimumCommitment,
+    ]
   );
 
   const trailingColumn = useMemo<ColumnDef<StackingPool>[]>(
@@ -475,7 +476,12 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
     ],
-    [posts.stackingRewardsTokens, posts.stackingPoolFees, posts.historicalYield, posts.totalLockedValueTvl]
+    [
+      posts.stackingRewardsTokens,
+      posts.stackingPoolFees,
+      posts.historicalYield,
+      posts.totalLockedValueTvl,
+    ]
   );
 
   const trailingColumn = useMemo<ColumnDef<LiquidStackingPool>>(
@@ -484,10 +490,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       accessorKey: 'actions',
       header: () => null,
       cell: info => (
-        <Link
-          to={`/stacking/liquid/${info.row.original.slug}`}
-          style={{ minWidth: 'fit-content' }}
-        >
+        <Link to={`/stacking/liquid/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
           <Button size="xs" whiteSpace="nowrap" minW="fit-content">
             Start earning
           </Button>
@@ -500,13 +503,13 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
 
   const columns = useMemo(() => {
     const cols: ColumnDef<LiquidStackingPool>[] = [leadingColumn];
-    
+
     if (isMounted && isLargeViewport) {
       cols.push(...largeViewportColumns);
     }
-    
+
     cols.push(trailingColumn);
-    
+
     return cols;
   }, [leadingColumn, largeViewportColumns, trailingColumn, isMounted, isLargeViewport]);
 

@@ -4,11 +4,14 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
 import { InfoGrid } from '~/components/info-grid/info-grid';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import {
   ValueDisplayerWithCustomLoader,
   ValueDisplayerWithLoader,
 } from '~/components/value-displayer/value-displayer-with-loader';
+import { content } from '~/data/content';
 import { useActivePoolInfo } from '~/features/stacking/hooks/use-active-pool-info';
+import { getPosts } from '~/utils/post-utils';
 import { toHumanReadableDays, toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import {
@@ -25,9 +28,6 @@ import {
 
 import { useUserPositionsFakeLoading } from './hooks/use-user-positions-fake-loading';
 import { useRevokeDelegateStxMutation } from './pooled-stacking-info/use-revoke-delegate-stx';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { content } from '~/data/content';
-import { getPosts } from '~/utils/post-utils';
 
 interface UserPositionsProps {
   stacksAddress: string;
@@ -153,7 +153,13 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-            name={<PostLabelHoverCard post={posts.stackingAmount} label={posts.stackingAmount?.title || "Amount"} textStyle="label.03" />}
+            name={
+              <PostLabelHoverCard
+                post={posts.stackingAmount}
+                label={posts.stackingAmount?.title || 'Amount'}
+                textStyle="label.03"
+              />
+            }
             isLoading={fakeLoading}
             value={
               activePoolRewardProtocolInfo.delegatedAmountMicroStx
@@ -164,27 +170,39 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-            name={<PostLabelHoverCard post={posts.historicalYield} label={posts.historicalYield?.title || "APR"} textStyle="label.03" />}
+            name={
+              <PostLabelHoverCard
+                post={posts.historicalYield}
+                label={posts.historicalYield?.title || 'APR'}
+                textStyle="label.03"
+              />
+            }
             isLoading={fakeLoading}
-           
             value={activePoolRewardProtocolInfo.apr}
-         
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithLoader
-           
-            name={<PostLabelHoverCard post={posts.pooledStackingUpcomingRewards} label={posts.pooledStackingUpcomingRewards?.title || "Next rewards"} textStyle="label.03" />}
-           
+            name={
+              <PostLabelHoverCard
+                post={posts.pooledStackingUpcomingRewards}
+                label={posts.pooledStackingUpcomingRewards?.title || 'Next rewards'}
+                textStyle="label.03"
+              />
+            }
             isLoading={fakeLoading}
-           
             value={`~${toHumanReadableDays(activePoolRewardProtocolInfo.nextCycleDays)}`}
-         
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell>
           <ValueDisplayerWithCustomLoader
-            name={<PostLabelHoverCard post={posts.stackingRewardsTokens} label={posts.stackingRewardsTokens?.title || "Rewards token"} textStyle="label.03" />}
+            name={
+              <PostLabelHoverCard
+                post={posts.stackingRewardsTokens}
+                label={posts.stackingRewardsTokens?.title || 'Rewards token'}
+                textStyle="label.03"
+              />
+            }
             isLoading={fakeLoading}
             value={
               <Flex gap="space.02" alignItems="center">

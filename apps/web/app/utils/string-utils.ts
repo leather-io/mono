@@ -5,7 +5,7 @@
  */
 export function removeTrailingPeriod(str: string | undefined | null): string {
   if (!str) return '';
-  
+
   // Remove any trailing periods
   return str.replace(/\.+$/, '');
-} 
+}

@@ -1,12 +1,12 @@
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { getLearnMoreLink } from '~/features/page/page';
-import { usePost, getPosts } from '~/utils/post-utils';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { getPostSlugForProvider } from '~/data/data';
+import { getLearnMoreLink } from '~/features/page/page';
+import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { getPosts, usePost } from '~/utils/post-utils';
 
 interface ProtocolOverviewProps {
   protocol: Protocol;
@@ -19,9 +19,7 @@ function ProtocolCell({ protocol, protocolSlug }: ProtocolOverviewProps) {
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
       {protocol.icon}
-      <styled.h4 textStyle="label.01">
-        {protocol.name}
-      </styled.h4>
+      <styled.h4 textStyle="label.01">{protocol.name}</styled.h4>
       {post && (
         <styled.p textStyle="caption.01">
           {post.sentence}
@@ -39,7 +37,7 @@ export function ProtocolOverview({ protocol, protocolSlug }: ProtocolOverviewPro
   const totalLockedValuePost = posts.totalLockedValueTvl;
   const stackingRewardsTokensPost = posts.stackingRewardsTokens;
   const stackingMinimumCommitmentPost = posts.stackingMinimumCommitment;
-  
+
   return (
     <InfoGrid
       width="100%"
@@ -57,30 +55,54 @@ export function ProtocolOverview({ protocol, protocolSlug }: ProtocolOverviewPro
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
         <ValueDisplayer
-          name={<PostLabelHoverCard post={historicalYieldPost} label="Historical yield" textStyle="label.02" />}
+          name={
+            <PostLabelHoverCard
+              post={historicalYieldPost}
+              label="Historical yield"
+              textStyle="label.02"
+            />
+          }
           value="—"
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
         <ValueDisplayer
-          name={<PostLabelHoverCard post={totalLockedValuePost} label="Total value locked" textStyle="label.02" />}
+          name={
+            <PostLabelHoverCard
+              post={totalLockedValuePost}
+              label="Total value locked"
+              textStyle="label.02"
+            />
+          }
           value="—"
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['4', '4', '2']}>
         <ValueDisplayer
-          name={<PostLabelHoverCard post={stackingRewardsTokensPost} label="Rewards token" textStyle="label.02" />}
+          name={
+            <PostLabelHoverCard
+              post={stackingRewardsTokensPost}
+              label="Rewards token"
+              textStyle="label.02"
+            />
+          }
           value={
             <>
               {protocol.liquidToken}
-              <Box textStyle="label.03">{"-"}</Box>
+              <Box textStyle="label.03">{'-'}</Box>
             </>
           }
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['5', '5', '2']}>
         <ValueDisplayer
-          name={<PostLabelHoverCard post={stackingMinimumCommitmentPost} label="Minimum commitment" textStyle="label.02" />}
+          name={
+            <PostLabelHoverCard
+              post={stackingMinimumCommitmentPost}
+              label="Minimum commitment"
+              textStyle="label.02"
+            />
+          }
           value={protocol.minimumDelegationAmount}
         />
       </InfoGrid.Cell>

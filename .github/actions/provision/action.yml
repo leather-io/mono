@@ -17,6 +17,6 @@ runs:
 
     - name: Install dependencies
       env:
-        CI: "1"
+        CI: '1'
       run: pnpm install
       shell: bash

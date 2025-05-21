@@ -1,28 +1,31 @@
 import { ReactElement } from 'react';
+
 import { css } from 'leather-styles/css';
-import { Box, VStack, styled, HTMLStyledProps } from 'leather-styles/jsx';
+import { Box, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { getPostSlugForProvider, StackingPool } from '~/data/data';
-import { usePost, getPosts } from '~/utils/post-utils';
-import { TextElementTag } from '~/shared/types';
+import { StackingPool, getPostSlugForProvider } from '~/data/data';
 import { getLearnMoreLink } from '~/features/page/page';
+import { TextElementTag } from '~/shared/types';
+import { getPosts, usePost } from '~/utils/post-utils';
 
 interface RewardTokenCellProps {
   token: string;
   value?: string;
   textStyle?: string;
 }
-function RewardTokenCell({ token, value, textStyle = 'label.03' }: RewardTokenCellProps): ReactElement {
+function RewardTokenCell({
+  token,
+  value,
+  textStyle = 'label.03',
+}: RewardTokenCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsTokens;
   const label = post?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard post={post} label={label} textStyle={textStyle} />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle={textStyle} />}
       value={
         <>
           {token}
@@ -42,13 +45,7 @@ function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps): React
   const label = post?.title ?? 'Minimum lockup period';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label={label}
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={<>{minLockupPeriodDays} cycle(s)</>}
     />
   );
@@ -69,9 +66,7 @@ function DaysUntilNextCycleCell({
   const label = post?.title ?? 'Days until next cycle';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard post={post} label={label} textStyle="label.03" />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={`${daysUntilNextCycle} days (Cycle ${nextCycleNumber}, ${nextCycleBlocks} blocks)`}
     />
   );
@@ -80,21 +75,13 @@ function DaysUntilNextCycleCell({
 interface MinimumCommitmentCellProps {
   minimumCommitment: string;
 }
-function MinimumCommitmentCell({
-  minimumCommitment
-}: MinimumCommitmentCellProps) {
+function MinimumCommitmentCell({ minimumCommitment }: MinimumCommitmentCellProps) {
   const posts = getPosts();
   const post = posts.stackingMinimumCommitment;
   const label = post?.title ?? 'Minimum commitment';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label={label}
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={minimumCommitment}
     />
   );
@@ -121,16 +108,14 @@ interface TotalValueLockedCellProps {
 }
 function TotalValueLockedCell({
   totalValueLocked,
-  totalValueLockedUsd
+  totalValueLockedUsd,
 }: TotalValueLockedCellProps) {
   const posts = getPosts();
   const post = posts.totalLockedValueTvl;
   const label = post?.title ?? 'Total value locked';
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard post={post} label={label} textStyle="label.03" />
-      }
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
           {totalValueLocked} <Box textStyle="label.03">{totalValueLockedUsd}</Box>
@@ -191,9 +176,9 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
         <LockupPeriodCell minLockupPeriodDays={minLockupPeriodDays} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
-        <TotalValueLockedCell 
-          totalValueLocked={`${pool.tvlUsd.replace('$', '')} STX`} 
-          totalValueLockedUsd={pool.tvlUsd} 
+        <TotalValueLockedCell
+          totalValueLocked={`${pool.tvlUsd.replace('$', '')} STX`}
+          totalValueLockedUsd={pool.tvlUsd}
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>

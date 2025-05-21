@@ -45,7 +45,7 @@ PRE_PUSH=syncpack:lint,typecheck,lint:filenames
 In most cases, setting PRE_COMMIT is sufficient, as errors from remaining checks are
 uncommon, and typechecking is handled by editors.
 
-Local checks are optional and configurable to suit developer preferences. On GitHub, these 
+Local checks are optional and configurable to suit developer preferences. On GitHub, these
 checks run automatically on every push through [Code checks](.github/workflows/code-checks.yml), as part of the CI workflow.
 
 ### Documentation
@@ -59,4 +59,3 @@ To be able to develop packages and test those in extension, check out this [guid
 ## License
 
 [MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
-

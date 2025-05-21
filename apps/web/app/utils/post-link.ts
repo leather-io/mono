@@ -3,4 +3,4 @@ export function getPostHref(slug: string) {
     return `https://prosperous-combination-099461.framer.app/posts/${slug}`;
   }
   return `https://leather.io/posts/${slug}`;
-} 
+}

@@ -1,9 +1,11 @@
 import { ReactElement } from 'react';
+
 import { styled } from 'leather-styles/jsx';
-import { PostInfoHoverIcon } from './post-info-hover-icon';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
 import { TextElementTag, isValidTextElementTag } from '~/shared/types';
+import { sanitizeContent } from '~/utils/sanitize-content';
+
+import { PostInfoHoverIcon } from './post-info-hover-icon';
 
 interface PostLabelHoverCardProps {
   post: Post | undefined;
@@ -15,11 +17,11 @@ interface PostLabelHoverCardProps {
 /**
  * Displays a label with hover functionality showing more information about a post
  */
-export function PostLabelHoverCard({ 
+export function PostLabelHoverCard({
   post,
-  label, 
-  textStyle = 'label.01', 
-  tagName = 'span' 
+  label,
+  textStyle = 'label.01',
+  tagName = 'span',
 }: PostLabelHoverCardProps): ReactElement | null {
   if (!post) return null;
   if (!isValidTextElementTag(tagName)) {
@@ -31,4 +33,4 @@ export function PostLabelHoverCard({
       <Tag textStyle={textStyle}>{sanitizeContent(String(label ?? post.title))}</Tag>
     </PostInfoHoverIcon>
   );
-} 
+}

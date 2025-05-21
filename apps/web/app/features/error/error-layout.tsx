@@ -2,9 +2,9 @@ import { isRouteErrorResponse } from 'react-router';
 
 import * as Sentry from '@sentry/react-router';
 import { Flex } from 'leather-styles/jsx';
+import { content } from '~/data/content';
 
 import type { Route } from '../../+types/root';
-import { content } from '~/data/content';
 
 export interface ErrorLayoutProps {
   error: Route.ErrorBoundaryProps['error'];

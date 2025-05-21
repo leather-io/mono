@@ -23,7 +23,9 @@ function AppFooter() {
 
         <Footer.Column title="Company">
           <Footer.Link href="https://leather.io/posts/privacy-policy">Privacy Policy</Footer.Link>
-          <Footer.Link href="https://leather.io/posts/terms-of-service">Terms of Service</Footer.Link>
+          <Footer.Link href="https://leather.io/posts/terms-of-service">
+            Terms of Service
+          </Footer.Link>
           <Footer.Link href="https://trustmachines.notion.site/Public-assets-00144dc5c69142199b00788ff61d721c">
             Brand assets
           </Footer.Link>

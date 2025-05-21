@@ -1,9 +1,10 @@
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { Accordion, Link } from '@leather.io/ui';
-import { getPostHref } from '~/utils/post-link';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
+import { getPostHref } from '~/utils/post-link';
 import { getPosts } from '~/utils/post-utils';
+import { sanitizeContent } from '~/utils/sanitize-content';
+
+import { Accordion, Link } from '@leather.io/ui';
 
 // List of sBTC-related post keys in order of appearance on the page
 const sbtcFaqPostKeysRaw = [
@@ -45,9 +46,15 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
           <Accordion.Item value={post.slug} key={post.slug}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
-              <styled.p textStyle="body.02" mb="space.02" style={{ whiteSpace: 'pre-line', color: 'black' }}>
+              <styled.p
+                textStyle="body.02"
+                mb="space.02"
+                style={{ whiteSpace: 'pre-line', color: 'black' }}
+              >
                 {sanitizeContent(post.summary)}{' '}
-                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>Learn more</Link>
+                <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>
+                  Learn more
+                </Link>
               </styled.p>
             </Accordion.Content>
           </Accordion.Item>

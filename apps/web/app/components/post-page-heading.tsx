@@ -1,7 +1,7 @@
-import { Page, getLearnMoreLink } from '~/features/page/page';
-import { Post } from '~/data/post-types';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import { styled } from 'leather-styles/jsx';
+import { Post } from '~/data/post-types';
+import { Page, getLearnMoreLink } from '~/features/page/page';
+import { sanitizeContent } from '~/utils/sanitize-content';
 
 interface PostPageHeadingProps {
   post: Post;
@@ -23,15 +23,10 @@ export function PostPageHeading({ post }: PostPageHeadingProps) {
       }
     >
       {disclaimer && (
-        <styled.p 
-          textStyle="caption.01" 
-          color="ink.text-subdued" 
-          mt="space.02" 
-          borderRadius="sm"
-        >
+        <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02" borderRadius="sm">
           {disclaimer}
         </styled.p>
       )}
     </Page.Heading>
   );
-} 
+}

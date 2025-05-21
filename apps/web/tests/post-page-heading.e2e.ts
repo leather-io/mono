@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+
 import { test } from '.';
 
 test.describe('PostPageHeading', () => {
@@ -9,7 +10,9 @@ test.describe('PostPageHeading', () => {
     await expect(page.getByText('Test disclaimer')).toBeVisible();
     // Check that the Learn more link is present and inline with the subtitle
     const learnMore = page.getByText('Learn more');
-    expect(await learnMore.evaluate(node => node.parentElement?.textContent)).toContain('Test subtitle');
+    expect(await learnMore.evaluate(node => node.parentElement?.textContent)).toContain(
+      'Test subtitle'
+    );
     // Ensure there is no <hr> or border above the disclaimer
     const disclaimer = page.getByText('Test disclaimer');
     const disclaimerPrev = await disclaimer.evaluateHandle(node => node.previousElementSibling);
@@ -28,4 +31,4 @@ test.describe('PostPageHeading', () => {
     const disclaimer = await page.$('text=Test disclaimer');
     expect(disclaimer).toBeNull();
   });
-}); 
+});

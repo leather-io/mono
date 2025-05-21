@@ -1,14 +1,14 @@
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { getLearnMoreLink } from '~/features/page/page';
+import { getPosts } from '~/utils/post-utils';
 
 import { Flag } from '@leather.io/ui';
 
 import { RewardProtocolInfo } from '../sbtc-rewards';
 import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { getLearnMoreLink } from '~/features/page/page';
-import { getPosts } from '~/utils/post-utils';
 
 interface RewardProtocolCellProps {
   rewardProtocol: RewardProtocolInfo;
@@ -59,11 +59,7 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
     <ValueDisplayer
       name={
-        <PostLabelHoverCard
-          post={post}
-          label="Total Value Locked (TVL)"
-          textStyle="label.03"
-        />
+        <PostLabelHoverCard post={post} label="Total Value Locked (TVL)" textStyle="label.03" />
       }
       value={
         <>
@@ -81,13 +77,7 @@ function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
   const post = posts.historicalYield;
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label="Historical yield"
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.03" />}
       value={rewardProtocol.apr}
       textAlign="left"
     />
@@ -99,13 +89,7 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
   const post = posts.sbtcRewardsMinimumCommitment;
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label="Minimum commitment"
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label="Minimum commitment" textStyle="label.03" />}
       value={
         <>
           {rewardProtocol.minCommitment}
@@ -122,13 +106,7 @@ function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
   const post = posts.sbtcRewardsTokens;
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label="Rewards token"
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label="Rewards token" textStyle="label.03" />}
       value={
         <Flag
           spacing="space.02"

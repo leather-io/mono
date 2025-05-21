@@ -38,16 +38,11 @@ const customPosts: PostsCollection = {
 
 export const content = {
   stacking: {
-    providerDescription:
-      `Providers are external parties that offer yield-earning services based on the Proof of Transfer (PoX) protocol. Leather is not liable for the conduct of third parties.`,
-    payoutDescription:
-      `The type of reward you'll receive from the pool — either BTC or STX — depending on the provider's configuration.`,
-    minimumAmountToStackDescription:
-      `     The minimum amount of STX required to participate in this provider's pool. You cannot stack with less than this.`,
-    aprDescription:
-      `APR (Annual Percentage Rate) represents the annualized return participants earn on their stacked assets, excluding compounding.`,
-    feeDescription:
-      `The fee is a percentage of the rewards you earn from the pool. It is deducted from your rewards before they are distributed to you.`,
+    providerDescription: `Providers are external parties that offer yield-earning services based on the Proof of Transfer (PoX) protocol. Leather is not liable for the conduct of third parties.`,
+    payoutDescription: `The type of reward you'll receive from the pool — either BTC or STX — depending on the provider's configuration.`,
+    minimumAmountToStackDescription: `     The minimum amount of STX required to participate in this provider's pool. You cannot stack with less than this.`,
+    aprDescription: `APR (Annual Percentage Rate) represents the annualized return participants earn on their stacked assets, excluding compounding.`,
+    feeDescription: `The fee is a percentage of the rewards you earn from the pool. It is deducted from your rewards before they are distributed to you.`,
     missingIndependentStackingDescription: `We're working hard to integrate independent stacking here. In the meantime, you can use our legacy earn experience.`,
     unpoolingInfo: `After unpooling your previous position remains visible until the current cycle completes.`,
   },
@@ -206,8 +201,10 @@ export const content = {
   statusMessages: {
     waitingForTxConfirmation: 'Waiting for transaction confirmation',
     waitingForCycleToStart: 'Waiting for the cycle to start',
-    stackingReady: 'Your STX are ready for stacking. Once the next cycle starts the network will determine if and how many slots are claimed.',
-    stackingSubmitted: 'A Stacking request was successfully submitted to the blockchain. Once confirmed, an additional amount will be stacking.',
+    stackingReady:
+      'Your STX are ready for stacking. Once the next cycle starts the network will determine if and how many slots are claimed.',
+    stackingSubmitted:
+      'A Stacking request was successfully submitted to the blockchain. Once confirmed, an additional amount will be stacking.',
     errorLoadingData: 'Error while loading data, try reloading the page.',
     youAreStacking: "You're stacking",
   },
@@ -256,7 +253,8 @@ export const content = {
     expectedDelegateTo: 'Expected `delegate-to` to be defined.',
     expectedAmountUstx: 'Expected `amount-ustx` to be defined.',
     nonStandardDelegateTx: 'Detected a non-standard delegate-stx transaction.',
-    processedNonDelegationTx: 'Processed a non-delegation transaction. Only delegation-related transaction should be used with this function.',
+    processedNonDelegationTx:
+      'Processed a non-delegation transaction. Only delegation-related transaction should be used with this function.',
     failedToFetchPosts: 'Failed to fetch posts.json',
   },
   validationMessages: {
@@ -265,7 +263,7 @@ export const content = {
     mustStackAmount: 'You must stack an amount',
     availableBalance: 'Available balance is',
     mustStackAtLeast: 'You must stack at least',
-    mustDelegateMore: 'You must delegate more than you\'ve already stacked',
+    mustDelegateMore: "You must delegate more than you've already stacked",
     mustDelegateAtLeast: 'You must delegate at least',
     addressNotValid: 'Address is not valid',
     addressIncorrectNetwork: 'Address is for incorrect network',

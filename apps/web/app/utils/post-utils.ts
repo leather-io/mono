@@ -1,6 +1,7 @@
-import { removeTrailingPeriod } from './string-utils';
 import { content } from '~/data/content';
 import type { Post, PostsCollection } from '~/data/post-types';
+
+import { removeTrailingPeriod } from './string-utils';
 
 // --------------------
 // Formatting Helpers
@@ -59,13 +60,13 @@ export function getPostByKey(key: string): Post | undefined {
   const posts = getPosts();
   // Try direct access first
   if (posts[key]) return posts[key];
-  
+
   // Try converting to camelCase if it looks like a kebab-case key
   if (key.includes('-')) {
     const camelCaseKey = toCamelCase(key);
     return posts[camelCaseKey];
   }
-  
+
   return undefined;
 }
 
@@ -142,4 +143,4 @@ export function getFeaturedPosts(): Post[] {
  */
 export function getVisiblePosts(): Post[] {
   return getAllPosts().filter(post => !post.hidden);
-} 
+}
