@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
-import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useBrowser } from '@/core/browser-provider';
 import { LEATHER_GUIDES_MOBILE_BITCOIN_UNIT } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -22,6 +22,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
   const { i18n } = useLingui();
+  const { linkingRef } = useBrowser();
 
   function onUpdateBitcoinUnit(unit: BitcoinUnit) {
     settings.changeBitcoinUnitPreference(unit);
@@ -42,7 +43,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
         id: 'bitcoin_unit.header_title',
         message: 'Bitcoin unit',
       })}
-      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
+      onPressSupport={() => linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
     >
       <SettingsList gap="0">
         {Object.values(bitcoinUnitsKeyedByName).map(unit => (

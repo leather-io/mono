@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
-import { Linking } from 'react-native';
 
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
+import { useBrowser } from '@/core/browser-provider';
 import { LEATHER_GUIDES_MOBILE_REMOVE_WALLET } from '@/shared/constants';
 import { t } from '@lingui/macro';
 
@@ -12,6 +12,7 @@ interface RemoveWalletSheetProps {
   onSubmit(): unknown;
 }
 export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps) {
+  const { linkingRef } = useBrowser();
   return (
     <WarningSheetLayout
       sheetRef={sheetRef}
@@ -26,7 +27,7 @@ export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps
       })}
       variant="critical"
       onSubmit={onSubmit}
-      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}
+      onPressSupport={() => linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}
     />
   );
 }

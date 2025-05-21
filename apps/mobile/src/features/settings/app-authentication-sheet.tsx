@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
-import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useBrowser } from '@/core/browser-provider';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
@@ -20,6 +20,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
   const settings = useSettings();
   const { displayToast } = useToastContext();
   const { authenticate } = useAuthentication();
+  const { linkingRef } = useBrowser();
 
   function onUpdateAppAuth() {
     authenticate()
@@ -69,7 +70,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         id: 'app_auth.header_title',
         message: 'App authentication',
       })}
-      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
+      onPressSupport={() => linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
     >
       <SettingsList>
         <SettingsListItem

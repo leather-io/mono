@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
-import { Linking } from 'react-native';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
+import { useBrowser } from '@/core/browser-provider';
 import { LEATHER_GUIDES_MOBILE_ANALYTICS } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -18,6 +18,7 @@ interface AnalyticsSheetProps {
 export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
+  const { linkingRef } = useBrowser();
 
   function onUpdateAnalytics() {
     settings.changeAnalyticsPreference(
@@ -40,7 +41,7 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
         id: 'analytics.header_title',
         message: 'Analytics',
       })}
-      onPressSupport={() => void Linking.openURL(LEATHER_GUIDES_MOBILE_ANALYTICS)}
+      onPressSupport={() => linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_ANALYTICS)}
     >
       <SettingsList>
         <SettingsListItem

@@ -1,5 +1,3 @@
-import { Linking } from 'react-native';
-
 // TODO: move this somewhere else, it's not a good place for it
 import { getStacksNetworkMode } from '@/queries/leather-query-provider';
 
@@ -18,55 +16,43 @@ import { assertUnreachable } from '@leather.io/utils';
 type BitcoinNetworkPreference = 'mainnet' | 'testnet4' | 'signet';
 type StacksNetworkPreference = 'mainnet' | 'testnet';
 
-interface OnPressActivityArgs {
+interface MakeActivityArgs {
   txid: string;
   networkPreference: NetworkConfiguration;
   asset?: CryptoAssetInfo;
 }
-export async function onPressActivity({ txid, networkPreference, asset }: OnPressActivityArgs) {
+export function makeActivityLink({ txid, networkPreference, asset }: MakeActivityArgs) {
   if (txid && asset) {
-    await goToActivityExplorer({
+    return makeActivityExplorerLink({
       asset,
       txid,
       networkPreference,
     });
   }
+  return null;
 }
 
-interface GoToActivityExplorerArgs {
+interface MakeActivityExplorerLinkArgs {
   asset: CryptoAssetInfo;
   txid: string;
   networkPreference: NetworkConfiguration;
 }
-export async function goToActivityExplorer({
+function makeActivityExplorerLink({
   asset,
   txid,
   networkPreference,
-}: GoToActivityExplorerArgs) {
+}: MakeActivityExplorerLinkArgs) {
   if (asset.chain === 'bitcoin') {
-    return await goMempoolExplorer(
+    return makeMempoolExplorerLink({
+      networkPreference: networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference,
       txid,
-      networkPreference.chain.bitcoin.bitcoinNetwork as BitcoinNetworkPreference
-    );
+    });
   }
-  return await goToStacksExplorer(txid, getStacksNetworkMode(networkPreference));
-}
-
-async function goToStacksExplorer(txid: string, networkPreference: StacksNetworkPreference) {
-  const url = makeStacksTxExplorerLink({
-    networkPreference,
+  return makeStacksTxExplorerLink({
+    networkPreference: getStacksNetworkMode(networkPreference),
     searchParams: undefined,
     txid,
   });
-  return await Linking.openURL(url);
-}
-
-async function goMempoolExplorer(txid: string, networkPreference: BitcoinNetworkPreference) {
-  const url = makeMempoolExplorerLink({
-    networkPreference,
-    txid,
-  });
-  return await Linking.openURL(url);
 }
 
 interface MakeStacksTxExplorerLinkArgs {
