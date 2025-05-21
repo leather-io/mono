@@ -68,7 +68,6 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       createMoneyFromDecimal(stackingTrackerPool.data.lastCycle?.pool?.stacked_amount ?? 0, 'STX'),
       stxMarketData
     );
-
     const tvlUsd = i18nFormatCurrency(tvlBaseCurrencyAmount);
 
     const title = stackingTrackerPool.data.entity.name || pool.name;
@@ -81,14 +80,21 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       stackingTrackerPool.data.lastCycle?.pool.pox_address ||
       (poxAddress && formatPoxAddressToNetwork(stacksNetwork.network, poxAddress));
 
+    const minCommitment = +pool.minAmount.split(' ')[0];
+    const minCommitmentBaseCurrencyAmount = baseCurrencyAmountInQuote(
+      createMoneyFromDecimal(minCommitment ?? 0, 'STX'),
+      stxMarketData
+    );
+    const minCommitmentUsd = i18nFormatCurrency(minCommitmentBaseCurrencyAmount);
+
     return {
       id: poolSlug,
 
       logo: <ProviderIcon providerId={pool.providerId} />,
       rewardsToken: pool.payout,
       description: pool.description,
-      minCommitment: pool.minAmount,
-      minCommitmentUsd: pool.minCommitmentUsd,
+      minCommitment,
+      minCommitmentUsd,
 
       title,
       url,
@@ -127,7 +133,7 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       description: pool.description,
       id: pool.providerId,
       logo: <ProviderIcon providerId={pool.providerId} />,
-      minCommitment: pool.minAmount,
+      minCommitment: +pool.minAmount.split(' ')[0],
       minCommitmentUsd: pool.minCommitmentUsd,
       minLockupPeriodDays: 1,
       nextCycleBlocks: 220,

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
+import { createGetAllowanceContractCallersQueryOptions } from '~/queries/create-get-allowance-contract-callers-query-options';
 
 import {
   createGetAccountExtendedBalancesQueryOptions,
-  createGetAllowanceContractCallersQueryOptions,
   createGetCoreInfoQueryOptions,
   createGetCycleDurationQueryOptions,
   createGetPoxInfoQueryOptions,

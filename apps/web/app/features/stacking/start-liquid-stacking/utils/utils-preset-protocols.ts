@@ -49,6 +49,10 @@ export function getProtocolBySlug(protocolSlug: ProtocolSlug) {
   return protocols[protocolName];
 }
 
+export function getProtocolIdBySlug(protocolSlug: ProtocolSlug) {
+  return ProtocolSlugToIdMap[protocolSlug];
+}
+
 export function getProtocolSlugByProtocolName(
   protocolName: ProtocolName
 ): ProtocolSlug | undefined {

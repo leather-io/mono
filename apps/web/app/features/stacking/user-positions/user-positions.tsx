@@ -63,7 +63,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
 
   const activeLisaProtocolInfo = lisaProtocol.info;
   const isLisaProtocolActive =
-    !lisaProtocol.isError && lisaProtocol.info && lisaProtocol.balance?.data.gt(0);
+    !lisaProtocol.isError && lisaProtocol.info && lisaProtocol.balance?.data?.gt(0);
 
   const activeDaoProtocolInfo = daoProtocol.info;
   const isDaoProtocolActive =
