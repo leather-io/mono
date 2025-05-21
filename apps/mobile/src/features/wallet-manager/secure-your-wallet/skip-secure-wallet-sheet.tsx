@@ -12,6 +12,7 @@ interface SkipSecureWalletSheetProps {
 export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSheetProps) {
   return (
     <WarningSheetLayout
+      variant="critical"
       sheetRef={sheetRef}
       title={t({
         id: 'skip_secure_wallet.header_title',
