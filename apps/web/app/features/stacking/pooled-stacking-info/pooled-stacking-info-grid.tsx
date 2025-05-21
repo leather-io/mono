@@ -6,7 +6,12 @@ import { ValueDisplayer } from '~/components/value-displayer/default-value-displ
 import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
+import {
+  daysToWeek,
+  toHumanReadableDays,
+  toHumanReadableStx,
+  toHumanReadableWeeks,
+} from '~/utils/unit-convert';
 
 import { Flag } from '@leather.io/ui';
 
@@ -91,7 +96,7 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
       name="Minimum Commitment"
       value={
         <>
-          {rewardProtocol.minCommitment}
+          {toHumanReadableStx(rewardProtocol.minCommitment)}
           <Box textStyle="label.03">{rewardProtocol.minCommitmentUsd}</Box>
         </>
       }

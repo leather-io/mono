@@ -3,7 +3,12 @@ import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import { daysToWeek, toHumanReadableDays, toHumanReadableWeeks } from '~/utils/unit-convert';
+import {
+  daysToWeek,
+  toHumanReadableDays,
+  toHumanReadableStx,
+  toHumanReadableWeeks,
+} from '~/utils/unit-convert';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -69,10 +74,24 @@ function DaysUntilNextCycleCell({
 }
 
 interface MinimumCommitmentCellProps {
-  minimumCommitment: string;
+  minimumCommitment: number;
+  minimumCommitmentUsd: string;
 }
-function MinimumCommitmentCell({ minimumCommitment }: MinimumCommitmentCellProps) {
-  return <ValueDisplayer name="Minimum commitment" value={<>{minimumCommitment}</>} />;
+function MinimumCommitmentCell({
+  minimumCommitment,
+  minimumCommitmentUsd,
+}: MinimumCommitmentCellProps) {
+  return (
+    <ValueDisplayer
+      name="Minimum commitment"
+      value={
+        <>
+          {toHumanReadableStx(minimumCommitment)}{' '}
+          <Box textStyle="label.03">{minimumCommitmentUsd}</Box>
+        </>
+      }
+    />
+  );
 }
 
 interface HistoricalAprCellProps {
@@ -153,7 +172,10 @@ export function PoolOverview({ pool }: PoolOverviewProps) {
         <RewardTokenCell token={pool.rewardsToken} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
-        <MinimumCommitmentCell minimumCommitment={pool.minCommitment} />
+        <MinimumCommitmentCell
+          minimumCommitment={pool.minCommitment}
+          minimumCommitmentUsd={pool.minCommitmentUsd}
+        />
       </InfoGrid.Cell>
     </InfoGrid>
   );

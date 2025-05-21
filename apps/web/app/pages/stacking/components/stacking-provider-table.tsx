@@ -21,6 +21,7 @@ import {
   rowPadding,
   theadBorderBottom,
 } from '~/components/table';
+import { DASH } from '~/constants/constants';
 import { content } from '~/data/content';
 import {
   LiquidStackingPool,
@@ -32,7 +33,7 @@ import { getProtocolSlugByProviderId } from '~/features/stacking/start-liquid-st
 import { providerIdToSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
-import { useDAOFee } from '~/queries/protocols/dao/fee';
+import { useProtocolFee } from '~/queries/protocols/use-protocol-fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
 import { toHumanReadablePercent, toHumanReadableShortStx } from '~/utils/unit-convert';
@@ -122,7 +123,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
           }
 
           if (isError || isUndefined(data?.lastCycle?.pool.stacked_amount)) {
-            return <styled.div>{(info.getValue() as string) || '-'}</styled.div>;
+            return <styled.div>{(info.getValue() as string) || DASH}</styled.div>;
           }
 
           return (
@@ -421,22 +422,26 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         accessorKey: 'fee',
         cell: info => {
           const slug = getProtocolSlugByProviderId(info.row.original.providerId);
-          if (slug !== 'stacking-dao') {
+          if (!slug) {
             return <styled.div>{info.getValue() as string}</styled.div>;
           }
 
           // eslint-disable-next-line react-hooks/rules-of-hooks
-          const { isLoading, isError, data: fee } = useDAOFee();
+          const protocolFeeQuery = useProtocolFee(slug);
 
-          if (isLoading) {
+          if (protocolFeeQuery?.isLoading) {
             return <SkeletonLoader isLoading w={40} h={16} />;
           }
 
-          if (isError || isUndefined(fee)) {
+          if (protocolFeeQuery?.isError || isUndefined(protocolFeeQuery?.data)) {
             return <styled.div>{info.getValue() as string}</styled.div>;
           }
 
-          return <styled.div>{toHumanReadablePercent(fee.multipliedBy(100))}</styled.div>;
+          return (
+            <styled.div>
+              {toHumanReadablePercent(protocolFeeQuery?.data?.multipliedBy(100) || 0)}
+            </styled.div>
+          );
         },
         header: () => (
           <styled.div>

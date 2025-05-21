@@ -1,6 +1,6 @@
 import { Box, HStack, VStack, styled } from 'leather-styles/jsx';
+import { ProtocolOverview } from '~/components/protocol-overview';
 import { PendingStackExtendAlert } from '~/features/stacking/components/pending-stack-extend-alert';
-import { LiquidStackingInfoGrid } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-info-grid';
 import { useGetHasPendingStackingTransactionQuery } from '~/features/stacking/direct-stacking-info/use-get-has-pending-tx-query';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import {
@@ -8,19 +8,13 @@ import {
   ProtocolSlug,
   ProtocolSlugToIdMap,
 } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { dummyPoolRewardProtocol } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
-import { useStxCryptoAssetBalance } from '~/queries/balance/account-balance.hooks';
+import { useProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { Spinner } from '@leather.io/ui';
 
-import {
-  useGetAccountExtendedBalancesQuery,
-  useGetCoreInfoQuery,
-  useGetPoxInfoQuery,
-  useGetStatusQuery,
-} from '../hooks/stacking.query';
+import { useGetPoxInfoQuery, useGetStatusQuery } from '../hooks/stacking.query';
 import { NoStackingInfo } from './components/no-stacking-info';
 import { PendingStackingInfo } from './components/pending-stacking-info';
 
@@ -29,28 +23,24 @@ export interface DirectStackingInfoProps {
   protocolSlug: ProtocolSlug;
 }
 
-export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfoProps) {
+export function LiquidStackingInfo({ protocolSlug }: DirectStackingInfoProps) {
   const { networkName } = useStacksNetwork();
   const getStatusQuery = useGetStatusQuery();
-  const getAccountExtendedBalancesQuery = useGetAccountExtendedBalancesQuery();
-  const getCoreInfoQuery = useGetCoreInfoQuery();
-  const { filteredBalanceQuery: getAccountBalanceLockedQuery } = useStxCryptoAssetBalance(address);
   const getPoxInfoQuery = useGetPoxInfoQuery();
   const {
     getHasPendingDirectStackingQuery,
     getHasPendingStackIncreaseQuery,
     getHasPendingStackExtendQuery,
   } = useGetHasPendingStackingTransactionQuery();
+  const protocolInfo = useProtocolInfo(protocolSlug);
 
   if (
     getStatusQuery.isLoading ||
-    getAccountExtendedBalancesQuery.isLoading ||
-    getCoreInfoQuery.isLoading ||
     getPoxInfoQuery.isLoading ||
-    getAccountBalanceLockedQuery.isLoading ||
     getHasPendingDirectStackingQuery.isLoading ||
     getHasPendingStackIncreaseQuery.isLoading ||
-    getHasPendingStackExtendQuery.isLoading
+    getHasPendingStackExtendQuery.isLoading ||
+    protocolInfo.isLoading
   ) {
     // return <CenteredSpinner />;
     return <Spinner />;
@@ -59,16 +49,11 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
   if (
     getStatusQuery.isError ||
     !getStatusQuery.data ||
-    getAccountExtendedBalancesQuery.isError ||
-    !getAccountExtendedBalancesQuery.data ||
-    getAccountBalanceLockedQuery.isError ||
-    !getAccountBalanceLockedQuery.data ||
-    getCoreInfoQuery.isError ||
-    !getCoreInfoQuery.data ||
     getPoxInfoQuery.isError ||
     !getPoxInfoQuery.data ||
     getHasPendingDirectStackingQuery.isError ||
-    getHasPendingStackIncreaseQuery.isError
+    getHasPendingStackIncreaseQuery.isError ||
+    protocolInfo.isError
   ) {
     const msg = 'Error while loading data, try reloading the page.';
     // eslint-disable-next-line no-console
@@ -122,16 +107,7 @@ export function LiquidStackingInfo({ address, protocolSlug }: DirectStackingInfo
         </VStack>
       </HStack>
 
-      <LiquidStackingInfoGrid
-        protocolName={protocol.name}
-        protocolIcon={protocol.icon}
-        rewardProtocol={dummyPoolRewardProtocol}
-        rewardCycleId={getPoxInfoQuery.data.reward_cycle_id}
-        lockedAmount={getAccountBalanceLockedQuery.data.availableBalance.amount}
-        stackerInfoDetails={getStatusQuery.data.details}
-        pendingStackExtend={getHasPendingStackExtendQuery.data}
-        protocolSlug={protocolSlug}
-      />
+      {protocolInfo.info && <ProtocolOverview info={protocolInfo.info} />}
 
       {getHasPendingStackExtendQuery.data && (
         <PendingStackExtendAlert pendingStackExtend={getHasPendingStackExtendQuery.data} />

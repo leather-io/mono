@@ -28,6 +28,7 @@ import {
   useStxAvailableUnlockedBalance,
   useStxCryptoAssetBalance,
 } from '~/queries/balance/account-balance.hooks';
+import { useProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
@@ -66,6 +67,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   const { networkInstance } = useStacksNetwork();
   const navigate = useNavigate();
+  const protocolInfo = useProtocolInfo(protocolSlug);
 
   const getSecondsUntilNextCycleQuery = useGetSecondsUntilNextCycleQuery();
 
@@ -119,7 +121,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   const stackingAmount = formMethods.watch('amount');
 
-  if (getSecondsUntilNextCycleQuery.isLoading) {
+  if (getSecondsUntilNextCycleQuery.isLoading || protocolInfo.isLoading) {
     return (
       <Flex height="100vh" width="100%">
         <LoadingSpinner />
@@ -142,7 +144,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       <Page.Inset>
-        <ProtocolOverview protocol={protocol} protocolSlug={protocolSlug} />
+        {protocolInfo.info && <ProtocolOverview info={protocolInfo.info} isStackingPage />}
       </Page.Inset>
       <FormProvider {...formMethods}>
         <StartStackingLayout

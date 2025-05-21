@@ -34,6 +34,7 @@ import {
   useStxAvailableUnlockedBalance,
   useStxCryptoAssetBalance,
 } from '~/queries/balance/account-balance.hooks';
+import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
@@ -66,11 +67,7 @@ export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
   return <StartPooledStackingLayout client={client} poolSlug={poolSlug} />;
 }
 
-const initialStackingFormValues: Partial<StackingPoolFormSchema> = {
-  // amount: '',
-  // numberOfCycles: 1,
-  // poolAddress: '',
-};
+const initialStackingFormValues: Partial<StackingPoolFormSchema> = {};
 
 interface StartPooledStackingLayoutProps {
   poolSlug: PoolSlug;
@@ -82,6 +79,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
+  const stacksClient = useStacksClient();
   const poolInfo = usePoolInfo(poolSlug);
 
   const { network, networkInstance, networkPreference } = useStacksNetwork();
@@ -99,7 +97,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     contractName,
     callingContract: poxContracts['WrapperFastPool'],
     senderAddress: stacksAccount.address,
-    network,
+    client: stacksClient,
   });
 
   const getAllowanceContractCallersRestakeQuery = useGetAllowanceContractCallersQuery({
@@ -107,7 +105,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     contractName,
     callingContract: poxContracts['WrapperRestake'],
     senderAddress: stacksAccount.address,
-    network,
+    client: stacksClient,
   });
 
   const getAllowanceContractCallersOneCycleQuery = useGetAllowanceContractCallersQuery({
@@ -115,7 +113,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     contractName,
     callingContract: poxContracts['WrapperOneCycle'],
     senderAddress: stacksAccount.address,
-    network,
+    client: stacksClient,
   });
 
   const {

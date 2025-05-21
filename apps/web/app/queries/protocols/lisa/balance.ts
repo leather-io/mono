@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { getLiquidContract } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
 import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
-import { useNftHoldingsQuery } from '~/queries/balance/nft-holdings';
+import { fetchNftHoldings } from '~/queries/balance/nft-holdings';
+import { CreateProtocolBalanceQueryOptionsParams } from '~/queries/protocols/protocol-types';
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
@@ -24,30 +25,24 @@ export interface LisaMintRequest {
   status: string;
 }
 
-export function useLisaBalance() {
-  const client = useStacksClient();
-  const { stacksAccount } = useLeatherConnect();
-  const address = stacksAccount?.address;
-
-  const network = useStacksNetwork();
-  const networkMode = getNetworkInstanceByName(network.networkName);
-
-  const lisaContract = getLiquidContract(networkMode, 'Lisa').split('.');
-  const [contractAddress, contractName] = lisaContract || [];
-
-  const nftQuery = useNftHoldingsQuery();
-
-  return useQuery({
-    queryKey: [
-      'lisa-mint-requests',
-      address,
-      nftQuery.data?.results,
-      contractAddress,
-      contractName,
-    ],
-    enabled: !!address && nftQuery.isSuccess && !!contractName && !!contractName,
+export function createGetLisaBalanceQueryOptions({
+  address,
+  networkMode,
+  client,
+  networkUrl,
+}: CreateProtocolBalanceQueryOptionsParams) {
+  return {
+    queryKey: ['lisa-mint-requests', address, networkUrl, networkMode],
+    enabled: !!address,
     queryFn: async () => {
-      const results = nftQuery.data?.results ?? [];
+      const lisaContract = getLiquidContract(networkMode, 'Lisa').split('.');
+      const [contractAddress, contractName] = lisaContract || [];
+      if (!contractAddress || !contractName) {
+        return null;
+      }
+      const nftHoldings = await fetchNftHoldings(networkUrl, address);
+
+      const results = nftHoldings?.results ?? [];
 
       const lisaNftIds = results
         .filter(nft => nft.asset_identifier.endsWith(LISA_NFT_IDENTIFIER))
@@ -91,5 +86,23 @@ export function useLisaBalance() {
           .reduce((sum, r) => sum.plus(r?.amount ?? 0), new BigNumber(0)) ?? new BigNumber(0)
       );
     },
-  });
+  };
+}
+
+export function useLisaBalance() {
+  const client = useStacksClient();
+  const { stacksAccount } = useLeatherConnect();
+  const address = stacksAccount?.address;
+
+  const network = useStacksNetwork();
+  const networkMode = getNetworkInstanceByName(network.networkName);
+
+  return useQuery(
+    createGetLisaBalanceQueryOptions({
+      address,
+      client,
+      networkMode,
+      networkUrl: network.networkPreference.chain.stacks.url,
+    })
+  );
 }
