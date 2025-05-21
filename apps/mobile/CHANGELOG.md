@@ -701,6 +701,37 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.41.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.40.2...@leather.io/mobile-v2.41.0) (2025-05-21)
+
+
+### Features
+
+* sip30 sendTransfer ([4fc910e](https://github.com/leather-io/mono/commit/4fc910e5b44e839669a2695a6ff0c720a9ccc145))
+
+
+### Bug Fixes
+
+* approver buttons get lost sometimes ([1654bc7](https://github.com/leather-io/mono/commit/1654bc709ad99f904d5a035525e0a0148ed21f5c))
+* browser issues ([af47760](https://github.com/leather-io/mono/commit/af477602e47ee8a90fa75987d57e64909d7ebb34))
+* dev builds ([9f9857e](https://github.com/leather-io/mono/commit/9f9857edc5514e60f70e3c7fcd49405a1606cd3a))
+* metro update ([70c57e7](https://github.com/leather-io/mono/commit/70c57e7d1052a74d47f976a14eaa872deace3d96))
+* **mobile:** add custom retry logic for queries ([dd4cc0a](https://github.com/leather-io/mono/commit/dd4cc0ad44f32b2e35f19dc9fc1daa6f05630db6))
+* update browser ui ([925f37f](https://github.com/leather-io/mono/commit/925f37f90b73eb22a0ac55247f099445823e9f26))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.1
+    * @leather.io/provider bumped to 1.2.13
+    * @leather.io/query bumped to 2.37.1
+    * @leather.io/rpc bumped to 2.15.0
+    * @leather.io/services bumped to 1.12.0
+    * @leather.io/ui bumped to 1.66.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.1
+
 ## [2.40.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.40.1...@leather.io/mobile-v2.40.2) (2025-05-19)
 
 
