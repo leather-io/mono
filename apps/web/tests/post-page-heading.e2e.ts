@@ -7,6 +7,17 @@ test.describe('PostPageHeading', () => {
     await expect(page.getByText('Test Title')).toBeVisible();
     await expect(page.getByText('Test subtitle')).toBeVisible();
     await expect(page.getByText('Test disclaimer')).toBeVisible();
+    // Check that the Learn more link is present and inline with the subtitle
+    const subtitle = await page.getByText('Test subtitle');
+    const learnMore = await page.getByText('Learn more');
+    expect(await learnMore.evaluate(node => node.parentElement?.textContent)).toContain('Test subtitle');
+    // Ensure there is no <hr> or border above the disclaimer
+    const disclaimer = await page.getByText('Test disclaimer');
+    const disclaimerPrev = await disclaimer.evaluateHandle(node => node.previousElementSibling);
+    if (disclaimerPrev) {
+      const tagName = await disclaimerPrev.evaluate(node => node.tagName);
+      expect(tagName).not.toBe('HR');
+    }
   });
 
   test('handles missing fields gracefully', async ({ page }) => {

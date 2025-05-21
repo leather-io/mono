@@ -18,30 +18,22 @@ export function PostPageHeading({ post }: PostPageHeadingProps) {
   return (
     <Page.Heading
       title={sanitizeContent(post.prompt ?? post.title)}
-      subtitle={subtitle}
+      subtitle={
+        <>
+          {subtitle}
+          {learnMoreLink}
+        </>
+      }
     >
-      {learnMoreLink}
       {disclaimer && (
-        <styled.div>
-          <styled.hr 
-            color="ink.border-default" 
-            border="none" 
-            borderBottomWidth="1px" 
-            borderBottomStyle="solid"
-            borderBottomColor="ink.border-default"
-            width="100%" 
-            mb="space.02" 
-            mt="space.03" 
-          />
-          <styled.p 
-            textStyle="caption.01" 
-            color="ink.text-subdued" 
-            mt="space.02" 
-            borderRadius="sm"
-          >
-            {disclaimer}
-          </styled.p>
-        </styled.div>
+        <styled.p 
+          textStyle="caption.01" 
+          color="ink.text-subdued" 
+          mt="space.02" 
+          borderRadius="sm"
+        >
+          {disclaimer}
+        </styled.p>
       )}
     </Page.Heading>
   );

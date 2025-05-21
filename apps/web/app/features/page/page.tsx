@@ -20,12 +20,10 @@ export function PageInset(props: HTMLStyledProps<'div'>) {
 
 interface PageHeadingProps {
   title: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   children?: ReactNode;
 }
 export function PageHeading({ title, subtitle = '', children }: PageHeadingProps) {
-  const needsPeriod = subtitle && !subtitle.endsWith('.') && !subtitle.endsWith('!') && !subtitle.endsWith('?');
-
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
       <Box flex={1}>
