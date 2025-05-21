@@ -19,20 +19,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 
-      - name: Build web app
-        env:
-          CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
-          LEATHER_TARGET: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
-          LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
-          LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
-          LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
+      - name: Build web app deps
         run: pnpm turbo run build --filter="@leather.io/web"
 
       - name: Deploy web app
         working-directory: apps/web
         env:
           CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
+          LEATHER_TARGET: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
+          LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
+          LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
+          LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
           CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-        run: pnpm wrangler deploy
+        run: pnpm run deploy
