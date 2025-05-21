@@ -1,8 +1,12 @@
 import { Box, HasChildren } from '@leather.io/ui/native';
 
-export function CollectiblesLayout({ children }: HasChildren) {
+interface CollectiblesLayoutProps extends HasChildren {
+  mode?: 'gallery' | 'widget';
+}
+
+export function CollectiblesLayout({ children }: CollectiblesLayoutProps) {
   return (
-    <Box flexDirection="row" alignItems="center" paddingHorizontal="5" gap="4" flexWrap="wrap">
+    <Box flexDirection="column" alignItems="center" paddingHorizontal="5" gap="4" flexWrap="wrap">
       {children}
     </Box>
   );

@@ -1,5 +1,5 @@
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { Collectibles } from '@/features/collectibles';
+import { Collectibles, CollectiblesLayout } from '@/features/collectibles';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { t } from '@lingui/macro';
@@ -18,7 +18,9 @@ export default function CollectiblesScreen() {
       title={pageTitle}
       contentTitle={pageTitle}
     >
-      <Collectibles collectibles={collectibles} />
+      <CollectiblesLayout>
+        <Collectibles collectibles={collectibles} />
+      </CollectiblesLayout>
     </AnimatedHeaderScreenLayout>
   );
 }
