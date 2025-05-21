@@ -3,16 +3,13 @@ import { Explainer } from '~/components/explainer';
 import { content } from '~/data/content';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { sanitizeContent } from '~/utils/sanitize-content';
-import { getPostByKey, getPosts } from '~/utils/post-utils';
+import { getPostByKey } from '~/utils/post-utils';
 
 export function StackingExplainer(props: HTMLStyledProps<'section'>) {
-  const posts = getPosts();
-  
   return (
     <Explainer {...props}>
       {content.stackingExplainer.map((step, idx) => {
         const post = getPostByKey(step.postKey);
-        
         return (
           <Explainer.Step
             key={step.title}

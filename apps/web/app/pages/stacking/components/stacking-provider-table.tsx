@@ -15,7 +15,6 @@ import { ProviderIcon } from '~/components/icons/provider-icon';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import {
   ForceRowHeight,
-  SortableHeader,
   Table,
   rowPadding,
   theadBorderBottom,
@@ -84,7 +83,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
       maxSize: 40,
       size: 40,
     }),
-    []
+    [posts.stackingProviders]
   );
 
   const extendedColumns = useMemo<ColumnDef<StackingPool>[]>(
@@ -119,18 +118,14 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         accessorKey: 'tvl',
         cell: info => {
           const slug = providerIdToSlug(info.row.original.providerId);
-
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const { isLoading, isError, data } = useStackingTrackerPool(slug);
-
           if (isLoading) {
             return <SkeletonLoader isLoading w={40} h={16} />;
           }
-
           if (isError || isUndefined(data?.lastCycle?.pool.stacked_amount)) {
             return <styled.div>{(info.getValue() as string) || '-'}</styled.div>;
           }
-
           return (
             <styled.div>{toHumanReadableShortStx(data.lastCycle.pool.stacked_amount)}</styled.div>
           );
@@ -139,7 +134,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
           <styled.div maxW="fit-content" whiteSpace="nowrap" textAlign="right">
             <PostLabelHoverCard
               post={posts.totalLockedValueTvl}
-              label={content.labels.totalLockedValueTvl}
+              label={posts.totalLockedValueTvl?.title || ''}
               textStyle="label.03"
             />
           </styled.div>
@@ -229,7 +224,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 12,
       },
     ],
-    []
+    [posts.stackingRewardsTokens, posts.stackingPoolFees, posts.historicalYield, posts.totalLockedValueTvl, posts.stackingMinimumCommitment]
   );
 
   const trailingColumn = useMemo<ColumnDef<StackingPool>[]>(
@@ -353,7 +348,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       size: 40,
       maxSize: 40,
     }),
-    []
+    [posts.stackingProviders]
   );
 
   const largeViewportColumns = useMemo<ColumnDef<LiquidStackingPool>[]>(
@@ -390,7 +385,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
           <styled.div maxW="fit-content" whiteSpace="nowrap" textAlign="right">
             <PostLabelHoverCard
               post={posts.totalLockedValueTvl}
-              label={content.labels.totalLockedValueTvl}
+              label={posts.totalLockedValueTvl?.title || ''}
               textStyle="label.03"
             />
           </styled.div>
@@ -480,7 +475,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
     ],
-    []
+    [posts.stackingRewardsTokens, posts.stackingPoolFees, posts.historicalYield, posts.totalLockedValueTvl]
   );
 
   const trailingColumn = useMemo<ColumnDef<LiquidStackingPool>>(

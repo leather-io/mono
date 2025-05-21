@@ -58,13 +58,13 @@ export function ProtocolOverview({ protocol, protocolSlug }: ProtocolOverviewPro
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
         <ValueDisplayer
           name={<PostLabelHoverCard post={historicalYieldPost} label="Historical yield" textStyle="label.02" />}
-          value={"—"}
+          value="—"
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
         <ValueDisplayer
           name={<PostLabelHoverCard post={totalLockedValuePost} label="Total value locked" textStyle="label.02" />}
-          value={"—"}
+          value="—"
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['4', '4', '2']}>

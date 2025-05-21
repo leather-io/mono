@@ -1,4 +1,4 @@
-import { ReactNode, ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 /**
  * Type definitions for HTML element tags
@@ -11,14 +11,14 @@ export type TextElementTag = HeadingTag | TextTag | LabelTag;
 /**
  * Validation helper for checking if a string is a valid text element tag
  */
-export const isValidTextElementTag = (tag: string): tag is TextElementTag => {
+export function isValidTextElementTag(tag: string): tag is TextElementTag {
   const validTags = [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
     'p', 'span', 'div',
     'label'
   ];
   return validTags.includes(tag);
-};
+}
 
 /**
  * React Element Type Guidelines

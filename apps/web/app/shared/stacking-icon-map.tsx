@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
 import { IconMapType } from '~/shared/types';
 import { StackingConditionItem } from '~/features/stacking/components/stacking-conditions';

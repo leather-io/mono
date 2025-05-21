@@ -1,11 +1,9 @@
-import { ReactNode, ReactElement } from 'react';
-import type { JSX } from 'react';
-import { Flex, styled } from 'leather-styles/jsx';
+import { ReactElement } from 'react';
+import { styled } from 'leather-styles/jsx';
 import { PostInfoHoverIcon } from './post-info-hover-icon';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
 import { TextElementTag, isValidTextElementTag } from '~/shared/types';
-import { getPosts } from '~/utils/post-utils';
 
 interface PostLabelHoverCardProps {
   post: Post | undefined;
@@ -24,12 +22,9 @@ export function PostLabelHoverCard({
   tagName = 'span' 
 }: PostLabelHoverCardProps): ReactElement | null {
   if (!post) return null;
-  
   if (!isValidTextElementTag(tagName)) {
-    console.warn(`Invalid tag name: ${tagName}. Falling back to span.`);
     tagName = 'span';
   }
-  
   const Tag = styled[tagName];
   return (
     <PostInfoHoverIcon post={post}>

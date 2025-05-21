@@ -10,6 +10,7 @@ import {
 } from '~/utils/validators/stx-amount-validator';
 
 import { Money } from '@leather.io/models';
+import { content } from '~/data/content';
 
 interface SchemaCreationParams {
   protocolName: ProtocolName;
@@ -23,7 +24,7 @@ export function createValidationSchema({ protocolName, availableBalance }: Schem
       amount: stxAmountSchema()
         .refine(value => validateMaxStackingAmount(value))
         .refine(value => validateAvailableBalance(value, availableBalanceAmount), {
-          message: `Available balance is ${toHumanReadableMicroStx(availableBalanceAmount ?? 0)}`,
+          message: `${content.validationMessages.availableBalance} ${toHumanReadableMicroStx(availableBalanceAmount ?? 0)}`,
         }),
     })
     .superRefine((data, ctx) => {
@@ -32,7 +33,7 @@ export function createValidationSchema({ protocolName, availableBalance }: Schem
       if (!validateMinStackingAmount(amount, minDelegatedStackingAmount)) {
         ctx.addIssue({
           code: 'custom',
-          message: `You must stack at least ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
+          message: `${content.validationMessages.mustStackAtLeast} ${toHumanReadableMicroStx(minDelegatedStackingAmount)}`,
           path: ['amount'],
         });
       }

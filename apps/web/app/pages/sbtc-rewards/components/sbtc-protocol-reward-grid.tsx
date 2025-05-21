@@ -7,7 +7,6 @@ import { Flag } from '@leather.io/ui';
 import { RewardProtocolInfo } from '../sbtc-rewards';
 import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { content } from '~/data/content';
 import { getLearnMoreLink } from '~/features/page/page';
 import { getPosts } from '~/utils/post-utils';
 

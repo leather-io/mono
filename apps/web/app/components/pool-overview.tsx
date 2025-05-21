@@ -1,20 +1,13 @@
-import { ReactNode, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled, HTMLStyledProps } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { PostValueHoverCard } from '~/components/post-value-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { content } from '~/data/content';
-import type { StackingPool } from '~/data/data';
-import { getPostSlugForProvider } from '~/data/data';
-import type { PostsCollection } from '~/data/post-types';
-import { getLearnMoreLink } from '~/features/page/page';
-import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
+import { getPostSlugForProvider, StackingPool } from '~/data/data';
 import { usePost, getPosts } from '~/utils/post-utils';
 import { TextElementTag } from '~/shared/types';
-
-import { ProviderIcon } from './icons/provider-icon';
+import { getLearnMoreLink } from '~/features/page/page';
 
 interface RewardTokenCellProps {
   token: string;
@@ -109,9 +102,8 @@ function MinimumCommitmentCell({
 
 interface HistoricalAprCellProps {
   historicalApr: string;
-  textStyle?: string;
 }
-function HistoricalAprCell({ historicalApr, textStyle = 'label.03' }: HistoricalAprCellProps) {
+function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
   const posts = getPosts();
   const post = posts.historicalYield;
   const label = post?.title ?? 'Historical yield';

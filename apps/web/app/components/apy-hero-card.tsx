@@ -1,4 +1,4 @@
-import { Flex, styled } from 'leather-styles/jsx';
+import { Flex } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
 import { Page } from '~/features/page/page';
 import { PostValueHoverCard } from '~/components/post-value-hover-card';

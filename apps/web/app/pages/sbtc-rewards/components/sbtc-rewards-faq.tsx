@@ -1,6 +1,5 @@
 import { HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Accordion, Link } from '@leather.io/ui';
-import { content } from '~/data/content';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
