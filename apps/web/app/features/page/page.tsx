@@ -56,7 +56,7 @@ export function getLearnMoreLink(destination: string, precedingText?: string): R
   return (
     <>
       {precedingText && needsPeriod ? '. ' : ' '}
-      <Link href={href} style={{ fontSize: 'inherit' }}>{'Learn more'}</Link>
+      <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>{'Learn more'}</Link>
     </>
   );
 }

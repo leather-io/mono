@@ -6,17 +6,24 @@ import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
 
 interface PostValueHoverCardProps {
-  postKey: string;
+  postKey?: string;
+  post?: Post;
   value: ReactNode;
   label?: string;
 }
 
-export function PostValueHoverCard({ postKey, value, label }: PostValueHoverCardProps) {
-  const post: Post | undefined = content.posts[postKey];
+export function PostValueHoverCard({ postKey, post: propPost, value, label }: PostValueHoverCardProps) {
+  let post = propPost;
+  
+  if (!post && postKey) {
+    post = content.posts[postKey];
+  }
+  
   if (!post) return null;
+  
   return (
     <Flex flexDir="column">
-      <PostInfoHoverIcon postKey={postKey}>
+      <PostInfoHoverIcon post={post}>
         <styled.span textStyle="label.01">{sanitizeContent(label ?? post.title)}</styled.span>
       </PostInfoHoverIcon>
       {typeof value === 'string' ? (

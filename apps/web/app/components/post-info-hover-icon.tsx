@@ -1,29 +1,37 @@
-import { ReactNode } from 'react';
-import { Flex, styled } from 'leather-styles/jsx';
-import { BasicHoverCard } from './basic-hover-card';
-import { content } from '~/data/content';
+import { ReactNode, ReactElement, Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { InfoCircleIcon } from '@leather.io/ui';
-import { getPostHref } from '~/utils/post-link';
+import { Flex, styled } from 'leather-styles/jsx';
+
+import { BasicHoverCard } from './basic-hover-card';
+import type { Post } from '~/data/post-types';
 import { getLearnMoreLink } from '~/features/page/page';
 import { sanitizeContent } from '~/utils/sanitize-content';
-import { useNavigate } from 'react-router-dom';
-import type { PostsCollection } from '~/data/post-types';
+import { getPostHref } from '~/utils/post-link';
+import { getPosts } from '~/utils/post-utils';
 
 interface PostInfoHoverIconProps {
-  postKey: string;
+  post: Post | undefined;
   children: ReactNode;
   iconColor?: 'black' | 'white';
 }
 
-export function PostInfoHoverIcon({ postKey, children, iconColor = 'black' }: PostInfoHoverIconProps) {
-  const post = (content.posts as unknown as PostsCollection)[postKey];
+/**
+ * Displays content with a hover icon to show additional information about a post
+ */
+export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostInfoHoverIconProps): ReactElement {
   const navigate = useNavigate();
-  if (!post) return <>{children}</>;
+  
+  if (!post) return <Fragment>{children}</Fragment>;
+  
   const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
-  const handleIconClick = (e: React.MouseEvent) => {
+  
+  const handleIconClick = (e: React.MouseEvent): void => {
     e.stopPropagation();
-    navigate(getPostHref(post.slug));
+    void navigate(getPostHref(post.slug));
   };
+  
   return (
     <BasicHoverCard align="start" content={
       <styled.span display="block">
@@ -33,14 +41,17 @@ export function PostInfoHoverIcon({ postKey, children, iconColor = 'black' }: Po
     }>
       <Flex alignItems="center" gap="space.02">
         {children}
-        <a
+        <styled.a
           href={getPostHref(post.slug)}
           rel="noopener noreferrer"
           onClick={handleIconClick}
-          style={{ display: 'inline-flex', color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}
+          display="inline-flex"
+          color="inherit"
+          textDecoration="none"
+          cursor="pointer"
         >
           <InfoCircleIcon variant="small" color={iconColorToken} />
-        </a>
+        </styled.a>
       </Flex>
     </BasicHoverCard>
   );

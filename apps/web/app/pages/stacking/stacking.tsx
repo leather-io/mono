@@ -21,7 +21,7 @@ export function Stacking() {
     <Page>
       <Page.Header title="Stacking" />
 
-      <PostPageHeading post={content.posts['stacking']} />
+      <PostPageHeading post={content.posts.stacking} />
 
       <ApyRewardHeroCard
         apyRange="6–10%"
@@ -35,11 +35,11 @@ export function Stacking() {
         {stacksAccount => <UserPositions stacksAddress={stacksAccount.address} />}
       </StacksAccountLoader>
 
-      <PostSectionHeading post={content.posts['pooled-stacking']} />
+      <PostSectionHeading post={content.posts.pooledStacking} />
       <StackingExplainer mt="space.05" />
       <StackingProviderTable mt="space.05" />
       <IndependentStackingLink />
-      <PostSectionHeading post={content.posts['liquid-stacking']} />
+      <PostSectionHeading post={content.posts.liquidStacking} />
       <LiquidStackingExplainer mt="space.04" />
       <LiquidStackingProviderTable mt="space.05" />
 

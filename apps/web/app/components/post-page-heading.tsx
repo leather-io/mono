@@ -12,22 +12,36 @@ interface PostPageHeadingProps {
 
 export function PostPageHeading({ post }: PostPageHeadingProps) {
   if (!post) return null;
-  const subtitle = sanitizeContent(post.sentence || '');
+  const subtitle = sanitizeContent(post.sentence ?? '');
   const disclaimer = post.disclaimer ? sanitizeContent(post.disclaimer) : null;
   const learnMoreLink = getLearnMoreLink(post.slug, post.sentence);
   return (
     <Page.Heading
-      title={sanitizeContent(post.prompt || post.title)}
+      title={sanitizeContent(post.prompt ?? post.title)}
       subtitle={subtitle}
     >
       {learnMoreLink}
       {disclaimer && (
-        <>
-          <styled.hr color="ink.border-default" border="none" borderBottom="1px solid var(--colors-ink-border-default)" width="100%" mb="space.02" mt="space.03" />
-          <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.02" borderRadius="sm">
+        <styled.div>
+          <styled.hr 
+            color="ink.border-default" 
+            border="none" 
+            borderBottomWidth="1px" 
+            borderBottomStyle="solid"
+            borderBottomColor="ink.border-default"
+            width="100%" 
+            mb="space.02" 
+            mt="space.03" 
+          />
+          <styled.p 
+            textStyle="caption.01" 
+            color="ink.text-subdued" 
+            mt="space.02" 
+            borderRadius="sm"
+          >
             {disclaimer}
           </styled.p>
-        </>
+        </styled.div>
       )}
     </Page.Heading>
   );

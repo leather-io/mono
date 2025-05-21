@@ -24,7 +24,7 @@ function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
 
 function BridgeToSbtcCell() {
   const { onBridgeSbtc, bridgingStatus, whenExtensionState } = useSbtcRewardContext();
-  const sbtcBridgePost = content.posts['sbtc-bridge'];
+  const sbtcBridgePost = content.posts.sbtcBridge;
   return (
     <Flex flexDir={['column', 'row', 'column', 'row']} justifyContent="space-between" p="space.05">
       <Flex flexDir="column" flex={1} justifyContent="space-between">
@@ -64,7 +64,7 @@ function BridgeToSbtcCell() {
 
 function SwapStxToSbtcCell() {
   const { onSwapStxSbtc, whenExtensionState } = useSbtcRewardContext();
-  const stacksSwapsPost = content.posts['stacks-swaps'];
+  const stacksSwapsPost = content.posts.stacksSwaps;
   return (
     <Flex
       flexDir={['column', 'row', 'column', 'row']}

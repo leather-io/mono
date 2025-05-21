@@ -11,6 +11,7 @@ import { SbtcProviderIcon } from './sbtc-provider-icon';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { content } from '~/data/content';
 import { getLearnMoreLink } from '~/features/page/page';
+import { getPosts } from '~/utils/post-utils';
 
 interface RewardProtocolCellProps {
   rewardProtocol: RewardProtocolInfo;
@@ -20,16 +21,17 @@ function RewardProtocolEnrollCell({
   rewardProtocol,
   action,
 }: RewardProtocolCellProps & { action: React.ReactElement }) {
-  // Map protocol id to post slug
-  const protocolSlugMap: Record<string, string> = {
-    basic: 'sbtc-rewards-basic',
-    alex: 'alex-sbtc-pools',
-    bitflow: 'bitflow-sbtc-pools',
-    velar: 'velar-sbtc-pools',
-    zest: 'zest-sbtc-pools',
+  // Map protocol id to post key in camelCase
+  const protocolKeyMap: Record<string, string> = {
+    basic: 'sbtcRewardsBasic',
+    alex: 'alexSbtcPools',
+    bitflow: 'bitflowSbtcPools',
+    velar: 'velarSbtcPools',
+    zest: 'zestSbtcPools',
   };
-  const postSlug = protocolSlugMap[rewardProtocol.id];
-  const post = postSlug ? (content.posts as Record<string, any>)[postSlug] : undefined;
+  const posts = getPosts();
+  const postKey = protocolKeyMap[rewardProtocol.id];
+  const post = postKey ? posts[postKey] : undefined;
   return (
     <Flex flex={1} justifyContent="space-between" flexDir="column" p="space.05" minH="246px">
       {<SbtcProviderIcon id={rewardProtocol.id} />}
@@ -55,11 +57,13 @@ function RewardProtocolEnrollCell({
 }
 
 function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.totalLockedValueTvl;
   return (
     <ValueDisplayer
       name={
         <PostLabelHoverCard
-          postKey="total-locked-value-tvl"
+          post={post}
           label="Total Value Locked (TVL)"
           textStyle="label.03"
         />
@@ -76,11 +80,13 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
 }
 
 function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.historicalYield;
   return (
     <ValueDisplayer
       name={
         <PostLabelHoverCard
-          postKey="historical-yield"
+          post={post}
           label="Historical yield"
           textStyle="label.03"
         />
@@ -92,11 +98,13 @@ function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
 }
 
 function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.sbtcRewardsMinimumCommitment;
   return (
     <ValueDisplayer
       name={
         <PostLabelHoverCard
-          postKey="sbtc-rewards-minimum-commitment"
+          post={post}
           label="Minimum commitment"
           textStyle="label.03"
         />
@@ -113,11 +121,13 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
 }
 
 function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
+  const posts = getPosts();
+  const post = posts.sbtcRewardsTokens;
   return (
     <ValueDisplayer
       name={
         <PostLabelHoverCard
-          postKey="sbtc-rewards-tokens"
+          post={post}
           label="Rewards token"
           textStyle="label.03"
         />

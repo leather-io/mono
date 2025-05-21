@@ -15,7 +15,7 @@ import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols
 
 export function useDaoInfo() {
   const protocolSlug: ProtocolSlug = 'stacking-dao';
-  const providerId: ProviderId = 'stacking-dao';
+  const providerId: ProviderId = 'stackingDao';
 
   const poxInfoQuery = useGetPoxInfoQuery();
   const balance = useDaoBalance();

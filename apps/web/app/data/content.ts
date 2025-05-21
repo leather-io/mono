@@ -1,6 +1,40 @@
-import type { PostsCollection } from './post-types';
+import { PostsCollection, normalizePosts, postsCollectionSchema } from './post-types';
 import postsData from './posts.json';
-import { normalizePosts } from './post-types';
+
+// Parse and validate posts data with Zod schema
+const validatedPosts = postsCollectionSchema.parse(normalizePosts(postsData));
+
+// Add custom static posts with proper type safety
+const customPosts: PostsCollection = {
+  choosingPoolingDuration: {
+    title: 'Indefinite',
+    sentence: `The pool commits your STX for Stacking for up to 12 cycles (with about two weeks per cycle). You can revoke anytime, but they stay locked until the pool's commitment ends. Revoke before the pool's next commitment to regain access at the end of the current commitment period.`,
+    id: '',
+    slug: 'choose-pooling-duration',
+    body: '',
+    date: '',
+    status: '',
+    category: '',
+    subcategory: '',
+    featured: false,
+    hidden: false,
+    question: '',
+    prompt: '',
+    images: [],
+    views: [],
+    earnProviders: [],
+    dataPointInstructions: '',
+    aliases: '',
+    dataPointSource: '',
+    summary: '',
+    website: '',
+    disclaimer: '',
+    order: 0,
+    icon: [],
+    dataPointValue: '',
+    createdTime: '',
+  },
+};
 
 export const content = {
   stacking: {
@@ -61,36 +95,10 @@ export const content = {
       description: `Use your liquid Stacking token in DeFi and swap back anytime while earning.`,
     },
   ],
+  // Merge the validated posts with our custom posts
   posts: {
-    ...normalizePosts(postsData),
-    'choose-pooling-duration': {
-      title: 'Indefinite',
-      sentence: `The pool commits your STX for Stacking for up to 12 cycles (with about two weeks per cycle). You can revoke anytime, but they stay locked until the pool's commitment ends. Revoke before the pool's next commitment to regain access at the end of the current commitment period.`,
-      id: '',
-      slug: 'choose-pooling-duration',
-      body: '',
-      date: '',
-      status: '',
-      category: '',
-      subcategory: '',
-      featured: false,
-      hidden: false,
-      question: '',
-      prompt: '',
-      images: [],
-      views: [],
-      earnProviders: [],
-      dataPointInstructions: '',
-      aliases: '',
-      dataPointSource: '',
-      summary: '',
-      website: '',
-      disclaimer: '',
-      order: 0,
-      icon: [],
-      dataPointValue: '',
-      createdTime: '',
-    },
+    ...validatedPosts,
+    ...customPosts,
   },
 
   // --- Consolidated content below ---
@@ -239,5 +247,6 @@ export const content = {
 export async function fetchPostsFromCMS(): Promise<PostsCollection> {
   const res = await fetch('https://leather-cms.s3.amazonaws.com/posts.json');
   if (!res.ok) throw new Error('Failed to fetch posts.json');
-  return res.json();
+  const rawData = await res.json();
+  return postsCollectionSchema.parse(normalizePosts(rawData));
 }

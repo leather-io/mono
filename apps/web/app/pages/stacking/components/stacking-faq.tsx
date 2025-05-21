@@ -5,35 +5,37 @@ import { content } from '~/data/content';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
+import { getPosts } from '~/utils/post-utils';
 
 // List of stacking-related post keys to use in the FAQ, ordered by appearance on the page
 const stackingFaqPostKeysRaw = [
   // Main section headings
   'stacking',
-  'pooled-stacking',
-  'liquid-stacking',
+  'pooledStacking',
+  'liquidStacking',
   // Explainer steps (traditional and liquid)
-  'stacks-token-stx',
-  'stacking-providers',
-  'stacking-lock-stx',
-  'stacking-rewards',
-  'stacking-liquid-token',
+  'stacksTokenStx',
+  'stackingProviders',
+  'stackingLockStx',
+  'stackingRewards',
+  'stackingLiquidToken',
   // Table posts (in order of table columns)
-  'stacking-providers',
-  'stacking-rewards-tokens',
-  'stacking-minimum-commitment',
-  'historical-yield',
-  'stacking-pool-fees',
+  'stackingProviders',
+  'stackingRewardsTokens',
+  'stackingMinimumCommitment',
+  'historicalYield',
+  'stackingPoolFees',
 ];
 
 // Remove duplicates while preserving order
 const stackingFaqPostKeys = Array.from(new Set(stackingFaqPostKeysRaw));
 
 export function StackingFaq(props: HTMLStyledProps<'div'>) {
-  // Filter posts to only those with a question and summary
+  // Get posts and filter out undefined/invalid posts
+  const posts = getPosts();
   const faqPosts = stackingFaqPostKeys
-    .map(key => content.posts[key] as Post)
-    .filter(post => post && post.question && post.summary);
+    .map(key => posts[key])
+    .filter((post): post is Post => Boolean(post && post.question && post.summary));
 
   return (
     <styled.div {...props}>

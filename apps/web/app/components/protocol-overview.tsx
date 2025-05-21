@@ -8,7 +8,7 @@ import { CopyAddress } from '~/features/stacking/components/address';
 import { ProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { getLearnMoreLink } from '~/features/page/page';
-import { usePost } from '~/utils/post-utils';
+import { usePost, getPosts } from '~/utils/post-utils';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { getPostSlugForProvider } from '~/data/data';
 import {
@@ -24,9 +24,12 @@ interface RewardTokenCellProps {
   symbol: string;
 }
 function RewardTokenCell({ icon, symbol }: RewardTokenCellProps) {
+  const posts = getPosts();
+  const post = posts.stackingRewardsTokens;
+  
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-rewards-tokens" textStyle="label.02" />}
+      name={<PostLabelHoverCard post={post} label="Rewards token" textStyle="label.02" />}
       value={
         <Flag spacing="space.02" img={icon}>
           {symbol}
@@ -40,8 +43,11 @@ interface LockupPeriodCellProps {
   lockupPeriod?: string;
 }
 function LockupPeriodCell({ lockupPeriod = '1 Cycle' }: LockupPeriodCellProps) {
+  const posts = getPosts();
+  const post = posts.stackingMinimumLockupPeriod;
+  
   return <ValueDisplayer 
-    name={<PostLabelHoverCard postKey="stacking-minimum-lockup-period" textStyle="label.02" />} 
+    name={<PostLabelHoverCard post={post} label="Minimum lockup period" textStyle="label.02" />} 
     value={lockupPeriod} 
   />;
 }
@@ -56,9 +62,12 @@ function DaysUntilNextCycleCell({
   nextCycleBlocks,
   nextCycleNumber,
 }: DaysUntilNextCycleCellProps) {
+  const posts = getPosts();
+  const post = posts.stackingUpcomingCycle;
+  
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-upcoming-cycle" textStyle="label.02" />}
+      name={<PostLabelHoverCard post={post} label="Days until next cycle" textStyle="label.02" />}
       value={
         <>
           {toHumanReadableDays(daysUntilNextCycle)}{' '}
@@ -79,9 +88,12 @@ function MinimumCommitmentCell({
   minimumCommitment,
   minimumCommitmentUsd,
 }: MinimumCommitmentCellProps) {
+  const posts = getPosts();
+  const post = posts.stackingMinimumCommitment;
+  
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="stacking-minimum-commitment" textStyle="label.02" />}
+      name={<PostLabelHoverCard post={post} label="Minimum commitment" textStyle="label.02" />}
       value={
         <>
           {toHumanReadableStx(minimumCommitment || 0)}{' '}
@@ -96,8 +108,11 @@ interface HistoricalAprCellProps {
   apr?: number;
 }
 function HistoricalAprCell({ apr }: HistoricalAprCellProps) {
+  const posts = getPosts();
+  const post = posts.historicalYield;
+  
   return <ValueDisplayer 
-    name={<PostLabelHoverCard postKey="historical-yield" textStyle="label.02" />} 
+    name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.02" />} 
     value={toHumanReadablePercent(apr || 0)} 
   />;
 }
@@ -110,9 +125,12 @@ function TotalValueLockedCell({
   totalValueLocked,
   totalValueLockedUsd,
 }: TotalValueLockedCellProps) {
+  const posts = getPosts();
+  const post = posts.totalLockedValueTvl;
+  
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard postKey="total-locked-value-tvl" textStyle="label.02" />}
+      name={<PostLabelHoverCard post={post} label="Total value locked" textStyle="label.02" />}
       value={
         <>
           {toHumanReadableStx(totalValueLocked || 0)}{' '}
@@ -215,19 +233,19 @@ export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug 
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['2', '2', '1']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard postKey="historical-yield" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={getPosts().historicalYield} label="Historical yield" textStyle="label.02" />}
             value={(protocol as any).estApr || "—"}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard postKey="total-locked-value-tvl" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={getPosts().totalLockedValueTvl} label="Total value locked" textStyle="label.02" />}
             value={(protocol as any).tvl || "—"}
           />
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '2']} gridRow={['4', '4', '2']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard postKey="stacking-rewards-tokens" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={getPosts().stackingRewardsTokens} label="Rewards token" textStyle="label.02" />}
             value={
               <>
                 {protocol.liquidToken}
@@ -238,7 +256,7 @@ export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug 
         </InfoGrid.Cell>
         <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['5', '5', '2']}>
           <ValueDisplayer
-            name={<PostLabelHoverCard postKey="stacking-minimum-commitment" textStyle="label.02" />}
+            name={<PostLabelHoverCard post={getPosts().stackingMinimumCommitment} label="Minimum commitment" textStyle="label.02" />}
             value={typeof protocol.minimumDelegationAmount === 'number' ? 
               toHumanReadableStx(protocol.minimumDelegationAmount) : 
               String(protocol.minimumDelegationAmount || '')}

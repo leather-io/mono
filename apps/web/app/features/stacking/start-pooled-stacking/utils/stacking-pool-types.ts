@@ -9,8 +9,8 @@ export const poolSlugToIdMap = {
   'fast-pool': 'fastPool',
   'fast-pool-v2': 'fastPoolV2',
   planbetter: 'planbetter',
-  'stacking-dao': 'stacking-dao',
-  'xverse-pool': 'xverse-pool',
+  'stacking-dao': 'stackingDao',
+  'xverse-pool': 'xversePool',
   restake: 'restake',
   // custom: 'custom',
 } as const;

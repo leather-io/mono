@@ -60,22 +60,3 @@ To be able to develop packages and test those in extension, check out this [guid
 
 [MIT](LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)
 
-## Security: Dynamic Content Sanitization
-
-All dynamic HTML content rendered in the web app (such as FAQs, explainers, and CMS-driven posts) is sanitized using [DOMPurify](https://github.com/cure53/DOMPurify) via a shared utility (`sanitizeContent`).
-
-- **Browser:** Uses DOMPurify to remove unsafe HTML and prevent XSS.
-- **SSR:** Falls back to escaping HTML tags to prevent injection.
-
-This is enforced in all UI components that render user- or CMS-driven HTML, including FAQ, explainer, and post-driven UI elements.
-
-A shared utility, `sanitizeContent`, is used throughout the codebase to sanitize any post content before rendering. Example usage:
-
-```ts
-import { sanitizeContent } from '~/app/utils/sanitize-content';
-
-const safeHtml = sanitizeContent(post.Summary);
-```
-
-This is applied in all FAQ, explainer, hover card, and heading components that render post content.
-
