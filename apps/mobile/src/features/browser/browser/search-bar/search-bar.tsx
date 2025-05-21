@@ -2,13 +2,15 @@ import { RefObject, useRef } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 import { KeyboardController } from 'react-native-keyboard-controller';
 import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import * as Clipboard from 'expo-clipboard';
 import * as Sharing from 'expo-sharing';
 
-import { Box, Theme } from '@leather.io/ui/native';
+import { Box, Pressable, Text, Theme, legacyTouchablePressEffect } from '@leather.io/ui/native';
 
 import { BrowserType } from '../utils';
 import { BrowserNavigationBar } from './browser-navigation-bar';
@@ -46,7 +48,8 @@ export function SearchBar({
   const textInputRef = useRef<RNTextInput>(null);
 
   const { keyboardAvoidingStyle, searchBarStyle, isUrlFocused, browserNavigationBarStyle } =
-    useSearchBarAnimatedStyles({ browserType });
+    useSearchBarAnimatedStyles();
+  const { bottom } = useSafeAreaInsets();
 
   function goBack() {
     webViewRef.current?.goBack();
@@ -93,6 +96,51 @@ export function SearchBar({
             canGoForward={!!navState?.canGoForward}
             resetBrowser={resetBrowser}
           />
+        </AnimatedBox>
+      )}
+      {browserType === 'inactive' && (
+        <AnimatedBox
+          style={[keyboardAvoidingStyle, browserNavigationBarStyle]}
+          pt="4"
+          position="absolute"
+          right={0}
+          left={0}
+          shadowColor="ink.background-overlay"
+          shadowOffset={{
+            width: 0,
+            height: 12,
+          }}
+          shadowRadius={24}
+          shadowOpacity={0.08}
+          elevation={1}
+          onLayout={e => {
+            setBrowserNavigationBarHeight(e.nativeEvent.layout.height);
+          }}
+        >
+          <Box
+            style={{
+              paddingBottom: theme.spacing['2'] + bottom,
+            }}
+            px="5"
+            pt="2"
+            width="100%"
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="ink.background-primary"
+          >
+            <Pressable
+              p="4"
+              onPress={() => textInputRef.current?.focus()}
+              pressEffects={legacyTouchablePressEffect}
+            >
+              <Text variant="label03">
+                {t({
+                  id: 'browser.searchbar.search-url',
+                  message: 'Search or type url',
+                })}
+              </Text>
+            </Pressable>
+          </Box>
         </AnimatedBox>
       )}
       <AnimatedBox

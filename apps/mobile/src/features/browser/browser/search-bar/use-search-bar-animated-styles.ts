@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import {
   Extrapolation,
@@ -7,16 +6,9 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import { BrowserType } from '../utils';
-
-export function useSearchBarAnimatedStyles({ browserType }: { browserType: BrowserType }) {
+export function useSearchBarAnimatedStyles() {
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const isUrlFocused = useSharedValue(false);
-  const browserTypeSharedValue = useSharedValue<BrowserType>(browserType);
-  useEffect(() => {
-    browserTypeSharedValue.value = browserType;
-  }, [browserType, browserTypeSharedValue]);
-
   const keyboardAvoidingStyle = useAnimatedStyle(() => ({
     bottom: isUrlFocused.value ? -keyboardHeight.value : 0,
   }));
@@ -27,9 +19,6 @@ export function useSearchBarAnimatedStyles({ browserType }: { browserType: Brows
     };
   });
   const searchBarStyle = useAnimatedStyle(() => {
-    if (browserTypeSharedValue.value === 'inactive') {
-      return { opacity: 1, zIndex: 0 };
-    }
     return {
       // no need to interpolate as progress.value is a continuous value between 0 and 1
       opacity: progress.value,
