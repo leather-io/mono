@@ -25,17 +25,17 @@ export const protocols: Record<ProtocolName, Protocol> = {
     minimumDelegationAmount: 1_000_000,
     icon: <ImgFillLoader src="/icons/stacking-dao.webp" width="32" fill="black" />,
   },
-  Lisa: {
-    name: 'Lisa',
+  LISA: {
+    name: 'LISA',
     description: 'See your balance increase automatically and always exchange at 1 STX to 1 LiSTX',
     duration: 1,
     website: 'https://www.lisalab.io/',
-    liquidContract: 'Lisa',
+    liquidContract: 'lisa',
     liquidToken: 'LI_STX',
     protocolAddress: {
-      mainnet: NetworkInstanceToLiquidContractMap['mainnet']['Lisa'],
-      testnet: NetworkInstanceToLiquidContractMap['testnet']['Lisa'],
-      devnet: NetworkInstanceToLiquidContractMap['devnet']['Lisa'],
+      mainnet: NetworkInstanceToLiquidContractMap['mainnet']['lisa'],
+      testnet: NetworkInstanceToLiquidContractMap['testnet']['lisa'],
+      devnet: NetworkInstanceToLiquidContractMap['devnet']['lisa'],
     },
     minimumDelegationAmount: 1_000_000,
     icon: <ImgFillLoader src="/icons/lisa.webp" width="32" fill="black" />,

@@ -148,7 +148,8 @@ interface ProtocolCellProps {
   postSlug?: string;
 }
 function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps): ReactElement {
-  const post = postSlug ? usePost(postSlug) : null;
+  const post = usePost(postSlug || '');
+  const hasValidPost = !!postSlug && !!post;
   
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
@@ -156,7 +157,7 @@ function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps):
       <styled.h4 textDecoration="underline" textStyle="label.01">
         {name}
       </styled.h4>
-      {post ? (
+      {hasValidPost ? (
         <styled.p textStyle="caption.01">
           {post?.sentence || ''}
           {post?.slug && post?.sentence ? getLearnMoreLink(post.slug, post.sentence) : <></>}

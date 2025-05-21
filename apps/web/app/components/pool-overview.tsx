@@ -1,7 +1,7 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Box, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
+import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
@@ -9,13 +9,10 @@ import { DASH } from '~/constants/constants';
 import { getPostSlugForProvider, StackingPool } from '~/data/data';
 import { getLearnMoreLink } from '~/features/page/page';
 import {
-  toHumanReadableDays,
   toHumanReadableStx,
 } from '~/utils/unit-convert';
 import { usePost, getPosts } from '~/utils/post-utils';
 import { TextElementTag } from '~/shared/types';
-
-import { ProviderIcon } from './icons/provider-icon';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -127,9 +124,8 @@ function MinimumCommitmentCell({
 
 interface HistoricalAprCellProps {
   historicalApr?: string | null;
-  textStyle?: string;
 }
-function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps): ReactElement {
+function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.historicalYield;
   const label = post?.title ?? 'Historical yield';
@@ -178,7 +174,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
     <VStack gap="space.05" alignItems="left" p="space.05">
       {'logo' in pool ? (pool as any).logo : null}
       <styled.h4 textDecoration="underline" textStyle="label.01">
-        {post.title} 
+        {post?.title || ''}
       </styled.h4>
       {post && (
         <styled.p textStyle="caption.01">

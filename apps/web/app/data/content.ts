@@ -224,7 +224,7 @@ export const content = {
       iconKey: 'StackingDaoIcon',
     },
     {
-      name: 'Lisa',
+      name: 'LISA',
       description: `See your balance increase automatically and always exchange at 1 STX to 1 LiSTX`,
       url: 'https://www.lisalab.io/',
       iconKey: 'LisaIcon',
