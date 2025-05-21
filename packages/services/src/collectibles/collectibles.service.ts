@@ -41,9 +41,9 @@ export class CollectiblesService {
         .flat()
         .sort(sortByBlockHeight)
         .map(c => c.asset),
-      ...bitcoinCollectibles
+        ...bitcoinCollectibles
         .flat()
-        .sort(sortByBlockHeight)
+        .sort(sortByBlockHeight)  
         .map(c => c.asset),
     ];
   }
@@ -111,6 +111,11 @@ export class CollectiblesService {
     taprootDescriptor: string,
     signal?: AbortSignal
   ): Promise<{ asset: InscriptionCryptoAssetInfo; blockHeight: number }[]> {
+    // TODO: remove this once we decide to enable inscriptions
+    const inscriptionsEnabled = false;
+    if (!inscriptionsEnabled) {
+      return [];
+    }
     try {
       const bisInscriptions = await this.bisApiClient.fetchInscriptions(taprootDescriptor, signal);
       return bisInscriptions.map(inscription => ({

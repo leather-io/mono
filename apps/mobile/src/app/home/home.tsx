@@ -30,7 +30,7 @@ export function Home() {
   const releaseCollectibles = useCollectiblesFlag();
   const releaseEarn = useEarnFlag();
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
-
+  console.log('collectibles', collectibles);
   return (
     <PageLayout>
       <Box gap="8" mt="5">
