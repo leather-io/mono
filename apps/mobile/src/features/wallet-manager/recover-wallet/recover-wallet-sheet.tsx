@@ -3,7 +3,7 @@ import { RefObject } from 'react';
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { t } from '@lingui/macro';
 
-import { LockIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 interface RecoverWalletSheetProps {
   recoverWalletSheetRef: RefObject<SheetRef | null>;
@@ -23,7 +23,6 @@ export function RecoverWalletSheet({
         id: 'recover_wallet.passphrase.header_title',
         message: `BIP39 passphrase`,
       })}
-      icon={<LockIcon />}
       placeholder={t({
         id: 'recover_wallet.passphrase.input_placeholder',
         message: `Passphrase`,

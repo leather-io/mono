@@ -4,7 +4,7 @@ import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
 import { t } from '@lingui/macro';
 
-import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
+import { Button, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface NonceSheetProps {
   sheetRef: RefObject<SheetRef | null>;
@@ -16,7 +16,6 @@ export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceShee
 
   return (
     <SheetLayout
-      icon={<NoteTextIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'approver.add_nonce.header_title',

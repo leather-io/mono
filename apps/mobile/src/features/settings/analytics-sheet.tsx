@@ -8,7 +8,7 @@ import { LEATHER_GUIDES_MOBILE_ANALYTICS } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { CookieIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -35,7 +35,6 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
 
   return (
     <SettingsSheetLayout
-      icon={<CookieIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'analytics.header_title',

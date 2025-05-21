@@ -8,7 +8,7 @@ import { ThemePreference, defaultThemePreferences } from '@/store/settings/utils
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import { SheetRef, SunInCloudIcon } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 import { capitalize } from '@leather.io/utils';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
@@ -34,7 +34,6 @@ export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
 
   return (
     <SettingsSheetLayout
-      icon={<SunInCloudIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'theme.header_title',

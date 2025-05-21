@@ -4,7 +4,7 @@ import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
 import { t } from '@lingui/macro';
 
-import { Button, NoteTextIcon, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
+import { Button, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface MemoSheetProps {
   sheetRef: RefObject<SheetRef | null>;
@@ -16,7 +16,6 @@ export function MemoSheet({ sheetRef, memo: _memo, onChangeMemo }: MemoSheetProp
 
   return (
     <SheetLayout
-      icon={<NoteTextIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'approver.add_memo.header_title',

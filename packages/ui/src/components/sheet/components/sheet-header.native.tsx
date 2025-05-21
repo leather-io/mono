@@ -4,16 +4,14 @@ const SHEET_HEADER_HEIGHT = 64;
 
 interface SheetHeaderProps {
   title: string;
-  icon: React.ReactNode;
   onPressSupport?: () => void;
 }
 
-export function SheetHeader({ title, icon, onPressSupport }: SheetHeaderProps) {
+export function SheetHeader({ title, onPressSupport }: SheetHeaderProps) {
   return (
     <Box alignItems="center" flexDirection="row" height={SHEET_HEADER_HEIGHT}>
       <Box alignItems="flex-start" flex={2}>
         <Box alignItems="center" flexDirection="row" gap="3">
-          {icon}
           <Text color="ink.text-primary" variant="heading05">
             {title}
           </Text>

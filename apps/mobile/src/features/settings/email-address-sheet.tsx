@@ -8,7 +8,7 @@ import { t } from '@lingui/macro';
 import { z } from 'zod';
 
 import { emailAddressSchema } from '@leather.io/models';
-import { Button, EmailIcon, SheetRef, Text, UIBottomSheetTextInput } from '@leather.io/ui/native';
+import { Button, SheetRef, Text, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
 interface EmailAddressSheetProps {
   sheetRef: RefObject<SheetRef | null>;
@@ -47,7 +47,6 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
 
   return (
     <SheetLayout
-      icon={<EmailIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'email_address.header_title',

@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 
-import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
-import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
+import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { InlineAssetPicker } from '@/features/send/components/inline-asset-picker';
 import { BtcForm } from '@/features/send/forms/btc/btc-form';
 import { BtcDataLoader } from '@/features/send/forms/btc/btc-loader';

@@ -10,7 +10,7 @@ import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
 import { AccountDisplayPreference } from '@leather.io/models';
-import { PackageSecurityIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 import { match } from '@leather.io/utils';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
@@ -52,7 +52,6 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
 
   return (
     <SettingsSheetLayout
-      icon={<PackageSecurityIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'account_identifier.header_title',
