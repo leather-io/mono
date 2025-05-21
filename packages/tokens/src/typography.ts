@@ -33,8 +33,8 @@ function getTextVariants({ platform }: { platform: Platform }) {
   const webFontLigatures =
     platform === 'web'
       ? {
-        fontVariantLigatures: 'none',
-      }
+          fontVariantLigatures: 'none',
+        }
       : {};
 
   const commonFiracodeStyles = {

@@ -76,13 +76,13 @@ export interface PostsCollection {
 // Zod schema for ImageAsset
 export const imageAssetSchema = z.object({
   name: z.string(),
-  url: z.string().url()
+  url: z.string().url(),
 });
 
 // Zod schema for EarnProvider
 export const earnProviderSchema = z.object({
   name: z.string(),
-  id: z.string()
+  id: z.string(),
 });
 
 // Zod schema for Post
@@ -112,7 +112,7 @@ export const postSchema = z.object({
   order: z.number(),
   icon: z.array(imageAssetSchema),
   dataPointValue: z.string(),
-  createdTime: z.string()
+  createdTime: z.string(),
 });
 
 export const postsCollectionSchema = z.record(z.string(), postSchema);
@@ -126,7 +126,7 @@ function toCamelCase(str: string): string {
 export function normalizePost(rawData: unknown): Post {
   // Cast the unknown data to RawPost type
   const raw = rawData as RawPost;
-  
+
   const normalizedPost = {
     id: raw.id,
     title: raw.Title,
@@ -155,7 +155,7 @@ export function normalizePost(rawData: unknown): Post {
     dataPointValue: raw['Data point value'],
     createdTime: raw.Created_time,
   };
-  
+
   // Validate the post with Zod
   return postSchema.parse(normalizedPost);
 }
@@ -167,4 +167,4 @@ export function normalizePosts(rawPosts: Record<string, unknown>): PostsCollecti
     normalized[camelCaseKey] = normalizePost(rawPosts[slug]);
   }
   return normalized;
-} 
+}

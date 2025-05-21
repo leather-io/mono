@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -53,7 +53,7 @@ const providerSlugMap = {
   stackingDao: 'stacking-dao',
 } as const;
 
-export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
+export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactElement {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [isMounted, setIsMounted] = useState(false);
   const isLargeViewport = useViewportMinWidth('md');
@@ -241,7 +241,13 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 12,
       },
     ],
-    [posts.stackingRewardsTokens, posts.stackingPoolFees, posts.historicalYield, posts.totalLockedValueTvl, posts.stackingMinimumCommitment]
+    [
+      posts.stackingRewardsTokens,
+      posts.stackingPoolFees,
+      posts.historicalYield,
+      posts.totalLockedValueTvl,
+      posts.stackingMinimumCommitment,
+    ]
   );
 
   const trailingColumn = useMemo<ColumnDef<StackingPool>[]>(
@@ -329,7 +335,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
   );
 }
 
-export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
+export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): ReactElement {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [isMounted, setIsMounted] = useState(false);
   const isLargeViewport = useViewportMinWidth('md');
@@ -496,7 +502,12 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
     ],
-    [posts.stackingRewardsTokens, posts.stackingPoolFees, posts.historicalYield, posts.totalLockedValueTvl]
+    [
+      posts.stackingRewardsTokens,
+      posts.stackingPoolFees,
+      posts.historicalYield,
+      posts.totalLockedValueTvl,
+    ]
   );
 
   const trailingColumn = useMemo<ColumnDef<LiquidStackingPool>>(
@@ -505,10 +516,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
       accessorKey: 'actions',
       header: () => null,
       cell: info => (
-        <Link
-          to={`/stacking/liquid/${info.row.original.slug}`}
-          style={{ minWidth: 'fit-content' }}
-        >
+        <Link to={`/stacking/liquid/${info.row.original.slug}`} style={{ minWidth: 'fit-content' }}>
           <Button size="xs" whiteSpace="nowrap" minW="fit-content">
             Start earning
           </Button>
@@ -521,13 +529,13 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>) {
 
   const columns = useMemo(() => {
     const cols: ColumnDef<LiquidStackingPool>[] = [leadingColumn];
-    
+
     if (isMounted && isLargeViewport) {
       cols.push(...largeViewportColumns);
     }
-    
+
     cols.push(trailingColumn);
-    
+
     return cols;
   }, [leadingColumn, largeViewportColumns, trailingColumn, isMounted, isLargeViewport]);
 

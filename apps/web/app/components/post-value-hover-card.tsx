@@ -1,10 +1,13 @@
 import { ReactNode } from 'react';
+
 import { Flex, styled } from 'leather-styles/jsx';
-import { PostInfoHoverIcon } from './post-info-hover-icon';
 import { content } from '~/data/content';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import type { Post } from '~/data/post-types';
+import { sanitizeContent } from '~/utils/sanitize-content';
+
 import { isString } from '@leather.io/utils';
+
+import { PostInfoHoverIcon } from './post-info-hover-icon';
 
 interface PostValueHoverCardProps {
   postKey?: string;
@@ -13,15 +16,20 @@ interface PostValueHoverCardProps {
   label?: string;
 }
 
-export function PostValueHoverCard({ postKey, post: propPost, value, label }: PostValueHoverCardProps) {
+export function PostValueHoverCard({
+  postKey,
+  post: propPost,
+  value,
+  label,
+}: PostValueHoverCardProps) {
   let post = propPost;
-  
+
   if (!post && postKey) {
     post = content.posts[postKey];
   }
-  
+
   if (!post) return null;
-  
+
   return (
     <Flex flexDir="column">
       <PostInfoHoverIcon post={post}>
@@ -34,4 +42,4 @@ export function PostValueHoverCard({ postKey, post: propPost, value, label }: Po
       )}
     </Flex>
   );
-} 
+}

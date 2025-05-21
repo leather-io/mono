@@ -15,4 +15,4 @@ export function sanitizeContent(dirty: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-} 
+}

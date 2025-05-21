@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Box, VStack, styled, HTMLStyledProps } from 'leather-styles/jsx';
+import { Box, HTMLStyledProps, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
@@ -22,7 +22,7 @@ interface RewardTokenCellProps {
   value?: string;
   textStyle?: string;
 }
-function RewardTokenCell({ token = 'STX', value, textStyle = 'label.03' }: RewardTokenCellProps) {
+function RewardTokenCell({ token = 'STX', value, textStyle = 'label.03' }: RewardTokenCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsTokens;
   const label = post?.title ?? 'Rewards token';
@@ -44,7 +44,7 @@ function RewardTokenCell({ token = 'STX', value, textStyle = 'label.03' }: Rewar
 interface LockupPeriodCellProps {
   minLockupPeriodDays: number;
 }
-function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps) {
+function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumLockupPeriod;
   const label = post?.title ?? 'Minimum lockup period';
@@ -71,7 +71,7 @@ function DaysUntilNextCycleCell({
   daysUntilNextCycle,
   nextCycleNumber,
   nextCycleBlocks,
-}: DaysUntilNextCycleCellProps) {
+}: DaysUntilNextCycleCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingUpcomingCycle;
   const label = post?.title ?? 'Days until next cycle';
@@ -96,7 +96,7 @@ interface MinimumCommitmentCellProps {
 function MinimumCommitmentCell({
   minimumCommitment = '40,000,000.00 STX',
   minimumCommitmentUsd,
-}: MinimumCommitmentCellProps) {
+}: MinimumCommitmentCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumCommitment;
   const label = post?.title ?? 'Minimum commitment';
@@ -129,7 +129,7 @@ interface HistoricalAprCellProps {
   historicalApr?: string | null;
   textStyle?: string;
 }
-function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps) {
+function HistoricalAprCell({ historicalApr, textStyle }: HistoricalAprCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.historicalYield;
   const label = post?.title ?? 'Historical yield';
@@ -148,7 +148,7 @@ interface TotalValueLockedCellProps {
 function TotalValueLockedCell({
   totalValueLocked = '51,784,293 STX',
   totalValueLockedUsd = '$36,212,756',
-}: TotalValueLockedCellProps) {
+}: TotalValueLockedCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.totalLockedValueTvl;
   const label = post?.title ?? 'Total value locked';
@@ -171,7 +171,7 @@ interface PoolOverviewProps {
   pool: StackingPool;
   poolSlug: string;
 }
-function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
+function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
   const postSlug = getPostSlugForProvider(poolSlug) ?? '';
   const post = usePost(postSlug);
   return (
@@ -190,7 +190,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps) {
   );
 }
 
-export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
+export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElement {
   // Demo/default values for required props
   const minLockupPeriodDays = 1;
   const daysUntilNextCycle = 2;
@@ -201,6 +201,10 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
   const displayMinCommitment = typeof pool.minimumDelegationAmount === 'number' 
     ? toHumanReadableStx(pool.minimumDelegationAmount)
     : '';
+  
+  // Format TVL values
+  const formattedTvl = (pool as any).tvl || `${(pool as any).tvlUsd?.replace('$', '')} STX`;
+  const formattedTvlUsd = (pool as any).tvlUsd;
   
   return (
     <InfoGrid
@@ -225,8 +229,8 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps) {
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '3']} gridRow={['3', '3', '1']}>
         <TotalValueLockedCell 
-          totalValueLocked={(pool as any).tvl} 
-          totalValueLockedUsd={(pool as any).tvlUsd} 
+          totalValueLocked={formattedTvl} 
+          totalValueLockedUsd={formattedTvlUsd} 
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['3', '3', '2']}>
@@ -256,7 +260,7 @@ export function StackingAmountLabel({
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-}) {
+}): ReactElement {
   const posts = getPosts();
   const post = posts.stackingAmount;
   const label = post?.title ?? 'Amount';
@@ -277,7 +281,7 @@ export function StackingRewardsAddressLabel({
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-}) {
+}): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsAddress;
   const label = post?.title ?? 'Rewards address';
@@ -298,7 +302,7 @@ export function StackingDurationLabel({
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-}) {
+}): ReactElement {
   const posts = getPosts();
   const post = posts.stackingDuration;
   const label = post?.title ?? 'Duration';
@@ -319,7 +323,7 @@ export function StackingContractDetailsLabel({
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-}) {
+}): ReactElement {
   const posts = getPosts();
   const post = posts.stackingContractDetails;
   const label = post?.title ?? 'Details';
@@ -340,7 +344,7 @@ export function PooledStackingConditionsLabel({
 }: {
   textStyle?: string;
   tagName?: TextElementTag;
-}) {
+}): ReactElement {
   const posts = getPosts();
   const post = posts.pooledStackingConditions;
   const label = post?.title ?? 'Pooling conditions';

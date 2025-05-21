@@ -287,7 +287,10 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 </Stack>
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Address to receive rewards" post={stackingRewardsAddressPost} />
+                  <StackingFormItemTitle
+                    title="Address to receive rewards"
+                    post={stackingRewardsAddressPost}
+                  />
                   <ChooseRewardsAddress />
                   <styled.span textStyle="caption.01" color="ink.text-subdued">
                     This is where the pool will deposit your rewards each cycle.
@@ -315,7 +318,10 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.04">
-                  <StackingFormItemTitle title="Pooling conditions" post={pooledStackingConditionsPost} />
+                  <StackingFormItemTitle
+                    title="Pooling conditions"
+                    post={pooledStackingConditionsPost}
+                  />
                   <ChoosePoolingConditions />
                 </Stack>
 

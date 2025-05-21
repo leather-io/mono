@@ -1,6 +1,7 @@
 import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { content } from '~/data/content';
 import { Address } from '~/features/stacking/components/address';
 import { LiquidStackingActionButtons } from '~/features/stacking/direct-stacking-info/components/liquid-stacking-action-buttons';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
@@ -13,7 +14,6 @@ import { Hr } from '@leather.io/ui';
 import { PendingStackExtendAlert } from '../../components/pending-stack-extend-alert';
 import { StackExtendInfo } from '../get-has-pending-stack-extend';
 import { StackIncreaseInfo } from '../get-has-pending-stack-increase';
-import { content } from '~/data/content';
 
 type ActiveStackerInfo = StackerInfo & {
   stacked: true;
@@ -54,16 +54,23 @@ export function ActiveStackingInfo({
 
             {isBeforeFirstRewardCycle && (
               <Box pb="space.04">
-                <styled.p textStyle="label.02">{content.statusMessages.waitingForCycleToStart}</styled.p>
+                <styled.p textStyle="label.02">
+                  {content.statusMessages.waitingForCycleToStart}
+                </styled.p>
                 <styled.p>{content.statusMessages.stackingReady}</styled.p>
               </Box>
             )}
 
             {pendingStackIncrease && (
               <Box pb="space.04">
-                <styled.p textStyle="label.02">{content.statusMessages.waitingForTxConfirmation}</styled.p>
+                <styled.p textStyle="label.02">
+                  {content.statusMessages.waitingForTxConfirmation}
+                </styled.p>
                 <styled.p>
-                  {content.statusMessages.stackingSubmitted.replace('an additional amount', `an additional amount of ${toHumanReadableStx(pendingStackIncrease.increaseBy)}`)}
+                  {content.statusMessages.stackingSubmitted.replace(
+                    'an additional amount',
+                    `an additional amount of ${toHumanReadableStx(pendingStackIncrease.increaseBy)}`
+                  )}
                 </styled.p>
               </Box>
             )}

@@ -1,9 +1,9 @@
 import { type HTMLStyledProps } from 'leather-styles/jsx';
 import { Explainer } from '~/components/explainer';
-import { content } from '~/data/content';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { sanitizeContent } from '~/utils/sanitize-content';
+import { content } from '~/data/content';
 import { getPostByKey } from '~/utils/post-utils';
+import { sanitizeContent } from '~/utils/sanitize-content';
 
 export function StackingExplainer(props: HTMLStyledProps<'section'>) {
   return (
@@ -15,11 +15,11 @@ export function StackingExplainer(props: HTMLStyledProps<'section'>) {
             key={step.title}
             index={idx}
             title={
-              <PostLabelHoverCard 
+              <PostLabelHoverCard
                 post={post}
-                label={step.title} 
-                textStyle="label.01" 
-                tagName="h3" 
+                label={step.title}
+                textStyle="label.01"
+                tagName="h3"
               />
             }
             description={sanitizeContent(step.description)}

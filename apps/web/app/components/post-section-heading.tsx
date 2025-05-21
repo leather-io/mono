@@ -1,8 +1,8 @@
-import { styled, Flex } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
 import { Post } from '~/data/post-types';
 import { getLearnMoreLink } from '~/features/page/page';
-import { sanitizeContent } from '~/utils/sanitize-content';
 import { styleTokens } from '~/shared/style-tokens';
+import { sanitizeContent } from '~/utils/sanitize-content';
 
 interface PostSectionHeadingProps {
   post: Post;
@@ -13,10 +13,10 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
   if (!post) return null;
   return (
     <Flex
-      flexDir={["column", "column", "row"]}
-      alignItems={["flex-start", "flex-start", "flex-start"]}
+      flexDir={['column', 'column', 'row']}
+      alignItems={['flex-start', 'flex-start', 'flex-start']}
       justifyContent="space-between"
-      gap={["space.04", "space.04", "space.07"]}
+      gap={['space.04', 'space.04', 'space.07']}
       mb="space.07"
       mt="space.07"
     >
@@ -24,13 +24,17 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
         {prefix}
         {sanitizeContent(post.title)}
       </styled.h2>
-      <Flex flexDir="column" alignItems={["flex-start", "flex-start", "flex-end"]} maxW={["100%", "100%", "60%"]}>
+      <Flex
+        flexDir="column"
+        alignItems={['flex-start', 'flex-start', 'flex-end']}
+        maxW={['100%', '100%', '60%']}
+      >
         <Flex alignItems="flex-start" gap="space.02">
           {post.sentence && (
-            <styled.p 
-              textStyle="body.01" 
-              mb="space.01" 
-              display="inline" 
+            <styled.p
+              textStyle="body.01"
+              mb="space.01"
+              display="inline"
               whiteSpace={styleTokens.whiteSpace.preLine}
             >
               {sanitizeContent(post.sentence)}
@@ -40,20 +44,15 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
         </Flex>
         {post.disclaimer && (
           <>
-            <styled.hr 
-              color="ink.border-default" 
-              border="none" 
-              borderBottom="1px solid var(--colors-ink-border-default)" 
-              width="100%" 
-              mb="space.02" 
-              mt="space.03" 
+            <styled.hr
+              color="ink.border-default"
+              border="none"
+              borderBottom="1px solid var(--colors-ink-border-default)"
+              width="100%"
+              mb="space.02"
+              mt="space.03"
             />
-            <styled.p 
-              textStyle="body.02" 
-              color="ink.text-subdued" 
-              mb="space.01" 
-              borderRadius="sm"
-            >
+            <styled.p textStyle="body.02" color="ink.text-subdued" mb="space.01" borderRadius="sm">
               {sanitizeContent(post.disclaimer)}
             </styled.p>
           </>
@@ -61,4 +60,4 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
       </Flex>
     </Flex>
   );
-} 
+}

@@ -16,4 +16,4 @@ https.get(url, res => {
     file.close();
     console.log('Downloaded posts.json');
   });
-}); 
+});

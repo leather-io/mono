@@ -24,7 +24,7 @@ The purpose of [typescript](https://www.typescriptlang.org/) is to add strong ty
   {
     "extends": ["@leather.io/tsconfig-config/tsconfig.base.json"],
     "include": ["**/*", ".*.ts"],
-    "exclude": []
+    "exclude": [],
   }
   ```
 

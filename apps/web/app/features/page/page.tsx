@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
+
 import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
-import { Link } from '@leather.io/ui';
 import { getPostHref } from '~/utils/post-link';
-import { ReactNode } from 'react';
+
+import { Link } from '@leather.io/ui';
 
 import { SignInButton } from '../sign-in-button/sign-in-button';
 
@@ -46,14 +48,20 @@ export function PageHeading({ title, subtitle = '', children }: PageHeadingProps
  */
 export function getLearnMoreLink(destination: string, precedingText?: string): ReactNode {
   if (!destination) return null;
-  const needsPeriod = precedingText && !precedingText.trim().endsWith('.') && !precedingText.trim().endsWith('!') && !precedingText.trim().endsWith('?');
+  const needsPeriod =
+    precedingText &&
+    !precedingText.trim().endsWith('.') &&
+    !precedingText.trim().endsWith('!') &&
+    !precedingText.trim().endsWith('?');
   // Simple URL check
   const isUrl = /^https?:\/\//.test(destination);
   const href = isUrl ? destination : getPostHref(destination);
   return (
     <>
       {precedingText && needsPeriod ? '. ' : ' '}
-      <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>{'Learn more'}</Link>
+      <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>
+        {'Learn more'}
+      </Link>
     </>
   );
 }

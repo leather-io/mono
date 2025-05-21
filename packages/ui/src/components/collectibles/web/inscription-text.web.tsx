@@ -1,4 +1,5 @@
 import { Box } from 'leather-styles/jsx';
+
 // Cross-package import for universal sanitization. If this package is published independently, refactor to use a local sanitizer.
 import { sanitizeContent } from '@leather.io/utils/sanitize-content';
 

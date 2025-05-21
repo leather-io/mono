@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 /**
  * Universal sanitizer for dynamic HTML content.
  * Uses DOMPurify in the browser, and a safe fallback for SSR (returns plain text).
- * 
+ *
  * This utility centrally manages content sanitization across all UI components
  * that render user- or CMS-driven HTML, protecting against XSS attacks.
  */
@@ -18,4 +18,4 @@ export function sanitizeContent(dirty: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-} 
+}

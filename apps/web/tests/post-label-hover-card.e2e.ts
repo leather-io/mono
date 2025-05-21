@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+
 import { test } from '.';
 
 test.describe('PostLabelHoverCard', () => {
@@ -17,4 +18,4 @@ test.describe('PostLabelHoverCard', () => {
     await page.goto('/hover-card-label-missing'); // Adjust route as needed for your app
     await expect(page.getByText('Unknown')).toBeVisible();
   });
-}); 
+});

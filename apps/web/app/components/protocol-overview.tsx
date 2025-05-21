@@ -1,15 +1,15 @@
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { ProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { getLearnMoreLink } from '~/features/page/page';
 import { usePost, getPosts } from '~/utils/post-utils';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { getPostSlugForProvider } from '~/data/data';
 import {
   toHumanReadableDays,
@@ -23,7 +23,7 @@ interface RewardTokenCellProps {
   icon: ReactNode;
   symbol: string;
 }
-function RewardTokenCell({ icon, symbol }: RewardTokenCellProps) {
+function RewardTokenCell({ icon, symbol }: RewardTokenCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsTokens;
   
@@ -42,7 +42,7 @@ function RewardTokenCell({ icon, symbol }: RewardTokenCellProps) {
 interface LockupPeriodCellProps {
   lockupPeriod?: string;
 }
-function LockupPeriodCell({ lockupPeriod = '1 Cycle' }: LockupPeriodCellProps) {
+function LockupPeriodCell({ lockupPeriod = '1 Cycle' }: LockupPeriodCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumLockupPeriod;
   
@@ -61,7 +61,7 @@ function DaysUntilNextCycleCell({
   daysUntilNextCycle,
   nextCycleBlocks,
   nextCycleNumber,
-}: DaysUntilNextCycleCellProps) {
+}: DaysUntilNextCycleCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingUpcomingCycle;
   
@@ -87,7 +87,7 @@ interface MinimumCommitmentCellProps {
 function MinimumCommitmentCell({
   minimumCommitment,
   minimumCommitmentUsd,
-}: MinimumCommitmentCellProps) {
+}: MinimumCommitmentCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumCommitment;
   
@@ -107,7 +107,7 @@ function MinimumCommitmentCell({
 interface HistoricalAprCellProps {
   apr?: number;
 }
-function HistoricalAprCell({ apr }: HistoricalAprCellProps) {
+function HistoricalAprCell({ apr }: HistoricalAprCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.historicalYield;
   
@@ -124,7 +124,7 @@ interface TotalValueLockedCellProps {
 function TotalValueLockedCell({
   totalValueLocked,
   totalValueLockedUsd,
-}: TotalValueLockedCellProps) {
+}: TotalValueLockedCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.totalLockedValueTvl;
   
@@ -147,7 +147,7 @@ interface ProtocolCellProps {
   description: string;
   postSlug?: string;
 }
-function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps) {
+function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps): ReactElement {
   const post = postSlug ? usePost(postSlug) : null;
   
   return (
@@ -158,8 +158,8 @@ function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps) 
       </styled.h4>
       {post ? (
         <styled.p textStyle="caption.01">
-          {post.sentence}
-          {getLearnMoreLink(post.slug, post.sentence)}
+          {post?.sentence || ''}
+          {post?.slug && post?.sentence ? getLearnMoreLink(post.slug, post.sentence) : <></>}
         </styled.p>
       ) : (
         <styled.p textStyle="caption.01">{description}</styled.p>
@@ -171,7 +171,7 @@ function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps) 
 interface ProtocolStatusProps {
   status: string;
 }
-function ProtocolStatusCell({ status }: ProtocolStatusProps) {
+function ProtocolStatusCell({ status }: ProtocolStatusProps): ReactElement {
   return (
     <ValueDisplayer
       gap="space.04"
@@ -185,11 +185,10 @@ function ProtocolStatusCell({ status }: ProtocolStatusProps) {
   );
 }
 
-interface ContractAddressCell {
+interface ContractAddressCellProps {
   address: string;
 }
-
-function ContractAddressCell({ address }: ContractAddressCell) {
+function ContractAddressCell({ address }: ContractAddressCellProps): ReactElement {
   return (
     <ValueDisplayer
       gap="space.04"
@@ -206,7 +205,7 @@ export interface ProtocolOverviewProps {
   isStackingPage?: boolean;
 }
 
-export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug }: ProtocolOverviewProps) {
+export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug }: ProtocolOverviewProps): ReactElement {
   const isStackingPageOrUndefined = isStackingPage ? true : undefined;
   const posts = getPosts();
   
@@ -268,7 +267,7 @@ export function ProtocolOverview({ isStackingPage, info, protocol, protocolSlug 
   }
 
   // Handle legacy case where we have the info object
-  if (!info) return null;
+  if (!info) return <></>;
 
   return (
     <VStack gap="0">

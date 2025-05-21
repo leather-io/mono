@@ -2,13 +2,13 @@ import { StacksNetworkName } from '@stacks/network';
 import { StackerInfo } from '@stacks/stacking';
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
+import { content } from '~/data/content';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
   stxAmountSchema,
   validateAvailableBalance,
   validateMaxStackingAmount,
 } from '~/utils/validators/stx-amount-validator';
-import { content } from '~/data/content';
 
 interface CreateValidationSchemaArgs {
   availableBalanceUStx?: BigNumber;

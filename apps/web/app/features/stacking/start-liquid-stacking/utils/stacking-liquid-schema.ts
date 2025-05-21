@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { content } from '~/data/content';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import { ProtocolName } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
@@ -10,7 +11,6 @@ import {
 } from '~/utils/validators/stx-amount-validator';
 
 import { Money } from '@leather.io/models';
-import { content } from '~/data/content';
 
 interface SchemaCreationParams {
   protocolName: ProtocolName;

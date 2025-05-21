@@ -1,16 +1,18 @@
+import { ReactElement } from 'react';
+
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
+import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { RewardProtocolInfo } from '~/data/data';
+import { getLearnMoreLink } from '~/features/page/page';
+import { getPosts } from '~/utils/post-utils';
 
 import { Flag } from '@leather.io/ui';
 import { ensureArray } from '@leather.io/utils';
 
 import { SbtcProtocolRewardGridLayout } from './sbtc-protocol-reward-grid.layout';
 import { SbtcProviderIcon } from './sbtc-provider-icon';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
-import { getLearnMoreLink } from '~/features/page/page';
-import { getPosts } from '~/utils/post-utils';
 
 interface RewardProtocolCellProps {
   rewardProtocol: RewardProtocolInfo;
@@ -19,7 +21,7 @@ interface RewardProtocolCellProps {
 function RewardProtocolEnrollCell({
   rewardProtocol,
   action,
-}: RewardProtocolCellProps & { action: React.ReactElement }) {
+}: RewardProtocolCellProps & { action: React.ReactElement }): ReactElement {
   // Map protocol id to post key in camelCase
   const protocolKeyMap: Record<string, string> = {
     basic: 'sbtcRewardsBasic',
@@ -55,17 +57,13 @@ function RewardProtocolEnrollCell({
   );
 }
 
-function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
+function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.totalLockedValueTvl;
   return (
     <ValueDisplayer
       name={
-        <PostLabelHoverCard
-          post={post}
-          label="Total Value Locked (TVL)"
-          textStyle="label.03"
-        />
+        <PostLabelHoverCard post={post} label="Total Value Locked (TVL)" textStyle="label.03" />
       }
       value={
         <>
@@ -78,36 +76,24 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
   );
 }
 
-function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
+function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.historicalYield;
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label="Historical yield"
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.03" />}
       value={rewardProtocol.apr}
       textAlign="left"
     />
   );
 }
 
-function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
+function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.sbtcRewardsMinimumCommitment;
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label="Minimum commitment"
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label="Minimum commitment" textStyle="label.03" />}
       value={
         <>
           {rewardProtocol.minCommitment}
@@ -119,18 +105,12 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps) {
   );
 }
 
-function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
+function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.sbtcRewardsTokens;
   return (
     <ValueDisplayer
-      name={
-        <PostLabelHoverCard
-          post={post}
-          label="Rewards token"
-          textStyle="label.03"
-        />
-      }
+      name={<PostLabelHoverCard post={post} label="Rewards token" textStyle="label.03" />}
       value={
         <Flex gap="space.02">
           {ensureArray(rewardProtocol.payoutToken).map(token =>
@@ -157,7 +137,7 @@ export function SbtcProtocolRewardGrid({
   rewardProtocol,
   enrollAction,
   ...props
-}: SbtcProtocolRewardGridProps) {
+}: SbtcProtocolRewardGridProps): ReactElement {
   return (
     <SbtcProtocolRewardGridLayout
       primaryCell={

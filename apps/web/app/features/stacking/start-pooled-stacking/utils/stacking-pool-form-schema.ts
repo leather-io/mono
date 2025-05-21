@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { z } from 'zod';
+import { content } from '~/data/content';
 import { StackingProviderId } from '~/data/data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import {
@@ -12,7 +13,6 @@ import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io
 import { BitcoinNetworkModes, Money } from '@leather.io/models';
 
 import { getStackingPoolById } from './stacking-pool-types';
-import { content } from '~/data/content';
 
 function btcAddressNetworkValidator(networkMode: BitcoinNetworkModes) {
   return (address: string) => isValidBitcoinNetworkAddress(address, networkMode);
@@ -48,7 +48,10 @@ export function createValidationSchema({
       rewardAddress: z
         .string()
         .refine(isValidBitcoinAddress, content.validationMessages.addressNotValid) // TODO: invalidAddress
-        .refine(btcAddressNetworkValidator(networkMode), content.validationMessages.addressIncorrectNetwork), // incorrectNetworkAddress
+        .refine(
+          btcAddressNetworkValidator(networkMode),
+          content.validationMessages.addressIncorrectNetwork
+        ), // incorrectNetworkAddress
     })
     .superRefine((data, ctx) => {
       const amount = data.amount;

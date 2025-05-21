@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 // This test assumes you can mock or inject CMS content for the test environment.
 test.describe('XSS Protection', () => {
@@ -18,4 +18,4 @@ test.describe('XSS Protection', () => {
     const xssExecuted = await page.evaluate(() => (window as any).__xss_executed);
     expect(xssExecuted).toBeUndefined();
   });
-}); 
+});

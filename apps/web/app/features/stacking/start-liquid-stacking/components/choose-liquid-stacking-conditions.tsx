@@ -12,14 +12,14 @@ export function ChooseLiquidStackingConditions() {
   const liquidStackingConditions = mapConditionsWithIcons(content.liquidStackingConditions);
   const posts = getPosts();
   const post = posts.liquidStackingConditions;
-  
+
   return (
     <>
-      <PostLabelHoverCard 
+      <PostLabelHoverCard
         post={post}
         label="Liquid Stacking Conditions"
-        textStyle="label.01" 
-        tagName="h1" 
+        textStyle="label.01"
+        tagName="h1"
       />
       <StackingConditions conditions={liquidStackingConditions} />
     </>

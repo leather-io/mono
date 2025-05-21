@@ -197,20 +197,20 @@ export function defineRpcEndpoint<
     | { method: Method; result: Result; error?: Error }
 ):
   | {
-    method: Method;
-    params: Params;
-    result: Result;
-    error: Error;
-    request: ReturnType<typeof createRpcRequestSchema<Method, Params>>;
-    response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
-  }
+      method: Method;
+      params: Params;
+      result: Result;
+      error: Error;
+      request: ReturnType<typeof createRpcRequestSchema<Method, Params>>;
+      response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
+    }
   | {
-    method: Method;
-    result: Result;
-    error: Error;
-    request: ReturnType<typeof createRpcRequestSchema<Method>>;
-    response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
-  } {
+      method: Method;
+      result: Result;
+      error: Error;
+      request: ReturnType<typeof createRpcRequestSchema<Method>>;
+      response: ReturnType<typeof createRpcResponseSchema<Result, Error>>;
+    } {
   const error = (props.error ?? defaultErrorSchema) as Error;
 
   if ('params' in props) {

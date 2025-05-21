@@ -1,6 +1,7 @@
-import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
-import { IconMapType } from '~/shared/types';
 import { StackingConditionItem } from '~/features/stacking/components/stacking-conditions';
+import { IconMapType } from '~/shared/types';
+
+import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
 
 /**
  * Shared icon map for stacking-related components.
@@ -30,6 +31,6 @@ export function mapConditionsWithIcons(
   return conditions.map(condition => ({
     icon: stackingIconMap[condition.iconKey] || null,
     title: condition.title,
-    description: condition.description
+    description: condition.description,
   }));
-} 
+}
