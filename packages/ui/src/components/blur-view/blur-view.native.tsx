@@ -1,4 +1,5 @@
-import { LegacyRef, forwardRef } from 'react';
+import { RefObject, useEffect } from 'react';
+import { Platform } from 'react-native';
 
 import {
   ExperimentalBlurMethod,
@@ -14,18 +15,20 @@ interface BlurViewProps extends ExpoBlurViewProps {
   experimentalBlurMethod?: ExperimentalBlurMethod;
 }
 
-export const BlurView = forwardRef((props: BlurViewProps, ref: LegacyRef<ExpoBlurView>) => {
-  const { themeVariant, experimentalBlurMethod } = props;
+export function BlurView(props: BlurViewProps & { ref?: RefObject<ExpoBlurView> }) {
+  useEffect(() => {
+    if (Platform.OS === 'android' && props.experimentalBlurMethod === 'dimezisBlurView') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Don't use BlurView on android with "dimezisBlurView" as it's not working properly on it, see https://docs.expo.dev/versions/latest/sdk/blur-view/#experimentalblurmethod`
+      );
+    }
+  }, [props.experimentalBlurMethod]);
+
   const tint: ExpoBlurTint =
-    themeVariant === 'dark' ? 'systemChromeMaterialDark' : 'systemChromeMaterialLight';
-  return (
-    <ExpoBlurView
-      experimentalBlurMethod={experimentalBlurMethod}
-      ref={ref}
-      tint={tint}
-      {...props}
-    />
-  );
-});
+    props.themeVariant === 'dark' ? 'systemChromeMaterialDark' : 'systemChromeMaterialLight';
+
+  return <ExpoBlurView experimentalBlurMethod="none" ref={props.ref} tint={tint} {...props} />;
+}
 
 BlurView.displayName = 'BlurView';

@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useRef } from 'react';
-import { ViewStyle } from 'react-native';
+import { Platform, ViewStyle } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,10 +9,10 @@ import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import {
+  BlurView,
   Box,
   BrowserIcon,
   Button,
@@ -96,33 +96,47 @@ function ActionBarContainer({ children }: ActionBarContainerProps) {
   const { bottom } = useSafeAreaInsets();
   const bottomOffset = getActionBarBottomOffset(bottom);
   const theme = useTheme<Theme>();
+  const { themeDerivedFromThemePreference } = useSettings();
+  const styles = {
+    position: 'absolute',
+    bottom: bottomOffset,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    gap: theme.spacing[6],
+    height: actionBarHeight,
+    marginHorizontal: theme.spacing[5],
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[2],
+    overflow: 'hidden',
+    borderRadius: theme.borderRadii['sm'],
+    borderColor: theme.colors['ink.border-transparent'],
+    borderWidth: 1,
+  } as const;
 
-  return (
-    <AnimatedBox entering={FadeInDown} exiting={FadeOutDown}>
-      <GradientBackdrop height={bottomOffset + actionBarHeight} />
+  const actionBarBlurContainer = Platform.select({
+    ios: (
       <BlurView
-        experimentalBlurMethod="dimezisBlurView"
+        themeVariant={themeDerivedFromThemePreference}
         intensity={blurIntensity}
         blurReductionFactor={androidBlurReductionFactor}
-        style={{
-          position: 'absolute',
-          bottom: bottomOffset,
-          flexDirection: 'row',
-          alignSelf: 'center',
-          gap: theme.spacing[6],
-          height: actionBarHeight,
-          marginHorizontal: theme.spacing[5],
-          paddingHorizontal: theme.spacing[6],
-          paddingVertical: theme.spacing[2],
-          overflow: 'hidden',
-          borderRadius: theme.borderRadii['sm'],
-          borderColor: theme.colors['ink.border-transparent'],
-          borderWidth: 1,
-        }}
+        style={styles}
       >
         <BlurBackdrop />
         {children}
       </BlurView>
+    ),
+    android: (
+      <Box style={styles}>
+        <BlurBackdrop />
+        {children}
+      </Box>
+    ),
+  });
+
+  return (
+    <AnimatedBox entering={FadeInDown} exiting={FadeOutDown}>
+      <GradientBackdrop height={bottomOffset + actionBarHeight} />
+      {actionBarBlurContainer}
     </AnimatedBox>
   );
 }
