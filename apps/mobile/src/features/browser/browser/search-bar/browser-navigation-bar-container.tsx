@@ -26,6 +26,8 @@ export function BrowserNavigationBarContainer({ children }: BrowserNavigationBar
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
+        borderRadius: 8,
+        overflow: 'hidden',
       }) satisfies StyleProp<ViewStyle>,
     [bottom, theme.spacing]
   );

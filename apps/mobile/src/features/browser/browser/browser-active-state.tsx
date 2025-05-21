@@ -107,7 +107,10 @@ export function BrowserActiveState({
   return (
     <Box flex={1} bg="ink.background-primary">
       <BrowserLoading ref={browserLoadingRef} />
-      <ViewShot ref={viewShotRef} style={{ flex: 1, paddingBottom: browserNavigationBarHeight }}>
+      <ViewShot
+        ref={viewShotRef}
+        style={{ flex: 1, paddingBottom: browserNavigationBarHeight - theme.spacing['2'] }}
+      >
         <WebView
           nestedScrollEnabled
           onMessage={onMessageHandler}
