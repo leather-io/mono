@@ -71,7 +71,6 @@ export function SearchBar({
       {browserType === 'active' && (
         <AnimatedBox
           style={[keyboardAvoidingStyle, browserNavigationBarStyle]}
-          pt="4"
           position="absolute"
           right={0}
           left={0}

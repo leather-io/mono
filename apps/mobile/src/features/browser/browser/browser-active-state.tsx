@@ -112,7 +112,10 @@ export function BrowserActiveState({
   return (
     <Box flex={1} bg="ink.background-primary">
       <BrowserLoading ref={browserLoadingRef} />
-      <ViewShot ref={viewShotRef} style={{ flex: 1, paddingBottom: browserNavigationBarHeight }}>
+      <ViewShot
+        ref={viewShotRef}
+        style={{ flex: 1, paddingBottom: browserNavigationBarHeight - theme.spacing['2'] }}
+      >
         <WebView
           onScroll={({ nativeEvent }) => {
             if (nativeEvent.contentOffset.y < -CONTENT_OFFSET_FOR_BROWSER_CLOSE) {
