@@ -24,7 +24,7 @@ interface UserPositionGridProps {
   logo?: ReactNode;
   poolSlug?: string;
   amount?: string;
-  apr?: string;
+  apr?: string | null;
   nextReward?: string;
   rewardTokenIcon?: React.ReactNode;
   rewardTokenSymbol?: string;

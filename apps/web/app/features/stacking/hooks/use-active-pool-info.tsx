@@ -55,18 +55,6 @@ export function useActivePoolInfo() {
     isExpired,
   ]);
 
-  const hardcodeActivePoolRewardProtocolInfo = useMemo<ActivePoolRewardProtocolInfo | null>(() => {
-    if (!poolInfo.hardcodePoolRewardProtocolInfo) {
-      return null;
-    }
-    return {
-      ...poolInfo.hardcodePoolRewardProtocolInfo,
-      isStacking: true,
-      delegatedAmountMicroStx: 40_000_000,
-      isExpired: false,
-    };
-  }, [poolInfo.hardcodePoolRewardProtocolInfo]);
-
   const isLoading =
     getPoolAddressQuery.isLoading ||
     delegationStatusQuery.isLoading ||
@@ -87,7 +75,7 @@ export function useActivePoolInfo() {
     return { isLoading: true } as const;
   }
 
-  if (isError || !hardcodeActivePoolRewardProtocolInfo) {
+  if (isError) {
     return { isLoading: false, isError: true } as const;
   }
 
@@ -97,6 +85,5 @@ export function useActivePoolInfo() {
     delegationStatusQuery,
     getCoreInfoQuery,
     activePoolRewardProtocolInfo,
-    hardcodeActivePoolRewardProtocolInfo,
   };
 }

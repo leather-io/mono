@@ -36,10 +36,14 @@ import { StartEarningButton } from '~/pages/stacking/components/start-earning-bu
 import { useProtocolFee } from '~/queries/protocols/use-protocol-fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
-import { toHumanReadablePercent, toHumanReadableShortStx } from '~/utils/unit-convert';
+import {
+  toHumanReadableMicroStx,
+  toHumanReadablePercent,
+  toHumanReadableShortStx,
+} from '~/utils/unit-convert';
 
 import { Button, Flag, SkeletonLoader, useOnMount } from '@leather.io/ui';
-import { isUndefined } from '@leather.io/utils';
+import { isNumber, isUndefined } from '@leather.io/utils';
 
 const providerSlugMap = {
   fastPool: 'fast-pool',
@@ -140,12 +144,15 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
         maxSize: 15,
       },
       {
-        accessorKey: 'minAmount',
-        cell: info => (
-          <styled.div maxW="fit-content">
-            {info.getValue() === null ? '—' : (info.getValue() as string)}
-          </styled.div>
-        ),
+        accessorKey: 'minimumDelegationAmount',
+        cell: info => {
+          const value = info.getValue();
+          return (
+            <styled.div maxW="fit-content">
+              {isNumber(value) ? toHumanReadableMicroStx(value) : DASH}
+            </styled.div>
+          );
+        },
         header: () => (
           <styled.div maxW="fit-content">
             <BasicHoverCard content={content.stacking.minimumAmountToStackDescription}>
@@ -170,7 +177,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
           }
 
           if (isError || !data?.entity.apr) {
-            return <styled.div>{info.getValue() as string}</styled.div>;
+            return <styled.div>{DASH}</styled.div>;
           }
 
           return <styled.div>{toHumanReadablePercent(data.entity.apr)}</styled.div>;
@@ -199,7 +206,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>) {
           }
 
           if (isError || isUndefined(data?.entity.fee)) {
-            return <styled.div>{info.getValue() as string}</styled.div>;
+            return <styled.div>{DASH}</styled.div>;
           }
 
           return <styled.div>{toHumanReadablePercent(data.entity.fee * 100)}</styled.div>;

@@ -2,6 +2,7 @@ import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { DASH } from '~/constants/constants';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import {
   daysToWeek,
@@ -95,15 +96,15 @@ function MinimumCommitmentCell({
 }
 
 interface HistoricalAprCellProps {
-  historicalApr: string;
+  historicalApr: string | null;
 }
 function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps) {
-  return <ValueDisplayer name="Historical APR" value={<>{historicalApr}</>} />;
+  return <ValueDisplayer name="Historical APR" value={historicalApr || DASH} />;
 }
 
 interface TotalValueLockedCellProps {
-  totalValueLocked: string;
-  totalValueLockedUsd: string;
+  totalValueLocked: string | null;
+  totalValueLockedUsd: string | null;
 }
 function TotalValueLockedCell({
   totalValueLocked,
@@ -114,7 +115,8 @@ function TotalValueLockedCell({
       name="Total value locked"
       value={
         <>
-          {totalValueLocked} <Box textStyle="label.03">{totalValueLockedUsd}</Box>
+          {totalValueLocked || DASH}{' '}
+          {totalValueLockedUsd && <Box textStyle="label.03">{totalValueLockedUsd}</Box>}
         </>
       }
     />
