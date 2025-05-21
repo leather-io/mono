@@ -4,14 +4,7 @@ import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { GuardResult } from '@/features/send/components/recipient/use-recipient-evaluator';
 import { t } from '@lingui/macro';
 
-import {
-  AddressDisplayer,
-  Box,
-  Button,
-  PlusIcon,
-  type SheetRef,
-  Text,
-} from '@leather.io/ui/native';
+import { AddressDisplayer, Box, Button, type SheetRef, Text } from '@leather.io/ui/native';
 
 interface RecipientWarningSheetProps {
   sheetRef: RefObject<SheetRef | null>;
@@ -38,7 +31,7 @@ export function RecipientGuardSheet({ sheetRef, config, onConfirm }: RecipientWa
   }
 
   return (
-    <SheetLayout handleComponent={null} sheetRef={sheetRef} icon={<PlusIcon />} title={title}>
+    <SheetLayout handleComponent={null} sheetRef={sheetRef} title={title}>
       <Text>{description}</Text>
       <Box
         p="5"

@@ -1,6 +1,6 @@
-import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
-import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
+import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AssetPicker } from '@/features/send/components/asset-picker/asset-picker';
 import { usePreloadBtcData } from '@/features/send/hooks/use-preload-btc-data';
 import { usePreloadStxData } from '@/features/send/hooks/use-preload-stx-data';

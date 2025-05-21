@@ -1,5 +1,5 @@
-import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
-import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
+import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
+import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AccountList } from '@/features/account/account-list/account-list';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { Account } from '@/store/accounts/accounts';

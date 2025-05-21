@@ -3,15 +3,7 @@ import { RefObject } from 'react';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import {
-  Box,
-  Button,
-  ErrorTriangleIcon,
-  Sheet,
-  SheetHeader,
-  SheetRef,
-  Text,
-} from '@leather.io/ui/native';
+import { Box, Button, Sheet, SheetHeader, SheetRef, Text } from '@leather.io/ui/native';
 
 type WarningSheetVariant = 'normal' | 'critical';
 
@@ -40,22 +32,6 @@ export function WarningSheetLayout({
             <SheetHeader
               onPressSupport={onPressSupport ? onPressSupport : undefined}
               title={title}
-              icon={
-                <Box
-                  bg={
-                    variant === 'critical' ? 'red.background-primary' : 'ink.background-secondary'
-                  }
-                  borderRadius="round"
-                  flexDirection="row"
-                  p="2"
-                >
-                  <ErrorTriangleIcon
-                    color={
-                      variant === 'critical' ? 'red.action-primary-default' : 'ink.text-primary'
-                    }
-                  />
-                </Box>
-              }
             />
           </Box>
           <Text>{description}</Text>

@@ -9,7 +9,7 @@ import { useLingui } from '@lingui/react';
 
 import { currencyNameMap } from '@leather.io/constants';
 import { FiatCurrency } from '@leather.io/models';
-import { DollarCircleIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -34,7 +34,6 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
 
   return (
     <SettingsSheetLayout
-      icon={<DollarCircleIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'conversion_unit.header_title',

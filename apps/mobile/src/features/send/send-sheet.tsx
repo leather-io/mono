@@ -1,4 +1,4 @@
-import { FullHeightSheet } from '@/components/full-height-sheet/full-height-sheet';
+import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { Send } from '@/features/send/send';
 

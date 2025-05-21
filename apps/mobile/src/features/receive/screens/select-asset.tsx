@@ -1,6 +1,6 @@
-import { FullHeightSheetHeader } from '@/components/full-height-sheet/full-height-sheet-header';
-import { FullHeightSheetLayout } from '@/components/full-height-sheet/full-height-sheet.layout';
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
+import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { TokenIcon } from '@/features/balances/token-icon';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';

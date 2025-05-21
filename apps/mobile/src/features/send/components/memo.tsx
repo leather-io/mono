@@ -9,7 +9,6 @@ import { t } from '@lingui/macro';
 import {
   Button,
   NoteEmptyIcon,
-  NoteTextIcon,
   Pressable,
   type SheetRef,
   Text,
@@ -75,7 +74,6 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
       </Pressable>
 
       <SheetLayout
-        icon={<NoteTextIcon />}
         sheetRef={sheetRef}
         onChange={handleSheetStateChange}
         title={t({

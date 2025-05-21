@@ -4,7 +4,7 @@ import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
-import { PassportIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 interface AccountNameSheetProps {
   sheetRef: RefObject<SheetRef | null>;
@@ -17,7 +17,6 @@ export function AccountNameSheet({ sheetRef, name, setName }: AccountNameSheetPr
       sheetRef={sheetRef}
       initialValue={name}
       title={t({ id: 'account_name.header_title', message: 'Account label' })}
-      icon={<PassportIcon />}
       placeholder={t({ id: 'account_name.input_placeholder', message: 'Name' })}
       submitTitle={t({ id: 'account_name.button', message: 'Save' })}
       onSubmit={newName => {

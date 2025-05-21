@@ -11,7 +11,7 @@ import { useLingui } from '@lingui/react';
 
 import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import { BitcoinUnit } from '@leather.io/models';
-import { BitcoinCircleIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -37,7 +37,6 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
 
   return (
     <SettingsSheetLayout
-      icon={<BitcoinCircleIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'bitcoin_unit.header_title',

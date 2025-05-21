@@ -9,7 +9,7 @@ import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 
-import { KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
@@ -64,7 +64,6 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
 
   return (
     <SettingsSheetLayout
-      icon={<KeyholeIcon />}
       sheetRef={sheetRef}
       title={t({
         id: 'app_auth.header_title',
