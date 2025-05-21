@@ -25,6 +25,7 @@ interface BrowserActiveStateProps {
   navState: WebViewNavigation | null;
   setNavState: (navState: WebViewNavigation | null) => void;
   goToUrl(url: string): void;
+  browserNavigationBarHeight: number;
 }
 
 export function BrowserActiveState({
@@ -33,6 +34,7 @@ export function BrowserActiveState({
   navState,
   setNavState,
   goToUrl,
+  browserNavigationBarHeight,
 }: BrowserActiveStateProps) {
   const viewShotRef = useRef<ViewShot>(null);
   const [origin, setOrigin] = useState<string | null>(null);
@@ -105,7 +107,7 @@ export function BrowserActiveState({
   return (
     <Box flex={1} bg="ink.background-primary">
       <BrowserLoading ref={browserLoadingRef} />
-      <ViewShot ref={viewShotRef} style={{ flex: 1 }}>
+      <ViewShot ref={viewShotRef} style={{ flex: 1, paddingBottom: browserNavigationBarHeight }}>
         <WebView
           nestedScrollEnabled
           onMessage={onMessageHandler}
