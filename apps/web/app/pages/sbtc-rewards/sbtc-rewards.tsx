@@ -16,6 +16,7 @@ import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
+import { useRemainingSbtcSupply } from '~/queries/sbtc/use-remaining-sbtc-supply';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 import { formatPostPrompt, getPosts } from '~/utils/post-utils';
@@ -81,9 +82,11 @@ const formattedSbtcPools = sbtcPools.map(pool => ({
 export function SbtcRewards(): ReactElement {
   const { status, whenExtensionState } = useLeatherConnect();
   const postSlug = 'sbtcRewards';
+  const remainingSbtcPegCapSupply = useRemainingSbtcSupply();
 
-  function bridgeSbtc() {
-    // Cannot bridge, cap reached
+  async function bridgeSbtc() {
+    void analytics.untypedTrack('bridge_btc_sbtc_opened');
+    await leather.openSwap({ base: 'BTC', quote: 'sBTC' });
   }
 
   async function swapStxSbtc() {
@@ -95,7 +98,7 @@ export function SbtcRewards(): ReactElement {
     <SbtcRewardContext.Provider
       value={{
         whenExtensionState,
-        bridgingStatus: 'disabled',
+        bridgingStatus: remainingSbtcPegCapSupply?.isGreaterThan(0) ? 'enabled' : 'disabled',
         extensionStatus: status,
         onBridgeSbtc: bridgeSbtc,
         onSwapStxSbtc: swapStxSbtc,
