@@ -1,10 +1,15 @@
 import QRCode from 'react-native-qrcode-svg';
 
+import { Image } from 'expo-image';
+
 import { Box, ThemeProvider } from '@leather.io/ui/native';
 
 interface QrCardProps {
   value: string;
 }
+
+const qrSize = 190;
+const logoSize = 52;
 
 export function QrCard({ value }: QrCardProps) {
   return (
@@ -37,13 +42,13 @@ export function QrCard({ value }: QrCardProps) {
             padding="5"
             backgroundColor="ink.background-primary"
             borderRadius="md"
+            alignItems="center"
+            justifyContent="center"
           >
-            <QRCode
-              value={value}
-              logoSize={36}
-              logo={require('./qr-leather-lettermark.png')}
-              size={190}
-              logoMargin={8}
+            <QRCode value={value} size={qrSize} />
+            <Image
+              source={require('./qr-leather-lettermark.png')}
+              style={{ position: 'absolute', width: logoSize, height: logoSize }}
             />
           </Box>
         </Box>
