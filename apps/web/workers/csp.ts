@@ -20,6 +20,7 @@ export const csp = builder({
       '*.stacking-tracker.com',
       'api.leather.io',
       '*.api.leather.io',
+      'https://sbtc-emily.com',
     ],
   },
 });

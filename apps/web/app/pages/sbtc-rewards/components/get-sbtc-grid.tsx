@@ -42,7 +42,11 @@ function BridgeToSbtcCell() {
         <WhenClient>
           <Button
             onClick={onBridgeSbtc}
-            disabled={bridgingStatus !== 'enabled'}
+            disabled={whenExtensionState({
+              connected: bridgingStatus !== 'enabled',
+              detected: true,
+              missing: true,
+            })}
             mt="space.04"
             size="xs"
           >
