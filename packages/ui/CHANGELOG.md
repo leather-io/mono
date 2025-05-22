@@ -389,6 +389,28 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.67.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.66.2...@leather.io/ui-v1.67.0) (2025-05-22)
+
+
+### Features
+
+* **ui:** add remaining space tokens to mobile theme ([37e19a4](https://github.com/leather-io/mono/commit/37e19a46646f953ccb7d178a1aaa76042d53723e))
+
+
+### Bug Fixes
+
+* android navigation and blurview ([f516f32](https://github.com/leather-io/mono/commit/f516f323f98087f5bc8f9b7b4b8644f97ef3d660))
+* **mobile:** remove header icon from sheets, ref LEA-1834 ([fca6ad8](https://github.com/leather-io/mono/commit/fca6ad82c2b84ea16e872aca5d150c05f01bdf2e))
+* **ui:** decrease sheet header height ([fa50c03](https://github.com/leather-io/mono/commit/fa50c03d37e8b0221137ecf927f20c73bc46ef04))
+* **ui:** use correct radio button border color ([10b68cc](https://github.com/leather-io/mono/commit/10b68ccee9e48e80aa63736b0206af685d5d61fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.33.1
+
 ## [1.66.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.66.1...@leather.io/ui-v1.66.2) (2025-05-21)
 
 

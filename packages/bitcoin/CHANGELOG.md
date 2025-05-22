@@ -704,6 +704,16 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.15.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.20.1
+    * @leather.io/crypto bumped to 1.6.58
+    * @leather.io/utils bumped to 0.33.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.15.1
+
 ## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.25.2...@leather.io/bitcoin-v0.26.0) (2025-05-16)
 
 

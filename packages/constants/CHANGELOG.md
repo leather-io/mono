@@ -157,6 +157,14 @@
   * dependencies
     * @leather.io/models bumped to 0.31.0
 
+## [0.20.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.20.0...@leather.io/constants-v0.20.1) (2025-05-22)
+
+
+### Bug Fixes
+
+* linking to browser instead of safari ([34e9ff2](https://github.com/leather-io/mono/commit/34e9ff22b0a0522d5b1dc2729a5eb34b868d58bc))
+* update browser suggested tab ([7226bb0](https://github.com/leather-io/mono/commit/7226bb071c6bd3e7a4aa9858920e4d4b2955157a))
+
 ## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.19.1...@leather.io/constants-v0.20.0) (2025-05-16)
 
 
