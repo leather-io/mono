@@ -3,21 +3,27 @@ import { RotatedArrow } from '~/components/icons/rotated-icon';
 import { sbtcEnroll, sbtcPools } from '~/data/data';
 import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
+import { PostPageHeading } from '~/components/post-page-heading';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
+import { content } from '~/data/content';
+import { formatPostPrompt, formatPostSentence } from '~/utils/post-utils';
+import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 
 import { Button, Hr } from '@leather.io/ui';
 
-import { ApyRewardHeroCard } from '../../components/apy-hero-card';
+import { PostValueHoverCard } from '../../components/post-value-hover-card';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
 import { SbtcRewardContext } from './sbtc-rewards-context';
+import { PostSectionHeading } from '~/components/post-section-heading';
 
 export function SbtcRewards() {
   const { status, whenExtensionState } = useLeatherConnect();
+  const postSlug = 'sbtc-rewards';
 
   function bridgeSbtc() {
     // Cannot bridge, cap reached
@@ -41,10 +47,7 @@ export function SbtcRewards() {
       <Page>
         <Page.Header title="sBTC Rewards" />
 
-        <Page.Heading
-          title="Earn yield with Bitcoin on Stacks"
-          subtitle="Get BTC in the form of sBTC on Stacks—the leading L2 for Bitcoin—to earn yield from a variety of reward protocols without sacrificing Bitcoin’s underlying security and self-sovereignty."
-        />
+        <PostPageHeading post={(content.posts as Record<string, any>)[postSlug]} />
 
         <ApyRewardHeroCard
           apyRange="5–8%"
@@ -55,17 +58,14 @@ export function SbtcRewards() {
           backgroundPosition="right"
         />
 
+
         <styled.section mt="space.09">
-          <styled.h3 textStyle="heading.03">Step 1: Get sBTC</styled.h3>
-          <styled.p textStyle="label.03" mt="space.02" maxW="390px">
-            You can get sBTC either by bridging BTC to the Stacks blockchain or by swapping another
-            asset on Stacks on the L2 itself.
-          </styled.p>
+          <PostSectionHeading post={(content.posts as Record<string, any>)['get-sbtc']} prefix="Step 1: " />
           <GetSbtcGrid mt="space.05" />
         </styled.section>
 
         <styled.section mt="space.08">
-          <styled.h3 textStyle="heading.03">Step 2: Choose reward protocol</styled.h3>
+          <PostSectionHeading post={(content.posts as Record<string, any>)['sbtc-rewards-provider']} prefix="Step 2: " />
 
           <SbtcProtocolRewardGrid
             enrollAction={<SbtcEnrollButton />}
@@ -77,7 +77,7 @@ export function SbtcRewards() {
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="xs" fullWidth onClick={() => openExternalLink(pool.url)}>
-                  Explore <RotatedArrow />
+                  {content.labels.startEarning} <RotatedArrow />
                 </Button>
               }
               key={pool.id}

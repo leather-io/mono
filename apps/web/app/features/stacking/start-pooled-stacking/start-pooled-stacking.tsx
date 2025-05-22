@@ -259,7 +259,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
       {poolInfo.poolRewardProtocolInfo && (
         <Page.Inset>
-          <PoolOverview pool={poolInfo.poolRewardProtocolInfo} />
+          <PoolOverview pool={poolInfo.poolRewardProtocolInfo} poolSlug={poolSlug} />
         </Page.Inset>
       )}
 
@@ -269,7 +269,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" />
+                  <StackingFormItemTitle title="Amount" postKey="stacking-amount" />
                   <ChoosePoolingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -278,7 +278,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 </Stack>
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Address to receive rewards" />
+                  <StackingFormItemTitle title="Address to receive rewards" postKey="stacking-rewards-address" />
                   <ChooseRewardsAddress />
                   <styled.span textStyle="caption.01" color="ink.text-subdued">
                     This is where the pool will deposit your rewards each cycle.
@@ -288,14 +288,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Duration" />
+                  <StackingFormItemTitle title="Duration" postKey="stacking-duration" />
                   <ChoosePoolingDuration />
                 </Stack>
 
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" />
+                  <StackingFormItemTitle title="Details" postKey="stacking-contract-details" />
                   <StackingContractDetails
                     addressTitle="Pool address"
                     address={poolStxAddress}
@@ -306,7 +306,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                 <Hr />
 
                 <Stack gap="space.04">
-                  <StackingFormItemTitle title="Pooling conditions" />
+                  <StackingFormItemTitle title="Pooling conditions" postKey="pooled-stacking-conditions" />
                   <ChoosePoolingConditions />
                 </Stack>
 

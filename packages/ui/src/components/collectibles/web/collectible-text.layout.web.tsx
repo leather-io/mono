@@ -1,5 +1,7 @@
-import DomPurify from 'dompurify';
 import { Box } from 'leather-styles/jsx';
+// @ts-ignore
+// Cross-package import for universal sanitization. If this package is published independently, refactor to use a local sanitizer.
+import { sanitizeContent } from '@leather.io/utils/sanitize-content';
 
 interface CollectibleTextLayoutProps {
   children: string;
@@ -25,7 +27,7 @@ export function CollectibleTextLayout({ children }: CollectibleTextLayoutProps) 
       textAlign="left"
       width="100%"
     >
-      <pre>{DomPurify.sanitize(children)}</pre>
+      <pre>{sanitizeContent(children)}</pre>
     </Box>
   );
 }
