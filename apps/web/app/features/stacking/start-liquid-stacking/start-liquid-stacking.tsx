@@ -152,7 +152,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
             <Form>
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Amount" />
+                  <StackingFormItemTitle title="Amount" postKey="stacking-amount" />
                   <ChoosePoolingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
@@ -162,7 +162,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Details" />
+                  <StackingFormItemTitle title="Details" postKey="stacking-contract-details" />
                   {/* TODO: fix contractAddress value */}
                   <StackingContractDetails
                     addressTitle="Protocol address"
@@ -174,7 +174,6 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
                 <Hr />
 
                 <Stack gap="space.02">
-                  <StackingFormItemTitle title="Liquid Stacking conditions" />
                   <ChooseLiquidStackingConditions />
                 </Stack>
 
