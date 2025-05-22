@@ -197,36 +197,36 @@ export const mockPostsData = {
     icon: [],
     dataPointValue: '',
     createdTime: '2023-01-01T00:00:00Z',
-  }
+  },
 };
 
 // Convert mock data into the format expected by the application
 export function generateMockPostsCollection() {
   const collection: Record<string, any> = {};
-  
+
   Object.entries(mockPostsData).forEach(([key, post]) => {
     collection[key] = post;
   });
-  
+
   return collection;
 }
 
 // Setup mock routes for protocol pages
 export async function setupProtocolMocks(page: Page) {
   // Mock the CMS data fetch
-  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async (route) => {
+  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(generateMockPostsCollection()),
     });
   });
-  
+
   // Setup protocol-specific mocks based on the URL pattern
   await page.route('**/api/protocols/**', async (route, request) => {
     const url = request.url();
     let protocolData;
-    
+
     // Customize the mock data based on the protocol slug in the URL
     if (url.includes('stacking-dao')) {
       protocolData = {
@@ -302,32 +302,34 @@ export async function setupProtocolMocks(page: Page) {
         logo: '<svg></svg>',
       };
     }
-    
+
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(protocolData),
     });
   });
-  
+
   // Setup pooled stacking HTML content mocks
-  await page.route('**/stacking/pool/**', async (route, request) => {
-    const url = request.url();
-    // If this is an API request, don't fulfill it here
-    if (url.includes('/api/')) {
-      return route.continue();
-    }
-    
-    // Extract the protocol slug from the URL
-    const slug = url.split('/').pop() || 'unknown';
-    
-    // For 'unknown' protocol, let it go to 404
-    if (slug === 'unknown') {
-      return route.continue();
-    }
-    
-    // Create mock HTML for pool stacking page
-    const html = `
+  await page.route(
+    '**/stacking/pool/**',
+    async (route, request) => {
+      const url = request.url();
+      // If this is an API request, don't fulfill it here
+      if (url.includes('/api/')) {
+        return route.continue();
+      }
+
+      // Extract the protocol slug from the URL
+      const slug = url.split('/').pop() || 'unknown';
+
+      // For 'unknown' protocol, let it go to 404
+      if (slug === 'unknown') {
+        return route.continue();
+      }
+
+      // Create mock HTML for pool stacking page
+      const html = `
       <html>
         <head><title>${slug} Pooled Stacking</title></head>
         <body>
@@ -339,32 +341,36 @@ export async function setupProtocolMocks(page: Page) {
         </body>
       </html>
     `;
-    
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/html',
-      body: html,
-    });
-  }, { times: 1 }); // Only intercept the first navigation, let subsequent requests through
-  
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: html,
+      });
+    },
+    { times: 1 }
+  ); // Only intercept the first navigation, let subsequent requests through
+
   // Setup liquid stacking HTML content mocks
-  await page.route('**/stacking/liquid/**', async (route, request) => {
-    const url = request.url();
-    // If this is an API request, don't fulfill it here
-    if (url.includes('/api/')) {
-      return route.continue();
-    }
-    
-    // Extract the protocol slug from the URL
-    const slug = url.split('/').pop() || 'unknown';
-    
-    // For 'unknown' protocol, let it go to 404
-    if (slug === 'unknown') {
-      return route.continue();
-    }
-    
-    // Create mock HTML for liquid stacking page
-    const html = `
+  await page.route(
+    '**/stacking/liquid/**',
+    async (route, request) => {
+      const url = request.url();
+      // If this is an API request, don't fulfill it here
+      if (url.includes('/api/')) {
+        return route.continue();
+      }
+
+      // Extract the protocol slug from the URL
+      const slug = url.split('/').pop() || 'unknown';
+
+      // For 'unknown' protocol, let it go to 404
+      if (slug === 'unknown') {
+        return route.continue();
+      }
+
+      // Create mock HTML for liquid stacking page
+      const html = `
       <html>
         <head><title>${slug} Liquid Stacking</title></head>
         <body>
@@ -376,13 +382,15 @@ export async function setupProtocolMocks(page: Page) {
         </body>
       </html>
     `;
-    
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/html',
-      body: html,
-    });
-  }, { times: 1 }); // Only intercept the first navigation, let subsequent requests through
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: html,
+      });
+    },
+    { times: 1 }
+  ); // Only intercept the first navigation, let subsequent requests through
 }
 
 // Setup mock data for hover card tests
@@ -393,7 +401,7 @@ export async function setupHoverCardMocks(page: Page) {
       const mockApp = document.createElement('div');
       mockApp.id = 'mock-app';
       document.body.appendChild(mockApp);
-      
+
       // Value hover card
       if (window.location.pathname === '/hover-card-value') {
         const valueElement = document.createElement('div');
@@ -402,7 +410,7 @@ export async function setupHoverCardMocks(page: Page) {
         valueElement.className = 'post-value-display';
         mockApp.appendChild(valueElement);
       }
-      
+
       // Missing value hover card
       if (window.location.pathname === '/hover-card-value-missing') {
         const valueElement = document.createElement('div');
@@ -411,26 +419,28 @@ export async function setupHoverCardMocks(page: Page) {
         valueElement.className = 'post-value-display';
         mockApp.appendChild(valueElement);
       }
-      
+
       // Label hover card
       if (window.location.pathname === '/hover-card-label') {
         const labelElement = document.createElement('div');
         labelElement.textContent = 'Historical yield';
         mockApp.appendChild(labelElement);
       }
-      
+
       // Missing label hover card
       if (window.location.pathname === '/hover-card-label-missing') {
         const labelElement = document.createElement('div');
         labelElement.textContent = 'Unknown';
         mockApp.appendChild(labelElement);
       }
-      
+
       // Add a mock radix popper content wrapper that shows on hover
-      document.addEventListener('mouseover', (e) => {
+      document.addEventListener('mouseover', e => {
         if (e.target instanceof HTMLElement) {
-          if (e.target.textContent?.includes('Historical yield') || 
-              e.target.hasAttribute('data-testid')) {
+          if (
+            e.target.textContent?.includes('Historical yield') ||
+            e.target.hasAttribute('data-testid')
+          ) {
             const popperContent = document.createElement('div');
             popperContent.setAttribute('data-radix-popper-content-wrapper', '');
             popperContent.innerHTML = '<span>learn more</span>';
@@ -444,7 +454,7 @@ export async function setupHoverCardMocks(page: Page) {
 
 // Setup mocks for XSS protection test
 export async function setupXssMocks(page: Page) {
-  await page.route('**/stacking/faq', async (route) => {
+  await page.route('**/stacking/faq', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
@@ -466,16 +476,16 @@ export async function setupXssMocks(page: Page) {
 // Setup mocks for post page heading tests
 export async function setupPostPageHeadingMocks(page: Page) {
   // Mock the CMS data fetch first (shared with protocol mocks)
-  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async (route) => {
+  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(generateMockPostsCollection()),
     });
   });
-  
+
   // Mock page content for test-slug
-  await page.route('**/test-slug', async (route) => {
+  await page.route('**/test-slug', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
@@ -491,9 +501,9 @@ export async function setupPostPageHeadingMocks(page: Page) {
       `,
     });
   });
-  
+
   // Mock page content for test-slug-missing-fields (empty page)
-  await page.route('**/test-slug-missing-fields', async (route) => {
+  await page.route('**/test-slug-missing-fields', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
@@ -512,16 +522,16 @@ export async function setupPostPageHeadingMocks(page: Page) {
 // Setup mocks for post section heading tests
 export async function setupPostSectionHeadingMocks(page: Page) {
   // Mock the CMS data fetch first (shared with protocol mocks)
-  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async (route) => {
+  await page.route('https://leather-cms.s3.amazonaws.com/posts.json', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(generateMockPostsCollection()),
     });
   });
-  
+
   // Mock page content for section-slug
-  await page.route('**/section-slug', async (route) => {
+  await page.route('**/section-slug', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
@@ -537,9 +547,9 @@ export async function setupPostSectionHeadingMocks(page: Page) {
       `,
     });
   });
-  
+
   // Mock page content for section-slug-missing (empty page)
-  await page.route('**/section-slug-missing', async (route) => {
+  await page.route('**/section-slug-missing', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
@@ -553,4 +563,4 @@ export async function setupPostSectionHeadingMocks(page: Page) {
       `,
     });
   });
-} 
+}
