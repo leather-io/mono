@@ -19,8 +19,8 @@ function getBalanceOperator(activity: OnChainActivity) {
 }
 
 function getBalanceColor(activity: OnChainActivity) {
-  const isSendOrReceive = activity.type === 'sendAsset' || activity.type === 'receiveAsset';
-  if (isSendOrReceive && activity.status === 'success') return 'green.action-primary-default';
+  if (activity.type === 'receiveAsset' && activity.status === 'success')
+    return 'green.action-primary-default';
   return 'ink.text-primary';
 }
 
