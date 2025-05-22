@@ -48,6 +48,10 @@ export function useNotificationsFlag() {
   return useBoolVariation('release_push_notifications', false);
 }
 
+export function useInscriptionsFlag() {
+  return useBoolVariation('release_inscriptions_feature', false);
+}
+
 export function useRunesFlag() {
   return useBoolVariation('release_runes_feature', false);
 }

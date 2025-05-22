@@ -1,4 +1,5 @@
 import { toFetchState } from '@/components/loading/fetch-state';
+import { useRunesFlag } from '@/features/feature-flags';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
@@ -18,6 +19,7 @@ export function useRunesAccountBalance(fingerprint: string, accountIndex: number
 
 function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
   const { fiatCurrencyPreference } = useSettings();
+  const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: [
       'runes-balances-service-get-runes-aggregate-balance',
@@ -26,6 +28,7 @@ function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAggregateBalance(accounts, signal),
+    enabled: runeFlag,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -37,10 +40,12 @@ function useRunesAggregateBalanceQuery(accounts: AccountAddresses[]) {
 
 function useRunesAccountBalanceQuery(account: AccountAddresses) {
   const { fiatCurrencyPreference } = useSettings();
+  const runeFlag = useRunesFlag();
   return useQuery({
     queryKey: ['runes-balances-service-get-runes-account-balance', account, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getRunesBalancesService().getRunesAccountBalance(account, signal),
+    enabled: runeFlag,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
