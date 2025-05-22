@@ -701,6 +701,48 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.41.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.41.0...@leather.io/mobile-v2.41.1) (2025-05-22)
+
+
+### Bug Fixes
+
+* android navigation and blurview ([f516f32](https://github.com/leather-io/mono/commit/f516f323f98087f5bc8f9b7b4b8644f97ef3d660))
+* browser footer blocking website ui ([50e529b](https://github.com/leather-io/mono/commit/50e529bff7c90eca83a9c2eaabc624dba9f0d9f9))
+* browser illustration colors ([b948cff](https://github.com/leather-io/mono/commit/b948cff23dc6bff2891a2e810ce06fafc930c302))
+* dragging browser ([4941bb6](https://github.com/leather-io/mono/commit/4941bb60ecbf10bddde44963e6ad5b2ae1a966c4))
+* linking to browser instead of safari ([34e9ff2](https://github.com/leather-io/mono/commit/34e9ff22b0a0522d5b1dc2729a5eb34b868d58bc))
+* **mobile:** add border to secret key wrapper ([d80c348](https://github.com/leather-io/mono/commit/d80c3481fa9577bc5325977c91260b970e2d61d6))
+* **mobile:** add sentry DSN ([7a3df28](https://github.com/leather-io/mono/commit/7a3df2892fb470e9bcf222995427f901f2fb8615))
+* **mobile:** fix logo not rendering on QR codes ([087c19c](https://github.com/leather-io/mono/commit/087c19c479d4328e21df16f40e34d61710153860))
+* **mobile:** fix toast padding ([334bb77](https://github.com/leather-io/mono/commit/334bb7700b35c0727cb04101cb9193223f3fda84))
+* **mobile:** fix wallets empty state spacing ([a635ea1](https://github.com/leather-io/mono/commit/a635ea13d52eb89f4f830f9a5f5df372cbd79746))
+* **mobile:** match "add wallet" sheet to design ([20b6e43](https://github.com/leather-io/mono/commit/20b6e436984d88ddd39d9b9cddc870a631990a84))
+* **mobile:** match "secure your wallet" page to design ([c0888c1](https://github.com/leather-io/mono/commit/c0888c12640e42d2d8e812a0db15071f166ee1b6))
+* **mobile:** only enable the backup confirmation button after revealing the secret key ([ca30066](https://github.com/leather-io/mono/commit/ca3006693631ab3fdbb6318db8050344fb512263))
+* **mobile:** remove header icon from sheets, ref LEA-1834 ([fca6ad8](https://github.com/leather-io/mono/commit/fca6ad82c2b84ea16e872aca5d150c05f01bdf2e))
+* **ui:** decrease sheet header height ([fa50c03](https://github.com/leather-io/mono/commit/fa50c03d37e8b0221137ecf927f20c73bc46ef04))
+* update border radius on search bar ([e3108cb](https://github.com/leather-io/mono/commit/e3108cb5ae0e45150a476d14bff4ed7dfb12d9c5))
+* update browser suggested tab ([7226bb0](https://github.com/leather-io/mono/commit/7226bb071c6bd3e7a4aa9858920e4d4b2955157a))
+* update search bar footer ([390c982](https://github.com/leather-io/mono/commit/390c9827c6a12d6d29a38b6f8274abc65643e0fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.2
+    * @leather.io/constants bumped to 0.20.1
+    * @leather.io/crypto bumped to 1.6.58
+    * @leather.io/provider bumped to 1.2.14
+    * @leather.io/query bumped to 2.37.2
+    * @leather.io/rpc bumped to 2.15.1
+    * @leather.io/services bumped to 1.12.1
+    * @leather.io/stacks bumped to 1.10.3
+    * @leather.io/ui bumped to 1.67.0
+    * @leather.io/utils bumped to 0.33.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.2
+
 ## [2.41.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.40.2...@leather.io/mobile-v2.41.0) (2025-05-21)
 
 
