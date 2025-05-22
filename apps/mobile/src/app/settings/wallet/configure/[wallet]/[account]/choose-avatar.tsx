@@ -52,7 +52,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
   return (
     <Box bg="ink.background-primary" flex={1}>
       <ScrollView contentContainerStyle={defaultStyles}>
-        <Box gap="5" px="5">
+        <Box gap="5">
           <SquircleBox
             alignSelf="center"
             width={124}
