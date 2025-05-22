@@ -1,24 +1,22 @@
-import { useRef } from 'react';
-
 import { Divider } from '@/components/divider';
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { EmptyWalletsScreen } from '@/features/settings/wallet-and-accounts/components/empty-wallets-screen';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
-import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { AppRoutes } from '@/routes';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
-import { Eye1ClosedIcon, PlusIcon, SheetRef } from '@leather.io/ui/native';
+import { Eye1ClosedIcon, PlusIcon } from '@leather.io/ui/native';
 
 export default function SettingsWalletScreen() {
   const router = useRouter();
-  const addWalletSheetRef = useRef<SheetRef>(null);
+  const { addWalletSheetRef } = useGlobalSheets();
   const hiddenAccounts = useAccounts('hidden');
   const hiddenAccountsLength = hiddenAccounts.list.length;
   const { list: walletsList } = useWallets();
@@ -75,7 +73,6 @@ export default function SettingsWalletScreen() {
           />
         )}
       </AnimatedHeaderScreenLayout>
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </>
   );
 }

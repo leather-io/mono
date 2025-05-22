@@ -1,9 +1,10 @@
-import { RefObject, useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import {
   NotifyUserSheetData,
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
@@ -12,15 +13,11 @@ import { SheetRef } from '@leather.io/ui/native';
 
 import { AddWalletSheetLayout } from './add-wallet-sheet.layout';
 
-interface AddWalletSheetBaseProps {
-  addWalletSheetRef: RefObject<SheetRef | null>;
-  opensFully?: boolean;
-}
-
-export function AddWalletSheet({ addWalletSheetRef, opensFully }: AddWalletSheetBaseProps) {
+export function AddWalletSheet() {
   const sheetRef = useRef<SheetRef>(null);
   const { themeDerivedFromThemePreference } = useSettings();
   const router = useRouter();
+  const { addWalletSheetRef } = useGlobalSheets();
   const [sheetData, setSheetData] = useState<NotifyUserSheetData | null>(null);
   const createWallet = useCallback(() => {
     router.navigate(AppRoutes.CreateNewWallet);
@@ -49,7 +46,8 @@ export function AddWalletSheet({ addWalletSheetRef, opensFully }: AddWalletSheet
         restoreWallet={restoreWallet}
         addWalletSheetRef={addWalletSheetRef}
         themeVariant={themeDerivedFromThemePreference}
-        opensFully={opensFully}
+        // TODO: this should be set when we call ref.current.present
+        opensFully={false}
       />
       <NotifyUserSheetLayout
         onCloseSheet={onCloseSheet}

@@ -1,22 +1,16 @@
-import { RefObject, useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 
-import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
-import { SheetRef } from '@leather.io/ui/native';
-
 import { AddAccountSheetLayout } from './add-account-sheet.layout';
 
-interface AddAccountSheetBaseProps {
-  addAccountSheetRef: RefObject<SheetRef | null>;
-}
-
-export function AddAccountSheet({ addAccountSheetRef }: AddAccountSheetBaseProps) {
-  const addWalletSheetRef = useRef<SheetRef>(null);
+export function AddAccountSheet() {
   const { themeDerivedFromThemePreference } = useSettings();
   const router = useRouter();
+  const { addAccountSheetRef, addWalletSheetRef } = useGlobalSheets();
   const addToWallet = useCallback(() => {
     router.navigate(AppRoutes.SettingsWallet);
     addAccountSheetRef.current?.close();
@@ -25,18 +19,14 @@ export function AddAccountSheet({ addAccountSheetRef }: AddAccountSheetBaseProps
   const addToNewWallet = useCallback(() => {
     addWalletSheetRef.current?.present();
     addAccountSheetRef.current?.close();
-  }, [addAccountSheetRef]);
+  }, [addAccountSheetRef, addWalletSheetRef]);
 
   return (
-    <>
-      <AddAccountSheetLayout
-        addToWallet={addToWallet}
-        addToNewWallet={addToNewWallet}
-        addAccountSheetRef={addAccountSheetRef}
-        themeVariant={themeDerivedFromThemePreference}
-      />
-
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
-    </>
+    <AddAccountSheetLayout
+      addToWallet={addToWallet}
+      addToNewWallet={addToNewWallet}
+      addAccountSheetRef={addAccountSheetRef}
+      themeVariant={themeDerivedFromThemePreference}
+    />
   );
 }

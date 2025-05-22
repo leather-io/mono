@@ -13,7 +13,6 @@ import { useWaitlistFlag } from '@/features/feature-flags';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
-import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
@@ -93,7 +92,6 @@ interface ConfigureWalletProps {
 }
 function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const router = useRouter();
-  const addWalletSheetRef = useRef<SheetRef>(null);
   const walletNameSheetRef = useRef<SheetRef>(null);
   const removeWalletSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
@@ -251,7 +249,6 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
           </Box>
         </Box>
       </AnimatedHeaderScreenLayout>
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
       <NotifyUserSheetLayout sheetData={notifySheetData} sheetRef={notifySheetRef} />

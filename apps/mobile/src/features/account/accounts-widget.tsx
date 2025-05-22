@@ -3,10 +3,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import { FetchError } from '@/components/loading/error';
 import { Widget } from '@/components/widget';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance, TotalBalance } from '@/features/balances/total-balance';
-import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
@@ -22,18 +22,16 @@ import { Box, SheetRef, SkeletonLoader, Theme } from '@leather.io/ui/native';
 
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
-import { AddAccountSheet } from './sheets/add-account-sheet';
 
 export function AccountsWidget() {
   const accountSelectorSheetRef = useRef<SheetRef>(null);
-  const addAccountSheetRef = useRef<SheetRef>(null);
-  const addWalletSheetRef = useRef<SheetRef>(null);
   const router = useRouter();
   const wallets = useWallets();
   const accounts = useAccounts();
   const { totalBalance } = useTotalBalance();
   const { i18n } = useLingui();
   const theme = useTheme<Theme>();
+  const { addAccountSheetRef, addWalletSheetRef } = useGlobalSheets();
 
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
@@ -115,8 +113,6 @@ export function AccountsWidget() {
         </Widget.Body>
       </Widget>
 
-      <AddAccountSheet addAccountSheetRef={addAccountSheetRef} />
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
       <AccountSelectorSheet
         sheetRef={accountSelectorSheetRef}
         onAccountPress={(accountId: string) => {

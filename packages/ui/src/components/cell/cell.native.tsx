@@ -1,4 +1,3 @@
-import { ElementRef, forwardRef } from 'react';
 import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { useTheme } from '@shopify/restyle';
@@ -6,6 +5,7 @@ import { useTheme } from '@shopify/restyle';
 import { usePressedState } from '../../hooks/use-pressed-state.native';
 import { Theme } from '../../theme-native';
 import { Box, BoxProps } from '../box/box.native';
+import { PressableRef } from '../pressable/pressable-core.native';
 import { Pressable, PressableProps } from '../pressable/pressable.native';
 import { CellAsideNative } from './components/cell-aside.native';
 import { CellContent } from './components/cell-content.native';
@@ -20,7 +20,6 @@ type NonPressableRootProps = {
   pressable: false;
 } & BoxProps;
 
-type CellElement = ElementRef<typeof Pressable>;
 export type CellProps = PressableRootProps | NonPressableRootProps;
 
 const cellRootStyles: BoxProps = {
@@ -31,14 +30,16 @@ const cellRootStyles: BoxProps = {
   alignItems: 'center',
 };
 
-export const CellRoot = forwardRef<CellElement, CellProps>(({ style, ...props }, ref) => {
+export function CellRoot({ style, ...props }: CellProps & { ref?: PressableRef }) {
   const { pressed, onPressIn, onPressOut } = usePressedState();
   const theme = useTheme<Theme>();
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: withSpring(
-        pressed ? theme.colors['ink.background-secondary'] : theme.colors['ink.background-primary']
+        pressed.value
+          ? theme.colors['ink.background-secondary']
+          : theme.colors['ink.background-primary']
       ),
     };
   });
@@ -46,18 +47,17 @@ export const CellRoot = forwardRef<CellElement, CellProps>(({ style, ...props },
   if (props.pressable) {
     return (
       <Pressable
-        ref={ref}
         {...cellRootStyles}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
-        style={[style, animatedStyle]}
+        style={[animatedStyle, style]}
         {...props}
       />
     );
   }
 
-  return <Box ref={ref} {...cellRootStyles} {...props} />;
-});
+  return <Box {...cellRootStyles} {...props} />;
+}
 
 CellRoot.displayName = 'Cell.Root';
 

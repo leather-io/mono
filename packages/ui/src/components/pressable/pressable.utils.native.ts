@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   AnimatableValue,
+  SharedValue,
   useAnimatedStyle,
   withDelay,
   withSpring,
@@ -56,7 +57,7 @@ export function usePressEffectStyle({
   pressed,
   pressEffects,
 }: {
-  pressed: boolean;
+  pressed: SharedValue<boolean>;
   pressEffects: PressEffects;
 }) {
   const theme = useTheme<Theme>();
@@ -91,13 +92,13 @@ export function usePressEffectStyle({
   return useAnimatedStyle(() => {
     return animationEntries.reduce((result, entry) => {
       // only apply the delay when transitioning from default to pressed state.
-      const derivedDelay = entry.delay && pressed ? entry.delay : 0;
+      const derivedDelay = entry.delay && pressed.value ? entry.delay : 0;
 
       return {
         ...result,
         [entry.key]: withDelay(
           derivedDelay,
-          entry.animationFunction(pressed ? entry.to : entry.from, entry.config)
+          entry.animationFunction(pressed.value ? entry.to : entry.from, entry.config)
         ),
       };
     }, {});
