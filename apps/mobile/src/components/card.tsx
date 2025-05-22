@@ -9,7 +9,7 @@ interface CardProps extends PressableProps {
 export function Card({ children, onPress, height = 180, ...props }: CardProps) {
   const { pressed, onPressIn, onPressOut } = usePressedState();
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(pressed ? 0.95 : 1) }],
+    transform: [{ scale: withSpring(pressed.value ? 0.95 : 1) }],
   }));
   return (
     <Pressable

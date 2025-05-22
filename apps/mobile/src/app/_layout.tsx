@@ -13,11 +13,13 @@ import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
 import { ThemeProvider } from '@/core/theme-provider';
+import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
 import { BrowserSheet } from '@/features/browser/browser/browser-sheet';
 import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
 import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
+import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
 import { initiateI18n } from '@/locales';
 import { queryClient } from '@/queries/query';
@@ -71,6 +73,8 @@ function App() {
       <SendSheet />
       <ReceiveSheet />
       <BrowserSheet />
+      <AddAccountSheet />
+      <AddWalletSheet />
     </Box>
   );
 }

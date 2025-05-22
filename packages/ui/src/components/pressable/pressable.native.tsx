@@ -1,11 +1,10 @@
-import { ElementRef, forwardRef } from 'react';
-import { type GestureResponderEvent, Pressable as RNPressable } from 'react-native';
+import { type GestureResponderEvent } from 'react-native';
 
 import { isDefined, isString } from '@leather.io/utils';
 
 import { useHaptics } from '../../hooks/use-haptics.native';
 import { usePressedState } from '../../hooks/use-pressed-state.native';
-import { PressableCore, PressableCoreProps } from './pressable-core.native';
+import { PressableCore, PressableCoreProps, PressableRef } from './pressable-core.native';
 import { PressEffects } from './pressable.types.native';
 import { usePressEffectStyle } from './pressable.utils.native';
 
@@ -15,8 +14,6 @@ interface HapticConfig {
   onPress?: PressableHapticFeedbackType;
   onLongPress?: PressableHapticFeedbackType;
 }
-
-type PressableElement = ElementRef<typeof RNPressable>;
 
 interface PressableOwnProps {
   /**
@@ -59,41 +56,47 @@ interface PressableOwnProps {
 
 export type PressableProps = PressableOwnProps & PressableCoreProps;
 
-export const Pressable = forwardRef<PressableElement, PressableProps>(
-  ({ haptics = {}, pressEffects = {}, onPress, onLongPress, style, ...rest }, ref) => {
-    const triggerHaptics = useHaptics();
-    const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
-    const { onPressIn, onPressOut, pressed } = usePressedState(rest);
-    const pressEffectStyle = usePressEffectStyle({ pressed, pressEffects });
-    const shouldPassLongPress = isDefined(onLongPress) || isDefined(hapticConfig.onLongPress);
+export function Pressable({
+  haptics = {},
+  pressEffects = {},
+  onPress,
+  onLongPress,
+  style,
+  ref,
+  ...rest
+}: PressableProps & { ref?: PressableRef }) {
+  const triggerHaptics = useHaptics();
+  const hapticConfig = isString(haptics) ? { onPress: haptics } : haptics;
+  const { onPressIn, onPressOut, pressed } = usePressedState(rest);
+  const pressEffectStyle = usePressEffectStyle({ pressed, pressEffects });
+  const shouldPassLongPress = isDefined(onLongPress) || isDefined(hapticConfig.onLongPress);
 
-    function handlePress(event: GestureResponderEvent) {
-      if (hapticConfig.onPress) {
-        void triggerHaptics(hapticConfig.onPress);
-      }
-      onPress?.(event);
+  function handlePress(event: GestureResponderEvent) {
+    if (hapticConfig.onPress) {
+      void triggerHaptics(hapticConfig.onPress);
     }
-
-    function handleLongPress(event: GestureResponderEvent) {
-      if (hapticConfig.onLongPress) {
-        void triggerHaptics(hapticConfig.onLongPress);
-      }
-      onLongPress?.(event);
-    }
-
-    return (
-      <PressableCore
-        ref={ref}
-        onPress={handlePress}
-        onLongPress={shouldPassLongPress ? handleLongPress : undefined}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
-        style={[pressEffectStyle, style]}
-        {...rest}
-      />
-    );
+    onPress?.(event);
   }
-);
+
+  function handleLongPress(event: GestureResponderEvent) {
+    if (hapticConfig.onLongPress) {
+      void triggerHaptics(hapticConfig.onLongPress);
+    }
+    onLongPress?.(event);
+  }
+
+  return (
+    <PressableCore
+      ref={ref}
+      onPress={handlePress}
+      onLongPress={shouldPassLongPress ? handleLongPress : undefined}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={[pressEffectStyle, style]}
+      {...rest}
+    />
+  );
+}
 
 Pressable.displayName = 'Pressable';
 

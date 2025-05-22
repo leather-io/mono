@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PressableListItem } from '@/components/developer-console/list-items';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { ApproverSheet } from '@/features/browser/approver-sheet/approver-sheet';
 import { BrowserMessage } from '@/features/browser/approver-sheet/utils';
-import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
@@ -13,7 +13,7 @@ import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 import { router } from 'expo-router';
 
-import { Box, SheetRef, Theme } from '@leather.io/ui/native';
+import { Box, Theme } from '@leather.io/ui/native';
 
 const LEATHER_URL = 'https://leather.io';
 
@@ -22,8 +22,8 @@ export default function DeveloperConsoleScreen() {
   const theme = useTheme<Theme>();
 
   const [getAddressesMessage, setGetAddressesMessage] = useState<BrowserMessage | null>(null);
+  const { addWalletSheetRef } = useGlobalSheets();
 
-  const addWalletSheetRef = useRef<SheetRef>(null);
   const settings = useSettings();
 
   return (
@@ -75,7 +75,6 @@ export default function DeveloperConsoleScreen() {
         request={getAddressesMessage}
         sendResult={() => setGetAddressesMessage(null)}
       />
-      <AddWalletSheet addWalletSheetRef={addWalletSheetRef} />
     </Box>
   );
 }

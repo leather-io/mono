@@ -1,10 +1,10 @@
-import { ReactNode, useMemo, useRef } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { Platform, ViewStyle } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useActionBar } from '@/components/action-bar/use-action-bar';
-import { AddWalletSheet } from '@/features/wallet-manager/add-wallet';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -20,7 +20,6 @@ import {
   PaperPlaneIcon,
   PlusIcon,
   Pressable,
-  SheetRef,
   Text,
   Theme,
   legacyTouchablePressEffect,
@@ -43,7 +42,7 @@ export function ActionBar() {
     onOpenReceive,
     onOpenSend,
   } = useActionBar();
-  const addWalletSheetRef = useRef<SheetRef>(null);
+  const { addWalletSheetRef } = useGlobalSheets();
 
   if (!isActionBarVisible) {
     return null;
@@ -83,7 +82,6 @@ export function ActionBar() {
         testID={TestId.homeAddWalletButton}
         onPress={() => addWalletSheetRef.current?.present()}
       />
-      <AddWalletSheet opensFully addWalletSheetRef={addWalletSheetRef} />
     </ActionBarContainer>
   );
 }
