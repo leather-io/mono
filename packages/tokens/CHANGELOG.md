@@ -138,6 +138,20 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.7.0
 
+## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.17.1...@leather.io/tokens-v0.18.0) (2025-05-22)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tsconfig-config bumped to 0.8.0
+
 ## [0.17.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.16.1...@leather.io/tokens-v0.17.0) (2025-05-07)
 
 

@@ -701,6 +701,42 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.42.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.41.1...@leather.io/mobile-v2.42.0) (2025-05-22)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+
+
+### Bug Fixes
+
+* **mobile:** change approver BG and add border to some sections, ref LEA-2546 ([ad8e040](https://github.com/leather-io/mono/commit/ad8e040f79a93184b408ae754c23be59b46848e8))
+* **mobile:** don't show avatar border for SIP-10 or runes, ref ENG-77 ([4f76078](https://github.com/leather-io/mono/commit/4f760786d02e8b7ab32c83cf24bda8d876315782))
+* **mobile:** fix alignment of avatars, ref LEA-2472 ([83632ad](https://github.com/leather-io/mono/commit/83632ad89bd0bd3aaad48c58b5990509e65b945b))
+* **mobile:** only show receive success as green, ref LEA-2646 ([b2460bb](https://github.com/leather-io/mono/commit/b2460bbb1af2a88de78175b7bf7cac501cfb6523))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.5.1
+    * @leather.io/bitcoin bumped to 0.26.3
+    * @leather.io/constants bumped to 0.20.2
+    * @leather.io/crypto bumped to 1.7.0
+    * @leather.io/models bumped to 0.32.1
+    * @leather.io/provider bumped to 1.2.15
+    * @leather.io/query bumped to 2.37.3
+    * @leather.io/rpc bumped to 2.16.0
+    * @leather.io/services bumped to 1.12.2
+    * @leather.io/stacks bumped to 1.10.4
+    * @leather.io/tokens bumped to 0.18.0
+    * @leather.io/ui bumped to 1.68.0
+    * @leather.io/utils bumped to 0.34.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.3
+
 ## [2.41.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.41.0...@leather.io/mobile-v2.41.1) (2025-05-22)
 
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.7.0...@leather.io/tsconfig-config-v0.8.0) (2025-05-22)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* cms integration ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+
+
+### Bug Fixes
+
+* **mobile:** add sentry DSN ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+
 ## [0.7.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.6.1...@leather.io/tsconfig-config-v0.7.0) (2025-05-16)
 
 
