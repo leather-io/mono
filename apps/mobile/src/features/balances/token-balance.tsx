@@ -39,7 +39,9 @@ export function TokenBalance({
     >
       <Cell.Icon>{icon}</Cell.Icon>
       <Cell.Content>
-        <Cell.Label variant="primary">{tokenName}</Cell.Label>
+        <Cell.Label variant="primary" numberOfLines={1} ellipsizeMode="tail">
+          {tokenName}
+        </Cell.Label>
         <Cell.Label variant="secondary">
           <Text variant="caption01" color="ink.text-subdued" lineHeight={16}>
             {getChainLayerFromAssetProtocol(protocol)}
