@@ -23,6 +23,7 @@ export function RunesAvatarIcon() {
         </Svg>
       }
       indicator={<BtcIcon width={16} height={16} />}
+      showFauxBorder={false}
     />
   );
 }

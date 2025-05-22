@@ -43,6 +43,7 @@ interface AvatarProps extends BoxProps {
   fallback?: string;
   fallbackDelayMs?: number;
   outlineColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
+  showFauxBorder?: boolean;
 }
 
 export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
@@ -56,6 +57,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
     fallback,
     fallbackDelayMs = defaultFallbackDelay,
     outlineColor,
+    showFauxBorder = true,
     ...rest
   } = props;
   const [imageLoadingStatus, setImageLoadingStatus] = useState<ImageLoadingStatus>('idle');
@@ -65,7 +67,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
       ref={ref}
       alignItems="center"
       justifyContent="center"
-      bg="ink.background-secondary"
+      bg={showFauxBorder ? 'ink.background-secondary' : undefined}
       {...variantStyles[variant]}
       {...sizeStyles[size]}
       {...rest}
@@ -99,13 +101,15 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
         />
       ) : null}
 
-      <AvatarFauxBorder
-        outlineColor={
-          outlineColor ??
-          (isDefined(image) ? 'ink.border-transparent' : 'ink.component-background-hover')
-        }
-        variant={variant}
-      />
+      {showFauxBorder && (
+        <AvatarFauxBorder
+          outlineColor={
+            outlineColor ??
+            (isDefined(image) ? 'ink.border-transparent' : 'ink.component-background-hover')
+          }
+          variant={variant}
+        />
+      )}
 
       {indicator ? (
         <Box
