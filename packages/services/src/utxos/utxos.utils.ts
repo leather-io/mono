@@ -1,3 +1,4 @@
+import { DerivationPathDepth, extractSectionFromDerivationPath } from '@leather.io/crypto';
 import { Utxo, UtxoId } from '@leather.io/models';
 import { sumNumbers } from '@leather.io/utils';
 
@@ -49,6 +50,17 @@ export const uneconomicalSatThreshold = 10000;
 
 export function isUneconomicalUtxo(utxo: Utxo) {
   return Number(utxo.value) < uneconomicalSatThreshold;
+}
+
+export function isPrimaryReceiveAddressUtxo(utxo: Utxo) {
+  try {
+    return (
+      extractSectionFromDerivationPath(DerivationPathDepth.ChangeReceive)(utxo.path) === 0 &&
+      extractSectionFromDerivationPath(DerivationPathDepth.AddressIndex)(utxo.path) === 0
+    );
+  } catch {
+    return true;
+  }
 }
 
 export function sumUtxoValues(utxos: Utxo[]) {

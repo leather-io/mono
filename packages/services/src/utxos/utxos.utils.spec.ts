@@ -9,6 +9,7 @@ import {
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
+  isPrimaryReceiveAddressUtxo,
   isUnconfirmedUtxo,
   isUneconomicalUtxo,
   selectUniqueUtxoIds,
@@ -388,5 +389,38 @@ describe(getOutboundUtxos.name, () => {
 
     expect(originalHeightUtxos[0].height).toEqual(ORIGINAL_TX_HEIGHT);
     expect(defaultHeightUtxos[0].height).toEqual(fallbackUtxoHeight);
+  });
+});
+
+describe(isPrimaryReceiveAddressUtxo.name, () => {
+  it('returns true for primary receive address UTXOs', () => {
+    const nsUtxo = {
+      path: `m/84'/0'/0'/0/0`,
+    } as unknown as Utxo;
+    const trUtxo = {
+      path: `m/86'/0'/1'/0/0`,
+    } as unknown as Utxo;
+    expect(isPrimaryReceiveAddressUtxo(nsUtxo)).toEqual(true);
+    expect(isPrimaryReceiveAddressUtxo(trUtxo)).toEqual(true);
+  });
+
+  it('returns false for non-primary receive address UTXOs', () => {
+    const changeAddressUtxo = {
+      path: `m/84'/0'/0'/1/0`,
+    } as unknown as Utxo;
+    const nonPrimaryAddressUtxo = {
+      path: `m/84'/0'/0'/0/1`,
+    } as unknown as Utxo;
+    expect(isPrimaryReceiveAddressUtxo(changeAddressUtxo)).toEqual(false);
+    expect(isPrimaryReceiveAddressUtxo(nonPrimaryAddressUtxo)).toEqual(false);
+  });
+
+  it('returns true for missing or invalid derivation paths', () => {
+    const missingPathUtxo = {} as unknown as Utxo;
+    const invalidPathUtxo = {
+      path: 'invalid-path',
+    } as unknown as Utxo;
+    expect(isPrimaryReceiveAddressUtxo(missingPathUtxo)).toEqual(true);
+    expect(isPrimaryReceiveAddressUtxo(invalidPathUtxo)).toEqual(true);
   });
 });

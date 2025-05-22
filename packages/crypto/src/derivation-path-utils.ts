@@ -9,7 +9,7 @@ export enum DerivationPathDepth {
   AddressIndex = 5,
 }
 
-function extractSectionFromDerivationPath(depth: DerivationPathDepth) {
+export function extractSectionFromDerivationPath(depth: DerivationPathDepth) {
   return (path: string) => {
     const segments = path.split('/');
     const accountNum = parseInt(segments[depth].replaceAll("'", ''), 10);

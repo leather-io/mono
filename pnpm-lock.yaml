@@ -1152,6 +1152,9 @@ importers:
       '@leather.io/constants':
         specifier: workspace:*
         version: link:../constants
+      '@leather.io/crypto':
+        specifier: workspace:*
+        version: link:../crypto
       '@leather.io/models':
         specifier: workspace:*
         version: link:../models
