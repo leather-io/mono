@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { describe, expect, it, vi } from 'vitest';
 
 // Store protocol data that was passed to the component for verification
@@ -83,7 +84,7 @@ vi.mock('~/utils/post-utils', () => ({
 }));
 
 vi.mock('~/features/page/page', () => ({
-  Page: { 
+  Page: {
     Header: () => null,
     Inset: ({ children }: { children: React.ReactNode }) => children,
   },
@@ -100,23 +101,23 @@ describe('SbtcRewards', () => {
   it.skip('renders with data from sbtcPools', () => {
     // Import the component (after all mocks are set up)
     const { SbtcRewards } = require('./sbtc-rewards');
-    
+
     // Render the component
     const element = React.createElement(SbtcRewards);
     React.createElement('div', null, element);
-    
+
     // Verify the protocol data was passed correctly
     expect(renderedProtocols.basic.title).toBe('Basic sBTC rewards');
     expect(renderedProtocols.basic.tvl).toBe('2,150 BTC');
     expect(renderedProtocols.basic.apr).toBe('4.9%');
     expect(renderedProtocols.basic.payoutToken).toBe('sBTC');
-    
+
     expect(renderedProtocols.alex.title).toBe('ALEX');
     expect(renderedProtocols.alex.tvl).toBe('1,880 BTC');
     expect(renderedProtocols.alex.apr).toBe('5.2%');
     expect(Array.isArray(renderedProtocols.alex.payoutToken)).toBe(true);
     expect(renderedProtocols.alex.payoutToken).toEqual(['sBTC', 'aBTC']);
-    
+
     expect(renderedProtocols.bitflow.title).toBe('Bitflow');
     expect(renderedProtocols.bitflow.tvl).toBe('1,420 BTC');
     expect(renderedProtocols.bitflow.apr).toBe('5.1%');
