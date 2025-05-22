@@ -3,7 +3,7 @@ import { PrivateText } from '@/components/private-text';
 import { currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { SkeletonLoader, TextProps } from '@leather.io/ui/native';
-import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
+import { formatMoney, i18nFormatCurrency } from '@leather.io/utils';
 
 const EmptyBalanceDisplay = '-.--';
 interface FormatBalanceProps {
@@ -24,7 +24,7 @@ export function formatBalance({ balance, isFiat, operator }: FormatBalanceProps)
  * [operator, formattedValue].filter(Boolean).join(' ')?
 Maybe time to look into withPrefix type string helpers.
  */
-  return formatMoneyWithoutSymbol(balance);
+  return formatMoney(balance);
 }
 
 interface BalanceProps extends TextProps {

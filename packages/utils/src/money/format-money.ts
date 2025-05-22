@@ -52,6 +52,7 @@ export function createMoney(value: NumType, symbol: Currency, resolution?: numbe
 const thinSpace = ' ';
 
 export function formatMoney({ amount, symbol, decimals }: Money) {
+  console.log('formatMoney', amount, symbol, decimals);
   return `${amount.shiftedBy(-decimals).toString()} ${symbol}`;
 }
 
