@@ -1,4 +1,5 @@
 import { toFetchState } from '@/components/loading/fetch-state';
+import { useInscriptionsFlag } from '@/features/feature-flags';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
@@ -16,6 +17,12 @@ export function useAccountCollectibles(fingerprint: string, accountIndex: number
 }
 
 function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
+  const inscriptionsFlag = useInscriptionsFlag();
+  if (!inscriptionsFlag) {
+    accounts.forEach(account => {
+      account.bitcoin = undefined;
+    });
+  }
   return useQuery({
     queryKey: ['collectibles-service-get-total-collectibles', accounts],
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -30,6 +37,10 @@ function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
 }
 
 function useAccountCollectiblesQuery(account: AccountAddresses) {
+  const inscriptionsFlag = useInscriptionsFlag();
+  if (!inscriptionsFlag) {
+    account.bitcoin = undefined;
+  }
   return useQuery({
     queryKey: ['collectibles-service-get-account-collectibles', account],
     queryFn: ({ signal }: QueryFunctionContext) =>
