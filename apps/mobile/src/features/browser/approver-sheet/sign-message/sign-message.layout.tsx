@@ -58,7 +58,7 @@ export function SignMessageApproverLayout({
               </Cell.Root>
             )}
           </Approver.Section>
-          <Approver.Section>
+          <Approver.Section borderTop>
             <Text variant="label01">
               {t({
                 id: 'approver.signMessage.message-subtitle',

@@ -6,9 +6,12 @@ import { Theme } from '../../../theme-native';
 import { Box } from '../../box/box.native';
 import { useRegisterApproverChild } from '../approver-context.shared';
 
-export function ApproverSection(
-  props: BoxProps<Theme> & { children: ReactNode; noTopPadding?: boolean }
-) {
+interface ApproverSectionProps extends BoxProps<Theme> {
+  children: ReactNode;
+  noTopPadding?: boolean;
+  borderTop?: boolean;
+}
+export function ApproverSection(props: ApproverSectionProps) {
   useRegisterApproverChild('section');
   return (
     <Box
@@ -17,6 +20,8 @@ export function ApproverSection(
       mt={props.noTopPadding ? '0' : '3'}
       gap="2"
       backgroundColor="ink.background-primary"
+      borderTopColor="ink.border-transparent"
+      borderTopWidth={props.borderTop ? 1 : 0}
       {...props}
     />
   );
