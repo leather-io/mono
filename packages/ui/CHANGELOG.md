@@ -389,6 +389,32 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.68.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.67.0...@leather.io/ui-v1.68.0) (2025-05-22)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* cms integration ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+
+
+### Bug Fixes
+
+* **mobile:** add sentry DSN ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* **mobile:** change approver BG and add border to some sections, ref LEA-2546 ([ad8e040](https://github.com/leather-io/mono/commit/ad8e040f79a93184b408ae754c23be59b46848e8))
+* **mobile:** don't show avatar border for SIP-10 or runes, ref ENG-77 ([4f76078](https://github.com/leather-io/mono/commit/4f760786d02e8b7ab32c83cf24bda8d876315782))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.18.0
+    * @leather.io/utils bumped to 0.34.0
+  * devDependencies
+    * @leather.io/models bumped to 0.32.1
+    * @leather.io/panda-preset bumped to 0.12.6
+
 ## [1.67.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.66.2...@leather.io/ui-v1.67.0) (2025-05-22)
 
 
