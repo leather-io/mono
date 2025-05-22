@@ -163,7 +163,7 @@ export const stackingPoolData = {
     rewardsToken: 'BTC',
     estApr: '11%',
     tvlUsd: '$40,000,000',
-    minCommitmentUsd: '$1',
+    minCommitmentUsd: '$98.02',
     payout: 'STX',
     description:
       getPostBySlug('restake')?.sentence ??

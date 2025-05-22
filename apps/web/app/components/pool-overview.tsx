@@ -10,7 +10,7 @@ import { StackingPool, getPostSlugForProvider } from '~/data/data';
 import { getLearnMoreLink } from '~/features/page/page';
 import { TextElementTag } from '~/shared/types';
 import { getPosts, usePost } from '~/utils/post-utils';
-import { toHumanReadableStx } from '~/utils/unit-convert';
+import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 interface RewardTokenCellProps {
   token?: string;
@@ -48,7 +48,7 @@ function LockupPeriodCell({ minLockupPeriodDays }: LockupPeriodCellProps): React
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
-      value={<>{minLockupPeriodDays} cycle(s)</>}
+      value={<>{minLockupPeriodDays} days</>}
     />
   );
 }
@@ -71,7 +71,10 @@ function DaysUntilNextCycleCell({
       name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
-          {daysUntilNextCycle} days (Cycle {nextCycleNumber}, {nextCycleBlocks} blocks)
+          {daysUntilNextCycle} days
+          <Box textStyle="label.03">
+            (Cycle {nextCycleNumber}, {nextCycleBlocks} blocks)
+          </Box>
         </>
       }
     />
@@ -83,17 +86,16 @@ interface MinimumCommitmentCellProps {
   minimumCommitmentUsd?: string;
 }
 function MinimumCommitmentCell({
-  minimumCommitment = '40,000,000.00 STX',
+  minimumCommitment,
   minimumCommitmentUsd,
 }: MinimumCommitmentCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingMinimumCommitment;
   const label = post?.title ?? 'Minimum commitment';
 
-  // Handle numeric minimumCommitment by converting it
   const displayValue =
     typeof minimumCommitment === 'number'
-      ? toHumanReadableStx(minimumCommitment)
+      ? toHumanReadableMicroStx(minimumCommitment)
       : minimumCommitment;
 
   return (
@@ -129,8 +131,8 @@ interface TotalValueLockedCellProps {
   totalValueLockedUsd?: string | null;
 }
 function TotalValueLockedCell({
-  totalValueLocked = '51,784,293 STX',
-  totalValueLockedUsd = '$36,212,756',
+  totalValueLocked,
+  totalValueLockedUsd,
 }: TotalValueLockedCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.totalLockedValueTvl;
@@ -157,7 +159,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
   const post = usePost(postSlug);
   return (
     <VStack gap="space.05" alignItems="left" p="space.05">
-      {'logo' in pool ? (pool as any).logo : null}
+      {'icon' in pool ? (pool as any).icon : null}
       <styled.h4 textDecoration="underline" textStyle="label.01">
         {post?.title || ''}
       </styled.h4>
@@ -172,20 +174,20 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
 }
 
 export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElement {
-  // Demo/default values for required props
-  const minLockupPeriodDays = 1;
-  const daysUntilNextCycle = 2;
-  const nextCycleNumber = 10;
-  const nextCycleBlocks = 100;
+  // Get values from pool object and round to whole numbers
+  const minLockupPeriodDays = Math.round((pool as any).minLockupPeriodDays || pool.duration);
+  const daysUntilNextCycle = Math.round((pool as any).nextCycleDays);
+  const nextCycleNumber = (pool as any).nextCycleNumber;
+  const nextCycleBlocks = (pool as any).nextCycleBlocks;
 
-  // Calculate the human-readable minimum commitment amount from minimumDelegationAmount
+  // minimumDelegationAmount is always in microSTX (1 STX = 1,000,000 microSTX)
   const displayMinCommitment =
     typeof pool.minimumDelegationAmount === 'number'
-      ? toHumanReadableStx(pool.minimumDelegationAmount)
+      ? toHumanReadableMicroStx(pool.minimumDelegationAmount)
       : '';
 
-  // Format TVL values
-  const formattedTvl = (pool as any).tvl || `${(pool as any).tvlUsd?.replace('$', '')} STX`;
+  // Format TVL values without special cases
+  const formattedTvl = (pool as any).tvl || DASH;
   const formattedTvlUsd = (pool as any).tvlUsd;
 
   return (

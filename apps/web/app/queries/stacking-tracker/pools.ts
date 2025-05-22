@@ -64,7 +64,7 @@ const poolSlugToStackingTrackerSlug: Record<PoolSlug, string | null> = {
   planbetter: 'planbetter-pool',
   'stacking-dao': 'stackingdao-pool',
   'xverse-pool': 'xverse-pool',
-  restake: 'null',
+  restake: null,
 };
 
 export interface StackingTrackerPool {

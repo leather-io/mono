@@ -266,14 +266,18 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   // Helper to map PoolRewardProtocolInfo to StackingPool
   function mapPoolRewardProtocolInfoToStackingPool(info: any): import('~/data/data').StackingPool {
-    return {
+    const minimumDelegationAmount = info.minCommitment
+      ? Math.round(info.minCommitment * 1000000)
+      : 0;
+
+    const mappedPool = {
       providerId: info.id || '',
       name: info.title || '',
       url: info.url || '',
-      minAmount: info.minCommitment || null,
+      minAmount: info.minCommitment || null, // This stays in STX units
       estApr: info.apr || '',
-      payout: '', // Not available on PoolRewardProtocolInfo
-      disabled: false, // Not available on PoolRewardProtocolInfo
+      payout: info.rewardsToken || '',
+      disabled: false,
       description: info.description || '',
       duration: info.minLockupPeriodDays || 1,
       poolAddress: {
@@ -281,16 +285,25 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
         testnet: info.poolAddress,
         devnet: info.poolAddress,
       },
-      fee: '', // Not available on PoolRewardProtocolInfo
-      poxContract: '', // Not available on PoolRewardProtocolInfo
+      fee: '',
+      poxContract: '',
       rewardsToken: info.rewardsToken || '',
-      minimumDelegationAmount: 0, // Not available on PoolRewardProtocolInfo
-      allowCustomRewardAddress: false, // Not available on PoolRewardProtocolInfo
+      minimumDelegationAmount: minimumDelegationAmount, // This needs to be in microSTX
+      allowCustomRewardAddress: false,
       tvlUsd: info.tvlUsd || '',
       minCommitmentUsd: info.minCommitmentUsd || '',
       icon: info.logo,
       website: info.url || '',
+
+      // Add the missing fields needed for PoolOverview
+      nextCycleBlocks: info.nextCycleBlocks || 0,
+      nextCycleDays: info.nextCycleDays || 0,
+      nextCycleNumber: info.nextCycleNumber || 0,
+      minLockupPeriodDays: info.minLockupPeriodDays || 1,
+      tvl: info.tvl || '',
     };
+
+    return mappedPool;
   }
 
   return (
