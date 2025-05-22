@@ -44,17 +44,18 @@ export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostI
     >
       <Flex alignItems="center" gap="space.02">
         {children}
-        <styled.a
-          href={getPostHref(post.slug)}
-          rel="noopener noreferrer"
+        <styled.button
           onClick={handleIconClick}
           display="inline-flex"
           color="inherit"
           textDecoration="none"
           cursor="pointer"
+          bg="transparent"
+          border="none"
+          p="0"
         >
           <InfoCircleIcon variant="small" color={iconColorToken} />
-        </styled.a>
+        </styled.button>
       </Flex>
     </BasicHoverCard>
   );

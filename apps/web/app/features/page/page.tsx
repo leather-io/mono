@@ -57,12 +57,12 @@ export function getLearnMoreLink(destination: string, precedingText?: string): R
   const isUrl = /^https?:\/\//.test(destination);
   const href = isUrl ? destination : getPostHref(destination);
   return (
-    <>
+    <styled.span display="inline">
       {precedingText && needsPeriod ? '. ' : ' '}
       <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>
         {'Learn more'}
       </Link>
-    </>
+    </styled.span>
   );
 }
 

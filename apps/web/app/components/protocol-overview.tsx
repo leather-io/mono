@@ -162,12 +162,12 @@ function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps):
         {name}
       </styled.h4>
       {hasValidPost ? (
-        <styled.p textStyle="caption.01">
+        <styled.div textStyle="caption.01">
           {post?.sentence || ''}
           {post?.slug && post?.sentence ? getLearnMoreLink(post.slug, post.sentence) : <></>}
-        </styled.p>
+        </styled.div>
       ) : (
-        <styled.p textStyle="caption.01">{description}</styled.p>
+        <styled.div textStyle="caption.01">{description}</styled.div>
       )}
     </VStack>
   );

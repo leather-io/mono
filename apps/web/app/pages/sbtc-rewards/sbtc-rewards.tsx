@@ -11,6 +11,7 @@ import { ZestLogo } from '~/components/icons/zest-logo';
 import { PostPageHeading } from '~/components/post-page-heading';
 import { PostSectionHeading } from '~/components/post-section-heading';
 import { content } from '~/data/content';
+import { sbtcEnroll as sbtcEnrollData, sbtcPools } from '~/data/data';
 import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
@@ -37,33 +38,44 @@ export interface RewardProtocolInfo {
   minCommitment: string;
   minCommitmentUsd: string;
   apr: string;
-  payoutToken: string;
+  payoutToken: string | string[];
 }
 
 const posts = getPosts();
 
 const sbtcEnroll = {
-  id: 'basic',
+  id: sbtcEnrollData.id,
   logo: <SbtcLogo size="32px" />,
-  title: 'Basic sBTC rewards',
+  title: sbtcEnrollData.title,
   description: formatPostPrompt(posts.sbtcRewardsBasic?.prompt || ''),
-  tvl: '2,150 BTC',
-  tvlUsd: '$130,050,000',
-  minCommitment: '0.005 BTC',
-  minCommitmentUsd: '$302.50',
-  apr: '4.9%',
-  payoutToken: 'sBTC',
+  tvl: sbtcEnrollData.tvl,
+  tvlUsd: sbtcEnrollData.tvlUsd,
+  minCommitment: sbtcEnrollData.minCommitment,
+  minCommitmentUsd: sbtcEnrollData.minCommitmentUsd,
+  apr: sbtcEnrollData.apr,
+  payoutToken: sbtcEnrollData.payoutToken,
 } as const;
 
 const logoMap: Record<string, ReactElement> = {
-  AlexLogo: <AlexLogo size="32px" />,
-  BitflowLogo: <BitflowLogo size="32px" />,
-  VelarLogo: <VelarLogo size="32px" />,
-  ZestLogo: <ZestLogo size="32px" />,
+  alex: <AlexLogo size="32px" />,
+  bitflow: <BitflowLogo size="32px" />,
+  velar: <VelarLogo size="32px" />,
+  zest: <ZestLogo size="32px" />,
 };
-const sbtcPools = content.sbtcPools.map(pool => ({
-  ...pool,
-  logo: logoMap[pool.logoKey] || null,
+
+// Map the data from sbtcPools to the format expected by SbtcProtocolRewardGrid
+const formattedSbtcPools = sbtcPools.map(pool => ({
+  id: pool.id,
+  logo: logoMap[pool.id] || null,
+  title: pool.title,
+  description: pool.description,
+  tvl: pool.tvl,
+  tvlUsd: pool.tvlUsd,
+  minCommitment: pool.minCommitment,
+  minCommitmentUsd: pool.minCommitmentUsd,
+  apr: pool.apr,
+  payoutToken: pool.payoutToken,
+  url: pool.url,
 }));
 
 export function SbtcRewards(): ReactElement {
@@ -117,7 +129,7 @@ export function SbtcRewards(): ReactElement {
             rewardProtocol={sbtcEnroll}
           />
 
-          {sbtcPools.map(pool => (
+          {formattedSbtcPools.map(pool => (
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="xs" fullWidth onClick={() => openExternalLink(pool.url)}>
