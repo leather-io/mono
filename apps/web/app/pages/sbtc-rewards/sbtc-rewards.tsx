@@ -5,6 +5,7 @@ import { analytics } from '~/features/analytics/analytics';
 import { Page } from '~/features/page/page';
 import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { leather } from '~/helpers/leather-sdk';
+import { useRemainingSbtcSupply } from '~/queries/sbtc/use-remaining-sbtc-supply';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
 
@@ -18,6 +19,7 @@ import { SbtcRewardContext } from './sbtc-rewards-context';
 
 export function SbtcRewards() {
   const { status, whenExtensionState } = useLeatherConnect();
+  const remainingSbtcPegCapSupply = useRemainingSbtcSupply();
 
   function bridgeSbtc() {
     // Cannot bridge, cap reached
@@ -32,7 +34,7 @@ export function SbtcRewards() {
     <SbtcRewardContext.Provider
       value={{
         whenExtensionState,
-        bridgingStatus: 'disabled',
+        bridgingStatus: remainingSbtcPegCapSupply?.isGreaterThan(0) ? 'enabled' : 'disabled',
         extensionStatus: status,
         onBridgeSbtc: bridgeSbtc,
         onSwapStxSbtc: swapStxSbtc,
