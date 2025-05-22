@@ -41,15 +41,15 @@ function RewardProtocolEnrollCell({
           {rewardProtocol.title}
         </styled.h3>
         {post && (
-          <styled.p textStyle="caption.01" mt="space.01">
+          <styled.div textStyle="caption.01" mt="space.01">
             {post.prompt}
             {getLearnMoreLink(post.slug, post.prompt)}
-          </styled.p>
+          </styled.div>
         )}
         {!post && (
-          <styled.p textStyle="caption.01" mt="space.01">
+          <styled.div textStyle="caption.01" mt="space.01">
             {rewardProtocol.description}
-          </styled.p>
+          </styled.div>
         )}
         <Box mt="space.04">{action}</Box>
       </Box>
@@ -108,13 +108,15 @@ function MinimumCommitmentCell({ rewardProtocol }: RewardProtocolCellProps): Rea
 function PayoutTokenCell({ rewardProtocol }: RewardProtocolCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.sbtcRewardsTokens;
+  const payoutTokens = ensureArray(rewardProtocol.payoutToken);
+
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label="Rewards token" textStyle="label.03" />}
       value={
         <Flex gap="space.02">
-          {ensureArray(rewardProtocol.payoutToken).map(token =>
-            token == 'sBTC' ? (
+          {payoutTokens.map(token =>
+            token === 'sBTC' ? (
               <Flag key={token} spacing="space.02" img={<SbtcLogo size={24} />}>
                 {token}
               </Flag>

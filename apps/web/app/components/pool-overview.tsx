@@ -164,10 +164,10 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
         {post?.title || ''}
       </styled.h4>
       {post && (
-        <styled.p textStyle="caption.01">
+        <styled.div textStyle="caption.01">
           {post.sentence}
           {getLearnMoreLink(post.slug, post.sentence)}
-        </styled.p>
+        </styled.div>
       )}
     </VStack>
   );

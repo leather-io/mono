@@ -46,7 +46,7 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
           <Accordion.Item value={post.slug} key={post.slug}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
-              <styled.p
+              <styled.div
                 textStyle="body.02"
                 mb="space.02"
                 style={{ whiteSpace: 'pre-line', color: 'black' }}
@@ -55,7 +55,7 @@ export function SbtcRewardsFaq(props: HTMLStyledProps<'div'>) {
                 <Link href={getPostHref(post.slug)} style={{ fontSize: 'inherit' }}>
                   Learn more
                 </Link>
-              </styled.p>
+              </styled.div>
             </Accordion.Content>
           </Accordion.Item>
         ))}

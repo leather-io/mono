@@ -31,7 +31,7 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
       >
         <Flex alignItems="flex-start" gap="space.02">
           {post.sentence && (
-            <styled.p
+            <styled.div
               textStyle="body.01"
               mb="space.01"
               display="inline"
@@ -39,7 +39,7 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
             >
               {sanitizeContent(post.sentence)}
               {getLearnMoreLink(post.slug, post.sentence)}
-            </styled.p>
+            </styled.div>
           )}
         </Flex>
         {post.disclaimer && (
