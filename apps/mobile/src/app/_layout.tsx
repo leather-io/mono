@@ -38,7 +38,7 @@ import { Box, SheetProvider } from '@leather.io/ui/native';
 dayjs.extend(relativeTime);
 
 Sentry.init({
-  dsn: 'https://873049e06da26c641d8b46a9aeb50203@o4504203991318528.ingest.us.sentry.io/4509349474992128',
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   environment: process.env.EXPO_PUBLIC_NODE_ENV ?? 'development',
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
