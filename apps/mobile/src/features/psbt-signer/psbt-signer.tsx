@@ -279,7 +279,7 @@ function BasePsbtSigner({
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
           </Approver.Section>
-          <Approver.Section>
+          <Approver.Section borderTop>
             <BitcoinFeeCard
               feeType={selectedFeeType}
               amount={psbtDetails.fee}
