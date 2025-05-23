@@ -30,7 +30,6 @@ export default function HomeScreen() {
   const releaseCollectibles = useCollectiblesFlag();
   const releaseEarn = useEarnFlag();
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
-
   return (
     <PageLayout>
       <Box gap="8" mt="5">
