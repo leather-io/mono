@@ -1,5 +1,5 @@
 // All new events should use the object-action framework.
-import { DefaultNetworkConfigurations } from '@leather.io/models';
+import { DefaultNetworkConfigurations, StxCryptoAssetBalance } from '@leather.io/models';
 
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
@@ -22,6 +22,7 @@ export interface Events extends HistoricalEvents {
     amount: number;
     provider?: string;
   };
+  stx_balance_updated: StxCryptoAssetBalance;
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
