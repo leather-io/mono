@@ -8,7 +8,6 @@ import { AccountSelectorSheet } from '@/features/account/account-selector/accoun
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance, TotalBalance } from '@/features/balances/total-balance';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -94,7 +93,7 @@ export function AccountsWidget() {
                   key={account.id}
                   onPress={() => {
                     router.navigate({
-                      pathname: AppRoutes.Account,
+                      pathname: '/account/[accountId]',
                       params: {
                         accountId: account.id,
                       },
@@ -117,7 +116,7 @@ export function AccountsWidget() {
         onAccountPress={(accountId: string) => {
           accountSelectorSheetRef.current?.close();
           router.navigate({
-            pathname: AppRoutes.Account,
+            pathname: '/account/[accountId]',
             params: { account: accountId, accountId },
           });
         }}

@@ -12,7 +12,6 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useDeviceId } from '@/hooks/use-device-id';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import * as Application from 'expo-application';
@@ -80,7 +79,7 @@ export default function SettingsScreen() {
               message: 'Add, configure and remove',
             })}
             icon={<WalletIcon />}
-            onPress={() => router.navigate(AppRoutes.SettingsWallet)}
+            onPress={() => router.navigate('/settings/wallet')}
             testID={TestId.settingsWalletAndAccountsButton}
           />
           <Divider />
@@ -94,7 +93,7 @@ export default function SettingsScreen() {
               message: 'Theme and account identifier',
             })}
             icon={<SquareLinesBottomIcon />}
-            onPress={() => router.navigate(AppRoutes.SettingsDisplay)}
+            onPress={() => router.navigate('/settings/display')}
             testID={TestId.settingsDisplayButton}
           />
           <SettingsListItem
@@ -107,7 +106,7 @@ export default function SettingsScreen() {
               message: 'Analytics and app authentication',
             })}
             icon={<ShieldIcon />}
-            onPress={() => router.navigate(AppRoutes.SettingsSecurity)}
+            onPress={() => router.navigate('/settings/security')}
             testID={TestId.settingsSecurityButton}
           />
           <SettingsListItem
@@ -120,7 +119,7 @@ export default function SettingsScreen() {
               message: 'Mainnet, testnet or signet',
             })}
             icon={<GlobeTiltedIcon />}
-            onPress={() => router.navigate(AppRoutes.SettingsNetworks)}
+            onPress={() => router.navigate('/settings/networks')}
             testID={TestId.settingsNetworkButton}
           />
           {releasePushNotifications && (
@@ -135,7 +134,7 @@ export default function SettingsScreen() {
                 message: 'Push and email notifications',
               })}
               icon={<BellIcon />}
-              onPress={() => router.navigate(AppRoutes.SettingsNotifications)}
+              onPress={() => router.navigate('/settings/notifications')}
               testID={TestId.settingsNotificationsButton}
             />
           )}
@@ -149,7 +148,7 @@ export default function SettingsScreen() {
               message: 'Support, guides and articles',
             })}
             icon={<SupportIcon />}
-            onPress={() => router.navigate(AppRoutes.SettingsHelp)}
+            onPress={() => router.navigate('/settings/help')}
             testID={TestId.settingsHelpButton}
           />
         </SettingsList>

@@ -1,6 +1,5 @@
 import { RefObject } from 'react';
 
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { router } from 'expo-router';
@@ -34,7 +33,7 @@ export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) 
           hitSlop={12}
           onPress={() => {
             sheetRef.current?.close();
-            router.navigate(AppRoutes.SettingsWallet);
+            router.navigate('/settings/wallet');
           }}
           testID={TestId.settingsWalletAndAccountsButton}
           pressEffects={legacyTouchablePressEffect}

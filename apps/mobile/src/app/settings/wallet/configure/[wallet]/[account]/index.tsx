@@ -9,7 +9,6 @@ import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
 import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/accounts.write';
@@ -96,7 +95,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                 caption={wallet.name}
                 onPress={() => {
                   router.navigate({
-                    pathname: AppRoutes.Account,
+                    pathname: '/account/[accountId]',
                     params: { accountId: account.id },
                   });
                 }}
@@ -129,7 +128,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
             icon={<HeadIcon />}
             onPress={() => {
               router.navigate({
-                pathname: AppRoutes.SettingsWalletConfigureAccountAvatar,
+                pathname: '/settings/wallet/configure/[wallet]/[account]/choose-avatar',
                 params: { wallet: fingerprint, account: accountIndex },
               });
             }}

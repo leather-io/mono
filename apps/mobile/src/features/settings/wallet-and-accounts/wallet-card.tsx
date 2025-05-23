@@ -5,7 +5,6 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountsByFingerprint } from '@/store/accounts/accounts.read';
@@ -44,7 +43,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
 
   function onSelectAccount(account: Account) {
     router.navigate({
-      pathname: AppRoutes.SettingsWalletConfigureAccount,
+      pathname: '/settings/wallet/configure/[wallet]/[account]',
       params: { fingerprint, wallet: fingerprint, account: account.accountIndex },
     });
   }
@@ -75,7 +74,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             <Pressable
               onPress={() => {
                 router.navigate({
-                  pathname: AppRoutes.SettingsWalletConfigureWallet,
+                  pathname: '/settings/wallet/configure/[wallet]',
                   params: { fingerprint, wallet: fingerprint },
                 });
               }}

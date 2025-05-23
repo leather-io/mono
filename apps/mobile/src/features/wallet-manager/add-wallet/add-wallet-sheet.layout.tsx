@@ -9,7 +9,6 @@ import Animated, {
 import { NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import { WaitlistIds } from '@/features/waitlist/ids';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
@@ -145,7 +144,7 @@ export function AddWalletSheetLayout({
                   })}
                   icon={<SignalIcon color="ink.text-subdued" />}
                   onPress={() => {
-                    router.navigate(AppRoutes.HardwareWallets);
+                    router.navigate('/hardware-wallets');
                     addWalletSheetRef.current?.close();
                   }}
                 />
@@ -180,7 +179,7 @@ export function AddWalletSheetLayout({
                   })}
                   icon={<PaletteIcon color="ink.text-subdued" />}
                   onPress={() => {
-                    router.navigate(AppRoutes.MpcWallets);
+                    router.navigate('/mpc-wallets');
                     addWalletSheetRef.current?.close();
                   }}
                 />
