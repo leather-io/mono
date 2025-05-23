@@ -27,12 +27,12 @@ interface PageHeadingProps {
 export function PageHeading({ title, subtitle = '', children }: PageHeadingProps) {
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
-      <Box flex={1}>
+      <Box width="50%">
         <Page.Title textStyle="heading.02" maxW="400px">
           {title}
         </Page.Title>
       </Box>
-      <Box flex={1}>
+      <Box width="50%">
         <Page.Subtitle mt={['space.03', 'space.03', 0]} style={{ whiteSpace: 'pre-line' }}>
           {subtitle}
         </Page.Subtitle>
@@ -46,7 +46,11 @@ export function PageHeading({ title, subtitle = '', children }: PageHeadingProps
  * destination: can be a postSlug (string) or a full URL (string starting with http/https)
  * precedingText: text that comes before the link, used for punctuation logic
  */
-export function getLearnMoreLink(destination: string, precedingText?: string): ReactNode {
+interface LearnMoreLinkProps {
+  destination: string;
+  precedingText?: string;
+}
+export function LearnMoreLink({ destination, precedingText }: LearnMoreLinkProps) {
   if (!destination) return null;
   const needsPeriod =
     precedingText &&
@@ -57,7 +61,7 @@ export function getLearnMoreLink(destination: string, precedingText?: string): R
   const isUrl = /^https?:\/\//.test(destination);
   const href = isUrl ? destination : getPostHref(destination);
   return (
-    <styled.span display="inline">
+    <styled.span>
       {precedingText && needsPeriod ? '. ' : ' '}
       <Link href={href} style={{ fontSize: 'inherit', display: 'inline' }}>
         {'Learn more'}

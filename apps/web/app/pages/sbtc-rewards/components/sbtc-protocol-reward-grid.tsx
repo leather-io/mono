@@ -5,7 +5,7 @@ import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { RewardProtocolInfo } from '~/data/data';
-import { getLearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/features/page/page';
 import { getPosts } from '~/utils/post-utils';
 
 import { Flag } from '@leather.io/ui';
@@ -43,7 +43,7 @@ function RewardProtocolEnrollCell({
         {post && (
           <styled.div textStyle="caption.01" mt="space.01">
             {post.prompt}
-            {getLearnMoreLink(post.slug, post.prompt)}
+            <LearnMoreLink destination={post.slug} precedingText={post.prompt} />
           </styled.div>
         )}
         {!post && (

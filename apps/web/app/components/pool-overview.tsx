@@ -7,7 +7,7 @@ import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { DASH } from '~/constants/constants';
 import { StackingPool, getPostSlugForProvider } from '~/data/data';
-import { getLearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/features/page/page';
 import { TextElementTag } from '~/shared/types';
 import { getPosts, usePost } from '~/utils/post-utils';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
@@ -166,7 +166,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
       {post && (
         <styled.div textStyle="caption.01">
           {post.sentence}
-          {getLearnMoreLink(post.slug, post.sentence)}
+          <LearnMoreLink destination={post.slug} precedingText={post.sentence} />
         </styled.div>
       )}
     </VStack>

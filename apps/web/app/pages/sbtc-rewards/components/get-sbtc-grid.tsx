@@ -3,7 +3,7 @@ import { WhenClient } from '~/components/client-only';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { content } from '~/data/content';
-import { getLearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/features/page/page';
 import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
 
 import { Badge, Button } from '@leather.io/ui';
@@ -29,7 +29,10 @@ function BridgeToSbtcCell() {
           {sbtcBridgePost && (
             <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
               {sbtcBridgePost.prompt}
-              {getLearnMoreLink(sbtcBridgePost.slug, sbtcBridgePost.prompt)}
+              <LearnMoreLink
+                destination={sbtcBridgePost.slug}
+                precedingText={sbtcBridgePost.prompt}
+              />
             </styled.p>
           )}
         </Box>
@@ -73,7 +76,10 @@ function SwapStxToSbtcCell() {
           {stacksSwapsPost && (
             <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
               {stacksSwapsPost.prompt}
-              {getLearnMoreLink(stacksSwapsPost.slug, stacksSwapsPost.prompt)}
+              <LearnMoreLink
+                destination={stacksSwapsPost.slug}
+                precedingText={stacksSwapsPost.prompt}
+              />
             </styled.p>
           )}
         </Box>
