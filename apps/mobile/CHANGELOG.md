@@ -701,6 +701,13 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.42.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.42.0...@leather.io/mobile-v2.42.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* **mobile:** re-add FlashList resolutions to not crash the build ([5e0440e](https://github.com/leather-io/mono/commit/5e0440e494cc0f14277a1a01e41ec46396f5be29))
+
 ## [2.42.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.41.1...@leather.io/mobile-v2.42.0) (2025-05-22)
 
 
