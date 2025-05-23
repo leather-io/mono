@@ -6,6 +6,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { useBrowser } from '@/core/browser-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 
 import { Sheet } from '@leather.io/ui/native';
@@ -28,6 +29,7 @@ export function BrowserSheet() {
   const { themeDerivedFromThemePreference } = useSettings();
   useImperativeHandle(linkingRef, () => ({
     openURL(url) {
+      void analytics?.track('in_app_browser_opened', { url });
       browserSheetRef.current?.present();
       goToUrl(url);
     },

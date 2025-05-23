@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { BigNumber } from 'bignumber.js';
+import { analytics } from '~/features/analytics/analytics';
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useStacksNetwork } from '~/store/stacks-network';
 
@@ -37,7 +38,13 @@ export function useStxCryptoAssetBalance(address: string) {
     }),
     select: resp => {
       const initialBalance = createMoney(new BigNumber(resp.balance), 'STX');
-      return createStxCryptoAssetBalance(initialBalance, inboundBalance, outboundBalance);
+      const stxBalance = createStxCryptoAssetBalance(
+        initialBalance,
+        inboundBalance,
+        outboundBalance
+      );
+      void analytics.track('stx_balance_updated', stxBalance);
+      return stxBalance;
     },
     enabled: !!initialBalanceQuery.data,
   });
