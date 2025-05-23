@@ -22,6 +22,9 @@ export interface Events extends HistoricalEvents {
     amount: number;
     provider?: string;
   };
+  liquid_stacking_increased: {
+    amount: number;
+  };
   stx_balance_updated: StxCryptoAssetBalance;
 }
 
