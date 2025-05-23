@@ -7,7 +7,7 @@ import { stxToMicroStxBigint } from '~/utils/unit-convert';
 
 import { LeatherSdk } from '@leather.io/sdk';
 import { formatContractId } from '@leather.io/stacks';
-import { stxToMicroStx } from '@leather.io/utils';
+import { scaleValue, stxToMicroStx } from '@leather.io/utils';
 
 import { StackIncreaseInfo } from '../../direct-stacking-info/get-has-pending-stack-increase';
 import { SignerDetailsFormValues } from './types';
@@ -47,7 +47,9 @@ export function createIncreaseLiquidMutationOptions({
         authId: authId ? parseInt(authId, 10) : undefined,
       });
 
-      void analytics.untypedTrack('liquid_stacking_increased');
+      void analytics.track('liquid_stacking_increased', {
+        amount: scaleValue(increaseBy),
+      });
       return leather.stxCallContract({
         contract: formatContractId(
           stackIncreaseOptions.contractAddress,
