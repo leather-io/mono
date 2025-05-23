@@ -51,13 +51,37 @@ export function createMoney(value: NumType, symbol: Currency, resolution?: numbe
 
 const thinSpace = ' ';
 
+function exponentialToNumerical(amount: BigNumber) {
+  const [integral, decimal, power] = amount.toString().split(/[eE]|\./);
+  const expPowerValuePosition = 2;
+  const expPower = power ? +power.substring(0, expPowerValuePosition) : 0;
+  const positiveExponential = expPower >= 0;
+  if (decimal) {
+    if (positiveExponential) {
+      return Number(`${integral}${decimal.slice(0, +expPower)}.${decimal.slice(+expPower)}`);
+    }
+    return 0;
+  }
+  return Number(integral);
+}
+
+function formatMoneyWithoutSymbolWithoutScientific(amount: BigNumber, decimals: number) {
+  const numericalAmount = exponentialToNumerical(amount);
+  const formattedAmount = new BigNumber(numericalAmount).shiftedBy(-decimals).toString();
+  const formattedAmountWithoutScientific = new BigNumber(formattedAmount).toFixed(decimals);
+  return `${formattedAmountWithoutScientific}`;
+}
+
 export function formatMoney({ amount, symbol, decimals }: Money) {
-  console.log('formatMoney', amount, symbol, decimals);
-  return `${amount.shiftedBy(-decimals).toString()} ${symbol}`;
+  const formattedAmountWithoutScientific = formatMoneyWithoutSymbolWithoutScientific(
+    amount,
+    decimals
+  );
+  return `${formattedAmountWithoutScientific} ${symbol}`;
 }
 
 export function formatMoneyWithoutSymbol({ amount, decimals }: Money) {
-  return `${amount.shiftedBy(-decimals).toString()}`;
+  return formatMoneyWithoutSymbolWithoutScientific(amount, decimals);
 }
 
 export function formatMoneyToFixedDecimal(
