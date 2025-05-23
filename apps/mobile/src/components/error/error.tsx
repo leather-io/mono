@@ -1,7 +1,9 @@
 import { t } from '@lingui/macro';
+import { Image } from 'expo-image';
 
-import { Box, HasChildren, Text } from '@leather.io/ui/native';
+import { Box, Button, HasChildren, Text } from '@leather.io/ui/native';
 
+import { EmptyLayout } from '../loading/empty-layout';
 import { PageLayout } from '../page/page.layout';
 
 function WidgetWrap({ children }: HasChildren) {
@@ -13,40 +15,53 @@ function WidgetWrap({ children }: HasChildren) {
 }
 
 interface ErrorProps {
-  error: Error;
-  image?: React.ReactNode;
+  error?: Error;
+  onRetry?: () => void;
 }
 
-export function Error({ error, image }: ErrorProps) {
+export function Error({ error, onRetry }: ErrorProps) {
   return (
     <PageLayout>
       <WidgetWrap>
-        <Box justifyContent="center" alignItems="center" mt="9">
-          <Box gap="4" alignItems="center" padding="5">
-            {image ? (
-              image
-            ) : (
-              <Box
-                width={218}
-                height={200}
-                alignItems="flex-start"
-                bg="ink.background-secondary"
-              ></Box>
-            )}
-            <Text variant="heading03" textAlign="center" fontSize={32}>
-              {t({ id: 'error_boundary.title', message: 'Something went wrong' })}
-            </Text>
-            <Text variant="label01" textAlign="center">
-              {t({ id: 'error_boundary.subtitle', message: 'Pull this page to refresh' })}
-            </Text>
-
-            <Box width={218} height="auto" alignItems="flex-start" bg="ink.background-secondary">
-              <Text variant="code" textAlign="center">
-                {error.message}
-              </Text>
+        <EmptyLayout
+          image={
+            <Box pt="8">
+              <Image
+                style={{ height: 203, width: 244 }}
+                source={require('@/assets/stickers/egg.png')}
+              />
             </Box>
-          </Box>
-        </Box>
+          }
+        >
+          <Text variant="heading03" textAlign="center" fontSize={32}>
+            {t({ id: 'error_boundary.title', message: 'Something went wrong' })}
+          </Text>
+          {onRetry ? (
+            <Button
+              onPress={onRetry}
+              title={t({ id: 'error_boundary.action', message: 'Try again' })}
+            />
+          ) : (
+            <>
+              <Text variant="label01" textAlign="center">
+                {t({ id: 'error_boundary.subtitle', message: 'Drag to refresh' })}
+              </Text>
+
+              {error && (
+                <Box
+                  width={218}
+                  height="auto"
+                  alignItems="flex-start"
+                  bg="ink.background-secondary"
+                >
+                  <Text variant="code" textAlign="center">
+                    {error.message}
+                  </Text>
+                </Box>
+              )}
+            </>
+          )}
+        </EmptyLayout>
       </WidgetWrap>
     </PageLayout>
   );

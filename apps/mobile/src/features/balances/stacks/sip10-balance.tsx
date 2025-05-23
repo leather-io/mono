@@ -74,7 +74,7 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
   return (
     <FetchWrapper data={data} error={<Sip10TokenBalanceError />}>
       {data.state === 'success' && (
-        <Box flex={1} minHeight={200} width="100%">
+        <Box flex={1} width="100%" height="100%">
           <FlashList
             data={data.value.sip10s.sort(sortSip10Balances).slice(0, displayLimit)}
             renderItem={({ item }: { item: Sip10AggregateBalance['sip10s'][number] }) => (

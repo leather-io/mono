@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { FetchError } from '@/components/error/fetch-error';
+import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Widget } from '@/components/widget';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
@@ -37,7 +37,7 @@ export function AccountsWidget() {
   const isErrorTotalBalance = totalBalance.state === 'error';
   return (
     <>
-      {isErrorTotalBalance && <FetchError />}
+      {isErrorTotalBalance && <FetchErrorCallout />}
       <Widget>
         <Box>
           <Widget.Header

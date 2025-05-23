@@ -2,24 +2,27 @@ import { EmptyLayout } from '@/components/loading';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
 
-import { Box } from '@leather.io/ui/native';
+import { Box, Text } from '@leather.io/ui/native';
 
 export function ActivityEmpty() {
   return (
     <EmptyLayout
-      title={t({ id: 'activity-empty.title', message: "It's quiet in here" })}
-      subtitle={t({
-        id: 'activity-empty.subtitle',
-        message: 'Do your first transaction to begin.',
-      })}
-      img={
-        <Box px="5" py="4">
-          <Image
-            style={{ height: 57, width: 54 }}
-            source={require('@/assets/sticker_no_activity.png')}
-          />
-        </Box>
+      image={
+        <Image
+          style={{ height: 165, width: 145 }}
+          contentFit="cover"
+          source={require('@/assets/stickers/net.png')}
+        />
       }
-    />
+    >
+      <Box width={186}>
+        <Text textAlign="center" variant="label01">
+          {t({
+            id: 'activity-empty.title',
+            message: 'Make your first transaction to get started',
+          })}
+        </Text>
+      </Box>
+    </EmptyLayout>
   );
 }
