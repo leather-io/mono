@@ -8,6 +8,7 @@ import {
   serializePostConditionWire,
   uintCV,
 } from '@stacks/transactions';
+import { analytics } from '~/features/analytics/analytics';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import {
   getLiquidContract,
@@ -108,6 +109,10 @@ export function createDepositStxMutationOptions({ leather, network }: CreateHand
     mutationKey: ['deposit-stx', leather, network],
     mutationFn: async (values: LiquidStackingFormValues) => {
       const liquidStackStxOptions = getOptions(values, network);
+      await analytics.track('liquid_stacking_started', {
+        amount: values.amount,
+        provider: values.protocolName,
+      });
       return leather.stxCallContract(liquidStackStxOptions);
     },
   } as const;
