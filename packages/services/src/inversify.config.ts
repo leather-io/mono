@@ -8,6 +8,7 @@ import { RunesBalancesService } from './balances/runes-balances.service';
 import { Sip10BalancesService } from './balances/sip10-balances.service';
 import { StxBalancesService } from './balances/stx-balances.service';
 import { CollectiblesService } from './collectibles/collectibles.service';
+import { AnalyticsService } from './infrastructure/analytics/analytics.service';
 import { HttpCacheService } from './infrastructure/cache/http-cache.service';
 import { Environment } from './infrastructure/environment';
 import { SettingsService } from './infrastructure/settings/settings.service';
@@ -24,6 +25,7 @@ export interface InitServicesContainerOptions {
   env: Environment;
   settingsService: Newable<SettingsService>;
   cacheService: Newable<HttpCacheService>;
+  analyticsService?: Newable<AnalyticsService>;
 }
 
 export function initServicesContainer(options: InitServicesContainerOptions): Container {
@@ -38,6 +40,13 @@ export function initServicesContainer(options: InitServicesContainerOptions): Co
       .bind<HttpCacheService>(Types.CacheService)
       .to(options.cacheService)
       .inSingletonScope();
+
+    if (options.analyticsService) {
+      servicesContainer
+        .bind<AnalyticsService>(Types.AnalyticsService)
+        .to(options.analyticsService)
+        .inSingletonScope();
+    }
   }
   return servicesContainer;
 }

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SegmentClient, createClient } from '@segment/analytics-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
+import { AnalyticsService } from '@leather.io/services';
 
 const FIRST_OPEN_KEY = 'first_open_tracked';
 
@@ -25,6 +26,10 @@ const leatherAnalyticsClient = configureAnalyticsClient<SegmentClient>({
 
 export let analytics: ReturnType<typeof configureAnalyticsClient<SegmentClient>> | undefined =
   leatherAnalyticsClient;
+
+export class MobileAnalyticsService extends AnalyticsService {
+  static readonly client = leatherAnalyticsClient;
+}
 
 export async function trackFirstAppOpen() {
   const hasTrackedFirstOpen = await AsyncStorage.getItem(FIRST_OPEN_KEY);
