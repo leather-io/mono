@@ -37,18 +37,13 @@ export function BrowserConnectedTab({ goToUrl }: ConnectedProps) {
         <Image
           style={{ height: width * 0.5, width: width * 0.5 }}
           contentFit="cover"
-          source={require('@/assets/connected_empty.png')}
+          source={require('@/assets/stickers/ufo.png')}
         />
-        <Text textAlign="center" variant="heading03">
-          {t({
-            id: 'browser-sheet.connected.empty.title',
-            message: 'Nothing here yet',
-          })}
-        </Text>
+
         <Text textAlign="center" variant="label01">
           {t({
             id: 'browser-sheet.connected.empty.caption',
-            message: 'You will find the apps you are connected here',
+            message: 'You will find the apps you are connected to here',
           })}
         </Text>
       </Box>

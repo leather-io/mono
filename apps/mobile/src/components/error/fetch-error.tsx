@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro';
+import { Image } from 'expo-image';
 
 import { Box, Callout, CloudOffIcon, Text } from '@leather.io/ui/native';
 
@@ -10,13 +11,20 @@ interface ErrorProps {
 export function Error({ errorMessage }: ErrorProps) {
   return (
     <EmptyLayout
-      title={t({ id: 'fetch-state.error', message: 'Error' })}
-      subtitle={errorMessage ?? ''}
-    />
+      image={
+        <Image style={{ height: 219, width: 270 }} source={require('@/assets/stickers/net.png')} />
+      }
+    >
+      <Text variant="heading03">{t({ id: 'error.title', message: 'Something went wrong' })}</Text>
+      <Text variant="label01">
+        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull this page to refresh' })}
+      </Text>
+      {errorMessage && <Text variant="code">{errorMessage}</Text>}
+    </EmptyLayout>
   );
 }
 
-export function FetchError() {
+export function FetchErrorCallout() {
   return (
     <Callout
       title={t({

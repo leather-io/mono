@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 
+import { Error } from '@/components/error/error';
 import { FetchState, toFetchState } from '@/components/loading/fetch-state';
-import { ErrorState } from '@/features/send/components/error-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
@@ -77,7 +77,7 @@ export function BtcDataLoader({ account, children }: BtcDataLoaderProps) {
   }
 
   if (btcDataQuery.state === 'error') {
-    return <ErrorState onRetry={() => queryClient.refetchQueries()} />;
+    return <Error onRetry={() => queryClient.refetchQueries()} />;
   }
 
   return children(btcDataQuery.value);
