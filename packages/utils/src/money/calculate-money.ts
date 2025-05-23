@@ -60,3 +60,23 @@ export function sumMoney(moneysArr: Money[]) {
   const sum = moneysArr.reduce((acc, item) => acc.plus(item.amount), new BigNumber(0));
   return createMoney(sum, moneysArr[0].symbol, moneysArr[0].decimals);
 }
+
+export function minMoney(xAmount: Money, yAmount: Money) {
+  if (xAmount.symbol !== yAmount.symbol)
+    throw new Error('Cannot calculate min of different currencies');
+  return createMoney(
+    BigNumber.min(xAmount.amount, yAmount.amount),
+    xAmount.symbol,
+    xAmount.decimals
+  );
+}
+
+export function maxMoney(xAmount: Money, yAmount: Money) {
+  if (xAmount.symbol !== yAmount.symbol)
+    throw new Error('Cannot calculate max of different currencies');
+  return createMoney(
+    BigNumber.max(xAmount.amount, yAmount.amount),
+    xAmount.symbol,
+    xAmount.decimals
+  );
+}
