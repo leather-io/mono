@@ -5,6 +5,8 @@ import { MarketData, createMarketData, createMarketPair } from '@leather.io/mode
 import {
   baseCurrencyAmountInQuote,
   convertAmountToFractionalUnit,
+  maxMoney,
+  minMoney,
   subtractMoney,
   sumMoney,
 } from './calculate-money';
@@ -12,8 +14,13 @@ import { createMoney, createMoneyFromDecimal } from './format-money';
 
 const tenMicroStx = createMoney(10, 'STX');
 const tenStx = createMoneyFromDecimal(10, 'STX');
+const nineStx = createMoneyFromDecimal(9, 'STX');
+const eightStx = createMoneyFromDecimal(8, 'STX');
 
 const tenBtc = createMoneyFromDecimal(10, 'BTC');
+
+const moneyArray = [tenStx, nineStx, eightStx];
+const moneyArrayWithMixedCurrencies = [tenStx, tenBtc];
 
 const mockWrongMarketData = {
   pair: createMarketPair('BTC' as any, 'USD'),
@@ -67,5 +74,45 @@ describe(subtractMoney.name, () => {
   });
   test('it throws error when subtracting different currencies', () => {
     expect(() => subtractMoney(tenMicroStx, tenBtc)).toThrowError();
+  });
+});
+
+describe('minMoney', () => {
+  test('it returns the smallest amount for a valid array', () => {
+    const result = minMoney(moneyArray);
+    expect(result).toEqual(eightStx);
+  });
+
+  test('it returns a single Money object for an array with one element', () => {
+    const result = minMoney([tenStx]);
+    expect(result).toEqual(tenStx);
+  });
+
+  test('it throws error for an empty array', () => {
+    expect(() => minMoney([])).toThrowError();
+  });
+
+  test('it throws error for mixed currencies', () => {
+    expect(() => minMoney(moneyArrayWithMixedCurrencies)).toThrowError();
+  });
+});
+
+describe('maxMoney', () => {
+  test('it returns the largest amount for a valid array', () => {
+    const result = maxMoney(moneyArray);
+    expect(result).toEqual(tenStx);
+  });
+
+  test('it returns a single Money object for an array with one element', () => {
+    const result = maxMoney([tenStx]);
+    expect(result).toEqual(tenStx);
+  });
+
+  test('it throws error for an empty array', () => {
+    expect(() => maxMoney([])).toThrowError();
+  });
+
+  test('it throws error for mixed currencies', () => {
+    expect(() => maxMoney(moneyArrayWithMixedCurrencies)).toThrowError();
   });
 });
