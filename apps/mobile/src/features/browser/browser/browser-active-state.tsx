@@ -122,6 +122,9 @@ export function BrowserActiveState({
               browserSheetRef.current?.close();
             }
           }}
+          onOpenWindow={e => {
+            goToUrl(e.nativeEvent.targetUrl);
+          }}
           nestedScrollEnabled
           onMessage={onMessageHandler}
           allowsInlineMediaPlayback={true}
