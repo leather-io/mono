@@ -1,5 +1,5 @@
-import { ReactNode, RefObject } from 'react';
-import { Dimensions, Platform } from 'react-native';
+import { ReactNode, RefObject, useEffect } from 'react';
+import { BackHandler, Dimensions, Platform } from 'react-native';
 import { SharedValue, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -66,6 +66,29 @@ export function Sheet({
     fullHeightWithoutNotch: -theme.spacing['4'],
     none: 0,
   });
+
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', function () {
+      if (internalAnimatedIndex.value >= 0) {
+        ref.current?.close();
+        /**
+         * When true is returned the event will not be bubbled up
+         * & no other back action will execute
+         */
+        return true;
+      }
+      /**
+       * Returning false will let the event to bubble up & let other event listeners
+       * or the system's default back action to be executed.
+       */
+      return false;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [ref, internalAnimatedIndex.value]);
+
   return (
     <BottomSheetModal
       animatedIndex={internalAnimatedIndex}

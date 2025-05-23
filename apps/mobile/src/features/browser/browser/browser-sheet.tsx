@@ -1,4 +1,5 @@
-import { useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { BackHandler } from 'react-native';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
 import { useBrowser } from '@/core/browser-provider';
@@ -28,6 +29,32 @@ export function BrowserSheet() {
       goToUrl(url);
     },
   }));
+
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', function () {
+      if (browserSearchState.browserType === 'active') {
+        if (navState?.canGoBack) {
+          webViewRef.current?.goBack();
+        } else {
+          resetSearchBar();
+        }
+        /**
+         * When true is returned the event will not be bubbled up
+         * & no other back action will execute
+         */
+        return true;
+      }
+      /**
+       * Returning false will let the event to bubble up & let other event listeners
+       * or the system's default back action to be executed.
+       */
+      return false;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [browserSearchState.browserType, navState?.canGoBack, resetSearchBar]);
 
   return (
     <Sheet
