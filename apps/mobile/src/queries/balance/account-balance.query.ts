@@ -1,4 +1,5 @@
 import { FetchState, toFetchState } from '@/components/loading/fetch-state';
+import { useRunesFlag } from '@/features/feature-flags';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { useSettings } from '@/store/settings/settings';
 
@@ -24,6 +25,8 @@ export interface AccountBalance {
 }
 
 export function useAccountBalance(accountId: AccountId): AccountBalance {
+  const runesFlag = useRunesFlag();
+
   const { fingerprint, accountIndex } = accountId;
   const { fiatCurrencyPreference } = useSettings();
   const zeroMoneyFiat = createMoney(0, fiatCurrencyPreference);
@@ -49,7 +52,7 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
       btcAccountBalance.value?.fiat.availableBalance,
       stxAccountBalance.value?.fiat.availableBalance,
       sip10AccountBalance.value?.fiat.availableBalance,
-      runesAccountBalance.value?.fiat.availableBalance,
+      ...(runesFlag ? [runesAccountBalance.value?.fiat.availableBalance] : []),
     ].filter(isDefined)
   );
 
