@@ -1,4 +1,3 @@
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { router } from 'expo-router';
 
@@ -8,7 +7,7 @@ export function HeaderLeatherLogo() {
   return (
     <Box p="3">
       <LeatherLogomarkIcon
-        onPress={() => router.navigate(AppRoutes.DeveloperConsole)}
+        onPress={() => router.navigate('/developer-console')}
         testID={TestId.homeDeveloperToolsButton}
       />
     </Box>

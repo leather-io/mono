@@ -11,7 +11,6 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
-import { AppRoutes } from '@/routes';
 import { AccountLookup } from '@/shared/types';
 import { Account as AccountType } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
@@ -49,7 +48,7 @@ export function Account({ account, walletName }: AccountProps) {
             <SettingsGearIcon
               onPress={() => {
                 router.navigate({
-                  pathname: AppRoutes.SettingsWalletConfigureAccount,
+                  pathname: '/settings/wallet/configure/[wallet]/[account]',
                   params: {
                     fingerprint: fingerprint,
                     wallet: fingerprint,
@@ -78,7 +77,7 @@ export function Account({ account, walletName }: AccountProps) {
         <BalancesWidget
           onPressHeader={() =>
             router.navigate({
-              pathname: AppRoutes.AccountBalances,
+              pathname: '/account/[accountId]/balances',
               params: { accountId: id },
             })
           }
@@ -97,7 +96,7 @@ export function Account({ account, walletName }: AccountProps) {
           activity={activity}
           onPressHeader={() =>
             router.navigate({
-              pathname: AppRoutes.AccountActivity,
+              pathname: '/account/[accountId]/activity',
               params: { accountId: id, accountName: name },
             })
           }
@@ -107,7 +106,7 @@ export function Account({ account, walletName }: AccountProps) {
           <CollectiblesWidget
             onPressHeader={() =>
               router.navigate({
-                pathname: AppRoutes.AccountCollectibles,
+                pathname: '/account/[accountId]/collectibles',
                 params: { accountId: id, accountName: name },
               })
             }

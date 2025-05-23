@@ -1,4 +1,3 @@
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useWallets } from '@/store/wallets/wallets.read';
@@ -38,7 +37,7 @@ export function HeaderOptions() {
           message: 'Settings',
         })}
         icon={<SettingsGearIcon />}
-        onPress={() => router.navigate(AppRoutes.Settings)}
+        onPress={() => router.navigate('/settings')}
         testID={TestId.homeSettingsButton}
       />
       {hasWallets && (
@@ -48,7 +47,7 @@ export function HeaderOptions() {
             message: 'Activity',
           })}
           icon={<PulseIcon />}
-          onPress={() => router.navigate(AppRoutes.Activity)}
+          onPress={() => router.navigate('/activity')}
           testID={TestId.homeActivityButton}
         />
       )}
