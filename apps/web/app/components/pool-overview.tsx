@@ -15,23 +15,18 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 interface RewardTokenCellProps {
   token?: string;
   value?: string;
-  textStyle?: string;
 }
-function RewardTokenCell({
-  token = 'STX',
-  value,
-  textStyle = 'label.03',
-}: RewardTokenCellProps): ReactElement {
+function RewardTokenCell({ token, value }: RewardTokenCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsTokens;
   const label = post?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle={textStyle} />}
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
           {token}
-          <Box textStyle={textStyle}>{value}</Box>
+          <Box textStyle="label.03">{value}</Box>
         </>
       }
     />
@@ -225,7 +220,7 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElemen
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '4']} gridRow={['4', '4', '1']}>
-        <RewardTokenCell token={pool.payout} textStyle="label.03" />
+        <RewardTokenCell token={pool.payout} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
         <MinimumCommitmentCell
