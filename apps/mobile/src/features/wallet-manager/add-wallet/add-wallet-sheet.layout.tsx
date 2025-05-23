@@ -83,7 +83,7 @@ export function AddWalletSheetLayout({
           <Image
             style={{ height: '100%' }}
             contentFit="cover"
-            source={require('@/assets/create-wallet-image.png')}
+            source={require('@/assets/stickers/add-wallet.png')}
           />
         </Box>
         <Box>

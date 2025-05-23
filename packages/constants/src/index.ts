@@ -73,6 +73,9 @@ export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
 export const LEATHER_EARN_URL = 'https://earn.leather.io';
 
+export const LEATHER_EARN_STACKING_URL = 'https://app.leather.io/stacking';
+export const LEATHER_EARN_SBTC_URL = 'https://app.leather.io/sbtc';
+
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';
 
