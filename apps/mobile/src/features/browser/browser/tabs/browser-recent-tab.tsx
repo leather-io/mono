@@ -28,7 +28,7 @@ export function BrowserRecentTab({ goToUrl }: RecentProps) {
         justifyContent="center"
         alignItems="center"
         alignSelf="center"
-        maxWidth={width * 0.45}
+        maxWidth={width * 0.5}
         style={{
           paddingBottom: bottom + URL_SEARCH_HEIGHT,
         }}
