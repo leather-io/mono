@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Flex, styled } from 'leather-styles/jsx';
 import type { Post } from '~/data/post-types';
-import { getLearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/features/page/page';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
@@ -38,7 +38,7 @@ export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostI
       content={
         <styled.span display="block">
           {sanitizeContent(post.sentence)}
-          {getLearnMoreLink(post.slug, post.sentence)}
+          <LearnMoreLink destination={post.slug} precedingText={post.sentence} />
         </styled.span>
       }
     >

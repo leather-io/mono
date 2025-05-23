@@ -6,7 +6,7 @@ import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { getPostSlugForProvider } from '~/data/data';
-import { getLearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/features/page/page';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { Protocol } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { ProtocolInfo } from '~/queries/protocols/use-protocol-info';
@@ -164,7 +164,11 @@ function ProtocolCell({ description, icon, name, postSlug }: ProtocolCellProps):
       {hasValidPost ? (
         <styled.div textStyle="caption.01">
           {post?.sentence || ''}
-          {post?.slug && post?.sentence ? getLearnMoreLink(post.slug, post.sentence) : <></>}
+          {post?.slug && post?.sentence ? (
+            <LearnMoreLink destination={post.slug} precedingText={post.sentence} />
+          ) : (
+            <></>
+          )}
         </styled.div>
       ) : (
         <styled.div textStyle="caption.01">{description}</styled.div>
