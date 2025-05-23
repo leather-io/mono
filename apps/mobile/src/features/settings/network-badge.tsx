@@ -1,4 +1,3 @@
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useLingui } from '@lingui/react';
@@ -15,7 +14,7 @@ export function NetworkBadge(props: NetworkBadgeProps) {
   if (networkPreference.id === 'mainnet') return null;
 
   return (
-    <Pressable onPress={() => router.navigate(AppRoutes.SettingsNetworks)}>
+    <Pressable onPress={() => router.navigate('/settings/networks')}>
       <Badge
         testID={TestId.networkBadge}
         label={i18n._({

@@ -6,7 +6,6 @@ import { PressableListItem } from '@/components/developer-console/list-items';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { ApproverSheet } from '@/features/browser/approver-sheet/approver-sheet';
 import { BrowserMessage } from '@/features/browser/approver-sheet/utils';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -45,12 +44,12 @@ export default function DeveloperConsoleScreen() {
         />
         <PressableListItem
           title={t`Wallet management`}
-          onPress={() => router.navigate(AppRoutes.DeveloperConsoleWalletManager)}
+          onPress={() => router.navigate('/developer-console/wallet-manager')}
           testID={TestId.developerToolsWalletManagementButton}
         />
         <PressableListItem
           title={t`Bitcoin Scrach Pad`}
-          onPress={() => router.navigate(AppRoutes.DeveloperBitcoinScratchPad)}
+          onPress={() => router.navigate('/developer-console/bitcoin-scratch-pad')}
         />
         <PressableListItem
           title={t`getAddresses`}

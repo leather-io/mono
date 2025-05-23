@@ -14,7 +14,6 @@ import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remov
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useAuthentication } from '@/hooks/use-authentication';
-import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { userRemovesWallet } from '@/store/global-action';
 import { useSettings } from '@/store/settings/settings';
@@ -179,7 +178,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               icon={<Eye1ClosedIcon />}
               onPress={() => {
                 router.navigate({
-                  pathname: AppRoutes.SettingsWalletConfigureViewSecretKey,
+                  pathname: '/settings/wallet/configure/[wallet]/view-secret-key',
                   params: { fingerprint: wallet.fingerprint, wallet: wallet.fingerprint },
                 });
               }}

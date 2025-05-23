@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
@@ -12,7 +11,7 @@ export function AddAccountSheet() {
   const router = useRouter();
   const { addAccountSheetRef, addWalletSheetRef } = useGlobalSheets();
   const addToWallet = useCallback(() => {
-    router.navigate(AppRoutes.SettingsWallet);
+    router.navigate('/settings/wallet');
     addAccountSheetRef.current?.close();
   }, [addAccountSheetRef, router]);
 

@@ -5,7 +5,6 @@ import {
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { AppRoutes } from '@/routes';
 import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
@@ -20,12 +19,12 @@ export function AddWalletSheet() {
   const { addWalletSheetRef } = useGlobalSheets();
   const [sheetData, setSheetData] = useState<NotifyUserSheetData | null>(null);
   const createWallet = useCallback(() => {
-    router.navigate(AppRoutes.CreateNewWallet);
+    router.navigate('/create-new-wallet');
     addWalletSheetRef.current?.close();
   }, [addWalletSheetRef, router]);
 
   const restoreWallet = useCallback(() => {
-    router.navigate(AppRoutes.RecoverWallet);
+    router.navigate('/recover-wallet');
     addWalletSheetRef.current?.close();
   }, [addWalletSheetRef, router]);
 

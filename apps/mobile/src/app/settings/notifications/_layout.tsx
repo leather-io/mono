@@ -1,5 +1,4 @@
 import { TabBar } from '@/components/tab-bar';
-import { AppRoutes } from '@/routes';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 
@@ -22,9 +21,9 @@ function NotificationsHeader() {
       <TabBar
         tabs={[
           {
-            isActive: pathname === AppRoutes.SettingsNotifications,
+            isActive: pathname === '/settings/notifications',
             onPress() {
-              router.navigate(AppRoutes.SettingsNotifications);
+              router.navigate('/settings/notifications');
             },
             title: t({
               id: 'notifications.push.tab_title',
@@ -32,9 +31,9 @@ function NotificationsHeader() {
             }),
           },
           {
-            isActive: pathname === AppRoutes.SettingsNotificationsEmail,
+            isActive: pathname === '/settings/notifications/email',
             onPress() {
-              router.navigate(AppRoutes.SettingsNotificationsEmail);
+              router.navigate('/settings/notifications/email');
             },
             title: t({
               id: 'notifications.email.tab_title',

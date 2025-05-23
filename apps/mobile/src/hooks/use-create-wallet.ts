@@ -1,5 +1,4 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { AppRoutes } from '@/routes';
 import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
@@ -20,7 +19,7 @@ export function useCreateWallet() {
     changeSecurityLevelPreference(biometrics ? 'secure' : 'insecure');
     const { mnemonic, passphrase } = await tempMnemonicStore.getTemporaryMnemonic();
     if (mnemonic) {
-      router.navigate(AppRoutes.GeneratingWallet);
+      router.navigate('/generating-wallet');
       await nextAnimationFrame();
       try {
         await keyStore.restoreWalletFromMnemonic({
@@ -36,7 +35,8 @@ export function useCreateWallet() {
             message: 'Wallet added successfully',
           }),
         });
-        router.navigate(AppRoutes.Home);
+        router.dismissAll();
+        router.replace('/');
         // be sure to always delete temporary mnemonic if we eventually use it as a wallet
         await tempMnemonicStore.deleteTemporaryMnemonic();
       } catch (e) {
@@ -67,7 +67,7 @@ export function useCreateWallet() {
   async function navigateAndCreateWallet() {
     switch (securityLevelPreference) {
       case 'not-selected':
-        router.navigate(AppRoutes.SecureYourWallet);
+        router.navigate('/secure-your-wallet');
         return;
       case 'secure':
         await createWallet({ biometrics: true });
@@ -80,7 +80,7 @@ export function useCreateWallet() {
         console.warn(
           "securityLevelPreference is undefined. That shouldn't happen in a newly created store"
         );
-        router.navigate(AppRoutes.SecureYourWallet);
+        router.navigate('/secure-your-wallet');
     }
   }
 

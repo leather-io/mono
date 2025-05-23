@@ -1,7 +1,6 @@
 import { HomeHeader } from '@/components/headers/home-header';
 import { NakedHeader } from '@/components/headers/naked-header';
 import { NetworkBadge } from '@/features/settings/network-badge';
-import { AppRoutes } from '@/routes';
 import { useLingui } from '@lingui/react';
 import { Stack, useRouter } from 'expo-router';
 
@@ -49,7 +48,7 @@ export function AppNavigationStack() {
         options={{
           header: () => (
             <NakedHeader
-              onGoBack={() => router.navigate(AppRoutes.Settings)}
+              onGoBack={() => router.navigate('/settings')}
               rightElement={<NetworkBadge />}
             />
           ),

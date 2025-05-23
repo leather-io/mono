@@ -13,7 +13,6 @@ import { NotificationsSheet } from '@/features/notifications/notifications-sheet
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
-import { AppRoutes } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -37,7 +36,7 @@ export default function HomeScreen() {
         {hasWallets && (
           <>
             <BalancesWidget
-              onPressHeader={() => router.navigate(AppRoutes.Balances)}
+              onPressHeader={() => router.navigate('/balances')}
               balance={<TotalBalance color="ink.text-subdued" />}
               title={t({ id: 'balances.header_title', message: 'All tokens' })}
             >
@@ -45,13 +44,13 @@ export default function HomeScreen() {
             </BalancesWidget>
             <ActivityWidget
               activity={activity}
-              onPressHeader={() => router.navigate(AppRoutes.Activity)}
+              onPressHeader={() => router.navigate('/activity')}
               title={t({ id: 'activity.header_title', message: 'All activity' })}
             />
             {releaseEarn && <EarnWidget />}
             {releaseCollectibles && hasCollectibles(collectibles) && (
               <CollectiblesWidget
-                onPressHeader={() => router.navigate(AppRoutes.Collectibles)}
+                onPressHeader={() => router.navigate('/collectibles')}
                 title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
               >
                 <Collectibles collectibles={collectibles} mode="widget" />
