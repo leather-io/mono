@@ -11,6 +11,17 @@ export interface Events extends HistoricalEvents {
   submit_feature_waitlist: SubmitWaitlist;
   legacy_request_initiated: { method: string };
   application_first_opened: { timestamp: string };
+  pooled_stacking_started: {
+    amount: number;
+    provider: string;
+    poolAddress: string;
+    delegationDurationType?: string;
+    numberOfCycles: number;
+  };
+  liquid_stacking_started: {
+    amount: number;
+    provider?: string;
+  };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
