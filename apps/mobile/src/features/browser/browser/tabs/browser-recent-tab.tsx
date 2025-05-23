@@ -28,7 +28,7 @@ export function BrowserRecentTab({ goToUrl }: RecentProps) {
         justifyContent="center"
         alignItems="center"
         alignSelf="center"
-        maxWidth={width * 0.45}
+        maxWidth={width * 0.5}
         style={{
           paddingBottom: bottom + URL_SEARCH_HEIGHT,
         }}
@@ -37,14 +37,8 @@ export function BrowserRecentTab({ goToUrl }: RecentProps) {
         <Image
           style={{ height: width * 0.45, width: width * 0.45 }}
           contentFit="cover"
-          source={require('@/assets/recents_empty.png')}
+          source={require('@/assets/stickers/flower.png')}
         />
-        <Text textAlign="center" variant="heading03">
-          {t({
-            id: 'browser-sheet.recent.empty.title',
-            message: 'Nothing here yet',
-          })}
-        </Text>
         <Text textAlign="center" variant="label01">
           {t({
             id: 'browser-sheet.recent.empty.caption',

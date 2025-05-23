@@ -2,7 +2,6 @@ import { RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
-import { Image } from 'expo-image';
 
 import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
 
@@ -11,13 +10,6 @@ export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef 
 
   return (
     <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
-      <Box style={{ height: 200 }}>
-        <Image
-          style={{ height: '100%' }}
-          contentFit="cover"
-          source={require('@/assets/notifications-placeholder.png')}
-        />
-      </Box>
       <Box py="3" px="5" gap="5">
         <Text variant="heading03">
           {t({ id: 'notifications-sheet.title', message: 'Get transaction notifications' })}

@@ -1,5 +1,5 @@
+import { Error } from '@/components/error/error';
 import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
-import { ErrorState } from '@/features/send/components/error-state';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { useStxAddressBalanceQuery } from '@/queries/balance/stx-balance.query';
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
@@ -63,7 +63,7 @@ export function StxDataLoader({ account, children }: StxDataLoaderProps) {
   }
 
   if (stxDataQuery.state === 'error') {
-    return <ErrorState onRetry={() => queryClient.refetchQueries()} />;
+    return <Error onRetry={() => queryClient.refetchQueries()} />;
   }
 
   return children(stxDataQuery.value);

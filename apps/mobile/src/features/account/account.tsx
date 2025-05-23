@@ -1,5 +1,5 @@
+import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { NakedHeader } from '@/components/headers/naked-header';
-import { FetchError } from '@/components/loading/error';
 import { PageLayout } from '@/components/page/page.layout';
 import { AccountOverview } from '@/features/account/components/account-overview-card';
 import { ActivityWidget } from '@/features/activity/activity-widget';
@@ -42,7 +42,7 @@ export function Account({ account, walletName }: AccountProps) {
   return (
     <PageLayout>
       <NakedHeader
-        error={isErrorTotalBalance && <FetchError />}
+        error={isErrorTotalBalance && <FetchErrorCallout />}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
             <NetworkBadge />

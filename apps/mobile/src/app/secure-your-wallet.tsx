@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
 
 import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SkipSecureWalletSheet } from '@/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet';
@@ -8,6 +7,7 @@ import { useAuthentication } from '@/hooks/use-authentication';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
+import { Image } from 'expo-image';
 
 import { Box, Button, SheetRef, Text, Theme } from '@leather.io/ui/native';
 
@@ -45,7 +45,10 @@ export default function SecureYourWalletScreen() {
             </Text>
           </Box>
           <Box justifyContent="center" alignItems="center" aspectRatio={1}>
-            <CustomLockIcon />
+            <Image
+              source={require('@/assets/stickers/lock.png')}
+              style={{ width: 204, height: 204 }}
+            />
           </Box>
         </AnimatedHeaderScreenLayout>
         <Box px="5">
@@ -80,19 +83,5 @@ export default function SecureYourWalletScreen() {
         sheetRef={sheetRef}
       />
     </>
-  );
-}
-
-function CustomLockIcon() {
-  return (
-    <Svg width="204" height="204" viewBox="0 0 204 204" fill="none">
-      <Path
-        d="M136 85.5V60C136 41.2223 120.778 26 102 26C83.2223 26 68 41.2223 68 60V85.5M102 119.5V145M51 179H153C157.694 179 161.5 175.194 161.5 170.5V94C161.5 89.3056 157.694 85.5 153 85.5H51C46.3056 85.5 42.5 89.3056 42.5 94V170.5C42.5 175.194 46.3056 179 51 179Z"
-        stroke="currentColor"
-        strokeWidth="7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
   );
 }
