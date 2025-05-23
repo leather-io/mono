@@ -701,6 +701,23 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.42.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.42.1...@leather.io/mobile-v2.42.2) (2025-05-23)
+
+
+### Bug Fixes
+
+* adding account stays loading on failed auth check ([c101da4](https://github.com/leather-io/mono/commit/c101da459a6dfa570b996db106b4a214cd6a7bb4))
+* back handler for android ([59795ce](https://github.com/leather-io/mono/commit/59795ce21b485e46acbfafa02dfd844a4e6a5782))
+* open windows inside webview ([b65e92f](https://github.com/leather-io/mono/commit/b65e92f46dea6d67f07be9f2d9f75d9496bd36fc))
+* revamp splash screen ([4121857](https://github.com/leather-io/mono/commit/412185749c7783c709248f25b47a851a7b1c1bf6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.68.1
+
 ## [2.42.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.42.0...@leather.io/mobile-v2.42.1) (2025-05-23)
 
 

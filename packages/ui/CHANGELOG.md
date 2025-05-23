@@ -389,6 +389,13 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.68.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.0...@leather.io/ui-v1.68.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* back handler for android ([59795ce](https://github.com/leather-io/mono/commit/59795ce21b485e46acbfafa02dfd844a4e6a5782))
+
 ## [1.68.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.67.0...@leather.io/ui-v1.68.0) (2025-05-22)
 
 
