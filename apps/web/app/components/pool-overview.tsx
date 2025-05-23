@@ -7,7 +7,7 @@ import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { DASH } from '~/constants/constants';
 import { StackingPool, getPostSlugForProvider } from '~/data/data';
-import { getLearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/features/page/page';
 import { TextElementTag } from '~/shared/types';
 import { getPosts, usePost } from '~/utils/post-utils';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
@@ -15,23 +15,18 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 interface RewardTokenCellProps {
   token?: string;
   value?: string;
-  textStyle?: string;
 }
-function RewardTokenCell({
-  token = 'STX',
-  value,
-  textStyle = 'label.03',
-}: RewardTokenCellProps): ReactElement {
+function RewardTokenCell({ token, value }: RewardTokenCellProps): ReactElement {
   const posts = getPosts();
   const post = posts.stackingRewardsTokens;
   const label = post?.title ?? 'Rewards token';
   return (
     <ValueDisplayer
-      name={<PostLabelHoverCard post={post} label={label} textStyle={textStyle} />}
+      name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
           {token}
-          <Box textStyle={textStyle}>{value}</Box>
+          <Box textStyle="label.03">{value}</Box>
         </>
       }
     />
@@ -166,7 +161,7 @@ function PoolCell({ pool, poolSlug }: PoolOverviewProps): ReactElement {
       {post && (
         <styled.div textStyle="caption.01">
           {post.sentence}
-          {getLearnMoreLink(post.slug, post.sentence)}
+          <LearnMoreLink destination={post.slug} precedingText={post.sentence} />
         </styled.div>
       )}
     </VStack>
@@ -225,7 +220,7 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElemen
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['1', '1', '4']} gridRow={['4', '4', '1']}>
-        <RewardTokenCell token={pool.payout} textStyle="label.03" />
+        <RewardTokenCell token={pool.payout} />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '4']} gridRow={['4', '4', '2']}>
         <MinimumCommitmentCell
@@ -248,61 +243,5 @@ export function StackingAmountLabel({
   const posts = getPosts();
   const post = posts.stackingAmount;
   const label = post?.title ?? 'Amount';
-  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
-}
-
-// Add a component for the stacking-rewards-address post label
-export function StackingRewardsAddressLabel({
-  textStyle = 'label.01',
-  tagName = 'h1',
-}: {
-  textStyle?: string;
-  tagName?: TextElementTag;
-}): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingRewardsAddress;
-  const label = post?.title ?? 'Rewards address';
-  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
-}
-
-// Add a component for the stacking-duration post label
-export function StackingDurationLabel({
-  textStyle = 'label.01',
-  tagName = 'h1',
-}: {
-  textStyle?: string;
-  tagName?: TextElementTag;
-}): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingDuration;
-  const label = post?.title ?? 'Duration';
-  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
-}
-
-// Add a component for the stacking-contract-details post label
-export function StackingContractDetailsLabel({
-  textStyle = 'label.01',
-  tagName = 'h1',
-}: {
-  textStyle?: string;
-  tagName?: TextElementTag;
-}): ReactElement {
-  const posts = getPosts();
-  const post = posts.stackingContractDetails;
-  const label = post?.title ?? 'Details';
-  return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
-}
-
-// Add a component for the pooled-stacking-conditions post label
-export function PooledStackingConditionsLabel({
-  textStyle = 'label.01',
-  tagName = 'h1',
-}: {
-  textStyle?: string;
-  tagName?: TextElementTag;
-}): ReactElement {
-  const posts = getPosts();
-  const post = posts.pooledStackingConditions;
-  const label = post?.title ?? 'Pooling conditions';
   return <PostLabelHoverCard post={post} label={label} textStyle={textStyle} tagName={tagName} />;
 }
