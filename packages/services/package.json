@@ -29,6 +29,7 @@
     "@hirosystems/token-metadata-api-client": "1.2.0",
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/constants": "workspace:*",
+    "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@stacks/stacks-blockchain-api-types": "7.14.1",

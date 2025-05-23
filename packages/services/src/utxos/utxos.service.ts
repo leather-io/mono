@@ -12,6 +12,7 @@ import {
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
+  isPrimaryReceiveAddressUtxo,
   isUnconfirmedUtxo,
   isUneconomicalUtxo,
   selectUniqueUtxoIds,
@@ -60,6 +61,7 @@ export class UtxosService {
       this.getDescriptorUtxos(account.bitcoin.nativeSegwitDescriptor, [], signal),
       this.getDescriptorUtxos(account.bitcoin.taprootDescriptor, unprotectedUtxos, signal),
     ]);
+
     return {
       confirmed: [...nativeSegwitUtxos.confirmed, ...taprootUtxos.confirmed],
       inbound: [...nativeSegwitUtxos.inbound, ...taprootUtxos.inbound],
@@ -82,7 +84,7 @@ export class UtxosService {
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
     const [leatherApiUtxos, totalProtectedUtxos, btcTxs] = await Promise.all([
-      this.leatherApiClient.fetchUtxos(descriptor, signal),
+      this.getPrimaryReceiveAddressUtxos(descriptor, signal),
       this.getDescriptorProtectedUtxos(descriptor, signal),
       this.bitcoinTransactionsService.getDescriptorTransactions(descriptor, signal),
     ]);
@@ -123,7 +125,7 @@ export class UtxosService {
     if (!taprootDescriptor.toLocaleLowerCase().startsWith('tr(')) return [];
 
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
-      this.leatherApiClient.fetchUtxos(taprootDescriptor, signal),
+      this.getPrimaryReceiveAddressUtxos(taprootDescriptor, signal),
       this.bisApiClient.fetchInscriptions(taprootDescriptor, signal),
       this.bisApiClient.fetchRunesValidOutputs(taprootDescriptor, signal),
     ]);
@@ -133,5 +135,11 @@ export class UtxosService {
     const runesUtxoIds = runeOutputs.map(r => getUtxoIdFromOutpoint(r.output)).filter(isDefined);
 
     return utxos.filter(filterMatchesAnyUtxoId([...inscribedUtxoIds, ...runesUtxoIds]));
+  }
+
+  private async getPrimaryReceiveAddressUtxos(descriptor: string, signal?: AbortSignal) {
+    return (await this.leatherApiClient.fetchUtxos(descriptor, signal)).filter(
+      isPrimaryReceiveAddressUtxo
+    );
   }
 }
