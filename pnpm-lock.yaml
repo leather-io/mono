@@ -1193,6 +1193,9 @@ importers:
         specifier: 3.24.2
         version: 3.24.2
     devDependencies:
+      '@leather.io/analytics':
+        specifier: workspace:*
+        version: link:../analytics
       '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config
