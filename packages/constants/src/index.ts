@@ -41,6 +41,8 @@ export const currencyDecimalsMap: Record<Currency, number> = {
   CNY: 2,
   JPY: 0,
   KRW: 0,
+  XBT: BTC_DECIMALS,
+  sats: 0,
 } as const;
 
 export const currencyNameMap = {
@@ -52,6 +54,8 @@ export const currencyNameMap = {
   CNY: 'Chinese Yuan',
   JPY: 'Japanese Yen',
   KRW: 'South Korean Won',
+  XBT: 'Bitcoin',
+  sats: 'Satoshis',
 } as const;
 
 // https://bitcoin.stackexchange.com/a/41082/139277
