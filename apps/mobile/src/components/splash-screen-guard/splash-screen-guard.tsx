@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTotalActivity } from '@/queries/activity/account-activity.query';
-import { useTotalBalance } from '@/queries/balance/total-balance.query';
+import { useAppState } from '@/hooks/use-app-state';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
@@ -17,29 +16,28 @@ import { LeatherSplash, SplashLottieView } from '../animations/leather-splash';
 import { AuthContext } from './use-auth-context';
 import { useAuthState } from './use-auth-state';
 
-const DEFAULT_ANIMATION_FINISHED = false;
-
 export function SplashScreenGuard({ children }: HasChildren) {
-  const [animationFinished, setAnimationFinished] = useState(DEFAULT_ANIMATION_FINISHED);
   const splashRef = useRef<SplashLottieView>(null);
   const lockedSplashRef = useRef<SplashLottieView>(null);
-  const { whenTheme } = useSettings();
+  const { whenTheme, securityLevelPreference } = useSettings();
   const insets = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const colorScheme = useColorScheme();
-  // pre-load main queries
-  void useTotalBalance();
-  void useTotalActivity();
 
   const playSplash = useCallback(() => {
     splashRef.current?.start();
     lockedSplashRef.current?.start();
   }, []);
-
-  const { tryAuthentication, authState, lockApp } = useAuthState({
-    playSplash,
-    setAnimationFinished,
-  });
+  const {
+    authState,
+    unlockOnOpen,
+    unlockManually,
+    unlockOnForeground,
+    lockOnBackground,
+    onFinishAnimation,
+    lockManually,
+    bypassSecurity,
+  } = useAuthState({ playSplash });
 
   useEffect(() => {
     // just in case splash screen flashes, we want to at least have the correct colors set
@@ -52,62 +50,112 @@ export function SplashScreenGuard({ children }: HasChildren) {
   }, [colorScheme, theme.colors]);
 
   useOnMount(() => {
-    // try authenticating when we first open the app
-    void tryAuthentication({ firstTry: true });
+    if (securityLevelPreference === 'secure') {
+      void unlockOnOpen();
+      return;
+    } else {
+      bypassSecurity();
+      playSplash();
+    }
   });
 
-  async function onUnlock() {
-    return tryAuthentication({ firstTry: false });
+  function onUnlock() {
+    if (securityLevelPreference === 'secure') {
+      void unlockManually();
+    } else {
+      bypassSecurity();
+      playSplash();
+    }
   }
 
-  if (animationFinished) {
-    return <AuthContext.Provider value={{ lockApp }}>{children}</AuthContext.Provider>;
+  const onAppForeground = useCallback(
+    function () {
+      if (securityLevelPreference === 'secure') {
+        void unlockOnForeground();
+        return;
+      } else {
+        bypassSecurity();
+        playSplash();
+      }
+    },
+    [bypassSecurity, playSplash, securityLevelPreference, unlockOnForeground]
+  );
+
+  const onAppBackground = useCallback(
+    function () {
+      if (securityLevelPreference === 'secure') {
+        lockOnBackground();
+      } else {
+        bypassSecurity();
+        playSplash();
+      }
+    },
+    [bypassSecurity, lockOnBackground, securityLevelPreference, playSplash]
+  );
+
+  useAppState({
+    onAppForeground,
+    onAppBackground,
+  });
+
+  function lockApp() {
+    lockManually();
   }
 
   const splash =
-    authState === 'cold-start' || authState === 'started' || authState === 'passed-on-first' ? (
-      <LeatherSplash
-        splashRef={splashRef}
-        type="unlocked"
-        onAnimationFinish={() => setAnimationFinished(true)}
-      />
+    authState.status === 'cold-start' ||
+    authState.status === 'started' ||
+    authState.status === 'passed-on-first' ? (
+      <LeatherSplash splashRef={splashRef} type="unlocked" onAnimationFinish={onFinishAnimation} />
     ) : (
       <LeatherSplash
         splashRef={lockedSplashRef}
         type="locked"
-        onAnimationFinish={() => setAnimationFinished(true)}
+        onAnimationFinish={onFinishAnimation}
       />
     );
 
   return (
-    <Box
-      backgroundColor={whenTheme({
-        light: 'ink.text-primary' as const,
-        dark: 'ink.text-non-interactive' as const,
-      })}
-      flex={1}
-    >
-      {splash}
-      {authState === 'failed' && (
-        <Button
-          onPress={onUnlock}
-          style={{
-            bottom: insets.bottom + theme.spacing[5],
-            left: theme.spacing[5],
-            right: theme.spacing[5],
-            position: 'absolute',
-            backgroundColor: colorThemes.dark['ink.action-primary-default'],
-          }}
-          textStyle={{
-            color: colorThemes.dark['ink.background-primary'],
-          }}
-          title={t({
-            id: 'unlock',
-            message: 'Unlock',
+    <AuthContext.Provider value={{ lockApp }}>
+      {!authState.isUnlocked && (
+        <Box
+          backgroundColor={whenTheme({
+            light: 'ink.text-primary' as const,
+            dark: 'ink.text-non-interactive' as const,
           })}
-          buttonState="default"
-        />
+          position="absolute"
+          top={0}
+          right={0}
+          left={0}
+          bottom={0}
+          flex={1}
+          zIndex="max"
+        >
+          {splash}
+          {authState.status === 'failed' && (
+            <Button
+              onPress={onUnlock}
+              style={{
+                bottom: insets.bottom + theme.spacing[5],
+                left: theme.spacing[5],
+                right: theme.spacing[5],
+                position: 'absolute',
+                backgroundColor: colorThemes.dark['ink.action-primary-default'],
+              }}
+              textStyle={{
+                color: colorThemes.dark['ink.background-primary'],
+              }}
+              title={t({
+                id: 'unlock',
+                message: 'Unlock',
+              })}
+              buttonState="default"
+            />
+          )}
+        </Box>
       )}
-    </Box>
+
+      {children}
+    </AuthContext.Provider>
   );
 }

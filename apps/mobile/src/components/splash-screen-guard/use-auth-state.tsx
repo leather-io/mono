@@ -1,99 +1,174 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer } from 'react';
 
-import { useAppState } from '@/hooks/use-app-state';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 
-const unlockTimeout = 60 * 1000;
-type AuthState = 'cold-start' | 'started' | 'failed' | 'passed-on-first' | 'passed-afterwards';
+export type AuthStatus =
+  | 'cold-start'
+  | 'started'
+  | 'failed'
+  | 'passed-on-first'
+  | 'passed-afterwards';
 
-export function useAuthState({
-  playSplash,
-  setAnimationFinished,
-}: {
-  playSplash(): void;
-  setAnimationFinished(value: boolean): void;
-}) {
-  const { securityLevelPreference, userLeavesApp, lastActive } = useSettings();
-  const [authState, setAuthState] = useState<AuthState>('cold-start');
+interface AuthState {
+  status: AuthStatus;
+  isUnlocked: boolean;
+}
+
+type AuthAction =
+  | { type: 'unlockOnOpen' }
+  | { type: 'unlockManually' }
+  | { type: 'lockOnBackground' }
+  | { type: 'unlockOnForeground' }
+  | { type: 'lockManually' }
+  | { type: 'authFailed' }
+  | { type: 'onFinishAnimation' };
+
+// Initial state
+const initialState: AuthState = {
+  status: 'cold-start',
+  isUnlocked: false,
+};
+
+function reducer(state: AuthState, action: AuthAction): AuthState {
+  switch (action.type) {
+    case 'lockOnBackground': {
+      return {
+        status: 'started',
+        isUnlocked: false,
+      };
+    }
+    case 'lockManually': {
+      return {
+        status: 'failed',
+        isUnlocked: false,
+      };
+    }
+    case 'unlockOnForeground': {
+      return {
+        status: 'passed-on-first',
+        isUnlocked: true,
+      };
+    }
+    case 'unlockOnOpen': {
+      return {
+        status: 'passed-on-first',
+        isUnlocked: false,
+      };
+    }
+    case 'unlockManually': {
+      return {
+        status: 'passed-afterwards',
+        isUnlocked: false,
+      };
+    }
+    case 'authFailed': {
+      return {
+        status: 'failed',
+        isUnlocked: false,
+      };
+    }
+    case 'onFinishAnimation': {
+      return {
+        ...state,
+        isUnlocked: true,
+      };
+    }
+    default:
+      throw new Error('Wrong action dispatched in browser search state');
+  }
+}
+
+const unlockTimeout = 60 * 1000;
+function checkUnlockTime(lastActive: number) {
+  return lastActive > +new Date() - unlockTimeout;
+}
+
+export function useAuthState({ playSplash }: { playSplash(): void }) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { userLeavesApp, lastActive } = useSettings();
   const { authenticate } = useAuthentication();
 
-  const checkUnlockTime = useCallback(() => {
-    return !!lastActive && lastActive > +new Date() - unlockTimeout;
-  }, [lastActive]);
-
-  const tryAuthentication = useCallback(
-    async ({ firstTry }: { firstTry: boolean }) => {
-      // if in insecure mode - just proceed with a splash
-      if (securityLevelPreference !== 'secure') {
-        playSplash();
-        return;
-      }
-      // if in secure mode, skip checks only if unlock time is not exceeding the timeout
-      // and this is not a cold start of the app
-      if (securityLevelPreference === 'secure' && authState !== 'cold-start' && checkUnlockTime()) {
-        setAuthState('passed-on-first');
-        setAnimationFinished(true);
-        playSplash();
-        return;
-      }
-
+  const unlockOnOpen = useCallback(
+    async function () {
       const result = await authenticate();
       if (result && result.success) {
         playSplash();
-        if (firstTry) {
-          setAuthState('passed-on-first');
-          void analytics?.track('app_unlocked');
-        } else {
-          setAuthState('passed-afterwards');
-          void analytics?.track('app_unlocked');
-        }
+        dispatch({ type: 'unlockOnOpen' });
+        void analytics?.track('app_unlocked');
       } else {
-        setAuthState('failed');
+        dispatch({ type: 'authFailed' });
       }
     },
-    [
-      securityLevelPreference,
-      checkUnlockTime,
-      authState,
-      playSplash,
-      setAnimationFinished,
-      authenticate,
-    ]
+    [authenticate, playSplash]
   );
 
-  const onAppForeground = useCallback(() => {
-    return tryAuthentication({ firstTry: true });
-  }, [tryAuthentication]);
+  const unlockManually = useCallback(
+    async function () {
+      const result = await authenticate();
+      if (result && result.success) {
+        playSplash();
+        dispatch({ type: 'unlockManually' });
+        void analytics?.track('app_unlocked');
+      } else {
+        dispatch({ type: 'authFailed' });
+      }
+    },
+    [authenticate, playSplash]
+  );
 
-  const onAppBackground = useCallback(() => {
-    if (securityLevelPreference === 'secure') {
-      setAuthState('started');
+  const lockOnBackground = useCallback(
+    function () {
+      dispatch({ type: 'lockOnBackground' });
 
       // add latest active timestamp only if the app was actually unlocked
-      const appUnlocked = authState === 'passed-on-first' || authState === 'passed-afterwards';
+      const appUnlocked =
+        state.status === 'passed-on-first' || state.status === 'passed-afterwards';
       if (appUnlocked) {
         userLeavesApp(+new Date());
       }
-    }
-  }, [securityLevelPreference, userLeavesApp, authState]);
+    },
+    [state.status, userLeavesApp]
+  );
 
-  const lockApp = useCallback(() => {
-    setAnimationFinished(false);
-    setAuthState('failed');
-    userLeavesApp(null);
-    void analytics?.track('app_locked');
-  }, [setAnimationFinished, setAuthState, userLeavesApp]);
+  const unlockOnForeground = useCallback(
+    async function () {
+      // if in secure mode, skip checks only if unlock time is not exceeding the timeout
+      // and this is not a cold start of the app
+      if (state.status !== 'cold-start' && lastActive && checkUnlockTime(lastActive)) {
+        dispatch({ type: 'unlockOnForeground' });
+        playSplash();
+        return;
+      }
+      await unlockOnOpen();
+    },
+    [lastActive, playSplash, state.status, unlockOnOpen]
+  );
+  const lockManually = useCallback(
+    function () {
+      dispatch({ type: 'lockManually' });
+      userLeavesApp(null);
+      void analytics?.track('app_locked');
+    },
+    [userLeavesApp]
+  );
 
-  useAppState({
-    onAppForeground,
-    onAppBackground,
-  });
+  const onFinishAnimation = useCallback(function onFinishAnimation() {
+    dispatch({ type: 'onFinishAnimation' });
+  }, []);
+  const bypassSecurity = useCallback(function bypassSecurity() {
+    dispatch({ type: 'unlockOnOpen' });
+  }, []);
 
   return {
-    tryAuthentication,
-    authState,
-    lockApp,
+    authState: state,
+    unlockOnOpen,
+    unlockManually,
+    lockOnBackground,
+    unlockOnForeground,
+    lockManually,
+    onFinishAnimation,
+    bypassSecurity,
   };
 }
