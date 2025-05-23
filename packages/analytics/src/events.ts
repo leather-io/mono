@@ -26,6 +26,7 @@ export interface Events extends HistoricalEvents {
     amount: number;
   };
   stx_balance_updated: StxCryptoAssetBalance;
+  in_app_browser_opened: { url: string };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
