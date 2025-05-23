@@ -119,16 +119,27 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
           {variant === 'active' && (
             <Button
               onPress={async () => {
-                setIsAddingAccount(true);
-                await keys.createNewAccountOfWallet(fingerprint);
-                displayToast({
-                  title: t({
-                    id: 'wallet.add_account.toast_title',
-                    message: `Account created`,
-                  }),
-                  type: 'success',
-                });
-                setIsAddingAccount(false);
+                try {
+                  setIsAddingAccount(true);
+                  await keys.createNewAccountOfWallet(fingerprint);
+                  displayToast({
+                    title: t({
+                      id: 'wallet.add_account.toast_title',
+                      message: `Account created`,
+                    }),
+                    type: 'success',
+                  });
+                  setIsAddingAccount(false);
+                } catch {
+                  displayToast({
+                    title: t({
+                      id: 'wallet.add_account.fail.toast_title',
+                      message: 'Account creation failed',
+                    }),
+                    type: 'error',
+                  });
+                  setIsAddingAccount(false);
+                }
               }}
               buttonState="ghost"
               disabled={isAddingAccount}
