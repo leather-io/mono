@@ -1,5 +1,5 @@
 import { useToastContext } from '@/components/toast/toast-context';
-import { AppRoutes } from '@/routes';
+import { AppRouteNames, AppRoutes, useAppNavigation } from '@/routes';
 import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
@@ -11,6 +11,7 @@ import { useHaptics } from '@leather.io/ui/native';
 
 export function useCreateWallet() {
   const router = useRouter();
+  const navigation = useAppNavigation();
   const toastContext = useToastContext();
   const triggerHapticFeedback = useHaptics();
   const keyStore = useKeyStore();
@@ -36,7 +37,10 @@ export function useCreateWallet() {
             message: 'Wallet added successfully',
           }),
         });
-        router.navigate(AppRoutes.Home);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: AppRouteNames.index }],
+        });
         // be sure to always delete temporary mnemonic if we eventually use it as a wallet
         await tempMnemonicStore.deleteTemporaryMnemonic();
       } catch (e) {
