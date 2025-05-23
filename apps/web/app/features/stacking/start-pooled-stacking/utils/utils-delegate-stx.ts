@@ -9,11 +9,12 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { StackingProviderId } from '~/data/data';
+import { analytics } from '~/features/analytics/analytics';
 import { StxCallContractParams } from '~/helpers/leather-sdk';
 import { cyclesToBurnChainHeight } from '~/utils/calculate-burn-height';
 
 import { LeatherSdk } from '@leather.io/sdk';
-import { stxToMicroStx } from '@leather.io/utils';
+import { scaleValue, stxToMicroStx } from '@leather.io/utils';
 
 import { getStackingPoolById } from './stacking-pool-types';
 import { StackingFormValues } from './types';
@@ -110,6 +111,14 @@ export function createDelegateStxMutationOptions({
       const [poxInfo] = await Promise.all([client.getPoxInfo(), client.getStackingContract()]);
 
       const delegateStxOptions = getDelegateStxOptions(values, poxInfo, network);
+
+      await analytics.track('pooled_stacking_started', {
+        provider: values.providerId,
+        amount: scaleValue(values.amount),
+        poolAddress: values.poolAddress,
+        delegationDurationType: values.delegationDurationType,
+        numberOfCycles: values.numberOfCycles,
+      });
 
       return leather.stxCallContract(delegateStxOptions);
     },

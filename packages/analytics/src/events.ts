@@ -1,5 +1,5 @@
 // All new events should use the object-action framework.
-import { DefaultNetworkConfigurations } from '@leather.io/models';
+import { DefaultNetworkConfigurations, StxCryptoAssetBalance } from '@leather.io/models';
 
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
@@ -11,6 +11,22 @@ export interface Events extends HistoricalEvents {
   submit_feature_waitlist: SubmitWaitlist;
   legacy_request_initiated: { method: string };
   application_first_opened: { timestamp: string };
+  pooled_stacking_started: {
+    amount: number;
+    provider: string;
+    poolAddress: string;
+    delegationDurationType?: string;
+    numberOfCycles: number;
+  };
+  liquid_stacking_started: {
+    amount: number;
+    provider?: string;
+  };
+  liquid_stacking_increased: {
+    amount: number;
+  };
+  stx_balance_updated: StxCryptoAssetBalance;
+  in_app_browser_opened: { url: string };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
