@@ -58,7 +58,7 @@ export function GetAddressesApproverLayout({
               </Cell.Root>
             )}
           </Approver.Section>
-          <Approver.Section borderTop>
+          <Approver.Section>
             <ApproverPermissions permissions={['request_approval', 'view_balance_activity']} />
           </Approver.Section>
         </Approver.Container>

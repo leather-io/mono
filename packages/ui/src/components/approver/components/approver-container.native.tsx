@@ -20,6 +20,7 @@ export function ApproverContainer({ children }: HasChildren) {
           marginBottom: theme.spacing[5] + bottom,
           marginTop: theme.spacing[4] + top,
         }}
+        backgroundColor="ink.background-secondary"
       >
         {children}
       </Box>

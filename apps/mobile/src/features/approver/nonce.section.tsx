@@ -14,7 +14,7 @@ export function NonceSection({ nonce, onChangeNonce }: NonceSectionProps) {
 
   return (
     <>
-      <Approver.Section borderTop>
+      <Approver.Section>
         <NonceCard
           nonce={nonce}
           onPress={() => {
