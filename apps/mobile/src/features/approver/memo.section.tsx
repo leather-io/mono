@@ -16,7 +16,7 @@ export function MemoSection({ memo, isMemoEditable, onChangeMemo }: MemoSectionP
 
   return (
     <>
-      <Approver.Section borderTop>
+      <Approver.Section>
         <MemoCard
           memo={memo}
           isEditable={isMemoEditable}
