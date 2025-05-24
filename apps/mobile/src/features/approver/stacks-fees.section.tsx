@@ -48,7 +48,7 @@ export function StacksFeesSection({ txHex, onChangeFee }: StacksFeesSectionProps
   const feeMoney = getTxFeeMoney(tx);
   return (
     <>
-      <Approver.Section borderTop>
+      <Approver.Section>
         <Box />
         <StacksFeeCard
           feeType={selectedFeeType}
