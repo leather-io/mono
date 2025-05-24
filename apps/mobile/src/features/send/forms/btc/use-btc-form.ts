@@ -48,16 +48,20 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       feeRate: feeRates.halfHourFee.toNumber(),
     },
   });
+
   const maxSpend = calculateMaxBtcSpend({
     recipient: form.watch('recipient'),
     feeRate: form.watch('feeRate'),
   });
   const { onSetMax } = useSendMax(maxSpend.spendableBitcoin, form);
+  const handleSubmit = form.handleSubmit(values => {
+    if (!nativeSegwit) {
+      return;
+    }
 
-  const handleSubmit = form.handleSubmit(values =>
     btcFormValuesToPsbtHex(
       values,
-      nativeSegwit.derivePayer({ addressIndex: 0 }),
+      nativeSegwit?.derivePayer({ addressIndex: 0 }),
       utxos,
       networkPreference.chain.bitcoin.mode
     )
@@ -70,8 +74,8 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
           }),
           type: 'error',
         })
-      )
-  );
+      );
+  });
 
   return {
     form,

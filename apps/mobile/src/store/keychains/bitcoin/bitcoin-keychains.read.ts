@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { selectNetworkPreference } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { createSelector } from '@reduxjs/toolkit';
 import memoize from 'just-memoize';
 
@@ -89,9 +90,20 @@ function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
 }
 
 export function useBitcoinAccounts() {
+  const { hasWallets } = useWallets();
   const list = useSelector(bitcoinKeychains);
 
   return useMemo(() => {
+    if (!hasWallets)
+      return {
+        list: [],
+        hasWallets,
+        accountIndexByPaymentType: () => ({ nativeSegwit: null, taproot: null }),
+        accountIdByPaymentType: () => ({ nativeSegwit: null, taproot: null }),
+        fromAccountIndex: () => [],
+        fromFingerprint: () => [],
+        fromFingerprintAndAccountIndex: () => [],
+      };
     const defaultSelectors = descriptorKeychainSelectors(list, filterKeychainsByAccountIndex);
     function accountIndexByPaymentType(fingerprint: string, accountIndex: number) {
       return splitByPaymentTypes(defaultSelectors.fromAccountIndex(fingerprint, accountIndex));
@@ -105,7 +117,7 @@ export function useBitcoinAccounts() {
       accountIndexByPaymentType,
       accountIdByPaymentType,
     };
-  }, [list]);
+  }, [list, hasWallets]);
 }
 
 export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, accountIndex: number) {
@@ -114,8 +126,8 @@ export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, acco
     accountIndex
   );
 
-  const taprootPayerAddress = taproot.derivePayer({ addressIndex: 0 }).address;
-  const nativeSegwitPayerAddress = nativeSegwit.derivePayer({ addressIndex: 0 }).address;
+  const taprootPayerAddress = taproot?.derivePayer({ addressIndex: 0 }).address ?? '';
+  const nativeSegwitPayerAddress = nativeSegwit?.derivePayer({ addressIndex: 0 }).address ?? '';
 
   return { taprootPayerAddress, nativeSegwitPayerAddress };
 }

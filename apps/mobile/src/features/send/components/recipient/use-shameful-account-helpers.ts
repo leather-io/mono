@@ -21,17 +21,17 @@ export function useAccountHelpers(
 
   const getSegwitAddress = useCallback(
     (fingerprint: string, index: number) =>
-      accountIndexByPaymentType(fingerprint, index).nativeSegwit.derivePayer({
+      accountIndexByPaymentType(fingerprint, index).nativeSegwit?.derivePayer({
         addressIndex: 0,
-      }).address,
+      }).address ?? null,
     [accountIndexByPaymentType]
   );
 
   const getTaprootAddress = useCallback(
     (fingerprint: string, index: number) =>
-      accountIndexByPaymentType(fingerprint, index).taproot.derivePayer({
+      accountIndexByPaymentType(fingerprint, index).taproot?.derivePayer({
         addressIndex: 0,
-      }).address,
+      }).address ?? null,
     [accountIndexByPaymentType]
   );
 
