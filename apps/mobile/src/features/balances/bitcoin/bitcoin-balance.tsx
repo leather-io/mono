@@ -27,7 +27,6 @@ export function BitcoinTokenBalance({
         id: 'asset_name.bitcoin',
         message: 'Bitcoin',
       })}
-      protocol="nativeBtc"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       onPress={onPress}

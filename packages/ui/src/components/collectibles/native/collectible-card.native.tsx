@@ -16,7 +16,6 @@ export interface CollectibleCardProps {
 }
 
 export function CollectibleCard({ mimeType, name, size = 200, src, type }: CollectibleCardProps) {
-  console.log('src', src, name, type, mimeType);
   return (
     <Box>
       {(() => {

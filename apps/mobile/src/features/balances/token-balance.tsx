@@ -2,10 +2,9 @@ import { ReactNode } from 'react';
 
 import { Balance } from '@/components/balance/balance';
 import { Loading } from '@/components/loading/loading';
-import { getChainLayerFromAssetProtocol } from '@/features/balances/utils/get-chain-layer-from-protocol';
 import { TestId } from '@/shared/test-id';
 
-import { CryptoAssetProtocol, Money } from '@leather.io/models';
+import { Money } from '@leather.io/models';
 import { Cell, type PressableProps, Text } from '@leather.io/ui/native';
 
 interface TokenBalanceProps extends PressableProps {
@@ -14,14 +13,12 @@ interface TokenBalanceProps extends PressableProps {
   tokenName: string;
   availableBalance?: Money;
   fiatBalance?: Money;
-  protocol: CryptoAssetProtocol;
   isLoading?: boolean;
 }
 export function TokenBalance({
   icon,
   tokenName,
   availableBalance,
-  protocol,
   fiatBalance,
   onPress,
   isLoading,
@@ -41,22 +38,17 @@ export function TokenBalance({
       <Cell.Content>
         <Cell.Label variant="primary">{tokenName}</Cell.Label>
         <Cell.Label variant="secondary">
-          <Text variant="caption01" color="ink.text-subdued" lineHeight={16}>
-            {getChainLayerFromAssetProtocol(protocol)}
+          <Text variant="caption01" lineHeight={16}>
+            {rest.ticker}
           </Text>
         </Cell.Label>
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          <Balance balance={availableBalance} variant="label02" />
+          <Balance balance={fiatBalance} variant="label02" lineHeight={16} />
         </Cell.Label>
         <Cell.Label variant="secondary">
-          <Balance
-            balance={fiatBalance}
-            variant="caption01"
-            color="ink.text-subdued"
-            lineHeight={16}
-          />
+          <Balance balance={availableBalance} variant="caption01" />
         </Cell.Label>
       </Cell.Aside>
     </Cell.Root>
