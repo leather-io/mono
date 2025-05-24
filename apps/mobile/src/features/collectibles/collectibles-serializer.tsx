@@ -1,5 +1,3 @@
-import { t } from '@lingui/macro';
-
 import { NonFungibleCryptoAssetInfo } from '@leather.io/models';
 import { type CollectibleCardProps } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
@@ -19,10 +17,6 @@ export function serializeCollectibles(collectibles: NonFungibleCryptoAssetInfo[]
           if (!isValidInscription(collectible)) return null;
           return {
             name: formatInsciptionName(collectible.title),
-            subtitle: t({
-              id: 'collectibles.inscription',
-              message: 'Inscription',
-            }),
             type: collectible.protocol,
             src: collectible.src,
             mimeType: collectible.mimeType,
@@ -31,10 +25,6 @@ export function serializeCollectibles(collectibles: NonFungibleCryptoAssetInfo[]
           if (!isValidSip9(collectible)) return null;
           return {
             name: collectible.name,
-            subtitle: t({
-              id: 'collectibles.stacks',
-              message: 'Stacks NFT',
-            }),
             type: collectible.protocol,
             src: collectible.cachedImage,
           };

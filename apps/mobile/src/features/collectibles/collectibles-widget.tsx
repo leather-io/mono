@@ -26,6 +26,11 @@ export function CollectiblesWidget({ children, onPressHeader, title }: Collectib
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             gap: theme.spacing['3'],
+            paddingHorizontal: theme.spacing['5'],
+          }}
+          style={{
+            // prevent card shadows being cut off
+            overflow: 'visible',
           }}
         >
           {children}
