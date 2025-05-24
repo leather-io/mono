@@ -113,7 +113,7 @@ export function Account({ account, walletName }: AccountProps) {
             }
             title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
           >
-            <Collectibles collectibles={collectibles} />
+            <Collectibles collectibles={collectibles} mode="widget" />
           </CollectiblesWidget>
         )}
       </Box>
