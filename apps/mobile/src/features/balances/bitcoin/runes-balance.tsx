@@ -29,7 +29,6 @@ function RunesTokenBalance({
       ticker={symbol}
       icon={<RunesAvatarIcon />}
       tokenName={name}
-      protocol="rune"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
     />
@@ -42,7 +41,6 @@ function RunesTokenBalanceError() {
       ticker=""
       icon={<RunesAvatarIcon />}
       tokenName=""
-      protocol="rune"
       fiatBalance={undefined}
       availableBalance={undefined}
     />

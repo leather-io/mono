@@ -21,7 +21,7 @@ export function CollectiblesList({ collectibles, mode }: CollectiblesListProps) 
       }
       return serializeCollectibles(collectibles.value);
     },
-    [collectibles, mode, displayLimit]
+    [mode, displayLimit]
   );
 
   return (

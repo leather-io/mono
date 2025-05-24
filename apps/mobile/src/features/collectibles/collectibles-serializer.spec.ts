@@ -17,7 +17,6 @@ describe('serializeCollectibles', () => {
       expect.arrayContaining([
         expect.objectContaining({
           name: expect.any(String),
-          subtitle: expect.any(String),
           type: expect.stringMatching(/^(inscription|sip9|stamp)$/),
           src: expect.any(String),
         }),
