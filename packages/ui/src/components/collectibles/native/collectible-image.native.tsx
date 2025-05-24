@@ -1,7 +1,6 @@
 import { Image } from 'react-native';
 
-import { Box } from '../../../../native';
-import { Text } from '../../../../native';
+import { Box, Text } from '../../../../native';
 
 interface CollectibleImageProps {
   alt: string;

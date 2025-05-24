@@ -44,7 +44,6 @@ function Sip10TokenBalance({
         />
       }
       tokenName={name}
-      protocol="sip10"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
     />
@@ -57,7 +56,6 @@ function Sip10TokenBalanceError() {
       ticker=""
       icon={<Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />}
       tokenName=""
-      protocol="sip10"
       fiatBalance={undefined}
       availableBalance={undefined}
     />
