@@ -3,30 +3,20 @@ import { assertUnreachable } from '@leather.io/utils';
 
 import { Box } from '../../../../native';
 import { CollectibleAudio } from './collectible-audio.native';
-import { CollectibleCaption } from './collectible-caption.native';
 import { CollectibleHtml } from './collectible-html.native';
 import { CollectibleImage } from './collectible-image.native';
 import { CollectibleText } from './collectible-text.native';
 
 export interface CollectibleCardProps {
   mimeType?: string;
-  mode?: 'widget' | 'gallery';
   name: string;
   size: number;
   src: string;
-  subtitle?: string;
   type: CryptoAssetProtocol;
 }
 
-export function CollectibleCard({
-  mimeType,
-  mode = 'gallery',
-  name,
-  size = 200,
-  src,
-  subtitle,
-  type,
-}: CollectibleCardProps) {
+export function CollectibleCard({ mimeType, name, size = 200, src, type }: CollectibleCardProps) {
+  console.log('src', src, name, type, mimeType);
   return (
     <Box>
       {(() => {
@@ -50,7 +40,6 @@ export function CollectibleCard({
 
         return <CollectibleImage source={src} alt={name} size={size} />;
       })()}
-      {mode === 'gallery' && <CollectibleCaption name={name} size={size} subtitle={subtitle} />}
     </Box>
   );
 }
