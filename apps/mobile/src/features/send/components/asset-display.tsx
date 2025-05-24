@@ -44,7 +44,6 @@ export function AssetDisplay({
         ticker={assetInfo.symbol}
         icon={icon}
         tokenName={name}
-        protocol={assetInfo.protocol}
         availableBalance={availableBalance}
         fiatBalance={fiatBalance}
         px="3"
