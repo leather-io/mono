@@ -25,6 +25,7 @@ export default function CollectiblesScreen() {
       rightHeaderElement={<NetworkBadge />}
       title={pageTitle}
       contentTitle={pageTitle}
+      contentTitleStyles={{ paddingLeft: '5' }}
     >
       <Collectibles collectibles={collectibles} />
     </AnimatedHeaderScreenLayout>

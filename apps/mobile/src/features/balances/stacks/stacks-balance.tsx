@@ -25,7 +25,6 @@ export function StacksTokenBalance({
         id: 'asset_name.stacks',
         message: 'Stacks',
       })}
-      protocol="nativeStx"
       fiatBalance={fiatBalance}
       availableBalance={availableBalance}
       isLoading={isLoading}

@@ -1,8 +1,10 @@
 import { FetchState, FetchWrapper } from '@/components/loading';
-import { CollectiblesLayout, serializeCollectibles } from '@/features/collectibles';
+import { CollectiblesLayout } from '@/features/collectibles';
 
 import { NonFungibleCryptoAssetInfo } from '@leather.io/models';
-import { CollectibleCard, SkeletonLoader } from '@leather.io/ui/native';
+import { SkeletonLoader } from '@leather.io/ui/native';
+
+import { CollectiblesList } from './collectibles-list';
 
 interface CollectiblesProps {
   collectibles: FetchState<NonFungibleCryptoAssetInfo[]>;
@@ -14,7 +16,6 @@ export function hasCollectibles(collectibles: FetchState<NonFungibleCryptoAssetI
 }
 
 export function Collectibles({ collectibles, mode = 'gallery' }: CollectiblesProps) {
-  const displayLimit = 9;
   const thumbnailSize = mode === 'widget' ? 200 : 164;
 
   return (
@@ -29,24 +30,13 @@ export function Collectibles({ collectibles, mode = 'gallery' }: CollectiblesPro
         </CollectiblesLayout>
       }
     >
-      {collectibles.state === 'success' &&
-        serializeCollectibles(collectibles.value).map(
-          ({ name, type, mimeType, subtitle, src }, index) => {
-            if (mode === 'widget' && index >= displayLimit) return null;
-            return (
-              <CollectibleCard
-                key={index}
-                name={name}
-                type={type}
-                mimeType={mimeType}
-                mode={mode}
-                size={thumbnailSize}
-                src={src}
-                subtitle={subtitle}
-              />
-            );
-          }
-        )}
+      {mode === 'gallery' ? (
+        <CollectiblesLayout>
+          <CollectiblesList collectibles={collectibles} mode={mode} />
+        </CollectiblesLayout>
+      ) : (
+        <CollectiblesList collectibles={collectibles} mode={mode} />
+      )}
     </FetchWrapper>
   );
 }
