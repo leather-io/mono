@@ -1,4 +1,4 @@
-import { configureAccountParamsSchema } from '@/app/account/[account]/index';
+import { configureAccountParamsSchema } from '@/app/account/[accountId]/index';
 import { FetchWrapper } from '@/components/loading';
 import { ActivityEmpty, ActivityLayout, ActivityList, hasActivity } from '@/features/activity';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';

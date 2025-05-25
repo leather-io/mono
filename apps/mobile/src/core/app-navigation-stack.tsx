@@ -16,10 +16,10 @@ export function AppNavigationStack() {
       <Stack.Screen name="swap" options={{ header: () => <NakedHeader /> }} />
 
       {/* Account */}
-      <Stack.Screen name="account/[account]/index" options={{ headerShown: false }} />
-      <Stack.Screen name="account/[account]/activity" options={{ headerShown: false }} />
-      <Stack.Screen name="account/[account]/collectibles" options={{ headerShown: false }} />
-      <Stack.Screen name="account/[account]/balances" options={{ headerShown: false }} />
+      <Stack.Screen name="account/[accountId]/index" options={{ headerShown: false }} />
+      <Stack.Screen name="account/[accountId]/activity" options={{ headerShown: false }} />
+      <Stack.Screen name="account/[accountId]/collectibles" options={{ headerShown: false }} />
+      <Stack.Screen name="account/[accountId]/balances" options={{ headerShown: false }} />
       <Stack.Screen name="balances/index" options={{ headerShown: false }} />
 
       {/* Activity */}
