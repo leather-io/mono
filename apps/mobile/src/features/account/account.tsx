@@ -79,7 +79,7 @@ export function Account({ account, walletName }: AccountProps) {
           onPressHeader={() =>
             router.navigate({
               pathname: AppRoutes.AccountBalances,
-              params: { account: id, accountId: id },
+              params: { accountId: id },
             })
           }
           balance={
@@ -98,7 +98,7 @@ export function Account({ account, walletName }: AccountProps) {
           onPressHeader={() =>
             router.navigate({
               pathname: AppRoutes.AccountActivity,
-              params: { account: id, accountId: id, accountName: name },
+              params: { accountId: id, accountName: name },
             })
           }
           title={t({ id: 'account.activity.header_title', message: 'Activity' })}
@@ -108,7 +108,7 @@ export function Account({ account, walletName }: AccountProps) {
             onPressHeader={() =>
               router.navigate({
                 pathname: AppRoutes.AccountCollectibles,
-                params: { account: id, accountId: id, accountName: name },
+                params: { accountId: id, accountName: name },
               })
             }
             title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
