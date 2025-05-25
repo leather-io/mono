@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
+import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -25,11 +26,19 @@ type ReceiveRouteKey = keyof ReceiveStackParamList;
 export const ReceiveStack = createStackNavigator<ReceiveStackParamList>();
 
 export function ReceiveNavigator({ children }: HasChildren) {
+  const {
+    state: { selectedAccount, selectedAsset, accounts },
+  } = useReceiveFlowContext();
   const theme = useTheme<Theme>();
+  const initialRouteName = getInitialRouteName({
+    selectedAccount,
+    selectedAsset,
+    totalAccountNumber: accounts.length,
+  });
 
   return (
     <ReceiveStack.Navigator
-      initialRouteName="select-account"
+      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false,
         cardStyle: {
@@ -52,6 +61,28 @@ export function useReceiveRoute<RouteKey extends ReceiveRouteKey>() {
 
 export function useReceiveNavigation() {
   return useNavigation<NavigationProp<ReceiveStackParamList>>();
+}
+
+interface GetInitialRouteParams {
+  selectedAccount: Account | null;
+  selectedAsset: SelectedAsset | null;
+  totalAccountNumber: number;
+}
+
+function getInitialRouteName({
+  selectedAccount,
+  selectedAsset,
+  totalAccountNumber,
+}: GetInitialRouteParams): ReceiveRouteKey {
+  if (!selectedAccount) {
+    return totalAccountNumber > 1 ? 'select-account' : 'select-asset';
+  }
+
+  if (!selectedAsset) {
+    return 'select-asset';
+  }
+
+  return 'asset-details';
 }
 
 export function useCopyAddress() {
