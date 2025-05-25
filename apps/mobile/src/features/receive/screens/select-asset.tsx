@@ -12,14 +12,7 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { ReceiveAssetItem } from '../components/receive-asset-item';
 import { getAssets } from '../get-assets';
-import {
-  CreateCurrentReceiveRoute,
-  useCopyAddress,
-  useReceiveSheetNavigation,
-  useReceiveSheetRoute,
-} from '../utils';
-
-type CurrentRoute = CreateCurrentReceiveRoute<'select-asset'>;
+import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export interface SelectedAsset {
   symbol: string;
@@ -30,8 +23,8 @@ export interface SelectedAsset {
 }
 
 export function SelectAsset() {
-  const route = useReceiveSheetRoute<CurrentRoute>();
-  const navigation = useReceiveSheetNavigation<CurrentRoute>();
+  const route = useReceiveRoute<'select-asset'>();
+  const navigation = useReceiveNavigation();
 
   function onSelectAccount(asset: SelectedAsset) {
     navigation.navigate('asset-details', { asset, accountName: account.name });

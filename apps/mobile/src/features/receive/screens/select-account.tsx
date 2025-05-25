@@ -6,12 +6,10 @@ import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 
-import { CreateCurrentReceiveRoute, useReceiveSheetNavigation } from '../utils';
-
-type CurrentRoute = CreateCurrentReceiveRoute<'select-account'>;
+import { useReceiveNavigation } from '../navigation';
 
 export function SelectAccount() {
-  const navigation = useReceiveSheetNavigation<CurrentRoute>();
+  const navigation = useReceiveNavigation();
   const accounts = useAccounts();
 
   function onSelectAccount(account: Account) {

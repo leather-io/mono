@@ -21,19 +21,12 @@ import {
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
-import {
-  CreateCurrentReceiveRoute,
-  useCopyAddress,
-  useReceiveSheetNavigation,
-  useReceiveSheetRoute,
-} from '../utils';
-
-type CurrentRoute = CreateCurrentReceiveRoute<'asset-details'>;
+import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export function AssetDetails() {
   const { i18n } = useLingui();
-  const route = useReceiveSheetRoute<CurrentRoute>();
-  const navigation = useReceiveSheetNavigation<CurrentRoute>();
+  const route = useReceiveRoute<'asset-details'>();
+  const navigation = useReceiveNavigation();
   const asset = route.params.asset;
   const accountName = route.params.accountName;
   const { name, address, addressType, description } = asset;
