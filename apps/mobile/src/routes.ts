@@ -13,11 +13,11 @@ export enum AppRoutes {
   HardwareWallets = '/hardware-wallets',
 
   // Account
-  Account = '/account/[account]',
+  Account = '/account/[accountId]',
   Activity = '/activity',
-  AccountActivity = '/account/[account]/activity',
-  AccountBalances = '/account/[account]/balances',
-  AccountCollectibles = '/account/[account]/collectibles',
+  AccountActivity = '/account/[accountId]/activity',
+  AccountBalances = '/account/[accountId]/balances',
+  AccountCollectibles = '/account/[accountId]/collectibles',
   // Settings
   Settings = '/settings',
   SettingsDisplay = '/settings/display',

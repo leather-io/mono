@@ -13,6 +13,8 @@ ignore:
   - apps/mobile/android
   - apps/mobile/artifacts
   - apps/mobile/ios
+  # Skip names in [brackets] in file-based routing, as they represent variables:
+  - apps/mobile/src/app/**//*\[*\]*
   - apps/web/{.react-router,build}
   - dist
   - node_modules
