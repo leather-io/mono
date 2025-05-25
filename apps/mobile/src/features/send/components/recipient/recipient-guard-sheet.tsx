@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import { RefObject, useEffect } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { GuardResult } from '@/features/send/components/recipient/use-recipient-evaluator';
@@ -13,6 +13,12 @@ interface RecipientWarningSheetProps {
 }
 
 export function RecipientGuardSheet({ sheetRef, config, onConfirm }: RecipientWarningSheetProps) {
+  useEffect(() => {
+    if (config.severity !== 'none') {
+      sheetRef.current?.present();
+    }
+  }, [sheetRef, config.severity]);
+
   if (config.severity === 'none') {
     return null;
   }
