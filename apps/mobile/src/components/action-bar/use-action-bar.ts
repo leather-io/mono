@@ -1,8 +1,7 @@
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useBrowserFlag } from '@/features/feature-flags';
-import { AppRoutes } from '@/routes';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { useLocalSearchParams, usePathname, useSegments } from 'expo-router';
+import { useSegments } from 'expo-router';
 
 const allowedSegmentConditions: ((segments: ReturnType<typeof useSegments>) => boolean)[] = [
   ([rootSegment]) => rootSegment === undefined,
@@ -11,22 +10,18 @@ const allowedSegmentConditions: ((segments: ReturnType<typeof useSegments>) => b
 ];
 
 export function useActionBar() {
-  const { browserSheetRef, sendSheetRef, receiveSheetRef } = useGlobalSheets();
+  const { browserSheetRef, sendSheetRef, receiveSheetRef, addWalletSheetRef } = useGlobalSheets();
   const { hasWallets } = useWallets();
   const releaseBrowserFeature = useBrowserFlag();
-  const pathname = usePathname();
-  const params = useLocalSearchParams();
   const segments = useSegments();
   const isActionBarVisible = allowedSegmentConditions.some(condition => condition(segments));
 
-  function getAccountIdIfOnAccountPage() {
-    return pathname === AppRoutes.Account ? params.accountId : undefined;
+  function onAddWallet() {
+    addWalletSheetRef.current?.present();
   }
 
   function onOpenSend() {
-    sendSheetRef.current?.present({
-      accountId: getAccountIdIfOnAccountPage(),
-    });
+    sendSheetRef.current?.present();
   }
 
   function onOpenReceive() {
@@ -39,6 +34,7 @@ export function useActionBar() {
 
   return {
     hasWallets,
+    onAddWallet,
     onOpenBrowser,
     onOpenSend,
     onOpenReceive,
