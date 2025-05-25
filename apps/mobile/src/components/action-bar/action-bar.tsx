@@ -4,7 +4,6 @@ import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useActionBar } from '@/components/action-bar/use-action-bar';
-import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -38,11 +37,11 @@ export function ActionBar() {
     isActionBarVisible,
     hasWallets,
     isBrowserEnabled,
+    onAddWallet,
     onOpenBrowser,
     onOpenReceive,
     onOpenSend,
   } = useActionBar();
-  const { addWalletSheetRef } = useGlobalSheets();
 
   if (!isActionBarVisible) {
     return null;
@@ -80,7 +79,7 @@ export function ActionBar() {
         icon={<PlusIcon variant="small" />}
         title={t({ id: 'action_bar.add_wallet_label', message: 'Add Wallet' })}
         testID={TestId.homeAddWalletButton}
-        onPress={() => addWalletSheetRef.current?.present()}
+        onPress={onAddWallet}
       />
     </ActionBarContainer>
   );
@@ -111,30 +110,28 @@ function ActionBarContainer({ children }: ActionBarContainerProps) {
     borderWidth: 1,
   } as const;
 
-  const actionBarBlurContainer = Platform.select({
-    ios: (
-      <BlurView
-        themeVariant={themeDerivedFromThemePreference}
-        intensity={blurIntensity}
-        blurReductionFactor={androidBlurReductionFactor}
-        style={styles}
-      >
-        <BlurBackdrop />
-        {children}
-      </BlurView>
-    ),
-    android: (
-      <Box style={styles}>
-        <BlurBackdrop />
-        {children}
-      </Box>
-    ),
-  });
-
   return (
     <AnimatedBox entering={FadeInDown} exiting={FadeOutDown}>
       <GradientBackdrop height={bottomOffset + actionBarHeight} />
-      {actionBarBlurContainer}
+      {Platform.select({
+        ios: (
+          <BlurView
+            themeVariant={themeDerivedFromThemePreference}
+            intensity={blurIntensity}
+            blurReductionFactor={androidBlurReductionFactor}
+            style={styles}
+          >
+            <BlurBackdrop />
+            {children}
+          </BlurView>
+        ),
+        android: (
+          <Box style={styles}>
+            <BlurBackdrop />
+            {children}
+          </Box>
+        ),
+      })}
     </AnimatedBox>
   );
 }
