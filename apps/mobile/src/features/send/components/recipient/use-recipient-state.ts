@@ -45,11 +45,8 @@ export function useRecipientState({
   }
 
   function closeRecipientSheet() {
+    setGuardResult({ severity: 'none' });
     sheetRef.current?.dismiss();
-  }
-
-  function openGuardSheet() {
-    guardSheetRef.current?.present();
   }
 
   function closeGuardSheet() {
@@ -76,7 +73,6 @@ export function useRecipientState({
 
     if (evaluationResult.severity !== 'none') {
       setGuardResult(evaluationResult);
-      openGuardSheet();
       return;
     }
 
@@ -92,7 +88,6 @@ export function useRecipientState({
     if (evaluationResult.severity !== 'none') {
       onChange('');
       setGuardResult(evaluationResult);
-      openGuardSheet();
       return;
     }
 
