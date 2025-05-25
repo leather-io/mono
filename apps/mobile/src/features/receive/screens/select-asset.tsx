@@ -2,17 +2,18 @@ import { HeaderBackButton } from '@/components/headers/components/header-back-bu
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { TokenIcon } from '@/features/balances/token-icon';
+import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { t } from '@lingui/macro';
 
-import { truncateMiddle } from '@leather.io/utils';
+import { assertExistence, truncateMiddle } from '@leather.io/utils';
 
 import { ReceiveAssetItem } from '../components/receive-asset-item';
 import { getAssets } from '../get-assets';
-import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
+import { useCopyAddress, useReceiveNavigation } from '../navigation';
 
 export interface SelectedAsset {
   symbol: string;
@@ -23,17 +24,31 @@ export interface SelectedAsset {
 }
 
 export function SelectAsset() {
-  const route = useReceiveRoute<'select-asset'>();
-  const navigation = useReceiveNavigation();
+  const { navigate, goBack } = useReceiveNavigation();
+  const {
+    selectAsset,
+    state: { selectedAccount },
+  } = useReceiveFlowContext();
 
-  function onSelectAccount(asset: SelectedAsset) {
-    navigation.navigate('asset-details', { asset, accountName: account.name });
+  assertExistence(selectedAccount, "'Select asset' screen expects `selectedAccount` to exist.");
+
+  function onSelectAsset(asset: SelectedAsset) {
+    selectAsset(asset);
+    if (selectedAccount) {
+      navigate('asset-details', { asset, accountName: selectedAccount?.name });
+    }
   }
-  const account = route.params.account;
+
   const { nativeSegwitPayerAddress, taprootPayerAddress } =
-    useBitcoinPayerAddressFromAccountIndex(account.fingerprint, account.accountIndex) ?? '';
+    useBitcoinPayerAddressFromAccountIndex(
+      selectedAccount.fingerprint,
+      selectedAccount.accountIndex
+    ) ?? '';
   const stxAddress =
-    useStacksSignerAddressFromAccountIndex(account.fingerprint, account.accountIndex) ?? '';
+    useStacksSignerAddressFromAccountIndex(
+      selectedAccount.fingerprint,
+      selectedAccount.accountIndex
+    ) ?? '';
 
   const assets = getAssets({ nativeSegwitPayerAddress, taprootPayerAddress, stxAddress });
   const onCopyAddress = useCopyAddress();
@@ -51,9 +66,7 @@ export function SelectAsset() {
               id: 'receive.select_asset.header_subtitle',
               message: 'Receive',
             })}
-            leftElement={
-              <HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />
-            }
+            leftElement={<HeaderBackButton onPress={goBack} testID={TestId.backButton} />}
             rightElement={<NetworkBadge />}
           />
         }
@@ -67,7 +80,7 @@ export function SelectAsset() {
             symbol={asset.symbol}
             icon={<TokenIcon ticker={asset.symbol} />}
             onCopy={() => onCopyAddress(asset.address)}
-            onPress={() => onSelectAccount(asset)}
+            onPress={() => onSelectAsset(asset)}
           />
         ))}
       </FullHeightSheetLayout>
