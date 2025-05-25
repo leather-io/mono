@@ -1,18 +1,22 @@
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AccountList } from '@/features/account/account-list/account-list';
+import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { Account } from '@/store/accounts/accounts';
-import { useAccounts } from '@/store/accounts/accounts.read';
 import { t } from '@lingui/macro';
 
 import { useReceiveNavigation } from '../navigation';
 
 export function SelectAccount() {
   const navigation = useReceiveNavigation();
-  const accounts = useAccounts();
+  const {
+    selectAccount,
+    state: { accounts },
+  } = useReceiveFlowContext();
 
   function onSelectAccount(account: Account) {
+    selectAccount(account);
     navigation.navigate('select-asset', { account });
   }
 
@@ -32,7 +36,7 @@ export function SelectAccount() {
         />
       }
     >
-      <AccountList accounts={accounts.list} onPress={onSelectAccount} showWalletInfo />
+      <AccountList accounts={accounts} onPress={onSelectAccount} showWalletInfo />
     </FullHeightSheetLayout>
   );
 }
