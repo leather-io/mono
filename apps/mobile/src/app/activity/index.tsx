@@ -14,7 +14,7 @@ export default function ActivityScreen() {
         {hasActivity(activity) ? (
           activity.state === 'success' && <ActivityList activity={activity.value} />
         ) : (
-          <Box px="5">
+          <Box width="100%" height={200} justifyContent="center" alignItems="center">
             <ActivityEmpty />
           </Box>
         )}
