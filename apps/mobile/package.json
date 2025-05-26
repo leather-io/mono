@@ -119,6 +119,7 @@
     "expo-standard-web-crypto": "1.8.1",
     "expo-status-bar": "2.2.3",
     "expo-system-ui": "5.0.7",
+    "expo-updates": "0.28.13",
     "fast-text-encoding": "1.0.6",
     "immer": "10.1.1",
     "just-memoize": "2.2.0",
