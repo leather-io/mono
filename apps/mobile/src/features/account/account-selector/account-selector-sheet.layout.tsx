@@ -67,6 +67,8 @@ export function AccountSelectorSheetLayout({
                 cardId={account.id}
                 onCardPress={() => onAccountPress(account.id)}
                 swapCardIndexes={swapAccountIndexes}
+                // TODO: disable reorder for now before the release
+                disableReorder
               >
                 <WalletLoader fingerprint={account.fingerprint} key={account.id}>
                   {wallet => (
