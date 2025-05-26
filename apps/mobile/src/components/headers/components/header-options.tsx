@@ -1,6 +1,7 @@
 import { AppRoutes } from '@/routes';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
+import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
@@ -20,6 +21,7 @@ export function HeaderOptions() {
   function onUpdatePrivacyMode() {
     changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
   }
+  const { hasWallets } = useWallets();
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
@@ -39,16 +41,17 @@ export function HeaderOptions() {
         onPress={() => router.navigate(AppRoutes.Settings)}
         testID={TestId.homeSettingsButton}
       />
-
-      <IconButton
-        label={t({
-          id: 'header.activity_label',
-          message: 'Activity',
-        })}
-        icon={<PulseIcon />}
-        onPress={() => router.navigate(AppRoutes.Activity)}
-        testID={TestId.homeActivityButton}
-      />
+      {hasWallets && (
+        <IconButton
+          label={t({
+            id: 'header.activity_label',
+            message: 'Activity',
+          })}
+          icon={<PulseIcon />}
+          onPress={() => router.navigate(AppRoutes.Activity)}
+          testID={TestId.homeActivityButton}
+        />
+      )}
     </Box>
   );
 }
