@@ -35,7 +35,7 @@ function ScrollableContent({ children }: HasChildren) {
 
   return (
     <ScrollView
-      contentInset={{ bottom: actionBarOffset }}
+      contentContainerStyle={{ paddingBottom: actionBarOffset }}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
