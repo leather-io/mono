@@ -13,7 +13,7 @@ import { assertExistence, truncateMiddle } from '@leather.io/utils';
 
 import { ReceiveAssetItem } from '../components/receive-asset-item';
 import { getAssets } from '../get-assets';
-import { useCopyAddress, useReceiveNavigation } from '../navigation';
+import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export interface SelectedAsset {
   symbol: string;
@@ -25,10 +25,12 @@ export interface SelectedAsset {
 
 export function SelectAsset() {
   const { navigate, goBack } = useReceiveNavigation();
+  const route = useReceiveRoute<'select-asset'>();
   const {
     selectAsset,
     state: { selectedAccount },
   } = useReceiveFlowContext();
+  const canGoBack = route.params?.previousRoute === 'select-account';
 
   assertExistence(selectedAccount, "'Select asset' screen expects `selectedAccount` to exist.");
 
@@ -66,7 +68,9 @@ export function SelectAsset() {
               id: 'receive.select_asset.header_subtitle',
               message: 'Receive',
             })}
-            leftElement={<HeaderBackButton onPress={goBack} testID={TestId.backButton} />}
+            leftElement={
+              canGoBack ? <HeaderBackButton onPress={goBack} testID={TestId.backButton} /> : null
+            }
             rightElement={<NetworkBadge />}
           />
         }

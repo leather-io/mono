@@ -17,7 +17,7 @@ export function SelectAccount() {
 
   function onSelectAccount(account: Account) {
     selectAccount(account);
-    navigation.navigate('select-asset', { account });
+    navigation.navigate('select-asset', { account, previousRoute: 'select-account' });
   }
 
   return (

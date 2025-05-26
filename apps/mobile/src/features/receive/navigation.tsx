@@ -17,7 +17,7 @@ import { SelectedAsset } from './screens/select-asset';
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type ReceiveStackParamList = {
   'select-account': undefined;
-  'select-asset': { account: Account };
+  'select-asset': { account: Account; previousRoute?: ReceiveRouteKey };
   'asset-details': { asset: SelectedAsset; accountName: string };
 };
 
