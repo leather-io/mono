@@ -25,6 +25,18 @@ export function formatURL(url: string) {
   return 'https://' + url;
 }
 
+export function isValidUrl(testUrl: string) {
+  let url;
+
+  try {
+    url = new URL(formatURL(testUrl));
+  } catch {
+    return false;
+  }
+
+  return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
 export type BrowserType = 'active' | 'inactive';
 
 export const messagePartialZodObject = z.object({
