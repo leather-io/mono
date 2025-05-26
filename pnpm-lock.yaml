@@ -454,8 +454,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(typescript@5.8.3)
       '@lingui/format-po':
-        specifier: 5.0.0
-        version: 5.0.0(typescript@5.8.3)
+        specifier: 5.3.1
+        version: 5.3.1(typescript@5.8.3)
       '@lingui/macro':
         specifier: 4.11.1
         version: 4.11.1(@lingui/react@4.11.1(react@19.0.0))(babel-plugin-macros@3.1.0)(typescript@5.8.3)
@@ -4197,6 +4197,10 @@ packages:
     resolution: {integrity: sha512-m+2WxU4SG+vL8L5i/wdQ8/H0u5LQt6ZqIhxonyA2y7+llxRzjmr6GOikYaCiHPPWKG4gUUk+wXGsz9ZJyFB7tA==}
     engines: {node: '>=20.0.0'}
 
+  '@lingui/conf@5.3.1':
+    resolution: {integrity: sha512-eX7DaagtB0/3UN3jB8xqfu4cldSKi+zganZE6Q73N7fhgQhoqEIfnRurSrHP4tmea1AARUi66jFWx/1lPPBrAg==}
+    engines: {node: '>=20.0.0'}
+
   '@lingui/core@4.11.1':
     resolution: {integrity: sha512-iG8Oz46kuYFugWFlCH/SRvnsMqhD2zc3csPUVD7RZN/374v6Djd6EzlQEla307J3qFrhfJDrhhZrIH8v0GANCw==}
     engines: {node: '>=16.0.0'}
@@ -4205,8 +4209,8 @@ packages:
     resolution: {integrity: sha512-8qeiL8tXkGjW9kjUFzO00ZibpP5S6fJHdvTprm7wMAjpLtUYbMlSn/XQi2uLpG+ZB+9/EPTKGhNOaa9Fktq53Q==}
     engines: {node: '>=16.0.0'}
 
-  '@lingui/format-po@5.0.0':
-    resolution: {integrity: sha512-RAanAPS/IYfbHvSoi5b3Sefwd8otmika0sqfsZRtkynGa8f8JHAmGXWY+ChPqQlnWOa68h+fKGKDnCl/8CHKww==}
+  '@lingui/format-po@5.3.1':
+    resolution: {integrity: sha512-TE4nbvOspzj4M1PdBr6lYpMQAM4qulhQij8uyO32aNpejt6psivZ1bdcG6UGh1+ue38C5QYvjVSlWR8UCShTWg==}
     engines: {node: '>=20.0.0'}
 
   '@lingui/macro@4.11.1':
@@ -4220,9 +4224,11 @@ packages:
     resolution: {integrity: sha512-6dufjX9YdGZftgnzmrakvgiE0srp83GhrbK32dz33hASgAbF5vGHkxyOZLmnL3xYO5RgsrCJ5HGyiB/oQKlc9w==}
     engines: {node: '>=16.0.0'}
 
-  '@lingui/message-utils@5.0.0':
-    resolution: {integrity: sha512-Y1EwezciY7BL4dVIEhJA+eyp0ZVxXxT2U0tlnvrHDXEqJZchlVdjYosdsuuKcvZbbTXUEkwyR0wXQ9dKxAlXrg==}
+  '@lingui/message-utils@5.3.1':
+    resolution: {integrity: sha512-/nwO/uXHYNO4pT+gor7iFdvNHSIjhGhJnqGeWMndSAAqmx0LstrFp9yWhcUU3XaTceyy7AtgVZh0ter7ghOw/Q==}
     engines: {node: '>=20.0.0'}
+    bundledDependencies:
+      - '@messageformat/date-skeleton'
 
   '@lingui/react@4.11.1':
     resolution: {integrity: sha512-pqnAhp1gYJKz7dgDAIb1G1oaBq7OcuQJrXDq/ekrLqSBLozlpPskY5bmv20ygtjgoUiVOlD0+32UWDLafasc4w==}
@@ -16052,7 +16058,7 @@ snapshots:
       '@babel/traverse': 7.27.1
       '@babel/types': 7.27.1
       convert-source-map: 2.0.0
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -16110,7 +16116,7 @@ snapshots:
       '@babel/core': 7.27.1
       '@babel/helper-compilation-targets': 7.27.2
       '@babel/helper-plugin-utils': 7.27.1
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       lodash.debounce: 4.0.8
       resolve: 1.22.10
     transitivePeerDependencies:
@@ -16925,7 +16931,7 @@ snapshots:
       '@babel/parser': 7.27.2
       '@babel/template': 7.27.2
       '@babel/types': 7.27.1
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -17925,7 +17931,7 @@ snapshots:
       ci-info: 3.9.0
       compression: 1.8.0
       connect: 3.7.0
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       env-editor: 0.4.2
       freeport-async: 2.0.0
       getenv: 1.0.0
@@ -17991,7 +17997,7 @@ snapshots:
       '@expo/plist': 0.3.4
       '@expo/sdk-runtime-versions': 1.0.0
       chalk: 4.1.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       getenv: 1.0.0
       glob: 10.4.5
       resolve-from: 5.0.0
@@ -18034,7 +18040,7 @@ snapshots:
   '@expo/env@1.0.5':
     dependencies:
       chalk: 4.1.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       dotenv: 16.4.5
       dotenv-expand: 11.0.7
       getenv: 1.0.0
@@ -18046,7 +18052,7 @@ snapshots:
       '@expo/spawn-async': 1.7.2
       arg: 5.0.2
       chalk: 4.1.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       find-up: 5.0.0
       getenv: 1.0.0
       minimatch: 9.0.5
@@ -18085,7 +18091,7 @@ snapshots:
       '@expo/spawn-async': 1.7.2
       '@react-native/js-polyfills': 0.79.2
       chalk: 4.1.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       dotenv: 16.4.5
       dotenv-expand: 11.0.7
       expo-asset: 11.1.5(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(encoding@0.1.13)(expo-font@13.3.1(expo@53.0.9)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(expo@53.0.9)(react-dom@19.0.0(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -18147,7 +18153,7 @@ snapshots:
       '@expo/image-utils': 0.7.4
       '@expo/json-file': 9.1.4
       '@react-native/normalize-colors': 0.79.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       resolve-from: 5.0.0
       semver: 7.7.2
       xml2js: 0.6.0
@@ -18159,7 +18165,7 @@ snapshots:
   '@expo/server@0.6.2':
     dependencies:
       abort-controller: 3.0.0
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       source-map-support: 0.5.21
       undici: 7.9.0
     transitivePeerDependencies:
@@ -18957,6 +18963,16 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@lingui/conf@5.3.1(typescript@5.8.3)':
+    dependencies:
+      '@babel/runtime': 7.26.0
+      chalk: 4.1.2
+      cosmiconfig: 8.3.6(typescript@5.8.3)
+      jest-validate: 29.7.0
+      jiti: 1.21.7
+    transitivePeerDependencies:
+      - typescript
+
   '@lingui/core@4.11.1':
     dependencies:
       '@babel/runtime': 7.26.0
@@ -18972,10 +18988,10 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@lingui/format-po@5.0.0(typescript@5.8.3)':
+  '@lingui/format-po@5.3.1(typescript@5.8.3)':
     dependencies:
-      '@lingui/conf': 5.0.0(typescript@5.8.3)
-      '@lingui/message-utils': 5.0.0
+      '@lingui/conf': 5.3.1(typescript@5.8.3)
+      '@lingui/message-utils': 5.3.1
       date-fns: 3.6.0
       pofile: 1.1.4(patch_hash=3aa567735e04439bd60b423ea3624e3a3f54a7b4f03e416ade823a8c342ad0c2)
     transitivePeerDependencies:
@@ -18998,7 +19014,7 @@ snapshots:
       '@messageformat/parser': 5.1.1
       js-sha256: 0.10.1
 
-  '@lingui/message-utils@5.0.0':
+  '@lingui/message-utils@5.3.1':
     dependencies:
       '@messageformat/parser': 5.1.1
       js-sha256: 0.10.1
@@ -19096,7 +19112,7 @@ snapshots:
     dependencies:
       agent-base: 7.1.3
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       lru-cache: 10.4.3
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
@@ -24244,7 +24260,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -24655,7 +24671,7 @@ snapshots:
       babel-plugin-react-native-web: 0.19.13
       babel-plugin-syntax-hermes-parser: 0.25.1
       babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.27.1)
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       expo: 53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(encoding@0.1.13)(expo-linking@7.1.5)(react-dom@19.0.0(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-webview@13.13.5(patch_hash=21fe2f9c5ca4d6d0d89af4bfd1356a44d92cdac80c7035d93ff211bcae35229e)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       expo-router: 5.0.7(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(expo-constants@17.1.6(expo@53.0.9)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)))(expo-linking@7.1.5)(expo@53.0.9)(react-native-reanimated@3.17.5(@babel/core@7.27.1)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react@19.0.0)
       react-native-reanimated: 3.17.5(@babel/core@7.27.1)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -24705,7 +24721,7 @@ snapshots:
       babel-plugin-react-native-web: 0.19.13
       babel-plugin-syntax-hermes-parser: 0.25.1
       babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.27.1)
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       expo: 53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(encoding@0.1.13)(expo-linking@7.1.5)(react-dom@19.0.0(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-webview@13.13.5(patch_hash=21fe2f9c5ca4d6d0d89af4bfd1356a44d92cdac80c7035d93ff211bcae35229e)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       expo-router: 5.0.7(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(expo-constants@17.1.6(expo@53.0.9)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)))(expo-linking@7.1.5)(expo@53.0.9)(react-native-reanimated@3.17.5(@babel/core@7.27.1)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react@19.0.0)
       react-native-reanimated: 3.17.5(@babel/core@7.27.1)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -25722,10 +25738,6 @@ snapshots:
       ms: 2.1.2
 
   debug@4.3.7:
-    dependencies:
-      ms: 2.1.3
-
-  debug@4.4.1:
     dependencies:
       ms: 2.1.3
 
@@ -26841,7 +26853,7 @@ snapshots:
       '@react-navigation/native': 7.1.9(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       '@react-navigation/native-stack': 7.3.13(@react-navigation/native@7.1.9(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       client-only: 0.0.1
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       escape-string-regexp: 5.0.0
       expo: 53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(encoding@0.1.13)(expo-linking@7.1.5)(react-dom@19.0.0(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-webview@13.13.5(patch_hash=21fe2f9c5ca4d6d0d89af4bfd1356a44d92cdac80c7035d93ff211bcae35229e)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       expo-constants: 17.1.6(expo@53.0.9)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))
@@ -26908,7 +26920,7 @@ snapshots:
   expo-system-ui@5.0.7(expo@53.0.9)(react-native-web@0.20.0(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)):
     dependencies:
       '@react-native/normalize-colors': 0.79.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       expo: 53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(encoding@0.1.13)(expo-linking@7.1.5)(react-dom@19.0.0(react@19.0.0))(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-screens@4.10.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native-webview@13.13.5(patch_hash=21fe2f9c5ca4d6d0d89af4bfd1356a44d92cdac80c7035d93ff211bcae35229e)(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)
     optionalDependencies:
@@ -27406,7 +27418,7 @@ snapshots:
   gaxios@6.7.1(encoding@0.1.13):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       is-stream: 2.0.1
       node-fetch: 2.7.0(encoding@0.1.13)
       uuid: 9.0.1
@@ -27476,7 +27488,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.5
       data-uri-to-buffer: 6.0.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -27794,28 +27806,21 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.4.1
-    transitivePeerDependencies:
-      - supports-color
-
-  https-proxy-agent@7.0.6:
-    dependencies:
-      agent-base: 7.1.3
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -28458,7 +28463,7 @@ snapshots:
       decimal.js: 10.5.0
       html-encoding-sniffer: 4.0.0
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.20
       parse5: 7.3.0
@@ -29042,7 +29047,7 @@ snapshots:
     dependencies:
       exponential-backoff: 3.1.2
       flow-enums-runtime: 0.0.6
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       metro-core: 0.82.3
     transitivePeerDependencies:
       - supports-color
@@ -29070,7 +29075,7 @@ snapshots:
 
   metro-file-map@0.82.3:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       fb-watchman: 2.0.2
       flow-enums-runtime: 0.0.6
       graceful-fs: 4.2.11
@@ -29166,7 +29171,7 @@ snapshots:
       chalk: 4.1.2
       ci-info: 2.0.0
       connect: 3.7.0
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       error-stack-parser: 2.1.4
       flow-enums-runtime: 0.0.6
       graceful-fs: 4.2.11
@@ -29769,10 +29774,10 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.3
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       get-uri: 6.0.4
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       pac-resolver: 7.0.1
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
@@ -29991,7 +29996,7 @@ snapshots:
   portfinder@1.0.37:
     dependencies:
       async: 3.2.6
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -30443,9 +30448,9 @@ snapshots:
   proxy-agent@6.5.0:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       lru-cache: 7.18.3
       pac-proxy-agent: 7.2.0
       proxy-from-env: 1.1.0
@@ -31368,7 +31373,7 @@ snapshots:
 
   router@2.2.0:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       depd: 2.0.0
       is-promise: 4.0.0
       parseurl: 1.3.3
@@ -31694,7 +31699,7 @@ snapshots:
   socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       socks: 2.8.4
     transitivePeerDependencies:
       - supports-color
@@ -32636,7 +32641,7 @@ snapshots:
 
   universal-analytics@0.5.3:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       uuid: 8.3.2
     transitivePeerDependencies:
       - supports-color
@@ -32811,7 +32816,7 @@ snapshots:
   vite-node@2.1.9(@types/node@22.15.3)(lightningcss@1.27.0)(terser@5.39.2):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       es-module-lexer: 1.7.0
       pathe: 1.1.2
       vite: 5.4.19(@types/node@22.15.3)(lightningcss@1.27.0)(terser@5.39.2)
@@ -32942,7 +32947,7 @@ snapshots:
       '@vitest/spy': 2.1.9
       '@vitest/utils': 2.1.9
       chai: 5.2.0
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@9.4.0)
       expect-type: 1.2.0
       magic-string: 0.30.17
       pathe: 1.1.2
