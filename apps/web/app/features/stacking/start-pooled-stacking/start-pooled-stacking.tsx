@@ -3,12 +3,12 @@ import { Form, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
 import { ClarityType } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { Flex, Stack, styled } from 'leather-styles/jsx';
+import { Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
+import { LoadingOverlay } from '~/components/loading-overlay';
 import { PoolOverview } from '~/components/pool-overview';
 import { Page } from '~/features/page/page';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
@@ -39,7 +39,7 @@ import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 import { getPosts } from '~/utils/post-utils';
 
-import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
+import { Button, Hr } from '@leather.io/ui';
 
 import { StackingContractDetails } from '../components/stacking-contract-details';
 import { StackingFormItemTitle } from '../components/stacking-form-item-title';
@@ -55,30 +55,17 @@ import { StackingPoolFormSchema, createValidationSchema } from './utils/stacking
 import { PoolSlug, getPoolFromSlug } from './utils/stacking-pool-types';
 import { PoolWrapperAllowanceState } from './utils/types';
 
+const initialStackingFormValues: Partial<StackingPoolFormSchema> = {};
+
 interface StartPooledStackingProps {
   poolSlug: PoolSlug;
 }
 
 export function StartPooledStacking({ poolSlug }: StartPooledStackingProps) {
   const { client } = useStackingClient();
-  const { stacksAccount } = useLeatherConnect();
-
-  if (!stacksAccount || !client) return 'You need to connect Leather';
-
-  return <StartPooledStackingLayout client={client} poolSlug={poolSlug} />;
-}
-
-const initialStackingFormValues: Partial<StackingPoolFormSchema> = {};
-
-interface StartPooledStackingLayoutProps {
-  poolSlug: PoolSlug;
-  client: StackingClient;
-}
-
-// This is not a layout component
-function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayoutProps) {
   const { stacksAccount, btcAddressP2wpkh } = useLeatherConnect();
-  if (!stacksAccount) throw new Error('No STX address available');
+
+  if (!stacksAccount || !client) throw new Error('No STX address available');
 
   const stacksClient = useStacksClient();
   const poolInfo = usePoolInfo(poolSlug);
@@ -242,11 +229,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   const pooledStackingConditionsPost = posts.pooledStackingConditions;
 
   if (getSecondsUntilNextCycleQuery.isLoading || poolInfo.isLoading) {
-    return (
-      <Flex height="100vh" width="100%">
-        <LoadingSpinner />
-      </Flex>
-    );
+    return <LoadingOverlay />;
   }
 
   function onSubmit(confirmation: PooledStackingConfirmationStepId) {

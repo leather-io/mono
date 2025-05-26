@@ -5,6 +5,7 @@ import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
+import { DASH } from '~/constants/constants';
 import { getPostSlugForProvider } from '~/data/data';
 import { getLearnMoreLink } from '~/features/page/page';
 import { CopyAddress } from '~/features/stacking/components/address';
@@ -107,7 +108,7 @@ function MinimumCommitmentCell({
 }
 
 interface HistoricalAprCellProps {
-  apr?: number;
+  apr?: number | null;
 }
 function HistoricalAprCell({ apr }: HistoricalAprCellProps): ReactElement {
   const posts = getPosts();
@@ -116,14 +117,14 @@ function HistoricalAprCell({ apr }: HistoricalAprCellProps): ReactElement {
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label="Historical yield" textStyle="label.02" />}
-      value={toHumanReadablePercent(apr || 0)}
+      value={apr ? toHumanReadablePercent(apr) : DASH}
     />
   );
 }
 
 interface TotalValueLockedCellProps {
-  totalValueLocked?: number;
-  totalValueLockedUsd?: string;
+  totalValueLocked?: number | null;
+  totalValueLockedUsd?: string | null;
 }
 function TotalValueLockedCell({
   totalValueLocked,
@@ -137,8 +138,8 @@ function TotalValueLockedCell({
       name={<PostLabelHoverCard post={post} label="Total value locked" textStyle="label.02" />}
       value={
         <>
-          {toHumanReadableStx(totalValueLocked || 0)}{' '}
-          <Box textStyle="label.03">{totalValueLockedUsd}</Box>
+          {totalValueLocked ? toHumanReadableStx(totalValueLocked) : DASH}{' '}
+          {totalValueLockedUsd && <Box textStyle="label.03">{totalValueLockedUsd}</Box>}
         </>
       }
     />

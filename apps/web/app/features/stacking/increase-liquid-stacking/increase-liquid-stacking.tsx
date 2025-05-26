@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
@@ -40,10 +39,6 @@ import { getProtocolBySlug } from '../start-liquid-stacking/utils/utils-preset-p
 import { ChoosePoolingAmount } from '../start-pooled-stacking/components/choose-pooling-amount';
 import { createValidationSchema } from './utils/increase-liquid-schema';
 
-interface StartLiquidStackingProps {
-  protocolSlug: ProtocolSlug;
-}
-
 const initialStackingFormValues: Partial<IncreaseLiquidFormSchema> = {
   signerKey: '',
   signerSignature: '',
@@ -52,22 +47,15 @@ const initialStackingFormValues: Partial<IncreaseLiquidFormSchema> = {
   // amount: '',
 };
 
-export function IncreaseLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
-  const { client } = useStackingClient();
-  const { stacksAccount } = useLeatherConnect();
-
-  if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
-  return <IncreaseLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
-}
-
-interface StartLiquidStackingLayoutProps {
+interface StartLiquidStackingProps {
   protocolSlug: ProtocolSlug;
-  client: StackingClient;
 }
 
-function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStackingLayoutProps) {
+export function IncreaseLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
   const { stacksAccount } = useLeatherConnect();
-  if (!stacksAccount) throw new Error('No stx address available');
+  const { client } = useStackingClient();
+
+  if (!stacksAccount || !client) throw new Error('No stx address available');
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 

@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
@@ -14,7 +13,6 @@ import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import { useGetSecondsUntilNextCycleQuery } from '~/features/stacking/hooks/stacking.query';
-import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
 import { ChooseLiquidStackingConditions } from '~/features/stacking/start-liquid-stacking/components/choose-liquid-stacking-conditions';
 import { LiquidStackingConfirmationSteps } from '~/features/stacking/start-liquid-stacking/components/liquid-stacking-confirmation-steps';
 import {
@@ -39,28 +37,15 @@ import { StackingFormItemTitle } from '../components/stacking-form-item-title';
 import { ChoosePoolingAmount } from '../start-pooled-stacking/components/choose-pooling-amount';
 import { getProtocolBySlug } from './utils/utils-preset-protocols';
 
-interface StartLiquidStackingProps {
-  protocolSlug: ProtocolSlug;
-}
 const initialStackingFormValues: Partial<StackingLiquidFormSchema> = {
   // amount: '',
 };
 
-export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
-  const { client } = useStackingClient();
-  const { stacksAccount } = useLeatherConnect();
-
-  if (!stacksAccount || !client) return <Navigate to="/stacking" replace />;
-
-  return <StartLiquidStackingLayout client={client} protocolSlug={protocolSlug} />;
-}
-
-interface StartLiquidStackingLayoutProps {
+interface StartLiquidStackingProps {
   protocolSlug: ProtocolSlug;
-  client: StackingClient;
 }
 
-function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutProps) {
+export function StartLiquidStacking({ protocolSlug }: StartLiquidStackingProps) {
   const { stacksAccount } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No stx address available');
 
