@@ -1,10 +1,12 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, InteractionManager, Keyboard } from 'react-native';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import { useToastContext } from '@/components/toast/toast-context';
 import { useBrowser } from '@/core/browser-provider';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useSettings } from '@/store/settings/settings';
+import { t } from '@lingui/macro';
 
 import { Sheet } from '@leather.io/ui/native';
 
@@ -12,6 +14,7 @@ import { BrowserActiveState } from './browser-active-state';
 import { BrowserInactiveState } from './browser-inactive-state';
 import { SearchBar } from './search-bar/search-bar';
 import { useBrowserSearchState } from './use-browser-search-state';
+import { isValidUrl } from './utils';
 
 export function BrowserSheet() {
   const { browserSheetRef } = useGlobalSheets();
@@ -29,6 +32,7 @@ export function BrowserSheet() {
       goToUrl(url);
     },
   }));
+  const { displayToast } = useToastContext();
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', function () {
@@ -85,7 +89,22 @@ export function BrowserSheet() {
         setTextUrl={setTextUrl}
         navState={navState}
         resetBrowser={resetSearchBar}
-        onSubmit={() => goToUrl(browserSearchState.textUrl)}
+        onSubmit={() => {
+          Keyboard.dismiss();
+          InteractionManager.runAfterInteractions(() => {
+            if (isValidUrl(browserSearchState.textUrl)) {
+              goToUrl(browserSearchState.textUrl);
+            } else {
+              displayToast({
+                type: 'error',
+                title: t({
+                  id: 'browser.search-bar.wrong-url',
+                  message: 'Wrong URL',
+                }),
+              });
+            }
+          });
+        }}
       />
     </Sheet>
   );
