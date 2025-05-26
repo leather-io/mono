@@ -62,7 +62,7 @@ export const unstable_settings = { initialRouteName: '/' };
 
 initAppServices();
 void SplashScreen.preventAutoHideAsync();
-void initiateI18n();
+initiateI18n();
 void setupFeatureFlags();
 
 function App() {
