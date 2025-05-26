@@ -1,1 +1,4 @@
-*/messages.js
+**/*.po
+**/*.js
+**/*.ts
+!en/**

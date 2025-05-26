@@ -23,15 +23,18 @@ jobs:
         working-directory: ./apps/mobile
         run: |
           pnpm lingui
+
       - name: crowdin action
         uses: crowdin/github-action@v2
         with:
+          # Sync `en` translations with Crowdin
           upload_sources: true
-          # maybe we should do this to set initial translations?
+          upload_language: 'en'
           upload_translations: false
           download_translations: false
           create_pull_request: false
           config: apps/mobile/crowdin.yml
+
         env:
           # A classic GitHub Personal Access Token with the 'repo' scope selected (the user should have write access to the repository).
           GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
