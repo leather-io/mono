@@ -1,7 +1,6 @@
 import React from 'react';
 
-import * as Sentry from '@sentry/react-native';
-
+// import * as Sentry from '@sentry/react-native';
 import { Error } from './error';
 
 interface ErrorBoundaryProps {
@@ -24,12 +23,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    Sentry.captureException(error, {
-      extra: {
-        componentStack: errorInfo.componentStack,
-      },
-    });
+  componentDidCatch() {
+    // Sentry.captureException(error, {
+    //   extra: {
+    //     componentStack: errorInfo.componentStack,
+    //   },
+    // });
   }
 
   render() {
