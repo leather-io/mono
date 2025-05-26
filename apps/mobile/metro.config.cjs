@@ -4,7 +4,7 @@
 const path = require('path');
 const { getDefaultConfig } = require('expo/metro-config');
 const MetroSymlinksResolver = require('@rnx-kit/metro-resolver-symlinks');
-const { withSentryConfig } = require('@sentry/react-native/metro');
+// const { withSentryConfig } = require('@sentry/react-native/metro');
 
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, '../..');
@@ -80,4 +80,5 @@ config.transformer.getTransformOptions = async () => ({
   },
 });
 
-module.exports = withSentryConfig(config);
+// module.exports = withSentryConfig(config);
+module.exports = config;
