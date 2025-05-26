@@ -1,4 +1,4 @@
-import { Box, ClockIcon, ConnectionIcon, SparkleIcon } from '@leather.io/ui/native';
+import { Box, ClockIcon, ConnectionIcon } from '@leather.io/ui/native';
 
 import { Tab } from './tab';
 import { BrowserSheetTab } from './utils';
@@ -11,14 +11,14 @@ interface BrowserHeaderProps {
 export function BrowserHeader({ currentTab, setCurrentTab }: BrowserHeaderProps) {
   return (
     <Box flexDirection="row" height={74}>
-      <Tab
-        isActive={currentTab === 'suggested'}
-        onPress={() => {
-          setCurrentTab('suggested');
-        }}
-      >
-        <SparkleIcon />
-      </Tab>
+      {/* <Tab */}
+      {/*   isActive={currentTab === 'suggested'} */}
+      {/*   onPress={() => { */}
+      {/*     setCurrentTab('suggested'); */}
+      {/*   }} */}
+      {/* > */}
+      {/*   <SparkleIcon /> */}
+      {/* </Tab> */}
       <Tab
         isActive={currentTab === 'connected'}
         onPress={() => {
