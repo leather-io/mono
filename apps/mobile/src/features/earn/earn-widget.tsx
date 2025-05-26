@@ -9,6 +9,7 @@ import { useTheme } from '@shopify/restyle';
 import { StxBalance } from '@leather.io/services';
 import { Box, Text, Theme } from '@leather.io/ui/native';
 
+import { useEarnFlag } from '../feature-flags';
 import { LockedBalanceCard } from './locked-balance-card';
 import { SbtcCard } from './sbtc-card';
 import { StackingCard } from './stacking-card';
@@ -21,6 +22,10 @@ export function EarnWidget() {
   const theme = useTheme<Theme>();
 
   const stxBalance = useStxTotalBalance();
+  const earnFlag = useEarnFlag();
+  const userIsStacking = stxBalance.state == 'success' && isStacking(stxBalance);
+
+  if (!earnFlag && !userIsStacking) return null;
 
   return (
     <Widget>
@@ -36,29 +41,31 @@ export function EarnWidget() {
       </Box>
       <Widget.Body>
         <FetchWrapper data={stxBalance}>
-          {stxBalance.state == 'success' && isStacking(stxBalance) ? (
+          {userIsStacking ? (
             <LockedBalanceCard
               fiatLockedBalance={stxBalance.value?.fiat.lockedBalance}
               stxLockedBalance={stxBalance.value?.stx.lockedBalance}
             />
           ) : (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                gap: theme.spacing['2'],
-                paddingHorizontal: theme.spacing['5'],
-              }}
-              style={{
-                // prevent card shadows being cut off
-                overflow: 'visible',
-              }}
-            >
-              <Box flexDirection="row" gap="3">
-                <SbtcCard />
-                <StackingCard />
-              </Box>
-            </ScrollView>
+            earnFlag && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  gap: theme.spacing['2'],
+                  paddingHorizontal: theme.spacing['5'],
+                }}
+                style={{
+                  // prevent card shadows being cut off
+                  overflow: 'visible',
+                }}
+              >
+                <Box flexDirection="row" gap="3">
+                  <SbtcCard />
+                  <StackingCard />
+                </Box>
+              </ScrollView>
+            )
           )}
         </FetchWrapper>
       </Widget.Body>
