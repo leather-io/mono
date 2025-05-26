@@ -14,7 +14,7 @@ interface BrowserTabLayoutProps {
 export function BrowserTabSheetLayout({ children }: BrowserTabLayoutProps) {
   const { bottom } = useSafeAreaInsets();
   return (
-    <BottomSheetScrollView contentInset={{ bottom: bottom + URL_SEARCH_HEIGHT }}>
+    <BottomSheetScrollView contentContainerStyle={{ paddingBottom: bottom + URL_SEARCH_HEIGHT }}>
       <Box flex={1} px="5" py="2">
         {children}
       </Box>
