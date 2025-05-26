@@ -40,7 +40,7 @@ export default () => {
       name: 'Leather',
       owner: 'leather-wallet',
       slug: 'leather-wallet-mobile',
-      version: '2.2.0',
+      version: '2.3.0',
       runtimeVersion: {
         policy: 'fingerprint',
       },
