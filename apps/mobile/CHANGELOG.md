@@ -701,6 +701,71 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.43.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.42.1...@leather.io/mobile-v2.43.0) (2025-05-27)
+
+
+### Features
+
+* commit po files and ensure we upload them as the translation source of truth for crowdin ([43089ce](https://github.com/leather-io/mono/commit/43089ce176eb80935e0df807e986ce722672cf79))
+* **mobile:** pre-select account when Receive is opened from Account screen ([97fd22b](https://github.com/leather-io/mono/commit/97fd22bede1e0eb4de2aaee9167a38bd3dc8b8bd))
+
+
+### Bug Fixes
+
+* adding account stays loading on failed auth check ([c101da4](https://github.com/leather-io/mono/commit/c101da459a6dfa570b996db106b4a214cd6a7bb4))
+* android content inset ([49c9c04](https://github.com/leather-io/mono/commit/49c9c04204ef895645aa661d58c1e9dcdbaa1bb0))
+* android dapp crash ([a5dc417](https://github.com/leather-io/mono/commit/a5dc41717f717ecfdfc03d6e349a38de5d7040fe))
+* assets ([a3b7a95](https://github.com/leather-io/mono/commit/a3b7a95cc8d7d2d61ba12c60b6fcfc0185189881))
+* back handler for android ([59795ce](https://github.com/leather-io/mono/commit/59795ce21b485e46acbfafa02dfd844a4e6a5782))
+* collectibles width ([1bc3734](https://github.com/leather-io/mono/commit/1bc37344caaab5f7f9d0d60a09abab1803748797))
+* dapp feature flag ([1561d66](https://github.com/leather-io/mono/commit/1561d667cc6b4eecd6f94087daa96ea5f88543c0))
+* disable account reorder for now ([38ac998](https://github.com/leather-io/mono/commit/38ac9984835482a8966e929cc087a5929d297d75))
+* don't show activity button when app has no wallets ([d737ddf](https://github.com/leather-io/mono/commit/d737ddf21e293abd806a98fc635a7383e470706c))
+* dont go to wrong url ([2a49d67](https://github.com/leather-io/mono/commit/2a49d670ca2d6b5a3030bd42ccc8f4d4708e4d53))
+* empty activity ([8c72e81](https://github.com/leather-io/mono/commit/8c72e8174eb6267556c9a4fa4e78d17038c950e6))
+* **mobile:** add guards against undefined bitcoinAccounts if wallets deleted, ref ENG-41 ([73c1a28](https://github.com/leather-io/mono/commit/73c1a28de5076f6feba6923afbbcb9bb91835d5b))
+* **mobile:** add new collectible designs, ref ENG-33 ([c29a670](https://github.com/leather-io/mono/commit/c29a6707aeecf7f7ceb90c973819d0ee3c1cd7e0))
+* **mobile:** add new token balance designs, ref ENG-33 ([a002e98](https://github.com/leather-io/mono/commit/a002e988ba5e2ed11f1be7a6ab9734e40a0efdfb))
+* **mobile:** auto-show guard sheet on severity change ([033e10d](https://github.com/leather-io/mono/commit/033e10d033f3b98d1d123315076dfa50530ca2ec))
+* **mobile:** change bg colour of approver header, ref LEA-2546 ([a40aef1](https://github.com/leather-io/mono/commit/a40aef17a3e20ea8887122becafa698f5511dcbb))
+* **mobile:** fix account initialization in send ([c788e62](https://github.com/leather-io/mono/commit/c788e622df02bdfd7395c2900ea3df185e748831))
+* **mobile:** fix width of empty browser text ([9815a7e](https://github.com/leather-io/mono/commit/9815a7e5f1887ea50749cba390972a04f3ae5c09))
+* **mobile:** hide back button on Receive asset selection unless navigated from account selection ([1f4eb34](https://github.com/leather-io/mono/commit/1f4eb3453005c4bbf94e7e1202257135ad58a984))
+* **mobile:** make sure we can handle exponential values in formatMoney, ref LEA-2629 ([507dda1](https://github.com/leather-io/mono/commit/507dda19cc702301c38ddeb19469a76df9bcf9a1))
+* **mobile:** prevent useBitcoinAccounts from crashing on wallet deletion, ref ENG-41 ([f0c2ad0](https://github.com/leather-io/mono/commit/f0c2ad0ed68a0c83e41e83b83a4c6d3fddc50e50))
+* **mobile:** remove unused images ([552ab41](https://github.com/leather-io/mono/commit/552ab41f40b2a7ec8eb9dc23fe008a78b425b762))
+* **mobile:** replace create wallet animations ([11a100e](https://github.com/leather-io/mono/commit/11a100ee76a4855912fb10d4a0f45a9a39c6eb51))
+* **mobile:** revert change approver BG and add border to some sections, ref LEA-2546 ([7830ee4](https://github.com/leather-io/mono/commit/7830ee49041b22d989fd493aa5a5baf50f12c9ef))
+* **mobile:** roll back not found page to appease lint, ref LEA-2562 ([7caaedf](https://github.com/leather-io/mono/commit/7caaedfd5bfaad21cadb223ebc4e8540d3f48437))
+* **mobile:** swap out stickers, LEA-2592 ([fe41b78](https://github.com/leather-io/mono/commit/fe41b786e64062871ecad447e74072e57bb299da))
+* **mobile:** truncate long token names with ellipsis, ref ENG-33 ([319c95e](https://github.com/leather-io/mono/commit/319c95ea09a0c47975fdd1ab7c85730001453d92))
+* **mobile:** update max amount in Send form on recipient change ([f1ac38b](https://github.com/leather-io/mono/commit/f1ac38baf0dd8288ad2ae512ec307c2ce925180e))
+* **mobile:** update NSPrivacyAccessedAPIType value in app config ([5a181b4](https://github.com/leather-io/mono/commit/5a181b431d3a96b4de7bc03de0c469973debe828))
+* open windows inside webview ([b65e92f](https://github.com/leather-io/mono/commit/b65e92f46dea6d67f07be9f2d9f75d9496bd36fc))
+* remove Sentry for now ([7ec6a5e](https://github.com/leather-io/mono/commit/7ec6a5e981d7a766642156ca0a55145cf00b351d))
+* remove suggested tab and earn opportunities ([29cacc4](https://github.com/leather-io/mono/commit/29cacc42a35603b4a91d2934d437ab8e081286c8))
+* reset wallet route ([f5969a4](https://github.com/leather-io/mono/commit/f5969a45a9d2faaf43fee8c15ca370b7aff6005b))
+* revamp splash screen ([4121857](https://github.com/leather-io/mono/commit/412185749c7783c709248f25b47a851a7b1c1bf6))
+* url search bar bug ([c46f0ee](https://github.com/leather-io/mono/commit/c46f0ee8514a604736fb9ef0b9f1eff59080189b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.4
+    * @leather.io/constants bumped to 0.20.3
+    * @leather.io/crypto bumped to 1.7.1
+    * @leather.io/provider bumped to 1.2.16
+    * @leather.io/query bumped to 2.37.4
+    * @leather.io/rpc bumped to 2.16.1
+    * @leather.io/services bumped to 1.12.3
+    * @leather.io/stacks bumped to 1.10.5
+    * @leather.io/ui bumped to 1.68.1
+    * @leather.io/utils bumped to 0.34.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.4
+
 ## [2.42.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.42.0...@leather.io/mobile-v2.42.1) (2025-05-23)
 
 
