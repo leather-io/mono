@@ -91,19 +91,23 @@ export function BrowserSheet() {
         resetBrowser={resetSearchBar}
         onSubmit={() => {
           Keyboard.dismiss();
-          InteractionManager.runAfterInteractions(() => {
-            if (isValidUrl(browserSearchState.textUrl)) {
-              goToUrl(browserSearchState.textUrl);
-            } else {
-              displayToast({
-                type: 'error',
-                title: t({
-                  id: 'browser.search-bar.wrong-url',
-                  message: 'Wrong URL',
-                }),
-              });
-            }
-          });
+          // setting timeout s.t. keyboard has time to close before opening url
+          // Without this search bar gets lost sometimes after going to active browser tab
+          setTimeout(() => {
+            InteractionManager.runAfterInteractions(() => {
+              if (isValidUrl(browserSearchState.textUrl)) {
+                goToUrl(browserSearchState.textUrl);
+              } else {
+                displayToast({
+                  type: 'error',
+                  title: t({
+                    id: 'browser.search-bar.wrong-url',
+                    message: 'Wrong URL',
+                  }),
+                });
+              }
+            });
+          }, 50);
         }}
       />
     </Sheet>
