@@ -389,6 +389,26 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.10.1
 
+## [1.68.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.0...@leather.io/ui-v1.68.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* back handler for android ([59795ce](https://github.com/leather-io/mono/commit/59795ce21b485e46acbfafa02dfd844a4e6a5782))
+* **mobile:** add new collectible designs, ref ENG-33 ([c29a670](https://github.com/leather-io/mono/commit/c29a6707aeecf7f7ceb90c973819d0ee3c1cd7e0))
+* **mobile:** add new token balance designs, ref ENG-33 ([a002e98](https://github.com/leather-io/mono/commit/a002e988ba5e2ed11f1be7a6ab9734e40a0efdfb))
+* **mobile:** change bg colour of approver header, ref LEA-2546 ([a40aef1](https://github.com/leather-io/mono/commit/a40aef17a3e20ea8887122becafa698f5511dcbb))
+* **mobile:** replace create wallet animations ([11a100e](https://github.com/leather-io/mono/commit/11a100ee76a4855912fb10d4a0f45a9a39c6eb51))
+* **mobile:** replace receive svg, LEA-2646 ([6359f6e](https://github.com/leather-io/mono/commit/6359f6e7addb8ef3f3ca275cfe33ef1e24c1bbaa))
+* **mobile:** revert change approver BG and add border to some sections, ref LEA-2546 ([7830ee4](https://github.com/leather-io/mono/commit/7830ee49041b22d989fd493aa5a5baf50f12c9ef))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.34.1
+
 ## [1.68.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.67.0...@leather.io/ui-v1.68.0) (2025-05-22)
 
 

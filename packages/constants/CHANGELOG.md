@@ -165,6 +165,14 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.20.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.20.2...@leather.io/constants-v0.20.3) (2025-05-27)
+
+
+### Bug Fixes
+
+* **mobile:** replace create wallet animations ([11a100e](https://github.com/leather-io/mono/commit/11a100ee76a4855912fb10d4a0f45a9a39c6eb51))
+* **mobile:** swap out stickers, LEA-2592 ([fe41b78](https://github.com/leather-io/mono/commit/fe41b786e64062871ecad447e74072e57bb299da))
+
 ## [0.20.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.20.0...@leather.io/constants-v0.20.1) (2025-05-22)
 
 
