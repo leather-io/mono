@@ -37,7 +37,6 @@ interface BtcFormProps {
   assetItemAnimationOffsetTop?: number | null;
   onOpenAssetPicker(): void;
 }
-
 export function BtcForm({
   fiatBalance,
   availableBalance,

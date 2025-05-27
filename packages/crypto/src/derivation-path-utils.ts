@@ -32,11 +32,10 @@ export const extractAddressIndexFromPath = extractSectionFromDerivationPath(
   DerivationPathDepth.AddressIndex
 );
 
-export function appendAddressIndexToPath(path: string, index: number) {
+export function appendAddressIndexToPath(path: string, change: number, addressIndex: number) {
   const accountIndex = extractAccountIndexFromPath(path);
   if (!Number.isInteger(accountIndex)) throw new Error('Invalid path, must have account index');
-  const assumedReceiveChangeIndex = 0;
-  return `${path}/${assumedReceiveChangeIndex}/${index}`;
+  return `${path}/${change}/${addressIndex}`;
 }
 
 export function extractFingerprintFromKeyOriginPath(keyOriginPath: string) {
@@ -120,6 +119,14 @@ export function extractAccountIndexFromDescriptor(descriptor: string) {
  */
 export function extractKeyFromDescriptor(descriptor: string) {
   return descriptor.split(']')[1];
+}
+
+/**
+ * @example `0a3fd8ef/84'/0'/0/0/0` -> `0a3fd8ef/84'/0'/0`
+ */
+export function extractAccountPathFromFullPath(path: string) {
+  const segments = path.split('/');
+  return segments.slice(0, 4).join('/');
 }
 
 export function keyOriginToDerivationPath(keyOrigin: string) {

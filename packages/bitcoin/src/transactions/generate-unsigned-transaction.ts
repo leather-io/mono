@@ -1,37 +1,39 @@
-import { hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 
 import {
   CoinSelectionRecipient,
-  CoinSelectionUtxo,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
 } from '../coin-selection/coin-selection';
-import { BtcSignerDefaultBip32Derivation } from '../signer/bitcoin-signer';
+import {
+  BitcoinNativeSegwitPayer,
+  BitcoinTaprootPayer,
+  payerToBip32Derivation,
+  payerToTapBip32Derivation,
+} from '../signer/bitcoin-signer';
 import { BtcSignerNetwork } from '../utils/bitcoin.network';
 import { BitcoinError } from '../validation/bitcoin-error';
 
-export interface GenerateBitcoinUnsignedTransactionArgs {
+export interface GenerateBitcoinUnsignedTransactionArgs<T> {
   feeRate: number;
   isSendingMax?: boolean;
-  payerAddress: string;
-  payerPublicKey: string;
-  bip32Derivation: BtcSignerDefaultBip32Derivation[];
   network: BtcSignerNetwork;
   recipients: CoinSelectionRecipient[];
-  utxos: CoinSelectionUtxo[];
+  utxos: T[];
+  changeAddress: string;
+  payerLookup(keyOrigin: string): BitcoinNativeSegwitPayer | BitcoinTaprootPayer | undefined;
 }
-
-export function generateBitcoinUnsignedTransactionNativeSegwit({
+export function generateBitcoinUnsignedTransaction<
+  T extends { txid: string; vout: number; value: number; keyOrigin: string },
+>({
   feeRate,
   isSendingMax,
-  payerAddress,
-  payerPublicKey,
-  bip32Derivation,
   network,
   recipients,
+  changeAddress,
   utxos,
-}: GenerateBitcoinUnsignedTransactionArgs) {
+  payerLookup,
+}: GenerateBitcoinUnsignedTransactionArgs<T>) {
   const determineUtxosArgs = { feeRate, recipients, utxos };
   const { inputs, outputs, fee } = isSendingMax
     ? determineUtxosForSpendAll(determineUtxosArgs)
@@ -41,19 +43,33 @@ export function generateBitcoinUnsignedTransactionNativeSegwit({
   if (!outputs.length) throw new BitcoinError('NoOutputsToSign');
 
   const tx = new btc.Transaction();
-  const p2wpkh = btc.p2wpkh(hexToBytes(payerPublicKey), network);
 
   for (const input of inputs) {
+    const payer = payerLookup(input.keyOrigin);
+
+    if (!payer) {
+      // eslint-disable-next-line no-console
+      console.log(`No payer found for input with keyOrigin ${input.keyOrigin}`);
+      continue;
+    }
+
+    const bip32Derivation =
+      payer.paymentType === 'p2tr'
+        ? { tapBip32Derivation: [payerToTapBip32Derivation(payer)] }
+        : { bip32Derivation: [payerToBip32Derivation(payer)] };
+
+    const tapInternalKey =
+      payer.paymentType === 'p2tr' ? { tapInternalKey: payer.payment.tapInternalKey } : {};
+
     tx.addInput({
       txid: input.txid,
       index: input.vout,
-      sequence: 0,
-      bip32Derivation,
       witnessUtxo: {
-        // script = 0014 + pubKeyHash
-        script: p2wpkh.script,
+        script: payer.payment.script,
         amount: BigInt(input.value),
       },
+      ...bip32Derivation,
+      ...tapInternalKey,
     });
   }
 
@@ -61,7 +77,7 @@ export function generateBitcoinUnsignedTransactionNativeSegwit({
     // When coin selection returns an output with no address,
     // we assume it is a change output
     if (!output.address) {
-      tx.addOutputAddress(payerAddress, BigInt(output.value), network);
+      tx.addOutputAddress(changeAddress, BigInt(output.value), network);
       return;
     }
     tx.addOutputAddress(output.address, BigInt(output.value), network);

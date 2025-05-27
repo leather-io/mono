@@ -1,18 +1,26 @@
-import { hexToBytes } from '@noble/hashes/utils';
+import { hex } from '@scure/base';
+import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
+import { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
+import { createBitcoinAddress } from '../validation/bitcoin-address';
 import {
   GenerateBitcoinUnsignedTransactionArgs,
-  generateBitcoinUnsignedTransactionNativeSegwit,
+  generateBitcoinUnsignedTransaction,
 } from './generate-unsigned-transaction';
+
+const publicKey = hex.decode('030000000000000000000000000000000000000000000000000000000000000001');
+const payment = btc.p2wpkh(publicKey, btc.TEST_NETWORK);
 
 const mockResult = {
   inputs: [
     {
-      address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+      path: "m/84'/1'/0'/0/1",
+      keyOrigin: "deadbeef/84'/1'/0'/0/1",
+      address: payment.address!,
       txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
       vout: 1,
       value: 200000,
@@ -21,19 +29,12 @@ const mockResult = {
   fee: createMoney(141, 'BTC'),
 };
 
-describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
-  const mockArgs: GenerateBitcoinUnsignedTransactionArgs = {
+describe(generateBitcoinUnsignedTransaction.name, () => {
+  const mockArgs: GenerateBitcoinUnsignedTransactionArgs<OwnedUtxo> = {
     feeRate: 1,
     isSendingMax: false,
     network: getBtcSignerLibNetworkConfigByMode('testnet'),
-    payerAddress: 'tb1qxy5r9rlmpcxgwp92x2594q3gg026y4kdv2rsl8',
-    payerPublicKey: '0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af',
-    bip32Derivation: [
-      [
-        hexToBytes('0329b076bc20f7b1592b2a1a5cb91dfefe8c966e50e256458e23dd2c5d63f8f1af'),
-        { fingerprint: 400738063, path: [2147483732, 2147483649, 2147483648, 0, 0] },
-      ],
-    ],
+    changeAddress: createBitcoinAddress(payment.address!),
     recipients: [
       {
         address: 'tb1qsqncyhhqdtfn07t3dhupx7smv5gk83ds6k0gfa',
@@ -42,22 +43,40 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
     ],
     utxos: [
       {
-        address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+        address: payment.address!,
+        path: "m/84'/1'/0'/0/0",
+        keyOrigin: "deadbeef/84'/1'/0'/0/0",
         txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
         vout: 0,
         value: 100000,
       },
       {
-        address: 'tb1qt28eagxcl9gvhq2rpj5slg7dwgxae2dn2hk93m',
+        address: payment.address!,
+        path: "m/84'/1'/0'/0/1",
+        keyOrigin: "deadbeef/84'/1'/0'/0/1",
         txid: 'c715ea469c8d794f6dd7e0043148631f69d411c428ef0ab2b04e4528ffe8319f',
         vout: 1,
         value: 200000,
       },
     ],
+    payerLookup() {
+      return {
+        paymentType: 'p2wpkh',
+        address: createBitcoinAddress(payment.address!),
+        keyOrigin: "deadbeef/84'/1'/0'/0/0",
+        masterKeyFingerprint: 'deadbeef',
+        network: 'testnet',
+        payment: {
+          script: payment.script,
+          type: 'p2wpkh',
+        },
+        publicKey,
+      };
+    },
   };
 
   it('should generate an unsigned transaction with correct inputs and outputs', () => {
-    const result = generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
+    const result = generateBitcoinUnsignedTransaction(mockArgs);
     if (result) {
       expect(result.inputs).toEqual(mockResult.inputs);
       expect(result.fee).toEqual(mockResult.fee);
@@ -67,7 +86,7 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
   });
 
   it('should add change address to output correctly', () => {
-    const result = generateBitcoinUnsignedTransactionNativeSegwit(mockArgs);
+    const result = generateBitcoinUnsignedTransaction(mockArgs);
 
     if (result) {
       expect(result.tx.outputsLength).toBe(2);
@@ -76,12 +95,12 @@ describe('generateBitcoinUnsignedTransactionNativeSegwit', () => {
   });
 
   it('should throw an error if inputs are empty', () => {
-    const argsWithNoInputs: GenerateBitcoinUnsignedTransactionArgs = {
+    const argsWithNoInputs: GenerateBitcoinUnsignedTransactionArgs<any> = {
       ...mockArgs,
       utxos: [],
     };
 
-    expect(() => generateBitcoinUnsignedTransactionNativeSegwit(argsWithNoInputs)).toThrowError(
+    expect(() => generateBitcoinUnsignedTransaction(argsWithNoInputs)).toThrowError(
       'InsufficientFunds'
     );
   });

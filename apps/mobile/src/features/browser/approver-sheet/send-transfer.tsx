@@ -1,21 +1,23 @@
 import { useMemo } from 'react';
 
 import { PsbtSigner } from '@/features/psbt-signer/psbt-signer';
-import { createCoinSelectionUtxos } from '@/features/send/utils';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { App } from '@/store/apps/utils';
-import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import {
+  useBitcoinAccounts,
+  useBitcoinPayerFromKeyOrigin,
+} from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
 import {
   createBitcoinAddress,
-  generateBitcoinUnsignedTransactionNativeSegwit,
+  generateBitcoinUnsignedTransaction,
   getBtcSignerLibNetworkConfigByMode,
-  payerToBip32Derivation,
 } from '@leather.io/bitcoin';
+import { extractAccountIndexFromDescriptor } from '@leather.io/crypto';
 import { AverageBitcoinFeeRates, bitcoinNetworkModesSchema } from '@leather.io/models';
 import {
   RpcRequest,
@@ -26,7 +28,7 @@ import {
   sendTransfer,
 } from '@leather.io/rpc';
 import { UtxoTotals } from '@leather.io/services';
-import { createMoneyFromDecimal } from '@leather.io/utils';
+import { createMoneyFromDecimal, isDefined } from '@leather.io/utils';
 
 interface SendTransferApproverProps {
   request: RpcRequest<typeof sendTransfer>;
@@ -35,7 +37,6 @@ interface SendTransferApproverProps {
   closeApprover(): void;
   accountId: string;
 }
-
 export function SendTransferApprover(props: SendTransferApproverProps) {
   const { data: feeRates } = useAverageBitcoinFeeRates();
   const { fingerprint, accountIndex } = destructAccountIdentifier(props.accountId);
@@ -76,36 +77,38 @@ function BaseSendTransferApprover(
   }
 ) {
   const { accountIdByPaymentType } = useBitcoinAccounts();
+  const payerLookup = useBitcoinPayerFromKeyOrigin();
 
   const bitcoinAccount = useMemo(
     () => accountIdByPaymentType(props.accountId),
     [accountIdByPaymentType, props.accountId]
   );
-  const nativeSegwitPayer = useMemo(
-    () => bitcoinAccount.nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }),
-    [bitcoinAccount.nativeSegwit]
-  );
+
   const networkMode = useMemo(
     () => bitcoinNetworkModesSchema.parse(props.request.params.network),
     [props.request.params.network]
   );
+
   const tx = useMemo(
     () =>
-      // if all wallets deleted, nativeSegwitPayer will be undefined
-      nativeSegwitPayer &&
-      generateBitcoinUnsignedTransactionNativeSegwit({
-        payerAddress: createBitcoinAddress(nativeSegwitPayer.address),
-        payerPublicKey: bytesToHex(nativeSegwitPayer.publicKey),
+      // if all wallets deleted, bitcoinAccount.nativeSegwit will be undefined
+      bitcoinAccount.nativeSegwit &&
+      generateBitcoinUnsignedTransaction({
         recipients: getSendTransferRecipients(props.request.params),
         feeRate: props.feeRates?.halfHourFee.toNumber() ?? 1,
         isSendingMax: false,
-        utxos: createCoinSelectionUtxos(props.utxos.available),
-        bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
+        utxos: props.utxos.available,
         network: getBtcSignerLibNetworkConfigByMode(networkMode),
+        payerLookup,
+        changeAddress: bitcoinAccount.nativeSegwit.derivePayer({
+          change: 0,
+          addressIndex: 0,
+        }).address,
       }),
     [
-      nativeSegwitPayer,
+      bitcoinAccount.nativeSegwit,
       networkMode,
+      payerLookup,
       props.feeRates?.halfHourFee,
       props.request.params,
       props.utxos.available,
@@ -113,9 +116,15 @@ function BaseSendTransferApprover(
   );
   // if all wallets deleted, tx will be undefined
   const psbtHex = tx ? bytesToHex(tx.psbt) : undefined;
-  if (!psbtHex) return null;
+
+  const fingerprint = bitcoinAccount?.nativeSegwit?.masterKeyFingerprint;
+  const descriptor = bitcoinAccount?.nativeSegwit?.descriptor;
+
+  if (!psbtHex || !isDefined(descriptor) || !isDefined(fingerprint)) return null;
   return (
     <PsbtSigner
+      accountIndex={extractAccountIndexFromDescriptor(descriptor)}
+      fingerprint={fingerprint}
       broadcast
       psbtHex={psbtHex}
       network={networkMode}

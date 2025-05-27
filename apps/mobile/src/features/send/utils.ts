@@ -1,18 +1,16 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
+import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
-import { ChainId, type StacksNetwork } from '@stacks/network';
+import { ChainId, StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
 import memoize from 'p-memoize';
 
 import {
-  type BitcoinNativeSegwitPayer,
-  type CoinSelectionUtxo,
   createBitcoinAddress,
-  generateBitcoinUnsignedTransactionNativeSegwit,
+  generateBitcoinUnsignedTransaction,
   getBtcSignerLibNetworkConfigByMode,
-  payerToBip32Derivation,
 } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
 import { defaultStacksFees, isAddressCompliant } from '@leather.io/query';
@@ -30,15 +28,6 @@ export function calculateDefaultStacksFee() {
   return convertAmountToBaseUnit(defaultStacksFees.estimates[1]?.fee ?? defaultFeeFallbackAsMoney);
 }
 
-export function createCoinSelectionUtxos(utxos: OwnedUtxo[]): CoinSelectionUtxo[] {
-  return utxos.map(utxo => ({
-    address: utxo.address,
-    txid: utxo.txid,
-    value: utxo.value,
-    vout: utxo.vout,
-  }));
-}
-
 export function isUserInputEffectivelyZero(input: string) {
   return input === '0' || /^0\.0*$/.test(input);
 }
@@ -47,18 +36,24 @@ export function validateDecimalPlaces(value: string, maxDecimalPlaces: number) {
   return (value.split('.')[1] ?? '').length <= maxDecimalPlaces;
 }
 
-export function btcFormValuesToPsbtHex(
-  values: BtcFormSchema,
-  nativeSegwitPayer: BitcoinNativeSegwitPayer,
-  utxos: OwnedUtxo[],
-  networkMode: BitcoinNetworkModes
-) {
+export interface BtcFormValuesToPsbtHexParams {
+  values: BtcFormSchema;
+  utxos: OwnedUtxo[];
+  networkMode: BitcoinNetworkModes;
+  changeAddress: string;
+  payerLookup: PayerLookupFn;
+}
+export async function btcFormValuesToPsbtHex({
+  values,
+  utxos,
+  networkMode,
+  changeAddress,
+  payerLookup,
+}: BtcFormValuesToPsbtHexParams) {
   const { feeRate, amount: inputAmount, isSendingMax, recipient } = values;
 
   try {
-    const tx = generateBitcoinUnsignedTransactionNativeSegwit({
-      payerAddress: createBitcoinAddress(nativeSegwitPayer.address),
-      payerPublicKey: bytesToHex(nativeSegwitPayer.publicKey),
+    const tx = generateBitcoinUnsignedTransaction({
       recipients: [
         {
           address: createBitcoinAddress(recipient),
@@ -67,11 +62,12 @@ export function btcFormValuesToPsbtHex(
       ],
       feeRate,
       isSendingMax,
-      utxos: createCoinSelectionUtxos(utxos),
-      bip32Derivation: [payerToBip32Derivation(nativeSegwitPayer)],
+      utxos,
       network: getBtcSignerLibNetworkConfigByMode(networkMode),
+      payerLookup,
+      changeAddress,
     });
-    return Promise.resolve(bytesToHex(tx.psbt));
+    return bytesToHex(tx.psbt);
   } catch (error) {
     return Promise.reject(isError(error) ? error : new Error(String(error)));
   }
@@ -92,7 +88,7 @@ export async function stxFormValuesToSerializedTransaction(
     recipient,
     txType: TransactionTypes.StxTokenTransfer,
     network: stacksNetwork,
-    publicKey: publicKey,
+    publicKey,
   });
 
   return tx.serialize();
@@ -109,9 +105,7 @@ async function rawAddressComplianceValidator({
   chain,
   shouldCheckCompliance,
 }: addressComplianceValidatorParams) {
-  if (!shouldCheckCompliance) {
-    return true;
-  }
+  if (!shouldCheckCompliance) return true;
 
   return isAddressCompliant({ address, chain });
 }

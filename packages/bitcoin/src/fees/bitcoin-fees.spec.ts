@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { AverageBitcoinFeeRates } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { CoinSelectionRecipient, CoinSelectionUtxo } from '../coin-selection/coin-selection';
+import { CoinSelectionRecipient } from '../coin-selection/coin-selection';
 import { recipientAddress, taprootAddress } from '../mocks/mocks';
 import { getBitcoinFees, getBitcoinTransactionFee } from './bitcoin-fees';
 
@@ -66,13 +66,13 @@ describe('getBitcoinFees', () => {
     const recipients: CoinSelectionRecipient[] = [
       { address: recipientAddress, amount: createMoney(1000, 'BTC') },
     ];
-    const utxos: CoinSelectionUtxo[] = [
+    const utxos = [
       {
         address: taprootAddress,
         txid: '8192e8e20088c5f052fc7351b86b8f60a9454937860b281227e53e19f3e9c3f6',
         vout: 0,
         value: 2000,
-      },
+      } as const,
     ];
 
     const fees = getBitcoinFees({ feeRates, recipients, utxos });

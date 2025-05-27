@@ -2,7 +2,7 @@ import { sha256 } from '@noble/hashes/sha256';
 import { hexToBytes } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
-import { CoinSelectionUtxo } from './coin-selection';
+import { OwnedUtxo } from '@leather.io/models';
 
 function generateMockHex() {
   return Math.floor(Math.random() * 0xffffff)
@@ -10,9 +10,11 @@ function generateMockHex() {
     .padEnd(6, '0');
 }
 
-function generateMockUtxo(value: number): CoinSelectionUtxo {
+function generateMockUtxo(value: number): OwnedUtxo {
   return {
     address: 'tb1qxy5r9rlmpcxgwp92x2594q3gg026y4kdv2rsl8',
+    path: `m/84'/1'/0'/0/0`,
+    keyOrigin: `deadbeef/84'/1'/0'/0/0`,
     txid: sha256(sha256(hexToBytes(generateMockHex()))).toString(),
     value,
     vout: 0,

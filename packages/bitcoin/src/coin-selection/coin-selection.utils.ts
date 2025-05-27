@@ -5,9 +5,9 @@ import { BTC_P2WPKH_DUST_AMOUNT } from '@leather.io/constants';
 import { sumNumbers } from '@leather.io/utils';
 
 import { BtcSizeFeeEstimator } from '../fees/btc-size-fee-estimator';
-import { CoinSelectionRecipient, CoinSelectionUtxo } from './coin-selection';
+import { CoinSelectionRecipient } from './coin-selection';
 
-export function getUtxoTotal(utxos: CoinSelectionUtxo[]) {
+export function getUtxoTotal<T extends { value: number }>(utxos: T[]) {
   return sumNumbers(utxos.map(utxo => utxo.value));
 }
 
@@ -57,16 +57,18 @@ export function getSizeInfo(payload: {
 
   return sizeInfo;
 }
-interface GetSpendableAmountArgs {
-  utxos: CoinSelectionUtxo[];
+interface GetSpendableAmountArgs<T> {
+  utxos: T[];
   feeRate: number;
   recipients: CoinSelectionRecipient[];
   isSendMax?: boolean;
 }
-export function getSpendableAmount({ utxos, feeRate, recipients }: GetSpendableAmountArgs) {
-  const balance = utxos
-    .map(utxo => Number(utxo.value))
-    .reduce((prevVal, curVal) => prevVal + curVal, 0);
+export function getSpendableAmount<T extends { value: number }>({
+  utxos,
+  feeRate,
+  recipients,
+}: GetSpendableAmountArgs<T>) {
+  const balance = utxos.map(utxo => utxo.value).reduce((prevVal, curVal) => prevVal + curVal, 0);
 
   const size = getSizeInfo({
     inputLength: utxos.length,
@@ -81,12 +83,12 @@ export function getSpendableAmount({ utxos, feeRate, recipients }: GetSpendableA
 }
 
 // Check if the spendable amount drops when adding a utxo
-export function filterUneconomicalUtxos({
+export function filterUneconomicalUtxos<T extends { value: number; txid: string }>({
   utxos,
   feeRate,
   recipients,
 }: {
-  utxos: CoinSelectionUtxo[];
+  utxos: T[];
   feeRate: number;
   recipients: CoinSelectionRecipient[];
 }) {
@@ -97,7 +99,7 @@ export function filterUneconomicalUtxos({
   });
 
   const filteredUtxos = utxos
-    .filter(utxo => utxo.value >= BTC_P2WPKH_DUST_AMOUNT)
+    .filter(utxo => Number(utxo.value) >= BTC_P2WPKH_DUST_AMOUNT)
     .filter(utxo => {
       // Calculate spendableAmount without that utxo
       const { spendableAmount } = getSpendableAmount({

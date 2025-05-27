@@ -28,5 +28,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],
-  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "./dist"]
+  "exclude": ["node_modules", "babel.config.cjs", "metro.config.cjs", "**/*.js", "**/dist"]
 }

@@ -2,13 +2,12 @@ import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
 
 import {
   CoinSelectionRecipient,
-  CoinSelectionUtxo,
   DetermineUtxosForSpendArgs,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
 } from '../coin-selection/coin-selection';
 
-type GetBitcoinTransactionFeeArgs = DetermineUtxosForSpendArgs & {
+type GetBitcoinTransactionFeeArgs = DetermineUtxosForSpendArgs<{ value: number; txid: string }> & {
   isSendingMax?: boolean;
 };
 
@@ -34,7 +33,7 @@ export interface GetBitcoinFeesArgs {
   feeRates: AverageBitcoinFeeRates;
   isSendingMax?: boolean;
   recipients: CoinSelectionRecipient[];
-  utxos: CoinSelectionUtxo[];
+  utxos: { value: number; txid: string }[];
 }
 export function getBitcoinFees({ feeRates, isSendingMax, recipients, utxos }: GetBitcoinFeesArgs) {
   const defaultArgs = {
