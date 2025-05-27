@@ -66,3 +66,6 @@ export function useDynamicFeeFlag() {
 export function useEarnFlag() {
   return useBoolVariation('release_earn_feature', false);
 }
+export function useDappSuggestions() {
+  return useBoolVariation('release_dapp_suggestions_feature', false);
+}
