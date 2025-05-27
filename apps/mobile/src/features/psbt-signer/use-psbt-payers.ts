@@ -7,7 +7,7 @@ export function usePsbtPayers({ psbtHex }: { psbtHex: string }) {
   const inputDerivationPaths = getPsbtInputDerivationPaths({ psbtHex });
   const inputKeyOrigins = inputDerivationPaths.map(derivationPath => derivationPath.keyOrigin);
   const payers = keychains.list
-    .map(keychain => keychain.derivePayer({ addressIndex: 0 }))
+    .map(keychain => keychain.derivePayer({ change: 0, addressIndex: 0 }))
     .filter(keychain => inputKeyOrigins.includes(keychain.keyOrigin));
 
   return payers;

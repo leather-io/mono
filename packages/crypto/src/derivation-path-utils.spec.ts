@@ -1,6 +1,7 @@
 import {
   extractAccountIndexFromPath,
   extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
   extractDerivationPathFromDescriptor,
   extractKeyFromDescriptor,
   extractKeyOriginPathFromDescriptor,
@@ -12,6 +13,14 @@ describe(extractAddressIndexFromPath.name, () => {
     expect(extractAddressIndexFromPath("m/84'/0'/0'/0/0")).toEqual(0);
     expect(extractAddressIndexFromPath("m/84'/0'/0'/0/10")).toEqual(10);
     expect(extractAddressIndexFromPath("m/84'/0'/0'/0/9999")).toEqual(9999);
+  });
+});
+
+describe(extractChangeIndexFromPath.name, () => {
+  test('should extract the address index from the derivation path', () => {
+    expect(extractChangeIndexFromPath("m/84'/0'/0'/0/0")).toEqual(0);
+    expect(extractChangeIndexFromPath("m/84'/0'/0'/1/10")).toEqual(1);
+    expect(extractChangeIndexFromPath("m/84'/0'/0'/1/9999")).toEqual(1);
   });
 });
 

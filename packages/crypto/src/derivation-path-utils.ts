@@ -5,7 +5,7 @@ export enum DerivationPathDepth {
   Purpose = 1,
   CoinType = 2,
   Account = 3,
-  ChangeReceive = 4,
+  Change = 4,
   AddressIndex = 5,
 }
 
@@ -22,6 +22,10 @@ export const extractPurposeFromPath = extractSectionFromDerivationPath(Derivatio
 
 export const extractAccountIndexFromPath = extractSectionFromDerivationPath(
   DerivationPathDepth.Account
+);
+
+export const extractChangeIndexFromPath = extractSectionFromDerivationPath(
+  DerivationPathDepth.Change
 );
 
 export const extractAddressIndexFromPath = extractSectionFromDerivationPath(

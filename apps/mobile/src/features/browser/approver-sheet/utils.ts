@@ -22,21 +22,20 @@ import {
 import { BitcoinNetworkModes } from '@leather.io/models';
 import { RpcRequests } from '@leather.io/rpc';
 
-interface InfuseBip32Props {
+interface AddBip32DerivationFieldToInputsProps {
   psbtHex: string;
   networkMode: BitcoinNetworkModes;
   bitcoinAccounts: ReturnType<typeof useBitcoinAccounts>['list'];
   accountId: string;
   signAtIndex: number | number[] | undefined;
 }
-
 export function addBip32DerivationFieldToInputs({
   psbtHex,
   networkMode,
   bitcoinAccounts,
   accountId,
   signAtIndex: _signAtIndex,
-}: InfuseBip32Props) {
+}: AddBip32DerivationFieldToInputsProps) {
   const signAtIndex = normalizeSignAtIndex(_signAtIndex);
   const tx = getPsbtAsTransaction(psbtHex);
 
@@ -56,9 +55,7 @@ export function addBip32DerivationFieldToInputs({
     });
     const bitcoinAccount = findAccountByAddress(bitcoinAccountsById, addr);
 
-    if (!bitcoinAccount) {
-      return;
-    }
+    if (!bitcoinAccount) return;
 
     const accountIdx = extractAccountIndexFromDescriptor(bitcoinAccount?.descriptor);
     const accountFingerprint = extractFingerprintFromDescriptor(bitcoinAccount?.descriptor ?? '');
@@ -66,7 +63,8 @@ export function addBip32DerivationFieldToInputs({
     const bitcoinAccountId = makeAccountIdentifer(accountFingerprint, accountIdx);
 
     if (bitcoinAccountId === accountId) {
-      const payer = bitcoinAccount.derivePayer({ addressIndex: 0 });
+      // TODO in #1295: use dynamic payer info
+      const payer = bitcoinAccount.derivePayer({ change: 0, addressIndex: 0 });
       if (paymentType === 'p2tr') {
         tx.updateInput(idx, {
           tapBip32Derivation: [payerToTapBip32Derivation(payer)],

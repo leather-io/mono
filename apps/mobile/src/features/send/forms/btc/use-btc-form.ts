@@ -60,7 +60,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
 
     btcFormValuesToPsbtHex(
       values,
-      nativeSegwit?.derivePayer({ addressIndex: 0 }),
+      nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }),
       utxos,
       networkPreference.chain.bitcoin.mode
     )

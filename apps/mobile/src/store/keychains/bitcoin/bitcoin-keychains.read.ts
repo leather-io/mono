@@ -34,8 +34,8 @@ const bitcoinKeychainSelectors = bitcoinKeychainAdapter.getSelectors(
 // These are expensive actions that may be called several times
 const memoizedInitalizeBitcoinKeychain = memoize(initializeBitcoinAccountKeychainFromDescriptor);
 const memoizedDriveBitcoinPayerFromAccount = memoize(
-  (descriptor: string, network: BitcoinNetworkModes, addressIndex: number) =>
-    deriveBitcoinPayerFromAccount(descriptor, network)({ addressIndex })
+  (descriptor: string, network: BitcoinNetworkModes, change: number, addressIndex: number) =>
+    deriveBitcoinPayerFromAccount(descriptor, network)({ change, addressIndex })
 );
 
 function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: BitcoinNetworkModes) {
@@ -48,8 +48,13 @@ function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: Bit
     .map(keychain => ({
       ...memoizedInitalizeBitcoinKeychain(keychain.descriptor),
       // Performance optimization to aggressively memoize payer derivation
-      derivePayer({ addressIndex }: BitcoinPayerInfo) {
-        return memoizedDriveBitcoinPayerFromAccount(keychain.descriptor, network, addressIndex);
+      derivePayer({ change, addressIndex }: BitcoinPayerInfo) {
+        return memoizedDriveBitcoinPayerFromAccount(
+          keychain.descriptor,
+          network,
+          change,
+          addressIndex
+        );
       },
     }));
 }
@@ -126,8 +131,9 @@ export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, acco
     accountIndex
   );
 
-  const taprootPayerAddress = taproot?.derivePayer({ addressIndex: 0 }).address ?? '';
-  const nativeSegwitPayerAddress = nativeSegwit?.derivePayer({ addressIndex: 0 }).address ?? '';
+  const taprootPayerAddress = taproot?.derivePayer({ change: 0, addressIndex: 0 }).address ?? '';
+  const nativeSegwitPayerAddress =
+    nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }).address ?? '';
 
   return { taprootPayerAddress, nativeSegwitPayerAddress };
 }
@@ -135,7 +141,10 @@ export function useBitcoinPayerAddressFromAccountIndex(fingerprint: string, acco
 export function useBitcoinAddresses() {
   const { list: accounts } = useBitcoinAccounts();
   return useMemo(
-    () => accounts.map(keychain => keychain.derivePayer({ addressIndex: 0 })).map(a => a.address),
+    () =>
+      accounts
+        .map(keychain => keychain.derivePayer({ change: 0, addressIndex: 0 }))
+        .map(a => a.address),
     [accounts]
   );
 }
@@ -145,5 +154,7 @@ export function findAccountByAddress(
   address: string,
   addressIndex = 0
 ) {
-  return accounts.find(keychain => keychain.derivePayer({ addressIndex }).address === address);
+  return accounts.find(
+    keychain => keychain.derivePayer({ change: 0, addressIndex }).address === address
+  );
 }

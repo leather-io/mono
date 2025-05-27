@@ -9,6 +9,7 @@ import {
   appendAddressIndexToPath,
   decomposeDescriptor,
   deriveKeychainFromXpub,
+  extractChangeIndexFromPath,
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
 import type { BitcoinAddress, BitcoinNetworkModes, ValueOf } from '@leather.io/models';
@@ -83,7 +84,7 @@ export function initializeBitcoinAccountKeychainFromDescriptor(
 }
 
 export interface BitcoinPayerInfo {
-  receive?: number;
+  change: number;
   addressIndex: number;
 }
 export function deriveBitcoinPayerFromAccount(descriptor: string, network: BitcoinNetworkModes) {
@@ -94,8 +95,8 @@ export function deriveBitcoinPayerFromAccount(descriptor: string, network: Bitco
   if (accountKeychain.depth !== DerivationPathDepth.Account)
     throw new Error('Keychain passed is not an account');
 
-  return ({ receive = 0, addressIndex }: BitcoinPayerInfo) => {
-    const childKeychain = accountKeychain.deriveChild(receive).deriveChild(addressIndex);
+  return ({ change, addressIndex }: BitcoinPayerInfo) => {
+    const childKeychain = accountKeychain.deriveChild(change).deriveChild(addressIndex);
 
     const derivePayerFromAccount = whenSupportedPaymentType(paymentType)({
       p2tr: getTaprootPaymentFromAddressIndex,
@@ -210,6 +211,13 @@ export function payerToBip32DerivationBitcoinJsLib(
     masterFingerprint: Buffer.from(args.masterKeyFingerprint, 'hex'),
     path: keyOriginToDerivationPath(args.keyOrigin),
     pubkey: Buffer.from(args.publicKey),
+  };
+}
+
+export function extractPayerInfoFromDerivationPath(path: string) {
+  return {
+    change: extractChangeIndexFromPath(path),
+    addressIndex: extractChangeIndexFromPath(path),
   };
 }
 

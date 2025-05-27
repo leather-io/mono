@@ -32,7 +32,7 @@ export async function signBip322Message({
 
   switch (message.params.paymentType) {
     case 'p2tr': {
-      const taprootPayer = taproot.derivePayer({ addressIndex: 0 });
+      const taprootPayer = taproot.derivePayer({ change: 0, addressIndex: 0 });
 
       const { signature } = await signBip322MessageSimple({
         message: message.params.message,
@@ -55,7 +55,7 @@ export async function signBip322Message({
       };
     }
     case 'p2wpkh': {
-      const nativeSegwitPayer = nativeSegwit.derivePayer({ addressIndex: 0 });
+      const nativeSegwitPayer = nativeSegwit.derivePayer({ change: 0, addressIndex: 0 });
 
       const { signature } = await signBip322MessageSimple({
         message: message.params.message,
