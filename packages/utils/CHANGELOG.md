@@ -311,6 +311,21 @@
   * dependencies
     * @leather.io/constants bumped to 0.20.1
 
+## [0.34.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.34.0...@leather.io/utils-v0.34.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* **mobile:** make sure we can handle exponential values in formatMoney, ref LEA-2629 ([507dda1](https://github.com/leather-io/mono/commit/507dda19cc702301c38ddeb19469a76df9bcf9a1))
+* **mobile:** truncate long token names with ellipsis, ref ENG-33 ([319c95e](https://github.com/leather-io/mono/commit/319c95ea09a0c47975fdd1ab7c85730001453d92))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.20.3
+
 ## [0.34.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.33.1...@leather.io/utils-v0.34.0) (2025-05-22)
 
 
