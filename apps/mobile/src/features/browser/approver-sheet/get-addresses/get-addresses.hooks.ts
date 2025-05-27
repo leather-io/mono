@@ -19,8 +19,8 @@ export function useGetAddressesAccount(accountId: string | null) {
   const stacksAccount = stacksAccountFromAccountIndex(fingerprint, accountIndex)[0];
   const { nativeSegwit, taproot } = accountIndexByPaymentType(fingerprint, accountIndex);
 
-  const taprootPayer = taproot?.derivePayer({ addressIndex: 0 });
-  const nativeSegwitPayer = nativeSegwit?.derivePayer({ addressIndex: 0 });
+  const taprootPayer = taproot?.derivePayer({ change: 0, addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
   if (!stacksAccount || !nativeSegwitPayer || !taprootPayer)
     throw new Error('some of the accounts are not available');
   return { fingerprint, accountIndex, taprootPayer, nativeSegwitPayer, stacksAccount };

@@ -20,7 +20,7 @@ function BitcoinAccounts({ fingerprint, accountIndex }: BitcoinAccountsProps) {
 
   return accounts.map(keychain => (
     <Text key={keychain.descriptor} style={{ marginLeft: 12, marginBottom: 8 }}>
-      {keychain.derivePayer({ addressIndex: 0 }).address}
+      {keychain.derivePayer({ change: 0, addressIndex: 0 }).address}
     </Text>
   ));
 }

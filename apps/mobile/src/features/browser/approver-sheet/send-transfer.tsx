@@ -82,7 +82,7 @@ function BaseSendTransferApprover(
     [accountIdByPaymentType, props.accountId]
   );
   const nativeSegwitPayer = useMemo(
-    () => bitcoinAccount.nativeSegwit?.derivePayer({ addressIndex: 0 }),
+    () => bitcoinAccount.nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }),
     [bitcoinAccount.nativeSegwit]
   );
   const networkMode = useMemo(

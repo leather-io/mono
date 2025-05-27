@@ -22,6 +22,7 @@ export function useAccountHelpers(
   const getSegwitAddress = useCallback(
     (fingerprint: string, index: number) =>
       accountIndexByPaymentType(fingerprint, index).nativeSegwit?.derivePayer({
+        change: 0,
         addressIndex: 0,
       }).address ?? null,
     [accountIndexByPaymentType]
@@ -30,6 +31,7 @@ export function useAccountHelpers(
   const getTaprootAddress = useCallback(
     (fingerprint: string, index: number) =>
       accountIndexByPaymentType(fingerprint, index).taproot?.derivePayer({
+        change: 0,
         addressIndex: 0,
       }).address ?? null,
     [accountIndexByPaymentType]

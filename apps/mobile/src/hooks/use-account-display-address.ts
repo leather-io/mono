@@ -24,8 +24,8 @@ export function useAccountDisplayAddress({
     accountIndex
   );
 
-  const taprootPayer = taproot?.derivePayer({ addressIndex: 0 });
-  const nativeSegwitPayer = nativeSegwit?.derivePayer({ addressIndex: 0 });
+  const taprootPayer = taproot?.derivePayer({ change: 0, addressIndex: 0 });
+  const nativeSegwitPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
 
   const stxAddress = useStacksSignerAddressFromAccountIndex(fingerprint, accountIndex) ?? '';
 
