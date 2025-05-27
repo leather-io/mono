@@ -44,9 +44,9 @@ export function addBip32DerivationFieldToInputs({
     if (input.bip32Derivation || input.tapBip32Derivation) return;
     const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(networkMode);
     const addr = getBitcoinInputAddress(input, bitcoinNetwork);
-    if (!addr) {
-      throw new Error('Unsupported bitcoin address');
-    }
+
+    if (!addr) throw new Error('Unsupported bitcoin address');
+
     const paymentType = inferPaymentTypeFromAddress(addr);
     const bitcoinAccountsById = bitcoinAccounts.filter(acc => {
       const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
@@ -66,14 +66,10 @@ export function addBip32DerivationFieldToInputs({
       // TODO in #1295: use dynamic payer info
       const payer = bitcoinAccount.derivePayer({ change: 0, addressIndex: 0 });
       if (paymentType === 'p2tr') {
-        tx.updateInput(idx, {
-          tapBip32Derivation: [payerToTapBip32Derivation(payer)],
-        });
+        tx.updateInput(idx, { tapBip32Derivation: [payerToTapBip32Derivation(payer)] });
       }
       if (paymentType === 'p2wpkh') {
-        tx.updateInput(idx, {
-          bip32Derivation: [payerToBip32Derivation(payer)],
-        });
+        tx.updateInput(idx, { bip32Derivation: [payerToBip32Derivation(payer)] });
       }
     } else if (!signAtIndex || signAtIndex.includes(idx)) {
       throw new Error('PSBT asks to sign an input that is not ours');

@@ -56,12 +56,18 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
 
   const handleSubmit = form.handleSubmit(values => {
     stxFormValuesToSerializedTransaction(values, stxSigner?.publicKey ?? '', stacksNetwork)
-      .then(txHex => navigate('approval', { hex: txHex }))
+      .then(txHex =>
+        navigate('approval', {
+          hex: txHex,
+          fingerprint: account.fingerprint,
+          accountIndex: account.accountIndex,
+        })
+      )
       .catch(() =>
         displayToast({
           title: t({
             id: 'send-form.unexpected-error',
-            message: 'Transaction failed due to an unexpected error. Our team has been notified.',
+            message: 'Transaction failed due to an unexpected error',
           }),
           type: 'error',
         })

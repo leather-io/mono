@@ -27,16 +27,14 @@ export function useSelectByAccountIds(accountIds: string[]) {
 }
 
 function selectByAccountIds(accountIds: string[]) {
-  return createSelector(selectors.selectEntities, entities => {
-    return accountIds
+  return createSelector(selectors.selectEntities, entities =>
+    accountIds
       .map(id => entities[id])
       .map(account => {
-        if (!account) {
-          throw new Error('No account found');
-        }
+        if (!account) throw new Error('No account found');
         return initalizeAccount(account);
-      });
-  });
+      })
+  );
 }
 
 function selectAccountsByFingerprint(fingerprint: string, status?: AccountStatus) {

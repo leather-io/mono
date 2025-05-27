@@ -9,6 +9,7 @@ import {
   appendAddressIndexToPath,
   decomposeDescriptor,
   deriveKeychainFromXpub,
+  extractAddressIndexFromPath,
   extractChangeIndexFromPath,
   keyOriginToDerivationPath,
 } from '@leather.io/crypto';
@@ -106,7 +107,7 @@ export function deriveBitcoinPayerFromAccount(descriptor: string, network: Bitco
     const payment = derivePayerFromAccount(childKeychain, network);
 
     return {
-      keyOrigin: appendAddressIndexToPath(keyOrigin, 0),
+      keyOrigin: appendAddressIndexToPath(keyOrigin, change, addressIndex),
       masterKeyFingerprint: fingerprint,
       paymentType,
       network,
@@ -217,7 +218,7 @@ export function payerToBip32DerivationBitcoinJsLib(
 export function extractPayerInfoFromDerivationPath(path: string) {
   return {
     change: extractChangeIndexFromPath(path),
-    addressIndex: extractChangeIndexFromPath(path),
+    addressIndex: extractAddressIndexFromPath(path),
   };
 }
 

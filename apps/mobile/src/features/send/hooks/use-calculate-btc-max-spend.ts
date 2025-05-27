@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
 
-import { createCoinSelectionUtxos } from '@/features/send/utils';
-
 import { calculateMaxSpend } from '@leather.io/bitcoin';
 import { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
 
@@ -17,7 +15,7 @@ export function useCalculateBtcMaxSpend(feeRates: AverageBitcoinFeeRates, utxos:
     ({ recipient, feeRate }: CalculateBtcMaxSpendParams) =>
       calculateMaxSpend({
         recipient,
-        utxos: createCoinSelectionUtxos(utxos),
+        utxos,
         feeRate,
         feeRates,
       }),

@@ -1,14 +1,10 @@
 import { useCallback } from 'react';
 
+import { useBitcoinPayerFromKeyOrigin } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useNetworkPreferenceBitcoinScureLibNetworkConfig } from '@/store/settings/settings.read';
 
-import {
-  BtcSignerDefaultBip32Derivation,
-  CoinSelectionRecipient,
-  CoinSelectionUtxo,
-  generateBitcoinUnsignedTransactionNativeSegwit,
-} from '@leather.io/bitcoin';
-import { Money } from '@leather.io/models';
+import { CoinSelectionRecipient, generateBitcoinUnsignedTransaction } from '@leather.io/bitcoin';
+import { Money, OwnedUtxo } from '@leather.io/models';
 
 interface BtcTransactionValues {
   amount: Money;
@@ -18,32 +14,31 @@ interface BtcTransactionValues {
 interface GenerateBtcUnsignedTransactionCallbackArgs {
   feeRate: number;
   isSendingMax: boolean;
-  utxos: CoinSelectionUtxo[];
+  utxos: OwnedUtxo[];
   values: BtcTransactionValues;
-  bip32Derivation: BtcSignerDefaultBip32Derivation[];
 }
 
-export function useGenerateBtcUnsignedTransactionNativeSegwit(address: string, publicKey: string) {
+interface UseGenerateBtcUnsignedTransactionNativeSegwit {
+  changeAddress: string;
+  fingerprint: string;
+}
+export function useGenerateBtcUnsignedTransactionNativeSegwit(
+  args: UseGenerateBtcUnsignedTransactionNativeSegwit
+) {
   const network = useNetworkPreferenceBitcoinScureLibNetworkConfig();
+  const payerLookup = useBitcoinPayerFromKeyOrigin();
 
   return useCallback(
-    ({
-      feeRate,
-      isSendingMax,
-      values,
-      utxos,
-      bip32Derivation,
-    }: GenerateBtcUnsignedTransactionCallbackArgs) =>
-      generateBitcoinUnsignedTransactionNativeSegwit({
+    ({ feeRate, isSendingMax, values, utxos }: GenerateBtcUnsignedTransactionCallbackArgs) =>
+      generateBitcoinUnsignedTransaction({
         feeRate,
         isSendingMax,
         network,
-        bip32Derivation,
-        payerAddress: address,
-        payerPublicKey: publicKey,
         recipients: values.recipients,
         utxos,
+        payerLookup,
+        changeAddress: args.changeAddress,
       }),
-    [address, network, publicKey]
+    [args.changeAddress, network, payerLookup]
   );
 }

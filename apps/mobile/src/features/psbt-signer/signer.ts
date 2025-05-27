@@ -12,7 +12,6 @@ interface SignOptions {
   signAtIndex?: number[];
   allowedSighash?: number[];
 }
-
 export async function signTx(tx: Uint8Array, options?: SignOptions) {
   const unsignedTx = btc.Transaction.fromPSBT(tx);
 

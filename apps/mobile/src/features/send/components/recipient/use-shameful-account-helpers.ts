@@ -45,16 +45,14 @@ export function useAccountHelpers(
 
   const accountsWithAddresses = useMemo(
     () =>
-      accounts.map(a => {
-        return {
-          ...a,
-          addresses: [
-            getSegwitAddress(a.fingerprint, a.accountIndex),
-            getTaprootAddress(a.fingerprint, a.accountIndex),
-            getStacksSignerAddress(a.fingerprint, a.accountIndex),
-          ],
-        };
-      }),
+      accounts.map(account => ({
+        ...account,
+        addresses: [
+          getSegwitAddress(account.fingerprint, account.accountIndex),
+          getTaprootAddress(account.fingerprint, account.accountIndex),
+          getStacksSignerAddress(account.fingerprint, account.accountIndex),
+        ],
+      })),
     [accounts, getSegwitAddress, getTaprootAddress, getStacksSignerAddress]
   );
 

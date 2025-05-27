@@ -7,13 +7,13 @@ import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
-import { createCoinSelectionUtxos } from '@/features/send/utils';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/queries/transaction/bitcoin-transactions.hooks';
 import { useBitcoinBroadcastTransaction } from '@/queries/transaction/use-bitcoin-broadcast-transaction';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
+import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -24,15 +24,12 @@ import {
   getPsbtAsTransaction,
   getPsbtDetails,
   getSizeInfo,
-  payerToBip32Derivation,
 } from '@leather.io/bitcoin';
 import {
+  AccountId,
   AverageBitcoinFeeRates,
   BitcoinNetworkModes,
   FeeTypes,
-  Money,
-  WalletDefaultNetworkConfigurationIds,
-  defaultNetworksKeyedById,
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
@@ -48,59 +45,32 @@ import { ApproverWrapper } from '../approver/components/approver-wrapper';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
 import { signTx } from './signer';
-import { usePsbtAccounts } from './use-psbt-accounts';
+import { useAccountsFromPsbt } from './use-accounts-from-psbt';
 import { usePsbtPayers } from './use-psbt-payers';
-import { normalizeSignAtIndex } from './utils';
+import { getFeeType, getPsbtNetwork, normalizeSignAtIndex } from './utils';
+
+interface PsbtSignerProps extends AccountId {
+  psbtHex: string;
+  broadcast: RpcParams<typeof signPsbt>['broadcast'];
+  allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
+  signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
+  network?: BitcoinNetworkModes;
+  onBack(): void;
+  onResult(result: { hex: string; txid?: string }): void;
+}
+export function PsbtSigner(props: PsbtSignerProps) {
+  const { data: feeRates } = useAverageBitcoinFeeRates();
+  if (!feeRates) return null;
+  return <BasePsbtSigner feeRates={feeRates} {...props} />;
+}
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
   feeRates: AverageBitcoinFeeRates;
 }
-
-interface PsbtSignerProps {
-  psbtHex: string;
-  broadcast: RpcParams<typeof signPsbt>['broadcast'];
-  onBack(): void;
-  onResult(result: { hex: string; txid?: string }): void;
-  allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
-  signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
-  network?: BitcoinNetworkModes;
-}
-
-interface FeeTypeParams {
-  psbtFee: Money;
-  fees: ReturnType<typeof getBitcoinFees>;
-}
-
-function getFeeType({ psbtFee, fees }: FeeTypeParams) {
-  if (fees.standard.fee?.amount && psbtFee.amount.isEqualTo(fees.standard.fee.amount)) {
-    return FeeTypes.Middle;
-  }
-  if (fees.low.fee?.amount && psbtFee.amount.isEqualTo(fees.low.fee.amount)) {
-    return FeeTypes.Low;
-  }
-  if (fees.high.fee?.amount && psbtFee.amount.isEqualTo(fees.high.fee.amount)) {
-    return FeeTypes.High;
-  }
-  return FeeTypes.Custom;
-}
-
-export function PsbtSigner(props: PsbtSignerProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
-  if (!feeRates) return null;
-
-  return <BasePsbtSigner feeRates={feeRates} {...props} />;
-}
-
-function getPsbtNetwork(network: BitcoinNetworkModes) {
-  if (network === 'testnet')
-    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet4];
-  if (network === 'mainnet')
-    return defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet];
-  throw new Error('This network is currently not supported');
-}
-
 function BasePsbtSigner({
   psbtHex: _psbtHex,
+  fingerprint,
+  accountIndex,
   onBack,
   onResult,
   feeRates,
@@ -110,16 +80,22 @@ function BasePsbtSigner({
   network: requestedNetwork,
 }: BasePsbtSignerProps) {
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
-  const psbtAccounts = usePsbtAccounts({ psbtHex });
+  const psbtAccounts = useAccountsFromPsbt({ psbtHex });
   const psbtPayers = usePsbtPayers({ psbtHex });
-  const psbtAddresses = psbtPayers.map(payer => createBitcoinAddress(payer.address));
 
   const { displayToast } = useToastContext();
+
+  const bitcoinAccount = useBitcoinAccounts();
+  const { nativeSegwit: nativeSegwitAccount } = bitcoinAccount.accountIndexByPaymentType(
+    fingerprint,
+    accountIndex
+  );
+
+  const psbtAddresses = psbtPayers.map(payer => createBitcoinAddress(payer.address));
+
+  if (!nativeSegwitAccount) throw new Error('No account found');
   if (!psbtAccounts[0]) throw new Error('No psbt accounts');
-  if (psbtAccounts.length > 1)
-    throw new Error('Only one psbt account as input is supported right now');
   if (!psbtPayers[0]) throw new Error('No payer found');
-  if (psbtPayers.length > 1) throw new Error('Only one psbt payer is supported right now');
 
   const currentNetwork = useCurrentNetworkState();
   const network = requestedNetwork ? getPsbtNetwork(requestedNetwork) : currentNetwork;
@@ -146,7 +122,8 @@ function BasePsbtSigner({
       amount: createMoney(new BigNumber(output.value), 'BTC'),
       address: output.address,
     }));
-  const coinSelectionUtxos = createCoinSelectionUtxos(utxos.value?.available ?? []);
+
+  const coinSelectionUtxos = utxos.value?.available ?? [];
 
   const fees = getBitcoinFees({
     feeRates,
@@ -169,11 +146,10 @@ function BasePsbtSigner({
   ]);
   const totalSpend = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
 
-  const payer = psbtPayers[0].address;
-  const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit(
-    payer,
-    bytesToHex(psbtPayers[0].publicKey)
-  );
+  const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit({
+    changeAddress: nativeSegwitAccount.derivePayer({ change: 0, addressIndex: 0 }).address,
+    fingerprint: nativeSegwitAccount.masterKeyFingerprint,
+  });
 
   function onChangeFee(feeType: FeeTypes) {
     const feeRate = match()(feeType, {
@@ -191,7 +167,6 @@ function BasePsbtSigner({
         isSendingMax: false,
         values: { amount: createMoney(totalSendValue, 'BTC'), recipients },
         utxos: coinSelectionUtxos,
-        bip32Derivation: [payerToBip32Derivation(psbtPayers[0])],
       });
       if (!tx) throw new Error('No tx');
       const psbtHex = bytesToHex(tx.psbt);
@@ -216,27 +191,20 @@ function BasePsbtSigner({
         signAtIndex: normalizeSignAtIndex(signAtIndex),
         allowedSighash,
       });
+
       signedTx.finalize();
 
       if (!broadcast) {
-        onResult({
-          hex: signedTx.hex,
-        });
+        onResult({ hex: signedTx.hex });
         return;
       }
 
       await broadcastTx({
-        // TODO: for now
         skipSpendableCheckUtxoIds: 'all',
         tx: signedTx.hex,
         onResult(txid) {
           setApproverState('submitted');
-          setTimeout(() => {
-            onResult({
-              hex: signedTx.hex,
-              txid,
-            });
-          }, 1000);
+          setTimeout(() => onResult({ hex: signedTx.hex, txid }), 1000);
         },
         onError() {
           displayToast({
@@ -307,10 +275,7 @@ function BasePsbtSigner({
         <Approver.Footer>
           <Box flexDirection="row" alignItems="center" justifyContent="space-between">
             <Text variant="label02">
-              {t({
-                id: 'approver.total_spend',
-                message: 'Total spend',
-              })}
+              {t({ id: 'approver.total_spend', message: 'Total spend' })}
             </Text>
             <Text variant="label02">
               {formatBalance({ balance: totalSpend, isQuoteCurrency: true })}

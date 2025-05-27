@@ -16,7 +16,7 @@ type SendStackParamList = {
     previousRoute: SendRouteKey;
     assetItemElementInitialOffset?: number | null;
   };
-  approval: { hex: string };
+  approval: { hex: string; fingerprint: string; accountIndex: number };
 };
 
 type SendRouteKey = keyof SendStackParamList;

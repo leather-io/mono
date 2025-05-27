@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/store';
@@ -20,7 +20,13 @@ import {
   inferPaymentTypeFromPath,
   initializeBitcoinAccountKeychainFromDescriptor,
 } from '@leather.io/bitcoin';
-import { extractKeyOriginPathFromDescriptor } from '@leather.io/crypto';
+import {
+  extractAccountPathFromFullPath,
+  extractAddressIndexFromPath,
+  extractChangeIndexFromPath,
+  extractKeyOriginPathFromDescriptor,
+  validateKeyOriginPath,
+} from '@leather.io/crypto';
 import { BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 
 import { descriptorKeychainSelectors, filterKeychainsByAccountIndex } from '../keychains';
@@ -54,7 +60,7 @@ function deriveBitcoinPayersFromStore(keychains: BitcoinKeychain[], network: Bit
           network,
           change,
           addressIndex
-        );
+        ) as BitcoinNativeSegwitPayer | BitcoinTaprootPayer;
       },
     }));
 }
@@ -82,7 +88,7 @@ function isNativeSegwitAccount(account: BitcoinAccountKeychain) {
   return inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh';
 }
 
-function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
+export function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
   const nativeSegwit = accounts.find(isNativeSegwitAccount);
 
   const taproot = accounts.find(isTaprootAccount);
@@ -107,7 +113,6 @@ export function useBitcoinAccounts() {
         accountIdByPaymentType: () => ({ nativeSegwit: null, taproot: null }),
         fromAccountIndex: () => [],
         fromFingerprint: () => [],
-        fromFingerprintAndAccountIndex: () => [],
       };
     const defaultSelectors = descriptorKeychainSelectors(list, filterKeychainsByAccountIndex);
     function accountIndexByPaymentType(fingerprint: string, accountIndex: number) {
@@ -156,5 +161,30 @@ export function findAccountByAddress(
 ) {
   return accounts.find(
     keychain => keychain.derivePayer({ change: 0, addressIndex }).address === address
+  );
+}
+
+export type PayerLookupFn = (
+  keyOrigin: string
+) => BitcoinNativeSegwitPayer | BitcoinTaprootPayer | undefined;
+
+export function useBitcoinPayerFromKeyOrigin(): PayerLookupFn {
+  const { list: accounts } = useBitcoinAccounts();
+
+  return useCallback(
+    (keyOrigin: string) => {
+      validateKeyOriginPath(keyOrigin);
+
+      const change = extractChangeIndexFromPath(keyOrigin);
+      const addressIndex = extractAddressIndexFromPath(keyOrigin);
+
+      const baseKeyOrigin = extractAccountPathFromFullPath(keyOrigin);
+      const account = accounts.find(keychain => keychain.keyOrigin === baseKeyOrigin);
+
+      if (!account) return undefined;
+
+      return account.derivePayer({ change, addressIndex });
+    },
+    [accounts]
   );
 }

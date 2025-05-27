@@ -15,6 +15,8 @@ msgstr ""
 "Project-Id-Version: leather-mobile\n"
 "Language-Team: English\n"
 "PO-Revision-Date: 2025-05-27 06:08\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
 
 #: src/features/activity/activity.layout.tsx:24
 msgid "activity.account.header_content_title"
@@ -52,7 +54,7 @@ msgstr "{name}"
 msgid "bitcoin_unit.cell_caption"
 msgstr "{name}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:47
+#: src/features/settings/conversion-unit-sheet.tsx:51
 msgid "conversion_unit.cell_title"
 msgstr "{name}"
 
@@ -77,7 +79,7 @@ msgstr "{symbol}"
 msgid "bitcoin_unit.cell_title"
 msgstr "{symbol}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:52
+#: src/features/settings/conversion-unit-sheet.tsx:56
 msgid "conversion_unit.cell_caption"
 msgstr "{symbol}"
 
@@ -170,7 +172,6 @@ msgid "account.default.name"
 msgstr "Account {accountIdx}"
 
 #. js-lingui-generated-id
-#. js-lingui-id: J1ixsF
 #: src/features/wallet-manager/account-list.tsx:23
 msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
@@ -244,7 +245,6 @@ msgid "add_memo.header_title"
 msgstr "Add memo"
 
 #. js-lingui-generated-id
-#. js-lingui-id: H7vkPd
 #: src/features/wallet-manager/wallets.tsx:38
 msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} "
@@ -441,15 +441,9 @@ msgstr "BIP39 passphrase"
 #: src/features/balances/bitcoin/bitcoin-balance.tsx:26
 #: src/features/receive/get-assets.ts:22
 #: src/features/receive/get-assets.ts:39
-#: src/features/send/forms/btc/btc-form.tsx:64
+#: src/features/send/forms/btc/btc-form.tsx:63
 msgid "asset_name.bitcoin"
 msgstr "Bitcoin"
-
-#. js-lingui-generated-id
-#. js-lingui-id: cW/RI6
-#: src/app/developer-console/index.tsx:51
-msgid "Bitcoin Scrach Pad"
-msgstr "Bitcoin scrach pad"
 
 #: src/app/settings/display/index.tsx:93
 msgid "display.bitcoin_unit.cell_title"
@@ -462,12 +456,6 @@ msgstr "Bitcoin unit"
 #: src/features/settings/bitcoin-unit-sheet.tsx:30
 msgid "bitcoin_unit.toast_title"
 msgstr "Bitcoin unit updated"
-
-#. js-lingui-generated-id
-#. js-lingui-id: CkZRLS
-#: src/app/developer-console/bitcoin-scratch-pad.tsx:39
-msgid "BitcoinScratchPad"
-msgstr "Bitcoin scratch pad"
 
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:100
 msgid "browser-sheet.dapp.bitflow.title"
@@ -524,12 +512,6 @@ msgstr "Change name"
 #: src/features/account/sheets/add-account-sheet.layout.tsx:44
 msgid "add_account.existing_wallet.cell_caption"
 msgstr "Choose existing wallet"
-
-#. js-lingui-generated-id
-#. js-lingui-id: xCJdfg
-#: src/app/developer-console/wallet-manager.tsx:35
-msgid "Clear"
-msgstr "Clear"
 
 #: src/features/send/components/recipient/recipient-input.tsx:59
 msgid "send-form.recipient.input.clear"
@@ -647,11 +629,11 @@ msgstr "Contract arguments"
 msgid "display.conversion_unit.cell_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:38
+#: src/features/settings/conversion-unit-sheet.tsx:40
 msgid "conversion_unit.header_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:27
+#: src/features/settings/conversion-unit-sheet.tsx:29
 msgid "conversion_unit.toast_title"
 msgstr "Conversion unit updated"
 
@@ -690,13 +672,6 @@ msgstr "Create or restore via email address"
 #: src/features/account/components/create-wallet-card.tsx:23
 msgid "create_wallet_card.title"
 msgstr "Add account"
-
-#. js-lingui-generated-id
-#. js-lingui-id: i8Klw5
-#: src/app/developer-console/index.tsx:43
-#: src/app/developer-console/wallet-manager.tsx:40
-msgid "Create wallet"
-msgstr "Create wallet"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:187
 msgid "add_wallet.watch_only_wallet.cell_title"
@@ -814,12 +789,6 @@ msgstr "Done"
 msgid "error_boundary.subtitle"
 msgstr "Drag to refresh"
 
-#. js-lingui-generated-id
-#. js-lingui-id: JNt6gq
-#: src/app/developer-console/index.tsx:69
-msgid "Drawer"
-msgstr "Drawer"
-
 #: src/features/earn/earn-widget.tsx:35
 msgid "earn.title"
 msgstr "Earn"
@@ -922,8 +891,8 @@ msgstr "Export xPub"
 msgid "app_auth.toast_title_error"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:243
-#: src/features/psbt-signer/psbt-signer.tsx:254
+#: src/features/psbt-signer/psbt-signer.tsx:211
+#: src/features/psbt-signer/psbt-signer.tsx:222
 msgid "approver.send.btc.error.broadcast"
 msgstr "Failed to broadcast transaction"
 
@@ -955,7 +924,7 @@ msgstr "Fee"
 msgid "approver.send.stx.success.change-fee"
 msgstr "Fee updated"
 
-#: src/features/psbt-signer/psbt-signer.tsx:202
+#: src/features/psbt-signer/psbt-signer.tsx:177
 msgid "approver.send.btc.success.change-fee"
 msgstr "Fee updated"
 
@@ -975,21 +944,9 @@ msgstr "For your eyes only"
 msgid "mpc_wallets.fordefi"
 msgstr "Fordefi"
 
-#. js-lingui-generated-id
-#. js-lingui-id: B1MVWs
-#: src/app/developer-console/wallet-manager.tsx:40
-msgid "Generating…"
-msgstr "Generating…"
-
 #: src/features/notifications/notifications-sheet.tsx:15
 msgid "notifications-sheet.title"
 msgstr "Receive transaction notifications"
-
-#. js-lingui-generated-id
-#. js-lingui-id: 0qUziF
-#: src/app/developer-console/index.tsx:55
-msgid "getAddresses"
-msgstr "getAddresses"
 
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:55
 msgid "browser-sheet.dapp.granite.title"
@@ -1028,7 +985,7 @@ msgid "configure_account.hide_account.cell_title"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
-#: src/features/psbt-signer/psbt-signer.tsx:294
+#: src/features/psbt-signer/psbt-signer.tsx:262
 msgid "approver.advanced.hide"
 msgstr "Hide advanced options"
 
@@ -1286,12 +1243,6 @@ msgstr "OneKey"
 msgid "approver.inputs-outputs.output.title"
 msgstr "Output"
 
-#. js-lingui-generated-id
-#. js-lingui-id: 6WdDG7
-#: src/app/developer-console/index.tsx:70
-msgid "Page"
-msgstr "Page"
-
 #: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:26
 msgid "recover_wallet.passphrase.input_placeholder"
 msgstr "Passphrase"
@@ -1391,12 +1342,6 @@ msgstr "Recently Visited"
 msgid "send-form.recipient.recents"
 msgstr "Recents"
 
-#. js-lingui-generated-id
-#. js-lingui-id: I3QpvQ
-#: src/app/developer-console/bitcoin-scratch-pad.tsx:41
-msgid "Recipient"
-msgstr "Recipient"
-
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:39
 msgid "browser.toolbox.refresh"
 msgstr "Refresh"
@@ -1425,7 +1370,7 @@ msgstr "Require biometrics or PIN"
 msgid "add_wallet.restore_wallet.cell_title"
 msgstr "Restore wallet"
 
-#: src/features/send/forms/btc/btc-form.tsx:132
+#: src/features/send/forms/btc/btc-form.tsx:131
 #: src/features/send/forms/stx/stx-form.tsx:149
 msgid "send_form.review_button"
 msgstr "Review"
@@ -1466,7 +1411,7 @@ msgstr "Save to…"
 msgid "send-form.recipient.unsupported_qr"
 msgstr "Scan a Bitcoin or Stacks address"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:63
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:72
 #: src/features/send/components/recipient/recipient-toggle.tsx:64
 msgid "send-form.recipient.qr_button"
 msgstr "Scan a QR code"
@@ -1499,12 +1444,6 @@ msgstr "Security"
 msgid "security.header_title"
 msgstr "Security"
 
-#. js-lingui-generated-id
-#. js-lingui-id: SuJxG1
-#: src/app/developer-console/index.tsx:39
-msgid "securityLevelPreference:"
-msgstr "securityLevelPreference:"
-
 #: src/features/receive/screens/select-account.tsx:27
 #: src/features/send/screens/select-account.tsx:43
 msgid "select_account.header_title"
@@ -1519,7 +1458,7 @@ msgstr "Select asset"
 msgid "action_bar.send_label"
 msgstr "Send"
 
-#: src/features/psbt-signer/psbt-signer.tsx:269
+#: src/features/psbt-signer/psbt-signer.tsx:237
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:137
 msgid "approver.send.title"
 msgstr "Send"
@@ -1581,19 +1520,13 @@ msgid "analytics.cell_caption"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:119
-#: src/features/psbt-signer/psbt-signer.tsx:290
+#: src/features/psbt-signer/psbt-signer.tsx:258
 msgid "approver.advanced.show"
 msgstr "Show advanced options"
 
 #: src/components/headers/components/header-options.tsx:64
 msgid "header.privacy_label_show"
 msgstr "Show balances"
-
-#. js-lingui-generated-id
-#. js-lingui-id: c+Fnce
-#: src/app/developer-console/bitcoin-scratch-pad.tsx:51
-msgid "Sign"
-msgstr "Sign"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:40
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:31
@@ -1603,18 +1536,6 @@ msgstr "Sign Message"
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:87
 msgid "approver.signTransaction.title"
 msgstr "Sign Transaction"
-
-#. js-lingui-generated-id
-#. js-lingui-id: E72UHU
-#: src/app/developer-console/index.tsx:64
-msgid "signMessage"
-msgstr "signMessage"
-
-#. js-lingui-generated-id
-#. js-lingui-id: S8MyH4
-#: src/app/developer-console/index.tsx:66
-msgid "signPsbt"
-msgstr "signPsbt"
 
 #: src/app/secure-your-wallet.tsx:61
 msgid "secure_your_wallet.skip_button"
@@ -1665,18 +1586,6 @@ msgstr "Stacks address"
 #: src/features/approver/utils.tsx:45
 msgid "approver.fee.type.middle"
 msgstr "Standard"
-
-#. js-lingui-generated-id
-#. js-lingui-id: /5mK9T
-#: src/app/developer-console/index.tsx:68
-msgid "stx_signMessage"
-msgstr "stx_signMessage"
-
-#. js-lingui-generated-id
-#. js-lingui-id: UYVLzm
-#: src/app/developer-console/index.tsx:67
-msgid "stx_signTransaction"
-msgstr "stx_signTransaction"
 
 #: src/features/approver/components/approver-buttons.tsx:58
 msgid "approver.button.submitted"
@@ -1798,12 +1707,6 @@ msgstr "to"
 msgid "approver.outcomes.title2"
 msgstr "To address"
 
-#. js-lingui-generated-id
-#. js-lingui-id: OiHHCm
-#: src/app/developer-console/wallet-manager.tsx:48
-msgid "Toggle network"
-msgstr "Toggle network"
-
 #: src/app/settings/display/index.tsx:145
 msgid "display.haptics.cell_caption"
 msgstr "Toggle tactile feedback for interactions"
@@ -1824,7 +1727,7 @@ msgstr "Tokens"
 msgid "earn.total_locked"
 msgstr "Total locked"
 
-#: src/features/psbt-signer/psbt-signer.tsx:310
+#: src/features/psbt-signer/psbt-signer.tsx:278
 #: src/features/stacks-tx-signer/stacks-tx-signer.tsx:167
 msgid "approver.total_spend"
 msgstr "Total spend"
@@ -1833,16 +1736,10 @@ msgstr "Total spend"
 msgid "notifications.push.cell_title"
 msgstr "Transaction confirmations"
 
-#: src/features/send/forms/btc/use-btc-form.ts:71
-#: src/features/send/forms/stx/use-stx-form.ts:62
+#: src/features/send/forms/btc/use-btc-form.ts:76
+#: src/features/send/forms/stx/use-stx-form.ts:68
 msgid "send-form.unexpected-error"
 msgstr "Transaction failed due to an unexpected error. Our team has been notified"
-
-#. js-lingui-generated-id
-#. js-lingui-id: T6Ea26
-#: src/app/developer-console/index.tsx:65
-msgid "transferBtc"
-msgstr "transferBtc"
 
 #: src/app/hardware-wallets.tsx:66
 msgid "hardware_wallets.trezor"
@@ -1855,12 +1752,6 @@ msgstr "Try again"
 #: src/features/qr-scanner/use-camera-permission.ts:40
 msgid "qr_scanner.camera_alert.message"
 msgstr "Turn on camera access in Settings to scan a QR."
-
-#. js-lingui-generated-id
-#. js-lingui-id: 0InOj0
-#: src/app/developer-console/bitcoin-scratch-pad.tsx:43
-msgid "Type here to translate!"
-msgstr "Type here to translate"
 
 #: src/features/browser/browser/search-bar/search-input/generic-search-text-input.tsx:20
 msgid "browser.input_placeholder"
@@ -1929,7 +1820,6 @@ msgid "approver.permissions.view_balance_activity"
 msgstr "View your wallet balance & activity"
 
 #. js-lingui-generated-id
-#. js-lingui-id: DnBH3U
 #: src/features/wallet-manager/wallets.tsx:26
 msgid "Wallet {fingerprint}"
 msgstr "Wallet {fingerprint}"
@@ -1945,12 +1835,6 @@ msgstr "Wallet added"
 #: src/hooks/use-create-wallet.ts:46
 msgid "create_wallet.wallet_exists.toast_title_error"
 msgstr "Wallet added already"
-
-#. js-lingui-generated-id
-#. js-lingui-id: AGlCSs
-#: src/app/developer-console/index.tsx:46
-msgid "Wallet management"
-msgstr "Wallet management"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:105
 msgid "configure_wallet.wallet_name.empty_name_error"
@@ -1968,7 +1852,7 @@ msgstr "Wallets and accounts"
 msgid "approver.account.title"
 msgstr "With account"
 
-#: src/features/browser/browser/browser-sheet.tsx:100
+#: src/features/browser/browser/browser-sheet.tsx:105
 msgid "browser.search-bar.wrong-url"
 msgstr "Wrong URL"
 
@@ -2004,4 +1888,3 @@ msgstr "Your Secret Key grants you access to your wallet and its assets. Store i
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:85
 msgid "browser-sheet.dapp.zest.title"
 msgstr "Zest"
-

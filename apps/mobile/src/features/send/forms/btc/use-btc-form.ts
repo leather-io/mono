@@ -10,7 +10,10 @@ import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
 import { btcFormValuesToPsbtHex } from '@/features/send/utils';
 import { Account } from '@/store/accounts/accounts';
-import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import {
+  useBitcoinAccounts,
+  useBitcoinPayerFromKeyOrigin,
+} from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useSettings } from '@/store/settings/settings';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/macro';
@@ -22,12 +25,12 @@ interface UseBtcFormProps {
   feeRates: AverageBitcoinFeeRates;
   utxos: OwnedUtxo[];
 }
-
 export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
   const { accountIndex, fingerprint } = account;
   const { navigate } = useSendNavigation();
   const { displayToast } = useToastContext();
   const { networkPreference } = useSettings();
+  const payerFromKeyOrigin = useBitcoinPayerFromKeyOrigin();
   const { nativeSegwit } = useBitcoinAccounts().accountIndexByPaymentType(
     fingerprint,
     accountIndex
@@ -52,24 +55,24 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
     recipient: form.watch('recipient'),
     feeRate: form.watch('feeRate'),
   });
+
   const { onSetMax } = useSendMax(maxSpend.spendableBitcoin, form);
   const handleSubmit = form.handleSubmit(values => {
-    if (!nativeSegwit) {
-      return;
-    }
+    if (!nativeSegwit) return;
 
-    btcFormValuesToPsbtHex(
+    btcFormValuesToPsbtHex({
       values,
-      nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 }),
       utxos,
-      networkPreference.chain.bitcoin.mode
-    )
-      .then((psbtHex: string) => navigate('approval', { hex: psbtHex }))
+      networkMode: networkPreference.chain.bitcoin.mode,
+      payerLookup: payerFromKeyOrigin,
+      changeAddress: nativeSegwit.derivePayer({ change: 0, addressIndex: 0 }).address,
+    })
+      .then((psbtHex: string) => navigate('approval', { hex: psbtHex, accountIndex, fingerprint }))
       .catch(() =>
         displayToast({
           title: t({
             id: 'send-form.unexpected-error',
-            message: 'Transaction failed due to an unexpected error. Our team has been notified.',
+            message: 'Transaction failed due to an unexpected error',
           }),
           type: 'error',
         })

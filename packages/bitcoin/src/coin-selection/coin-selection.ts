@@ -13,29 +13,21 @@ export interface CoinSelectionOutput {
   address?: string;
 }
 
-export interface CoinSelectionUtxo {
-  address: string;
-  txid: string;
-  value: number;
-  vout: number;
-}
-
 export interface CoinSelectionRecipient {
   address: string;
   amount: Money;
 }
 
-export interface DetermineUtxosForSpendArgs {
+export interface DetermineUtxosForSpendArgs<T> {
   feeRate: number;
   recipients: CoinSelectionRecipient[];
-  utxos: CoinSelectionUtxo[];
+  utxos: T[];
 }
-
-export function determineUtxosForSpendAll({
+export function determineUtxosForSpendAll<T extends { value: number; txid: string }>({
   feeRate,
   recipients,
   utxos,
-}: DetermineUtxosForSpendArgs) {
+}: DetermineUtxosForSpendArgs<T>) {
   recipients.forEach(recipient => {
     if (!validate(recipient.address)) throw new BitcoinError('InvalidAddress');
   });
@@ -63,7 +55,11 @@ export function determineUtxosForSpendAll({
   };
 }
 
-export function determineUtxosForSpend({ feeRate, recipients, utxos }: DetermineUtxosForSpendArgs) {
+export function determineUtxosForSpend<T extends { value: number; txid: string }>({
+  feeRate,
+  recipients,
+  utxos,
+}: DetermineUtxosForSpendArgs<T>) {
   recipients.forEach(recipient => {
     if (!validate(recipient.address)) throw new BitcoinError('InvalidAddress');
   });
@@ -77,7 +73,7 @@ export function determineUtxosForSpend({ feeRate, recipients, utxos }: Determine
   const amount = sumMoney(recipients.map(recipient => recipient.amount));
 
   // Prepopulate with first utxo, at least one is needed
-  const neededUtxos: CoinSelectionUtxo[] = [filteredUtxos[0]];
+  const neededUtxos: T[] = [filteredUtxos[0]];
 
   function estimateTransactionSize() {
     return getSizeInfo({
