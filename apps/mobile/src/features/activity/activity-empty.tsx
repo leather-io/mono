@@ -9,7 +9,7 @@ export function ActivityEmpty() {
     <EmptyLayout
       image={
         <Image
-          style={{ height: 165, width: 145 }}
+          style={{ height: 184, width: 167 }}
           contentFit="cover"
           source={require('@/assets/stickers/net.png')}
         />
