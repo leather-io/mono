@@ -77,7 +77,7 @@ export default () => {
               NSPrivacyAccessedAPITypeReasons: ['C617.1'],
             },
             {
-              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPIType',
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults',
               NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
             },
             {
