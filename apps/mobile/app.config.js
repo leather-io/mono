@@ -125,14 +125,14 @@ export default () => {
       plugins: [
         '@react-native-firebase/app',
         '@react-native-firebase/messaging',
-        // [
-        //   '@sentry/react-native/expo',
-        //   {
-        //     url: 'https://sentry.io/',
-        //     project: 'leather-mobile',
-        //     organization: 'trust-machines',
-        //   },
-        // ],
+        [
+          '@sentry/react-native/expo',
+          {
+            project: 'leather-mobile',
+            organization: 'trust-machines',
+            url: 'https://trust-machines.sentry.io',
+          },
+        ],
         [
           'expo-local-authentication',
           {
