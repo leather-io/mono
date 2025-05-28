@@ -14,7 +14,8 @@
       },
       "android": {
         "image": "latest"
-      }
+      },
+      "channel": "base"
     },
     "maestro": {
       "extends": "base",
