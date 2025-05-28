@@ -311,6 +311,14 @@
   * dependencies
     * @leather.io/constants bumped to 0.20.1
 
+## [0.35.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.34.1...@leather.io/utils-v0.35.0) (2025-05-28)
+
+
+### Features
+
+* add min max fns to calc money ([62dc157](https://github.com/leather-io/mono/commit/62dc157ada4aaa76b4a054861264748de4f04d4a))
+* add new tracking events for pooled/liquid stacking ([178c833](https://github.com/leather-io/mono/commit/178c83368688d1f98135d765bc260830edf016e0))
+
 ## [0.34.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.34.0...@leather.io/utils-v0.34.1) (2025-05-27)
 
 
