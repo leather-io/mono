@@ -32,7 +32,7 @@ import { trackFirstAppOpen } from '@/utils/analytics';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
-// import * as Sentry from '@sentry/react-native';
+import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -43,17 +43,12 @@ import { Box, SheetProvider } from '@leather.io/ui/native';
 
 dayjs.extend(relativeTime);
 
-// Sentry.init({
-//   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-//   environment: process.env.EXPO_PUBLIC_NODE_ENV ?? 'development',
-//   // Adds more context data to events (IP address, cookies, user, etc.)
-//   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
-//   sendDefaultPii: true,
-//   integrations: [Sentry.feedbackIntegration()],
-//
-//   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-//   // spotlight: __DEV__,
-// });
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: __DEV__,
+  tracesSampleRate: 1.0,
+});
+
 // Catch any errors thrown by the Layout component
 export { ErrorBoundary } from 'expo-router';
 
@@ -129,5 +124,4 @@ function RootLayout() {
   );
 }
 
-// export default Sentry.wrap(RootLayout);
-export default RootLayout;
+export default Sentry.wrap(RootLayout);
