@@ -701,6 +701,13 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.44.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.43.0...@leather.io/mobile-v2.44.0) (2025-05-28)
+
+
+### Features
+
+* sentry ([9243cb8](https://github.com/leather-io/mono/commit/9243cb87cfb798a738726e2283a3e6553448245f))
+
 ## [2.43.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.42.1...@leather.io/mobile-v2.43.0) (2025-05-27)
 
 
