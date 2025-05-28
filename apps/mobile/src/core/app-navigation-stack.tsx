@@ -27,17 +27,6 @@ export function AppNavigationStack() {
       {/* Collectibles */}
       <Stack.Screen name="collectibles/index" options={{ headerShown: false }} />
 
-      {/* Developer Console */}
-      <Stack.Screen name="developer-console/index" options={{ header: () => <NakedHeader /> }} />
-      <Stack.Screen
-        name="developer-console/wallet-manager"
-        options={{ header: () => <NakedHeader /> }}
-      />
-      <Stack.Screen
-        name="developer-console/bitcoin-scratch-pad"
-        options={{ header: () => <NakedHeader /> }}
-      />
-
       {/* Settings */}
       <Stack.Screen name="settings/index" options={{ headerShown: false }} />
       <Stack.Screen name="settings/display/index" options={{ headerShown: false }} />
