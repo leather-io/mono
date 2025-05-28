@@ -701,6 +701,38 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.45.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.44.0...@leather.io/mobile-v2.45.0) (2025-05-28)
+
+
+### Features
+
+* add min max fns to calc money ([62dc157](https://github.com/leather-io/mono/commit/62dc157ada4aaa76b4a054861264748de4f04d4a))
+* add new tracking events for pooled/liquid stacking ([178c833](https://github.com/leather-io/mono/commit/178c83368688d1f98135d765bc260830edf016e0))
+
+
+### Bug Fixes
+
+* delete dev console ([587cd6a](https://github.com/leather-io/mono/commit/587cd6a54321487011a34c736b00cbe1b1a3fec1))
+* use crowdin translations ([b161c47](https://github.com/leather-io/mono/commit/b161c479b8b309d6786e3a5b5fc34913f94b57cc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.6.0
+    * @leather.io/bitcoin bumped to 0.26.5
+    * @leather.io/crypto bumped to 1.7.2
+    * @leather.io/provider bumped to 1.2.17
+    * @leather.io/query bumped to 2.37.5
+    * @leather.io/rpc bumped to 2.16.2
+    * @leather.io/services bumped to 1.12.4
+    * @leather.io/stacks bumped to 1.10.6
+    * @leather.io/ui bumped to 1.68.2
+    * @leather.io/utils bumped to 0.35.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.5
+
 ## [2.44.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.43.0...@leather.io/mobile-v2.44.0) (2025-05-28)
 
 

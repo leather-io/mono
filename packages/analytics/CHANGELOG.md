@@ -72,6 +72,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.32.1
 
+## [3.6.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.5.1...@leather.io/analytics-v3.6.0) (2025-05-28)
+
+
+### Features
+
+* add new tracking events for pooled/liquid stacking ([178c833](https://github.com/leather-io/mono/commit/178c83368688d1f98135d765bc260830edf016e0))
+
 ## [3.5.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.4.2...@leather.io/analytics-v3.5.0) (2025-05-16)
 
 
