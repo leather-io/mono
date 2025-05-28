@@ -2,14 +2,13 @@
 /* eslint-disable no-console */
 
 const path = require('path');
-const { getDefaultConfig } = require('expo/metro-config');
 const MetroSymlinksResolver = require('@rnx-kit/metro-resolver-symlinks');
-// const { withSentryConfig } = require('@sentry/react-native/metro');
+const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, '../..');
 
-const config = getDefaultConfig(projectRoot);
+const config = getSentryExpoConfig(projectRoot);
 
 // add SVG compatibility
 config.transformer = {
@@ -80,5 +79,4 @@ config.transformer.getTransformOptions = async () => ({
   },
 });
 
-// module.exports = withSentryConfig(config);
 module.exports = config;
