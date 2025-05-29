@@ -25,7 +25,7 @@ export function Send({ accountId, asset }: SendProps) {
         selectedAsset: asset,
       }}
     >
-      <SheetNavigationContainer>
+      <SheetNavigationContainer base="send">
         <SendNavigator>
           <SendStack.Screen name="select-asset" component={SelectAsset} />
           <SendStack.Screen name="select-account" component={SelectAccount} />

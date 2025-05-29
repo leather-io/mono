@@ -21,7 +21,7 @@ export function ReceiveSheet() {
 
   return (
     <FullHeightSheet sheetRef={receiveSheetRef} onAnimate={handleAnimatedPositionChange}>
-      <SheetNavigationContainer>
+      <SheetNavigationContainer base="receive">
         <Receive accountId={accountId} />
       </SheetNavigationContainer>
     </FullHeightSheet>
