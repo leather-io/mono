@@ -22,7 +22,7 @@ export function Receive({ accountId }: ReceiveProps) {
         selectedAccount,
       }}
     >
-      <SheetNavigationContainer>
+      <SheetNavigationContainer base="receive">
         <ReceiveNavigator>
           <ReceiveStack.Screen name="select-account" component={SelectAccount} />
           <ReceiveStack.Screen name="select-asset" component={SelectAsset} />
