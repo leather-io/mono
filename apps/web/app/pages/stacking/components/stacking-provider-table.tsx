@@ -139,7 +139,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
             />
           </styled.div>
         ),
-        meta: { align: 'left' },
+        meta: { align: 'right' },
         size: 15,
         maxSize: 15,
       },
@@ -150,18 +150,14 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
           const minAmount = (info.row.original as any).minAmount;
           if (minAmount) {
             return (
-              <styled.div maxW="fit-content" textAlign="right" color="black">
+              <styled.div textAlign="right" color="black">
                 {minAmount}
               </styled.div>
             );
           }
 
           const value = info.getValue();
-          return (
-            <styled.div maxW="fit-content">
-              {isNumber(value) ? toHumanReadableMicroStx(value) : DASH}
-            </styled.div>
-          );
+          return <styled.div>{isNumber(value) ? toHumanReadableMicroStx(value) : DASH}</styled.div>;
         },
         header: () => (
           <styled.div maxW="fit-content" whiteSpace="nowrap" textAlign="right">
@@ -279,7 +275,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
   });
 
   return (
-    <Table.Root {...props}>
+    <Table.Root width="100%" overflowX="auto" {...props}>
       <Table.Table>
         <Table.Head className={theadBorderBottom}>
           {table.getHeaderGroups().map((headerGroup: any) => (
@@ -426,7 +422,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): Reac
             <styled.div>{toHumanReadableShortStx(data.lastCycle.token.stacked_amount)}</styled.div>
           );
         },
-        meta: { align: 'left' },
+        meta: { align: 'right' },
         size: 15,
         maxSize: 15,
       },
@@ -434,11 +430,13 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): Reac
         accessorKey: 'estApr',
         id: 'estApr',
         header: () => (
-          <PostLabelHoverCard
-            post={posts.historicalYield}
-            label={content.labels.historicalYield}
-            textStyle="label.03"
-          />
+          <styled.div whiteSpace="nowrap" textAlign="right">
+            <PostLabelHoverCard
+              post={posts.historicalYield}
+              label={content.labels.historicalYield}
+              textStyle="label.03"
+            />
+          </styled.div>
         ),
         cell: info => {
           const slug = getProtocolSlugByProviderId(info.row.original.providerId);
@@ -545,7 +543,7 @@ export function LiquidStackingProviderTable(props: HTMLStyledProps<'div'>): Reac
   });
 
   return (
-    <Table.Root {...props}>
+    <Table.Root width="100%" overflowX="auto" {...props}>
       <Table.Table>
         <Table.Head className={theadBorderBottom}>
           {table.getHeaderGroups().map(headerGroup => (
