@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 
 import { Box, GridProps } from 'leather-styles/jsx';
-import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { DASH } from '~/constants/constants';
 import { CopyAddress } from '~/features/stacking/components/address';
@@ -154,10 +153,7 @@ function RewardsTokenCell({ rewardProtocol }: RewardProtocolCellProps) {
       gap="space.04"
       name="Rewards token"
       value={
-        <Flag
-          spacing="space.02"
-          img={rewardProtocol.rewardsToken === 'sBTC' && <SbtcLogo size={24} />}
-        >
+        <Flag spacing="space.02" img={rewardProtocol.rewardTokenIcon}>
           {rewardProtocol.rewardsToken}
         </Flag>
       }
