@@ -63,7 +63,7 @@ export interface StackingPool {
   providerId: ProviderId;
   name: string;
   url: string;
-  payout: string;
+  payout: 'STX' | 'BTC';
   description: string;
   poolAddress?: {
     mainnet: string;
@@ -199,6 +199,7 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperOneCycle',
     minimumDelegationAmount: 100_000_000,
+    allowCustomRewardAddress: true,
   },
   stackingDao: {
     ...providers.stackingDao,
@@ -219,7 +220,6 @@ export const stackingPoolData = {
     },
     poxContract: 'WrapperStackingDao',
     minimumDelegationAmount: MIN_DELEGATED_STACKING_AMOUNT_USTX,
-    allowCustomRewardAddress: false,
     disabled: false,
     tvlUsd: '$40,000,000',
     minCommitmentUsd: '$1',

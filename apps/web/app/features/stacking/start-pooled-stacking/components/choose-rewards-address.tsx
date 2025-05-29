@@ -6,7 +6,11 @@ import { StackingPoolFormSchema } from '~/features/stacking/start-pooled-stackin
 
 import { Input } from '@leather.io/ui';
 
-export function ChooseRewardsAddress() {
+interface ChooseRewardsAddressProps {
+  disabled?: boolean;
+}
+
+export function ChooseRewardsAddress({ disabled }: ChooseRewardsAddressProps) {
   const { control } = useFormContext<StackingPoolFormSchema>();
 
   return (
@@ -26,6 +30,7 @@ export function ChooseRewardsAddress() {
                 onChange={input => {
                   onChange(input.target.value);
                 }}
+                disabled={!!disabled}
                 onBlur={onBlur}
                 ref={ref}
               />

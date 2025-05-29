@@ -3,8 +3,10 @@ import { useMemo } from 'react';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { STACKS_BLOCKS_PER_DAY } from '~/constants/constants';
+import { StackingPool } from '~/data/data';
 import { useGetPoxInfoQuery, useGetStatusQuery } from '~/features/stacking/hooks/stacking.query';
 import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
+import { poolRewardProtocolInfoRewardTokenSchema } from '~/features/stacking/start-pooled-stacking/components/pool-reward-protocol-info-reward-token.schema';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
 import {
   PoolSlug,
@@ -47,7 +49,10 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
     !getPoolAddressQuery.data ||
     !stxMarketData;
 
-  const pool = useMemo(() => poolSlug && getPoolFromSlug(poolSlug), [poolSlug]);
+  const pool = useMemo<StackingPool | null>(
+    () => poolSlug && getPoolFromSlug(poolSlug),
+    [poolSlug]
+  );
 
   const poolRewardProtocolInfo = useMemo(() => {
     if (isLoading || isError || !pool || !poolSlug) {
@@ -96,7 +101,8 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       id: poolSlug,
 
       logo: <ProviderIcon providerId={pool.providerId} />,
-      rewardsToken: pool.payout,
+      rewardsToken: poolRewardProtocolInfoRewardTokenSchema.parse(pool.payout),
+      allowCustomRewardAddress: !!pool.allowCustomRewardAddress,
       description: pool.description,
       minCommitment,
       minCommitmentUsd,

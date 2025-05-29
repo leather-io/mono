@@ -306,12 +306,14 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
     return mappedPool;
   }
 
+  const { poolRewardProtocolInfo } = poolInfo;
+
   return (
     <Stack gap={['space.06', 'space.06', 'space.06', 'space.09']} mb="space.07">
-      {poolInfo.poolRewardProtocolInfo && (
+      {poolRewardProtocolInfo && (
         <Page.Inset>
           <PoolOverview
-            pool={mapPoolRewardProtocolInfoToStackingPool(poolInfo.poolRewardProtocolInfo)}
+            pool={mapPoolRewardProtocolInfoToStackingPool(poolRewardProtocolInfo)}
             poolSlug={poolSlug}
           />
         </Page.Inset>
@@ -331,16 +333,20 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
                   />
                 </Stack>
 
-                <Stack gap="space.02">
-                  <StackingFormItemTitle
-                    title="Address to receive rewards"
-                    post={stackingRewardsAddressPost}
-                  />
-                  <ChooseRewardsAddress />
-                  <styled.span textStyle="caption.01" color="ink.text-subdued">
-                    This is where the pool will deposit your rewards each cycle.
-                  </styled.span>
-                </Stack>
+                {poolRewardProtocolInfo?.rewardsToken === 'BTC' && (
+                  <Stack gap="space.02">
+                    <StackingFormItemTitle
+                      title="Address to receive rewards"
+                      post={stackingRewardsAddressPost}
+                    />
+                    <ChooseRewardsAddress
+                      disabled={!poolRewardProtocolInfo.allowCustomRewardAddress}
+                    />
+                    <styled.span textStyle="caption.01" color="ink.text-subdued">
+                      This is where the pool will deposit your rewards each cycle.
+                    </styled.span>
+                  </Stack>
+                )}
 
                 <Hr />
 
