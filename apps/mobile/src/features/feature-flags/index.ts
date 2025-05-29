@@ -63,9 +63,15 @@ export function useWaitlistFlag() {
 export function useDynamicFeeFlag() {
   return useBoolVariation('release_dynamic_fee_feature', false);
 }
+
 export function useEarnFlag() {
   return useBoolVariation('release_earn_feature', false);
 }
+
 export function useDappSuggestions() {
   return useBoolVariation('release_dapp_suggestions_feature', false);
+}
+
+export function useSendPasteButton() {
+  return useBoolVariation('send_paste_button', false);
 }

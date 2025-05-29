@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useSendPasteButton } from '@/features/feature-flags';
+import { IosRecipientPasteButton } from '@/features/send/components/recipient/ios-recipient-paste-button';
 import { RecipientInput } from '@/features/send/components/recipient/recipient-input';
 import { RecipientSelectorHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/recipient-selector/recipient-selector-item';
@@ -41,6 +43,7 @@ export function RecipientSelector({
   onSelectAddress,
   onQrButtonPress,
 }: RecipientSelectorProps) {
+  const pasteButtonEnabled = useSendPasteButton();
   const [searchTerm, setSearchTerm] = useState('');
   const recipientSuggestions = useRecipientSuggestions({
     searchTerm,
@@ -53,24 +56,27 @@ export function RecipientSelector({
   const isPerformingSearch = normalizeSearchTerm(searchTerm).length > 0;
   const isBnsLookup = isBnsLookupCandidate(normalizeSearchTerm(searchTerm));
 
+  function handlePasteButtonPress(value: string) {
+    setSearchTerm(value);
+  }
+
   return (
     <>
       <RecipientSelectorHeader>
         <Box>
           <RecipientInput value={searchTerm} onChange={setSearchTerm} />
           {searchTerm.length === 0 && (
-            <IconButton
-              label={t({
-                id: 'send-form.recipient.qr_button',
-                message: 'Scan a QR code',
-              })}
-              position="absolute"
-              top={12}
-              right={8}
-              hitSlop={8}
-              onPress={onQrButtonPress}
-              icon={<QrCodeIcon />}
-            />
+            <Box position="absolute" top={12} right={8} flexDirection="row">
+              {pasteButtonEnabled && <IosRecipientPasteButton onPress={handlePasteButtonPress} />}
+              <IconButton
+                label={t({
+                  id: 'send-form.recipient.qr_button',
+                  message: 'Scan a QR code',
+                })}
+                onPress={onQrButtonPress}
+                icon={<QrCodeIcon />}
+              />
+            </Box>
           )}
         </Box>
       </RecipientSelectorHeader>
