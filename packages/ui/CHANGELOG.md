@@ -403,6 +403,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [1.68.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.3...@leather.io/ui-v1.68.4) (2025-05-30)
+
+
+### Bug Fixes
+
+* ensure we set proper border radius and use container on browser, closes LEA-2492 ([3c12795](https://github.com/leather-io/mono/commit/3c127952414f03871057b84d6b2dde471690b163))
+
 ## [1.68.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.0...@leather.io/ui-v1.68.1) (2025-05-27)
 
 
