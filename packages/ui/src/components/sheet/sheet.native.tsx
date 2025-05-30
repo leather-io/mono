@@ -25,6 +25,7 @@ export const CLOSED_ANIMATED_SHARED_VALUE = -888;
 type SnapPointVariant = 'fullHeightWithNotch' | 'fullHeightWithoutNotch' | 'none';
 
 export interface SheetProps extends Omit<BottomSheetModalProps, 'children'> {
+  // Determines if the bottom sheet should have a container with a border radius and default background color.
   shouldHaveContainer?: boolean;
   snapPointVariant?: SnapPointVariant;
   isScrollView?: boolean;
@@ -109,7 +110,7 @@ export function Sheet({
       handleComponent={() => (
         <Box
           alignItems="center"
-          padding="2"
+          padding="1"
           position="absolute"
           top={handleComponentTop}
           width="100%"
@@ -130,8 +131,9 @@ export function Sheet({
           style={{
             backgroundColor: theme.colors['ink.background-primary'],
             paddingBottom: bottom,
-            borderTopLeftRadius: theme.borderRadii.lg,
-            borderTopRightRadius: theme.borderRadii.lg,
+            flex: 1,
+            borderTopLeftRadius: theme.borderRadii.round,
+            borderTopRightRadius: theme.borderRadii.round,
             overflow: 'hidden',
           }}
         >
