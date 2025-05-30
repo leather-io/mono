@@ -288,6 +288,21 @@
   * dependencies
     * @leather.io/utils bumped to 0.35.0
 
+## [2.16.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.16.2...@leather.io/rpc-v2.16.3) (2025-05-30)
+
+
+### Bug Fixes
+
+* rpc network type errors ([42c8519](https://github.com/leather-io/mono/commit/42c8519b54d034f3adc3a20da27af4e4d7d4a8ff))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.33.0
+    * @leather.io/utils bumped to 0.35.1
+
 ## [2.16.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.15.1...@leather.io/rpc-v2.16.0) (2025-05-22)
 
 

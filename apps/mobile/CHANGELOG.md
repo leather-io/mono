@@ -701,6 +701,33 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.46.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.45.0...@leather.io/mobile-v2.46.0) (2025-05-30)
+
+
+### Features
+
+* enhance utxo model ([b23fdd5](https://github.com/leather-io/mono/commit/b23fdd5eef83c923ce36ef99a1164071e2b6f035))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.6.1
+    * @leather.io/bitcoin bumped to 0.26.6
+    * @leather.io/constants bumped to 0.20.4
+    * @leather.io/crypto bumped to 1.7.3
+    * @leather.io/models bumped to 0.33.0
+    * @leather.io/provider bumped to 1.2.18
+    * @leather.io/query bumped to 2.37.6
+    * @leather.io/rpc bumped to 2.16.3
+    * @leather.io/services bumped to 1.13.0
+    * @leather.io/stacks bumped to 1.10.7
+    * @leather.io/ui bumped to 1.68.3
+    * @leather.io/utils bumped to 0.35.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.6
+
 ## [2.45.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.44.0...@leather.io/mobile-v2.45.0) (2025-05-28)
 
 

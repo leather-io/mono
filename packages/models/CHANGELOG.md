@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.33.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.32.1...@leather.io/models-v0.33.0) (2025-05-30)
+
+
+### Features
+
+* enhance utxo model ([b23fdd5](https://github.com/leather-io/mono/commit/b23fdd5eef83c923ce36ef99a1164071e2b6f035))
+
 ## [0.32.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.31.0...@leather.io/models-v0.32.0) (2025-05-16)
 
 
