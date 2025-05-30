@@ -165,6 +165,12 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.33.0
+
 ## [0.20.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.20.2...@leather.io/constants-v0.20.3) (2025-05-27)
 
 
