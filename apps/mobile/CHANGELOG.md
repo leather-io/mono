@@ -701,6 +701,20 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.46.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.46.0...@leather.io/mobile-v2.46.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* ensure we set proper border radius and use container on browser, closes LEA-2492 ([3c12795](https://github.com/leather-io/mono/commit/3c127952414f03871057b84d6b2dde471690b163))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.68.4
+
 ## [2.46.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.45.0...@leather.io/mobile-v2.46.0) (2025-05-30)
 
 
