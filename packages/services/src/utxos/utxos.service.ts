@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { AccountAddresses, Utxo, UtxoId } from '@leather.io/models';
+import { AccountAddresses, OwnedUtxo, UtxoId } from '@leather.io/models';
 import { hasBitcoinAddress, isDefined } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -14,17 +14,18 @@ import {
   getUtxoIdFromSatpoint,
   isUnconfirmedUtxo,
   isUneconomicalUtxo,
+  mapLeatherApiUtxoToOwnedUtxo,
   selectUniqueUtxoIds,
 } from './utxos.utils';
 
 export interface UtxoTotals {
-  confirmed: Utxo[];
-  inbound: Utxo[];
-  outbound: Utxo[];
-  protected: Utxo[];
-  uneconomical: Utxo[];
-  unspendable: Utxo[];
-  available: Utxo[];
+  confirmed: OwnedUtxo[];
+  inbound: OwnedUtxo[];
+  outbound: OwnedUtxo[];
+  protected: OwnedUtxo[];
+  uneconomical: OwnedUtxo[];
+  unspendable: OwnedUtxo[];
+  available: OwnedUtxo[];
 }
 
 const emptyUtxos: UtxoTotals = {
@@ -57,8 +58,18 @@ export class UtxosService {
     if (!hasBitcoinAddress(account)) return emptyUtxos;
 
     const [nativeSegwitUtxos, taprootUtxos] = await Promise.all([
-      this.getDescriptorUtxos(account.bitcoin.nativeSegwitDescriptor, [], signal),
-      this.getDescriptorUtxos(account.bitcoin.taprootDescriptor, unprotectedUtxos, signal),
+      this.getDescriptorUtxos(
+        account.id.fingerprint,
+        account.bitcoin.nativeSegwitDescriptor,
+        [],
+        signal
+      ),
+      this.getDescriptorUtxos(
+        account.id.fingerprint,
+        account.bitcoin.taprootDescriptor,
+        unprotectedUtxos,
+        signal
+      ),
     ]);
     return {
       confirmed: [...nativeSegwitUtxos.confirmed, ...taprootUtxos.confirmed],
@@ -77,22 +88,23 @@ export class UtxosService {
    * An optional list of unprotected UTXOs can be provided on request to selectively move UTXO values from protected to available.
    */
   public async getDescriptorUtxos(
+    fingerprint: string,
     descriptor: string,
     unprotectedUtxoIds: UtxoId[],
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
-    const [leatherApiUtxos, totalProtectedUtxos, btcTxs] = await Promise.all([
-      this.leatherApiClient.fetchUtxos(descriptor, signal),
-      this.getDescriptorProtectedUtxos(descriptor, signal),
+    const [ownedUtxos, totalProtectedUtxos, btcTxs] = await Promise.all([
+      this.getOwnedUtxos(descriptor, fingerprint, signal),
+      this.getDescriptorProtectedUtxos(fingerprint, descriptor, signal),
       this.bitcoinTransactionsService.getDescriptorTransactions(descriptor, signal),
     ]);
-    const outboundUtxos = getOutboundUtxos(btcTxs);
+    const outboundUtxos = getOutboundUtxos(btcTxs, fingerprint);
     const protectedUtxos = totalProtectedUtxos.filter(
       filterOutMatchesAnyUtxoId(unprotectedUtxoIds)
     );
-    const unconfirmedUtxos = leatherApiUtxos.filter(isUnconfirmedUtxo);
+    const unconfirmedUtxos = ownedUtxos.filter(isUnconfirmedUtxo);
     const confirmedUtxos = [
-      ...leatherApiUtxos.filter(filterOutMatchesAnyUtxoId(unconfirmedUtxos)),
+      ...ownedUtxos.filter(filterOutMatchesAnyUtxoId(unconfirmedUtxos)),
       ...outboundUtxos,
     ];
     const uneconomicalUtxos = confirmedUtxos.filter(isUneconomicalUtxo);
@@ -117,13 +129,14 @@ export class UtxosService {
    * Retrieve protected UTXOs (those w/ inscriptions or runes) for given Bitcoin taproot xpub descriptor.
    */
   public async getDescriptorProtectedUtxos(
+    fingerprint: string,
     taprootDescriptor: string,
     signal?: AbortSignal
-  ): Promise<Utxo[]> {
+  ): Promise<OwnedUtxo[]> {
     if (!taprootDescriptor.toLocaleLowerCase().startsWith('tr(')) return [];
 
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
-      this.leatherApiClient.fetchUtxos(taprootDescriptor, signal),
+      this.getOwnedUtxos(taprootDescriptor, fingerprint, signal),
       this.bisApiClient.fetchInscriptions(taprootDescriptor, signal),
       this.bisApiClient.fetchRunesValidOutputs(taprootDescriptor, signal),
     ]);
@@ -133,5 +146,14 @@ export class UtxosService {
     const runesUtxoIds = runeOutputs.map(r => getUtxoIdFromOutpoint(r.output)).filter(isDefined);
 
     return utxos.filter(filterMatchesAnyUtxoId([...inscribedUtxoIds, ...runesUtxoIds]));
+  }
+
+  private async getOwnedUtxos(
+    descriptor: string,
+    fingerprint: string,
+    signal?: AbortSignal
+  ): Promise<OwnedUtxo[]> {
+    const utxos = await this.leatherApiClient.fetchUtxos(descriptor, signal);
+    return utxos.map(utxo => mapLeatherApiUtxoToOwnedUtxo(utxo, fingerprint));
   }
 }

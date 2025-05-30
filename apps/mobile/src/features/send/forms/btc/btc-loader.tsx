@@ -10,14 +10,19 @@ import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-import { AccountId, AverageBitcoinFeeRates, MarketData, Money } from '@leather.io/models';
-import { Utxo } from '@leather.io/query';
+import {
+  AccountId,
+  AverageBitcoinFeeRates,
+  MarketData,
+  Money,
+  OwnedUtxo,
+} from '@leather.io/models';
 
 interface BtcData {
   availableBalance: Money;
   fiatBalance: Money;
   feeRates: AverageBitcoinFeeRates;
-  utxos: Utxo[];
+  utxos: OwnedUtxo[];
   marketData: MarketData;
 }
 

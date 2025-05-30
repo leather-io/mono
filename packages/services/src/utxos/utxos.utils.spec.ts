@@ -1,16 +1,21 @@
 import { Utxo, UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
-import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import {
+  LeatherApiBitcoinTransaction,
+  LeatherApiUtxo,
+} from '../infrastructure/api/leather/leather-api.client';
 import {
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
+  getKeyOrigin,
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
   getUtxoIdFromSatpoint,
   isUnconfirmedUtxo,
   isUneconomicalUtxo,
+  mapLeatherApiUtxoToOwnedUtxo,
   selectUniqueUtxoIds,
   sumUtxoValues,
   uneconomicalSatThreshold,
@@ -61,22 +66,22 @@ describe('utxo list filtering', () => {
     {
       txid: '1234',
       vout: 0,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '2468',
       vout: 1,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '3692',
       vout: 2,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '4826',
       vout: 3,
-      value: '100000',
+      value: 100000,
     },
   ] as Utxo[];
 
@@ -106,12 +111,12 @@ describe('utxo list filtering', () => {
         {
           txid: '2468',
           vout: 1,
-          value: '100000',
+          value: 100000,
         },
         {
           txid: '4826',
           vout: 3,
-          value: '100000',
+          value: 100000,
         },
       ]);
     });
@@ -128,12 +133,12 @@ describe('utxo list filtering', () => {
         {
           txid: '1234',
           vout: 0,
-          value: '100000',
+          value: 100000,
         },
         {
           txid: '3692',
           vout: 2,
-          value: '100000',
+          value: 100000,
         },
       ]);
     });
@@ -149,24 +154,24 @@ describe(isUnconfirmedUtxo.name, () => {
     {
       txid: '1234',
       vout: 0,
-      value: '100000',
+      value: 100000,
       height: 1234,
     },
     {
       txid: '2468',
       vout: 1,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '3692',
       vout: 2,
-      value: '100000',
+      value: 100000,
       height: 2468,
     },
     {
       txid: '4826',
       vout: 3,
-      value: '100000',
+      value: 100000,
     },
   ] as Utxo[];
 
@@ -176,12 +181,12 @@ describe(isUnconfirmedUtxo.name, () => {
       {
         txid: '2468',
         vout: 1,
-        value: '100000',
+        value: 100000,
       },
       {
         txid: '4826',
         vout: 3,
-        value: '100000',
+        value: 100000,
       },
     ]);
   });
@@ -217,16 +222,16 @@ describe(sumUtxoValues.name, () => {
   it('returns summed values of all utxo in list', () => {
     const utxos = [
       {
-        value: '10000',
+        value: 10000,
       },
       {
-        value: '20000',
+        value: 20000,
       },
       {
-        value: '30000',
+        value: 30000,
       },
       {
-        value: '40000',
+        value: 40000,
       },
     ] as Utxo[];
     expect(sumUtxoValues(utxos)).toEqual(initBigNumber('100000'));
@@ -238,27 +243,27 @@ describe(selectUniqueUtxoIds.name, () => {
     {
       txid: '1234',
       vout: 0,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '1234',
       vout: 0,
-      value: '200000',
+      value: 200000,
     },
     {
       txid: '1234',
       vout: 1,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '5678',
       vout: 0,
-      value: '100000',
+      value: 100000,
     },
     {
       txid: '5678',
       vout: 0,
-      value: '300000',
+      value: 300000,
     },
   ] as Utxo[];
 
@@ -267,17 +272,17 @@ describe(selectUniqueUtxoIds.name, () => {
       {
         txid: '1234',
         vout: 0,
-        value: '100000',
+        value: 100000,
       },
       {
         txid: '1234',
         vout: 1,
-        value: '100000',
+        value: 100000,
       },
       {
         txid: '5678',
         vout: 0,
-        value: '100000',
+        value: 100000,
       },
     ]);
   });
@@ -372,21 +377,51 @@ describe(getOutboundUtxos.name, () => {
   ];
 
   it('maps owned vins of unconfirmed, outbound transactions to UTXOs', () => {
-    const outboundUtxos = getOutboundUtxos(txs);
+    const outboundUtxos = getOutboundUtxos(txs, 'fingerprint');
 
     expect(outboundUtxos.length).toEqual(1);
     expect(outboundUtxos[0].txid).toEqual(ownedVin.txid);
     expect(outboundUtxos[0].vout).toEqual(ownedVin.n);
     expect(outboundUtxos[0].address).toEqual(ownedVin.address);
     expect(outboundUtxos[0].path).toEqual(ownedVin.path);
-    expect(outboundUtxos[0].value).toEqual(ownedVin.value);
+    expect(outboundUtxos[0].value).toEqual(Number(ownedVin.value));
+    expect(outboundUtxos[0].keyOrigin).toEqual('fingerprint/bc1q123-path');
   });
 
   it('reads the original tx height if available, otherwise falls back to a default', () => {
-    const originalHeightUtxos = getOutboundUtxos(txs);
-    const defaultHeightUtxos = getOutboundUtxos(txs.slice(0, 1));
+    const originalHeightUtxos = getOutboundUtxos(txs, 'fingerprint');
+    const defaultHeightUtxos = getOutboundUtxos(txs.slice(0, 1), 'fingerprint');
 
     expect(originalHeightUtxos[0].height).toEqual(ORIGINAL_TX_HEIGHT);
     expect(defaultHeightUtxos[0].height).toEqual(fallbackUtxoHeight);
+  });
+});
+
+describe(mapLeatherApiUtxoToOwnedUtxo.name, () => {
+  it('maps a Leather API UTXO to an Owned UTXO', () => {
+    const fingerprint = 'deadbeef';
+    const utxo = {
+      txid: '1234',
+      vout: 0,
+      value: 100000,
+      address: 'bc1q123',
+      path: 'bc1q123-path',
+    } as unknown as LeatherApiUtxo;
+    const ownedUtxo = mapLeatherApiUtxoToOwnedUtxo(utxo, fingerprint);
+    expect(ownedUtxo.txid).toEqual(utxo.txid);
+    expect(ownedUtxo.vout).toEqual(utxo.vout);
+    expect(ownedUtxo.value).toEqual(utxo.value);
+    expect(ownedUtxo.address).toEqual(utxo.address);
+    expect(ownedUtxo.path).toEqual(utxo.path);
+    expect(ownedUtxo.keyOrigin).toEqual('deadbeef/bc1q123-path');
+  });
+});
+
+describe(getKeyOrigin.name, () => {
+  it('returns the key origin for a given fingerprint and path', () => {
+    const fingerprint = 'deadbeef';
+    const path = "m/84'/0'/0'/0/0";
+    const keyOrigin = getKeyOrigin(fingerprint, path);
+    expect(keyOrigin).toEqual("deadbeef/84'/0'/0'/0/0");
   });
 });

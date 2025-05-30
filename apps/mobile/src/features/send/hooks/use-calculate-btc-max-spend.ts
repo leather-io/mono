@@ -3,8 +3,7 @@ import { useCallback } from 'react';
 import { createCoinSelectionUtxos } from '@/features/send/utils';
 
 import { calculateMaxSpend } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates } from '@leather.io/models';
-import type { Utxo } from '@leather.io/query';
+import { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
 
 interface CalculateBtcMaxSpendParams {
   recipient: string;
@@ -13,7 +12,7 @@ interface CalculateBtcMaxSpendParams {
 
 export type CalculateBtcMaxSpend = ReturnType<typeof useCalculateBtcMaxSpend>;
 
-export function useCalculateBtcMaxSpend(feeRates: AverageBitcoinFeeRates, utxos: Utxo[]) {
+export function useCalculateBtcMaxSpend(feeRates: AverageBitcoinFeeRates, utxos: OwnedUtxo[]) {
   return useCallback(
     ({ recipient, feeRate }: CalculateBtcMaxSpendParams) =>
       calculateMaxSpend({
