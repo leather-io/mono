@@ -1,7 +1,10 @@
-import { Utxo, UtxoId } from '@leather.io/models';
+import { OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
 import { sumNumbers } from '@leather.io/utils';
 
-import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import {
+  LeatherApiBitcoinTransaction,
+  LeatherApiUtxo,
+} from '../infrastructure/api/leather/leather-api.client';
 import {
   isOutboundTx,
   isPendingTx,
@@ -52,7 +55,7 @@ export function isUneconomicalUtxo(utxo: Utxo) {
 }
 
 export function sumUtxoValues(utxos: Utxo[]) {
-  return sumNumbers(utxos.map(utxo => Number(utxo.value)));
+  return sumNumbers(utxos.map(utxo => utxo.value));
 }
 
 export function selectUniqueUtxoIds<T extends UtxoId>(ids: T[]) {
@@ -64,7 +67,10 @@ export function selectUniqueUtxoIds<T extends UtxoId>(ids: T[]) {
 
 export const fallbackUtxoHeight = 800_000;
 
-export function getOutboundUtxos(txs: LeatherApiBitcoinTransaction[]): Utxo[] {
+export function getOutboundUtxos(
+  txs: LeatherApiBitcoinTransaction[],
+  fingerprint: string
+): OwnedUtxo[] {
   const txMap = new Map(txs.map(tx => [tx.txid, tx]));
   return txs
     .filter(isPendingTx)
@@ -76,9 +82,25 @@ export function getOutboundUtxos(txs: LeatherApiBitcoinTransaction[]): Utxo[] {
       vout: vin.n,
       address: vin.address ?? '',
       path: vin.path ?? '',
-      value: vin.value,
+      value: Number(vin.value),
+      keyOrigin: vin.path ? getKeyOrigin(fingerprint, vin.path) : '',
       // there's a chance the page of txs doesnt include the original, to get height but because its outbound, we know it is confirmed.
       // in these cases, fallback to a default height
       height: txMap.get(vin.txid)?.height ?? fallbackUtxoHeight,
     }));
+}
+
+export function mapLeatherApiUtxoToOwnedUtxo(
+  utxo: LeatherApiUtxo,
+  masterFingerprint: string
+): OwnedUtxo {
+  return {
+    ...utxo,
+    value: Number(utxo.value),
+    keyOrigin: getKeyOrigin(masterFingerprint, utxo.path),
+  };
+}
+
+export function getKeyOrigin(fingerprint: string, path: string) {
+  return `${fingerprint}/${path.replace('m/', '')}`;
 }

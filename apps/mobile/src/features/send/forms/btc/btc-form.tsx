@@ -19,8 +19,8 @@ import {
   type FiatCurrency,
   type MarketData,
   type Money,
+  type OwnedUtxo,
 } from '@leather.io/models';
-import { type Utxo } from '@leather.io/query';
 import { BtcAvatarIcon, Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
@@ -31,7 +31,7 @@ interface BtcFormProps {
   availableBalance: Money;
   fiatBalance: Money;
   feeRates: AverageBitcoinFeeRates;
-  utxos: Utxo[];
+  utxos: OwnedUtxo[];
   marketData: MarketData;
   fiatCurrency: FiatCurrency;
   assetItemAnimationOffsetTop?: number | null;
