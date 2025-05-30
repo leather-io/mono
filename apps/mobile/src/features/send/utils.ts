@@ -14,8 +14,8 @@ import {
   getBtcSignerLibNetworkConfigByMode,
   payerToBip32Derivation,
 } from '@leather.io/bitcoin';
-import { type BitcoinNetworkModes } from '@leather.io/models';
-import { type Utxo, defaultStacksFees, isAddressCompliant } from '@leather.io/query';
+import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
+import { defaultStacksFees, isAddressCompliant } from '@leather.io/query';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
   convertAmountToBaseUnit,
@@ -30,11 +30,11 @@ export function calculateDefaultStacksFee() {
   return convertAmountToBaseUnit(defaultStacksFees.estimates[1]?.fee ?? defaultFeeFallbackAsMoney);
 }
 
-export function createCoinSelectionUtxos(utxos: Utxo[]): CoinSelectionUtxo[] {
+export function createCoinSelectionUtxos(utxos: OwnedUtxo[]): CoinSelectionUtxo[] {
   return utxos.map(utxo => ({
     address: utxo.address,
     txid: utxo.txid,
-    value: Number(utxo.value),
+    value: utxo.value,
     vout: utxo.vout,
   }));
 }
@@ -50,7 +50,7 @@ export function validateDecimalPlaces(value: string, maxDecimalPlaces: number) {
 export function btcFormValuesToPsbtHex(
   values: BtcFormSchema,
   nativeSegwitPayer: BitcoinNativeSegwitPayer,
-  utxos: Utxo[],
+  utxos: OwnedUtxo[],
   networkMode: BitcoinNetworkModes
 ) {
   const { feeRate, amount: inputAmount, isSendingMax, recipient } = values;

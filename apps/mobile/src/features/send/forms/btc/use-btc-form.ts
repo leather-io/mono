@@ -15,13 +15,12 @@ import { useSettings } from '@/store/settings/settings';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/macro';
 
-import { AverageBitcoinFeeRates } from '@leather.io/models';
-import type { Utxo } from '@leather.io/query';
+import { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
 
 interface UseBtcFormProps {
   account: Account;
   feeRates: AverageBitcoinFeeRates;
-  utxos: Utxo[];
+  utxos: OwnedUtxo[];
 }
 
 export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {

@@ -20,6 +20,8 @@ export type LeatherApiBitcoinTransaction =
   paths['/v1/transactions/{descriptor}']['get']['responses'][200]['content']['application/json']['data'][number];
 export type LeatherApiSip10Token =
   paths['/v1/tokens/sip10s/{principal}']['get']['responses']['200']['content']['application/json'];
+export type LeatherApiUtxo =
+  paths['/v1/utxos/{descriptor}']['get']['responses'][200]['content']['application/json'][number];
 
 @injectable()
 export class LeatherApiClient {
