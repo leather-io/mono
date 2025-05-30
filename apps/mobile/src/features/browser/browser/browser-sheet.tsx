@@ -67,7 +67,6 @@ export function BrowserSheet() {
       ref={browserSheetRef}
       snapPointVariant="fullHeightWithoutNotch"
       shouldHaveContainer={true}
-      isScrollView={false}
       themeVariant={themeDerivedFromThemePreference}
       onDismiss={resetSearchBar}
     >
