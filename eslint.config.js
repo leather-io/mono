@@ -9,6 +9,20 @@ export default tseslint.config(
   {
     files: ['{packages,apps}/**/*.{ts,tsx}'],
     extends: [baseConfig],
+    rules: {
+      '@typescript-eslint/no-floating-promises': [
+        'error',
+        {
+          allowForKnownSafeCalls: [
+            {
+              from: 'package',
+              package: '@leather.io/analytics',
+              name: 'track',
+            },
+          ],
+        },
+      ],
+    },
   },
   {
     files: ['**/*.spec.ts'],
