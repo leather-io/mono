@@ -14,6 +14,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { type Account } from '@/store/accounts/accounts';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 
 export function SelectAccount() {
@@ -27,11 +28,13 @@ export function SelectAccount() {
   } = useSendFlowContext();
 
   function handleSelectAccount(account: Account) {
+    analytics.track('send_account_selected');
     selectAccount(account);
     navigate(selectedAsset ? 'form' : 'select-asset', { previousRoute: 'select-account' });
   }
 
   function handleBackButtonPress() {
+    analytics.track('send_back_button_pressed', { screen: 'select-asset' });
     navigate('select-asset');
     selectAccount(null);
   }

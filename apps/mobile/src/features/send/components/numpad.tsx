@@ -1,5 +1,7 @@
 import { useValidateInputDecimalPlaces } from '@/features/send/hooks/use-validate-input-decimal-places';
+import { analytics } from '@/utils/analytics';
 import BigNumber from 'bignumber.js';
+import { funnel } from 'remeda';
 
 import { Currency } from '@leather.io/models';
 import { Box, type NumpadProps, Numpad as RawNumpad } from '@leather.io/ui/native';
@@ -10,6 +12,15 @@ interface SendFormNumpadProps extends NumpadProps {
   currency: Currency;
   onBlur(): void;
 }
+
+const { call: trackEnterAmountEvent } = funnel(
+  (amount: string) => analytics.track('send_amount_entered', { amount }),
+  {
+    reducer: (_, amount: string) => amount,
+    minQuietPeriodMs: 1000,
+    triggerAt: 'end',
+  }
+);
 
 export function Numpad({
   clearSendingMax,
@@ -26,6 +37,7 @@ export function Numpad({
       clearSendingMax();
     }
 
+    trackEnterAmountEvent(value);
     onBlur();
     onChange(value);
   }

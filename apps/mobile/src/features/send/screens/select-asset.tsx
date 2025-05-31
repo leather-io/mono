@@ -1,19 +1,17 @@
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AssetPicker } from '@/features/send/components/asset-picker/asset-picker';
 import { usePreloadBtcData } from '@/features/send/hooks/use-preload-btc-data';
 import { usePreloadStxData } from '@/features/send/hooks/use-preload-stx-data';
-import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
+import { useSendNavigation } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
 import { NetworkBadge } from '@/features/settings/network-badge';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 
 export function SelectAsset() {
   const { navigate } = useSendNavigation();
-  const route = useSendRoute<'select-asset'>();
-  const canGoBack = route.params?.previousRoute === 'select-account';
   const {
     state: { selectedAccount },
     selectAsset,
@@ -23,6 +21,7 @@ export function SelectAsset() {
   usePreloadStxData(selectedAccount);
 
   function handleSelectAsset(asset: SendableAsset, assetItemElementOffsetTop: number | null) {
+    analytics.track('send_asset_selected', { asset });
     selectAsset(asset);
     if (selectedAccount) {
       navigate('form', {
@@ -34,10 +33,6 @@ export function SelectAsset() {
         previousRoute: 'select-asset',
       });
     }
-  }
-
-  function handleBackButtonPress() {
-    navigate('select-account');
   }
 
   return (
@@ -52,7 +47,6 @@ export function SelectAsset() {
             id: 'send.select_asset.header_subtitle',
             message: 'Send',
           })}
-          leftElement={canGoBack ? <HeaderBackButton onPress={handleBackButtonPress} /> : null}
           rightElement={<NetworkBadge />}
         />
       }

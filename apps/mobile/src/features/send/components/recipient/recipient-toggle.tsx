@@ -19,7 +19,7 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 interface RecipientToggleProps {
   onPress(): void;
   value: string;
-  onQrButtonPress(): void;
+  onQrButtonPress(source: 'toggle' | 'input'): void;
 }
 
 export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientToggleProps) {
@@ -66,7 +66,7 @@ export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientTo
                 message: 'Scan a QR code',
               })}
               icon={<QrCodeIcon />}
-              onPress={onQrButtonPress}
+              onPress={() => onQrButtonPress('toggle')}
             />
           </>
         )}

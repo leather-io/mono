@@ -1,6 +1,7 @@
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { Send } from '@/features/send/send';
+import { analytics } from '@/utils/analytics';
 import { useGlobalSearchParams, useSegments } from 'expo-router';
 import { isString } from 'remeda';
 
@@ -17,8 +18,16 @@ export function SendSheet() {
     }
   }
 
+  function handleDismiss() {
+    analytics.track('send_sheet_dismissed');
+  }
+
   return (
-    <FullHeightSheet sheetRef={sendSheetRef} onAnimate={handleAnimatedPositionChange}>
+    <FullHeightSheet
+      sheetRef={sendSheetRef}
+      onAnimate={handleAnimatedPositionChange}
+      onDismiss={handleDismiss}
+    >
       <Send accountId={accountId} />
     </FullHeightSheet>
   );

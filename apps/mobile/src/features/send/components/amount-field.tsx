@@ -5,6 +5,7 @@ import {
   type AmountFieldProps as RawAmountFieldProps,
 } from '@/components/amount-field/amount-field';
 import { FieldConnectorArrow } from '@/features/send/components/field-connector-arrow';
+import { analytics } from '@/utils/analytics';
 
 import { Box } from '@leather.io/ui/native';
 
@@ -12,7 +13,16 @@ interface AmountFieldProps extends RawAmountFieldProps {
   enteringAnimationEnabled?: boolean;
 }
 
-export function AmountField({ enteringAnimationEnabled, ...amountFieldProps }: AmountFieldProps) {
+export function AmountField({
+  enteringAnimationEnabled,
+  onSetIsSendingMax,
+  ...amountFieldProps
+}: AmountFieldProps) {
+  function handleSetIsSendingMax() {
+    analytics.track('send_max_selected');
+    onSetIsSendingMax?.();
+  }
+
   return (
     <AnimatedBox
       zIndex="10"
@@ -20,7 +30,7 @@ export function AmountField({ enteringAnimationEnabled, ...amountFieldProps }: A
       entering={enteringAnimationEnabled ? enteringAnimation : undefined}
       backgroundColor="ink.background-primary"
     >
-      <RawAmountField {...amountFieldProps} />
+      <RawAmountField onSetIsSendingMax={handleSetIsSendingMax} {...amountFieldProps} />
       <FieldConnectorArrow />
     </AnimatedBox>
   );

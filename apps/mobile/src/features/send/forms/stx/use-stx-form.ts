@@ -12,6 +12,7 @@ import {
 import { Account } from '@/store/accounts/accounts';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
+import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/macro';
 
@@ -55,6 +56,11 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
   const { onSetMax } = useSendMax(maxSpend, form);
 
   const handleSubmit = form.handleSubmit(values => {
+    analytics.track('send_transaction_review_initiated', {
+      asset: 'STX',
+      amount: Number(values.amount),
+    });
+
     stxFormValuesToSerializedTransaction(values, stxSigner?.publicKey ?? '', stacksNetwork)
       .then(txHex =>
         navigate('approval', {
