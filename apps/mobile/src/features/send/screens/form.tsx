@@ -13,6 +13,7 @@ import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 
@@ -37,10 +38,12 @@ export function Form() {
   }
 
   function handleOpenAssetPicker() {
+    analytics.track('send_inline_asset_picker_opened');
     assetPickerSheetRef.current?.present();
   }
 
   function handleInlineAssetSelection(asset: SendableAsset) {
+    analytics.track('send_asset_selected', { asset });
     setShouldAnimateAssetItem(false);
     selectAsset(asset);
   }

@@ -24,6 +24,7 @@ import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
@@ -78,6 +79,7 @@ export function StacksTxSigner({
     try {
       const signedTx = await signer?.sign(tx);
 
+      analytics.track('broadcast_transaction', { symbol: 'STX' });
       await broadcastTransaction(
         { tx: signedTx, stacksNetwork },
         {

@@ -8,6 +8,7 @@ import {
   RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/recipient.types';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
+import { analytics } from '@/utils/analytics';
 import dayjs from 'dayjs';
 
 import { Cell, PersonIcon } from '@leather.io/ui/native';
@@ -19,11 +20,16 @@ interface RecipientSelectorItemProps {
 }
 
 export function RecipientSelectorItem({ entry, onSelect }: RecipientSelectorItemProps) {
+  function handleSelect(address: string) {
+    analytics.track('send_recipient_selected', { type: entry.type });
+    onSelect(address);
+  }
+
   switch (entry.type) {
     case 'internal':
-      return <InternalRecipientItem entry={entry} onSelect={onSelect} />;
+      return <InternalRecipientItem entry={entry} onSelect={handleSelect} />;
     case 'external':
-      return <ExternalRecipientItem entry={entry} onSelect={onSelect} />;
+      return <ExternalRecipientItem entry={entry} onSelect={handleSelect} />;
     default:
       return assertUnreachable(entry);
   }

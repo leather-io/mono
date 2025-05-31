@@ -27,6 +27,21 @@ export interface Events extends HistoricalEvents {
   };
   stx_balance_updated: StxCryptoAssetBalance;
   in_app_browser_opened: { url: string };
+  add_wallet_sheet_opened: { source: 'action_bar' | 'add_account_sheet' };
+  send_sheet_opened: { source: 'action_bar' };
+  receive_sheet_opened: { source: 'action_bar' };
+  browser_sheet_opened: { source: 'action_bar' };
+  send_sheet_dismissed: undefined;
+  send_asset_selected: { asset: string };
+  send_account_selected: undefined;
+  send_back_button_pressed: { screen: string };
+  send_inline_asset_picker_opened: undefined;
+  send_max_selected: undefined;
+  send_amount_entered: { amount: string };
+  send_recipient_sheet_opened: undefined;
+  send_recipient_selected: { type: 'internal' | 'external' };
+  send_qr_scanner_opened: { source: 'toggle' | 'input' };
+  send_transaction_review_initiated: { asset: string; amount: number };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.

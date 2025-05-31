@@ -14,6 +14,7 @@ import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/queries/transac
 import { useBitcoinBroadcastTransaction } from '@/queries/transaction/use-bitcoin-broadcast-transaction';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -193,6 +194,7 @@ function BasePsbtSigner({
   }
 
   async function onSubmitTransaction() {
+    analytics.track('request_sign_psbt_submit');
     setApproverState('submitting');
     try {
       const psbt = getPsbtAsTransaction(psbtHex);
@@ -208,6 +210,7 @@ function BasePsbtSigner({
         return;
       }
 
+      analytics.track('broadcast_transaction', { symbol: 'BTC' });
       await broadcastTx({
         skipSpendableCheckUtxoIds: 'all',
         tx: signedTx.hex,

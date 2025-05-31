@@ -15,6 +15,7 @@ import {
   useBitcoinPayerFromKeyOrigin,
 } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useSettings } from '@/store/settings/settings';
+import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/macro';
 
@@ -59,6 +60,11 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
   const { onSetMax } = useSendMax(maxSpend.spendableBitcoin, form);
   const handleSubmit = form.handleSubmit(values => {
     if (!nativeSegwit) return;
+
+    analytics.track('send_transaction_review_initiated', {
+      asset: 'BTC',
+      amount: Number(values.amount),
+    });
 
     btcFormValuesToPsbtHex({
       values,

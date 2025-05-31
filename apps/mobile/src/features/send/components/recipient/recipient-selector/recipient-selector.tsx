@@ -31,7 +31,7 @@ interface RecipientSelectorProps {
   recipientSchema: ZodSchema;
   assetInfo: FungibleCryptoAssetInfo;
   onSelectAddress(address: string): void;
-  onQrButtonPress(): void;
+  onQrButtonPress(source: 'toggle' | 'input'): void;
 }
 
 export function RecipientSelector({
@@ -73,7 +73,7 @@ export function RecipientSelector({
                   id: 'send-form.recipient.qr_button',
                   message: 'Scan a QR code',
                 })}
-                onPress={onQrButtonPress}
+                onPress={() => onQrButtonPress('input')}
                 icon={<QrCodeIcon />}
               />
             </Box>

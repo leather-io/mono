@@ -11,7 +11,7 @@ const FIRST_OPEN_KEY = 'first_open_tracked';
 const segmentClient = createClient({
   writeKey: process.env.EXPO_PUBLIC_SEGMENT_WRITE_KEY || '',
   trackAppLifecycleEvents: true,
-  debug: true,
+  debug: false,
 });
 
 segmentClient.add({ plugin: new AppLifecycleEventPlugin() });
