@@ -1,6 +1,7 @@
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { SheetNavigationContainer } from '@/core/sheet-navigation-container';
+import { analytics } from '@/utils/analytics';
 import { useGlobalSearchParams, useSegments } from 'expo-router';
 import { isString } from 'remeda';
 
@@ -19,8 +20,16 @@ export function ReceiveSheet() {
     }
   }
 
+  function handleDismiss() {
+    analytics.track('receive_sheet_dismissed');
+  }
+
   return (
-    <FullHeightSheet sheetRef={receiveSheetRef} onAnimate={handleAnimatedPositionChange}>
+    <FullHeightSheet
+      sheetRef={receiveSheetRef}
+      onAnimate={handleAnimatedPositionChange}
+      onDismiss={handleDismiss}
+    >
       <SheetNavigationContainer base="receive">
         <Receive accountId={accountId} />
       </SheetNavigationContainer>

@@ -1,15 +1,15 @@
 import { HeaderBackButton } from '@/components/headers/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
-import { TokenIcon } from '@/features/balances/token-icon';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 
-import { assertExistence, truncateMiddle } from '@leather.io/utils';
+import { assertExistence } from '@leather.io/utils';
 
 import { ReceiveAssetItem } from '../components/receive-asset-item';
 import { getAssets } from '../get-assets';
@@ -55,6 +55,11 @@ export function SelectAsset() {
   const assets = getAssets({ nativeSegwitPayerAddress, taprootPayerAddress, stxAddress });
   const onCopyAddress = useCopyAddress();
 
+  function handleCopyAddress(asset: SelectedAsset) {
+    analytics.track('receive_address_copied', { asset: asset.name, location: 'list_item' });
+    void onCopyAddress(asset.address);
+  }
+
   return (
     <>
       <FullHeightSheetLayout
@@ -78,12 +83,8 @@ export function SelectAsset() {
         {assets.map(asset => (
           <ReceiveAssetItem
             key={asset.address}
-            address={truncateMiddle(asset.address)}
-            addressType={asset.addressType}
-            name={asset.name}
-            symbol={asset.symbol}
-            icon={<TokenIcon ticker={asset.symbol} />}
-            onCopy={() => onCopyAddress(asset.address)}
+            asset={asset}
+            onCopyAddress={handleCopyAddress}
             onPress={() => onSelectAsset(asset)}
           />
         ))}

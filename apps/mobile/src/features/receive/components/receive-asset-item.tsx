@@ -1,26 +1,20 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
+import { TokenIcon } from '@/features/balances/token-icon';
+import { SelectedAsset } from '@/features/receive/screens/select-asset';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { Box, Cell, CopyIcon, IconButton, Text } from '@leather.io/ui/native';
+import { truncateMiddle } from '@leather.io/utils';
 
 interface ReceiveAssetItemProps {
-  address: string;
-  addressType?: string;
-  name: string;
-  symbol: string;
-  icon: React.ReactNode;
-  onCopy: () => void;
+  asset: SelectedAsset;
+  onCopyAddress: (asset: SelectedAsset) => void;
   onPress: () => void;
 }
-export function ReceiveAssetItem({
-  address,
-  addressType,
-  name,
-  icon,
-  onCopy,
-  onPress,
-}: ReceiveAssetItemProps) {
+export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAssetItemProps) {
+  const { address, addressType, name } = asset;
+
   return (
     <Cell.Root
       pressable={true}
@@ -28,7 +22,9 @@ export function ReceiveAssetItem({
       onPress={onPress}
       testID={TestId.receiveAssetItem}
     >
-      <Cell.Icon>{icon}</Cell.Icon>
+      <Cell.Icon>
+        <TokenIcon ticker={asset.symbol} />
+      </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">
           {
@@ -38,7 +34,7 @@ export function ReceiveAssetItem({
             </Box>
           }
         </Cell.Label>
-        <Cell.Label variant="secondary">{address}</Cell.Label>
+        <Cell.Label variant="secondary">{truncateMiddle(address)}</Cell.Label>
       </Cell.Content>
       <Cell.Aside>
         <IconButton
@@ -48,7 +44,7 @@ export function ReceiveAssetItem({
           })}
           mr="-2"
           icon={<CopyIcon />}
-          onPress={onCopy}
+          onPress={() => onCopyAddress(asset)}
         />
       </Cell.Aside>
     </Cell.Root>

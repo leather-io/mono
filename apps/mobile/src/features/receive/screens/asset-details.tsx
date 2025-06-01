@@ -7,6 +7,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { QrCard } from '@/features/receive/components/qr-card';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
+import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -31,6 +32,16 @@ export function AssetDetails() {
   const accountName = route.params.accountName;
   const { name, address, addressType, description } = asset;
   const onCopyAddress = useCopyAddress();
+
+  function handleCopyAddress() {
+    analytics.track('receive_address_copied', { asset: name, location: 'details' });
+    void onCopyAddress(address);
+  }
+
+  function handleShareButtonPress() {
+    analytics.track('receive_share_button_pressed', { asset: name });
+    void Share.share({ message: address });
+  }
 
   return (
     <FullHeightSheetLayout
@@ -77,7 +88,7 @@ export function AssetDetails() {
           justifyContent="space-between"
           gap="2"
           pressEffects={legacyTouchablePressEffect}
-          onPress={() => void onCopyAddress(address)}
+          onPress={handleCopyAddress}
         >
           <Box flex={1}>
             <AddressDisplayer address={address} />
@@ -90,7 +101,7 @@ export function AssetDetails() {
           buttonState="outline"
           icon={<ArrowOutOfBoxIcon />}
           style={{ marginTop: 'auto' }}
-          onPress={() => void Share.share({ message: address })}
+          onPress={handleShareButtonPress}
         />
       </Box>
     </FullHeightSheetLayout>
