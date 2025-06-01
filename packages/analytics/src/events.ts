@@ -29,9 +29,10 @@ export interface Events extends HistoricalEvents {
   in_app_browser_opened: { url: string };
   add_wallet_sheet_opened: { source: 'action_bar' | 'add_account_sheet' };
   send_sheet_opened: { source: 'action_bar' };
-  receive_sheet_opened: { source: 'action_bar' };
-  browser_sheet_opened: { source: 'action_bar' };
   send_sheet_dismissed: undefined;
+  receive_sheet_opened: { source: 'action_bar' };
+  receive_sheet_dismissed: undefined;
+  browser_sheet_opened: { source: 'action_bar' };
   send_asset_selected: { asset: string };
   send_account_selected: undefined;
   send_back_button_pressed: { screen: string };
@@ -42,6 +43,8 @@ export interface Events extends HistoricalEvents {
   send_recipient_selected: { type: 'internal' | 'external' };
   send_qr_scanner_opened: { source: 'toggle' | 'input' };
   send_transaction_review_initiated: { asset: string; amount: number };
+  receive_address_copied: { asset: string; location: string };
+  receive_share_button_pressed: { asset: string };
 }
 
 // These are historical events that we'll maintain but that do not follow the object-action framework.
