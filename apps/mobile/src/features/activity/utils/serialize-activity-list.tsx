@@ -1,3 +1,4 @@
+import { Balance } from '@/components/balance/balance';
 import { LinkingRef } from '@/core/browser-provider';
 
 import { NetworkConfiguration, OnChainActivity } from '@leather.io/models';
