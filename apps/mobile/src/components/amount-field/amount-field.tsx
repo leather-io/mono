@@ -29,7 +29,6 @@ export function AmountField({
   inputValue,
   inputCurrencyMode,
   invalid,
-  isValidating,
   inputCurrencyModeChangeEnabled,
   onInputCurrencyModeChange,
   onSetIsSendingMax,
@@ -39,7 +38,7 @@ export function AmountField({
   quoteCurrency,
   locale,
 }: AmountFieldProps) {
-  const state = evaluateInternalState({ inputValue, invalid, isValidating });
+  const state = evaluateInternalState({ inputValue, invalid });
   const textColor = getTextColor(state);
 
   function handleSendMaxPress() {
@@ -92,7 +91,6 @@ type EvaluateInternalStateParams = Pick<
 function evaluateInternalState({
   invalid,
   inputValue,
-  isValidating,
 }: EvaluateInternalStateParams): InternalState {
   if (inputValue === '0') {
     return 'initial';
@@ -102,7 +100,7 @@ function evaluateInternalState({
     return 'active';
   }
 
-  if (invalid && !isValidating) {
+  if (invalid) {
     return 'invalid';
   }
 
