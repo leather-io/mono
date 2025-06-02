@@ -8,19 +8,23 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface ErrorMessageProps {
   amount: string;
-  isValidating: boolean;
   errorMessage: string | undefined;
 }
 
-export function ErrorMessage({ amount, isValidating, errorMessage }: ErrorMessageProps) {
-  if (isValidating || !errorMessage || isUserInputEffectivelyZero(amount)) {
+export function ErrorMessage({ amount, errorMessage }: ErrorMessageProps) {
+  if (!errorMessage || isUserInputEffectivelyZero(amount)) {
     return null;
   }
 
-  // TODO: Needs a11y announcement
   return (
     <AnimatedBox entering={enteringAnimation} exiting={exitingAnimation}>
-      <Text mt="3" textAlign="center" variant="label02" color="red.action-primary-default">
+      <Text
+        mt="3"
+        textAlign="center"
+        variant="label02"
+        color="red.action-primary-default"
+        accessibilityLiveRegion="polite"
+      >
         {errorMessage}
       </Text>
     </AnimatedBox>

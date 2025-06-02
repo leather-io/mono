@@ -123,7 +123,6 @@ export function StxForm({
 
       <ErrorMessage
         amount={form.watch('amount')}
-        isValidating={form.formState.isValidating}
         errorMessage={form.formState.errors.amount?.message}
       />
 
