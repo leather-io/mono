@@ -39,6 +39,7 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   }
 
   const activityItemHeight = 72;
+
   const serializedActivities = useMemo(
     () =>
       filteredActivities.map(activity =>
@@ -69,6 +70,14 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
         ListEmptyComponent={<ActivityEmpty />}
         refreshing={refreshing}
         onRefresh={onRefresh}
+        overrideItemLayout={layout => {
+          layout.size = 72;
+        }}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+          autoscrollToTopThreshold: 10,
+        }}
+        removeClippedSubviews={true}
       />
     </Box>
   );

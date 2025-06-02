@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 export interface ActivityListItemProps {
@@ -10,26 +12,28 @@ export interface ActivityListItemProps {
   onPress: () => void;
 }
 
-export function ActivityListItem({
-  txid,
-  avatar,
-  title,
-  caption,
-  fiatBalance,
-  cryptoBalance,
-  onPress,
-}: ActivityListItemProps) {
-  return (
-    <Pressable flexDirection="row" disabled={!txid} onPress={onPress}>
-      <Flag img={avatar} px="5" py="3">
-        <ItemLayout
-          gap="0"
-          titleLeft={title}
-          titleRight={fiatBalance}
-          captionLeft={caption}
-          captionRight={cryptoBalance}
-        />
-      </Flag>
-    </Pressable>
-  );
-}
+export const ActivityListItem = memo(
+  ({
+    txid,
+    avatar,
+    title,
+    caption,
+    fiatBalance,
+    cryptoBalance,
+    onPress,
+  }: ActivityListItemProps) => {
+    return (
+      <Pressable flexDirection="row" disabled={!txid} onPress={onPress}>
+        <Flag img={avatar} px="5" py="3">
+          <ItemLayout
+            gap="0"
+            titleLeft={title}
+            titleRight={fiatBalance}
+            captionLeft={caption}
+            captionRight={cryptoBalance}
+          />
+        </Flag>
+      </Pressable>
+    );
+  }
+);
