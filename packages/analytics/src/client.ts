@@ -8,7 +8,7 @@ export function AnalyticsClient<T extends AnalyticsClientInterface>(
   return {
     async track<K extends keyof Events>(
       event: K,
-      properties?: undefined extends Events[K] ? [] : [param: Events[K]]
+      ...[properties]: Events[K] extends undefined ? [] : [Events[K]]
     ) {
       return analyticsClient.track(event, { ...properties, ...defaultProperties });
     },
