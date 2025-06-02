@@ -47,6 +47,7 @@ Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   debug: __DEV__,
   tracesSampleRate: 1.0,
+  enabled: !__DEV__,
 });
 
 // Catch any errors thrown by the Layout component
