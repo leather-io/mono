@@ -318,6 +318,13 @@
     * @leather.io/constants bumped to 0.20.4
     * @leather.io/models bumped to 0.33.0
 
+## [0.35.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.35.1...@leather.io/utils-v0.35.2) (2025-06-02)
+
+
+### Bug Fixes
+
+* revert change to format money ([37d6044](https://github.com/leather-io/mono/commit/37d604476d51b949dffc1b7f0fef2698766404f2))
+
 ## [0.35.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.34.1...@leather.io/utils-v0.35.0) (2025-05-28)
 
 

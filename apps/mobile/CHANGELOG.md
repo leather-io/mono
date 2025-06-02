@@ -701,6 +701,35 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.47.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.46.1...@leather.io/mobile-v2.47.0) (2025-06-02)
+
+
+### Features
+
+* **mobile:** add paste button to recipient selector in Send ([2167604](https://github.com/leather-io/mono/commit/2167604e20add8681510478ba5c765b1bd73ea44))
+
+
+### Bug Fixes
+
+* revert change to format money ([37d6044](https://github.com/leather-io/mono/commit/37d604476d51b949dffc1b7f0fef2698766404f2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.7
+    * @leather.io/crypto bumped to 1.7.4
+    * @leather.io/provider bumped to 1.2.19
+    * @leather.io/query bumped to 2.37.7
+    * @leather.io/rpc bumped to 2.16.4
+    * @leather.io/services bumped to 1.13.1
+    * @leather.io/stacks bumped to 1.10.8
+    * @leather.io/ui bumped to 1.68.5
+    * @leather.io/utils bumped to 0.35.2
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.7
+
 ## [2.46.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.46.0...@leather.io/mobile-v2.46.1) (2025-05-30)
 
 
