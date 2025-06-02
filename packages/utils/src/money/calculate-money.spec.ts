@@ -5,12 +5,13 @@ import { MarketData, createMarketData, createMarketPair } from '@leather.io/mode
 import {
   baseCurrencyAmountInQuote,
   convertAmountToFractionalUnit,
+  convertToMoneyTypeWithDefaultOfZero,
   maxMoney,
   minMoney,
   subtractMoney,
   sumMoney,
 } from './calculate-money';
-import { createMoney, createMoneyFromDecimal } from './format-money';
+import { createMoney, createMoneyFromDecimal, formatMoney } from './format-money';
 
 const tenMicroStx = createMoney(10, 'STX');
 const tenStx = createMoneyFromDecimal(10, 'STX');
@@ -53,6 +54,11 @@ describe(convertAmountToFractionalUnit.name, () => {
 
   test('it converts 99 as decimal amount to a fractional unit', () =>
     expect(convertAmountToFractionalUnit(new BigNumber(99), 6).toNumber()).toEqual(99000000));
+});
+
+describe(convertToMoneyTypeWithDefaultOfZero.name, () => {
+  test('it converts and formats a number to a money object', () =>
+    expect(formatMoney(convertToMoneyTypeWithDefaultOfZero('STX', 400))).toEqual('0.0004 STX'));
 });
 
 describe(sumMoney.name, () => {
