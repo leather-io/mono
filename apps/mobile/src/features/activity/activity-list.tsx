@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useRefreshHandler } from '@/components/page/page.layout';
+import { useBrowser } from '@/core/browser-provider';
 import { ViewMode } from '@/shared/types';
+import { useSettings } from '@/store/settings/settings';
 import { FlashList } from '@shopify/flash-list';
 
 import { Activity, OnChainActivity, OnChainActivityTypes } from '@leather.io/models';
@@ -9,7 +11,8 @@ import { Box } from '@leather.io/ui/native';
 
 import { ActivityCard } from './activity-card';
 import { ActivityEmpty } from './activity-empty';
-import { ActivityListItem } from './activity-list-item';
+import { ActivityListItem, ActivityListItemProps } from './activity-list-item';
+import { serializeActivityList } from './utils/serialize-activity-list';
 
 interface ActivityListProps {
   activity: Activity[];
@@ -17,6 +20,8 @@ interface ActivityListProps {
 }
 
 export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
+  const { networkPreference } = useSettings();
+  const { linkingRef } = useBrowser();
   const { refreshing, onRefresh } = useRefreshHandler();
   const [renderLimit, setRenderLimit] = useState(10);
   const filteredActivities = activity
@@ -33,12 +38,30 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
     );
   }
 
+  const activityItemHeight = 72;
+  const serializedActivities = useMemo(
+    () =>
+      filteredActivities.map(activity =>
+        serializeActivityList(activity, networkPreference, linkingRef)
+      ),
+    [filteredActivities, networkPreference]
+  );
   return (
     <Box flex={1} width="100%" height="100%">
       <FlashList
-        data={filteredActivities}
-        renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
-        estimatedItemSize={72}
+        data={serializedActivities}
+        renderItem={({ item }: { item: ActivityListItemProps }) => (
+          <ActivityListItem
+            txid={item.txid}
+            avatar={item.avatar}
+            title={item.title}
+            caption={item.caption}
+            fiatBalance={item.fiatBalance}
+            cryptoBalance={item.cryptoBalance}
+            onPress={item.onPress}
+          />
+        )}
+        estimatedItemSize={activityItemHeight}
         keyExtractor={(_, index) => `activity.${index}`}
         showsVerticalScrollIndicator={false}
         onEndReached={() => setRenderLimit(renderLimit + 10)}
