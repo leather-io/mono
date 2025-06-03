@@ -55,6 +55,7 @@ interface PsbtSignerProps extends AccountId {
   allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
   signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
   network?: BitcoinNetworkModes;
+  feeEditorEnabled: boolean;
   onBack(): void;
   onResult(result: { hex: string; txid?: string }): void;
 }
@@ -77,6 +78,7 @@ function BasePsbtSigner({
   signAtIndex,
   allowedSighash,
   broadcast,
+  feeEditorEnabled,
   network: requestedNetwork,
 }: BasePsbtSignerProps) {
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
@@ -151,6 +153,13 @@ function BasePsbtSigner({
     fingerprint: nativeSegwitAccount.masterKeyFingerprint,
   });
 
+  // Editing the fee of a PSBT is fairly sensitive operation. The implementation
+  // currently generates another tx from our global UTXO set, however if the tx
+  // is coming externally, we must not do this, as it may at best invalidate the
+  // tx, at worst transfer funds irretrievably. To implement safely, we must
+  // first check the sig hash type to make sure the tx is modifiable, and if it
+  // is, only append new inputs and outputs, leaving the existing ones
+  // untouched.
   function onChangeFee(feeType: FeeTypes) {
     const feeRate = match()(feeType, {
       [FeeTypes.Low]: feeRates.hourFee.toNumber(),
@@ -247,13 +256,15 @@ function BasePsbtSigner({
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
           </Approver.Section>
-          <Approver.Section>
-            <BitcoinFeeCard
-              feeType={selectedFeeType}
-              amount={psbtDetails.fee}
-              onPress={() => feeSheetRef.current?.present()}
-            />
-          </Approver.Section>
+          {feeEditorEnabled && (
+            <Approver.Section>
+              <BitcoinFeeCard
+                feeType={selectedFeeType}
+                amount={psbtDetails.fee}
+                onPress={() => feeSheetRef.current?.present()}
+              />
+            </Approver.Section>
+          )}
           <Approver.Advanced
             titleClosed={t({
               id: 'approver.advanced.show',

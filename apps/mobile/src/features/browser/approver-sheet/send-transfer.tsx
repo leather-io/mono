@@ -123,6 +123,7 @@ function BaseSendTransferApprover(
   if (!psbtHex || !isDefined(descriptor) || !isDefined(fingerprint)) return null;
   return (
     <PsbtSigner
+      feeEditorEnabled
       accountIndex={extractAccountIndexFromDescriptor(descriptor)}
       fingerprint={fingerprint}
       broadcast
