@@ -24,6 +24,10 @@ export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostI
 
   const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
 
+  /**
+   * Handle click on the info icon button
+   * Navigates to the same URL as the "Learn more" link in the tooltip
+   */
   function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
     if (post && post.slug) {
