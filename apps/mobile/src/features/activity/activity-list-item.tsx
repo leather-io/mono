@@ -1,6 +1,7 @@
 import { Balance } from '@/components/balance/balance';
 import { useBrowser } from '@/core/browser-provider';
 import { useSettings } from '@/store/settings/settings';
+import { minusSign } from '@/utils/special-char';
 
 import { OnChainActivity } from '@leather.io/models';
 import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
@@ -14,7 +15,7 @@ interface ActivityListItemProps {
 
 function getBalanceOperator(activity: OnChainActivity) {
   if (activity.type === 'receiveAsset') return '+';
-  if (activity.type === 'sendAsset') return '-';
+  if (activity.type === 'sendAsset') return minusSign;
   return undefined;
 }
 
