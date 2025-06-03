@@ -26,7 +26,7 @@ describe(Sip10BalancesService.name, () => {
   } as unknown as HiroStacksApiClient;
 
   const mockMarketDataService = {
-    getSip10MarketData: vi.fn().mockImplementation((asset: Sip10CryptoAssetInfo) => {
+    getMarketData: vi.fn().mockImplementation((asset: Sip10CryptoAssetInfo) => {
       if (asset.symbol === 'MOCK1') {
         return {
           pair: { base: asset.symbol, quote: 'USD' },
@@ -79,7 +79,7 @@ describe(Sip10BalancesService.name, () => {
         signal
       );
       expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledWith(stacksAddress, signal);
-      expect(mockMarketDataService.getSip10MarketData).toHaveBeenCalledTimes(2);
+      expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(2);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(2);
       expect(addressBalance.sip10s.length).toEqual(2);
     });
@@ -114,7 +114,7 @@ describe(Sip10BalancesService.name, () => {
         'STACKS_ADDRESS3',
       ]);
       expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledTimes(3);
-      expect(mockMarketDataService.getSip10MarketData).toHaveBeenCalledTimes(6);
+      expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(6);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(6);
       expect(aggregateBalance.sip10s.length).toEqual(2);
     });

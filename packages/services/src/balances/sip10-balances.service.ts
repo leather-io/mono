@@ -110,7 +110,7 @@ export class Sip10BalancesService {
   ): Promise<Sip10Balance> {
     const asset = await this.sip10TokensService.getAssetInfo(tokenId, signal);
     const totalBalance = createMoney(amount, asset.symbol, asset.decimals);
-    const marketData = await this.marketDataService.getSip10MarketData(asset);
+    const marketData = await this.marketDataService.getMarketData(asset, signal);
 
     return {
       asset,

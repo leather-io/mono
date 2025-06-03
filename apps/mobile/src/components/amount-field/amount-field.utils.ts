@@ -1,8 +1,12 @@
 import { InputCurrencyMode } from '@/utils/types';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
-import { type Currency, type MarketData, type Money } from '@leather.io/models';
-import { baseCurrencyAmountInQuote, createMoneyFromDecimal } from '@leather.io/utils';
+import { type Currency, type MarketData } from '@leather.io/models';
+import {
+  baseCurrencyAmountInQuote,
+  createMoneyFromDecimal,
+  quoteCurrencyAmountToBase,
+} from '@leather.io/utils';
 
 interface FormatSecondaryValueParams {
   value: string;
@@ -41,8 +45,4 @@ export function calculateSecondaryValue({
     .shiftedBy(-resultAmount.decimals)
     .toFixed(resultAmount.decimals)
     .replace(/\.?0+$/, '');
-}
-
-function quoteCurrencyAmountToBase(quantity: Money, { pair, price }: MarketData) {
-  return createMoneyFromDecimal(quantity.amount.dividedBy(price.amount), pair.base);
 }

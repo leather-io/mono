@@ -13,6 +13,7 @@ export * from './assets/balance-helpers';
 export * from './assets/inscription-helpers';
 export * from './truncate-middle';
 export * from './time';
+export * from './market-data';
 
 export { spamFilter } from './spam-filter/spam-filter';
 export { extractPhraseFromString } from './extract-phrase-from-string/extract-phrase-from-string';

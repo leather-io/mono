@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import { inject, injectable } from 'inversify';
 
 import { btcCryptoAsset, currencyDecimalsMap } from '@leather.io/constants';
@@ -7,6 +6,7 @@ import {
   FungibleCryptoAssetInfo,
   MarketData,
   NativeCryptoAssetInfo,
+  QuoteCurrency,
   RuneCryptoAssetInfo,
   Sip10CryptoAssetInfo,
   createMarketData,
@@ -17,13 +17,14 @@ import {
   convertAmountToFractionalUnit,
   createMoney,
   initBigNumber,
+  invertExchangeRate,
+  rebaseMarketData,
 } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
-import { calculateBtcUsdEchangeRate } from './exchange-rate.utils';
 
 @injectable()
 export class MarketDataService {
@@ -34,131 +35,152 @@ export class MarketDataService {
   ) {}
 
   /**
-   * Retrieves current market data for asset.
+   * Retrieves asset market data quoted in user's preferred quote currency.
    */
   public async getMarketData(
+    asset: FungibleCryptoAssetInfo,
+    signal?: AbortSignal
+  ): Promise<MarketData> {
+    const marketDataUsd: MarketData = await this.getMarketDataUsd(asset, signal);
+    if (this.settingsService.getSettings().quoteCurrency === 'USD') {
+      return marketDataUsd;
+    }
+    const usdExchangeRate = await this.getUsdExchangeRate(
+      this.settingsService.getSettings().quoteCurrency,
+      signal
+    );
+    return rebaseMarketData(marketDataUsd, usdExchangeRate);
+  }
+
+  /**
+   * Retrieves asset market data quoted in USD.
+   */
+  public async getMarketDataUsd(
     asset: FungibleCryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
     switch (asset.protocol) {
       case 'nativeBtc':
       case 'nativeStx':
-        return await this.getNativeAssetMarketData(asset, signal);
+        return await this.getNativeAssetMarketDataUsd(asset, signal);
       case 'sip10':
-        return this.getSip10MarketData(asset, signal);
+        return await this.getSip10MarketDataUsd(asset, signal);
       case 'rune':
-        return this.getRuneMarketData(asset, signal);
+        return await this.getRuneMarketDataUsd(asset, signal);
       case 'brc20':
-        return this.getBrc20MarketData(asset, signal);
+        return await this.getBrc20MarketDataUsd(asset, signal);
       default:
         throw Error('Market data not supported for asset type: ' + asset.protocol);
     }
   }
 
   /**
-   * Get current market data for Native Asset (BTC, STX).
+   * Get <XXX>/USD exchange rate, where "XXX" is any supported quote currency.
    */
-  public async getNativeAssetMarketData(
-    currency: NativeCryptoAssetInfo,
+  public async getUsdExchangeRate(base: QuoteCurrency, signal?: AbortSignal) {
+    if (base === 'USD') {
+      return createMarketData(createMarketPair(base, 'USD'), createMoney(100, 'USD'));
+    } else if (base === 'BTC') {
+      return createMarketData(
+        createMarketPair(base, 'USD'),
+        createMoney(
+          convertAmountToFractionalUnit(
+            initBigNumber(
+              (await this.leatherApiClient.fetchNativeTokenPriceMap(signal))[base].price
+            ),
+            currencyDecimalsMap['USD']
+          ),
+          'USD'
+        )
+      );
+    } else {
+      // Leather API returns USD/Fiat rates, need to invert to get Fiat/USD
+      const usdExchangeRates = await this.leatherApiClient.fetchUsdExchangeRates(signal);
+      const usdToFiatRate = createMarketData(
+        createMarketPair('USD', base),
+        createMoney(
+          convertAmountToFractionalUnit(
+            initBigNumber(usdExchangeRates.rates[base as keyof typeof usdExchangeRates.rates]),
+            currencyDecimalsMap[base]
+          ),
+          base
+        )
+      );
+
+      return invertExchangeRate(usdToFiatRate);
+    }
+  }
+
+  private async getNativeAssetMarketDataUsd(
+    asset: NativeCryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const priceMap = await this.leatherApiClient.fetchNativeTokenPriceMap(signal);
-    return await this.buildQuoteCurrencyPreferenceMarketData(
-      currency.symbol,
-      initBigNumber(priceMap[currency.symbol].price)
+    const nativeAssetPriceUsd = createMoney(
+      convertAmountToFractionalUnit(
+        initBigNumber(priceMap[asset.symbol].price),
+        currencyDecimalsMap['USD']
+      ),
+      'USD'
     );
+    return createMarketData(createMarketPair(asset.symbol, 'USD'), nativeAssetPriceUsd);
   }
 
-  /**
-   * Get current market data for SIP10 Asset.
-   */
-  public async getSip10MarketData(
+  private async getSip10MarketDataUsd(
     asset: Sip10CryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap(signal);
     const tokenPriceMatch = tokenPriceMap[asset.contractId];
     if (!tokenPriceMatch) {
-      return createMarketData(
-        createMarketPair(asset.symbol, this.settingsService.getSettings().quoteCurrency),
-        createMoney(0, this.settingsService.getSettings().quoteCurrency)
-      );
+      return createMarketData(createMarketPair(asset.symbol, 'USD'), createMoney(0, 'USD'));
     }
-
-    return await this.buildQuoteCurrencyPreferenceMarketData(
-      asset.symbol,
-      initBigNumber(tokenPriceMatch.price)
+    return createMarketData(
+      createMarketPair(asset.symbol, 'USD'),
+      createMoney(
+        convertAmountToFractionalUnit(
+          initBigNumber(tokenPriceMatch.price),
+          currencyDecimalsMap['USD']
+        ),
+        'USD'
+      )
     );
   }
 
-  /**
-   * Get current market data for Rune Asset.
-   */
-  public async getRuneMarketData(
+  private async getRuneMarketDataUsd(
     asset: RuneCryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const runePriceMap = await this.leatherApiClient.fetchRunePriceMap(signal);
 
-    const runePrice = runePriceMap[asset.runeName]
+    const runePriceUsd = runePriceMap[asset.runeName]
       ? runePriceMap[asset.runeName]
       : await this.leatherApiClient.fetchRunePrice(asset.runeName, signal);
 
-    return await this.buildQuoteCurrencyPreferenceMarketData(
-      asset.runeName,
-      initBigNumber(runePrice.price)
+    return createMarketData(
+      createMarketPair(asset.runeName, 'USD'),
+      createMoney(
+        convertAmountToFractionalUnit(
+          initBigNumber(runePriceUsd.price),
+          currencyDecimalsMap['USD']
+        ),
+        'USD'
+      )
     );
   }
 
-  /**
-   * Get current market data for BRC20 Asset.
-   */
-  public async getBrc20MarketData(
+  private async getBrc20MarketDataUsd(
     asset: Brc20CryptoAssetInfo,
     signal?: AbortSignal
   ): Promise<MarketData> {
-    const btcMarketData = await this.getNativeAssetMarketData(btcCryptoAsset, signal);
-    const bisMarketInfo = await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal);
-    const brc20FiatPrice = baseCurrencyAmountInQuote(
-      createMoney(initBigNumber(bisMarketInfo.min_listed_unit_price ?? 0), 'BTC'),
+    const [btcMarketData, bisMarketInfo] = await Promise.all([
+      await this.getNativeAssetMarketDataUsd(btcCryptoAsset, signal),
+      await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal),
+    ]);
+    const brc20PriceUsd = baseCurrencyAmountInQuote(
+      createMoney(bisMarketInfo.min_listed_unit_price ?? 0, 'BTC'),
       btcMarketData
     );
-
-    return await this.buildQuoteCurrencyPreferenceMarketData(asset.symbol, brc20FiatPrice.amount);
-  }
-
-  private async buildQuoteCurrencyPreferenceMarketData(
-    assetSymbol: string,
-    assetPriceUsd: BigNumber
-  ) {
-    const assetPriceBase = convertAmountToFractionalUnit(
-      assetPriceUsd,
-      currencyDecimalsMap[this.settingsService.getSettings().quoteCurrency]
-    );
-    const quoteCurrencyMarketData = createMarketData(
-      createMarketPair(assetSymbol, this.settingsService.getSettings().quoteCurrency),
-      createMoney(
-        this.settingsService.getSettings().quoteCurrency === 'USD'
-          ? assetPriceBase
-          : assetPriceBase.times(await this.readQuoteCurrencyPreferenceExchangeRate()),
-        this.settingsService.getSettings().quoteCurrency
-      )
-    );
-    return quoteCurrencyMarketData;
-  }
-
-  private async readQuoteCurrencyPreferenceExchangeRate() {
-    const quoteCurrencyPreference = this.settingsService.getSettings().quoteCurrency;
-    if (quoteCurrencyPreference === 'BTC') {
-      const btcPriceUsd = initBigNumber(
-        (await this.leatherApiClient.fetchNativeTokenPriceMap())['BTC'].price
-      );
-      return calculateBtcUsdEchangeRate(btcPriceUsd);
-    } else {
-      const exchangeRates = await this.leatherApiClient.fetchFiatExchangeRates();
-      return initBigNumber(
-        exchangeRates.rates[quoteCurrencyPreference as keyof typeof exchangeRates.rates]
-      );
-    }
+    return createMarketData(createMarketPair(asset.symbol, 'USD'), brc20PriceUsd);
   }
 }
