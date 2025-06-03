@@ -89,7 +89,12 @@ export function ItemLayout({
     </Flex>
   );
 
-  if (img) return <Flag img={img}>{content}</Flag>;
+  if (img)
+    return (
+      <Flag width="100%" img={img}>
+        {content}
+      </Flag>
+    );
 
   return content;
 }
