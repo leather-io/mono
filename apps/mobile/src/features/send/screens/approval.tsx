@@ -21,6 +21,7 @@ export function Approval() {
   if (selectedAsset === 'btc') {
     return (
       <PsbtSigner
+        feeEditorEnabled={false}
         accountIndex={selectedAccount.accountIndex}
         fingerprint={selectedAccount.fingerprint}
         broadcast
