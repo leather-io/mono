@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Flex, styled } from 'leather-styles/jsx';
 import type { Post } from '~/data/post-types';
@@ -21,15 +20,22 @@ interface PostInfoHoverIconProps {
  * Displays content with a hover icon to show additional information about a post
  */
 export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostInfoHoverIconProps) {
-  const navigate = useNavigate();
-
   if (!post) return children;
 
   const iconColorToken = iconColor === 'white' ? 'invert' : 'ink.text-subdued';
 
+  /**
+   * Handle click on the info icon button
+   * Navigates to the same URL as the "Learn more" link in the tooltip
+   */
   function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
-    void navigate(getPostHref(post!.slug));
+    if (post && post.slug) {
+      const isUrl = /^https?:\/\//.test(post.slug);
+      const href = isUrl ? post.slug : getPostHref(post.slug);
+
+      window.location.href = href;
+    }
   }
 
   return (
