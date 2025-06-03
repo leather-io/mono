@@ -28,6 +28,7 @@ export const leatherApiPriorities = {
   nativeTokenPriceMap: leatherPriorityLevels.HIGH,
   nativeTokenPrice: leatherPriorityLevels.HIGH,
   nativeTokenDescription: leatherPriorityLevels.MEDIUM,
+  nativeTokenHistory: leatherPriorityLevels.MEDIUM,
   runePriceList: leatherPriorityLevels.HIGH,
   runePriceMap: leatherPriorityLevels.HIGH,
   runePrice: leatherPriorityLevels.HIGH,
@@ -35,6 +36,7 @@ export const leatherApiPriorities = {
   runeMap: leatherPriorityLevels.MEDIUM,
   rune: leatherPriorityLevels.MEDIUM,
   runeDescription: leatherPriorityLevels.MEDIUM,
+  runeHistory: leatherPriorityLevels.MEDIUM,
   sip10PriceList: leatherPriorityLevels.HIGH,
   sip10PriceMap: leatherPriorityLevels.HIGH,
   sip10Price: leatherPriorityLevels.HIGH,
@@ -42,5 +44,6 @@ export const leatherApiPriorities = {
   sip10TokenMap: leatherPriorityLevels.MEDIUM,
   sip10Token: leatherPriorityLevels.MEDIUM,
   sip10TokenDescription: leatherPriorityLevels.MEDIUM,
+  sip10TokenHistory: leatherPriorityLevels.MEDIUM,
   registerAddresses: leatherPriorityLevels.LOW,
 };

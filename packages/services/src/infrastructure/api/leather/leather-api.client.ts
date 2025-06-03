@@ -22,6 +22,8 @@ export type LeatherApiSip10Token =
   paths['/v1/tokens/sip10s/{principal}']['get']['responses']['200']['content']['application/json'];
 export type LeatherApiUtxo =
   paths['/v1/utxos/{descriptor}']['get']['responses'][200]['content']['application/json'][number];
+export type LeatherApiTokenPriceHistory =
+  paths['/v1/market/prices/native/{symbol}/history']['get']['responses'][200]['content']['application/json'];
 
 @injectable()
 export class LeatherApiClient {
@@ -211,6 +213,27 @@ export class LeatherApiClient {
     );
   }
 
+  async fetchNativeTokenHistory(symbol: string, signal?: AbortSignal) {
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-token-history', symbol],
+      async () => {
+        const { data } = await this.rateLimiter.add(
+          RateLimiterType.Leather,
+          () =>
+            this.client.GET('/v1/market/prices/native/{symbol}/history', {
+              signal,
+              params: { path: { symbol } },
+            }),
+          {
+            priority: leatherApiPriorities.nativeTokenHistory,
+            signal,
+          }
+        );
+        return data!;
+      }
+    );
+  }
+
   async fetchRunePriceList(signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(['leather-api-rune-price-list'], async () => {
       const { data } = await this.rateLimiter.add(
@@ -341,6 +364,21 @@ export class LeatherApiClient {
             priority: leatherApiPriorities.runeDescription,
             signal,
           }
+        );
+        return data!;
+      }
+    );
+  }
+
+  async fetchRuneHistory(runeName: string, signal?: AbortSignal) {
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-rune-history', runeName],
+      async () => {
+        const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
+          this.client.GET('/v1/market/prices/runes/{runeName}/history', {
+            signal,
+            params: { path: { runeName } },
+          })
         );
         return data!;
       }
@@ -490,6 +528,21 @@ export class LeatherApiClient {
             priority: leatherApiPriorities.sip10TokenDescription,
             signal,
           }
+        );
+        return data!;
+      }
+    );
+  }
+
+  async fetchSip10TokenHistory(principal: string, signal?: AbortSignal) {
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-sip10-token-history', principal],
+      async () => {
+        const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
+          this.client.GET('/v1/market/prices/sip10s/{principal}/history', {
+            signal,
+            params: { path: { principal } },
+          })
         );
         return data!;
       }
