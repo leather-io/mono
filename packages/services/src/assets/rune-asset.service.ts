@@ -20,4 +20,9 @@ export class RuneAssetService {
 
     return createRuneCryptoAssetInfo(runeName, rune.spacedRuneName, rune.decimals, rune.symbol);
   }
+
+  public async getAssetDescription(runeName: string, signal?: AbortSignal): Promise<string> {
+    const runeDescription = await this.leatherApiClient.fetchRuneDescription(runeName, signal);
+    return runeDescription;
+  }
 }
