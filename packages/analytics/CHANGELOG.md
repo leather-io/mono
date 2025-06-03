@@ -78,6 +78,21 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [3.6.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.6.1...@leather.io/analytics-v3.6.2) (2025-06-03)
+
+
+### Bug Fixes
+
+* fix function signature ([59500e2](https://github.com/leather-io/mono/commit/59500e258a50a5b7f9efe8ee7712cf5e9588fe50))
+* spreading was indexing on 0 ([aa6dc29](https://github.com/leather-io/mono/commit/aa6dc2946f679f9a35cdb37d7e4d912c16e5e6dd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.34.0
+
 ## [3.6.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.5.1...@leather.io/analytics-v3.6.0) (2025-05-28)
 
 
