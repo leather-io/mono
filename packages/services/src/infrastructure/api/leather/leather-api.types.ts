@@ -1446,7 +1446,7 @@ export interface paths {
           };
           content: {
             'application/json': {
-              description: string | null;
+              description: string;
             };
           };
         };
@@ -1686,7 +1686,7 @@ export interface paths {
           };
           content: {
             'application/json': {
-              description: string | null;
+              description: string;
             };
           };
         };
@@ -1759,7 +1759,7 @@ export interface paths {
           };
           content: {
             'application/json': {
-              description: string | null;
+              description: string;
             };
           };
         };

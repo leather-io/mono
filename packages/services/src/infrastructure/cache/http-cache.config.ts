@@ -26,6 +26,7 @@ export type HttpCacheKey =
   | 'leather-api-native-token-price-map'
   | 'leather-api-native-token-price'
   | 'leather-api-native-token-description'
+  | 'leather-api-native-token-history'
   | 'leather-api-rune-price-list'
   | 'leather-api-rune-price-map'
   | 'leather-api-rune-price'
@@ -33,6 +34,7 @@ export type HttpCacheKey =
   | 'leather-api-rune-map'
   | 'leather-api-rune'
   | 'leather-api-rune-description'
+  | 'leather-api-rune-history'
   | 'leather-api-sip10-price-list'
   | 'leather-api-sip10-price-map'
   | 'leather-api-sip10-price'
@@ -40,6 +42,7 @@ export type HttpCacheKey =
   | 'leather-api-sip10-token-map'
   | 'leather-api-sip10-token'
   | 'leather-api-sip10-token-description'
+  | 'leather-api-sip10-token-history'
   | 'leather-api-register-notifications';
 
 export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
@@ -63,6 +66,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-native-token-price-map': { ttl: minutesInMs(5) },
   'leather-api-native-token-price': { ttl: minutesInMs(5) },
   'leather-api-native-token-description': { ttl: daysInMs(1) },
+  'leather-api-native-token-history': { ttl: minutesInMs(5) },
   'leather-api-rune-price-list': { ttl: minutesInMs(5) },
   'leather-api-rune-price-map': { ttl: minutesInMs(5) },
   'leather-api-rune-price': { ttl: minutesInMs(5) },
@@ -70,6 +74,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-rune-map': { ttl: daysInMs(1) },
   'leather-api-rune': { ttl: daysInMs(30) },
   'leather-api-rune-description': { ttl: daysInMs(1) },
+  'leather-api-rune-history': { ttl: minutesInMs(5) },
   'leather-api-sip10-price-list': { ttl: minutesInMs(5) },
   'leather-api-sip10-price-map': { ttl: minutesInMs(5) },
   'leather-api-sip10-price': { ttl: minutesInMs(5) },
@@ -77,5 +82,6 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'leather-api-sip10-token-map': { ttl: daysInMs(1) },
   'leather-api-sip10-token': { ttl: daysInMs(30) },
   'leather-api-sip10-token-description': { ttl: daysInMs(1) },
+  'leather-api-sip10-token-history': { ttl: minutesInMs(5) },
   'leather-api-register-notifications': { ttl: secondsInMs(10) },
 };

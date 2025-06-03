@@ -1,6 +1,7 @@
 import { Container, Newable } from 'inversify';
 
 import { ActivityService } from './activity/activity.service';
+import { FungibleAssetInfoService } from './assets/fungible-asset-info.service';
 import { RuneAssetService } from './assets/rune-asset.service';
 import { Sip10AssetService } from './assets/sip10-asset.service';
 import { BtcBalancesService } from './balances/btc-balances.service';
@@ -90,4 +91,7 @@ export function getCollectiblesService() {
 }
 export function getNotificationsService() {
   return getServicesContainer().get(NotificationsService);
+}
+export function getFungibleAssetInfoService() {
+  return getServicesContainer().get(FungibleAssetInfoService);
 }
