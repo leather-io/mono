@@ -109,8 +109,8 @@ export class LeatherApiClient {
     );
   }
 
-  async fetchFiatExchangeRates(signal?: AbortSignal) {
-    return await this.cacheService.fetchWithCache(['leather-api-fiat-exchange-rates'], async () => {
+  async fetchUsdExchangeRates(signal?: AbortSignal) {
+    return await this.cacheService.fetchWithCache(['leather-api-usd-exchange-rates'], async () => {
       const { data } = await this.rateLimiter.add(
         RateLimiterType.Leather,
         () => this.client.GET('/v1/market/fiat-rates', { signal }),

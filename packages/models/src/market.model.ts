@@ -1,12 +1,12 @@
-import type { CryptoCurrency, QuoteCurrency } from './currencies.model';
+import type { Currency, QuoteCurrency } from './currencies.model';
 import type { Money } from './money.model';
 
 interface MarketPair {
-  readonly base: CryptoCurrency;
+  readonly base: Currency;
   readonly quote: QuoteCurrency;
 }
 
-export function createMarketPair(base: CryptoCurrency, quote: QuoteCurrency): MarketPair {
+export function createMarketPair(base: Currency, quote: QuoteCurrency): MarketPair {
   return Object.freeze({ base, quote });
 }
 

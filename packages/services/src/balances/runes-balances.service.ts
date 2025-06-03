@@ -107,7 +107,7 @@ export class RunesBalancesService {
   ): Promise<RuneBalance> {
     const runeInfo = await this.runeAssetService.getAssetInfo(runeName, signal);
     const totalBalance = createMoney(initBigNumber(amount), runeInfo.runeName, runeInfo.decimals);
-    const runeMarketData = await this.marketDataService.getRuneMarketData(runeInfo, signal);
+    const runeMarketData = await this.marketDataService.getMarketData(runeInfo, signal);
     return {
       asset: runeInfo,
       quote: createBaseCryptoAssetBalance(baseCurrencyAmountInQuote(totalBalance, runeMarketData)),

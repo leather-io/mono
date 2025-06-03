@@ -19,7 +19,7 @@ export type HttpCacheKey =
   // LeatherApiClient
   | 'leather-api-utxos'
   | 'leather-api-transactions'
-  | 'leather-api-fiat-exchange-rates'
+  | 'leather-api-usd-exchange-rates'
   | 'leather-api-native-token-price-list'
   | 'leather-api-native-token-price-map'
   | 'leather-api-native-token-price'
@@ -54,7 +54,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
   'leather-api-transactions': { ttl: secondsInMs(10) },
-  'leather-api-fiat-exchange-rates': { ttl: daysInMs(1) },
+  'leather-api-usd-exchange-rates': { ttl: daysInMs(1) },
   'leather-api-native-token-price-list': { ttl: minutesInMs(5) },
   'leather-api-native-token-price-map': { ttl: minutesInMs(5) },
   'leather-api-native-token-price': { ttl: minutesInMs(5) },
