@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.34.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.33.0...@leather.io/models-v0.34.0) (2025-06-03)
+
+
+### Features
+
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
 ## [0.33.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.32.1...@leather.io/models-v0.33.0) (2025-05-30)
 
 

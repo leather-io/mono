@@ -171,6 +171,20 @@
   * dependencies
     * @leather.io/models bumped to 0.33.0
 
+## [0.21.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.20.4...@leather.io/constants-v0.21.0) (2025-06-03)
+
+
+### Features
+
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.34.0
+
 ## [0.20.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.20.2...@leather.io/constants-v0.20.3) (2025-05-27)
 
 

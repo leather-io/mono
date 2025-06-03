@@ -701,6 +701,33 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.48.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.47.0...@leather.io/mobile-v2.48.0) (2025-06-03)
+
+
+### Features
+
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.6.2
+    * @leather.io/bitcoin bumped to 0.26.8
+    * @leather.io/constants bumped to 0.21.0
+    * @leather.io/crypto bumped to 1.7.5
+    * @leather.io/models bumped to 0.34.0
+    * @leather.io/provider bumped to 1.2.20
+    * @leather.io/query bumped to 2.37.8
+    * @leather.io/rpc bumped to 2.16.5
+    * @leather.io/services bumped to 1.14.0
+    * @leather.io/stacks bumped to 1.10.9
+    * @leather.io/ui bumped to 1.68.6
+    * @leather.io/utils bumped to 0.35.3
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.8
+
 ## [2.47.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.46.1...@leather.io/mobile-v2.47.0) (2025-06-02)
 
 

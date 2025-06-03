@@ -343,6 +343,25 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.16.4
 
+## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.13.1...@leather.io/services-v1.14.0) (2025-06-03)
+
+
+### Features
+
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.8
+    * @leather.io/constants bumped to 0.21.0
+    * @leather.io/models bumped to 0.34.0
+    * @leather.io/utils bumped to 0.35.3
+  * devDependencies
+    * @leather.io/rpc bumped to 2.16.5
+
 ## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.12.4...@leather.io/services-v1.13.0) (2025-05-30)
 
 
