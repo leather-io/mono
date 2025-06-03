@@ -132,8 +132,8 @@ export function Sheet({
             backgroundColor: theme.colors['ink.background-primary'],
             paddingBottom: bottom,
             flex: 1,
-            borderTopLeftRadius: theme.borderRadii.round,
-            borderTopRightRadius: theme.borderRadii.round,
+            borderTopLeftRadius: theme.borderRadii.lg,
+            borderTopRightRadius: theme.borderRadii.lg,
             overflow: 'hidden',
           }}
         >
