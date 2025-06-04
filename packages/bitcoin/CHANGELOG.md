@@ -776,6 +776,20 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.16.5
 
+## [0.26.9](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.26.8...@leather.io/bitcoin-v0.26.9) (2025-06-04)
+
+
+### Bug Fixes
+
+* **mobile:** disable external psbt fee editing, closes LEA-2679 ([eaf6a15](https://github.com/leather-io/mono/commit/eaf6a15669167244e5aab8a7d748266e6f4b72aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.7.6
+
 ## [0.26.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.25.2...@leather.io/bitcoin-v0.26.0) (2025-05-16)
 
 

@@ -417,6 +417,14 @@
   * devDependencies
     * @leather.io/models bumped to 0.34.0
 
+## [1.68.7](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.6...@leather.io/ui-v1.68.7) (2025-06-04)
+
+
+### Bug Fixes
+
+* egg sheet ([96286ea](https://github.com/leather-io/mono/commit/96286eacf5a3fa1fd86df0ab8b52cbdd58ade4ea))
+* **ui:** use Flag width ([798e268](https://github.com/leather-io/mono/commit/798e2688cfa684de2eb176cf3078ab21857c9139))
+
 ## [1.68.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.3...@leather.io/ui-v1.68.4) (2025-05-30)
 
 
