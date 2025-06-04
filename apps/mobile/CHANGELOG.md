@@ -701,6 +701,39 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.49.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.48.0...@leather.io/mobile-v2.49.0) (2025-06-04)
+
+
+### Features
+
+* **mobile:** add analytics tracking to action bar items ([6894d05](https://github.com/leather-io/mono/commit/6894d058e7e8cca35292ba3049266f0f88d449ed))
+* **mobile:** add analytics tracking to Receive flow ([91ca7a6](https://github.com/leather-io/mono/commit/91ca7a6c103adf2a4591e920e5df18d5fc8598d1))
+* **mobile:** add analytics tracking to Send flow ([ab31acf](https://github.com/leather-io/mono/commit/ab31acf47a9b590bf26abb956218ea4ec853ff27))
+* **mobile:** minus sign ([52c64d7](https://github.com/leather-io/mono/commit/52c64d71317309b53646cee2a2f2f6b326e72ad1))
+
+
+### Bug Fixes
+
+* **mobile:** disable external psbt fee editing, closes LEA-2679 ([eaf6a15](https://github.com/leather-io/mono/commit/eaf6a15669167244e5aab8a7d748266e6f4b72aa))
+* **mobile:** fix amount field value and form validation error message flickering ([2690ff4](https://github.com/leather-io/mono/commit/2690ff45af60fcccd57133b6fd0085e02b472683))
+* **mobile:** fix sheet navigation analytics, add base prefix ([626556c](https://github.com/leather-io/mono/commit/626556cfff0df500fa959e84db6233a9b439d1e3))
+* **mobile:** remove text measurement logic from amount field ([0f8233b](https://github.com/leather-io/mono/commit/0f8233b9b61b599c5465f77e080396cb7f0d2f0c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.7.0
+    * @leather.io/bitcoin bumped to 0.26.9
+    * @leather.io/crypto bumped to 1.7.6
+    * @leather.io/query bumped to 2.37.9
+    * @leather.io/services bumped to 1.14.1
+    * @leather.io/stacks bumped to 1.10.10
+    * @leather.io/ui bumped to 1.68.7
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.9
+
 ## [2.48.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.47.0...@leather.io/mobile-v2.48.0) (2025-06-03)
 
 

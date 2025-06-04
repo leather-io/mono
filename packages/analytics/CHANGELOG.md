@@ -78,6 +78,14 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [3.7.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.6.2...@leather.io/analytics-v3.7.0) (2025-06-04)
+
+
+### Features
+
+* **mobile:** add analytics tracking to Receive flow ([91ca7a6](https://github.com/leather-io/mono/commit/91ca7a6c103adf2a4591e920e5df18d5fc8598d1))
+* **mobile:** add analytics tracking to Send flow ([ab31acf](https://github.com/leather-io/mono/commit/ab31acf47a9b590bf26abb956218ea4ec853ff27))
+
 ## [3.6.2](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.6.1...@leather.io/analytics-v3.6.2) (2025-06-03)
 
 

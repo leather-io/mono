@@ -396,6 +396,13 @@
   * dependencies
     * @leather.io/utils bumped to 0.35.3
 
+## [1.7.6](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.7.5...@leather.io/crypto-v1.7.6) (2025-06-04)
+
+
+### Bug Fixes
+
+* **mobile:** disable external psbt fee editing, closes LEA-2679 ([eaf6a15](https://github.com/leather-io/mono/commit/eaf6a15669167244e5aab8a7d748266e6f4b72aa))
+
 ## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.6.58...@leather.io/crypto-v1.7.0) (2025-05-22)
 
 
