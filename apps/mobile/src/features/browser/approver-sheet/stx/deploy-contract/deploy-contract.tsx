@@ -35,6 +35,7 @@ export function DeployContractApprover({
   nonce,
   accountId,
 }: DeployContractApproverProps) {
+  console.log('DeployContractApprover request', request);
   const stxRequestParams = getStxRequestParams(request.params, nonce);
   const defaultNetwork = useNetworkPreferenceStacksNetwork();
   const network = getNetworkFromRequestParams({ params: request.params, defaultNetwork });

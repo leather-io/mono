@@ -24,6 +24,7 @@ import { router } from 'expo-router';
 import { Box, LeatherLogomarkIcon, SheetRef } from '@leather.io/ui/native';
 
 export default function HomeScreen() {
+  console.log('HomeScreen');
   useLingui();
   const { hasWallets } = useWallets();
   const notificationSheetRef = useRef<SheetRef>(null);

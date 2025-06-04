@@ -37,6 +37,7 @@ export function CallContractApprover({
 }: CallContractApproverProps) {
   const { displayToast } = useToastContext();
   const defaultNetwork = useNetworkPreferenceStacksNetwork();
+  console.log('CallContractApprover request', request);
   const network = getNetworkFromRequestParams({ params: request.params, defaultNetwork });
   const stxRequestParams = getStxRequestParams(request.params, nonce);
   const [txHex, setTxHex] = useState<null | string>(null);
