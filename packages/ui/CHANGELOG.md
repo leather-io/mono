@@ -417,6 +417,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.34.0
 
+## [1.68.8](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.7...@leather.io/ui-v1.68.8) (2025-06-04)
+
+
+### Bug Fixes
+
+* browser input ([4ca8ef4](https://github.com/leather-io/mono/commit/4ca8ef4cf0cc15df6b450c1c1e0c7a9fb07d93ee))
+
 ## [1.68.7](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.6...@leather.io/ui-v1.68.7) (2025-06-04)
 
 

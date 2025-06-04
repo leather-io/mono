@@ -701,6 +701,20 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.49.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.49.0...@leather.io/mobile-v2.49.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* browser input ([4ca8ef4](https://github.com/leather-io/mono/commit/4ca8ef4cf0cc15df6b450c1c1e0c7a9fb07d93ee))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.68.8
+
 ## [2.49.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.48.0...@leather.io/mobile-v2.49.0) (2025-06-04)
 
 
