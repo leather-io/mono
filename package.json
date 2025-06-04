@@ -226,7 +226,7 @@
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
       "expo-secure-store@14.2.3": "patches/expo-secure-store@14.2.3.patch",
-      "react-native-webview@13.13.5": "patches/react-native-webview@13.13.5.patch"
+      "react-native-webview@13.14.1": "patches/react-native-webview@13.14.1.patch"
     }
   }
 }
