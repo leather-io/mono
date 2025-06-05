@@ -25,8 +25,8 @@ export interface AccountBalance {
 
 export function useAccountBalance(accountId: AccountId): AccountBalance {
   const { fingerprint, accountIndex } = accountId;
-  const { quoteCurrencyPreference } = useSettings();
-  const zeroMoneyQuote = createMoney(0, quoteCurrencyPreference);
+  const { fiatCurrencyPreference } = useSettings();
+  const zeroMoneyQuote = createMoney(0, fiatCurrencyPreference);
 
   const btcAccountBalance = useBtcAccountBalance(fingerprint, accountIndex);
   const stxAccountBalance = useStxAccountBalance(fingerprint, accountIndex);

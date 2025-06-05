@@ -27,6 +27,6 @@ export function createMarketDataQueryOptions(
 }
 
 export function useMarketDataQuery(asset: FungibleCryptoAssetInfo) {
-  const { quoteCurrencyPreference } = useSettings();
-  return useQuery(createMarketDataQueryOptions(asset, quoteCurrencyPreference));
+  const { fiatCurrencyPreference } = useSettings();
+  return useQuery(createMarketDataQueryOptions(asset, fiatCurrencyPreference));
 }

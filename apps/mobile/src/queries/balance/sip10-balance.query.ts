@@ -22,12 +22,12 @@ export function useSip10AccountBalance(fingerprint: string, accountIndex: number
 }
 
 function useSip10AggregateBalanceQuery(addresses: string[]) {
-  const { quoteCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
     queryKey: [
       'sip10-balances-service-get-sip10-aggregate-balance',
       addresses,
-      quoteCurrencyPreference,
+      fiatCurrencyPreference,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalance(addresses, signal),
@@ -41,13 +41,9 @@ function useSip10AggregateBalanceQuery(addresses: string[]) {
 }
 
 function useSip10AddressBalanceQuery(address: string) {
-  const { quoteCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: [
-      'sip10-balances-service-get-sip10-address-balance',
-      address,
-      quoteCurrencyPreference,
-    ],
+    queryKey: ['sip10-balances-service-get-sip10-address-balance', address, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AddressBalance(address, signal),
     refetchOnReconnect: false,

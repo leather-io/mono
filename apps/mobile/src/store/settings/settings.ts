@@ -58,7 +58,7 @@ export const initialState: SettingsState = {
   bitcoinUnitPreference: 'bitcoin',
   createdOn: new Date().toISOString(),
   emailAddressPreference: '',
-  quoteCurrencyPreference: 'USD', // TODO: migrate to quoteCurrencyPreference
+  fiatCurrencyPreference: 'USD', // TODO LEA-2723: migrate to quoteCurrencyPreference
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
   hapticsPreference: 'enabled',
@@ -76,7 +76,7 @@ export function useSettings() {
   const analyticsPreference = useSelector(selectAnalyticsPreference);
   const bitcoinUnitPreference = useSelector(selectBitcoinUnitPreference);
   const emailAddressPreference = useSelector(selectEmailAddressPreference);
-  const quoteCurrencyPreference = useSelector(selectCurrencyPreference);
+  const fiatCurrencyPreference = useSelector(selectCurrencyPreference);
   const privacyModePreference = useSelector(selectPrivacyModePreference);
   const hapticsPreference = useSelector(selectHapticsPreference);
   const networkPreference = useSelector(selectNetworkPreference);
@@ -93,7 +93,7 @@ export function useSettings() {
     analyticsPreference,
     bitcoinUnitPreference,
     emailAddressPreference,
-    quoteCurrencyPreference,
+    fiatCurrencyPreference,
     networkPreference,
     privacyModePreference,
     hapticsPreference,

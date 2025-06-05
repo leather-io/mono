@@ -24,8 +24,8 @@ interface TotalBalance {
 }
 
 export function useTotalBalance(): TotalBalance {
-  const { quoteCurrencyPreference } = useSettings();
-  const zeroMoneyQuote = createMoney(0, quoteCurrencyPreference);
+  const { fiatCurrencyPreference } = useSettings();
+  const zeroMoneyQuote = createMoney(0, fiatCurrencyPreference);
 
   const btcTotalBalance = useBtcTotalBalance();
   const stxTotalBalance = useStxTotalBalance();

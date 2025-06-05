@@ -26,7 +26,7 @@ export function Form() {
     state: { selectedAsset, selectedAccount },
     selectAsset,
   } = useSendFlowContext();
-  const { quoteCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   const assetPickerSheetRef = useRef<SheetRef>(null);
   const [shouldAnimateAssetItem, setShouldAnimateAssetItem] = useState(true);
   const assetItemElementInitialOffset = shouldAnimateAssetItem
@@ -79,7 +79,7 @@ export function Form() {
                       marketData={marketData}
                       availableBalance={availableBalance}
                       quoteBalance={quoteBalance}
-                      quoteCurrency={quoteCurrencyPreference}
+                      quoteCurrency={fiatCurrencyPreference}
                       nonce={nonce}
                       onOpenAssetPicker={handleOpenAssetPicker}
                       assetItemAnimationOffsetTop={assetItemElementInitialOffset}
@@ -93,7 +93,7 @@ export function Form() {
                 {({ availableBalance, quoteBalance, feeRates, utxos, marketData }) => {
                   return (
                     <BtcForm
-                      quoteCurrency={quoteCurrencyPreference}
+                      quoteCurrency={fiatCurrencyPreference}
                       marketData={marketData}
                       availableBalance={availableBalance}
                       quoteBalance={quoteBalance}

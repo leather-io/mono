@@ -9,7 +9,7 @@ const maxTimeMs = 2147483647;
 // Mock the useSettings hook
 vi.mock('@/store/settings/settings', () => ({
   useSettings: () => ({
-    quoteCurrencyPreference: 'USD',
+    fiatCurrencyPreference: 'USD',
   }),
 }));
 
