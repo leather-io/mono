@@ -18,6 +18,7 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
   function onDeleteApp() {
     dispatch(userRemovesApp({ origin: app.origin }));
   }
+
   return (
     <Pressable onPress={onPress} pressEffects={legacyTouchablePressEffect} maxWidth={width * 0.4}>
       <Box py="3" flexDirection="row" alignItems="center" justifyContent="space-between">
@@ -46,10 +47,12 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
         </Pressable>
       </Box>
 
-      <Image
-        style={{ width: width * 0.4, height: 300 }}
-        source={app.screenshot && { uri: app.screenshot }}
-      />
+      <Box borderWidth={1} borderColor="ink.border-default" borderRadius="sm" overflow="hidden">
+        <Image
+          style={{ width: width * 0.4, height: 300 }}
+          source={app.screenshot && { uri: app.screenshot }}
+        />
+      </Box>
     </Pressable>
   );
 }
