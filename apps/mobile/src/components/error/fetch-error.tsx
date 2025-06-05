@@ -10,11 +10,7 @@ interface ErrorProps {
 }
 export function Error({ errorMessage }: ErrorProps) {
   return (
-    <EmptyLayout
-      image={
-        <Image style={{ height: 219, width: 270 }} source={require('@/assets/stickers/net.png')} />
-      }
-    >
+    <EmptyLayout image={<Image source={require('@/assets/stickers/net.png')} />}>
       <Text variant="heading03">{t({ id: 'error.title', message: 'Something went wrong' })}</Text>
       <Text variant="label01">
         {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull this page to refresh' })}

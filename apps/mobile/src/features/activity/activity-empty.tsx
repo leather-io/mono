@@ -7,13 +7,7 @@ import { Box, Text } from '@leather.io/ui/native';
 export function ActivityEmpty() {
   return (
     <EmptyLayout
-      image={
-        <Image
-          style={{ height: 184, width: 167 }}
-          contentFit="cover"
-          source={require('@/assets/stickers/net.png')}
-        />
-      }
+      image={<Image contentFit="contain" source={require('@/assets/stickers/net.png')} />}
     >
       <Box width={186}>
         <Text textAlign="center" variant="label01">

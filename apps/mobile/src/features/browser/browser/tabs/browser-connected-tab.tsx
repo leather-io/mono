@@ -35,7 +35,7 @@ export function BrowserConnectedTab({ goToUrl }: ConnectedProps) {
         gap="3"
       >
         <Image
-          style={{ height: width * 0.5, width: width * 0.5 }}
+          style={{ height: 270, width: 270 }}
           contentFit="cover"
           source={require('@/assets/stickers/ufo.png')}
         />
