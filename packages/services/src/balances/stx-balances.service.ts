@@ -76,14 +76,14 @@ export class StxBalancesService {
     address: string,
     signal?: AbortSignal
   ): Promise<StxAddressBalance> {
-    const [addressBalancesResponse, pendingTransactions, stxMarketData] = await Promise.all([
-      this.stacksApiClient.getAddressBalances(address, signal),
+    const [addressStxBalanceResponse, pendingTransactions, stxMarketData] = await Promise.all([
+      this.stacksApiClient.getAddressStxBalance(address, signal),
       this.stacksTransactionsService.getPendingTransactions(address, signal),
       this.marketDataService.getMarketData(stxCryptoAsset, signal),
     ]);
 
-    const totalBalanceStx = createMoney(readStxTotalBalance(addressBalancesResponse), 'STX');
-    const lockedBalanceStx = createMoney(readStxLockedBalance(addressBalancesResponse), 'STX');
+    const totalBalanceStx = createMoney(readStxTotalBalance(addressStxBalanceResponse), 'STX');
+    const lockedBalanceStx = createMoney(readStxLockedBalance(addressStxBalanceResponse), 'STX');
     const inboundBalanceStx = calculateInboundStxBalance(address, pendingTransactions);
     const outboundBalanceStx = calculateOutboundStxBalance(address, pendingTransactions);
 

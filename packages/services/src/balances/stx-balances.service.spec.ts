@@ -16,8 +16,9 @@ describe(StxBalancesService.name, () => {
   } as unknown as SettingsService;
 
   const mockStacksApiClient = {
-    getAddressBalances: vi.fn().mockResolvedValue({
-      stx: { balance: '5000000', locked: '1000000' },
+    getAddressStxBalance: vi.fn().mockResolvedValue({
+      balance: '5000000',
+      locked: '1000000',
     }),
   } as unknown as HiroStacksApiClient;
 
@@ -55,7 +56,7 @@ describe(StxBalancesService.name, () => {
     it('retrieves stx balance using stacks api account balance and pending transactions', async () => {
       const signal = new AbortController().signal;
       const balance = await stxBalancesService.getStxAddressBalance(stacksAddress, signal);
-      expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledWith(stacksAddress, signal);
+      expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress, signal);
       expect(mockStacksTransactionsService.getPendingTransactions).toHaveBeenCalledWith(
         stacksAddress,
         signal

@@ -10,6 +10,8 @@ export type HttpCacheKey =
 
   // HiroStacksApiClient
   | 'hiro-stacks-get-address-balances'
+  | 'hiro-stacks-get-address-stx-balance'
+  | 'hiro-stacks-get-address-ft-balances'
   | 'hiro-stacks-get-address-transactions'
   | 'hiro-stacks-get-transaction-events'
   | 'hiro-stacks-get-address-mempool-transactions'
@@ -46,6 +48,8 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'bis-runes-valid-outputs': { ttl: secondsInMs(30) },
 
   'hiro-stacks-get-address-balances': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-address-stx-balance': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-address-ft-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-events': { ttl: secondsInMs(10) },
   'hiro-stacks-get-address-mempool-transactions': { ttl: secondsInMs(10) },

@@ -1,15 +1,6 @@
-import { FtMetadataResponse, NftMetadataResponse } from '@hirosystems/token-metadata-api-client';
 import {
-  AddressAssetsListResponse,
-  AddressBalanceResponse,
-  AddressTransactionWithTransfers,
-  AddressTransactionsWithTransfersListResponse,
-  MempoolTransaction,
   MempoolTransactionListResponse,
-  NonFungibleTokenHolding,
   NonFungibleTokenHoldingsList,
-  Transaction,
-  TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
@@ -23,31 +14,20 @@ import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings
 import type { SettingsService } from '../../settings/settings.service';
 import { HiroMultiPageRequest, fetchHiroPages } from './hiro-multi-page';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
+import {
+  HiroAddressBalanceResponse,
+  HiroAddressFtBalancesResponse,
+  HiroAddressStxBalanceResponse,
+  HiroAddressTransaction,
+  HiroAddressTransactionsResponse,
+  HiroMempoolTransactionListResponse,
+  HiroNftHolding,
+  HiroNftMetadataResponse,
+  HiroPageRequest,
+  HiroTransactionEvent,
+  HiroTransactionEventsResponse,
+} from './hiro-stacks-api.types';
 import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
-
-export interface HiroPageRequest {
-  limit: number;
-  offset: number;
-}
-export interface HiroPageResponse<T> {
-  limit: number;
-  offset: number;
-  total: number;
-  results: T[];
-}
-
-export type HiroAddressTransactionsResponse = AddressTransactionsWithTransfersListResponse;
-export type HiroAddressTransactionWithTransfers = AddressTransactionWithTransfers;
-export type HiroAddressTransaction = AddressTransactionWithTransfers;
-export type HiroAddressBalanceResponse = AddressBalanceResponse;
-export type HiroMempoolTransactionListResponse = MempoolTransactionListResponse;
-export type HiroFtMetadataResponse = FtMetadataResponse;
-export type HiroNftMetadataResponse = NftMetadataResponse;
-export type HiroTransactionEvent = TransactionEvent;
-export type HiroTransactionEventsResponse = AddressAssetsListResponse;
-export type HiroStacksTransaction = Transaction;
-export type HiroStacksMempoolTransaction = MempoolTransaction;
-export type HiroNftHolding = NonFungibleTokenHolding;
 
 @injectable()
 export class HiroStacksApiClient {
@@ -85,6 +65,64 @@ export class HiroStacksApiClient {
               {
                 signal,
               }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getAccountBalance,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data;
+      }
+    );
+  }
+
+  public async getAddressStxBalance(
+    address: string,
+    signal?: AbortSignal
+  ): Promise<HiroAddressStxBalanceResponse> {
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-stx-balance',
+        address,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      async () => {
+        const res = await this.limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            this._axios.get<HiroAddressStxBalanceResponse>(
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/addresses/${address}/balances/stx`,
+              { signal }
+            ),
+          {
+            priority: hiroApiRequestsPriorityLevels.getAccountBalance,
+            signal,
+            throwOnTimeout: true,
+          }
+        );
+        return res.data;
+      }
+    );
+  }
+
+  public async getAddressFtBalances(
+    address: string,
+    signal?: AbortSignal
+  ): Promise<HiroAddressFtBalancesResponse> {
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-ft-balances',
+        address,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      async () => {
+        const res = await this.limiter.add(
+          RateLimiterType.HiroStacks,
+          () =>
+            this._axios.get<HiroAddressFtBalancesResponse>(
+              `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/addresses/${address}/balances/ft`,
+              { signal }
             ),
           {
             priority: hiroApiRequestsPriorityLevels.getAccountBalance,

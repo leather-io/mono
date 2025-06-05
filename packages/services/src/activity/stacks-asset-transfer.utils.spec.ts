@@ -6,7 +6,7 @@ import { CryptoAssetCategories } from '@leather.io/models';
 import {
   HiroStacksMempoolTransaction,
   HiroTransactionEvent,
-} from '../infrastructure/api/hiro/hiro-stacks-api.client';
+} from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   StacksAssetTransfer,
   aggregateTransferReceivers,

@@ -70,20 +70,13 @@ export class Sip10BalancesService {
     address: string,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    const fungibleTokens = (await this.stacksApiClient.getAddressBalances(address, signal))
-      .fungible_tokens;
+    const ftBalances = (await this.stacksApiClient.getAddressFtBalances(address, signal)).results;
 
     const sip10Balances = (
       await Promise.allSettled(
-        Object.keys(fungibleTokens)
-          .filter(tokenId => Number(fungibleTokens[tokenId]?.balance ?? 0) !== 0)
-          .map(tokenId =>
-            this.getSip10TokenBalance(
-              tokenId,
-              Number(fungibleTokens[tokenId]?.balance ?? 0),
-              signal
-            )
-          )
+        ftBalances
+          .filter(ft => Number(ft.balance ?? 0) !== 0)
+          .map(ft => this.getSip10TokenBalance(ft.token, Number(ft.balance ?? 0), signal))
       )
     )
       .filter(result => result.status === 'fulfilled')

@@ -1,5 +1,5 @@
 import { fetchHiroPages } from './hiro-multi-page';
-import { HiroPageRequest, HiroPageResponse } from './hiro-stacks-api.client';
+import { HiroPageRequest, HiroPageResponse } from './hiro-stacks-api.types';
 
 describe(fetchHiroPages.name, () => {
   function createMockFetchFn(totalItems: number) {

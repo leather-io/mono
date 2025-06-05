@@ -24,7 +24,7 @@ import {
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
   HiroTransactionEvent,
-} from '../infrastructure/api/hiro/hiro-stacks-api.client';
+} from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   StacksAssetTransferWithInfo,
   aggregateTransferReceivers,
