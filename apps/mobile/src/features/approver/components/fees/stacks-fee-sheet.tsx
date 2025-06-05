@@ -28,7 +28,7 @@ export function StacksFeesSheet({
 }: FeesSheetProps) {
   const { data: stxMarketData } = useStxMarketDataQuery();
 
-  function convertFeeToFiat(fee: Money) {
+  function convertFeeToQuote(fee: Money) {
     return baseCurrencyAmountInQuoteWithFallback(fee, stxMarketData);
   }
 
@@ -49,7 +49,7 @@ export function StacksFeesSheet({
             key={feeType}
             feeType={feeType}
             fee={fee}
-            fiatFee={convertFeeToFiat(fee)}
+            quoteFee={convertFeeToQuote(fee)}
           />
         );
       })}

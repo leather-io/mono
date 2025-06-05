@@ -11,7 +11,7 @@ import { AccountId, MarketData, Money } from '@leather.io/models';
 
 interface StxData {
   availableBalance: Money;
-  fiatBalance: Money;
+  quoteBalance: Money;
   nonce: number | undefined;
   marketData: MarketData;
 }
@@ -38,7 +38,7 @@ function useStxData({ fingerprint, accountIndex }: AccountId): FetchState<StxDat
     data: isReady
       ? {
           availableBalance: balance.data.stx.availableUnlockedBalance,
-          fiatBalance: balance.data.quote.availableUnlockedBalance,
+          quoteBalance: balance.data.quote.availableUnlockedBalance,
           nonce: nextNonce.data?.nonce,
           marketData: marketData.data,
         }

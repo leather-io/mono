@@ -14,13 +14,13 @@ import { TokenBalance } from '../token-balance';
 
 interface RunesTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
-  fiatBalance?: Money;
+  quoteBalance?: Money;
   symbol: string;
   name: string;
 }
 function RunesTokenBalance({
   availableBalance,
-  fiatBalance,
+  quoteBalance,
   name,
   symbol,
 }: RunesTokenBalanceProps) {
@@ -29,7 +29,7 @@ function RunesTokenBalance({
       ticker={symbol}
       icon={<RunesAvatarIcon />}
       tokenName={name}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       availableBalance={availableBalance}
     />
   );
@@ -41,7 +41,7 @@ function RunesTokenBalanceError() {
       ticker=""
       icon={<RunesAvatarIcon />}
       tokenName=""
-      fiatBalance={undefined}
+      quoteBalance={undefined}
       availableBalance={undefined}
     />
   );
@@ -63,7 +63,7 @@ function RunesBalanceWrapper({ data, mode = 'full' }: RunesBalanceWrapperProps) 
               symbol={balance.asset.symbol}
               name={balance.asset.runeName}
               availableBalance={balance.crypto.availableBalance}
-              fiatBalance={balance.quote.availableBalance}
+              quoteBalance={balance.quote.availableBalance}
             />
           );
         })}

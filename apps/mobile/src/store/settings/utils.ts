@@ -27,7 +27,7 @@ export interface SettingsState {
   bitcoinUnitPreference: BitcoinUnit;
   createdOn: string;
   emailAddressPreference: EmailAddress;
-  fiatCurrencyPreference: QuoteCurrency;
+  quoteCurrencyPreference: QuoteCurrency;
   networkPreference: DefaultNetworkConfigurations;
   privacyModePreference: PrivacyModePreference;
   themePreference: ThemePreference;
@@ -44,7 +44,7 @@ export const settingsSchema = z.object({
   bitcoinUnitPreference: z.string(),
   createdOn: z.string(),
   emailAddressPreference: z.string(),
-  fiatCurrencyPreference: z.string(),
+  quoteCurrencyPreference: z.string(),
   networkPreference: z.string(),
   privacyModePreference: z.string(),
   themePreference: z.string(),

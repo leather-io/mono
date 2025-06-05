@@ -31,7 +31,7 @@ export function BitcoinFeesSheet({
 }: FeesSheetProps) {
   const { data: btcMarketData } = useBtcMarketDataQuery();
 
-  function convertFeeToFiat(fee: number) {
+  function convertFeeToQuote(fee: number) {
     return baseCurrencyAmountInQuoteWithFallback(createMoney(fee, 'BTC'), btcMarketData);
   }
 
@@ -65,7 +65,7 @@ export function BitcoinFeesSheet({
             feeType={feeType}
             feeRate={feeRate.toNumber()}
             fee={fee}
-            fiatFee={convertFeeToFiat(fee)}
+            quoteFee={convertFeeToQuote(fee)}
           />
         );
       })}

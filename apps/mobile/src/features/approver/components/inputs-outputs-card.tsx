@@ -17,11 +17,11 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
 
   function annotateWithMoney<T extends PsbtInput | PsbtOutput>(inputOutput: T) {
     const btcAmount = createMoney(Number(inputOutput.value), 'BTC');
-    const fiatAmount = baseCurrencyAmountInQuoteWithFallback(btcAmount, btcMarketData);
+    const quoteAmount = baseCurrencyAmountInQuoteWithFallback(btcAmount, btcMarketData);
     return {
       ...inputOutput,
       btcAmount,
-      fiatAmount,
+      quoteAmount,
     };
   }
 
@@ -50,7 +50,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
               txid={input.txid}
               address={input.address}
               btcAmount={input.btcAmount}
-              fiatAmount={input.fiatAmount}
+              quoteAmount={input.quoteAmount}
               isLocked
             />
           ))}
@@ -69,7 +69,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
               key={output.address + output.btcAmount.amount.valueOf()}
               address={output.address}
               btcAmount={output.btcAmount}
-              fiatAmount={output.fiatAmount}
+              quoteAmount={output.quoteAmount}
               isLocked
             />
           ))}

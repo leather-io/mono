@@ -9,7 +9,7 @@ import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 export function BitcoinOutcome({ amount }: { amount: Money }) {
   const { data: btcMarketData } = useBtcMarketDataQuery();
 
-  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, btcMarketData);
+  const quoteBalance = baseCurrencyAmountInQuoteWithFallback(amount, btcMarketData);
 
   return (
     <>
@@ -20,7 +20,7 @@ export function BitcoinOutcome({ amount }: { amount: Money }) {
         })}
       </Text>
       <Box mx="-5">
-        <BitcoinTokenBalance availableBalance={amount} fiatBalance={fiatBalance} />
+        <BitcoinTokenBalance availableBalance={amount} quoteBalance={quoteBalance} />
       </Box>
     </>
   );

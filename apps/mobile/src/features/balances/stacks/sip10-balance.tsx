@@ -20,7 +20,7 @@ import { sortSip10Balances } from '../utils/sort-sip10-balances';
 interface Sip10TokenBalanceProps {
   availableBalance?: Money;
   contractId: string;
-  fiatBalance?: Money;
+  quoteBalance?: Money;
   imageCanonicalUri: string;
   name: string;
   symbol: string;
@@ -28,7 +28,7 @@ interface Sip10TokenBalanceProps {
 function Sip10TokenBalance({
   availableBalance,
   contractId,
-  fiatBalance,
+  quoteBalance,
   imageCanonicalUri,
   name,
   symbol,
@@ -44,7 +44,7 @@ function Sip10TokenBalance({
         />
       }
       tokenName={name}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       availableBalance={availableBalance}
     />
   );
@@ -56,7 +56,7 @@ function Sip10TokenBalanceError() {
       ticker=""
       icon={<Sip10AvatarIcon contractId="" imageCanonicalUri="" name="" />}
       tokenName=""
-      fiatBalance={undefined}
+      quoteBalance={undefined}
       availableBalance={undefined}
     />
   );
@@ -81,7 +81,7 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
               <Sip10TokenBalance
                 availableBalance={item.crypto.availableBalance}
                 contractId={item.asset.contractId}
-                fiatBalance={item.quote.totalBalance}
+                quoteBalance={item.quote.totalBalance}
                 imageCanonicalUri={item.asset.imageCanonicalUri}
                 name={item.asset.name}
                 symbol={item.asset.symbol}

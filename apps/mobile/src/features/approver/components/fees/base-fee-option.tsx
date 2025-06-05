@@ -10,7 +10,7 @@ interface BaseFeeOptionProps {
   title: string;
   time: string;
   formattedFeeAmount: string;
-  formattedFiatFeeAmount: string;
+  formattedQuoteFeeAmount: string;
 }
 
 export function BaseFeeOption({
@@ -21,7 +21,7 @@ export function BaseFeeOption({
   title,
   time,
   formattedFeeAmount,
-  formattedFiatFeeAmount,
+  formattedQuoteFeeAmount,
 }: BaseFeeOptionProps) {
   const borderColor = {
     default: isSelected ? 'ink.text-primary' : 'ink.border-default',
@@ -54,7 +54,7 @@ export function BaseFeeOption({
           titleLeft={title}
           captionLeft={time}
           titleRight={formattedFeeAmount}
-          captionRight={formattedFiatFeeAmount}
+          captionRight={formattedQuoteFeeAmount}
         />
       </Pressable>
     </>

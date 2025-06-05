@@ -8,13 +8,13 @@ import { TokenBalance } from '../token-balance';
 
 interface BitcoinTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
-  fiatBalance?: Money;
+  quoteBalance?: Money;
   onPress?(): void;
   isLoading?: boolean;
 }
 export function BitcoinTokenBalance({
   availableBalance,
-  fiatBalance,
+  quoteBalance,
   onPress,
   isLoading,
   ...rest
@@ -27,7 +27,7 @@ export function BitcoinTokenBalance({
         id: 'asset_name.bitcoin',
         message: 'Bitcoin',
       })}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       availableBalance={availableBalance}
       onPress={onPress}
       isLoading={isLoading}
@@ -44,12 +44,12 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const { state, value } = useBtcTotalBalance();
 
   const availableBalance = value?.btc.availableBalance;
-  const fiatBalance = value?.quote.availableBalance;
+  const quoteBalance = value?.quote.availableBalance;
 
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       isLoading={state === 'loading'}
       onPress={onPress}
     />
@@ -69,12 +69,12 @@ export function BitcoinBalanceByAccount({
   const { state, value } = useBtcAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.btc.availableBalance;
-  const fiatBalance = value?.quote.availableBalance;
+  const quoteBalance = value?.quote.availableBalance;
 
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       onPress={onPress}
       isLoading={state === 'loading'}
     />

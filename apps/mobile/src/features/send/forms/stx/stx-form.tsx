@@ -24,7 +24,7 @@ const assetInfo = stxCryptoAsset;
 interface StxFormProps {
   account: Account;
   availableBalance: Money;
-  fiatBalance: Money;
+  quoteBalance: Money;
   nonce: number | undefined;
   marketData: MarketData;
   quoteCurrency: QuoteCurrency;
@@ -35,7 +35,7 @@ interface StxFormProps {
 export function StxForm({
   assetItemAnimationOffsetTop,
   availableBalance,
-  fiatBalance,
+  quoteBalance,
   quoteCurrency,
   marketData,
   nonce,
@@ -64,7 +64,7 @@ export function StxForm({
         })}
         assetInfo={assetInfo}
         availableBalance={availableBalance}
-        fiatBalance={fiatBalance}
+        quoteBalance={quoteBalance}
         icon={<StxAvatarIcon />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}

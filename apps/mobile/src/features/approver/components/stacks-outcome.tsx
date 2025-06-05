@@ -9,7 +9,7 @@ import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 export function StacksOutcome({ amount }: { amount: Money }) {
   const { data: stxMarketData } = useStxMarketDataQuery();
 
-  const fiatBalance = baseCurrencyAmountInQuoteWithFallback(amount, stxMarketData);
+  const quoteBalance = baseCurrencyAmountInQuoteWithFallback(amount, stxMarketData);
   return (
     <>
       <Text variant="label01">
@@ -19,7 +19,7 @@ export function StacksOutcome({ amount }: { amount: Money }) {
         })}
       </Text>
       <Box mx="-5">
-        <StacksTokenBalance availableBalance={amount} fiatBalance={fiatBalance} py="3" />
+        <StacksTokenBalance availableBalance={amount} quoteBalance={quoteBalance} py="3" />
       </Box>
     </>
   );

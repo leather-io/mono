@@ -33,12 +33,12 @@ import {
   userChangedAnalyticsPreference,
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
-  userChangedFiatCurrencyPreference,
   userChangedHapticsPreference,
   userChangedLastActive,
   userChangedNetworkPreference,
   userChangedNotificationPreference,
   userChangedPrivacyModePreference,
+  userChangedQuoteCurrencyPreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
 } from './settings.write';
@@ -58,7 +58,7 @@ export const initialState: SettingsState = {
   bitcoinUnitPreference: 'bitcoin',
   createdOn: new Date().toISOString(),
   emailAddressPreference: '',
-  fiatCurrencyPreference: 'USD', // TODO: migrate to quoteCurrencyPreference
+  quoteCurrencyPreference: 'USD', // TODO: migrate to quoteCurrencyPreference
   networkPreference: WalletDefaultNetworkConfigurationIds.mainnet,
   privacyModePreference: 'visible',
   hapticsPreference: 'enabled',
@@ -135,9 +135,9 @@ export function useSettings() {
     },
     changeQuoteCurrencyPreference(unit: QuoteCurrency) {
       void analytics?.track('user_setting_updated', {
-        fiat_currency: unit,
+        quote_currency: unit,
       });
-      dispatch(userChangedFiatCurrencyPreference(unit));
+      dispatch(userChangedQuoteCurrencyPreference(unit));
     },
     changeNetworkPreference(network: DefaultNetworkConfigurations) {
       dispatch(userChangedNetworkPreference(network));

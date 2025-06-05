@@ -8,9 +8,9 @@ export function sortSip10Balances(
   if (a.asset.symbol === 'sBTC') return -1;
   if (b.asset.symbol === 'sBTC') return 1;
 
-  // Sort by fiat total balance
-  const fiatDiff = Number(b.quote.totalBalance.amount) - Number(a.quote.totalBalance.amount);
-  if (fiatDiff !== 0) return fiatDiff;
+  // Sort by quote total balance
+  const quoteDiff = Number(b.quote.totalBalance.amount) - Number(a.quote.totalBalance.amount);
+  if (quoteDiff !== 0) return quoteDiff;
 
   // Sort by crypto total balance
   const cryptoDiff = Number(b.crypto.totalBalance.amount) - Number(a.crypto.totalBalance.amount);

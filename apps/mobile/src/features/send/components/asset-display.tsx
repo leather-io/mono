@@ -14,7 +14,7 @@ interface AssetDisplayProps {
   name: string;
   assetInfo: FungibleCryptoAssetInfo;
   availableBalance: Money;
-  fiatBalance: Money;
+  quoteBalance: Money;
   icon: ReactNode;
   assetItemElementInitialOffset?: number | null;
   onPress?(): void;
@@ -25,7 +25,7 @@ export function AssetDisplay({
   assetInfo,
   icon,
   availableBalance,
-  fiatBalance,
+  quoteBalance,
   assetItemElementInitialOffset,
   onPress,
 }: AssetDisplayProps) {
@@ -45,7 +45,7 @@ export function AssetDisplay({
         icon={icon}
         tokenName={name}
         availableBalance={availableBalance}
-        fiatBalance={fiatBalance}
+        quoteBalance={quoteBalance}
         px="3"
         style={{ marginBottom: -1 }}
         onPress={onPress}

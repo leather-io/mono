@@ -28,7 +28,7 @@ msgstr "{currency}"
 
 #: src/features/approver/components/fees/bitcoin-fee-option.tsx:40
 msgid "fees-sheet.fee-rate-caption"
-msgstr "{feeRate} sats/vB · {fiatFee}"
+msgstr "{feeRate} sats/vB · {quoteFee}"
 
 #: src/app/settings/wallet/index.tsx:45
 msgid "wallet.hidden_accounts.cell_caption"

@@ -20,7 +20,7 @@ import {
 
 interface BtcData {
   availableBalance: Money;
-  fiatBalance: Money;
+  quoteBalance: Money;
   feeRates: AverageBitcoinFeeRates;
   utxos: OwnedUtxo[];
   marketData: MarketData;
@@ -56,7 +56,7 @@ function useBtcData({ fingerprint, accountIndex }: AccountId): FetchState<BtcDat
     data: isReady
       ? {
           availableBalance: btcBalance.value?.btc.availableBalance,
-          fiatBalance: btcBalance.value?.quote.availableBalance,
+          quoteBalance: btcBalance.value?.quote.availableBalance,
           feeRates: feeRates.data || zeroFees,
           utxos: accountUtxos.value?.available,
           marketData: marketData.data,

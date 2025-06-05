@@ -26,7 +26,7 @@ export interface AccountBalance {
 export function useAccountBalance(accountId: AccountId): AccountBalance {
   const { fingerprint, accountIndex } = accountId;
   const { quoteCurrencyPreference } = useSettings();
-  const zeroMoneyFiat = createMoney(0, quoteCurrencyPreference);
+  const zeroMoneyQuote = createMoney(0, quoteCurrencyPreference);
 
   const btcAccountBalance = useBtcAccountBalance(fingerprint, accountIndex);
   const stxAccountBalance = useStxAccountBalance(fingerprint, accountIndex);
@@ -45,7 +45,7 @@ export function useAccountBalance(accountId: AccountId): AccountBalance {
     runesAccountBalance.state === 'error';
   const accountBalance = sumMoney(
     [
-      zeroMoneyFiat,
+      zeroMoneyQuote,
       btcAccountBalance.value?.quote.availableBalance,
       stxAccountBalance.value?.quote.availableBalance,
       sip10AccountBalance.value?.quote.availableBalance,

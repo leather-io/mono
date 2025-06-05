@@ -8,11 +8,11 @@ interface UtxoRowProps {
   isLocked: boolean;
   address: string;
   btcAmount: Money;
-  fiatAmount: Money;
+  quoteAmount: Money;
   txid?: string;
 }
 
-export function UtxoRow({ isLocked, address, btcAmount, fiatAmount, txid }: UtxoRowProps) {
+export function UtxoRow({ isLocked, address, btcAmount, quoteAmount, txid }: UtxoRowProps) {
   const icon = isLocked ? <LockIcon /> : <UnlockIcon color="red.action-primary-default" />;
 
   return (
@@ -26,7 +26,7 @@ export function UtxoRow({ isLocked, address, btcAmount, fiatAmount, txid }: Utxo
       </Cell.Content>
       <Cell.Aside>
         <Balance balance={btcAmount} variant="label02" />
-        <Balance balance={fiatAmount} variant="label02" color="ink.text-subdued" />
+        <Balance balance={quoteAmount} variant="label02" color="ink.text-subdued" />
       </Cell.Aside>
     </Cell.Root>
   );

@@ -349,7 +349,7 @@ describe('sortSip10Balances', () => {
     expect(sorted[0]?.asset.symbol).toBe('sBTC');
   });
 
-  it('should next sort by fiat total balance when symbols are different', () => {
+  it('should next sort by quote total balance when symbols are different', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
     expect(sorted[1]?.asset.symbol).toBe('WELSH');
     expect(sorted[2]?.asset.symbol).toBe('LiSTX');
@@ -357,7 +357,7 @@ describe('sortSip10Balances', () => {
     expect(sorted[4]?.asset.symbol).toBe('BAN');
   });
 
-  it('should then sort by crypto total balance when fiat balances are equal', () => {
+  it('should then sort by crypto total balance when quote balances are equal', () => {
     const sorted = [...mockBalances].sort(sortSip10Balances);
     expect(sorted[5]?.asset.symbol).toBe('stSTX');
     expect(sorted[6]?.asset.symbol).toBe('aBTC');
