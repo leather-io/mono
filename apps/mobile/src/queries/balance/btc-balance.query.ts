@@ -17,9 +17,9 @@ export function useBtcAccountBalance(fingerprint: string, accountIndex: number) 
 }
 
 function useBtcAccountBalanceQuery(account: AccountAddresses) {
-  const { quoteCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-account-balance', account, quoteCurrencyPreference],
+    queryKey: ['btc-balance-service-get-btc-account-balance', account, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBtcBalancesService().getBtcAccountBalance({ account, unprotectedUtxos: [] }, signal),
     refetchOnReconnect: false,
@@ -32,9 +32,9 @@ function useBtcAccountBalanceQuery(account: AccountAddresses) {
 }
 
 function useBtcAggregateBalanceQuery(accounts: AccountAddresses[]) {
-  const { quoteCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-aggregate-balance', accounts, quoteCurrencyPreference],
+    queryKey: ['btc-balance-service-get-btc-aggregate-balance', accounts, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getBtcBalancesService().getBtcAggregateBalance(
         accounts.map(account => ({

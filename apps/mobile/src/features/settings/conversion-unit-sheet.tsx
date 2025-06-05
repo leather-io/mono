@@ -60,7 +60,7 @@ export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
               })}
               onPress={() => onUpdateConversionUnit(symbol)}
               type="radio"
-              isRadioSelected={settings.quoteCurrencyPreference === symbol}
+              isRadioSelected={settings.fiatCurrencyPreference === symbol}
             />
           ))}
       </SettingsList>

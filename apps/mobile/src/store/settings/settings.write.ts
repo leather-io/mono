@@ -36,7 +36,7 @@ export const settingsSlice = createSlice({
       state.emailAddressPreference = action.payload;
     },
     userChangedQuoteCurrencyPreference(state, action: PayloadAction<QuoteCurrency>) {
-      state.quoteCurrencyPreference = action.payload;
+      state.fiatCurrencyPreference = action.payload;
     },
     userChangedNetworkPreference(state, action: PayloadAction<DefaultNetworkConfigurations>) {
       state.networkPreference = action.payload;
