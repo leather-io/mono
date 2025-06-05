@@ -24,7 +24,7 @@ export function SearchBarToolbar({
   onShare,
 }: SearchBarToolbarProps) {
   return (
-    <Box flexDirection="row" justifyContent="space-between" mt="5">
+    <Box flexDirection="row" justifyContent="space-between">
       <ToolbarButton
         icon={<SparkleIcon variant="small" />}
         onPress={onClickApps}
