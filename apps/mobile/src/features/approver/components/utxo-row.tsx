@@ -26,7 +26,7 @@ export function UtxoRow({ isLocked, address, btcAmount, quoteAmount, txid }: Utx
       </Cell.Content>
       <Cell.Aside>
         <Balance balance={btcAmount} variant="label02" />
-        <Balance balance={quoteAmount} variant="label02" color="ink.text-subdued" />
+        <Balance balance={quoteAmount} variant="label02" color="ink.text-subdued" isQuoteCurrency />
       </Cell.Aside>
     </Cell.Root>
   );

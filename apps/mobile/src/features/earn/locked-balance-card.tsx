@@ -40,7 +40,7 @@ export function LockedBalanceCard({
           }
           titleRight={
             <Box alignItems="flex-end">
-              <Balance balance={quoteLockedBalance} variant="label01" />
+              <Balance balance={quoteLockedBalance} variant="label01" isQuoteCurrency />
               <Balance balance={stxLockedBalance} variant="caption01" />
             </Box>
           }
