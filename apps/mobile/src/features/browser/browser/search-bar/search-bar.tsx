@@ -104,14 +104,6 @@ export function SearchBar({
           position="absolute"
           right={0}
           left={0}
-          shadowColor="ink.background-overlay"
-          shadowOffset={{
-            width: 0,
-            height: 12,
-          }}
-          shadowRadius={24}
-          shadowOpacity={0.08}
-          elevation={1}
           onLayout={e => {
             setBrowserNavigationBarHeight(e.nativeEvent.layout.height);
           }}
@@ -135,6 +127,7 @@ export function SearchBar({
             borderTopRightRadius="md"
             borderColor="ink.border-default"
             borderWidth={1}
+            borderBottomWidth={0}
             borderStyle="solid"
             backgroundColor="ink.background-primary"
           >
@@ -167,6 +160,7 @@ export function SearchBar({
         borderTopRightRadius="lg"
         borderColor="ink.border-default"
         borderWidth={1}
+        borderBottomWidth={0}
         borderStyle="solid"
         backgroundColor="ink.background-primary"
         position="absolute"
@@ -180,26 +174,24 @@ export function SearchBar({
           setTextUrl={setTextUrl}
           onSubmit={onSubmit}
         />
-        {browserType === 'active' && (
-          <SearchBarToolbar
-            onClickApps={async () => {
-              resetBrowser();
-              await KeyboardController.dismiss();
-            }}
-            onRefresh={async () => {
-              refresh();
-              await KeyboardController.dismiss();
-            }}
-            onPaste={async () => {
-              const copiedString = await Clipboard.getStringAsync();
-              setTextUrl(copiedString);
-            }}
-            onShare={async () => {
-              if (navState?.url) await Sharing.shareAsync(navState?.url);
-              await KeyboardController.dismiss();
-            }}
-          />
-        )}
+        <SearchBarToolbar
+          onClickApps={async () => {
+            resetBrowser();
+            await KeyboardController.dismiss();
+          }}
+          onRefresh={async () => {
+            refresh();
+            await KeyboardController.dismiss();
+          }}
+          onPaste={async () => {
+            const copiedString = await Clipboard.getStringAsync();
+            setTextUrl(copiedString);
+          }}
+          onShare={async () => {
+            if (navState?.url) await Sharing.shareAsync(navState?.url);
+            await KeyboardController.dismiss();
+          }}
+        />
       </AnimatedBox>
     </>
   );

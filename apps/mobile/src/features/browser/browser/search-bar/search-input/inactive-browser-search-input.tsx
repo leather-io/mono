@@ -1,5 +1,4 @@
 import { KeyboardController } from 'react-native-keyboard-controller';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Box } from '@leather.io/ui/native';
 
@@ -14,9 +13,8 @@ export function InactiveBrowserSearchInput({
   setTextUrl,
   onSubmit,
 }: SearchInputProps) {
-  const { bottom } = useSafeAreaInsets();
   return (
-    <Box style={{ marginBottom: bottom }}>
+    <Box>
       <GenericSearchTextInput
         ref={textInputRef}
         onFocus={() => {
