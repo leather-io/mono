@@ -29,9 +29,6 @@ export function InactiveBrowserSearchInput({
         onChangeText={setTextUrl}
         value={textUrl}
         onSubmitEditing={onSubmit}
-        px="4"
-        borderColor="ink.border-default"
-        borderWidth={1}
       />
       {textUrl && <GenericClearSearchButton onPress={() => setTextUrl('')} right={2} />}
     </Box>
