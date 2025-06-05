@@ -1,26 +1,15 @@
-import { ReactNode, RefObject } from 'react';
-
-import { useSettings } from '@/store/settings/settings';
+import { ReactNode } from 'react';
 
 import { Sheet, SheetRef } from '@leather.io/ui/native';
 
 interface RecipientQrSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   children: ReactNode;
 }
 
 export function RecipientQrSheet({ sheetRef, children }: RecipientQrSheetProps) {
-  const { themeDerivedFromThemePreference } = useSettings();
-
   return (
-    <Sheet
-      ref={sheetRef}
-      themeVariant={themeDerivedFromThemePreference}
-      handleComponent={null}
-      snapPoints={['100%']}
-      enableDynamicSizing={false}
-      shouldHaveContainer={false}
-    >
+    <Sheet ref={sheetRef} handleComponent={null} snapPoints={['100%']} enableDynamicSizing={false}>
       {children}
     </Sheet>
   );

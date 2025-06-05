@@ -64,8 +64,7 @@ export function Approval() {
   );
 }
 
-// Temporary buffer to prevent approver header from overlapping with iOS status bar
-// TODO: test and remove once LEA-2086 is completed.
+// Prevent approver header from overlapping with iOS status bar
 function ScrollBuffer() {
   const { top } = useSafeAreaInsets();
   if (top === 0) return null;

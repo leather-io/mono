@@ -35,12 +35,13 @@ export { Cell, type CellProps } from './src/components/cell/cell.native';
 export {
   Sheet,
   type SheetProps,
+  type SheetInstance,
   type SheetRef,
-  SheetProvider,
-  UIBottomSheetTextInput,
-  CLOSED_ANIMATED_SHARED_VALUE,
+  PermanentSheet,
+  type PermanentSheetProps,
+  type PermanentSheetInstance,
+  SheetModalProvider,
 } from './src/components/sheet/sheet.native';
-export { SheetHeader } from './src/components/sheet/components/sheet-header.native';
 export { RadioButton } from './src/components/radio-button/radio-button.native';
 export { Switch } from './src/components/switch/switch.native';
 export * from './src/components/collectibles/index.native';

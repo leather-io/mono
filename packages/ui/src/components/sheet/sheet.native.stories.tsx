@@ -25,7 +25,6 @@ export default meta;
 export const SheetStory = {
   args: {
     children: <Text>Some sheet</Text>,
-    themeVariant: 'light',
   },
   argTypes: {},
 } satisfies StoryObj<typeof Sheet>;

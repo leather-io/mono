@@ -20,7 +20,7 @@ import {
   GlobeIcon,
   PackageSecurityIcon,
   PointerHandIcon,
-  SheetRef,
+  SheetInstance,
   SunInCloudIcon,
 } from '@leather.io/ui/native';
 
@@ -28,11 +28,11 @@ export default function SettingsDisplayScreen() {
   const btcConversionUnitEnabled = useBtcConversionUnitFlag();
   const i18nEnabled = useInternationalizationFlag();
   const shouldShowLanguageSetting = i18nEnabled && keys(supportedLanguages).length > 1;
-  const themeSheetRef = useRef<SheetRef>(null);
-  const bitcoinUnitSheetRef = useRef<SheetRef>(null);
-  const conversionUnitSheetRef = useRef<SheetRef>(null);
-  const accountIdentifierSheetRef = useRef<SheetRef>(null);
-  const languageSheetRef = useRef<SheetRef>(null);
+  const themeSheetRef = useRef<SheetInstance>(null);
+  const bitcoinUnitSheetRef = useRef<SheetInstance>(null);
+  const conversionUnitSheetRef = useRef<SheetInstance>(null);
+  const accountIdentifierSheetRef = useRef<SheetInstance>(null);
+  const languageSheetRef = useRef<SheetInstance>(null);
   const {
     accountDisplayPreference,
     bitcoinUnitPreference,

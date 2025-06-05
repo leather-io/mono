@@ -8,7 +8,7 @@ import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.
 import { destructAccountIdentifier, makeAccountIdentifer } from '@/store/utils';
 
 import { RpcRequest, RpcResponse, createRpcSuccessResponse, signMessage } from '@leather.io/rpc';
-import { SheetRef } from '@leather.io/ui/native';
+import { SheetInstance } from '@leather.io/ui/native';
 
 import { signBip322Message } from './bip322-signer';
 import { SignMessageApproverLayout } from './sign-message.layout';
@@ -22,7 +22,7 @@ interface SignMessageApproverProps {
 
 export function SignMessageApprover(props: SignMessageApproverProps) {
   const { list: accounts } = useAccounts();
-  const accountSelecterSheetRef = useRef<SheetRef>(null);
+  const accountSelecterSheetRef = useRef<SheetInstance>(null);
 
   function getDefaultAccountId() {
     if (!('accountId' in props.app)) return null;

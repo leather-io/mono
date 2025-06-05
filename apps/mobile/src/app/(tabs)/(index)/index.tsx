@@ -20,11 +20,11 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
-import { Box, LeatherLogomarkIcon, SheetRef } from '@leather.io/ui/native';
+import { Box, LeatherLogomarkIcon, SheetInstance } from '@leather.io/ui/native';
 
 export default function HomeScreen() {
   const { hasWallets } = useWallets();
-  const notificationSheetRef = useRef<SheetRef>(null);
+  const notificationSheetRef = useRef<SheetInstance>(null);
   const activity = useTotalActivity();
   const collectibles = useTotalCollectibles();
   const releaseCollectibles = useCollectiblesFlag();

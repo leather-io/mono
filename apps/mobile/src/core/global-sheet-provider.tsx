@@ -1,14 +1,14 @@
 import { createContext, useContext, useRef } from 'react';
 
-import { HasChildren, SheetRef } from '@leather.io/ui/native';
+import { HasChildren, SheetInstance, SheetRef } from '@leather.io/ui/native';
 
 interface GlobalSheetContextValue {
-  sendSheetRef: React.RefObject<SheetRef | null>;
-  receiveSheetRef: React.RefObject<SheetRef | null>;
-  browserSheetRef: React.RefObject<SheetRef | null>;
-  addAccountSheetRef: React.RefObject<SheetRef | null>;
-  addWalletSheetRef: React.RefObject<SheetRef | null>;
-  versionGuardSheetRef: React.RefObject<SheetRef | null>;
+  sendSheetRef: SheetRef;
+  receiveSheetRef: SheetRef;
+  browserSheetRef: SheetRef;
+  addAccountSheetRef: SheetRef;
+  addWalletSheetRef: SheetRef;
+  versionGuardSheetRef: SheetRef;
 }
 
 const GlobalSheetContext = createContext<GlobalSheetContextValue | null>(null);
@@ -20,12 +20,12 @@ export function useGlobalSheets() {
 }
 
 export function GlobalSheetProvider({ children }: HasChildren) {
-  const sendSheetRef = useRef<SheetRef>(null);
-  const receiveSheetRef = useRef<SheetRef>(null);
-  const browserSheetRef = useRef<SheetRef>(null);
-  const addAccountSheetRef = useRef<SheetRef>(null);
-  const addWalletSheetRef = useRef<SheetRef>(null);
-  const versionGuardSheetRef = useRef<SheetRef>(null);
+  const sendSheetRef = useRef<SheetInstance>(null);
+  const receiveSheetRef = useRef<SheetInstance>(null);
+  const browserSheetRef = useRef<SheetInstance>(null);
+  const addAccountSheetRef = useRef<SheetInstance>(null);
+  const addWalletSheetRef = useRef<SheetInstance>(null);
+  const versionGuardSheetRef = useRef<SheetInstance>(null);
 
   return (
     <GlobalSheetContext.Provider

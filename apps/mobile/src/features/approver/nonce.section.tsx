@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { Approver, SheetRef } from '@leather.io/ui/native';
+import { Approver, SheetInstance } from '@leather.io/ui/native';
 
 import { NonceCard } from './components/nonce-card';
 import { NonceSheet } from './components/nonce-sheet';
@@ -10,7 +10,7 @@ interface NonceSectionProps {
   onChangeNonce(nonce: string): void;
 }
 export function NonceSection({ nonce, onChangeNonce }: NonceSectionProps) {
-  const nonceSheetRef = useRef<SheetRef>(null);
+  const nonceSheetRef = useRef<SheetInstance>(null);
 
   return (
     <>

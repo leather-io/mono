@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
+import { useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppByOrigin } from '@/store/apps/apps.read';
-import { useSettings } from '@/store/settings/settings';
+import { useTheme } from '@shopify/restyle';
 
 import { RpcErrorCode, RpcResponses, createRpcErrorResponse } from '@leather.io/rpc';
-import { Sheet, SheetRef } from '@leather.io/ui/native';
+import { Sheet, SheetInstance } from '@leather.io/ui/native';
 
 import { BrowserApprover } from './browser-approver';
 import { BrowserMessage, RpcErrorMessage } from './utils';
@@ -16,8 +18,12 @@ interface ApproverSheetProps {
 }
 
 export function ApproverSheet(props: ApproverSheetProps) {
-  const approverSheetRef = useRef<SheetRef>(null);
+  const approverSheetRef = useRef<SheetInstance>(null);
   const app = useAppByOrigin(props.origin);
+  const { height } = useWindowDimensions();
+  const { top } = useSafeAreaInsets();
+  const theme = useTheme();
+
   function closeApprover() {
     approverSheetRef.current?.close();
     if (props.request) {
@@ -40,15 +46,13 @@ export function ApproverSheet(props: ApproverSheetProps) {
     }
   }, [props.request]);
 
-  const { themeDerivedFromThemePreference } = useSettings();
   if (!app) return null;
 
   return (
     <Sheet
-      shouldHaveContainer={false}
+      enableDynamicSizing={false}
+      snapPoints={[height - top - theme.spacing['5']]}
       ref={approverSheetRef}
-      themeVariant={themeDerivedFromThemePreference}
-      snapPointVariant="fullHeightWithoutNotch"
     >
       <BrowserApprover app={app} closeApprover={closeApprover} {...props} />
     </Sheet>

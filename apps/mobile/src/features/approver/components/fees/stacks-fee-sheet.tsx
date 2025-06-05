@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 
 import { FeeTypes, Money } from '@leather.io/models';
@@ -12,7 +10,7 @@ import { StacksFeeOption } from './stacks-fee-option';
 const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
 
 interface FeesSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   selectedFeeType: FeeTypes;
   fees: Record<FeeTypes, Money>;
   currentFee: Money;

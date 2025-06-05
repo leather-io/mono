@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -12,7 +10,7 @@ import { SheetRef } from '@leather.io/ui/native';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface ThemeSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function ThemeSheet({ sheetRef }: ThemeSheetProps) {
   const settings = useSettings();

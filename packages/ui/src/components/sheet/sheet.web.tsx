@@ -7,7 +7,7 @@ import { Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
 
 import { pxStringToNumber } from '@leather.io/utils';
 
-import { SheetFooter } from './components/sheet-footer.web';
+import { SheetFooter } from './sheet-footer.web';
 
 export interface SheetProps {
   isShowing: boolean;

@@ -29,13 +29,13 @@ msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 msgid "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 msgstr "{hiddenAccountsLength, plural, one {# hidden account} other {# hidden accounts}}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:36
+#: src/features/settings/conversion-unit-sheet.tsx:34
 msgctxt "Currency name"
 msgid "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
 msgstr "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
 
 #: src/app/settings/display/index.tsx:56
-#: src/features/settings/theme-sheet.tsx:34
+#: src/features/settings/theme-sheet.tsx:32
 msgid "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 msgstr "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 
@@ -81,15 +81,15 @@ msgid "Account creation failed"
 msgstr "Account creation failed"
 
 #: src/app/settings/display/index.tsx:100
-#: src/features/settings/account-identifier-sheet.tsx:47
+#: src/features/settings/account-identifier-sheet.tsx:45
 msgid "Account identifier"
 msgstr "Account identifier"
 
-#: src/features/settings/account-identifier-sheet.tsx:39
+#: src/features/settings/account-identifier-sheet.tsx:37
 msgid "Account identifier updated"
 msgstr "Account identifier updated"
 
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:17
 msgid "Account label"
 msgstr "Account label"
 
@@ -113,12 +113,13 @@ msgstr "Activity"
 
 #: src/features/account/components/add-account-card.tsx:12
 #: src/features/account/components/create-wallet-card.tsx:22
-#: src/features/account/sheets/add-account-sheet.layout.tsx:35
+#: src/features/account/sheets/add-account-sheet.tsx:26
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:140
 msgid "Add account"
 msgstr "Add account"
 
-#: src/features/approver/components/memo-sheet.tsx:18
+#: src/features/approver/components/memo-sheet.tsx:16
+#: src/features/approver/components/nonce-sheet.tsx:16
 #: src/features/send/components/memo.tsx:34
 #: src/features/send/components/memo.tsx:68
 msgid "Add memo"
@@ -128,21 +129,17 @@ msgstr "Add memo"
 msgid "Add new account for {fingerprint} 🆕"
 msgstr "Add new account for {fingerprint} 🆕"
 
-#: src/features/approver/components/nonce-sheet.tsx:18
-msgid "Add nonce"
-msgstr "Add nonce"
-
-#: src/features/account/sheets/add-account-sheet.layout.tsx:40
+#: src/features/account/sheets/add-account-sheet.tsx:30
 msgid "Add to existing wallet"
 msgstr "Add to existing wallet"
 
-#: src/features/account/sheets/add-account-sheet.layout.tsx:46
+#: src/features/account/sheets/add-account-sheet.tsx:36
 msgid "Add to new wallet"
 msgstr "Add to new wallet"
 
 #: src/app/settings/wallet/index.tsx:46
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:26
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:80
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:75
 msgid "Add wallet"
 msgstr "Add wallet"
 
@@ -199,7 +196,7 @@ msgstr "Advanced options"
 msgid "Alex"
 msgstr "Alex"
 
-#: src/features/account/account-selector/account-selector-sheet-header.tsx:24
+#: src/features/account/account-selector/account-selector-sheet.layout.tsx:56
 #: src/features/account/accounts-widget.tsx:45
 msgid "All accounts"
 msgstr "All accounts"
@@ -229,7 +226,7 @@ msgstr "Allow app to access secure storage"
 msgid "Allow Camera Access"
 msgstr "Allow Camera Access"
 
-#: src/features/settings/analytics-sheet.tsx:41
+#: src/features/settings/analytics-sheet.tsx:39
 msgid "Allow collection of data"
 msgstr "Allow collection of data"
 
@@ -246,7 +243,7 @@ msgid "An error occurred"
 msgstr "An error occurred"
 
 #: src/app/settings/security/index.tsx:37
-#: src/features/settings/analytics-sheet.tsx:36
+#: src/features/settings/analytics-sheet.tsx:34
 msgid "Analytics"
 msgstr "Analytics"
 
@@ -254,17 +251,17 @@ msgstr "Analytics"
 msgid "Analytics and app authentication"
 msgstr "Analytics and app authentication"
 
-#: src/features/settings/analytics-sheet.tsx:28
+#: src/features/settings/analytics-sheet.tsx:26
 msgid "Analytics updated"
 msgstr "Analytics updated"
 
 #: src/app/settings/security/index.tsx:45
-#: src/features/settings/app-authentication-sheet.tsx:59
-#: src/features/settings/app-authentication-sheet.tsx:64
+#: src/features/settings/app-authentication-sheet.tsx:57
+#: src/features/settings/app-authentication-sheet.tsx:62
 msgid "App authentication"
 msgstr "App authentication"
 
-#: src/features/settings/app-authentication-sheet.tsx:38
+#: src/features/settings/app-authentication-sheet.tsx:36
 msgid "App authorization updated"
 msgstr "App authorization updated"
 
@@ -306,7 +303,7 @@ msgstr "Back up your Secret Key"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:68
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:18
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
+#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:20
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
@@ -319,11 +316,11 @@ msgid "Bitcoin"
 msgstr "Bitcoin"
 
 #: src/app/settings/display/index.tsx:72
-#: src/features/settings/bitcoin-unit-sheet.tsx:37
+#: src/features/settings/bitcoin-unit-sheet.tsx:35
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
 
-#: src/features/settings/bitcoin-unit-sheet.tsx:29
+#: src/features/settings/bitcoin-unit-sheet.tsx:27
 msgid "Bitcoin unit updated"
 msgstr "Bitcoin unit updated"
 
@@ -347,7 +344,7 @@ msgstr "Browser"
 msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
-#: src/components/sheets/warning-sheet.layout.tsx:44
+#: src/components/sheets/warning-sheet.layout.tsx:51
 #: src/features/qr-scanner/use-camera-permission.ts:39
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:31
 msgid "Cancel"
@@ -357,7 +354,7 @@ msgstr "Cancel"
 msgid "Cannot send to yourself"
 msgstr "Cannot send to yourself"
 
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:17
 msgid "Change name"
 msgstr "Change name"
 
@@ -369,7 +366,7 @@ msgstr "Changed network"
 msgid "Charisma"
 msgstr "Charisma"
 
-#: src/features/settings/email-address-sheet.tsx:37
+#: src/features/settings/email-address-sheet.tsx:33
 msgid "Check your email for verification"
 msgstr "Check your email for verification"
 
@@ -379,11 +376,11 @@ msgstr "Check your email for verification"
 msgid "browser.approver.choose-account"
 msgstr "Choose an account"
 
-#: src/features/account/sheets/add-account-sheet.layout.tsx:41
+#: src/features/account/sheets/add-account-sheet.tsx:31
 msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
-#: src/features/send/components/recipient/recipient-input.tsx:56
+#: src/features/send/components/recipient/recipient-input.tsx:50
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -420,12 +417,12 @@ msgstr ""
 "Configure\n"
 "wallet"
 
-#: src/features/approver/components/memo-sheet.tsx:37
-#: src/features/approver/components/nonce-sheet.tsx:37
+#: src/features/approver/components/memo-sheet.tsx:18
+#: src/features/approver/components/nonce-sheet.tsx:18
 #: src/features/approver/layouts/get-addresses.layout.tsx:66
 #: src/features/send/components/memo.tsx:90
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:24
+#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -447,12 +444,12 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/components/sheets/warning-sheet.layout.tsx:41
+#: src/components/sheets/warning-sheet.layout.tsx:48
 #: src/features/recover-wallet/recover-wallet.layout.tsx:88
 msgid "Continue"
 msgstr "Continue"
 
-#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:17
+#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:15
 msgid "Continue without security"
 msgstr "Continue without security"
 
@@ -461,11 +458,11 @@ msgid "Contract arguments"
 msgstr "Contract arguments"
 
 #: src/app/settings/display/index.tsx:92
-#: src/features/settings/conversion-unit-sheet.tsx:31
+#: src/features/settings/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:25
+#: src/features/settings/conversion-unit-sheet.tsx:23
 msgid "Conversion unit updated"
 msgstr "Conversion unit updated"
 
@@ -481,7 +478,7 @@ msgstr "Copy"
 msgid "Copy address"
 msgstr "Copy address"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:85
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:80
 msgid "Create new wallet"
 msgstr "Create new wallet"
 
@@ -570,7 +567,7 @@ msgstr "Display"
 msgid "Dive into feature details"
 msgstr "Dive into feature details"
 
-#: src/features/notifications/notifications-sheet.tsx:32
+#: src/features/notifications/notifications-sheet.tsx:30
 msgid "Don't notify me"
 msgstr "Don't notify me"
 
@@ -605,8 +602,8 @@ msgid "Email"
 msgstr "Email"
 
 #: src/app/settings/notifications/email.tsx:18
-#: src/features/settings/email-address-sheet.tsx:43
-#: src/features/settings/email-address-sheet.tsx:52
+#: src/features/settings/email-address-sheet.tsx:42
+#: src/features/settings/email-address-sheet.tsx:44
 msgid "Email address"
 msgstr "Email address"
 
@@ -614,7 +611,7 @@ msgstr "Email address"
 msgid "Enable device security"
 msgstr "Enable device security"
 
-#: src/features/notifications/notifications-sheet.tsx:15
+#: src/features/notifications/notifications-sheet.tsx:13
 msgid "Enable to receive notifications about transactions"
 msgstr "Enable to receive notifications about transactions"
 
@@ -666,8 +663,8 @@ msgstr "Export key"
 msgid "Export xPub"
 msgstr "Export xPub"
 
-#: src/features/settings/app-authentication-sheet.tsx:43
-#: src/features/settings/app-authentication-sheet.tsx:50
+#: src/features/settings/app-authentication-sheet.tsx:41
+#: src/features/settings/app-authentication-sheet.tsx:48
 msgid "Failed to authenticate"
 msgstr "Failed to authenticate"
 
@@ -714,8 +711,8 @@ msgstr "Fees"
 msgid "For your eyes only"
 msgstr "For your eyes only"
 
-#: src/features/account/sheets/add-account-sheet.layout.tsx:47
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:86
+#: src/features/account/sheets/add-account-sheet.tsx:37
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "Generate new Secret Key for self-custody"
 msgstr "Generate new Secret Key for self-custody"
 
@@ -724,7 +721,7 @@ msgstr "Generate new Secret Key for self-custody"
 msgid "Get support or provide feedback"
 msgstr "Get support or provide feedback"
 
-#: src/components/app-update-required/app-update-required-sheet.tsx:25
+#: src/components/app-update-required/app-update-required-sheet.tsx:23
 msgid "Get the latest version of the Leather app"
 msgstr "Get the latest version of the Leather app"
 
@@ -778,7 +775,7 @@ msgstr "Historical yield"
 msgid "Home"
 msgstr "Home"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:50
+#: src/components/sheets/notify-user-sheet.layout.tsx:46
 msgid "I'm interested"
 msgstr "I'm interested"
 
@@ -794,7 +791,7 @@ msgstr "Icons"
 msgid "ID copied to clipboard"
 msgstr "ID copied to clipboard"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:93
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:88
 msgid "Import existing accounts from self-custody"
 msgstr "Import existing accounts from self-custody"
 
@@ -810,7 +807,7 @@ msgstr "Inputs and outputs"
 msgid "Insufficient funds"
 msgstr "Insufficient funds"
 
-#: src/features/settings/email-address-sheet.tsx:27
+#: src/features/settings/email-address-sheet.tsx:23
 msgid "Invalid email address"
 msgstr "Invalid email address"
 
@@ -831,8 +828,8 @@ msgstr "Layer"
 msgid "Layer 1"
 msgstr "Layer 1"
 
-#: src/features/settings/account-identifier-sheet.tsx:21
-#: src/features/settings/account-identifier-sheet.tsx:22
+#: src/features/settings/account-identifier-sheet.tsx:19
+#: src/features/settings/account-identifier-sheet.tsx:20
 msgid "Layer 1 • Bitcoin"
 msgstr "Layer 1 • Bitcoin"
 
@@ -844,8 +841,8 @@ msgstr "Layer 2"
 msgid "Layer 2 · Stacks"
 msgstr "Layer 2 · Stacks"
 
-#: src/features/settings/account-identifier-sheet.tsx:23
-#: src/features/settings/account-identifier-sheet.tsx:24
+#: src/features/settings/account-identifier-sheet.tsx:21
+#: src/features/settings/account-identifier-sheet.tsx:22
 msgid "Layer 2 • Stacks"
 msgstr "Layer 2 • Stacks"
 
@@ -897,12 +894,13 @@ msgstr "Matching"
 msgid "Max"
 msgstr "Max"
 
-#: src/components/app-update-required/app-update-required-sheet.tsx:49
+#: src/components/app-update-required/app-update-required-sheet.tsx:46
 msgid "Maybe later"
 msgstr "Maybe later"
 
 #: src/features/approver/components/memo-card.tsx:19
-#: src/features/approver/components/memo-sheet.tsx:26
+#: src/features/approver/components/memo-sheet.tsx:17
+#: src/features/approver/components/nonce-sheet.tsx:17
 #: src/features/send/components/memo.tsx:76
 msgid "Memo"
 msgstr "Memo"
@@ -934,13 +932,13 @@ msgid "minutes ago"
 msgstr "minutes ago"
 
 #: src/app/settings/index.tsx:110
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:100
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:95
 msgid "More options"
 msgstr "More options"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:94
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:20
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:20
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:18
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:18
 #: src/features/token/components/token-details-table.tsx:19
 msgid "Name"
 msgstr "Name"
@@ -965,7 +963,6 @@ msgid "No results found"
 msgstr "No results found"
 
 #: src/features/approver/components/nonce-card.tsx:18
-#: src/features/approver/components/nonce-sheet.tsx:26
 msgid "Nonce"
 msgstr "Nonce"
 
@@ -982,7 +979,7 @@ msgstr "Not a number"
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/features/notifications/notifications-sheet.tsx:23
+#: src/features/notifications/notifications-sheet.tsx:21
 msgid "Notify me"
 msgstr "Notify me"
 
@@ -998,7 +995,7 @@ msgstr "Open wallet settings"
 msgid "Output"
 msgstr "Output"
 
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:23
+#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:21
 msgid "Passphrase"
 msgstr "Passphrase"
 
@@ -1018,15 +1015,15 @@ msgstr "PlanBetter"
 msgid "Price"
 msgstr "Price"
 
-#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:20
+#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:18
 msgid "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely."
 msgstr "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you’ve stored its Secret Key elsewhere securely."
 
-#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:18
+#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:16
 msgid "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 
-#: src/features/settings/email-address-sheet.tsx:44
+#: src/features/settings/email-address-sheet.tsx:43
 msgid "Provide an email address for receiving notifications"
 msgstr "Provide an email address for receiving notifications"
 
@@ -1059,7 +1056,7 @@ msgstr "Receive fail"
 msgid "Receive notifications about transactions"
 msgstr "Receive notifications about transactions"
 
-#: src/features/notifications/notifications-sheet.tsx:14
+#: src/features/notifications/notifications-sheet.tsx:12
 msgid "Receive transaction notifications"
 msgstr "Receive transaction notifications"
 
@@ -1077,7 +1074,7 @@ msgid "Recents"
 msgstr "Recents"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:169
-#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:19
+#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:17
 msgid "Remove wallet"
 msgstr "Remove wallet"
 
@@ -1089,7 +1086,7 @@ msgstr "Rename wallet"
 msgid "Request approval for transactions"
 msgstr "Request approval for transactions"
 
-#: src/features/settings/app-authentication-sheet.tsx:65
+#: src/features/settings/app-authentication-sheet.tsx:63
 msgid "Require biometrics or PIN"
 msgstr "Require biometrics or PIN"
 
@@ -1097,7 +1094,7 @@ msgstr "Require biometrics or PIN"
 msgid "Restake"
 msgstr "Restake"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:92
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:87
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
@@ -1116,9 +1113,9 @@ msgid "Runes"
 msgstr "Runes"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:74
-#: src/features/settings/email-address-sheet.tsx:57
-#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:21
-#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:21
+#: src/features/settings/email-address-sheet.tsx:45
+#: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:19
+#: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
 msgid "Save"
 msgstr "Save"
 
@@ -1140,7 +1137,7 @@ msgstr "Scan a QR code"
 msgid "Scan QR Code"
 msgstr "Scan QR Code"
 
-#: src/features/send/components/recipient/recipient-input.tsx:47
+#: src/features/send/components/recipient/recipient-input.tsx:41
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
@@ -1205,7 +1202,7 @@ msgstr "Settings"
 msgid "Share"
 msgstr "Share"
 
-#: src/features/settings/analytics-sheet.tsx:42
+#: src/features/settings/analytics-sheet.tsx:40
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
@@ -1313,7 +1310,7 @@ msgid "The address you entered isn’t valid. Verify and try again"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
 #: src/app/settings/display/index.tsx:55
-#: src/features/settings/theme-sheet.tsx:30
+#: src/features/settings/theme-sheet.tsx:28
 msgid "Theme"
 msgstr "Theme"
 
@@ -1321,7 +1318,7 @@ msgstr "Theme"
 msgid "Theme and account identifier"
 msgstr "Theme and account identifier"
 
-#: src/features/settings/theme-sheet.tsx:24
+#: src/features/settings/theme-sheet.tsx:22
 msgid "Theme updated"
 msgstr "Theme updated"
 
@@ -1337,7 +1334,7 @@ msgstr "This address is linked to activity that violates compliance policies. Yo
 msgid "This app would like to"
 msgstr "This app would like to"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:47
+#: src/components/sheets/notify-user-sheet.layout.tsx:43
 msgid "This feature is not available yet, but we can notify you when ready."
 msgstr "This feature is not available yet, but we can notify you when ready."
 
@@ -1455,7 +1452,7 @@ msgstr "Unlock"
 msgid "Update from {storeName}"
 msgstr "Update from {storeName}"
 
-#: src/components/app-update-required/app-update-required-sheet.tsx:28
+#: src/components/app-update-required/app-update-required-sheet.tsx:26
 msgid "Update the app to get access to the latest features."
 msgstr "Update the app to get access to the latest features."
 

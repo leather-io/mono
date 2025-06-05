@@ -10,7 +10,7 @@ import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import type { ZodSchema } from 'zod';
 
 import { FungibleCryptoAsset, SupportedBlockchains } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { SheetInstance } from '@leather.io/ui/native';
 import { assertExistence } from '@leather.io/utils';
 
 interface UseRecipientStateParams {
@@ -20,9 +20,9 @@ interface UseRecipientStateParams {
 }
 
 export function useRecipientState({ asset, recipientSchema, onChange }: UseRecipientStateParams) {
-  const sheetRef = useRef<SheetRef>(null);
-  const guardSheetRef = useRef<SheetRef>(null);
-  const scannerSheetRef = useRef<SheetRef>(null);
+  const sheetRef = useRef<SheetInstance>(null);
+  const guardSheetRef = useRef<SheetInstance>(null);
+  const scannerSheetRef = useRef<SheetInstance>(null);
   const {
     state: { accounts, selectedAccount },
   } = useSendFlowContext();

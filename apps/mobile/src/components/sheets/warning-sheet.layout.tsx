@@ -1,14 +1,19 @@
-import { RefObject } from 'react';
-
-import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
-import { Box, Button, Sheet, SheetHeader, SheetRef, Text } from '@leather.io/ui/native';
+import {
+  Box,
+  Button,
+  QuestionCircleIcon,
+  Sheet,
+  SheetRef,
+  Text,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 type WarningSheetVariant = 'normal' | 'critical';
 
 interface WarningSheetLayoutProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   title: string;
   description: string;
   onSubmit(): unknown;
@@ -23,28 +28,31 @@ export function WarningSheetLayout({
   variant = 'normal',
   onPressSupport,
 }: WarningSheetLayoutProps) {
-  const { themeDerivedFromThemePreference } = useSettings();
   return (
-    <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
-      <Box p="5" justifyContent="space-between" gap="5">
-        <Box gap="5">
-          <Box>
-            <SheetHeader
-              onPressSupport={onPressSupport ? onPressSupport : undefined}
-              title={title}
-            />
-          </Box>
+    <Sheet ref={sheetRef}>
+      <Sheet.View justifyContent="space-between" gap="5">
+        <Sheet.Header
+          leftElement={<Sheet.Title>{title}</Sheet.Title>}
+          rightElement={
+            onPressSupport ? (
+              <TouchableOpacity onPress={onPressSupport} zIndex="10">
+                <QuestionCircleIcon variant="small" />
+              </TouchableOpacity>
+            ) : undefined
+          }
+        />
+        <Box px="5" gap="5">
           <Text>{description}</Text>
+          <Box gap="3">
+            <Button onPress={onSubmit} intent={variant === 'critical' ? 'danger' : undefined}>
+              {t`Continue`}
+            </Button>
+            <Button onPress={() => sheetRef.current?.dismiss()} variant="ghost">
+              {t`Cancel`}
+            </Button>
+          </Box>
         </Box>
-        <Box gap="3">
-          <Button onPress={onSubmit} intent={variant === 'critical' ? 'danger' : undefined}>
-            {t`Continue`}
-          </Button>
-          <Button onPress={() => sheetRef.current?.dismiss()} variant="ghost">
-            {t`Cancel`}
-          </Button>
-        </Box>
-      </Box>
+      </Sheet.View>
     </Sheet>
   );
 }

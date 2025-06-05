@@ -1,12 +1,17 @@
-import { RefObject } from 'react';
+import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useSettings } from '@/store/settings/settings';
-
-import { Box, HasChildren, Sheet, SheetHeader, SheetRef, useTheme } from '@leather.io/ui/native';
+import {
+  Box,
+  HasChildren,
+  QuestionCircleIcon,
+  Sheet,
+  SheetRef,
+  TouchableOpacity,
+} from '@leather.io/ui/native';
 
 interface SettingsSheetLayoutProps extends HasChildren {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   title: string;
   onPressSupport?: () => void;
 }
@@ -16,22 +21,30 @@ export function SettingsSheetLayout({
   title,
   onPressSupport,
 }: SettingsSheetLayoutProps) {
-  const { bottom } = useSafeAreaInsets();
-  const { themeDerivedFromThemePreference } = useSettings();
-  const theme = useTheme();
+  const maxHeight = useSettingsSheetMaxHeight();
 
   return (
-    <Sheet isScrollView ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
-      <Box
-        style={{
-          paddingBottom: theme.spacing[5] + bottom,
-          paddingHorizontal: theme.spacing[5],
-          paddingTop: theme.spacing[4],
-        }}
-      >
-        <SheetHeader onPressSupport={onPressSupport ? onPressSupport : undefined} title={title} />
-        <Box mx="-5">{children}</Box>
-      </Box>
+    <Sheet ref={sheetRef} maxDynamicContentSize={maxHeight}>
+      <Sheet.ScrollView stickyHeaderIndices={[0]}>
+        <Sheet.Header
+          leftElement={<Sheet.Title>{title}</Sheet.Title>}
+          rightElement={
+            onPressSupport ? (
+              <TouchableOpacity onPress={onPressSupport} zIndex="10">
+                <QuestionCircleIcon variant="small" />
+              </TouchableOpacity>
+            ) : undefined
+          }
+        />
+        <Box pb="5">{children}</Box>
+      </Sheet.ScrollView>
     </Sheet>
   );
+}
+
+function useSettingsSheetMaxHeight() {
+  const { height } = useWindowDimensions();
+  const { top } = useSafeAreaInsets();
+  const minimumTopOffset = 120;
+  return height - Math.max(top, minimumTopOffset);
 }

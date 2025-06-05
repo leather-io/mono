@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -26,7 +24,7 @@ function getAccountDisplayPrefDescription(preference: AccountDisplayPreference) 
 }
 
 interface AccountIdentifierSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps) {
   const settings = useSettings();

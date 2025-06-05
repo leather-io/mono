@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
 import { useOpenURL } from '@/features/browser/browser/use-open-url';
 import { LEATHER_GUIDES_MOBILE_REMOVE_WALLET } from '@/shared/constants';
@@ -8,7 +6,7 @@ import { t } from '@lingui/core/macro';
 import { SheetRef } from '@leather.io/ui/native';
 
 interface RemoveWalletSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   onSubmit(): unknown;
 }
 export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps) {

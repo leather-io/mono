@@ -9,7 +9,7 @@ import { useSettings } from '@/store/settings/settings';
 import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/core/macro';
 
-import { CookieIcon, KeyholeIcon, SheetRef } from '@leather.io/ui/native';
+import { CookieIcon, KeyholeIcon, SheetInstance } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 function getCaption(securityLevelPreference: SecurityLevelPreference) {
@@ -26,8 +26,8 @@ function getCaption(securityLevelPreference: SecurityLevelPreference) {
 }
 
 export default function SettingsSecurityScreen() {
-  const analyticsSheetRef = useRef<SheetRef>(null);
-  const appAuthenticationSheetRef = useRef<SheetRef>(null);
+  const analyticsSheetRef = useRef<SheetInstance>(null);
+  const appAuthenticationSheetRef = useRef<SheetInstance>(null);
   const settings = useSettings();
 
   return (

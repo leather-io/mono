@@ -9,7 +9,7 @@ import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import { RpcRequest, RpcResponse, createRpcSuccessResponse, getAddresses } from '@leather.io/rpc';
-import { SheetRef } from '@leather.io/ui/native';
+import { SheetInstance } from '@leather.io/ui/native';
 
 import { useGetAddressesAccount } from './get-addresses.hooks';
 import { formatAddressesForGetAddresses } from './utils';
@@ -25,7 +25,7 @@ interface GetAddressesApproverProps {
 export function GetAddressesApprover(props: GetAddressesApproverProps) {
   const { list: accounts } = useAccounts();
   const dispatch = useAppDispatch();
-  const accountSelecterSheetRef = useRef<SheetRef>(null);
+  const accountSelecterSheetRef = useRef<SheetInstance>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     'accountId' in props.app ? props.app.accountId : null
   );

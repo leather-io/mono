@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -16,7 +14,7 @@ import { useOpenURL } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface BitcoinUnitSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const settings = useSettings();
