@@ -21,12 +21,12 @@ import {
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { getAssetIdentifierFromContract } from '../assets/stacks-asset.utils';
+import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
-  HiroStacksApiClient,
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
   HiroTransactionEvent,
-} from '../infrastructure/api/hiro/hiro-stacks-api.client';
+} from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { MarketDataService } from '../market-data/market-data.service';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';

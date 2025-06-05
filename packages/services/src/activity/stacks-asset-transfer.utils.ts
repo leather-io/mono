@@ -12,7 +12,7 @@ import {
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
   HiroTransactionEvent,
-} from '../infrastructure/api/hiro/hiro-stacks-api.client';
+} from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { isMempoolTx } from './stacks-tx-activity.utils';
 
 export interface StacksAssetTransfer {

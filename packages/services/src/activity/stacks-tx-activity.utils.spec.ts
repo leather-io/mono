@@ -14,7 +14,7 @@ import {
 } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
-import { HiroStacksTransaction } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { HiroStacksTransaction } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { StacksAssetTransferWithInfo } from './stacks-asset-transfer.utils';
 import {
   mapContractCallActivity,

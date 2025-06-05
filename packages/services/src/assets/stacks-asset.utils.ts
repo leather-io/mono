@@ -9,7 +9,7 @@ import {
 } from '@leather.io/models';
 import { getTicker, isUndefined } from '@leather.io/utils';
 
-import { HiroNftMetadataResponse } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { HiroNftMetadataResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 
 export function isTransferableSip10Token(token: LeatherApiSip10Token) {

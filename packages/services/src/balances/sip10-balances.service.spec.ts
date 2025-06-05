@@ -13,15 +13,11 @@ import { Sip10BalancesService } from './sip10-balances.service';
 
 describe(Sip10BalancesService.name, () => {
   const mockStacksApiClient = {
-    getAddressBalances: vi.fn().mockResolvedValue({
-      fungible_tokens: {
-        'SM123MOCK1.token-mock1::mock1': {
-          balance: 12000000,
-        },
-        'SM123MOCK1.token-mock1::mock2': {
-          balance: 20000000,
-        },
-      },
+    getAddressFtBalances: vi.fn().mockResolvedValue({
+      results: [
+        { token: 'SM123MOCK1.token-mock1::mock1', balance: 12000000 },
+        { token: 'SM123MOCK1.token-mock1::mock2', balance: 20000000 },
+      ],
     }),
   } as unknown as HiroStacksApiClient;
 
@@ -78,7 +74,7 @@ describe(Sip10BalancesService.name, () => {
         stacksAddress,
         signal
       );
-      expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledWith(stacksAddress, signal);
+      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledWith(stacksAddress, signal);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(2);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(2);
       expect(addressBalance.sip10s.length).toEqual(2);
@@ -113,7 +109,7 @@ describe(Sip10BalancesService.name, () => {
         'STACKS_ADDRESS2',
         'STACKS_ADDRESS3',
       ]);
-      expect(mockStacksApiClient.getAddressBalances).toHaveBeenCalledTimes(3);
+      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledTimes(3);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(6);
       expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(6);
       expect(aggregateBalance.sip10s.length).toEqual(2);
