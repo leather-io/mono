@@ -80,18 +80,20 @@ interface AccountItemProps {
 
 function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
   const wallet = useWalletByFingerprint(account.fingerprint);
-  const balance = useAccountBalance({
+  const { btc, stx } = useAccountBalance({
     accountIndex: account.accountIndex,
     fingerprint: account.fingerprint,
-  })[asset];
-  if (balance.state !== 'success') {
+  });
+
+  if (btc.state !== 'success' || stx.state !== 'success') {
     return null;
   }
 
-  if (balance.value.quote.availableBalance.amount.isZero()) {
+  const availableBalance =
+    asset === 'stx' ? stx.value.quote.availableUnlockedBalance : btc.value.quote.availableBalance;
+  if (availableBalance.amount.isZero()) {
     return null;
   }
-  const availableBalance = balance.value.quote.availableBalance;
   return (
     <AccountListItem
       onPress={() => onSelectAccount(account)}
