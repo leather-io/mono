@@ -72,13 +72,13 @@ export function Form() {
           {
             stx: (
               <StxDataLoader account={selectedAccount}>
-                {({ availableBalance, fiatBalance, marketData, nonce }) => {
+                {({ availableBalance, quoteBalance, marketData, nonce }) => {
                   return (
                     <StxForm
                       account={selectedAccount}
                       marketData={marketData}
                       availableBalance={availableBalance}
-                      fiatBalance={fiatBalance}
+                      quoteBalance={quoteBalance}
                       quoteCurrency={quoteCurrencyPreference}
                       nonce={nonce}
                       onOpenAssetPicker={handleOpenAssetPicker}
@@ -90,13 +90,13 @@ export function Form() {
             ),
             btc: (
               <BtcDataLoader account={selectedAccount}>
-                {({ availableBalance, fiatBalance, feeRates, utxos, marketData }) => {
+                {({ availableBalance, quoteBalance, feeRates, utxos, marketData }) => {
                   return (
                     <BtcForm
                       quoteCurrency={quoteCurrencyPreference}
                       marketData={marketData}
                       availableBalance={availableBalance}
-                      fiatBalance={fiatBalance}
+                      quoteBalance={quoteBalance}
                       feeRates={feeRates}
                       utxos={utxos}
                       account={selectedAccount}

@@ -5,11 +5,14 @@ import { Money } from '@leather.io/models';
 import { Box, ItemLayout, Text } from '@leather.io/ui/native';
 
 interface LockedBalanceCardProps {
-  fiatLockedBalance: Money;
+  quoteLockedBalance: Money;
   stxLockedBalance: Money;
 }
 
-export function LockedBalanceCard({ fiatLockedBalance, stxLockedBalance }: LockedBalanceCardProps) {
+export function LockedBalanceCard({
+  quoteLockedBalance,
+  stxLockedBalance,
+}: LockedBalanceCardProps) {
   return (
     <Box px="5" py="0" width="100%" height={90}>
       <Box
@@ -37,7 +40,7 @@ export function LockedBalanceCard({ fiatLockedBalance, stxLockedBalance }: Locke
           }
           titleRight={
             <Box alignItems="flex-end">
-              <Balance balance={fiatLockedBalance} variant="label01" />
+              <Balance balance={quoteLockedBalance} variant="label01" />
               <Balance balance={stxLockedBalance} variant="caption01" />
             </Box>
           }

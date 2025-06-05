@@ -47,7 +47,7 @@ export const selectBitcoinUnitPreference = createSelector(
 
 export const selectCurrencyPreference = createSelector(
   selectSettings,
-  state => state.fiatCurrencyPreference
+  state => state.quoteCurrencyPreference
 );
 
 export const selectEmailAddressPreference = createSelector(

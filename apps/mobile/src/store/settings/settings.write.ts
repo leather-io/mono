@@ -35,8 +35,8 @@ export const settingsSlice = createSlice({
     userChangedEmailAddressPreference(state, action: PayloadAction<string>) {
       state.emailAddressPreference = action.payload;
     },
-    userChangedFiatCurrencyPreference(state, action: PayloadAction<QuoteCurrency>) {
-      state.fiatCurrencyPreference = action.payload;
+    userChangedQuoteCurrencyPreference(state, action: PayloadAction<QuoteCurrency>) {
+      state.quoteCurrencyPreference = action.payload;
     },
     userChangedNetworkPreference(state, action: PayloadAction<DefaultNetworkConfigurations>) {
       state.networkPreference = action.payload;
@@ -68,7 +68,7 @@ export const {
   userChangedAnalyticsPreference,
   userChangedBitcoinUnitPreference,
   userChangedEmailAddressPreference,
-  userChangedFiatCurrencyPreference,
+  userChangedQuoteCurrencyPreference,
   userChangedNetworkPreference,
   userChangedPrivacyModePreference,
   userChangedHapticsPreference,

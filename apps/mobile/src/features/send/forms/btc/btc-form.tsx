@@ -29,7 +29,7 @@ const assetInfo = btcCryptoAsset;
 interface BtcFormProps {
   account: Account;
   availableBalance: Money;
-  fiatBalance: Money;
+  quoteBalance: Money;
   feeRates: AverageBitcoinFeeRates;
   utxos: OwnedUtxo[];
   marketData: MarketData;
@@ -38,7 +38,7 @@ interface BtcFormProps {
   onOpenAssetPicker(): void;
 }
 export function BtcForm({
-  fiatBalance,
+  quoteBalance,
   availableBalance,
   marketData,
   account,
@@ -66,7 +66,7 @@ export function BtcForm({
         })}
         assetInfo={assetInfo}
         availableBalance={availableBalance}
-        fiatBalance={fiatBalance}
+        quoteBalance={quoteBalance}
         icon={<BtcAvatarIcon />}
         onPress={onOpenAssetPicker}
         assetItemElementInitialOffset={assetItemAnimationOffsetTop ?? null}

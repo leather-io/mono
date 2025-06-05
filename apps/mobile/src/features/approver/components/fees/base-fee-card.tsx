@@ -19,7 +19,7 @@ interface BaseFeeCardProps {
 }
 
 export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: BaseFeeCardProps) {
-  const fiatAmount = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
+  const quoteAmount = baseCurrencyAmountInQuoteWithFallback(amount, marketData);
   const releaseDynamicFee = useDynamicFeeFlag();
 
   return (
@@ -47,7 +47,7 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
             <Box flexDirection="row" alignItems="center" gap="2">
               <Box alignItems="flex-end">
                 <Balance balance={amount} variant="label02" />
-                <Balance balance={fiatAmount} variant="label02" color="ink.text-subdued" />
+                <Balance balance={quoteAmount} variant="label02" color="ink.text-subdued" />
               </Box>
               <ChevronRightIcon variant="small" />
             </Box>

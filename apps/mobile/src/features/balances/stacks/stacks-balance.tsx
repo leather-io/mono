@@ -8,12 +8,12 @@ import { TokenBalance } from '../token-balance';
 
 interface StacksTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
-  fiatBalance?: Money;
+  quoteBalance?: Money;
   isLoading?: boolean;
 }
 export function StacksTokenBalance({
   availableBalance,
-  fiatBalance,
+  quoteBalance,
   isLoading,
   ...rest
 }: StacksTokenBalanceProps) {
@@ -25,7 +25,7 @@ export function StacksTokenBalance({
         id: 'asset_name.stacks',
         message: 'Stacks',
       })}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       availableBalance={availableBalance}
       isLoading={isLoading}
       {...rest}
@@ -41,12 +41,12 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
   const { state, value } = useStxTotalBalance();
 
   const availableBalance = value?.stx.availableUnlockedBalance;
-  const fiatBalance = value?.quote.availableUnlockedBalance;
+  const quoteBalance = value?.quote.availableUnlockedBalance;
 
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       onPress={onPress}
       isLoading={state === 'loading'}
     />
@@ -66,12 +66,12 @@ export function StacksBalanceByAccount({
   const { state, value } = useStxAccountBalance(fingerprint, accountIndex);
 
   const availableBalance = value?.stx.availableUnlockedBalance;
-  const fiatBalance = value?.quote.availableUnlockedBalance;
+  const quoteBalance = value?.quote.availableUnlockedBalance;
 
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
-      fiatBalance={fiatBalance}
+      quoteBalance={quoteBalance}
       onPress={onPress}
       isLoading={state === 'loading'}
     />

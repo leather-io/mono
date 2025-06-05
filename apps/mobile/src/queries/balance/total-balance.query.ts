@@ -25,7 +25,7 @@ interface TotalBalance {
 
 export function useTotalBalance(): TotalBalance {
   const { quoteCurrencyPreference } = useSettings();
-  const zeroMoneyFiat = createMoney(0, quoteCurrencyPreference);
+  const zeroMoneyQuote = createMoney(0, quoteCurrencyPreference);
 
   const btcTotalBalance = useBtcTotalBalance();
   const stxTotalBalance = useStxTotalBalance();
@@ -44,7 +44,7 @@ export function useTotalBalance(): TotalBalance {
     runesTotalBalance.state === 'error';
   const accountBalance = sumMoney(
     [
-      zeroMoneyFiat,
+      zeroMoneyQuote,
       btcTotalBalance.value?.quote.availableBalance,
       stxTotalBalance.value?.quote.availableBalance,
       sip10TotalBalance.value?.quote.availableBalance,
