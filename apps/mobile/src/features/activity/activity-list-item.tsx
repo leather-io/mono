@@ -1,4 +1,4 @@
-import { Balance, isQuoteCryptoCurrency } from '@/components/balance/balance';
+import { Balance } from '@/components/balance/balance';
 import { useBrowser } from '@/core/browser-provider';
 import { useSettings } from '@/store/settings/settings';
 import { minusSign } from '@/utils/special-char';
@@ -48,14 +48,18 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       <Flag img={<ActivityAvatarIcon type={type} asset={asset} status={status} />} px="5" py="3">
         <ItemLayout
           gap="0"
-          titleLeft={<Text variant="label01">{getActivityTitle(activity)}</Text>}
+          titleLeft={
+            <Text variant="label01" fontSize={15}>
+              {getActivityTitle(activity)}
+            </Text>
+          }
           titleRight={
             value?.quote ? (
               <Balance
                 operator={getBalanceOperator(activity)}
                 balance={value.quote}
                 color={getBalanceColor(activity)}
-                fontSize={isQuoteCryptoCurrency(value.quote) ? 13 : undefined}
+                fontSize={15}
                 isQuoteCurrency
               />
             ) : undefined
