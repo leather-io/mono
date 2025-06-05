@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react';
+import { useState } from 'react';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -14,34 +14,32 @@ import { Image } from 'expo-image';
 import {
   ArrowRotateClockwiseIcon,
   Box,
-  CLOSED_ANIMATED_SHARED_VALUE,
   EllipsisVIcon,
   PlusIcon,
   Sheet,
   SheetRef,
   Text,
-  ThemeVariant,
 } from '@leather.io/ui/native';
 
 import { AddWalletCell } from './add-wallet-cell';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
+const CLOSED_ANIMATED_SHARED_VALUE = -888;
+
 interface AddWalletSheetBaseProps {
-  addWalletSheetRef: RefObject<SheetRef | null>;
+  addWalletSheetRef: SheetRef;
 }
 
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   createWallet(): unknown;
   restoreWallet(): unknown;
-  themeVariant: ThemeVariant;
   opensFully?: boolean;
 }
 export function AddWalletSheetLayout({
   addWalletSheetRef,
   createWallet,
   restoreWallet,
-  themeVariant,
   opensFully,
 }: AddWalletSheetLayoutProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
@@ -59,51 +57,49 @@ export function AddWalletSheetLayout({
 
   return (
     <Sheet
-      isScrollView
       animatedIndex={animatedIndex}
       ref={addWalletSheetRef}
-      themeVariant={themeVariant}
-      onDismiss={() => {
-        setMoreOptionsVisible(!!opensFully);
-      }}
+      onDismiss={() => setMoreOptionsVisible(!!opensFully)}
     >
-      <AnimatedBox style={animatedStyle}>
-        <Box width="100%" style={{ height: 184, overflow: 'hidden' }}>
-          <Image
-            style={{ height: '100%' }}
-            contentFit="cover"
-            source={require('@/assets/stickers/add-wallet.png')}
-          />
-        </Box>
-        <Box>
-          <Box px="5" py="4">
-            <Text variant="heading03">{t`Add wallet`}</Text>
+      <Sheet.ScrollView>
+        <AnimatedBox style={animatedStyle}>
+          <Box width="100%" style={{ height: 184, overflow: 'hidden' }}>
+            <Image
+              style={{ height: '100%' }}
+              contentFit="cover"
+              source={require('@/assets/stickers/add-wallet.png')}
+            />
           </Box>
-          <Box gap="1" pb="5">
-            <AddWalletCell
-              onPress={createWallet}
-              title={t`Create new wallet`}
-              caption={t`Generate new Secret Key for self-custody`}
-              testID={TestId.createNewWalletSheetButton}
-              icon={<PlusIcon />}
-            />
-            <AddWalletCell
-              onPress={restoreWallet}
-              title={t`Restore wallet`}
-              caption={t`Import existing accounts from self-custody`}
-              testID={TestId.restoreWalletSheetButton}
-              icon={<ArrowRotateClockwiseIcon />}
-            />
-            {releaseWaitlistFeatures && (
+          <Box>
+            <Box px="5" py="4">
+              <Text variant="heading03">{t`Add wallet`}</Text>
+            </Box>
+            <Box gap="1" pb="5">
               <AddWalletCell
-                onPress={openOptions}
-                title={t`More options`}
-                icon={moreOptionsVisible ? undefined : <EllipsisVIcon />}
+                onPress={createWallet}
+                title={t`Create new wallet`}
+                caption={t`Generate new Secret Key for self-custody`}
+                testID={TestId.createNewWalletSheetButton}
+                icon={<PlusIcon />}
               />
-            )}
+              <AddWalletCell
+                onPress={restoreWallet}
+                title={t`Restore wallet`}
+                caption={t`Import existing accounts from self-custody`}
+                testID={TestId.restoreWalletSheetButton}
+                icon={<ArrowRotateClockwiseIcon />}
+              />
+              {releaseWaitlistFeatures && (
+                <AddWalletCell
+                  onPress={openOptions}
+                  title={t`More options`}
+                  icon={moreOptionsVisible ? undefined : <EllipsisVIcon />}
+                />
+              )}
+            </Box>
           </Box>
-        </Box>
-      </AnimatedBox>
+        </AnimatedBox>
+      </Sheet.ScrollView>
     </Sheet>
   );
 }

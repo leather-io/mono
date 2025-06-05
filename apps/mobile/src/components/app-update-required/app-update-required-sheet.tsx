@@ -1,5 +1,4 @@
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
@@ -14,12 +13,11 @@ interface AppUpdateRequiredSheetProps {
 
 export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheetProps) {
   const { versionGuardSheetRef } = useGlobalSheets();
-  const { themeDerivedFromThemePreference } = useSettings();
 
   return (
-    <Sheet ref={versionGuardSheetRef} themeVariant={themeDerivedFromThemePreference}>
-      <Box maxWidth={400} alignItems="center" alignSelf="center">
-        <Box pb="4" pt="6" px="5" flexDirection="row">
+    <Sheet ref={versionGuardSheetRef}>
+      <Sheet.View maxWidth={400} px="5">
+        <Box pb="2" pt="6" flexDirection="row">
           <Box flex={1.4} gap="5">
             <Text color="ink.text-primary" variant="heading05">
               {t`Get the latest version of the Leather app`}
@@ -28,7 +26,7 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
               {t`Update the app to get access to the latest features.`}
             </Text>
           </Box>
-          <Box flex={1} style={{ height: 160, width: 160 }}>
+          <Box flex={1} width={160} height={160}>
             <Image
               style={{
                 height: '100%',
@@ -42,13 +40,13 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
             />
           </Box>
         </Box>
-      </Box>
-      <Box width="100%" px="5" maxWidth={400} alignSelf="center" gap="4">
-        <UpdateButton onPress={onUpdatePress} />
-        <Button onPress={() => versionGuardSheetRef.current?.dismiss()} variant="ghost">
-          {t`Maybe later`}
-        </Button>
-      </Box>
+        <Box gap="3">
+          <UpdateButton onPress={onUpdatePress} />
+          <Button variant="ghost" onPress={() => versionGuardSheetRef.current?.dismiss()}>
+            {t`Maybe later`}
+          </Button>
+        </Box>
+      </Sheet.View>
     </Sheet>
   );
 }

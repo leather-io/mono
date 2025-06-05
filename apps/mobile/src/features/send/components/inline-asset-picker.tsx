@@ -1,20 +1,23 @@
-import { RefObject } from 'react';
+import { useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssetPicker } from '@/features/send/components/asset-picker/asset-picker';
 import { Account } from '@/store/accounts/accounts';
-import { useSettings } from '@/store/settings/settings';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { Box, Sheet, SheetRef } from '@leather.io/ui/native';
+import { Sheet, SheetRef } from '@leather.io/ui/native';
 
 interface InlineAssetPickerProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   account: Account;
   onSelectAsset(asset: FungibleCryptoAsset): void;
 }
 
 export function InlineAssetPicker({ sheetRef, account, onSelectAsset }: InlineAssetPickerProps) {
-  const { themeDerivedFromThemePreference } = useSettings();
+  const { top } = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const minimumTopOffset = 80;
+  const offsetTop = Math.max(top, minimumTopOffset);
 
   function handleSelectAsset(asset: FungibleCryptoAsset) {
     onSelectAsset(asset);
@@ -22,10 +25,10 @@ export function InlineAssetPicker({ sheetRef, account, onSelectAsset }: InlineAs
   }
 
   return (
-    <Sheet themeVariant={themeDerivedFromThemePreference} ref={sheetRef}>
-      <Box pt="5">
+    <Sheet ref={sheetRef} maxDynamicContentSize={height - Math.max(offsetTop)}>
+      <Sheet.ScrollView pt="5">
         <AssetPicker account={account} onSelectAsset={handleSelectAsset} />
-      </Box>
+      </Sheet.ScrollView>
     </Sheet>
   );
 }

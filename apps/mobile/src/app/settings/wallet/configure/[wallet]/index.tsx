@@ -34,7 +34,7 @@ import {
   Box,
   Eye1ClosedIcon,
   InboxIcon,
-  SheetRef,
+  SheetInstance,
   SquareLinesBottomIcon,
   Text,
   Theme,
@@ -76,8 +76,8 @@ interface ConfigureWalletProps {
 }
 function ConfigureWallet({ wallet }: ConfigureWalletProps) {
   const router = useRouter();
-  const walletNameSheetRef = useRef<SheetRef>(null);
-  const removeWalletSheetRef = useRef<SheetRef>(null);
+  const walletNameSheetRef = useRef<SheetInstance>(null);
+  const removeWalletSheetRef = useRef<SheetInstance>(null);
   const dispatch = useAppDispatch();
   const { securityLevelPreference } = useSettings();
   const { authenticate } = useAuthentication();
@@ -128,7 +128,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
     removeWallet();
   }
 
-  const notifySheetRef = useRef<SheetRef>(null);
+  const notifySheetRef = useRef<SheetInstance>(null);
   const [notifySheetData, setNotifySheetData] = useState<NotifyUserSheetData | null>(null);
 
   function onOpenSheet(option: NotifyUserSheetData) {

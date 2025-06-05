@@ -25,7 +25,7 @@ import {
   GlobeTiltedIcon,
   Pressable,
   SettingsGearIcon,
-  SheetRef,
+  SheetInstance,
   ShieldIcon,
   SquareLinesBottomIcon,
   SupportIcon,
@@ -36,8 +36,8 @@ import {
 } from '@leather.io/ui/native';
 
 export default function SettingsScreen() {
-  const contactsSheetRef = useRef<SheetRef>(null);
-  const feesSheetRef = useRef<SheetRef>(null);
+  const contactsSheetRef = useRef<SheetInstance>(null);
+  const feesSheetRef = useRef<SheetInstance>(null);
   const router = useRouter();
   const { lockApp } = useAuthContext();
   const { displayToast } = useToastContext();

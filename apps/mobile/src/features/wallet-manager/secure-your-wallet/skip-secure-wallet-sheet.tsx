@@ -1,12 +1,10 @@
-import { RefObject } from 'react';
-
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
 import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
 interface SkipSecureWalletSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   onSubmit(): void;
 }
 export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSheetProps) {

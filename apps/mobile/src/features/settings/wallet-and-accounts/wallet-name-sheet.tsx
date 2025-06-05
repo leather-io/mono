@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
@@ -7,7 +5,7 @@ import { t } from '@lingui/core/macro';
 import { SheetRef } from '@leather.io/ui/native';
 
 interface WalletNameSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   name: string;
   setName(name: string): { success: boolean };
 }

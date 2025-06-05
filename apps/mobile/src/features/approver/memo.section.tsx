@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { Approver, SheetRef } from '@leather.io/ui/native';
+import { Approver, SheetInstance } from '@leather.io/ui/native';
 
 import { MemoCard } from './components/memo-card';
 import { MemoSheet } from './components/memo-sheet';
@@ -12,7 +12,7 @@ interface MemoSectionProps {
 }
 
 export function MemoSection({ memo, isMemoEditable, onChangeMemo }: MemoSectionProps) {
-  const memoSheetRef = useRef<SheetRef>(null);
+  const memoSheetRef = useRef<SheetInstance>(null);
 
   return (
     <>

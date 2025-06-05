@@ -7,10 +7,10 @@ import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
-import { Box, Button, SheetRef, Text } from '@leather.io/ui/native';
+import { Box, Button, SheetInstance, Text } from '@leather.io/ui/native';
 
 export default function SecureYourWalletScreen() {
-  const sheetRef = useRef<SheetRef>(null);
+  const sheetRef = useRef<SheetInstance>(null);
   const { createWallet } = useCreateWallet();
   const { callIfEnrolled } = useAuthentication();
 

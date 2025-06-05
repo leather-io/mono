@@ -10,7 +10,7 @@ import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { SheetInstance } from '@leather.io/ui/native';
 
 import { FormLayout } from './form.layout';
 
@@ -21,7 +21,7 @@ export function Form() {
     state: { selectedAsset, selectedAccount },
     selectAsset,
   } = useSendFlowContext();
-  const assetPickerSheetRef = useRef<SheetRef>(null);
+  const assetPickerSheetRef = useRef<SheetInstance>(null);
   const [shouldAnimateAssetItem, setShouldAnimateAssetItem] = useState(true);
   const assetItemElementInitialOffset = shouldAnimateAssetItem
     ? params?.assetItemElementInitialOffset

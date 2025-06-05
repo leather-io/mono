@@ -25,14 +25,14 @@ import {
   Eye1Icon,
   HeadIcon,
   PassportIcon,
-  SheetRef,
+  SheetInstance,
 } from '@leather.io/ui/native';
 
 interface ConfigureAccountProps extends AccountId {
   account: Account;
 }
 function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccountProps) {
-  const accountNameSheetRef = useRef<SheetRef>(null);
+  const accountNameSheetRef = useRef<SheetInstance>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
 

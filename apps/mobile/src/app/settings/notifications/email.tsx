@@ -4,11 +4,11 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { EmailAddressSheet } from '@/features/settings/email-address-sheet';
 import { t } from '@lingui/core/macro';
 
-import { Box, EmailIcon, SheetRef } from '@leather.io/ui/native';
+import { Box, EmailIcon, SheetInstance } from '@leather.io/ui/native';
 
 // TODO: Hook up to email service when available
 export default function SettingsNotificationsEmailScreen() {
-  const emailAddressSheetRef = useRef<SheetRef>(null);
+  const emailAddressSheetRef = useRef<SheetInstance>(null);
 
   return (
     <>

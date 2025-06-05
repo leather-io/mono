@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -13,7 +11,7 @@ import { SheetRef } from '@leather.io/ui/native';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface ConversionUnitSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function ConversionUnitSheet({ sheetRef }: ConversionUnitSheetProps) {
   const settings = useSettings();

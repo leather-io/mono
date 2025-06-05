@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountOrder } from '@/store/accounts/accounts.write';
@@ -9,7 +9,7 @@ import { SheetRef } from '@leather.io/ui/native';
 import { AccountSelectorSheetLayout } from './account-selector-sheet.layout';
 
 interface AccountSelectedSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   onAccountPress: (accountId: string) => void;
 }
 

@@ -1,20 +1,16 @@
-import { RefObject, useState } from 'react';
-
-import { SheetLayout } from '@/components/sheets/sheet.layout';
-import { TextInput } from '@/components/text-input';
+import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 import { z } from 'zod';
 
 import { emailAddressSchema } from '@leather.io/models';
-import { Button, SheetRef, Text, UIBottomSheetTextInput } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 interface EmailAddressSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
-  const [emailAddress, setEmailAddress] = useState('');
   const settings = useSettings();
   const { displayToast } = useToastContext();
 
@@ -40,22 +36,14 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
   }
 
   return (
-    <SheetLayout sheetRef={sheetRef} title={t`Email address`}>
-      <Text>{t`Provide an email address for receiving notifications`}</Text>
-      <TextInput
-        autoCapitalize="none"
-        autoComplete="off"
-        autoCorrect={false}
-        autoFocus
-        inputState="focused"
-        onChangeText={text => setEmailAddress(text)}
-        placeholder={t`Email address`}
-        TextInputComponent={UIBottomSheetTextInput}
-        value={emailAddress}
-      />
-      <Button mt="3" onPress={() => onSaveEmailAddress(emailAddress)}>
-        {t`Save`}
-      </Button>
-    </SheetLayout>
+    <InputSheetLayout
+      sheetRef={sheetRef}
+      initialValue=""
+      title={t`Email address`}
+      description={t`Provide an email address for receiving notifications`}
+      placeholder={t`Email address`}
+      submitTitle={t`Save`}
+      onSubmit={onSaveEmailAddress}
+    />
   );
 }

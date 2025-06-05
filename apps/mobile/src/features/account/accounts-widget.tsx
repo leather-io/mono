@@ -16,13 +16,13 @@ import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
-import { Box, SheetRef, SkeletonLoader, useTheme } from '@leather.io/ui/native';
+import { Box, SheetInstance, SkeletonLoader, useTheme } from '@leather.io/ui/native';
 
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
 
 export function AccountsWidget() {
-  const accountSelectorSheetRef = useRef<SheetRef>(null);
+  const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const router = useRouter();
   const wallets = useWallets();
   const accounts = useAccounts();

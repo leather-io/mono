@@ -1,12 +1,10 @@
-import { RefObject } from 'react';
-
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
 interface RecoverWalletSheetProps {
-  recoverWalletSheetRef: RefObject<SheetRef | null>;
+  recoverWalletSheetRef: SheetRef;
   passphrase: string;
   setPassphrase(passphrase: string): unknown;
 }

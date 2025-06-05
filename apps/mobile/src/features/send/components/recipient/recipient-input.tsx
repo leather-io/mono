@@ -3,13 +3,7 @@ import { type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from 
 import { TextInput } from '@/components/text-input';
 import { t } from '@lingui/core/macro';
 
-import {
-  Box,
-  CloseIcon,
-  IconButton,
-  SearchIcon,
-  UIBottomSheetTextInput,
-} from '@leather.io/ui/native';
+import { Box, CloseIcon, IconButton, SearchIcon, Sheet } from '@leather.io/ui/native';
 
 interface RecipientInputProps {
   value: string;
@@ -45,7 +39,7 @@ export function RecipientInput({
           value={value}
           onChangeText={onChange}
           placeholder={t`Search for BNS name or address`}
-          TextInputComponent={UIBottomSheetTextInput}
+          TextInputComponent={Sheet.TextInput}
           textVariant="label02"
           returnKeyType="done"
           onSubmitEditing={onSubmitEditing}

@@ -1,13 +1,11 @@
 import { useCallback } from 'react';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { useSettings } from '@/store/settings/settings';
 import { useRouter } from 'expo-router';
 
 import { AddWalletSheetLayout } from './add-wallet-sheet.layout';
 
 export function AddWalletSheet() {
-  const { themeDerivedFromThemePreference } = useSettings();
   const router = useRouter();
   const { addWalletSheetRef } = useGlobalSheets();
   const createWallet = useCallback(() => {
@@ -21,15 +19,12 @@ export function AddWalletSheet() {
   }, [addWalletSheetRef, router]);
 
   return (
-    <>
-      <AddWalletSheetLayout
-        createWallet={createWallet}
-        restoreWallet={restoreWallet}
-        addWalletSheetRef={addWalletSheetRef}
-        themeVariant={themeDerivedFromThemePreference}
-        // TODO: this should be set when we call ref.current.present
-        opensFully={false}
-      />
-    </>
+    <AddWalletSheetLayout
+      createWallet={createWallet}
+      restoreWallet={restoreWallet}
+      addWalletSheetRef={addWalletSheetRef}
+      // TODO: this should be set when we call ref.current.present
+      opensFully={false}
+    />
   );
 }

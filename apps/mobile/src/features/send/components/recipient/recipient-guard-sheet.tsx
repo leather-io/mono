@@ -1,13 +1,13 @@
-import { RefObject, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { GuardResult } from '@/features/send/components/recipient/use-recipient-evaluator';
 import { t } from '@lingui/core/macro';
 
-import { AddressDisplayer, Box, Button, type SheetRef, Text } from '@leather.io/ui/native';
+import { AddressDisplayer, Box, Button, SheetRef, Text } from '@leather.io/ui/native';
 
 interface RecipientWarningSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   config: GuardResult;
   onConfirm: (address: string) => void;
 }

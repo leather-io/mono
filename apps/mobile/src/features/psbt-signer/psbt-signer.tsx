@@ -33,7 +33,7 @@ import {
   FeeTypes,
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
-import { Approver, Box, SentIcon, SheetRef, Text } from '@leather.io/ui/native';
+import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
   createMoney,
@@ -106,7 +106,7 @@ function BasePsbtSigner({
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const [approverState, setApproverState] = useState<ApproverState>('start');
   const { data: btcMarketData } = useBtcMarketDataQuery();
-  const feeSheetRef = useRef<SheetRef>(null);
+  const feeSheetRef = useRef<SheetInstance>(null);
 
   const utxos = useAccountUtxos(psbtAccounts[0]?.fingerprint, psbtAccounts[0]?.accountIndex);
 

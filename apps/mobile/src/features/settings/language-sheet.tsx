@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react';
+import { useState } from 'react';
 import { Modal } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
@@ -16,7 +16,7 @@ import { Box, GlobeIcon, SheetRef, Theme } from '@leather.io/ui/native';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface LanguageSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function LanguageSheet({ sheetRef }: LanguageSheetProps) {
   const settings = useSettings();

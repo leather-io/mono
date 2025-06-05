@@ -10,9 +10,9 @@ import {
   Button,
   NoteEmptyIcon,
   Pressable,
-  type SheetRef,
+  Sheet,
+  SheetInstance,
   Text,
-  UIBottomSheetTextInput,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
@@ -27,7 +27,7 @@ interface MemoProps {
 }
 
 export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: MemoProps) {
-  const sheetRef = useRef<SheetRef>(null);
+  const sheetRef = useRef<SheetInstance>(null);
   const [confirmationAttempted, setConfirmationAttempted] = useState(false);
   const shouldDisplayErrorMessage = error && confirmationAttempted;
   const shouldMarkToggleAsInvalid = invalid && isTouched && confirmationAttempted;
@@ -74,7 +74,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
           inputState="focused"
           onChangeText={onChange}
           placeholder={t`Memo`}
-          TextInputComponent={UIBottomSheetTextInput}
+          TextInputComponent={Sheet.TextInput}
           value={value}
           textVariant="caption01"
           returnKeyType="done"

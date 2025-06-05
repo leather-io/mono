@@ -1,5 +1,3 @@
-import { RefObject } from 'react';
-
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import BigNumber from 'bignumber.js';
 
@@ -13,7 +11,7 @@ import { FeeSheetLayout } from './fee-sheet.layout';
 const feeTypes = [FeeTypes.Low, FeeTypes.Middle, FeeTypes.High, FeeTypes.Custom];
 
 interface FeesSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   selectedFeeType: FeeTypes;
   fees: AverageBitcoinFeeRates | undefined;
   txSize: number;

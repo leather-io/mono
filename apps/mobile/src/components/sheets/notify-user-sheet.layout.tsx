@@ -1,6 +1,3 @@
-import { RefObject } from 'react';
-
-import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
@@ -15,15 +12,13 @@ export interface NotifyUserSheetData {
 interface NotifyUserSheetLayoutProps {
   onCloseSheet?(): unknown;
   sheetData: NotifyUserSheetData | null;
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
 }
 export function NotifyUserSheetLayout({
   onCloseSheet,
   sheetData,
   sheetRef,
 }: NotifyUserSheetLayoutProps) {
-  const { themeDerivedFromThemePreference } = useSettings();
-
   function onNotify() {
     if (sheetData) {
       analytics.track('submit_feature_waitlist', {
@@ -34,21 +29,23 @@ export function NotifyUserSheetLayout({
   }
 
   return (
-    <Sheet themeVariant={themeDerivedFromThemePreference} onDismiss={onCloseSheet} ref={sheetRef}>
-      <Image
-        style={{ height: 180 }}
-        contentFit="cover"
-        source={require('@/assets/unavailable-feature.png')}
-      />
-      <Box p="5" justifyContent="space-between" gap="5">
-        <Box gap="4">
-          <Text variant="heading05">{sheetData?.title}</Text>
-          <Text variant="body01">
-            {t`This feature is not available yet, but we can notify you when ready.`}
-          </Text>
+    <Sheet onDismiss={onCloseSheet} ref={sheetRef}>
+      <Sheet.View>
+        <Image
+          style={{ height: 180 }}
+          contentFit="cover"
+          source={require('@/assets/unavailable-feature.png')}
+        />
+        <Box p="5" justifyContent="space-between" gap="5">
+          <Box gap="4">
+            <Text variant="heading05">{sheetData?.title}</Text>
+            <Text variant="body01">
+              {t`This feature is not available yet, but we can notify you when ready.`}
+            </Text>
+          </Box>
+          <Button onPress={onNotify}>{t`I'm interested`}</Button>
         </Box>
-        <Button onPress={onNotify}>{t`I'm interested`}</Button>
-      </Box>
+      </Sheet.View>
     </Sheet>
   );
 }

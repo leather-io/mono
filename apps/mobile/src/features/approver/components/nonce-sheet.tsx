@@ -1,41 +1,25 @@
-import { RefObject, useState } from 'react';
-
-import { SheetLayout } from '@/components/sheets/sheet.layout';
-import { TextInput } from '@/components/text-input';
+import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
 import { t } from '@lingui/core/macro';
 
-import { Button, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 
 interface NonceSheetProps {
-  sheetRef: RefObject<SheetRef | null>;
+  sheetRef: SheetRef;
   nonce: string;
   onChangeNonce(nonce: string): void;
 }
-export function NonceSheet({ sheetRef, nonce: _nonce, onChangeNonce }: NonceSheetProps) {
-  const [nonce, setNonce] = useState(_nonce);
-
+export function NonceSheet({ sheetRef, nonce, onChangeNonce }: NonceSheetProps) {
   return (
-    <SheetLayout sheetRef={sheetRef} title={t`Add nonce`}>
-      <TextInput
-        autoCapitalize="none"
-        autoComplete="off"
-        autoCorrect={false}
-        autoFocus
-        inputState="focused"
-        onChangeText={setNonce}
-        placeholder={t`Nonce`}
-        TextInputComponent={UIBottomSheetTextInput}
-        value={nonce}
-      />
-      <Button
-        mt="3"
-        onPress={() => {
-          sheetRef.current?.close();
-          onChangeNonce(nonce);
-        }}
-      >
-        {t`Confirm`}
-      </Button>
-    </SheetLayout>
+    <InputSheetLayout
+      sheetRef={sheetRef}
+      initialValue={nonce}
+      title={t`Add memo`}
+      placeholder={t`Memo`}
+      submitTitle={t`Confirm`}
+      onSubmit={value => {
+        onChangeNonce(value);
+        sheetRef.current?.close();
+      }}
+    />
   );
 }

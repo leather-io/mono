@@ -36,7 +36,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { Box, SheetProvider } from '@leather.io/ui/native';
+import { Box, SheetModalProvider } from '@leather.io/ui/native';
 
 dayjs.extend(relativeTime);
 
@@ -103,9 +103,9 @@ function RootLayout() {
                             <SplashScreenGuard>
                               <HapticsProvider>
                                 <GlobalSheetProvider>
-                                  <SheetProvider>
+                                  <SheetModalProvider>
                                     <App />
-                                  </SheetProvider>
+                                  </SheetModalProvider>
                                 </GlobalSheetProvider>
                               </HapticsProvider>
                             </SplashScreenGuard>

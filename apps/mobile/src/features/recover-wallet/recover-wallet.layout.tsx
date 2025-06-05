@@ -13,7 +13,7 @@ import {
   ChevronRightIcon,
   HasChildren,
   LockIcon,
-  SheetRef,
+  SheetInstance,
   Text,
 } from '@leather.io/ui/native';
 
@@ -31,7 +31,7 @@ export function RecoverWalletLayout({
   onSubmit,
   isButtonDisabled,
 }: RecoverWalletLayoutProps) {
-  const recoverWalletSheetRef = useRef<SheetRef>(null);
+  const recoverWalletSheetRef = useRef<SheetInstance>(null);
 
   return (
     <Screen>

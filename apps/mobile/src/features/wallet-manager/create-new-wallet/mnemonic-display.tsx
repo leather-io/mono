@@ -7,7 +7,7 @@ import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 
-import { Box, Button, SheetRef, Text, useTheme } from '@leather.io/ui/native';
+import { Box, Button, SheetInstance, Text, useTheme } from '@leather.io/ui/native';
 
 import { MnemonicWordBox } from './mnemonic-word-box';
 
@@ -31,7 +31,7 @@ export function MnemonicDisplay({
 }) {
   const { displayToast } = useToastContext();
   const theme = useTheme();
-  const notifySheetRef = useRef<SheetRef>(null);
+  const notifySheetRef = useRef<SheetInstance>(null);
   const releaseWaitlistFeatures = useWaitlistFlag();
   if (!mnemonic) return null;
   const mnemonicWords = mnemonic.split(' ');
