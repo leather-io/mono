@@ -119,12 +119,23 @@ export function SearchBar({
           <Box
             style={{
               paddingBottom: theme.spacing['2'] + bottom,
+              // TODO: LEA-1933 Use elevation scale once added
+              boxShadow: [
+                { offsetX: 0, offsetY: 0, blurRadius: 2, color: 'rgba(18,16,16,.12)' },
+                { offsetX: 0, offsetY: 4, blurRadius: 8, color: 'rgba(18,16,16,.08)' },
+                { offsetX: 0, offsetY: 12, blurRadius: 24, color: 'rgba(18,16,16,.08)' },
+              ],
             }}
             px="5"
             pt="2"
             width="100%"
             justifyContent="center"
             alignItems="center"
+            borderTopLeftRadius="md"
+            borderTopRightRadius="md"
+            borderColor="ink.border-default"
+            borderWidth={1}
+            borderStyle="solid"
             backgroundColor="ink.background-primary"
           >
             <Pressable
@@ -147,13 +158,16 @@ export function SearchBar({
           keyboardAvoidingStyle,
           {
             paddingHorizontal: theme.spacing['5'],
-            paddingTop: theme.spacing['4'],
+            paddingTop: theme.spacing['1'],
             paddingBottom: theme.spacing['4'],
           },
           searchBarStyle,
         ]}
-        borderTopRightRadius="lg"
         borderTopLeftRadius="lg"
+        borderTopRightRadius="lg"
+        borderColor="ink.border-default"
+        borderWidth={1}
+        borderStyle="solid"
         backgroundColor="ink.background-primary"
         position="absolute"
         right={0}
