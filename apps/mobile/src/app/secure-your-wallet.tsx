@@ -46,8 +46,9 @@ export default function SecureYourWalletScreen() {
           </Box>
           <Box justifyContent="center" alignItems="center" aspectRatio={1}>
             <Image
+              style={{ height: 270, width: 270 }}
               source={require('@/assets/stickers/lock.png')}
-              style={{ width: 189, height: 252 }}
+              contentFit="contain"
             />
           </Box>
         </AnimatedHeaderScreenLayout>

@@ -35,7 +35,7 @@ export function BrowserRecentTab({ goToUrl }: RecentProps) {
         gap="3"
       >
         <Image
-          style={{ height: width * 0.45, width: width * 0.45 }}
+          style={{ height: 270, width: 270 }}
           contentFit="cover"
           source={require('@/assets/stickers/flower.png')}
         />

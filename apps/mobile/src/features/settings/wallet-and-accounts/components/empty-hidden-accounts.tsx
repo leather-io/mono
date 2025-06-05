@@ -8,7 +8,7 @@ export function EmptyHiddenAccounts() {
   return (
     <EmptyLayout
       image={
-        <Image style={{ height: 189, width: 155 }} source={require('@/assets/stickers/eyes.png')} />
+        <Image style={{ height: 270, width: 270 }} source={require('@/assets/stickers/eyes.png')} />
       }
     >
       <Box width={177}>

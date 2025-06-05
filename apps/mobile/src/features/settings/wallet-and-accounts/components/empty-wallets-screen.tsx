@@ -12,7 +12,7 @@ export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenPr
     <Box width="100%" alignItems="center" justifyContent="center" gap="4" py="7">
       <Box width={270} height={270} alignItems="center" justifyContent="center">
         <Image
-          style={{ height: 178, width: 121 }}
+          style={{ height: 270, width: 270 }}
           source={require('@/assets/stickers/wallet.png')}
         />
       </Box>

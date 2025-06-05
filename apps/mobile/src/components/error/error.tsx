@@ -27,7 +27,8 @@ export function Error({ error, onRetry }: ErrorProps) {
           image={
             <Box pt="8">
               <Image
-                style={{ height: 203, width: 244 }}
+                style={{ height: 219, width: 270 }}
+                contentFit="contain"
                 source={require('@/assets/stickers/egg.png')}
               />
             </Box>
