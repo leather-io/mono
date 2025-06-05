@@ -30,7 +30,7 @@
     "lingui:extract": "lingui extract --clean",
     "lingui:extract:watch": "lingui extract --watch",
     "lingui:watch": "concurrently  \"pnpm lingui:extract:watch\"  \"pnpm lingui:compile:watch\"  ",
-    "postinstall": "if [ \"$CI\" = \"1\" ]; then pnpm -w build:mobile; fi",
+    "postinstall": "if [ \"$CI\" = \"1\" ] && git diff --quiet HEAD^ HEAD -- apps/mobile/ || [ \"$CI\" != \"1\" ]; then pnpm -w build:mobile; fi",
     "preandroid": "pnpm run firebase",
     "preios": "pnpm run check:cocoapods && pnpm run firebase",
     "start": "expo start",
