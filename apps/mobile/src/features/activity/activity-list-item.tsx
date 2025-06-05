@@ -1,4 +1,4 @@
-import { Balance } from '@/components/balance/balance';
+import { Balance, isQuoteCryptoCurrency } from '@/components/balance/balance';
 import { useBrowser } from '@/core/browser-provider';
 import { useSettings } from '@/store/settings/settings';
 import { minusSign } from '@/utils/special-char';
@@ -55,6 +55,8 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
                 operator={getBalanceOperator(activity)}
                 balance={value.quote}
                 color={getBalanceColor(activity)}
+                fontSize={isQuoteCryptoCurrency(value.quote) ? 13 : undefined}
+                isQuoteCurrency
               />
             ) : undefined
           }

@@ -100,7 +100,7 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
       address={
         <AccountAddress accountIndex={account.accountIndex} fingerprint={account.fingerprint} />
       }
-      balance={<Balance balance={availableBalance} />}
+      balance={<Balance balance={availableBalance} isQuoteCurrency />}
       icon={<AccountAvatar icon={account.icon} />}
     />
   );

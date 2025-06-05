@@ -47,7 +47,7 @@ export function TokenBalance({
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          <Balance balance={quoteBalance} variant="label02" lineHeight={16} />
+          <Balance balance={quoteBalance} variant="label02" lineHeight={16} isQuoteCurrency />
         </Cell.Label>
         <Cell.Label variant="secondary">
           <Balance balance={availableBalance} variant="caption01" />

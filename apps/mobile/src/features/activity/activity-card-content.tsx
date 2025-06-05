@@ -27,6 +27,7 @@ export function ActivityCardContent({ activity }: ActivityCardContentProps) {
               color="ink.text-subdued"
               fontWeight="400"
               lineHeight={16}
+              isQuoteCurrency
             />
           </Box>
         )}
