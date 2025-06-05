@@ -14,7 +14,7 @@ export function Tab({ children, isActive, onPress }: TabProps) {
       flex={1}
       justifyContent="center"
       alignItems="center"
-      borderBottomWidth={1}
+      borderBottomWidth={2}
       borderColor={isActive ? 'ink.text-subdued' : 'ink.border-default'}
       onPress={onPress}
     >
