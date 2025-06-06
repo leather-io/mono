@@ -31,7 +31,7 @@ export function PostInfoHoverIcon({ post, children, iconColor = 'black' }: PostI
   function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
     if (post && post.slug) {
-      const isUrl = /^https?:\/\//.test(post.slug);
+      const isUrl = URL.canParse(post.slug);
       const href = isUrl ? post.slug : getPostHref(post.slug);
 
       window.location.href = href;
