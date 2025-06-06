@@ -139,5 +139,8 @@
     {
       "type": "node-workspace"
     }
+  ],
+  "extra-files": [
+    "app.config.js"
   ]
 }
