@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - dev
+      - fix/release-please-update-app-config
 
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
           token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          default-branch: dev
+          default-branch: fix/release-please-update-app-config
           release-type: 'minor'
           signoff: 'leather-bot <leather-bot@leather.io>'
 
