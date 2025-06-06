@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - dev
+      - fix/release-please-update-app-config
 
 permissions:
   contents: write
