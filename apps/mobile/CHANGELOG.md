@@ -701,6 +701,48 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.50.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.49.1...@leather.io/mobile-v2.50.0) (2025-06-06)
+
+
+### Features
+
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+
+
+### Bug Fixes
+
+* **mobile:** add border and shadow to browser search bar ([4b17733](https://github.com/leather-io/mono/commit/4b17733366daa436d9645f1612349faf59305601))
+* **mobile:** add border to browser recents screenshots ([65adeac](https://github.com/leather-io/mono/commit/65adeace6f1dbff69987fb4f2f26c5f010a5b1b5))
+* **mobile:** banish fiat from the app, ref ENG-109 ([a5fccff](https://github.com/leather-io/mono/commit/a5fccff32536f4bf93cd4391e78f24d3624d1c5b))
+* **mobile:** fix inactive browser search input appearance ([0a0041a](https://github.com/leather-io/mono/commit/0a0041a64b38b218854324dfe51574fb68d9d2bf))
+* **mobile:** fix size of activity list item text, ref ENG-109 ([bcc4556](https://github.com/leather-io/mono/commit/bcc45563dfb45ac461dd53ed3d9ec2b2a0f8855a))
+* **mobile:** pass prop to simplify isQuoteCurrency, ref ENG-109 ([f87c583](https://github.com/leather-io/mono/commit/f87c583190ba632dc65fe78dd67b52359c22198d))
+* **mobile:** replace image stickers, ref ENG-110 ([08b1ed7](https://github.com/leather-io/mono/commit/08b1ed7beafff5d1aec675891222392c6a96273b))
+* **mobile:** rollback change to fiatCurrencyPreference in state, ref ENG-109 ([fb4c519](https://github.com/leather-io/mono/commit/fb4c5192d9c81f404ce9d500ffd75462abb1b2a0))
+* **mobile:** use 2px border with on browser tabs ([e3647b1](https://github.com/leather-io/mono/commit/e3647b1720195e353cf030678de8ddebfc2efc14))
+* **mobile:** use availableUnlockedBalance for STX in account selection screen, ref LEA-2644 ([deddbcf](https://github.com/leather-io/mono/commit/deddbcf9f5bd71fa44c44553535ecd49c6eebf65))
+* release please update app config ([7313460](https://github.com/leather-io/mono/commit/73134602962f0c655c248cacd7e71cd922e43dc8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.7.1
+    * @leather.io/bitcoin bumped to 0.26.10
+    * @leather.io/constants bumped to 0.21.1
+    * @leather.io/crypto bumped to 1.7.7
+    * @leather.io/models bumped to 0.35.0
+    * @leather.io/provider bumped to 1.2.21
+    * @leather.io/query bumped to 2.37.10
+    * @leather.io/rpc bumped to 2.16.6
+    * @leather.io/services bumped to 1.15.0
+    * @leather.io/stacks bumped to 1.10.11
+    * @leather.io/ui bumped to 1.68.9
+    * @leather.io/utils bumped to 0.36.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.26.10
+
 ## [2.49.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.49.0...@leather.io/mobile-v2.49.1) (2025-06-04)
 
 

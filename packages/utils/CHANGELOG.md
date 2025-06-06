@@ -325,6 +325,21 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.36.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.35.3...@leather.io/utils-v0.36.0) (2025-06-06)
+
+
+### Features
+
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.21.1
+    * @leather.io/models bumped to 0.35.0
+
 ## [0.35.2](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.35.1...@leather.io/utils-v0.35.2) (2025-06-02)
 
 
