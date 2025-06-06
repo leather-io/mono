@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 10\n"
 "Project-Id-Version: leather-mobile\n"
 "Language-Team: English\n"
-"PO-Revision-Date: 2025-05-27 06:08\n"
+"PO-Revision-Date: 2025-06-06 10:34\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 
@@ -66,8 +66,8 @@ msgstr "{network}"
 msgid "settings.header_network"
 msgstr "{network}"
 
-#: src/features/receive/screens/asset-details.tsx:43
-#: src/features/send/screens/form.tsx:57
+#: src/features/receive/screens/asset-details.tsx:54
+#: src/features/send/screens/form.tsx:60
 msgid "select_asset.header_subtitle"
 msgstr "{subtitle}"
 
@@ -645,7 +645,7 @@ msgstr "Copper"
 msgid "create_new_wallet.mnemonic.copy_button"
 msgstr "Copy"
 
-#: src/features/receive/components/receive-asset-item.tsx:45
+#: src/features/receive/components/receive-asset-item.tsx:41
 msgid "receive.copy_address_label"
 msgstr "Copy address"
 
@@ -785,7 +785,7 @@ msgstr "Don't notify me"
 msgid "view_secret_key.button"
 msgstr "Done"
 
-#: src/components/error/error.tsx:47
+#: src/components/error/error.tsx:48
 msgid "error_boundary.subtitle"
 msgstr "Drag to refresh"
 
@@ -822,7 +822,7 @@ msgstr "Email address"
 msgid "email_address.input_placeholder"
 msgstr "Email address"
 
-#: src/app/secure-your-wallet.tsx:71
+#: src/app/secure-your-wallet.tsx:72
 msgid "secure_your_wallet.security_button"
 msgstr "Enable device security"
 
@@ -891,12 +891,12 @@ msgstr "Export xPub"
 msgid "app_auth.toast_title_error"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:211
-#: src/features/psbt-signer/psbt-signer.tsx:222
+#: src/features/psbt-signer/psbt-signer.tsx:223
+#: src/features/psbt-signer/psbt-signer.tsx:234
 msgid "approver.send.btc.error.broadcast"
 msgstr "Failed to broadcast transaction"
 
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:92
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:94
 msgid "approver.send.stx.error.broadcast"
 msgstr "Failed to broadcast transaction"
 
@@ -924,7 +924,7 @@ msgstr "Fee"
 msgid "approver.send.stx.success.change-fee"
 msgstr "Fee updated"
 
-#: src/features/psbt-signer/psbt-signer.tsx:177
+#: src/features/psbt-signer/psbt-signer.tsx:187
 msgid "approver.send.btc.success.change-fee"
 msgstr "Fee updated"
 
@@ -985,7 +985,7 @@ msgid "configure_account.hide_account.cell_title"
 msgstr "Hide account"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
-#: src/features/psbt-signer/psbt-signer.tsx:262
+#: src/features/psbt-signer/psbt-signer.tsx:276
 msgid "approver.advanced.hide"
 msgstr "Hide advanced options"
 
@@ -1109,7 +1109,7 @@ msgstr "Locking"
 msgid "settings.networks.cell_caption"
 msgstr "Mainnet, testnet or signet"
 
-#: src/features/activity/activity-empty.tsx:20
+#: src/features/activity/activity-empty.tsx:14
 msgid "activity-empty.title"
 msgstr "Make your first transaction to get started"
 
@@ -1266,7 +1266,7 @@ msgstr "Paste or type Secret Key to add wallet"
 #: src/features/approver/layouts/get-addresses.layout.tsx:49
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
 msgid "browser.approver.choose-account"
-msgstr "Please, choose an account"
+msgstr "Choose an account"
 
 #: src/app/mpc-wallets.tsx:69
 msgid "mpc_wallets.portal"
@@ -1288,8 +1288,8 @@ msgstr "Continue without security"
 msgid "email_address.subtitle"
 msgstr "Provide an email address for receiving notifications"
 
-#: src/components/error/fetch-error.tsx:20
-#: src/components/error/fetch-error.tsx:41
+#: src/components/error/fetch-error.tsx:16
+#: src/components/error/fetch-error.tsx:37
 msgid "fetch-state-error.balance.subtitle"
 msgstr "Pull to refresh"
 
@@ -1310,7 +1310,7 @@ msgstr "Qredo"
 msgid "action_bar.receive_label"
 msgstr "Receive"
 
-#: src/features/receive/screens/asset-details.tsx:39
+#: src/features/receive/screens/asset-details.tsx:50
 msgid "receive_asset.header_title"
 msgstr "Receive"
 
@@ -1318,7 +1318,7 @@ msgstr "Receive"
 msgid "select_account.receive.header_subtitle"
 msgstr "Receive"
 
-#: src/features/receive/screens/select-asset.tsx:67
+#: src/features/receive/screens/select-asset.tsx:72
 msgid "receive.select_asset.header_subtitle"
 msgstr "Receive"
 
@@ -1370,8 +1370,8 @@ msgstr "Require biometrics or PIN"
 msgid "add_wallet.restore_wallet.cell_title"
 msgstr "Restore wallet"
 
-#: src/features/send/forms/btc/btc-form.tsx:131
-#: src/features/send/forms/stx/stx-form.tsx:149
+#: src/features/send/forms/btc/btc-form.tsx:130
+#: src/features/send/forms/stx/stx-form.tsx:148
 msgid "send_form.review_button"
 msgstr "Review"
 
@@ -1424,7 +1424,7 @@ msgstr "Scan QR Code"
 msgid "send-form.recipient.input.placeholder"
 msgstr "Search for BNS name or address"
 
-#: src/features/browser/browser/search-bar/search-bar.tsx:136
+#: src/features/browser/browser/search-bar/search-bar.tsx:140
 msgid "browser.searchbar.search-url"
 msgstr "Search or type url"
 
@@ -1445,12 +1445,12 @@ msgid "security.header_title"
 msgstr "Security"
 
 #: src/features/receive/screens/select-account.tsx:27
-#: src/features/send/screens/select-account.tsx:43
+#: src/features/send/screens/select-account.tsx:46
 msgid "select_account.header_title"
 msgstr "Select account"
 
-#: src/features/receive/screens/select-asset.tsx:63
-#: src/features/send/screens/select-asset.tsx:47
+#: src/features/receive/screens/select-asset.tsx:68
+#: src/features/send/screens/select-asset.tsx:42
 msgid "select_asset.header_title"
 msgstr "Select asset"
 
@@ -1458,20 +1458,20 @@ msgstr "Select asset"
 msgid "action_bar.send_label"
 msgstr "Send"
 
-#: src/features/psbt-signer/psbt-signer.tsx:237
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:137
+#: src/features/psbt-signer/psbt-signer.tsx:249
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139
 msgid "approver.send.title"
 msgstr "Send"
 
-#: src/features/send/screens/form.tsx:53
+#: src/features/send/screens/form.tsx:56
 msgid "send_form.header_title"
 msgstr "Send"
 
-#: src/features/send/screens/select-account.tsx:47
+#: src/features/send/screens/select-account.tsx:50
 msgid "select_account.send.header_subtitle"
 msgstr "Send"
 
-#: src/features/send/screens/select-asset.tsx:51
+#: src/features/send/screens/select-asset.tsx:46
 msgid "send.select_asset.header_subtitle"
 msgstr "Send"
 
@@ -1511,7 +1511,7 @@ msgstr "Settings"
 msgid "browser.toolbox.share"
 msgstr "Share"
 
-#: src/features/receive/screens/asset-details.tsx:89
+#: src/features/receive/screens/asset-details.tsx:100
 msgid "receive_asset.share_button"
 msgstr "Share"
 
@@ -1520,7 +1520,7 @@ msgid "analytics.cell_caption"
 msgstr "Share anonymous usage details"
 
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:119
-#: src/features/psbt-signer/psbt-signer.tsx:258
+#: src/features/psbt-signer/psbt-signer.tsx:272
 msgid "approver.advanced.show"
 msgstr "Show advanced options"
 
@@ -1537,7 +1537,7 @@ msgstr "Sign Message"
 msgid "approver.signTransaction.title"
 msgstr "Sign Transaction"
 
-#: src/app/secure-your-wallet.tsx:61
+#: src/app/secure-your-wallet.tsx:62
 msgid "secure_your_wallet.skip_button"
 msgstr "Skip for now"
 
@@ -1549,7 +1549,7 @@ msgstr "Proceed with caution since your wallet will not be protected by your dev
 msgid "approver.fee.type.low"
 msgstr "Slow"
 
-#: src/components/error/fetch-error.tsx:30
+#: src/components/error/fetch-error.tsx:26
 msgid "fetch-state-error.balance.title"
 msgstr "Some balances couldn't load."
 
@@ -1557,11 +1557,11 @@ msgstr "Some balances couldn't load."
 msgid "input.default.error"
 msgstr "An error has occurred"
 
-#: src/components/error/error.tsx:37
+#: src/components/error/error.tsx:38
 msgid "error_boundary.title"
 msgstr "Something went wrong"
 
-#: src/components/error/fetch-error.tsx:18
+#: src/components/error/fetch-error.tsx:14
 msgid "error.title"
 msgstr "Something went wrong"
 
@@ -1723,12 +1723,12 @@ msgstr "Token Transfer"
 msgid "account.balances.header_title"
 msgstr "Tokens"
 
-#: src/features/earn/locked-balance-card.tsx:31
+#: src/features/earn/locked-balance-card.tsx:34
 msgid "earn.total_locked"
 msgstr "Total locked"
 
-#: src/features/psbt-signer/psbt-signer.tsx:278
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:167
+#: src/features/psbt-signer/psbt-signer.tsx:292
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:169
 msgid "approver.total_spend"
 msgstr "Total spend"
 
@@ -1736,8 +1736,8 @@ msgstr "Total spend"
 msgid "notifications.push.cell_title"
 msgstr "Transaction confirmations"
 
-#: src/features/send/forms/btc/use-btc-form.ts:76
-#: src/features/send/forms/stx/use-stx-form.ts:68
+#: src/features/send/forms/btc/use-btc-form.ts:79
+#: src/features/send/forms/stx/use-stx-form.ts:74
 msgid "send-form.unexpected-error"
 msgstr "Transaction failed due to an unexpected error. Our team has been notified"
 
@@ -1745,7 +1745,7 @@ msgstr "Transaction failed due to an unexpected error. Our team has been notifie
 msgid "hardware_wallets.trezor"
 msgstr "Trezor"
 
-#: src/components/error/error.tsx:42
+#: src/components/error/error.tsx:43
 msgid "error_boundary.action"
 msgstr "Try again"
 
