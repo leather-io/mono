@@ -141,6 +141,6 @@
     }
   ],
   "extra-files": [
-    "./apps/mobile/app.config.js"
+    "apps/mobile/app.config.js"
   ]
 }
