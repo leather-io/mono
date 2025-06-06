@@ -48,6 +48,7 @@ export * from './fee-animals/animal-eagle.web';
 export * from './fee-animals/animal-rabbit.web';
 export * from './fee-animals/animal-snail.web';
 export * from './function-icon.web';
+export * from './gift-icon.web';
 export * from './glasses-icon.web';
 export * from './globe-icon.web';
 export * from './globe-tilted-icon.web';
