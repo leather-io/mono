@@ -349,6 +349,25 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.26.9
 
+## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.14.1...@leather.io/services-v1.15.0) (2025-06-06)
+
+
+### Features
+
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.10
+    * @leather.io/constants bumped to 0.21.1
+    * @leather.io/models bumped to 0.35.0
+    * @leather.io/utils bumped to 0.36.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.16.6
+
 ## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.13.1...@leather.io/services-v1.14.0) (2025-06-03)
 
 
