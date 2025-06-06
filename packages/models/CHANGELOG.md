@@ -30,6 +30,13 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.35.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.34.0...@leather.io/models-v0.35.0) (2025-06-06)
+
+
+### Features
+
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+
 ## [0.34.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.33.0...@leather.io/models-v0.34.0) (2025-06-03)
 
 
