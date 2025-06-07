@@ -1,4 +1,5 @@
 import { LEATHER_API_URL, MODE } from '~/constants/environment';
+import { WebAnalyticsService } from '~/features/analytics/analytics';
 
 import { initServicesContainer } from '@leather.io/services';
 
@@ -14,5 +15,6 @@ export function initAppServices() {
 
     cacheService: WebHttpCacheService,
     settingsService: WebSettingsService,
+    analyticsService: WebAnalyticsService,
   });
 }
