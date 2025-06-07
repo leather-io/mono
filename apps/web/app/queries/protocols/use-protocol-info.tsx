@@ -34,9 +34,9 @@ export interface ProtocolInfo {
   id: ProviderId;
   slug: ProtocolSlug;
   amount: BigNumber | null;
-  apr: number;
-  tvl?: number;
-  tvlUsd: string;
+  apr: number | null;
+  tvl?: number | null;
+  tvlUsd: string | null;
   payout: string;
   payoutIcon: ReactNode;
   nextCycleDays: number;
@@ -60,17 +60,16 @@ export function useProtocolInfo(protocolSlug: ProtocolSlug) {
     poxInfoQuery.isLoading ||
     stackingTracker.isLoading ||
     stxMarket.isLoading;
+
   const isError =
     balance?.isError ||
     !balance?.data ||
     poxInfoQuery.isError ||
     !poxInfoQuery.data ||
-    stackingTracker.isError ||
-    !stackingTracker.data ||
     stxMarket.isError ||
     !stxMarket.data;
 
-  const info = useMemo<ProtocolInfo | null>(() => {
+  const info = useMemo(() => {
     if (isLoading || isError) {
       return null;
     }
@@ -81,11 +80,13 @@ export function useProtocolInfo(protocolSlug: ProtocolSlug) {
 
     const contractAddress = getLiquidContract(networkMode, protocol.liquidContract);
 
-    const tvlBaseCurrencyAmount = baseCurrencyAmountInQuote(
-      createMoneyFromDecimal(stackingTracker.data.lastCycle?.token.stacked_amount ?? 0, 'STX'),
-      stxMarket.data
-    );
-    const tvlUsd = i18nFormatCurrency(tvlBaseCurrencyAmount);
+    const tvlBaseCurrencyAmount = stackingTracker.data
+      ? baseCurrencyAmountInQuote(
+          createMoneyFromDecimal(stackingTracker.data.lastCycle?.token.stacked_amount ?? 0, 'STX'),
+          stxMarket.data
+        )
+      : null;
+    const tvlUsd = tvlBaseCurrencyAmount && i18nFormatCurrency(tvlBaseCurrencyAmount);
 
     const minimumCommitment = 1;
     const minimumCommitmentBaseCurrencyAmount = baseCurrencyAmountInQuote(
@@ -94,7 +95,7 @@ export function useProtocolInfo(protocolSlug: ProtocolSlug) {
     );
     const minimumCommitmentUsd = i18nFormatCurrency(minimumCommitmentBaseCurrencyAmount);
 
-    return {
+    const result: ProtocolInfo = {
       nextCycleDays: poxInfoQuery.data.next_cycle.blocks_until_reward_phase / STACKS_BLOCKS_PER_DAY,
       nextCycleNumber: poxInfoQuery.data.next_cycle.id,
       nextCycleBlocks: poxInfoQuery.data.next_cycle.blocks_until_reward_phase,
@@ -105,8 +106,8 @@ export function useProtocolInfo(protocolSlug: ProtocolSlug) {
       id: providerId,
       slug: protocolSlug,
       amount: balance.data,
-      apr: stackingTracker.data.entity.apr,
-      tvl: stackingTracker.data.lastCycle?.token.stacked_amount,
+      apr: stackingTracker.data?.entity.apr || null,
+      tvl: stackingTracker.data?.lastCycle?.token.stacked_amount || null,
       tvlUsd,
       minimumCommitment,
       minimumCommitmentUsd,
@@ -115,6 +116,8 @@ export function useProtocolInfo(protocolSlug: ProtocolSlug) {
 
       contractAddress,
     };
+
+    return result;
   }, [
     network,
     isError,
