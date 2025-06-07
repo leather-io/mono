@@ -5,8 +5,6 @@ import { Money } from '@leather.io/models';
 import { SkeletonLoader, TextProps } from '@leather.io/ui/native';
 import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
 
-import { useBtcConversionUnitFlag } from '../../features/feature-flags';
-
 const EmptyBalanceDisplay = '-.--';
 
 export function isQuoteCryptoCurrency(balance: Money) {
@@ -51,7 +49,6 @@ export function Balance({
   isQuoteCurrency = false,
   ...props
 }: BalanceProps) {
-  const btcConversionUnitFlag = useBtcConversionUnitFlag();
   if (isLoading) {
     return <SkeletonLoader height={20} width={100} isLoading={true} />;
   }
@@ -69,7 +66,7 @@ export function Balance({
     <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
       {formatBalance({
         balance,
-        isQuoteCurrency: isQuoteCurrency && btcConversionUnitFlag,
+        isQuoteCurrency: isQuoteCurrency,
         operator,
       })}
     </PrivateText>
