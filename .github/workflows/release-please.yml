@@ -27,9 +27,7 @@ jobs:
           token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          default-branch: dev
-          release-type: 'minor'
-          signoff: 'leather-bot <leather-bot@leather.io>'
+          target-branch: dev
 
     # The logic below handles the npm publication:
   deploy:
