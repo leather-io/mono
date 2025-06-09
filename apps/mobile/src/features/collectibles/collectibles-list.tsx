@@ -16,6 +16,7 @@ interface CollectiblesListProps {
 export function CollectiblesList({ collectibles, mode }: CollectiblesListProps) {
   const displayLimit = mode === 'widget' ? 9 : undefined;
   const theme = useTheme<Theme>();
+  // FIX this LEA-2703
   // TODO: not a good fix, it should be automatically adjusted without this mathematics on our side.
   // Will open a ticket for this one in the future
   const edgeToEdgeThumbnailWidth = (width - 2 * theme.spacing[5] - theme.spacing[4]) / 2;
