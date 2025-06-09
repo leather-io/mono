@@ -177,6 +177,13 @@
   * dependencies
     * @leather.io/models bumped to 0.35.0
 
+## [0.24.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.23.0...@leather.io/constants-v0.24.0) (2025-06-09)
+
+
+### Features
+
+* try releasing mobile ([e52a7a4](https://github.com/leather-io/mono/commit/e52a7a41fce0ac1718ae3a9b3e47d62451f328a3))
+
 ## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.22.0...@leather.io/constants-v0.23.0) (2025-06-09)
 
 
