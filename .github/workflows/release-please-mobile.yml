@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - fix/release-please
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: Release packages
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      changelog: ${{ steps.release.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.LEATHER_BOT }}
+
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.LEATHER_BOT }}
+          config-file: release-please-config-mobile.json
+          manifest-file: .release-please-manifest-mobile.json
+          target-branch: fix/release-please
