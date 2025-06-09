@@ -2,7 +2,7 @@
   "name": "@leather.io/rpc",
   "author": "leather-wallet",
   "description": "RPC types package for Leather",
-  "version": "2.17.0",
+  "version": "2.18.0",
   "license": "MIT",
   "type": "module",
   "scripts": {

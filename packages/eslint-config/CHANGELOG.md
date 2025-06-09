@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.10.0...@leather.io/eslint-config-v0.11.0) (2025-06-09)
+
+
+### Features
+
+* run me ([1286e77](https://github.com/leather-io/mono/commit/1286e774e6a7a5572537207e25059c4a9e62a022))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.9.0...@leather.io/eslint-config-v0.10.0) (2025-05-22)
 
 
