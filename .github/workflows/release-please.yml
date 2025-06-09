@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.LEATHER_BOT }}
 
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.LEATHER_BOT }}
