@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { BalanceViewProps } from '@/features/balances/balances';
@@ -11,9 +11,9 @@ import { FlashList } from '@shopify/flash-list';
 
 import { Money } from '@leather.io/models';
 import { Sip10AddressBalance, Sip10AggregateBalance } from '@leather.io/services';
-import { Box, Sip10AvatarIcon } from '@leather.io/ui/native';
+import { Sip10AvatarIcon } from '@leather.io/ui/native';
 
-import { SIP10_BALANCES_LIMIT, SIP10_BALANCES_WIDGET_LIMIT } from '../constants';
+import { SIP10_BALANCES_WIDGET_LIMIT } from '../constants';
 import { TokenBalance } from '../token-balance';
 import { sortSip10Balances } from '../utils/sort-sip10-balances';
 
@@ -68,33 +68,28 @@ interface Sip10BalanceWrapperProps {
 }
 function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) {
   const displayLimit = mode === 'widget' ? SIP10_BALANCES_WIDGET_LIMIT : undefined;
+  const sortedData = useMemo(() => {
+    if (data.state !== 'success') return [];
+    return data.value.sip10s.sort(sortSip10Balances).slice(0, displayLimit);
+  }, [data, displayLimit]);
 
-  const [renderLimit, setRenderLimit] = useState(displayLimit ?? SIP10_BALANCES_LIMIT);
+  const renderItem = useCallback(
+    ({ item }: { item: Sip10AggregateBalance['sip10s'][number] }) => (
+      <Sip10TokenBalance
+        availableBalance={item.crypto.availableBalance}
+        contractId={item.asset.contractId}
+        quoteBalance={item.quote.totalBalance}
+        imageCanonicalUri={item.asset.imageCanonicalUri}
+        name={item.asset.name}
+        symbol={item.asset.symbol}
+      />
+    ),
+    []
+  );
 
   return (
     <FetchWrapper data={data} error={<Sip10TokenBalanceError />}>
-      {data.state === 'success' && (
-        <Box flex={1} width="100%" height="100%">
-          <FlashList
-            data={data.value.sip10s.sort(sortSip10Balances).slice(0, displayLimit)}
-            renderItem={({ item }: { item: Sip10AggregateBalance['sip10s'][number] }) => (
-              <Sip10TokenBalance
-                availableBalance={item.crypto.availableBalance}
-                contractId={item.asset.contractId}
-                quoteBalance={item.quote.totalBalance}
-                imageCanonicalUri={item.asset.imageCanonicalUri}
-                name={item.asset.name}
-                symbol={item.asset.symbol}
-              />
-            )}
-            estimatedItemSize={72}
-            keyExtractor={(_, index) => `token.${index}`}
-            showsVerticalScrollIndicator={false}
-            onEndReached={() => setRenderLimit(renderLimit + 10)}
-            onEndReachedThreshold={0.5}
-          />
-        </Box>
-      )}
+      {data.state === 'success' && <FlashList data={sortedData} renderItem={renderItem} />}
     </FetchWrapper>
   );
 }
