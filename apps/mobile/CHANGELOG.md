@@ -701,6 +701,13 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+## [2.52.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.51.0...@leather.io/mobile-v2.52.0) (2025-06-09)
+
+
+### Features
+
+* run me ([1286e77](https://github.com/leather-io/mono/commit/1286e774e6a7a5572537207e25059c4a9e62a022))
+
 ## [2.51.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.50.0...@leather.io/mobile-v2.51.0) (2025-06-07)
 
 
