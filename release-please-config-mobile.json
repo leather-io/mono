@@ -17,5 +17,6 @@
   "extra-files": [
     "app.config.js"
   ],
-  "signoff": "leather-bot <leather-bot@leather.io>"
+  "signoff": "leather-bot <leather-bot@leather.io>",
+  "pull-request-title-pattern": "chore${scope}: release Leather Mobile ${version}"
 }
