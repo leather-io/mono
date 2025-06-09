@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { assertUnreachable } from '@leather.io/utils';
 
-import { ArrowLeftIcon } from '../../icons/arrow-left-icon.native';
+import { BackspaceIcon } from '../../icons/backspace-icon.native';
 import { Box } from '../box/box.native';
 import { NumpadKey, NumpadKeySlot } from './numpad-key.native';
 
@@ -46,7 +46,7 @@ function getAllKeys(decimalSeparator: DecimalSeparator): Record<KeyId, Key> {
       accessibilityLabel: decimalSeparator,
       element: decimalSeparator,
     },
-    delete: { id: 'delete', accessibilityLabel: 'delete', element: <ArrowLeftIcon /> },
+    delete: { id: 'delete', accessibilityLabel: 'delete', element: <BackspaceIcon /> },
   };
 }
 
