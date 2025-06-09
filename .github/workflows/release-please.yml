@@ -27,7 +27,7 @@ jobs:
           token: ${{ secrets.LEATHER_BOT }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          target-branch: dev
+          target-branch: fix/release-please
 
     # The logic below handles the npm publication:
   deploy:

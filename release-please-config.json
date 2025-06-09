@@ -142,5 +142,6 @@
   ],
   "extra-files": [
     "app.config.js"
-  ]
+  ],
+  "signoff": "leather-bot <leather-bot@leather.io>"
 }
