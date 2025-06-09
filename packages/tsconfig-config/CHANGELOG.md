@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.8.0...@leather.io/tsconfig-config-v0.9.0) (2025-06-09)
+
+
+### Features
+
+* run me ([1286e77](https://github.com/leather-io/mono/commit/1286e774e6a7a5572537207e25059c4a9e62a022))
+
 ## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.7.0...@leather.io/tsconfig-config-v0.8.0) (2025-05-22)
 
 
