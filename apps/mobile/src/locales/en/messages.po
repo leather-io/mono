@@ -54,7 +54,7 @@ msgstr "{name}"
 msgid "bitcoin_unit.cell_caption"
 msgstr "{name}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:51
+#: src/features/settings/conversion-unit-sheet.tsx:47
 msgid "conversion_unit.cell_title"
 msgstr "{name}"
 
@@ -79,7 +79,7 @@ msgstr "{symbol}"
 msgid "bitcoin_unit.cell_title"
 msgstr "{symbol}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:56
+#: src/features/settings/conversion-unit-sheet.tsx:52
 msgid "conversion_unit.cell_caption"
 msgstr "{symbol}"
 
@@ -99,33 +99,33 @@ msgstr "{title}"
 msgid "address_type_badge.label"
 msgstr "{type}"
 
+#: src/features/approver/utils.tsx:68
+msgid "approver.bitcoin.fee.speed.low"
+msgstr "~40 mins"
+
 #: src/features/approver/utils.tsx:76
 msgid "approver.bitcoin.fee.speed.high"
-msgstr "~10 mins"
-
-#: src/features/approver/utils.tsx:104
-msgid "approver.stacks.fee.speed.high"
 msgstr "~10 mins"
 
 #: src/features/approver/utils.tsx:72
 msgid "approver.bitcoin.fee.speed.middle"
 msgstr "~20 mins"
 
-#: src/features/approver/utils.tsx:100
-msgid "approver.stacks.fee.speed.middle"
-msgstr "~20 mins"
-
-#: src/features/approver/utils.tsx:68
-msgid "approver.bitcoin.fee.speed.low"
-msgstr "~40 mins"
-
-#: src/features/approver/utils.tsx:96
+#: src/features/approver/utils.tsx:97
 msgid "approver.stacks.fee.speed.low"
 msgstr "~40 mins"
+
+#: src/features/approver/utils.tsx:105
+msgid "approver.stacks.fee.speed.high"
+msgstr "~10 mins"
 
 #: src/features/earn/stacking-card.tsx:22
 msgid "earn.stacking.yield-description-max"
 msgstr "10%"
+
+#: src/features/approver/utils.tsx:101
+msgid "approver.stacks.fee.speed.middle"
+msgstr "~20 mins"
 
 #: src/features/earn/sbtc-card.tsx:18
 msgid "earn.sbtc.yield-description-min"
@@ -629,11 +629,11 @@ msgstr "Contract arguments"
 msgid "display.conversion_unit.cell_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:40
+#: src/features/settings/conversion-unit-sheet.tsx:38
 msgid "conversion_unit.header_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:29
+#: src/features/settings/conversion-unit-sheet.tsx:27
 msgid "conversion_unit.toast_title"
 msgstr "Conversion unit updated"
 
@@ -710,7 +710,7 @@ msgid "approver.fee.type.custom"
 msgstr "Custom"
 
 #: src/features/approver/utils.tsx:80
-#: src/features/approver/utils.tsx:108
+#: src/features/approver/utils.tsx:109
 msgid "approver.fee.speed.custom"
 msgstr "Custom"
 
@@ -1775,7 +1775,7 @@ msgid "approver.fee.type.unknown"
 msgstr "Unknown"
 
 #: src/features/approver/utils.tsx:84
-#: src/features/approver/utils.tsx:112
+#: src/features/approver/utils.tsx:113
 msgid "approver.fee.speed.unknown"
 msgstr "Unknown"
 

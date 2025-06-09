@@ -16,7 +16,7 @@ import {
   cvToString,
 } from '@stacks/transactions';
 
-import { FeeTypes } from '@leather.io/models';
+import { FeeTypes, btcTxTimeMap } from '@leather.io/models';
 import { StacksSigner } from '@leather.io/stacks';
 import {
   AnimalChameleonIcon,
@@ -61,21 +61,21 @@ function getBaseFeeData(feeType: FeeTypes) {
   }[feeType];
   return { icon, title };
 }
-
+// TODO LEA-2724: update this to use btcTxTimeMap instead translated keys
 export function getBitcoinFeeData(feeType: FeeTypes) {
   const { icon, title } = getBaseFeeData(feeType);
   const time = {
     [FeeTypes.Low]: t({
       id: 'approver.bitcoin.fee.speed.low',
-      message: '~40 mins',
+      message: '~1 hour+',
     }),
     [FeeTypes.Middle]: t({
       id: 'approver.bitcoin.fee.speed.middle',
-      message: '~20 mins',
+      message: '~30 min',
     }),
     [FeeTypes.High]: t({
       id: 'approver.bitcoin.fee.speed.high',
-      message: '~10 mins',
+      message: '~10 – 20min',
     }),
     [FeeTypes.Custom]: t({
       id: 'approver.fee.speed.custom',
@@ -89,21 +89,22 @@ export function getBitcoinFeeData(feeType: FeeTypes) {
   return { icon, title, time };
 }
 
+// TODO LEA-2724: we have a duplicate stacksFeePriorityTimeMap in the extension
 export function getStacksFeeData(feeType: FeeTypes) {
   const feeMatcher = match<FeeTypes>();
   const { icon, title } = getBaseFeeData(feeType);
   const time = feeMatcher(feeType, {
     [FeeTypes.Low]: t({
       id: 'approver.stacks.fee.speed.low',
-      message: '~40 mins',
+      message: '1–2 minutes',
     }),
     [FeeTypes.Middle]: t({
       id: 'approver.stacks.fee.speed.middle',
-      message: '~20 mins',
+      message: '20–30 seconds',
     }),
     [FeeTypes.High]: t({
       id: 'approver.stacks.fee.speed.high',
-      message: '~10 mins',
+      message: '10 seconds',
     }),
     [FeeTypes.Custom]: t({
       id: 'approver.fee.speed.custom',
