@@ -26,6 +26,7 @@ export * from './arrow-rotate-right-left-icon.native';
 export * from './arrow-top-bottom-icon.native';
 export * from './arrow-up-icon.native';
 export * from './arrows-repeat-left-right-icon.native';
+export * from './backspace-icon.native';
 export * from './barcode-icon.native';
 export * from './bars-three-icon.native';
 export * from './bars-two-icon.native';

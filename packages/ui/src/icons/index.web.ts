@@ -6,6 +6,7 @@ export * from './arrow-rotate-right-left-icon.web';
 export * from './arrow-top-bottom-icon.web';
 export * from './arrow-up-icon.web';
 export * from './arrows-repeat-left-right-icon.web';
+export * from './backspace-icon.web';
 export * from './barcode-icon.web';
 export * from './bars-three-icon.web';
 export * from './bars-two-icon.web';
