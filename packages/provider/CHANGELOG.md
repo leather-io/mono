@@ -234,6 +234,27 @@
     * @leather.io/rpc bumped to 2.16.5
     * @leather.io/utils bumped to 0.35.3
 
+## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.2.21...@leather.io/provider-v1.3.0) (2025-06-10)
+
+
+### Features
+
+* browser ui ([34cf34b](https://github.com/leather-io/mono/commit/34cf34b147c261056200b20232fb404308056025))
+
+
+### Bug Fixes
+
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.36.0
+    * @leather.io/rpc bumped to 2.17.0
+    * @leather.io/utils bumped to 0.37.0
+
 ## [1.2.21](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.2.20...@leather.io/provider-v1.2.21) (2025-06-10)
 
 

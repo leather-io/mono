@@ -349,6 +349,45 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.26.9
 
+## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.15.0...@leather.io/services-v1.16.0) (2025-06-10)
+
+
+### Features
+
+* add client id to leather api reqs ([41b6cdd](https://github.com/leather-io/mono/commit/41b6cdd3b884fba7eb60563b6dcccf5a855e1d17))
+* add leather api requests to queue ([c362860](https://github.com/leather-io/mono/commit/c362860bc49744ccc2af09a2cce74fc851abbf66))
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* consolidate http cache config ([7226d99](https://github.com/leather-io/mono/commit/7226d998f8cfa83ce78c5055ea25f5a4165532a9))
+* enhance utxo model ([b23fdd5](https://github.com/leather-io/mono/commit/b23fdd5eef83c923ce36ef99a1164071e2b6f035))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* integrate consolidated token api endpoints ([5b096f3](https://github.com/leather-io/mono/commit/5b096f35a22bd048ddc3716529924c33da2f3151))
+* integrate leather api types into client ([c6ea29b](https://github.com/leather-io/mono/commit/c6ea29b3bc472f7fdfe9d5ab2880bbffa6a68cf4))
+* prevent missing metadata refetch ([955dcfc](https://github.com/leather-io/mono/commit/955dcfcf79a17a9fc956f150644d9f2e09430fba))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+* **web:** add query provider and upgrade alex sdk package ([4e9fde1](https://github.com/leather-io/mono/commit/4e9fde1343847eb866c9799ad241fd27de27d37e))
+
+
+### Bug Fixes
+
+* leather api fetch using correct bitcoin network setting ([5e21f19](https://github.com/leather-io/mono/commit/5e21f19469a849516f47c166e9e3e80c367cb192))
+* sip10 balances service error handling ([ca5cbe5](https://github.com/leather-io/mono/commit/ca5cbe57df3d80de1ad62a3ebf7f53c5bd71763a))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.27.0
+    * @leather.io/constants bumped to 0.22.0
+    * @leather.io/models bumped to 0.36.0
+    * @leather.io/utils bumped to 0.37.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.17.0
+
 ## [1.15.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.14.1...@leather.io/services-v1.15.0) (2025-06-10)
 
 
