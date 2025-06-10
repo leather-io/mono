@@ -301,6 +301,35 @@
     * @leather.io/models bumped to 0.34.0
     * @leather.io/utils bumped to 0.35.3
 
+## [2.18.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.17.0...@leather.io/rpc-v2.18.0) (2025-06-10)
+
+
+### Features
+
+* add platform to getInfo response ([5576be5](https://github.com/leather-io/mono/commit/5576be517dc981842acad6a30088de43536d306b))
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* implement getInfo and supportedMethods sip30 ([305f084](https://github.com/leather-io/mono/commit/305f08405973944f1f0ed0caae62179f6093c827))
+* sip30 sendTransfer ([4fc910e](https://github.com/leather-io/mono/commit/4fc910e5b44e839669a2695a6ff0c720a9ccc145))
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+* **ui:** location-aware dropdown transitions ([dd1f99b](https://github.com/leather-io/mono/commit/dd1f99b8ec9f4c12f135f4a9dd7ac663aa9576dc))
+* **web:** add segment, events, closes ENG-67 ([d5222cd](https://github.com/leather-io/mono/commit/d5222cd33f730da05c5ce31300daa9b9e2849e5b))
+
+
+### Bug Fixes
+
+* rpc network type errors ([42c8519](https://github.com/leather-io/mono/commit/42c8519b54d034f3adc3a20da27af4e4d7d4a8ff))
+* **rpc:** add new error codes ([3ccf178](https://github.com/leather-io/mono/commit/3ccf178aa6fd1a721ded19df7e20a23d8f21d1ef))
+* **rpc:** allow unknown props in open method ([3f86176](https://github.com/leather-io/mono/commit/3f86176bb7a5d92eab247bd8f040107b7146e40f))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.37.0
+    * @leather.io/utils bumped to 0.38.0
+
 ## [2.17.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.16.6...@leather.io/rpc-v2.17.0) (2025-06-10)
 
 

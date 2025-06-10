@@ -776,6 +776,37 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.16.5
 
+## [0.28.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.27.0...@leather.io/bitcoin-v0.28.0) (2025-06-10)
+
+
+### Features
+
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* integrate collectibles, ref LEA-1426 ([8639772](https://github.com/leather-io/mono/commit/86397724e64ed7f29ac610761e0f87684b5db8f8))
+* **mobile:** add QR scanning to Send ([fb4c703](https://github.com/leather-io/mono/commit/fb4c703af9c8394e3fae45a5e04ef5716d240b1f))
+* sign message ([e5617b5](https://github.com/leather-io/mono/commit/e5617b529d3e7ce2ff5e10734e52e05e63c9a385))
+* **web:** auth button styling ([495dda3](https://github.com/leather-io/mono/commit/495dda37d993cf1688707f0474cb94e1b9cfbef8))
+
+
+### Bug Fixes
+
+* **mobile:** disable external psbt fee editing, closes LEA-2679 ([eaf6a15](https://github.com/leather-io/mono/commit/eaf6a15669167244e5aab8a7d748266e6f4b72aa))
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.23.0
+    * @leather.io/crypto bumped to 1.9.0
+    * @leather.io/models bumped to 0.37.0
+    * @leather.io/utils bumped to 0.38.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.18.0
+
 ## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.26.10...@leather.io/bitcoin-v0.27.0) (2025-06-10)
 
 
