@@ -30,6 +30,24 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.37.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.36.0...@leather.io/models-v0.37.0) (2025-06-10)
+
+
+### Features
+
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* enhance utxo model ([b23fdd5](https://github.com/leather-io/mono/commit/b23fdd5eef83c923ce36ef99a1164071e2b6f035))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Bug Fixes
+
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
 ## [0.36.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.35.0...@leather.io/models-v0.36.0) (2025-06-10)
 
 

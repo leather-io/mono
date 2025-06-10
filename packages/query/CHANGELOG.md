@@ -642,6 +642,44 @@
     * @leather.io/bitcoin bumped to 0.26.9
     * @leather.io/stacks bumped to 1.10.10
 
+## [2.39.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.38.0...@leather.io/query-v2.39.0) (2025-06-10)
+
+
+### Features
+
+* add client id to leather api reqs ([41b6cdd](https://github.com/leather-io/mono/commit/41b6cdd3b884fba7eb60563b6dcccf5a855e1d17))
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* add stack in a pool page ([2567ddb](https://github.com/leather-io/mono/commit/2567ddb912658168f88589be0c8163d05bbfdabf))
+* add stacking queries, LEA-2322 ([f4d8ccb](https://github.com/leather-io/mono/commit/f4d8ccbe758f42d0c3436c167172090c5676310d))
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* movies queries away from [@leather](https://github.com/leather).io/query ([64f39a9](https://github.com/leather-io/mono/commit/64f39a90a14c5d285f6aae74a6ad593588844a19))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+* **web:** add query provider and upgrade alex sdk package ([4e9fde1](https://github.com/leather-io/mono/commit/4e9fde1343847eb866c9799ad241fd27de27d37e))
+* **web:** add stacked in pool user positions data ([d1382a5](https://github.com/leather-io/mono/commit/d1382a5e54ef9ab46b1c08e83430aa6470a4912a))
+
+
+### Bug Fixes
+
+* contract interface query response type ([0b5aa4d](https://github.com/leather-io/mono/commit/0b5aa4db8c6183cc02ff78eaf9e90e9b2b2fcf11))
+* hiro deprecated endpoints ([9d2b940](https://github.com/leather-io/mono/commit/9d2b94074cb515b15d6fad0e16381e069e2c686a))
+* remove coincap query ([e8314cd](https://github.com/leather-io/mono/commit/e8314cdc42216e6102b469b9fef1543f93d53d25))
+* stx balance hooks ([a0d688d](https://github.com/leather-io/mono/commit/a0d688d4ba40c4bb4652320ff7a690522b835ba4))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+* utxo inscription check html page path ([cf72e09](https://github.com/leather-io/mono/commit/cf72e098b52b2bfaa17034c8ef738362a2270452))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.28.0
+    * @leather.io/constants bumped to 0.23.0
+    * @leather.io/models bumped to 0.37.0
+    * @leather.io/rpc bumped to 2.18.0
+    * @leather.io/stacks bumped to 1.12.0
+    * @leather.io/utils bumped to 0.38.0
+
 ## [2.38.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.37.10...@leather.io/query-v2.38.0) (2025-06-10)
 
 
