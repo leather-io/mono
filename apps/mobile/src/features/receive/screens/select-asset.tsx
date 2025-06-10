@@ -2,7 +2,6 @@ import { HeaderBackButton } from '@/components/headers/components/header-back-bu
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -76,7 +75,6 @@ export function SelectAsset() {
             leftElement={
               canGoBack ? <HeaderBackButton onPress={goBack} testID={TestId.backButton} /> : null
             }
-            rightElement={<NetworkBadge />}
           />
         }
       >
