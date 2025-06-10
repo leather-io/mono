@@ -9,11 +9,11 @@ import { useRouter } from 'expo-router';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
-import { ReversibleHeader } from '../components/animated-reversible-header';
 import { HeaderBackButton } from '../components/header-back-button';
 import { HeaderTitle } from '../components/header-title';
 import { HeaderTitleWithSubtitle } from '../components/header-title-with-subtitle';
 import { HeaderLayout } from '../header.layout';
+import { ReversibleHeader } from './animated-reversible-header';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 

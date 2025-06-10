@@ -4,9 +4,9 @@ import { AnimatedTitleHeader } from '@/components/headers/animated-header/animat
 
 import { Box, HasChildren, TextProps } from '@leather.io/ui/native';
 
-import { ReversibleHeader } from '../components/animated-reversible-header';
 import { ContentTitle } from '../components/content-title';
 import { useAnimatedHeader } from './animated-header.hooks';
+import { ReversibleHeader } from './animated-reversible-header';
 
 interface ScrollViewStylesProps {
   gap?: number;

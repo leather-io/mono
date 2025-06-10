@@ -5,19 +5,19 @@ import { HEADER_HEIGHT } from '@/shared/constants';
 
 import { Box } from '@leather.io/ui/native';
 
-interface HeaderLayoutProps {
+export interface HeaderLayoutProps {
   leftElement?: ReactNode;
   centerElement?: ReactNode;
   rightElement?: ReactNode;
   bottomElement?: ReactNode;
-  error?: ReactNode;
+  topElement?: ReactNode;
 }
 export function HeaderLayout({
   leftElement,
   centerElement,
   rightElement,
   bottomElement,
-  error,
+  topElement,
 }: HeaderLayoutProps) {
   const insets = useSafeAreaInsets();
 
@@ -28,7 +28,7 @@ export function HeaderLayout({
       bg="ink.background-primary"
       style={{ paddingTop: insets.top }}
     >
-      {error}
+      {topElement}
       <Box
         flexDirection="row"
         alignItems="center"
