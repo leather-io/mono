@@ -24,18 +24,20 @@ interface PageHeadingProps {
   subtitle?: ReactNode;
   children?: ReactNode;
 }
-export function PageHeading({ title, subtitle = '', children }: PageHeadingProps) {
+export function PageHeading({ title, subtitle, children }: PageHeadingProps) {
   return (
     <Flex my="space.07" flexDir={['column', 'column', 'row']} gap={[null, null, 'space.08']}>
-      <Box width="50%">
+      <Box flex={1}>
         <Page.Title textStyle="heading.02" maxW="400px">
           {title}
         </Page.Title>
       </Box>
-      <Box width="50%">
-        <Page.Subtitle mt={['space.03', 'space.03', 0]} style={{ whiteSpace: 'pre-line' }}>
-          {subtitle}
-        </Page.Subtitle>
+      <Box flex={1}>
+        {subtitle && (
+          <Page.Subtitle mt={['space.03', 'space.03', 0]} whiteSpace="pre-line">
+            {subtitle}
+          </Page.Subtitle>
+        )}
         {children}
       </Box>
     </Flex>
