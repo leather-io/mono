@@ -14,23 +14,25 @@ jobs:
     if: github.event.head_commit.author.email == 'edgar.khanzadian@gmail.com'
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy-ios
-        with:
-          EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-          GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
-          IS_MAIN_BRANCH: true
+      - run: echo "It worked"
+      # - uses: ./.github/actions/eas-deploy-ios
+      #   with:
+      #     EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+      #     APPLE_ID: ${{ secrets.APPLE_ID }}
+      #     ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
+      #     EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      #     LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
+      #     GOOGLE_SERVICES_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST_B64 }}
+      #     IS_MAIN_BRANCH: true
 
   deploy-eas-android-dev:
     runs-on: ubuntu-latest
     if: github.event.head_commit.author.email == 'edgar.khanzadian@gmail.com'
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/eas-deploy-android
-        with:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
-          IS_MAIN_BRANCH: true
+      - run: echo "It worked"
+      # - uses: ./.github/actions/eas-deploy-android
+      #   with:
+      #     EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      #     LEATHER_BOT: ${{ secrets.LEATHER_BOT }}
+      #     IS_MAIN_BRANCH: true
