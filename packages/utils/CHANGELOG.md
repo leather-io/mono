@@ -325,6 +325,39 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.37.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.36.0...@leather.io/utils-v0.37.0) (2025-06-10)
+
+
+### Features
+
+* add min max fns to calc money ([62dc157](https://github.com/leather-io/mono/commit/62dc157ada4aaa76b4a054861264748de4f04d4a))
+* add new tracking events for pooled/liquid stacking ([178c833](https://github.com/leather-io/mono/commit/178c83368688d1f98135d765bc260830edf016e0))
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* cms integration ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* collectibles service ([5a1cd63](https://github.com/leather-io/mono/commit/5a1cd635dca5c34cfa1baff4185296dcc440288a))
+* consolidate http cache config ([7226d99](https://github.com/leather-io/mono/commit/7226d998f8cfa83ce78c5055ea25f5a4165532a9))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* integrate activity service to UI, ref LEA-2285 ([ef37ae1](https://github.com/leather-io/mono/commit/ef37ae11e633b949f03afc4a01b52b29e97207a8))
+* **mobile:** add the layout for advanced recipient flow ([70f5acc](https://github.com/leather-io/mono/commit/70f5acc66fecff8f79aa8d483b313df6a6a55723))
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+
+
+### Bug Fixes
+
+* **mobile:** add sentry DSN ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* **mobile:** make sure we can handle exponential values in formatMoney, ref LEA-2629 ([507dda1](https://github.com/leather-io/mono/commit/507dda19cc702301c38ddeb19469a76df9bcf9a1))
+* **mobile:** truncate long token names with ellipsis, ref ENG-33 ([319c95e](https://github.com/leather-io/mono/commit/319c95ea09a0c47975fdd1ab7c85730001453d92))
+* revert change to format money ([37d6044](https://github.com/leather-io/mono/commit/37d604476d51b949dffc1b7f0fef2698766404f2))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.22.0
+    * @leather.io/models bumped to 0.36.0
+
 ## [0.36.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.35.3...@leather.io/utils-v0.36.0) (2025-06-10)
 
 

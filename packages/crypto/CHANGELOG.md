@@ -396,6 +396,26 @@
   * dependencies
     * @leather.io/utils bumped to 0.35.3
 
+## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.7.7...@leather.io/crypto-v1.8.0) (2025-06-10)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+
+
+### Bug Fixes
+
+* **mobile:** disable external psbt fee editing, closes LEA-2679 ([eaf6a15](https://github.com/leather-io/mono/commit/eaf6a15669167244e5aab8a7d748266e6f4b72aa))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.37.0
+
 ## [1.7.7](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.7.6...@leather.io/crypto-v1.7.7) (2025-06-10)
 
 
