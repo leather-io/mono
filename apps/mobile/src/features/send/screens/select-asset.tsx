@@ -6,7 +6,6 @@ import { usePreloadStxData } from '@/features/send/hooks/use-preload-stx-data';
 import { useSendNavigation } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 
@@ -47,7 +46,6 @@ export function SelectAsset() {
             id: 'send.select_asset.header_subtitle',
             message: 'Send',
           })}
-          rightElement={<NetworkBadge />}
         />
       }
     >
