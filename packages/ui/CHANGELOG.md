@@ -425,6 +425,18 @@
   * devDependencies
     * @leather.io/models bumped to 0.35.0
 
+## [1.70.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.69.0...@leather.io/ui-v1.70.0) (2025-06-10)
+
+
+### Features
+
+* **ui:** use backspace icon in numpad ([a22108d](https://github.com/leather-io/mono/commit/a22108d0e8a37c6423af916dc0825e666e08c770))
+
+
+### Bug Fixes
+
+* gift icon web ([d5562a5](https://github.com/leather-io/mono/commit/d5562a568f9768b223709af4b455aefa7d42cb21))
+
 ## [1.69.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.9...@leather.io/ui-v1.69.0) (2025-06-07)
 
 

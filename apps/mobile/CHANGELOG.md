@@ -701,6 +701,12 @@
   * dependencies
     * @leather.io/query bumped to 2.35.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.70.0
+
 ## [2.51.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.50.0...@leather.io/mobile-v2.51.0) (2025-06-07)
 
 
