@@ -1,15 +1,15 @@
+import { Header } from '@/components/headers/header';
 import { TestId } from '@/shared/test-id';
 import { useRouter } from 'expo-router';
 
 import { HeaderBackButton } from './components/header-back-button';
-import { HeaderLayout } from './header.layout';
 
 interface NakedHeaderProps {
   onGoBack?: () => void;
   rightElement?: React.ReactNode;
-  error?: React.ReactNode;
+  topElement?: React.ReactNode;
 }
-export function NakedHeader({ onGoBack, rightElement, error }: NakedHeaderProps) {
+export function NakedHeader({ onGoBack, rightElement, topElement }: NakedHeaderProps) {
   const router = useRouter();
 
   function goBack() {
@@ -17,8 +17,8 @@ export function NakedHeader({ onGoBack, rightElement, error }: NakedHeaderProps)
   }
 
   return (
-    <HeaderLayout
-      error={error}
+    <Header
+      topElement={topElement}
       leftElement={<HeaderBackButton onPress={onGoBack ?? goBack} testID={TestId.backButton} />}
       rightElement={rightElement}
     />

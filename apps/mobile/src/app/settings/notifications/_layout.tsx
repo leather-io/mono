@@ -1,3 +1,4 @@
+import { NakedHeader } from '@/components/headers/naked-header';
 import { TabBar } from '@/components/tab-bar';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
@@ -10,6 +11,7 @@ function NotificationsHeader() {
 
   return (
     <>
+      <NakedHeader />
       <Box bg="ink.background-primary" paddingBottom="5" paddingHorizontal="5">
         <Text variant="heading03">
           {t({
@@ -48,7 +50,7 @@ function NotificationsHeader() {
 
 export default function SettingsNotificationsLayout() {
   return (
-    <Tabs tabBar={() => null}>
+    <Tabs tabBar={() => null} backBehavior="none">
       <Tabs.Screen
         name="index"
         options={{

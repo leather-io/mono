@@ -5,8 +5,8 @@ import { useTheme } from '@shopify/restyle';
 
 import { BoxProps, Theme } from '@leather.io/ui/native';
 
-import { secondaryTitleVisibilityThreshold } from '../animated-header/animated-header.hooks';
-import { HeaderSubtitle, HeaderTitle } from './header-title';
+import { HeaderSubtitle, HeaderTitle } from '../components/header-title';
+import { secondaryTitleVisibilityThreshold } from './animated-header.hooks';
 
 interface ReversibleHeaderProps extends BoxProps {
   title: string | ReactNode;

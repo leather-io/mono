@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { NakedHeader } from '@/components/headers/naked-header';
 import { accountIconMap } from '@/features/account/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
 import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
@@ -51,6 +52,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
 
   return (
     <Box bg="ink.background-primary" flex={1}>
+      <NakedHeader />
       <ScrollView contentContainerStyle={defaultStyles}>
         <Box gap="5">
           <SquircleBox

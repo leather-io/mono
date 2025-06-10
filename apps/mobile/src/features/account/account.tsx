@@ -39,9 +39,10 @@ export function Account({ account, walletName }: AccountProps) {
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
   return (
-    <PageLayout>
+    <>
+      {/* TODO: Can this be simply Header, since it's not naked? */}
       <NakedHeader
-        error={isErrorTotalBalance && <FetchErrorCallout />}
+        topElement={isErrorTotalBalance && <FetchErrorCallout />}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
             <NetworkBadge />
@@ -60,62 +61,64 @@ export function Account({ account, walletName }: AccountProps) {
           </Box>
         }
       />
-      <AccountOverview
-        isLoading={isLoadingTotalBalance}
-        icon={icon}
-        heading={
-          <AccountBalance
-            fingerprint={fingerprint}
-            accountIndex={accountIndex}
-            variant="heading02"
-          />
-        }
-        accountName={name}
-        walletName={walletName}
-      />
-      <Box gap="8">
-        <BalancesWidget
-          onPressHeader={() =>
-            router.navigate({
-              pathname: '/account/[accountId]/balances',
-              params: { accountId: id },
-            })
-          }
-          balance={
+      <PageLayout>
+        <AccountOverview
+          isLoading={isLoadingTotalBalance}
+          icon={icon}
+          heading={
             <AccountBalance
               fingerprint={fingerprint}
               accountIndex={accountIndex}
-              color="ink.text-subdued"
+              variant="heading02"
             />
           }
-          title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
-        >
-          <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
-        </BalancesWidget>
-        <ActivityWidget
-          activity={activity}
-          onPressHeader={() =>
-            router.navigate({
-              pathname: '/account/[accountId]/activity',
-              params: { accountId: id, accountName: name },
-            })
-          }
-          title={t({ id: 'account.activity.header_title', message: 'Activity' })}
+          accountName={name}
+          walletName={walletName}
         />
-        {releaseCollectibles && hasCollectibles(collectibles) && (
-          <CollectiblesWidget
+        <Box gap="8">
+          <BalancesWidget
             onPressHeader={() =>
               router.navigate({
-                pathname: '/account/[accountId]/collectibles',
+                pathname: '/account/[accountId]/balances',
+                params: { accountId: id },
+              })
+            }
+            balance={
+              <AccountBalance
+                fingerprint={fingerprint}
+                accountIndex={accountIndex}
+                color="ink.text-subdued"
+              />
+            }
+            title={t({ id: 'account.balances.header_title', message: 'Tokens' })}
+          >
+            <AccountBalances mode="widget" fingerprint={fingerprint} accountIndex={accountIndex} />
+          </BalancesWidget>
+          <ActivityWidget
+            activity={activity}
+            onPressHeader={() =>
+              router.navigate({
+                pathname: '/account/[accountId]/activity',
                 params: { accountId: id, accountName: name },
               })
             }
-            title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
-          >
-            <Collectibles collectibles={collectibles} mode="widget" />
-          </CollectiblesWidget>
-        )}
-      </Box>
-    </PageLayout>
+            title={t({ id: 'account.activity.header_title', message: 'Activity' })}
+          />
+          {releaseCollectibles && hasCollectibles(collectibles) && (
+            <CollectiblesWidget
+              onPressHeader={() =>
+                router.navigate({
+                  pathname: '/account/[accountId]/collectibles',
+                  params: { accountId: id, accountName: name },
+                })
+              }
+              title={t({ id: 'account.collectibles.header_title', message: 'Collectibles' })}
+            >
+              <Collectibles collectibles={collectibles} mode="widget" />
+            </CollectiblesWidget>
+          )}
+        </Box>
+      </PageLayout>
+    </>
   );
 }

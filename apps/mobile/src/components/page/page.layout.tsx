@@ -54,10 +54,8 @@ interface PageLayoutProps extends HasChildren {
 }
 export function PageLayout({ children, scrollable = true }: PageLayoutProps) {
   return (
-    <>
-      <Box flex={1} bg="ink.background-primary">
-        {scrollable ? <ScrollableContent>{children}</ScrollableContent> : children}
-      </Box>
-    </>
+    <Box flex={1} bg="ink.background-primary">
+      {scrollable ? <ScrollableContent>{children}</ScrollableContent> : children}
+    </Box>
   );
 }
