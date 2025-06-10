@@ -138,6 +138,30 @@
     * @leather.io/models bumped to 0.34.0
     * @leather.io/rpc bumped to 2.16.5
 
+## [1.5.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.4.0...@leather.io/sdk-v1.5.0) (2025-06-10)
+
+
+### Features
+
+* **web:** add stacking steps ([481f298](https://github.com/leather-io/mono/commit/481f298994bab1fc85844a284729a3eaa5580986))
+* **web:** sign in button, closes LEA-2317 ([b308681](https://github.com/leather-io/mono/commit/b308681dac47c2e7b52c5c73afd7765586cd92ef))
+
+
+### Bug Fixes
+
+* **sdk:** return result only ([7bb64ab](https://github.com/leather-io/mono/commit/7bb64abd14d40389f22fee6cc3d3152bf32fa9c0))
+* **sdk:** return results when passing params ([c979efc](https://github.com/leather-io/mono/commit/c979efc7680a25598913b73ecf55ffc57c1af103))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+* **web:** stack independently copy ([7711abb](https://github.com/leather-io/mono/commit/7711abbb7b2fd734b0b77d1f4a17e9dced58a8f9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.38.0
+    * @leather.io/rpc bumped to 2.19.0
+
 ## [1.4.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.3.0...@leather.io/sdk-v1.4.0) (2025-06-10)
 
 
