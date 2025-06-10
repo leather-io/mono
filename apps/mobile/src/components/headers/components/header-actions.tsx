@@ -13,14 +13,14 @@ import {
   SettingsGearIcon,
 } from '@leather.io/ui/native';
 
-export function HeaderOptions() {
+export function HeaderActions() {
   const router = useRouter();
   const { changePrivacyModePreference, privacyModePreference } = useSettings();
+  const { hasWallets } = useWallets();
 
   function onUpdatePrivacyMode() {
     changePrivacyModePreference(privacyModePreference === 'visible' ? 'hidden' : 'visible');
   }
-  const { hasWallets } = useWallets();
 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="center">
