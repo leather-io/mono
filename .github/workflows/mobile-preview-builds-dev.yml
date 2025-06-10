@@ -11,7 +11,7 @@ permissions:
 jobs:
   deploy-eas-ios-dev:
     runs-on: ubuntu-latest
-    if: github.event.head_commit.author.email == '163018147+leather-bot@users.noreply.github.com'
+    if: github.event.head_commit.author.email == secrets.LEATHER_BOT_EMAIL
     steps:
       - uses: actions/checkout@v4
       - run: echo "It worked"
@@ -27,7 +27,7 @@ jobs:
 
   deploy-eas-android-dev:
     runs-on: ubuntu-latest
-    if: github.event.head_commit.author.email == '163018147+leather-bot@users.noreply.github.com'
+    if: github.event.head_commit.author.email == secrets.LEATHER_BOT_EMAIL
     steps:
       - uses: actions/checkout@v4
       - run: echo "It worked"
