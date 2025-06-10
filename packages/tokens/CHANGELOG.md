@@ -138,6 +138,21 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.7.0
 
+## [0.18.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.18.0...@leather.io/tokens-v0.18.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.2
+    * @leather.io/tsconfig-config bumped to 0.8.1
+
 ## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.17.1...@leather.io/tokens-v0.18.0) (2025-05-22)
 
 

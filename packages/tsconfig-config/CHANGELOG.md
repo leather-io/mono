@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.8.0...@leather.io/tsconfig-config-v0.8.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
 ## [0.8.0](https://github.com/leather-io/mono/compare/@leather.io/tsconfig-config-v0.7.0...@leather.io/tsconfig-config-v0.8.0) (2025-05-22)
 
 

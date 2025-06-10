@@ -78,6 +78,22 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [3.7.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.7.0...@leather.io/analytics-v3.7.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* **mobile:** add quote_currency to analytics, ref ENG-109 ([ea6a8e0](https://github.com/leather-io/mono/commit/ea6a8e0dbdc03ae37987526ced899310b17ed420))
+* **mobile:** rollback change to fiatCurrencyPreference in state, ref ENG-109 ([fb4c519](https://github.com/leather-io/mono/commit/fb4c5192d9c81f404ce9d500ffd75462abb1b2a0))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.35.0
+
 ## [3.7.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.6.2...@leather.io/analytics-v3.7.0) (2025-06-04)
 
 
