@@ -23,9 +23,9 @@ export function HeaderLayout({
 
   return (
     <Box
-      bg="ink.background-primary"
       justifyContent="center"
       width="100%"
+      bg="ink.background-primary"
       style={{ paddingTop: insets.top }}
     >
       {error}
@@ -33,12 +33,11 @@ export function HeaderLayout({
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
-        height={HEADER_HEIGHT}
         gap="2"
-        py="3"
-        px="3"
+        height={HEADER_HEIGHT}
+        px="4"
       >
-        <Box alignItems="flex-start" justifyContent="center" flexGrow={1} height="100%" zIndex="20">
+        <Box flexGrow={1} zIndex="20">
           {leftElement}
         </Box>
         <Box
@@ -52,9 +51,7 @@ export function HeaderLayout({
         >
           {centerElement}
         </Box>
-        <Box alignItems="flex-end" flexGrow={1} height="100%" justifyContent="center" zIndex="20">
-          {rightElement}
-        </Box>
+        <Box zIndex="20">{rightElement}</Box>
       </Box>
       {bottomElement}
     </Box>
