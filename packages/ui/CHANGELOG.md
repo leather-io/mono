@@ -417,6 +417,25 @@
   * devDependencies
     * @leather.io/models bumped to 0.34.0
 
+## [1.68.9](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.8...@leather.io/ui-v1.68.9) (2025-06-10)
+
+
+### Bug Fixes
+
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/prettier-config bumped to 0.6.2
+    * @leather.io/tokens bumped to 0.18.1
+    * @leather.io/utils bumped to 0.36.0
+  * devDependencies
+    * @leather.io/models bumped to 0.35.0
+    * @leather.io/panda-preset bumped to 0.12.7
+
 ## [1.68.8](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.68.7...@leather.io/ui-v1.68.8) (2025-06-04)
 
 

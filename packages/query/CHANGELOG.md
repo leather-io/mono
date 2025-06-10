@@ -642,6 +642,28 @@
     * @leather.io/bitcoin bumped to 0.26.9
     * @leather.io/stacks bumped to 1.10.10
 
+## [2.37.10](https://github.com/leather-io/mono/compare/@leather.io/query-v2.37.9...@leather.io/query-v2.37.10) (2025-06-10)
+
+
+### Bug Fixes
+
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.26.10
+    * @leather.io/constants bumped to 0.21.1
+    * @leather.io/models bumped to 0.35.0
+    * @leather.io/rpc bumped to 2.16.6
+    * @leather.io/stacks bumped to 1.10.11
+    * @leather.io/utils bumped to 0.36.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.6.2
+    * @leather.io/tsconfig-config bumped to 0.8.1
+
 ## [2.37.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.36.6...@leather.io/query-v2.37.0) (2025-05-16)
 
 
