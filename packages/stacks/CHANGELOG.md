@@ -473,6 +473,33 @@
   * dependencies
     * @leather.io/crypto bumped to 1.7.6
 
+## [1.13.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.12.0...@leather.io/stacks-v1.13.0) (2025-06-10)
+
+
+### Features
+
+* add pooling duration component ([9b09b26](https://github.com/leather-io/mono/commit/9b09b26defdcf5335eb8e1f10323e30498034ce7))
+* sip30 message signing ([52f4239](https://github.com/leather-io/mono/commit/52f42397ad47db11b2dc826fd63bb01d0ab4c545))
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+* stack in a pool form part 1 ([35e4ee9](https://github.com/leather-io/mono/commit/35e4ee939212196980e80c5f088f0a9cb48f3f32))
+* stx_signTransaction (part 2) ([8315231](https://github.com/leather-io/mono/commit/8315231d1ef4f305398b0ccf4a546e0e25582ee3))
+
+
+### Bug Fixes
+
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+* try again? ([980b546](https://github.com/leather-io/mono/commit/980b546f72ea7b32bd4defcd4bf3e277ce06325b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.24.0
+    * @leather.io/crypto bumped to 1.10.0
+    * @leather.io/models bumped to 0.38.0
+    * @leather.io/utils bumped to 0.39.0
+
 ## [1.12.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.11.0...@leather.io/stacks-v1.12.0) (2025-06-10)
 
 
