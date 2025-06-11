@@ -1,6 +1,6 @@
 import { serializeSatPoint } from '@leather.io/bitcoin';
 import { HIRO_INSCRIPTIONS_API_URL, Inscription } from '@leather.io/models';
-import { createInscriptionCryptoAssetInfo } from '@leather.io/utils';
+import { createInscriptionAsset } from '@leather.io/utils';
 
 import { InscriptionResponseHiro } from '../../../types/inscription';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../clients/best-in-slot';
 
 export function createHiroInscription(inscriptionResponse: InscriptionResponseHiro) {
-  const inscription: Inscription = createInscriptionCryptoAssetInfo({
+  const inscription: Inscription = createInscriptionAsset({
     id: inscriptionResponse.id,
     number: inscriptionResponse.number,
     contentSrc: `${HIRO_INSCRIPTIONS_API_URL}/${inscriptionResponse.id}/content`,
@@ -48,7 +48,7 @@ export function createBestInSlotInscription(
   bisInscription: BestInSlotInscriptionResponse
 ): Inscription {
   const mimeType = bisInscription.delegate?.mime_type ?? bisInscription.mime_type;
-  return createInscriptionCryptoAssetInfo({
+  return createInscriptionAsset({
     id: bisInscription.inscription_id,
     number: bisInscription.inscription_number,
     contentSrc: bisInscription.delegate?.content_url ?? bisInscription.content_url,

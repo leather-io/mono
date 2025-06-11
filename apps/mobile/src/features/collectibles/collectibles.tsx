@@ -1,17 +1,17 @@
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { CollectiblesLayout } from '@/features/collectibles';
 
-import { NonFungibleCryptoAssetInfo } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui/native';
 
 import { CollectiblesList } from './collectibles-list';
 
 interface CollectiblesProps {
-  collectibles: FetchState<NonFungibleCryptoAssetInfo[]>;
+  collectibles: FetchState<NonFungibleCryptoAsset[]>;
   mode?: 'widget' | 'gallery';
 }
 
-export function hasCollectibles(collectibles: FetchState<NonFungibleCryptoAssetInfo[]>) {
+export function hasCollectibles(collectibles: FetchState<NonFungibleCryptoAsset[]>) {
   return collectibles.state === 'success' && collectibles.value.length > 0;
 }
 

@@ -1,10 +1,10 @@
 import { injectable } from 'inversify';
 
-import { Sip9CryptoAssetInfo } from '@leather.io/models';
+import { Sip9Asset } from '@leather.io/models';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
-  createSip9CryptoAssetInfo,
+  createSip9Asset,
   getContractPrincipalFromAssetIdentifier,
   getNonFungibleTokenId,
 } from './stacks-asset.utils';
@@ -16,15 +16,15 @@ export class Sip9AssetService {
    * Gets full asset information for given SIP-9 asset identifier.
    * Expected identifier format: \<address\>.\<contract-name\>::\<asset-name\>
    */
-  public async getAssetInfo(
+  public async getAsset(
     assetIdentifier: string,
     tokenHexValue: string,
     signal?: AbortSignal
-  ): Promise<Sip9CryptoAssetInfo> {
+  ): Promise<Sip9Asset> {
     const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
     const tokenId = getNonFungibleTokenId(tokenHexValue);
     const metadata = await this.stacksApiClient.getNftMetadata(principal, tokenId, signal);
     if (!metadata) throw new Error(`Sip9 Metadata Not Found: ${assetIdentifier}`);
-    return createSip9CryptoAssetInfo(assetIdentifier, tokenId, metadata);
+    return createSip9Asset(assetIdentifier, tokenId, metadata);
   }
 }

@@ -1,5 +1,5 @@
 // All new events should use the object-action framework.
-import { DefaultNetworkConfigurations, StxCryptoAssetBalance } from '@leather.io/models';
+import { DefaultNetworkConfigurations, StxBalance } from '@leather.io/models';
 
 // https://segment.com/academy/collecting-data/naming-conventions-for-clean-data/
 export interface Events extends HistoricalEvents {
@@ -25,7 +25,7 @@ export interface Events extends HistoricalEvents {
   liquid_stacking_increased: {
     amount: number;
   };
-  stx_balance_updated: StxCryptoAssetBalance;
+  stx_balance_updated: StxBalance;
   in_app_browser_opened: { url: string };
   add_wallet_sheet_opened: { source: 'action_bar' | 'add_account_sheet' };
   send_sheet_opened: { source: 'action_bar' };

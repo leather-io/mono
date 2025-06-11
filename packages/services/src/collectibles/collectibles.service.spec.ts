@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   AccountAddresses,
   CryptoAssetProtocols,
-  InscriptionCryptoAssetInfo,
-  Sip9CryptoAssetInfo,
+  InscriptionAsset,
+  Sip9Asset,
 } from '@leather.io/models';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
@@ -61,7 +61,7 @@ describe(CollectiblesService.name, () => {
   } as unknown as HiroStacksApiClient;
 
   const mockSip9AssetService = {
-    getAssetInfo: vi.fn().mockImplementation((assetId: string) =>
+    getAsset: vi.fn().mockImplementation((assetId: string) =>
       Promise.resolve({
         protocol: CryptoAssetProtocols.sip9,
         assetId,
@@ -98,7 +98,7 @@ describe(CollectiblesService.name, () => {
 
       expect(mockBisApiClient.fetchInscriptions).toHaveBeenCalledTimes(2);
       expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledTimes(2);
-      expect(mockSip9AssetService.getAssetInfo).toHaveBeenCalledTimes(4);
+      expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(4);
 
       expect(collectibles).toHaveLength(8);
 
@@ -112,14 +112,14 @@ describe(CollectiblesService.name, () => {
       expect(collectibles[6].protocol).toEqual('inscription');
       expect(collectibles[7].protocol).toEqual('inscription');
       // Stacks NFTs sorted by blockHeight, Inscriptions by last_transfer_height
-      expect((collectibles[0] as Sip9CryptoAssetInfo).assetId).toEqual('SP000.nft-2');
-      expect((collectibles[1] as Sip9CryptoAssetInfo).assetId).toEqual('SP000.nft-2');
-      expect((collectibles[2] as Sip9CryptoAssetInfo).assetId).toEqual('SP000.nft-1');
-      expect((collectibles[3] as Sip9CryptoAssetInfo).assetId).toEqual('SP000.nft-1');
-      expect((collectibles[4] as InscriptionCryptoAssetInfo).id).toEqual('insc1');
-      expect((collectibles[5] as InscriptionCryptoAssetInfo).id).toEqual('insc1');
-      expect((collectibles[6] as InscriptionCryptoAssetInfo).id).toEqual('insc2');
-      expect((collectibles[7] as InscriptionCryptoAssetInfo).id).toEqual('insc2');
+      expect((collectibles[0] as Sip9Asset).assetId).toEqual('SP000.nft-2');
+      expect((collectibles[1] as Sip9Asset).assetId).toEqual('SP000.nft-2');
+      expect((collectibles[2] as Sip9Asset).assetId).toEqual('SP000.nft-1');
+      expect((collectibles[3] as Sip9Asset).assetId).toEqual('SP000.nft-1');
+      expect((collectibles[4] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[5] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[6] as InscriptionAsset).id).toEqual('insc2');
+      expect((collectibles[7] as InscriptionAsset).id).toEqual('insc2');
     });
 
     it('handles accounts with only bitcoin addresses', async () => {
@@ -180,10 +180,10 @@ describe(CollectiblesService.name, () => {
       expect(collectibles[2].protocol).toEqual('inscription');
       expect(collectibles[3].protocol).toEqual('inscription');
       // Stacks NFTs sorted by blockHeight, Inscriptions by last_transfer_height
-      expect((collectibles[0] as Sip9CryptoAssetInfo).assetId).toEqual('SP000.nft-2');
-      expect((collectibles[1] as Sip9CryptoAssetInfo).assetId).toEqual('SP000.nft-1');
-      expect((collectibles[2] as InscriptionCryptoAssetInfo).id).toEqual('insc1');
-      expect((collectibles[3] as InscriptionCryptoAssetInfo).id).toEqual('insc2');
+      expect((collectibles[0] as Sip9Asset).assetId).toEqual('SP000.nft-2');
+      expect((collectibles[1] as Sip9Asset).assetId).toEqual('SP000.nft-1');
+      expect((collectibles[2] as InscriptionAsset).id).toEqual('insc1');
+      expect((collectibles[3] as InscriptionAsset).id).toEqual('insc2');
     });
 
     it('handles failed NFT asset info fetches', async () => {
@@ -192,13 +192,13 @@ describe(CollectiblesService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockSip9AssetService, 'getAssetInfo').mockRejectedValueOnce(
+      vi.spyOn(mockSip9AssetService, 'getAsset').mockRejectedValueOnce(
         new Error('Failed to fetch')
       );
       const collectibles = await collectiblesService.getAccountCollectibles(account);
 
       expect(collectibles).toHaveLength(1);
-      expect(mockSip9AssetService.getAssetInfo).toHaveBeenCalledTimes(2);
+      expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(2);
     });
 
     it('handles empty accounts', async () => {

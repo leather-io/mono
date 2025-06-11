@@ -4,8 +4,8 @@ import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  Sip9CryptoAssetInfo,
-  Sip10CryptoAssetInfo,
+  Sip9Asset,
+  Sip10Asset,
 } from '@leather.io/models';
 import { getTicker, isUndefined } from '@leather.io/utils';
 
@@ -49,11 +49,11 @@ export function getNonFungibleTokenId(hex: string): number {
   return clarityValue.type === 'uint' ? Number(clarityValue.value) : 0;
 }
 
-export function createSip9CryptoAssetInfo(
+export function createSip9Asset(
   assetIdentifier: string,
   tokenId: number,
   { metadata }: HiroNftMetadataResponse
-): Sip9CryptoAssetInfo {
+): Sip9Asset {
   const assetName = getAssetNameFromIdentifier(assetIdentifier);
   return {
     chain: CryptoAssetChains.stacks,
@@ -70,7 +70,7 @@ export function createSip9CryptoAssetInfo(
   };
 }
 
-export function createSip10CryptoAssetInfo(sip10Token: LeatherApiSip10Token): Sip10CryptoAssetInfo {
+export function createSip10Asset(sip10Token: LeatherApiSip10Token): Sip10Asset {
   const assetName = getAssetNameFromIdentifier(sip10Token.assetIdentifier);
   const name = sip10Token.name ?? assetName;
 

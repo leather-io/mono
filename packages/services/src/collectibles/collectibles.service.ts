@@ -3,11 +3,11 @@ import { injectable } from 'inversify';
 
 import {
   AccountAddresses,
-  InscriptionCryptoAssetInfo,
-  NonFungibleCryptoAssetInfo,
-  Sip9CryptoAssetInfo,
+  InscriptionAsset,
+  NonFungibleCryptoAsset,
+  Sip9Asset,
 } from '@leather.io/models';
-import { createInscriptionCryptoAssetInfo, isDefined } from '@leather.io/utils';
+import { createInscriptionAsset, isDefined } from '@leather.io/utils';
 
 import { Sip9AssetService } from '../assets/sip9-asset.service';
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -25,7 +25,7 @@ export class CollectiblesService {
   public async getTotalCollectibles(
     accounts: AccountAddresses[],
     signal?: AbortSignal
-  ): Promise<NonFungibleCryptoAssetInfo[]> {
+  ): Promise<NonFungibleCryptoAsset[]> {
     const stacksCollectibles = await Promise.all(
       accounts
         .filter(a => a.stacks)
@@ -51,7 +51,7 @@ export class CollectiblesService {
   public async getAccountCollectibles(
     account: AccountAddresses,
     signal?: AbortSignal
-  ): Promise<NonFungibleCryptoAssetInfo[]> {
+  ): Promise<NonFungibleCryptoAsset[]> {
     const [bitcoinCollectibles, stacksCollectibles] = await Promise.all([
       account.bitcoin
         ? this.getInscriptionsWithBlockHeight(account.bitcoin.taprootDescriptor, signal)
@@ -69,7 +69,7 @@ export class CollectiblesService {
   private async getSip9sWithBlockHeight(
     stxAddress: string,
     signal?: AbortSignal
-  ): Promise<{ asset: Sip9CryptoAssetInfo; blockHeight: number }[]> {
+  ): Promise<{ asset: Sip9Asset; blockHeight: number }[]> {
     try {
       const nftHoldings = await this.stacksApiClient.getNftHoldings(stxAddress, signal);
       const BATCH_SIZE = 6;
@@ -79,7 +79,7 @@ export class CollectiblesService {
           nftHoldings
             .slice(i, i + BATCH_SIZE)
             .map(holding =>
-              this.getOptionalSip9AssetInfo(holding, signal).then(asset =>
+              this.getOptionalSip9Asset(holding, signal).then(asset =>
                 asset ? { asset, blockHeight: holding.block_height } : undefined
               )
             )
@@ -92,12 +92,12 @@ export class CollectiblesService {
     }
   }
 
-  private async getOptionalSip9AssetInfo(
+  private async getOptionalSip9Asset(
     holding: NonFungibleTokenHolding,
     signal?: AbortSignal
-  ): Promise<Sip9CryptoAssetInfo | undefined> {
+  ): Promise<Sip9Asset | undefined> {
     try {
-      return await this.sip9AssetsService.getAssetInfo(
+      return await this.sip9AssetsService.getAsset(
         holding.asset_identifier,
         holding.value.hex,
         signal
@@ -110,13 +110,11 @@ export class CollectiblesService {
   private async getInscriptionsWithBlockHeight(
     taprootDescriptor: string,
     signal?: AbortSignal
-  ): Promise<{ asset: InscriptionCryptoAssetInfo; blockHeight: number }[]> {
+  ): Promise<{ asset: InscriptionAsset; blockHeight: number }[]> {
     try {
       const bisInscriptions = await this.bisApiClient.fetchInscriptions(taprootDescriptor, signal);
       return bisInscriptions.map(inscription => ({
-        asset: createInscriptionCryptoAssetInfo(
-          mapBisInscriptionToCreateInscriptionData(inscription)
-        ),
+        asset: createInscriptionAsset(mapBisInscriptionToCreateInscriptionData(inscription)),
         blockHeight: inscription.last_transfer_block_height ?? inscription.genesis_height,
       }));
     } catch {

@@ -1,6 +1,6 @@
 import { useGetPoolAddress } from '~/features/stacking/pooled-stacking-info/use-get-pool-address-query';
 import { useStackingInitiatedByQuery } from '~/features/stacking/pooled-stacking-info/use-stacking-initiated-by';
-import { useStxCryptoAssetBalance } from '~/queries/balance/account-balance.hooks';
+import { useStxBalance } from '~/queries/balance/account-balance.hooks';
 
 import { useGetPoxInfoQuery } from '../hooks/stacking.query';
 import { useDelegationStatusQuery } from './use-delegation-status-query';
@@ -8,7 +8,7 @@ import { useDelegationStatusQuery } from './use-delegation-status-query';
 export function usePooledStackingInfo(address: string) {
   const delegationStatusQuery = useDelegationStatusQuery();
 
-  const { filteredBalanceQuery: getAccountBalanceLockedQuery } = useStxCryptoAssetBalance(address);
+  const { filteredBalanceQuery: getAccountBalanceLockedQuery } = useStxBalance(address);
 
   const stackingInitiatedByQuery = useStackingInitiatedByQuery();
   const getPoxInfoQuery = useGetPoxInfoQuery();

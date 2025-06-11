@@ -1,16 +1,11 @@
-import {
-  Money,
-  type RuneCryptoAssetInfo,
-  createMarketData,
-  createMarketPair,
-} from '@leather.io/models';
+import { Money, type RuneAsset, createMarketData, createMarketPair } from '@leather.io/models';
 import { createBaseCryptoAssetBalance, createMoney } from '@leather.io/utils';
 
 import { RuneBalance, RuneTickerInfo } from '../clients/best-in-slot';
 
 const defaultRunesSymbol = '¤';
 
-function createRuneCryptoAssetInfo(tickerInfo: RuneTickerInfo): RuneCryptoAssetInfo {
+function createRuneAsset(tickerInfo: RuneTickerInfo): RuneAsset {
   return {
     chain: 'bitcoin',
     category: 'fungible',
@@ -23,7 +18,7 @@ function createRuneCryptoAssetInfo(tickerInfo: RuneTickerInfo): RuneCryptoAssetI
   };
 }
 
-export function createRuneCryptoAssetDetails(
+export function createRuneAssetDetails(
   runeBalance: RuneBalance,
   tickerInfo: RuneTickerInfo,
   fiatPrice: Money
@@ -32,7 +27,7 @@ export function createRuneCryptoAssetDetails(
     balance: createBaseCryptoAssetBalance(
       createMoney(Number(runeBalance.total_balance), tickerInfo.rune_name, tickerInfo.decimals)
     ),
-    info: createRuneCryptoAssetInfo(tickerInfo),
+    info: createRuneAsset(tickerInfo),
     marketData: createMarketData(
       createMarketPair(tickerInfo.rune_name, 'USD'),
       createMoney(fiatPrice.amount, 'USD')

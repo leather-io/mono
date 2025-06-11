@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import { AccountAddresses, CryptoAssetBalance, RuneCryptoAssetInfo } from '@leather.io/models';
+import { AccountAddresses, CryptoAssetBalance, RuneAsset } from '@leather.io/models';
 import {
   aggregateBaseCryptoAssetBalances,
   baseCurrencyAmountInQuote,
@@ -19,7 +19,7 @@ import { combineRunesBalances, readRunesOutputsBalances } from './runes-balances
 import { sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface RuneBalance {
-  asset: RuneCryptoAssetInfo;
+  asset: RuneAsset;
   quote: CryptoAssetBalance;
   crypto: CryptoAssetBalance;
 }
@@ -105,7 +105,7 @@ export class RunesBalancesService {
     amount: string,
     signal?: AbortSignal
   ): Promise<RuneBalance> {
-    const runeInfo = await this.runeAssetService.getAssetInfo(runeName, signal);
+    const runeInfo = await this.runeAssetService.getAsset(runeName, signal);
     const totalBalance = createMoney(initBigNumber(amount), runeInfo.runeName, runeInfo.decimals);
     const runeMarketData = await this.marketDataService.getMarketData(runeInfo, signal);
     return {

@@ -5,12 +5,12 @@ import { FetchState } from '@/components/loading';
 import { serializeCollectibles } from '@/features/collectibles';
 import { useTheme } from '@shopify/restyle';
 
-import { NonFungibleCryptoAssetInfo } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { CollectibleCard, Theme } from '@leather.io/ui/native';
 
 const { width } = Dimensions.get('window');
 interface CollectiblesListProps {
-  collectibles: FetchState<NonFungibleCryptoAssetInfo[]>;
+  collectibles: FetchState<NonFungibleCryptoAsset[]>;
   mode: 'widget' | 'gallery';
 }
 export function CollectiblesList({ collectibles, mode }: CollectiblesListProps) {
@@ -22,7 +22,7 @@ export function CollectiblesList({ collectibles, mode }: CollectiblesListProps) 
   const thumbnailSize = mode === 'widget' ? 200 : edgeToEdgeThumbnailWidth;
 
   const collectiblesList = useCallback(
-    (collectibles: FetchState<NonFungibleCryptoAssetInfo[]>) => {
+    (collectibles: FetchState<NonFungibleCryptoAsset[]>) => {
       if (collectibles.state !== 'success') return [];
       if (mode === 'widget') {
         return serializeCollectibles(collectibles.value).slice(0, displayLimit);

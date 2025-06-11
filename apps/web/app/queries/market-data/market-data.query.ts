@@ -1,14 +1,11 @@
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { useQuoteCurrency } from '~/store/quote-currency';
 
-import { FungibleCryptoAssetInfo, QuoteCurrency } from '@leather.io/models';
+import { FungibleCryptoAsset, QuoteCurrency } from '@leather.io/models';
 import { getMarketDataService } from '@leather.io/services';
 import { oneMinInMs } from '@leather.io/utils';
 
-export function createMarketDataQueryOptions(
-  asset: FungibleCryptoAssetInfo,
-  currency: QuoteCurrency
-) {
+export function createMarketDataQueryOptions(asset: FungibleCryptoAsset, currency: QuoteCurrency) {
   return {
     queryKey: ['market-data-service-get-market-data', asset, currency],
     queryFn: ({ signal }: QueryFunctionContext) =>
@@ -22,7 +19,7 @@ export function createMarketDataQueryOptions(
   } as const;
 }
 
-export function useMarketDataQuery(asset: FungibleCryptoAssetInfo) {
+export function useMarketDataQuery(asset: FungibleCryptoAsset) {
   const { quoteCurrency } = useQuoteCurrency();
   return useQuery(createMarketDataQueryOptions(asset, quoteCurrency));
 }

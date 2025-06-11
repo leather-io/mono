@@ -1,10 +1,6 @@
-import {
-  InscriptionCryptoAssetInfo,
-  NonFungibleCryptoAssetInfo,
-  Sip9CryptoAssetInfo,
-} from '@leather.io/models';
+import { InscriptionAsset, NonFungibleCryptoAsset, Sip9Asset } from '@leather.io/models';
 
-const mockInscriptions: InscriptionCryptoAssetInfo[] = [
+const mockInscriptions: InscriptionAsset[] = [
   {
     id: '335209b72c452f52199ae09e8ce586a451ce452c73326f01f958d8aa8417e062i0',
     number: 73858867,
@@ -87,7 +83,7 @@ const mockInscriptions: InscriptionCryptoAssetInfo[] = [
   },
 ];
 
-const mockSip9s: Sip9CryptoAssetInfo[] = [
+const mockSip9s: Sip9Asset[] = [
   {
     name: 'BlockSurvey #90',
     description: 'Worlds First Software License as an NFT',
@@ -135,4 +131,4 @@ const mockSip9s: Sip9CryptoAssetInfo[] = [
   },
 ];
 
-export const mockCollectibles: NonFungibleCryptoAssetInfo[] = [...mockInscriptions, ...mockSip9s];
+export const mockCollectibles: NonFungibleCryptoAsset[] = [...mockInscriptions, ...mockSip9s];

@@ -21,7 +21,7 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/macro';
 import { type ZodSchema } from 'zod';
 
-import { type FungibleCryptoAssetInfo, type SendAssetActivity } from '@leather.io/models';
+import { type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
 import { Box, IconButton, QrCodeIcon } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
@@ -29,7 +29,7 @@ interface RecipientSelectorProps {
   accounts: Account[];
   selectedAccount: Account;
   recipientSchema: ZodSchema;
-  assetInfo: FungibleCryptoAssetInfo;
+  asset: FungibleCryptoAsset;
   onSelectAddress(address: string): void;
   onQrButtonPress(source: 'toggle' | 'input'): void;
 }
@@ -39,7 +39,7 @@ export function RecipientSelector({
   accounts,
   selectedAccount,
   recipientSchema,
-  assetInfo,
+  asset,
   onSelectAddress,
   onQrButtonPress,
 }: RecipientSelectorProps) {
@@ -51,7 +51,7 @@ export function RecipientSelector({
     activity,
     accounts,
     selectedAccount,
-    assetInfo,
+    asset,
   });
   const isPerformingSearch = normalizeSearchTerm(searchTerm).length > 0;
   const isBnsLookup = isBnsLookupCandidate(normalizeSearchTerm(searchTerm));

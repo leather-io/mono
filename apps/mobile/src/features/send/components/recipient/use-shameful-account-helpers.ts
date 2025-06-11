@@ -5,7 +5,7 @@ import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { omit } from 'remeda';
 
-import { FungibleCryptoAssetInfo } from '@leather.io/models';
+import { FungibleCryptoAsset } from '@leather.io/models';
 
 interface UseAccountHelpersResult {
   findAccountByAddress: (address: string) => Account | null;
@@ -14,7 +14,7 @@ interface UseAccountHelpersResult {
 
 export function useAccountHelpers(
   accounts: Account[],
-  assetInfo: FungibleCryptoAssetInfo
+  asset: FungibleCryptoAsset
 ): UseAccountHelpersResult {
   const accountIndexByPaymentType = useBitcoinAccounts().accountIndexByPaymentType;
   const fromAccountIndex = useStacksSigners().fromAccountIndex;
@@ -70,6 +70,6 @@ export function useAccountHelpers(
 
   return {
     findAccountByAddress,
-    getAddressByAccount: assetInfo.chain === 'stacks' ? getStacksSignerAddress : getSegwitAddress,
+    getAddressByAccount: asset.chain === 'stacks' ? getStacksSignerAddress : getSegwitAddress,
   };
 }

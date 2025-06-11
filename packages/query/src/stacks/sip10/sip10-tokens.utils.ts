@@ -4,7 +4,7 @@ import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  type Sip10CryptoAssetInfo,
+  type Sip10Asset,
 } from '@leather.io/models';
 import { getStacksAssetStringParts } from '@leather.io/stacks';
 import { getTicker, isUndefined } from '@leather.io/utils';
@@ -13,10 +13,7 @@ export function isTransferableSip10Token(token: Partial<FtMetadataResponse>) {
   return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);
 }
 
-export function createSip10CryptoAssetInfo(
-  key: string,
-  ftAsset: FtMetadataResponse
-): Sip10CryptoAssetInfo {
+export function createSip10Asset(key: string, ftAsset: FtMetadataResponse): Sip10Asset {
   const { contractAssetName } = getStacksAssetStringParts(key);
   const name = ftAsset.name || contractAssetName;
 
@@ -35,4 +32,4 @@ export function createSip10CryptoAssetInfo(
   };
 }
 
-export type Sip10CryptoAssetFilter = 'all' | 'supported' | 'unsupported';
+export type Sip10AssetFilter = 'all' | 'supported' | 'unsupported';

@@ -32,7 +32,7 @@ import {
 import { leather } from '~/helpers/leather-sdk';
 import {
   useStxAvailableUnlockedBalance,
-  useStxCryptoAssetBalance,
+  useStxBalance,
 } from '~/queries/balance/account-balance.hooks';
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
@@ -119,7 +119,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
 
   const {
     filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
-  } = useStxCryptoAssetBalance(stacksAccount.address);
+  } = useStxBalance(stacksAccount.address);
   const totalAvailableBalance = useStxAvailableUnlockedBalance(stacksAccount.address);
 
   const poxInfoQuery = useGetPoxInfoQuery();

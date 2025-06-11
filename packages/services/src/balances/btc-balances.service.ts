@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 
-import { btcCryptoAsset } from '@leather.io/constants';
-import { AccountAddresses, BtcCryptoAssetBalance, UtxoId } from '@leather.io/models';
+import { btcAsset } from '@leather.io/constants';
+import { AccountAddresses, BtcBalance, UtxoId } from '@leather.io/models';
 import {
-  aggregateBtcCryptoAssetBalances,
+  aggregateBtcBalances,
   baseCurrencyAmountInQuote,
-  createBtcCryptoAssetBalance,
+  createBtcBalance,
   createMoney,
 } from '@leather.io/utils';
 
@@ -15,12 +15,12 @@ import { MarketDataService } from '../market-data/market-data.service';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';
 
-export interface BtcBalance {
-  btc: BtcCryptoAssetBalance;
-  quote: BtcCryptoAssetBalance;
+export interface QuotedBtcBalance {
+  btc: BtcBalance;
+  quote: BtcBalance;
 }
 
-export interface BtcAccountBalance extends BtcBalance {
+export interface AccountQuotedBtcBalance extends QuotedBtcBalance {
   account: AccountAddresses;
 }
 
@@ -29,7 +29,7 @@ export interface BtcAccountBalanceRequest {
   unprotectedUtxos: UtxoId[];
 }
 
-const btcCryptoAssetZeroBalance = createBtcCryptoAssetBalance(createMoney(0, 'BTC'));
+const btcAssetZeroBalance = createBtcBalance(createMoney(0, 'BTC'));
 
 @injectable()
 export class BtcBalancesService {
@@ -44,22 +44,20 @@ export class BtcBalancesService {
   public async getBtcAggregateBalance(
     balanceRequests: BtcAccountBalanceRequest[],
     signal?: AbortSignal
-  ): Promise<BtcBalance> {
+  ): Promise<QuotedBtcBalance> {
     const accountBalances = await Promise.all(
       balanceRequests.map(req => this.getBtcAccountBalance(req, signal))
     );
 
     const cumulativeBtcBalance =
       accountBalances.length > 0
-        ? aggregateBtcCryptoAssetBalances(accountBalances.map(r => r.btc))
-        : btcCryptoAssetZeroBalance;
+        ? aggregateBtcBalances(accountBalances.map(r => r.btc))
+        : btcAssetZeroBalance;
 
     const cumulativeQuoteBalance =
       accountBalances.length > 0
-        ? aggregateBtcCryptoAssetBalances(accountBalances.map(r => r.quote))
-        : createBtcCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().quoteCurrency)
-          );
+        ? aggregateBtcBalances(accountBalances.map(r => r.quote))
+        : createBtcBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency));
 
     return {
       btc: cumulativeBtcBalance,
@@ -77,7 +75,7 @@ export class BtcBalancesService {
   public async getBtcAccountBalance(
     request: BtcAccountBalanceRequest,
     signal?: AbortSignal
-  ): Promise<BtcAccountBalance> {
+  ): Promise<AccountQuotedBtcBalance> {
     const utxos = await this.utxosService.getAccountUtxos(
       request.account,
       request.unprotectedUtxos,
@@ -91,11 +89,11 @@ export class BtcBalancesService {
     const uneconomicalBalance = createMoney(sumUtxoValues(utxos.uneconomical), 'BTC');
     const unspendableBalance = createMoney(sumUtxoValues(utxos.unspendable), 'BTC');
 
-    const btcMarketData = await this.marketDataService.getMarketData(btcCryptoAsset, signal);
+    const btcMarketData = await this.marketDataService.getMarketData(btcAsset, signal);
 
     return {
       account: request.account,
-      btc: createBtcCryptoAssetBalance(
+      btc: createBtcBalance(
         totalBalance,
         inboundBalance,
         outboundBalance,
@@ -103,7 +101,7 @@ export class BtcBalancesService {
         uneconomicalBalance,
         unspendableBalance
       ),
-      quote: createBtcCryptoAssetBalance(
+      quote: createBtcBalance(
         baseCurrencyAmountInQuote(totalBalance, btcMarketData),
         baseCurrencyAmountInQuote(inboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(outboundBalance, btcMarketData),

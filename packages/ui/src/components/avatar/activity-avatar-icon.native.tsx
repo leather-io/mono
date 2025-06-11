@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { ActivityType, FungibleCryptoAssetInfo, OnChainActivityStatus } from '@leather.io/models';
+import { ActivityType, FungibleCryptoAsset, OnChainActivityStatus } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 import FailedIcon from '../../assets/icons/activity/failed.svg';
@@ -33,7 +33,7 @@ function StatusIndicator({ type, status }: StatusIndicatorProps): ReactElement {
   }
 }
 
-function getActivityIcon(type: ActivityType, asset?: FungibleCryptoAssetInfo) {
+function getActivityIcon(type: ActivityType, asset?: FungibleCryptoAsset) {
   switch (asset?.symbol) {
     case 'STX':
       return <StxAvatarIcon />;
@@ -55,7 +55,7 @@ function getActivityIcon(type: ActivityType, asset?: FungibleCryptoAssetInfo) {
 
 interface ActivityIconProps {
   type: ActivityType;
-  asset?: FungibleCryptoAssetInfo;
+  asset?: FungibleCryptoAsset;
   status: OnChainActivityStatus;
 }
 export function ActivityAvatarIcon({ type, asset, status }: ActivityIconProps) {

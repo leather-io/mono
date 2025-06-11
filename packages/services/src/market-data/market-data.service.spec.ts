@@ -1,5 +1,5 @@
-import { btcCryptoAsset, stxCryptoAsset } from '@leather.io/constants';
-import { RuneCryptoAssetInfo, Sip10CryptoAssetInfo } from '@leather.io/models';
+import { btcAsset, stxAsset } from '@leather.io/constants';
+import { RuneAsset, Sip10Asset } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
@@ -51,8 +51,8 @@ describe(MarketDataService.name, () => {
 
   describe(MarketDataService.prototype.getMarketDataUsd.name, () => {
     it('should return native asset market data in USD', async () => {
-      const stxMarketData = await marketDataService.getMarketDataUsd(stxCryptoAsset);
-      const btcMarketData = await marketDataService.getMarketDataUsd(btcCryptoAsset);
+      const stxMarketData = await marketDataService.getMarketDataUsd(stxAsset);
+      const btcMarketData = await marketDataService.getMarketDataUsd(btcAsset);
 
       expect(stxMarketData.pair.base).toEqual('STX');
       expect(stxMarketData.pair.quote).toEqual('USD');
@@ -70,7 +70,7 @@ describe(MarketDataService.name, () => {
         protocol: 'sip10',
         contractId: 'SP123.some-token',
         symbol: 'SOME',
-      } as Sip10CryptoAssetInfo);
+      } as Sip10Asset);
 
       expect(sip10MarketData.pair.base).toEqual('SOME');
       expect(sip10MarketData.pair.quote).toEqual('USD');
@@ -83,7 +83,7 @@ describe(MarketDataService.name, () => {
         protocol: 'rune',
         runeName: 'SOMERUNE',
         symbol: 'SOMERUNE',
-      } as RuneCryptoAssetInfo);
+      } as RuneAsset);
 
       expect(runeMarketData.pair.base).toEqual('SOMERUNE');
       expect(runeMarketData.pair.quote).toEqual('USD');
@@ -98,7 +98,7 @@ describe(MarketDataService.name, () => {
     });
 
     it('should return native asset market data in the users quote currency', async () => {
-      const stxMarketData = await marketDataService.getMarketData(stxCryptoAsset);
+      const stxMarketData = await marketDataService.getMarketData(stxAsset);
       expect(stxMarketData.pair.base).toEqual('STX');
       expect(stxMarketData.pair.quote).toEqual('EUR');
       expect(stxMarketData.price.amount).toEqual(initBigNumber(160));
@@ -110,7 +110,7 @@ describe(MarketDataService.name, () => {
         protocol: 'sip10',
         contractId: 'SP123.some-token',
         symbol: 'SOME',
-      } as Sip10CryptoAssetInfo);
+      } as Sip10Asset);
 
       expect(sip10MarketData.pair.base).toEqual('SOME');
       expect(sip10MarketData.pair.quote).toEqual('EUR');
@@ -123,7 +123,7 @@ describe(MarketDataService.name, () => {
         protocol: 'rune',
         runeName: 'SOMERUNE',
         symbol: 'SOMERUNE',
-      } as RuneCryptoAssetInfo);
+      } as RuneAsset);
 
       expect(runeMarketData.pair.base).toEqual('SOMERUNE');
       expect(runeMarketData.pair.quote).toEqual('EUR');

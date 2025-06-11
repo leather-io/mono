@@ -1,8 +1,8 @@
 import { CryptoAssetCategories, CryptoAssetChains, CryptoAssetProtocols } from '@leather.io/models';
 
-import { CreateInscriptionData, createInscriptionCryptoAssetInfo } from './inscription-helpers';
+import { CreateInscriptionData, createInscriptionAsset } from './inscription-helpers';
 
-describe(createInscriptionCryptoAssetInfo.name, () => {
+describe(createInscriptionAsset.name, () => {
   const mockCreateInscriptionData: CreateInscriptionData = {
     id: 'inscr1',
     number: 1,
@@ -17,7 +17,7 @@ describe(createInscriptionCryptoAssetInfo.name, () => {
   };
 
   it('populates inscription data on asset as expected', () => {
-    const inscription = createInscriptionCryptoAssetInfo(mockCreateInscriptionData);
+    const inscription = createInscriptionAsset(mockCreateInscriptionData);
 
     expect(inscription.chain).toEqual(CryptoAssetChains.bitcoin);
     expect(inscription.category).toEqual(CryptoAssetCategories.nft);

@@ -14,12 +14,12 @@ import { Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
 
-import { stxCryptoAsset } from '@leather.io/constants';
+import { stxAsset } from '@leather.io/constants';
 import { MarketData, Money, QuoteCurrency } from '@leather.io/models';
 import { Button, StxAvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
-const assetInfo = stxCryptoAsset;
+const asset = stxAsset;
 
 interface StxFormProps {
   account: Account;
@@ -46,7 +46,7 @@ export function StxForm({
     state: { inputCurrencyMode },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: assetInfo.symbol,
+    crypto: asset.symbol,
     quote: quoteCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useStxForm({
@@ -62,7 +62,7 @@ export function StxForm({
           id: 'asset_name.stacks',
           message: 'Stacks',
         })}
-        assetInfo={assetInfo}
+        asset={asset}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}
         icon={<StxAvatarIcon />}
@@ -73,7 +73,7 @@ export function StxForm({
         render={({ field: { value }, fieldState: { invalid, isValidating } }) => (
           <AmountField
             inputValue={value}
-            cryptoCurrency={assetInfo.symbol}
+            cryptoCurrency={asset.symbol}
             quoteCurrency={quoteCurrency}
             marketData={marketData}
             invalid={invalid}
@@ -94,7 +94,7 @@ export function StxForm({
         name="recipient"
         render={({ field: { value, onChange } }) => (
           <Recipient
-            assetInfo={assetInfo}
+            asset={asset}
             value={value}
             onChange={onChange}
             recipientSchema={schema.shape.recipient}

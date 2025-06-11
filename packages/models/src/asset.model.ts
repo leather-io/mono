@@ -25,35 +25,35 @@ export type CryptoAssetChain = keyof typeof CryptoAssetChains;
 export type CryptoAssetCategory = keyof typeof CryptoAssetCategories;
 export type CryptoAssetProtocol = keyof typeof CryptoAssetProtocols;
 
-export interface BaseCryptoAssetInfo {
+export interface BaseCryptoAsset {
   readonly chain: CryptoAssetChain;
   readonly category: CryptoAssetCategory;
   readonly protocol: CryptoAssetProtocol;
 }
 
 // Fungible asset types
-interface BaseFungibleCryptoAssetInfo extends BaseCryptoAssetInfo {
+interface BaseFungibleCryptoAsset extends BaseCryptoAsset {
   readonly category: 'fungible';
   readonly symbol: string;
   readonly decimals: number;
   readonly hasMemo: boolean;
 }
-export interface BtcCryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface BtcAsset extends BaseFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'nativeBtc';
   readonly symbol: 'BTC';
 }
-export interface StxCryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface StxAsset extends BaseFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'nativeStx';
   readonly symbol: 'STX';
 }
-export interface Brc20CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface Brc20Asset extends BaseFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'brc20';
   readonly symbol: string;
 }
-export interface Src20CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface Src20Asset extends BaseFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'src20';
   readonly id: string;
@@ -61,14 +61,14 @@ export interface Src20CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
   readonly deploy_tx: string;
   readonly deploy_img: string;
 }
-export interface RuneCryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface RuneAsset extends BaseFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'rune';
   readonly spacedRuneName: string;
   readonly runeName: string;
   readonly symbol: string;
 }
-export interface Sip10CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface Sip10Asset extends BaseFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'sip10';
   readonly name: string;
@@ -78,25 +78,25 @@ export interface Sip10CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
   readonly imageCanonicalUri: string;
   readonly symbol: string;
 }
-export interface Stx20CryptoAssetInfo extends BaseFungibleCryptoAssetInfo {
+export interface Stx20Asset extends BaseFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'stx20';
   readonly symbol: string;
 }
-export type NativeCryptoAssetInfo = BtcCryptoAssetInfo | StxCryptoAssetInfo;
-export type FungibleCryptoAssetInfo =
-  | NativeCryptoAssetInfo
-  | Sip10CryptoAssetInfo
-  | Brc20CryptoAssetInfo
-  | Src20CryptoAssetInfo
-  | Stx20CryptoAssetInfo
-  | RuneCryptoAssetInfo;
+export type NativeCryptoAsset = BtcAsset | StxAsset;
+export type FungibleCryptoAsset =
+  | NativeCryptoAsset
+  | Sip10Asset
+  | Brc20Asset
+  | Src20Asset
+  | Stx20Asset
+  | RuneAsset;
 
 // NFT asset types
-interface BaseNonFungibleCryptoAssetInfo extends BaseCryptoAssetInfo {
+interface BaseNonFungibleCryptoAsset extends BaseCryptoAsset {
   readonly category: 'nft';
 }
-export interface InscriptionCryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
+export interface InscriptionAsset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'inscription';
   readonly id: string;
@@ -114,13 +114,13 @@ export interface InscriptionCryptoAssetInfo extends BaseNonFungibleCryptoAssetIn
   readonly genesisTimestamp: number;
   readonly genesisBlockHeight: number;
 }
-export interface StampCryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
+export interface StampAsset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'bitcoin';
   readonly protocol: 'stamp';
   readonly stamp: number;
   readonly stampUrl: string;
 }
-export interface Sip9CryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
+export interface Sip9Asset extends BaseNonFungibleCryptoAsset {
   readonly chain: 'stacks';
   readonly protocol: 'sip9';
   readonly assetId: string;
@@ -132,9 +132,6 @@ export interface Sip9CryptoAssetInfo extends BaseNonFungibleCryptoAssetInfo {
   readonly cachedImage: string;
   readonly cachedImageThumbnail: string;
 }
-export type NonFungibleCryptoAssetInfo =
-  | InscriptionCryptoAssetInfo
-  | StampCryptoAssetInfo
-  | Sip9CryptoAssetInfo;
+export type NonFungibleCryptoAsset = InscriptionAsset | StampAsset | Sip9Asset;
 
-export type CryptoAssetInfo = FungibleCryptoAssetInfo | NonFungibleCryptoAssetInfo;
+export type CryptoAsset = FungibleCryptoAsset | NonFungibleCryptoAsset;

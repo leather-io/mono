@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { isShallowEqual } from 'remeda';
 import { assert, describe, expect, it, vi } from 'vitest';
 
-import { btcCryptoAsset } from '@leather.io/constants';
+import { btcAsset } from '@leather.io/constants';
 import { SendAssetActivity } from '@leather.io/models';
 
 // One of the imports references @lingui/macro, causing compile-time errors.
@@ -40,7 +40,7 @@ function createActivityItem({
   return {
     type: 'sendAsset',
     txid: id,
-    asset: btcCryptoAsset,
+    asset: btcAsset,
     receivers: [receiver],
     timestamp: dayjs()
       .subtract(...timestamp)

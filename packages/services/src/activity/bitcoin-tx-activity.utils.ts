@@ -1,4 +1,4 @@
-import { btcCryptoAsset } from '@leather.io/constants';
+import { btcAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
   ActivityLevels,
@@ -39,7 +39,7 @@ export function mapBitcoinTxToActivity(
     account: account.id,
     txid: tx.txid,
     status: mapBitcoinTxStatus(tx),
-    asset: btcCryptoAsset,
+    asset: btcAsset,
   };
 
   return isSend

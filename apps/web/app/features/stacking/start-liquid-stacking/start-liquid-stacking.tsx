@@ -26,7 +26,7 @@ import { createDepositStxMutationOptions } from '~/features/stacking/start-liqui
 import { leather } from '~/helpers/leather-sdk';
 import {
   useStxAvailableUnlockedBalance,
-  useStxCryptoAssetBalance,
+  useStxBalance,
 } from '~/queries/balance/account-balance.hooks';
 import { useProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { useLeatherConnect } from '~/store/addresses';
@@ -74,7 +74,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
 
   const {
     filteredBalanceQuery: { isLoading: totalAvailableBalanceIsLoading },
-  } = useStxCryptoAssetBalance(stacksAccount.address);
+  } = useStxBalance(stacksAccount.address);
   const totalAvailableBalance = useStxAvailableUnlockedBalance(stacksAccount.address);
 
   const protocol = getProtocolBySlug(protocolSlug);

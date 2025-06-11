@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 
-import { stxCryptoAsset } from '@leather.io/constants';
-import { StxCryptoAssetBalance } from '@leather.io/models';
+import { stxAsset } from '@leather.io/constants';
+import { StxBalance } from '@leather.io/models';
 import {
-  aggregateStxCryptoAssetBalances,
+  aggregateStxBalances,
   baseCurrencyAmountInQuote,
   createMoney,
-  createStxCryptoAssetBalance,
+  createStxBalance,
 } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
@@ -20,16 +20,16 @@ import { MarketDataService } from '../market-data/market-data.service';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';
 
-export interface StxBalance {
-  stx: StxCryptoAssetBalance;
-  quote: StxCryptoAssetBalance;
+export interface QuotedStxBalance {
+  stx: StxBalance;
+  quote: StxBalance;
 }
 
-export interface StxAddressBalance extends StxBalance {
+export interface AddressQuotedStxBalance extends QuotedStxBalance {
   address: string;
 }
 
-const stxCryptoAssetZeroBalance = createStxCryptoAssetBalance(createMoney(0, 'STX'));
+const stxAssetZeroBalance = createStxBalance(createMoney(0, 'STX'));
 
 @injectable()
 export class StxBalancesService {
@@ -46,22 +46,20 @@ export class StxBalancesService {
   public async getStxAggregateBalance(
     addresses: string[],
     signal?: AbortSignal
-  ): Promise<StxBalance> {
+  ): Promise<QuotedStxBalance> {
     const addressBalances = await Promise.all(
       addresses.map(address => this.getStxAddressBalance(address, signal))
     );
 
     const cumulativeStxBalance =
       addressBalances.length > 0
-        ? aggregateStxCryptoAssetBalances(addressBalances.map(r => r.stx))
-        : stxCryptoAssetZeroBalance;
+        ? aggregateStxBalances(addressBalances.map(r => r.stx))
+        : stxAssetZeroBalance;
 
     const cumulativeQuoteBalance =
       addressBalances.length > 0
-        ? aggregateStxCryptoAssetBalances(addressBalances.map(r => r.quote))
-        : createStxCryptoAssetBalance(
-            createMoney(0, this.settingsService.getSettings().quoteCurrency)
-          );
+        ? aggregateStxBalances(addressBalances.map(r => r.quote))
+        : createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency));
 
     return {
       stx: cumulativeStxBalance,
@@ -75,11 +73,11 @@ export class StxBalancesService {
   public async getStxAddressBalance(
     address: string,
     signal?: AbortSignal
-  ): Promise<StxAddressBalance> {
+  ): Promise<AddressQuotedStxBalance> {
     const [addressStxBalanceResponse, pendingTransactions, stxMarketData] = await Promise.all([
       this.stacksApiClient.getAddressStxBalance(address, signal),
       this.stacksTransactionsService.getPendingTransactions(address, signal),
-      this.marketDataService.getMarketData(stxCryptoAsset, signal),
+      this.marketDataService.getMarketData(stxAsset, signal),
     ]);
 
     const totalBalanceStx = createMoney(readStxTotalBalance(addressStxBalanceResponse), 'STX');
@@ -89,13 +87,13 @@ export class StxBalancesService {
 
     return {
       address,
-      stx: createStxCryptoAssetBalance(
+      stx: createStxBalance(
         totalBalanceStx,
         inboundBalanceStx,
         outboundBalanceStx,
         lockedBalanceStx
       ),
-      quote: createStxCryptoAssetBalance(
+      quote: createStxBalance(
         baseCurrencyAmountInQuote(totalBalanceStx, stxMarketData),
         baseCurrencyAmountInQuote(inboundBalanceStx, stxMarketData),
         baseCurrencyAmountInQuote(outboundBalanceStx, stxMarketData),

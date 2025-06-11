@@ -2,7 +2,7 @@ import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  InscriptionCryptoAssetInfo,
+  InscriptionAsset,
   InscriptionMimeType,
 } from '@leather.io/models';
 
@@ -51,9 +51,7 @@ export interface CreateInscriptionData {
   readonly outputValue: string;
 }
 
-export function createInscriptionCryptoAssetInfo(
-  data: CreateInscriptionData
-): InscriptionCryptoAssetInfo {
+export function createInscriptionAsset(data: CreateInscriptionData): InscriptionAsset {
   const iframeSrc = `https://ordinals.com/preview/${data.id}`;
   const preview = `https://ordinals.hiro.so/inscription/${data.id}`;
   const title = `Inscription ${data.number}`;
@@ -85,7 +83,7 @@ export function createInscriptionCryptoAssetInfo(
     };
   }
 
-  return whenInscriptionMimeType<InscriptionCryptoAssetInfo>(data.mimeType, {
+  return whenInscriptionMimeType<InscriptionAsset>(data.mimeType, {
     audio: () => ({
       ...sharedInfo,
       mimeType: 'audio',

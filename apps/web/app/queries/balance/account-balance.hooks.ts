@@ -5,7 +5,7 @@ import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useStacksNetwork } from '~/store/stacks-network';
 
 import { createGetStxAddressBalanceQueryOptions } from '@leather.io/query';
-import { createMoney, createStxCryptoAssetBalance } from '@leather.io/utils';
+import { createMoney, createStxBalance } from '@leather.io/utils';
 
 import { useMempoolTxsBalance } from './use-mempool-txs-balance';
 
@@ -22,7 +22,7 @@ function useStxBalanceQuery(address: string) {
   );
 }
 
-export function useStxCryptoAssetBalance(address: string) {
+export function useStxBalance(address: string) {
   const client = useStacksClient();
   const { networkPreference } = useStacksNetwork();
 
@@ -38,11 +38,7 @@ export function useStxCryptoAssetBalance(address: string) {
     }),
     select: resp => {
       const initialBalance = createMoney(new BigNumber(resp.balance), 'STX');
-      const stxBalance = createStxCryptoAssetBalance(
-        initialBalance,
-        inboundBalance,
-        outboundBalance
-      );
+      const stxBalance = createStxBalance(initialBalance, inboundBalance, outboundBalance);
       void analytics.track('stx_balance_updated', stxBalance);
       return stxBalance;
     },
@@ -57,13 +53,13 @@ export function useStxCryptoAssetBalance(address: string) {
 }
 
 export function useStxAvailableLockedBalance(address: string) {
-  const stxBalance = useStxCryptoAssetBalance(address);
+  const stxBalance = useStxBalance(address);
 
   return stxBalance.filteredBalanceQuery.data?.lockedBalance ?? createMoney(0, 'STX');
 }
 
 export function useStxAvailableUnlockedBalance(address: string) {
-  const stxBalance = useStxCryptoAssetBalance(address);
+  const stxBalance = useStxBalance(address);
 
   return stxBalance.filteredBalanceQuery.data?.unlockedBalance ?? createMoney(0, 'STX');
 }

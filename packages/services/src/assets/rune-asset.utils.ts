@@ -2,17 +2,17 @@ import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  RuneCryptoAssetInfo,
+  RuneAsset,
 } from '@leather.io/models';
 
 const defaultRunesSymbol = '¤';
 
-export function createRuneCryptoAssetInfo(
+export function createRuneAsset(
   runeName: string,
   spacedRuneName: string,
   decimals: number,
   symbol?: string
-): RuneCryptoAssetInfo {
+): RuneAsset {
   return {
     chain: CryptoAssetChains.bitcoin,
     category: CryptoAssetCategories.fungible,
