@@ -126,19 +126,17 @@ export class UtxosService {
   }
 
   /**
-   * Retrieve protected UTXOs (those w/ inscriptions or runes) for given Bitcoin taproot xpub descriptor.
+   * Retrieve protected UTXOs (those w/ inscriptions or runes) for given Bitcoin account xpub descriptor.
    */
   public async getDescriptorProtectedUtxos(
     fingerprint: string,
-    taprootDescriptor: string,
+    descriptor: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    if (!taprootDescriptor.toLocaleLowerCase().startsWith('tr(')) return [];
-
     const [utxos, inscriptions, runeOutputs] = await Promise.all([
-      this.getOwnedUtxos(taprootDescriptor, fingerprint, signal),
-      this.bisApiClient.fetchInscriptions(taprootDescriptor, signal),
-      this.bisApiClient.fetchRunesValidOutputs(taprootDescriptor, signal),
+      this.getOwnedUtxos(descriptor, fingerprint, signal),
+      this.bisApiClient.fetchInscriptions(descriptor, signal),
+      this.bisApiClient.fetchRunesValidOutputs(descriptor, signal),
     ]);
     const inscribedUtxoIds = inscriptions
       .map(inscription => getUtxoIdFromSatpoint(inscription.satpoint))
