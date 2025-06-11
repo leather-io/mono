@@ -1,14 +1,14 @@
 import { injectable } from 'inversify';
 
-import { btcCryptoAsset, stxCryptoAsset } from '@leather.io/constants';
+import { btcAsset, stxAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
   Activity,
+  CryptoAsset,
   CryptoAssetCategories,
-  CryptoAssetInfo,
   OnChainActivity,
   OnChainActivityTypes,
-  Sip10CryptoAssetInfo,
+  Sip10Asset,
 } from '@leather.io/models';
 import {
   baseCurrencyAmountInQuote,
@@ -84,7 +84,7 @@ export class ActivityService {
    */
   public async getActivityByAsset(
     account: AccountAddresses,
-    asset: CryptoAssetInfo,
+    asset: CryptoAsset,
     signal?: AbortSignal
   ): Promise<Activity[]> {
     switch (asset.protocol) {
@@ -110,7 +110,7 @@ export class ActivityService {
 
     const [bitcoinTransactions] = await Promise.all([
       this.bitcoinTransactionsService.getAccountTransactions(account, signal),
-      this.marketDataService.getMarketData(btcCryptoAsset, signal),
+      this.marketDataService.getMarketData(btcAsset, signal),
     ]);
     const activityList: Activity[] = [];
     for (const tx of bitcoinTransactions) {
@@ -201,7 +201,7 @@ export class ActivityService {
    *  Gets SIP10 asset activity list for an account
    */
   public async getSip10Activity(
-    asset: Sip10CryptoAssetInfo,
+    asset: Sip10Asset,
     account: AccountAddresses,
     signal?: AbortSignal
   ): Promise<Activity[]> {
@@ -276,28 +276,28 @@ export class ActivityService {
     signal?: AbortSignal
   ): Promise<StacksAssetTransferWithInfo[]> {
     const transfers = getStacksAssetTransfers(tx, txEvents);
-    return (
-      await Promise.all(transfers.map(t => this.addStacksTransferAssetInfo(t, signal)))
-    ).filter(isDefined);
+    return (await Promise.all(transfers.map(t => this.addStacksTransferAsset(t, signal)))).filter(
+      isDefined
+    );
   }
 
-  private async addStacksTransferAssetInfo(
+  private async addStacksTransferAsset(
     transfer: StacksAssetTransfer,
     signal?: AbortSignal
   ): Promise<StacksAssetTransferWithInfo | undefined> {
     if (transfer.assetId === 'STX') {
       return {
         ...transfer,
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
       };
     } else {
       try {
         return {
           ...transfer,
-          assetInfo:
+          asset:
             transfer.assetCategory === CryptoAssetCategories.fungible
-              ? await this.sip10AssetService.getAssetInfo(transfer.assetId, signal)
-              : await this.sip9AssetService.getAssetInfo(
+              ? await this.sip10AssetService.getAsset(transfer.assetId, signal)
+              : await this.sip9AssetService.getAsset(
                   transfer.assetId,
                   transfer.tokenValue!,
                   signal

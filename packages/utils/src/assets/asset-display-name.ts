@@ -1,8 +1,8 @@
-import { CryptoAssetInfo } from '@leather.io/models';
+import { CryptoAsset } from '@leather.io/models';
 
 import { assertUnreachable } from '../index';
 
-export function getAssetDisplayName(asset: CryptoAssetInfo) {
+export function getAssetDisplayName(asset: CryptoAsset) {
   const { protocol } = asset;
 
   switch (protocol) {

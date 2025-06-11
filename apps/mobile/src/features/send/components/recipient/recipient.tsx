@@ -13,16 +13,16 @@ import { SendFormLoadingSpinner } from '@/features/send/components/send-form-lay
 import { analytics } from '@/utils/analytics';
 import { type ZodSchema } from 'zod';
 
-import { type FungibleCryptoAssetInfo } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 
 interface RecipientProps {
   value: string;
   onChange(value: string): void;
-  assetInfo: FungibleCryptoAssetInfo;
+  asset: FungibleCryptoAsset;
   recipientSchema: ZodSchema;
 }
 
-export const Recipient = memo(({ value, onChange, assetInfo, recipientSchema }: RecipientProps) => {
+export const Recipient = memo(({ value, onChange, asset, recipientSchema }: RecipientProps) => {
   const {
     accounts,
     selectedAccount,
@@ -37,7 +37,7 @@ export const Recipient = memo(({ value, onChange, assetInfo, recipientSchema }: 
     scannerSheetRef,
     closeScannerSheet,
     onQrScanned,
-  } = useRecipientState({ assetInfo, recipientSchema, onChange });
+  } = useRecipientState({ asset, recipientSchema, onChange });
 
   function onTogglePress() {
     analytics.track('send_recipient_sheet_opened');
@@ -60,7 +60,7 @@ export const Recipient = memo(({ value, onChange, assetInfo, recipientSchema }: 
           success: data => (
             <RecipientSelector
               onQrButtonPress={onQrButtonPress}
-              assetInfo={assetInfo}
+              asset={asset}
               activity={data}
               accounts={accounts}
               selectedAccount={selectedAccount}

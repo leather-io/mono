@@ -8,7 +8,7 @@ import {
   TransactionEvent,
 } from '@stacks/stacks-blockchain-api-types';
 
-import { stxCryptoAsset } from '@leather.io/constants';
+import { stxAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
   ActivityLevels,
@@ -78,7 +78,7 @@ export function mapTokenTransferActivity(
     account: account.id,
     txid: tx.tx_id,
     status: mapStacksTxStatus(tx),
-    asset: stxCryptoAsset,
+    asset: stxAsset,
     amount: initBigNumber(tx.token_transfer.amount),
   };
   return tx.sender_address === account.stacks?.stxAddress
@@ -166,16 +166,16 @@ export function mapTxAssetTransfersToActivity(
     if (sends.length > 0 && receives.length > 0) {
       activity.push({
         type: OnChainActivityTypes.swapAssets,
-        fromAsset: sends[0].assetInfo,
+        fromAsset: sends[0].asset,
         fromAmount: sumAssetTransferAmounts(sends),
-        toAsset: receives[0].assetInfo,
+        toAsset: receives[0].asset,
         toAmount: sumAssetTransferAmounts(receives),
         ...commonProps,
       });
     } else if (sends.length > 0) {
       activity.push({
         type: OnChainActivityTypes.sendAsset,
-        asset: sends[0].assetInfo,
+        asset: sends[0].asset,
         amount: sumAssetTransferAmounts(sends),
         receivers: aggregateTransferReceivers(sends),
         ...commonProps,
@@ -183,7 +183,7 @@ export function mapTxAssetTransfersToActivity(
     } else if (receives.length > 0) {
       activity.push({
         type: OnChainActivityTypes.receiveAsset,
-        asset: receives[0].assetInfo,
+        asset: receives[0].asset,
         amount: sumAssetTransferAmounts(receives),
         senders: aggregateTransferSenders(receives),
         ...commonProps,

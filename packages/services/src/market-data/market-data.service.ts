@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify';
 
-import { btcCryptoAsset, currencyDecimalsMap } from '@leather.io/constants';
+import { btcAsset, currencyDecimalsMap } from '@leather.io/constants';
 import {
-  Brc20CryptoAssetInfo,
-  FungibleCryptoAssetInfo,
+  Brc20Asset,
+  FungibleCryptoAsset,
   MarketData,
-  NativeCryptoAssetInfo,
+  NativeCryptoAsset,
   QuoteCurrency,
-  RuneCryptoAssetInfo,
-  Sip10CryptoAssetInfo,
+  RuneAsset,
+  Sip10Asset,
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
@@ -38,7 +38,7 @@ export class MarketDataService {
    * Retrieves asset market data quoted in user's preferred quote currency.
    */
   public async getMarketData(
-    asset: FungibleCryptoAssetInfo,
+    asset: FungibleCryptoAsset,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const marketDataUsd: MarketData = await this.getMarketDataUsd(asset, signal);
@@ -56,7 +56,7 @@ export class MarketDataService {
    * Retrieves asset market data quoted in USD.
    */
   public async getMarketDataUsd(
-    asset: FungibleCryptoAssetInfo,
+    asset: FungibleCryptoAsset,
     signal?: AbortSignal
   ): Promise<MarketData> {
     switch (asset.protocol) {
@@ -112,7 +112,7 @@ export class MarketDataService {
   }
 
   private async getNativeAssetMarketDataUsd(
-    asset: NativeCryptoAssetInfo,
+    asset: NativeCryptoAsset,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const priceMap = await this.leatherApiClient.fetchNativeTokenPriceMap(signal);
@@ -127,7 +127,7 @@ export class MarketDataService {
   }
 
   private async getSip10MarketDataUsd(
-    asset: Sip10CryptoAssetInfo,
+    asset: Sip10Asset,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const tokenPriceMap = await this.leatherApiClient.fetchSip10PriceMap(signal);
@@ -147,10 +147,7 @@ export class MarketDataService {
     );
   }
 
-  private async getRuneMarketDataUsd(
-    asset: RuneCryptoAssetInfo,
-    signal?: AbortSignal
-  ): Promise<MarketData> {
+  private async getRuneMarketDataUsd(asset: RuneAsset, signal?: AbortSignal): Promise<MarketData> {
     const runePriceMap = await this.leatherApiClient.fetchRunePriceMap(signal);
 
     const runePriceUsd = runePriceMap[asset.runeName]
@@ -170,11 +167,11 @@ export class MarketDataService {
   }
 
   private async getBrc20MarketDataUsd(
-    asset: Brc20CryptoAssetInfo,
+    asset: Brc20Asset,
     signal?: AbortSignal
   ): Promise<MarketData> {
     const [btcMarketData, bisMarketInfo] = await Promise.all([
-      await this.getNativeAssetMarketDataUsd(btcCryptoAsset, signal),
+      await this.getNativeAssetMarketDataUsd(btcAsset, signal),
       await this.bestInSlotApiClient.fetchBrc20MarketInfo(asset.symbol, signal),
     ]);
     const brc20PriceUsd = baseCurrencyAmountInQuote(

@@ -6,7 +6,7 @@ import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
 
-import { StxBalance } from '@leather.io/services';
+import { QuotedStxBalance } from '@leather.io/services';
 import { Box, Text, Theme } from '@leather.io/ui/native';
 
 import { useEarnFlag } from '../feature-flags';
@@ -14,7 +14,7 @@ import { LockedBalanceCard } from './locked-balance-card';
 import { SbtcCard } from './sbtc-card';
 import { StackingCard } from './stacking-card';
 
-export function isStacking(stxBalance: FetchState<StxBalance>) {
+export function isStacking(stxBalance: FetchState<QuotedStxBalance>) {
   return stxBalance.state === 'success' && stxBalance.value.stx.lockedBalance.amount.gt(0);
 }
 

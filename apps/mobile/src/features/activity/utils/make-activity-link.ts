@@ -2,7 +2,7 @@
 import { getStacksNetworkMode } from '@/queries/leather-query-provider';
 
 import { HIRO_EXPLORER_URL } from '@leather.io/constants';
-import { CryptoAssetInfo, NetworkConfiguration } from '@leather.io/models';
+import { CryptoAsset, NetworkConfiguration } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 /**
@@ -19,7 +19,7 @@ type StacksNetworkPreference = 'mainnet' | 'testnet';
 interface MakeActivityArgs {
   txid: string;
   networkPreference: NetworkConfiguration;
-  asset?: CryptoAssetInfo;
+  asset?: CryptoAsset;
 }
 export function makeActivityLink({ txid, networkPreference, asset }: MakeActivityArgs) {
   if (txid && asset) {
@@ -33,7 +33,7 @@ export function makeActivityLink({ txid, networkPreference, asset }: MakeActivit
 }
 
 interface MakeActivityExplorerLinkArgs {
-  asset: CryptoAssetInfo;
+  asset: CryptoAsset;
   txid: string;
   networkPreference: NetworkConfiguration;
 }

@@ -3,7 +3,7 @@ import { Account } from '@/store/accounts/accounts';
 import { isDefined } from 'remeda';
 import { SafeParseReturnType } from 'zod';
 
-import { FungibleCryptoAssetInfo, SendAssetActivity } from '@leather.io/models';
+import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 import { fetchBtcNameOwner, fetchStacksNameOwner } from '@leather.io/query';
 
 export function recipientSchemaResultContainsError(
@@ -15,11 +15,11 @@ export function recipientSchemaResultContainsError(
   );
 }
 
-export function getLookupHelperByChain(assetInfo: FungibleCryptoAssetInfo) {
+export function getLookupHelperByChain(asset: FungibleCryptoAsset) {
   return {
     bitcoin: fetchBtcNameOwner,
     stacks: fetchStacksNameOwner,
-  }[assetInfo.chain];
+  }[asset.chain];
 }
 
 export function isBnsLookupCandidate(input: string) {

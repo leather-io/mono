@@ -1,4 +1,4 @@
-import { InscriptionCryptoAssetInfo } from './crypto-asset-info.model';
+import { InscriptionAsset } from './asset.model';
 
 /**
  * Inscriptions contain arbitrary data. When retrieving an inscription, it should be
@@ -19,8 +19,8 @@ export const inscriptionMimeTypes = [
 
 export type InscriptionMimeType = (typeof inscriptionMimeTypes)[number];
 
-/* Deprecated: Made obsolete by InscriptionCryptoAssetInfo; Will be removed */
-export interface Inscription extends InscriptionCryptoAssetInfo {
+/* Deprecated: Made obsolete by InscriptionAsset; Will be removed */
+export interface Inscription extends InscriptionAsset {
   preview: string;
   src: string;
   title: string;

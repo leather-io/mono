@@ -13,7 +13,7 @@ import { type Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/macro';
 
-import { btcCryptoAsset } from '@leather.io/constants';
+import { btcAsset } from '@leather.io/constants';
 import {
   type AverageBitcoinFeeRates,
   type MarketData,
@@ -24,7 +24,7 @@ import {
 import { BtcAvatarIcon, Button } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
-const assetInfo = btcCryptoAsset;
+const asset = btcAsset;
 
 interface BtcFormProps {
   account: Account;
@@ -52,7 +52,7 @@ export function BtcForm({
     state: { inputCurrencyMode },
   } = useSendFlowContext();
   const currency = whenInputCurrencyMode(inputCurrencyMode)({
-    crypto: assetInfo.symbol,
+    crypto: asset.symbol,
     quote: quoteCurrency,
   });
   const { form, schema, maxSpend, onSetMax, onSubmit } = useBtcForm({ account, feeRates, utxos });
@@ -64,7 +64,7 @@ export function BtcForm({
           id: 'asset_name.bitcoin',
           message: 'Bitcoin',
         })}
-        assetInfo={assetInfo}
+        asset={asset}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}
         icon={<BtcAvatarIcon />}
@@ -75,7 +75,7 @@ export function BtcForm({
         render={({ field: { value }, fieldState: { invalid, isValidating } }) => (
           <AmountField
             inputValue={value}
-            cryptoCurrency={assetInfo.symbol}
+            cryptoCurrency={asset.symbol}
             quoteCurrency={quoteCurrency}
             marketData={marketData}
             invalid={invalid}
@@ -95,7 +95,7 @@ export function BtcForm({
         name="recipient"
         render={({ field: { value, onChange } }) => (
           <Recipient
-            assetInfo={assetInfo}
+            asset={asset}
             value={value}
             onChange={onChange}
             recipientSchema={schema.sourceType().shape.recipient}

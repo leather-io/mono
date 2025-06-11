@@ -1,7 +1,7 @@
 import { PostCondition } from '@stacks/stacks-blockchain-api-types';
 import BigNumber from 'bignumber.js';
 
-import { CryptoAssetCategories, CryptoAssetCategory, CryptoAssetInfo } from '@leather.io/models';
+import { CryptoAsset, CryptoAssetCategories, CryptoAssetCategory } from '@leather.io/models';
 import { isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 
 import {
@@ -24,7 +24,7 @@ export interface StacksAssetTransfer {
 }
 
 export interface StacksAssetTransferWithInfo extends StacksAssetTransfer {
-  assetInfo: CryptoAssetInfo;
+  asset: CryptoAsset;
 }
 
 export function sumAssetTransferAmounts(transfers: StacksAssetTransfer[]): BigNumber {

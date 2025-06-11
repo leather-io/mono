@@ -1,9 +1,4 @@
-import {
-  BaseCryptoAssetBalance,
-  BtcCryptoAssetBalance,
-  Money,
-  StxCryptoAssetBalance,
-} from '@leather.io/models';
+import { BaseCryptoAssetBalance, BtcBalance, Money, StxBalance } from '@leather.io/models';
 
 import { createMoney, subtractMoney, sumMoney } from '../money';
 
@@ -24,14 +19,14 @@ export function createBaseCryptoAssetBalance(
   };
 }
 
-export function createBtcCryptoAssetBalance(
+export function createBtcBalance(
   totalBalance: Money,
   inboundBal?: Money,
   outboundBal?: Money,
   protectedBal?: Money,
   uneconomicalBal?: Money,
   unspendableBal?: Money
-): BtcCryptoAssetBalance {
+): BtcBalance {
   const zeroBalance = createMoney(0, totalBalance.symbol);
   const inboundBalance = inboundBal ?? zeroBalance;
   const outboundBalance = outboundBal ?? zeroBalance;
@@ -48,12 +43,12 @@ export function createBtcCryptoAssetBalance(
   };
 }
 
-export function createStxCryptoAssetBalance(
+export function createStxBalance(
   totalBalance: Money,
   inboundBal?: Money,
   outboundBal?: Money,
   lockedBal?: Money
-): StxCryptoAssetBalance {
+): StxBalance {
   const zeroBalance = createMoney(0, totalBalance.symbol);
   const inboundBalance = inboundBal ?? zeroBalance;
   const outboundBalance = outboundBal ?? zeroBalance;
@@ -79,10 +74,8 @@ export function aggregateBaseCryptoAssetBalances(
   );
 }
 
-export function aggregateBtcCryptoAssetBalances(
-  balances: BtcCryptoAssetBalance[]
-): BtcCryptoAssetBalance {
-  return createBtcCryptoAssetBalance(
+export function aggregateBtcBalances(balances: BtcBalance[]): BtcBalance {
+  return createBtcBalance(
     sumMoney(balances.map(b => b.totalBalance)),
     sumMoney(balances.map(b => b.inboundBalance)),
     sumMoney(balances.map(b => b.outboundBalance)),
@@ -92,10 +85,8 @@ export function aggregateBtcCryptoAssetBalances(
   );
 }
 
-export function aggregateStxCryptoAssetBalances(
-  balances: StxCryptoAssetBalance[]
-): StxCryptoAssetBalance {
-  return createStxCryptoAssetBalance(
+export function aggregateStxBalances(balances: StxBalance[]): StxBalance {
+  return createStxBalance(
     sumMoney(balances.map(b => b.totalBalance)),
     sumMoney(balances.map(b => b.inboundBalance)),
     sumMoney(balances.map(b => b.outboundBalance)),

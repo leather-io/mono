@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { FungibleCryptoAssetInfo } from '@leather.io/models';
+import { FungibleCryptoAsset } from '@leather.io/models';
 
 import { createMarketDataQueryOptions } from './market-data.query';
 
@@ -14,7 +14,7 @@ vi.mock('@/store/settings/settings', () => ({
 }));
 
 describe('createMarketDataQueryOptions', () => {
-  const options = createMarketDataQueryOptions({} as FungibleCryptoAssetInfo, 'mainnet');
+  const options = createMarketDataQueryOptions({} as FungibleCryptoAsset, 'mainnet');
   it('should have valid cache times', () => {
     expect(options.gcTime).toBeGreaterThanOrEqual(0);
     expect(options.staleTime).toBeGreaterThanOrEqual(0);

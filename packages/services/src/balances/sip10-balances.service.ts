@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import { CryptoAssetBalance, Sip10CryptoAssetInfo } from '@leather.io/models';
+import { CryptoAssetBalance, Sip10Asset } from '@leather.io/models';
 import {
   aggregateBaseCryptoAssetBalances,
   baseCurrencyAmountInQuote,
@@ -16,7 +16,7 @@ import { MarketDataService } from '../market-data/market-data.service';
 import { combineSip10Balances, sortByAvailableQuoteBalance } from './sip10-balances.utils';
 
 export interface Sip10Balance {
-  asset: Sip10CryptoAssetInfo;
+  asset: Sip10Asset;
   quote: CryptoAssetBalance;
   crypto: CryptoAssetBalance;
 }
@@ -101,7 +101,7 @@ export class Sip10BalancesService {
     amount: number,
     signal?: AbortSignal
   ): Promise<Sip10Balance> {
-    const asset = await this.sip10TokensService.getAssetInfo(tokenId, signal);
+    const asset = await this.sip10TokensService.getAsset(tokenId, signal);
     const totalBalance = createMoney(amount, asset.symbol, asset.decimals);
     const marketData = await this.marketDataService.getMarketData(asset, signal);
 

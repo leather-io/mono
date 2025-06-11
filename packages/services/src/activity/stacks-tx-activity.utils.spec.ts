@@ -4,7 +4,7 @@ import {
   TokenTransferTransaction,
 } from '@stacks/stacks-blockchain-api-types';
 
-import { stxCryptoAsset } from '@leather.io/constants';
+import { stxAsset } from '@leather.io/constants';
 import {
   AccountAddresses,
   ActivityLevels,
@@ -55,7 +55,7 @@ describe('mapTokenTransferActivity', () => {
       {
         type: OnChainActivityTypes.sendAsset,
         receivers: ['ST456'],
-        asset: stxCryptoAsset,
+        asset: stxAsset,
         amount: initBigNumber('1000'),
         account: account.id,
         txid: 'tx123',
@@ -82,7 +82,7 @@ describe('mapTokenTransferActivity', () => {
       {
         type: OnChainActivityTypes.receiveAsset,
         senders: ['ST456'],
-        asset: stxCryptoAsset,
+        asset: stxAsset,
         amount: initBigNumber('1000'),
         account: account.id,
         txid: 'tx123',
@@ -141,7 +141,7 @@ describe('mapSmartContractActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '1000',
@@ -153,7 +153,7 @@ describe('mapSmartContractActivity', () => {
     expect(result).toHaveLength(2);
     expect(result).toContainEqual({
       type: OnChainActivityTypes.sendAsset,
-      asset: stxCryptoAsset,
+      asset: stxAsset,
       amount: initBigNumber('1000'),
       receivers: ['ST456'],
       account: account.id,
@@ -215,7 +215,7 @@ describe('mapContractCallActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '1000',
@@ -227,7 +227,7 @@ describe('mapContractCallActivity', () => {
     expect(result).toHaveLength(1);
     expect(result).toContainEqual({
       type: OnChainActivityTypes.sendAsset,
-      asset: stxCryptoAsset,
+      asset: stxAsset,
       amount: initBigNumber('1000'),
       receivers: ['ST456'],
       account: account.id,
@@ -257,7 +257,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '1000',
@@ -265,7 +265,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
         sender: 'ST123',
         receiver: 'ST789',
         tokenValue: '2000',
@@ -275,7 +275,7 @@ describe('mapTxAssetTransfersToActivity', () => {
     expect(mapTxAssetTransfersToActivity(tx, account, transfers)).toEqual([
       {
         type: OnChainActivityTypes.sendAsset,
-        asset: stxCryptoAsset,
+        asset: stxAsset,
         amount: initBigNumber('3000'),
         receivers: ['ST456', 'ST789'],
         account: account.id,
@@ -292,7 +292,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'ST000.token::xyz',
-        assetInfo: { assetId: 'ST000.token::xyz' },
+        asset: { assetId: 'ST000.token::xyz' },
         sender: 'ST456',
         receiver: 'ST123',
         tokenValue: '1000',
@@ -300,7 +300,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'ST000.token::xyz',
-        assetInfo: { assetId: 'ST000.token::xyz' },
+        asset: { assetId: 'ST000.token::xyz' },
         sender: 'ST789',
         receiver: 'ST123',
         tokenValue: '2000',
@@ -327,7 +327,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '1000',
@@ -335,7 +335,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'ST000.token::xyz',
-        assetInfo: { assetId: 'ST000.token::xyz' },
+        asset: { assetId: 'ST000.token::xyz' },
         sender: 'ST456',
         receiver: 'ST123',
         tokenValue: '2000',
@@ -347,7 +347,7 @@ describe('mapTxAssetTransfersToActivity', () => {
     expect(result).toEqual([
       {
         type: OnChainActivityTypes.swapAssets,
-        fromAsset: stxCryptoAsset,
+        fromAsset: stxAsset,
         fromAmount: initBigNumber('1000'),
         toAsset: { assetId: 'ST000.token::xyz' },
         toAmount: initBigNumber('2000'),
@@ -365,7 +365,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'STX',
-        assetInfo: stxCryptoAsset,
+        asset: stxAsset,
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '1000',
@@ -373,7 +373,7 @@ describe('mapTxAssetTransfersToActivity', () => {
       {
         assetCategory: CryptoAssetCategories.fungible,
         assetId: 'TOKEN1',
-        assetInfo: { name: 'Token1' },
+        asset: { name: 'Token1' },
         sender: 'ST123',
         receiver: 'ST456',
         tokenValue: '2000',

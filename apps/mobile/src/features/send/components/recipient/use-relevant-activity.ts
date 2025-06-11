@@ -5,10 +5,10 @@ import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
 
-import { Activity, FungibleCryptoAssetInfo, SendAssetActivity } from '@leather.io/models';
+import { Activity, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
 
-export function useRelevantActivity(account: Account, assetInfo: FungibleCryptoAssetInfo) {
+export function useRelevantActivity(account: Account, asset: FungibleCryptoAsset) {
   const { fingerprint, accountIndex } = account;
   const { fiatCurrencyPreference } = useSettings();
   const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
@@ -25,7 +25,7 @@ export function useRelevantActivity(account: Account, assetInfo: FungibleCryptoA
       staleTime: 1 * 5000,
       gcTime: 1 * 5000,
       select: data => {
-        return pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(assetInfo)));
+        return pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset)));
       },
     })
   );
@@ -40,8 +40,8 @@ function isValidSendActivity(activity: Activity): activity is SendAssetActivity 
   );
 }
 
-function isRelevantSendActivity(assetInfo: FungibleCryptoAssetInfo) {
-  return (activity: SendAssetActivity) => isShallowEqual(activity.asset, assetInfo);
+function isRelevantSendActivity(asset: FungibleCryptoAsset) {
+  return (activity: SendAssetActivity) => isShallowEqual(activity.asset, asset);
 }
 
 interface MatchRelevantActivityResult {

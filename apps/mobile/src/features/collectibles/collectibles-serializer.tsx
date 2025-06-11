@@ -1,4 +1,4 @@
-import { NonFungibleCryptoAssetInfo } from '@leather.io/models';
+import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { type CollectibleCardProps } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -9,7 +9,7 @@ import {
   isValidStamp,
 } from './collectibles.utils';
 
-export function serializeCollectibles(collectibles: NonFungibleCryptoAssetInfo[]) {
+export function serializeCollectibles(collectibles: NonFungibleCryptoAsset[]) {
   return collectibles
     .map(collectible => {
       switch (collectible.protocol) {

@@ -1,15 +1,11 @@
-import {
-  InscriptionCryptoAssetInfo,
-  Sip9CryptoAssetInfo,
-  StampCryptoAssetInfo,
-} from '@leather.io/models';
+import { InscriptionAsset, Sip9Asset, StampAsset } from '@leather.io/models';
 import { isDefined, isEmptyString } from '@leather.io/utils';
 
-export function isValidInscription(collectible: InscriptionCryptoAssetInfo) {
+export function isValidInscription(collectible: InscriptionAsset) {
   return !isEmptyString(collectible.src) && isDefined(collectible.src);
 }
 
-export function isValidSip9(collectible: Sip9CryptoAssetInfo) {
+export function isValidSip9(collectible: Sip9Asset) {
   return (
     !isEmptyString(collectible.cachedImage) &&
     isDefined(collectible.cachedImage) &&
@@ -17,7 +13,7 @@ export function isValidSip9(collectible: Sip9CryptoAssetInfo) {
   );
 }
 
-export function isValidStamp(collectible: StampCryptoAssetInfo) {
+export function isValidStamp(collectible: StampAsset) {
   return !isEmptyString(collectible.stampUrl) && isDefined(collectible.stampUrl);
 }
 export function formatInsciptionName(name: string) {

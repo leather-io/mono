@@ -3,9 +3,9 @@ import type {
   AccountDisplayPreferenceInfo,
   BitcoinUnit,
   BitcoinUnitInfo,
-  BtcCryptoAssetInfo,
+  BtcAsset,
   Currency,
-  StxCryptoAssetInfo,
+  StxAsset,
 } from '@leather.io/models';
 
 export const gaiaUrl = 'https://hub.blockstack.org';
@@ -129,7 +129,7 @@ export const accountDisplayPreferencesKeyedByType: Record<
   },
 };
 
-export const btcCryptoAsset: BtcCryptoAssetInfo = {
+export const btcAsset: BtcAsset = {
   chain: 'bitcoin',
   protocol: 'nativeBtc',
   symbol: 'BTC',
@@ -138,7 +138,7 @@ export const btcCryptoAsset: BtcCryptoAssetInfo = {
   hasMemo: false,
 };
 
-export const stxCryptoAsset: StxCryptoAssetInfo = {
+export const stxAsset: StxAsset = {
   chain: 'stacks',
   protocol: 'nativeStx',
   symbol: 'STX',

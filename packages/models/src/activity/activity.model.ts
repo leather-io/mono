@@ -1,7 +1,7 @@
 import type { BigNumber } from 'bignumber.js';
 
 import { AccountId } from '../account.model';
-import { CryptoAssetInfo } from '../crypto-assets/crypto-asset-info.model';
+import { CryptoAsset } from '../asset.model';
 import { Money } from '../money.model';
 import { ActivityLevel } from './activity-level.model';
 import { OnChainActivityStatus } from './activity-status.model';
@@ -47,7 +47,7 @@ export interface ExecuteSmartContractActivity extends BaseOnChainActivity {
 
 export interface LockAssetActivity extends BaseOnChainActivity {
   readonly type: 'lockAsset';
-  readonly asset: CryptoAssetInfo;
+  readonly asset: CryptoAsset;
   readonly amount: BigNumber;
   readonly value?: {
     crypto: Money;
@@ -57,7 +57,7 @@ export interface LockAssetActivity extends BaseOnChainActivity {
 
 export interface SendAssetActivity extends BaseOnChainActivity {
   readonly type: 'sendAsset';
-  readonly asset: CryptoAssetInfo;
+  readonly asset: CryptoAsset;
   readonly receivers: string[];
   readonly amount: BigNumber;
   readonly value?: {
@@ -68,7 +68,7 @@ export interface SendAssetActivity extends BaseOnChainActivity {
 
 export interface ReceiveAssetActivity extends BaseOnChainActivity {
   readonly type: 'receiveAsset';
-  readonly asset: CryptoAssetInfo;
+  readonly asset: CryptoAsset;
   readonly senders: string[];
   readonly amount: BigNumber;
   readonly value?: {
@@ -79,13 +79,13 @@ export interface ReceiveAssetActivity extends BaseOnChainActivity {
 
 export interface SwapAssetsActivity extends BaseOnChainActivity {
   readonly type: 'swapAssets';
-  readonly fromAsset: CryptoAssetInfo;
+  readonly fromAsset: CryptoAsset;
   readonly fromAmount: BigNumber;
   readonly fromValue?: {
     crypto: Money;
     quote: Money;
   };
-  readonly toAsset: CryptoAssetInfo;
+  readonly toAsset: CryptoAsset;
   readonly toAmount: BigNumber;
   readonly toValue?: {
     crypto: Money;

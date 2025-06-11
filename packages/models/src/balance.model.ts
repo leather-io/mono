@@ -1,4 +1,4 @@
-import { Money } from '../money.model';
+import { Money } from './money.model';
 
 export interface BaseCryptoAssetBalance {
   /**
@@ -23,7 +23,7 @@ export interface BaseCryptoAssetBalance {
   readonly availableBalance: Money;
 }
 
-export interface BtcCryptoAssetBalance extends BaseCryptoAssetBalance {
+export interface BtcBalance extends BaseCryptoAssetBalance {
   /**
    * Balance of UTXOs with collectibles
    */
@@ -39,7 +39,7 @@ export interface BtcCryptoAssetBalance extends BaseCryptoAssetBalance {
   readonly unspendableBalance: Money;
 }
 
-export interface StxCryptoAssetBalance extends BaseCryptoAssetBalance {
+export interface StxBalance extends BaseCryptoAssetBalance {
   /**
    * availableBalance minus lockedBalance
    */
@@ -54,7 +54,4 @@ export interface StxCryptoAssetBalance extends BaseCryptoAssetBalance {
   readonly unlockedBalance: Money;
 }
 
-export type CryptoAssetBalance =
-  | BaseCryptoAssetBalance
-  | BtcCryptoAssetBalance
-  | StxCryptoAssetBalance;
+export type CryptoAssetBalance = BaseCryptoAssetBalance | BtcBalance | StxBalance;

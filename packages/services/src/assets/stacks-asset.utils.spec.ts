@@ -2,7 +2,7 @@ import { CryptoAssetCategories, CryptoAssetChains, CryptoAssetProtocols } from '
 
 import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 import {
-  createSip10CryptoAssetInfo,
+  createSip10Asset,
   getAddressFromAssetIdentifier,
   getAssetNameFromIdentifier,
   getContractPrincipalFromAssetIdentifier,
@@ -51,7 +51,7 @@ describe('getAddressFromAssetIdentifier', () => {
   });
 });
 
-describe('createSip10CryptoAssetInfo', () => {
+describe('createSip10Asset', () => {
   const assetIdentifier = 'SP123.token-contract::TOKEN';
   let sip10Token: LeatherApiSip10Token;
 
@@ -66,8 +66,8 @@ describe('createSip10CryptoAssetInfo', () => {
     };
   });
 
-  it('creates Sip10CryptoAssetInfo instance using provided data', () => {
-    const asset = createSip10CryptoAssetInfo(sip10Token);
+  it('creates Sip10Asset instance using provided data', () => {
+    const asset = createSip10Asset(sip10Token);
     expect(asset).toEqual({
       chain: CryptoAssetChains.stacks,
       category: CryptoAssetCategories.fungible,

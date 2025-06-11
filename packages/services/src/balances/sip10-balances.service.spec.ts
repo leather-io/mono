@@ -1,4 +1,4 @@
-import { Sip10CryptoAssetInfo } from '@leather.io/models';
+import { Sip10Asset } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
@@ -22,7 +22,7 @@ describe(Sip10BalancesService.name, () => {
   } as unknown as HiroStacksApiClient;
 
   const mockMarketDataService = {
-    getMarketData: vi.fn().mockImplementation((asset: Sip10CryptoAssetInfo) => {
+    getMarketData: vi.fn().mockImplementation((asset: Sip10Asset) => {
       if (asset.symbol === 'MOCK1') {
         return {
           pair: { base: asset.symbol, quote: 'USD' },
@@ -40,7 +40,7 @@ describe(Sip10BalancesService.name, () => {
   } as unknown as MarketDataService;
 
   const mockSip10TokensService = {
-    getAssetInfo: vi.fn().mockImplementation(assetId =>
+    getAsset: vi.fn().mockImplementation(assetId =>
       Promise.resolve({
         decimals: 6,
         contractId: getContractPrincipalFromAssetIdentifier(assetId),
@@ -76,7 +76,7 @@ describe(Sip10BalancesService.name, () => {
       );
       expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledWith(stacksAddress, signal);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(2);
-      expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(2);
+      expect(mockSip10TokensService.getAsset).toHaveBeenCalledTimes(2);
       expect(addressBalance.sip10s.length).toEqual(2);
     });
 
@@ -111,7 +111,7 @@ describe(Sip10BalancesService.name, () => {
       ]);
       expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledTimes(3);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(6);
-      expect(mockSip10TokensService.getAssetInfo).toHaveBeenCalledTimes(6);
+      expect(mockSip10TokensService.getAsset).toHaveBeenCalledTimes(6);
       expect(aggregateBalance.sip10s.length).toEqual(2);
     });
 

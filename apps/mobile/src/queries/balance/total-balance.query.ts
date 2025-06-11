@@ -4,10 +4,10 @@ import { useSettings } from '@/store/settings/settings';
 
 import { Money } from '@leather.io/models';
 import {
-  BtcBalance,
+  QuotedBtcBalance,
+  QuotedStxBalance,
   RunesAggregateBalance,
   Sip10AggregateBalance,
-  StxBalance,
 } from '@leather.io/services';
 import { createMoney, isDefined, sumMoney } from '@leather.io/utils';
 
@@ -16,8 +16,8 @@ import { useRunesTotalBalance } from './runes-balance.query';
 import { useSip10TotalBalance } from './sip10-balance.query';
 
 interface TotalBalance {
-  btc: FetchState<BtcBalance>;
-  stx: FetchState<StxBalance>;
+  btc: FetchState<QuotedBtcBalance>;
+  stx: FetchState<QuotedStxBalance>;
   sip10: FetchState<Sip10AggregateBalance>;
   runes: FetchState<RunesAggregateBalance>;
   totalBalance: FetchState<Money>;
