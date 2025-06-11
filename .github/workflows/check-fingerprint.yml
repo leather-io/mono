@@ -10,15 +10,3 @@ jobs:
     steps:
       - name: Prepare the app
         uses: ./.github/actions/provision
-
-      - name: Setup Expo and EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ inputs.EXPO_TOKEN }}
-
-      - name: Install jq tool
-        run: |
-          sudo apt-get update
-          sudo apt-get install jq
-        shell: bash
