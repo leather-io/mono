@@ -34,10 +34,7 @@ jobs:
           ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
 
       - name: Publish simulator expo link in PR
-        if: ${{ inputs.IS_MAIN_BRANCH == 'false' }}
         uses: actions/github-script@v7
-        env:
-          BUILD_LINK: ${{ steps.simulator_build.outputs.BUILD_LINK }}
         with:
           github-token: ${{ inputs.LEATHER_BOT }}
           script: |
