@@ -186,7 +186,7 @@ export function GradientBackdrop({ height }: { height: number }) {
     <>
       <LinearGradient
         pointerEvents="none"
-        colors={[transparentStopColor, 'white']}
+        colors={[transparentStopColor, theme.colors['ink.background-primary']]}
         locations={[0.35, 0.9]}
         style={style}
       />
