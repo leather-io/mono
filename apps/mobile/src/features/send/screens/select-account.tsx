@@ -91,9 +91,7 @@ function AccountItem({ account, asset, onSelectAccount }: AccountItemProps) {
 
   const availableBalance =
     asset === 'stx' ? stx.value.quote.availableUnlockedBalance : btc.value.quote.availableBalance;
-  if (availableBalance.amount.isZero()) {
-    return null;
-  }
+
   return (
     <AccountListItem
       onPress={() => onSelectAccount(account)}
