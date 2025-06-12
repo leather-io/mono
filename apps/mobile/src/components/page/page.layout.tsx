@@ -7,36 +7,26 @@ import { useRefreshHandler } from '@/hooks/use-refresh-handler';
 
 import { Box, HasChildren } from '@leather.io/ui/native';
 
-function ScrollableContent({ children }: HasChildren) {
+export function PageLayout({ children }: HasChildren) {
   const { actionBarOffset } = useActionBarOffset();
   const { top } = useSafeAreaInsets();
   const contentOffsetTop = top;
 
   const { refreshing, onRefresh } = useRefreshHandler();
-
-  return (
-    <ScrollView
-      contentContainerStyle={{ paddingBottom: actionBarOffset }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          progressViewOffset={contentOffsetTop}
-        />
-      }
-    >
-      {children}
-    </ScrollView>
-  );
-}
-
-interface PageLayoutProps extends HasChildren {
-  scrollable?: boolean;
-}
-export function PageLayout({ children, scrollable = true }: PageLayoutProps) {
   return (
     <Box flex={1} bg="ink.background-primary">
-      {scrollable ? <ScrollableContent>{children}</ScrollableContent> : children}
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: actionBarOffset }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            progressViewOffset={contentOffsetTop}
+          />
+        }
+      >
+        {children}
+      </ScrollView>
     </Box>
   );
 }
