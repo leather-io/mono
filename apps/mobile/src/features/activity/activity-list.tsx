@@ -18,7 +18,7 @@ interface ActivityListProps {
 
 export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   const { refreshing, onRefresh } = useRefreshHandler();
-  const maxRenderLimit = mode === 'widget' ? 10 : 20;
+  const maxRenderLimit = mode === 'widget' ? 10 : 10;
   const [renderLimit, setRenderLimit] = useState(maxRenderLimit);
 
   const filteredActivities = activity
@@ -36,21 +36,21 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   }
 
   return (
-    <Box flex={1} height="100%">
-      <Box flex={1} width="100%" height="100%">
-        <FlashList
-          data={filteredActivities}
-          renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
-          estimatedItemSize={72}
-          keyExtractor={(_, index) => `activity.${index}`}
-          showsVerticalScrollIndicator={false}
-          onEndReached={() => setRenderLimit(renderLimit + 20)}
-          onEndReachedThreshold={0.5}
-          ListEmptyComponent={<ActivityEmpty />}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      </Box>
+    <Box flex={1} width="100%" height="100%">
+      <FlashList
+        data={filteredActivities}
+        renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
+        estimatedItemSize={72}
+        estimatedListSize={{ height: 72 * renderLimit, width: 390 }}
+        keyExtractor={(_, index) => `activity.${index}`}
+        showsVerticalScrollIndicator={false}
+        onEndReached={() => setRenderLimit(renderLimit + 20)}
+        onLoad={() => setRenderLimit(renderLimit + 20)}
+        onEndReachedThreshold={0.01}
+        ListEmptyComponent={<ActivityEmpty />}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
     </Box>
   );
 }
