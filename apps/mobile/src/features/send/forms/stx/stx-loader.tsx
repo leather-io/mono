@@ -55,7 +55,6 @@ interface StxDataLoaderProps {
 }
 
 export function StxDataLoader({ account, children }: StxDataLoaderProps) {
-  const queryClient = useQueryClient();
   const stxDataQuery = useStxData(account);
 
   if (stxDataQuery.state === 'loading') {
@@ -63,7 +62,7 @@ export function StxDataLoader({ account, children }: StxDataLoaderProps) {
   }
 
   if (stxDataQuery.state === 'error') {
-    return <Error onRetry={() => queryClient.refetchQueries()} />;
+    return <Error />;
   }
 
   return children(stxDataQuery.value);
