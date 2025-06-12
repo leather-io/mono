@@ -349,6 +349,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.26.9
 
+## [1.17.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.16.0...@leather.io/services-v1.17.0) (2025-06-12)
+
+
+### Features
+
+* protect native segwit ordinals in utxo service ([efe5ef4](https://github.com/leather-io/mono/commit/efe5ef43903b15aa1b2bf56d34b674de13a881dd))
+
 ## [1.16.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.15.0...@leather.io/services-v1.16.0) (2025-06-07)
 
 

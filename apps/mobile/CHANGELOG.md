@@ -707,6 +707,27 @@
   * dependencies
     * @leather.io/ui bumped to 1.70.0
 
+## [2.52.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.51.1...@leather.io/mobile-v2.52.0) (2025-06-12)
+
+
+### Features
+
+* eas updates ([1169ac4](https://github.com/leather-io/mono/commit/1169ac446923cd15bac6e384afdb06c9442cd8fe))
+
+
+### Bug Fixes
+
+* **mobile:** display accounts with empty balances in Send ([9fe5d4f](https://github.com/leather-io/mono/commit/9fe5d4fad1232529c58c499aca1aff69180437ed))
+* **mobile:** use correct action bar gradient stop color ([f455976](https://github.com/leather-io/mono/commit/f455976e5f055e4f587cc44ce41be142ca16cb26))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.17.0
+    * @leather.io/ui bumped to 1.71.0
+
 ## [2.51.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.50.0...@leather.io/mobile-v2.51.0) (2025-06-07)
 
 
