@@ -2,7 +2,7 @@ import { createContext, useContext, useRef } from 'react';
 
 import { HasChildren } from '@leather.io/ui/native';
 
-interface LinkingRef {
+export interface LinkingRef {
   openURL(url: string): void;
 }
 

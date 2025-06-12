@@ -1,8 +1,12 @@
+import { LinkingRef } from '@/core/browser-provider';
+import { minusSign } from '@/utils/special-char';
 import { i18n } from '@lingui/core';
 import { t } from '@lingui/macro';
 import dayjs from 'dayjs';
 
-import { BaseOnChainActivity, OnChainActivity } from '@leather.io/models';
+import { BaseOnChainActivity, NetworkConfiguration, OnChainActivity } from '@leather.io/models';
+
+import { makeActivityLink } from './make-activity-link';
 
 interface getActivityStatusLabelProps {
   type: OnChainActivity['type'];
@@ -112,4 +116,57 @@ export function getActivityTitle(activity: OnChainActivity) {
         message: 'Unknown',
       });
   }
+}
+
+function getBalanceOperator(activity: OnChainActivity) {
+  if (activity.type === 'receiveAsset') return '+';
+  if (activity.type === 'sendAsset') return minusSign;
+  return undefined;
+}
+
+function getBalanceColor(activity: OnChainActivity) {
+  if (activity.type === 'receiveAsset' && activity.status === 'success')
+    return 'green.action-primary-default';
+  return 'ink.text-primary';
+}
+
+export function formatActivityItem(
+  activity: OnChainActivity,
+  networkPreference: NetworkConfiguration,
+  linkingRef: React.RefObject<LinkingRef | null>
+) {
+  const { txid, status, type, timestamp } = activity;
+  const value = 'value' in activity ? activity.value : undefined;
+  const activityHasAsset = 'asset' in activity;
+  const asset = activityHasAsset && 'symbol' in activity.asset ? activity.asset : undefined;
+
+  return {
+    txid,
+    type,
+    avatar: { type, asset, status },
+    title: getActivityTitle(activity),
+    caption: formatActivityCaption({
+      type: type,
+      status: status,
+      timestamp: timestamp,
+    }),
+    quoteBalance: value?.quote
+      ? {
+          operator: getBalanceOperator(activity),
+          balance: value.quote,
+          color: getBalanceColor(activity) || 'ink.text-primary',
+        }
+      : undefined,
+    cryptoBalance: value?.crypto
+      ? {
+          balance: value.crypto,
+        }
+      : undefined,
+    onPress: () => {
+      const link = makeActivityLink({ txid, networkPreference, asset });
+      if (link) {
+        linkingRef.current?.openURL(link);
+      }
+    },
+  };
 }
