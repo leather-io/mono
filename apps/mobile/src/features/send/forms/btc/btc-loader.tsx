@@ -7,7 +7,6 @@ import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
-import { useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -74,7 +73,6 @@ interface BtcDataLoaderProps {
 }
 
 export function BtcDataLoader({ account, children }: BtcDataLoaderProps) {
-  const queryClient = useQueryClient();
   const btcDataQuery = useBtcData(account);
 
   if (btcDataQuery.state === 'loading') {
@@ -82,7 +80,7 @@ export function BtcDataLoader({ account, children }: BtcDataLoaderProps) {
   }
 
   if (btcDataQuery.state === 'error') {
-    return <Error onRetry={() => queryClient.refetchQueries()} />;
+    return <Error />;
   }
 
   return children(btcDataQuery.value);
