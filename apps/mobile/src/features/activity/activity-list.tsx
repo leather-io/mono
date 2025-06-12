@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useRefreshHandler } from '@/components/page/page.layout';
+import { useRefreshHandler } from '@/hooks/use-refresh-handler';
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
 
@@ -18,7 +18,9 @@ interface ActivityListProps {
 
 export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   const { refreshing, onRefresh } = useRefreshHandler();
-  const [renderLimit, setRenderLimit] = useState(10);
+  const maxRenderLimit = mode === 'widget' ? 10 : 20;
+  const [renderLimit, setRenderLimit] = useState(maxRenderLimit);
+
   const filteredActivities = activity
     .slice(0, renderLimit)
     .filter(activity => activity.type in OnChainActivityTypes) as OnChainActivity[];
@@ -34,19 +36,21 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   }
 
   return (
-    <Box flex={1} width="100%" height="100%">
-      <FlashList
-        data={filteredActivities}
-        renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
-        estimatedItemSize={72}
-        keyExtractor={(_, index) => `activity.${index}`}
-        showsVerticalScrollIndicator={false}
-        onEndReached={() => setRenderLimit(renderLimit + 10)}
-        onEndReachedThreshold={0.5}
-        ListEmptyComponent={<ActivityEmpty />}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-      />
+    <Box flex={1} height="100%">
+      <Box flex={1} width="100%" height="100%">
+        <FlashList
+          data={filteredActivities}
+          renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
+          estimatedItemSize={72}
+          keyExtractor={(_, index) => `activity.${index}`}
+          showsVerticalScrollIndicator={false}
+          onEndReached={() => setRenderLimit(renderLimit + 20)}
+          onEndReachedThreshold={0.5}
+          ListEmptyComponent={<ActivityEmpty />}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      </Box>
     </Box>
   );
 }
