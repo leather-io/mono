@@ -37,7 +37,7 @@ interface ActivityLayoutProps extends HasChildren {
 }
 export function ActivityLayout({ children, accountName }: ActivityLayoutProps) {
   return (
-    <PageLayout scrollable={false}>
+    <PageLayout>
       <AnimatedHeaderScreenLayout
         contentContainerStyles={{ paddingHorizontal: 0 }}
         rightHeaderElement={<NetworkBadge />}
