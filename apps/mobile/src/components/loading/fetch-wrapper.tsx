@@ -1,4 +1,5 @@
-import { Error, FetchState, Loading } from '@/components/loading';
+import { Error } from '@/components/error/error';
+import { FetchState, Loading } from '@/components/loading';
 
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -16,7 +17,7 @@ export function FetchWrapper({ data, loader, error, children }: FetchWrapperProp
           case 'loading':
             return loader ?? <Loading />;
           case 'error':
-            return error ?? <Error errorMessage={data.errorMessage} />;
+            return error ?? <Error />;
           case 'success':
             return <>{children}</>;
           default:
