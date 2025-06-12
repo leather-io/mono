@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useRefreshHandler } from '@/components/page/page.layout';
+import { useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
 
