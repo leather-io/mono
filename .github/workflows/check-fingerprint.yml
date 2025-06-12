@@ -16,7 +16,7 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
-          token: ${{ inputs.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install jq tool
         run: |
@@ -30,13 +30,13 @@ jobs:
           echo $(jq --arg ASC_APP_ID "$ASC_APP_ID" '.submit.production.ios.ascAppId = $ASC_APP_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
         shell: bash
         env:
-          APPLE_ID: ${{ inputs.APPLE_ID }}
-          ASC_APP_ID: ${{ inputs.ASC_APP_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
 
       - name: Publish simulator expo link in PR
         uses: actions/github-script@v7
         with:
-          github-token: ${{ inputs.LEATHER_BOT }}
+          github-token: ${{ secrets.LEATHER_BOT }}
           script: |
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
