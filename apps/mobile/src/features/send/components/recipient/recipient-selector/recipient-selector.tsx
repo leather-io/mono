@@ -101,7 +101,7 @@ export function RecipientSelector({
                 <RecipientSelectorSectionHeader id={section.id} />
               )}
               renderItem={({ item }) => (
-                <RecipientSelectorItem entry={item} onSelect={onSelectAddress} />
+                <RecipientSelectorItem entry={item} onSelect={onSelectAddress} asset={asset} />
               )}
             />
           );
