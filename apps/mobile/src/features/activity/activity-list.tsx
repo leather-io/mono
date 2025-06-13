@@ -46,7 +46,6 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
         keyExtractor={(_, index) => `activity.${index}`}
         showsVerticalScrollIndicator={false}
         onEndReached={() => setRenderLimit(renderLimit + 20)}
-        onLoad={() => setRenderLimit(renderLimit + 20)}
         onEndReachedThreshold={0.01}
         ListEmptyComponent={<ActivityEmpty />}
         refreshing={refreshing}
