@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useRefreshHandler } from '@/components/page/page.layout';
+import { useRefreshHandler } from '@/hooks/use-refresh-handler';
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
 
@@ -18,7 +18,9 @@ interface ActivityListProps {
 
 export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
   const { refreshing, onRefresh } = useRefreshHandler();
-  const [renderLimit, setRenderLimit] = useState(10);
+  const initialRenderLimit = 10;
+  const [renderLimit, setRenderLimit] = useState(initialRenderLimit);
+
   const filteredActivities = activity
     .slice(0, renderLimit)
     .filter(activity => activity.type in OnChainActivityTypes) as OnChainActivity[];
@@ -33,16 +35,19 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
     );
   }
 
+  const itemHeight = 72;
+
   return (
     <Box flex={1} width="100%" height="100%">
       <FlashList
         data={filteredActivities}
         renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
-        estimatedItemSize={72}
+        estimatedItemSize={itemHeight}
         keyExtractor={(_, index) => `activity.${index}`}
         showsVerticalScrollIndicator={false}
-        onEndReached={() => setRenderLimit(renderLimit + 10)}
-        onEndReachedThreshold={0.5}
+        onEndReached={() => setRenderLimit(renderLimit + 20)}
+        onLoad={() => setRenderLimit(renderLimit + 20)}
+        onEndReachedThreshold={0.01}
         ListEmptyComponent={<ActivityEmpty />}
         refreshing={refreshing}
         onRefresh={onRefresh}
