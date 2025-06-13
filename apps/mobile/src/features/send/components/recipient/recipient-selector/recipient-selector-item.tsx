@@ -11,15 +11,23 @@ import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
 import { analytics } from '@/utils/analytics';
 import dayjs from 'dayjs';
 
-import { Cell, PersonIcon } from '@leather.io/ui/native';
+import { FungibleCryptoAsset } from '@leather.io/models';
+import {
+  ArrowTopRightIcon,
+  Avatar,
+  BitcoinFilledCircleIcon,
+  Cell,
+  StacksFilledCircleIcon,
+} from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
 interface RecipientSelectorItemProps {
   entry: RecipientSuggestionEntry;
   onSelect(address: string): void;
+  asset: FungibleCryptoAsset;
 }
 
-export function RecipientSelectorItem({ entry, onSelect }: RecipientSelectorItemProps) {
+export function RecipientSelectorItem({ entry, onSelect, asset }: RecipientSelectorItemProps) {
   function handleSelect(address: string) {
     analytics.track('send_recipient_selected', { type: entry.type });
     onSelect(address);
@@ -27,9 +35,9 @@ export function RecipientSelectorItem({ entry, onSelect }: RecipientSelectorItem
 
   switch (entry.type) {
     case 'internal':
-      return <InternalRecipientItem entry={entry} onSelect={handleSelect} />;
+      return <InternalRecipientItem entry={entry} onSelect={handleSelect} asset={asset} />;
     case 'external':
-      return <ExternalRecipientItem entry={entry} onSelect={handleSelect} />;
+      return <ExternalRecipientItem entry={entry} onSelect={handleSelect} asset={asset} />;
     default:
       return assertUnreachable(entry);
   }
@@ -68,7 +76,7 @@ interface ExternalRecipientItemProps extends RecipientSelectorItemProps {
   entry: ExternalRecipientSuggestionEntry;
 }
 
-function ExternalRecipientItem({ entry, onSelect }: ExternalRecipientItemProps) {
+function ExternalRecipientItem({ entry, onSelect, asset }: ExternalRecipientItemProps) {
   const { title, subtitle } = entry.bnsName
     ? {
         title: entry.bnsName,
@@ -79,10 +87,15 @@ function ExternalRecipientItem({ entry, onSelect }: ExternalRecipientItemProps) 
         subtitle: entry.timestamp ? dayjs.unix(entry.timestamp).fromNow() : undefined,
       };
 
+  const indicatorIcon = {
+    BTC: <BitcoinFilledCircleIcon variant="small" />,
+    STX: <StacksFilledCircleIcon variant="small" />,
+  }[asset.symbol];
+
   return (
     <Cell.Root pressable={true} maxHeight={68} onPress={() => onSelect(entry.address)}>
       <Cell.Icon>
-        <AccountAvatar icon={PersonIcon} />
+        <Avatar icon={<ArrowTopRightIcon />} indicator={indicatorIcon} />
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label
