@@ -14,7 +14,6 @@ export default defineProject({
   },
   test: {
     ...defaultVitestUnitTestingConfig.test,
-    environment: 'jsdom',
     include: [
       'app/**/*.spec.{ts,tsx}',
       'app/**/*.test.{ts,tsx}',

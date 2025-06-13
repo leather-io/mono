@@ -1,6 +1,13 @@
 export function getPostHref(slug: string) {
-  if (process.env.NODE_ENV === 'development') {
-    return `https://prosperous-combination-099461.framer.app/posts/${slug}`;
+  const trimmedSlug = slug.trim();
+
+  if (URL.canParse(trimmedSlug)) {
+    return trimmedSlug;
   }
-  return `https://leather.io/posts/${slug}`;
+
+  if (import.meta.env.DEV) {
+    return `https://prosperous-combination-099461.framer.app/posts/${trimmedSlug}`;
+  }
+
+  return `https://leather.io/posts/${trimmedSlug}`;
 }
