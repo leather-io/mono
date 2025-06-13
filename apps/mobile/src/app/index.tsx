@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 import { HeaderActions } from '@/components/headers/components/header-actions';
 import { Header } from '@/components/headers/header';
-import { PageLayout } from '@/components/page/page.layout';
+import { Screen } from '@/components/screen/screen';
 import { AccountsWidget } from '@/features/account/accounts-widget';
 import { ActivityWidget } from '@/features/activity/activity-widget';
 import { AllAccountBalances } from '@/features/balances/balances';
@@ -33,7 +33,7 @@ export default function HomeScreen() {
   useOnDetectNoNotificationPreference(notificationSheetRef.current?.present);
 
   return (
-    <>
+    <Screen>
       <Header
         leftElement={
           <Box flexDirection="row" alignItems="center" p="2" gap="2">
@@ -43,37 +43,39 @@ export default function HomeScreen() {
         }
         rightElement={<HeaderActions />}
       />
-      <PageLayout>
-        <Box gap="8" mt="5">
-          <AccountsWidget />
-          {hasWallets && (
-            <>
-              <BalancesWidget
-                onPressHeader={() => router.navigate('/balances')}
-                balance={<TotalBalance color="ink.text-subdued" />}
-                title={t({ id: 'balances.header_title', message: 'All tokens' })}
-              >
-                <AllAccountBalances mode="widget" />
-              </BalancesWidget>
-              <ActivityWidget
-                activity={activity}
-                onPressHeader={() => router.navigate('/activity')}
-                title={t({ id: 'activity.header_title', message: 'All activity' })}
-              />
-              <EarnWidget />
-              {releaseCollectibles && hasCollectibles(collectibles) && (
-                <CollectiblesWidget
-                  onPressHeader={() => router.navigate('/collectibles')}
-                  title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
+      <Screen.Body>
+        <Screen.ScrollView>
+          <Box gap="8" pt="6">
+            <AccountsWidget />
+            {hasWallets && (
+              <>
+                <BalancesWidget
+                  onPressHeader={() => router.navigate('/balances')}
+                  balance={<TotalBalance color="ink.text-subdued" />}
+                  title={t({ id: 'balances.header_title', message: 'All tokens' })}
                 >
-                  <Collectibles collectibles={collectibles} mode="widget" />
-                </CollectiblesWidget>
-              )}
-            </>
-          )}
-        </Box>
-        <NotificationsSheet sheetRef={notificationSheetRef} />
-      </PageLayout>
-    </>
+                  <AllAccountBalances mode="widget" />
+                </BalancesWidget>
+                <ActivityWidget
+                  activity={activity}
+                  onPressHeader={() => router.navigate('/activity')}
+                  title={t({ id: 'activity.header_title', message: 'All activity' })}
+                />
+                <EarnWidget />
+                {releaseCollectibles && hasCollectibles(collectibles) && (
+                  <CollectiblesWidget
+                    onPressHeader={() => router.navigate('/collectibles')}
+                    title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
+                  >
+                    <Collectibles collectibles={collectibles} mode="widget" />
+                  </CollectiblesWidget>
+                )}
+              </>
+            )}
+          </Box>
+        </Screen.ScrollView>
+      </Screen.Body>
+      <NotificationsSheet sheetRef={notificationSheetRef} />
+    </Screen>
   );
 }
