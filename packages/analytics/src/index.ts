@@ -14,3 +14,5 @@ export function configureAnalyticsClient<T extends AnalyticsClientInterface>({
 }) {
   return AnalyticsClient<T>({ client, defaultProperties, defaultTraits });
 }
+
+export { AnalyticsClient };
