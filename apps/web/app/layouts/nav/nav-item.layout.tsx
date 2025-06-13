@@ -16,9 +16,9 @@ export function NavItem({ children, icon, href }: NavItemProps) {
   const content = (
     <Flag
       width="100%"
-      spacing="space.03"
+      spacing="space.02"
       img={
-        <Box ml="1px" width="16px" height="16">
+        <Box width="16px" height="16px" display="flex" alignItems="center" justifyContent="center">
           {icon}
         </Box>
       }

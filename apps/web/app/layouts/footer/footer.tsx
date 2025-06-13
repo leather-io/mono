@@ -8,7 +8,6 @@ function AppFooter() {
       <Footer.Grid>
         <Footer.Column title="Dive deeper">
           <Footer.Link href={externalLeatherNavigator.guides}>Guide</Footer.Link>
-          <Footer.Link href={externalLeatherNavigator.news}>FAQ</Footer.Link>
           <Footer.Link href={externalLeatherNavigator.blog}>Blog</Footer.Link>
           <Footer.Link href={externalLeatherNavigator.docs}>Developer docs</Footer.Link>
         </Footer.Column>
@@ -16,12 +15,13 @@ function AppFooter() {
         <Footer.Column title="Legal & policies">
           <Footer.Link href="https://leather.io/privacy-policy">Privacy Policy</Footer.Link>
           <Footer.Link href="https://leather.io/terms">Terms of Service</Footer.Link>
+          <Footer.Link href="https://leather.io/security">Security</Footer.Link>
           <Footer.Link href="https://trustmachines.notion.site/Public-assets-00144dc5c69142199b00788ff61d721c">
             Brand assets
           </Footer.Link>
         </Footer.Column>
 
-        <Footer.Column title="Earn">
+        <Footer.Column title="Advanced Earn">
           <Footer.Link withIcon href="https://earn.leather.io/pool-admin">
             Pool administration
           </Footer.Link>
