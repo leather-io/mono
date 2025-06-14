@@ -1,20 +1,11 @@
 import { TestId } from '@/shared/test-id';
 
-import { ArrowLeftIcon, Pressable, legacyTouchablePressEffect } from '@leather.io/ui/native';
+import { ArrowLeftIcon, IconButton } from '@leather.io/ui/native';
 
 interface HeaderBackButtonProps {
   onPress?(): void;
   testID?: string;
 }
-export function HeaderBackButton({ onPress, testID }: HeaderBackButtonProps) {
-  return (
-    <Pressable
-      onPress={onPress}
-      p="3"
-      testID={testID ?? TestId.backButton}
-      pressEffects={legacyTouchablePressEffect}
-    >
-      <ArrowLeftIcon />
-    </Pressable>
-  );
+export function HeaderBackButton({ onPress, testID = TestId.backButton }: HeaderBackButtonProps) {
+  return <IconButton label="" icon={<ArrowLeftIcon />} testID={testID} onPress={onPress} />;
 }
