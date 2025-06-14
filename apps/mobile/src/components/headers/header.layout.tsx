@@ -37,7 +37,7 @@ export function HeaderLayout({
         height={HEADER_HEIGHT}
         px="4"
       >
-        <Box flexGrow={1} zIndex="20">
+        <Box alignItems="flex-start" flexGrow={1} zIndex="20">
           {leftElement}
         </Box>
         <Box
