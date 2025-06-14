@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { NakedHeader } from '@/components/headers/naked-header';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { accountIconMap } from '@/features/account/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
-import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
@@ -24,7 +23,6 @@ interface ChooseAvatarProps extends AccountId {
 }
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {
   const { bottom } = useSafeAreaInsets();
-  const defaultStyles = useScrollViewStyles();
   const theme = useTheme<Theme>();
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
@@ -51,9 +49,9 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
   }
 
   return (
-    <Box bg="ink.background-primary" flex={1}>
-      <NakedHeader />
-      <ScrollView contentContainerStyle={defaultStyles}>
+    <Screen>
+      <Header />
+      <Screen.ScrollView>
         <Box gap="5">
           <SquircleBox
             alignSelf="center"
@@ -70,15 +68,17 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             {PreviewIcon && <PreviewIcon width={64} height={64} />}
           </SquircleBox>
 
-          <Text variant="label01">
-            {t({
-              id: 'choose_avatar.images.subtitle',
-              message: 'Icons',
-            })}
-          </Text>
+          <Box px="5">
+            <Text variant="label01">
+              {t({
+                id: 'choose_avatar.images.subtitle',
+                message: 'Icons',
+              })}
+            </Text>
+          </Box>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
         </Box>
-      </ScrollView>
+      </Screen.ScrollView>
       <Box
         style={{ paddingBottom: bottom + theme.spacing['5'] }}
         px="5"
@@ -95,7 +95,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
           })}
         />
       </Box>
-    </Box>
+    </Screen>
   );
 }
 

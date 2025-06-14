@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { AnalyticsSheet } from '@/features/settings/analytics-sheet';
 import { AppAuthenticationSheet } from '@/features/settings/app-authentication-sheet';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
 import { SecurityLevelPreference } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
@@ -41,13 +41,12 @@ export default function SettingsSecurityScreen() {
     id: 'security.header_title',
     message: 'Security',
   });
+
   return (
-    <>
-      <AnimatedHeaderScreenLayout
-        rightHeaderElement={<NetworkBadge />}
-        title={pageTitle}
-        contentTitle={pageTitle}
-      >
+    <Screen>
+      <Header />
+      <Screen.ScrollView>
+        <Screen.Title>{pageTitle}</Screen.Title>
         <SettingsList>
           <SettingsListItem
             title={t({
@@ -82,9 +81,9 @@ export default function SettingsSecurityScreen() {
             }}
           />
         </SettingsList>
-      </AnimatedHeaderScreenLayout>
+      </Screen.ScrollView>
       <AnalyticsSheet sheetRef={analyticsSheetRef} />
       <AppAuthenticationSheet sheetRef={appAuthenticationSheetRef} />
-    </>
+    </Screen>
   );
 }

@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 
 import { Divider } from '@/components/divider';
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
@@ -161,93 +162,101 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
   return (
     <>
-      <AnimatedHeaderScreenLayout
-        title={t({
-          id: 'configure_wallet.header_title',
-          message: 'Configure wallet',
-        })}
-      >
-        <Box gap="3">
-          <Text variant="heading05">{wallet.name}</Text>
-          <SettingsList>
-            <SettingsListItem
-              title={t({
-                id: 'configure_wallet.view_key.cell_title',
-                message: 'View Secret Key',
-              })}
-              icon={<Eye1ClosedIcon />}
-              onPress={() => {
-                router.navigate({
-                  pathname: '/settings/wallet/configure/[wallet]/view-secret-key',
-                  params: { fingerprint: wallet.fingerprint, wallet: wallet.fingerprint },
-                });
-              }}
-              testID={TestId.walletSettingsViewSecretKeyButton}
-            />
-            <SettingsListItem
-              title={t({
-                id: 'configure_wallet.rename_wallet.cell_title',
-                message: 'Rename wallet',
-              })}
-              icon={<SquareLinesBottomIcon />}
-              onPress={() => {
-                walletNameSheetRef.current?.present();
-              }}
-              testID={TestId.walletSettingsRenameWalletButton}
-            />
-            <SettingsListItem
-              title={t({
-                id: 'configure_wallet.remove_wallet.cell_title',
-                message: 'Remove wallet',
-              })}
-              icon={<TrashIcon color="red.action-primary-default" />}
-              onPress={() => {
-                removeWalletSheetRef.current?.present();
-              }}
-              testID={TestId.walletSettingsRemoveWalletButton}
-            />
-          </SettingsList>
-          {releaseWaitlistFeatures && (
-            <Accordion
-              label={t({
-                id: 'configure_wallet.accordion_label',
-                message: 'More options',
-              })}
-              content={
-                <SettingsList>
-                  {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
-                    feature => (
-                      <SettingsListItem
-                        key={feature.id}
-                        title={feature.title}
-                        icon={feature.icon}
-                        onPress={onOpenSheet({
-                          title: feature.title,
-                          id: feature.id,
-                        })}
-                      />
-                    )
-                  )}
-                </SettingsList>
-              }
-            />
-          )}
-        </Box>
-        <Box mb="7">
-          <Divider />
-          <Box py="5">
-            <Text variant="caption01">
-              {t({
-                id: 'configure_wallet.creation_label',
-                message: 'Creation date',
-              })}
-            </Text>
-            <Text variant="caption01" color="ink.text-subdued">
-              {dayjs(wallet.createdOn).format('D MMM YYYY')}
-            </Text>
+      <Screen>
+        <Header />
+        <Screen.ScrollView>
+          <Screen.Title>
+            {t({
+              id: 'configure_wallet.header_title',
+              message: 'Configure wallet',
+            })}
+          </Screen.Title>
+          <Box px="5" py="2">
+            <Text variant="heading05">{wallet.name}</Text>
           </Box>
-        </Box>
-      </AnimatedHeaderScreenLayout>
+          <Box gap="3">
+            <SettingsList gap="1">
+              <SettingsListItem
+                title={t({
+                  id: 'configure_wallet.view_key.cell_title',
+                  message: 'View Secret Key',
+                })}
+                icon={<Eye1ClosedIcon />}
+                onPress={() => {
+                  router.navigate({
+                    pathname: '/settings/wallet/configure/[wallet]/view-secret-key',
+                    params: { fingerprint: wallet.fingerprint, wallet: wallet.fingerprint },
+                  });
+                }}
+                testID={TestId.walletSettingsViewSecretKeyButton}
+              />
+              <SettingsListItem
+                title={t({
+                  id: 'configure_wallet.rename_wallet.cell_title',
+                  message: 'Rename wallet',
+                })}
+                icon={<SquareLinesBottomIcon />}
+                onPress={() => {
+                  walletNameSheetRef.current?.present();
+                }}
+                testID={TestId.walletSettingsRenameWalletButton}
+              />
+              <SettingsListItem
+                title={t({
+                  id: 'configure_wallet.remove_wallet.cell_title',
+                  message: 'Remove wallet',
+                })}
+                icon={<TrashIcon color="red.action-primary-default" />}
+                onPress={() => {
+                  removeWalletSheetRef.current?.present();
+                }}
+                testID={TestId.walletSettingsRemoveWalletButton}
+              />
+            </SettingsList>
+            {releaseWaitlistFeatures && (
+              <Box px="5">
+                <Accordion
+                  label={t({
+                    id: 'configure_wallet.accordion_label',
+                    message: 'More options',
+                  })}
+                  content={
+                    <SettingsList mx="-5">
+                      {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
+                        feature => (
+                          <SettingsListItem
+                            key={feature.id}
+                            title={feature.title}
+                            icon={feature.icon}
+                            onPress={onOpenSheet({
+                              title: feature.title,
+                              id: feature.id,
+                            })}
+                          />
+                        )
+                      )}
+                    </SettingsList>
+                  }
+                />
+              </Box>
+            )}
+
+            <Divider />
+
+            <Box py="3" px="5">
+              <Text variant="caption01">
+                {t({
+                  id: 'configure_wallet.creation_label',
+                  message: 'Creation date',
+                })}
+              </Text>
+              <Text variant="caption01" color="ink.text-subdued">
+                {dayjs(wallet.createdOn).format('D MMM YYYY')}
+              </Text>
+            </Box>
+          </Box>
+        </Screen.ScrollView>
+      </Screen>
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
       <NotifyUserSheetLayout sheetData={notifySheetData} sheetRef={notifySheetRef} />

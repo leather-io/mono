@@ -1,8 +1,8 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
@@ -53,39 +53,40 @@ export default function SettingsNetworksScreen() {
     id: 'networks.header_title',
     message: 'Networks',
   });
+
   return (
-    <AnimatedHeaderScreenLayout
-      rightHeaderElement={<NetworkBadge />}
-      title={pageTitle}
-      contentTitle={pageTitle}
-    >
-      <SettingsList>
-        {defaultNetworkPreferences.map(network => (
-          <SettingsListItem
-            icon={getNetworkIcon(network)}
-            title={i18n._({
-              id: 'networks.cell_title',
-              message: '{network}',
-              values: { network: capitalize(network) },
-            })}
-            caption={
-              settings.networkPreference.id === network
-                ? t({
-                    id: 'networks.cell_caption_enabled',
-                    message: 'Enabled',
-                  })
-                : t({
-                    id: 'networks.cell_caption_disabled',
-                    message: 'Disabled',
-                  })
-            }
-            key={network}
-            onPress={() => onChangeNetwork(network)}
-            type="radio"
-            isRadioSelected={settings.networkPreference.id === network}
-          />
-        ))}
-      </SettingsList>
-    </AnimatedHeaderScreenLayout>
+    <Screen>
+      <Header />
+      <Screen.ScrollView>
+        <Screen.Title>{pageTitle}</Screen.Title>
+        <SettingsList>
+          {defaultNetworkPreferences.map(network => (
+            <SettingsListItem
+              icon={getNetworkIcon(network)}
+              title={i18n._({
+                id: 'networks.cell_title',
+                message: '{network}',
+                values: { network: capitalize(network) },
+              })}
+              caption={
+                settings.networkPreference.id === network
+                  ? t({
+                      id: 'networks.cell_caption_enabled',
+                      message: 'Enabled',
+                    })
+                  : t({
+                      id: 'networks.cell_caption_disabled',
+                      message: 'Disabled',
+                    })
+              }
+              key={network}
+              onPress={() => onChangeNetwork(network)}
+              type="radio"
+              isRadioSelected={settings.networkPreference.id === network}
+            />
+          ))}
+        </SettingsList>
+      </Screen.ScrollView>
+    </Screen>
   );
 }
