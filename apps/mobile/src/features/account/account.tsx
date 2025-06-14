@@ -1,6 +1,6 @@
 import { FetchErrorCallout } from '@/components/error/fetch-error';
-import { NakedHeader } from '@/components/headers/naked-header';
-import { PageLayout } from '@/components/page/page.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { AccountOverview } from '@/features/account/components/account-overview-card';
 import { ActivityWidget } from '@/features/activity/activity-widget';
 import { AccountBalances } from '@/features/balances/balances';
@@ -39,9 +39,8 @@ export function Account({ account, walletName }: AccountProps) {
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
   return (
-    <>
-      {/* TODO: Can this be simply Header, since it's not naked? */}
-      <NakedHeader
+    <Screen>
+      <Header
         topElement={isErrorTotalBalance && <FetchErrorCallout />}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
@@ -61,7 +60,7 @@ export function Account({ account, walletName }: AccountProps) {
           </Box>
         }
       />
-      <PageLayout>
+      <Screen.ScrollView>
         <AccountOverview
           isLoading={isLoadingTotalBalance}
           icon={icon}
@@ -118,7 +117,7 @@ export function Account({ account, walletName }: AccountProps) {
             </CollectiblesWidget>
           )}
         </Box>
-      </PageLayout>
-    </>
+      </Screen.ScrollView>
+    </Screen>
   );
 }
