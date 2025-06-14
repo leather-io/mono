@@ -1,13 +1,14 @@
 import { useRef } from 'react';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { AccountAddress } from '@/features/account/components/account-address';
 import { AccountCard } from '@/features/account/components/account-card';
 import { AccountBalance } from '@/features/balances/total-balance';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { AccountNameSheet } from '@/features/settings/wallet-and-accounts/account-name-sheet';
 import { TestId } from '@/shared/test-id';
 import { Account, AccountLoader } from '@/store/accounts/accounts';
@@ -72,88 +73,92 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
 
   return (
     <>
-      <AnimatedHeaderScreenLayout
-        rightHeaderElement={<NetworkBadge />}
-        title={pageTitle}
-        contentTitle={pageTitle}
-      >
-        <Box pb="3">
-          <WalletLoader fingerprint={account.fingerprint} key={account.id}>
-            {wallet => (
-              <AccountCard
-                address={<AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />}
-                secondaryTitle={
-                  <AccountBalance
-                    fingerprint={fingerprint}
-                    accountIndex={accountIndex}
-                    variant="label01"
+      <Screen>
+        <Header leftElement={<HeaderBackButton />} />
+        <Screen.ScrollView>
+          <Screen.Title>{pageTitle}</Screen.Title>
+          <Box gap="4">
+            <Box px="5">
+              <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+                {wallet => (
+                  <AccountCard
+                    address={
+                      <AccountAddress fingerprint={fingerprint} accountIndex={accountIndex} />
+                    }
+                    secondaryTitle={
+                      <AccountBalance
+                        fingerprint={fingerprint}
+                        accountIndex={accountIndex}
+                        variant="label01"
+                      />
+                    }
+                    icon={account.icon}
+                    iconTestID={defaultIconTestId(account.icon)}
+                    primaryTitle={account.name}
+                    caption={wallet.name}
+                    onPress={() => {
+                      router.navigate({
+                        pathname: '/account/[accountId]',
+                        params: { accountId: account.id },
+                      });
+                    }}
                   />
-                }
-                icon={account.icon}
-                iconTestID={defaultIconTestId(account.icon)}
-                primaryTitle={account.name}
-                caption={wallet.name}
+                )}
+              </WalletLoader>
+            </Box>
+            <SettingsList gap="1">
+              <SettingsListItem
+                title={t({
+                  id: 'configure_account.name.cell_title',
+                  message: 'Name',
+                })}
+                caption={i18n._({
+                  id: 'configure_account.name.cell_caption',
+                  message: '{name}',
+                  values: { name: account.name },
+                })}
+                icon={<PassportIcon />}
+                onPress={() => {
+                  accountNameSheetRef.current?.present();
+                }}
+                testID={TestId.walletSettingsAccountNameCell}
+              />
+              <SettingsListItem
+                title={t({
+                  id: 'configure_account.avatar.cell_title',
+                  message: 'Avatar',
+                })}
+                icon={<HeadIcon />}
                 onPress={() => {
                   router.navigate({
-                    pathname: '/account/[accountId]',
-                    params: { accountId: account.id },
+                    pathname: '/settings/wallet/configure/[wallet]/[account]/choose-avatar',
+                    params: { wallet: fingerprint, account: accountIndex },
                   });
                 }}
               />
-            )}
-          </WalletLoader>
-        </Box>
-        <SettingsList>
-          <SettingsListItem
-            title={t({
-              id: 'configure_account.name.cell_title',
-              message: 'Name',
-            })}
-            caption={i18n._({
-              id: 'configure_account.name.cell_caption',
-              message: '{name}',
-              values: { name: account.name },
-            })}
-            icon={<PassportIcon />}
-            onPress={() => {
-              accountNameSheetRef.current?.present();
-            }}
-            testID={TestId.walletSettingsAccountNameCell}
-          />
-          <SettingsListItem
-            title={t({
-              id: 'configure_account.avatar.cell_title',
-              message: 'Avatar',
-            })}
-            icon={<HeadIcon />}
-            onPress={() => {
-              router.navigate({
-                pathname: '/settings/wallet/configure/[wallet]/[account]/choose-avatar',
-                params: { wallet: fingerprint, account: accountIndex },
-              });
-            }}
-          />
-          {account.status === 'active' ? (
-            <SettingsListItem
-              title={t({
-                id: 'configure_account.hide_account.cell_title',
-                message: 'Hide account',
-              })}
-              icon={<Eye1ClosedIcon />}
-              onPress={toggleHideAccount}
-            />
-          ) : (
-            <SettingsListItem
-              title={t({
-                id: 'configure_account.unhide_account.cell_title',
-                message: 'Unhide account',
-              })}
-              icon={<Eye1Icon />}
-              onPress={toggleHideAccount}
-            />
-          )}
-        </SettingsList>
-      </AnimatedHeaderScreenLayout>
+              {account.status === 'active' ? (
+                <SettingsListItem
+                  title={t({
+                    id: 'configure_account.hide_account.cell_title',
+                    message: 'Hide account',
+                  })}
+                  icon={<Eye1ClosedIcon />}
+                  onPress={toggleHideAccount}
+                />
+              ) : (
+                <SettingsListItem
+                  title={t({
+                    id: 'configure_account.unhide_account.cell_title',
+                    message: 'Unhide account',
+                  })}
+                  icon={<Eye1Icon />}
+                  onPress={toggleHideAccount}
+                />
+              )}
+            </SettingsList>
+          </Box>
+        </Screen.ScrollView>
+      </Screen>
       <AccountNameSheet name={account.name} setName={setName} sheetRef={accountNameSheetRef} />
     </>
   );

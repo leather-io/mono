@@ -1,13 +1,13 @@
 import { useRef } from 'react';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useLocaleFlag } from '@/features/feature-flags';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { toggleLocalization } from '@/locales/toggle-localization';
 import { useSettings } from '@/store/settings/settings';
@@ -45,18 +45,16 @@ export default function SettingsDisplayScreen() {
     changeHapticsPreference(hapticsPreference === 'enabled' ? 'disabled' : 'enabled');
   }
 
-  const pageTitle = t({
-    id: 'display.header_title',
-    message: 'Display',
-  });
-
   return (
-    <>
-      <AnimatedHeaderScreenLayout
-        rightHeaderElement={<NetworkBadge />}
-        title={pageTitle}
-        contentTitle={pageTitle}
-      >
+    <Screen>
+      <Header />
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({
+            id: 'display.header_title',
+            message: 'Display',
+          })}
+        </Screen.Title>
         <SettingsList>
           <SettingsListItem
             title={t({
@@ -152,11 +150,11 @@ export default function SettingsDisplayScreen() {
             switchValue={hapticsPreference === 'enabled'}
           />
         </SettingsList>
-      </AnimatedHeaderScreenLayout>
+      </Screen.ScrollView>
       <ThemeSheet sheetRef={themeSheetRef} />
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />
       <AccountIdentifierSheet sheetRef={accountIdentifierSheetRef} />
-    </>
+    </Screen>
   );
 }

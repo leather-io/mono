@@ -1,4 +1,5 @@
-import { NakedHeader } from '@/components/headers/naked-header';
+import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { Header } from '@/components/headers/header';
 import { TabBar } from '@/components/tab-bar';
 import { t } from '@lingui/macro';
 import { Tabs, usePathname, useRouter } from 'expo-router';
@@ -11,7 +12,7 @@ function NotificationsHeader() {
 
   return (
     <>
-      <NakedHeader />
+      <Header leftElement={<HeaderBackButton />} />
       <Box bg="ink.background-primary" paddingBottom="5" paddingHorizontal="5">
         <Text variant="heading03">
           {t({
