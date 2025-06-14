@@ -1,8 +1,10 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { AllAccountBalances } from '@/features/balances/balances';
 import { TotalBalance } from '@/features/balances/total-balance';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { t } from '@lingui/macro';
+
+import { Box, Text } from '@leather.io/ui/native';
 
 export default function BalancesScreen() {
   const pageTitle = t({
@@ -11,15 +13,16 @@ export default function BalancesScreen() {
   });
 
   return (
-    <AnimatedHeaderScreenLayout
-      contentContainerStyles={{ paddingHorizontal: 0 }}
-      rightHeaderElement={<NetworkBadge />}
-      title={pageTitle}
-      contentTitle={pageTitle}
-      subtitle={<TotalBalance variant="heading03" />}
-      isHeaderReversible={true}
-    >
-      <AllAccountBalances mode="full" />
-    </AnimatedHeaderScreenLayout>
+    <Screen>
+      <Header />
+      <Screen.ScrollView>
+        {/* TODO: This was previously called "ReverisbleHeader. The behavior wasn't clear. Clarify out and replicate. */}
+        <Box px="5" pb="5" mb="3">
+          <Text variant="label01">{pageTitle}</Text>
+          <TotalBalance variant="heading03" />
+        </Box>
+        <AllAccountBalances mode="full" />
+      </Screen.ScrollView>
+    </Screen>
   );
 }
