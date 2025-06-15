@@ -1,5 +1,4 @@
 import { FetchErrorCallout } from '@/components/error/fetch-error';
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { AccountOverview } from '@/features/account/components/account-overview-card';
 import { ActivityWidget } from '@/features/activity/activity-widget';
@@ -40,7 +39,7 @@ export function Account({ account, walletName }: AccountProps) {
   const isErrorTotalBalance = totalBalance.state === 'error';
   return (
     <Screen>
-      <Header
+      <Screen.Header
         topElement={isErrorTotalBalance && <FetchErrorCallout />}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">

@@ -1,4 +1,3 @@
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
 import { useMnemonic } from '@/store/storage-persistors';
@@ -17,7 +16,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.Body>
         <Screen.ScrollView>
           <Screen.Title>

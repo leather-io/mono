@@ -1,4 +1,3 @@
-import { Header } from '@/components/headers/header';
 import { FetchWrapper } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { ScreenList } from '@/components/screen/screen-list';
@@ -16,7 +15,7 @@ export default function ActivityScreen() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       {/*TODO: Add to header centerElement when animation is added*/}
       {/*t({
         id: 'activity.header_title',

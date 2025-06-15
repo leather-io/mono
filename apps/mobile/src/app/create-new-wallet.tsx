@@ -1,7 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
@@ -79,7 +78,7 @@ export default function CreateNewWallet() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.Body>
         <Screen.ScrollView>
           <Screen.Title>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { accountIconMap } from '@/features/account/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
@@ -50,7 +49,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.ScrollView>
         <Box gap="5">
           <SquircleBox

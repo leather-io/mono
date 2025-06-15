@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { SkipSecureWalletSheet } from '@/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
@@ -17,7 +16,7 @@ export default function SecureYourWalletScreen() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.Body>
         <Screen.ScrollView>
           <Screen.Title>

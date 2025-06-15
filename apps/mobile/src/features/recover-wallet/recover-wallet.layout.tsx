@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { RecoverWalletSheet } from '@/features/wallet-manager/recover-wallet/recover-wallet-sheet';
 import { TestId } from '@/shared/test-id';
@@ -36,7 +35,7 @@ export function RecoverWalletLayout({
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.Body>
         <Screen.ScrollView>
           <Screen.Title>

@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
@@ -47,7 +46,7 @@ export default function SettingsDisplayScreen() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.ScrollView>
         <Screen.Title>
           {t({

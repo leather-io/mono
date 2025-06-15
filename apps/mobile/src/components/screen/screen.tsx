@@ -1,3 +1,4 @@
+import { ScreenHeader } from '@/components/screen/screen-header/screen-header';
 import { ScreenScrollView } from '@/components/screen/screen-scrollview';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
@@ -22,4 +23,5 @@ function Title({ children }: HasChildren) {
 
 Screen.Body = Body;
 Screen.Title = Title;
+Screen.Header = ScreenHeader;
 Screen.ScrollView = ScreenScrollView;

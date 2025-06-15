@@ -1,4 +1,3 @@
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { AccountBalances } from '@/features/balances/balances';
 import { AccountBalance } from '@/features/balances/total-balance';
@@ -26,7 +25,7 @@ export default function BalancesScreen() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.ScrollView>
         {/* TODO: This was previously called "ReverisbleHeader. The behavior wasn't clear. Clarify out and replicate. */}
         <Box px="5" pb="5" mb="3">
