@@ -3,7 +3,7 @@ import { Screen } from '@/components/screen/screen';
 import { ScreenList } from '@/components/screen/screen-list';
 import { ActivityListItem } from '@/features/activity';
 import { ActivityEmpty } from '@/features/activity/activity-empty';
-import { useRefreshHandler } from '@/features/refresh-control/refresh-control';
+import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { t } from '@lingui/macro';
 
@@ -24,6 +24,7 @@ export default function ActivityScreen() {
       <FetchWrapper data={activity}>
         {activity.state === 'success' && (
           <ScreenList
+            refreshControl={<RefreshControl />}
             ListHeaderComponent={
               <Screen.Title>
                 {t({

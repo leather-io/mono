@@ -1,6 +1,7 @@
 import { Screen } from '@/components/screen/screen';
 import { AccountBalances } from '@/features/balances/balances';
 import { AccountBalance } from '@/features/balances/total-balance';
+import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
@@ -26,7 +27,7 @@ export default function BalancesScreen() {
   return (
     <Screen>
       <Screen.Header />
-      <Screen.ScrollView>
+      <Screen.ScrollView refreshControl={<RefreshControl />}>
         {/* TODO: This was previously called "ReverisbleHeader. The behavior wasn't clear. Clarify out and replicate. */}
         <Box px="5" pb="5" mb="3">
           <Text variant="label01">{pageTitle}</Text>
