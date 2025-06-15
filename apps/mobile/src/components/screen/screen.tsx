@@ -1,4 +1,5 @@
 import { ScreenScrollView } from '@/components/screen/screen-scrollview';
+import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
 import { Box, BoxProps, HasChildren, Text } from '@leather.io/ui/native';
 
@@ -7,7 +8,8 @@ export function Screen(props: BoxProps) {
 }
 
 function Body(props: BoxProps) {
-  return <Box flex={1} {...props} />;
+  const bottomInset = useSafeBottomInset();
+  return <Box flex={1} style={{ paddingBottom: bottomInset }} {...props} />;
 }
 
 function Title({ children }: HasChildren) {

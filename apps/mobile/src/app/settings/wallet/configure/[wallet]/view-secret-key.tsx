@@ -1,5 +1,3 @@
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
@@ -10,11 +8,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Box, Button, Text } from '@leather.io/ui/native';
 
 function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
-  const { bottom } = useSafeAreaInsets();
   const router = useRouter();
   const { mnemonic, passphrase } = useMnemonic({ fingerprint });
 
-  if (!mnemonic) return <Box flex={1} backgroundColor="ink.background-primary" />;
+  if (!mnemonic) {
+    return <Box flex={1} backgroundColor="ink.background-primary" />;
+  }
 
   return (
     <Screen>
@@ -38,7 +37,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
             <MnemonicDisplay mnemonic={mnemonic} passphrase={passphrase} />
           </Box>
         </Screen.ScrollView>
-        <Box px="5" bottom={bottom}>
+        <Box px="5">
           <Button
             onPress={() => router.back()}
             buttonState="default"

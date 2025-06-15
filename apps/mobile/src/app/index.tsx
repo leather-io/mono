@@ -43,38 +43,36 @@ export default function HomeScreen() {
         }
         rightElement={<HeaderActions />}
       />
-      <Screen.Body>
-        <Screen.ScrollView>
-          <Box gap="8" pt="6">
-            <AccountsWidget />
-            {hasWallets && (
-              <>
-                <BalancesWidget
-                  onPressHeader={() => router.navigate('/balances')}
-                  balance={<TotalBalance color="ink.text-subdued" />}
-                  title={t({ id: 'balances.header_title', message: 'All tokens' })}
+      <Screen.ScrollView>
+        <Box gap="8" pt="6">
+          <AccountsWidget />
+          {hasWallets && (
+            <>
+              <BalancesWidget
+                onPressHeader={() => router.navigate('/balances')}
+                balance={<TotalBalance color="ink.text-subdued" />}
+                title={t({ id: 'balances.header_title', message: 'All tokens' })}
+              >
+                <AllAccountBalances mode="widget" />
+              </BalancesWidget>
+              <ActivityWidget
+                activity={activity}
+                onPressHeader={() => router.navigate('/activity')}
+                title={t({ id: 'activity.header_title', message: 'All activity' })}
+              />
+              <EarnWidget />
+              {releaseCollectibles && hasCollectibles(collectibles) && (
+                <CollectiblesWidget
+                  onPressHeader={() => router.navigate('/collectibles')}
+                  title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
                 >
-                  <AllAccountBalances mode="widget" />
-                </BalancesWidget>
-                <ActivityWidget
-                  activity={activity}
-                  onPressHeader={() => router.navigate('/activity')}
-                  title={t({ id: 'activity.header_title', message: 'All activity' })}
-                />
-                <EarnWidget />
-                {releaseCollectibles && hasCollectibles(collectibles) && (
-                  <CollectiblesWidget
-                    onPressHeader={() => router.navigate('/collectibles')}
-                    title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
-                  >
-                    <Collectibles collectibles={collectibles} mode="widget" />
-                  </CollectiblesWidget>
-                )}
-              </>
-            )}
-          </Box>
-        </Screen.ScrollView>
-      </Screen.Body>
+                  <Collectibles collectibles={collectibles} mode="widget" />
+                </CollectiblesWidget>
+              )}
+            </>
+          )}
+        </Box>
+      </Screen.ScrollView>
       <NotificationsSheet sheetRef={notificationSheetRef} />
     </Screen>
   );

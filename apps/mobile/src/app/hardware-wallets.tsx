@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Header } from '@/components/headers/header';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
@@ -85,14 +86,17 @@ export default function HardwareWalletListScreen() {
   function onCloseSheet() {
     setSheetData(null);
   }
-  const pageTitle = t({
-    id: 'hardware_wallets.title',
-    message: 'Connect device',
-  });
 
   return (
-    <>
-      <AnimatedHeaderScreenLayout title={pageTitle} contentTitle={pageTitle}>
+    <Screen>
+      <Header />
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({
+            id: 'hardware_wallets.title',
+            message: 'Connect device',
+          })}
+        </Screen.Title>
         <SettingsList>
           {Object.values(getUnavailableFeatures()).map(feature => {
             const hardwareWalletName = feature.title;
@@ -115,12 +119,12 @@ export default function HardwareWalletListScreen() {
             );
           })}
         </SettingsList>
-      </AnimatedHeaderScreenLayout>
+      </Screen.ScrollView>
       <NotifyUserSheetLayout
         onCloseSheet={onCloseSheet}
         sheetData={sheetData}
         sheetRef={sheetRef}
       />
-    </>
+    </Screen>
   );
 }
