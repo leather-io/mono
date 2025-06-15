@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { InlineAssetPicker } from '@/features/send/components/inline-asset-picker';

@@ -1,8 +1,7 @@
 import { useRef } from 'react';
 
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
+import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
@@ -74,7 +73,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   return (
     <>
       <Screen>
-        <Header leftElement={<HeaderBackButton />} />
+        <Screen.Header leftElement={<HeaderBackButton />} />
         <Screen.ScrollView>
           <Screen.Title>{pageTitle}</Screen.Title>
           <Box gap="4">

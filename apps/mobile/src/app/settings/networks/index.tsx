@@ -1,4 +1,3 @@
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
@@ -56,7 +55,7 @@ export default function SettingsNetworksScreen() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.ScrollView>
         <Screen.Title>{pageTitle}</Screen.Title>
         <SettingsList>

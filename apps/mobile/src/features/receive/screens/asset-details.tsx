@@ -1,7 +1,7 @@
 import { Share } from 'react-native';
 
 import { AddressTypeBadge } from '@/components/address-type-badge';
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { QrCard } from '@/features/receive/components/qr-card';

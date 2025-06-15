@@ -1,8 +1,7 @@
 import { useRef } from 'react';
 
-import { HeaderActions } from '@/components/headers/components/header-actions';
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
+import { HeaderActions } from '@/components/screen/screen-header/components/header-actions';
 import { AccountsWidget } from '@/features/account/accounts-widget';
 import { ActivityWidget } from '@/features/activity/activity-widget';
 import { AllAccountBalances } from '@/features/balances/balances';
@@ -34,7 +33,7 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <Header
+      <Screen.Header
         leftElement={
           <Box flexDirection="row" alignItems="center" p="2" gap="2">
             <LeatherLogomarkIcon />

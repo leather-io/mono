@@ -1,4 +1,3 @@
-import { Header } from '@/components/headers/header';
 import { Screen } from '@/components/screen/screen';
 import { Collectibles } from '@/features/collectibles';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
@@ -9,7 +8,7 @@ export default function CollectiblesScreen() {
 
   return (
     <Screen>
-      <Header />
+      <Screen.Header />
       <Screen.ScrollView>
         <Screen.Title>
           {t({
