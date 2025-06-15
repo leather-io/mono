@@ -12,6 +12,7 @@ import { EarnWidget } from '@/features/earn/earn-widget';
 import { useCollectiblesFlag } from '@/features/feature-flags';
 import { NotificationsSheet } from '@/features/notifications/notifications-sheet';
 import { useOnDetectNoNotificationPreference } from '@/features/notifications/use-notifications';
+import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
@@ -42,7 +43,7 @@ export default function HomeScreen() {
         }
         rightElement={<HeaderActions />}
       />
-      <Screen.ScrollView>
+      <Screen.ScrollView refreshControl={<RefreshControl />}>
         <Box gap="8" pt="6">
           <AccountsWidget />
           {hasWallets && (

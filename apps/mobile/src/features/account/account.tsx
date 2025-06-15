@@ -6,6 +6,7 @@ import { AccountBalances } from '@/features/balances/balances';
 import { BalancesWidget } from '@/features/balances/balances-widget';
 import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
 import { useCollectiblesFlag } from '@/features/feature-flags';
+import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
@@ -59,7 +60,7 @@ export function Account({ account, walletName }: AccountProps) {
           </Box>
         }
       />
-      <Screen.ScrollView>
+      <Screen.ScrollView refreshControl={<RefreshControl />}>
         <AccountOverview
           isLoading={isLoadingTotalBalance}
           icon={icon}

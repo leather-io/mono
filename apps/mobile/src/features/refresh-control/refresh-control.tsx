@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { RefreshControl as RNRefreshControl } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { queryClient } from '@/queries/query';
 
@@ -24,10 +23,6 @@ export function useRefreshHandler() {
 }
 
 export function RefreshControl() {
-  const { top } = useSafeAreaInsets();
   const { refreshing, onRefresh } = useRefreshHandler();
-
-  return (
-    <RNRefreshControl refreshing={refreshing} onRefresh={onRefresh} progressViewOffset={top} />
-  );
+  return <RNRefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
 }
