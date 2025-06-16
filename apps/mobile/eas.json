@@ -20,9 +20,11 @@
     "maestro": {
       "extends": "base",
       "environment": "production",
-      "withoutCredentials": true,
       "channel": "maestro",
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
     },
     "development": {
       "extends": "base",
