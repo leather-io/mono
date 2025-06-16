@@ -8,7 +8,12 @@ import { useSettings } from '@/store/settings/settings';
 import { FlashList } from '@shopify/flash-list';
 import { ResponsiveValue } from '@shopify/restyle';
 
-import { Activity, OnChainActivity, OnChainActivityTypes } from '@leather.io/models';
+import {
+  Activity,
+  FungibleCryptoAsset,
+  OnChainActivity,
+  OnChainActivityTypes,
+} from '@leather.io/models';
 import { ActivityAvatarIcon, Text, Theme } from '@leather.io/ui/native';
 import { Box } from '@leather.io/ui/native';
 
@@ -16,6 +21,7 @@ import { ActivityCard } from './activity-card';
 import { ActivityEmpty } from './activity-empty';
 import { ActivityListItem, ActivityListItemProps } from './activity-list-item';
 import { formatActivityItem } from './utils/format-activity';
+import { makeActivityLink } from './utils/make-activity-link';
 
 interface ActivityListProps {
   activity: Activity[];
@@ -45,7 +51,24 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
     return (
       <Box flexDirection="row" gap="3">
         {filteredActivities.map((activity, index) => (
-          <ActivityCard key={`activity.${index}`} {...activity} />
+          <ActivityCard
+            key={`activity.${index}`}
+            type={activity.type}
+            asset={activity.avatar?.asset as FungibleCryptoAsset}
+            status={activity.avatar?.status}
+            onPress={() => {
+              const activityLink = makeActivityLink({
+                asset: activity.avatar?.asset,
+                txid: activity.txid,
+                networkPreference,
+              });
+              if (activityLink) {
+                linkingRef.current?.openURL(activityLink);
+              }
+            }}
+            quoteBalance={activity?.quoteBalance?.balance}
+            cryptoBalance={activity?.cryptoBalance?.balance}
+          />
         ))}
       </Box>
     );
@@ -79,6 +102,7 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
                     Theme['breakpoints']
                   >
                 }
+                isQuoteCurrency
               />
             }
             cryptoBalance={

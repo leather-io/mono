@@ -1,47 +1,56 @@
+import { Balance } from '@/components/balance/balance';
 import { Card } from '@/components/card';
-import { useBrowser } from '@/core/browser-provider';
-import { useSettings } from '@/store/settings/settings';
 
-import { OnChainActivity } from '@leather.io/models';
-import { ActivityAvatarIcon, Box } from '@leather.io/ui/native';
+import { FungibleCryptoAsset, Money, OnChainActivity } from '@leather.io/models';
+import { ActivityAvatarIcon, Box, Text } from '@leather.io/ui/native';
 
-import { ActivityCardContent } from './activity-card-content';
-import { makeActivityLink } from './utils/make-activity-link';
+import { getActivityStatusLabel } from './utils/format-activity';
 
 interface ActivityCardProps {
-  // activity: OnChainActivity;
-  txid: string;
   type: OnChainActivity['type'];
-  avatar: React.ReactNode;
-  title: React.ReactNode;
-  caption: React.ReactNode;
-  quoteBalance?: React.ReactNode;
-  cryptoBalance?: React.ReactNode;
+  asset: FungibleCryptoAsset | undefined;
+  status: OnChainActivity['status'];
   onPress: () => void;
+  quoteBalance: Money | undefined;
+  cryptoBalance: Money | undefined;
 }
 
 export function ActivityCard({
-  txid,
   type,
-  avatar,
-  title,
-  caption,
+  asset,
+  status,
+  onPress,
   quoteBalance,
   cryptoBalance,
-  onPress,
 }: ActivityCardProps) {
-  // const { networkPreference } = useSettings();
-  // const { linkingRef } = useBrowser();
-
-  // const { txid, status, type } = activity;
-  // const activityHasAsset = 'asset' in activity;
-  // const asset = activityHasAsset && 'symbol' in activity.asset ? activity.asset : undefined;
   return (
     <Card onPress={onPress} width={200}>
       <Box flexDirection="row" justifyContent="space-between">
         <ActivityAvatarIcon type={type} asset={asset} status={status} />
       </Box>
-      <ActivityCardContent activity={activity} />
+      <Box flexDirection="column" alignItems="flex-start" flexShrink={0} alignSelf="stretch">
+        <Box alignItems="flex-start" gap="1" alignSelf="stretch">
+          <Text variant="label02">
+            {getActivityStatusLabel({
+              type: type,
+              status: status,
+            })}
+          </Text>
+          {(type === 'sendAsset' || type === 'receiveAsset') && quoteBalance && cryptoBalance && (
+            <Box alignItems="flex-start" gap="1" alignSelf="stretch">
+              <Balance balance={cryptoBalance} variant="label02" />
+              <Balance
+                balance={quoteBalance}
+                variant="caption01"
+                color="ink.text-subdued"
+                fontWeight="400"
+                lineHeight={16}
+                isQuoteCurrency
+              />
+            </Box>
+          )}
+        </Box>
+      </Box>
     </Card>
   );
 }
