@@ -707,6 +707,13 @@
   * dependencies
     * @leather.io/ui bumped to 1.70.0
 
+## [2.54.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.0...@leather.io/mobile-v2.54.1) (2025-06-16)
+
+
+### Bug Fixes
+
+* eas code signing ([ba86e18](https://github.com/leather-io/mono/commit/ba86e1878c8f2a2c5299933eff0acc24f680ce0e))
+
 ## [2.54.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.53.0...@leather.io/mobile-v2.54.0) (2025-06-16)
 
 
