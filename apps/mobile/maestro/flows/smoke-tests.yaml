@@ -1,0 +1,14 @@
+# Leather Mobile Wallet Smoke Tests
+appId: io.leather.mobilewallet
+name: Smoke Tests
+---
+# Scenario: App launches and user can create a new wallet
+- launchApp
+
+# Given the user is on the home screen
+- assertVisible: 'All accounts'
+
+# When the user toggles the settings button it should work
+- tapOn:
+    id: 'homeSettingsButton'
+- assertVisible: 'SETTINGS'

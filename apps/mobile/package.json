@@ -31,6 +31,7 @@
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "maestro test maestro/flows/*",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
