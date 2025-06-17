@@ -1,0 +1,91 @@
+name: Check Mobile Fingerprint
+on: pull_request_target
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  check-mobile-fingerprint:
+    name: Check Mobile Fingerprint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare the app
+        uses: ./.github/actions/provision
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install jq tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+        shell: bash
+
+      - name: Setup eas credentials
+        run: |
+          echo $(jq --arg APPLE_ID "$APPLE_ID" '.submit.production.ios.appleId = $APPLE_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
+          echo $(jq --arg ASC_APP_ID "$ASC_APP_ID" '.submit.production.ios.ascAppId = $ASC_APP_ID' ./apps/mobile/eas.json) > ./apps/mobile/eas.json
+        shell: bash
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
+
+      - name: Run fingerprint comparison
+        id: fingerprint_comparison
+        run: |
+          # get latest build id
+          cd apps/mobile
+          LATEST_PROD_BUILD_ID=$(eas build:list --build-profile=production --non-interactive --json | jq -r '.[0].id')
+          JSON_FINGERPRINT_COMPARISON=$(eas fingerprint:compare --build-id $LATEST_PROD_BUILD_ID --json --non-interactive)
+          HASH_1=$(jq '.fingerprint1.hash' <<< "$JSON_FINGERPRINT_COMPARISON")
+          HASH_2=$(jq '.fingerprint2.hash' <<< "$JSON_FINGERPRINT_COMPARISON")
+          if [ "$HASH_1" = "$HASH_2" ]; then
+            echo "result=1" >> $GITHUB_OUTPUT
+          else
+            echo "result=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish simulator expo link in PR
+        uses: actions/github-script@v7
+        env:
+          COMPARISON_RESULT: ${{ steps.fingerprint_comparison.outputs.result }}
+        with:
+          github-token: ${{ secrets.LEATHER_BOT }}
+          script: |
+            const {COMPARISON_RESULT} = process.env
+            const isEqual = Boolean(Number(COMPARISON_RESULT))
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const tag = "<!-- LEATHER_FINGERPRINT_TESTER --> \n\n\n"
+
+            // Find existing comment by the bot
+            const botComment = comments.find(comment =>
+              comment.body.includes('<!-- LEATHER_FINGERPRINT_TESTER -->')
+            );
+            const basicConfig = isEqual ? {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: tag + "This PR has the same fingerprint as the latest production build. Merging this PR would not require us to submit a new build to the stores. (Note: Make sure your PR is up to date)"
+            } : {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: tag + "This PR's build fingerprint differs from the latest production build's fingerprint. Merging this PR would require us to submit the build to the stores. (Note: Make sure your PR is up to date)"
+            }
+            if(botComment) {
+              github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                ...basicConfig,
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                ...basicConfig
+              })
+            }
