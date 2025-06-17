@@ -34,6 +34,19 @@ function setupFirebaseEnvVariablesIos() {
 export default () => {
   setupFirebaseEnvVariablesAndroid();
   setupFirebaseEnvVariablesIos();
+  const easUpdatesEnabled = !!process.env.EXPO_ENABLE_UPDATES;
+
+  const updates = easUpdatesEnabled
+    ? {
+      fallbackToCacheTimeout: 0,
+      url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
+      codeSigningCertificate: './certs/certificate.pem',
+      codeSigningMetadata: {
+        keyid: 'main',
+        alg: 'rsa-v1_5-sha256',
+      },
+    }
+    : undefined;
 
   return {
     expo: {
@@ -49,15 +62,7 @@ export default () => {
       scheme: 'leather',
       userInterfaceStyle: 'automatic',
       platforms: ['ios', 'android'],
-      updates: {
-        fallbackToCacheTimeout: 0,
-        url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
-        codeSigningCertificate: './certs/certificate.pem',
-        codeSigningMetadata: {
-          keyid: 'main',
-          alg: 'rsa-v1_5-sha256',
-        },
-      },
+      updates,
       assetBundlePatterns: ['**/*'],
       ios: {
         config: {
