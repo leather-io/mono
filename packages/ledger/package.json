@@ -1,0 +1,30 @@
+{
+  "name": "@leather.io/ledger",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --dts --external react",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+  },
+  "dependencies": {
+    "@ledgerhq/hw-transport-webusb": "^6.27.1",
+    "ledger-bitcoin": "^0.7.0",
+    "@zondax/ledger-stacks": "^0.19.0",
+    "@leather.io/bitcoin": "workspace:*",
+    "@leather.io/models": "workspace:*",
+    "@leather.io/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "eslint": "^8.56.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}
