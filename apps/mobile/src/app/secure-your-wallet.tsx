@@ -17,57 +17,55 @@ export default function SecureYourWalletScreen() {
   return (
     <Screen>
       <Screen.Header />
-      <Screen.Body>
-        <Screen.ScrollView>
-          <Screen.Title>
-            {t({
-              id: 'secure_your_wallet.title',
-              message: 'Secure your wallet',
-            })}
-          </Screen.Title>
-          <Box px="5">
-            <Box gap="3">
-              <Text variant="label01">
-                {t({
-                  id: 'secure_your_wallet.caption',
-                  message: `Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`,
-                })}
-              </Text>
-            </Box>
-            <Box justifyContent="center" alignItems="center" aspectRatio={1}>
-              <Image
-                style={{ height: 270, width: 270 }}
-                source={require('@/assets/stickers/lock.png')}
-                contentFit="contain"
-              />
-            </Box>
-          </Box>
-        </Screen.ScrollView>
-
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({
+            id: 'secure_your_wallet.title',
+            message: 'Secure your wallet',
+          })}
+        </Screen.Title>
         <Box px="5">
-          <Button
-            onPress={() => {
-              sheetRef.current?.present();
-            }}
-            pb="4"
-            buttonState="ghost"
-            title={t({
-              id: 'secure_your_wallet.skip_button',
-              message: `Skip for now`,
-            })}
-          />
-          <Button
-            onPress={() => {
-              void callIfEnrolled(() => createWallet({ biometrics: true }));
-            }}
-            buttonState="default"
-            title={t({
-              id: 'secure_your_wallet.security_button',
-              message: `Enable device security`,
-            })}
-          />
+          <Box gap="3">
+            <Text variant="label01">
+              {t({
+                id: 'secure_your_wallet.caption',
+                message: `Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`,
+              })}
+            </Text>
+          </Box>
+          <Box justifyContent="center" alignItems="center" aspectRatio={1}>
+            <Image
+              style={{ height: 270, width: 270 }}
+              source={require('@/assets/stickers/lock.png')}
+              contentFit="contain"
+            />
+          </Box>
         </Box>
-      </Screen.Body>
+      </Screen.ScrollView>
+
+      <Screen.Footer>
+        <Button
+          onPress={() => {
+            sheetRef.current?.present();
+          }}
+          pb="4"
+          buttonState="ghost"
+          title={t({
+            id: 'secure_your_wallet.skip_button',
+            message: `Skip for now`,
+          })}
+        />
+        <Button
+          onPress={() => {
+            void callIfEnrolled(() => createWallet({ biometrics: true }));
+          }}
+          buttonState="default"
+          title={t({
+            id: 'secure_your_wallet.security_button',
+            message: `Enable device security`,
+          })}
+        />
+      </Screen.Footer>
       <SkipSecureWalletSheet
         onSubmit={async () => {
           sheetRef.current?.close();

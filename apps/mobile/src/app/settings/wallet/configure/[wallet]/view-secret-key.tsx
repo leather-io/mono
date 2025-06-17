@@ -17,36 +17,34 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
   return (
     <Screen>
       <Screen.Header />
-      <Screen.Body>
-        <Screen.ScrollView>
-          <Screen.Title>
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({
+            id: 'view_secret_key.title',
+            message: 'SECRET KEY',
+          })}
+        </Screen.Title>
+        <Box gap="5" px="5">
+          <Text variant="label01">
             {t({
-              id: 'view_secret_key.title',
-              message: 'SECRET KEY',
+              id: 'view_secret_key.subtitle',
+              message: 'Your Secret Key grants you access to your wallet and its assets.',
             })}
-          </Screen.Title>
-          <Box gap="5" px="5">
-            <Text variant="label01">
-              {t({
-                id: 'view_secret_key.subtitle',
-                message: 'Your Secret Key grants you access to your wallet and its assets.',
-              })}
-            </Text>
+          </Text>
 
-            <MnemonicDisplay mnemonic={mnemonic} passphrase={passphrase} />
-          </Box>
-        </Screen.ScrollView>
-        <Box px="5">
-          <Button
-            onPress={() => router.back()}
-            buttonState="default"
-            title={t({
-              id: 'view_secret_key.button',
-              message: 'Done',
-            })}
-          />
+          <MnemonicDisplay mnemonic={mnemonic} passphrase={passphrase} />
         </Box>
-      </Screen.Body>
+      </Screen.ScrollView>
+      <Screen.Footer>
+        <Button
+          onPress={() => router.back()}
+          buttonState="default"
+          title={t({
+            id: 'view_secret_key.button',
+            message: 'Done',
+          })}
+        />
+      </Screen.Footer>
     </Screen>
   );
 }

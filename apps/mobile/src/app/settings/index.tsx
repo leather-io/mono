@@ -60,7 +60,7 @@ export default function SettingsScreen() {
   return (
     <>
       <Screen>
-        <Screen.Header />
+        <Screen.Header centerElement={<Text variant="heading05">{pageTitle}</Text>} />
 
         <Screen.ScrollView>
           <Screen.Title>{pageTitle}</Screen.Title>

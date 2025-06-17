@@ -1,6 +1,5 @@
 import { FetchWrapper } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
-import { ScreenList } from '@/components/screen/screen-list';
 import { ActivityListItem } from '@/features/activity';
 import { ActivityEmpty } from '@/features/activity/activity-empty';
 import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/refresh-control';
@@ -23,7 +22,7 @@ export default function ActivityScreen() {
       })*/}
       <FetchWrapper data={activity}>
         {activity.state === 'success' && (
-          <ScreenList
+          <Screen.List
             refreshControl={<RefreshControl />}
             ListHeaderComponent={
               <Screen.Title>

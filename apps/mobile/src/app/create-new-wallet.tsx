@@ -79,77 +79,70 @@ export default function CreateNewWallet() {
   return (
     <Screen>
       <Screen.Header />
-      <Screen.Body>
-        <Screen.ScrollView>
-          <Screen.Title>
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({
+            id: 'create_new_wallet.title',
+            message: 'Back up your secret key',
+          })}
+        </Screen.Title>
+        <Box px="5" gap="5">
+          <Text variant="label01">
             {t({
-              id: 'create_new_wallet.title',
-              message: 'Back up your secret key',
+              id: 'create_new_wallet.subtitle',
+              message:
+                'Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.',
             })}
-          </Screen.Title>
-          <Box px="5" gap="5">
-            <Text variant="label01">
-              {t({
-                id: 'create_new_wallet.subtitle',
-                message:
-                  'Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.',
-              })}
-            </Text>
+          </Text>
 
-            <Box
-              borderWidth={1}
-              borderColor="ink.border-default"
-              borderRadius="xs"
-              overflow="hidden"
-            >
-              {isHidden && (
-                <SecretBanner isHidden={isHidden}>
-                  <Pressable
-                    onPress={() => setIsHidden(false)}
-                    height="100%"
-                    flexDirection="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    gap="2"
-                    pressEffects={legacyTouchablePressEffect}
-                    testID={TestId.walletCreationTapToReveal}
-                  >
-                    <PointerHandIcon />
-                    <Box>
-                      <Text variant="label02">
-                        {t({
-                          id: 'create_new_wallet.view_secret_key_label_a',
-                          message: 'Tap to view Secret Key',
-                        })}
-                      </Text>
-                      <Text variant="label02" color="red.action-primary-default">
-                        {t({
-                          id: 'create_new_wallet.view_secret_key_label_b',
-                          message: 'For your eyes only',
-                        })}
-                      </Text>
-                    </Box>
-                  </Pressable>
-                </SecretBanner>
-              )}
-              <MnemonicDisplay mnemonic={mnemonic} />
-            </Box>
+          <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" overflow="hidden">
+            {isHidden && (
+              <SecretBanner isHidden={isHidden}>
+                <Pressable
+                  onPress={() => setIsHidden(false)}
+                  height="100%"
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  gap="2"
+                  pressEffects={legacyTouchablePressEffect}
+                  testID={TestId.walletCreationTapToReveal}
+                >
+                  <PointerHandIcon />
+                  <Box>
+                    <Text variant="label02">
+                      {t({
+                        id: 'create_new_wallet.view_secret_key_label_a',
+                        message: 'Tap to view Secret Key',
+                      })}
+                    </Text>
+                    <Text variant="label02" color="red.action-primary-default">
+                      {t({
+                        id: 'create_new_wallet.view_secret_key_label_b',
+                        message: 'For your eyes only',
+                      })}
+                    </Text>
+                  </Box>
+                </Pressable>
+              </SecretBanner>
+            )}
+            <MnemonicDisplay mnemonic={mnemonic} />
           </Box>
-        </Screen.ScrollView>
-
-        <Box px="5">
-          <Button
-            disabled={isHidden}
-            onPress={() => void navigateAndCreateWallet()}
-            buttonState="default"
-            title={t({
-              id: 'create_new_wallet.button',
-              message: `I've backed it up`,
-            })}
-            testID={TestId.walletCreationBackedUpButton}
-          />
         </Box>
-      </Screen.Body>
+      </Screen.ScrollView>
+
+      <Screen.Footer>
+        <Button
+          disabled={isHidden}
+          onPress={() => void navigateAndCreateWallet()}
+          buttonState="default"
+          title={t({
+            id: 'create_new_wallet.button',
+            message: `I've backed it up`,
+          })}
+          testID={TestId.walletCreationBackedUpButton}
+        />
+      </Screen.Footer>
     </Screen>
   );
 }
