@@ -654,7 +654,7 @@ importers:
         version: 1.52.0
       '@react-router/cloudflare':
         specifier: 7.6.0
-        version: 7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
+        version: 7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
       '@react-router/dev':
         specifier: 7.6.0
         version: 7.6.0(@react-router/serve@7.6.0(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.8.3))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(lightningcss@1.27.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.39.2)(yaml@2.8.0))(wrangler@4.14.4(@cloudflare/workers-types@4.20250510.0))(yaml@2.8.0)
@@ -887,6 +887,40 @@ importers:
         specifier: 8.18.0
         version: 8.18.0(eslint@9.16.0(jiti@2.4.2))(typescript@5.8.3)
 
+  packages/ledger:
+    dependencies:
+      '@leather.io/bitcoin':
+        specifier: workspace:*
+        version: link:../bitcoin
+      '@leather.io/models':
+        specifier: workspace:*
+        version: link:../models
+      '@leather.io/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@ledgerhq/hw-transport-webusb':
+        specifier: 6.27.19
+        version: 6.27.19
+      '@zondax/ledger-stacks':
+        specifier: 1.0.4
+        version: 1.0.4(encoding@0.1.13)
+      ledger-bitcoin:
+        specifier: 0.2.3
+        version: 0.2.3
+    devDependencies:
+      '@types/react':
+        specifier: 18.3.10
+        version: 18.3.10
+      eslint:
+        specifier: 9.16.0
+        version: 9.16.0(jiti@2.4.2)
+      tsup:
+        specifier: 8.4.0
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+
   packages/models:
     dependencies:
       '@stacks/stacks-blockchain-api-types':
@@ -926,7 +960,7 @@ importers:
         version: link:../tokens
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
 
   packages/prettier-config:
     dependencies:
@@ -2333,8 +2367,22 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@bitcoinerlab/descriptors@1.1.1':
+    resolution: {integrity: sha512-AMFkbBBg9T1iWtEmWB23oADk7zaOQix6wUPLXalhTyFDjhkFXDd6pCRfto/HAdaPg/ccM4GMTVgYLee9WdYFyQ==}
+    peerDependencies:
+      ledger-bitcoin: ^0.2.2
+    peerDependenciesMeta:
+      ledger-bitcoin:
+        optional: true
+
+  '@bitcoinerlab/miniscript@1.4.0':
+    resolution: {integrity: sha512-BsG3dmwQmgKHnRZecDgUsPjwcpnf1wgaZbolcMTByS10k1zYzIx97W51LzG7GvokRJ+wnzTX/GhC8Y3L2X0CQA==}
+
   '@bitcoinerlab/secp256k1@1.0.2':
     resolution: {integrity: sha512-zXhJNdnd9pkmBx3nJc1SjdNco49Fi1EPlj6d4JN5M4YjlFlVZyoD27hu6IWJQOaWwwagd6tsoKIQQEf+t+SvWw==}
+
+  '@bitcoinerlab/secp256k1@1.2.0':
+    resolution: {integrity: sha512-jeujZSzb3JOZfmJYI0ph1PVpCRV5oaexCgy+RvCXV8XlY+XFB/2n3WOcvBsKLsOw78KYgnQrQWb2HrKE4be88Q==}
 
   '@bkrem/react-transition-group@1.3.5':
     resolution: {integrity: sha512-lbBYhC42sxAeFEopxzd9oWdkkV0zirO5E9WyeOBxOrpXsf7m30Aj8vnbayZxFOwD9pvUQ2Pheb1gO79s0Qap3Q==}
@@ -4192,6 +4240,21 @@ packages:
       react: '*'
       react-native: '*'
 
+  '@ledgerhq/devices@8.4.6':
+    resolution: {integrity: sha512-EMWhCOC+Ww14i2Dl8Txc0AAw8oToCxt1hOKmE7+yE38SkzfRWS0Je3P+o9/EgkaopI8Y0N8lWOJzy1CiulP3Lg==}
+
+  '@ledgerhq/errors@6.21.0':
+    resolution: {integrity: sha512-2k5veG9eu+1X5oBVhKSWzA6RE+TWOTSJnytjEhPBTZB6h2ixMrCUMWF5+OAWXiI1EiSNsvGGk19XO87qpZiVTw==}
+
+  '@ledgerhq/hw-transport-webusb@6.27.19':
+    resolution: {integrity: sha512-M93sCyYREk8jCW/o7D/Ey+GQl38IALc0AY5WLKghzyjgqdPNo0x3j7CuTFJXiMWl5Mh8YDsO/MY8kkG9tuMvKQ==}
+
+  '@ledgerhq/hw-transport@6.31.6':
+    resolution: {integrity: sha512-wXycgy21wdwdr9s2fz7K96aDqnsPXPT15E6GlNrYJ0C36tAQcHOtI+XWZ1A8J4cMlRRh6siGWsEymziOdFBPCQ==}
+
+  '@ledgerhq/logs@6.13.0':
+    resolution: {integrity: sha512-4+qRW2Pc8V+btL0QEmdB2X+uyx0kOWMWE1/LWsq5sZy3Q5tpi4eItJS6mB0XL3wGW59RQ+8bchNQQ1OW/va8Og==}
+
   '@lingui/babel-plugin-extract-messages@4.11.1':
     resolution: {integrity: sha512-ouyUTVy2QbHQMv5ib2zFzimjpdBYALCbqnzOJI0YKCOIJD/+sCIPKcCzVrLdKEu90qwy18J/Ho7Z66BhffGAkQ==}
     engines: {node: '>=16.0.0'}
@@ -4250,7 +4313,6 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
-    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -6572,6 +6634,9 @@ packages:
   '@stacks/auth@6.17.0':
     resolution: {integrity: sha512-SaxB6ULkYLRd5WZotymlPzroBn5/28KgJOTY0nKDcwCqxSkYjPZepweA30LK5eUOmePuGILaMTagj1ibZRnvUg==}
 
+  '@stacks/common@4.3.5':
+    resolution: {integrity: sha512-UuViiQ7fn3vdtTe3739aRzbl+wbukekeQuXgqt8d7nB2HC2HodD7GcHhpUga165cO35CD6lQUtj3vXxJb5Ga+A==}
+
   '@stacks/common@6.16.0':
     resolution: {integrity: sha512-PnzvhrdGRMVZvxTulitlYafSK4l02gPCBBoI9QEoTqgSnv62oaOXhYAUUkTMFKxdHW1seVEwZsrahuXiZPIAwg==}
 
@@ -6593,6 +6658,9 @@ packages:
   '@stacks/encryption@7.0.6':
     resolution: {integrity: sha512-tUaYmsaRHRS95eeVBrfctAixFwL2yZHjDltC3dgQ+JjpcYNnWuvPOWoEEENwSU/t/Dj0b/xGSd1YW7z9CFd+cQ==}
 
+  '@stacks/network@4.3.5':
+    resolution: {integrity: sha512-TC4+AkuT6qi3MoEGxTftA+4BNp99QvGnI+qtKQkoA1m0KDr8b9hSBUhugJHRhQbWuo7D6q0+JagYEGxLID29Kw==}
+
   '@stacks/network@6.17.0':
     resolution: {integrity: sha512-numHbfKjwco/rbkGPOEz8+FcJ2nBnS/tdJ8R422Q70h3SiA9eqk9RjSzB8p4JP8yW1SZvW+eihADHfMpBuZyfw==}
 
@@ -6613,6 +6681,9 @@ packages:
 
   '@stacks/stacks-blockchain-api-types@7.14.1':
     resolution: {integrity: sha512-65hvhXxC+EUqHJAQsqlBCqXB+zwfxZICSKYJugdg6BCp9I9qniyfz5XyQeC4RMVo0tgEoRdS/b5ZCFo5kLWmxA==}
+
+  '@stacks/transactions@4.3.8':
+    resolution: {integrity: sha512-5xYYv2TdXXM9PVixB79Pr99symQ8fhbVATjempGUxtL23/XUiRiLvJZohDxIE4VQ2EzbB4g4j8Y7oqPjj0h09Q==}
 
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
@@ -7882,8 +7953,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react@18.3.21':
-    resolution: {integrity: sha512-gXLBtmlcRJeT09/sI4PxVwyrku6SaNUj/6cMubjE6T6XdY1fDmBL7r0nX0jbSZPU/Xr0KuwLLZh6aOYY5d91Xw==}
+  '@types/react@18.3.10':
+    resolution: {integrity: sha512-02sAAlBnP39JgXwkAq3PeU9DVaaGpZyF3MGcC0MKgQVkZor5IiiDAipVaxQHtDJAmO4GIy/rVBy/LzVj76Cyqg==}
 
   '@types/react@19.0.12':
     resolution: {integrity: sha512-V6Ar115dBDrjbtXSrS+/Oruobc+qVbbUxDFC1RSbRqLt5SYvxxyIDrSC85RWml54g+jfNeEMZhEj7wW07ONQhA==}
@@ -7902,6 +7973,9 @@ packages:
 
   '@types/serve-static@1.15.7':
     resolution: {integrity: sha512-W8Ym+h8nhuRwaKPaDw34QUkwsGi6Rc4yYqvKFo5rm2FUEhCFbzVWrxXUxuKK8TASjWsysJY0nsmNCGhCOIsrOw==}
+
+  '@types/sha.js@2.4.4':
+    resolution: {integrity: sha512-Qukd+D6S2Hm0wLVt2Vh+/eWBIoUt+wF8jWjBsG4F8EFQRwKtYvtXCPcNl2OEUQ1R+eTr3xuSaBYUyM3WD1x/Qw==}
 
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
@@ -8155,6 +8229,9 @@ packages:
 
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
+
+  '@zondax/ledger-stacks@1.0.4':
+    resolution: {integrity: sha512-R8CB0CZ2poTzpcG0jhzzXZvXF7axIsmZFhp06aHCUjgz+1df63YbC4tUzyzmseekwqNWnaebWFejQKJ99WiHZA==}
 
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -8633,9 +8710,16 @@ packages:
   bip21@3.0.0:
     resolution: {integrity: sha512-uJ3opZiOUs9x+Q+D6ezcIQje3ymIXyFFEbx1C8wRVSERxQ0rXTG4FJuj8neYUDNJhwsvTy9f2dYMaUMq+3/fIw==}
 
+  bip32-path@0.4.2:
+    resolution: {integrity: sha512-ZBMCELjJfcNMkz5bDuJ1WrYvjlhEF5k6mQ8vUr4N7MbVRsXei7ZOg8VhhwMfNiW68NWmLkgkc6WvTickrLGprQ==}
+
   bip32@4.0.0:
     resolution: {integrity: sha512-aOGy88DDlVUhspIXJN+dVEtclhIsfAUppD43V0j40cPTld3pv/0X/MlrZSZ6jowIaQQzFwP8M6rFU2z2mVYjDQ==}
     engines: {node: '>=6.0.0'}
+
+  bip68@1.0.4:
+    resolution: {integrity: sha512-O1htyufFTYy3EO0JkHg2CLykdXEtV2ssqw47Gq9A0WByp662xpJnMEB9m43LZjsSDjIAOozWRExlFQk2hlV1XQ==}
+    engines: {node: '>=4.5.0'}
 
   bippy@0.3.11:
     resolution: {integrity: sha512-q81FjIKd9Yw/RTZeWrh2w7LdvnTG6qWMo3wibcABN/hntZ8HFnpIV1VNWxPox6rDBRHN4L5ECdETDkdTwKitoA==}
@@ -8750,6 +8834,10 @@ packages:
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
+
+  c32check@1.1.3:
+    resolution: {integrity: sha512-ADADE/PjAbJRlwpG3ShaOMbBUlJJZO7xaYSRD5Tub6PixQlgR4s36y9cvMf/YRGpkqX+QOxIdMw216iC320q9A==}
+    engines: {node: '>=8'}
 
   c32check@2.0.0:
     resolution: {integrity: sha512-rpwfAcS/CMqo0oCqDf3r9eeLgScRE3l/xHDCXhM3UyrfvIn7PrLq63uHh7yYbv8NzaZn5MVsVhIRpQ+5GZ5HyA==}
@@ -9239,6 +9327,9 @@ packages:
 
   cross-fetch@3.2.0:
     resolution: {integrity: sha512-Q+xVJLoGOeIMXZmbUK4HYk+69cQH6LudR0Vu/pRm2YlU/hDV9CiS0gKUMaWY5f2NeUH9C1nV3bsTlCo0FsTV1Q==}
+
+  cross-sha256@1.2.0:
+    resolution: {integrity: sha512-KViLNMDZKV7jwFqjFx+rNhG26amnFYYQ0S+VaFlVvpk8tM+2XbFia/don/SjGHg9WQxnFVi6z64CGPuF3T+nNw==}
 
   cross-spawn@7.0.5:
     resolution: {integrity: sha512-ZVJrKKYunU38/76t0RMOulHOnUcbU9GbpWKAOZ0mhjr7CX6FVrH+4FrAapSOekrgFQ3f/8gwMEuIft0aKq6Hug==}
@@ -11813,6 +11904,10 @@ packages:
   lazystream@1.0.1:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
+
+  ledger-bitcoin@0.2.3:
+    resolution: {integrity: sha512-sWdvMTR5CkebNlM0Mam9ROdpsD7Y4087kj4cbIaCCq8IXShCQ44vE3j0wTmt+sHp13eETgY63OWN1rkuIfMfuQ==}
+    engines: {node: '>=14'}
 
   leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
@@ -17031,10 +17126,28 @@ snapshots:
   '@biomejs/cli-darwin-arm64@1.9.4':
     optional: true
 
+  '@bitcoinerlab/descriptors@1.1.1(ledger-bitcoin@0.2.3)':
+    dependencies:
+      '@bitcoinerlab/miniscript': 1.4.0
+      '@bitcoinerlab/secp256k1': 1.2.0
+      bip32: 4.0.0
+      bitcoinjs-lib: 6.1.5
+      ecpair: 2.1.0
+    optionalDependencies:
+      ledger-bitcoin: 0.2.3
+
+  '@bitcoinerlab/miniscript@1.4.0':
+    dependencies:
+      bip68: 1.0.4
+
   '@bitcoinerlab/secp256k1@1.0.2':
     dependencies:
       '@noble/hashes': 1.5.0
       '@noble/secp256k1': 1.7.2
+
+  '@bitcoinerlab/secp256k1@1.2.0':
+    dependencies:
+      '@noble/curves': 1.8.2
 
   '@bkrem/react-transition-group@1.3.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -18982,6 +19095,31 @@ snapshots:
       react: 19.0.0
       react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)
 
+  '@ledgerhq/devices@8.4.6':
+    dependencies:
+      '@ledgerhq/errors': 6.21.0
+      '@ledgerhq/logs': 6.13.0
+      rxjs: 7.8.2
+      semver: 7.7.2
+
+  '@ledgerhq/errors@6.21.0': {}
+
+  '@ledgerhq/hw-transport-webusb@6.27.19':
+    dependencies:
+      '@ledgerhq/devices': 8.4.6
+      '@ledgerhq/errors': 6.21.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
+
+  '@ledgerhq/hw-transport@6.31.6':
+    dependencies:
+      '@ledgerhq/devices': 8.4.6
+      '@ledgerhq/errors': 6.21.0
+      '@ledgerhq/logs': 6.13.0
+      events: 3.3.0
+
+  '@ledgerhq/logs@6.13.0': {}
+
   '@lingui/babel-plugin-extract-messages@4.11.1': {}
 
   '@lingui/cli@4.11.1(typescript@5.8.3)':
@@ -19111,10 +19249,10 @@ snapshots:
     dependencies:
       '@lukeed/csprng': 1.1.0
 
-  '@mdx-js/react@3.1.0(@types/react@18.3.21)(react@18.3.1)':
+  '@mdx-js/react@3.1.0(@types/react@18.3.10)(react@18.3.1)':
     dependencies:
       '@types/mdx': 2.0.13
-      '@types/react': 18.3.21
+      '@types/react': 18.3.10
       react: 18.3.1
 
   '@messageformat/parser@5.1.1':
@@ -21332,11 +21470,11 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
-  '@react-router/cloudflare@7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
+  '@react-router/cloudflare@7.6.0(@cloudflare/workers-types@4.20250510.0)(react-router@7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
     dependencies:
       '@cloudflare/workers-types': 4.20250510.0
       react-router: 7.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -22044,6 +22182,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@stacks/common@4.3.5':
+    dependencies:
+      '@types/bn.js': 5.1.6
+      '@types/node': 18.19.101
+      buffer: 6.0.3
+
   '@stacks/common@6.16.0':
     dependencies:
       '@types/bn.js': 5.1.6
@@ -22100,6 +22244,13 @@ snapshots:
       ripemd160-min: 0.0.6
       varuint-bitcoin: 1.1.2
 
+  '@stacks/network@4.3.5(encoding@0.1.13)':
+    dependencies:
+      '@stacks/common': 4.3.5
+      cross-fetch: 3.2.0(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
+
   '@stacks/network@6.17.0(encoding@0.1.13)':
     dependencies:
       '@stacks/common': 6.16.0
@@ -22152,6 +22303,22 @@ snapshots:
   '@stacks/stacks-blockchain-api-types@0.61.0': {}
 
   '@stacks/stacks-blockchain-api-types@7.14.1': {}
+
+  '@stacks/transactions@4.3.8(encoding@0.1.13)':
+    dependencies:
+      '@noble/hashes': 1.5.0
+      '@noble/secp256k1': 1.7.2
+      '@stacks/common': 4.3.5
+      '@stacks/network': 4.3.5(encoding@0.1.13)
+      '@types/node': 18.19.101
+      '@types/sha.js': 2.4.4
+      c32check: 1.1.3
+      lodash.clonedeep: 4.5.0
+      ripemd160-min: 0.0.6
+      sha.js: 2.4.11
+      smart-buffer: 4.2.0
+    transitivePeerDependencies:
+      - encoding
 
   '@stacks/transactions@6.17.0(encoding@0.1.13)':
     dependencies:
@@ -22846,12 +23013,12 @@ snapshots:
 
   '@storybook/addon-docs@8.3.2(storybook@8.3.2)':
     dependencies:
-      '@mdx-js/react': 3.1.0(@types/react@18.3.21)(react@18.3.1)
+      '@mdx-js/react': 3.1.0(@types/react@18.3.10)(react@18.3.1)
       '@storybook/blocks': 8.3.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2)
       '@storybook/csf-plugin': 8.3.2(storybook@8.3.2)
       '@storybook/global': 5.0.0
       '@storybook/react-dom-shim': 8.3.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2)
-      '@types/react': 18.3.21
+      '@types/react': 18.3.10
       fs-extra: 11.3.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -23746,7 +23913,7 @@ snapshots:
     dependencies:
       minimatch: 9.0.5
       path-browserify: 1.0.1
-      tinyglobby: 0.2.12
+      tinyglobby: 0.2.13
 
   '@tsconfig/node10@1.0.11': {}
 
@@ -23944,7 +24111,7 @@ snapshots:
     dependencies:
       '@types/react': 19.0.12
 
-  '@types/react@18.3.21':
+  '@types/react@18.3.10':
     dependencies:
       '@types/prop-types': 15.7.14
       csstype: 3.1.3
@@ -23974,6 +24141,10 @@ snapshots:
       '@types/http-errors': 2.0.4
       '@types/node': 22.15.3
       '@types/send': 0.17.4
+
+  '@types/sha.js@2.4.4':
+    dependencies:
+      '@types/node': 22.15.3
 
   '@types/shimmer@1.2.0': {}
 
@@ -24342,6 +24513,15 @@ snapshots:
   '@xtuc/ieee754@1.2.0': {}
 
   '@xtuc/long@4.2.2': {}
+
+  '@zondax/ledger-stacks@1.0.4(encoding@0.1.13)':
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@stacks/transactions': 4.3.8(encoding@0.1.13)
+      varuint-bitcoin: 1.1.2
+    transitivePeerDependencies:
+      - encoding
 
   JSONStream@1.3.5:
     dependencies:
@@ -24950,12 +25130,16 @@ snapshots:
     dependencies:
       query-string: 9.1.2
 
+  bip32-path@0.4.2: {}
+
   bip32@4.0.0:
     dependencies:
       '@noble/hashes': 1.5.0
       '@scure/base': 1.2.4
       typeforce: 1.18.0
       wif: 2.0.6
+
+  bip68@1.0.4: {}
 
   bippy@0.3.11(@types/react@19.0.12)(react@19.0.0):
     dependencies:
@@ -25114,6 +25298,12 @@ snapshots:
       streamsearch: 1.1.0
 
   bytes@3.1.2: {}
+
+  c32check@1.1.3:
+    dependencies:
+      base-x: 3.0.11
+      buffer: 5.7.1
+      cross-sha256: 1.2.0
 
   c32check@2.0.0:
     dependencies:
@@ -25649,6 +25839,10 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
+
+  cross-sha256@1.2.0:
+    dependencies:
+      buffer: 5.7.1
 
   cross-spawn@7.0.5:
     dependencies:
@@ -28789,6 +28983,14 @@ snapshots:
   lazystream@1.0.1:
     dependencies:
       readable-stream: 2.3.8
+
+  ledger-bitcoin@0.2.3:
+    dependencies:
+      '@bitcoinerlab/descriptors': 1.1.1(ledger-bitcoin@0.2.3)
+      '@bitcoinerlab/secp256k1': 1.2.0
+      '@ledgerhq/hw-transport': 6.31.6
+      bip32-path: 0.4.2
+      bitcoinjs-lib: 6.1.5
 
   leven@3.1.0: {}
 

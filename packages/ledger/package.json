@@ -14,17 +14,17 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-webusb": "^6.27.1",
-    "ledger-bitcoin": "^0.7.0",
-    "@zondax/ledger-stacks": "^0.19.0",
+    "@ledgerhq/hw-transport-webusb": "6.27.19",
+    "ledger-bitcoin": "0.2.3",
+    "@zondax/ledger-stacks": "1.0.4",
     "@leather.io/bitcoin": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "eslint": "^8.56.0",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "@types/react": "18.3.10",
+    "eslint": "9.16.0",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3"
   }
 }
