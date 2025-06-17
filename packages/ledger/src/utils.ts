@@ -1,6 +1,6 @@
 import { delay } from '@leather.io/utils';
 
-import type { LedgerConnectionErrors } from './types';
+import { LedgerConnectionErrors } from './types';
 
 export const LEDGER_APPS_MAP = {
   BITCOIN_MAINNET: 'Bitcoin',

@@ -1,5 +1,3 @@
-import type { DefaultWalletPolicy } from 'ledger-bitcoin';
-
 import type { BitcoinNetworkModes } from '@leather.io/models';
 
 export interface BitcoinLedgerAccountDetails {
