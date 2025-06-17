@@ -1,4 +1,8 @@
-export function getPostHref(slug: string) {
+export function getPostHref(slug?: string) {
+  if (slug === undefined || slug === null) {
+    slug = 'undefined';
+  }
+
   const trimmedSlug = slug.trim();
 
   if (URL.canParse(trimmedSlug)) {
