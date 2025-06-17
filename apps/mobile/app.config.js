@@ -155,6 +155,10 @@ export default () => {
             ios: {
               useFrameworks: 'static',
               deploymentTarget: '15.1',
+              newArchEnabled: true,
+            },
+            android: {
+              newArchEnabled: true,
             },
           },
         ],
