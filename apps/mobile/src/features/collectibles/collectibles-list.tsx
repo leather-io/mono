@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { Dimensions } from 'react-native';
 
-import { FetchState } from '@/components/loading';
-import { serializeCollectibles } from '@/features/collectibles';
+import { FetchState } from '@/components/loading/fetch-state';
+import { serializeCollectibles } from '@/features/collectibles/collectibles-serializer';
 import { useTheme } from '@shopify/restyle';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';

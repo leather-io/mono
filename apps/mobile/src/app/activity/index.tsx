@@ -1,6 +1,8 @@
-import { FetchWrapper } from '@/components/loading';
-import { ActivityLayout, ActivityList, hasActivity } from '@/features/activity';
+import { FetchWrapper } from '@/components/loading/fetch-wrapper';
 import { ActivityEmpty } from '@/features/activity/activity-empty';
+import { ActivityList } from '@/features/activity/activity-list';
+import { hasActivity } from '@/features/activity/activity-widget';
+import { ActivityLayout } from '@/features/activity/activity.layout';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 
 import { Box } from '@leather.io/ui/native';

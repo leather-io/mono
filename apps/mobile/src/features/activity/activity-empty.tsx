@@ -1,4 +1,4 @@
-import { EmptyLayout } from '@/components/loading';
+import { EmptyLayout } from '@/components/loading/empty-layout';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
 
