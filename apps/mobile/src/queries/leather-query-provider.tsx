@@ -1,4 +1,4 @@
-import { type ReactNode, createContext, useContext, useMemo } from 'react';
+import { type ReactNode, createContext, use, useMemo } from 'react';
 
 import { ChainId } from '@stacks/network';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -21,7 +21,7 @@ const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 const LeatherEnvironmentContext = createContext<LeatherEnvironment | null>(null);
 
 export function useLeatherGithub() {
-  const leatherEnv = useContext(LeatherEnvironmentContext);
+  const leatherEnv = use(LeatherEnvironmentContext);
 
   if (!leatherEnv) {
     throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
@@ -31,7 +31,7 @@ export function useLeatherGithub() {
 }
 
 export function useLeatherEnv() {
-  const leatherEnv = useContext(LeatherEnvironmentContext);
+  const leatherEnv = use(LeatherEnvironmentContext);
 
   if (!leatherEnv || !leatherEnv.env) {
     throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
@@ -41,7 +41,7 @@ export function useLeatherEnv() {
 }
 
 export function useIsLeatherTestingEnv() {
-  const leatherEnv = useContext(LeatherEnvironmentContext);
+  const leatherEnv = use(LeatherEnvironmentContext);
 
   if (!leatherEnv || !leatherEnv.env) {
     throw new Error('No LeatherEnvironment set, use LeatherQueryProvider to set one');
@@ -51,7 +51,7 @@ export function useIsLeatherTestingEnv() {
 }
 
 export function useLeatherNetwork(): NetworkConfiguration {
-  const leatherNetwork = useContext(LeatherNetworkContext);
+  const leatherNetwork = use(LeatherNetworkContext);
 
   if (!leatherNetwork) {
     throw new Error('No LeatherNetwork set, use LeatherQueryProvider to set one');
