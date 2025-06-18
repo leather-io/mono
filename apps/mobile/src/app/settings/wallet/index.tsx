@@ -11,7 +11,7 @@ import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useRouter } from 'expo-router';
 
-import { Eye1ClosedIcon, PlusIcon } from '@leather.io/ui/native';
+import { Eye1ClosedIcon, PlusIcon, Text } from '@leather.io/ui/native';
 
 export default function SettingsWalletScreen() {
   const router = useRouter();
@@ -52,6 +52,12 @@ export default function SettingsWalletScreen() {
                   }}
                 />
               )}
+              <Text>
+                {t({
+                  id: 'test_crowdin_action',
+                  message: 'TESTING TEST',
+                })}
+              </Text>
               <SettingsListItem
                 title={t({
                   id: 'wallet.add_wallet.cell_title',
