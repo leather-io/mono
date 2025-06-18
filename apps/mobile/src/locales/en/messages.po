@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 10\n"
 "Project-Id-Version: leather-mobile\n"
 "Language-Team: English\n"
-"PO-Revision-Date: 2025-06-06 10:34\n"
+"PO-Revision-Date: 2025-06-18 07:53\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 
@@ -265,7 +265,7 @@ msgstr "Add to existing wallet"
 msgid "add_account.new_wallet.cell_title"
 msgstr "Add to new wallet"
 
-#: src/app/settings/wallet/index.tsx:56
+#: src/app/settings/wallet/index.tsx:62
 msgid "wallet.add_wallet.cell_title"
 msgstr "Add wallet"
 
@@ -1643,6 +1643,10 @@ msgstr "Taproot"
 msgid "account_display_preference.taproot"
 msgstr "Taproot address"
 
+#: src/app/settings/wallet/index.tsx:56
+msgid "test_crowdin_action"
+msgstr "TESTING TEST (updated on crowdin)"
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:15
 msgid "send-form.recipient.no-search-results.description"
 msgstr "The address you entered isn’t valid. Verify and try again"
@@ -1888,3 +1892,4 @@ msgstr "Your Secret Key grants you access to your wallet and its assets. Store i
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:85
 msgid "browser-sheet.dapp.zest.title"
 msgstr "Zest"
+
