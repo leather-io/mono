@@ -73,6 +73,7 @@ export default tseslint.config(
     },
     rules: {
       ...pluginReactCompiler.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'off',
     },
   },
   {
