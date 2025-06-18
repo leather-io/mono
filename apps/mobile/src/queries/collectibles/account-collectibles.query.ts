@@ -38,13 +38,14 @@ function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
 
 function useAccountCollectiblesQuery(account: AccountAddresses) {
   const inscriptionsFlag = useInscriptionsFlag();
+  let localAccount = account;
   if (!inscriptionsFlag) {
-    account.bitcoin = undefined;
+    localAccount.bitcoin = undefined;
   }
   return useQuery({
-    queryKey: ['collectibles-service-get-account-collectibles', account],
+    queryKey: ['collectibles-service-get-account-collectibles', localAccount],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getCollectiblesService().getAccountCollectibles(account, signal),
+      getCollectiblesService().getAccountCollectibles(localAccount, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

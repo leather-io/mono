@@ -1,5 +1,4 @@
 import react from 'eslint-plugin-react';
-import reactCompiler from 'eslint-plugin-react-compiler';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
@@ -12,15 +11,7 @@ export default [
     },
     rules: reactHooks.configs.recommended.rules,
   },
-  {
-    name: 'react-compiler',
-    plugins: {
-      'react-compiler': reactCompiler,
-    },
-    rules: {
-      ...reactCompiler.configs.recommended.rules,
-    },
-  },
+
   {
     rules: {
       'react/function-component-definition': 'error',
