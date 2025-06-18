@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { KeyboardController } from 'react-native-keyboard-controller';
 
 import { useTheme } from '@shopify/restyle';
@@ -10,22 +11,24 @@ import { SearchInputProps } from './utils';
 
 export function ActiveBrowserSearchInput({
   textInputRef,
-  isUrlFocused,
+  isUrlFocused: isFocused,
   textUrl,
   setTextUrl,
   onSubmit,
 }: SearchInputProps) {
   const theme = useTheme<Theme>();
+  // changing this to fix eslint error about prop mutation but it seems like isUrlFocused is always false
+  const [isUrlFocused, setIsUrlFocused] = useState(isFocused.value);
   return (
     <Box>
       <GenericSearchTextInput
         ref={textInputRef}
         onFocus={() => {
-          isUrlFocused.value = true;
+          setIsUrlFocused(!isUrlFocused);
         }}
         onBlur={async () => {
           await KeyboardController.dismiss();
-          isUrlFocused.value = false;
+          setIsUrlFocused(!isUrlFocused);
         }}
         onChangeText={setTextUrl}
         value={textUrl}

@@ -36,16 +36,15 @@ function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
   });
 }
 
-function useAccountCollectiblesQuery(account: AccountAddresses) {
+function useAccountCollectiblesQuery(accountInput: AccountAddresses) {
   const inscriptionsFlag = useInscriptionsFlag();
-  let localAccount = account;
-  if (!inscriptionsFlag) {
-    localAccount.bitcoin = undefined;
-  }
+
+  const account = inscriptionsFlag ? { ...accountInput } : { ...accountInput, bitcoin: undefined };
+
   return useQuery({
-    queryKey: ['collectibles-service-get-account-collectibles', localAccount],
+    queryKey: ['collectibles-service-get-account-collectibles', account],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getCollectiblesService().getAccountCollectibles(localAccount, signal),
+      getCollectiblesService().getAccountCollectibles(account, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
