@@ -1,5 +1,6 @@
 import pluginQuery from '@tanstack/eslint-plugin-query';
 import pluginLingui from 'eslint-plugin-lingui';
+import pluginReactCompiler from 'eslint-plugin-react-compiler';
 import tseslint from 'typescript-eslint';
 
 import baseConfig from '@leather.io/eslint-config';
@@ -67,6 +68,12 @@ export default tseslint.config(
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
+    plugins: {
+      'react-compiler': pluginReactCompiler,
+    },
+    rules: {
+      ...pluginReactCompiler.configs.recommended.rules,
+    },
   },
   {
     name: 'test-files',
