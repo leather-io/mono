@@ -53,7 +53,7 @@ export default () => {
       name: 'Leather',
       owner: 'leather-wallet',
       slug: 'leather-wallet-mobile',
-      version: '2.54.1', // x-release-please-version
+      version: '2.54.2', // x-release-please-version
       runtimeVersion: {
         policy: 'fingerprint',
       },
