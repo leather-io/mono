@@ -109,7 +109,7 @@ export function createDepositStxMutationOptions({ leather, network }: CreateHand
     mutationKey: ['deposit-stx', leather, network],
     mutationFn: async (values: LiquidStackingFormValues) => {
       const liquidStackStxOptions = getOptions(values, network);
-      await analytics.track('liquid_stacking_started', {
+      void analytics.track('liquid_stacking_started', {
         amount: scaleValue(values.amount),
         provider: values.protocolName,
       });
