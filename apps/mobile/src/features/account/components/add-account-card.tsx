@@ -15,7 +15,6 @@ export function AddAccountCard({ onPress }: AddAccountCardProps) {
         onPress={onPress}
         width={200}
         icon={PlusIcon}
-        testID={TestId.homeAddAccountCard}
         primaryTitle={t({ id: 'add_account_card.title', message: 'Add account' })}
       />
     </>

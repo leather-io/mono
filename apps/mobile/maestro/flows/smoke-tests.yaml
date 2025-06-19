@@ -14,8 +14,8 @@ name: Smoke Tests
 - assertVisible: 'SETTINGS'
 - tapOn:
     id: 'backButton'
-# When the user taps the create wallet card it should work
-# - tapOn:
-#     id: 'homeCreateWalletCard'
-# - tapOn:
-#     id: 'createNewWalletSheetButton'
+# E2E notes: Edgar deleted dev console in https://github.com/leather-io/mono/commit/587cd6a54321487011a34c736b00cbe1b1a3fec1
+# we used that a lot in E2E tests to reset wallets and accounts
+# we could be better off to stop doing this as it just slows everything down
+# when we hit LaunchApp it returns to the default state
+# if we want to re-test empty state we need to modify the clean up flow to run
