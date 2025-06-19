@@ -20,7 +20,6 @@
     "maestro": {
       "extends": "base",
       "environment": "production",
-      "withoutCredentials": true,
       "channel": "maestro",
       "distribution": "internal"
     },
