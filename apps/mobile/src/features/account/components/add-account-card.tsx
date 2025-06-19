@@ -1,4 +1,5 @@
 import { AccountCard } from '@/features/account/components/account-card';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
 import { PlusIcon } from '@leather.io/ui/native';
@@ -9,11 +10,14 @@ interface AddAccountCardProps {
 
 export function AddAccountCard({ onPress }: AddAccountCardProps) {
   return (
-    <AccountCard
-      onPress={onPress}
-      width={200}
-      icon={PlusIcon}
-      primaryTitle={t({ id: 'add_account_card.title', message: 'Add account' })}
-    />
+    <>
+      <AccountCard
+        onPress={onPress}
+        width={200}
+        icon={PlusIcon}
+        testID={TestId.homeAddAccountCard}
+        primaryTitle={t({ id: 'add_account_card.title', message: 'Add account' })}
+      />
+    </>
   );
 }

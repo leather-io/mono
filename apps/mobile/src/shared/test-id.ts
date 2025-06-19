@@ -7,6 +7,7 @@ export enum TestId {
   developerToolsWalletManagementButton = 'developerToolsWalletManagementButton',
   homeAccountCard = 'homeAccountCard',
   homeActivityButton = 'homeActivityButton',
+  homeAddAccountCard = 'homeAddAccountCard',
   homeAddWalletButton = 'homeAddWalletButton',
   homeCreateWalletCard = 'homeCreateWalletCard',
   homeDeveloperToolsButton = 'homeDeveloperToolsButton',
