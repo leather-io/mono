@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useRef } from 'react';
+import { createContext, use, useCallback, useRef } from 'react';
 
 import { HasChildren } from '@leather.io/ui/native';
 
@@ -12,7 +12,7 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType | null>(null);
 
 export function useToastContext() {
-  const context = useContext(ToastContext);
+  const context = use(ToastContext);
   if (!context) throw new Error("'useToastContext' must be used within an ToastWrapper");
   return context;
 }

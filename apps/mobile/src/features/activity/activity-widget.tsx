@@ -1,7 +1,8 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { FetchState, FetchWrapper } from '@/components/loading';
-import { Widget } from '@/components/widget';
+import { FetchState } from '@/components/loading/fetch-state';
+import { FetchWrapper } from '@/components/loading/fetch-wrapper';
+import { Widget } from '@/components/widget/widget';
 import { useTheme } from '@shopify/restyle';
 
 import { Activity } from '@leather.io/models';

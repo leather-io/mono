@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef } from 'react';
+import { createContext, use, useRef } from 'react';
 
 import { HasChildren } from '@leather.io/ui/native';
 
@@ -13,7 +13,7 @@ interface BrowserContextValue {
 const BrowserContext = createContext<BrowserContextValue | null>(null);
 
 export function useBrowser() {
-  const context = useContext(BrowserContext);
+  const context = use(BrowserContext);
   if (!context) throw new Error('`useBrowser` must be used within ``');
   return context;
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -104,7 +104,9 @@ function RootLayout() {
                                 <GlobalSheetProvider>
                                   <BrowserProvider>
                                     <SheetProvider>
-                                      <App />
+                                      <StrictMode>
+                                        <App />
+                                      </StrictMode>
                                     </SheetProvider>
                                   </BrowserProvider>
                                 </GlobalSheetProvider>

@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useReducer } from 'react';
+import { ReactNode, createContext, use, useReducer } from 'react';
 
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
 import { Account } from '@/store/accounts/accounts';
@@ -89,7 +89,7 @@ export function ReceiveFlowProvider({ initialData, children }: ReceiveProviderPr
 }
 
 export function useReceiveFlowContext() {
-  const context = useContext(ReceiveFlowContext);
+  const context = use(ReceiveFlowContext);
   if (!context) {
     throw new Error('useReceiveFlowContext must be used within ReceiveFlowProvider');
   }

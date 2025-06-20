@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef } from 'react';
+import { createContext, use, useRef } from 'react';
 
 import { HasChildren, SheetRef } from '@leather.io/ui/native';
 
@@ -13,7 +13,7 @@ interface GlobalSheetContextValue {
 const GlobalSheetContext = createContext<GlobalSheetContextValue | null>(null);
 
 export function useGlobalSheets() {
-  const context = useContext(GlobalSheetContext);
+  const context = use(GlobalSheetContext);
   if (!context) throw new Error('`useGlobalSheets` must be used within `GlobalSheetProvider`');
   return context;
 }

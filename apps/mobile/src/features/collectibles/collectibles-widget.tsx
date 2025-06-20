@@ -1,10 +1,9 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { Widget } from '@/components/widget/widget';
 import { useTheme } from '@shopify/restyle';
 
 import { Theme } from '@leather.io/ui/native';
-
-import { Widget } from '../../components/widget';
 
 interface CollectiblesWidgetProps {
   children: React.ReactNode;

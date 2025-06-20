@@ -36,11 +36,11 @@ function useTotalCollectiblesQuery(accounts: AccountAddresses[]) {
   });
 }
 
-function useAccountCollectiblesQuery(account: AccountAddresses) {
+function useAccountCollectiblesQuery(accountInput: AccountAddresses) {
   const inscriptionsFlag = useInscriptionsFlag();
-  if (!inscriptionsFlag) {
-    account.bitcoin = undefined;
-  }
+
+  const account = inscriptionsFlag ? { ...accountInput } : { ...accountInput, bitcoin: undefined };
+
   return useQuery({
     queryKey: ['collectibles-service-get-account-collectibles', account],
     queryFn: ({ signal }: QueryFunctionContext) =>

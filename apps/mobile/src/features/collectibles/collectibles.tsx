@@ -1,5 +1,6 @@
-import { FetchState, FetchWrapper } from '@/components/loading';
-import { CollectiblesLayout } from '@/features/collectibles';
+import { FetchState } from '@/components/loading/fetch-state';
+import { FetchWrapper } from '@/components/loading/fetch-wrapper';
+import { CollectiblesLayout } from '@/features/collectibles/collectibles.layout';
 
 import { NonFungibleCryptoAsset } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui/native';

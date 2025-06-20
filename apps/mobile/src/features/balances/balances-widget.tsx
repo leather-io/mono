@@ -1,6 +1,6 @@
-import { HasChildren } from '@leather.io/ui/native';
+import { Widget } from '@/components/widget/widget';
 
-import { Widget } from '../../components/widget';
+import { HasChildren } from '@leather.io/ui/native';
 
 interface BalancesWidgetProps extends HasChildren {
   onPressHeader: () => void;

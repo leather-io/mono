@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useReducer } from 'react';
+import { ReactNode, createContext, use, useReducer } from 'react';
 
 import { SendableAsset } from '@/features/send/types';
 import { Account } from '@/store/accounts/accounts';
@@ -99,7 +99,7 @@ export function SendFlowProvider({ initialData, children }: SendProviderProps) {
 }
 
 export function useSendFlowContext() {
-  const context = useContext(SendFlowContext);
+  const context = use(SendFlowContext);
   if (!context) {
     throw new Error('useSendFlowContext must be used within SendFlowProvider');
   }

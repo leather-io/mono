@@ -11,6 +11,7 @@ export default [
     },
     rules: reactHooks.configs.recommended.rules,
   },
+
   {
     rules: {
       'react/function-component-definition': 'error',

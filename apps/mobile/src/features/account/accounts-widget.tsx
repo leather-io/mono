@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { FetchErrorCallout } from '@/components/error/fetch-error';
-import { Widget } from '@/components/widget';
+import { Widget } from '@/components/widget/widget';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
 import { AccountCard } from '@/features/account/components/account-card';

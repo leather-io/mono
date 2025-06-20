@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { FetchState, FetchWrapper } from '@/components/loading';
+import { FetchState } from '@/components/loading/fetch-state';
+import { FetchWrapper } from '@/components/loading/fetch-wrapper';
 import { BalanceViewProps } from '@/features/balances/balances';
 import {
   useSip10AccountBalance,

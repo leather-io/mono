@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { t } from '@lingui/macro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Sentry from '@sentry/react-native';
 import * as SecureStore from 'expo-secure-store';
 import { PersistConfig } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
@@ -17,8 +18,14 @@ export const persistConfig: PersistConfig<RootState> = {
       stateSchema.parse(inboundState);
       return autoMergeLevel2(inboundState, originalState, reducedState, config);
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn(e);
+      Sentry.captureException(e, {
+        extra: {
+          inboundState,
+          originalState,
+          reducedState,
+          config,
+        },
+      });
       // set state on fire if zod doesn't pass (until release, we would need to implement migrations afterwards)
       return originalState;
     }
@@ -169,7 +176,6 @@ export function useMnemonic({
     if (shouldLoadOnInit) {
       void getMnemonic();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { mnemonic, passphrase };
 }

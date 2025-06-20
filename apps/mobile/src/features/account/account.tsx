@@ -5,7 +5,8 @@ import { AccountOverview } from '@/features/account/components/account-overview-
 import { ActivityWidget } from '@/features/activity/activity-widget';
 import { AccountBalances } from '@/features/balances/balances';
 import { BalancesWidget } from '@/features/balances/balances-widget';
-import { Collectibles, CollectiblesWidget, hasCollectibles } from '@/features/collectibles';
+import { Collectibles, hasCollectibles } from '@/features/collectibles/collectibles';
+import { CollectiblesWidget } from '@/features/collectibles/collectibles-widget';
 import { useCollectiblesFlag } from '@/features/feature-flags';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountActivity } from '@/queries/activity/account-activity.query';
