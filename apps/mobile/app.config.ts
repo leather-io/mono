@@ -35,27 +35,32 @@ function setupFirebaseEnvVariablesIos() {
 export default (): ExpoConfig => {
   setupFirebaseEnvVariablesAndroid();
   setupFirebaseEnvVariablesIos();
+  const easUpdatesEnabled = !!process.env.EXPO_ENABLE_UPDATES;
 
   return {
     name: 'Leather',
     owner: 'leather-wallet',
     slug: 'leather-wallet-mobile',
+    version: '2.54.2', // x-release-please-version
     runtimeVersion: {
       policy: 'fingerprint',
     },
     orientation: 'portrait',
     icon: './src/assets/icon.png',
-    notification: {
-      icon: './src/assets/adaptive-icon.png',
-      color: '#12100F',
-    },
     scheme: 'leather',
     userInterfaceStyle: 'automatic',
     platforms: ['ios', 'android'],
-    updates: {
-      fallbackToCacheTimeout: 0,
-      url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
-    },
+    updates: easUpdatesEnabled
+      ? {
+          fallbackToCacheTimeout: 0,
+          url: 'https://u.expo.dev/c03c1f22-be7b-4b76-aa1b-3ebf716bd2cc',
+          codeSigningCertificate: './certs/certificate.pem',
+          codeSigningMetadata: {
+            keyid: 'main',
+            alg: 'rsa-v1_5-sha256',
+          },
+        }
+      : undefined,
     assetBundlePatterns: ['**/*'],
     ios: {
       config: {
@@ -79,7 +84,7 @@ export default (): ExpoConfig => {
             NSPrivacyAccessedAPITypeReasons: ['C617.1'],
           },
           {
-            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPIType',
+            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults',
             NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
           },
           {
@@ -100,6 +105,10 @@ export default (): ExpoConfig => {
           backgroundColor: '#716A60',
         },
       },
+    },
+    notification: {
+      icon: './src/assets/android-notification-icon.png',
+      color: '#12100F',
     },
     android: {
       package: 'io.leather.mobilewallet',
@@ -123,6 +132,14 @@ export default (): ExpoConfig => {
     plugins: [
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
+      [
+        '@sentry/react-native/expo',
+        {
+          project: 'leather-mobile',
+          organization: 'trust-machines',
+          url: 'https://trust-machines.sentry.io',
+        },
+      ],
       [
         'expo-local-authentication',
         {
