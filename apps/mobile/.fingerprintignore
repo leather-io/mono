@@ -2,7 +2,3 @@
 ./GoogleService-Info.plist
 ios/
 android/
-
-app.config.ts
-app.config.js
-eas.json

@@ -106,10 +106,6 @@ export default (): ExpoConfig => {
         },
       },
     },
-    notification: {
-      icon: './src/assets/adaptive-icon.png',
-      color: '#12100F',
-    },
     android: {
       package: 'io.leather.mobilewallet',
       googleServicesFile: './google-services.json',
