@@ -20,6 +20,8 @@ export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
       onPress={onPress}
       width={width}
       icon={PlusIcon}
+      //  this lingui shit is killing me. I was working on the wrong file as I used the UI text
+      // here we actually show 'Add account' in the UI for this card
       primaryTitle={t({ id: 'create_wallet_card.title', message: 'Create or restore wallet' })}
       caption={t({
         id: 'create_wallet_card.caption',

@@ -4,10 +4,13 @@ appId: io.leather.mobilewallet
     file: ./unlock.yaml
     when:
       visible: Passcode field
+#   developer tools were deleted in https://github.com/leather-io/mono/commit/587cd6a54321487011a34c736b00cbe1b1a3fec1
+
 - tapOn:
     id: 'homeDeveloperToolsButton'
 - tapOn:
     text: 'Wallet management'
+#  clear was just running this anyway so could run this or not at all onPress={() => clearAllPersistedStorage(wallets.list.map(wallet => wallet.fingerprint))}
 - tapOn:
     text: 'Clear'
 - tapOn:
@@ -18,3 +21,5 @@ appId: io.leather.mobilewallet
     id: 'homeAddWalletButton'
 - assertNotVisible:
     id: 'homeAccountCard-0'
+# PETE - come up with a simpler test plan, even on paper to get us most of the benefits of E2E testing quickly
+# deprecate old test IDs also
