@@ -14,7 +14,6 @@ const config: LinguiConfig = {
       include: ['src'],
     },
   ],
-  compileNamespace: 'ts',
   format: formatter({ explicitIdAsDefault: true }),
 };
 

@@ -54,7 +54,7 @@ msgstr "{name}"
 msgid "bitcoin_unit.cell_caption"
 msgstr "{name}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:51
+#: src/features/settings/conversion-unit-sheet.tsx:47
 msgid "conversion_unit.cell_title"
 msgstr "{name}"
 
@@ -79,7 +79,7 @@ msgstr "{symbol}"
 msgid "bitcoin_unit.cell_title"
 msgstr "{symbol}"
 
-#: src/features/settings/conversion-unit-sheet.tsx:56
+#: src/features/settings/conversion-unit-sheet.tsx:52
 msgid "conversion_unit.cell_caption"
 msgstr "{symbol}"
 
@@ -629,11 +629,11 @@ msgstr "Contract arguments"
 msgid "display.conversion_unit.cell_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:40
+#: src/features/settings/conversion-unit-sheet.tsx:38
 msgid "conversion_unit.header_title"
 msgstr "Conversion unit"
 
-#: src/features/settings/conversion-unit-sheet.tsx:29
+#: src/features/settings/conversion-unit-sheet.tsx:27
 msgid "conversion_unit.toast_title"
 msgstr "Conversion unit updated"
 
