@@ -19,9 +19,8 @@
     },
     "maestro": {
       "extends": "base",
-      "environment": "production",
-      "withoutCredentials": true,
       "channel": "maestro",
+      "environment": "production",
       "distribution": "internal"
     },
     "development": {
@@ -32,8 +31,8 @@
     },
     "staging": {
       "extends": "base",
-      "distribution": "internal",
       "channel": "staging",
+      "distribution": "internal",
       "autoIncrement": true
     },
     "production": {
