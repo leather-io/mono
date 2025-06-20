@@ -107,7 +107,7 @@ export default (): ExpoConfig => {
       },
     },
     notification: {
-      icon: './src/assets/android-notification-icon.png',
+      icon: './src/assets/adaptive-icon.png',
       color: '#12100F',
     },
     android: {
