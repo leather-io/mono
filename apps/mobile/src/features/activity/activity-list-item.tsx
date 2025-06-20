@@ -1,89 +1,33 @@
-import { Balance } from '@/components/balance/balance';
-import { useBrowser } from '@/core/browser-provider';
-import { useSettings } from '@/store/settings/settings';
-import { minusSign } from '@/utils/special-char';
+import { Flag, ItemLayout, Pressable } from '@leather.io/ui/native';
 
-import { OnChainActivity } from '@leather.io/models';
-import { ActivityAvatarIcon, Flag, ItemLayout, Pressable, Text } from '@leather.io/ui/native';
-
-import { formatActivityCaption, getActivityTitle } from './utils/format-activity';
-import { makeActivityLink } from './utils/make-activity-link';
-
-interface ActivityListItemProps {
-  activity: OnChainActivity;
+export interface ActivityListItemProps {
+  txid: string;
+  avatar: React.ReactNode;
+  title: React.ReactNode;
+  caption: React.ReactNode;
+  quoteBalance?: React.ReactNode;
+  cryptoBalance?: React.ReactNode;
+  onPress: () => void;
 }
 
-function getBalanceOperator(activity: OnChainActivity) {
-  if (activity.type === 'receiveAsset') return '+';
-  if (activity.type === 'sendAsset') return minusSign;
-  return undefined;
-}
-
-function getBalanceColor(activity: OnChainActivity) {
-  if (activity.type === 'receiveAsset' && activity.status === 'success')
-    return 'green.action-primary-default';
-  return 'ink.text-primary';
-}
-
-export function ActivityListItem({ activity }: ActivityListItemProps) {
-  const { networkPreference } = useSettings();
-  const { linkingRef } = useBrowser();
-
-  const { txid, status, type, timestamp } = activity;
-  const value = 'value' in activity ? activity.value : undefined;
-  const activityHasAsset = 'asset' in activity;
-  const asset = activityHasAsset && 'symbol' in activity.asset ? activity.asset : undefined;
-
+export function ActivityListItem({
+  txid,
+  avatar,
+  title,
+  caption,
+  quoteBalance,
+  cryptoBalance,
+  onPress,
+}: ActivityListItemProps) {
   return (
-    <Pressable
-      flexDirection="row"
-      disabled={!txid}
-      onPress={() => {
-        const activityLink = makeActivityLink({ txid, networkPreference, asset });
-        if (activityLink) {
-          linkingRef.current?.openURL(activityLink);
-        }
-      }}
-    >
-      <Flag img={<ActivityAvatarIcon type={type} asset={asset} status={status} />} px="5" py="3">
+    <Pressable flexDirection="row" disabled={!txid} onPress={onPress}>
+      <Flag img={avatar} px="5" py="3">
         <ItemLayout
           gap="0"
-          titleLeft={
-            <Text variant="label01" fontSize={15}>
-              {getActivityTitle(activity)}
-            </Text>
-          }
-          titleRight={
-            value?.quote ? (
-              <Balance
-                operator={getBalanceOperator(activity)}
-                balance={value.quote}
-                color={getBalanceColor(activity)}
-                fontSize={15}
-                isQuoteCurrency
-              />
-            ) : undefined
-          }
-          captionLeft={
-            <Text variant="caption01" color="ink.text-subdued" lineHeight={16} fontSize={13}>
-              {formatActivityCaption({
-                type: type,
-                status: status,
-                timestamp: timestamp,
-              })}
-            </Text>
-          }
-          captionRight={
-            value?.crypto ? (
-              <Balance
-                balance={value.crypto}
-                variant="caption01"
-                color="ink.text-subdued"
-                lineHeight={16}
-                fontSize={13}
-              />
-            ) : undefined
-          }
+          titleLeft={title}
+          titleRight={quoteBalance}
+          captionLeft={caption}
+          captionRight={cryptoBalance}
         />
       </Flag>
     </Pressable>
