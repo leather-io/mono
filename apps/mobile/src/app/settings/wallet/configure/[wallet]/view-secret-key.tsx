@@ -1,4 +1,5 @@
 import { Screen } from '@/components/screen/screen';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
 import { useMnemonic } from '@/store/storage-persistors';
 import { t } from '@lingui/macro';
@@ -10,20 +11,16 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
   const router = useRouter();
   const { mnemonic, passphrase } = useMnemonic({ fingerprint });
 
-  if (!mnemonic) {
-    return <Box flex={1} backgroundColor="ink.background-primary" />;
-  }
+  if (!mnemonic) return <Box flex={1} backgroundColor="ink.background-primary" />;
 
   return (
-    <Screen>
-      <Screen.Header />
-      <Screen.ScrollView>
-        <Screen.Title>
-          {t({
-            id: 'view_secret_key.title',
-            message: 'SECRET KEY',
-          })}
-        </Screen.Title>
+    <>
+      <SettingsLayout
+        title={t({
+          id: 'view_secret_key.title',
+          message: 'SECRET KEY',
+        })}
+      >
         <Box gap="5" px="5">
           <Text variant="label01">
             {t({
@@ -34,7 +31,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
 
           <MnemonicDisplay mnemonic={mnemonic} passphrase={passphrase} />
         </Box>
-      </Screen.ScrollView>
+      </SettingsLayout>
       <Screen.Footer>
         <Button
           onPress={() => router.back()}
@@ -45,7 +42,7 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
           })}
         />
       </Screen.Footer>
-    </Screen>
+    </>
   );
 }
 

@@ -26,11 +26,11 @@ function Body(props: BoxProps) {
 
 function Title({ children }: HasChildren) {
   return (
-    <Screen.HeaderAnimationTarget>
-      <Box width={320} px="5" pb="5" mb="3">
+    <Box width={320} px="5" pb="5" mb="3">
+      <Screen.HeaderAnimationTarget>
         <Text variant="heading03">{children}</Text>
-      </Box>
-    </Screen.HeaderAnimationTarget>
+      </Screen.HeaderAnimationTarget>
+    </Box>
   );
 }
 

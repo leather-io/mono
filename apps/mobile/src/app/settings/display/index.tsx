@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 
-import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useLocaleFlag } from '@/features/feature-flags';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { toggleLocalization } from '@/locales/toggle-localization';
 import { useSettings } from '@/store/settings/settings';
@@ -45,115 +45,111 @@ export default function SettingsDisplayScreen() {
   }
 
   return (
-    <Screen>
-      <Screen.Header />
-      <Screen.ScrollView>
-        <Screen.Title>
-          {t({
-            id: 'display.header_title',
-            message: 'Display',
+    <SettingsLayout
+      title={t({
+        id: 'display.header_title',
+        message: 'Display',
+      })}
+    >
+      <SettingsList>
+        <SettingsListItem
+          title={t({
+            id: 'display.theme.cell_title',
+            message: 'Theme',
           })}
-        </Screen.Title>
-        <SettingsList>
-          <SettingsListItem
-            title={t({
-              id: 'display.theme.cell_title',
-              message: 'Theme',
-            })}
-            caption={i18n._({
-              id: 'display.theme.cell_caption',
-              message: '{theme}',
-              values: { theme: capitalize(themePreference) },
-            })}
-            icon={<SunInCloudIcon />}
-            onPress={() => {
-              themeSheetRef.current?.present();
-            }}
-          />
+          caption={i18n._({
+            id: 'display.theme.cell_caption',
+            message: '{theme}',
+            values: { theme: capitalize(themePreference) },
+          })}
+          icon={<SunInCloudIcon />}
+          onPress={() => {
+            themeSheetRef.current?.present();
+          }}
+        />
 
-          {releaseLocaleFeature && (
-            <>
-              <SettingsListItem
-                title={t({
-                  id: 'display.language.cell_title',
-                  message: 'Language',
-                })}
-                caption={i18n._({
-                  id: 'display.language.cell_caption',
-                  message: '{locale}',
-                  values: { locale: i18n.locale },
-                })}
-                icon={<GlobeIcon />}
-                onPress={() => toggleLocalization()}
-              />
-              <SettingsListItem
-                title={t({
-                  id: 'display.bitcoin_unit.cell_title',
-                  message: 'Bitcoin unit',
-                })}
-                caption={i18n._({
-                  id: 'display.bitcoin_unit.cell_caption',
-                  message: '{symbol}',
-                  values: { symbol: bitcoinUnitPreference.symbol },
-                })}
-                icon={<BitcoinCircleIcon />}
-                onPress={() => {
-                  bitcoinUnitSheetRef.current?.present();
-                }}
-              />
-            </>
-          )}
+        {releaseLocaleFeature && (
+          <>
+            <SettingsListItem
+              title={t({
+                id: 'display.language.cell_title',
+                message: 'Language',
+              })}
+              caption={i18n._({
+                id: 'display.language.cell_caption',
+                message: '{locale}',
+                values: { locale: i18n.locale },
+              })}
+              icon={<GlobeIcon />}
+              onPress={() => toggleLocalization()}
+            />
+            <SettingsListItem
+              title={t({
+                id: 'display.bitcoin_unit.cell_title',
+                message: 'Bitcoin unit',
+              })}
+              caption={i18n._({
+                id: 'display.bitcoin_unit.cell_caption',
+                message: '{symbol}',
+                values: { symbol: bitcoinUnitPreference.symbol },
+              })}
+              icon={<BitcoinCircleIcon />}
+              onPress={() => {
+                bitcoinUnitSheetRef.current?.present();
+              }}
+            />
+          </>
+        )}
 
-          <SettingsListItem
-            title={t({
-              id: 'display.conversion_unit.cell_title',
-              message: 'Conversion unit',
-            })}
-            caption={i18n._({
-              id: 'display.conversion_unit.cell_caption',
-              message: '{currency}',
-              values: { currency: fiatCurrencyPreference },
-            })}
-            icon={<DollarCircleIcon />}
-            onPress={() => {
-              conversionUnitSheetRef.current?.present();
-            }}
-          />
-          <SettingsListItem
-            title={t({
-              id: 'display.account_identifier.cell_title',
-              message: 'Account identifier',
-            })}
-            caption={i18n._({
-              id: 'display.account_identifier.cell_caption',
-              message: '{name}',
-              values: { name: accountDisplayPreference.name },
-            })}
-            icon={<PackageSecurityIcon />}
-            onPress={() => {
-              accountIdentifierSheetRef.current?.present();
-            }}
-          />
-          <SettingsListItem
-            title={t({
-              id: 'display.haptics.cell_title',
-              message: 'Haptics',
-            })}
-            caption={t({
-              id: 'display.haptics.cell_caption',
-              message: 'Toggle tactile feedback for touch interactions',
-            })}
-            icon={<PointerHandIcon />}
-            type="switch"
-            onSwitchValueChange={() => onUpdateHapticsPreference()}
-            switchValue={hapticsPreference === 'enabled'}
-          />
-        </SettingsList>
-      </Screen.ScrollView>
+        <SettingsListItem
+          title={t({
+            id: 'display.conversion_unit.cell_title',
+            message: 'Conversion unit',
+          })}
+          caption={i18n._({
+            id: 'display.conversion_unit.cell_caption',
+            message: '{currency}',
+            values: { currency: fiatCurrencyPreference },
+          })}
+          icon={<DollarCircleIcon />}
+          onPress={() => {
+            conversionUnitSheetRef.current?.present();
+          }}
+        />
+        <SettingsListItem
+          title={t({
+            id: 'display.account_identifier.cell_title',
+            message: 'Account identifier',
+          })}
+          caption={i18n._({
+            id: 'display.account_identifier.cell_caption',
+            message: '{name}',
+            values: { name: accountDisplayPreference.name },
+          })}
+          icon={<PackageSecurityIcon />}
+          onPress={() => {
+            accountIdentifierSheetRef.current?.present();
+          }}
+        />
+        <SettingsListItem
+          title={t({
+            id: 'display.haptics.cell_title',
+            message: 'Haptics',
+          })}
+          caption={t({
+            id: 'display.haptics.cell_caption',
+            message: 'Toggle tactile feedback for touch interactions',
+          })}
+          icon={<PointerHandIcon />}
+          type="switch"
+          onSwitchValueChange={() => onUpdateHapticsPreference()}
+          switchValue={hapticsPreference === 'enabled'}
+        />
+      </SettingsList>
       <ThemeSheet sheetRef={themeSheetRef} />
       <BitcoinUnitSheet sheetRef={bitcoinUnitSheetRef} />
       <ConversionUnitSheet sheetRef={conversionUnitSheetRef} />
       <AccountIdentifierSheet sheetRef={accountIdentifierSheetRef} />
-    </Screen>
+    </SettingsLayout>
   );
 }
