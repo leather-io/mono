@@ -18,8 +18,8 @@ export function ItemLayoutWithButtons({
   title,
 }: ItemWithButtonsLayoutProps) {
   return (
-    <Flag img={img} alignItems="center">
-      <Flex alignItems="center" justifyContent="space-between" width="100%">
+    <Flag img={img} alignItems="center" width="100%">
+      <Flex alignItems="center" justifyContent="space-between">
         <Stack
           alignItems="start"
           flexGrow={2}
