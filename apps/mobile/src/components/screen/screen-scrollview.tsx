@@ -1,8 +1,45 @@
 import Animated, { AnimatedScrollViewProps } from 'react-native-reanimated';
 
+import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
+import { NormalizeScrollContainerProps } from '@/components/screen/screen.types';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
-export function ScreenScrollView(props: AnimatedScrollViewProps) {
+type ScreenScrollviewProps = NormalizeScrollContainerProps<AnimatedScrollViewProps>;
+
+export function ScreenScrollView({
+  onScrollBeginDrag,
+  onScrollEndDrag,
+  onMomentumScrollBegin,
+  onMomentumScrollEnd,
+  ...props
+}: ScreenScrollviewProps) {
   const bottomInset = useSafeBottomInset();
-  return <Animated.ScrollView contentContainerStyle={{ paddingBottom: bottomInset }} {...props} />;
+  const { scrollRef, scrollHandler, debouncedFixScroll } = useScreenScrollContext();
+
+  return (
+    <Animated.ScrollView
+      ref={scrollRef}
+      scrollEventThrottle={16}
+      overScrollMode="auto"
+      onScroll={scrollHandler}
+      onScrollBeginDrag={event => {
+        debouncedFixScroll.cancel();
+        onScrollBeginDrag?.(event);
+      }}
+      onScrollEndDrag={event => {
+        debouncedFixScroll();
+        onScrollEndDrag?.(event);
+      }}
+      onMomentumScrollBegin={event => {
+        debouncedFixScroll.cancel();
+        onMomentumScrollBegin?.(event);
+      }}
+      onMomentumScrollEnd={event => {
+        debouncedFixScroll();
+        onMomentumScrollEnd?.(event);
+      }}
+      contentContainerStyle={{ paddingBottom: bottomInset }}
+      {...props}
+    />
+  );
 }
