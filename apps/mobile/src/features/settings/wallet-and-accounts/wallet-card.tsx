@@ -19,6 +19,7 @@ import {
   Button,
   ChevronDownIcon,
   ChevronUpIcon,
+  IconButton,
   PlusIcon,
   Pressable,
   SettingsGearIcon,
@@ -49,21 +50,18 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
   }
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" px="5">
       {variant === 'hidden' && !hasAccounts ? null : (
-        <Box flexDirection="row" alignItems="center" justifyContent="space-between">
+        <Box flexDirection="row" alignItems="center" justifyContent="space-between" py="3">
           <Pressable
-            py="3"
             flex={1}
             flexDirection="row"
             alignItems="center"
             gap="1"
-            onPress={() => {
-              setExpanded(!expanded);
-            }}
+            onPress={() => setExpanded(!expanded)}
             pressEffects={legacyTouchablePressEffect}
           >
-            <Text variant="label02">{name}</Text>
+            <Text variant="label01">{name}</Text>
             {expanded ? (
               <ChevronUpIcon color="ink.text-primary" variant="small" />
             ) : (
@@ -71,27 +69,26 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
             )}
           </Pressable>
           {variant === 'active' && (
-            <Pressable
+            <IconButton
+              icon={<SettingsGearIcon color="ink.text-primary" />}
+              label={t({ id: 'wallet.open_wallet_settings', message: 'Open wallet settings' })}
               onPress={() => {
                 router.navigate({
                   pathname: '/settings/wallet/configure/[wallet]',
                   params: { fingerprint, wallet: fingerprint },
                 });
               }}
-              py="3"
               flex={1}
               alignItems="flex-end"
               testID={TestId.walletListSettingsButton}
               pressEffects={legacyTouchablePressEffect}
-            >
-              <SettingsGearIcon color="ink.text-primary" />
-            </Pressable>
+            />
           )}
         </Box>
       )}
 
       {expanded && (
-        <Box flexDirection="column" gap="2">
+        <Box flexDirection="column" gap="3">
           {accounts.map(account => (
             <AccountCard
               key={account.id}

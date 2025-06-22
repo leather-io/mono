@@ -1,15 +1,13 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Screen } from '@/components/screen/screen';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import { ImageBackground } from 'expo-image';
 
 import { generateMnemonic } from '@leather.io/crypto';
@@ -20,7 +18,6 @@ import {
   PointerHandIcon,
   Pressable,
   Text,
-  Theme,
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
@@ -69,8 +66,6 @@ function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: b
 }
 
 export default function CreateNewWallet() {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
   const [isHidden, setIsHidden] = useState(true);
   const [mnemonic, setMnemonic] = useState<string | null>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
@@ -87,14 +82,11 @@ export default function CreateNewWallet() {
   });
 
   return (
-    <Box bg="ink.background-primary" flex={1} style={{ paddingBottom: bottom + theme.spacing[5] }}>
-      <AnimatedHeaderScreenLayout
-        // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
-        // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
-        title={pageTitle}
-        contentTitle={pageTitle}
-      >
-        <Box>
+    <Screen>
+      <Screen.Header />
+      <Screen.ScrollView>
+        <Screen.Title>{pageTitle}</Screen.Title>
+        <Box px="5" gap="5">
           <Text variant="label01">
             {t({
               id: 'create_new_wallet.subtitle',
@@ -103,13 +95,7 @@ export default function CreateNewWallet() {
             })}
           </Text>
 
-          <Box
-            my="5"
-            borderWidth={1}
-            borderColor="ink.border-default"
-            borderRadius="xs"
-            overflow="hidden"
-          >
+          <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" overflow="hidden">
             {isHidden && (
               <SecretBanner isHidden={isHidden}>
                 <Pressable
@@ -143,8 +129,9 @@ export default function CreateNewWallet() {
             <MnemonicDisplay mnemonic={mnemonic} />
           </Box>
         </Box>
-      </AnimatedHeaderScreenLayout>
-      <Box px="5" gap="4">
+      </Screen.ScrollView>
+
+      <Screen.Footer>
         <Button
           disabled={isHidden}
           onPress={() => void navigateAndCreateWallet()}
@@ -155,7 +142,7 @@ export default function CreateNewWallet() {
           })}
           testID={TestId.walletCreationBackedUpButton}
         />
-      </Box>
-    </Box>
+      </Screen.Footer>
+    </Screen>
   );
 }

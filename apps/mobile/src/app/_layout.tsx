@@ -9,7 +9,6 @@ import { ErrorBoundary } from '@/components/error/error-boundary';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
-import { AppNavigationStack } from '@/core/app-navigation-stack';
 import { BrowserProvider } from '@/core/browser-provider';
 import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
@@ -31,11 +30,12 @@ import { persistor, store } from '@/store';
 import { trackFirstAppOpen } from '@/utils/analytics';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
-import { I18nProvider } from '@lingui/react';
+import { I18nProvider, useLingui } from '@lingui/react';
 import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -64,6 +64,7 @@ void setupFeatureFlags();
 function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
+  useLingui();
 
   useEffect(() => {
     void trackFirstAppOpen();
@@ -73,7 +74,7 @@ function App() {
     <Box backgroundColor="ink.background-secondary" flex={1}>
       <ErrorBoundary>
         <StatusBar />
-        <AppNavigationStack />
+        <Stack screenOptions={{ headerShown: false }} />
         <ActionBar />
         <SendSheet />
         <ReceiveSheet />

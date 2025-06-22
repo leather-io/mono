@@ -1,6 +1,6 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Screen } from '@/components/screen/screen';
 import { Collectibles } from '@/features/collectibles';
-import { NetworkBadge } from '@/features/settings/network-badge';
+import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
@@ -18,16 +18,13 @@ export default function CollectiblesScreen() {
     id: 'account.collectibles.header_title',
     message: 'Collectibles',
   });
-
   return (
-    <AnimatedHeaderScreenLayout
-      contentContainerStyles={{ paddingHorizontal: 0 }}
-      rightHeaderElement={<NetworkBadge />}
-      title={pageTitle}
-      contentTitle={pageTitle}
-      contentTitleStyles={{ paddingLeft: '5' }}
-    >
-      <Collectibles collectibles={collectibles} />
-    </AnimatedHeaderScreenLayout>
+    <Screen>
+      <Screen.Header />
+      <Screen.ScrollView refreshControl={<RefreshControl />}>
+        <Screen.Title>{pageTitle}</Screen.Title>
+        <Collectibles collectibles={collectibles} />
+      </Screen.ScrollView>
+    </Screen>
   );
 }

@@ -1,11 +1,9 @@
 import { useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnimatedHeaderScreenWithKeyboardLayout } from '@/components/headers/animated-header/animated-header-screen-with-keyboard.layout';
+import { Screen } from '@/components/screen/screen';
 import { RecoverWalletSheet } from '@/features/wallet-manager/recover-wallet/recover-wallet-sheet';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 
 import {
   Accordion,
@@ -17,7 +15,6 @@ import {
   LockIcon,
   SheetRef,
   Text,
-  Theme,
 } from '@leather.io/ui/native';
 
 interface RecoverWalletLayoutProps extends HasChildren {
@@ -34,22 +31,16 @@ export function RecoverWalletLayout({
   onSubmit,
   isButtonDisabled,
 }: RecoverWalletLayoutProps) {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
   const recoverWalletSheetRef = useRef<SheetRef>(null);
 
   return (
-    <>
-      <Box
-        bg="ink.background-primary"
-        flex={1}
-        style={{ paddingBottom: bottom + theme.spacing[5] }}
-      >
-        <AnimatedHeaderScreenWithKeyboardLayout
-          // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
-          // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
-          title={t({ id: 'recover_wallet.title', message: 'Enter your secret key' })}
-        >
+    <Screen>
+      <Screen.Header />
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({ id: 'recover_wallet.title', message: 'Enter your secret key' })}
+        </Screen.Title>
+        <Box px="5">
           <Box gap="3">
             <Text variant="label01">
               {t({
@@ -109,9 +100,10 @@ export function RecoverWalletLayout({
               </Box>
             }
           />
-        </AnimatedHeaderScreenWithKeyboardLayout>
+        </Box>
+      </Screen.ScrollView>
+      <Screen.Footer>
         <Button
-          mx="5"
           onPress={onSubmit}
           disabled={isButtonDisabled}
           buttonState={isButtonDisabled ? 'disabled' : 'default'}
@@ -121,12 +113,12 @@ export function RecoverWalletLayout({
           })}
           testID={TestId.restoreWalletContinue}
         />
-      </Box>
+      </Screen.Footer>
       <RecoverWalletSheet
         setPassphrase={setPassphrase}
         passphrase={passphrase}
         recoverWalletSheetRef={recoverWalletSheetRef}
       />
-    </>
+    </Screen>
   );
 }

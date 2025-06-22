@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Screen } from '@/components/screen/screen';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
@@ -104,13 +104,17 @@ export default function MpcWalletListScreen() {
   function onCloseSheet() {
     setSheetData(null);
   }
+
   const pageTitle = t({
     id: 'mpc_wallets.title',
     message: 'Connect mpc wallet',
   });
+
   return (
-    <>
-      <AnimatedHeaderScreenLayout title={pageTitle} contentTitle={pageTitle}>
+    <Screen>
+      <Screen.Header />
+      <Screen.ScrollView>
+        <Screen.Title>{pageTitle}</Screen.Title>
         <SettingsList>
           {Object.values(getUnavailableFeatures()).map(feature => {
             const mpcWalletName = feature.title;
@@ -135,12 +139,12 @@ export default function MpcWalletListScreen() {
             );
           })}
         </SettingsList>
-      </AnimatedHeaderScreenLayout>
+      </Screen.ScrollView>
       <NotifyUserSheetLayout
         onCloseSheet={onCloseSheet}
         sheetData={sheetData}
         sheetRef={sheetRef}
       />
-    </>
+    </Screen>
   );
 }
