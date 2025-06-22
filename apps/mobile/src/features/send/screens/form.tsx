@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { InlineAssetPicker } from '@/features/send/components/inline-asset-picker';
@@ -11,7 +11,6 @@ import { StxDataLoader } from '@/features/send/forms/stx/stx-loader';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { i18n } from '@lingui/core';
@@ -63,7 +62,6 @@ export function Form() {
               values: { subtitle: selectedAccount.name },
             })}
             leftElement={canGoBack() ? <HeaderBackButton onPress={goBack} /> : null}
-            rightElement={<NetworkBadge />}
           />
         }
       >

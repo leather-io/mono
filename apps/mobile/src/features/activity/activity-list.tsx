@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useRefreshHandler } from '@/components/page/page.layout';
+import { useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
 
@@ -37,7 +37,7 @@ export function ActivityList({ activity, mode = 'full' }: ActivityListProps) {
     <Box flex={1} width="100%" height="100%">
       <FlashList
         data={filteredActivities}
-        renderItem={({ item }: { item: OnChainActivity }) => <ActivityListItem activity={item} />}
+        renderItem={({ item }) => <ActivityListItem activity={item} />}
         estimatedItemSize={72}
         keyExtractor={(_, index) => `activity.${index}`}
         showsVerticalScrollIndicator={false}

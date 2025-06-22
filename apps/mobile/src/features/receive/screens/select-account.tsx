@@ -2,7 +2,6 @@ import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/ful
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AccountList } from '@/features/account/account-list/account-list';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { Account } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 
@@ -32,7 +31,6 @@ export function SelectAccount() {
             id: 'select_account.receive.header_subtitle',
             message: 'Receive',
           })}
-          rightElement={<NetworkBadge />}
         />
       }
     >
