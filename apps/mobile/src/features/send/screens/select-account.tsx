@@ -1,7 +1,7 @@
 import { ScrollView } from 'react-native';
 
 import { Balance } from '@/components/balance/balance';
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { AccountListItem } from '@/features/account/account-list/account-list-item';
@@ -10,7 +10,6 @@ import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { useSendNavigation, useSendRoute } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { type Account } from '@/store/accounts/accounts';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
@@ -52,7 +51,6 @@ export function SelectAccount() {
             message: 'Send',
           })}
           leftElement={canGoBack ? <HeaderBackButton onPress={handleBackButtonPress} /> : null}
-          rightElement={<NetworkBadge />}
         />
       }
     >

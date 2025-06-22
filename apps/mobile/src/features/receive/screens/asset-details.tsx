@@ -1,11 +1,10 @@
 import { Share } from 'react-native';
 
 import { AddressTypeBadge } from '@/components/address-type-badge';
-import { HeaderBackButton } from '@/components/headers/components/header-back-button';
+import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { QrCard } from '@/features/receive/components/qr-card';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { TestId } from '@/shared/test-id';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
@@ -57,7 +56,6 @@ export function AssetDetails() {
             values: { subtitle: accountName },
           })}
           leftElement={<HeaderBackButton onPress={navigation.goBack} testID={TestId.backButton} />}
-          rightElement={<NetworkBadge />}
         />
       }
     >

@@ -1,10 +1,13 @@
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
+import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
 
 import { Box, Button, HasChildren, Text } from '@leather.io/ui/native';
 
 import { EmptyLayout } from '../loading/empty-layout';
-import { PageLayout } from '../page/page.layout';
 
 function WidgetWrap({ children }: HasChildren) {
   return (
@@ -20,8 +23,13 @@ interface ErrorProps {
 }
 
 export function Error({ error, onRetry }: ErrorProps) {
+  const bottomInset = useSafeBottomInset();
+
   return (
-    <PageLayout>
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: bottomInset }}
+      refreshControl={<RefreshControl />}
+    >
       <WidgetWrap>
         <EmptyLayout
           image={
@@ -64,6 +72,6 @@ export function Error({ error, onRetry }: ErrorProps) {
           )}
         </EmptyLayout>
       </WidgetWrap>
-    </PageLayout>
+    </ScrollView>
   );
 }
