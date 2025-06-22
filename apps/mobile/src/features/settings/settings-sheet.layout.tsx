@@ -31,7 +31,7 @@ export function SettingsSheetLayout({
         }}
       >
         <SheetHeader onPressSupport={onPressSupport ? onPressSupport : undefined} title={title} />
-        {children}
+        <Box mx="-5">{children}</Box>
       </Box>
     </Sheet>
   );

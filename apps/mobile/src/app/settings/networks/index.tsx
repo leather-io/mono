@@ -1,8 +1,7 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { NetworkBadge } from '@/features/settings/network-badge';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { useSettings } from '@/store/settings/settings';
 import { defaultNetworkPreferences } from '@/store/settings/utils';
 import { t } from '@lingui/macro';
@@ -49,15 +48,12 @@ export default function SettingsNetworksScreen() {
     });
   }
 
-  const pageTitle = t({
-    id: 'networks.header_title',
-    message: 'Networks',
-  });
   return (
-    <AnimatedHeaderScreenLayout
-      rightHeaderElement={<NetworkBadge />}
-      title={pageTitle}
-      contentTitle={pageTitle}
+    <SettingsLayout
+      title={t({
+        id: 'networks.header_title',
+        message: 'Networks',
+      })}
     >
       <SettingsList>
         {defaultNetworkPreferences.map(network => (
@@ -86,6 +82,6 @@ export default function SettingsNetworksScreen() {
           />
         ))}
       </SettingsList>
-    </AnimatedHeaderScreenLayout>
+    </SettingsLayout>
   );
 }

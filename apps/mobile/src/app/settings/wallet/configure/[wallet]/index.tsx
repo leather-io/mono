@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 
 import { Divider } from '@/components/divider';
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import {
@@ -10,6 +9,7 @@ import {
 } from '@/components/sheets/notify-user-sheet.layout';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useWaitlistFlag } from '@/features/feature-flags';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
@@ -161,15 +161,17 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
 
   return (
     <>
-      <AnimatedHeaderScreenLayout
+      <SettingsLayout
         title={t({
           id: 'configure_wallet.header_title',
           message: 'Configure wallet',
         })}
       >
-        <Box gap="3">
+        <Box px="5" py="2">
           <Text variant="heading05">{wallet.name}</Text>
-          <SettingsList>
+        </Box>
+        <Box gap="3">
+          <SettingsList gap="1">
             <SettingsListItem
               title={t({
                 id: 'configure_wallet.view_key.cell_title',
@@ -208,34 +210,36 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
             />
           </SettingsList>
           {releaseWaitlistFeatures && (
-            <Accordion
-              label={t({
-                id: 'configure_wallet.accordion_label',
-                message: 'More options',
-              })}
-              content={
-                <SettingsList>
-                  {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
-                    feature => (
-                      <SettingsListItem
-                        key={feature.id}
-                        title={feature.title}
-                        icon={feature.icon}
-                        onPress={onOpenSheet({
-                          title: feature.title,
-                          id: feature.id,
-                        })}
-                      />
-                    )
-                  )}
-                </SettingsList>
-              }
-            />
+            <Box px="5">
+              <Accordion
+                label={t({
+                  id: 'configure_wallet.accordion_label',
+                  message: 'More options',
+                })}
+                content={
+                  <SettingsList mx="-5">
+                    {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(
+                      feature => (
+                        <SettingsListItem
+                          key={feature.id}
+                          title={feature.title}
+                          icon={feature.icon}
+                          onPress={onOpenSheet({
+                            title: feature.title,
+                            id: feature.id,
+                          })}
+                        />
+                      )
+                    )}
+                  </SettingsList>
+                }
+              />
+            </Box>
           )}
-        </Box>
-        <Box mb="7">
+
           <Divider />
-          <Box py="5">
+
+          <Box py="3" px="5">
             <Text variant="caption01">
               {t({
                 id: 'configure_wallet.creation_label',
@@ -247,7 +251,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
             </Text>
           </Box>
         </Box>
-      </AnimatedHeaderScreenLayout>
+      </SettingsLayout>
       <WalletNameSheet sheetRef={walletNameSheetRef} name={wallet.name} setName={setName} />
       <RemoveWalletSheet onSubmit={onRemoveWallet} sheetRef={removeWalletSheetRef} />
       <NotifyUserSheetLayout sheetData={notifySheetData} sheetRef={notifySheetRef} />

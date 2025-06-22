@@ -1,19 +1,15 @@
 import { useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import { Screen } from '@/components/screen/screen';
 import { SkipSecureWalletSheet } from '@/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import { Image } from 'expo-image';
 
-import { Box, Button, SheetRef, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, SheetRef, Text } from '@leather.io/ui/native';
 
 export default function SecureYourWalletScreen() {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme<Theme>();
   const sheetRef = useRef<SheetRef>(null);
   const { createWallet } = useCreateWallet();
   const { callIfEnrolled } = useAuthentication();
@@ -24,18 +20,11 @@ export default function SecureYourWalletScreen() {
   });
 
   return (
-    <>
-      <Box
-        bg="ink.background-primary"
-        flex={1}
-        style={{ paddingBottom: bottom + theme.spacing[5] }}
-      >
-        <AnimatedHeaderScreenLayout
-          // hidden until linked: https://linear.app/leather-io/issue/LEA-1916
-          // rightTitleElement={<MoreInfoIcon onPress={() => {}} />}
-          title={pageTitle}
-          contentTitle={pageTitle}
-        >
+    <Screen>
+      <Screen.Header />
+      <Screen.ScrollView>
+        <Screen.Title>{pageTitle}</Screen.Title>
+        <Box px="5">
           <Box gap="3">
             <Text variant="label01">
               {t({
@@ -51,31 +40,32 @@ export default function SecureYourWalletScreen() {
               contentFit="contain"
             />
           </Box>
-        </AnimatedHeaderScreenLayout>
-        <Box px="5">
-          <Button
-            onPress={() => {
-              sheetRef.current?.present();
-            }}
-            pb="4"
-            buttonState="ghost"
-            title={t({
-              id: 'secure_your_wallet.skip_button',
-              message: `Skip for now`,
-            })}
-          />
-          <Button
-            onPress={() => {
-              void callIfEnrolled(() => createWallet({ biometrics: true }));
-            }}
-            buttonState="default"
-            title={t({
-              id: 'secure_your_wallet.security_button',
-              message: `Enable device security`,
-            })}
-          />
         </Box>
-      </Box>
+      </Screen.ScrollView>
+
+      <Screen.Footer>
+        <Button
+          onPress={() => {
+            sheetRef.current?.present();
+          }}
+          pb="4"
+          buttonState="ghost"
+          title={t({
+            id: 'secure_your_wallet.skip_button',
+            message: `Skip for now`,
+          })}
+        />
+        <Button
+          onPress={() => {
+            void callIfEnrolled(() => createWallet({ biometrics: true }));
+          }}
+          buttonState="default"
+          title={t({
+            id: 'secure_your_wallet.security_button',
+            message: `Enable device security`,
+          })}
+        />
+      </Screen.Footer>
       <SkipSecureWalletSheet
         onSubmit={async () => {
           sheetRef.current?.close();
@@ -83,6 +73,6 @@ export default function SecureYourWalletScreen() {
         }}
         sheetRef={sheetRef}
       />
-    </>
+    </Screen>
   );
 }

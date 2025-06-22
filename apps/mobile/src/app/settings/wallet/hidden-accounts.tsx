@@ -1,15 +1,16 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { WalletsList } from '@/features/settings/wallet-and-accounts/wallets-list';
 import { t } from '@lingui/macro';
 
 export default function HiddenAccountsScreen() {
-  const pageTitle = t({
-    id: 'hidden_accounts.header_title',
-    message: 'Hidden accounts',
-  });
   return (
-    <AnimatedHeaderScreenLayout title={pageTitle} contentTitle={pageTitle}>
+    <SettingsLayout
+      title={t({
+        id: 'hidden_accounts.header_title',
+        message: 'Hidden accounts',
+      })}
+    >
       <WalletsList variant="hidden" />
-    </AnimatedHeaderScreenLayout>
+    </SettingsLayout>
   );
 }

@@ -1,8 +1,7 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useBrowser } from '@/core/browser-provider';
-import { NetworkBadge } from '@/features/settings/network-badge';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { t } from '@lingui/macro';
 
 import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@leather.io/constants';
@@ -10,15 +9,13 @@ import { GraduateCapIcon, MagicBookIcon, SupportIcon } from '@leather.io/ui/nati
 
 export default function SettingsHelpScreen() {
   const { linkingRef } = useBrowser();
-  const pageTitle = t({
-    id: 'help.header_title',
-    message: 'Help',
-  });
+
   return (
-    <AnimatedHeaderScreenLayout
-      rightHeaderElement={<NetworkBadge />}
-      title={pageTitle}
-      contentTitle={pageTitle}
+    <SettingsLayout
+      title={t({
+        id: 'networks.header_title',
+        message: 'Networks',
+      })}
     >
       <SettingsList>
         <SettingsListItem
@@ -58,6 +55,6 @@ export default function SettingsHelpScreen() {
           onPress={() => linkingRef.current?.openURL(LEATHER_LEARN_URL)}
         />
       </SettingsList>
-    </AnimatedHeaderScreenLayout>
+    </SettingsLayout>
   );
 }

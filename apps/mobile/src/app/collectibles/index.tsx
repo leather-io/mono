@@ -1,28 +1,23 @@
-import { AnimatedHeaderScreenLayout } from '@/components/headers/animated-header/animated-header-screen.layout';
-import { PageLayout } from '@/components/page/page.layout';
+import { Screen } from '@/components/screen/screen';
 import { Collectibles } from '@/features/collectibles';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { t } from '@lingui/macro';
 
 export default function CollectiblesScreen() {
   const collectibles = useTotalCollectibles();
-  const pageTitle = t({
-    id: 'collectibles.header_title',
-    message: 'All collectibles',
-  });
 
   return (
-    <PageLayout>
-      <AnimatedHeaderScreenLayout
-        contentContainerStyles={{ paddingHorizontal: 0 }}
-        rightHeaderElement={<NetworkBadge />}
-        title={pageTitle}
-        contentTitle={pageTitle}
-        contentTitleStyles={{ paddingLeft: '5' }}
-      >
+    <Screen>
+      <Screen.Header />
+      <Screen.ScrollView>
+        <Screen.Title>
+          {t({
+            id: 'collectibles.header_title',
+            message: 'All collectibles',
+          })}
+        </Screen.Title>
         <Collectibles collectibles={collectibles} />
-      </AnimatedHeaderScreenLayout>
-    </PageLayout>
+      </Screen.ScrollView>
+    </Screen>
   );
 }

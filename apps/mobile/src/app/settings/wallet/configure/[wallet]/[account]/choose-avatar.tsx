@@ -1,30 +1,25 @@
 import { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Screen } from '@/components/screen/screen';
 import { accountIconMap } from '@/features/account/components/account-avatar';
 import { Avatars } from '@/features/settings/choose-avatar/avatars';
-import { useScrollViewStyles } from '@/hooks/use-scroll-view-styles';
+import SettingsLayout from '@/features/settings/settings-layout';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
 import { AccountIcon } from '@/store/accounts/utils';
 import { useAppDispatch } from '@/store/utils';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 
 import { AccountId } from '@leather.io/models';
-import { Box, Button, SquircleBox, Text, Theme } from '@leather.io/ui/native';
+import { Box, Button, SquircleBox, Text } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
 interface ChooseAvatarProps extends AccountId {
   account: Account;
 }
 function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps) {
-  const { bottom } = useSafeAreaInsets();
-  const defaultStyles = useScrollViewStyles();
-  const theme = useTheme<Theme>();
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const router = useRouter();
@@ -50,8 +45,8 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
   }
 
   return (
-    <Box bg="ink.background-primary" flex={1}>
-      <ScrollView contentContainerStyle={defaultStyles}>
+    <>
+      <SettingsLayout>
         <Box gap="5">
           <SquircleBox
             alignSelf="center"
@@ -68,21 +63,18 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             {PreviewIcon && <PreviewIcon width={64} height={64} />}
           </SquircleBox>
 
-          <Text variant="label01">
-            {t({
-              id: 'choose_avatar.images.subtitle',
-              message: 'Icons',
-            })}
-          </Text>
+          <Box px="5">
+            <Text variant="label01">
+              {t({
+                id: 'choose_avatar.images.subtitle',
+                message: 'Icons',
+              })}
+            </Text>
+          </Box>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
         </Box>
-      </ScrollView>
-      <Box
-        style={{ paddingBottom: bottom + theme.spacing['5'] }}
-        px="5"
-        pt="2"
-        bg="ink.background-primary"
-      >
+      </SettingsLayout>
+      <Screen.Footer>
         <Button
           disabled={isSubmitDisabled}
           onPress={onSubmit}
@@ -92,8 +84,8 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
             message: 'Save',
           })}
         />
-      </Box>
-    </Box>
+      </Screen.Footer>
+    </>
   );
 }
 
