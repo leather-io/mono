@@ -15,7 +15,7 @@ export default function ActivityScreen() {
   const pageTitle = t({ id: 'activity.header_title', message: 'All activity' });
 
   return (
-    <Screen>
+    <Screen enableHeaderScrollAnimation>
       <Screen.Header centerElement={<Text variant="label01">{pageTitle}</Text>} />
       <FetchWrapper data={activity}>
         {activity.state === 'success' && (
