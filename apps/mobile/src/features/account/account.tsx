@@ -1,3 +1,5 @@
+import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
+
 import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Screen } from '@/components/screen/screen';
 import { HeaderBlurOverlay } from '@/components/screen/screen-header/components/header-blur-overlay';
@@ -141,10 +143,18 @@ interface StickerHeaderProps {
 function StickyHeader({ icon }: StickerHeaderProps) {
   const { scrollY } = useScreenScrollContext();
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: interpolate(scrollY.value, [36, 50], [1, 0.8], 'clamp') }],
+    };
+  });
+
   return (
     <>
       <Box alignItems="center" pb="3" mb="-3" backgroundColor="ink.background-primary">
-        <AccountAvatar icon={icon} />
+        <Animated.View style={animatedStyle}>
+          <AccountAvatar icon={icon} />
+        </Animated.View>
       </Box>
       <Box top={12}>
         <HeaderBlurOverlay scrollY={scrollY} />
