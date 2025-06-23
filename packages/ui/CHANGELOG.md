@@ -425,6 +425,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.35.0
 
+## [1.72.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.0...@leather.io/ui-v1.72.1) (2025-06-23)
+
+
+### Bug Fixes
+
+* use of flag needs width 100 percent ([f22a51a](https://github.com/leather-io/mono/commit/f22a51af122937e157ae09503c331f2483c5bc28))
+
 ## [1.72.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.71.0...@leather.io/ui-v1.72.0) (2025-06-13)
 
 
