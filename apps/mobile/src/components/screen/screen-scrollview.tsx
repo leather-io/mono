@@ -11,6 +11,7 @@ export function ScreenScrollView({
   onScrollEndDrag,
   onMomentumScrollBegin,
   onMomentumScrollEnd,
+  contentContainerStyle,
   ...props
 }: ScreenScrollviewProps) {
   const bottomInset = useSafeBottomInset();
@@ -38,7 +39,7 @@ export function ScreenScrollView({
         debouncedFixScroll();
         onMomentumScrollEnd?.(event);
       }}
-      contentContainerStyle={{ paddingBottom: bottomInset }}
+      contentContainerStyle={[{ paddingBottom: bottomInset }, contentContainerStyle]}
       {...props}
     />
   );

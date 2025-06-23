@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
+import { Screen } from '@/components/screen/screen';
 import { HeaderTitleWithSubtitle } from '@/components/screen/screen-header/components/header-title-with-subtitle';
-import { HeaderLayout } from '@/components/screen/screen-header/components/header.layout';
 
 interface FullHeightSheetHeaderProps {
   title: string;
@@ -16,8 +16,8 @@ export function FullHeightSheetHeader({
   rightElement,
 }: FullHeightSheetHeaderProps) {
   return (
-    <HeaderLayout
-      leftElement={leftElement}
+    <Screen.Header
+      leftElement={leftElement ?? null}
       centerElement={<HeaderTitleWithSubtitle title={title} subtitle={subtitle} />}
       rightElement={rightElement}
     />

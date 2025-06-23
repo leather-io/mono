@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Screen } from '@/components/screen/screen';
 import { useTheme } from '@shopify/restyle';
 
 import { Box, HasChildren, Theme } from '@leather.io/ui/native';
@@ -13,7 +14,7 @@ export function FullHeightSheetLayout({ children, header }: FullHeightSheetLayou
   const theme = useTheme<Theme>();
 
   return (
-    <>
+    <Screen>
       <Box paddingTop="4">{header}</Box>
       <Box
         flex={1}
@@ -24,6 +25,6 @@ export function FullHeightSheetLayout({ children, header }: FullHeightSheetLayou
       >
         {children}
       </Box>
-    </>
+    </Screen>
   );
 }
