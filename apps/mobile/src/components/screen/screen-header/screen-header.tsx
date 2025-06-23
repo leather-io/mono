@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FadingView } from '@/components/screen/screen-fading-view';
 import { HeaderBackButton } from '@/components/screen/screen-header/components/header-back-button';
+import { HeaderBlurOverlay } from '@/components/screen/screen-header/components/header-blur-overlay';
 import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { HEADER_HEIGHT } from '@/shared/constants';
@@ -15,6 +16,7 @@ export interface HeaderProps {
   rightElement?: ReactNode;
   bottomElement?: ReactNode;
   topElement?: ReactNode;
+  blurOverlay?: boolean;
 }
 
 export function ScreenHeader({
@@ -23,8 +25,9 @@ export function ScreenHeader({
   rightElement = <NetworkBadge />,
   topElement,
   bottomElement,
+  blurOverlay = true,
 }: HeaderProps) {
-  const { headerVisibility } = useScreenScrollContext();
+  const { headerVisibility, scrollY } = useScreenScrollContext();
   const insets = useSafeAreaInsets();
 
   return (
@@ -32,7 +35,6 @@ export function ScreenHeader({
       justifyContent="center"
       width="100%"
       bg="ink.background-primary"
-      zIndex="10"
       style={{ paddingTop: insets.top }}
     >
       {topElement}
@@ -63,6 +65,7 @@ export function ScreenHeader({
         <Box zIndex="20">{rightElement}</Box>
       </Box>
       {bottomElement}
+      {blurOverlay && <HeaderBlurOverlay scrollY={scrollY} />}
     </Box>
   );
 }
