@@ -624,6 +624,9 @@ importers:
       url-join:
         specifier: 5.0.0
         version: 5.0.0
+      uuid:
+        specifier: 11.1.0
+        version: 11.1.0
       valid-url:
         specifier: 1.0.9
         version: 1.0.9
@@ -16395,16 +16398,16 @@ snapshots:
 
   '@babel/helper-environment-visitor@7.24.7':
     dependencies:
-      '@babel/types': 7.27.1
+      '@babel/types': 7.27.6
 
   '@babel/helper-function-name@7.24.7':
     dependencies:
       '@babel/template': 7.27.2
-      '@babel/types': 7.27.1
+      '@babel/types': 7.27.6
 
   '@babel/helper-hoist-variables@7.24.7':
     dependencies:
-      '@babel/types': 7.27.1
+      '@babel/types': 7.27.6
 
   '@babel/helper-member-expression-to-functions@7.27.1':
     dependencies:
@@ -16498,7 +16501,7 @@ snapshots:
 
   '@babel/helper-split-export-declaration@7.24.7':
     dependencies:
-      '@babel/types': 7.27.1
+      '@babel/types': 7.27.6
 
   '@babel/helper-string-parser@7.27.1': {}
 
