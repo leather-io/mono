@@ -1,5 +1,7 @@
 import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Screen } from '@/components/screen/screen';
+import { HeaderBlurOverlay } from '@/components/screen/screen-header/components/header-blur-overlay';
+import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountOverview } from '@/features/account/components/account-overview-card';
 import { ActivityWidget } from '@/features/activity/activity-widget';
@@ -14,13 +16,10 @@ import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { AccountLookup } from '@/shared/types';
 import { Account as AccountType } from '@/store/accounts/accounts';
-import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
-import { useTheme } from '@shopify/restyle';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
-import { Box, SettingsGearIcon, Theme } from '@leather.io/ui/native';
+import { Box, SettingsGearIcon } from '@leather.io/ui/native';
 
 import { AccountBalance } from '../balances/total-balance';
 
@@ -47,6 +46,7 @@ export function Account({ account, walletName }: AccountProps) {
   return (
     <Screen>
       <Screen.Header
+        blurOverlay={false}
         topElement={isErrorTotalBalance && <FetchErrorCallout />}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
@@ -139,24 +139,16 @@ interface StickerHeaderProps {
 }
 
 function StickyHeader({ icon }: StickerHeaderProps) {
-  const { themeDerivedFromThemePreference } = useSettings();
-  const theme = useTheme<Theme>();
-  const gradientTransparentStopColor =
-    themeDerivedFromThemePreference === 'light' ? 'rgba(255,255,255,0)' : 'rgba(27,26,23,0)';
+  const { scrollY } = useScreenScrollContext();
+
   return (
-    <Box alignItems="center" pb="3" mb="-3" backgroundColor="ink.background-primary">
-      <AccountAvatar icon={icon} />
-      <LinearGradient
-        style={{
-          position: 'absolute',
-          marginTop: 12,
-          top: '100%',
-          right: 0,
-          left: 0,
-          height: 22,
-        }}
-        colors={[theme.colors['ink.background-primary'], gradientTransparentStopColor]}
-      />
-    </Box>
+    <>
+      <Box alignItems="center" pb="3" mb="-3" backgroundColor="ink.background-primary">
+        <AccountAvatar icon={icon} />
+      </Box>
+      <Box top={12}>
+        <HeaderBlurOverlay scrollY={scrollY} />
+      </Box>
+    </>
   );
 }
