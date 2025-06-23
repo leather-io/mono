@@ -11,6 +11,7 @@ export function ScreenList<T>({
   onScrollEndDrag,
   onMomentumScrollBegin,
   onMomentumScrollEnd,
+  contentContainerStyle,
   ...props
 }: ScreenListProps<T>) {
   const bottomInset = useSafeBottomInset();
@@ -38,7 +39,7 @@ export function ScreenList<T>({
         debouncedFixScroll();
         onMomentumScrollEnd?.(event);
       }}
-      contentContainerStyle={{ paddingBottom: bottomInset }}
+      contentContainerStyle={[{ paddingBottom: bottomInset }, contentContainerStyle]}
       {...props}
     />
   );
