@@ -1,17 +1,25 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { FetchState, FetchWrapper } from '@/components/loading';
+import { FetchState } from '@/components/loading';
 import { Widget } from '@/components/widget';
+import { ActivityCard } from '@/features/activity/activity-card';
 import { useTheme } from '@shopify/restyle';
 
-import { Activity } from '@leather.io/models';
+import { Activity, OnChainActivity, OnChainActivityTypes } from '@leather.io/models';
 import { Box, Theme } from '@leather.io/ui/native';
 
-import { ActivityEmpty } from './activity-empty';
-import { ActivityList } from './activity-list';
+const renderLimit = 10;
 
-export function hasActivity(activity: FetchState<Activity[]>) {
+function hasActivity(activity: FetchState<Activity[]>) {
   return activity.state === 'success' && activity.value.length > 0;
+}
+
+function inOnChainActivity(activity: Activity): activity is OnChainActivity {
+  return activity.type in OnChainActivityTypes;
+}
+
+function getVisibleActivity(activity: Activity[]) {
+  return activity.slice(0, renderLimit).filter(inOnChainActivity);
 }
 
 interface ActivityWidgetProps {
@@ -21,10 +29,11 @@ interface ActivityWidgetProps {
 }
 export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidgetProps) {
   const theme = useTheme<Theme>();
-  // Don't render anything if loading or no activity
-  if (activity.state === 'loading' || !hasActivity(activity)) {
+
+  if (activity.state !== 'success' || !hasActivity(activity)) {
     return null;
   }
+
   return (
     <Widget>
       <Box>
@@ -37,7 +46,7 @@ export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidge
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
-            gap: theme.spacing['2'],
+            gap: theme.spacing['3'],
             paddingHorizontal: theme.spacing['5'],
           }}
           style={{
@@ -45,15 +54,9 @@ export function ActivityWidget({ activity, onPressHeader, title }: ActivityWidge
             overflow: 'visible',
           }}
         >
-          <FetchWrapper data={activity}>
-            {hasActivity(activity) ? (
-              activity.state === 'success' && (
-                <ActivityList activity={activity.value} mode="widget" />
-              )
-            ) : (
-              <ActivityEmpty />
-            )}
-          </FetchWrapper>
+          {getVisibleActivity(activity.value).map((activity, index) => (
+            <ActivityCard key={`activity.${index}`} activity={activity} />
+          ))}
         </ScrollView>
       </Widget.Body>
     </Widget>
