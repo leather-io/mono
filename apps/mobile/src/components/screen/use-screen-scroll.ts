@@ -59,7 +59,7 @@ export function useScreenScroll({
         : 1,
       { duration: 250 }
     );
-  }, []);
+  }, [enableHeaderAnimation]);
 
   const debouncedFixScroll = useDebouncedCallback(() => {
     if (disableAutoFixScroll || !enableHeaderAnimation) return;

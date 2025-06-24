@@ -19,7 +19,7 @@ export default function AccountActivityScreen() {
   const activity = useAccountActivity(fingerprint, accountIndex);
 
   return (
-    <Screen enableHeaderScrollAnimation>
+    <Screen>
       <Screen.Header
         centerElement={
           <Text variant="label01">

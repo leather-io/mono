@@ -26,7 +26,7 @@ export default function BalancesScreen() {
   const isLoading = totalBalance.state === 'loading';
 
   return (
-    <Screen enableHeaderScrollAnimation>
+    <Screen>
       <Screen.Header
         centerElement={
           <HeaderTitleWithSubtitle

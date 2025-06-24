@@ -7,14 +7,10 @@ import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
 import { Box, BoxProps, HasChildren, Text } from '@leather.io/ui/native';
 
-interface ScreenProps extends BoxProps {
-  enableHeaderScrollAnimation?: boolean;
-}
-
-export function Screen({ enableHeaderScrollAnimation, ...boxProps }: ScreenProps) {
+export function Screen(props: BoxProps) {
   return (
-    <ScreenScrollProvider enableHeaderScrollAnimation={enableHeaderScrollAnimation}>
-      <Box flex={1} {...boxProps} backgroundColor="ink.background-primary" />
+    <ScreenScrollProvider>
+      <Box flex={1} backgroundColor="ink.background-primary" {...props} />
     </ScreenScrollProvider>
   );
 }
