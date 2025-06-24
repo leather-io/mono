@@ -1,4 +1,5 @@
 import { Screen } from '@/components/screen/screen';
+import { HeaderTitleWithSubtitle } from '@/components/screen/screen-header/components/header-title-with-subtitle';
 import { AccountBalances } from '@/features/balances/balances';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
@@ -25,22 +26,36 @@ export default function BalancesScreen() {
   const isLoading = totalBalance.state === 'loading';
 
   return (
-    <Screen>
-      <Screen.Header />
+    <Screen enableHeaderScrollAnimation>
+      <Screen.Header
+        centerElement={
+          <HeaderTitleWithSubtitle
+            title={
+              <AccountBalance
+                fingerprint={fingerprint}
+                accountIndex={accountIndex}
+                variant="heading05"
+              />
+            }
+            subtitle={pageTitle}
+          />
+        }
+      />
       <Screen.ScrollView refreshControl={<RefreshControl />}>
-        {/* TODO: This was previously called "ReverisbleHeader. The behavior wasn't clear. Clarify out and replicate. */}
-        <Box px="5" pb="5" mb="3">
-          <Text variant="label01">{pageTitle}</Text>
-          {isLoading ? (
-            <SkeletonLoader width={55} height={24} isLoading={isLoading} />
-          ) : (
-            <AccountBalance
-              fingerprint={fingerprint}
-              accountIndex={accountIndex}
-              variant="heading03"
-            />
-          )}
-        </Box>
+        <Screen.HeaderAnimationTarget>
+          <Box px="5" pb="5" mb="3">
+            <Text variant="label01">{pageTitle}</Text>
+            {isLoading ? (
+              <SkeletonLoader width={55} height={24} isLoading={isLoading} />
+            ) : (
+              <AccountBalance
+                fingerprint={fingerprint}
+                accountIndex={accountIndex}
+                variant="heading03"
+              />
+            )}
+          </Box>
+        </Screen.HeaderAnimationTarget>
         <AccountBalances mode="full" fingerprint={fingerprint} accountIndex={accountIndex} />
       </Screen.ScrollView>
     </Screen>
