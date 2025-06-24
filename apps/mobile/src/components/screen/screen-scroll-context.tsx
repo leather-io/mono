@@ -1,39 +1,29 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode, createContext, useCallback, useContext, useState } from 'react';
 import { AnimatedRef, useAnimatedRef } from 'react-native-reanimated';
 
 import { useScreenScroll } from '@/components/screen/use-screen-scroll';
 
 type ScreenScrollContextValue = ReturnType<typeof useScreenScroll> & {
   scrollRef: AnimatedRef<any>;
+  registerScrollTarget: () => void;
 };
 
 const ScreenScrollContext = createContext<ScreenScrollContextValue | null>(null);
 
 interface ScreenScrollProviderProps {
-  enableHeaderScrollAnimation?: boolean;
   children: ReactNode;
 }
 
-export function ScreenScrollProvider({
-  enableHeaderScrollAnimation,
-  children,
-}: ScreenScrollProviderProps) {
+export function ScreenScrollProvider({ children }: ScreenScrollProviderProps) {
   const scrollRef = useAnimatedRef();
+  const [hasRegisteredTarget, setHasRegisteredTarget] = useState(false);
 
-  const { scrollY, scrollHandler, debouncedFixScroll, animationTargetHeight, headerVisibility } =
-    useScreenScroll({ enableHeaderAnimation: enableHeaderScrollAnimation, scrollRef });
+  const registerScrollTarget = useCallback(() => setHasRegisteredTarget(true), []);
+
+  const scrollBag = useScreenScroll({ enableHeaderAnimation: hasRegisteredTarget, scrollRef });
 
   return (
-    <ScreenScrollContext.Provider
-      value={{
-        scrollY,
-        scrollHandler,
-        debouncedFixScroll,
-        animationTargetHeight,
-        headerVisibility,
-        scrollRef,
-      }}
-    >
+    <ScreenScrollContext.Provider value={{ ...scrollBag, registerScrollTarget, scrollRef }}>
       {children}
     </ScreenScrollContext.Provider>
   );

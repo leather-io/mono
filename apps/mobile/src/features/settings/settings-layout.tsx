@@ -11,7 +11,7 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ title, children }: SettingsLayoutProps) {
   return (
-    <Screen enableHeaderScrollAnimation>
+    <Screen>
       <Screen.Header centerElement={<Text variant="label01">{title}</Text>} />
       <Screen.ScrollView>
         {title ? <Screen.Title>{title}</Screen.Title> : null}

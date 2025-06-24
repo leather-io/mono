@@ -14,7 +14,7 @@ export default function BalancesScreen() {
   });
 
   return (
-    <Screen enableHeaderScrollAnimation>
+    <Screen>
       <Screen.Header
         centerElement={
           <HeaderTitleWithSubtitle
