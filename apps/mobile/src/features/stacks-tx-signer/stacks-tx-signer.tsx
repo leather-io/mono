@@ -58,7 +58,9 @@ export function StacksTxSigner({
   assertTokenTransferPayload(tx.payload);
 
   const recipient = getTxRecipient(tx.payload);
-  const totalSpendMoney = getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee);
+  const principalSpend = createMoney(tx.payload.amount, 'STX');
+  const totalSpend = getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee);
+  const totalSpendQuote = baseCurrencyAmountInQuoteWithFallback(totalSpend, stxMarketData);
   const { fingerprint, accountIndex } = destructAccountIdentifier(accountId);
   const signer = useStacksSigners().fromAccountIndex(fingerprint, accountIndex)[0];
   assertStacksSigner(signer);
@@ -68,8 +70,6 @@ export function StacksTxSigner({
   const txOptions = useTxOptions(signer);
 
   if (!account) throw new Error('No account found');
-
-  const totalSpendUsd = baseCurrencyAmountInQuoteWithFallback(totalSpendMoney, stxMarketData);
 
   const [approverState, setApproverState] = useState<ApproverState>('start');
   async function onSubmitTransaction() {
@@ -146,7 +146,7 @@ export function StacksTxSigner({
             <ApproverAccountCard accounts={[account]} />
           </Approver.Section>
           <Approver.Section>
-            <StacksOutcome amount={totalSpendMoney} />
+            <StacksOutcome amount={principalSpend} />
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
@@ -172,7 +172,7 @@ export function StacksTxSigner({
               })}
             </Text>
             <Text variant="label02">
-              {formatBalance({ balance: totalSpendUsd, isQuoteCurrency: true })}
+              {formatBalance({ balance: totalSpendQuote, isQuoteCurrency: true })}
             </Text>
           </Box>
           <Approver.Actions>
