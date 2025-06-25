@@ -1,9 +1,12 @@
 name: iOS Maestro Test
 
 on:
-  pull_request_labeled:
-    labels:
-      - needs:e2e-tests
+  pull_request:
+    paths:
+      - '../../../apps/mobile/**'
+      - '../../../packages/**'
+      - '!../../../packages/ui/**/*.web.ts'
+      - '!../../../packages/ui/**/*.web.tsx'
 
 jobs:
   initialize:
@@ -26,4 +29,4 @@ jobs:
     params:
       build_id: ${{ needs.build_ios.outputs.build_id }}
       flow_path:
-        - maestro/flows/
+        - maestro/flows/smoketests.yaml

@@ -3,6 +3,7 @@ export enum TestId {
   accountChangeNameSheetSaveButton = 'accountChangeNameSheetSaveButton',
   backButton = 'backButton',
   createNewWalletSheetButton = 'createNewWalletSheetButton',
+  clearSecureStoreButton = 'clearSecureStoreButton',
   defaultAccountIcon = 'defaultAccountIcon',
   developerToolsWalletManagementButton = 'developerToolsWalletManagementButton',
   homeAccountCard = 'homeAccountCard',

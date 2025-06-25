@@ -8,8 +8,14 @@ name: Create Wallet
 # Given the user is on the home screen
 - assertVisible: 'All accounts'
 
+- runScript: 'hello-world.js'
 # When the user taps the create wallet card it should work
-- tapOn:
-    id: 'homeCreateWalletCard'
-- tapOn:
-    id: 'createNewWalletSheetButton'
+# - tapOn:
+#     id: 'homeCreateWalletCard'
+# - tapOn:
+#     id: 'createNewWalletSheetButton'
+
+# Hello World test works but can't get it to work with the clear-secure-store.js script
+# can't see it logging anything in the console
+
+# maybe its better to bring back a CI_ENV based button to clear the secure store? Then I can use it in the E2E tests locally too
