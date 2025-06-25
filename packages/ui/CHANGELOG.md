@@ -425,6 +425,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.35.0
 
+## [1.72.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.1...@leather.io/ui-v1.72.2) (2025-06-25)
+
+
+### Bug Fixes
+
+* **ui:** fix pulse and gear icon sizes ([35e922e](https://github.com/leather-io/mono/commit/35e922e25861296f62b40f27047131c24e06523a))
+
 ## [1.72.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.0...@leather.io/ui-v1.72.1) (2025-06-23)
 
 
