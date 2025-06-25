@@ -713,6 +713,12 @@
   * dependencies
     * @leather.io/ui bumped to 1.72.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.72.2
+
 ## [2.54.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.1...@leather.io/mobile-v2.54.2) (2025-06-18)
 
 
