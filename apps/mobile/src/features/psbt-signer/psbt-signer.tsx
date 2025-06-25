@@ -147,7 +147,11 @@ function BasePsbtSigner({
     psbtDetails.addressNativeSegwitTotal,
     psbtDetails.addressTaprootTotal,
   ]);
-  const totalSpend = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
+  const totalSpendQuote = baseCurrencyAmountInQuoteWithFallback(totalBtc, btcMarketData);
+  const principalSpend = createMoney(
+    psbtDetails.addressNativeSegwitTotal.amount.minus(psbtDetails.fee.amount),
+    'BTC'
+  );
 
   const generateTx = useGenerateBtcUnsignedTransactionNativeSegwit({
     changeAddress: nativeSegwitAccount.derivePayer({ change: 0, addressIndex: 0 }).address,
@@ -255,7 +259,7 @@ function BasePsbtSigner({
             <ApproverAccountCard accounts={psbtAccounts} />
           </Approver.Section>
           <Approver.Section>
-            <BitcoinOutcome amount={psbtDetails.addressNativeSegwitTotal} />
+            <BitcoinOutcome amount={principalSpend} />
             <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
             <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
           </Approver.Section>
@@ -292,7 +296,7 @@ function BasePsbtSigner({
               {t({ id: 'approver.total_spend', message: 'Total spend' })}
             </Text>
             <Text variant="label02">
-              {formatBalance({ balance: totalSpend, isQuoteCurrency: true })}
+              {formatBalance({ balance: totalSpendQuote, isQuoteCurrency: true })}
             </Text>
           </Box>
           <Approver.Actions>
