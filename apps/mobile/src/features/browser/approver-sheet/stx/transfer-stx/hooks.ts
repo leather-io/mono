@@ -7,7 +7,7 @@ import { bytesToHex } from '@stacks/common';
 import { RpcRequest, stxTransferStx } from '@leather.io/rpc';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { useOnMount } from '@leather.io/ui/native';
-import { createMoneyFromDecimal } from '@leather.io/utils';
+import { createMoney } from '@leather.io/utils';
 
 import { getDefaultFee } from '../utils';
 
@@ -31,15 +31,14 @@ export function useTransferStxTxHex({ request, setTxHex, nonce, accountId }: Use
 
       const tx = await generateStacksUnsignedTransaction({
         txType: TransactionTypes.StxTokenTransfer,
-        amount: createMoneyFromDecimal(request.params.amount, 'STX'),
+        amount: createMoney(request.params.amount, 'STX'),
         memo: request.params.memo,
         recipient: request.params.recipient,
         publicKey: bytesToHex(signer.publicKey),
         fee,
         nonce,
       });
-      const txHex = tx.serialize();
-      return txHex;
+      return tx.serialize();
     },
     [fromAccountId, request.params, nonce, fee, accountId]
   );
