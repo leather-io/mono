@@ -84,3 +84,6 @@ export async function initiateI18n() {
   //   i18n.load(locale, obj);
   // });
 }
+
+// I could bring back all of this weird stuff but probably better to give it a try without IDs
+// try the very simple approach first
