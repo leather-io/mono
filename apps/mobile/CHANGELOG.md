@@ -719,6 +719,15 @@
   * dependencies
     * @leather.io/ui bumped to 1.72.2
 
+## [2.54.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.4...@leather.io/mobile-v2.54.5) (2025-06-27)
+
+
+### Bug Fixes
+
+* **mobile:** display principal amount in addition to total spend in approver ([7e5c6dc](https://github.com/leather-io/mono/commit/7e5c6dcdda9f3197b358a83c61a8770eac60e17b))
+* **mobile:** replace createMoneyFromDecimal with createMoney in stx transfer hooks ([d79c87b](https://github.com/leather-io/mono/commit/d79c87b533e52ad559e75e50ee5a384a8312c121))
+* **mobile:** revise Send approver title ([30e75b3](https://github.com/leather-io/mono/commit/30e75b38bbae0b29375977d9d2978cecbad5aa7d))
+
 ## [2.54.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.1...@leather.io/mobile-v2.54.2) (2025-06-18)
 
 
