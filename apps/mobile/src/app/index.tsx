@@ -16,16 +16,18 @@ import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
+import { TestId } from '@/shared/test-id';
+import { clearAllPersistedStorage } from '@/store';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import { router } from 'expo-router';
 
-import { Box, LeatherLogomarkIcon, SheetRef } from '@leather.io/ui/native';
+import { Box, Button, LeatherLogomarkIcon, SheetRef } from '@leather.io/ui/native';
 
 export default function HomeScreen() {
   useLingui();
-  const { hasWallets } = useWallets();
+  const { list: walletsList, hasWallets } = useWallets();
   const notificationSheetRef = useRef<SheetRef>(null);
   const activity = useTotalActivity();
   const collectibles = useTotalCollectibles();
@@ -39,6 +41,19 @@ export default function HomeScreen() {
           <Box flexDirection="row" alignItems="center" p="2" gap="2">
             <LeatherLogomarkIcon />
             <NetworkBadge />
+
+            {/* FOR E2E TESTS ONLY - allows us to clear the secure store */}
+            {/* // seems to catch EXPO_PUBLIC_ENVIRONMENT  but not EAS_CI ?  */}
+
+            {process.env.EXPO_PUBLIC_ENVIRONMENT === 'development' && (
+              <Button
+                title={t`Clear`}
+                onPress={() =>
+                  clearAllPersistedStorage(walletsList.map(wallet => wallet.fingerprint))
+                }
+                testID={TestId.walletManagementClearButton}
+              />
+            )}
           </Box>
         }
         rightElement={<HeaderActions />}

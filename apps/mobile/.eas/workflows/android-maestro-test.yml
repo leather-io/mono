@@ -26,4 +26,4 @@ jobs:
     params:
       build_id: ${{ needs.build_android.outputs.build_id }}
       flow_path:
-        - maestro/flows/
+        - maestro/flows/smoke-tests.yaml

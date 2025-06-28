@@ -34,6 +34,7 @@ export function AccountCard({
   appIcons,
   isLoading,
   width,
+  testID,
 }: AccountCardProps) {
   if (isLoading) {
     return <Loading mode="widget" />;
@@ -47,6 +48,7 @@ export function AccountCard({
       shadowOpacity={0.04}
       shadowOffset={{ width: 0, height: 2 }}
       shadowRadius={6}
+      testID={testID}
     >
       <Box flexDirection="row" justifyContent="space-between">
         <AccountAvatar icon={icon} />
