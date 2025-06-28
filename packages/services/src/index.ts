@@ -7,6 +7,7 @@ export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/settings/settings.service';
+export * from './infrastructure/analytics/analytics.service';
 export * from './inversify.config';
 export * from './market-data/market-data.service';
 export * from './transactions/stacks-transactions.service';
