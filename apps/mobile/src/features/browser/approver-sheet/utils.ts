@@ -81,9 +81,12 @@ export function addBip32DerivationFieldToInputs({
 export type BrowserMessage = RpcRequests | null;
 
 // Disabling lingui eslint rule here as this is an error message for dApps
+/* eslint-disable lingui/no-unlocalized-strings */
 export const RpcErrorMessage = {
   InvalidParams: 'Invalid parameters',
   NullOrigin: 'Origin is null',
   UndefinedParams: 'Undefined parameters',
   UserRejectedOperation: 'User rejected request',
 } as const;
+
+/* eslint-enable lingui/no-unlocalized-strings */

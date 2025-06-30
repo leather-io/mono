@@ -57,6 +57,46 @@ If you encounter difficulties with `pnpm run ios` you can instead run:
 
 - Once started press `i` to open it in the ios simulator
 
+### Translations
+
+We were using CrowdIn to manage translations however this was error prone and not working well. We have since reverted to removing the CrowdIn integration and instead managing text in a more simple manner using only `lingui`.
+
+All code added must be translate ready and use `lingui` marcros / tags.
+
+#### Development flow
+
+If you need to add / update an existing translation you will need to:
+
+- make your required code change
+- run `pnpm lingui:extract` to generate a `message.po` file containing your change
+- run `pnpm lingui:compile` to verify the file is not corrupted
+- commit the `messages.po` file to the codebase
+
+#### eslint
+
+`eslint` is used to enforce all text using `lingui` in the mobile app.
+
+- exceptions can be added to the `eslint.config.js`
+- via overrides (`eslint-disable lingui/no-unlocalized-strings`)
+
+#### ci
+
+`lingui-checks.yml` is used to verify that any new / updated translations have been added to the `messages.po` file. The job is triggered by pull requests to `apps/mobile`.
+
+The workflow runs:
+
+- `pnpm lingui:extract` to generate `messages.po` based on translation
+- `pnpm lingui:compile` to test compilation errors (e.g. same id with different text)
+- `git diff` to see if `messages.po` has been updated by the extract
+
+#### CrowdIn workflow
+
+We can still use CrowdIn to manage our app translations if desired. The simpler workflow to follow is to:
+
+- generate our `en/messages.po` file and manually upload it to CrowdIn
+- have translators work on the translations there
+- download translated `.po` files and add them back into the application
+
 ## License
 
 [MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)

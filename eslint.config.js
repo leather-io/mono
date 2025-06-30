@@ -67,6 +67,24 @@ export default tseslint.config(
     name: 'mobile',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
     extends: [reactConfig, pluginLingui.configs['flat/recommended']],
+    rules: {
+      'lingui/no-unlocalized-strings': [
+        'error',
+        {
+          ignoreFunction: [
+            'Error',
+            'BitcoinError',
+            'console.log',
+            'console.warn',
+            'console.error',
+            'it',
+            'describe',
+            'test',
+            'assertExistence',
+          ],
+        },
+      ],
+    },
   },
   {
     name: 'test-files',

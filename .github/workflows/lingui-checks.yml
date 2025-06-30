@@ -1,0 +1,20 @@
+name: Lingui Checks
+permissions:
+  contents: read
+on:
+  pull_request:
+    paths:
+      - 'apps/mobile/**'
+
+jobs:
+  lingui-extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+      - name: Run lingui
+        working-directory: ./apps/mobile
+        run: |
+          pnpm lingui:extract
+          pnpm lingui:compile
+          git diff --exit-code '**/messages.po' || (echo "Uncommited translations - messages.po changed!" && exit 1)
