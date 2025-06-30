@@ -21,7 +21,7 @@ export default function BalancesScreen() {
 
   const pageTitle = t({
     id: 'balances.header_title',
-    message: 'All tokens',
+    message: 'All PETE tokens',
   });
   const isLoading = totalBalance.state === 'loading';
 

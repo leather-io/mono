@@ -1,7 +1,16 @@
 // import { getLocales } from 'react-native-localize';
 // import { isProduction } from '@/shared/environment';
-// import OtaClient from '@crowdin/ota-client';
 import { i18n } from '@lingui/core';
+
+// import messages from './en/messages';
+//PETE IS THIS IT?????????? DID I DO IT ????
+// import { messages } from './en/messages';
+// const { messages } = await import(`./en/messages`);
+import { messages } from './en/messages';
+
+// this still gives an ast error but maybe i need some default when not po or svg
+
+// read this https://metrobundler.dev/docs/configuration/#babeltransformerpath
 
 // import { formatter } from '@lingui/format-po';
 //
@@ -43,7 +52,7 @@ export function getAvailableLocales() {
 //
 export async function initiateI18n() {
   // run load and activate so the I18nProvider doesn't block the render
-  const { messages } = await import(`./en/messages`);
+  // const { messages } = await import(`./en/messages`);
   i18n.load(DEFAULT_LOCALE, messages);
   i18n.activate(DEFAULT_LOCALE);
   // const locales = getLocales();

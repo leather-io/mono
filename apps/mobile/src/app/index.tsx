@@ -51,7 +51,7 @@ export default function HomeScreen() {
               <BalancesWidget
                 onPressHeader={() => router.navigate('/balances')}
                 balance={<TotalBalance color="ink.text-subdued" />}
-                title={t({ id: 'balances.header_title', message: 'All tokens' })}
+                title={t({ id: 'balances.header_title', message: 'All PETE tokens' })}
               >
                 <AllAccountBalances mode="widget" />
               </BalancesWidget>

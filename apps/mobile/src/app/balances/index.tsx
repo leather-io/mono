@@ -10,7 +10,7 @@ import { Box, Text } from '@leather.io/ui/native';
 export default function BalancesScreen() {
   const pageTitle = t({
     id: 'balances.header_title',
-    message: 'All tokens',
+    message: 'All PETE tokens',
   });
 
   return (

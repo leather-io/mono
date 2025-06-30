@@ -10,15 +10,16 @@ const workspaceRoot = path.resolve(projectRoot, '../..');
 
 const config = getSentryExpoConfig(projectRoot);
 
-// add SVG compatibility
+// Configure transformer to handle both SVG and PO files
 config.transformer = {
   ...config.transformer,
-  babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  babelTransformerPath: require.resolve('./metro-custom-transformer.cjs'),
 };
+
 config.resolver = {
   ...config.resolver,
   assetExts: config.resolver.assetExts.filter(ext => ext !== 'svg'),
-  sourceExts: [...config.resolver.sourceExts, 'svg'],
+  sourceExts: [...config.resolver.sourceExts, 'svg', 'po'],
   unstable_enablePackageExports: true,
   unstable_conditionNames: ['require', 'node', 'import'],
 };
