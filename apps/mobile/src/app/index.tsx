@@ -43,9 +43,7 @@ export default function HomeScreen() {
             <NetworkBadge />
 
             {/* FOR E2E TESTS ONLY - allows us to clear the secure store */}
-            {/* // seems to catch EXPO_PUBLIC_ENVIRONMENT  but not EAS_CI ?  */}
-
-            {process.env.EXPO_PUBLIC_ENVIRONMENT === 'development' && (
+            {process.env.EXPO_PUBLIC_MAESTRO_CI === 'true' && (
               <Button
                 title={t`Clear`}
                 onPress={() =>
