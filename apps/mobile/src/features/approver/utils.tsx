@@ -67,15 +67,15 @@ export function getBitcoinFeeData(feeType: FeeTypes) {
   const time = {
     [FeeTypes.Low]: t({
       id: 'approver.bitcoin.fee.speed.low',
-      message: '~40 mins',
+      message: '~1 hour+',
     }),
     [FeeTypes.Middle]: t({
       id: 'approver.bitcoin.fee.speed.middle',
-      message: '~20 mins',
+      message: '~30 min',
     }),
     [FeeTypes.High]: t({
       id: 'approver.bitcoin.fee.speed.high',
-      message: '~10 mins',
+      message: '~10 – 20min',
     }),
     [FeeTypes.Custom]: t({
       id: 'approver.fee.speed.custom',
@@ -95,15 +95,15 @@ export function getStacksFeeData(feeType: FeeTypes) {
   const time = feeMatcher(feeType, {
     [FeeTypes.Low]: t({
       id: 'approver.stacks.fee.speed.low',
-      message: '~40 mins',
+      message: '1–2 minutes',
     }),
     [FeeTypes.Middle]: t({
       id: 'approver.stacks.fee.speed.middle',
-      message: '~20 mins',
+      message: '20–30 seconds',
     }),
     [FeeTypes.High]: t({
       id: 'approver.stacks.fee.speed.high',
-      message: '~10 mins',
+      message: '10 seconds',
     }),
     [FeeTypes.Custom]: t({
       id: 'approver.fee.speed.custom',
