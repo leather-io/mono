@@ -16,7 +16,7 @@ export default function SettingsNotificationsScreen() {
           })}
           caption={t({
             id: 'notifications.push.cell_caption',
-            message: 'Receive updates when sending and receiving amounts',
+            message: 'Receive notifications about transactions',
           })}
           icon={<PlaceholderIcon />}
           type="switch"

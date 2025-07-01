@@ -56,7 +56,7 @@ export function MnemonicDisplay({
               displayToast({
                 title: t({
                   id: 'create_new_wallet.mnemonic.toast_title',
-                  message: `Successfully copied to clipboard!`,
+                  message: 'Copied to clipboard',
                 }),
                 type: 'success',
               });
@@ -66,7 +66,7 @@ export function MnemonicDisplay({
             buttonState="outline"
             title={t({
               id: 'create_new_wallet.mnemonic.copy_button',
-              message: `Copy`,
+              message: 'Copy',
             })}
           />
           {releaseWaitlistFeatures && (
@@ -77,7 +77,7 @@ export function MnemonicDisplay({
               buttonState="outline"
               title={t({
                 id: 'create_new_wallet.mnemonic.save_button',
-                message: `Save to…`,
+                message: 'Save to...',
               })}
             />
           )}
@@ -87,8 +87,8 @@ export function MnemonicDisplay({
       <NotifyUserSheetLayout
         sheetData={{
           title: t({
-            id: 'create_new_wallet.mnemonic.save_button.waitlist_title',
-            message: 'Save to…',
+            id: 'create_new_wallet.mnemonic.save_button',
+            message: 'Save to...',
           }),
           id: WaitlistIds.saveMnemonic,
         }}

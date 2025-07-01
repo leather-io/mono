@@ -58,7 +58,7 @@ export default function HomeScreen() {
               <ActivityWidget
                 activity={activity}
                 onPressHeader={() => router.navigate('/activity')}
-                title={t({ id: 'activity.header_title', message: 'All activity' })}
+                title={t({ id: 'activity.header_title', message: 'All Activity' })}
               />
               <EarnWidget />
               {releaseCollectibles && hasCollectibles(collectibles) && (

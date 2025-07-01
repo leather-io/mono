@@ -7,14 +7,9 @@ msgstr ""
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: leather-mobile\n"
-"X-Crowdin-Project-ID: 701559\n"
-"X-Crowdin-Language: en\n"
-"X-Crowdin-File: /src/locales/en/messages.po\n"
-"X-Crowdin-File-ID: 10\n"
 "Project-Id-Version: leather-mobile\n"
 "Language-Team: English\n"
-"PO-Revision-Date: 2025-06-06 10:34\n"
+"PO-Revision-Date: 2025-06-30 14:12\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 
@@ -26,23 +21,27 @@ msgstr "{accountName}"
 msgid "activity.account.header_content_title"
 msgstr "{accountName} Activity"
 
-#: src/app/settings/display/index.tsx:109
+#: src/app/settings/display/index.tsx:110
 msgid "display.conversion_unit.cell_caption"
 msgstr "{currency}"
 
 #: src/features/approver/components/fees/bitcoin-fee-option.tsx:40
 msgid "fees-sheet.fee-rate-caption"
-msgstr "{feeRate} sats/B · {quoteFee}"
+msgstr "{feeRate} sats/vB · {quoteFee}"
 
 #: src/app/settings/wallet/index.tsx:41
 msgid "wallet.hidden_accounts.cell_caption"
 msgstr "{hiddenAccountsLength} hidden accounts"
 
-#: src/app/settings/display/index.tsx:78
+#: src/app/settings/display/index.tsx:74
+msgid "display.language.cell_title"
+msgstr "{locale}"
+
+#: src/app/settings/display/index.tsx:79
 msgid "display.language.cell_caption"
 msgstr "{locale}"
 
-#: src/app/settings/display/index.tsx:124
+#: src/app/settings/display/index.tsx:125
 msgid "display.account_identifier.cell_caption"
 msgstr "{name}"
 
@@ -75,7 +74,7 @@ msgstr "{network}"
 msgid "select_asset.header_subtitle"
 msgstr "{subtitle}"
 
-#: src/app/settings/display/index.tsx:91
+#: src/app/settings/display/index.tsx:92
 msgid "display.bitcoin_unit.cell_caption"
 msgstr "{symbol}"
 
@@ -133,7 +132,7 @@ msgstr "10%"
 
 #: src/features/earn/sbtc-card.tsx:18
 msgid "earn.sbtc.yield-description-min"
-msgstr "5"
+msgstr "6"
 
 #: src/features/earn/stacking-card.tsx:18
 msgid "earn.stacking.yield-description-min"
@@ -171,13 +170,9 @@ msgstr "A DeFi suite offering trading, liquidity, and launchpad access built on 
 msgid "add_wallet.email_wallet.cell_caption"
 msgstr "Access custodial wallet"
 
+#: src/features/wallet-manager/account-list.tsx:24
 #: src/store/accounts/accounts.write.ts:43
 msgid "account.default.name"
-msgstr "Account {accountIdx}"
-
-#. js-lingui-generated-id
-#: src/features/wallet-manager/account-list.tsx:23
-msgid "Account {accountIndex}"
 msgstr "Account {accountIndex}"
 
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:122
@@ -188,7 +183,7 @@ msgstr "Account created"
 msgid "wallet.add_account.fail.toast_title"
 msgstr "Account creation failed"
 
-#: src/app/settings/display/index.tsx:120
+#: src/app/settings/display/index.tsx:121
 msgid "display.account_identifier.cell_title"
 msgstr "Account identifier"
 
@@ -224,6 +219,10 @@ msgstr "Activity"
 msgid "add_account_card.title"
 msgstr "Add account"
 
+#: src/features/account/components/create-wallet-card.tsx:23
+msgid "create_wallet_card.title"
+msgstr "Add account"
+
 #: src/features/account/sheets/add-account-sheet.layout.tsx:35
 msgid "add_account.header_title"
 msgstr "Add account"
@@ -244,18 +243,13 @@ msgstr "Add memo"
 msgid "add_memo.header_title"
 msgstr "Add memo"
 
-#. js-lingui-generated-id
-#: src/features/wallet-manager/wallets.tsx:38
-msgid "Add new account for {fingerprint} 🆕"
+#: src/features/wallet-manager/wallets.tsx:39
+msgid "wallets.add-new-account"
 msgstr "Add new account for {fingerprint} 🆕"
 
 #: src/features/approver/components/nonce-sheet.tsx:20
 msgid "approver.add_nonce.header_title"
 msgstr "Add nonce"
-
-#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:29
-msgid "add_or_create_new_wallet.button"
-msgstr "Add or create wallet"
 
 #: src/features/account/sheets/add-account-sheet.layout.tsx:40
 msgid "add_account.existing_wallet.cell_title"
@@ -269,13 +263,17 @@ msgstr "Add to new wallet"
 msgid "wallet.add_wallet.cell_title"
 msgstr "Add wallet"
 
+#: src/components/action-bar/action-bar.tsx:80
+msgid "action_bar.add_wallet_label"
+msgstr "Add wallet"
+
+#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:29
+msgid "add_or_create_new_wallet.button"
+msgstr "Add wallet"
+
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:91
 msgid "add_wallet.header_title"
 msgstr "Add wallet"
-
-#: src/components/action-bar/action-bar.tsx:80
-msgid "action_bar.add_wallet_label"
-msgstr "Add Wallet"
 
 #: src/app/settings/index.tsx:67
 msgid "settings.wallets.cell_caption"
@@ -283,11 +281,11 @@ msgstr "Add, configure and remove"
 
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
 msgid "wallet.adding_account.button"
-msgstr "Adding account"
+msgstr "Adding account..."
 
 #: src/app/generating-wallet.tsx:23
 msgid "add_wallet_animation.title"
-msgstr "Adding Wallet"
+msgstr "Adding wallet..."
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:104
 msgid "send-form.guard.non_compliant_address_title"
@@ -321,6 +319,10 @@ msgstr "Address scan range"
 msgid "configure_wallet.address_types.cell_title"
 msgstr "Address types"
 
+#: src/app/settings/wallet/configure/[wallet]/index.tsx:215
+msgid "configure_wallet.accordion_label"
+msgstr "Advanced options"
+
 #: src/features/recover-wallet/recover-wallet.layout.tsx:55
 msgid "recover_wallet.accordion_label"
 msgstr "Advanced options"
@@ -340,7 +342,7 @@ msgstr "All accounts"
 #: src/app/activity/index.tsx:15
 #: src/app/index.tsx:61
 msgid "activity.header_title"
-msgstr "All activity"
+msgstr "All Activity"
 
 #: src/app/collectibles/index.tsx:14
 #: src/app/index.tsx:67
@@ -353,6 +355,10 @@ msgstr "All collectibles"
 msgid "balances.header_title"
 msgstr "All tokens"
 
+#: src/store/storage-persistors.ts:33
+msgid "authentication_prompt"
+msgstr "Allow app to access secure storage"
+
 #: src/features/qr-scanner/use-camera-permission.ts:36
 msgid "qr_scanner.camera_alert.title"
 msgstr "Allow Camera Access"
@@ -361,13 +367,17 @@ msgstr "Allow Camera Access"
 msgid "analytics.cell_title"
 msgstr "Allow collection of data"
 
-#: src/store/storage-persistors.ts:33
-msgid "authentication_prompt"
-msgstr "Allow Leather to access application's secure storage"
-
 #: src/features/send/error-messages.ts:11
 msgid "send.validation.greater_than_zero"
 msgstr "Amount must be greater than zero"
+
+#: src/components/text-input.tsx:68
+msgid "input.default.error"
+msgstr "An error has occurred"
+
+#: src/hooks/use-create-wallet.ts:57
+msgid "create_wallet.toast_title_error"
+msgstr "An error occurred"
 
 #: src/app/settings/security/index.tsx:48
 msgid "security.analytics.cell_title"
@@ -401,6 +411,17 @@ msgstr "App authentication"
 msgid "app_auth.toast_title_success"
 msgstr "App authorization updated"
 
+#: src/hooks/use-authentication.ts:17
+msgid "authentication.user-not-enrolled"
+msgstr "App is not protected with device-level PIN or biometrics."
+
+#: src/features/approver/components/approver-buttons.tsx:31
+#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:84
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:149
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:88
+msgid "approver.button.approve"
+msgstr "Approve"
+
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:31
 msgid "browser.toolbox.apps"
 msgstr "Apps"
@@ -423,7 +444,7 @@ msgstr "Avatar"
 
 #: src/app/create-new-wallet.tsx:79
 msgid "create_new_wallet.title"
-msgstr "Back up your secret key"
+msgstr "Back up your Secret Key"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:79
 msgid "recover_wallet.passphrase_label"
@@ -444,7 +465,7 @@ msgstr "BIP39 passphrase"
 msgid "asset_name.bitcoin"
 msgstr "Bitcoin"
 
-#: src/app/settings/display/index.tsx:87
+#: src/app/settings/display/index.tsx:88
 msgid "display.bitcoin_unit.cell_title"
 msgstr "Bitcoin unit"
 
@@ -463,6 +484,10 @@ msgstr "Bitflow"
 #: src/app/mpc-wallets.tsx:28
 msgid "mpc_wallets.bitgo"
 msgstr "BitGo"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:176
+msgid "add_wallet.mpc_wallet.cell_caption"
+msgstr "BitGo, Fireblocks, Fordefi and more"
 
 #: src/app/hardware-wallets.tsx:26
 msgid "hardware_wallets.bitkey"
@@ -508,9 +533,22 @@ msgstr "Capsule"
 msgid "wallet_name.header_title"
 msgstr "Change name"
 
+#: src/app/settings/networks/index.tsx:43
+msgid "settings.networks.toast_title"
+msgstr "Changed network"
+
+#: src/features/settings/email-address-sheet.tsx:40
+msgid "email_address.toast_title_success"
+msgstr "Check your email for verification"
+
+#: src/features/approver/layouts/get-addresses.layout.tsx:49
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
+msgid "browser.approver.choose-account"
+msgstr "Choose an account"
+
 #: src/features/account/sheets/add-account-sheet.layout.tsx:44
 msgid "add_account.existing_wallet.cell_caption"
-msgstr "Choose existing leather wallet"
+msgstr "Choose existing wallet"
 
 #: src/features/send/components/recipient/recipient-input.tsx:59
 msgid "send-form.recipient.input.clear"
@@ -540,13 +578,6 @@ msgstr "Configure account"
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:165
 msgid "configure_wallet.header_title"
 msgstr "Configure wallet"
-
-#: src/features/approver/components/approver-buttons.tsx:31
-#: src/features/approver/layouts/base-stx-message-approver.layout.tsx:84
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:149
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:88
-msgid "approver.button.approve"
-msgstr "Confirm"
 
 #: src/features/approver/components/memo-sheet.tsx:46
 msgid "approver.add_memo.confirm_button"
@@ -590,23 +621,23 @@ msgstr "Connect hardware wallet: {hardwareWalletName}"
 
 #: src/app/mpc-wallets.tsx:108
 msgid "mpc_wallets.title"
-msgstr "Connect mpc wallet"
+msgstr "Connect MPC wallet"
+
+#: src/app/mpc-wallets.tsx:123
+msgid "notify_user.mpc_wallet.header_title"
+msgstr "Connect MPC wallet"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:172
 msgid "add_wallet.mpc_wallet.cell_title"
 msgstr "Connect MPC wallet"
 
-#: src/app/mpc-wallets.tsx:125
-msgid "notify_user.mpc_wallet.header_title"
-msgstr "Connect Mpc wallet: {mpcWalletName}"
-
 #: src/features/browser/browser/tabs/browser-connected-tab.tsx:56
 msgid "browser-sheet.connected.title"
 msgstr "Connected"
 
-#: src/app/settings/help/index.tsx:26
-msgid "help.support.cell_caption"
-msgstr "Contact our support team"
+#: src/app/settings/help/index.tsx:22
+msgid "help.support.cell_title"
+msgstr "Contact us"
 
 #: src/app/settings/index.tsx:157
 msgid "settings.contacts.cell_title"
@@ -616,15 +647,23 @@ msgstr "Contacts"
 msgid "contacts.header_title"
 msgstr "Contacts"
 
+#: src/components/sheets/warning-sheet.layout.tsx:43
+msgid "warning.submit_button"
+msgstr "Continue"
+
 #: src/features/recover-wallet/recover-wallet.layout.tsx:110
 msgid "recover_wallet.button"
 msgstr "Continue"
+
+#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:17
+msgid "skip_secure_wallet.header_title"
+msgstr "Continue without security"
 
 #: src/features/approver/contract-call-args.section.tsx:21
 msgid "approver.contract-arguments.title"
 msgstr "Contract arguments"
 
-#: src/app/settings/display/index.tsx:105
+#: src/app/settings/display/index.tsx:106
 msgid "display.conversion_unit.cell_title"
 msgstr "Conversion unit"
 
@@ -635,6 +674,10 @@ msgstr "Conversion unit"
 #: src/features/settings/conversion-unit-sheet.tsx:27
 msgid "conversion_unit.toast_title"
 msgstr "Conversion unit updated"
+
+#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:57
+msgid "create_new_wallet.mnemonic.toast_title"
+msgstr "Copied to clipboard"
 
 #: src/app/mpc-wallets.tsx:44
 msgid "mpc_wallets.copper"
@@ -648,29 +691,17 @@ msgstr "Copy"
 msgid "receive.copy_address_label"
 msgstr "Copy address"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:104
-msgid "add_wallet.create_wallet.cell_caption"
-msgstr "Create a new Bitcoin and Stacks wallet"
-
-#: src/features/account/sheets/add-account-sheet.layout.tsx:56
-msgid "add_account.new_wallet.cell_caption"
-msgstr "Create new wallet"
-
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:100
 msgid "add_wallet.create_wallet.cell_title"
 msgstr "Create new wallet"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:152
 msgid "add_wallet.email_wallet.cell_title"
-msgstr "Create or restore via email"
+msgstr "Create or restore via email address"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:163
 msgid "email_wallet.header_title"
-msgstr "Create or restore via email"
-
-#: src/features/account/components/create-wallet-card.tsx:23
-msgid "create_wallet_card.title"
-msgstr "Create or restore wallet"
+msgstr "Create or restore via email address"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:187
 msgid "add_wallet.watch_only_wallet.cell_title"
@@ -680,29 +711,25 @@ msgstr "Create watch-only wallet"
 msgid "notify_user.watch_only_wallet.header_title"
 msgstr "Create watch-only wallet"
 
-#: src/features/account/components/create-wallet-card.tsx:24
-msgid "create_wallet_card.caption"
-msgstr "Create, Import or connect instantly"
-
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:244
 msgid "configure_wallet.creation_label"
 msgstr "Creation date"
 
 #: src/features/send/components/fee-badge.tsx:36
 msgid "approval-ux.fees.extremely-high"
-msgstr "currently extremely high"
+msgstr "Currently extremely high"
 
 #: src/features/send/components/fee-badge.tsx:32
 msgid "approval-ux.fees.high"
-msgstr "currently high"
+msgstr "Currently high"
 
 #: src/features/send/components/fee-badge.tsx:24
 msgid "approval-ux.fees.low"
-msgstr "currently low"
+msgstr "Currently low"
 
 #: src/features/send/components/fee-badge.tsx:28
 msgid "approval-ux.fees.normal"
-msgstr "currently normal"
+msgstr "Currently normal"
 
 #: src/features/approver/utils.tsx:53
 msgid "approver.fee.type.custom"
@@ -740,10 +767,6 @@ msgstr "Deployment failed"
 msgid "settings.device_id_label"
 msgstr "Device ID"
 
-#: src/hooks/use-authentication.ts:17
-msgid "authentication.user-not-enrolled"
-msgstr "Device is not enrolled with PIN or biometrics"
-
 #: src/app/settings/networks/index.tsx:73
 msgid "networks.cell_caption_disabled"
 msgstr "Disabled"
@@ -776,11 +799,11 @@ msgstr "Display"
 msgid "help.guides.cell_caption"
 msgstr "Dive into feature details"
 
-#: src/features/notifications/notifications-sheet.tsx:42
+#: src/features/notifications/notifications-sheet.tsx:41
 msgid "notification-sheet.cancel_button"
 msgstr "Don't notify me"
 
-#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:39
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:40
 msgid "view_secret_key.button"
 msgstr "Done"
 
@@ -827,7 +850,7 @@ msgstr "Enable device security"
 
 #: src/features/notifications/notifications-sheet.tsx:18
 msgid "notifications-sheet.subtitle"
-msgstr "Enable notifications to receive updates when you send and receive amounts. You can adjust your preference anytime in Settings."
+msgstr "Enable to receive notifications about transactions"
 
 #: src/app/settings/networks/index.tsx:69
 msgid "networks.cell_caption_enabled"
@@ -855,7 +878,11 @@ msgstr "Enter recipient"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:41
 msgid "recover_wallet.title"
-msgstr "Enter your secret key"
+msgstr "Enter your Secret Key"
+
+#: src/features/recover-wallet/recover-wallet.tsx:115
+msgid "recover_wallet.input_placeholder"
+msgstr "Enter your Secret Key"
 
 #: src/features/activity/utils/format-activity.ts:28
 msgid "activity.status.executed"
@@ -871,7 +898,7 @@ msgstr "Execution failed"
 
 #: src/app/settings/help/index.tsx:50
 msgid "help.learn.cell_caption"
-msgstr "Expand your knowledge"
+msgstr "Expand your Bitcoin knowledge"
 
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:31
 msgid "browser-sheet.suggested-dapps.title"
@@ -943,9 +970,21 @@ msgstr "For your eyes only"
 msgid "mpc_wallets.fordefi"
 msgstr "Fordefi"
 
-#: src/features/notifications/notifications-sheet.tsx:15
-msgid "notifications-sheet.title"
-msgstr "Get transaction notifications"
+#: src/features/account/sheets/add-account-sheet.layout.tsx:56
+msgid "add_account.new_wallet.cell_caption"
+msgstr "Generate new Secret Key for self-custody"
+
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:104
+msgid "add_wallet.create_wallet.cell_caption"
+msgstr "Generate new Secret Key for self-custody"
+
+#: src/app/settings/help/index.tsx:26
+msgid "help.support.cell_caption"
+msgstr "Get support or provide feedback"
+
+#: src/app/settings/index.tsx:136
+msgid "settings.help.cell_caption"
+msgstr "Get support or provide feedback"
 
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:55
 msgid "browser-sheet.dapp.granite.title"
@@ -955,7 +994,7 @@ msgstr "Granite"
 msgid "help.guides.cell_title"
 msgstr "Guides"
 
-#: src/app/settings/display/index.tsx:135
+#: src/app/settings/display/index.tsx:136
 msgid "display.haptics.cell_title"
 msgstr "Haptics"
 
@@ -1010,11 +1049,7 @@ msgstr "ID copied to clipboard"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:117
 msgid "add_wallet.restore_wallet.cell_caption"
-msgstr "Import existing accounts"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:176
-msgid "add_wallet.mpc_wallet.cell_caption"
-msgstr "Import existing accounts"
+msgstr "Import existing accounts from self-custody"
 
 #: src/features/approver/components/inputs-outputs-card.tsx:41
 msgid "approver.inputs-outputs.input.title"
@@ -1022,7 +1057,7 @@ msgstr "Input"
 
 #: src/features/approver/components/inputs-outputs-card.tsx:34
 msgid "approver.inputs-outputs.title"
-msgstr "Inputs and Outputs"
+msgstr "Inputs and outputs"
 
 #: src/features/send/error-messages.ts:26
 msgid "send.validation.insufficient_funds"
@@ -1035,10 +1070,6 @@ msgstr "Invalid email address"
 #: src/features/recover-wallet/components/error-message.tsx:5
 msgid "recover_wallet.validation_error"
 msgstr "Invalid words: {joinedInvalidWords}"
-
-#: src/app/settings/display/index.tsx:74
-msgid "display.language.cell_title"
-msgstr "Language"
 
 #: src/features/balances/utils/get-chain-layer-from-protocol.ts:8
 msgid "account_balance.caption_left.native"
@@ -1078,7 +1109,7 @@ msgstr "Ledger"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:141
 msgid "add_wallet.connect_wallet.cell_caption"
-msgstr "Ledger, Trezor, Ryder and more"
+msgstr "Ledger, Ryder, Trezor and more"
 
 #: src/app/settings/index.tsx:223
 msgid "settings.lock_button"
@@ -1154,10 +1185,6 @@ msgstr "minutes ago"
 msgid "settings.accordion_label"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/index.tsx:215
-msgid "configure_wallet.accordion_label"
-msgstr "More options"
-
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:127
 msgid "add_wallet.options.cell_title"
 msgstr "More options"
@@ -1182,10 +1209,6 @@ msgstr "Native Segwit"
 msgid "account_display_preference.native_segwit"
 msgstr "Native Segwit address"
 
-#: src/app/settings/networks/index.tsx:43
-msgid "settings.networks.toast_title"
-msgstr "Network changed"
-
 #: src/app/settings/help/index.tsx:15
 #: src/app/settings/networks/index.tsx:53
 msgid "networks.header_title"
@@ -1197,7 +1220,7 @@ msgstr "Networks"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:191
 msgid "add_wallet.watch_only_wallet.cell_caption"
-msgstr "No key needed"
+msgstr "No key required"
 
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
 msgid "send-form.recipient.no-search-results.label"
@@ -1227,7 +1250,7 @@ msgstr "Notifications"
 msgid "notifications.header_title"
 msgstr "Notifications"
 
-#: src/features/notifications/notifications-sheet.tsx:31
+#: src/features/notifications/notifications-sheet.tsx:30
 msgid "notification-sheet.submit_button"
 msgstr "Notify me"
 
@@ -1261,12 +1284,7 @@ msgstr "Paste"
 
 #: src/features/recover-wallet/recover-wallet.layout.tsx:46
 msgid "recover_wallet.subtitle"
-msgstr "Paste or type a Secret Key to add its associated wallet."
-
-#: src/features/approver/layouts/get-addresses.layout.tsx:49
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
-msgid "browser.approver.choose-account"
-msgstr "Please, choose an account"
+msgstr "Paste or type Secret Key to add wallet"
 
 #: src/app/mpc-wallets.tsx:69
 msgid "mpc_wallets.portal"
@@ -1276,13 +1294,13 @@ msgstr "Portal"
 msgid "mpc_wallets.privy"
 msgstr "Privy"
 
-#: src/components/sheets/warning-sheet.layout.tsx:43
-msgid "warning.submit_button"
-msgstr "Proceed"
+#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:23
+msgid "remove_wallet.warning_caption"
+msgstr "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely."
 
-#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:17
-msgid "skip_secure_wallet.header_title"
-msgstr "Proceed without security"
+#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:21
+msgid "skip_secure_wallet.warning_caption"
+msgstr "Proceed with caution since your wallet will not be protected by your device’s native security mechanism."
 
 #: src/features/settings/email-address-sheet.tsx:57
 msgid "email_address.subtitle"
@@ -1291,7 +1309,7 @@ msgstr "Provide an email address for receiving notifications"
 #: src/components/error/fetch-error.tsx:16
 #: src/components/error/fetch-error.tsx:37
 msgid "fetch-state-error.balance.subtitle"
-msgstr "Pull this page to refresh"
+msgstr "Pull to refresh"
 
 #: src/app/settings/notifications/_layout.tsx:27
 #: src/app/settings/notifications/_layout.tsx:49
@@ -1328,7 +1346,11 @@ msgstr "Receive fail"
 
 #: src/app/settings/notifications/index.tsx:17
 msgid "notifications.push.cell_caption"
-msgstr "Receive updates when sending and receiving amounts"
+msgstr "Receive notifications about transactions"
+
+#: src/features/notifications/notifications-sheet.tsx:15
+msgid "notifications-sheet.title"
+msgstr "Receive transaction notifications"
 
 #: src/features/activity/utils/format-activity.ts:23
 msgid "activity.status.received"
@@ -1370,6 +1392,10 @@ msgstr "Require biometrics or PIN"
 msgid "add_wallet.restore_wallet.cell_title"
 msgstr "Restore wallet"
 
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:143
+msgid "configure_account.unhide_account.cell_title"
+msgstr "Reveal account"
+
 #: src/features/send/forms/btc/btc-form.tsx:130
 #: src/features/send/forms/stx/stx-form.tsx:148
 msgid "send_form.review_button"
@@ -1400,12 +1426,9 @@ msgid "wallet_name.button"
 msgstr "Save"
 
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:78
-msgid "create_new_wallet.mnemonic.save_button"
-msgstr "Save to…"
-
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:89
-msgid "create_new_wallet.mnemonic.save_button.waitlist_title"
-msgstr "Save to…"
+msgid "create_new_wallet.mnemonic.save_button"
+msgstr "Save to..."
 
 #: src/features/send/components/recipient/recipient-qr-scanner.tsx:33
 msgid "send-form.recipient.unsupported_qr"
@@ -1427,10 +1450,6 @@ msgstr "Search for BNS name or address"
 #: src/features/browser/browser/search-bar/search-bar.tsx:140
 msgid "browser.searchbar.search-url"
 msgstr "Search or type url"
-
-#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:19
-msgid "view_secret_key.title"
-msgstr "SECRET KEY"
 
 #: src/app/secure-your-wallet.tsx:17
 msgid "secure_your_wallet.title"
@@ -1541,10 +1560,6 @@ msgstr "Sign Transaction"
 msgid "secure_your_wallet.skip_button"
 msgstr "Skip for now"
 
-#: src/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet.tsx:21
-msgid "skip_secure_wallet.warning_caption"
-msgstr "Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets"
-
 #: src/features/approver/utils.tsx:41
 msgid "approver.fee.type.low"
 msgstr "Slow"
@@ -1553,20 +1568,12 @@ msgstr "Slow"
 msgid "fetch-state-error.balance.title"
 msgstr "Some balances couldn't load."
 
-#: src/components/text-input.tsx:68
-msgid "input.default.error"
-msgstr "Something is wrong!"
-
 #: src/components/error/error.tsx:46
 msgid "error_boundary.title"
 msgstr "Something went wrong"
 
 #: src/components/error/fetch-error.tsx:14
 msgid "error.title"
-msgstr "Something went wrong"
-
-#: src/hooks/use-create-wallet.ts:57
-msgid "create_wallet.toast_title_error"
 msgstr "Something went wrong"
 
 #: src/features/earn/stacking-card.tsx:14
@@ -1591,25 +1598,9 @@ msgstr "Standard"
 msgid "approver.button.submitted"
 msgstr "Submitted"
 
-#: src/features/settings/email-address-sheet.tsx:40
-msgid "email_address.toast_title_success"
-msgstr "Submitted, check your email"
-
 #: src/features/approver/components/approver-buttons.tsx:45
 msgid "approver.button.submitting"
-msgstr "Submitting"
-
-#: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:57
-msgid "create_new_wallet.mnemonic.toast_title"
-msgstr "Successfully copied to clipboard!"
-
-#: src/app/settings/help/index.tsx:22
-msgid "help.support.cell_title"
-msgstr "Support and feedback"
-
-#: src/app/settings/index.tsx:136
-msgid "settings.help.cell_caption"
-msgstr "Support, guides and articles"
+msgstr "Submitting..."
 
 #: src/app/swap.tsx:9
 msgid "swap.header_title"
@@ -1647,12 +1638,6 @@ msgstr "Taproot address"
 msgid "send-form.recipient.no-search-results.description"
 msgstr "The address you entered isn’t valid. Verify and try again"
 
-#: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:23
-msgid "remove_wallet.warning_caption"
-msgstr ""
-"The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet.\n"
-"Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device."
-
 #: src/app/settings/display/index.tsx:56
 msgid "display.theme.cell_title"
 msgstr "Theme"
@@ -1683,19 +1668,19 @@ msgstr "This app would like to"
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:55
 msgid "notify_user.subtitle"
-msgstr "This feature is not available yet, but we can notify you when it’s ready."
-
-#: src/features/receive/get-assets.ts:31
-msgid "asset_description.native_segwit"
-msgstr "This is your Native Segwit address."
+msgstr "This feature is not available yet, but we can notify you when ready."
 
 #: src/features/receive/get-assets.ts:61
 msgid "asset_description.stacks"
-msgstr "This is your Stacks address."
+msgstr "This is your address for receiving tokens on the Stacks network."
+
+#: src/features/receive/get-assets.ts:31
+msgid "asset_description.native_segwit"
+msgstr "This is your Native Segwit address for receiving tokens  on the Bitcoin network."
 
 #: src/features/receive/get-assets.ts:48
 msgid "asset_description.taproot"
-msgstr "This is your Taproot address. Use it to receive tokens on the bitcoin network."
+msgstr "This is your Taproot address for receiving tokens on the Bitcoin network."
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:59
 msgid "send-form.guard.same_address_warning_description"
@@ -1709,9 +1694,9 @@ msgstr "to"
 msgid "approver.outcomes.title2"
 msgstr "To address"
 
-#: src/app/settings/display/index.tsx:139
+#: src/app/settings/display/index.tsx:140
 msgid "display.haptics.cell_caption"
-msgstr "Toggle tactile feedback for touch interactions"
+msgstr "Toggle tactile feedback for interactions"
 
 #: src/features/send/error-messages.ts:16
 msgid "send.validation.invalid_precision"
@@ -1759,14 +1744,6 @@ msgstr "Turn on camera access in Settings to scan a QR."
 msgid "browser.input_placeholder"
 msgstr "Type URL or search"
 
-#: src/features/recover-wallet/recover-wallet.tsx:115
-msgid "recover_wallet.input_placeholder"
-msgstr "Type your recovery phrase"
-
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:143
-msgid "configure_account.unhide_account.cell_title"
-msgstr "Unhide account"
-
 #: src/features/activity/utils/format-activity.ts:94
 #: src/features/activity/utils/format-activity.ts:110
 msgid "activity.type.unknown"
@@ -1791,7 +1768,7 @@ msgstr "Use sBTC to borrow stablecoins non-custodially, without risk of forced l
 
 #: src/app/secure-your-wallet.tsx:30
 msgid "secure_your_wallet.caption"
-msgstr "Use your device’s PIN, Face ID, or other biometrics for quick and secure access."
+msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:130
 msgid "browser-sheet.dapp.velar.title"
@@ -1805,13 +1782,13 @@ msgstr "Verify full address"
 msgid "settings.version_label"
 msgstr "Version"
 
+#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:20
+msgid "wallets_list.empty_wallets_title"
+msgstr "View and manage all your wallets in one place"
+
 #: src/features/settings/wallet-and-accounts/components/empty-hidden-accounts.tsx:16
 msgid "wallets_list.hidden_accounts_title"
 msgstr "View and manage your hidden accounts"
-
-#: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:20
-msgid "wallets_list.empty_wallets_title"
-msgstr "View and manage your wallets all in one place"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:176
 msgid "configure_wallet.view_key.cell_title"
@@ -1832,11 +1809,11 @@ msgstr "Wallet {walletIdx}"
 
 #: src/hooks/use-create-wallet.ts:33
 msgid "create_wallet.toast_title_success"
-msgstr "Wallet added successfully"
+msgstr "Wallet added"
 
 #: src/hooks/use-create-wallet.ts:46
 msgid "create_wallet.wallet_exists.toast_title_error"
-msgstr "Wallet already exists"
+msgstr "Wallet added already"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:105
 msgid "configure_wallet.wallet_name.empty_name_error"
@@ -1879,13 +1856,17 @@ msgstr "You'll send"
 msgid "send-form.recipient.accounts"
 msgstr "Your accounts"
 
-#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:26
-msgid "view_secret_key.subtitle"
-msgstr "Your Secret Key grants you access to your wallet and its assets."
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:19
+msgid "view_secret_key.title"
+msgstr "Your Secret Key"
 
 #: src/app/create-new-wallet.tsx:91
 msgid "create_new_wallet.subtitle"
-msgstr "Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager."
+msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
+
+#: src/app/settings/wallet/configure/[wallet]/view-secret-key.tsx:26
+msgid "view_secret_key.subtitle"
+msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:85
 msgid "browser-sheet.dapp.zest.title"

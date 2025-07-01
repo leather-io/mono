@@ -12,13 +12,12 @@ export function NotificationsSheet({ sheetRef }: { sheetRef: RefObject<SheetRef 
     <Sheet ref={sheetRef} themeVariant={themeDerivedFromThemePreference}>
       <Box py="3" px="5" gap="5">
         <Text variant="heading03">
-          {t({ id: 'notifications-sheet.title', message: 'Get transaction notifications' })}
+          {t({ id: 'notifications-sheet.title', message: 'Receive transaction notifications' })}
         </Text>
         <Text>
           {t({
             id: 'notifications-sheet.subtitle',
-            message:
-              'Enable notifications to receive updates when you send and receive amounts. You can adjust your preference anytime in Settings.',
+            message: 'Enable to receive notifications about transactions',
           })}
         </Text>
         <Box gap="3" py="3">

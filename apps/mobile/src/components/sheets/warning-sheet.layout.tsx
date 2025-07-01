@@ -42,7 +42,7 @@ export function WarningSheetLayout({
             buttonState={variant === 'critical' ? 'critical' : 'default'}
             title={t({
               id: 'warning.submit_button',
-              message: `Proceed`,
+              message: 'Continue',
             })}
           />
           <Button
@@ -50,7 +50,7 @@ export function WarningSheetLayout({
             buttonState="ghost"
             title={t({
               id: 'warning.cancel_button',
-              message: `Cancel`,
+              message: 'Cancel',
             })}
           />
         </Box>

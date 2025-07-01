@@ -16,11 +16,12 @@ export function SkipSecureWalletSheet({ sheetRef, onSubmit }: SkipSecureWalletSh
       sheetRef={sheetRef}
       title={t({
         id: 'skip_secure_wallet.header_title',
-        message: `Proceed without security`,
+        message: 'Continue without security',
       })}
       description={t({
         id: 'skip_secure_wallet.warning_caption',
-        message: `Skipping security setup means your wallet will not be protected by your device’s security features. We highly recommend enabling security to protect your assets`,
+        message:
+          'Proceed with caution since your wallet will not be protected by your device’s native security mechanism.',
       })}
       onSubmit={onSubmit}
     />

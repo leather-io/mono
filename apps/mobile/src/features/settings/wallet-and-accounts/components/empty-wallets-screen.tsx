@@ -19,7 +19,7 @@ export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenPr
       <Text variant="label01" style={{ width: 200 }} textAlign="center">
         {t({
           id: 'wallets_list.empty_wallets_title',
-          message: 'View and manage your wallets all in one place',
+          message: 'View and manage all your wallets in one place',
         })}
       </Text>
       <Button
@@ -28,7 +28,7 @@ export function EmptyWalletsScreen({ onPressCreateWallet }: EmptyWalletsScreenPr
         buttonState="default"
         title={t({
           id: 'add_or_create_new_wallet.button',
-          message: `Add or create wallet`,
+          message: 'Add wallet',
         })}
       />
     </Box>

@@ -71,9 +71,10 @@ export default function SettingsDisplayScreen() {
         {releaseLocaleFeature && (
           <>
             <SettingsListItem
-              title={t({
+              title={i18n._({
                 id: 'display.language.cell_title',
-                message: 'Language',
+                message: '{locale}',
+                values: { locale: i18n.locale },
               })}
               caption={i18n._({
                 id: 'display.language.cell_caption',
@@ -138,7 +139,7 @@ export default function SettingsDisplayScreen() {
           })}
           caption={t({
             id: 'display.haptics.cell_caption',
-            message: 'Toggle tactile feedback for touch interactions',
+            message: 'Toggle tactile feedback for interactions',
           })}
           icon={<PointerHandIcon />}
           type="switch"

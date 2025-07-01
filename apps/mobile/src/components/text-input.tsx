@@ -67,7 +67,7 @@ export function TextInput({
     errorMessage ??
     t({
       id: 'input.default.error',
-      message: 'Something is wrong!',
+      message: 'An error has occurred',
     });
   const theme = useTheme<Theme>();
   const props = useRestyle(composedRestyleFunction, rest);

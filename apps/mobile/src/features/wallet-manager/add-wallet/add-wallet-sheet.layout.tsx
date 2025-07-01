@@ -103,7 +103,7 @@ export function AddWalletSheetLayout({
               })}
               caption={t({
                 id: 'add_wallet.create_wallet.cell_caption',
-                message: 'Create a new Bitcoin and Stacks wallet',
+                message: 'Generate new Secret Key for self-custody',
               })}
               testID={TestId.createNewWalletSheetButton}
               icon={<PlusIcon />}
@@ -116,7 +116,7 @@ export function AddWalletSheetLayout({
               })}
               caption={t({
                 id: 'add_wallet.restore_wallet.cell_caption',
-                message: 'Import existing accounts',
+                message: 'Import existing accounts from self-custody',
               })}
               testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
@@ -140,7 +140,7 @@ export function AddWalletSheetLayout({
                   })}
                   caption={t({
                     id: 'add_wallet.connect_wallet.cell_caption',
-                    message: 'Ledger, Trezor, Ryder and more',
+                    message: 'Ledger, Ryder, Trezor and more',
                   })}
                   icon={<SignalIcon color="ink.text-subdued" />}
                   onPress={() => {
@@ -151,7 +151,7 @@ export function AddWalletSheetLayout({
                 <AddWalletCell
                   title={t({
                     id: 'add_wallet.email_wallet.cell_title',
-                    message: 'Create or restore via email',
+                    message: 'Create or restore via email address',
                   })}
                   caption={t({
                     id: 'add_wallet.email_wallet.cell_caption',
@@ -162,7 +162,7 @@ export function AddWalletSheetLayout({
                     onOpenSheet({
                       title: t({
                         id: 'email_wallet.header_title',
-                        message: 'Create or restore via email',
+                        message: 'Create or restore via email address',
                       }),
                       id: WaitlistIds.restoreViaEmail,
                     });
@@ -175,7 +175,7 @@ export function AddWalletSheetLayout({
                   })}
                   caption={t({
                     id: 'add_wallet.mpc_wallet.cell_caption',
-                    message: 'Import existing accounts',
+                    message: 'BitGo, Fireblocks, Fordefi and more',
                   })}
                   icon={<PaletteIcon color="ink.text-subdued" />}
                   onPress={() => {
@@ -190,7 +190,7 @@ export function AddWalletSheetLayout({
                   })}
                   caption={t({
                     id: 'add_wallet.watch_only_wallet.cell_caption',
-                    message: 'No key needed',
+                    message: 'No key required',
                   })}
                   icon={<Eye2Icon color="ink.text-subdued" />}
                   onPress={() => {

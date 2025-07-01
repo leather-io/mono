@@ -135,7 +135,7 @@ export default function SettingsScreen() {
           })}
           caption={t({
             id: 'settings.help.cell_caption',
-            message: 'Support, guides and articles',
+            message: 'Get support or provide feedback',
           })}
           icon={<SupportIcon />}
           onPress={() => router.navigate('/settings/help')}

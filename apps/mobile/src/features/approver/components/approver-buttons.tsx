@@ -30,7 +30,7 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
             buttonState="default"
             title={t({
               id: 'approver.button.approve',
-              message: 'Confirm',
+              message: 'Approve',
             })}
             flex={1}
             onPress={onApprove}
@@ -44,7 +44,7 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
           buttonState="default"
           title={t({
             id: 'approver.button.submitting',
-            message: 'Submitting',
+            message: 'Submitting...',
           })}
           icon={<SpinnerIcon invertColors />}
         />

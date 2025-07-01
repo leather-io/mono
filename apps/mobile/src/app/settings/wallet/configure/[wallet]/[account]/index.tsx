@@ -142,7 +142,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               <SettingsListItem
                 title={t({
                   id: 'configure_account.unhide_account.cell_title',
-                  message: 'Unhide account',
+                  message: 'Reveal account',
                 })}
                 icon={<Eye1Icon />}
                 onPress={toggleHideAccount}

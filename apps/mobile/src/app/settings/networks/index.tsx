@@ -42,7 +42,7 @@ export default function SettingsNetworksScreen() {
     displayToast({
       title: t({
         id: 'settings.networks.toast_title',
-        message: 'Network changed',
+        message: 'Changed network',
       }),
       type: 'success',
     });

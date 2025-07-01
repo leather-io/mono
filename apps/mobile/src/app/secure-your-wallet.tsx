@@ -29,7 +29,7 @@ export default function SecureYourWalletScreen() {
             <Text variant="label01">
               {t({
                 id: 'secure_your_wallet.caption',
-                message: `Use your device’s PIN, Face ID, or other biometrics for quick and secure access.`,
+                message: 'Use your device PIN, Face ID or other biometrics to secure your wallets',
               })}
             </Text>
           </Box>

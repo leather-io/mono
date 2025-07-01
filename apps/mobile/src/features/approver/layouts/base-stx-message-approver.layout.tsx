@@ -83,7 +83,7 @@ export function BaseStxMessageApproverLayout({
               buttonState="default"
               title={t({
                 id: 'approver.button.approve',
-                message: 'Confirm',
+                message: 'Approve',
               })}
               flex={1}
               onPress={onApprove}

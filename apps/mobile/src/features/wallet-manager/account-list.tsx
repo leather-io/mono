@@ -20,7 +20,12 @@ export function AccountList({
   return (
     <View key={account.id} style={{ marginBottom: 20 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={{ fontSize: 16, marginBottom: 8 }}>{t`Account ${accountIndex}`}</Text>
+        <Text style={{ fontSize: 16, marginBottom: 8 }}>
+          {t({
+            id: 'account.default.name',
+            message: `Account ${accountIndex}`,
+          })}
+        </Text>
         <Pressable
           style={{ marginBottom: 12, marginLeft: 8 }}
           onPress={() => onHideAccount(accountIndex)}

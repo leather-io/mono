@@ -32,7 +32,7 @@ export function useCreateWallet() {
           type: 'success',
           title: t({
             id: 'create_wallet.toast_title_success',
-            message: 'Wallet added successfully',
+            message: 'Wallet added',
           }),
         });
         router.dismissAll();
@@ -45,7 +45,7 @@ export function useCreateWallet() {
             type: 'error',
             title: t({
               id: 'create_wallet.wallet_exists.toast_title_error',
-              message: 'Wallet already exists',
+              message: 'Wallet added already',
             }),
           });
           router.back();
@@ -56,7 +56,7 @@ export function useCreateWallet() {
           type: 'error',
           title: t({
             id: 'create_wallet.toast_title_error',
-            message: 'Something went wrong',
+            message: 'An error occurred',
           }),
         });
         router.back();

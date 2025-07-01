@@ -25,11 +25,11 @@ export const accountEntitySchema = entitySchema(accountStoreSchema);
 function addAccountDefaults({
   state,
   account,
-  accountIdx,
+  accountIndex,
 }: {
   state: EntityState<AccountStore, string>;
   account: PartialAccountStore;
-  accountIdx: number;
+  accountIndex: number;
 }): AccountStore {
   const currentWalletAccounts = getWalletAccountsByAccountId(state, account.id);
   const usedIcons = Object.values(state.entities).map(account => account.icon);
@@ -42,7 +42,7 @@ function addAccountDefaults({
     if (!draftAccount.name) {
       draftAccount.name = t({
         id: 'account.default.name',
-        message: `Account ${accountIdx}`,
+        message: `Account ${accountIndex}`,
       });
     }
     if (!draftAccount.status) {
@@ -71,7 +71,7 @@ export const accountsSlice = createSlice({
           addAccountDefaults({
             state,
             account: { id },
-            accountIdx: 1,
+            accountIndex: 1,
           })
         );
       })
@@ -90,7 +90,7 @@ export const accountsSlice = createSlice({
           addAccountDefaults({
             state,
             account: action.payload.account,
-            accountIdx: thisWalletsAccounts.length + 1,
+            accountIndex: thisWalletsAccounts.length + 1,
           })
         );
       })

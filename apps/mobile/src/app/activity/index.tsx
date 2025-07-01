@@ -12,7 +12,7 @@ import { Text } from '@leather.io/ui/native';
 export default function ActivityScreen() {
   const activity = useTotalActivity();
   const { refreshing, onRefresh } = useRefreshHandler();
-  const pageTitle = t({ id: 'activity.header_title', message: 'All activity' });
+  const pageTitle = t({ id: 'activity.header_title', message: 'All Activity' });
 
   return (
     <Screen>
