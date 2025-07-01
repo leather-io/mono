@@ -102,33 +102,33 @@ msgstr "{title}"
 msgid "address_type_badge.label"
 msgstr "{type}"
 
+#: src/features/approver/utils.tsx:68
+msgid "approver.bitcoin.fee.speed.low"
+msgstr "~1 hour+"
+
 #: src/features/approver/utils.tsx:76
 msgid "approver.bitcoin.fee.speed.high"
-msgstr "~10 mins"
-
-#: src/features/approver/utils.tsx:104
-msgid "approver.stacks.fee.speed.high"
-msgstr "~10 mins"
+msgstr "~10 – 20min"
 
 #: src/features/approver/utils.tsx:72
 msgid "approver.bitcoin.fee.speed.middle"
-msgstr "~20 mins"
-
-#: src/features/approver/utils.tsx:100
-msgid "approver.stacks.fee.speed.middle"
-msgstr "~20 mins"
-
-#: src/features/approver/utils.tsx:68
-msgid "approver.bitcoin.fee.speed.low"
-msgstr "~40 mins"
+msgstr "~30 min"
 
 #: src/features/approver/utils.tsx:96
 msgid "approver.stacks.fee.speed.low"
-msgstr "~40 mins"
+msgstr "1–2 minutes"
+
+#: src/features/approver/utils.tsx:104
+msgid "approver.stacks.fee.speed.high"
+msgstr "10 seconds"
 
 #: src/features/earn/stacking-card.tsx:22
 msgid "earn.stacking.yield-description-max"
 msgstr "10%"
+
+#: src/features/approver/utils.tsx:100
+msgid "approver.stacks.fee.speed.middle"
+msgstr "20–30 seconds"
 
 #: src/features/earn/sbtc-card.tsx:18
 msgid "earn.sbtc.yield-description-min"
