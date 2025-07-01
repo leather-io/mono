@@ -719,6 +719,25 @@
   * dependencies
     * @leather.io/ui bumped to 1.72.2
 
+## [2.55.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.5...@leather.io/mobile-v2.55.0) (2025-07-01)
+
+
+### Features
+
+* add remaining token details data to services ([e35f89b](https://github.com/leather-io/mono/commit/e35f89b528fb9b26851767e2263093fc3b457b2d))
+
+
+### Bug Fixes
+
+* **mobile:** update transaction time estimates to match extension, ref LEA-2703 ([d2220d8](https://github.com/leather-io/mono/commit/d2220d86e41e5a53c76c60c0c92bf6be7869e7e8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.20.0
+
 ## [2.54.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.4...@leather.io/mobile-v2.54.5) (2025-06-27)
 
 
