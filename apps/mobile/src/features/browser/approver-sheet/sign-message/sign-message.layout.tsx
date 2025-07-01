@@ -48,7 +48,7 @@ export function SignMessageApproverLayout({
                   <Cell.Label variant="primary">
                     {t({
                       id: `browser.approver.choose-account`,
-                      message: 'Please, choose an account',
+                      message: 'Choose an account',
                     })}
                   </Cell.Label>
                 </Cell.Content>
@@ -87,7 +87,7 @@ export function SignMessageApproverLayout({
               buttonState="default"
               title={t({
                 id: 'approver.button.approve',
-                message: 'Confirm',
+                message: 'Approve',
               })}
               flex={1}
               onPress={onApprove}

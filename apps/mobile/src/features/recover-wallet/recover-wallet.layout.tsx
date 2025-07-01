@@ -38,14 +38,14 @@ export function RecoverWalletLayout({
       <Screen.Header />
       <Screen.ScrollView>
         <Screen.Title>
-          {t({ id: 'recover_wallet.title', message: 'Enter your secret key' })}
+          {t({ id: 'recover_wallet.title', message: 'Enter your Secret Key' })}
         </Screen.Title>
         <Box px="5">
           <Box gap="3">
             <Text variant="label01">
               {t({
                 id: 'recover_wallet.subtitle',
-                message: 'Paste or type a Secret Key to add its associated wallet.',
+                message: 'Paste or type Secret Key to add wallet',
               })}
             </Text>
           </Box>

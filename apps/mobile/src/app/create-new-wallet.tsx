@@ -78,7 +78,7 @@ export default function CreateNewWallet() {
 
   const pageTitle = t({
     id: 'create_new_wallet.title',
-    message: 'Back up your secret key',
+    message: 'Back up your Secret Key',
   });
 
   return (
@@ -91,7 +91,7 @@ export default function CreateNewWallet() {
             {t({
               id: 'create_new_wallet.subtitle',
               message:
-                'Your Secret Key grants you access to your wallet and its assets. Write it down and store securely or use as safe password manager.',
+                'Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen.',
             })}
           </Text>
 

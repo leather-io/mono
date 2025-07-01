@@ -33,7 +33,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
       <Text variant="label02">
         {t({
           id: 'approver.inputs-outputs.title',
-          message: 'Inputs and Outputs',
+          message: 'Inputs and outputs',
         })}
       </Text>
       <Box gap="1">

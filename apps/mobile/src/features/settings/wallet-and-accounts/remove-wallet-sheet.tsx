@@ -22,8 +22,7 @@ export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps
       })}
       description={t({
         id: 'remove_wallet.warning_caption',
-        message: `The wallet will be removed from this device. You will lose access to all tokens and collectibles associated with this wallet.
-                     Before proceeding, make sure you have securely saved your secret key. Without it, you won't be able to access your tokens or collectibles from another device.`,
+        message: `Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely.`,
       })}
       variant="critical"
       onSubmit={onSubmit}

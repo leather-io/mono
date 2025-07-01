@@ -23,19 +23,19 @@ export function FeeBadge(props: FeeBadgeProps) {
   const title = matchVariant<string>(props.type, {
     low: i18n._({
       id: 'approval-ux.fees.low',
-      message: 'currently low',
+      message: 'Currently low',
     }),
     normal: i18n._({
       id: 'approval-ux.fees.normal',
-      message: 'currently normal',
+      message: 'Currently normal',
     }),
     high: i18n._({
       id: 'approval-ux.fees.high',
-      message: 'currently high',
+      message: 'Currently high',
     }),
     'extremely-high': i18n._({
       id: 'approval-ux.fees.extremely-high',
-      message: 'currently extremely high',
+      message: 'Currently extremely high',
     }),
   });
 

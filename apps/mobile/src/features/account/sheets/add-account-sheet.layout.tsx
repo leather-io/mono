@@ -43,7 +43,7 @@ export function AddAccountSheetLayout({
             })}
             caption={t({
               id: 'add_account.existing_wallet.cell_caption',
-              message: 'Choose existing leather wallet',
+              message: 'Choose existing wallet',
             })}
             icon={<WalletPlusIcon />}
           />
@@ -55,7 +55,7 @@ export function AddAccountSheetLayout({
             })}
             caption={t({
               id: 'add_account.new_wallet.cell_caption',
-              message: 'Create new wallet',
+              message: 'Generate new Secret Key for self-custody',
             })}
             icon={<PlusIcon />}
           />

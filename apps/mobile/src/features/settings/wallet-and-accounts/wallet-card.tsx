@@ -143,11 +143,11 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
                 isAddingAccount
                   ? t({
                       id: 'wallet.adding_account.button',
-                      message: `Adding account`,
+                      message: 'Adding account...',
                     })
                   : t({
                       id: 'wallet.add_account.button',
-                      message: `Add account`,
+                      message: 'Add account',
                     })
               }
               icon={isAddingAccount ? <SpinnerIcon /> : <PlusIcon variant="small" />}

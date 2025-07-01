@@ -77,7 +77,7 @@ export function ActionBar() {
         width="100%"
         buttonState="ghost"
         icon={<PlusIcon variant="small" />}
-        title={t({ id: 'action_bar.add_wallet_label', message: 'Add Wallet' })}
+        title={t({ id: 'action_bar.add_wallet_label', message: 'Add wallet' })}
         testID={TestId.homeAddWalletButton}
         onPress={onAddWallet}
       />

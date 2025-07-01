@@ -21,11 +21,11 @@ export default function SettingsHelpScreen() {
         <SettingsListItem
           title={t({
             id: 'help.support.cell_title',
-            message: 'Support and feedback',
+            message: 'Contact us',
           })}
           caption={t({
             id: 'help.support.cell_caption',
-            message: 'Contact our support team',
+            message: 'Get support or provide feedback',
           })}
           icon={<SupportIcon />}
           onPress={() => linkingRef.current?.openURL(LEATHER_SUPPORT_URL)}
@@ -49,7 +49,7 @@ export default function SettingsHelpScreen() {
           })}
           caption={t({
             id: 'help.learn.cell_caption',
-            message: 'Expand your knowledge',
+            message: 'Expand your Bitcoin knowledge',
           })}
           icon={<GraduateCapIcon />}
           onPress={() => linkingRef.current?.openURL(LEATHER_LEARN_URL)}

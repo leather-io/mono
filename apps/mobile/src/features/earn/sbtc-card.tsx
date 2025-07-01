@@ -17,7 +17,7 @@ export function SbtcCard() {
       })}
       minYield={t({
         id: 'earn.sbtc.yield-description-min',
-        message: '5',
+        message: '6',
       })}
       maxYield={t({
         id: 'earn.sbtc.yield-description-max',

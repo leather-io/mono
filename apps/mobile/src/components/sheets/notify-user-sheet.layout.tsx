@@ -54,7 +54,7 @@ export function NotifyUserSheetLayout({
           <Text variant="body01">
             {t({
               id: 'notify_user.subtitle',
-              message: `This feature is not available yet, but we can notify you when it’s ready.`,
+              message: 'This feature is not available yet, but we can notify you when ready.',
             })}
           </Text>
         </Box>

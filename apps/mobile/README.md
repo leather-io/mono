@@ -89,14 +89,6 @@ The workflow runs:
 - `pnpm lingui:compile` to test compilation errors (e.g. same id with different text)
 - `git diff` to see if `messages.po` has been updated by the extract
 
-#### CrowdIn workflow
-
-We can still use CrowdIn to manage our app translations if desired. The simpler workflow to follow is to:
-
-- generate our `en/messages.po` file and manually upload it to CrowdIn
-- have translators work on the translations there
-- download translated `.po` files and add them back into the application
-
 ## License
 
 [MIT](../../LICENSE) © [Leather Wallet LLC](https://github.com/leather-io/mono)

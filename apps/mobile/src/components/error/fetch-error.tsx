@@ -13,7 +13,7 @@ export function Error({ errorMessage }: ErrorProps) {
     <EmptyLayout image={<Image source={require('@/assets/stickers/net.png')} />}>
       <Text variant="heading03">{t({ id: 'error.title', message: 'Something went wrong' })}</Text>
       <Text variant="label01">
-        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull this page to refresh' })}
+        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull to refresh' })}
       </Text>
       {errorMessage && <Text variant="code">{errorMessage}</Text>}
     </EmptyLayout>
@@ -34,7 +34,7 @@ export function FetchErrorCallout() {
       }
     >
       <Text variant="label02">
-        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull this page to refresh' })}
+        {t({ id: 'fetch-state-error.balance.subtitle', message: 'Pull to refresh' })}
       </Text>
     </Callout>
   );

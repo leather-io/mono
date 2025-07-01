@@ -22,7 +22,7 @@ export default function GeneratingWalletScreen() {
         <Text variant="heading04" color="ink.text-subdued">
           {t({
             id: 'add_wallet_animation.title',
-            message: 'Adding Wallet',
+            message: 'Adding wallet...',
           })}
         </Text>
       </Box>

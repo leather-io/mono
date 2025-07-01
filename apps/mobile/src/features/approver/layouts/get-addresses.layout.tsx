@@ -48,7 +48,7 @@ export function GetAddressesApproverLayout({
                   <Cell.Label variant="primary">
                     {t({
                       id: `browser.approver.choose-account`,
-                      message: 'Please, choose an account',
+                      message: 'Choose an account',
                     })}
                   </Cell.Label>
                 </Cell.Content>

@@ -114,7 +114,7 @@ export function RecoverWallet() {
           onChangeText={onChangeText}
           placeholder={t({
             id: 'recover_wallet.input_placeholder',
-            message: 'Type your recovery phrase',
+            message: 'Enter your Secret Key',
           })}
           inputState={inputState}
           height={172}

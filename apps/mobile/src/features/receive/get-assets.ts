@@ -30,7 +30,7 @@ export function getAssets({
       }),
       description: t({
         id: 'asset_description.native_segwit',
-        message: 'This is your Native Segwit address.',
+        message: 'This is your Native Segwit address for receiving tokens  on the Bitcoin network.',
       }),
     },
     {
@@ -47,7 +47,7 @@ export function getAssets({
       }),
       description: t({
         id: 'asset_description.taproot',
-        message: 'This is your Taproot address. Use it to receive tokens on the bitcoin network.',
+        message: 'This is your Taproot address for receiving tokens on the Bitcoin network.',
       }),
     },
     {
@@ -60,7 +60,7 @@ export function getAssets({
       symbol: 'STX',
       description: t({
         id: 'asset_description.stacks',
-        message: 'This is your Stacks address.',
+        message: 'This is your address for receiving tokens on the Stacks network.',
       }),
     },
   ];

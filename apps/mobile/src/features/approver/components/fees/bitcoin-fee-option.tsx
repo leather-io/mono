@@ -39,7 +39,7 @@ export function BitcoinFeeOption({
       formattedFeeAmount={formatBalance({ balance: sats, isQuoteCurrency: false })}
       formattedQuoteFeeAmount={i18n._({
         id: 'fees-sheet.fee-rate-caption',
-        message: '{feeRate} sats/B · {quoteFee}',
+        message: '{feeRate} sats/vB · {quoteFee}',
         values: { feeRate, quoteFee: formatBalance({ balance: quoteFee, isQuoteCurrency: true }) },
       })}
     />

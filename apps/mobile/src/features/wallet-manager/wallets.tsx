@@ -35,7 +35,12 @@ export function WalletListLayout({
               style={{ marginBottom: 12 }}
               onPress={() => onCreateNewAccount(wallet.fingerprint)}
             >
-              <Text>{t`Add new account for ${fingerprint} 🆕`}</Text>
+              <Text>
+                {t({
+                  id: 'wallets.add-new-account',
+                  message: `Add new account for ${fingerprint} 🆕`,
+                })}
+              </Text>
             </Pressable>
             {renderAccount(fingerprint)}
           </View>

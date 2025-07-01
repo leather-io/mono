@@ -214,7 +214,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               <Accordion
                 label={t({
                   id: 'configure_wallet.accordion_label',
-                  message: 'More options',
+                  message: 'Advanced options',
                 })}
                 content={
                   <SettingsList mx="-5">

@@ -18,14 +18,15 @@ function ViewSecretKey({ fingerprint }: { fingerprint: string }) {
       <SettingsLayout
         title={t({
           id: 'view_secret_key.title',
-          message: 'SECRET KEY',
+          message: 'Your Secret Key',
         })}
       >
         <Box gap="5" px="5">
           <Text variant="label01">
             {t({
               id: 'view_secret_key.subtitle',
-              message: 'Your Secret Key grants you access to your wallet and its assets.',
+              message:
+                'Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen.',
             })}
           </Text>
 

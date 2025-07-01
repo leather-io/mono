@@ -16,7 +16,7 @@ export function useAuthentication() {
     displayToast({
       title: t({
         id: 'authentication.user-not-enrolled',
-        message: 'Device is not enrolled with PIN or biometrics',
+        message: 'App is not protected with device-level PIN or biometrics.',
       }),
       type: 'error',
     });

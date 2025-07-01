@@ -107,7 +107,7 @@ export default function MpcWalletListScreen() {
 
   const pageTitle = t({
     id: 'mpc_wallets.title',
-    message: 'Connect mpc wallet',
+    message: 'Connect MPC wallet',
   });
 
   return (
@@ -117,14 +117,12 @@ export default function MpcWalletListScreen() {
         <Screen.Title>{pageTitle}</Screen.Title>
         <SettingsList>
           {Object.values(getUnavailableFeatures()).map(feature => {
-            const mpcWalletName = feature.title;
-
             function onPress() {
               onOpenSheet({
                 id: feature.id,
                 title: t({
                   id: 'notify_user.mpc_wallet.header_title',
-                  message: `Connect Mpc wallet: ${mpcWalletName}`,
+                  message: 'Connect MPC wallet',
                 }),
               });
             }

@@ -39,7 +39,7 @@ export function EmailAddressSheet({ sheetRef }: EmailAddressSheetProps) {
     displayToast({
       title: t({
         id: 'email_address.toast_title_success',
-        message: 'Submitted, check your email',
+        message: 'Check your email for verification',
       }),
       type: 'success',
     });

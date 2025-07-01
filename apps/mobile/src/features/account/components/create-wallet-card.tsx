@@ -20,11 +20,7 @@ export function CreateWalletCard({ onPress }: CreateWalletCardProps) {
       onPress={onPress}
       width={width}
       icon={PlusIcon}
-      primaryTitle={t({ id: 'create_wallet_card.title', message: 'Create or restore wallet' })}
-      caption={t({
-        id: 'create_wallet_card.caption',
-        message: 'Create, Import or connect instantly',
-      })}
+      primaryTitle={t({ id: 'create_wallet_card.title', message: 'Add account' })}
       testID={TestId.homeCreateWalletCard}
     />
   );
