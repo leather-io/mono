@@ -101,7 +101,7 @@ function EarnFooter({ description, onPress }: EarnFooterProps) {
           onPress={onPress}
           title={t({
             id: 'earn.sbtc.button',
-            message: 'Enrol',
+            message: 'Enroll',
           })}
         />
       </Box>

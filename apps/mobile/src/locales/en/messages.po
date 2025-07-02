@@ -870,7 +870,7 @@ msgstr "Enabled"
 
 #: src/features/earn/earn-card.tsx:102
 msgid "earn.sbtc.button"
-msgstr "Enrol"
+msgstr "Enroll"
 
 #: src/features/send/components/recipient/recipient-toggle.tsx:57
 msgid "send_form.recipient.toggle.label"
