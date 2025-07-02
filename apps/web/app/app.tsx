@@ -36,7 +36,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <GlobalLoader />
         <Nav />
         <Flex flexDir="column" marginLeft={[null, null, 'navbar']} minHeight="100vh">
-          <styled.main flex={1}>{children}</styled.main>
+          <styled.main flex={1} bg="ink.background-primary">
+            {children}
+          </styled.main>
           <Footer />
         </Flex>
         <InstallDialog />
