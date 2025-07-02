@@ -14,11 +14,6 @@ export default defineProject({
   },
   test: {
     ...defaultVitestUnitTestingConfig.test,
-    include: [
-      'app/**/*.spec.{ts,tsx}',
-      'app/**/*.test.{ts,tsx}',
-      'tests/**/*.spec.{ts,tsx}',
-      'tests/**/*.test.{ts,tsx}',
-    ],
+    include: ['app/**/*.spec.{ts,tsx}', 'app/**/*.test.{ts,tsx}'],
   },
 });
