@@ -1,3 +1,5 @@
+import { MobileAnalyticsService } from '@/utils/analytics';
+
 import { initServicesContainer } from '@leather.io/services';
 
 import { MobileHttpCacheService } from './mobile-http-cache.service';
@@ -11,5 +13,6 @@ export function initAppServices() {
     },
     cacheService: MobileHttpCacheService,
     settingsService: MobileSettingsService,
+    analyticsService: MobileAnalyticsService,
   });
 }

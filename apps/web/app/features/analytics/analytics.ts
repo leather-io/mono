@@ -1,6 +1,7 @@
 import { AnalyticsBrowser } from '@segment/analytics-next';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
+import { AnalyticsService } from '@leather.io/services';
 
 const segmentClient = new AnalyticsBrowser();
 
@@ -28,4 +29,8 @@ if (writeKey) {
       },
     }
   );
+}
+
+export class WebAnalyticsService extends AnalyticsService {
+  static readonly client = analytics;
 }
