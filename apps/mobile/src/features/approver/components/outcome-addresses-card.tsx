@@ -1,7 +1,6 @@
-import { t } from '@lingui/macro';
+import { AddressDisplayer, Avatar, Flag, UsersTwoIcon } from '@leather.io/ui/native';
 
-import { AddressDisplayer, Avatar, Flag, Text, UsersTwoIcon } from '@leather.io/ui/native';
-
+// TODO: Bitcoin?
 function BitcoinAddress({ address }: { address: string }) {
   return (
     <Flag py="3" img={<Avatar icon={<UsersTwoIcon />} />}>
@@ -12,12 +11,6 @@ function BitcoinAddress({ address }: { address: string }) {
 export function OutcomeAddressesCard({ addresses }: { addresses: string[] }) {
   return (
     <>
-      <Text variant="label01">
-        {t({
-          id: 'approver.outcomes.title2',
-          message: 'To address',
-        })}
-      </Text>
       {addresses.map(address => (
         <BitcoinAddress key={address} address={address} />
       ))}

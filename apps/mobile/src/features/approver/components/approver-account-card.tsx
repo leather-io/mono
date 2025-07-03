@@ -6,9 +6,8 @@ import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { Account } from '@/store/accounts/accounts';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { t } from '@lingui/macro';
 
-import { Box, Text } from '@leather.io/ui/native';
+import { Box } from '@leather.io/ui/native';
 
 function AccountItem({ account, onPress }: { account: Account; onPress?: () => void }) {
   const { list: walletsList } = useWallets();
@@ -48,18 +47,10 @@ export function ApproverAccountCard({
   onPress?: () => void;
 }) {
   return (
-    <>
-      <Text variant="label01">
-        {t({
-          id: 'approver.account.title',
-          message: 'With account',
-        })}
-      </Text>
-      <Box mx="-5">
-        {accounts.map(account => (
-          <AccountItem onPress={onPress} key={account.id} account={account} />
-        ))}
-      </Box>
-    </>
+    <Box mx="-5">
+      {accounts.map(account => (
+        <AccountItem onPress={onPress} key={account.id} account={account} />
+      ))}
+    </Box>
   );
 }

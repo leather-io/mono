@@ -16,7 +16,7 @@ export function ContractCallArgsSection({ txHex }: { txHex: string }) {
   const { data } = useGetContractInterface(contractAddress, contractName.content);
 
   return (
-    <Approver.Section noTopPadding>
+    <Approver.Section>
       <Box>
         <Text>{t({ id: 'approver.contract-arguments.title', message: 'Contract arguments' })}</Text>
       </Box>
