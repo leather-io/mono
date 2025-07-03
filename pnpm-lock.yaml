@@ -383,6 +383,9 @@ importers:
       react-native-edge-to-edge:
         specifier: 1.6.0
         version: 1.6.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
+      react-native-exception-handler:
+        specifier: 2.10.10
+        version: 2.10.10(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
       react-native-gesture-handler:
         specifier: 2.24.0
         version: 2.24.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0)
@@ -651,7 +654,7 @@ importers:
         version: 1.52.0
       '@react-router/cloudflare':
         specifier: 7.6.2
-        version: 7.6.2(@cloudflare/workers-types@4.20250610.0)(react-router@7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
+        version: 7.6.2(@cloudflare/workers-types@4.20250610.0)(react-router@7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)
       '@react-router/dev':
         specifier: 7.6.2
         version: 7.6.2(@react-router/serve@7.6.2(react-router@7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.8.3))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(lightningcss@1.27.0)(react-router@7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(terser@5.39.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.27.0)(terser@5.39.2)(yaml@2.8.0))(wrangler@4.19.1(@cloudflare/workers-types@4.20250610.0))(yaml@2.8.0)
@@ -923,7 +926,7 @@ importers:
         version: link:../tokens
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
 
   packages/prettier-config:
     dependencies:
@@ -4295,6 +4298,7 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -13864,6 +13868,12 @@ packages:
       react: '*'
       react-native: '*'
 
+  react-native-exception-handler@2.10.10:
+    resolution: {integrity: sha512-otAXGoZDl1689OoUJWN/rXxVbdoZ3xcmyF1uq/CsizdLwwyZqVGd6d+p/vbYvnF996FfEyAEBnHrdFxulTn51w==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+
   react-native-gesture-handler@2.24.0:
     resolution: {integrity: sha512-ZdWyOd1C8axKJHIfYxjJKCcxjWEpUtUWgTOVY2wynbiveSQDm8X/PDyAKXSer/GOtIpjudUbACOndZXCN3vHsw==}
     peerDependencies:
@@ -21668,11 +21678,11 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
-  '@react-router/cloudflare@7.6.2(@cloudflare/workers-types@4.20250610.0)(react-router@7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
+  '@react-router/cloudflare@7.6.2(@cloudflare/workers-types@4.20250610.0)(react-router@7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0))(typescript@5.8.3)':
     dependencies:
       '@cloudflare/workers-types': 4.20250610.0
       react-router: 7.6.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.4.49)(typescript@5.8.3)(yaml@2.8.0)
+      tsup: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.3))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.8.0)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -31237,6 +31247,11 @@ snapshots:
       - supports-color
 
   react-native-edge-to-edge@1.6.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+      react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)
+
+  react-native-exception-handler@2.10.10(react-native@0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0))(react@19.0.0):
     dependencies:
       react: 19.0.0
       react-native: 0.79.2(@babel/core@7.27.1)(@react-native/assets-registry@0.73.1)(@types/react@19.0.12)(react@19.0.0)

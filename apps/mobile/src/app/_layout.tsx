@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { setJSExceptionHandler } from 'react-native-exception-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -28,6 +29,7 @@ import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
 import { trackFirstAppOpen } from '@/utils/analytics';
+import { errorHandler } from '@/utils/error-handler';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
 import { I18nProvider, useLingui } from '@lingui/react';
@@ -50,9 +52,6 @@ Sentry.init({
   enabled: !__DEV__,
 });
 
-// Catch any errors thrown by the Layout component
-export { ErrorBoundary } from 'expo-router';
-
 // Ensure that reloading on `/modal` keeps a back button present
 export const unstable_settings = { initialRouteName: '/' };
 
@@ -65,6 +64,8 @@ function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
   useLingui();
+
+  setJSExceptionHandler(errorHandler, true);
 
   useEffect(() => {
     void trackFirstAppOpen();

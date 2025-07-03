@@ -126,6 +126,7 @@
     "react-native": "0.79.2",
     "react-native-draggable-flatlist": "4.0.1",
     "react-native-edge-to-edge": "1.6.0",
+    "react-native-exception-handler": "2.10.10",
     "react-native-gesture-handler": "2.24.0",
     "react-native-get-random-values": "1.11.0",
     "react-native-keyboard-aware-scroll-view": "0.9.5",
