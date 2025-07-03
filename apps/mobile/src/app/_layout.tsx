@@ -60,6 +60,9 @@ initAppServices();
 void SplashScreen.preventAutoHideAsync();
 void initiateI18n();
 void setupFeatureFlags();
+ErrorUtils.setGlobalHandler(error => {
+  Sentry.captureException(error);
+});
 
 function App() {
   useWatchNotificationAddresses();
