@@ -48,6 +48,7 @@ export function ApproverSheet(props: ApproverSheetProps) {
       shouldHaveContainer={false}
       ref={approverSheetRef}
       themeVariant={themeDerivedFromThemePreference}
+      snapPointVariant="fullHeightWithoutNotch"
     >
       <BrowserApprover app={app} closeApprover={closeApprover} {...props} />
     </Sheet>

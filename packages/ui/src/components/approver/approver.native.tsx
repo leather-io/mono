@@ -8,7 +8,9 @@ import { ApproverAdvanced } from './components/approver-advanced.native';
 import { ApproverContainer } from './components/approver-container.native';
 import { ApproverFooter } from './components/approver-footer.native';
 import { ApproverHeader } from './components/approver-header.native';
+import { ApproverOverview } from './components/approver-overview.native';
 import { ApproverSection } from './components/approver-section.native';
+import { ApproverSubheader } from './components/approver-subheader.native';
 
 interface ApproverProps extends HasChildren {
   requester?: string;
@@ -35,7 +37,9 @@ function Approver({ requester, children }: ApproverProps) {
 }
 
 Approver.Header = ApproverHeader;
+Approver.Overview = ApproverOverview;
 Approver.Section = ApproverSection;
+Approver.Subheader = ApproverSubheader;
 Approver.Advanced = ApproverAdvanced;
 Approver.Actions = ApproverActions;
 Approver.Container = ApproverContainer;

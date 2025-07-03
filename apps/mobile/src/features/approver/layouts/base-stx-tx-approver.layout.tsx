@@ -23,10 +23,9 @@ import { t } from '@lingui/macro';
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { Approver, Box, Button } from '@leather.io/ui/native';
+import { Approver, Button, SentIcon } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
-import { ApproverWrapper } from '../components/approver-wrapper';
 import { useStxTransactionUpdatesHandler } from '../stx/hooks';
 
 interface BaseStxTxApproverLayoutProps {
@@ -80,82 +79,92 @@ export function BaseStxTxApproverLayout({
   });
 
   return (
-    <ApproverWrapper>
-      <Approver>
-        <Approver.Container>
-          <Approver.Header
-            title={t({
-              id: 'approver.signTransaction.title',
-              message: 'Sign Transaction',
-            })}
+    <Approver>
+      <Approver.Container>
+        <Approver.Header
+          title={t({
+            id: 'approver.signTransaction.title',
+            message: 'Sign Transaction',
+          })}
+        />
+        <Approver.Section>
+          <ApproverAccountCard
+            accounts={accounts.filter(
+              acc => makeAccountIdentifer(acc.fingerprint, acc.accountIndex) === accountId
+            )}
           />
-          <Approver.Section>
-            <ApproverAccountCard
-              accounts={accounts.filter(
-                acc => makeAccountIdentifer(acc.fingerprint, acc.accountIndex) === accountId
-              )}
-            />
-          </Approver.Section>
-          {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
-          {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
-          {isTokenTransferPayload(tx.payload) && (
-            <Approver.Section>
+        </Approver.Section>
+        {isContractCall(tx.payload) && <ContractCallSummarySection txHex={txHex} />}
+        {isContractDeploy(tx.payload) && <ContractDeploySummarySection txHex={txHex} />}
+        {isTokenTransferPayload(tx.payload) && (
+          <Approver.Overview>
+            <Approver.Section mb="-3">
+              <Approver.Subheader icon={<SentIcon variant="small" />}>
+                {t({ id: 'approver.outcomes.title1', message: 'You’ll send' })}
+              </Approver.Subheader>
+
               <StacksOutcome
                 amount={getTotalSpendMoney(tx.payload, tx.auth.spendingCondition.fee)}
               />
-              <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
+            </Approver.Section>
+
+            <Approver.Section>
+              <Approver.Subheader>
+                {t({ id: 'approver.outcomes.title2', message: 'To address' })}
+              </Approver.Subheader>
+
               <OutcomeAddressesCard addresses={[getTxRecipient(tx.payload)]} />
             </Approver.Section>
-          )}
-          <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
-          {isTokenTransfer(tx.payload) && (
-            <MemoSection
-              memo={tx.payload.memo.content}
-              isMemoEditable={false}
-              onChangeMemo={onChangeMemo}
-            />
-          )}
-          <Approver.Advanced
-            titleClosed={t({
-              id: 'approver.advanced.show',
-              message: 'Show advanced options',
+          </Approver.Overview>
+        )}
+        <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
+        {isTokenTransfer(tx.payload) && (
+          <MemoSection
+            memo={tx.payload.memo.content}
+            isMemoEditable={false}
+            onChangeMemo={onChangeMemo}
+          />
+        )}
+        <Approver.Advanced
+          titleClosed={t({
+            id: 'approver.advanced.show',
+            message: 'Show advanced options',
+          })}
+          titleOpened={t({
+            id: 'approver.advanced.hide',
+            message: 'Hide advanced options',
+          })}
+        >
+          {isContractCall(tx.payload) && <ContractCallArgsSection txHex={txHex} />}
+          {isContractDeploy(tx.payload) && <ContractDeployCodeSection txHex={txHex} />}
+          <NonceSection
+            nonce={tx.auth.spendingCondition.nonce.toString()}
+            onChangeNonce={onChangeNonce}
+          />
+        </Approver.Advanced>
+      </Approver.Container>
+      <Approver.Footer>
+        <Approver.Actions>
+          <Button
+            buttonState="outline"
+            title={t({
+              id: 'approver.button.deny',
+              message: 'Deny',
             })}
-            titleOpened={t({
-              id: 'approver.advanced.hide',
-              message: 'Hide advanced options',
+            flex={1}
+            onPress={onCloseApprover}
+          />
+          <Button
+            buttonState="default"
+            title={t({
+              id: 'approver.button.approve',
+              message: 'Approve',
             })}
-          >
-            {isContractCall(tx.payload) && <ContractCallArgsSection txHex={txHex} />}
-            {isContractDeploy(tx.payload) && <ContractDeployCodeSection txHex={txHex} />}
-            <NonceSection
-              nonce={tx.auth.spendingCondition.nonce.toString()}
-              onChangeNonce={onChangeNonce}
-            />
-          </Approver.Advanced>
-        </Approver.Container>
-        <Approver.Footer>
-          <Approver.Actions>
-            <Button
-              buttonState="outline"
-              title={t({
-                id: 'approver.button.deny',
-                message: 'Deny',
-              })}
-              flex={1}
-              onPress={onCloseApprover}
-            />
-            <Button
-              buttonState="default"
-              title={t({
-                id: 'approver.button.approve',
-                message: 'Approve',
-              })}
-              flex={1}
-              onPress={onApprove}
-            />
-          </Approver.Actions>
-        </Approver.Footer>
-      </Approver>
-    </ApproverWrapper>
+            flex={1}
+            onPress={onApprove}
+          />
+        </Approver.Actions>
+      </Approver.Footer>
+    </Approver>
   );
 }

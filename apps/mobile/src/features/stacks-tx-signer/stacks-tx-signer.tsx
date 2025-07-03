@@ -29,7 +29,7 @@ import { t } from '@lingui/macro';
 import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import { Approver, Box, Text } from '@leather.io/ui/native';
+import { Approver, Box, SentIcon, Text } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 interface StacksTxSignerProps {
@@ -132,68 +132,78 @@ export function StacksTxSigner({
   });
 
   return (
-    <>
-      <Approver requester="https://leather.io">
-        <Approver.Container>
-          <Approver.Header
-            title={t({
-              id: 'approver.send.title',
-              message: 'Send token',
-            })}
-          />
-          <Approver.Section>
-            <Box />
-            <ApproverAccountCard accounts={[account]} />
-          </Approver.Section>
-          <Approver.Section>
+    <Approver requester="https://leather.io">
+      <Approver.Container>
+        <Approver.Header
+          title={t({
+            id: 'approver.send.title',
+            message: 'Send token',
+          })}
+        />
+
+        <Approver.Overview>
+          <Approver.Section mb="-3">
+            <Approver.Subheader icon={<SentIcon variant="small" />}>
+              {t({ id: 'approver.outcomes.title1', message: 'You’ll send' })}
+            </Approver.Subheader>
             <StacksOutcome amount={principalSpend} />
-            <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
+          </Approver.Section>
+
+          <Approver.Section>
+            <Approver.Subheader>
+              {t({ id: 'approver.outcomes.title2', message: 'To address' })}
+            </Approver.Subheader>
             <OutcomeAddressesCard addresses={[recipient]} />
           </Approver.Section>
-          <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
-          <NonceSection
-            nonce={tx.auth.spendingCondition.nonce.toString()}
-            onChangeNonce={onChangeNonce}
-          />
-          {tx.payload.payloadType === PayloadType.TokenTransfer && (
-            <MemoSection
-              memo={tx.payload.memo.content}
-              onChangeMemo={onChangeMemo}
-              isMemoEditable
-            />
-          )}
-        </Approver.Container>
-        <Approver.Footer>
-          <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Text variant="label02">
-              {t({
-                id: 'approver.total_spend',
-                message: 'Total spend',
-              })}
-            </Text>
-            <Text variant="label02">
-              {formatBalance({ balance: totalSpendQuote, isQuoteCurrency: true })}
-            </Text>
-          </Box>
-          <Approver.Actions>
-            <ApproverButtons
-              approverState={approverState}
-              onBack={onEdit}
-              onApprove={onSubmitTransaction}
-            />
-          </Approver.Actions>
-        </Approver.Footer>
-        {approverState !== 'start' && (
-          <Box
-            position="absolute"
-            top={0}
-            bottom={0}
-            right={0}
-            left={0}
-            backgroundColor="ink.background-overlay"
-          />
+        </Approver.Overview>
+
+        <Approver.Section>
+          <ApproverAccountCard accounts={[account]} />
+        </Approver.Section>
+
+        <StacksFeesSection txHex={txHex} onChangeFee={onChangeFee} />
+
+        {tx.payload.payloadType === PayloadType.TokenTransfer && (
+          <MemoSection memo={tx.payload.memo.content} onChangeMemo={onChangeMemo} isMemoEditable />
         )}
-      </Approver>
-    </>
+
+        <NonceSection
+          nonce={tx.auth.spendingCondition.nonce.toString()}
+          onChangeNonce={onChangeNonce}
+        />
+      </Approver.Container>
+
+      <Approver.Footer>
+        <Box flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Text variant="label02">
+            {t({
+              id: 'approver.total_spend',
+              message: 'Total spend',
+            })}
+          </Text>
+          <Text variant="label02">
+            {formatBalance({ balance: totalSpendQuote, isQuoteCurrency: true })}
+          </Text>
+        </Box>
+        <Approver.Actions>
+          <ApproverButtons
+            approverState={approverState}
+            onBack={onEdit}
+            onApprove={onSubmitTransaction}
+          />
+        </Approver.Actions>
+      </Approver.Footer>
+
+      {approverState !== 'start' && (
+        <Box
+          position="absolute"
+          top={0}
+          bottom={0}
+          right={0}
+          left={0}
+          backgroundColor="ink.background-overlay"
+        />
+      )}
+    </Approver>
   );
 }

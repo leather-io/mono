@@ -3,10 +3,10 @@ import { ReactElement } from 'react';
 import { ActivityType, FungibleCryptoAsset, OnChainActivityStatus } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
-import FailedIcon from '../../assets/icons/activity/failed.svg';
-import PendingIcon from '../../assets/icons/activity/pending.svg';
-import ReceivedIcon from '../../assets/icons/activity/received.svg';
-import SentIcon from '../../assets/icons/activity/sent.svg';
+import { FailedIcon } from '../../icons/activity/failed-icon.native';
+import { PendingIcon } from '../../icons/activity/pending-icon.native';
+import { ReceivedIcon } from '../../icons/activity/received-icon.native';
+import { SentIcon } from '../../icons/activity/sent-icon.native';
 import { Avatar } from './avatar.native';
 import { BtcAvatarIcon } from './btc-avatar-icon.native';
 import { Sip10AvatarIcon } from './sip10-avatar-icon.native';
