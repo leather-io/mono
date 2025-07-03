@@ -32,6 +32,8 @@ export function AccountsWidget() {
   const theme = useTheme<Theme>();
   const { addAccountSheetRef, addWalletSheetRef } = useGlobalSheets();
 
+  throw new Error('Please catch me with ErrorUtils.setGlobalHandler');
+
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
   return (

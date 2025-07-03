@@ -49,7 +49,7 @@ Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   debug: __DEV__,
   tracesSampleRate: 1.0,
-  enabled: !__DEV__,
+  // enabled: !__DEV__,
 });
 
 // Ensure that reloading on `/modal` keeps a back button present
@@ -59,13 +59,18 @@ initAppServices();
 void SplashScreen.preventAutoHideAsync();
 void initiateI18n();
 void setupFeatureFlags();
+setJSExceptionHandler(errorHandler, true);
+
+ErrorUtils.setGlobalHandler((error, isFatal) => {
+  // Prevent Sentry from trying to add non-enumerable properties to the error object
+  // const errorToCapture = error instanceof Error ? error : new Error(String(error));
+  Sentry.captureException(error);
+});
 
 function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
   useLingui();
-
-  setJSExceptionHandler(errorHandler, true);
 
   useEffect(() => {
     void trackFirstAppOpen();

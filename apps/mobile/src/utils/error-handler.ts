@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/react-native';
 
 // Custom error handler to catch global JS errors
 export function errorHandler(error: Error | string) {
+  console.log('MOBILE ERROR HANDLER does it even get here?');
   // Send the error to Sentry
   Sentry.captureException(error);
 
