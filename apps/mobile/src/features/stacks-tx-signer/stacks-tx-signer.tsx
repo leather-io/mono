@@ -132,7 +132,7 @@ export function StacksTxSigner({
   });
 
   return (
-    <Approver requester="https://leather.io">
+    <Approver>
       <Approver.Container>
         <Approver.Header
           title={t({

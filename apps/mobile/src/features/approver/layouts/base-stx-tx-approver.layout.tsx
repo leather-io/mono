@@ -36,6 +36,7 @@ interface BaseStxTxApproverLayoutProps {
   txHex: string;
   setTxHex(txHex: string): void;
   txOptions: TxOptions;
+  origin?: string;
 }
 
 export function BaseStxTxApproverLayout({
@@ -46,6 +47,7 @@ export function BaseStxTxApproverLayout({
   txHex,
   setTxHex,
   txOptions,
+  origin,
 }: BaseStxTxApproverLayoutProps) {
   const tx = deserializeTransaction(txHex);
   const { changeFeeToastHandler, changeMemoToastHandler, changeNonceToastHandler } =
@@ -79,7 +81,7 @@ export function BaseStxTxApproverLayout({
   });
 
   return (
-    <Approver>
+    <Approver requester={origin}>
       <Approver.Container>
         <Approver.Header
           title={t({

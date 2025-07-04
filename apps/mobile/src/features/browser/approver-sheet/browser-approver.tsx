@@ -45,6 +45,7 @@ interface BrowserApproverProps {
 
 export function BrowserApprover(props: BrowserApproverProps) {
   const { list: stacksSigners } = useStacksSigners();
+
   switch (props.request?.method) {
     case getAddresses.method:
       return (
@@ -103,6 +104,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
       const accountId = getAccountIdFromConnectedApp(props.app);
       return (
         <SignTransactionApprover
+          app={props.app}
           sendResult={props.sendResult}
           request={props.request}
           closeApprover={props.closeApprover}
@@ -119,6 +121,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
             const parsedRequest = stxTransferStx.request.parse(props.request);
             return (
               <TransferStxApprover
+                app={props.app}
                 sendResult={props.sendResult}
                 request={parsedRequest}
                 closeApprover={props.closeApprover}
@@ -138,6 +141,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
             const parsedRequest = stxTransferSip9Nft.request.parse(props.request);
             return (
               <TransferSip9NftApprover
+                app={props.app}
                 sendResult={props.sendResult}
                 request={parsedRequest}
                 closeApprover={props.closeApprover}
@@ -157,6 +161,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
             const parsedRequest = stxTransferSip10Ft.request.parse(props.request);
             return (
               <TransferSip10FtApprover
+                app={props.app}
                 sendResult={props.sendResult}
                 request={parsedRequest}
                 closeApprover={props.closeApprover}
@@ -172,6 +177,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
       const accountId = getAccountIdFromConnectedApp(props.app);
       return (
         <StxSignMessageApprover
+          app={props.app}
           sendResult={props.sendResult}
           request={props.request}
           closeApprover={props.closeApprover}
@@ -183,6 +189,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
       const accountId = getAccountIdFromConnectedApp(props.app);
       return (
         <StxSignStructuredMessageApprover
+          app={props.app}
           sendResult={props.sendResult}
           request={props.request}
           closeApprover={props.closeApprover}
@@ -202,6 +209,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
             const parsedRequest = stxCallContract.request.parse(props.request);
             return (
               <CallContractApprover
+                app={props.app}
                 sendResult={props.sendResult}
                 request={parsedRequest}
                 closeApprover={props.closeApprover}
@@ -225,6 +233,7 @@ export function BrowserApprover(props: BrowserApproverProps) {
             const parsedRequest = stxDeployContract.request.parse(props.request);
             return (
               <DeployContractApprover
+                app={props.app}
                 sendResult={props.sendResult}
                 request={parsedRequest}
                 closeApprover={props.closeApprover}
