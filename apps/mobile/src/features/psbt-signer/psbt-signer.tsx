@@ -50,6 +50,7 @@ import { usePsbtPayers } from './use-psbt-payers';
 import { getFeeType, getPsbtNetwork, normalizeSignAtIndex } from './utils';
 
 interface PsbtSignerProps extends AccountId {
+  origin?: string;
   psbtHex: string;
   broadcast: RpcParams<typeof signPsbt>['broadcast'];
   allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
@@ -80,6 +81,7 @@ function BasePsbtSigner({
   broadcast,
   feeEditorEnabled,
   network: requestedNetwork,
+  origin,
 }: BasePsbtSignerProps) {
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
   const psbtAccounts = useAccountsFromPsbt({ psbtHex });
@@ -246,7 +248,7 @@ function BasePsbtSigner({
 
   return (
     <>
-      <Approver>
+      <Approver requester={origin}>
         <Approver.Container>
           <Approver.Header
             title={t({

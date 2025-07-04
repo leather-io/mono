@@ -16,9 +16,14 @@ export function ApproverHeader({ title }: ApproverHeaderProps) {
       <Box gap="2">
         <Text variant="heading03">{title}</Text>
         {requester && (
-          <Box flexDirection="row" gap="1">
+          <Box flexDirection="row" gap="1" mb="-2">
             <Favicon origin={requester} />
-            <Text variant="label03">Requested by {hostname}</Text>
+            <Text variant="label03">
+              <Text variant="label03" fontWeight="400">
+                Requested by
+              </Text>{' '}
+              {hostname}
+            </Text>
           </Box>
         )}
       </Box>
