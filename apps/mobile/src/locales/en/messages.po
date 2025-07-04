@@ -417,8 +417,8 @@ msgstr "App is not protected with device-level PIN or biometrics."
 
 #: src/features/approver/components/approver-buttons.tsx:31
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:84
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:149
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:88
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:161
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:85
 msgid "approver.button.approve"
 msgstr "Approve"
 
@@ -541,8 +541,8 @@ msgstr "Changed network"
 msgid "email_address.toast_title_success"
 msgstr "Check your email for verification"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:49
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:49
+#: src/features/approver/layouts/get-addresses.layout.tsx:48
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:46
 msgid "browser.approver.choose-account"
 msgstr "Choose an account"
 
@@ -587,7 +587,7 @@ msgstr "Confirm"
 msgid "approver.add_nonce.confirm_button"
 msgstr "Confirm"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:78
+#: src/features/approver/layouts/get-addresses.layout.tsx:77
 msgid "approver.button.confirm"
 msgstr "Confirm"
 
@@ -745,9 +745,9 @@ msgid "fees.header_title"
 msgstr "Custom fees"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:75
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:140
-#: src/features/approver/layouts/get-addresses.layout.tsx:69
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:79
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:152
+#: src/features/approver/layouts/get-addresses.layout.tsx:68
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:76
 msgid "approver.button.deny"
 msgstr "Deny"
 
@@ -917,8 +917,8 @@ msgstr "Export xPub"
 msgid "app_auth.toast_title_error"
 msgstr "Failed to authenticate"
 
-#: src/features/psbt-signer/psbt-signer.tsx:227
-#: src/features/psbt-signer/psbt-signer.tsx:238
+#: src/features/psbt-signer/psbt-signer.tsx:228
+#: src/features/psbt-signer/psbt-signer.tsx:239
 msgid "approver.send.btc.error.broadcast"
 msgstr "Failed to broadcast transaction"
 
@@ -946,15 +946,11 @@ msgstr "Failed to load latest nonce"
 msgid "approver.fee.type.high"
 msgstr "Fast"
 
-#: src/features/approver/components/fees/base-fee-card.tsx:29
-msgid "approver.fee.title"
-msgstr "Fee"
-
 #: src/features/approver/stx/hooks.ts:33
 msgid "approver.send.stx.success.change-fee"
 msgstr "Fee updated"
 
-#: src/features/psbt-signer/psbt-signer.tsx:191
+#: src/features/psbt-signer/psbt-signer.tsx:192
 msgid "approver.send.btc.success.change-fee"
 msgstr "Fee updated"
 
@@ -1022,8 +1018,8 @@ msgstr "Hidden accounts"
 msgid "configure_account.hide_account.cell_title"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:123
-#: src/features/psbt-signer/psbt-signer.tsx:280
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:135
+#: src/features/psbt-signer/psbt-signer.tsx:294
 msgid "approver.advanced.hide"
 msgstr "Hide advanced options"
 
@@ -1173,7 +1169,7 @@ msgstr "Memo updated"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:55
 #: src/features/approver/structured-message.section.tsx:49
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:63
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:60
 msgid "approver.signMessage.message-subtitle"
 msgstr "Message"
 
@@ -1497,8 +1493,8 @@ msgstr "Send"
 msgid "activity.status.send-failed"
 msgstr "Send Failed"
 
-#: src/features/psbt-signer/psbt-signer.tsx:253
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:139
+#: src/features/psbt-signer/psbt-signer.tsx:254
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:138
 msgid "approver.send.title"
 msgstr "Send token"
 
@@ -1542,8 +1538,8 @@ msgstr "Share"
 msgid "analytics.cell_caption"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:119
-#: src/features/psbt-signer/psbt-signer.tsx:276
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:131
+#: src/features/psbt-signer/psbt-signer.tsx:290
 msgid "approver.advanced.show"
 msgstr "Show advanced options"
 
@@ -1552,7 +1548,7 @@ msgid "header.privacy_label_show"
 msgstr "Show balances"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:40
-#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:31
+#: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:29
 msgid "approver.signMessage.title"
 msgstr "Sign Message"
 
@@ -1694,7 +1690,9 @@ msgstr "This merges your existing funds into a single output. It incurs a fee bu
 msgid "earn.sbtc.yield-description-to"
 msgstr "to"
 
-#: src/features/approver/components/outcome-addresses-card.tsx:16
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:115
+#: src/features/psbt-signer/psbt-signer.tsx:270
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:154
 msgid "approver.outcomes.title2"
 msgstr "To address"
 
@@ -1718,8 +1716,8 @@ msgstr "Tokens"
 msgid "earn.total_locked"
 msgstr "Total locked"
 
-#: src/features/psbt-signer/psbt-signer.tsx:296
-#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:169
+#: src/features/psbt-signer/psbt-signer.tsx:310
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:179
 msgid "approver.total_spend"
 msgstr "Total spend"
 
@@ -1831,10 +1829,6 @@ msgstr "Wallets"
 msgid "settings.wallets.cell_title"
 msgstr "Wallets and accounts"
 
-#: src/features/approver/components/approver-account-card.tsx:53
-msgid "approver.account.title"
-msgstr "With account"
-
 #: src/features/browser/browser/browser-sheet.tsx:105
 msgid "browser.search-bar.wrong-url"
 msgstr "Wrong URL"
@@ -1851,10 +1845,11 @@ msgstr "You will find the apps you are connected to here"
 msgid "browser-sheet.recent.empty.caption"
 msgstr "You will find the apps you recently viewed here"
 
-#: src/features/approver/components/bitcoin-outcome.tsx:17
-#: src/features/approver/components/stacks-outcome.tsx:16
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:105
+#: src/features/psbt-signer/psbt-signer.tsx:263
+#: src/features/stacks-tx-signer/stacks-tx-signer.tsx:147
 msgid "approver.outcomes.title1"
-msgstr "You'll send"
+msgstr "You’ll send"
 
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:26
 msgid "send-form.recipient.accounts"

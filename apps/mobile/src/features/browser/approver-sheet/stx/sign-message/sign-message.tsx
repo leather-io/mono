@@ -1,5 +1,6 @@
 import { BaseStxMessageApproverLayout } from '@/features/approver/layouts/base-stx-message-approver.layout';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { deserializeCV } from '@stacks/transactions';
@@ -8,6 +9,7 @@ import { RpcRequest, RpcResponse, createRpcSuccessResponse, stxSignMessage } fro
 import { SignatureData } from '@leather.io/stacks';
 
 interface StxSignMessageApproverProps {
+  app: App;
   request: RpcRequest<typeof stxSignMessage>;
   sendResult(result: RpcResponse<typeof stxSignMessage>): void;
   closeApprover(): void;
@@ -15,6 +17,7 @@ interface StxSignMessageApproverProps {
 }
 
 export function StxSignMessageApprover({
+  app,
   request,
   closeApprover,
   sendResult,
@@ -49,6 +52,7 @@ export function StxSignMessageApprover({
 
   return (
     <BaseStxMessageApproverLayout
+      origin={app.origin}
       onCloseApprover={closeApprover}
       accountId={accountId}
       accounts={accounts}

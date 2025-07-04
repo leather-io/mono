@@ -72,6 +72,7 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
   return (
     <>
       <GetAddressesApproverLayout
+        requester={props.origin}
         onApprove={onApprove}
         onOpenAccountSelection={onOpenAccountSelection}
         onCloseApprover={props.closeApprover}

@@ -5,6 +5,7 @@ import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
@@ -20,6 +21,7 @@ import {
 import { useTransferSip9NftTxHex } from './hooks';
 
 interface TransferSip9NftApproverProps {
+  app: App;
   request: RpcRequest<typeof stxTransferSip9Nft>;
   sendResult(result: RpcResponse<typeof stxTransferSip9Nft>): void;
   closeApprover(): void;
@@ -28,6 +30,7 @@ interface TransferSip9NftApproverProps {
 }
 
 export function TransferSip9NftApprover({
+  app,
   request,
   closeApprover,
   sendResult,
@@ -76,6 +79,7 @@ export function TransferSip9NftApprover({
 
   return (
     <BaseStxTxApproverLayout
+      origin={app.origin}
       txHex={txHex}
       setTxHex={setTxHex}
       txOptions={txOptions}

@@ -7,6 +7,7 @@ import { t } from '@lingui/macro';
 import { Approver, Button, Cell, ChevronRightIcon } from '@leather.io/ui/native';
 
 interface GetAddressesApproverLayoutProps {
+  requester: string;
   onApprove(): void;
   onOpenAccountSelection(): void;
   onCloseApprover(): void;
@@ -15,6 +16,7 @@ interface GetAddressesApproverLayoutProps {
 }
 
 export function GetAddressesApproverLayout({
+  requester,
   onApprove,
   onOpenAccountSelection,
   onCloseApprover,
@@ -22,15 +24,16 @@ export function GetAddressesApproverLayout({
   accounts,
 }: GetAddressesApproverLayoutProps) {
   return (
-    <Approver>
+    <Approver requester={requester}>
       <Approver.Container>
         <Approver.Header
+          showLargeFavicon
           title={t({
             id: 'approver.connect.title',
             message: 'Connect',
           })}
         />
-        <Approver.Section>
+        <Approver.Section mb="1">
           {selectedAccountId ? (
             <ApproverAccountCard
               accounts={accounts.filter(
