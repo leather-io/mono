@@ -82,6 +82,7 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
         onCloseApprover={props.closeApprover}
         accounts={accounts}
         selectedAccountId={selectedAccountId}
+        requester={props.origin}
       />
       <AccountSelectorSheet sheetRef={accountSelecterSheetRef} onAccountPress={onAccountPress} />
     </>

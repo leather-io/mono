@@ -5,6 +5,7 @@ import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStxTransaction } from '@/queries/stacks/use-broadcast-stx-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
@@ -15,6 +16,7 @@ import { RpcRequest, RpcResponse, createRpcSuccessResponse, stxTransferStx } fro
 import { useTransferStxTxHex } from './hooks';
 
 interface TransferStxApproverProps {
+  app: App;
   request: RpcRequest<typeof stxTransferStx>;
   sendResult(result: RpcResponse<typeof stxTransferStx>): void;
   closeApprover(): void;
@@ -23,6 +25,7 @@ interface TransferStxApproverProps {
 }
 
 export function TransferStxApprover({
+  app,
   request,
   closeApprover,
   sendResult,
@@ -73,6 +76,7 @@ export function TransferStxApprover({
 
   return (
     <BaseStxTxApproverLayout
+      origin={app.origin}
       txHex={txHex}
       setTxHex={setTxHex}
       txOptions={txOptions}

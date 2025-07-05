@@ -1,12 +1,32 @@
 import { Box } from '../../box/box.native';
+import { Favicon } from '../../favicon/favicon.native';
 import { Text } from '../../text/text.native';
-import { useRegisterApproverChild } from '../approver-context.shared';
+import { useApproverContext, useRegisterApproverChild } from '../approver-context.shared';
 
-export function ApproverHeader({ title }: { title: string }) {
+interface ApproverHeaderProps {
+  title: string;
+}
+
+export function ApproverHeader({ title }: ApproverHeaderProps) {
   useRegisterApproverChild('header');
+  const { requester, hostname } = useApproverContext();
+
   return (
-    <Box px="5" py="5">
-      <Text variant="heading03">{title}</Text>
+    <Box px="5" pt="6" pb="5" backgroundColor="ink.background-primary" style={{ marginBottom: -1 }}>
+      <Box gap="2">
+        <Text variant="heading03">{title}</Text>
+        {requester && (
+          <Box flexDirection="row" gap="1" mb="-2">
+            <Favicon origin={requester} />
+            <Text variant="label03">
+              <Text variant="label03" fontWeight="400">
+                Requested by
+              </Text>{' '}
+              {hostname}
+            </Text>
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 }

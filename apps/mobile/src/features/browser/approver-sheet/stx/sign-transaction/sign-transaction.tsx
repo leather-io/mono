@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx-approver.layout';
 import { getTxOptions } from '@/features/approver/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
@@ -18,6 +19,7 @@ import {
 import { getTxHexFromRequest } from './utils';
 
 interface SignTransactionApproverProps {
+  app: App;
   request: RpcRequest<typeof stxSignTransaction>;
   sendResult(result: RpcResponse<typeof stxSignTransaction>): void;
   closeApprover(): void;
@@ -25,6 +27,7 @@ interface SignTransactionApproverProps {
 }
 
 export function SignTransactionApprover({
+  app,
   request,
   closeApprover,
   sendResult,
@@ -65,6 +68,7 @@ export function SignTransactionApprover({
       accountId={accountId}
       accounts={accounts}
       onApprove={onApprove}
+      origin={app.origin}
     />
   );
 }

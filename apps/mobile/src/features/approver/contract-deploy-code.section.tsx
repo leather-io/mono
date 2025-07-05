@@ -10,7 +10,7 @@ export function ContractDeployCodeSection({ txHex }: { txHex: string }) {
   assertContractDeployPayload(tx.payload);
 
   return (
-    <Approver.Section noTopPadding>
+    <Approver.Section>
       <CodeCard codeBody={tx.payload.codeBody.content} />
     </Approver.Section>
   );

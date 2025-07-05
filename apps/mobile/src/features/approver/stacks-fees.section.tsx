@@ -4,7 +4,7 @@ import { useCalculateStacksTxFees } from '@/queries/stacks/fees/fees.hooks';
 import { deserializeTransaction } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
-import { Approver, Box, SheetRef } from '@leather.io/ui/native';
+import { Approver, SheetRef } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { StacksFeeCard } from './components/fees/stacks-fee-card';
@@ -49,7 +49,6 @@ export function StacksFeesSection({ txHex, onChangeFee }: StacksFeesSectionProps
   return (
     <>
       <Approver.Section>
-        <Box />
         <StacksFeeCard
           feeType={selectedFeeType}
           amount={feeMoney}

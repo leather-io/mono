@@ -1,3 +1,7 @@
+export * from './activity/failed-icon.web';
+export * from './activity/pending-icon.web';
+export * from './activity/sent-icon.web';
+export * from './activity/received-icon.web';
 export * from './arrow-down-icon.web';
 export * from './arrow-left-icon.web';
 export * from './arrow-out-of-box-icon.web';

@@ -33,7 +33,7 @@ import {
   FeeTypes,
 } from '@leather.io/models';
 import { RpcParams, signPsbt } from '@leather.io/rpc';
-import { Approver, Box, SheetRef, Text } from '@leather.io/ui/native';
+import { Approver, Box, SentIcon, SheetRef, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
   createMoney,
@@ -42,7 +42,6 @@ import {
 } from '@leather.io/utils';
 
 import { ApproverButtons } from '../approver/components/approver-buttons';
-import { ApproverWrapper } from '../approver/components/approver-wrapper';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { ApproverState } from '../approver/utils';
 import { signTx } from './signer';
@@ -51,6 +50,7 @@ import { usePsbtPayers } from './use-psbt-payers';
 import { getFeeType, getPsbtNetwork, normalizeSignAtIndex } from './utils';
 
 interface PsbtSignerProps extends AccountId {
+  origin?: string;
   psbtHex: string;
   broadcast: RpcParams<typeof signPsbt>['broadcast'];
   allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
@@ -81,6 +81,7 @@ function BasePsbtSigner({
   broadcast,
   feeEditorEnabled,
   network: requestedNetwork,
+  origin,
 }: BasePsbtSignerProps) {
   const [psbtHex, setPsbtHex] = useState(_psbtHex);
   const psbtAccounts = useAccountsFromPsbt({ psbtHex });
@@ -246,8 +247,8 @@ function BasePsbtSigner({
   }
 
   return (
-    <ApproverWrapper>
-      <Approver>
+    <>
+      <Approver requester={origin}>
         <Approver.Container>
           <Approver.Header
             title={t({
@@ -255,14 +256,27 @@ function BasePsbtSigner({
               message: 'Send token',
             })}
           />
+
+          <Approver.Overview>
+            <Approver.Section mb="-3">
+              <Approver.Subheader icon={<SentIcon variant="small" />}>
+                {t({ id: 'approver.outcomes.title1', message: 'You’ll send' })}
+              </Approver.Subheader>
+              <BitcoinOutcome amount={principalSpend} />
+            </Approver.Section>
+
+            <Approver.Section>
+              <Approver.Subheader>
+                {t({ id: 'approver.outcomes.title2', message: 'To address' })}
+              </Approver.Subheader>
+              <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
+            </Approver.Section>
+          </Approver.Overview>
+
           <Approver.Section>
             <ApproverAccountCard accounts={psbtAccounts} />
           </Approver.Section>
-          <Approver.Section>
-            <BitcoinOutcome amount={principalSpend} />
-            <Box alignSelf="center" bg="ink.border-transparent" height={1} width="100%" my="3" />
-            <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
-          </Approver.Section>
+
           {feeEditorEnabled && (
             <Approver.Section>
               <BitcoinFeeCard
@@ -282,7 +296,7 @@ function BasePsbtSigner({
               message: 'Hide advanced options',
             })}
           >
-            <Approver.Section noTopPadding>
+            <Approver.Section>
               <InputsAndOutputsCard
                 inputs={psbtDetails.psbtInputs}
                 outputs={psbtDetails.psbtOutputs}
@@ -326,6 +340,6 @@ function BasePsbtSigner({
         txSize={txVBytes}
         currentFeeRate={Math.round(psbtDetails.fee.amount.toNumber() / txVBytes)}
       />
-    </ApproverWrapper>
+    </>
   );
 }

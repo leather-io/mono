@@ -17,10 +17,6 @@ export function ApproverFooter({ children }: HasChildren) {
       onLayout={event => {
         setActionBarHeight(event.nativeEvent.layout.height);
       }}
-      position="absolute"
-      bottom={0}
-      left={0}
-      right={0}
       backgroundColor="ink.background-primary"
       borderTopColor="ink.border-transparent"
       borderTopWidth={1}
