@@ -7,15 +7,12 @@ import { HeaderOptions } from './components/header-options';
 import { HeaderLayout } from './header.layout';
 
 export function HomeHeader() {
-  // Add subtle margin adjustment for better visual balance
-  const logoSpacing = "-1";
-  
   return (
     <HeaderLayout
       leftElement={
         <Box flexDirection="row" alignItems="center">
           <HeaderLeatherLogo />
-          <NetworkBadge ml={logoSpacing} />
+          <NetworkBadge ml="-1" />
         </Box>
       }
       rightElement={<HeaderOptions />}
