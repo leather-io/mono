@@ -91,3 +91,33 @@ src/
 - Hardware wallet integration via PSBT
 - Permission-based dApp interactions
 - Multi-signature transaction support
+
+## Development Guidelines
+
+### Commit Message Format
+Use [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks, dependencies
+
+**Examples:**
+```
+feat(send): add QR code scanning for recipient addresses
+fix(fingerprint): exclude dynamic Firebase files from build fingerprinting
+docs(readme): update installation instructions
+chore(deps): update expo to 53.0.18
+```
