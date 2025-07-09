@@ -719,6 +719,23 @@
   * dependencies
     * @leather.io/ui bumped to 1.72.2
 
+## [2.55.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.55.0...@leather.io/mobile-v2.55.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* downgrade React from 19.1 to 19.0.0 ([051b6ae](https://github.com/leather-io/mono/commit/051b6aeb07464e8db2dc5179311a2c4767b4eabc))
+* **mobile:** change spelling on Enrol to Enroll, ref LEA-2985 ([cf720ae](https://github.com/leather-io/mono/commit/cf720aea6673cd4fdec63fa3a5bcc38819ca18c3))
+* **web:** upgrade packages ([d1d68b6](https://github.com/leather-io/mono/commit/d1d68b61e6ddc11d3a70ccad4d6769d0f358dba0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.8.1
+    * @leather.io/ui bumped to 1.72.3
+
 ## [2.55.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.54.5...@leather.io/mobile-v2.55.0) (2025-07-01)
 
 
