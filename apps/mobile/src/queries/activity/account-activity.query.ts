@@ -6,25 +6,16 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { AccountAddresses, CryptoAsset } from '@leather.io/models';
 import { getActivityService } from '@leather.io/services';
 
-/**
- * Keeping this as an example of services usage
- * @knipignore */
 export function useTotalActivity() {
   const accounts = useTotalAccountAddresses();
   return toFetchState(useTotalActivityQuery(accounts));
 }
 
-/**
- * Keeping this as an example of services usage
- * @knipignore */
 export function useAccountActivity(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useAccountActivityQuery(account));
 }
 
-/**
- * Keeping this as an example of services usage
- * @knipignore */
 export function useActivityByAsset(fingerprint: string, accountIndex: number, asset: CryptoAsset) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   return toFetchState(useActivityByAssetQuery(account, asset));
@@ -60,9 +51,6 @@ export function useAccountActivityQuery(account: AccountAddresses) {
   });
 }
 
-/**
- * Keeping this as an example of services usage
- * @knipignore */
 export function useActivityByAssetQuery(account: AccountAddresses, asset: CryptoAsset) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
