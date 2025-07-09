@@ -1,10 +1,12 @@
+import { TokenBalance } from '@/features/token/components/token-balance';
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
+import { btcAsset } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
 
-import { TokenBalance } from '../token-balance';
+import { OnOpenTokenProps } from '../balances';
 
 interface BitcoinTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
@@ -37,21 +39,22 @@ export function BitcoinTokenBalance({
 }
 
 interface BitcoinBalanceProps {
-  onPress?(): void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const { state, value } = useBtcTotalBalance();
-
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
-
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       isLoading={state === 'loading'}
-      onPress={onPress}
+      onPress={() => onPress?.({ asset: btcAsset, availableBalance, quoteBalance })}
     />
   );
 }
@@ -59,7 +62,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
 interface BitcoinBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?(): void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 export function BitcoinBalanceByAccount({
   accountIndex,
@@ -70,12 +73,14 @@ export function BitcoinBalanceByAccount({
 
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
-
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={onPress}
+      onPress={() => onPress?.({ asset: btcAsset, availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );

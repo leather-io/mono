@@ -1,10 +1,12 @@
+import { TokenBalance } from '@/features/token/components/token-balance';
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
+import { stxAsset } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
 
-import { TokenBalance } from '../token-balance';
+import { OnOpenTokenProps } from '../balances';
 
 interface StacksTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
@@ -34,7 +36,7 @@ export function StacksTokenBalance({
 }
 
 interface StacksBalanceProps {
-  onPress?(): void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 
 export function StacksBalance({ onPress }: StacksBalanceProps) {
@@ -42,12 +44,14 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
-
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={onPress}
+      onPress={() => onPress?.({ asset: stxAsset, availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );
@@ -56,7 +60,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 interface StacksBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?(): void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 export function StacksBalanceByAccount({
   accountIndex,
@@ -68,11 +72,15 @@ export function StacksBalanceByAccount({
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
 
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
+
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={onPress}
+      onPress={() => onPress?.({ asset: stxAsset, availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );

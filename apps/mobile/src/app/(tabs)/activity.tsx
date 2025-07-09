@@ -6,7 +6,6 @@ import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/re
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { t } from '@lingui/macro';
 
-import { OnChainActivity } from '@leather.io/models';
 import { Text } from '@leather.io/ui/native';
 
 export default function ActivityScreen() {
@@ -33,7 +32,7 @@ export default function ActivityScreen() {
           <Screen.List
             refreshControl={<RefreshControl />}
             ListHeaderComponent={<Screen.Title>{pageTitle}</Screen.Title>}
-            data={activity.value as OnChainActivity[]} // TODO: Unclear why was this cast. Needs clearing up.
+            data={activity.value.filter(activity => activity && 'asset' in activity)}
             renderItem={({ item }) => <ActivityListItem activity={item} />}
             keyExtractor={(_, index) => `activity.${index}`}
             ListEmptyComponent={<ActivityEmpty />}

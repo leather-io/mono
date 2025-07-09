@@ -7,7 +7,8 @@ interface AccountListItemProps extends PressableProps {
   icon: React.ReactNode;
   iconTestID?: string;
   testID?: string;
-  walletName?: string;
+  walletName?: React.ReactNode;
+  chevron?: React.ReactNode;
 }
 export function AccountListItem({
   accountName,
@@ -18,19 +19,23 @@ export function AccountListItem({
   onPress,
   testID,
   walletName,
+  chevron,
   ...rest
 }: AccountListItemProps) {
   return (
     <Cell.Root pressable={true} disabled={!onPress} onPress={onPress} testID={testID} {...rest}>
       <Cell.Icon testID={iconTestID}>{icon}</Cell.Icon>
       <Cell.Content>
-        <Cell.Label variant="primary">{accountName}</Cell.Label>
+        <Cell.Label variant="primary" numberOfLines={1} ellipsizeMode="tail">
+          {accountName}
+        </Cell.Label>
         <Cell.Label variant="secondary">{walletName}</Cell.Label>
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">{balance}</Cell.Label>
         <Cell.Label variant="secondary">{address}</Cell.Label>
       </Cell.Aside>
+      {chevron && <Cell.Icon>{chevron}</Cell.Icon>}
     </Cell.Root>
   );
 }

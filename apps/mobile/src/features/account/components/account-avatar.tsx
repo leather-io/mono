@@ -70,7 +70,7 @@ export function AccountAvatar(props: AccountAvatarProps) {
       alignItems="center"
       {...props}
     >
-      {Icon && <Icon />}
+      {Icon && <Icon {...props} />}
     </SquircleBox>
   );
 }

@@ -3,7 +3,7 @@ import { ComponentType, ReactNode } from 'react';
 import { Card } from '@/components/card';
 import { Loading } from '@/components/loading/loading';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
-import { AppIcons } from '@/features/accounts/components/app-icons';
+import { AppIcons } from '@/features/account/components/app-icons';
 import { AccountIcon } from '@/store/accounts/utils';
 
 import { Box, HasChildren, PressableProps, Text } from '@leather.io/ui/native';
