@@ -243,7 +243,7 @@ export async function setupProtocolMocks(page: Page) {
         payout: 'stSTX',
         minimumCommitment: 10000,
         minimumCommitmentUsd: '$1,000',
-        contractAddress: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.stacking-dao-core-v4',
+        contractAddress: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.stacking-dao-core-v5',
         logo: '<svg></svg>',
       };
     } else if (url.includes('lisa')) {
