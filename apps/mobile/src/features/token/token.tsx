@@ -4,18 +4,24 @@ import { Balance } from '@/components/balance/balance';
 import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { FetchWrapper } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
-import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
+import { useAssetDescriptionQuery } from '@/queries/assets/fungible-asset-info.query';
+import { useAssetPriceChangeQuery } from '@/queries/assets/fungible-asset-info.query';
+import { useAssetPriceHistoryQuery } from '@/queries/assets/fungible-asset-info.query';
+import { useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
+import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import { OnChainActivity } from '@leather.io/models';
+import { Money, OnChainActivity } from '@leather.io/models';
+import { FungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
+import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 import { ActivityEmpty } from '../activity/activity-empty';
 import { ActivityListItem } from '../activity/activity-list-item';
@@ -28,14 +34,75 @@ const scrollViewAdjustmentOffset = 56;
 
 interface TokenProps {
   tokenId: string;
+  asset: FungibleCryptoAsset;
 }
 
 // PETE - smart to have a switch here and then seperate files for BTC / STX / Sip10  - same as balances
 
-export function Token({ tokenId }: TokenProps) {
-  const { totalBalance } = useTotalBalance();
+function TokenPriceChange({
+  assetPrice,
+  assetPriceChange,
+}: {
+  assetPrice: Money;
+  assetPriceChange: number;
+}) {
+  const { i18n } = useLingui();
+  // Ensure assetPrice.amount is a number before arithmetic
+  const assetPriceAmount =
+    typeof assetPrice.amount === 'number' ? assetPrice.amount : Number(assetPrice.amount);
+
+  const priceChange = (assetPriceAmount * assetPriceChange) / 100;
+  const priceChangeFiat = createMoney(priceChange, assetPrice.symbol);
+
+  function getPriceChangeOperator(assetPriceChange: number) {
+    if (assetPriceChange > 0) {
+      return '+';
+    } else if (assetPriceChange < 0) {
+      return '-';
+    } else {
+      return '';
+    }
+  }
+  return (
+    <>
+      <Text variant="label02">
+        {i18n._({
+          id: 'token.details.price_change_percentage',
+          message: '{operator}{priceChange}%',
+          values: {
+            operator: getPriceChangeOperator(assetPriceChange),
+            priceChange: assetPriceChange,
+          },
+        })}{' '}
+        (<Balance balance={priceChangeFiat} variant="label02" lineHeight={16} isQuoteCurrency />)
+      </Text>
+    </>
+  );
+}
+
+export function Token({ tokenId, asset }: TokenProps) {
+  // const { totalBalance } = useTotalBalance();
+  const { value } = useBtcTotalBalance();
+
+  const { data: btcMarketData } = useBtcMarketDataQuery();
+
+  // const quoteBalance = baseCurrencyAmountInQuoteWithFallback(availableBalance, btcMarketData);
   const accounts = useAccounts();
   const { i18n } = useLingui();
+  const { data: assetDescription } = useAssetDescriptionQuery(asset);
+  const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
+  // const { data: assetPriceHistory } = useAssetPriceHistoryQuery(asset);
+  console.log('assetDescription', assetDescription);
+  console.log('assetPriceChange', assetPriceChange);
+  // console.log('assetPriceHistory', assetPriceHistory?.prices[0].price);
+  console.log('asset', asset);
+  console.log('btcMarketData', btcMarketData);
+  // > FEED this hardcoded BTC asset into assset descriptions
+  // > get it working then clean up
+  // > then get it working for STX / Sip10 / Runes
+  // > also for individual account balances
+  // > then clean the UI
+  // {"category": "fungible", "chain": "bitcoin", "decimals": 8, "hasMemo": false, "protocol": "nativeBtc", "symbol": "BTC"}
 
   // tmp hardcoded network
   const network = 'Bitcoin';
@@ -65,8 +132,15 @@ lastly drilling down to account specific tokens
 
   const { refreshing, onRefresh } = useRefreshHandler();
 
-  const isLoadingTotalBalance = totalBalance.state === 'loading';
-  const isErrorTotalBalance = totalBalance.state === 'error';
+  const availableBalance = value?.btc.availableBalance;
+  const quoteBalance = value?.quote.availableBalance;
+
+  // PETE - need to work on total balance query and add FetchWrapper
+  // also consider how to break up token.tsx to have a switch that loads token specific data
+  // OR not and just grab the data from the query and pass it in
+
+  // const isLoadingTotalBalance = value?.btc.state === 'loading';
+  // const isErrorTotalBalance = value?.btc.state === 'error';
 
   const renderListHeader = () => (
     <Box>
@@ -76,22 +150,11 @@ lastly drilling down to account specific tokens
 
       {/* TOKEN OVERVIEW */}
       <TokenOverview
-        isLoading={isLoadingTotalBalance}
+        isLoading={false}
         heading={<TokenIcon ticker={tokenId} />}
-        availableBalance={
-          <Balance
-            balance={totalBalance.state === 'success' ? totalBalance.value : undefined}
-            variant="label02"
-            lineHeight={16}
-          />
-        }
+        availableBalance={<Balance balance={availableBalance} variant="label02" lineHeight={16} />}
         quoteBalance={
-          <Balance
-            balance={totalBalance.state === 'success' ? totalBalance.value : undefined}
-            variant="label02"
-            lineHeight={16}
-            isQuoteCurrency
-          />
+          <Balance balance={quoteBalance} variant="label02" lineHeight={16} isQuoteCurrency />
         }
       />
 
@@ -100,8 +163,21 @@ lastly drilling down to account specific tokens
         name="Bitcoin"
         ticker="BTC"
         network="Bitcoin"
-        price="$100,000"
-        priceChange="10%"
+        price={
+          <Balance
+            balance={btcMarketData?.price}
+            variant="label02"
+            lineHeight={16}
+            isQuoteCurrency
+          />
+        }
+        priceChange={
+          <TokenPriceChange
+            // PETE this needs the same empty handling state as balances. Maybe pass <Balance in to assetPrice and have it wrapped with isLoading
+            assetPrice={btcMarketData?.price ?? createMoney(0, 'USD')}
+            assetPriceChange={assetPriceChange?.changePercent ?? 0}
+          />
+        }
       />
 
       <Box>
@@ -130,7 +206,7 @@ lastly drilling down to account specific tokens
     <Screen>
       <Screen.Header
         blurOverlay={false}
-        topElement={isErrorTotalBalance && <FetchErrorCallout />}
+        // topElement={isErrorTotalBalance && <FetchErrorCallout />}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
             <NetworkBadge />

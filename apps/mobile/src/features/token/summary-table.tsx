@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import { Box, HasChildren, Text } from '@leather.io/ui/native';
 
 interface SummaryTableRootProps extends HasChildren {
@@ -7,49 +9,50 @@ interface SummaryTableRootProps extends HasChildren {
 export function SummaryTableRoot({ title, children }: SummaryTableRootProps) {
   return (
     <Box>
-      <SummaryTableHeader title={title} />
+      <SummaryTableHeader>{title}</SummaryTableHeader>
       <Box>{children}</Box>
     </Box>
   );
 }
 
-function SummaryTableHeader({ title }: { title: string }) {
+function SummaryTableHeader({ children }: HasChildren) {
   return (
     <Box>
       <Text variant="label03" px="5" py="2">
-        {title}
+        {children}
       </Text>
     </Box>
   );
 }
 
-function SummaryTableLabel({ label }: { label: string }) {
+function SummaryTableLabel({ children }: HasChildren) {
   return (
     <Box flex={1}>
       <Text variant="label02" color="ink.text-subdued">
-        {label}
+        {children}
       </Text>
     </Box>
   );
 }
-function SummaryTableValue({ value }: { value: string }) {
+
+function SummaryTableValue({ children }: HasChildren) {
   return (
     <Box flex={1} alignItems="flex-end">
-      <Text variant="label02">{value}</Text>
+      <Text variant="label02">{children}</Text>
     </Box>
   );
 }
 
 interface SummaryTableItem {
   label: string;
-  value: string;
+  value: ReactNode;
 }
 
 export function SummaryTableItem({ label, value }: SummaryTableItem) {
   return (
     <Box flexDirection="row" px="5" py="2">
-      <SummaryTableLabel label={label} />
-      <SummaryTableValue value={value} />
+      <SummaryTableLabel>{label}</SummaryTableLabel>
+      <SummaryTableValue>{value}</SummaryTableValue>
     </Box>
   );
 }

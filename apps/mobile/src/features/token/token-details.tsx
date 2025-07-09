@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -7,8 +9,8 @@ interface TokenDetailsProps {
   name: string;
   ticker: string;
   network: string;
-  price: string;
-  priceChange: string;
+  price: ReactNode;
+  priceChange: ReactNode;
 }
 
 export function TokenDetails({ name, ticker, network, price, priceChange }: TokenDetailsProps) {
