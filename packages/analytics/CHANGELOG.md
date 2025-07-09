@@ -78,6 +78,13 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [3.8.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.8.0...@leather.io/analytics-v3.8.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* **web:** upgrade packages ([d1d68b6](https://github.com/leather-io/mono/commit/d1d68b61e6ddc11d3a70ccad4d6769d0f358dba0))
+
 ## [3.8.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.7.1...@leather.io/analytics-v3.8.0) (2025-06-07)
 
 
