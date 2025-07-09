@@ -1,6 +1,7 @@
 import { Balance } from '@/components/balance/balance';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { Account } from '@/store/accounts/accounts';
+import { WalletStore } from '@/store/wallets/utils';
 import { useLingui } from '@lingui/react';
 
 import { Cell, Text } from '@leather.io/ui/native';
@@ -9,11 +10,12 @@ import { AccountAvatar } from '../account/components/account-avatar';
 
 interface AccountListItemProps {
   account: Account;
+  wallet: WalletStore;
 }
 
-export function AccountListItem({ account }: AccountListItemProps) {
+export function AccountListItem({ account, wallet }: AccountListItemProps) {
   const { i18n } = useLingui();
-  const { state, value } = useBtcAccountBalance(account.fingerprint, account.accountIndex);
+  const { value } = useBtcAccountBalance(account.fingerprint, account.accountIndex);
 
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
@@ -33,8 +35,8 @@ export function AccountListItem({ account }: AccountListItemProps) {
         </Cell.Label>
         <Cell.Label variant="secondary">
           <Text variant="caption01" lineHeight={16}>
-            {/* this should be the wallet name. maybe that should be added to account to make it easier?  */}
-            {account.name}
+            {/* Should perhaps refactor account to have a wallet name?  Avoids using the wallet store here */}
+            {wallet.name}
           </Text>
         </Cell.Label>
       </Cell.Content>

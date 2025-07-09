@@ -16,7 +16,7 @@ import {
 interface AccountSelectorHeaderProps {
   sheetRef: RefObject<SheetRef | null>;
 }
-// TODO: refactor HeaderLayout so that we can use it here
+
 export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) {
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="5">

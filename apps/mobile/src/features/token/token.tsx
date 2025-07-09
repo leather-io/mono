@@ -10,6 +10,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { useAccounts } from '@/store/accounts/accounts.read';
+import { WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
@@ -115,7 +116,9 @@ lastly drilling down to account specific tokens
         {accounts.list
           .filter(account => account.status !== 'hidden')
           .map(account => (
-            <AccountListItem key={account.id} account={account} />
+            <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+              {wallet => <AccountListItem key={account.id} account={account} wallet={wallet} />}
+            </WalletLoader>
           ))}
       </Box>
 
