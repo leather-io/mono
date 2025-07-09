@@ -23,7 +23,7 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
       testID={TestId.receiveAssetItem}
     >
       <Cell.Icon>
-        <TokenIcon ticker={asset.symbol} />
+        <TokenIcon ticker={asset.symbol} showIndicator />
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">

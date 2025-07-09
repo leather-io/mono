@@ -2,14 +2,15 @@ import { BtcAvatarIcon, PlaceholderIcon, StxAvatarIcon } from '@leather.io/ui/na
 
 interface TokenIconProps {
   ticker: string;
+  showIndicator?: boolean;
 }
 
-export function TokenIcon({ ticker }: TokenIconProps) {
+export function TokenIcon({ ticker, showIndicator = false }: TokenIconProps) {
   switch (ticker) {
     case 'STX':
-      return <StxAvatarIcon />;
+      return <StxAvatarIcon indicator={showIndicator} />;
     case 'BTC':
-      return <BtcAvatarIcon />;
+      return <BtcAvatarIcon indicator={showIndicator} />;
     default:
       return <PlaceholderIcon />;
   }

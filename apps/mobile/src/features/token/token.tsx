@@ -37,6 +37,25 @@ interface TokenProps {
   asset: FungibleCryptoAsset;
 }
 
+function getPriceChangeOperator(assetPriceChange: number) {
+  if (assetPriceChange > 0) {
+    return '+';
+  } else if (assetPriceChange < 0) {
+    return '-';
+  } else {
+    return '';
+  }
+}
+
+function getPriceChangeColor(assetPriceChange: number) {
+  if (assetPriceChange > 0) {
+    return 'green.action-primary-default';
+  } else if (assetPriceChange < 0) {
+    return 'red.action-primary-default';
+  } else {
+    return 'ink.text-primary';
+  }
+}
 // PETE - smart to have a switch here and then seperate files for BTC / STX / Sip10  - same as balances
 
 function TokenPriceChange({
@@ -54,18 +73,9 @@ function TokenPriceChange({
   const priceChange = (assetPriceAmount * assetPriceChange) / 100;
   const priceChangeFiat = createMoney(priceChange, assetPrice.symbol);
 
-  function getPriceChangeOperator(assetPriceChange: number) {
-    if (assetPriceChange > 0) {
-      return '+';
-    } else if (assetPriceChange < 0) {
-      return '-';
-    } else {
-      return '';
-    }
-  }
   return (
     <>
-      <Text variant="label02">
+      <Text variant="label02" color={getPriceChangeColor(assetPriceChange)}>
         {i18n._({
           id: 'token.details.price_change_percentage',
           message: '{operator}{priceChange}%',
@@ -74,7 +84,15 @@ function TokenPriceChange({
             priceChange: assetPriceChange,
           },
         })}{' '}
-        (<Balance balance={priceChangeFiat} variant="label02" lineHeight={16} isQuoteCurrency />)
+        (
+        <Balance
+          balance={priceChangeFiat}
+          variant="label02"
+          lineHeight={16}
+          isQuoteCurrency
+          color={getPriceChangeColor(assetPriceChange)}
+        />
+        )
       </Text>
     </>
   );
@@ -97,6 +115,11 @@ export function Token({ tokenId, asset }: TokenProps) {
   // console.log('assetPriceHistory', assetPriceHistory?.prices[0].price);
   console.log('asset', asset);
   console.log('btcMarketData', btcMarketData);
+
+  // > PEte continue finishing up the price data
+  // > get colour coding for change
+  // > clean up the code and get it working for STX / Sip10 / Runes also
+
   // > FEED this hardcoded BTC asset into assset descriptions
   // > get it working then clean up
   // > then get it working for STX / Sip10 / Runes
@@ -144,10 +167,6 @@ lastly drilling down to account specific tokens
 
   const renderListHeader = () => (
     <Box>
-      {/* <Box style={{ marginTop: scrollViewAdjustmentOffset }}>
-        <AccountAvatar icon={tokenId} />
-      </Box> */}
-
       {/* TOKEN OVERVIEW */}
       <TokenOverview
         isLoading={false}
