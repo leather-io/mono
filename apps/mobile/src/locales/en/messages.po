@@ -938,6 +938,10 @@ msgstr "Failed to change memo"
 msgid "approver.send.stx.error.change-nonce"
 msgstr "Failed to change nonce"
 
+#: src/features/browser/approver-sheet/stx/nonce-loader.tsx:32
+msgid "nonce-loader.error"
+msgstr "Failed to load latest nonce"
+
 #: src/features/approver/utils.tsx:49
 msgid "approver.fee.type.high"
 msgstr "Fast"
