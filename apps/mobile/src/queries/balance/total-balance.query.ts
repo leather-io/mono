@@ -15,7 +15,7 @@ import { useBtcTotalBalance } from './btc-balance.query';
 import { useRunesTotalBalance } from './runes-balance.query';
 import { useSip10TotalBalance } from './sip10-balance.query';
 
-interface TotalBalance {
+export interface TotalBalance {
   btc: FetchState<QuotedBtcBalance>;
   stx: FetchState<QuotedStxBalance>;
   sip10: FetchState<Sip10AggregateBalance>;

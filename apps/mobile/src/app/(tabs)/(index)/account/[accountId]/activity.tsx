@@ -7,7 +7,6 @@ import { deserializeAccountId } from '@/store/accounts/accounts';
 import { i18n } from '@lingui/core';
 import { useLocalSearchParams } from 'expo-router';
 
-import { OnChainActivity } from '@leather.io/models';
 import { Text } from '@leather.io/ui/native';
 
 import { configureAccountParamsSchema } from './';
@@ -44,7 +43,7 @@ export default function AccountActivityScreen() {
                 })}
               </Screen.Title>
             }
-            data={activity.value as OnChainActivity[]} // TODO: Unclear why was this cast. Needs clearing up.
+            data={activity.value.filter(activity => activity && 'asset' in activity)}
             renderItem={({ item }) => <ActivityListItem activity={item} />}
             keyExtractor={(_, index) => `activity.${index}`}
             ListEmptyComponent={<ActivityEmpty />}

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import { FetchState, FetchWrapper } from '@/components/loading';
-import { BalanceViewProps } from '@/features/balances/balances';
+import { BalanceViewProps, OnOpenTokenProps } from '@/features/balances/balances';
+import { TokenBalance } from '@/features/token/components/token-balance';
 import {
   useSip10AccountBalance,
   useSip10TotalBalance,
@@ -14,7 +15,6 @@ import { Sip10AddressBalance, Sip10AggregateBalance } from '@leather.io/services
 import { Box, Sip10AvatarIcon } from '@leather.io/ui/native';
 
 import { SIP10_BALANCES_LIMIT, SIP10_BALANCES_WIDGET_LIMIT } from '../constants';
-import { TokenBalance } from '../token-balance';
 import { sortSip10Balances } from '../utils/sort-sip10-balances';
 
 interface Sip10TokenBalanceProps {
@@ -24,6 +24,7 @@ interface Sip10TokenBalanceProps {
   imageCanonicalUri: string;
   name: string;
   symbol: string;
+  onPress?(): void;
 }
 function Sip10TokenBalance({
   availableBalance,
@@ -31,6 +32,7 @@ function Sip10TokenBalance({
   quoteBalance,
   imageCanonicalUri,
   name,
+  onPress,
   symbol,
 }: Sip10TokenBalanceProps) {
   return (
@@ -43,6 +45,7 @@ function Sip10TokenBalance({
           name={name}
         />
       }
+      onPress={onPress}
       tokenName={name}
       quoteBalance={quoteBalance}
       availableBalance={availableBalance}
@@ -65,8 +68,9 @@ function Sip10TokenBalanceError() {
 interface Sip10BalanceWrapperProps {
   data: FetchState<Sip10AggregateBalance | Sip10AddressBalance>;
   mode: ViewMode;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
-function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) {
+function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapperProps) {
   const displayLimit = mode === 'widget' ? SIP10_BALANCES_WIDGET_LIMIT : undefined;
 
   const [renderLimit, setRenderLimit] = useState(displayLimit ?? SIP10_BALANCES_LIMIT);
@@ -83,6 +87,14 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
                 contractId={item.asset.contractId}
                 quoteBalance={item.quote.totalBalance}
                 imageCanonicalUri={item.asset.imageCanonicalUri}
+                onPress={() => {
+                  // pass balance and quote balance to the sheet from here
+                  onPress?.({
+                    asset: item.asset,
+                    availableBalance: item.crypto.availableBalance,
+                    quoteBalance: item.quote.totalBalance,
+                  });
+                }}
                 name={item.asset.name}
                 symbol={item.asset.symbol}
               />
@@ -99,9 +111,9 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
   );
 }
 
-export function Sip10Balance({ mode }: BalanceViewProps) {
+export function Sip10Balance({ mode, onPress }: BalanceViewProps) {
   const data = useSip10TotalBalance();
-  return <Sip10BalanceWrapper data={data} mode={mode} />;
+  return <Sip10BalanceWrapper data={data} mode={mode} onPress={onPress} />;
 }
 
 interface Sip10BalanceByAccountProps {

@@ -1,13 +1,8 @@
-import { useCallback } from 'react';
-
-import { useToastContext } from '@/components/toast/toast-context';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { Account } from '@/store/accounts/accounts';
-import { t } from '@lingui/macro';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@shopify/restyle';
-import * as Clipboard from 'expo-clipboard';
 
 import { HasChildren, Theme } from '@leather.io/ui/native';
 
@@ -83,22 +78,4 @@ function getInitialRouteName({
   }
 
   return 'asset-details';
-}
-
-export function useCopyAddress() {
-  const { displayToast } = useToastContext();
-  const onCopyAddress = useCallback(
-    async function onCopyAddress(address: string) {
-      await Clipboard.setStringAsync(address);
-      return displayToast({
-        type: 'success',
-        title: t({
-          id: 'receive.select_asset.toast_title',
-          message: 'Address copied',
-        }),
-      });
-    },
-    [displayToast]
-  );
-  return onCopyAddress;
 }

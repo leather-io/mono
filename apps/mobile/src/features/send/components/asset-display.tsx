@@ -5,7 +5,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { TokenBalance } from '@/features/balances/token-balance';
+import { TokenBalance } from '@/features/token/components/token-balance';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';

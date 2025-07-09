@@ -2,6 +2,7 @@ import { HeaderBackButton } from '@/components/screen/screen-header/components/h
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
+import { useCopyAddress } from '@/hooks/use-copy-address';
 import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -12,7 +13,7 @@ import { assertExistence } from '@leather.io/utils';
 
 import { ReceiveAssetItem } from '../components/receive-asset-item';
 import { getAssets } from '../get-assets';
-import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
+import { useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export interface SelectedAsset {
   symbol: string;

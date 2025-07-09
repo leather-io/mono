@@ -1,6 +1,6 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
-import { TokenIcon } from '@/features/balances/token-icon';
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
+import { TokenIcon } from '@/features/token/components/token-icon';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 
@@ -23,7 +23,7 @@ export function ReceiveAssetItem({ asset, onCopyAddress, onPress }: ReceiveAsset
       testID={TestId.receiveAssetItem}
     >
       <Cell.Icon>
-        <TokenIcon ticker={asset.symbol} />
+        <TokenIcon ticker={asset.symbol} showIndicator />
       </Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">

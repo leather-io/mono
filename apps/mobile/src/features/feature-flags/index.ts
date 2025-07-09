@@ -75,3 +75,7 @@ export function useDappSuggestions() {
 export function useSendPasteButton() {
   return useBoolVariation('send_paste_button', false);
 }
+
+export function useTokenDetailsFlag() {
+  return useBoolVariation('token_details', true);
+}
