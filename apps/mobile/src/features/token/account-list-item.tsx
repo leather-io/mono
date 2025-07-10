@@ -7,20 +7,15 @@ import { WalletLoader } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import { Box, Cell, Text } from '@leather.io/ui/native';
+import { Cell, Text } from '@leather.io/ui/native';
 
 import { AccountAvatar } from '../account/components/account-avatar';
+import { TokenDetailsCard } from './components/token-details-card';
 
 export function AccountList() {
   const accounts = useAccounts();
   return (
-    <Box>
-      <Text variant="label03">
-        {t({
-          id: 'token.details.accounts_title',
-          message: 'Accounts',
-        })}
-      </Text>
+    <TokenDetailsCard title={t({ id: 'token.details.accounts_title', message: 'Accounts' })}>
       {/* ACCOUNTS */}
       {accounts.list
         .filter(account => account.status !== 'hidden')
@@ -29,7 +24,7 @@ export function AccountList() {
             {wallet => <AccountListItem key={account.id} account={account} wallet={wallet} />}
           </WalletLoader>
         ))}
-    </Box>
+    </TokenDetailsCard>
   );
 }
 

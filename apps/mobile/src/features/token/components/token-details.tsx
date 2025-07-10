@@ -8,6 +8,7 @@ import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 import { TokenDescription } from './token-description';
+import { TokenDetailsCard, TokenDetailsWrapper } from './token-details-card';
 import { TokenDetailsTable } from './token-details-table';
 import { TokenOverview } from './token-overview';
 import { TokenPriceChange } from './token-price-change';
@@ -34,8 +35,7 @@ export function TokenDetails({
   ticker,
 }: TokenDetailsProps) {
   return (
-    <Box>
-      {/* TOKEN OVERVIEW */}
+    <TokenDetailsWrapper>
       <TokenOverview
         isLoading={false}
         heading={<TokenIcon ticker={ticker} />}
@@ -50,7 +50,6 @@ export function TokenDetails({
         quoteBalance={<Balance balance={quoteBalance} variant="label01" isQuoteCurrency />}
       />
 
-      {/* TOKEN DESCRIPTION */}
       <TokenDescription>{assetDescription}</TokenDescription>
 
       <TokenDetailsTable
@@ -69,7 +68,7 @@ export function TokenDetails({
 
       {accountDetails}
 
-      <Text variant="label03">{t({ id: 'token.activity.header_title', message: 'Activity' })}</Text>
-    </Box>
+      <TokenDetailsCard title={t({ id: 'token.activity.header_title', message: 'Activity' })} />
+    </TokenDetailsWrapper>
   );
 }

@@ -2,27 +2,8 @@ import { ReactNode } from 'react';
 
 import { Box, HasChildren, Text } from '@leather.io/ui/native';
 
-interface SummaryTableRootProps extends HasChildren {
-  title: string;
-}
-
-export function SummaryTableRoot({ title, children }: SummaryTableRootProps) {
-  return (
-    <Box>
-      <SummaryTableHeader>{title}</SummaryTableHeader>
-      <Box>{children}</Box>
-    </Box>
-  );
-}
-
-function SummaryTableHeader({ children }: HasChildren) {
-  return (
-    <Box>
-      <Text variant="label03" px="5" py="2">
-        {children}
-      </Text>
-    </Box>
-  );
+export function SummaryTableRoot({ children }: HasChildren) {
+  return <Box>{children}</Box>;
 }
 
 function SummaryTableLabel({ children }: HasChildren) {
@@ -50,7 +31,7 @@ interface SummaryTableItem {
 
 export function SummaryTableItem({ label, value }: SummaryTableItem) {
   return (
-    <Box flexDirection="row" px="5" py="2">
+    <Box flexDirection="row" py="2">
       <SummaryTableLabel>{label}</SummaryTableLabel>
       <SummaryTableValue>{value}</SummaryTableValue>
     </Box>
@@ -59,6 +40,7 @@ export function SummaryTableItem({ label, value }: SummaryTableItem) {
 
 export const SummaryTable = {
   Root: SummaryTableRoot,
-  Header: SummaryTableHeader,
   Item: SummaryTableItem,
+  Value: SummaryTableValue,
+  Label: SummaryTableLabel,
 };

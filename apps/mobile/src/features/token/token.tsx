@@ -44,6 +44,8 @@ export function Token({ tokenId, asset }: TokenProps) {
       // TokenDetails passed as ListHeader to avoid nested scrolling errors
       ListHeader={
         <TokenDetails
+          // onclick of accountList could just add an account to state?
+          // then filter activity further based on that?
           accountDetails={<AccountList />}
           availableBalance={availableBalance ?? createMoney(0, 'BTC')}
           assetDescription={assetDescription?.description ?? 'No description available'}

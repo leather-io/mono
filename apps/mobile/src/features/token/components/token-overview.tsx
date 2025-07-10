@@ -26,8 +26,16 @@ export function TokenOverview({
     );
   }
   return (
-    <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
-      <Box mx="5" pt="4" pb="8" flexDirection="column" alignItems="center" gap="3" flex={1}>
+    <Box
+      alignItems="center"
+      alignContent="center"
+      alignSelf="stretch"
+      flexWrap="wrap"
+      p="5"
+      backgroundColor="ink.background-primary"
+    >
+      {/* For all accounts view there is no header so this needs a top margin of 64px */}
+      <Box p="5" flexDirection="column" alignItems="center" gap="3" flex={1}>
         {heading}
         <Box gap="1" flexDirection="column" alignItems="center">
           <Text variant="label01" textAlign="center">
