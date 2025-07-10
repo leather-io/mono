@@ -1430,7 +1430,9 @@ export interface paths {
     /** @description Get SIP-10 Token Description */
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          locale?: 'en' | 'es' | 'ru' | 'zh';
+        };
         header?: never;
         path: {
           principal: string;
@@ -1670,7 +1672,9 @@ export interface paths {
     /** @description Get Rune Description */
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          locale?: 'en' | 'es' | 'ru' | 'zh';
+        };
         header?: never;
         path: {
           runeName: string;
@@ -1743,7 +1747,9 @@ export interface paths {
     /** @description Get Native token description */
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          locale?: 'en' | 'es' | 'ru' | 'zh';
+        };
         header?: never;
         path: {
           symbol: string;

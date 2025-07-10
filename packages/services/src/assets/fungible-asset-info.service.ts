@@ -5,6 +5,7 @@ import { quoteCurrencyAmountToBase } from '@leather.io/utils';
 
 import {
   LeatherApiClient,
+  LeatherApiLocale,
   LeatherApiTokenPriceHistory,
 } from '../infrastructure/api/leather/leather-api.client';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
@@ -28,16 +29,25 @@ export class FungibleAssetInfoService {
 
   public async getAssetDescription(
     asset: FungibleCryptoAsset,
+    locale: LeatherApiLocale,
     signal?: AbortSignal
   ): Promise<AssetDescription> {
     switch (asset.protocol) {
       case CryptoAssetProtocols.nativeBtc:
       case CryptoAssetProtocols.nativeStx:
-        return await this.leatherApiClient.fetchNativeTokenDescription(asset.symbol, signal);
+        return await this.leatherApiClient.fetchNativeTokenDescription(
+          asset.symbol,
+          locale,
+          signal
+        );
       case CryptoAssetProtocols.sip10:
-        return await this.leatherApiClient.fetchSip10TokenDescription(asset.contractId, signal);
+        return await this.leatherApiClient.fetchSip10TokenDescription(
+          asset.contractId,
+          locale,
+          signal
+        );
       case CryptoAssetProtocols.rune:
-        return await this.leatherApiClient.fetchRuneDescription(asset.runeName, signal);
+        return await this.leatherApiClient.fetchRuneDescription(asset.runeName, locale, signal);
       default:
         throw Error('Asset descriptions not supported for asset type: ' + asset.protocol);
     }
