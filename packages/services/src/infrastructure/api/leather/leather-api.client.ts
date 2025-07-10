@@ -24,6 +24,9 @@ export type LeatherApiUtxo =
   paths['/v1/utxos/{descriptor}']['get']['responses'][200]['content']['application/json'][number];
 export type LeatherApiTokenPriceHistory =
   paths['/v1/market/prices/native/{symbol}/history']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiLocale = Required<
+  NonNullable<paths['/v1/tokens/native/{symbol}/description']['get']['parameters']['query']>
+>['locale'];
 
 @injectable()
 export class LeatherApiClient {
@@ -192,16 +195,20 @@ export class LeatherApiClient {
     );
   }
 
-  async fetchNativeTokenDescription(symbol: string, signal?: AbortSignal) {
+  async fetchNativeTokenDescription(
+    symbol: string,
+    locale: LeatherApiLocale,
+    signal?: AbortSignal
+  ) {
     return await this.cacheService.fetchWithCache(
-      ['leather-api-native-token-description', symbol],
+      ['leather-api-native-token-description', symbol, locale],
       async () => {
         const { data } = await this.rateLimiter.add(
           RateLimiterType.Leather,
           () =>
             this.client.GET('/v1/tokens/native/{symbol}/description', {
               signal,
-              params: { path: { symbol } },
+              params: { path: { symbol }, query: { locale } },
             }),
           {
             priority: leatherApiPriorities.nativeTokenDescription,
@@ -349,16 +356,16 @@ export class LeatherApiClient {
     });
   }
 
-  async fetchRuneDescription(runeName: string, signal?: AbortSignal) {
+  async fetchRuneDescription(runeName: string, locale: LeatherApiLocale, signal?: AbortSignal) {
     return await this.cacheService.fetchWithCache(
-      ['leather-api-rune-description', runeName],
+      ['leather-api-rune-description', runeName, locale],
       async () => {
         const { data } = await this.rateLimiter.add(
           RateLimiterType.Leather,
           () =>
             this.client.GET('/v1/tokens/runes/{runeName}/description', {
               signal,
-              params: { path: { runeName } },
+              params: { path: { runeName }, query: { locale } },
             }),
           {
             priority: leatherApiPriorities.runeDescription,
@@ -513,16 +520,20 @@ export class LeatherApiClient {
     );
   }
 
-  async fetchSip10TokenDescription(principal: string, signal?: AbortSignal) {
+  async fetchSip10TokenDescription(
+    principal: string,
+    locale: LeatherApiLocale,
+    signal?: AbortSignal
+  ) {
     return await this.cacheService.fetchWithCache(
-      ['leather-api-sip10-token-description', principal],
+      ['leather-api-sip10-token-description', principal, locale],
       async () => {
         const { data } = await this.rateLimiter.add(
           RateLimiterType.Leather,
           () =>
             this.client.GET('/v1/tokens/sip10s/{principal}/description', {
               signal,
-              params: { path: { principal } },
+              params: { path: { principal }, query: { locale } },
             }),
           {
             priority: leatherApiPriorities.sip10TokenDescription,

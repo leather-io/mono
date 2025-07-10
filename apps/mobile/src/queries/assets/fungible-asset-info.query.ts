@@ -4,11 +4,14 @@ import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { getFungibleAssetInfoService } from '@leather.io/services';
 
+const DEFAULT_LOCALE = 'en';
+const DEFAULT_PRICE_HISTORY_PERIOD = '24h';
+
 export function useAssetDescriptionQuery(asset: FungibleCryptoAsset) {
   return useQuery({
     queryKey: ['fungible-asset-info-service-get-asset-description', asset],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getFungibleAssetInfoService().getAssetDescription(asset, signal),
+      getFungibleAssetInfoService().getAssetDescription(asset, DEFAULT_LOCALE, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -22,7 +25,11 @@ export function useAssetPriceChangeQuery(asset: FungibleCryptoAsset) {
   return useQuery({
     queryKey: ['fungible-asset-info-service-get-asset-price-change', asset],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getFungibleAssetInfoService().getAssetPriceChange(asset, '24h', signal),
+      getFungibleAssetInfoService().getAssetPriceChange(
+        asset,
+        DEFAULT_PRICE_HISTORY_PERIOD,
+        signal
+      ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -41,7 +48,11 @@ export function useAssetPriceHistoryQuery(asset: FungibleCryptoAsset) {
       fiatCurrencyPreference,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getFungibleAssetInfoService().getAssetPriceHistory(asset, '24h', signal),
+      getFungibleAssetInfoService().getAssetPriceHistory(
+        asset,
+        DEFAULT_PRICE_HISTORY_PERIOD,
+        signal
+      ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

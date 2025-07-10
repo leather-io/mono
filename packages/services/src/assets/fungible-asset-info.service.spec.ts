@@ -85,10 +85,15 @@ describe(FungibleAssetInfoService.name, () => {
   describe('getAssetDescription', () => {
     it('should return native asset descriptions from Leather API', async () => {
       const signal = new AbortController().signal;
-      const description = await fungibleAssetInfoService.getAssetDescription(btcAsset, signal);
+      const description = await fungibleAssetInfoService.getAssetDescription(
+        btcAsset,
+        'en',
+        signal
+      );
 
       expect(mockLeatherApiClient.fetchNativeTokenDescription).toHaveBeenCalledWith(
         btcAsset.symbol,
+        'en',
         signal
       );
       expect(description).toEqual({
@@ -102,11 +107,13 @@ describe(FungibleAssetInfoService.name, () => {
       const signal = new AbortController().signal;
       const description = await fungibleAssetInfoService.getAssetDescription(
         { contractId, protocol: CryptoAssetProtocols.sip10 } as Sip10Asset,
+        'en',
         signal
       );
 
       expect(mockLeatherApiClient.fetchSip10TokenDescription).toHaveBeenCalledWith(
         contractId,
+        'en',
         signal
       );
       expect(description).toEqual({
@@ -120,10 +127,15 @@ describe(FungibleAssetInfoService.name, () => {
       const signal = new AbortController().signal;
       const description = await fungibleAssetInfoService.getAssetDescription(
         { runeName, protocol: CryptoAssetProtocols.rune } as RuneAsset,
+        'en',
         signal
       );
 
-      expect(mockLeatherApiClient.fetchRuneDescription).toHaveBeenCalledWith(runeName, signal);
+      expect(mockLeatherApiClient.fetchRuneDescription).toHaveBeenCalledWith(
+        runeName,
+        'en',
+        signal
+      );
       expect(description).toEqual({
         description: runeDescription,
       });
@@ -132,7 +144,9 @@ describe(FungibleAssetInfoService.name, () => {
     it('should throw an error if the asset protocol is not supported', async () => {
       const signal = new AbortController().signal;
       const asset = { protocol: 'unsupported' } as unknown as FungibleCryptoAsset;
-      await expect(fungibleAssetInfoService.getAssetDescription(asset, signal)).rejects.toThrow();
+      await expect(
+        fungibleAssetInfoService.getAssetDescription(asset, 'en', signal)
+      ).rejects.toThrow();
     });
   });
 
