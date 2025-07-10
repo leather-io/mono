@@ -3,3 +3,5 @@ GoogleService-Info.plist
 ios/
 android/
 .expo/
+
+node_modules/.pnpm

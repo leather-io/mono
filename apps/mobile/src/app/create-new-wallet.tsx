@@ -36,7 +36,7 @@ function SecretBanner({ children, isHidden }: { children: ReactNode; isHidden: b
         style={{
           position: 'absolute',
           top: -20,
-          bottom: -20,
+          bottom: -15,
           left: -20,
           right: -20,
           zIndex: 10,
