@@ -1,17 +1,43 @@
 import { Balance } from '@/components/balance/balance';
 import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { Account } from '@/store/accounts/accounts';
+import { useAccounts } from '@/store/accounts/accounts.read';
 import { WalletStore } from '@/store/wallets/utils';
+import { WalletLoader } from '@/store/wallets/wallets.read';
+import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import { Cell, Text } from '@leather.io/ui/native';
+import { Box, Cell, Text } from '@leather.io/ui/native';
 
 import { AccountAvatar } from '../account/components/account-avatar';
+
+export function AccountList() {
+  const accounts = useAccounts();
+  return (
+    <Box>
+      <Text variant="label03">
+        {t({
+          id: 'token.details.accounts_title',
+          message: 'Accounts',
+        })}
+      </Text>
+      {/* ACCOUNTS */}
+      {accounts.list
+        .filter(account => account.status !== 'hidden')
+        .map(account => (
+          <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+            {wallet => <AccountListItem key={account.id} account={account} wallet={wallet} />}
+          </WalletLoader>
+        ))}
+    </Box>
+  );
+}
 
 interface AccountListItemProps {
   account: Account;
   wallet: WalletStore;
 }
+// TODO refactor this to use the AccountListItem component instead and pass in the props needed
 
 export function AccountListItem({ account, wallet }: AccountListItemProps) {
   const { i18n } = useLingui();
@@ -21,6 +47,7 @@ export function AccountListItem({ account, wallet }: AccountListItemProps) {
   const quoteBalance = value?.quote.availableBalance;
 
   return (
+    // pressable should be true and onPress should be passed in and go to the account details screen
     <Cell.Root pressable={false}>
       <Cell.Icon>
         <AccountAvatar icon={account.icon} />

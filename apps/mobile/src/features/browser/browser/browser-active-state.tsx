@@ -6,7 +6,7 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import {
   BrowserLoading,
   BrowserLoadingMethods,
-} from '@/features/accounts/components/browser-loading';
+} from '@/features/account/components/browser-loading';
 import { getFaviconAndSave } from '@/filesystem/favicon';
 import { userAddsApp } from '@/store/apps/apps.write';
 import { useAppDispatch } from '@/store/utils';

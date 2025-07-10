@@ -3,9 +3,9 @@ import { ReactNode } from 'react';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import { SummaryTableItem, SummaryTableRoot } from './summary-table';
+import { SummaryTableItem, SummaryTableRoot } from '../summary-table';
 
-interface TokenDetailsProps {
+interface TokenDetailsTableProps {
   name: string;
   ticker: string;
   network: string;
@@ -13,7 +13,13 @@ interface TokenDetailsProps {
   priceChange: ReactNode;
 }
 
-export function TokenDetails({ name, ticker, network, price, priceChange }: TokenDetailsProps) {
+export function TokenDetailsTable({
+  name,
+  ticker,
+  network,
+  price,
+  priceChange,
+}: TokenDetailsTableProps) {
   const { i18n } = useLingui();
   return (
     <SummaryTableRoot title={t({ id: 'token.details.title', message: 'Token Details' })}>
