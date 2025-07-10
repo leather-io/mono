@@ -24,6 +24,7 @@ export * from './arrow-out-of-box-icon.native';
 export * from './arrow-rotate-clockwise-icon.native';
 export * from './arrow-rotate-right-left-icon.native';
 export * from './arrow-top-bottom-icon.native';
+export * from './arrow-triangle-top-icon.native';
 export * from './arrow-top-right-icon.native';
 export * from './arrow-up-icon.native';
 export * from './arrows-repeat-left-right-icon.native';

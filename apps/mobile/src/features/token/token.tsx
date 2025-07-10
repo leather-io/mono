@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { FetchWrapper } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/refresh-control';
@@ -9,9 +8,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useAssetDescriptionQuery } from '@/queries/assets/fungible-asset-info.query';
 import { useAssetPriceChangeQuery } from '@/queries/assets/fungible-asset-info.query';
-import { useAssetPriceHistoryQuery } from '@/queries/assets/fungible-asset-info.query';
 import { useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
-import { useTotalBalance } from '@/queries/balance/total-balance.query';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { WalletLoader } from '@/store/wallets/wallets.read';
@@ -20,8 +17,8 @@ import { useLingui } from '@lingui/react';
 
 import { Money, OnChainActivity } from '@leather.io/models';
 import { FungibleCryptoAsset } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
-import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
+import { ArrowTriangleTopIcon, Box, Text } from '@leather.io/ui/native';
+import { createMoney } from '@leather.io/utils';
 
 import { ActivityEmpty } from '../activity/activity-empty';
 import { ActivityListItem } from '../activity/activity-list-item';
@@ -35,16 +32,6 @@ const scrollViewAdjustmentOffset = 56;
 interface TokenProps {
   tokenId: string;
   asset: FungibleCryptoAsset;
-}
-
-function getPriceChangeOperator(assetPriceChange: number) {
-  if (assetPriceChange > 0) {
-    return '+';
-  } else if (assetPriceChange < 0) {
-    return '-';
-  } else {
-    return '';
-  }
 }
 
 function getPriceChangeColor(assetPriceChange: number) {
@@ -66,7 +53,6 @@ function TokenPriceChange({
   assetPriceChange: number;
 }) {
   const { i18n } = useLingui();
-  // Ensure assetPrice.amount is a number before arithmetic
   const assetPriceAmount =
     typeof assetPrice.amount === 'number' ? assetPrice.amount : Number(assetPrice.amount);
 
@@ -75,12 +61,19 @@ function TokenPriceChange({
 
   return (
     <>
+      {assetPriceChange !== 0 && (
+        <ArrowTriangleTopIcon
+          color={getPriceChangeColor(assetPriceChange)}
+          width={8}
+          height={8}
+          style={{ transform: [{ rotate: assetPriceChange < 0 ? '180deg' : '0deg' }] }}
+        />
+      )}
       <Text variant="label02" color={getPriceChangeColor(assetPriceChange)}>
         {i18n._({
           id: 'token.details.price_change_percentage',
-          message: '{operator}{priceChange}%',
+          message: '{priceChange}%',
           values: {
-            operator: getPriceChangeOperator(assetPriceChange),
             priceChange: assetPriceChange,
           },
         })}{' '}
@@ -106,7 +99,6 @@ export function Token({ tokenId, asset }: TokenProps) {
 
   // const quoteBalance = baseCurrencyAmountInQuoteWithFallback(availableBalance, btcMarketData);
   const accounts = useAccounts();
-  const { i18n } = useLingui();
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
   // const { data: assetPriceHistory } = useAssetPriceHistoryQuery(asset);
@@ -171,17 +163,33 @@ lastly drilling down to account specific tokens
       <TokenOverview
         isLoading={false}
         heading={<TokenIcon ticker={tokenId} />}
-        availableBalance={<Balance balance={availableBalance} variant="label02" lineHeight={16} />}
-        quoteBalance={
-          <Balance balance={quoteBalance} variant="label02" lineHeight={16} isQuoteCurrency />
+        availableBalance={
+          <Box flexDirection="row" alignItems="center" gap="1">
+            <Balance balance={availableBalance} variant="heading03" />
+            <Text variant="heading03" color="ink.text-subdued">
+              {asset.symbol}
+            </Text>
+          </Box>
         }
+        quoteBalance={<Balance balance={quoteBalance} variant="label01" isQuoteCurrency />}
       />
+
+      {/* TOKEN DESCRIPTION */}
+      <Box>
+        <Text variant="label03">
+          {t({
+            id: 'token.details.description_title',
+            message: 'Description',
+          })}
+        </Text>
+        <Text variant="label02">{assetDescription?.description ?? 'No description available'}</Text>
+      </Box>
 
       {/* TOKEN DETAILS */}
       <TokenDetails
-        name="Bitcoin"
-        ticker="BTC"
-        network="Bitcoin"
+        name={`${asset.chain} (${asset.symbol})`} //TODO this should use name
+        ticker={asset.symbol}
+        network={asset.chain}
         price={
           <Balance
             balance={btcMarketData?.price}
@@ -201,10 +209,9 @@ lastly drilling down to account specific tokens
 
       <Box>
         <Text variant="label03">
-          {i18n._({
-            id: 'token.details.header_title',
-            message: '{network} Details',
-            values: { network: network },
+          {t({
+            id: 'token.details.accounts_title',
+            message: 'Accounts',
           })}
         </Text>
         {/* ACCOUNTS */}
@@ -217,7 +224,7 @@ lastly drilling down to account specific tokens
           ))}
       </Box>
 
-      <Text>{t({ id: 'token.activity.header_title', message: 'Recent activity' })}</Text>
+      <Text variant="label03">{t({ id: 'token.activity.header_title', message: 'Activity' })}</Text>
     </Box>
   );
 

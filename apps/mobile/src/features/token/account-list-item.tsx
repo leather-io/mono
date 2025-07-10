@@ -42,14 +42,14 @@ export function AccountListItem({ account, wallet }: AccountListItemProps) {
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          <Balance balance={availableBalance} variant="label02" isQuoteCurrency={true} />
+          <Balance balance={availableBalance} variant="label02" isQuoteCurrency />
         </Cell.Label>
         <Cell.Label variant="secondary">
           <Balance
             balance={quoteBalance}
             variant="caption01"
             color="ink.text-subdued"
-            isQuoteCurrency={true}
+            isQuoteCurrency
           />
         </Cell.Label>
       </Cell.Aside>
