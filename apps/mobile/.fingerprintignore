@@ -2,4 +2,4 @@
 ./GoogleService-Info.plist
 ios/
 android/
-node_modules/.pnpm/
+node_modules/.pnpm
