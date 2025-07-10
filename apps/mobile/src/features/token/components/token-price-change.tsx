@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Balance } from '@/components/balance/balance';
 import { useLingui } from '@lingui/react';
 

@@ -1,7 +1,7 @@
-import React from 'react';
-
-import { useAssetDescriptionQuery } from '@/queries/assets/fungible-asset-info.query';
-import { useAssetPriceChangeQuery } from '@/queries/assets/fungible-asset-info.query';
+import {
+  useAssetDescriptionQuery,
+  useAssetPriceChangeQuery,
+} from '@/queries/assets/fungible-asset-info.query';
 import { useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 
@@ -48,7 +48,7 @@ export function Token({ tokenId, asset }: TokenProps) {
           // then filter activity further based on that?
           accountDetails={<AccountList />}
           availableBalance={availableBalance ?? createMoney(0, 'BTC')}
-          assetDescription={assetDescription?.description ?? 'No description available'}
+          assetDescription={assetDescription?.description ?? ''}
           price={btcMarketData?.price ?? createMoney(0, 'USD')}
           changePercent={assetPriceChange?.changePercent ?? 0}
           quoteBalance={quoteBalance ?? createMoney(0, 'USD')}

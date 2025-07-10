@@ -7,12 +7,9 @@ import { ActivityListItem } from '@/features/activity/activity-list-item';
 import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
-import { t } from '@lingui/macro';
 
 import { OnChainActivity } from '@leather.io/models';
-import { Box, Text } from '@leather.io/ui/native';
-
-import { TokenDetailsCard } from './token-details-card';
+import { Box } from '@leather.io/ui/native';
 
 interface TokenActivityProps {
   ListHeader: React.ReactNode;

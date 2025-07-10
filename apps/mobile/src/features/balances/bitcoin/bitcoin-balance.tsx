@@ -42,7 +42,6 @@ interface BitcoinBalanceProps {
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const { state, value } = useBtcTotalBalance();
-  console.log('value', value);
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
 

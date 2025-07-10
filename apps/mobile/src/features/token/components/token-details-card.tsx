@@ -1,5 +1,3 @@
-import { t } from '@lingui/macro';
-
 import { Box, HasChildren, Text } from '@leather.io/ui/native';
 
 export function TokenDetailsWrapper({ children }: HasChildren) {
