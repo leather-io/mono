@@ -339,6 +339,10 @@ msgstr "All accounts"
 msgid "accounts.header_title"
 msgstr "All accounts"
 
+#: src/app/create-new-wallet.tsx:96
+msgid "test.header_title"
+msgstr "All Activity"
+
 #: src/app/activity/index.tsx:15
 #: src/app/index.tsx:61
 msgid "activity.header_title"
@@ -966,7 +970,7 @@ msgstr "Fees"
 msgid "mpc_wallets.fireblocks"
 msgstr "Fireblocks"
 
-#: src/app/create-new-wallet.tsx:120
+#: src/app/create-new-wallet.tsx:121
 msgid "create_new_wallet.view_secret_key_label_b"
 msgstr "For your eyes only"
 
@@ -1039,7 +1043,7 @@ msgstr "Historical yield"
 msgid "notify_user.interested_button"
 msgstr "I'm interested"
 
-#: src/app/create-new-wallet.tsx:139
+#: src/app/create-new-wallet.tsx:140
 msgid "create_new_wallet.button"
 msgstr "I've backed it up"
 
@@ -1626,7 +1630,7 @@ msgstr "Swapped"
 msgid "activity.status.swapping"
 msgstr "Swapping"
 
-#: src/app/create-new-wallet.tsx:114
+#: src/app/create-new-wallet.tsx:115
 msgid "create_new_wallet.view_secret_key_label_a"
 msgstr "Tap to view Secret Key"
 
