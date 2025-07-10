@@ -2,3 +2,4 @@
 ./GoogleService-Info.plist
 ios/
 android/
+node_modules/

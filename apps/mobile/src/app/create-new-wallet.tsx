@@ -93,6 +93,7 @@ export default function CreateNewWallet() {
               message:
                 'Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen.',
             })}
+            {t({ id: 'test.header_title', message: 'All Activity' })}
           </Text>
 
           <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" overflow="hidden">
