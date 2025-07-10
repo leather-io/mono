@@ -425,7 +425,7 @@
   * devDependencies
     * @leather.io/models bumped to 0.35.0
 
-## [1.72.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.2...@leather.io/ui-v1.72.3) (2025-07-09)
+## [1.72.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.2...@leather.io/ui-v1.72.3) (2025-07-10)
 
 
 ### Bug Fixes
