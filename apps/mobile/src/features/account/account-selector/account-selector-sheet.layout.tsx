@@ -75,7 +75,7 @@ export function AccountSelectorSheetLayout({
                     <AccountCard
                       caption={wallet.name}
                       primaryTitle={account.name}
-                      appIcons={connectedAppsToAccountIdMap[account.id]?.map(app => app.icon)}
+                      appOrigins={connectedAppsToAccountIdMap[account.id]?.map(app => app.origin)}
                       secondaryTitle={
                         <AccountBalance
                           variant="label01"

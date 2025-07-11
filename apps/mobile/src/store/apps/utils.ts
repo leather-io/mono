@@ -2,7 +2,6 @@ import z from 'zod';
 
 const baseAppSchema = z.object({
   origin: z.string(),
-  icon: z.string(),
   screenshot: z.union([z.string(), z.null()]),
   name: z.string(),
 });

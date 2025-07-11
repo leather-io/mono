@@ -5,7 +5,14 @@ import { App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
 import { Image } from 'expo-image';
 
-import { Box, CloseIcon, Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+import {
+  Box,
+  CloseIcon,
+  Favicon,
+  Pressable,
+  Text,
+  legacyTouchablePressEffect,
+} from '@leather.io/ui/native';
 
 const { width } = Dimensions.get('window');
 
@@ -30,7 +37,7 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
           flexShrink={1}
           overflow="hidden"
         >
-          <Image style={{ width: 24, height: 24, borderRadius: 999 }} source={{ uri: app.icon }} />
+          <Favicon origin={app.origin} size={16} />
           <Text style={{ flexShrink: 1 }} numberOfLines={1}>
             {app.name}
           </Text>
