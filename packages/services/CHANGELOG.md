@@ -349,6 +349,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.26.9
 
+## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.20.0...@leather.io/services-v1.21.0) (2025-07-11)
+
+
+### Features
+
+* adds locale to token description service call ([ef239e8](https://github.com/leather-io/mono/commit/ef239e86f05ea734ad76f0847bb8600a4d86ca1b))
+
 ## [1.20.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.19.0...@leather.io/services-v1.20.0) (2025-07-01)
 
 

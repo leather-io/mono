@@ -425,6 +425,16 @@
   * devDependencies
     * @leather.io/models bumped to 0.35.0
 
+## [1.73.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.3...@leather.io/ui-v1.73.0) (2025-07-11)
+
+
+### Features
+
+* **mobile:** add requester address and icon to approver header ([a7d5ae2](https://github.com/leather-io/mono/commit/a7d5ae299768b14e7b42b2ba650253920a715ce1))
+* **mobile:** add requester info to approval flows ([0d06c71](https://github.com/leather-io/mono/commit/0d06c71b21ff816836f4f2e0727c139dda968966))
+* **mobile:** redesign approver ([fcafb18](https://github.com/leather-io/mono/commit/fcafb187e46c403421bafb3c1630d53719e50482))
+* **ui:** add mobile Favicon component, make the pixel ratio in the web version dynamic ([9b3cf42](https://github.com/leather-io/mono/commit/9b3cf429bb431c69e9c85348fdf33886d8efbc7d))
+
 ## [1.72.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.2...@leather.io/ui-v1.72.3) (2025-07-10)
 
 
