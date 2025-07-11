@@ -14,6 +14,8 @@ import {
   supportedMethods,
 } from '@leather.io/rpc';
 
+const bareUrlRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 export type BrowserSheetTab = 'suggested' | 'connected' | 'recent';
 
 export const URL_SEARCH_HEIGHT = 70;
@@ -22,7 +24,10 @@ export function formatURL(url: string) {
   if (url.startsWith('http')) {
     return url;
   }
-  return 'https://' + url;
+  if (bareUrlRegex.test(url)) {
+    return 'https://' + url;
+  }
+  return 'https://duckduckgo.com/?q=' + url;
 }
 
 export function isValidUrl(testUrl: string) {
