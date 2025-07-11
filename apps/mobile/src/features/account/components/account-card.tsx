@@ -19,7 +19,7 @@ interface AccountCardProps extends PressableProps {
   onLongPress?(): void;
   testID?: string;
   iconTestID?: string;
-  appIcons?: string[];
+  appOrigins?: string[];
   isLoading?: boolean;
   width?: number;
 }
@@ -31,7 +31,7 @@ export function AccountCard({
   icon,
   address,
   onPress,
-  appIcons,
+  appOrigins,
   isLoading,
   width,
   testID,
@@ -71,7 +71,7 @@ export function AccountCard({
         </Box>
         <Title>{secondaryTitle}</Title>
       </Box>
-      {appIcons && <AppIcons appIcons={appIcons} />}
+      {appOrigins && <AppIcons appOrigins={appOrigins} />}
     </Card>
   );
 }

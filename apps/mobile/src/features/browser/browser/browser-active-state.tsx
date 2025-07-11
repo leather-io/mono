@@ -7,7 +7,6 @@ import {
   BrowserLoading,
   BrowserLoadingMethods,
 } from '@/features/accounts/components/browser-loading';
-import { getFaviconAndSave } from '@/filesystem/favicon';
 import { userAddsApp } from '@/store/apps/apps.write';
 import { useAppDispatch } from '@/store/utils';
 import { useTheme } from '@shopify/restyle';
@@ -67,19 +66,15 @@ export function BrowserActiveState({
     goToUrl(newNavState.url);
     if (newNavState.loading) return;
 
-    const uri = await getFaviconAndSave(url.hostname);
     const screenshotUri = await captureScreenshot(viewShotRef, url.hostname);
-    if (uri) {
-      dispatch(
-        userAddsApp({
-          icon: uri,
-          screenshot: screenshotUri ?? null,
-          name: newNavState.title,
-          origin: url.origin,
-          status: 'recently_visited',
-        })
-      );
-    }
+    dispatch(
+      userAddsApp({
+        screenshot: screenshotUri ?? null,
+        name: newNavState.title,
+        origin: url.origin,
+        status: 'recently_visited',
+      })
+    );
   }
   function postMessage(result: string) {
     webViewRef.current?.injectJavaScript(`window.onMessageFromRN(${result});`);
