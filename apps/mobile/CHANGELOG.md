@@ -719,6 +719,29 @@
   * dependencies
     * @leather.io/ui bumped to 1.72.2
 
+## [2.56.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.55.1...@leather.io/mobile-v2.56.0) (2025-07-11)
+
+
+### Features
+
+* adds locale to token description service call ([ef239e8](https://github.com/leather-io/mono/commit/ef239e86f05ea734ad76f0847bb8600a4d86ca1b))
+* **mobile:** add requester info to approval flows ([0d06c71](https://github.com/leather-io/mono/commit/0d06c71b21ff816836f4f2e0727c139dda968966))
+* **mobile:** redesign approver ([fcafb18](https://github.com/leather-io/mono/commit/fcafb187e46c403421bafb3c1630d53719e50482))
+
+
+### Bug Fixes
+
+* use favicon for app icon ([54e3da9](https://github.com/leather-io/mono/commit/54e3da9a0121d8df4a94d2d33c35e164e812b402))
+* use text search ([4546d6d](https://github.com/leather-io/mono/commit/4546d6d9a3498a58ca778d5bbc439309c838a0da))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.21.0
+    * @leather.io/ui bumped to 1.73.0
+
 ## [2.55.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.55.0...@leather.io/mobile-v2.55.1) (2025-07-10)
 
 
