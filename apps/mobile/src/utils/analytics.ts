@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@segment/analytics-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
+import { AnalyticsService } from '@leather.io/services';
 
 const FIRST_OPEN_KEY = 'first_open_tracked';
 
@@ -53,6 +54,10 @@ export const analytics = new Proxy(analyticsClient, {
     return value;
   },
 });
+
+export class MobileAnalyticsService extends AnalyticsService {
+  static readonly client = leatherAnalyticsClient;
+}
 
 export async function trackFirstAppOpen() {
   const hasTrackedFirstOpen = await AsyncStorage.getItem(FIRST_OPEN_KEY);
