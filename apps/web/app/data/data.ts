@@ -214,9 +214,9 @@ export const stackingPoolData = {
       "Enter the STX address of the pool with which you'd like to Stack without your STX leaving your wallet.",
     duration: -1,
     poolAddress: {
-      mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
-      testnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
-      devnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG.native-stacking-pool-v1',
+      mainnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG',
+      testnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG',
+      devnet: 'SP4SZE494VC2YC5JYG7AYFQ44F5Q4PYV7DVMDPBG',
     },
     poxContract: 'WrapperStackingDao',
     minimumDelegationAmount: MIN_DELEGATED_STACKING_AMOUNT_USTX,
