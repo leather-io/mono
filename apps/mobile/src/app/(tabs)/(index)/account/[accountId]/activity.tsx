@@ -1,4 +1,3 @@
-import { configureAccountParamsSchema } from '@/app/account/[accountId]/index';
 import { FetchWrapper } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { ActivityEmpty, ActivityListItem } from '@/features/activity';
@@ -10,6 +9,8 @@ import { useLocalSearchParams } from 'expo-router';
 
 import { OnChainActivity } from '@leather.io/models';
 import { Text } from '@leather.io/ui/native';
+
+import { configureAccountParamsSchema } from './';
 
 export default function AccountActivityScreen() {
   const params = useLocalSearchParams();
