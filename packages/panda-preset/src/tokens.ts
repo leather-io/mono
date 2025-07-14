@@ -2,7 +2,6 @@ import { defineTokens } from '@pandacss/dev';
 
 import { tokens as leatherTokens, zIndices } from '@leather.io/tokens';
 
-import { borders } from './borders';
 import { colors } from './colors';
 
 function transformZIndices(zIndices: Record<string, number>) {
@@ -13,5 +12,4 @@ export const tokens = defineTokens({
   ...leatherTokens,
   colors,
   zIndex: transformZIndices(zIndices),
-  borders,
 });
