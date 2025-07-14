@@ -13,11 +13,11 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 
-#: src/app/account/[accountId]/activity.tsx:26
+#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:27
 msgid "activity.account.header_title"
 msgstr "{accountName}"
 
-#: src/app/account/[accountId]/activity.tsx:39
+#: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:40
 msgid "activity.account.header_content_title"
 msgstr "{accountName} Activity"
 
@@ -203,10 +203,6 @@ msgstr "Account name cannot be empty"
 msgid "earn.stacking.description"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:45
-msgid "header.activity_label"
-msgstr "Activity"
-
 #: src/features/account/account.tsx:118
 msgid "account.activity.header_title"
 msgstr "Activity"
@@ -335,19 +331,19 @@ msgstr "All accounts"
 msgid "accounts.header_title"
 msgstr "All accounts"
 
-#: src/app/activity/index.tsx:15
-#: src/app/index.tsx:61
+#: src/app/(tabs)/(index)/index.tsx:61
+#: src/app/(tabs)/activity.tsx:14
 msgid "activity.header_title"
 msgstr "All Activity"
 
-#: src/app/collectibles/index.tsx:14
-#: src/app/index.tsx:67
+#: src/app/(tabs)/(index)/collectibles/index.tsx:14
+#: src/app/(tabs)/(index)/index.tsx:67
 msgid "collectibles.header_title"
 msgstr "All collectibles"
 
-#: src/app/account/[accountId]/balances.tsx:22
-#: src/app/balances/index.tsx:11
-#: src/app/index.tsx:54
+#: src/app/(tabs)/(index)/account/[accountId]/balances.tsx:22
+#: src/app/(tabs)/(index)/balances/index.tsx:11
+#: src/app/(tabs)/(index)/index.tsx:54
 msgid "balances.header_title"
 msgstr "All tokens"
 
@@ -542,7 +538,7 @@ msgstr "Close the scanner"
 msgid "approver.code.title"
 msgstr "Code"
 
-#: src/app/account/[accountId]/collectibles.tsx:17
+#: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
 #: src/features/account/account.tsx:128
 msgid "account.collectibles.header_title"
 msgstr "Collectibles"
@@ -951,7 +947,7 @@ msgstr "Hide account"
 msgid "approver.advanced.hide"
 msgstr "Hide advanced options"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:60
+#: src/components/screen/screen-header/components/header-actions.tsx:40
 msgid "header.privacy_label_hide"
 msgstr "Hide balances"
 
@@ -1410,7 +1406,7 @@ msgstr "Sent"
 msgid "settings.header_title"
 msgstr "Settings"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:35
+#: src/components/screen/screen-header/components/header-actions.tsx:26
 msgid "header.settings_label"
 msgstr "Settings"
 
@@ -1435,7 +1431,7 @@ msgstr "Share anonymous usage details"
 msgid "approver.advanced.show"
 msgstr "Show advanced options"
 
-#: src/components/screen/screen-header/components/header-actions.tsx:64
+#: src/components/screen/screen-header/components/header-actions.tsx:44
 msgid "header.privacy_label_show"
 msgstr "Show balances"
 
