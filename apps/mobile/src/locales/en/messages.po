@@ -166,10 +166,6 @@ msgstr "A DeFi platform on Stacks offering swaps, staking, fixed-term lending, a
 msgid "browser-sheet.dapp.velar.caption"
 msgstr "A DeFi suite offering trading, liquidity, and launchpad access built on Bitcoin L2s like Stacks"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:156
-msgid "add_wallet.email_wallet.cell_caption"
-msgstr "Access custodial wallet"
-
 #: src/features/wallet-manager/account-list.tsx:24
 #: src/store/accounts/accounts.write.ts:43
 msgid "account.default.name"
@@ -271,7 +267,7 @@ msgstr "Add wallet"
 msgid "add_or_create_new_wallet.button"
 msgstr "Add wallet"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:91
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:81
 msgid "add_wallet.header_title"
 msgstr "Add wallet"
 
@@ -481,18 +477,6 @@ msgstr "Bitcoin unit updated"
 msgid "browser-sheet.dapp.bitflow.title"
 msgstr "Bitflow"
 
-#: src/app/mpc-wallets.tsx:28
-msgid "mpc_wallets.bitgo"
-msgstr "BitGo"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:176
-msgid "add_wallet.mpc_wallet.cell_caption"
-msgstr "BitGo, Fireblocks, Fordefi and more"
-
-#: src/app/hardware-wallets.tsx:26
-msgid "hardware_wallets.bitkey"
-msgstr "Bitkey"
-
 #: src/shared/display-preference.ts:31
 msgid "account_display_preference.bns_name"
 msgstr "BNS name"
@@ -524,10 +508,6 @@ msgstr "Cancel"
 #: src/features/send/error-messages.ts:42
 msgid "send.validation.cannot_send_to_yourself"
 msgstr "Cannot send to yourself"
-
-#: src/app/mpc-wallets.tsx:36
-msgid "mpc_wallets.capsule"
-msgstr "Capsule"
 
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
 msgid "wallet_name.header_title"
@@ -607,30 +587,6 @@ msgstr "Confirm"
 msgid "approver.connect.title"
 msgstr "Connect"
 
-#: src/app/hardware-wallets.tsx:89
-msgid "hardware_wallets.title"
-msgstr "Connect device"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:137
-msgid "add_wallet.connect_wallet.cell_title"
-msgstr "Connect hardware wallet"
-
-#: src/app/hardware-wallets.tsx:104
-msgid "notify_user.hardware_wallets.header_title"
-msgstr "Connect hardware wallet: {hardwareWalletName}"
-
-#: src/app/mpc-wallets.tsx:108
-msgid "mpc_wallets.title"
-msgstr "Connect MPC wallet"
-
-#: src/app/mpc-wallets.tsx:123
-msgid "notify_user.mpc_wallet.header_title"
-msgstr "Connect MPC wallet"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:172
-msgid "add_wallet.mpc_wallet.cell_title"
-msgstr "Connect MPC wallet"
-
 #: src/features/browser/browser/tabs/browser-connected-tab.tsx:56
 msgid "browser-sheet.connected.title"
 msgstr "Connected"
@@ -679,10 +635,6 @@ msgstr "Conversion unit updated"
 msgid "create_new_wallet.mnemonic.toast_title"
 msgstr "Copied to clipboard"
 
-#: src/app/mpc-wallets.tsx:44
-msgid "mpc_wallets.copper"
-msgstr "Copper"
-
 #: src/features/wallet-manager/create-new-wallet/mnemonic-display.tsx:67
 msgid "create_new_wallet.mnemonic.copy_button"
 msgstr "Copy"
@@ -691,25 +643,9 @@ msgstr "Copy"
 msgid "receive.copy_address_label"
 msgstr "Copy address"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:100
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:90
 msgid "add_wallet.create_wallet.cell_title"
 msgstr "Create new wallet"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:152
-msgid "add_wallet.email_wallet.cell_title"
-msgstr "Create or restore via email address"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:163
-msgid "email_wallet.header_title"
-msgstr "Create or restore via email address"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:187
-msgid "add_wallet.watch_only_wallet.cell_title"
-msgstr "Create watch-only wallet"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:198
-msgid "notify_user.watch_only_wallet.header_title"
-msgstr "Create watch-only wallet"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:244
 msgid "configure_wallet.creation_label"
@@ -958,23 +894,15 @@ msgstr "Fee updated"
 msgid "settings.fees.cell_title"
 msgstr "Fees"
 
-#: src/app/mpc-wallets.tsx:52
-msgid "mpc_wallets.fireblocks"
-msgstr "Fireblocks"
-
 #: src/app/create-new-wallet.tsx:120
 msgid "create_new_wallet.view_secret_key_label_b"
 msgstr "For your eyes only"
-
-#: src/app/mpc-wallets.tsx:60
-msgid "mpc_wallets.fordefi"
-msgstr "Fordefi"
 
 #: src/features/account/sheets/add-account-sheet.layout.tsx:56
 msgid "add_account.new_wallet.cell_caption"
 msgstr "Generate new Secret Key for self-custody"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:104
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:94
 msgid "add_wallet.create_wallet.cell_caption"
 msgstr "Generate new Secret Key for self-custody"
 
@@ -1047,7 +975,7 @@ msgstr "Icons"
 msgid "settings.device_id.toast_title"
 msgstr "ID copied to clipboard"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:117
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:107
 msgid "add_wallet.restore_wallet.cell_caption"
 msgstr "Import existing accounts from self-custody"
 
@@ -1102,14 +1030,6 @@ msgstr "Layer 2 • Stacks"
 #: src/app/settings/help/index.tsx:46
 msgid "help.learn.cell_title"
 msgstr "Learn"
-
-#: src/app/hardware-wallets.tsx:34
-msgid "hardware_wallets.ledger"
-msgstr "Ledger"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:141
-msgid "add_wallet.connect_wallet.cell_caption"
-msgstr "Ledger, Ryder, Trezor and more"
 
 #: src/app/settings/index.tsx:223
 msgid "settings.lock_button"
@@ -1185,7 +1105,7 @@ msgstr "minutes ago"
 msgid "settings.accordion_label"
 msgstr "More options"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:127
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:117
 msgid "add_wallet.options.cell_title"
 msgstr "More options"
 
@@ -1217,10 +1137,6 @@ msgstr "Networks"
 #: src/app/settings/index.tsx:103
 msgid "settings.networks.cell_title"
 msgstr "Networks"
-
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:191
-msgid "add_wallet.watch_only_wallet.cell_caption"
-msgstr "No key required"
 
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state.tsx:9
 msgid "send-form.recipient.no-search-results.label"
@@ -1254,10 +1170,6 @@ msgstr "Notifications"
 msgid "notification-sheet.submit_button"
 msgstr "Notify me"
 
-#: src/app/hardware-wallets.tsx:42
-msgid "hardware_wallets.onekey"
-msgstr "OneKey"
-
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:74
 msgid "wallet.open_wallet_settings"
 msgstr "Open wallet settings"
@@ -1270,10 +1182,6 @@ msgstr "Output"
 msgid "recover_wallet.passphrase.input_placeholder"
 msgstr "Passphrase"
 
-#: src/app/hardware-wallets.tsx:50
-msgid "hardware_wallets.passport"
-msgstr "Passport"
-
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:47
 msgid "browser.toolbox.paste"
 msgstr "Paste"
@@ -1285,14 +1193,6 @@ msgstr "Paste"
 #: src/features/recover-wallet/recover-wallet.layout.tsx:46
 msgid "recover_wallet.subtitle"
 msgstr "Paste or type Secret Key to add wallet"
-
-#: src/app/mpc-wallets.tsx:69
-msgid "mpc_wallets.portal"
-msgstr "Portal"
-
-#: src/app/mpc-wallets.tsx:77
-msgid "mpc_wallets.privy"
-msgstr "Privy"
 
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:23
 msgid "remove_wallet.warning_caption"
@@ -1319,10 +1219,6 @@ msgstr "Push"
 #: src/app/settings/index.tsx:122
 msgid "settings.notifications.cell_caption"
 msgstr "Push and email notifications"
-
-#: src/app/mpc-wallets.tsx:85
-msgid "mpc_wallets.oredo"
-msgstr "Qredo"
 
 #: src/components/action-bar/action-bar.tsx:61
 msgid "action_bar.receive_label"
@@ -1388,7 +1284,7 @@ msgstr "Request approval for transactions"
 msgid "app_auth.cell_caption"
 msgstr "Require biometrics or PIN"
 
-#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:113
+#: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:103
 msgid "add_wallet.restore_wallet.cell_title"
 msgstr "Restore wallet"
 
@@ -1404,10 +1300,6 @@ msgstr "Review"
 #: src/features/balances/utils/get-chain-layer-from-protocol.ts:14
 msgid "account_balance.caption_left.rune"
 msgstr "Runes"
-
-#: src/app/hardware-wallets.tsx:58
-msgid "hardware_wallets.ryder"
-msgstr "Ryder"
 
 #: src/app/settings/wallet/configure/[wallet]/[account]/choose-avatar.tsx:82
 msgid "choose_avatar.button"
@@ -1602,10 +1494,6 @@ msgstr "Submitted"
 msgid "approver.button.submitting"
 msgstr "Submitting..."
 
-#: src/app/swap.tsx:9
-msgid "swap.header_title"
-msgstr "Swap"
-
 #: src/features/activity/utils/format-activity.ts:100
 msgid "activity.type.swapAssets"
 msgstr "Swap Assets"
@@ -1729,10 +1617,6 @@ msgstr "Transaction confirmations"
 #: src/features/send/forms/stx/use-stx-form.ts:74
 msgid "send-form.unexpected-error"
 msgstr "Transaction failed due to an unexpected error"
-
-#: src/app/hardware-wallets.tsx:66
-msgid "hardware_wallets.trezor"
-msgstr "Trezor"
 
 #: src/components/error/error.tsx:51
 msgid "error_boundary.action"
