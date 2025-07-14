@@ -6,26 +6,19 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import { NotifyUserSheetData } from '@/components/sheets/notify-user-sheet.layout';
 import { useWaitlistFlag } from '@/features/feature-flags';
-import { WaitlistIds } from '@/features/waitlist/ids';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
 
 import {
   ArrowRotateClockwiseIcon,
   Box,
   CLOSED_ANIMATED_SHARED_VALUE,
   EllipsisVIcon,
-  EmailIcon,
-  Eye2Icon,
-  PaletteIcon,
   PlusIcon,
   Sheet,
   SheetRef,
-  SignalIcon,
   Text,
   ThemeVariant,
 } from '@leather.io/ui/native';
@@ -41,7 +34,6 @@ interface AddWalletSheetBaseProps {
 interface AddWalletSheetLayoutProps extends AddWalletSheetBaseProps {
   createWallet(): unknown;
   restoreWallet(): unknown;
-  onOpenSheet(option: NotifyUserSheetData): unknown;
   themeVariant: ThemeVariant;
   opensFully?: boolean;
 }
@@ -49,13 +41,11 @@ export function AddWalletSheetLayout({
   addWalletSheetRef,
   createWallet,
   restoreWallet,
-  onOpenSheet,
   themeVariant,
   opensFully,
 }: AddWalletSheetLayoutProps) {
   const [moreOptionsVisible, setMoreOptionsVisible] = useState(!!opensFully);
   const animatedIndex = useSharedValue<number>(CLOSED_ANIMATED_SHARED_VALUE);
-  const router = useRouter();
   const releaseWaitlistFeatures = useWaitlistFlag();
 
   function openOptions() {
@@ -130,80 +120,6 @@ export function AddWalletSheetLayout({
                 })}
                 icon={moreOptionsVisible ? undefined : <EllipsisVIcon />}
               />
-            )}
-            {moreOptionsVisible && releaseWaitlistFeatures && (
-              <>
-                <AddWalletCell
-                  title={t({
-                    id: 'add_wallet.connect_wallet.cell_title',
-                    message: 'Connect hardware wallet',
-                  })}
-                  caption={t({
-                    id: 'add_wallet.connect_wallet.cell_caption',
-                    message: 'Ledger, Ryder, Trezor and more',
-                  })}
-                  icon={<SignalIcon color="ink.text-subdued" />}
-                  onPress={() => {
-                    router.navigate('/hardware-wallets');
-                    addWalletSheetRef.current?.close();
-                  }}
-                />
-                <AddWalletCell
-                  title={t({
-                    id: 'add_wallet.email_wallet.cell_title',
-                    message: 'Create or restore via email address',
-                  })}
-                  caption={t({
-                    id: 'add_wallet.email_wallet.cell_caption',
-                    message: 'Access custodial wallet',
-                  })}
-                  icon={<EmailIcon color="ink.text-subdued" />}
-                  onPress={() => {
-                    onOpenSheet({
-                      title: t({
-                        id: 'email_wallet.header_title',
-                        message: 'Create or restore via email address',
-                      }),
-                      id: WaitlistIds.restoreViaEmail,
-                    });
-                  }}
-                />
-                <AddWalletCell
-                  title={t({
-                    id: 'add_wallet.mpc_wallet.cell_title',
-                    message: 'Connect MPC wallet',
-                  })}
-                  caption={t({
-                    id: 'add_wallet.mpc_wallet.cell_caption',
-                    message: 'BitGo, Fireblocks, Fordefi and more',
-                  })}
-                  icon={<PaletteIcon color="ink.text-subdued" />}
-                  onPress={() => {
-                    router.navigate('/mpc-wallets');
-                    addWalletSheetRef.current?.close();
-                  }}
-                />
-                <AddWalletCell
-                  title={t({
-                    id: 'add_wallet.watch_only_wallet.cell_title',
-                    message: 'Create watch-only wallet',
-                  })}
-                  caption={t({
-                    id: 'add_wallet.watch_only_wallet.cell_caption',
-                    message: 'No key required',
-                  })}
-                  icon={<Eye2Icon color="ink.text-subdued" />}
-                  onPress={() => {
-                    onOpenSheet({
-                      title: t({
-                        id: 'notify_user.watch_only_wallet.header_title',
-                        message: 'Create watch-only wallet',
-                      }),
-                      id: WaitlistIds.watchOnlyWallet,
-                    });
-                  }}
-                />
-              </>
             )}
           </Box>
         </Box>
