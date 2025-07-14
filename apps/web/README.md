@@ -24,6 +24,14 @@ and open `http://localhost:5173`.
 
 Site is deployed on Cloudflare workers. See [deployment workflow](../../.github/workflows/deploy-web.yml) for details.
 
+Create a `.env` file to set local environment variables. Only `LEATHER_` prefixed
+variables are accessible at runtime.
+
+```
+LEATHER_TARGET=development
+LEATHER_MOCK_MODE=true
+```
+
 ## Universal Content Sanitization
 
 Dynamic HTML content is sanitized using a universal utility (`sanitizeContent`).
@@ -32,3 +40,7 @@ Dynamic HTML content is sanitized using a universal utility (`sanitizeContent`).
 - **SSR/Cloudflare Workers:** Uses a simple string-based sanitizer (removes <script> tags) for compatibility, since DOMPurify/JSDOM are not available in Workers.
 
 **Note:** For maximum security, always sanitize untrusted content on the client. SSR sanitization is basic and should not be solely relied upon for untrusted sources.
+
+## Mocking
+
+Flows can be tested end-to-end with mocked API responses using [MSW](https://mswjs.io). 

@@ -41,6 +41,7 @@
     "type",
     "author",
     "scripts",
-    "exports"
+    "exports",
+    "msw"
   ]
 }

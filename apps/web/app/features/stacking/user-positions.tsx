@@ -226,14 +226,14 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
       </InfoGrid>
 
       {!activePoolRewardProtocolInfo.id && (
-        <styled.p textStyle="caption.01" color="ink.text-subdued">
+        <styled.div textStyle="caption.01" color="ink.text-subdued">
           <Flag
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
             spacing="space.01"
           >
             {content.stacking.unpoolingInfo}
           </Flag>
-        </styled.p>
+        </styled.div>
       )}
     </Stack>
   );

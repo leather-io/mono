@@ -40,3 +40,5 @@ if (typeof window !== 'undefined') {
     CLOUDFLARE_ENV: import.meta.env.CLOUDFLARE_ENV,
   };
 }
+
+export const LEATHER_MOCK_MODE = import.meta.env.LEATHER_MOCK_MODE === 'true';

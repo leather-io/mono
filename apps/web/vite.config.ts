@@ -8,6 +8,8 @@ import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+import { copyMswWorker } from './scripts/copy-msw-worker.plugin';
+
 const sentryConfig: SentryReactRouterBuildOptions = {
   org: 'trust-machines',
   project: 'leather-web',
@@ -19,6 +21,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
   optimizeDeps: {
     exclude: ['axios'],
   },
+
   css: {
     postcss: {
       // Type error with Panda plugin
@@ -29,6 +32,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     alias: {
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
       axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
+      'msw/node': path.resolve(__dirname, 'node_modules/msw/lib/node/index.js'),
     },
   },
   define: {
@@ -37,6 +41,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
     'import.meta.env.CLOUDFLARE_ENV': JSON.stringify(process.env.CLOUDFLARE_ENV),
   },
   plugins: [
+    copyMswWorker(),
     cloudflare({ viteEnvironment: { name: 'ssr' } }),
     svgr({ include: '**/*.svg' }),
     viteCommonjs(),
