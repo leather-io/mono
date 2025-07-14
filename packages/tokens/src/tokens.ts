@@ -13,6 +13,7 @@ export const tokens = {
     error: { value: '1px solid {colors.red.border}' },
     focus: { value: '2px solid {colors.ink.action-primary-default}' },
     invert: { value: '1px solid {colors.invert}' },
+    none: { value: 'none' },
     subdued: { value: '1px solid {colors.ink.text-subdued}' },
     warning: { value: '1px solid {colors.yellow.border}' },
   },
