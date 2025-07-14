@@ -8,11 +8,22 @@ on:
   pull_request:
     paths:
       - 'apps/web/**'
+      - 'packages/**'
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          message: |
+            _Building web app preview at ${{ github.event.pull_request.head.sha }}_
+
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
 

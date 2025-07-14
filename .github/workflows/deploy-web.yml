@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - main
 
 permissions:
   contents: read
@@ -14,7 +13,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
-    environment: ${{ github.ref == 'refs/heads/main' && 'web:production' || github.ref == 'refs/heads/dev' && 'web:staging' }}
+    environment: 'web:production'
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/provision
@@ -25,8 +24,8 @@ jobs:
       - name: Deploy web app
         working-directory: apps/web
         env:
-          CLOUDFLARE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
-          LEATHER_TARGET: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging' }}
+          CLOUDFLARE_ENV: production
+          LEATHER_TARGET: production
           LEATHER_SENTRY_DSN: ${{ secrets.LEATHER_WEB_SENTRY_DSN }}
           LEATHER_SENTRY_AUTH_TOKEN: ${{ secrets.LEATHER_SENTRY_AUTH_TOKEN }}
           LEATHER_SEGMENT_WRITE_KEY: ${{ vars.SEGMENT_WRITE_KEY }}
