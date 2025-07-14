@@ -1,0 +1,42 @@
+name: Web Preview Build
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  pull_request:
+    paths:
+      - 'apps/web/**'
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/provision
+
+      - name: Build web app
+        run: pnpm --filter @leather.io/web build
+
+      - name: Upload preview version
+        working-directory: apps/web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_LEATHER_ACCOUNT_ID }}
+        id: wrangler-upload
+        run: pnpm wrangler versions upload --preview-alias pr-${{ github.event.pull_request.number }} > wrangler-preview.txt
+
+      - name: Output wrangler preview file
+        working-directory: apps/web
+        run: cat wrangler-preview.txt
+
+      - name: Set preview URL environment variable
+        working-directory: apps/web
+        run: echo "PREVIEW_URL=$(grep -o 'https://pr-${{ github.event.pull_request.number }}[^ ]*' wrangler-preview.txt | head -1)" >> $GITHUB_ENV
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.LEATHER_BOT }}
+          message: |
+            Leather Web Build ${{ github.event.pull_request.head.sha }} → ${{ env.PREVIEW_URL }}
