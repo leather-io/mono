@@ -77,7 +77,9 @@ function App() {
     <Box backgroundColor="ink.background-secondary" flex={1}>
       <ErrorBoundary>
         <StatusBar />
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+        </Stack>
         <ActionBar />
         <SendSheet />
         <ReceiveSheet />
