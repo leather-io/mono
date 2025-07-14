@@ -12,6 +12,7 @@ import { defaultMetaTags } from './constants/default-meta-tags';
 import { analytics } from './features/analytics/analytics';
 import { useOnRouteChange } from './features/analytics/use-on-route-change';
 import { InstallDialog } from './features/install-dialog/install-dialog';
+import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
@@ -42,6 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Footer />
         </Flex>
         <InstallDialog />
+        <MockLeatherDialog />
         <ScrollRestoration />
         <Scripts />
       </styled.body>
@@ -50,18 +52,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  useOnRouteChange(location => analytics.page(location.pathname));
-
   const navigate = useNavigate();
+
+  useOnRouteChange(location => analytics.page(location.pathname));
   useOnRouteChange(
     location => location.pathname === '/' && navigate('/stacking', { replace: true })
   );
 
   useEffect(() => {
     import('~/services/init-app-services')
-      .then(({ initAppServices }) => {
-        initAppServices();
-      })
+      .then(({ initAppServices }) => initAppServices())
       .catch(error => {
         // eslint-disable-next-line no-console
         console.error(error);

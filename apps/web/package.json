@@ -20,6 +20,11 @@
     "test:unit": "vitest run",
     "typecheck": "pnpm cf-typegen && react-router typegen && tsc -b"
   },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",
     "@leather.io/analytics": "workspace:*",
@@ -34,8 +39,8 @@
     "@leather.io/stacks": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@react-router/node": "7.6.3",
-    "@react-router/serve": "7.6.3",
+    "@react-router/node": "7.7.0",
+    "@react-router/serve": "7.7.0",
     "@segment/analytics-next": "1.81.0",
     "@sentry/profiling-node": "9.15.0",
     "@sentry/react-router": "9.15.0",
@@ -57,7 +62,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "7.56.3",
-    "react-router": "7.6.3",
+    "react-router": "7.7.0",
     "safe-buffer": "5.2.1",
     "url-join": "5.0.0",
     "uuid": "11.1.0",
@@ -66,28 +71,29 @@
     "zod": "3.24.2"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.8.0",
-    "@cloudflare/workers-types": "4.20250701.0",
+    "@cloudflare/vite-plugin": "1.9.6",
+    "@cloudflare/workers-types": "4.20250719.0",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "0.53.6",
     "@playwright/test": "1.52.0",
-    "@react-router/cloudflare": "7.6.3",
-    "@react-router/dev": "7.6.3",
+    "@react-router/cloudflare": "7.7.0",
+    "@react-router/dev": "7.7.0",
     "@types/node": "24.0.8",
     "@types/nprogress": "0.2.3",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/valid-url": "1.0.7",
     "jsdom": "22.1.0",
+    "msw": "2.10.2",
     "react-router-devtools": "5.0.6",
     "rollup-plugin-node-polyfills": "0.2.1",
     "ts-node": "10.9.2",
     "tty-browserify": "0.0.1",
     "typescript": "5.8.3",
-    "vite": "7.0.0",
+    "vite": "7.0.5",
     "vite-plugin-svgr": "4.3.0",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "2.1.9",
-    "wrangler": "4.22.0"
+    "wrangler": "4.25.0"
   }
 }

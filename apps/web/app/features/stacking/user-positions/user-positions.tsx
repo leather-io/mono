@@ -163,14 +163,14 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
       )}
 
       {!activePoolRewardProtocolInfo?.id && (
-        <styled.p textStyle="caption.01" color="ink.text-subdued">
+        <styled.div textStyle="caption.01" color="ink.text-subdued">
           <Flag
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
             spacing="space.01"
           >
             After unpooling your previous position remains visible until the current cycle completes
           </Flag>
-        </styled.p>
+        </styled.div>
       )}
     </Stack>
   );

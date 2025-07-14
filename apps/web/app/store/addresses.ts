@@ -30,7 +30,6 @@ export const stacksAccountAtom = atom(get => {
 });
 
 export const showMissingStacksKeysDialogAtom = atom(false);
-
 export const showInstallLeatherDialogAtom = atom(false);
 
 export function useStacksAccount() {
