@@ -1,14 +1,14 @@
 import { Image } from 'react-native';
 
-import { useBrowser } from '@/core/browser-provider';
 import { t } from '@lingui/macro';
 
 import { LEATHER_EARN_STACKING_URL } from '@leather.io/constants';
 
+import { useOpenURL } from '../browser/browser/use-open-url';
 import { EarnCard } from './earn-card';
 
 export function StackingCard() {
-  const { linkingRef } = useBrowser();
+  const { openURL } = useOpenURL();
   return (
     <EarnCard
       title={t({
@@ -32,7 +32,7 @@ export function StackingCard() {
           <Image source={require('@/assets/stickers/stacking.png')} width={177} height={228} />
         </>
       }
-      onPress={() => linkingRef.current?.openURL(LEATHER_EARN_STACKING_URL)}
+      onPress={() => openURL(LEATHER_EARN_STACKING_URL)}
     />
   );
 }

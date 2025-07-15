@@ -9,7 +9,6 @@ import { ErrorBoundary } from '@/components/error/error-boundary';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
-import { BrowserProvider } from '@/core/browser-provider';
 import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
@@ -106,11 +105,9 @@ function RootLayout() {
                             <SplashScreenGuard>
                               <HapticsProvider>
                                 <GlobalSheetProvider>
-                                  <BrowserProvider>
-                                    <SheetProvider>
-                                      <App />
-                                    </SheetProvider>
-                                  </BrowserProvider>
+                                  <SheetProvider>
+                                    <App />
+                                  </SheetProvider>
                                 </GlobalSheetProvider>
                               </HapticsProvider>
                             </SplashScreenGuard>
