@@ -42,8 +42,6 @@ export function isValidUrl(testUrl: string) {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-export type BrowserType = 'active' | 'inactive';
-
 export const messagePartialZodObject = z.object({
   id: z.string(),
   jsonrpc: z.string(),
