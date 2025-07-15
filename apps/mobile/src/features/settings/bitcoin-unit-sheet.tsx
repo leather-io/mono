@@ -3,7 +3,6 @@ import { RefObject } from 'react';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useBrowser } from '@/core/browser-provider';
 import { LEATHER_GUIDES_MOBILE_BITCOIN_UNIT } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/macro';
@@ -13,6 +12,7 @@ import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import { BitcoinUnit } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 
+import { useOpenURL } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface BitcoinUnitSheetProps {
@@ -22,7 +22,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
   const settings = useSettings();
   const { displayToast } = useToastContext();
   const { i18n } = useLingui();
-  const { linkingRef } = useBrowser();
+  const { openURL } = useOpenURL();
 
   function onUpdateBitcoinUnit(unit: BitcoinUnit) {
     settings.changeBitcoinUnitPreference(unit);
@@ -42,7 +42,7 @@ export function BitcoinUnitSheet({ sheetRef }: BitcoinUnitSheetProps) {
         id: 'bitcoin_unit.header_title',
         message: 'Bitcoin unit',
       })}
-      onPressSupport={() => linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
+      onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_BITCOIN_UNIT)}
     >
       <SettingsList gap="0">
         {Object.values(bitcoinUnitsKeyedByName).map(unit => (

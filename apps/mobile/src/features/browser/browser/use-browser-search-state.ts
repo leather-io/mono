@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 
 import { formatURL } from './utils';
 
@@ -38,13 +38,15 @@ function reducer(state: SearchBarState, action: SearchBarAction): SearchBarState
 }
 export function useBrowserSearchState() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const goToUrl = useCallback((url: string) => {
+    dispatch({ type: 'goToUrl', url });
+  }, []);
+  const setTextUrl = useCallback((textUrl: string) => {
+    dispatch({ type: 'setTextUrl', textUrl });
+  }, []);
   return {
     browserSearchState: state,
-    goToUrl(url: string) {
-      dispatch({ type: 'goToUrl', url });
-    },
-    setTextUrl(textUrl: string) {
-      dispatch({ type: 'setTextUrl', textUrl });
-    },
+    goToUrl,
+    setTextUrl,
   };
 }
