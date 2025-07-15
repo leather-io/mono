@@ -1,4 +1,6 @@
-import { useTotalBalance } from '@/queries/balance/total-balance.query';
+import { AccountBalance, useAccountBalance } from '@/queries/balance/account-balance.query';
+import { TotalBalance, useTotalBalance } from '@/queries/balance/total-balance.query';
+import { Account } from '@/store/accounts/accounts';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
@@ -10,31 +12,54 @@ type TokenBalance = {
   quoteBalance: Money;
 };
 
-export function useGetTokenBalance(tokenId: string): TokenBalance | undefined {
-  const allBalances = useTotalBalance();
+interface UseGetTokenBalanceProps {
+  tokenId: string;
+  account?: Account;
+}
 
+export function useGetAccountTokenBalance({
+  tokenId,
+  account,
+}: UseGetTokenBalanceProps): TokenBalance | undefined {
+  const accountBalance = useAccountBalance({
+    fingerprint: account?.fingerprint ?? '',
+    accountIndex: account?.accountIndex ?? 0,
+  });
+  return getTokenBalance({ tokenId, balance: accountBalance });
+}
+
+export function useGetTokenBalance({ tokenId }: UseGetTokenBalanceProps): TokenBalance | undefined {
+  const totalBalance = useTotalBalance();
+  return getTokenBalance({ tokenId, balance: totalBalance });
+}
+
+interface GetTokenBalanceProps {
+  tokenId: string;
+  balance: AccountBalance | TotalBalance;
+}
+
+function getTokenBalance({ tokenId, balance }: GetTokenBalanceProps) {
   if (tokenId === 'BTC') {
-    if (allBalances.btc.state === 'success') {
-      // return allBalances.btc.value?.quote.availableBalance;
+    if (balance.btc.state === 'success') {
       return {
         asset: btcAsset,
-        availableBalance: allBalances.btc.value?.btc.availableBalance,
-        quoteBalance: allBalances.btc.value?.quote.availableBalance,
+        availableBalance: balance.btc.value?.btc.availableBalance,
+        quoteBalance: balance.btc.value?.quote.availableBalance,
       };
     }
   }
   if (tokenId === 'STX') {
-    if (allBalances.stx.state === 'success') {
+    if (balance.stx.state === 'success') {
       return {
         asset: stxAsset,
-        availableBalance: allBalances.stx.value?.stx.availableBalance,
-        quoteBalance: allBalances.stx.value?.quote.availableBalance,
+        availableBalance: balance.stx.value?.stx.availableBalance,
+        quoteBalance: balance.stx.value?.quote.availableBalance,
       };
     }
   }
 
-  if (allBalances.sip10.state === 'success') {
-    const sip10 = allBalances.sip10.value?.sip10s.find(
+  if (balance.sip10.state === 'success') {
+    const sip10 = balance.sip10.value?.sip10s.find(
       (token: Sip10Balance) => token.asset.symbol === tokenId
     );
     if (sip10) {

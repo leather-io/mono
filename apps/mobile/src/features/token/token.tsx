@@ -16,7 +16,7 @@ interface TokenProps {
   tokenId: string;
 }
 export function Token({ tokenId }: TokenProps) {
-  const tokenBalance = useGetTokenBalance(tokenId);
+  const tokenBalance = useGetTokenBalance({ tokenId });
   if (!tokenBalance) {
     return null;
   }

@@ -1,7 +1,5 @@
 import { Balance } from '@/components/balance/balance';
 import { AccountListItem as AccountListItemComponent } from '@/features/account/account-list/account-list-item';
-import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
-import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { WalletStore } from '@/store/wallets/utils';
@@ -12,6 +10,7 @@ import { ChevronRightIcon, Text } from '@leather.io/ui/native';
 
 import { AccountAvatar } from '../account/components/account-avatar';
 import { TokenDetailsCard } from './components/token-details-card';
+import { useGetAccountTokenBalance } from './hooks/use-get-token-balance';
 
 export function AccountList({ tokenId }: { tokenId: string }) {
   const accounts = useAccounts();
@@ -42,16 +41,9 @@ interface AccountListItemProps {
 }
 
 export function AccountListItem({ account, wallet, tokenId }: AccountListItemProps) {
-  const { value: btcValue } = useBtcAccountBalance(account.fingerprint, account.accountIndex);
-  const { value: stxValue } = useStxAccountBalance(account.fingerprint, account.accountIndex);
-
-  const availableBalance =
-    tokenId === 'BTC' ? btcValue?.btc.availableBalance : stxValue?.stx.availableBalance;
-  const quoteBalance =
-    tokenId === 'BTC' ? btcValue?.quote.availableBalance : stxValue?.quote.availableBalance;
-
-  // > Pete this almost works. next feed in more SIP-10s as that will help dictate architecture
-  // then multi account
+  const tokenBalance = useGetAccountTokenBalance({ tokenId, account });
+  const availableBalance = tokenBalance?.availableBalance;
+  const quoteBalance = tokenBalance?.quoteBalance;
 
   return (
     <AccountListItemComponent
@@ -74,7 +66,10 @@ export function AccountListItem({ account, wallet, tokenId }: AccountListItemPro
           isQuoteCurrency
         />
       }
-      balance={<Balance balance={availableBalance} variant="label02" isQuoteCurrency />}
+      balance={
+        // FIXME: isQuoteCurrency is crashing for non BTC tokens
+        <Balance balance={availableBalance} variant="label02" isQuoteCurrency={tokenId === 'BTC'} />
+      }
       icon={<AccountAvatar icon={account.icon} />}
       chevron={<ChevronRightIcon width={16} height={16} />}
       onPress={() => {}}
