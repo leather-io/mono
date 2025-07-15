@@ -30,7 +30,16 @@ export function AllAccountBalances({ mode }: BalanceViewProps) {
           });
         }}
       />
-      <StacksBalance />
+      <StacksBalance
+        onPress={() => {
+          router.navigate({
+            pathname: '/token/[tokenId]',
+            params: {
+              tokenId: 'STX',
+            },
+          });
+        }}
+      />
       <Sip10Balance mode={mode} />
       {runesFlag && <RunesBalance mode={mode} />}
     </Box>

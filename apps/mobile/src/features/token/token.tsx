@@ -3,7 +3,9 @@ import {
   useAssetPriceChangeQuery,
 } from '@/queries/assets/fungible-asset-info.query';
 import { useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
+import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
+import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
 
 import { FungibleCryptoAsset } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
@@ -21,17 +23,22 @@ interface TokenProps {
 
 export function Token({ tokenId, asset }: TokenProps) {
   // const { totalBalance } = useTotalBalance();
-  const { value } = useBtcTotalBalance();
+  const { value: btcValue } = useBtcTotalBalance();
+  const { value: stxValue } = useStxTotalBalance();
 
   const { data: btcMarketData } = useBtcMarketDataQuery();
+  const { data: stxMarketData } = useStxMarketDataQuery();
 
   // this should be used to feed the accountDetails component / address for single account
   // const accounts = useAccounts();
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
 
-  const availableBalance = value?.btc.availableBalance;
-  const quoteBalance = value?.quote.availableBalance;
+  const availableBalance =
+    tokenId === 'BTC' ? btcValue?.btc.availableBalance : stxValue?.stx.availableBalance;
+  const quoteBalance =
+    tokenId === 'BTC' ? btcValue?.quote.availableBalance : stxValue?.quote.availableBalance;
+  const price = tokenId === 'BTC' ? btcMarketData?.price : stxMarketData?.price;
 
   // Need to use these for Balance Loaders. Probably better to pass <Balance /> to TokenDetails instead with a loader included
   // need to have the error overlay in TokenDetails also for failed queries
@@ -46,10 +53,10 @@ export function Token({ tokenId, asset }: TokenProps) {
         <TokenDetails
           // onclick of accountList could just add an account to state?
           // then filter activity further based on that?
-          accountDetails={<AccountList />}
+          accountDetails={<AccountList tokenId={tokenId} />}
           availableBalance={availableBalance ?? createMoney(0, 'BTC')}
           assetDescription={assetDescription?.description ?? ''}
-          price={btcMarketData?.price ?? createMoney(0, 'USD')}
+          price={price ?? createMoney(0, 'USD')}
           changePercent={assetPriceChange?.changePercent ?? 0}
           quoteBalance={quoteBalance ?? createMoney(0, 'USD')}
           ticker={tokenId}
