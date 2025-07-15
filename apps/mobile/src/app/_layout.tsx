@@ -16,7 +16,6 @@ import { LeatherQueryProvider } from '@/core/leather-query-provider';
 import { QueryPreloader } from '@/core/query-preloader';
 import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
-import { BrowserSheet } from '@/features/browser/browser/browser-sheet';
 import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
 import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
@@ -83,7 +82,6 @@ function App() {
         <ActionBar />
         <SendSheet />
         <ReceiveSheet />
-        <BrowserSheet />
         <AddAccountSheet />
         <AddWalletSheet />
       </ErrorBoundary>

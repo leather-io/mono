@@ -1,4 +1,5 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ViewShot from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
@@ -21,7 +22,7 @@ import { captureScreenshot, createGetInfoResponse, createSupportedMethodsRespons
 
 const CONTENT_OFFSET_FOR_BROWSER_CLOSE = 150;
 
-interface BrowserActiveStateProps {
+interface BrowserProps {
   webViewRef: RefObject<WebView | null>;
   searchUrl: string;
   navState: WebViewNavigation | null;
@@ -30,14 +31,15 @@ interface BrowserActiveStateProps {
   browserNavigationBarHeight: number;
 }
 
-export function BrowserActiveState({
+export function Browser({
   webViewRef,
   searchUrl,
   navState,
   setNavState,
   goToUrl,
   browserNavigationBarHeight,
-}: BrowserActiveStateProps) {
+}: BrowserProps) {
+  const { top } = useSafeAreaInsets();
   const viewShotRef = useRef<ViewShot>(null);
   const [origin, setOrigin] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -105,7 +107,7 @@ export function BrowserActiveState({
   }
 
   return (
-    <Box flex={1} bg="ink.background-primary">
+    <Box flex={1} bg="ink.background-primary" style={{ top }}>
       <BrowserLoading ref={browserLoadingRef} />
       <ViewShot
         ref={viewShotRef}
