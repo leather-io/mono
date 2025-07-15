@@ -43,7 +43,7 @@ export function TokenPriceChange({
           id: 'token.details.price_change_percentage',
           message: '{changePercent}%',
           values: {
-            changePercent: changePercent,
+            changePercent: changePercent.toFixed(2),
           },
         })}{' '}
         (

@@ -1,10 +1,9 @@
+import { TokenBalance } from '@/features/token/components/token-balance';
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
-
-import { TokenBalance } from '../token-balance';
 
 interface BitcoinTokenBalanceProps extends PressableProps {
   availableBalance?: Money;

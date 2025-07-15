@@ -1,5 +1,6 @@
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { BalanceViewProps } from '@/features/balances/balances';
+import { TokenBalance } from '@/features/token/components/token-balance';
 import {
   useRunesAccountBalance,
   useRunesTotalBalance,
@@ -9,8 +10,6 @@ import { ViewMode } from '@/shared/types';
 import { AccountId, Money } from '@leather.io/models';
 import { RunesAccountBalance, RunesAggregateBalance } from '@leather.io/services';
 import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
-
-import { TokenBalance } from '../token-balance';
 
 interface RunesTokenBalanceProps extends PressableProps {
   availableBalance?: Money;

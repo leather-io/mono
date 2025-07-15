@@ -1,10 +1,9 @@
+import { TokenBalance } from '@/features/token/components/token-balance';
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
 import { Money } from '@leather.io/models';
 import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
-
-import { TokenBalance } from '../token-balance';
 
 interface StacksTokenBalanceProps extends PressableProps {
   availableBalance?: Money;

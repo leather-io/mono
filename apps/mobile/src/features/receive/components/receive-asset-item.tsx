@@ -1,6 +1,6 @@
 import { AddressTypeBadge } from '@/components/address-type-badge';
-import { TokenIcon } from '@/features/balances/token-icon';
 import { SelectedAsset } from '@/features/receive/screens/select-asset';
+import { TokenIcon } from '@/features/token/components/token-icon';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/macro';
 

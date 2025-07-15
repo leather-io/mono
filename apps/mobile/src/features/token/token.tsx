@@ -1,49 +1,34 @@
+import { TokenIcon } from '@/features/token/components/token-icon';
 import {
   useAssetDescriptionQuery,
   useAssetPriceChangeQuery,
 } from '@/queries/assets/fungible-asset-info.query';
-import { useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
-import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
-import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
-import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.query';
+import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { AccountList } from './account-list-item';
 import { TokenActivity } from './components/token-activity';
 import { TokenDetails } from './components/token-details';
+import { useGetTokenBalance } from './hooks/use-get-token-balance';
 
 interface TokenProps {
   tokenId: string;
-  asset: FungibleCryptoAsset;
 }
-// PETE - smart to have a switch here and then seperate files for BTC / STX / Sip10  - same as balances
-// Do that in TokenScreen and have BTCToken / STXToken / Sip10Token files that pass on info to this component
+export function Token({ tokenId }: TokenProps) {
+  const tokenBalance = useGetTokenBalance(tokenId);
+  if (!tokenBalance) {
+    return null;
+  }
+  const { asset, availableBalance, quoteBalance } = tokenBalance;
 
-export function Token({ tokenId, asset }: TokenProps) {
-  // const { totalBalance } = useTotalBalance();
-  const { value: btcValue } = useBtcTotalBalance();
-  const { value: stxValue } = useStxTotalBalance();
-
-  const { data: btcMarketData } = useBtcMarketDataQuery();
-  const { data: stxMarketData } = useStxMarketDataQuery();
+  const marketData = useMarketDataQuery(asset);
+  const price = marketData.data?.price;
 
   // this should be used to feed the accountDetails component / address for single account
   // const accounts = useAccounts();
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
-
-  const availableBalance =
-    tokenId === 'BTC' ? btcValue?.btc.availableBalance : stxValue?.stx.availableBalance;
-  const quoteBalance =
-    tokenId === 'BTC' ? btcValue?.quote.availableBalance : stxValue?.quote.availableBalance;
-  const price = tokenId === 'BTC' ? btcMarketData?.price : stxMarketData?.price;
-
-  // Need to use these for Balance Loaders. Probably better to pass <Balance /> to TokenDetails instead with a loader included
-  // need to have the error overlay in TokenDetails also for failed queries
-  // const isLoadingTotalBalance = value?.btc.state === 'loading';
-  // const isErrorTotalBalance = value?.btc.state === 'error';
 
   return (
     <TokenActivity
@@ -59,7 +44,7 @@ export function Token({ tokenId, asset }: TokenProps) {
           price={price ?? createMoney(0, 'USD')}
           changePercent={assetPriceChange?.changePercent ?? 0}
           quoteBalance={quoteBalance ?? createMoney(0, 'USD')}
-          ticker={tokenId}
+          icon={<TokenIcon ticker={tokenId} asset={asset} />}
           asset={asset}
         />
       }

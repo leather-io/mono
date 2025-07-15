@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { TokenIcon } from '@/features/balances/token-icon';
 import { t } from '@lingui/macro';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
@@ -23,7 +22,7 @@ interface TokenDetailsProps {
   price: Money;
   changePercent: number;
   quoteBalance: Money;
-  ticker: string;
+  icon: React.ReactNode;
 }
 
 export function TokenDetails({
@@ -34,13 +33,13 @@ export function TokenDetails({
   price,
   changePercent,
   quoteBalance,
-  ticker,
+  icon,
 }: TokenDetailsProps) {
   return (
     <TokenDetailsWrapper>
       <TokenOverview
         isLoading={false}
-        heading={<TokenIcon ticker={ticker} />}
+        heading={icon}
         availableBalance={
           <Box flexDirection="row" alignItems="center" gap="1">
             <Balance balance={availableBalance} variant="heading03" />
@@ -51,8 +50,7 @@ export function TokenDetails({
         }
         quoteBalance={<Balance balance={quoteBalance} variant="label01" isQuoteCurrency />}
       />
-
-      <TokenDescription>{assetDescription}</TokenDescription>
+      {assetDescription && <TokenDescription>{assetDescription}</TokenDescription>}
 
       <TokenDetailsTable
         name={`${capitalize(asset.chain)} (${asset.symbol})`}

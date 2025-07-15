@@ -2,19 +2,20 @@ import { useState } from 'react';
 
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { BalanceViewProps } from '@/features/balances/balances';
+import { TokenBalance } from '@/features/token/components/token-balance';
 import {
   useSip10AccountBalance,
   useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
+import { router } from 'expo-router';
 
 import { Money } from '@leather.io/models';
 import { Sip10AddressBalance, Sip10AggregateBalance } from '@leather.io/services';
 import { Box, Sip10AvatarIcon } from '@leather.io/ui/native';
 
 import { SIP10_BALANCES_LIMIT, SIP10_BALANCES_WIDGET_LIMIT } from '../constants';
-import { TokenBalance } from '../token-balance';
 import { sortSip10Balances } from '../utils/sort-sip10-balances';
 
 interface Sip10TokenBalanceProps {
@@ -24,6 +25,7 @@ interface Sip10TokenBalanceProps {
   imageCanonicalUri: string;
   name: string;
   symbol: string;
+  onPress?(): void;
 }
 function Sip10TokenBalance({
   availableBalance,
@@ -31,6 +33,7 @@ function Sip10TokenBalance({
   quoteBalance,
   imageCanonicalUri,
   name,
+  onPress,
   symbol,
 }: Sip10TokenBalanceProps) {
   return (
@@ -43,6 +46,7 @@ function Sip10TokenBalance({
           name={name}
         />
       }
+      onPress={onPress}
       tokenName={name}
       quoteBalance={quoteBalance}
       availableBalance={availableBalance}
@@ -83,6 +87,16 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
                 contractId={item.asset.contractId}
                 quoteBalance={item.quote.totalBalance}
                 imageCanonicalUri={item.asset.imageCanonicalUri}
+                // TODO: investigate passing a function to keep it cleaner and DRY
+                // e.g. (tokeId) => onPress(tokenId)
+                onPress={() => {
+                  router.navigate({
+                    pathname: '/token/[tokenId]',
+                    params: {
+                      tokenId: item.asset.symbol,
+                    },
+                  });
+                }}
                 name={item.asset.name}
                 symbol={item.asset.symbol}
               />
