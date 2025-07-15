@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/react-router';
 Sentry.init({
   dsn: import.meta.env.LEATHER_SENTRY_DSN,
   integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.9,
   environment: import.meta.env.MODE,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
