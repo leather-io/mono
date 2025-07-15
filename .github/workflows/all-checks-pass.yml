@@ -1,5 +1,6 @@
 name: All checks pass
 on:
+  merge_group:
   pull_request:
     types:
       - opened
@@ -17,5 +18,13 @@ jobs:
       contents: read
 
     steps:
+      - name: Check if is merge queue
+        run: |
+          if [[ "${{ github.ref }}" == refs/heads/gh-readonly-queue* ]]; then
+            echo "IS_MERGE_QUEUE=true" >> $GITHUB_ENV
+          else
+            echo "IS_MERGE_QUEUE=false" >> $GITHUB_ENV
+          fi
+
       - uses: wechuli/allcheckspassed@v1
-        if: github.event_name != 'merge_group'
+        if: env.IS_MERGE_QUEUE != 'true'
