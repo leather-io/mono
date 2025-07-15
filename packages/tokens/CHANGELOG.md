@@ -138,6 +138,14 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.7.0
 
+## [0.18.1](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.18.0...@leather.io/tokens-v0.18.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* **web:** add none border type to tokens ([7b7d288](https://github.com/leather-io/mono/commit/7b7d28826850b91326cf7ba60bf32b670e581758))
+* **web:** remove border override ([d62f924](https://github.com/leather-io/mono/commit/d62f9244e540f1087b0e622649e2e38fb66137db))
+
 ## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.17.1...@leather.io/tokens-v0.18.0) (2025-05-22)
 
 
