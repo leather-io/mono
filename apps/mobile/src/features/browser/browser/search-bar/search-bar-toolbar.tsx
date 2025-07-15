@@ -1,60 +1,40 @@
 import { t } from '@lingui/macro';
 
-import {
-  ArrowOutOfBoxIcon,
-  ArrowRefreshIcon,
-  Box,
-  NoteEmptyIcon,
-  SparkleIcon,
-} from '@leather.io/ui/native';
+import { ArrowRefreshIcon, Box, NoteEmptyIcon, SparkleIcon } from '@leather.io/ui/native';
 
 import { ToolbarButton } from './toolbar-button';
 
 interface SearchBarToolbarProps {
-  onClickApps(): void;
-  onRefresh(): void;
-  onPaste(): void;
-  onShare(): void;
+  onExplore(): void;
+  onConnections(): void;
+  onRecents(): void;
 }
 
-export function SearchBarToolbar({
-  onClickApps,
-  onRefresh,
-  onPaste,
-  onShare,
-}: SearchBarToolbarProps) {
+export function SearchBarToolbar({ onExplore, onConnections, onRecents }: SearchBarToolbarProps) {
   return (
     <Box flexDirection="row" justifyContent="space-between">
       <ToolbarButton
         icon={<SparkleIcon variant="small" />}
-        onPress={onClickApps}
+        onPress={onExplore}
         label={t({
-          id: 'browser.toolbox.apps',
-          message: 'Apps',
+          id: 'browser.toolbox.explore',
+          message: 'Explore',
         })}
       />
       <ToolbarButton
         icon={<ArrowRefreshIcon variant="small" />}
-        onPress={onRefresh}
+        onPress={onConnections}
         label={t({
-          id: 'browser.toolbox.refresh',
-          message: 'Refresh',
+          id: 'browser.toolbox.connections',
+          message: 'Connections',
         })}
       />
       <ToolbarButton
         icon={<NoteEmptyIcon variant="small" />}
-        onPress={onPaste}
+        onPress={onRecents}
         label={t({
-          id: 'browser.toolbox.paste',
-          message: 'Paste',
-        })}
-      />
-      <ToolbarButton
-        icon={<ArrowOutOfBoxIcon variant="small" />}
-        onPress={onShare}
-        label={t({
-          id: 'browser.toolbox.share',
-          message: 'Share',
+          id: 'browser.toolbox.recents',
+          message: 'Recents',
         })}
       />
     </Box>
