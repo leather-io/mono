@@ -1,6 +1,7 @@
+import { t } from '@lingui/macro';
 import { Tabs } from 'expo-router';
 
-import { Box } from '@leather.io/ui/native';
+import { BrowserIcon, PulseIcon, WalletIcon } from '@leather.io/ui/native';
 
 export default function TabLayout() {
   return (
@@ -8,21 +9,33 @@ export default function TabLayout() {
       <Tabs.Screen
         name="(index)"
         options={{
-          tabBarIcon: () => <Box width={28} height={28} bg="red.border" />,
-          headerShown: false,
-        }}
-      />
-      <Tabs.Screen
-        name="browser"
-        options={{
-          tabBarIcon: () => <Box width={28} height={28} bg="red.border" />,
+          title: t({
+            id: 'tabs.home.title',
+            message: 'Home',
+          }),
+          tabBarIcon: () => <WalletIcon />,
           headerShown: false,
         }}
       />
       <Tabs.Screen
         name="activity"
         options={{
-          tabBarIcon: () => <Box width={28} height={28} bg="red.border" />,
+          title: t({
+            id: 'tabs.home.activity',
+            message: 'Activity',
+          }),
+          tabBarIcon: () => <PulseIcon />,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="browser"
+        options={{
+          title: t({
+            id: 'tabs.home.browser',
+            message: 'Browser',
+          }),
+          tabBarIcon: () => <BrowserIcon />,
           headerShown: false,
         }}
       />
