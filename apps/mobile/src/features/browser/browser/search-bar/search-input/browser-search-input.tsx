@@ -8,9 +8,8 @@ import { GenericClearSearchButton } from './generic-clear-search-button';
 import { GenericSearchTextInput } from './generic-search-text-input';
 import { SearchInputProps } from './utils';
 
-export function ActiveBrowserSearchInput({
+export function BrowserSearchInput({
   textInputRef,
-  isUrlFocused,
   textUrl,
   setTextUrl,
   onSubmit,
@@ -20,12 +19,8 @@ export function ActiveBrowserSearchInput({
     <Box>
       <GenericSearchTextInput
         ref={textInputRef}
-        onFocus={() => {
-          isUrlFocused.value = true;
-        }}
         onBlur={async () => {
           await KeyboardController.dismiss();
-          isUrlFocused.value = false;
         }}
         onChangeText={setTextUrl}
         value={textUrl}

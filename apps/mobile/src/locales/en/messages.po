@@ -203,6 +203,10 @@ msgstr "Account name cannot be empty"
 msgid "earn.stacking.description"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
+#: src/app/(tabs)/_layout.tsx:23
+msgid "tabs.home.activity"
+msgstr "Activity"
+
 #: src/features/account/account.tsx:118
 msgid "account.activity.header_title"
 msgstr "Activity"
@@ -414,10 +418,6 @@ msgstr "App is not protected with device-level PIN or biometrics."
 msgid "approver.button.approve"
 msgstr "Approve"
 
-#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:31
-msgid "browser.toolbox.apps"
-msgstr "Apps"
-
 #: src/features/approver/contract-call-args.section.tsx:31
 msgid "approver.contract-arguments.arg-title"
 msgstr "Argument {0}"
@@ -484,6 +484,10 @@ msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or 
 #: src/components/action-bar/action-bar.tsx:67
 msgid "action_bar.browser_label"
 msgstr "Browse"
+
+#: src/app/(tabs)/_layout.tsx:34
+msgid "tabs.home.browser"
+msgstr "Browser"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:70
 msgid "send-form.guard.same_address_error_title"
@@ -586,6 +590,10 @@ msgstr "Connect"
 #: src/features/browser/browser/tabs/browser-connected-tab.tsx:56
 msgid "browser-sheet.connected.title"
 msgstr "Connected"
+
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:27
+msgid "browser.toolbox.connections"
+msgstr "Connections"
 
 #: src/app/settings/help/index.tsx:22
 msgid "help.support.cell_title"
@@ -832,6 +840,10 @@ msgstr "Execution failed"
 msgid "help.learn.cell_caption"
 msgstr "Expand your Bitcoin knowledge"
 
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:19
+msgid "browser.toolbox.explore"
+msgstr "Explore"
+
 #: src/features/browser/browser/tabs/browser-suggested-tab.tsx:31
 msgid "browser-sheet.suggested-dapps.title"
 msgstr "Explore"
@@ -954,6 +966,10 @@ msgstr "Hide balances"
 #: src/features/earn/earn-card.tsx:53
 msgid "earn.historical-yield"
 msgstr "Historical yield"
+
+#: src/app/(tabs)/_layout.tsx:12
+msgid "tabs.home.title"
+msgstr "Home"
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:64
 msgid "notify_user.interested_button"
@@ -1178,10 +1194,6 @@ msgstr "Output"
 msgid "recover_wallet.passphrase.input_placeholder"
 msgstr "Passphrase"
 
-#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:47
-msgid "browser.toolbox.paste"
-msgstr "Paste"
-
 #: src/features/recover-wallet/recover-wallet.tsx:100
 msgid "recover_wallet.paste_button"
 msgstr "Paste"
@@ -1252,13 +1264,13 @@ msgstr "Received"
 msgid "browser-sheet.recently-visited.title"
 msgstr "Recently Visited"
 
+#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:35
+msgid "browser.toolbox.recents"
+msgstr "Recents"
+
 #: src/features/send/components/recipient/recipient-selector/recipient-selector-section-header.tsx:22
 msgid "send-form.recipient.recents"
 msgstr "Recents"
-
-#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:39
-msgid "browser.toolbox.refresh"
-msgstr "Refresh"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:201
 msgid "configure_wallet.remove_wallet.cell_title"
@@ -1335,10 +1347,6 @@ msgstr "Scan QR Code"
 msgid "send-form.recipient.input.placeholder"
 msgstr "Search for BNS name or address"
 
-#: src/features/browser/browser/search-bar/search-bar.tsx:140
-msgid "browser.searchbar.search-url"
-msgstr "Search or type url"
-
 #: src/app/secure-your-wallet.tsx:17
 msgid "secure_your_wallet.title"
 msgstr "Secure your wallet"
@@ -1413,10 +1421,6 @@ msgstr "Settings"
 #: src/features/qr-scanner/use-camera-permission.ts:44
 msgid "qr_scanner.camera_alert.action_label"
 msgstr "Settings"
-
-#: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:55
-msgid "browser.toolbox.share"
-msgstr "Share"
 
 #: src/features/receive/screens/asset-details.tsx:98
 msgid "receive_asset.share_button"
@@ -1709,7 +1713,7 @@ msgstr "Wallets"
 msgid "settings.wallets.cell_title"
 msgstr "Wallets and accounts"
 
-#: src/features/browser/browser/browser-sheet.tsx:105
+#: src/app/(tabs)/browser.tsx:65
 msgid "browser.search-bar.wrong-url"
 msgstr "Wrong URL"
 
