@@ -240,6 +240,20 @@
   * devDependencies
     * @leather.io/tokens bumped to 0.18.0
 
+## [0.12.7](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.12.6...@leather.io/panda-preset-v0.12.7) (2025-07-15)
+
+
+### Bug Fixes
+
+* **web:** remove border override ([d62f924](https://github.com/leather-io/mono/commit/d62f9244e540f1087b0e622649e2e38fb66137db))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/tokens bumped to 0.18.1
+
 ## [0.12.2](https://github.com/leather-io/mono/compare/@leather.io/panda-preset-v0.12.1...@leather.io/panda-preset-v0.12.2) (2025-04-28)
 
 
