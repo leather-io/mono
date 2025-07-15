@@ -1,11 +1,10 @@
 import { useReducer } from 'react';
 
-import { BrowserType, formatURL } from './utils';
+import { formatURL } from './utils';
 
 interface SearchBarState {
   searchUrl: string;
   textUrl: string;
-  browserType: BrowserType;
 }
 
 type SearchBarAction =
@@ -13,11 +12,9 @@ type SearchBarAction =
   | { type: 'setTextUrl'; textUrl: string }
   | { type: 'resetSearchBar' };
 
-// Initial state
 const initialState: SearchBarState = {
-  searchUrl: '',
-  textUrl: '',
-  browserType: 'inactive',
+  searchUrl: 'https://leather.io',
+  textUrl: 'https://leather.io',
 };
 
 function reducer(state: SearchBarState, action: SearchBarAction): SearchBarState {
@@ -33,11 +30,8 @@ function reducer(state: SearchBarState, action: SearchBarAction): SearchBarState
         ...state,
         textUrl: formatURL(action.url),
         searchUrl: formatURL(action.url),
-        browserType: 'active',
       };
     }
-    case 'resetSearchBar':
-      return initialState;
     default:
       throw new Error('Wrong action dispatched in browser search state');
   }
@@ -51,9 +45,6 @@ export function useBrowserSearchState() {
     },
     setTextUrl(textUrl: string) {
       dispatch({ type: 'setTextUrl', textUrl });
-    },
-    resetSearchBar() {
-      dispatch({ type: 'resetSearchBar' });
     },
   };
 }
