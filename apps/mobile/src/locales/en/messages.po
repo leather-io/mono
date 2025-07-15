@@ -130,7 +130,7 @@ msgstr "10%"
 msgid "approver.stacks.fee.speed.middle"
 msgstr "20–30 seconds"
 
-#: src/features/earn/sbtc-card.tsx:18
+#: src/features/earn/sbtc-card.tsx:19
 msgid "earn.sbtc.yield-description-min"
 msgstr "6"
 
@@ -138,7 +138,7 @@ msgstr "6"
 msgid "earn.stacking.yield-description-min"
 msgstr "6"
 
-#: src/features/earn/sbtc-card.tsx:22
+#: src/features/earn/sbtc-card.tsx:23
 msgid "earn.sbtc.yield-description-max"
 msgstr "8%"
 
@@ -477,7 +477,7 @@ msgstr "Bitflow"
 msgid "account_display_preference.bns_name"
 msgstr "BNS name"
 
-#: src/features/earn/sbtc-card.tsx:26
+#: src/features/earn/sbtc-card.tsx:27
 msgid "earn.sbtc.description"
 msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
 
@@ -755,7 +755,7 @@ msgstr "Drag to refresh"
 msgid "earn.title"
 msgstr "Earn"
 
-#: src/features/earn/sbtc-card.tsx:14
+#: src/features/earn/sbtc-card.tsx:15
 msgid "earn.sbtc.title"
 msgstr "Earn with SBTC"
 
@@ -1713,7 +1713,7 @@ msgstr "Wallets"
 msgid "settings.wallets.cell_title"
 msgstr "Wallets and accounts"
 
-#: src/app/(tabs)/browser.tsx:65
+#: src/app/(tabs)/browser.tsx:61
 msgid "browser.search-bar.wrong-url"
 msgstr "Wrong URL"
 
