@@ -1,36 +1,32 @@
-import { useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { useBrowser } from '@/core/browser-provider';
 import { Browser } from '@/features/browser/browser/browser';
 import { SearchBar } from '@/features/browser/browser/search-bar/search-bar';
 import { useBrowserSearchState } from '@/features/browser/browser/use-browser-search-state';
 import { isValidUrl } from '@/features/browser/browser/utils';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 import { Box } from '@leather.io/ui/native';
 
 export default function BrowserScreen() {
-  const { linkingRef } = useBrowser();
   const { browserSearchState, goToUrl, setTextUrl } = useBrowserSearchState();
   const [browserNavigationBarHeight, setBrowserNavigationBarHeight] = useState(0);
-  const router = useRouter();
+  const { url: urlQuery } = useLocalSearchParams<{ url?: string }>();
+  useEffect(() => {
+    if (urlQuery) {
+      void analytics?.track('in_app_browser_opened', { url: urlQuery });
+      goToUrl(urlQuery);
+    }
+  }, [urlQuery, goToUrl]);
 
   const webViewRef = useRef<WebView>(null);
   const [navState, setNavState] = useState<WebViewNavigation | null>(null);
 
-  useImperativeHandle(linkingRef, () => ({
-    openURL(url) {
-      router.dismissAll();
-      router.replace('/browser', {});
-      void analytics?.track('in_app_browser_opened', { url });
-      goToUrl(url);
-    },
-  }));
   const { displayToast } = useToastContext();
 
   return (
