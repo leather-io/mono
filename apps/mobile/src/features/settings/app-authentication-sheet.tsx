@@ -3,7 +3,6 @@ import { RefObject } from 'react';
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
-import { useBrowser } from '@/core/browser-provider';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
@@ -11,6 +10,7 @@ import { t } from '@lingui/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
+import { useOpenURL } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface AppAuthenticationSheetProps {
@@ -20,7 +20,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
   const settings = useSettings();
   const { displayToast } = useToastContext();
   const { authenticate } = useAuthentication();
-  const { linkingRef } = useBrowser();
+  const { openURL } = useOpenURL();
 
   function onUpdateAppAuth() {
     authenticate()
@@ -69,7 +69,7 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
         id: 'app_auth.header_title',
         message: 'App authentication',
       })}
-      onPressSupport={() => linkingRef.current?.openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
+      onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
     >
       <SettingsList>
         <SettingsListItem

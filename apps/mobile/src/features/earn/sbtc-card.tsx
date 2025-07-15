@@ -1,14 +1,15 @@
 import { Image } from 'react-native';
 
-import { useBrowser } from '@/core/browser-provider';
 import { t } from '@lingui/macro';
 
 import { LEATHER_EARN_SBTC_URL } from '@leather.io/constants';
 
+import { useOpenURL } from '../browser/browser/use-open-url';
 import { EarnCard } from './earn-card';
 
 export function SbtcCard() {
-  const { linkingRef } = useBrowser();
+  const { openURL } = useOpenURL();
+
   return (
     <EarnCard
       title={t({
@@ -32,7 +33,7 @@ export function SbtcCard() {
           <Image source={require('@/assets/stickers/sbtc.png')} width={117} height={228} />
         </>
       }
-      onPress={() => linkingRef.current?.openURL(LEATHER_EARN_SBTC_URL)}
+      onPress={() => openURL(LEATHER_EARN_SBTC_URL)}
     />
   );
 }
