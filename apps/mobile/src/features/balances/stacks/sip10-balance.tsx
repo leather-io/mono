@@ -69,8 +69,9 @@ function Sip10TokenBalanceError() {
 interface Sip10BalanceWrapperProps {
   data: FetchState<Sip10AggregateBalance | Sip10AddressBalance>;
   mode: ViewMode;
+  onPress?: (tokenId: string) => void;
 }
-function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) {
+function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapperProps) {
   const displayLimit = mode === 'widget' ? SIP10_BALANCES_WIDGET_LIMIT : undefined;
 
   const [renderLimit, setRenderLimit] = useState(displayLimit ?? SIP10_BALANCES_LIMIT);
@@ -90,12 +91,7 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
                 // TODO: investigate passing a function to keep it cleaner and DRY
                 // e.g. (tokeId) => onPress(tokenId)
                 onPress={() => {
-                  router.navigate({
-                    pathname: '/token/[tokenId]',
-                    params: {
-                      tokenId: item.asset.symbol,
-                    },
-                  });
+                  onPress?.(item.asset.symbol);
                 }}
                 name={item.asset.name}
                 symbol={item.asset.symbol}
@@ -113,9 +109,9 @@ function Sip10BalanceWrapper({ data, mode = 'full' }: Sip10BalanceWrapperProps) 
   );
 }
 
-export function Sip10Balance({ mode }: BalanceViewProps) {
+export function Sip10Balance({ mode, onPress }: BalanceViewProps) {
   const data = useSip10TotalBalance();
-  return <Sip10BalanceWrapper data={data} mode={mode} />;
+  return <Sip10BalanceWrapper data={data} mode={mode} onPress={onPress} />;
 }
 
 interface Sip10BalanceByAccountProps {

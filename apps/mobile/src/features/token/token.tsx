@@ -17,9 +17,12 @@ import { TokenDetails } from './components/token-details';
 import { useGetAccountTokenBalance, useGetTokenBalance } from './hooks/use-get-token-balance';
 
 interface TokenProps {
-  tokenId: string;
+  tokenId?: string;
 }
 export function Token({ tokenId }: TokenProps) {
+  if (!tokenId) {
+    return null;
+  }
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   // const [selectedToken, setSelectedToken] = useState<string | null>(tokenId);
   // const tokenTicker = tokenId ? tokenId : 'STX';
@@ -28,12 +31,12 @@ export function Token({ tokenId }: TokenProps) {
   // const accounts = useAccounts();
   // const accounts = useAccounts();
   // this causes a crash when selectedAccount is set
-  const accountTokenBalance = useGetAccountTokenBalance({
-    tokenId,
-    account: selectedAccount!,
-  });
+  // const accountTokenBalance = useGetAccountTokenBalance({
+  //   tokenId,
+  //   account: selectedAccount!,
+  // });
 
-  const balance = selectedAccount ? accountTokenBalance : tokenBalance;
+  const balance = selectedAccount ? tokenBalance : tokenBalance;
   if (!balance) {
     return null;
   }
