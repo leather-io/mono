@@ -55,16 +55,24 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
 
   const tokenSheetRef = useRef<SheetRef>(null);
 
-  function onOpenToken(tokenId: string) {
-    setSheetData({ tokenId, accountIndex, fingerprint });
+  function onOpenToken(data: TokenSheetData) {
+    setSheetData(data);
     // analytics.track('token_sheet_opened', { source: 'action_bar' });
     tokenSheetRef.current?.present();
   }
   return (
     <>
       <Box>
-        <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
-        <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
+        <BitcoinBalanceByAccount
+          onPress={() => onOpenToken({ tokenId: 'BTC', accountIndex, fingerprint })}
+          fingerprint={fingerprint}
+          accountIndex={accountIndex}
+        />
+        <StacksBalanceByAccount
+          onPress={() => onOpenToken({ tokenId: 'STX', accountIndex, fingerprint })}
+          fingerprint={fingerprint}
+          accountIndex={accountIndex}
+        />
         <Sip10BalanceByAccount mode={mode} fingerprint={fingerprint} accountIndex={accountIndex} />
         {runesFlag && (
           <RunesBalanceByAccount

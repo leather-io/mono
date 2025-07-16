@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { TokenIcon } from '@/features/token/components/token-icon';
 import {
@@ -8,22 +8,29 @@ import {
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 import { Account } from '@/store/accounts/accounts';
 
-import { Text } from '@leather.io/ui/native';
+import { SheetRef, Text } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { AccountList } from './account-list-item';
 import { TokenActivity } from './components/token-activity';
 import { TokenDetails } from './components/token-details';
 import { useGetAccountTokenBalance, useGetTokenBalance } from './hooks/use-get-token-balance';
+import { TokenSheet, TokenSheetData } from './token-sheet';
 
 interface TokenProps {
   tokenId?: string;
+  accountIndex?: number;
+  fingerprint?: string;
 }
-export function Token({ tokenId }: TokenProps) {
+export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
+  const [sheetData, setSheetData] = useState<TokenSheetData | null>(null);
   if (!tokenId) {
     return null;
   }
-  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+
+  console.log('accountIndex', accountIndex);
+  console.log('fingerprint', fingerprint);
+  // const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   // const [selectedToken, setSelectedToken] = useState<string | null>(tokenId);
   // const tokenTicker = tokenId ? tokenId : 'STX';
   const tokenBalance = useGetTokenBalance({ tokenId });
@@ -36,7 +43,7 @@ export function Token({ tokenId }: TokenProps) {
   //   account: selectedAccount!,
   // });
 
-  const balance = selectedAccount ? tokenBalance : tokenBalance;
+  const balance = tokenBalance;
   if (!balance) {
     return null;
   }
@@ -52,46 +59,61 @@ export function Token({ tokenId }: TokenProps) {
   // move the hooks into to their components - accept tokenId as a prop
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
-  // >> setting the accountId in state crashes the whole page!
+  const tokenSheetRef = useRef<SheetRef>(null);
 
-  // but why? does it reset the tokenId or something? it must
+  function onOpenToken(data: TokenSheetData) {
+    setSheetData(data);
+    // analytics.track('token_sheet_opened', { source: 'action_bar' });
+    tokenSheetRef.current?.present();
+  }
+
   return (
-    <TokenActivity
-      ticker={tokenId}
-      // TokenDetails passed as ListHeader to avoid nested scrolling errors
-      ListHeader={
-        <TokenDetails
-          // onclick of accountList could just add an account to state?
-          // then filter activity further based on that?
-          accountDetails={
-            selectedAccount !== null ? (
-              <Text>Selected Account</Text>
-            ) : (
-              <AccountList
-                tokenId={tokenId}
-                selectAccount={
+    <>
+      <TokenActivity
+        ticker={tokenId}
+        // TokenDetails passed as ListHeader to avoid nested scrolling errors
+        ListHeader={
+          <TokenDetails
+            // onclick of accountList could just add an account to state?
+            // then filter activity further based on that?
+            accountDetails={
+              accountIndex !== undefined ? (
+                <Text>Selected Account</Text>
+              ) : (
+                <AccountList
+                  tokenId={tokenId}
+                  selectAccount={account =>
+                    onOpenToken({
+                      tokenId,
+                      accountIndex: account.accountIndex,
+                      fingerprint: account.fingerprint,
+                    })
+                  }
                   // accountId =>
                   // setSelectedAccount(
                   //   accounts.list.find(account => account.id === accountId) ?? null
                   // )
                   // (accountId: string) => console.log('accountId', accountId)
-                  (account: Account) => {
-                    // const account = accounts.list.find(account => account.id === accountId) ?? null;
-                    setSelectedAccount(account);
-                  }
-                }
-              />
-            )
-          }
-          availableBalance={availableBalance ?? createMoney(0, 'BTC')}
-          assetDescription={assetDescription?.description ?? ''}
-          price={price ?? createMoney(0, 'USD')}
-          changePercent={assetPriceChange?.changePercent ?? 0}
-          quoteBalance={quoteBalance ?? createMoney(0, 'USD')}
-          icon={<TokenIcon ticker={tokenId} asset={asset} />}
-          asset={asset}
-        />
-      }
-    />
+                  // (account: Account) => {
+                  //   // const account = accounts.list.find(account => account.id === accountId) ?? null;
+                  //   setSelectedAccount(account);
+                  // }
+                  // }
+                />
+              )
+            }
+            availableBalance={availableBalance ?? createMoney(0, 'BTC')}
+            assetDescription={assetDescription?.description ?? ''}
+            price={price ?? createMoney(0, 'USD')}
+            changePercent={assetPriceChange?.changePercent ?? 0}
+            quoteBalance={quoteBalance ?? createMoney(0, 'USD')}
+            icon={<TokenIcon ticker={tokenId} asset={asset} />}
+            asset={asset}
+          />
+        }
+      />
+
+      <TokenSheet data={sheetData} sheetRef={tokenSheetRef} />
+    </>
   );
 }

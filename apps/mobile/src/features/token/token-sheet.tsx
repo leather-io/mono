@@ -1,11 +1,7 @@
 import { RefObject } from 'react';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
-import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { Send } from '@/features/send/send';
 import { analytics } from '@/utils/analytics';
-import { useGlobalSearchParams, useSegments } from 'expo-router';
-import { isString } from 'remeda';
 
 import { SheetRef, useHaptics } from '@leather.io/ui/native';
 
@@ -23,11 +19,7 @@ interface TokenSheetProps {
 }
 
 export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
-  //   const { tokenSheetRef } = useGlobalSheets();
   const triggerHaptics = useHaptics();
-  //   const { accountId } = useInitialTokenParams();
-  //   console.log('accountId', accountId);
-  console.log('tokenId', data?.tokenId);
 
   function handleAnimatedPositionChange(fromIndex: number, toIndex: number) {
     if (fromIndex === 0 && toIndex === -1) {
@@ -45,19 +37,11 @@ export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
     >
-      <Token tokenId={data?.tokenId} />
+      <Token
+        tokenId={data?.tokenId}
+        accountIndex={data?.accountIndex}
+        fingerprint={data?.fingerprint}
+      />
     </FullHeightSheet>
   );
 }
-
-// function useInitialTokenParams() {
-//   const [rootSegment] = useSegments();
-//   const params = useGlobalSearchParams();
-//   const isAccountRoute = rootSegment === 'account';
-//   const accountId = isAccountRoute && isString(params.accountId) ? params.accountId : undefined;
-//   //   const isTokenRoute = rootSegment === 'token';
-//   // //   const tokenId = isTokenRoute && isString(params.tokenId) ? params.tokenId : undefined;
-//   //   const accountId = isTokenRoute && isString(params.accountId) ? params.accountId : undefined;
-
-//   return { accountId };
-// }
