@@ -21,7 +21,6 @@ import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
 import { useWatchNotificationAddresses } from '@/features/notifications/use-notifications';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
-// import { TokenSheet } from '@/features/token/token-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
 import { initiateI18n } from '@/locales';
@@ -85,7 +84,6 @@ function App() {
         <BrowserSheet />
         <ReceiveSheet />
         <SendSheet />
-        {/* <TokenSheet tokenId={sheetData ?? ''} /> */}
       </ErrorBoundary>
     </Box>
   );

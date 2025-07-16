@@ -63,19 +63,18 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
           {wallet.name}
         </Text>
       }
-      // FIXME: refactor this name to not be address - leftPrimary or something like  that
-      // for some reason it says STX 74 not 74 STX?? investigate
-
+      // FIXME LEA-3015: refactor address prop to not be address - leftPrimary or something like  that
       address={
         <Balance
           balance={quoteBalance}
           variant="caption01"
           color="ink.text-subdued"
-          isQuoteCurrency
+          isQuoteCurrency={tokenId === 'BTC'}
         />
       }
       balance={
-        // FIXME: isQuoteCurrency is crashing for non BTC tokens
+        // FIXME LEA-3015: isQuoteCurrency is crashing for non BTC tokens
+        // need to update balance to show ticker beside non BTC tokens IF not activity list
         <Balance balance={availableBalance} variant="label02" isQuoteCurrency={tokenId === 'BTC'} />
       }
       icon={<AccountAvatar icon={account.icon} />}

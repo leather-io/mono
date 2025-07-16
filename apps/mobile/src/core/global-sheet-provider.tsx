@@ -8,7 +8,6 @@ interface GlobalSheetContextValue {
   browserSheetRef: React.RefObject<SheetRef | null>;
   receiveSheetRef: React.RefObject<SheetRef | null>;
   sendSheetRef: React.RefObject<SheetRef | null>;
-  // tokenSheetRef: React.RefObject<SheetRef | null>;
 }
 
 const GlobalSheetContext = createContext<GlobalSheetContextValue | null>(null);

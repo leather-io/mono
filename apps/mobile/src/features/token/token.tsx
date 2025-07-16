@@ -6,16 +6,15 @@ import {
   useAssetPriceChangeQuery,
 } from '@/queries/assets/fungible-asset-info.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
-import { Account } from '@/store/accounts/accounts';
 
-import { SheetRef, Text } from '@leather.io/ui/native';
+import { SheetRef } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { AccountList } from './account-list-item';
 import { AccountAddressList } from './address-list';
 import { TokenActivity } from './components/token-activity';
 import { TokenDetails } from './components/token-details';
-import { useGetAccountTokenBalance, useGetTokenBalance } from './hooks/use-get-token-balance';
+import { useGetTokenBalance } from './hooks/use-get-token-balance';
 import { TokenSheet, TokenSheetData } from './token-sheet';
 
 interface TokenProps {
@@ -29,20 +28,7 @@ export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
     return null;
   }
 
-  console.log('accountIndex', accountIndex);
-  console.log('fingerprint', fingerprint);
-  // const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
-  // const [selectedToken, setSelectedToken] = useState<string | null>(tokenId);
-  // const tokenTicker = tokenId ? tokenId : 'STX';
   const tokenBalance = useGetTokenBalance({ tokenId });
-
-  // const accounts = useAccounts();
-  // const accounts = useAccounts();
-  // this causes a crash when selectedAccount is set
-  // const accountTokenBalance = useGetAccountTokenBalance({
-  //   tokenId,
-  //   account: selectedAccount!,
-  // });
 
   const balance = tokenBalance;
   if (!balance) {
@@ -53,10 +39,7 @@ export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;
 
-  // this should be used to feed the accountDetails component / address for single account
-  // const accounts = useAccounts();
-
-  // TODO - can't call these conditionally so probably need to refactor this whole thin
+  // FIXME LEA-3015: can't call these conditionally so probably need to refactor this whole thin
   // move the hooks into to their components - accept tokenId as a prop
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
@@ -72,11 +55,9 @@ export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
     <>
       <TokenActivity
         ticker={tokenId}
-        // TokenDetails passed as ListHeader to avoid nested scrolling errors
+        // TokenDetails is Activity ListHeader to avoid nested scrolling errors
         ListHeader={
           <TokenDetails
-            // onclick of accountList could just add an account to state?
-            // then filter activity further based on that?
             accountDetails={
               accountIndex !== undefined ? (
                 <AccountAddressList
@@ -94,16 +75,6 @@ export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
                       fingerprint: account.fingerprint,
                     })
                   }
-                  // accountId =>
-                  // setSelectedAccount(
-                  //   accounts.list.find(account => account.id === accountId) ?? null
-                  // )
-                  // (accountId: string) => console.log('accountId', accountId)
-                  // (account: Account) => {
-                  //   // const account = accounts.list.find(account => account.id === accountId) ?? null;
-                  //   setSelectedAccount(account);
-                  // }
-                  // }
                 />
               )
             }

@@ -5,6 +5,7 @@ import { HeaderBackButton } from '@/components/screen/screen-header/components/h
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { QrCard } from '@/features/receive/components/qr-card';
+import { useCopyAddress } from '@/hooks/use-copy-address';
 import { TestId } from '@/shared/test-id';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
@@ -21,7 +22,7 @@ import {
   legacyTouchablePressEffect,
 } from '@leather.io/ui/native';
 
-import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
+import { useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export function AssetDetails() {
   const { i18n } = useLingui();

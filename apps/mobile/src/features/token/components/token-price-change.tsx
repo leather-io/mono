@@ -47,7 +47,7 @@ export function TokenPriceChange({
           },
         })}{' '}
         (
-        {/* TODO: this is showing an operator for negative values (-), but we don't want that in the design */}
+        {/* FIXME LEA-3015: this is showing an operator for negative values (-), but we don't want that in the design */}
         <Balance
           balance={priceChangeFiat}
           variant="label02"

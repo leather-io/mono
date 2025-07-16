@@ -18,6 +18,14 @@ interface TokenSheetProps {
   sheetRef: RefObject<SheetRef | null>;
 }
 
+// >>> PETE - start cleaning up this PR
+// >>  next up is to filter account activity by accountID
+// >> check if we have balances split by tap and segwit
+
+// > add a feature flag for the new token sheet
+
+// This will take a few days to complete.
+
 export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
   const triggerHaptics = useHaptics();
 

@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { createContext, useContext, useRef } from 'react';
+import { useRef, useState } from 'react';
 
-import { useGlobalSheets } from '@/core/global-sheet-provider';
 import {
   BitcoinBalance,
   BitcoinBalanceByAccount,
@@ -12,12 +10,9 @@ import { StacksBalance, StacksBalanceByAccount } from '@/features/balances/stack
 import { useRunesFlag } from '@/features/feature-flags';
 import { TokenSheet, TokenSheetData } from '@/features/token/token-sheet';
 import { ViewMode } from '@/shared/types';
-import { analytics } from '@/utils/analytics';
-import { router } from 'expo-router';
 
 import { AccountId } from '@leather.io/models';
-import { HasChildren, SheetRef } from '@leather.io/ui/native';
-import { Box } from '@leather.io/ui/native';
+import { Box, SheetRef } from '@leather.io/ui/native';
 
 export interface BalanceViewProps {
   mode: ViewMode;
@@ -61,9 +56,7 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
     tokenSheetRef.current?.present();
   }
 
-  // > PETE - investigate passing the balance data needed from BitcoinBalanceByAccount etc.
-  // > then i won't need to re-use the hook and can just pass on the data when the sheet is opened
-  // > not sure if that's good though. Avoids using my other hook though
+  // > FIXME LEA-3015: investigate passing the balance data needed from BitcoinBalanceByAccount etc.
 
   return (
     <>

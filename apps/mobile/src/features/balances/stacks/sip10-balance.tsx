@@ -9,7 +9,6 @@ import {
 } from '@/queries/balance/sip10-balance.query';
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
-import { router } from 'expo-router';
 
 import { Money } from '@leather.io/models';
 import { Sip10AddressBalance, Sip10AggregateBalance } from '@leather.io/services';
@@ -88,9 +87,8 @@ function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapp
                 contractId={item.asset.contractId}
                 quoteBalance={item.quote.totalBalance}
                 imageCanonicalUri={item.asset.imageCanonicalUri}
-                // TODO: investigate passing a function to keep it cleaner and DRY
-                // e.g. (tokeId) => onPress(tokenId)
                 onPress={() => {
+                  // pass balance and quote balance to the sheet from here
                   onPress?.(item.asset.symbol);
                 }}
                 name={item.asset.name}

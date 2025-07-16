@@ -6,6 +6,7 @@ import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-heig
 import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/full-height-sheet-header';
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { QrCard } from '@/features/receive/components/qr-card';
+import { useCopyAddress } from '@/hooks/use-copy-address';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -23,16 +24,15 @@ import {
   useHaptics,
 } from '@leather.io/ui/native';
 
-import { useCopyAddress } from '../receive/navigation';
 import { SelectedAsset } from '../receive/screens/select-asset';
-
-// import { useCopyAddress, useReceiveNavigation, useReceiveRoute } from '../navigation';
 
 export interface ReceiveSheetData {
   asset: SelectedAsset;
   accountName: string;
 }
-// Taken from receive/screens/asset-details
+// TODO LEA-3015: Taken from receive/screens/asset-details
+// refactor to share more and keep code DRY
+
 interface ReceiveSheetProps {
   data: ReceiveSheetData;
   sheetRef: RefObject<SheetRef | null>;

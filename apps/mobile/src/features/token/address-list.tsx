@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { useCopyAddress } from '@/hooks/use-copy-address';
 import { Account } from '@/store/accounts/accounts';
 import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
@@ -14,8 +14,6 @@ import { truncateMiddle } from '@leather.io/utils';
 
 import { AccountAvatar } from '../account/components/account-avatar';
 import { getAssets } from '../receive/get-assets';
-// FIXME - need to move this to a shared location and test toast
-import { useCopyAddress } from '../receive/navigation';
 import { SelectedAsset } from '../receive/screens/select-asset';
 import { TokenDetailsCard } from './components/token-details-card';
 import { useGetAccountTokenBalance } from './hooks/use-get-token-balance';
