@@ -24,6 +24,7 @@ export {
   type ButtonState,
   getButtonTextColor,
 } from './src/components/button/button.native';
+export { ButtonV2 } from './src/components/button/button-v2.native';
 export { Text, type TextProps } from './src/components/text/text.native';
 export {
   TextInput,
