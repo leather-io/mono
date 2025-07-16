@@ -25,7 +25,6 @@ export function GlobalSheetProvider({ children }: HasChildren) {
   const browserSheetRef = useRef<SheetRef>(null);
   const receiveSheetRef = useRef<SheetRef>(null);
   const sendSheetRef = useRef<SheetRef>(null);
-  // const tokenSheetRef = useRef<SheetRef>(null);
 
   return (
     <GlobalSheetContext.Provider
@@ -35,7 +34,6 @@ export function GlobalSheetProvider({ children }: HasChildren) {
         browserSheetRef,
         receiveSheetRef,
         sendSheetRef,
-        // tokenSheetRef,
       }}
     >
       {children}

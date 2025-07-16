@@ -60,6 +60,11 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
     // analytics.track('token_sheet_opened', { source: 'action_bar' });
     tokenSheetRef.current?.present();
   }
+
+  // > PETE - investigate passing the balance data needed from BitcoinBalanceByAccount etc.
+  // > then i won't need to re-use the hook and can just pass on the data when the sheet is opened
+  // > not sure if that's good though. Avoids using my other hook though
+
   return (
     <>
       <Box>

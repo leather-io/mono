@@ -12,6 +12,7 @@ import { SheetRef, Text } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { AccountList } from './account-list-item';
+import { AccountAddressList } from './address-list';
 import { TokenActivity } from './components/token-activity';
 import { TokenDetails } from './components/token-details';
 import { useGetAccountTokenBalance, useGetTokenBalance } from './hooks/use-get-token-balance';
@@ -78,7 +79,11 @@ export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
             // then filter activity further based on that?
             accountDetails={
               accountIndex !== undefined ? (
-                <Text>Selected Account</Text>
+                <AccountAddressList
+                  tokenId={tokenId}
+                  accountIndex={accountIndex}
+                  fingerprint={fingerprint ?? ''}
+                />
               ) : (
                 <AccountList
                   tokenId={tokenId}

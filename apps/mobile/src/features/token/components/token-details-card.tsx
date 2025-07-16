@@ -8,14 +8,18 @@ export function TokenDetailsWrapper({ children }: HasChildren) {
   );
 }
 interface TokenDetailsCardProps extends HasChildren {
-  title: string;
+  title: React.ReactNode;
 }
 export function TokenDetailsCard({ children, title }: TokenDetailsCardProps) {
   return (
     <Box backgroundColor="ink.background-primary" p="5">
-      <Text variant="label03" py="2">
-        {title}
-      </Text>
+      {typeof title === 'string' ? (
+        <Text variant="label03" py="2">
+          {title}
+        </Text>
+      ) : (
+        title
+      )}
       {children}
     </Box>
   );

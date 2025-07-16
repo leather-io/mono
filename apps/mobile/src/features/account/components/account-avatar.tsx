@@ -57,6 +57,7 @@ interface AccountAvatarProps extends SquircleBoxProps {
 
 export function AccountAvatar(props: AccountAvatarProps) {
   const Icon = isString(props.icon) ? accountIconMap[props.icon] : props.icon;
+  console.log(isString(props.icon));
   return (
     <SquircleBox
       width={48}
@@ -70,7 +71,7 @@ export function AccountAvatar(props: AccountAvatarProps) {
       alignItems="center"
       {...props}
     >
-      {Icon && <Icon />}
+      {Icon && <Icon {...props} />}
     </SquircleBox>
   );
 }
