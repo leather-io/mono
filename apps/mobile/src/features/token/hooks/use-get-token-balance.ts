@@ -6,28 +6,30 @@ import { btcAsset, stxAsset } from '@leather.io/constants';
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Sip10Balance } from '@leather.io/services';
 
-type TokenBalance = {
+interface TokenBalance {
   asset: FungibleCryptoAsset;
   availableBalance: Money;
   quoteBalance: Money;
-};
+}
 
-interface UseGetTokenBalanceProps {
+interface UseGetAccountTokenBalanceProps {
   tokenId: string;
-  account?: Account;
+  account: Account;
 }
 
 export function useGetAccountTokenBalance({
   tokenId,
   account,
-}: UseGetTokenBalanceProps): TokenBalance | undefined {
+}: UseGetAccountTokenBalanceProps): TokenBalance | undefined {
   const accountBalance = useAccountBalance({
-    fingerprint: account?.fingerprint ?? '',
-    accountIndex: account?.accountIndex ?? 0,
+    fingerprint: account.fingerprint,
+    accountIndex: account.accountIndex,
   });
   return getTokenBalance({ tokenId, balance: accountBalance });
 }
-
+interface UseGetTokenBalanceProps {
+  tokenId: string;
+}
 export function useGetTokenBalance({ tokenId }: UseGetTokenBalanceProps): TokenBalance | undefined {
   const totalBalance = useTotalBalance();
   return getTokenBalance({ tokenId, balance: totalBalance });

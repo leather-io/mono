@@ -12,7 +12,13 @@ import { AccountAvatar } from '../account/components/account-avatar';
 import { TokenDetailsCard } from './components/token-details-card';
 import { useGetAccountTokenBalance } from './hooks/use-get-token-balance';
 
-export function AccountList({ tokenId }: { tokenId: string }) {
+export function AccountList({
+  tokenId,
+  selectAccount,
+}: {
+  tokenId: string;
+  selectAccount: (account: Account) => void;
+}) {
   const accounts = useAccounts();
   return (
     <TokenDetailsCard title={t({ id: 'token.details.accounts_title', message: 'Accounts' })}>
@@ -26,6 +32,7 @@ export function AccountList({ tokenId }: { tokenId: string }) {
                 account={account}
                 wallet={wallet}
                 tokenId={tokenId}
+                onPress={() => selectAccount(account)}
               />
             )}
           </WalletLoader>
@@ -38,9 +45,10 @@ interface AccountListItemProps {
   account: Account;
   wallet: WalletStore;
   tokenId: string;
+  onPress: () => void;
 }
 
-export function AccountListItem({ account, wallet, tokenId }: AccountListItemProps) {
+export function AccountListItem({ account, wallet, tokenId, onPress }: AccountListItemProps) {
   const tokenBalance = useGetAccountTokenBalance({ tokenId, account });
   const availableBalance = tokenBalance?.availableBalance;
   const quoteBalance = tokenBalance?.quoteBalance;
@@ -72,7 +80,7 @@ export function AccountListItem({ account, wallet, tokenId }: AccountListItemPro
       }
       icon={<AccountAvatar icon={account.icon} />}
       chevron={<ChevronRightIcon width={16} height={16} />}
-      onPress={() => {}}
+      onPress={onPress}
     />
   );
 }
