@@ -4,6 +4,7 @@ import { FetchErrorCallout } from '@/components/error/fetch-error';
 import { Screen } from '@/components/screen/screen';
 import { HeaderBlurOverlay } from '@/components/screen/screen-header/components/header-blur-overlay';
 import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
+import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AccountOverview } from '@/features/account/components/account-overview-card';
 import { ActivityWidget } from '@/features/activity/activity-widget';
@@ -21,7 +22,7 @@ import { Account as AccountType } from '@/store/accounts/accounts';
 import { t } from '@lingui/macro';
 import { router } from 'expo-router';
 
-import { Box, SettingsGearIcon } from '@leather.io/ui/native';
+import { Box, ButtonV2, SettingsGearIcon } from '@leather.io/ui/native';
 
 import { AccountBalance } from '../balances/total-balance';
 
@@ -39,6 +40,7 @@ export function Account({ account, walletName }: AccountProps) {
     accountIndex,
   });
 
+  const { sendSheetRef, receiveSheetRef } = useGlobalSheets();
   const activity = useAccountActivity(fingerprint, accountIndex);
   const collectibles = useAccountCollectibles(fingerprint, accountIndex);
   const releaseCollectibles = useCollectiblesFlag();
@@ -88,6 +90,32 @@ export function Account({ account, walletName }: AccountProps) {
           accountName={name}
           walletName={walletName}
         />
+        <Box mt="3" mb="5" px="5" flexDirection="row" justifyContent="center" gap="2">
+          <ButtonV2
+            onPress={() => {
+              sendSheetRef.current?.present();
+            }}
+            minWidth={86}
+            size="sm"
+            buttonState="default"
+            title={t({
+              id: 'general.send',
+              message: `Send`,
+            })}
+          />
+          <ButtonV2
+            onPress={() => {
+              receiveSheetRef.current?.present();
+            }}
+            minWidth={86}
+            size="sm"
+            buttonState="outline"
+            title={t({
+              id: 'general.receive',
+              message: `Receive`,
+            })}
+          />
+        </Box>
         <Box gap="8">
           <BalancesWidget
             onPressHeader={() =>
