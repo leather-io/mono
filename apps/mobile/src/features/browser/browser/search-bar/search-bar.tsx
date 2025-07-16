@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
 import { useTheme } from '@shopify/restyle';
+import { useRouter } from 'expo-router';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
@@ -36,6 +37,7 @@ export function SearchBar({
   const theme = useTheme<Theme>();
   const textInputRef = useRef<RNTextInput>(null);
 
+  const router = useRouter();
   const { keyboardAvoidingStyle, searchBarStyle } = useSearchBarAnimatedStyles();
 
   function goBack() {
@@ -96,14 +98,14 @@ export function SearchBar({
           onSubmit={onSubmit}
         />
         <SearchBarToolbar
-          onExplore={async () => {
+          onExplore={() => {
             // TODO: implement functionality
           }}
-          onRecents={async () => {
-            // TODO: implement functionality
+          onRecents={() => {
+            router.navigate('/app-recently-viewed');
           }}
-          onConnections={async () => {
-            // TODO: implement functionality
+          onConnections={() => {
+            router.navigate('/app-connections');
           }}
         />
       </AnimatedBox>
