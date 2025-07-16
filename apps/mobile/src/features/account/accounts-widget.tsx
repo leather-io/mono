@@ -17,7 +17,7 @@ import { useLingui } from '@lingui/react';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
-import { Box, SheetRef, SkeletonLoader, Theme } from '@leather.io/ui/native';
+import { Box, ButtonV2, SheetRef, SkeletonLoader, Theme } from '@leather.io/ui/native';
 
 import { AddAccountCard } from './components/add-account-card';
 import { CreateWalletCard } from './components/create-wallet-card';
@@ -30,7 +30,8 @@ export function AccountsWidget() {
   const { totalBalance } = useTotalBalance();
   const { i18n } = useLingui();
   const theme = useTheme<Theme>();
-  const { addAccountSheetRef, addWalletSheetRef } = useGlobalSheets();
+  const { addAccountSheetRef, addWalletSheetRef, sendSheetRef, receiveSheetRef } =
+    useGlobalSheets();
 
   const isLoadingTotalBalance = totalBalance.state === 'loading';
   const isErrorTotalBalance = totalBalance.state === 'error';
@@ -55,6 +56,32 @@ export function AccountsWidget() {
               )}
             </Box>
           )}
+          <Box my="3" px="5" flexDirection="row" gap="2">
+            <ButtonV2
+              onPress={() => {
+                sendSheetRef.current?.present();
+              }}
+              minWidth={86}
+              size="sm"
+              buttonState="default"
+              title={t({
+                id: 'general.send',
+                message: `Send`,
+              })}
+            />
+            <ButtonV2
+              onPress={() => {
+                receiveSheetRef.current?.present();
+              }}
+              minWidth={86}
+              size="sm"
+              buttonState="outline"
+              title={t({
+                id: 'general.receive',
+                message: `Receive`,
+              })}
+            />
+          </Box>
         </Box>
         <Widget.Body>
           <ScrollView

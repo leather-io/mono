@@ -16,7 +16,7 @@ export function AccountOverview({
   if (isLoading) {
     return (
       <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
-        <Box mx="5" pt="4" pb="8" flexDirection="column" alignItems="center" gap="4" flex={1}>
+        <Box mx="5" pt="4" flexDirection="column" alignItems="center" gap="4" flex={1}>
           <Box flexDirection="row" height={64} width={64} borderRadius="round" overflow="hidden">
             <SkeletonLoader height={64} width={64} isLoading={true} />
           </Box>
@@ -27,7 +27,7 @@ export function AccountOverview({
   }
   return (
     <Box alignItems="center" alignContent="center" alignSelf="stretch" flexWrap="wrap">
-      <Box mx="5" pt="4" pb="8" flexDirection="column" alignItems="center" gap="3" flex={1}>
+      <Box mx="5" pt="4" flexDirection="column" alignItems="center" gap="3" flex={1}>
         {heading}
         <Box gap="1" flexDirection="column" alignItems="center">
           <Text variant="label01" textAlign="center">
