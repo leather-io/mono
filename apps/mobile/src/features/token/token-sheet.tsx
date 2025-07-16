@@ -3,16 +3,16 @@ import { RefObject } from 'react';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { analytics } from '@/utils/analytics';
 
-import { Money } from '@leather.io/models';
+import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { SheetRef, useHaptics } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
 import { Token } from './token';
 
 export interface TokenSheetData {
-  tokenId: string;
   accountIndex?: number;
   fingerprint?: string;
+  asset: FungibleCryptoAsset;
   availableBalance: Money;
   quoteBalance: Money;
 }
@@ -49,13 +49,16 @@ export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
     >
-      <Token
-        tokenId={data?.tokenId}
-        accountIndex={data?.accountIndex}
-        fingerprint={data?.fingerprint}
-        availableBalance={data?.availableBalance ?? createMoney(0, 'BTC')}
-        quoteBalance={data?.quoteBalance ?? createMoney(0, 'BTC')}
-      />
+      {/* TODO LEA-3015: improve this / add fallback defensiveness */}
+      {data && (
+        <Token
+          asset={data.asset}
+          accountIndex={data.accountIndex}
+          fingerprint={data.fingerprint}
+          availableBalance={data.availableBalance}
+          quoteBalance={data.quoteBalance}
+        />
+      )}
     </FullHeightSheet>
   );
 }

@@ -11,16 +11,16 @@ import { useRunesFlag } from '@/features/feature-flags';
 import { TokenSheet, TokenSheetData } from '@/features/token/token-sheet';
 import { ViewMode } from '@/shared/types';
 
-import { AccountId, Money } from '@leather.io/models';
+import { AccountId, FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box, SheetRef } from '@leather.io/ui/native';
 
 export interface BalanceViewProps {
   mode: ViewMode;
-  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 
 export interface OnOpenTokenProps {
-  tokenId: string;
+  asset: FungibleCryptoAsset;
   availableBalance: Money;
   quoteBalance: Money;
 }
@@ -31,9 +31,8 @@ export function AllAccountBalances({ mode }: BalanceViewProps) {
 
   const tokenSheetRef = useRef<SheetRef>(null);
 
-  function onOpenToken({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) {
-    console.log('onOpenToken', tokenId, availableBalance, quoteBalance);
-    setSheetData({ tokenId, availableBalance, quoteBalance });
+  function onOpenToken({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) {
+    setSheetData({ asset, availableBalance, quoteBalance });
     // analytics.track('token_sheet_opened', { source: 'action_bar' });
     tokenSheetRef.current?.present();
   }
@@ -42,19 +41,19 @@ export function AllAccountBalances({ mode }: BalanceViewProps) {
     <>
       <Box flex={1} height="100%">
         <BitcoinBalance
-          onPress={({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) =>
-            onOpenToken({ tokenId, availableBalance, quoteBalance })
+          onPress={({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) =>
+            onOpenToken({ asset, availableBalance, quoteBalance })
           }
         />
         <StacksBalance
-          onPress={({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) =>
-            onOpenToken({ tokenId, availableBalance, quoteBalance })
+          onPress={({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) =>
+            onOpenToken({ asset, availableBalance, quoteBalance })
           }
         />
         <Sip10Balance
           mode={mode}
-          onPress={({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) =>
-            onOpenToken({ tokenId, availableBalance, quoteBalance })
+          onPress={({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) =>
+            onOpenToken({ asset, availableBalance, quoteBalance })
           }
         />
         {runesFlag && <RunesBalance mode={mode} />}
@@ -83,9 +82,9 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
     <>
       <Box>
         <BitcoinBalanceByAccount
-          onPress={({ tokenId, availableBalance, quoteBalance }) =>
+          onPress={({ asset, availableBalance, quoteBalance }) =>
             onOpenToken({
-              tokenId,
+              asset,
               accountIndex,
               fingerprint,
               availableBalance,
@@ -96,8 +95,8 @@ export function AccountBalances({ mode, fingerprint, accountIndex }: AccountId &
           accountIndex={accountIndex}
         />
         <StacksBalanceByAccount
-          onPress={({ tokenId, availableBalance, quoteBalance }) =>
-            onOpenToken({ tokenId, accountIndex, fingerprint, availableBalance, quoteBalance })
+          onPress={({ asset, availableBalance, quoteBalance }) =>
+            onOpenToken({ asset, accountIndex, fingerprint, availableBalance, quoteBalance })
           }
           fingerprint={fingerprint}
           accountIndex={accountIndex}

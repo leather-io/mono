@@ -68,7 +68,7 @@ function Sip10TokenBalanceError() {
 interface Sip10BalanceWrapperProps {
   data: FetchState<Sip10AggregateBalance | Sip10AddressBalance>;
   mode: ViewMode;
-  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapperProps) {
   const displayLimit = mode === 'widget' ? SIP10_BALANCES_WIDGET_LIMIT : undefined;
@@ -90,7 +90,7 @@ function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapp
                 onPress={() => {
                   // pass balance and quote balance to the sheet from here
                   onPress?.({
-                    tokenId: item.asset.symbol,
+                    asset: item.asset,
                     availableBalance: item.crypto.availableBalance,
                     quoteBalance: item.quote.totalBalance,
                   });

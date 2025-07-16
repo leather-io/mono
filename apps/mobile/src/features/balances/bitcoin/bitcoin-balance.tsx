@@ -2,6 +2,7 @@ import { TokenBalance } from '@/features/token/components/token-balance';
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
+import { btcAsset } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
 
@@ -38,7 +39,7 @@ export function BitcoinTokenBalance({
 }
 
 interface BitcoinBalanceProps {
-  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
@@ -53,7 +54,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       isLoading={state === 'loading'}
-      onPress={() => onPress?.({ tokenId: 'BTC', availableBalance, quoteBalance })}
+      onPress={() => onPress?.({ asset: btcAsset, availableBalance, quoteBalance })}
     />
   );
 }
@@ -61,7 +62,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
 interface BitcoinBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
+  onPress?: ({ asset, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 export function BitcoinBalanceByAccount({
   accountIndex,
@@ -79,7 +80,7 @@ export function BitcoinBalanceByAccount({
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={() => onPress?.({ tokenId: 'BTC', availableBalance, quoteBalance })}
+      onPress={() => onPress?.({ asset: btcAsset, availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );
