@@ -587,9 +587,9 @@ msgstr "Confirm"
 msgid "approver.connect.title"
 msgstr "Connect"
 
-#: src/features/browser/browser/tabs/browser-connected-tab.tsx:56
-msgid "browser-sheet.connected.title"
-msgstr "Connected"
+#: src/app/app-connections.tsx:8
+msgid "browser.connections.title"
+msgstr "Connections"
 
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:27
 msgid "browser.toolbox.connections"
@@ -1260,9 +1260,9 @@ msgstr "Receive transaction notifications"
 msgid "activity.status.received"
 msgstr "Received"
 
-#: src/features/browser/browser/tabs/browser-recent-tab.tsx:54
-msgid "browser-sheet.recently-visited.title"
-msgstr "Recently Visited"
+#: src/app/app-recently-viewed.tsx:8
+msgid "browser.recently-viewed.title"
+msgstr "Recently viewed"
 
 #: src/features/browser/browser/search-bar/search-bar-toolbar.tsx:35
 msgid "browser.toolbox.recents"
@@ -1721,11 +1721,11 @@ msgstr "Wrong URL"
 msgid "send-form.guard.new_recipient_description"
 msgstr "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
 
-#: src/features/browser/browser/tabs/browser-connected-tab.tsx:44
+#: src/app/app-connections.tsx:9
 msgid "browser-sheet.connected.empty.caption"
 msgstr "You will find the apps you are connected to here"
 
-#: src/features/browser/browser/tabs/browser-recent-tab.tsx:43
+#: src/app/app-recently-viewed.tsx:9
 msgid "browser-sheet.recent.empty.caption"
 msgstr "You will find the apps you recently viewed here"
 
