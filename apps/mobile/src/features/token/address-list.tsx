@@ -135,8 +135,6 @@ function AddressListItem({
   quoteBalance,
   tokenId,
 }: AddressListItemProps) {
-  // global recieve sheet opens that flow which is complex with its own routing
-  //   const { receiveSheetRef } = useGlobalSheets();
   const [sheetData, setSheetData] = useState<ReceiveSheetData | null>(null);
   const receiveSheetRef = useRef<SheetRef>(null);
 

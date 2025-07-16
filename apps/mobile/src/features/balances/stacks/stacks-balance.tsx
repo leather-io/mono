@@ -5,6 +5,8 @@ import { t } from '@lingui/macro';
 import { Money } from '@leather.io/models';
 import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
 
+import { OnOpenTokenProps } from '../balances';
+
 interface StacksTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
   quoteBalance?: Money;
@@ -33,7 +35,7 @@ export function StacksTokenBalance({
 }
 
 interface StacksBalanceProps {
-  onPress?(): void;
+  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 
 export function StacksBalance({ onPress }: StacksBalanceProps) {
@@ -41,12 +43,14 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
-
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={onPress}
+      onPress={() => onPress?.({ tokenId: 'STX', availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );
@@ -55,7 +59,7 @@ export function StacksBalance({ onPress }: StacksBalanceProps) {
 interface StacksBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?(): void;
+  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 export function StacksBalanceByAccount({
   accountIndex,
@@ -67,11 +71,15 @@ export function StacksBalanceByAccount({
   const availableBalance = value?.stx.availableUnlockedBalance;
   const quoteBalance = value?.quote.availableUnlockedBalance;
 
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
+
   return (
     <StacksTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={onPress}
+      onPress={() => onPress?.({ tokenId: 'STX', availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );

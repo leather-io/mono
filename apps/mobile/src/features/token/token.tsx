@@ -6,7 +6,10 @@ import {
   useAssetPriceChangeQuery,
 } from '@/queries/assets/fungible-asset-info.query';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
+import { Q } from 'vitest/dist/chunks/reporters.nr4dxCkA.js';
 
+import { btcAsset } from '@leather.io/constants';
+import { Money } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 
@@ -21,20 +24,31 @@ interface TokenProps {
   tokenId?: string;
   accountIndex?: number;
   fingerprint?: string;
+  availableBalance: Money;
+  quoteBalance: Money;
 }
-export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
+export function Token({
+  tokenId,
+  accountIndex,
+  fingerprint,
+  availableBalance,
+  quoteBalance,
+}: TokenProps) {
   const [sheetData, setSheetData] = useState<TokenSheetData | null>(null);
   if (!tokenId) {
     return null;
   }
 
-  const tokenBalance = useGetTokenBalance({ tokenId });
+  console.log('token balance', tokenId, availableBalance, quoteBalance);
 
-  const balance = tokenBalance;
-  if (!balance) {
-    return null;
-  }
-  const { asset, availableBalance, quoteBalance } = balance;
+  // const tokenBalance = useGetTokenBalance({ tokenId });
+
+  // const balance = tokenBalance;
+  // if (!balance) {
+  //   return null;
+  // }
+  // const { asset, availableBalance, quoteBalance } = balance;
+  const asset = btcAsset;
 
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;
@@ -73,6 +87,8 @@ export function Token({ tokenId, accountIndex, fingerprint }: TokenProps) {
                       tokenId,
                       accountIndex: account.accountIndex,
                       fingerprint: account.fingerprint,
+                      availableBalance,
+                      quoteBalance,
                     })
                   }
                 />

@@ -24,6 +24,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
   const browserSheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
+
   return (
     <GlobalSheetContext.Provider
       value={{

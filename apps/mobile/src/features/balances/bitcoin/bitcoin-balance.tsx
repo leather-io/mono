@@ -5,6 +5,8 @@ import { t } from '@lingui/macro';
 import { Money } from '@leather.io/models';
 import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
 
+import { OnOpenTokenProps } from '../balances';
+
 interface BitcoinTokenBalanceProps extends PressableProps {
   availableBalance?: Money;
   quoteBalance?: Money;
@@ -36,20 +38,22 @@ export function BitcoinTokenBalance({
 }
 
 interface BitcoinBalanceProps {
-  onPress?(): void;
+  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 
 export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
   const { state, value } = useBtcTotalBalance();
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
-
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
       isLoading={state === 'loading'}
-      onPress={onPress}
+      onPress={() => onPress?.({ tokenId: 'BTC', availableBalance, quoteBalance })}
     />
   );
 }
@@ -57,7 +61,7 @@ export function BitcoinBalance({ onPress }: BitcoinBalanceProps) {
 interface BitcoinBalanceByAccountProps {
   accountIndex: number;
   fingerprint: string;
-  onPress?(): void;
+  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 export function BitcoinBalanceByAccount({
   accountIndex,
@@ -68,12 +72,14 @@ export function BitcoinBalanceByAccount({
 
   const availableBalance = value?.btc.availableBalance;
   const quoteBalance = value?.quote.availableBalance;
-
+  if (!availableBalance || !quoteBalance) {
+    return null;
+  }
   return (
     <BitcoinTokenBalance
       availableBalance={availableBalance}
       quoteBalance={quoteBalance}
-      onPress={onPress}
+      onPress={() => onPress?.({ tokenId: 'BTC', availableBalance, quoteBalance })}
       isLoading={state === 'loading'}
     />
   );

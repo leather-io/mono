@@ -3,7 +3,9 @@ import { RefObject } from 'react';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { analytics } from '@/utils/analytics';
 
+import { Money } from '@leather.io/models';
 import { SheetRef, useHaptics } from '@leather.io/ui/native';
+import { createMoney } from '@leather.io/utils';
 
 import { Token } from './token';
 
@@ -11,6 +13,8 @@ export interface TokenSheetData {
   tokenId: string;
   accountIndex?: number;
   fingerprint?: string;
+  availableBalance: Money;
+  quoteBalance: Money;
 }
 
 interface TokenSheetProps {
@@ -49,6 +53,8 @@ export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
         tokenId={data?.tokenId}
         accountIndex={data?.accountIndex}
         fingerprint={data?.fingerprint}
+        availableBalance={data?.availableBalance ?? createMoney(0, 'BTC')}
+        quoteBalance={data?.quoteBalance ?? createMoney(0, 'BTC')}
       />
     </FullHeightSheet>
   );

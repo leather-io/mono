@@ -21,6 +21,10 @@ msgstr "{accountName}"
 msgid "activity.account.header_content_title"
 msgstr "{accountName} Activity"
 
+#: src/features/token/components/token-price-change.tsx:42
+msgid "token.details.price_change_percentage"
+msgstr "{changePercent}%"
+
 #: src/app/settings/display/index.tsx:110
 msgid "display.conversion_unit.cell_caption"
 msgstr "{currency}"
@@ -69,8 +73,9 @@ msgstr "{network}"
 msgid "settings.header_network"
 msgstr "{network}"
 
-#: src/features/receive/screens/asset-details.tsx:53
+#: src/features/receive/screens/asset-details.tsx:54
 #: src/features/send/screens/form.tsx:59
+#: src/features/token/token-receive-sheet.tsx:78
 msgid "select_asset.header_subtitle"
 msgstr "{subtitle}"
 
@@ -129,6 +134,10 @@ msgstr "10%"
 #: src/features/approver/utils.tsx:100
 msgid "approver.stacks.fee.speed.middle"
 msgstr "20–30 seconds"
+
+#: src/features/token/components/token-details-table.tsx:25
+msgid "token.details.price_change"
+msgstr "24 Hour Change"
 
 #: src/features/earn/sbtc-card.tsx:18
 msgid "earn.sbtc.yield-description-min"
@@ -199,9 +208,17 @@ msgstr "Account label"
 msgid "configure_account.account_name.empty_name_error"
 msgstr "Account name cannot be empty"
 
+#: src/features/token/account-list-item.tsx:24
+msgid "token.details.accounts_title"
+msgstr "Accounts"
+
 #: src/features/earn/stacking-card.tsx:26
 msgid "earn.stacking.description"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
+
+#: src/features/token/components/token-details.tsx:71
+msgid "token.activity.header_title"
+msgstr "Activity"
 
 #: src/components/screen/screen-header/components/header-actions.tsx:45
 msgid "header.activity_label"
@@ -287,7 +304,7 @@ msgstr "Adding wallet..."
 msgid "send-form.guard.non_compliant_address_title"
 msgstr "Address blocked"
 
-#: src/features/receive/navigation.tsx:95
+#: src/hooks/use-copy-address.ts:14
 msgid "receive.select_asset.toast_title"
 msgstr "Address copied"
 
@@ -454,7 +471,7 @@ msgstr "BIP39 passphrase"
 msgid "recover_wallet.passphrase.header_title"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:26
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:27
 #: src/features/receive/get-assets.ts:22
 #: src/features/receive/get-assets.ts:39
 #: src/features/send/forms/btc/btc-form.tsx:63
@@ -698,6 +715,10 @@ msgstr "Deploying"
 #: src/features/activity/utils/format-activity.ts:35
 msgid "activity.status.deploy-failed"
 msgstr "Deployment failed"
+
+#: src/features/token/components/token-description.tsx:9
+msgid "token.details.description_title"
+msgstr "Description"
 
 #: src/app/settings/index.tsx:198
 msgid "settings.device_id_label"
@@ -999,7 +1020,11 @@ msgstr "Invalid email address"
 msgid "recover_wallet.validation_error"
 msgstr "Invalid words: {joinedInvalidWords}"
 
-#: src/features/balances/utils/get-chain-layer-from-protocol.ts:8
+#: src/features/token/components/token-details-table.tsx:29
+msgid "token.details.layer"
+msgstr "Layer"
+
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:8
 msgid "account_balance.caption_left.native"
 msgstr "Layer 1"
 
@@ -1011,11 +1036,11 @@ msgstr "Layer 1 • Bitcoin"
 msgid "account_display_preference.description.native_segwit"
 msgstr "Layer 1 • Bitcoin"
 
-#: src/features/balances/utils/get-chain-layer-from-protocol.ts:10
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:10
 msgid "account_balance.caption_left.stacks"
 msgstr "Layer 2"
 
-#: src/features/balances/utils/get-chain-layer-from-protocol.ts:12
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:12
 msgid "account_balance.caption_left.sip10"
 msgstr "Layer 2 · Stacks"
 
@@ -1109,6 +1134,10 @@ msgstr "More options"
 msgid "add_wallet.options.cell_title"
 msgstr "More options"
 
+#: src/features/token/components/token-details-table.tsx:19
+msgid "token.details.name"
+msgstr "Name"
+
 #: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:104
 msgid "configure_account.name.cell_title"
 msgstr "Name"
@@ -1120,6 +1149,10 @@ msgstr "Name"
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:20
 msgid "wallet_name.input_placeholder"
 msgstr "Name"
+
+#: src/features/token/address-list.tsx:77
+msgid "token.details.native_segwit_address"
+msgstr "Native Segwit"
 
 #: src/features/receive/get-assets.ts:27
 msgid "address_type.native_segwit"
@@ -1194,6 +1227,10 @@ msgstr "Paste"
 msgid "recover_wallet.subtitle"
 msgstr "Paste or type Secret Key to add wallet"
 
+#: src/features/token/components/token-details-table.tsx:21
+msgid "token.details.price"
+msgstr "Price"
+
 #: src/features/settings/wallet-and-accounts/remove-wallet-sheet.tsx:23
 msgid "remove_wallet.warning_caption"
 msgstr "Proceed with caution since the wallet will be removed entirely from this device and its assets will not be recoverable unless you've stored its Secret Key elsewhere securely."
@@ -1224,7 +1261,8 @@ msgstr "Push and email notifications"
 msgid "action_bar.receive_label"
 msgstr "Receive"
 
-#: src/features/receive/screens/asset-details.tsx:49
+#: src/features/receive/screens/asset-details.tsx:50
+#: src/features/token/token-receive-sheet.tsx:74
 msgid "receive_asset.header_title"
 msgstr "Receive"
 
@@ -1232,7 +1270,7 @@ msgstr "Receive"
 msgid "select_account.receive.header_subtitle"
 msgstr "Receive"
 
-#: src/features/receive/screens/select-asset.tsx:71
+#: src/features/receive/screens/select-asset.tsx:72
 msgid "receive.select_asset.header_subtitle"
 msgstr "Receive"
 
@@ -1297,7 +1335,7 @@ msgstr "Reveal account"
 msgid "send_form.review_button"
 msgstr "Review"
 
-#: src/features/balances/utils/get-chain-layer-from-protocol.ts:14
+#: src/features/token/utils/get-chain-layer-from-protocol.ts:14
 msgid "account_balance.caption_left.rune"
 msgstr "Runes"
 
@@ -1360,7 +1398,7 @@ msgstr "Security"
 msgid "select_account.header_title"
 msgstr "Select account"
 
-#: src/features/receive/screens/select-asset.tsx:67
+#: src/features/receive/screens/select-asset.tsx:68
 #: src/features/send/screens/select-asset.tsx:41
 msgid "select_asset.header_title"
 msgstr "Select asset"
@@ -1422,7 +1460,8 @@ msgstr "Settings"
 msgid "browser.toolbox.share"
 msgstr "Share"
 
-#: src/features/receive/screens/asset-details.tsx:98
+#: src/features/receive/screens/asset-details.tsx:99
+#: src/features/token/token-receive-sheet.tsx:122
 msgid "receive_asset.share_button"
 msgstr "Share"
 
@@ -1472,7 +1511,7 @@ msgstr "Something went wrong"
 msgid "earn.stacking.title"
 msgstr "Stacking rewards"
 
-#: src/features/balances/stacks/stacks-balance.tsx:24
+#: src/features/balances/stacks/stacks-balance.tsx:25
 #: src/features/receive/get-assets.ts:56
 #: src/features/send/forms/stx/stx-form.tsx:61
 msgid "asset_name.stacks"
@@ -1485,6 +1524,10 @@ msgstr "Stacks address"
 #: src/features/approver/utils.tsx:45
 msgid "approver.fee.type.middle"
 msgstr "Standard"
+
+#: src/features/token/address-list.tsx:106
+msgid "token.details.stx_address"
+msgstr "STX"
 
 #: src/features/approver/components/approver-buttons.tsx:58
 msgid "approver.button.submitted"
@@ -1513,6 +1556,10 @@ msgstr "Swapping"
 #: src/app/create-new-wallet.tsx:114
 msgid "create_new_wallet.view_secret_key_label_a"
 msgstr "Tap to view Secret Key"
+
+#: src/features/token/address-list.tsx:89
+msgid "token.details.taproot_address"
+msgstr "Taproot"
 
 #: src/features/receive/get-assets.ts:44
 msgid "address_type.taproot"
@@ -1591,6 +1638,10 @@ msgstr "Toggle tactile feedback for interactions"
 #: src/features/send/error-messages.ts:16
 msgid "send.validation.invalid_precision"
 msgstr "Token can only have {precision} decimals"
+
+#: src/features/token/components/token-details-table.tsx:17
+msgid "token.details.title"
+msgstr "Token Details"
 
 #: src/features/activity/utils/format-activity.ts:84
 msgid "activity.type.token-transfer"

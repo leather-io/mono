@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { FetchState, FetchWrapper } from '@/components/loading';
-import { BalanceViewProps } from '@/features/balances/balances';
+import { BalanceViewProps, OnOpenTokenProps } from '@/features/balances/balances';
 import { TokenBalance } from '@/features/token/components/token-balance';
 import {
   useSip10AccountBalance,
@@ -68,7 +68,7 @@ function Sip10TokenBalanceError() {
 interface Sip10BalanceWrapperProps {
   data: FetchState<Sip10AggregateBalance | Sip10AddressBalance>;
   mode: ViewMode;
-  onPress?: (tokenId: string) => void;
+  onPress?: ({ tokenId, availableBalance, quoteBalance }: OnOpenTokenProps) => void;
 }
 function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapperProps) {
   const displayLimit = mode === 'widget' ? SIP10_BALANCES_WIDGET_LIMIT : undefined;
@@ -89,7 +89,11 @@ function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapp
                 imageCanonicalUri={item.asset.imageCanonicalUri}
                 onPress={() => {
                   // pass balance and quote balance to the sheet from here
-                  onPress?.(item.asset.symbol);
+                  onPress?.({
+                    tokenId: item.asset.symbol,
+                    availableBalance: item.crypto.availableBalance,
+                    quoteBalance: item.quote.totalBalance,
+                  });
                 }}
                 name={item.asset.name}
                 symbol={item.asset.symbol}
