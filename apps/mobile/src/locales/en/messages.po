@@ -49,7 +49,7 @@ msgstr "{name}"
 msgid "configure_account.name.cell_caption"
 msgstr "{name}"
 
-#: src/features/account/accounts-widget.tsx:79
+#: src/features/account/accounts-widget.tsx:106
 msgid "accounts.account.cell_caption"
 msgstr "{name}"
 
@@ -207,7 +207,7 @@ msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from sta
 msgid "tabs.home.activity"
 msgstr "Activity"
 
-#: src/features/account/account.tsx:118
+#: src/features/account/account.tsx:146
 msgid "account.activity.header_title"
 msgstr "Activity"
 
@@ -331,7 +331,7 @@ msgstr "Alex"
 msgid "account_selector.header_title"
 msgstr "All accounts"
 
-#: src/features/account/accounts-widget.tsx:47
+#: src/features/account/accounts-widget.tsx:48
 msgid "accounts.header_title"
 msgstr "All accounts"
 
@@ -543,7 +543,7 @@ msgid "approver.code.title"
 msgstr "Code"
 
 #: src/app/(tabs)/(index)/account/[accountId]/collectibles.tsx:17
-#: src/features/account/account.tsx:128
+#: src/features/account/account.tsx:156
 msgid "account.collectibles.header_title"
 msgstr "Collectibles"
 
@@ -1232,6 +1232,11 @@ msgstr "Push and email notifications"
 msgid "action_bar.receive_label"
 msgstr "Receive"
 
+#: src/features/account/account.tsx:113
+#: src/features/account/accounts-widget.tsx:79
+msgid "general.receive"
+msgstr "Receive"
+
 #: src/features/receive/screens/asset-details.tsx:49
 msgid "receive_asset.header_title"
 msgstr "Receive"
@@ -1371,6 +1376,11 @@ msgstr "Select asset"
 
 #: src/components/action-bar/action-bar.tsx:56
 msgid "action_bar.send_label"
+msgstr "Send"
+
+#: src/features/account/account.tsx:101
+#: src/features/account/accounts-widget.tsx:67
+msgid "general.send"
 msgstr "Send"
 
 #: src/features/send/screens/form.tsx:55
@@ -1596,7 +1606,7 @@ msgstr "Token can only have {precision} decimals"
 msgid "activity.type.token-transfer"
 msgstr "Token Transfer"
 
-#: src/features/account/account.tsx:106
+#: src/features/account/account.tsx:134
 msgid "account.balances.header_title"
 msgstr "Tokens"
 
