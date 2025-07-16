@@ -79,11 +79,11 @@ function App() {
         <StatusBar />
         <Stack screenOptions={{ headerShown: false }} />
         <ActionBar />
+        <SendSheet />
+        <ReceiveSheet />
+        <BrowserSheet />
         <AddAccountSheet />
         <AddWalletSheet />
-        <BrowserSheet />
-        <ReceiveSheet />
-        <SendSheet />
       </ErrorBoundary>
     </Box>
   );
