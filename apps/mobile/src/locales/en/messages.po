@@ -203,12 +203,12 @@ msgstr "Account name cannot be empty"
 msgid "earn.stacking.description"
 msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from staking"
 
-#: src/app/(tabs)/_layout.tsx:23
-msgid "tabs.home.activity"
-msgstr "Activity"
-
 #: src/features/account/account.tsx:146
 msgid "account.activity.header_title"
+msgstr "Activity"
+
+#: src/features/navigation/tab-layout.tsx:46
+msgid "tabs.button.activity.title"
 msgstr "Activity"
 
 #: src/features/account/components/add-account-card.tsx:16
@@ -485,8 +485,8 @@ msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or 
 msgid "action_bar.browser_label"
 msgstr "Browse"
 
-#: src/app/(tabs)/_layout.tsx:34
-msgid "tabs.home.browser"
+#: src/features/navigation/tab-layout.tsx:52
+msgid "tabs.button.browser.title"
 msgstr "Browser"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:70
@@ -967,8 +967,8 @@ msgstr "Hide balances"
 msgid "earn.historical-yield"
 msgstr "Historical yield"
 
-#: src/app/(tabs)/_layout.tsx:12
-msgid "tabs.home.title"
+#: src/features/navigation/tab-layout.tsx:40
+msgid "tabs.button.home.title"
 msgstr "Home"
 
 #: src/components/sheets/notify-user-sheet.layout.tsx:64
