@@ -56,32 +56,34 @@ export function AccountsWidget() {
               )}
             </Box>
           )}
-          <Box my="3" px="5" flexDirection="row" gap="2">
-            <ButtonV2
-              onPress={() => {
-                sendSheetRef.current?.present();
-              }}
-              minWidth={86}
-              size="sm"
-              buttonState="default"
-              title={t({
-                id: 'general.send',
-                message: `Send`,
-              })}
-            />
-            <ButtonV2
-              onPress={() => {
-                receiveSheetRef.current?.present();
-              }}
-              minWidth={86}
-              size="sm"
-              buttonState="outline"
-              title={t({
-                id: 'general.receive',
-                message: `Receive`,
-              })}
-            />
-          </Box>
+          {wallets.hasWallets && (
+            <Box my="3" px="5" flexDirection="row" gap="2">
+              <ButtonV2
+                onPress={() => {
+                  sendSheetRef.current?.present();
+                }}
+                minWidth={86}
+                size="sm"
+                buttonState="default"
+                title={t({
+                  id: 'general.send',
+                  message: `Send`,
+                })}
+              />
+              <ButtonV2
+                onPress={() => {
+                  receiveSheetRef.current?.present();
+                }}
+                minWidth={86}
+                size="sm"
+                buttonState="outline"
+                title={t({
+                  id: 'general.receive',
+                  message: `Receive`,
+                })}
+              />
+            </Box>
+          )}
         </Box>
         <Widget.Body>
           <ScrollView
