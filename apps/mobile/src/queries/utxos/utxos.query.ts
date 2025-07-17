@@ -14,7 +14,7 @@ function useAccountUtxosQuery(account: AccountAddresses) {
   return useQuery({
     queryKey: ['utxos-service-get-account-utxos', account],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getUtxosService().getAccountUtxos(account, [], signal),
+      getUtxosService().getAccountUtxos({ account, unprotectedUtxos: [] }, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

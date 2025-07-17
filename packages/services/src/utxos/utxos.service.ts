@@ -1,11 +1,12 @@
 import { injectable } from 'inversify';
 
-import { AccountAddresses, OwnedUtxo, UtxoId } from '@leather.io/models';
+import { OwnedUtxo, UtxoId } from '@leather.io/models';
 import { hasBitcoinAddress, isDefined } from '@leather.io/utils';
 
 import { BestInSlotApiClient } from '../infrastructure/api/best-in-slot/best-in-slot-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
+import { BtcAccountRequest } from '../types/btc.types';
 import {
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
@@ -51,25 +52,28 @@ export class UtxosService {
    * An optional list of unprotected UTXOs can be provided on request to selectively move UTXO values from protected to available.
    */
   public async getAccountUtxos(
-    account: AccountAddresses,
-    unprotectedUtxos: UtxoId[],
+    { account, unprotectedUtxos, exclude }: BtcAccountRequest,
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
     if (!hasBitcoinAddress(account)) return emptyUtxos;
 
     const [nativeSegwitUtxos, taprootUtxos] = await Promise.all([
-      this.getDescriptorUtxos(
-        account.id.fingerprint,
-        account.bitcoin.nativeSegwitDescriptor,
-        [],
-        signal
-      ),
-      this.getDescriptorUtxos(
-        account.id.fingerprint,
-        account.bitcoin.taprootDescriptor,
-        unprotectedUtxos,
-        signal
-      ),
+      !exclude?.nativeSegwitAddresses
+        ? this.getDescriptorUtxos(
+            account.id.fingerprint,
+            account.bitcoin.nativeSegwitDescriptor,
+            [],
+            signal
+          )
+        : Promise.resolve(emptyUtxos),
+      !exclude?.taprootAddresses
+        ? this.getDescriptorUtxos(
+            account.id.fingerprint,
+            account.bitcoin.taprootDescriptor,
+            unprotectedUtxos,
+            signal
+          )
+        : Promise.resolve(emptyUtxos),
     ]);
     return {
       confirmed: [...nativeSegwitUtxos.confirmed, ...taprootUtxos.confirmed],
