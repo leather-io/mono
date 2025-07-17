@@ -12,6 +12,7 @@ import {
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market-data/market-data.service';
+import { BtcAccountRequest } from '../types/btc.types';
 import { UtxosService } from '../utxos/utxos.service';
 import { sumUtxoValues } from '../utxos/utxos.utils';
 
@@ -73,14 +74,10 @@ export class BtcBalancesService {
    * A list of selectively unprotected UTXOs provided on the request will move the UTXO values from protected to available balance.
    */
   public async getBtcAccountBalance(
-    request: BtcAccountBalanceRequest,
+    request: BtcAccountRequest,
     signal?: AbortSignal
   ): Promise<AccountQuotedBtcBalance> {
-    const utxos = await this.utxosService.getAccountUtxos(
-      request.account,
-      request.unprotectedUtxos,
-      signal
-    );
+    const utxos = await this.utxosService.getAccountUtxos(request, signal);
 
     const totalBalance = createMoney(sumUtxoValues(utxos.confirmed), 'BTC');
     const inboundBalance = createMoney(sumUtxoValues(utxos.inbound), 'BTC');

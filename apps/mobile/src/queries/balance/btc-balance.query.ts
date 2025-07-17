@@ -3,25 +3,74 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
 
-import { AccountAddresses } from '@leather.io/models';
-import { getBtcBalancesService } from '@leather.io/services';
+import { BtcAccountRequest, getBtcBalancesService } from '@leather.io/services';
 
 export function useBtcTotalBalance() {
   const accounts = useTotalAccountAddresses();
-  return toFetchState(useBtcAggregateBalanceQuery(accounts));
+  return toFetchState(
+    useBtcAggregateBalanceQuery(accounts.map(account => ({ account, unprotectedUtxos: [] })))
+  );
+}
+
+export function useBtcTotalNativeSegwitBalance() {
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(
+    useBtcAggregateBalanceQuery(
+      accounts.map(account => ({
+        account,
+        unprotectedUtxos: [],
+        exclude: { taprootAddresses: true },
+      }))
+    )
+  );
+}
+
+export function useBtcTotalTaprootBalance() {
+  const accounts = useTotalAccountAddresses();
+  return toFetchState(
+    useBtcAggregateBalanceQuery(
+      accounts.map(account => ({
+        account,
+        unprotectedUtxos: [],
+        exclude: { nativeSegwitAddresses: true },
+      }))
+    )
+  );
 }
 
 export function useBtcAccountBalance(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useBtcAccountBalanceQuery(account));
+  return toFetchState(useBtcAccountBalanceQuery({ account, unprotectedUtxos: [] }));
 }
 
-function useBtcAccountBalanceQuery(account: AccountAddresses) {
+export function useBtcAccountNativeSegwitBalance(fingerprint: string, accountIndex: number) {
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(
+    useBtcAccountBalanceQuery({
+      account,
+      unprotectedUtxos: [],
+      exclude: { taprootAddresses: true },
+    })
+  );
+}
+
+export function useBtcAccountTaprootBalance(fingerprint: string, accountIndex: number) {
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  return toFetchState(
+    useBtcAccountBalanceQuery({
+      account,
+      unprotectedUtxos: [],
+      exclude: { nativeSegwitAddresses: true },
+    })
+  );
+}
+
+function useBtcAccountBalanceQuery(request: BtcAccountRequest) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-account-balance', account, fiatCurrencyPreference],
+    queryKey: ['btc-balance-service-get-btc-account-balance', request, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getBtcBalancesService().getBtcAccountBalance({ account, unprotectedUtxos: [] }, signal),
+      getBtcBalancesService().getBtcAccountBalance(request, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -31,18 +80,12 @@ function useBtcAccountBalanceQuery(account: AccountAddresses) {
   });
 }
 
-function useBtcAggregateBalanceQuery(accounts: AccountAddresses[]) {
+function useBtcAggregateBalanceQuery(requests: BtcAccountRequest[]) {
   const { fiatCurrencyPreference } = useSettings();
   return useQuery({
-    queryKey: ['btc-balance-service-get-btc-aggregate-balance', accounts, fiatCurrencyPreference],
+    queryKey: ['btc-balance-service-get-btc-aggregate-balance', requests, fiatCurrencyPreference],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getBtcBalancesService().getBtcAggregateBalance(
-        accounts.map(account => ({
-          account,
-          unprotectedUtxos: [],
-        })),
-        signal
-      ),
+      getBtcBalancesService().getBtcAggregateBalance(requests, signal),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

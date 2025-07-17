@@ -16,7 +16,10 @@ export function usePreloadBtcData(account: Account | null) {
   useQuery({
     queryKey: ['utxos-service-get-account-utxos', accountAddresses],
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getUtxosService().getAccountUtxos(accountAddresses, [], signal),
+      getUtxosService().getAccountUtxos(
+        { account: accountAddresses, unprotectedUtxos: [] },
+        signal
+      ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
