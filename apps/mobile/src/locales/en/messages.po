@@ -49,7 +49,7 @@ msgstr "{name}"
 msgid "configure_account.name.cell_caption"
 msgstr "{name}"
 
-#: src/features/account/accounts-widget.tsx:106
+#: src/features/account/accounts-widget.tsx:108
 msgid "accounts.account.cell_caption"
 msgstr "{name}"
 
@@ -1233,7 +1233,7 @@ msgid "action_bar.receive_label"
 msgstr "Receive"
 
 #: src/features/account/account.tsx:113
-#: src/features/account/accounts-widget.tsx:79
+#: src/features/account/accounts-widget.tsx:80
 msgid "general.receive"
 msgstr "Receive"
 
@@ -1379,7 +1379,7 @@ msgid "action_bar.send_label"
 msgstr "Send"
 
 #: src/features/account/account.tsx:101
-#: src/features/account/accounts-widget.tsx:67
+#: src/features/account/accounts-widget.tsx:68
 msgid "general.send"
 msgstr "Send"
 
