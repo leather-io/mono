@@ -10,18 +10,32 @@ import { useTotalActivity } from '@/queries/activity/account-activity.query';
 
 import { OnChainActivity } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
+import { isDefined } from '@leather.io/utils';
 
 interface TokenActivityProps {
   ListHeader: React.ReactNode;
   ticker: string;
+  accountIndex?: number;
+  fingerprint?: string;
 }
 
-export function TokenActivity({ ListHeader, ticker }: TokenActivityProps) {
+const filterByTicker = (activity: OnChainActivity, ticker: string) =>
+  'asset' in activity && 'symbol' in activity.asset && activity.asset.symbol === ticker;
+
+const filterByAccount = (activity: OnChainActivity, accountIndex: number, fingerprint: string) =>
+  'account' in activity &&
+  activity.account.accountIndex === accountIndex &&
+  activity.account.fingerprint === fingerprint;
+
+export function TokenActivity({
+  ListHeader,
+  ticker,
+  accountIndex,
+  fingerprint,
+}: TokenActivityProps) {
   const scrollViewAdjustmentOffset = 56;
   const { refreshing, onRefresh } = useRefreshHandler();
   const activity = useTotalActivity();
-  // useActivityByAsset is on a per account basis so useTotalActivity for now and then filter in the component
-  // const { data: activityByAsset } = useActivityByAsset(asset);
 
   return (
     <Screen>
@@ -40,12 +54,15 @@ export function TokenActivity({ ListHeader, ticker }: TokenActivityProps) {
             refreshControl={<RefreshControl progressViewOffset={scrollViewAdjustmentOffset} />}
             style={{ marginTop: -scrollViewAdjustmentOffset }}
             data={
-              activity.value.filter(
-                activity =>
-                  'asset' in activity &&
-                  'symbol' in activity.asset &&
-                  activity.asset.symbol === ticker
-              ) as OnChainActivity[]
+              activity.value
+                .filter((activity): activity is OnChainActivity => activity && 'asset' in activity)
+                .filter(activity => filterByTicker(activity, ticker))
+                .filter(activity => {
+                  if (isDefined(accountIndex) && isDefined(fingerprint)) {
+                    return filterByAccount(activity, accountIndex, fingerprint);
+                  }
+                  return true;
+                }) as OnChainActivity[]
             } // TODO: Unclear why was this cast. Needs clearing up.
             renderItem={({ item }) => <ActivityListItem activity={item} />}
             keyExtractor={(_, index) => `activity.${index}`}

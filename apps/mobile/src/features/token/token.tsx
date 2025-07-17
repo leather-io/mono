@@ -35,9 +35,6 @@ export function Token({
 
   const marketData = useMarketDataQuery(asset);
   const price = marketData.data?.price;
-
-  // FIXME LEA-3015: can't call these conditionally so probably need to refactor this whole thin
-  // move the hooks into to their components - accept tokenId as a prop
   const { data: assetDescription } = useAssetDescriptionQuery(asset);
   const { data: assetPriceChange } = useAssetPriceChangeQuery(asset);
   const tokenSheetRef = useRef<SheetRef>(null);
@@ -52,6 +49,8 @@ export function Token({
     <>
       <TokenActivity
         ticker={asset.symbol}
+        accountIndex={accountIndex}
+        fingerprint={fingerprint}
         // TokenDetails is Activity ListHeader to avoid nested scrolling errors
         ListHeader={
           <TokenDetails
@@ -65,11 +64,11 @@ export function Token({
               ) : (
                 <AccountList
                   tokenId={asset.symbol}
-                  selectAccount={account =>
+                  selectAccount={({ accountIndex, fingerprint }) =>
                     onOpenToken({
                       asset,
-                      accountIndex: account.accountIndex,
-                      fingerprint: account.fingerprint,
+                      accountIndex,
+                      fingerprint,
                       availableBalance,
                       quoteBalance,
                     })
