@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 
 interface FaviconProps {
   origin: string;
-  size?: 16 | 32 | 64;
+  size?: 16 | 32 | 40 | 64;
 }
 
 export function Favicon({ origin, size = 16 }: FaviconProps) {

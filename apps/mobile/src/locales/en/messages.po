@@ -587,7 +587,7 @@ msgstr "Confirm"
 msgid "approver.connect.title"
 msgstr "Connect"
 
-#: src/app/app-connections.tsx:8
+#: src/app/app-connections.tsx:12
 msgid "browser.connections.title"
 msgstr "Connections"
 
@@ -722,6 +722,10 @@ msgstr "Disabled"
 #: src/features/recover-wallet/recover-wallet.layout.tsx:90
 msgid "recover_wallet.passphrase_disabled"
 msgstr "Disabled"
+
+#: src/features/browser/browser/link-card.tsx:22
+msgid "general.disconnected"
+msgstr "Disconnected"
 
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:64
 msgid "send-form.guard.label_dismiss"
@@ -1265,7 +1269,7 @@ msgstr "Receive transaction notifications"
 msgid "activity.status.received"
 msgstr "Received"
 
-#: src/app/app-recently-viewed.tsx:8
+#: src/app/app-recently-viewed.tsx:14
 msgid "browser.recently-viewed.title"
 msgstr "Recently viewed"
 
@@ -1731,11 +1735,11 @@ msgstr "Wrong URL"
 msgid "send-form.guard.new_recipient_description"
 msgstr "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
 
-#: src/app/app-connections.tsx:9
+#: src/app/app-connections.tsx:26
 msgid "browser-sheet.connected.empty.caption"
 msgstr "You will find the apps you are connected to here"
 
-#: src/app/app-recently-viewed.tsx:9
+#: src/app/app-recently-viewed.tsx:29
 msgid "browser-sheet.recent.empty.caption"
 msgstr "You will find the apps you recently viewed here"
 
