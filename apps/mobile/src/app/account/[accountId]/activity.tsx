@@ -43,7 +43,7 @@ export default function AccountActivityScreen() {
                 })}
               </Screen.Title>
             }
-            data={activity.value as OnChainActivity[]} // TODO: Unclear why was this cast. Needs clearing up.
+            data={activity.value.filter(activity => activity && 'asset' in activity)}
             renderItem={({ item }) => <ActivityListItem activity={item} />}
             keyExtractor={(_, index) => `activity.${index}`}
             ListEmptyComponent={<ActivityEmpty />}

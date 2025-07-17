@@ -19,13 +19,16 @@ interface TokenActivityProps {
   fingerprint?: string;
 }
 
-const filterByTicker = (activity: OnChainActivity, ticker: string) =>
-  'asset' in activity && 'symbol' in activity.asset && activity.asset.symbol === ticker;
-
-const filterByAccount = (activity: OnChainActivity, accountIndex: number, fingerprint: string) =>
-  'account' in activity &&
-  activity.account.accountIndex === accountIndex &&
-  activity.account.fingerprint === fingerprint;
+function filterByTicker(activity: OnChainActivity, ticker: string) {
+  return 'asset' in activity && 'symbol' in activity.asset && activity.asset.symbol === ticker;
+}
+function filterByAccount(activity: OnChainActivity, accountIndex: number, fingerprint: string) {
+  return (
+    'account' in activity &&
+    activity.account.accountIndex === accountIndex &&
+    activity.account.fingerprint === fingerprint
+  );
+}
 
 export function TokenActivity({
   ListHeader,
@@ -53,17 +56,15 @@ export function TokenActivity({
           <Screen.List
             refreshControl={<RefreshControl progressViewOffset={scrollViewAdjustmentOffset} />}
             style={{ marginTop: -scrollViewAdjustmentOffset }}
-            data={
-              activity.value
-                .filter((activity): activity is OnChainActivity => activity && 'asset' in activity)
-                .filter(activity => filterByTicker(activity, ticker))
-                .filter(activity => {
-                  if (isDefined(accountIndex) && isDefined(fingerprint)) {
-                    return filterByAccount(activity, accountIndex, fingerprint);
-                  }
-                  return true;
-                }) as OnChainActivity[]
-            } // TODO: Unclear why was this cast. Needs clearing up.
+            data={activity.value
+              .filter(activity => activity && 'asset' in activity)
+              .filter(activity => filterByTicker(activity, ticker))
+              .filter(activity => {
+                if (isDefined(accountIndex) && isDefined(fingerprint)) {
+                  return filterByAccount(activity, accountIndex, fingerprint);
+                }
+                return true;
+              })}
             renderItem={({ item }) => <ActivityListItem activity={item} />}
             keyExtractor={(_, index) => `activity.${index}`}
             ListHeaderComponent={() => ListHeader}

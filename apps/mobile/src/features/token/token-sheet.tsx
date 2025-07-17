@@ -5,7 +5,6 @@ import { analytics } from '@/utils/analytics';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { SheetRef, useHaptics } from '@leather.io/ui/native';
-import { createMoney } from '@leather.io/utils';
 
 import { Token } from './token';
 
