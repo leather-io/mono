@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { ComponentPropsWithoutRef, RefObject } from 'react';
 import { TouchableOpacity as RNTouchableOpacity, StyleProp, TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -20,7 +20,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { assertUnreachable, match } from '@leather.io/utils';
+import { match } from '@leather.io/utils';
 
 import { Text, Theme, TouchableOpacity } from '../../../native';
 
@@ -37,27 +37,52 @@ const composedRestyleFunction = composeRestyleFunctions<Theme, Props>(buttonRest
 
 export type ButtonState = 'default' | 'critical' | 'disabled' | 'success' | 'outline' | 'ghost';
 
-function whenButtonState<T>(buttonState: ButtonState, match: Record<ButtonState, T>) {
-  switch (buttonState) {
-    case 'default':
-      return match.default;
-    case 'critical':
-      return match.critical;
-    case 'disabled':
-      return match.disabled;
-    case 'success':
-      return match.success;
-    case 'outline':
-      return match.outline;
-    case 'ghost':
-      return match.ghost;
-    default:
-      assertUnreachable(buttonState);
-  }
-}
+type ButtonSize = 'xs' | 'sm' | 'md';
 
-export function getButtonTextColor(buttonState: ButtonState) {
-  return whenButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
+export function ButtonV2({
+  title,
+  buttonState: buttonStateProp = 'default',
+  icon,
+  textStyle,
+  size = 'md',
+  ref,
+  ...rest
+}: Props & {
+  title?: string;
+  buttonState?: ButtonState;
+  icon?: React.ReactNode;
+  textStyle?: StyleProp<TextStyle>;
+  size?: ButtonSize;
+  ref?: RefObject<typeof TouchableOpacity | null>;
+}) {
+  const matchButtonSize = match<ButtonSize>();
+  const buttonHeight = matchButtonSize<number>(size, {
+    xs: 32,
+    sm: 40,
+    md: 48,
+  });
+  const buttonPx = matchButtonSize<ResponsiveValue<keyof Theme['spacing'], Theme['breakpoints']>>(
+    size,
+    {
+      xs: '3',
+      sm: '3',
+      md: '4',
+    }
+  );
+  const buttonPy = matchButtonSize<ResponsiveValue<keyof Theme['spacing'], Theme['breakpoints']>>(
+    size,
+    {
+      xs: '2',
+      sm: '2',
+      md: '3',
+    }
+  );
+
+  const props = useRestyle(composedRestyleFunction, rest);
+  const buttonState = rest.disabled ? 'disabled' : buttonStateProp;
+  const matchButtonState = match<ButtonState>();
+
+  const textColor = matchButtonState<ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>>(
     buttonState,
     {
       default: 'ink.background-primary',
@@ -68,98 +93,65 @@ export function getButtonTextColor(buttonState: ButtonState) {
       ghost: 'ink.text-primary',
     }
   );
+
+  const bg = matchButtonState<
+    ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
+  >(buttonState, {
+    default: 'ink.text-primary',
+    critical: 'red.action-primary-default',
+    disabled: 'ink.background-secondary',
+    success: 'green.action-primary-default',
+    outline: 'ink.background-primary',
+    ghost: undefined,
+  });
+
+  const borderColor = matchButtonState<
+    ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
+  >(buttonState, {
+    default: undefined,
+    critical: undefined,
+    disabled: undefined,
+    success: undefined,
+    outline: 'ink.border-default',
+    ghost: undefined,
+  });
+
+  const borderWidth = matchButtonState<number | undefined>(buttonState, {
+    default: undefined,
+    critical: undefined,
+    disabled: undefined,
+    success: undefined,
+    outline: 1,
+    ghost: undefined,
+  });
+
+  const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
+
+  const hasGap = !!icon && !!title;
+
+  return (
+    <TouchableOpacity
+      ref={ref}
+      bg={bg}
+      px={buttonPx}
+      py={buttonPy}
+      height={buttonHeight}
+      borderRadius="round"
+      justifyContent="center"
+      alignItems="center"
+      borderColor={borderColor}
+      borderWidth={borderWidth}
+      flexDirection="row"
+      gap={hasGap ? '2' : undefined}
+      {...props}
+    >
+      {icon}
+      <Text variant={textVariant} color={textColor} style={textStyle}>
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
 }
-
-type ButtonSize = 'xs' | 'sm' | 'md';
-
-export const ButtonV2 = forwardRef(
-  (
-    {
-      title,
-      buttonState: buttonStateProp = 'default',
-      icon,
-      textStyle,
-      size = 'md',
-      ...rest
-    }: Props & {
-      title?: string;
-      buttonState?: ButtonState;
-      icon?: React.ReactNode;
-      textStyle?: StyleProp<TextStyle>;
-      size?: ButtonSize;
-    },
-    ref
-  ) => {
-    const matchButtonSize = match<ButtonSize>();
-    const buttonHeight = matchButtonSize<number>(size, {
-      xs: 32,
-      sm: 40,
-      md: 48,
-    });
-
-    const props = useRestyle(composedRestyleFunction, rest);
-    const buttonState = rest.disabled ? 'disabled' : buttonStateProp;
-
-    const bg = whenButtonState<
-      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
-    >(buttonState, {
-      default: 'ink.text-primary',
-      critical: 'red.action-primary-default',
-      disabled: 'ink.background-secondary',
-      success: 'green.action-primary-default',
-      outline: 'ink.background-primary',
-      ghost: undefined,
-    });
-
-    const textColor = getButtonTextColor(buttonState);
-
-    const borderColor = whenButtonState<
-      ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']> | undefined
-    >(buttonState, {
-      default: undefined,
-      critical: undefined,
-      disabled: undefined,
-      success: undefined,
-      outline: 'ink.action-primary-default',
-      ghost: undefined,
-    });
-
-    const borderWidth = whenButtonState<number | undefined>(buttonState, {
-      default: undefined,
-      critical: undefined,
-      disabled: undefined,
-      success: undefined,
-      outline: 1,
-      ghost: undefined,
-    });
-
-    const textVariant: VariantProps<Theme, 'textVariants'>['variant'] = 'label02';
-
-    const hasGap = !!icon && !!title;
-
-    return (
-      <TouchableOpacity
-        ref={ref}
-        bg={bg}
-        px="3"
-        height={buttonHeight}
-        borderRadius="round"
-        justifyContent="center"
-        alignItems="center"
-        borderColor={borderColor}
-        borderWidth={borderWidth}
-        flexDirection="row"
-        gap={hasGap ? '2' : undefined}
-        {...props}
-      >
-        {icon}
-        <Text variant={textVariant} color={textColor} style={textStyle}>
-          {title}
-        </Text>
-      </TouchableOpacity>
-    );
-  }
-);
 
 ButtonV2.displayName = 'Button';
 
