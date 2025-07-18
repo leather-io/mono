@@ -449,6 +449,20 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.12.9
 
+## [1.74.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.73.3...@leather.io/ui-v1.74.0) (2025-07-18)
+
+
+### Features
+
+* send receive buttons ([b98112f](https://github.com/leather-io/mono/commit/b98112faca0091f6ee1e1bcb562531f2923144a2))
+
+
+### Bug Fixes
+
+* update button design ([f032ee7](https://github.com/leather-io/mono/commit/f032ee7322dce18de4f462cb65328c94b1735ce9))
+* update design for connections tab ([49d2ab5](https://github.com/leather-io/mono/commit/49d2ab5056a6a131643276a2b11edcf6eeb0efcd))
+* update tab bar nav buttons ([47dde10](https://github.com/leather-io/mono/commit/47dde10271334e49a4396454ca70a67f57b7eb04))
+
 ## [1.73.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.72.3...@leather.io/ui-v1.73.0) (2025-07-11)
 
 

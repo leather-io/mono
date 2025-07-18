@@ -740,6 +740,36 @@
     * @leather.io/tokens bumped to 0.20.0
     * @leather.io/ui bumped to 1.73.3
 
+## [2.57.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.56.3...@leather.io/mobile-v2.57.0) (2025-07-18)
+
+
+### Features
+
+* add bottom tab nav ([3930bf1](https://github.com/leather-io/mono/commit/3930bf1edde2458737b3d2700e19ec26aa4a2a66))
+* add dapp screen ([a8956ac](https://github.com/leather-io/mono/commit/a8956acbc69a120186c6fb6556801bd484c47795))
+* move browser to browser tab ([b9be452](https://github.com/leather-io/mono/commit/b9be4522a14ed1ff6692dbf3161079a4fa5698ac))
+* send receive buttons ([b98112f](https://github.com/leather-io/mono/commit/b98112faca0091f6ee1e1bcb562531f2923144a2))
+
+
+### Bug Fixes
+
+* bottom tab nav ([807c528](https://github.com/leather-io/mono/commit/807c5283e95632ce28b85cfa2eba78e270cfb213))
+* browser linking ([fc492bb](https://github.com/leather-io/mono/commit/fc492bb6d4337fff9abc16a3b3a805d38cc010e6))
+* only show send/receive buttons when there are wallets in the app ([6bca826](https://github.com/leather-io/mono/commit/6bca8266ff5a340b0311c9d8806bcd54af0f094d))
+* premature nonce error ([6f0902f](https://github.com/leather-io/mono/commit/6f0902fb5e48474d15cf50da0d5da1c0bacfbfe7))
+* rip action bar ([fce8622](https://github.com/leather-io/mono/commit/fce86229714bc0e74fdb163429631e1d5e9ba157))
+* signing account ([ab18474](https://github.com/leather-io/mono/commit/ab18474ce964c4c39e1317bbde88099f1844ab27))
+* tab bar navigation height ([e9c7aad](https://github.com/leather-io/mono/commit/e9c7aad40865b9d2f0bf8e30c494585c96ed06d7))
+* update design for connections tab ([49d2ab5](https://github.com/leather-io/mono/commit/49d2ab5056a6a131643276a2b11edcf6eeb0efcd))
+* update tab bar nav buttons ([47dde10](https://github.com/leather-io/mono/commit/47dde10271334e49a4396454ca70a67f57b7eb04))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/ui bumped to 1.74.0
+
 ## [2.56.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.55.1...@leather.io/mobile-v2.56.0) (2025-07-11)
 
 
