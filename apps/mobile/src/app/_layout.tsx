@@ -4,7 +4,6 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
-import { ActionBar } from '@/components/action-bar/action-bar';
 import { ErrorBoundary } from '@/components/error/error-boundary';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
@@ -78,7 +77,6 @@ function App() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
         </Stack>
-        <ActionBar />
         <SendSheet />
         <ReceiveSheet />
         <AddAccountSheet />
