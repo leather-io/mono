@@ -207,7 +207,7 @@ msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from sta
 msgid "account.activity.header_title"
 msgstr "Activity"
 
-#: src/features/navigation/tab-layout.tsx:53
+#: src/features/navigation/tab-layout.tsx:63
 msgid "tabs.button.activity.title"
 msgstr "Activity"
 
@@ -477,7 +477,7 @@ msgstr "BNS name"
 msgid "earn.sbtc.description"
 msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
 
-#: src/features/navigation/tab-layout.tsx:59
+#: src/features/navigation/tab-layout.tsx:70
 msgid "tabs.button.browser.title"
 msgstr "Browser"
 
@@ -963,7 +963,7 @@ msgstr "Hide balances"
 msgid "earn.historical-yield"
 msgstr "Historical yield"
 
-#: src/features/navigation/tab-layout.tsx:47
+#: src/features/navigation/tab-layout.tsx:56
 msgid "tabs.button.home.title"
 msgstr "Home"
 
