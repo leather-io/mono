@@ -3,7 +3,7 @@ import { App, assertAppIsConnected } from '@/store/apps/utils';
 import { stacksSignerFromAddress } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { getStacksNetworkFromName } from '@/store/settings/settings.read';
-import { makeAccountIdentiferFromDescriptor } from '@/store/utils';
+import { makeStacksAccountIdentiferFromDescriptor } from '@/store/utils';
 import { StacksNetwork, StacksNetworks } from '@stacks/network';
 import { PostConditionModeName } from '@stacks/transactions';
 
@@ -36,7 +36,7 @@ export function getAccountIdFromRequestParams({
     const signer = stacksSigners.find(stacksSignerFromAddress(params.address));
     assertStacksSigner(signer);
 
-    return makeAccountIdentiferFromDescriptor(signer.descriptor);
+    return makeStacksAccountIdentiferFromDescriptor(signer.descriptor);
   }
 
   assertAppIsConnected(app);

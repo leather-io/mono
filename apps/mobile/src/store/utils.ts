@@ -3,10 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { EntityState, PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import z from 'zod';
 
-import {
-  extractAccountIndexFromDescriptor,
-  extractFingerprintFromDescriptor,
-} from '@leather.io/crypto';
+import { extractAddressIndexFromPath, extractFingerprintFromDescriptor } from '@leather.io/crypto';
 import { isDefined } from '@leather.io/utils';
 
 import { AccountIcon, AccountStore, accountIcons } from './accounts/utils';
@@ -37,8 +34,8 @@ export function destructAccountIdentifier(accountId: string) {
   return { fingerprint, accountIndex: +accountIndex };
 }
 
-export function makeAccountIdentiferFromDescriptor(descriptor: string) {
-  const accountIdx = extractAccountIndexFromDescriptor(descriptor);
+export function makeStacksAccountIdentiferFromDescriptor(descriptor: string) {
+  const accountIdx = extractAddressIndexFromPath(descriptor);
   const accountFingerprint = extractFingerprintFromDescriptor(descriptor);
 
   return makeAccountIdentifer(accountFingerprint, accountIdx);
