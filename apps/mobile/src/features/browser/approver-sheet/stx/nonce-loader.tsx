@@ -26,7 +26,7 @@ export function NonceLoader({
   } = useNextNonce(currentStacksAddress);
 
   useEffect(() => {
-    if (isError || !nonceResponse?.nonce) {
+    if (!isNonceLoading && (isError || !nonceResponse?.nonce)) {
       // TODO: track this
       displayToast({
         title: t({
@@ -36,7 +36,7 @@ export function NonceLoader({
         type: 'error',
       });
     }
-  }, [displayToast, isError, nonceResponse?.nonce]);
+  }, [displayToast, isError, nonceResponse?.nonce, isNonceLoading]);
 
   if (isNonceLoading) return null;
 
