@@ -259,10 +259,6 @@ msgstr "Add to new wallet"
 msgid "wallet.add_wallet.cell_title"
 msgstr "Add wallet"
 
-#: src/components/action-bar/action-bar.tsx:80
-msgid "action_bar.add_wallet_label"
-msgstr "Add wallet"
-
 #: src/features/settings/wallet-and-accounts/components/empty-wallets-screen.tsx:29
 msgid "add_or_create_new_wallet.button"
 msgstr "Add wallet"
@@ -480,10 +476,6 @@ msgstr "BNS name"
 #: src/features/earn/sbtc-card.tsx:27
 msgid "earn.sbtc.description"
 msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
-
-#: src/components/action-bar/action-bar.tsx:67
-msgid "action_bar.browser_label"
-msgstr "Browse"
 
 #: src/features/navigation/tab-layout.tsx:59
 msgid "tabs.button.browser.title"
@@ -1232,10 +1224,6 @@ msgstr "Push"
 msgid "settings.notifications.cell_caption"
 msgstr "Push and email notifications"
 
-#: src/components/action-bar/action-bar.tsx:61
-msgid "action_bar.receive_label"
-msgstr "Receive"
-
 #: src/features/account/account.tsx:113
 #: src/features/account/accounts-widget.tsx:80
 msgid "general.receive"
@@ -1377,10 +1365,6 @@ msgstr "Select account"
 #: src/features/send/screens/select-asset.tsx:41
 msgid "select_asset.header_title"
 msgstr "Select asset"
-
-#: src/components/action-bar/action-bar.tsx:56
-msgid "action_bar.send_label"
-msgstr "Send"
 
 #: src/features/account/account.tsx:101
 #: src/features/account/accounts-widget.tsx:68
