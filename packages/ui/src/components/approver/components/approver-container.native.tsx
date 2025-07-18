@@ -11,6 +11,7 @@ export function ApproverContainer({ children }: HasChildren) {
     <BottomSheetScrollView
       contentContainerStyle={{
         backgroundColor: theme.colors['ink.background-secondary'],
+        flex: 1,
         gap: 1,
       }}
     >
