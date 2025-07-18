@@ -1,17 +1,28 @@
 import { ReactNode } from 'react';
 
-import { Box, Text } from '@leather.io/ui/native';
+import { TabTriggerSlotProps } from 'expo-router/ui';
 
-interface TabButtonProps {
+import { Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+
+interface TabButtonProps extends Omit<TabTriggerSlotProps, 'ref'> {
   title: string;
-  icon: ReactNode;
+  activeIcon: ReactNode;
+  defaultIcon: ReactNode;
 }
 
-export function TabButton({ title, icon }: TabButtonProps) {
+export function TabButton({ title, activeIcon, defaultIcon, isFocused, ...props }: TabButtonProps) {
   return (
-    <Box justifyContent="center" alignItems="center" gap="1" paddingBottom="3" paddingTop="3">
-      {icon}
+    <Pressable
+      {...props}
+      pressEffects={legacyTouchablePressEffect}
+      justifyContent="center"
+      alignItems="center"
+      gap="1"
+      paddingBottom="3"
+      paddingTop="3"
+    >
+      {isFocused ? activeIcon : defaultIcon}
       <Text variant="label03">{title}</Text>
-    </Box>
+    </Pressable>
   );
 }

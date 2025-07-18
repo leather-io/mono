@@ -6,7 +6,15 @@ import { useTheme } from '@shopify/restyle';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 
-import { BrowserIcon, HomeIcon, PulseIcon, Theme } from '@leather.io/ui/native';
+import {
+  ActivityActiveIcon,
+  ActivityDefaultIcon,
+  BrowseActiveIcon,
+  BrowseDefaultIcon,
+  HomeActiveIcon,
+  HomeDefaultIcon,
+  Theme,
+} from '@leather.io/ui/native';
 
 import { TabButton } from './tab-button';
 import { TabLayoutContext } from './tab-layout-context';
@@ -41,21 +49,24 @@ export function TabLayout() {
             backgroundColor: colors['ink.background-primary'],
           }}
         >
-          <TabTrigger style={{ flex: 1 }} name="(index)" href="/(tabs)/(index)">
+          <TabTrigger asChild style={{ flex: 1 }} name="(index)" href="/(tabs)/(index)">
             <TabButton
-              icon={<HomeIcon />}
+              activeIcon={<HomeActiveIcon />}
+              defaultIcon={<HomeDefaultIcon />}
               title={t({ id: 'tabs.button.home.title', message: 'Home' })}
             />
           </TabTrigger>
-          <TabTrigger style={{ flex: 1 }} name="activity" href="/(tabs)/activity">
+          <TabTrigger asChild style={{ flex: 1 }} name="activity" href="/(tabs)/activity">
             <TabButton
-              icon={<PulseIcon />}
+              activeIcon={<ActivityActiveIcon />}
+              defaultIcon={<ActivityDefaultIcon />}
               title={t({ id: 'tabs.button.activity.title', message: 'Activity' })}
             />
           </TabTrigger>
-          <TabTrigger style={{ flex: 1 }} name="browser" href="/(tabs)/browser">
+          <TabTrigger asChild style={{ flex: 1 }} name="browser" href="/(tabs)/browser">
             <TabButton
-              icon={<BrowserIcon />}
+              activeIcon={<BrowseActiveIcon />}
+              defaultIcon={<BrowseDefaultIcon />}
               title={t({ id: 'tabs.button.browser.title', message: 'Browser' })}
             />
           </TabTrigger>
