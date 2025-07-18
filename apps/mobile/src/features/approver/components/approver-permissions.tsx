@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 
-import { Box, CheckmarkIcon, Flag, Text } from '@leather.io/ui/native';
+import { Box, CheckmarkIcon, Text } from '@leather.io/ui/native';
 
 type Permissions = 'view_balance_activity' | 'request_approval';
 
@@ -31,9 +31,10 @@ export function ApproverPermissions({ permissions }: ApproverPermissionsProps) {
       <Box gap="3">
         {permissions.map(permission => {
           return (
-            <Flag img={<CheckmarkIcon variant="small" />} key={permission}>
+            <Box flexDirection="row" alignItems="center" gap="3" key={permission}>
+              <CheckmarkIcon variant="small" />
               <Text variant="caption01">{permissionMap[permission]}</Text>
-            </Flag>
+            </Box>
           );
         })}
       </Box>
