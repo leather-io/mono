@@ -35,9 +35,10 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
 
   const { sendResult } = props;
   const { fromAccountId: stacksAccountFromAccountId } = useStacksSigners();
+  const isSubmitDisabled = !selectedAccountId;
 
   function onApprove() {
-    if (!selectedAccountId) return;
+    if (isSubmitDisabled) return;
     const account = stacksAccountFromAccountId(selectedAccountId)[0];
     if (!account) return;
 
@@ -78,6 +79,7 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
         onCloseApprover={props.closeApprover}
         accounts={accounts}
         selectedAccountId={selectedAccountId}
+        isSubmitDisabled={isSubmitDisabled}
       />
       <AccountSelectorSheet sheetRef={accountSelecterSheetRef} onAccountPress={onAccountPress} />
     </>

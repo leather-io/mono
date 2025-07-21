@@ -13,6 +13,7 @@ interface GetAddressesApproverLayoutProps {
   onCloseApprover(): void;
   selectedAccountId: string | null;
   accounts: Account[];
+  isSubmitDisabled: boolean;
 }
 
 export function GetAddressesApproverLayout({
@@ -22,6 +23,7 @@ export function GetAddressesApproverLayout({
   onCloseApprover,
   selectedAccountId,
   accounts,
+  isSubmitDisabled,
 }: GetAddressesApproverLayoutProps) {
   return (
     <Approver requester={requester}>
@@ -79,6 +81,7 @@ export function GetAddressesApproverLayout({
               message: 'Confirm',
             })}
             flex={1}
+            disabled={isSubmitDisabled}
             onPress={onApprove}
           />
         </Approver.Actions>

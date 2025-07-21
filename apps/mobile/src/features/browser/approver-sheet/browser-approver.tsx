@@ -17,6 +17,7 @@ import {
   stxTransferSip10Ft,
   stxTransferStx,
 } from '@leather.io/rpc';
+import { Box } from '@leather.io/ui/native';
 
 import { GetAddressesApprover } from './get-addresses/get-addresses';
 import { SendTransferApprover } from './send-transfer';
@@ -247,6 +248,6 @@ export function BrowserApprover(props: BrowserApproverProps) {
     }
 
     default:
-      return null;
+      return <Box flex={1} backgroundColor="ink.background-primary" />;
   }
 }
