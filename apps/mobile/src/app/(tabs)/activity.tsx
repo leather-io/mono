@@ -7,6 +7,7 @@ import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { t } from '@lingui/macro';
 
 import { OnChainActivity } from '@leather.io/models';
+import { Text } from '@leather.io/ui/native';
 
 export default function ActivityScreen() {
   const activity = useTotalActivity();
@@ -15,7 +16,18 @@ export default function ActivityScreen() {
 
   return (
     <Screen>
-      <Screen.Header leftElement={null} />
+      <Screen.Header
+        leftElement={null}
+        centerElement={
+          <Text variant="heading05">
+            {t({
+              id: 'screen.activity.title',
+              message: 'All Activity',
+            })}
+          </Text>
+        }
+      />
+
       <FetchWrapper data={activity}>
         {activity.state === 'success' && (
           <Screen.List
