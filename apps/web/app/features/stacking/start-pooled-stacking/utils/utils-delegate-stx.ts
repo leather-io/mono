@@ -1,7 +1,9 @@
+import { asciiToBytes } from '@stacks/common';
 import { StacksNetworkName } from '@stacks/network';
 import { PoxInfo, StackingClient, poxAddressToTuple } from '@stacks/stacking';
 import {
   ClarityValue,
+  bufferCV,
   noneCV,
   principalCV,
   serializeCV,
@@ -82,6 +84,12 @@ function getDelegateStxOptions(
     case 'WrapperFastPool':
     case 'WrapperRestake':
       functionArgs = [uintCV(stxToMicroStx(values.amount).toString())];
+      break;
+    case 'WrapperFastPoolV2':
+      functionArgs = [
+        uintCV(stxToMicroStx(values.amount).toString()),
+        bufferCV(asciiToBytes('stx')),
+      ];
       break;
     default:
       functionArgs = [];

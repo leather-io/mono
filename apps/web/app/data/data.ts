@@ -122,7 +122,7 @@ export const stackingPoolData = {
     minCommitmentUsd: '$1',
     description:
       getPostBySlug('fast-pool')?.sentence ??
-      'Enjoy a better swim experience in the upgraded pool. You can increase the locking amount for the next cycle. Locked STX will unlock 1 day after the end of the cycle.',
+      'Enjoy a better swimming experience in the upgraded pool. You can increase the locking amount for the next cycle. Locked STX unlock 1 day after the end of the cycle.',
     duration: 1,
     payout: 'STX',
     poolAddress: {

@@ -39,6 +39,7 @@
     "@segment/analytics-next": "1.81.0",
     "@sentry/profiling-node": "9.15.0",
     "@sentry/react-router": "9.15.0",
+    "@stacks/common": "7.0.2",
     "@stacks/network": "7.0.2",
     "@stacks/stacking": "7.0.5",
     "@stacks/stacks-blockchain-api-types": "7.14.1",
