@@ -32,9 +32,10 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
 
   const { sendResult } = props;
   const account = useGetAddressesAccount(selectedAccountId);
+  const isSubmitDisabled = !account;
 
   function onApprove() {
-    if (!account) return;
+    if (isSubmitDisabled) return;
     const keysToIncludeInResponse = formatAddressesForGetAddresses({
       taproot: {
         address: account.taprootPayer.address,
@@ -83,6 +84,7 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
         accounts={accounts}
         selectedAccountId={selectedAccountId}
         requester={props.origin}
+        isSubmitDisabled={isSubmitDisabled}
       />
       <AccountSelectorSheet sheetRef={accountSelecterSheetRef} onAccountPress={onAccountPress} />
     </>

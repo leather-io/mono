@@ -513,7 +513,7 @@ msgstr "Changed network"
 msgid "email_address.toast_title_success"
 msgstr "Check your email for verification"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:48
+#: src/features/approver/layouts/get-addresses.layout.tsx:50
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:46
 msgid "browser.approver.choose-account"
 msgstr "Choose an account"
@@ -559,7 +559,7 @@ msgstr "Confirm"
 msgid "approver.add_nonce.confirm_button"
 msgstr "Confirm"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:77
+#: src/features/approver/layouts/get-addresses.layout.tsx:79
 msgid "approver.button.confirm"
 msgstr "Confirm"
 
@@ -575,7 +575,7 @@ msgstr "Confirm"
 msgid "recover_wallet.passphrase.button"
 msgstr "Confirm"
 
-#: src/features/approver/layouts/get-addresses.layout.tsx:31
+#: src/features/approver/layouts/get-addresses.layout.tsx:33
 msgid "approver.connect.title"
 msgstr "Connect"
 
@@ -678,7 +678,7 @@ msgstr "Custom fees"
 
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:75
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:152
-#: src/features/approver/layouts/get-addresses.layout.tsx:68
+#: src/features/approver/layouts/get-addresses.layout.tsx:70
 #: src/features/browser/approver-sheet/sign-message/sign-message.layout.tsx:76
 msgid "approver.button.deny"
 msgstr "Deny"
