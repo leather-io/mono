@@ -332,8 +332,12 @@ msgid "accounts.header_title"
 msgstr "All accounts"
 
 #: src/app/(tabs)/(index)/index.tsx:61
-#: src/app/(tabs)/activity.tsx:14
+#: src/app/(tabs)/activity.tsx:15
 msgid "activity.header_title"
+msgstr "All Activity"
+
+#: src/app/(tabs)/activity.tsx:23
+msgid "screen.activity.title"
 msgstr "All Activity"
 
 #: src/app/(tabs)/(index)/collectibles/index.tsx:14
