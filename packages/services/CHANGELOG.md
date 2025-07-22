@@ -349,6 +349,13 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.26.9
 
+## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.21.0...@leather.io/services-v1.22.0) (2025-07-22)
+
+
+### Features
+
+* split btc balances by address type ([0dcf930](https://github.com/leather-io/mono/commit/0dcf930a4f4b4c45ff6aa16399babfe9d1afea22))
+
 ## [1.21.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.20.0...@leather.io/services-v1.21.0) (2025-07-11)
 
 

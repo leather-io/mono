@@ -449,6 +449,14 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.12.9
 
+## [1.74.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.74.0...@leather.io/ui-v1.74.1) (2025-07-22)
+
+
+### Bug Fixes
+
+* image and icon colors ([fc9fc0a](https://github.com/leather-io/mono/commit/fc9fc0a02ce78cbd9acc0b058282f3b081baf417))
+* **mobile:** make sure approver container takes up full height ([79cb453](https://github.com/leather-io/mono/commit/79cb45378d4e0b5ef8fde5b7fde10ab5587b70f5))
+
 ## [1.74.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.73.3...@leather.io/ui-v1.74.0) (2025-07-18)
 
 
