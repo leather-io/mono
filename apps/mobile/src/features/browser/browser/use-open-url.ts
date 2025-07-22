@@ -7,7 +7,7 @@ export function useOpenURL() {
   const openURL = useCallback(
     (url: string) => {
       if (router.canDismiss()) router.dismissAll();
-      router.replace(`/browser?url=${url}`);
+      router.navigate(`/browser?url=${url}`);
     },
     [router]
   );
