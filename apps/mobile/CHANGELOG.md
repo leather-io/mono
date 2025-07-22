@@ -740,6 +740,30 @@
     * @leather.io/tokens bumped to 0.20.0
     * @leather.io/ui bumped to 1.73.3
 
+## [2.58.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.57.0...@leather.io/mobile-v2.58.0) (2025-07-22)
+
+
+### Features
+
+* split btc balances by address type ([0dcf930](https://github.com/leather-io/mono/commit/0dcf930a4f4b4c45ff6aa16399babfe9d1afea22))
+
+
+### Bug Fixes
+
+* activity title ([910d6f9](https://github.com/leather-io/mono/commit/910d6f98870cc3a8dd58b0f3b7c8f27479447e93))
+* approver disabled confirm ([e4f4bbc](https://github.com/leather-io/mono/commit/e4f4bbcd7b2b6b9d4b76de9a5a454ab69d6ee0ef))
+* explore button ([6370d9f](https://github.com/leather-io/mono/commit/6370d9fce2edec98fe62917de27e2a527c63f9be))
+* image and icon colors ([fc9fc0a](https://github.com/leather-io/mono/commit/fc9fc0a02ce78cbd9acc0b058282f3b081baf417))
+* **mobile:** make sure approver container takes up full height ([79cb453](https://github.com/leather-io/mono/commit/79cb45378d4e0b5ef8fde5b7fde10ab5587b70f5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.22.0
+    * @leather.io/ui bumped to 1.74.1
+
 ## [2.57.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.56.3...@leather.io/mobile-v2.57.0) (2025-07-18)
 
 
