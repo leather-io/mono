@@ -73,6 +73,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.9.6",
     "@cloudflare/workers-types": "4.20250719.0",
+    "@msw/playwright": "0.4.2",
     "@originjs/vite-plugin-commonjs": "1.0.3",
     "@pandacss/dev": "0.53.6",
     "@playwright/test": "1.52.0",

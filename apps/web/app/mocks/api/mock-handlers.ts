@@ -2,7 +2,6 @@ import { HttpResponse, http } from 'msw';
 
 import { delay } from '@leather.io/utils';
 
-import { worker } from './browser';
 import { accountsHandler } from './hiro.so/accounts-address';
 import { accountsBalanceHandler } from './hiro.so/accounts-address-balance';
 import { accountsBalanceStxHandler } from './hiro.so/accounts-address-balance-stx';
@@ -58,7 +57,3 @@ export const errorEverythingHandlers = endpoints.map(endpoint =>
     )
   )
 );
-
-export function errorEverything() {
-  return worker.use(...errorEverythingHandlers);
-}
