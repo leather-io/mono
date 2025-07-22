@@ -13,11 +13,10 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
 });
 
-type BypassCheck = (url: URL) => boolean;
-
 async function enableApiMocking() {
   const { worker } = await import('./mocks/api/browser');
 
+  type BypassCheck = (url: URL) => boolean;
   const bypassChecks: BypassCheck[] = [
     url => url.host === 'localhost:5173',
     url => url.host.includes('extension://'),

@@ -50,7 +50,7 @@ function StartEarningPoolCheck({ slug, poolAddresses }: StartEarningButtonProps)
   if (!resolvedAddress) {
     return (
       <Link to={toStartEarn}>
-        <StartEarningButtonLayout />
+        <StartEarningButtonLayout data-testid={`start-earning-button-${slug}`} />
       </Link>
     );
   }

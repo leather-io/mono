@@ -643,6 +643,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: 4.20250719.0
         version: 4.20250719.0
+      '@msw/playwright':
+        specifier: 0.4.2
+        version: 0.4.2(msw@2.10.2(@types/node@24.0.8)(typescript@5.8.3))
       '@originjs/vite-plugin-commonjs':
         specifier: 1.0.3
         version: 1.0.3
@@ -4542,6 +4545,7 @@ packages:
 
   '@ls-lint/ls-lint@2.2.3':
     resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -4580,6 +4584,12 @@ packages:
 
   '@mjackson/node-fetch-server@0.6.1':
     resolution: {integrity: sha512-9ZJnk/DJjt805uv5PPv11haJIW+HHf3YEEyVXv+8iLQxLD/iXA68FH220XoiTPBC4gCg5q+IMadDw8qPqlA5wg==}
+
+  '@msw/playwright@0.4.2':
+    resolution: {integrity: sha512-xJnHJBkxCF+wcusYAFTDTW1kiD+WVsuYMSxcqvaAbe/mhy73oxkcqUbsiqZsKPdNrXIQQtkCyX5vSP5ZaPUHdA==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      msw: ^2.10.3
 
   '@mswjs/interceptors@0.39.3':
     resolution: {integrity: sha512-9bw/wBL7pblsnOCIqvn1788S9o4h+cC5HWXg0Xhh0dOzsZ53IyfmBM+FYqpDDPbm0xjCqEqvCITloF3Dm4TXRQ==}
@@ -20226,6 +20236,12 @@ snapshots:
   '@mjackson/node-fetch-server@0.2.0': {}
 
   '@mjackson/node-fetch-server@0.6.1': {}
+
+  '@msw/playwright@0.4.2(msw@2.10.2(@types/node@24.0.8)(typescript@5.8.3))':
+    dependencies:
+      '@mswjs/interceptors': 0.39.3
+      msw: 2.10.2(@types/node@24.0.8)(typescript@5.8.3)
+      outvariant: 1.4.3
 
   '@mswjs/interceptors@0.39.3':
     dependencies:

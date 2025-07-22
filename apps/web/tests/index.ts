@@ -1,6 +1,13 @@
+import { type NetworkFixture, createNetworkFixture } from '@msw/playwright';
 import { test as base, expect } from '@playwright/test';
 
-export const test = base.extend({
+import { successHandlers } from '../app/mocks/api/mock-handlers';
+
+interface Fixtures {
+  network: NetworkFixture;
+}
+
+export const test = base.extend<Fixtures>({
   page: async ({ page }, use) => {
     const messages: string[] = [];
     page.on('console', msg => {
@@ -20,4 +27,7 @@ export const test = base.extend({
     }
     expect(messages).toStrictEqual([]);
   },
+  network: createNetworkFixture({
+    initialHandlers: [...successHandlers],
+  }),
 });
