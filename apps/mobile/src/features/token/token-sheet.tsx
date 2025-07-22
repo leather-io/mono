@@ -37,6 +37,7 @@ export function TokenSheet({ data, sheetRef }: TokenSheetProps) {
   return (
     <FullHeightSheet
       sheetRef={sheetRef}
+      shouldHaveContainer={false}
       onAnimate={handleAnimatedPositionChange}
       onDismiss={handleDismiss}
     >
