@@ -4,9 +4,9 @@ import { FetchWrapper } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { ActivityEmpty } from '@/features/activity/activity-empty';
 import { ActivityListItem } from '@/features/activity/activity-list-item';
-import { RefreshControl, useRefreshHandler } from '@/features/refresh-control/refresh-control';
 import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 import { OnChainActivity } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
@@ -37,14 +37,13 @@ export function TokenActivity({
   fingerprint,
 }: TokenActivityProps) {
   const scrollViewAdjustmentOffset = 56;
-  const { refreshing, onRefresh } = useRefreshHandler();
   const activity = useTotalActivity();
 
   return (
     <Screen>
       <Screen.Header
         blurOverlay={false}
-        // topElement={isErrorTotalBalance && <FetchErrorCallout />}
+        leftElement={null}
         rightElement={
           <Box alignItems="center" flexDirection="row" justifyContent="center" mr="2">
             <NetworkBadge />
@@ -53,8 +52,7 @@ export function TokenActivity({
       />
       <FetchWrapper data={activity}>
         {activity.state === 'success' && (
-          <Screen.List
-            refreshControl={<RefreshControl progressViewOffset={scrollViewAdjustmentOffset} />}
+          <BottomSheetFlatList
             style={{ marginTop: -scrollViewAdjustmentOffset }}
             data={activity.value
               .filter(activity => activity && 'asset' in activity)
@@ -69,8 +67,6 @@ export function TokenActivity({
             keyExtractor={(_, index) => `activity.${index}`}
             ListHeaderComponent={() => ListHeader}
             ListEmptyComponent={<ActivityEmpty />}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
           />
         )}
       </FetchWrapper>
