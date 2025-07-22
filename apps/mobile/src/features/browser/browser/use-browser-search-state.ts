@@ -1,5 +1,7 @@
 import { useCallback, useReducer } from 'react';
 
+import { LEATHER_APPS_URL } from '@/shared/constants';
+
 import { formatURL } from './utils';
 
 interface SearchBarState {
@@ -13,8 +15,8 @@ type SearchBarAction =
   | { type: 'resetSearchBar' };
 
 const initialState: SearchBarState = {
-  searchUrl: 'https://leather.io',
-  textUrl: 'https://leather.io',
+  searchUrl: LEATHER_APPS_URL,
+  textUrl: LEATHER_APPS_URL,
 };
 
 function reducer(state: SearchBarState, action: SearchBarAction): SearchBarState {

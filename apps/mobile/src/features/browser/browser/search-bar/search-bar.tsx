@@ -1,13 +1,15 @@
 import { RefObject, useRef } from 'react';
-import { TextInput as RNTextInput } from 'react-native';
+import { Keyboard, TextInput as RNTextInput } from 'react-native';
 import Animated from 'react-native-reanimated';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import { LEATHER_APPS_URL } from '@/shared/constants';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
+import { useOpenURL } from '../use-open-url';
 import { BrowserNavigationBar } from './browser-navigation-bar';
 import { SearchBarToolbar } from './search-bar-toolbar';
 import { BrowserSearchInput } from './search-input/browser-search-input';
@@ -36,6 +38,7 @@ export function SearchBar({
 }: SearchBarProps) {
   const theme = useTheme<Theme>();
   const textInputRef = useRef<RNTextInput>(null);
+  const { openURL } = useOpenURL();
 
   const router = useRouter();
   const { keyboardAvoidingStyle, searchBarStyle } = useSearchBarAnimatedStyles();
@@ -99,7 +102,8 @@ export function SearchBar({
         />
         <SearchBarToolbar
           onExplore={() => {
-            // TODO: implement functionality
+            openURL(LEATHER_APPS_URL);
+            Keyboard.dismiss();
           }}
           onRecents={() => {
             router.navigate('/app-recently-viewed');
