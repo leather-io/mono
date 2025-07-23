@@ -1,19 +1,11 @@
 import { FIAT_METADATA } from './fiat-metadata';
-import { FormatterPreset, formatterPresets } from './formatter-presets';
-
-export interface FormatCurrencyOptions {
-  preset?: FormatterPreset;
-  compactThreshold?: number;
-  showCurrency?: boolean;
-  approximateDust?: boolean;
-  numberFormatOptions?: Intl.NumberFormatOptions;
-}
-
-export interface FormatCurrencyAmountInput {
-  amount: number;
-  currencyCode: string;
-  decimals: number;
-}
+import { formatterPresets } from './formatter-presets';
+import {
+  FormatCurrencyAmountInput,
+  FormatCurrencyOptions,
+  FormatterPreset,
+} from './formatter.types';
+import { FormatCurrencyInput } from './pg';
 
 interface CreateFormatterParams {
   locale: string;
@@ -29,12 +21,13 @@ export function createFormatter({ locale }: CreateFormatterParams) {
       preset,
       compactThreshold,
       showCurrency = true,
-      approximateDust = preset ? formatterPresets[preset].approximateDust : true,
+      approximateDust = getPresetResult(preset, input).approximateDust ?? true,
       numberFormatOptions = {},
     } = options;
-    const { compactThreshold: presetCompactThreshold, ...presetOptions } = preset
-      ? formatterPresets[preset]
-      : {};
+    const { compactThreshold: presetCompactThreshold, ...presetOptions } = getPresetResult(
+      preset,
+      input
+    );
     const shouldCompact = evaluateCompactNotation(compactThreshold, presetCompactThreshold, amount);
     const { minimumFractionDigits, maximumFractionDigits } = deriveFractionOptions(
       amount,
@@ -87,6 +80,16 @@ export function createFormatter({ locale }: CreateFormatterParams) {
 // Helpers
 //
 // -----------------------------------------------------------------------------
+function getPresetResult(preset: FormatterPreset | undefined, input: FormatCurrencyInput) {
+  if (!preset) return {};
+
+  if (typeof formatterPresets[preset] === 'function') {
+    return formatterPresets[preset](input);
+  }
+
+  return formatterPresets[preset];
+}
+
 function evaluateCompactNotation(
   userSpecifiedCompatcThreshold: number | undefined,
   presetCompactThreshold: number | undefined,

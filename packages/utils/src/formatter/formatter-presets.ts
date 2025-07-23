@@ -1,13 +1,22 @@
-export type FormatterPreset = 'balance' | 'shorthand-balance-crypto' | 'shorthand-balance-fiat';
+import { FormatterPreset, FormatterPresetResult, FormatterPresetValue } from './formatter.types';
 
-export type FormatterPresetOptions = Intl.NumberFormatOptions & {
-  showCurrency?: boolean;
-  compactThreshold?: number;
-  approximateDust?: boolean;
-};
-
-export const formatterPresets: Record<FormatterPreset, FormatterPresetOptions> = {
+export const formatterPresets: Record<FormatterPreset, FormatterPresetValue> = {
   balance: {},
+  'token-price': input => {
+    const options: FormatterPresetResult = {
+      compactThreshold: Infinity,
+      approximateDust: false,
+      showCurrency: true,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    };
+
+    if (input.amount >= 0 && input.amount <= 99) {
+      options.maximumFractionDigits = 6;
+    }
+
+    return options;
+  },
   'shorthand-balance-crypto': {
     minimumFractionDigits: 2,
     maximumFractionDigits: 4,
