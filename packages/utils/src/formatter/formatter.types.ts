@@ -6,7 +6,7 @@ export interface FormatCurrencyOptions {
   numberFormatOptions?: Intl.NumberFormatOptions;
 }
 
-export interface FormatCurrencyAmountInput {
+export interface FormatCurrencyInput {
   amount: number;
   currencyCode: string;
   decimals: number;
@@ -19,7 +19,7 @@ export type FormatterPreset =
 
 export type FormatterPresetValue =
   | FormatterPresetResult
-  | ((input: FormatCurrencyAmountInput) => FormatterPresetResult);
+  | ((input: FormatCurrencyInput) => FormatterPresetResult);
 
 export type FormatterPresetResult = Intl.NumberFormatOptions & {
   showCurrency?: boolean;
