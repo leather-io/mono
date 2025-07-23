@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
+import { MockModeToggle } from '~/components/mock-mode-toggle';
 import { getPostHref } from '~/utils/post-link';
 
 import { Link } from '@leather.io/ui';
@@ -90,7 +91,10 @@ export function PageHeader({ title }: PageHeaderProps) {
       </styled.h1>
 
       <WhenClient>
-        <SignInButton />
+        <Flex maxW="fit-content" height="100%">
+          <MockModeToggle />
+          <SignInButton />
+        </Flex>
       </WhenClient>
     </styled.header>
   );

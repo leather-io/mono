@@ -1,4 +1,5 @@
 import { Flex, styled } from 'leather-styles/jsx';
+import { Dialog as RadixDialog } from 'radix-ui';
 
 import { RpcRequests } from '@leather.io/rpc';
 import { Button, CloseIcon, Flag, Sheet } from '@leather.io/ui';
@@ -19,6 +20,7 @@ export function MockLeatherDialogLayout({
 }: MockLeatherDialogLayoutProps) {
   return (
     <Sheet isShowing={!!payload} onClose={onClose}>
+      <RadixDialog.Description />
       <styled.div px="space.05" py="space.03">
         <Flag
           img={
