@@ -4,6 +4,8 @@ import { HydratedRouter } from 'react-router/dom';
 
 import * as Sentry from '@sentry/react-router';
 
+import { LEATHER_MOCK_MODE } from './constants/environment';
+
 Sentry.init({
   dsn: import.meta.env.LEATHER_SENTRY_DSN,
   integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
@@ -14,6 +16,8 @@ Sentry.init({
 });
 
 async function enableApiMocking() {
+  if (!LEATHER_MOCK_MODE) return;
+
   const { worker } = await import('./mocks/api/browser');
 
   type BypassCheck = (url: URL) => boolean;

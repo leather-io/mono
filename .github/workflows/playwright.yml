@@ -42,4 +42,6 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: apps/web
+        env:
+          LEATHER_MOCK_MODE: true
         run: pnpm exec playwright test
