@@ -1,11 +1,6 @@
 import { FIAT_METADATA } from './fiat-metadata';
 import { formatterPresets } from './formatter-presets';
-import {
-  FormatCurrencyAmountInput,
-  FormatCurrencyOptions,
-  FormatterPreset,
-} from './formatter.types';
-import { FormatCurrencyInput } from './pg';
+import { FormatCurrencyInput, FormatCurrencyOptions, FormatterPreset } from './formatter.types';
 
 interface CreateFormatterParams {
   locale: string;
@@ -15,7 +10,7 @@ const defaultCompactThreshold = 1_000_000;
 const thinSpace = '\u2009';
 
 export function createFormatter({ locale }: CreateFormatterParams) {
-  function formatAmount(input: FormatCurrencyAmountInput, options: FormatCurrencyOptions = {}) {
+  function formatAmount(input: FormatCurrencyInput, options: FormatCurrencyOptions = {}) {
     const { amount, currencyCode, decimals } = input;
     const {
       preset,
@@ -55,7 +50,9 @@ export function createFormatter({ locale }: CreateFormatterParams) {
       });
 
       if (approximateDust && isSmallerThanMinorUnit(amount, decimals)) {
-        return `<${thinSpace}${formatter.format(getSmallestUnit(decimals))}`;
+        const smallestUnit = getSmallestUnit(decimals);
+        const multiplier = amount < 0 ? -1 : 1;
+        return `<${thinSpace}${formatter.format(smallestUnit * multiplier)}`;
       }
 
       return formatter.format(amount);
@@ -141,12 +138,14 @@ function deriveFractionOptions(
   numberFormatOptions: Intl.NumberFormatOptions
 ) {
   function getMaximumFractionDigits() {
-    if (compact) {
-      return 2;
-    }
+    if (!presetOptions.maximumFractionDigits && !numberFormatOptions.maximumFractionDigits) {
+      if (compact) {
+        return 2;
+      }
 
-    if (amount >= 1000 && amount <= 999999) {
-      return Math.min(decimals, 2);
+      if (amount >= 1000 && amount <= 999999) {
+        return Math.min(decimals, 2);
+      }
     }
 
     return (
@@ -155,6 +154,7 @@ function deriveFractionOptions(
   }
 
   const maximumFractionDigits = getMaximumFractionDigits();
+  // Ensure final minimumFractionDigits <= maximumFractionDigits to avoid Intl.NumberFormat RangeError
   const minimumFractionDigits = Math.min(
     numberFormatOptions.minimumFractionDigits ??
       presetOptions.minimumFractionDigits ??
