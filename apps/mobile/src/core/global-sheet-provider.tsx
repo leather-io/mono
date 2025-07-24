@@ -8,6 +8,7 @@ interface GlobalSheetContextValue {
   browserSheetRef: React.RefObject<SheetRef | null>;
   addAccountSheetRef: React.RefObject<SheetRef | null>;
   addWalletSheetRef: React.RefObject<SheetRef | null>;
+  versionGuardSheetRef: React.RefObject<SheetRef | null>;
 }
 
 const GlobalSheetContext = createContext<GlobalSheetContextValue | null>(null);
@@ -24,6 +25,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
   const browserSheetRef = useRef<SheetRef>(null);
   const addAccountSheetRef = useRef<SheetRef>(null);
   const addWalletSheetRef = useRef<SheetRef>(null);
+  const versionGuardSheetRef = useRef<SheetRef>(null);
 
   return (
     <GlobalSheetContext.Provider
@@ -33,6 +35,7 @@ export function GlobalSheetProvider({ children }: HasChildren) {
         browserSheetRef,
         addAccountSheetRef,
         addWalletSheetRef,
+        versionGuardSheetRef,
       }}
     >
       {children}
