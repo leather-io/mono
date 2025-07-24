@@ -1,15 +1,18 @@
-export interface FormatCurrencyOptions {
-  preset?: FormatterPreset;
-  compactThreshold?: number;
-  showCurrency?: boolean;
-  approximateDust?: boolean;
-  numberFormatOptions?: Intl.NumberFormatOptions;
-}
-
 export interface FormatCurrencyInput {
   amount: number;
   currencyCode: string;
   decimals: number;
+}
+
+export interface FormatCurrencyCustomOptions {
+  compactThreshold?: number;
+  showCurrency?: boolean;
+  approximateDust?: boolean;
+}
+
+export interface FormatCurrencyOptions extends FormatCurrencyCustomOptions {
+  preset?: FormatterPreset;
+  numberFormatOptions?: Intl.NumberFormatOptions;
 }
 export type FormatterPreset =
   | 'balance'
@@ -21,8 +24,4 @@ export type FormatterPresetValue =
   | FormatterPresetResult
   | ((input: FormatCurrencyInput) => FormatterPresetResult);
 
-export type FormatterPresetResult = Intl.NumberFormatOptions & {
-  showCurrency?: boolean;
-  compactThreshold?: number;
-  approximateDust?: boolean;
-};
+export type FormatterPresetResult = Omit<FormatCurrencyOptions, 'preset'>;

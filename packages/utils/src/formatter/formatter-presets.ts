@@ -1,27 +1,38 @@
 import { FormatterPreset, FormatterPresetResult, FormatterPresetValue } from './formatter.types';
 
 export const formatterPresets: Record<FormatterPreset, FormatterPresetValue> = {
-  balance: {},
+  balance: {
+    showCurrency: false,
+  },
   'token-price': input => {
     const options: FormatterPresetResult = {
       compactThreshold: Infinity,
       approximateDust: false,
       showCurrency: true,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    };
+      numberFormatOptions: {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    } as const;
 
     if (input.amount >= 0 && input.amount <= 99) {
-      options.maximumFractionDigits = 6;
+      options.numberFormatOptions = {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 6,
+      };
     }
 
     return options;
   },
   'shorthand-balance-crypto': {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 4,
+    numberFormatOptions: {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4,
+    },
   },
   'shorthand-balance-fiat': {
-    maximumFractionDigits: 2,
+    numberFormatOptions: {
+      maximumFractionDigits: 2,
+    },
   },
 };
