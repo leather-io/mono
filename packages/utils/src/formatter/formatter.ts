@@ -87,8 +87,21 @@ export function createFormatter({ locale, onFormatterError }: CreateFormatterPar
     return result;
   }
 
+  function formatPercentage(amount: number, decimals = 2) {
+    const formatter = safeInitializeNumberFormat(locale, {
+      style: 'percent',
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+
+    if (!formatter) return fallback;
+
+    return formatter.format(amount);
+  }
+
   return {
     formatAmount,
+    formatPercentage,
   };
 }
 
