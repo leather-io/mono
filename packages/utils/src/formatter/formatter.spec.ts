@@ -134,8 +134,58 @@ describe('crypto defaults', () => {
   });
 });
 
+describe('custom options', () => {
+  const { formatAmount } = createFormatter({ locale: 'en-US' });
+  it('compacts with a custom threshold', () => {
+    const usd = createUsd(1000);
+    expect(formatAmount(usd, { compactThreshold: 1000 })).toBe('$1.00K');
+  });
+
+  it('allows disabling compact notation', () => {
+    const usd = createUsd(1_000_000);
+    expect(formatAmount(usd, { compactThreshold: Infinity })).toBe('$1,000,000.00');
+  });
+
+  it('shows approximate fiat dust amount by default', () => {
+    const result = formatAmount(createUsd(0.00034));
+    expect(result).toBe('< $0.01');
+  });
+
+  it('accounts for currency decimal places when showing dust', () => {
+    const result = formatAmount(createJpy(0.75));
+    expect(result).toBe('< ¥1');
+  });
+
+  it('allows disabling approximate fiat dust amount', () => {
+    const result = formatAmount(createUsd(0.005), { approximateDust: false });
+    expect(result).toBe('$0.01');
+  });
+
+  it('allows disabling crypto currency display', () => {
+    const result = formatAmount(createBtc(12.34), { showCurrency: false });
+    expect(result).toBe('12.34');
+  });
+
+  it('allows disabling fiat currency display', () => {
+    const result = formatAmount(createUsd(12.34), { showCurrency: false });
+    expect(result).toBe('12.34');
+  });
+});
+
 describe('edge cases', () => {
   const { formatAmount } = createFormatter({ locale: 'en-US' });
+
+  it('gracefully handles incorrect locale', () => {
+    const { formatAmount } = createFormatter({ locale: 'BAD_LOCALE' });
+    expect(() => formatAmount(createUsd(12.34))).not.toThrow();
+    expect(formatAmount(createUsd(12.34))).toBe('');
+  });
+
+  it('gracefully handles incorrect locale', () => {
+    const { formatAmount } = createFormatter({ locale: 'BAD_LOCALE' });
+    expect(() => formatAmount(createUsd(12.34))).not.toThrow();
+    expect(formatAmount(createUsd(12.34))).toBe('');
+  });
 
   it('uses two decimals when compacted', () => {
     const usd = createUsd(10_000_000);
@@ -175,44 +225,6 @@ describe('edge cases', () => {
       numberFormatOptions: { minimumFractionDigits: 12, maximumFractionDigits: 2 },
     });
     expect(result).toBe('12.35');
-  });
-});
-
-describe('custom options', () => {
-  const { formatAmount } = createFormatter({ locale: 'en-US' });
-  it('compacts with a custom threshold', () => {
-    const usd = createUsd(1000);
-    expect(formatAmount(usd, { compactThreshold: 1000 })).toBe('$1.00K');
-  });
-
-  it('allows disabling compact notation', () => {
-    const usd = createUsd(1_000_000);
-    expect(formatAmount(usd, { compactThreshold: Infinity })).toBe('$1,000,000.00');
-  });
-
-  it('shows approximate fiat dust amount by default', () => {
-    const result = formatAmount(createUsd(0.00034));
-    expect(result).toBe('< $0.01');
-  });
-
-  it('accounts for currency decimal places when showing dust', () => {
-    const result = formatAmount(createJpy(0.75));
-    expect(result).toBe('< ¥1');
-  });
-
-  it('allows disabling approximate fiat dust amount', () => {
-    const result = formatAmount(createUsd(0.005), { approximateDust: false });
-    expect(result).toBe('$0.01');
-  });
-
-  it('allows disabling crypto currency display', () => {
-    const result = formatAmount(createBtc(12.34), { showCurrency: false });
-    expect(result).toBe('12.34');
-  });
-
-  it('allows disabling fiat currency display', () => {
-    const result = formatAmount(createUsd(12.34), { showCurrency: false });
-    expect(result).toBe('12.34');
   });
 });
 

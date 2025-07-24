@@ -1,70 +1,90 @@
 import { FIAT_METADATA } from './fiat-metadata';
 import { formatterPresets } from './formatter-presets';
-import { FormatCurrencyInput, FormatCurrencyOptions, FormatterPreset } from './formatter.types';
+import {
+  FormatCurrencyCustomOptions,
+  FormatCurrencyInput,
+  FormatCurrencyOptions,
+  FormatterPreset,
+} from './formatter.types';
 
 interface CreateFormatterParams {
   locale: string;
+  onFormatterError?: (
+    error: unknown,
+    context: { locale: string; options: Intl.NumberFormatOptions }
+  ) => void;
 }
 
+const fallback = '';
 const defaultCompactThreshold = 1_000_000;
 const thinSpace = '\u2009';
+const defaultCustomOptions = {
+  compactThreshold: defaultCompactThreshold,
+  showCurrency: true,
+  approximateDust: true,
+};
 
-export function createFormatter({ locale }: CreateFormatterParams) {
+export function createFormatter({ locale, onFormatterError }: CreateFormatterParams) {
+  function safeInitializeNumberFormat(locale: string, options: Intl.NumberFormatOptions) {
+    try {
+      return new Intl.NumberFormat(locale, options);
+    } catch (e) {
+      onFormatterError?.(e, { locale, options });
+      return null;
+    }
+  }
+
   function formatAmount(input: FormatCurrencyInput, options: FormatCurrencyOptions = {}) {
     const { amount, currencyCode, decimals } = input;
-    const {
-      preset,
-      compactThreshold,
-      showCurrency = true,
-      approximateDust = getPresetResult(preset, input).approximateDust ?? true,
-      numberFormatOptions = {},
-    } = options;
-    const { compactThreshold: presetCompactThreshold, ...presetOptions } = getPresetResult(
-      preset,
-      input
+    const { preset, numberFormatOptions = {}, ...customOptions } = options;
+    const { numberFormatOptions: presetNumberFormatOptions = {}, ...presetCustomOptions } =
+      getPresetResult(preset, input);
+    const { compactThreshold, showCurrency, approximateDust } = mergeCustomOptions(
+      presetCustomOptions,
+      customOptions
     );
-    const shouldCompact = evaluateCompactNotation(compactThreshold, presetCompactThreshold, amount);
+    const shouldCompact = evaluateCompactNotation(compactThreshold, amount);
+    const isFiatCurrency = isFiat(currencyCode);
+    const isDust = isFiatCurrency && isSmallerThanMinorUnit(amount, decimals);
     const { minimumFractionDigits, maximumFractionDigits } = deriveFractionOptions(
       amount,
       decimals,
       shouldCompact,
-      presetOptions,
+      presetNumberFormatOptions,
       numberFormatOptions
     );
-
-    const baseOptions: Intl.NumberFormatOptions = {
+    const formatterOptions: Intl.NumberFormatOptions = {
       minimumFractionDigits,
       maximumFractionDigits,
       ...(shouldCompact && { notation: 'compact' }),
-      ...omitFractionOptions(presetOptions),
+      ...omitFractionOptions(presetNumberFormatOptions),
       ...omitFractionOptions(numberFormatOptions),
     };
 
-    if (isFiat(currencyCode)) {
-      if (showCurrency) {
-        baseOptions.style = 'currency';
-        baseOptions.currency = currencyCode;
-      }
-      const formatter = new Intl.NumberFormat(locale, {
-        ...baseOptions,
-      });
-
-      if (approximateDust && isSmallerThanMinorUnit(amount, decimals)) {
-        const smallestUnit = getSmallestUnit(decimals);
-        const multiplier = amount < 0 ? -1 : 1;
-        return `<${thinSpace}${formatter.format(smallestUnit * multiplier)}`;
-      }
-
-      return formatter.format(amount);
+    if (isFiatCurrency && showCurrency) {
+      formatterOptions.style = 'currency';
+      formatterOptions.currency = currencyCode;
     } else {
-      const formatter = new Intl.NumberFormat(locale, {
-        style: 'decimal',
-        ...baseOptions,
-      });
-
-      const formattedAmount = formatter.format(amount);
-      return showCurrency ? `${formattedAmount}\u00A0${currencyCode}` : formattedAmount;
+      formatterOptions.style = 'decimal';
     }
+
+    const formatter = safeInitializeNumberFormat(locale, formatterOptions);
+
+    if (!formatter) return fallback;
+
+    if (isDust && approximateDust) {
+      const smallestUnit = getSmallestUnit(decimals);
+      const multiplier = amount < 0 ? -1 : 1;
+      return `<${thinSpace}${formatter.format(smallestUnit * multiplier)}`;
+    }
+
+    const result = formatter.format(amount);
+
+    if (!isFiatCurrency && showCurrency) {
+      return `${result}\u00A0${currencyCode}`;
+    }
+
+    return result;
   }
 
   return {
@@ -87,13 +107,18 @@ function getPresetResult(preset: FormatterPreset | undefined, input: FormatCurre
   return formatterPresets[preset];
 }
 
-function evaluateCompactNotation(
-  userSpecifiedCompatcThreshold: number | undefined,
-  presetCompactThreshold: number | undefined,
-  amount: number
+function mergeCustomOptions(
+  presetCustomOptions: FormatCurrencyCustomOptions,
+  customOptions: FormatCurrencyCustomOptions
 ) {
-  const compactThreshold =
-    userSpecifiedCompatcThreshold ?? presetCompactThreshold ?? defaultCompactThreshold;
+  return {
+    ...defaultCustomOptions,
+    ...presetCustomOptions,
+    ...customOptions,
+  };
+}
+
+function evaluateCompactNotation(compactThreshold: number, amount: number) {
   return Math.abs(amount) >= compactThreshold;
 }
 
@@ -134,11 +159,14 @@ function deriveFractionOptions(
   amount: number,
   decimals: number,
   compact: boolean,
-  presetOptions: Intl.NumberFormatOptions,
+  presetNumberFormatOptions: Intl.NumberFormatOptions,
   numberFormatOptions: Intl.NumberFormatOptions
 ) {
   function getMaximumFractionDigits() {
-    if (!presetOptions.maximumFractionDigits && !numberFormatOptions.maximumFractionDigits) {
+    if (
+      !presetNumberFormatOptions.maximumFractionDigits &&
+      !numberFormatOptions.maximumFractionDigits
+    ) {
       if (compact) {
         return 2;
       }
@@ -149,7 +177,9 @@ function deriveFractionOptions(
     }
 
     return (
-      numberFormatOptions.maximumFractionDigits ?? presetOptions.maximumFractionDigits ?? decimals
+      numberFormatOptions.maximumFractionDigits ??
+      presetNumberFormatOptions.maximumFractionDigits ??
+      decimals
     );
   }
 
@@ -157,7 +187,7 @@ function deriveFractionOptions(
   // Ensure final minimumFractionDigits <= maximumFractionDigits to avoid Intl.NumberFormat RangeError
   const minimumFractionDigits = Math.min(
     numberFormatOptions.minimumFractionDigits ??
-      presetOptions.minimumFractionDigits ??
+      presetNumberFormatOptions.minimumFractionDigits ??
       maximumFractionDigits,
     2
   );
