@@ -31,6 +31,8 @@ export function StackingClientProvider({ children }: StackingClientProviderProps
     return null;
   }, [stxAddress, network]);
 
+  if (!client) return null;
+
   return (
     <StackingClientContext.Provider value={{ client }}>{children}</StackingClientContext.Provider>
   );

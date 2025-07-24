@@ -8,7 +8,7 @@ import { sanitizeContent } from '~/utils/sanitize-content';
 export function StackingExplainer(props: HTMLStyledProps<'section'>) {
   return (
     <Explainer {...props}>
-      {content.stackingExplainer.map((step, idx) => {
+      {content.pooledStackingExplainer.map((step, idx) => {
         const post = getPostByKey(step.postKey);
         return (
           <Explainer.Step

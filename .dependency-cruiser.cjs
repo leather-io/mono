@@ -93,6 +93,32 @@ module.exports = {
         pathNot: '^apps/web/app/features/$1',
       },
     },
+    {
+      name: 'web-no-cross-page-component-imports',
+      severity: 'error',
+      comment:
+        'Page components should only be imported by their parent page and sibling components.',
+      from: {
+        path: '^apps/web/app/pages/([^/]+)',
+      },
+      to: {
+        path: '^apps/web/app/pages/([^/]+)/components',
+        pathNot: '^apps/web/app/pages/$1',
+      },
+    },
+    {
+      name: 'web-no-cross-feature-component-imports',
+      severity: 'error',
+      comment:
+        'Feature components should only be imported by their parent feature and sibling components.',
+      from: {
+        path: '^apps/web/app/features/([^/]+)',
+      },
+      to: {
+        path: '^apps/web/app/features/([^/]+)/.*components',
+        pathNot: '^apps/web/app/features/$1',
+      },
+    },
 
     {
       name: 'no-circular',

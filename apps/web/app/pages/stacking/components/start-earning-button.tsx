@@ -12,7 +12,10 @@ import { Button, ButtonProps, useOnMount } from '@leather.io/ui';
 interface StartEarningButtonLayoutProps extends ButtonProps {
   children?: ReactNode;
 }
-function StartEarningButtonLayout({ children, ...buttonProps }: StartEarningButtonLayoutProps) {
+export function StartEarningButtonLayout({
+  children,
+  ...buttonProps
+}: StartEarningButtonLayoutProps) {
   return (
     <Button width="100" size="xs" minW="fit-content" {...buttonProps}>
       {children || 'Start earning'}

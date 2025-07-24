@@ -4,11 +4,11 @@ import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { content } from '~/data/content';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { GetSbtcGridLayout } from '~/pages/sbtc-rewards/components/get-sbtc-grid.layout';
+import { GetSbtcGridLayout } from '~/pages/sbtc/components/get-sbtc-grid.layout';
 
 import { Badge, Button } from '@leather.io/ui';
 
-import { BridgingStatus, useSbtcRewardContext } from '../sbtc-rewards-context';
+import { BridgingStatus, useSbtcRewardContext } from '../sbtc-context';
 
 function MaxCapacity({ bridgingStatus }: { bridgingStatus: BridgingStatus }) {
   if (bridgingStatus !== 'disabled') return null;

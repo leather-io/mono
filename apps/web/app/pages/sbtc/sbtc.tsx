@@ -26,7 +26,7 @@ import { Button, Hr } from '@leather.io/ui';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
-import { SbtcRewardContext } from './sbtc-rewards-context';
+import { SbtcRewardContext } from './sbtc-context';
 
 export interface RewardProtocolInfo {
   id: string;
@@ -79,7 +79,7 @@ const formattedSbtcPools = sbtcPools.map(pool => ({
   url: pool.url,
 }));
 
-export function SbtcRewards(): ReactElement {
+export function SbtcRewards() {
   const { status, whenExtensionState } = useLeatherConnect();
   const postSlug = 'sbtcRewards';
   const remainingSbtcPegCapSupply = useRemainingSbtcSupply();

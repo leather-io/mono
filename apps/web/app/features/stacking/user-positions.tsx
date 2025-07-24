@@ -231,7 +231,7 @@ export function UserPositions({ stacksAddress }: UserPositionsProps) {
             img={<QuestionCircleIcon variant="small" color={'inherit' as any} />}
             spacing="space.01"
           >
-            {content.stacking.unpoolingInfo}
+            {content.pooledStacking.unpoolingInfo}
           </Flag>
         </styled.div>
       )}

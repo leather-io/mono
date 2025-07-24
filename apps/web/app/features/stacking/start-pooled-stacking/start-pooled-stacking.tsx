@@ -10,6 +10,7 @@ import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { PoolOverview } from '~/components/pool-overview';
+import { StackingPool } from '~/data/data';
 import { ChooseStackingAmount } from '~/features/stacking/components/choose-stacking-amount';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
@@ -265,7 +266,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
   }
 
   // Helper to map PoolRewardProtocolInfo to StackingPool
-  function mapPoolRewardProtocolInfoToStackingPool(info: any): import('~/data/data').StackingPool {
+  function mapPoolRewardProtocolInfoToStackingPool(info: any): StackingPool {
     const minimumDelegationAmount = info.minCommitment
       ? Math.round(info.minCommitment * 1000000)
       : 0;

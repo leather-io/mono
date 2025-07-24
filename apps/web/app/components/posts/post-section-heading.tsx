@@ -35,7 +35,7 @@ export function PostSectionHeading({ post, prefix }: PostSectionHeadingProps) {
       justifyContent="space-between"
       gap={['space.04', 'space.04', 'space.07']}
       mb="space.07"
-      mt="space.07"
+      mt="space.08"
     >
       <Box flex={1}>
         <styled.h2 textStyle="heading.03" maxW="400px" m={0} mr="space.03">

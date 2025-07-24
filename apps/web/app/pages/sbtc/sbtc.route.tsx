@@ -1,6 +1,6 @@
 import { MetaDescriptor } from 'react-router';
 
-import { SbtcRewards } from '~/pages/sbtc-rewards/sbtc-rewards';
+import { SbtcRewards } from '~/pages/sbtc/sbtc';
 import { formatPostPrompt, getPosts } from '~/utils/post-utils';
 
 export function meta() {

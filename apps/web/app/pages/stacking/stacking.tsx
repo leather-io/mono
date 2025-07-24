@@ -7,8 +7,10 @@ import { content } from '~/data/content';
 import { UserPositions } from '~/features/stacking/user-positions/user-positions';
 import { Page } from '~/layouts/page/page';
 
+import { IndependentStackingDetails } from './components/independent-stacking-details';
 import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
+import { SoloStackingInfoCard } from './components/solo-stacking-info-card';
 import { StackingExplainer } from './components/stacking-explainer';
 import { StackingFaq } from './components/stacking-faq';
 import {
@@ -42,6 +44,10 @@ export function Stacking() {
       <PostSectionHeading post={content.posts.liquidStacking} />
       <LiquidStackingExplainer mt="space.04" />
       <LiquidStackingProviderTable mt="space.05" />
+
+      <SoloStackingInfoCard />
+
+      <IndependentStackingDetails mt="space.05" />
 
       <Page.Divider my="space.07" />
 

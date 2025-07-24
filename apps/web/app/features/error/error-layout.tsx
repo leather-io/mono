@@ -1,7 +1,7 @@
 import { isRouteErrorResponse } from 'react-router';
 
 import * as Sentry from '@sentry/react-router';
-import { Flex } from 'leather-styles/jsx';
+import { Flex, styled } from 'leather-styles/jsx';
 import { content } from '~/data/content';
 
 import type { Route } from '../../+types/root';
@@ -28,13 +28,13 @@ export function ErrorLayout({ error }: ErrorLayoutProps) {
   }
 
   return (
-    <Flex alignItems="center" flexDirection="column" justifyContent="center">
+    <Flex alignItems="center" flexDirection="column" justifyContent="center" width="100%">
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (
-        <pre>
+        <styled.pre maxWidth="100%" overflow="auto">
           <code>{stack}</code>
-        </pre>
+        </styled.pre>
       )}
     </Flex>
   );

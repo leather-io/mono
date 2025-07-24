@@ -11,6 +11,9 @@ export default [
     route('active', 'pages/stacking/liquid/liquid-stacking-active.route.tsx'),
     route('increase', 'pages/stacking/liquid/liquid-stacking-increase.route.tsx'),
   ]),
-  route('sbtc', 'pages/sbtc-rewards/sbtc.route.tsx'),
+  ...prefix('stacking/independent', [
+    index('pages/stacking/independent/independent-stacking.route.tsx'),
+  ]),
+  route('sbtc', 'pages/sbtc/sbtc.route.tsx'),
   route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;
