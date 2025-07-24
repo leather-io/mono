@@ -404,6 +404,11 @@ msgstr "App authorization updated"
 msgid "authentication.user-not-enrolled"
 msgstr "App is not protected with device-level PIN or biometrics."
 
+#: src/utils/app-store-utils.ts:43
+#: src/utils/app-store-utils.ts:45
+msgid "version_guard.app_store"
+msgstr "App Store"
+
 #: src/features/approver/components/approver-buttons.tsx:31
 #: src/features/approver/layouts/base-stx-message-approver.layout.tsx:84
 #: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:161
@@ -647,6 +652,10 @@ msgstr "Create new wallet"
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:244
 msgid "configure_wallet.creation_label"
 msgstr "Creation date"
+
+#: src/hooks/use-version-check.ts:47
+msgid "version_guard.current_version_format_invalid"
+msgstr "Current app version format is invalid"
 
 #: src/features/send/components/fee-badge.tsx:36
 msgid "approval-ux.fees.extremely-high"
@@ -923,6 +932,14 @@ msgstr "Get support or provide feedback"
 msgid "settings.help.cell_caption"
 msgstr "Get support or provide feedback"
 
+#: src/components/app-update-required/app-update-required-sheet.tsx:25
+msgid "version_guard.title"
+msgstr "Get the latest version of the Leather app"
+
+#: src/utils/app-store-utils.ts:44
+msgid "version_guard.google_play"
+msgstr "Google Play"
+
 #: src/utils/dapps.ts:75
 msgid "dapps.granite"
 msgstr "Granite"
@@ -1092,6 +1109,10 @@ msgstr "Matching"
 msgid "send_form.max_label"
 msgstr "Max"
 
+#: src/components/app-update-required/app-update-required-sheet.tsx:55
+msgid "version_guard.decline_version"
+msgstr "Maybe later"
+
 #: src/features/approver/components/memo-card.tsx:20
 msgid "approver.memo.title"
 msgstr "Memo"
@@ -1121,6 +1142,10 @@ msgstr "Message"
 #: src/features/send/error-messages.ts:21
 msgid "send.validation.minimum_amount"
 msgstr "Minimum is {minSpendAmountInSats}"
+
+#: src/hooks/use-version-check.ts:74
+msgid "version_guard.minimum_version_format_invalid"
+msgstr "Minimum version format is invalid"
 
 #: src/features/activity/utils/format-activity.ts:65
 msgid "activity.time.minutes-ago"
@@ -1202,6 +1227,10 @@ msgstr "Notifications"
 #: src/features/notifications/notifications-sheet.tsx:30
 msgid "notification-sheet.submit_button"
 msgstr "Notify me"
+
+#: src/components/app-update-required/update-button.tsx:28
+msgid "common.ok"
+msgstr "OK"
 
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:74
 msgid "wallet.open_wallet_settings"
@@ -1683,6 +1712,19 @@ msgstr "Turn on camera access in Settings to scan a QR."
 msgid "browser.input_placeholder"
 msgstr "Type URL or search"
 
+#: src/hooks/use-version-check.ts:33
+msgid "version_guard.unable_to_determine_current_version"
+msgstr "Unable to determine current app version"
+
+#: src/components/app-update-required/update-button.tsx:27
+#: src/utils/app-store-utils.ts:31
+msgid "version_guard.store_error_message"
+msgstr "Unable to open app store. Please update the app manually from your device's app store."
+
+#: src/components/app-update-required/update-button.tsx:26
+msgid "version_guard.store_error_title"
+msgstr "Unable to Open Store"
+
 #: src/features/activity/utils/format-activity.ts:94
 #: src/features/activity/utils/format-activity.ts:110
 msgid "activity.type.unknown"
@@ -1697,9 +1739,21 @@ msgstr "Unknown"
 msgid "approver.fee.speed.unknown"
 msgstr "Unknown"
 
+#: src/hooks/use-version-check.ts:101
+msgid "version_guard.unknown_error"
+msgstr "Unknown error during version check"
+
 #: src/components/splash-screen-guard/splash-screen-guard.tsx:148
 msgid "unlock"
 msgstr "Unlock"
+
+#: src/utils/app-store-utils.ts:54
+msgid "version_guard.update_from_store"
+msgstr "Update from {0}"
+
+#: src/components/app-update-required/app-update-required-sheet.tsx:31
+msgid "version_guard.update_available"
+msgstr "Update the app to get access to the latest features."
 
 #: src/app/secure-your-wallet.tsx:30
 msgid "secure_your_wallet.caption"

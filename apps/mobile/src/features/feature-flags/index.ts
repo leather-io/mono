@@ -4,6 +4,7 @@ import {
   AutoEnvAttributes,
   ReactNativeLDClient,
   useBoolVariation,
+  useStringVariation,
 } from '@launchdarkly/react-native-client-sdk';
 import * as Application from 'expo-application';
 
@@ -78,4 +79,9 @@ export function useSendPasteButton() {
 
 export function useTokenDetailsFlag() {
   return useBoolVariation('token_details', true);
+}
+
+// Setting an empty string will not enforce a minimum version and will skip the check.
+export function useMinimumAppVersion() {
+  return useStringVariation('minimum_app_version', '');
 }

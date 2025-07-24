@@ -4,10 +4,12 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 
+import { AppUpdateRequiredSheet } from '@/components/app-update-required';
 import { ErrorBoundary } from '@/components/error/error-boundary';
 import { SplashScreenGuard } from '@/components/splash-screen-guard/splash-screen-guard';
 import { StatusBar } from '@/components/status-bar';
 import { ToastWrapper } from '@/components/toast/toast-context';
+import { VersionGuard } from '@/components/version-guard/version-guard';
 import { GlobalSheetProvider } from '@/core/global-sheet-provider';
 import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
@@ -73,6 +75,7 @@ function App() {
   return (
     <Box backgroundColor="ink.background-secondary" flex={1}>
       <ErrorBoundary>
+        <VersionGuard />
         <StatusBar />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
@@ -81,6 +84,7 @@ function App() {
         <ReceiveSheet />
         <AddAccountSheet />
         <AddWalletSheet />
+        <AppUpdateRequiredSheet />
       </ErrorBoundary>
     </Box>
   );
