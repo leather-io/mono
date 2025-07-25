@@ -1,15 +1,15 @@
-import { FIAT_METADATA } from './fiat-metadata';
-import { formatterPresets } from './formatter-presets';
+import { currencyFormatterPresets } from './currency-formatter-presets';
 import {
+  CurrencyFormatterPreset,
   FormatAmountCustomOptions,
   FormatAmountInput,
   FormatAmountOptions,
-  FormatterPreset,
-} from './formatter.types';
+} from './currency-formatter.types';
+import { FIAT_METADATA } from './fiat-metadata';
 
-interface CreateFormatterParams {
+interface CreateCurrencyFormatterParams {
   locale: string;
-  onFormatterError?: (
+  onError?: (
     error: unknown,
     context: { locale: string; options: Intl.NumberFormatOptions }
   ) => void;
@@ -24,12 +24,12 @@ const defaultCustomOptions = {
   approximateDust: true,
 };
 
-export function createFormatter({ locale, onFormatterError }: CreateFormatterParams) {
+export function createCurrencyFormatter({ locale, onError }: CreateCurrencyFormatterParams) {
   function safeInitializeNumberFormat(locale: string, options: Intl.NumberFormatOptions) {
     try {
       return new Intl.NumberFormat(locale, options);
     } catch (e) {
-      onFormatterError?.(e, { locale, options });
+      onError?.(e, { locale, options });
       return null;
     }
   }
@@ -112,14 +112,14 @@ export { type FormatAmountOptions };
 // Helpers
 //
 // -----------------------------------------------------------------------------
-function getPresetResult(preset: FormatterPreset | undefined, input: FormatAmountInput) {
+function getPresetResult(preset: CurrencyFormatterPreset | undefined, input: FormatAmountInput) {
   if (!preset) return {};
 
-  if (typeof formatterPresets[preset] === 'function') {
-    return formatterPresets[preset](input);
+  if (typeof currencyFormatterPresets[preset] === 'function') {
+    return currencyFormatterPresets[preset](input);
   }
 
-  return formatterPresets[preset];
+  return currencyFormatterPresets[preset];
 }
 
 function mergeCustomOptions(

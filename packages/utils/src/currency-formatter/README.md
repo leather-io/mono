@@ -1,4 +1,4 @@
-# Formatter
+# Currency Formatter
 
 Currency formatting utility that handles fiat and cryptocurrency display.
 
@@ -11,11 +11,11 @@ The formatter isn’t tied to our domain model and expects a numeric decimal inp
 needs a one-time setup at the app-level to adapt the app’s currency to its input:
 
 ```ts
-import { createFormatter, formatCurrencyOptions } from '@leather.io/utils';
+import { FormatAmountOptions, createCurrencyFormatter } from '@leather.io/utils';
 
-const formatter = createFormatter({ locale: 'en-US' });
+const formatter = createCurrencyFormatter({ locale: 'en-US' });
 
-function formatAmount(money: Money, options?: formatCurrencyOptions) {
+function formatCurrencyAmount(money: Money, options?: FormatAmountOptions) {
   return formatter.formatAmount(
     {
       amount: money.amount.shiftedBy(-money.decimals).toNumber(),
@@ -73,8 +73,8 @@ formatAmount(btcPrice, { preset: 'token-price' }); // $122,838.46
 Meant to be used in listing items and other areas with scarce real estate.
 
 ```ts
-formatAmount(btcBalance, { preset: 'shorthand-balance-crypto' }); // // "12.3457 BTC"
-formatAmount(usdBalance, { preset: 'shorthand-balance-fiat' }); // // "$12.35"
+formatAmount(btcBalance, { preset: 'shorthand-balance-crypto' }); // "12.3457 BTC"
+formatAmount(usdBalance, { preset: 'shorthand-balance-fiat' }); // "$12.35"
 ```
 
 ### Custom options:
@@ -118,14 +118,14 @@ happening. Additionaly, the internal implementation is wrapped in `try/catch` to
 exceptions are never thrown—a fallback empty string is returned instead.
 
 These instances are rare and typically don’t need to be handled manually at usage point, but
-it's recommended to log those errors for observability, using built in `onFormatterError` when
+it's recommended to log those errors for observability, using built in `onCurrencyFormatterError` when
 creating a formatter
 instance:
 
 ```ts
-const formatter = createFormatter({
+const formatter = createCurrencyFormatter({
   locale: 'en-US',
-  onFormatterError: (error, context) => {
+  onCurrencyFormatterError: (error, context) => {
     const { locale, options } = context;
     captureError(error, { locale, options });
   },

@@ -1,8 +1,15 @@
-import { FormatterPreset, FormatterPresetResult, FormatterPresetValue } from './formatter.types';
+import {
+  CurrencyFormatterPreset,
+  CurrencyFormatterPresetResult,
+  CurrencyFormatterPresetValue,
+} from './currency-formatter.types';
 
-export const formatterPresets: Record<FormatterPreset, FormatterPresetValue> = {
+export const currencyFormatterPresets: Record<
+  CurrencyFormatterPreset,
+  CurrencyFormatterPresetValue
+> = {
   'token-price': input => {
-    const options: FormatterPresetResult = {
+    const options: CurrencyFormatterPresetResult = {
       compactThreshold: Infinity,
       approximateDust: false,
       showCurrency: true,
