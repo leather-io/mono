@@ -1,27 +1,23 @@
-export interface FormatCurrencyInput {
+export interface FormatAmountInput {
   amount: number;
   currencyCode: string;
   decimals: number;
 }
 
-export interface FormatCurrencyCustomOptions {
+export interface FormatAmountCustomOptions {
   compactThreshold?: number;
   showCurrency?: boolean;
   approximateDust?: boolean;
 }
 
-export interface FormatCurrencyOptions extends FormatCurrencyCustomOptions {
+export interface FormatAmountOptions extends FormatAmountCustomOptions {
   preset?: FormatterPreset;
   numberFormatOptions?: Intl.NumberFormatOptions;
 }
-export type FormatterPreset =
-  | 'balance'
-  | 'token-price'
-  | 'shorthand-balance-crypto'
-  | 'shorthand-balance-fiat';
+export type FormatterPreset = 'token-price' | 'shorthand-balance-crypto' | 'shorthand-balance-fiat';
 
 export type FormatterPresetValue =
   | FormatterPresetResult
-  | ((input: FormatCurrencyInput) => FormatterPresetResult);
+  | ((input: FormatAmountInput) => FormatterPresetResult);
 
-export type FormatterPresetResult = Omit<FormatCurrencyOptions, 'preset'>;
+export type FormatterPresetResult = Omit<FormatAmountOptions, 'preset'>;

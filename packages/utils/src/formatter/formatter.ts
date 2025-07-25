@@ -1,9 +1,9 @@
 import { FIAT_METADATA } from './fiat-metadata';
 import { formatterPresets } from './formatter-presets';
 import {
-  FormatCurrencyCustomOptions,
-  FormatCurrencyInput,
-  FormatCurrencyOptions,
+  FormatAmountCustomOptions,
+  FormatAmountInput,
+  FormatAmountOptions,
   FormatterPreset,
 } from './formatter.types';
 
@@ -34,7 +34,7 @@ export function createFormatter({ locale, onFormatterError }: CreateFormatterPar
     }
   }
 
-  function formatAmount(input: FormatCurrencyInput, options: FormatCurrencyOptions = {}) {
+  function formatAmount(input: FormatAmountInput, options: FormatAmountOptions = {}) {
     const { amount, currencyCode, decimals } = input;
     const { preset, numberFormatOptions = {}, ...customOptions } = options;
     const { numberFormatOptions: presetNumberFormatOptions = {}, ...presetCustomOptions } =
@@ -105,12 +105,14 @@ export function createFormatter({ locale, onFormatterError }: CreateFormatterPar
   };
 }
 
+export { type FormatAmountOptions };
+
 // -----------------------------------------------------------------------------
 //
 // Helpers
 //
 // -----------------------------------------------------------------------------
-function getPresetResult(preset: FormatterPreset | undefined, input: FormatCurrencyInput) {
+function getPresetResult(preset: FormatterPreset | undefined, input: FormatAmountInput) {
   if (!preset) return {};
 
   if (typeof formatterPresets[preset] === 'function') {
@@ -121,8 +123,8 @@ function getPresetResult(preset: FormatterPreset | undefined, input: FormatCurre
 }
 
 function mergeCustomOptions(
-  presetCustomOptions: FormatCurrencyCustomOptions,
-  customOptions: FormatCurrencyCustomOptions
+  presetCustomOptions: FormatAmountCustomOptions,
+  customOptions: FormatAmountCustomOptions
 ) {
   return {
     ...defaultCustomOptions,
