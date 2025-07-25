@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createFormatter } from './formatter';
+import { createCurrencyFormatter } from './currency-formatter';
 
 interface TestConfig {
   locale: string;
@@ -60,7 +60,7 @@ describe('formatAmount', () => {
         ],
       },
     ])('locale: $locale, currency: $currencyCode', ({ locale, currencyCode, decimals, tests }) => {
-      const { formatAmount } = createFormatter({ locale });
+      const { formatAmount } = createCurrencyFormatter({ locale });
 
       it.each(tests)('formats %d to "%s"', (amount, expected) => {
         const result = formatAmount({ amount, currencyCode, decimals });
@@ -126,7 +126,7 @@ describe('formatAmount', () => {
         ],
       },
     ])('locale: $locale, currency: $currencyCode', ({ locale, currencyCode, decimals, tests }) => {
-      const { formatAmount } = createFormatter({ locale });
+      const { formatAmount } = createCurrencyFormatter({ locale });
 
       it.each(tests)('formats %d to "%s"', (amount, expected) => {
         const result = formatAmount({ amount, currencyCode, decimals });
@@ -136,7 +136,7 @@ describe('formatAmount', () => {
   });
 
   describe('custom options', () => {
-    const { formatAmount } = createFormatter({ locale: 'en-US' });
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
     it('compacts with a custom threshold', () => {
       const usd = createUsd(1000);
       expect(formatAmount(usd, { compactThreshold: 1000 })).toBe('$1.00K');
@@ -174,16 +174,16 @@ describe('formatAmount', () => {
   });
 
   describe('edge cases', () => {
-    const { formatAmount } = createFormatter({ locale: 'en-US' });
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
 
     it('gracefully falls back on invalid locale', () => {
-      const { formatAmount } = createFormatter({ locale: 'BAD_LOCALE' });
+      const { formatAmount } = createCurrencyFormatter({ locale: 'BAD_LOCALE' });
       expect(() => formatAmount(createUsd(12.34))).not.toThrow();
       expect(formatAmount(createUsd(12.34))).toBe('');
     });
 
     it('gracefully falls back on invalid locale', () => {
-      const { formatAmount } = createFormatter({ locale: 'BAD_LOCALE' });
+      const { formatAmount } = createCurrencyFormatter({ locale: 'BAD_LOCALE' });
       expect(() => formatAmount(createUsd(12.34))).not.toThrow();
       expect(formatAmount(createUsd(12.34))).toBe('');
     });
@@ -230,7 +230,7 @@ describe('formatAmount', () => {
   });
 
   describe('preset:token-price', () => {
-    const { formatAmount } = createFormatter({ locale: 'en-US' });
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
     it('displays up to 6 decimals for small prices', () => {
       const usd = createUsd(0.000001);
       expect(formatAmount(usd, { preset: 'token-price' })).toBe('$0.000001');
@@ -269,7 +269,7 @@ describe('formatAmount', () => {
 });
 
 describe('formatPercentage', () => {
-  const { formatPercentage } = createFormatter({ locale: 'en-US' });
+  const { formatPercentage } = createCurrencyFormatter({ locale: 'en-US' });
 
   it('formats the whole percentage correctly', () => {
     expect(formatPercentage(1)).toBe('100.00%');
@@ -284,7 +284,7 @@ describe('formatPercentage', () => {
   });
 
   it('gracefully falls back on invalid locale', () => {
-    const { formatPercentage } = createFormatter({ locale: 'BAD_LOCALE' });
+    const { formatPercentage } = createCurrencyFormatter({ locale: 'BAD_LOCALE' });
     expect(formatPercentage(0.5)).toBe('');
   });
 });
