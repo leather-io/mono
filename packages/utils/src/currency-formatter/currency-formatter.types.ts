@@ -14,10 +14,7 @@ export interface FormatAmountOptions extends FormatAmountCustomOptions {
   preset?: CurrencyFormatterPreset;
   numberFormatOptions?: Intl.NumberFormatOptions;
 }
-export type CurrencyFormatterPreset =
-  | 'token-price'
-  | 'shorthand-balance-crypto'
-  | 'shorthand-balance-fiat';
+export type CurrencyFormatterPreset = 'token-price' | 'shorthand-balance';
 
 export type CurrencyFormatterPresetValue =
   | CurrencyFormatterPresetResult

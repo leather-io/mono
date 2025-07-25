@@ -1,3 +1,4 @@
+import { isFiatCurrencyCode } from '../money';
 import { currencyFormatterPresets } from './currency-formatter-presets';
 import {
   CurrencyFormatterPreset,
@@ -5,7 +6,6 @@ import {
   FormatAmountInput,
   FormatAmountOptions,
 } from './currency-formatter.types';
-import { FIAT_METADATA } from './fiat-metadata';
 
 interface CreateCurrencyFormatterParams {
   locale: string;
@@ -44,7 +44,7 @@ export function createCurrencyFormatter({ locale, onError }: CreateCurrencyForma
       customOptions
     );
     const shouldCompact = evaluateCompactNotation(compactThreshold, amount);
-    const isFiatCurrency = isFiat(currencyCode);
+    const isFiatCurrency = isFiatCurrencyCode(currencyCode);
     const isDust = isFiatCurrency && isSmallerThanMinorUnit(amount, decimals);
     const { minimumFractionDigits, maximumFractionDigits } = deriveFractionOptions(
       amount,
@@ -137,17 +137,6 @@ function evaluateCompactNotation(compactThreshold: number, amount: number) {
   return Math.abs(amount) >= compactThreshold;
 }
 
-//https://tc39.es/ecma402/#sec-iswellformedcurrencycode
-export function isWellFormedCurrencyCode(currency: string): boolean {
-  if (currency.length !== 3) return false;
-  const normalized = currency.toUpperCase();
-  for (let i = 0; i < 3; i++) {
-    const code = normalized.charCodeAt(i);
-    if (code < 0x41 || code > 0x5a) return false;
-  }
-  return true;
-}
-
 function getSmallestUnit(decimals: number) {
   return 1 / 10 ** decimals;
 }
@@ -156,12 +145,6 @@ function isSmallerThanMinorUnit(value: number, decimals: number): boolean {
   if (value === 0) return false;
   const unit = 1 / 10 ** decimals;
   return Math.abs(value) < unit;
-}
-
-const fiatCurrencyCodeList = new Set(FIAT_METADATA.map(currency => currency.code));
-
-function isFiat(code: string) {
-  return fiatCurrencyCodeList.has(code);
 }
 
 function omitFractionOptions(options: Intl.NumberFormatOptions) {

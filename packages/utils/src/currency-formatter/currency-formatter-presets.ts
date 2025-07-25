@@ -1,3 +1,4 @@
+import { isFiatCurrencyCode } from '../money';
 import {
   CurrencyFormatterPreset,
   CurrencyFormatterPresetResult,
@@ -28,15 +29,20 @@ export const currencyFormatterPresets: Record<
 
     return options;
   },
-  'shorthand-balance-crypto': {
-    numberFormatOptions: {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 4,
-    },
-  },
-  'shorthand-balance-fiat': {
-    numberFormatOptions: {
-      maximumFractionDigits: 2,
-    },
+  'shorthand-balance': input => {
+    if (isFiatCurrencyCode(input.currencyCode)) {
+      return {
+        numberFormatOptions: {
+          maximumFractionDigits: 2,
+        },
+      };
+    } else {
+      return {
+        numberFormatOptions: {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 4,
+        },
+      };
+    }
   },
 };
