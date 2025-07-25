@@ -266,6 +266,20 @@ describe('formatAmount', () => {
       expect(formatAmount(usd, { preset: 'token-price', approximateDust: true })).toBe('< $0.01');
     });
   });
+
+  describe('shorthand-balance', () => {
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
+
+    it('shows up to 2 decimals for fiat balances', () => {
+      const usd = createUsd(1234.5678);
+      expect(formatAmount(usd, { preset: 'shorthand-balance' })).toBe('$1,234.57');
+    });
+
+    it('shows up to 4 decimals for crypto balances', () => {
+      const btc = createBtc(1234.5678);
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('1,234.5678 BTC'));
+    });
+  });
 });
 
 describe('formatPercentage', () => {

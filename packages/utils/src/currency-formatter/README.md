@@ -73,8 +73,8 @@ formatAmount(btcPrice, { preset: 'token-price' }); // $122,838.46
 Meant to be used in listing items and other areas with scarce real estate.
 
 ```ts
-formatAmount(btcBalance, { preset: 'shorthand-balance-crypto' }); // "12.3457 BTC"
-formatAmount(usdBalance, { preset: 'shorthand-balance-fiat' }); // "$12.35"
+formatAmount(btcBalance, { preset: 'shorthand-balance' }); // "12.3457 BTC"
+formatAmount(usdBalance, { preset: 'shorthand-balance' }); // "$12.35"
 ```
 
 ### Custom options:
