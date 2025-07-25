@@ -1,9 +1,6 @@
 import { FormatterPreset, FormatterPresetResult, FormatterPresetValue } from './formatter.types';
 
 export const formatterPresets: Record<FormatterPreset, FormatterPresetValue> = {
-  balance: {
-    showCurrency: false,
-  },
   'token-price': input => {
     const options: FormatterPresetResult = {
       compactThreshold: Infinity,
