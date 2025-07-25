@@ -12,5 +12,6 @@ export default [
     route('increase', 'routes/stacking/liquid-stacking-increase.page.tsx'),
   ]),
   route('sbtc', 'routes/sbtc.page.tsx'),
+  route('changelog', 'routes/changelog.page.tsx'),
   route('*', 'routes/error-not-found.page.tsx'),
 ] satisfies RouteConfig;

@@ -92,6 +92,7 @@
     "tty-browserify": "0.0.1",
     "typescript": "5.8.3",
     "vite": "7.0.5",
+    "vite-plugin-markdown": "2.2.0",
     "vite-plugin-svgr": "4.3.0",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "2.1.9",
