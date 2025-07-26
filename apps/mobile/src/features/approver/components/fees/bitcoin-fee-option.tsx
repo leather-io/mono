@@ -1,4 +1,4 @@
-import { formatBalance } from '@/components/balance/balance';
+import { formatCurrency } from '@/utils/currency-formatter';
 import { useLingui } from '@lingui/react';
 
 import { FeeTypes, Money } from '@leather.io/models';
@@ -28,6 +28,7 @@ export function BitcoinFeeOption({
 }: BitcoinFeeOptionProps) {
   const { i18n } = useLingui();
   const sats = createMoney(fee, 'BTC');
+
   return (
     <BaseFeeOption
       onPress={onPress}
@@ -36,11 +37,11 @@ export function BitcoinFeeOption({
       time={getBitcoinFeeData(feeType).time}
       isSelected={isSelected}
       disabled={disabled}
-      formattedFeeAmount={formatBalance({ balance: sats, isQuoteCurrency: false })}
+      formattedFeeAmount={formatCurrency(sats)}
       formattedQuoteFeeAmount={i18n._({
         id: 'fees-sheet.fee-rate-caption',
         message: '{feeRate} sats/vB · {quoteFee}',
-        values: { feeRate, quoteFee: formatBalance({ balance: quoteFee, isQuoteCurrency: true }) },
+        values: { feeRate, quoteFee: formatCurrency(quoteFee) },
       })}
     />
   );

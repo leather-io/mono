@@ -19,24 +19,23 @@ export function AccountList({
   tokenId: string;
   selectAccount: (account: Account) => void;
 }) {
-  const accounts = useAccounts();
+  const accounts = useAccounts('active');
+
   return (
     <TokenDetailsCard title={t({ id: 'token.details.accounts_title', message: 'Accounts' })}>
-      {accounts.list
-        .filter(account => account.status !== 'hidden')
-        .map(account => (
-          <WalletLoader fingerprint={account.fingerprint} key={account.id}>
-            {wallet => (
-              <AccountListItem
-                key={account.id}
-                account={account}
-                wallet={wallet}
-                tokenId={tokenId}
-                onPress={() => selectAccount(account)}
-              />
-            )}
-          </WalletLoader>
-        ))}
+      {accounts.list.map(account => (
+        <WalletLoader fingerprint={account.fingerprint} key={account.id}>
+          {wallet => (
+            <AccountListItem
+              key={account.id}
+              account={account}
+              wallet={wallet}
+              tokenId={tokenId}
+              onPress={() => selectAccount(account)}
+            />
+          )}
+        </WalletLoader>
+      ))}
     </TokenDetailsCard>
   );
 }
@@ -67,6 +66,7 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
       address={
         <Balance
           balance={quoteBalance}
+          formattingOptions={{ preset: 'shorthand-balance' }}
           variant="caption01"
           color="ink.text-subdued"
           isQuoteCurrency={tokenId === 'BTC'}
@@ -75,7 +75,12 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
       balance={
         // FIXME LEA-3015: isQuoteCurrency is crashing for non BTC tokens
         // need to update balance to show ticker beside non BTC tokens IF not activity list
-        <Balance balance={availableBalance} variant="label02" isQuoteCurrency={tokenId === 'BTC'} />
+        <Balance
+          formattingOptions={{ preset: 'shorthand-balance' }}
+          balance={availableBalance}
+          variant="label02"
+          isQuoteCurrency={tokenId === 'BTC'}
+        />
       }
       icon={<AccountAvatar icon={account.icon} />}
       chevron={<ChevronRightIcon width={16} height={16} />}

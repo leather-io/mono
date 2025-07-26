@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { ApproverButtons } from '@/features/approver/components/approver-buttons';
@@ -25,6 +24,7 @@ import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { destructAccountIdentifier } from '@/store/utils';
 import { analytics } from '@/utils/analytics';
+import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/macro';
 import { PayloadType, deserializeTransaction } from '@stacks/transactions';
 
@@ -181,9 +181,7 @@ export function StacksTxSigner({
               message: 'Total spend',
             })}
           </Text>
-          <Text variant="label02">
-            {formatBalance({ balance: totalSpendQuote, isQuoteCurrency: true })}
-          </Text>
+          <Text variant="label02">{formatCurrency(totalSpendQuote)}</Text>
         </Box>
         <Approver.Actions>
           <ApproverButtons

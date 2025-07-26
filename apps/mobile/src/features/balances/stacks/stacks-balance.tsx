@@ -1,24 +1,14 @@
-import { TokenBalance } from '@/features/token/components/token-balance';
+import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useStxAccountBalance, useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
-import { PressableProps, StxAvatarIcon } from '@leather.io/ui/native';
+import { StxAvatarIcon } from '@leather.io/ui/native';
 
 import { OnOpenTokenProps } from '../balances';
 
-interface StacksTokenBalanceProps extends PressableProps {
-  availableBalance?: Money;
-  quoteBalance?: Money;
-  isLoading?: boolean;
-}
-export function StacksTokenBalance({
-  availableBalance,
-  quoteBalance,
-  isLoading,
-  ...rest
-}: StacksTokenBalanceProps) {
+type StacksTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
+export function StacksTokenBalance(props: StacksTokenBalanceProps) {
   return (
     <TokenBalance
       ticker="STX"
@@ -27,10 +17,7 @@ export function StacksTokenBalance({
         id: 'asset_name.stacks',
         message: 'Stacks',
       })}
-      quoteBalance={quoteBalance}
-      availableBalance={availableBalance}
-      isLoading={isLoading}
-      {...rest}
+      {...props}
     />
   );
 }

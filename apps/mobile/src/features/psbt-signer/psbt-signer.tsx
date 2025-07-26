@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
 
-import { formatBalance } from '@/components/balance/balance';
 import { useToastContext } from '@/components/toast/toast-context';
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
@@ -15,6 +14,7 @@ import { useBitcoinBroadcastTransaction } from '@/queries/transaction/use-bitcoi
 import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
+import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
@@ -309,9 +309,7 @@ function BasePsbtSigner({
             <Text variant="label02">
               {t({ id: 'approver.total_spend', message: 'Total spend' })}
             </Text>
-            <Text variant="label02">
-              {formatBalance({ balance: totalSpendQuote, isQuoteCurrency: true })}
-            </Text>
+            <Text variant="label02">{formatCurrency(totalSpendQuote)}</Text>
           </Box>
           <Approver.Actions>
             <ApproverButtons

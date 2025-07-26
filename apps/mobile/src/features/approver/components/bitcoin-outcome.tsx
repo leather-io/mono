@@ -12,7 +12,11 @@ export function BitcoinOutcome({ amount }: { amount: Money }) {
 
   return (
     <Box mx="-5">
-      <BitcoinTokenBalance availableBalance={amount} quoteBalance={quoteBalance} />
+      <BitcoinTokenBalance
+        availableBalance={amount}
+        quoteBalance={quoteBalance}
+        forceBalanceVisible
+      />
     </Box>
   );
 }

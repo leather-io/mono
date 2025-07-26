@@ -1,43 +1,11 @@
 import { PrivateText } from '@/components/private-text';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { currencyDecimalsMap, currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
-import { SkeletonLoader, TextProps } from '@leather.io/ui/native';
-import {
-  FormatAmountOptions,
-  formatMoneyWithoutSymbol,
-  i18nFormatCurrency,
-} from '@leather.io/utils';
+import { SkeletonLoader, Text, TextProps } from '@leather.io/ui/native';
+import { FormatAmountOptions } from '@leather.io/utils';
 
 const EmptyBalanceDisplay = '-.--';
-
-export function isQuoteCryptoCurrency(balance: Money) {
-  return balance.symbol in currencyNameMap && balance.symbol === 'BTC';
-}
-
-interface FormatBalanceProps {
-  balance: Money;
-  isQuoteCurrency: boolean;
-  operator?: string;
-}
-export function formatBalance({ balance, isQuoteCurrency, operator }: FormatBalanceProps) {
-  if (isQuoteCurrency && isQuoteCryptoCurrency(balance)) {
-    const formattedAmount = balance.amount
-      .shiftedBy(-balance.decimals)
-      .toFixed(currencyDecimalsMap[balance.symbol]!);
-    return operator ? `${operator} ${formattedAmount} BTC` : `${formattedAmount} BTC`;
-  }
-
-  if (isQuoteCurrency) {
-    const isLargeBalance = balance.amount.isGreaterThanOrEqualTo(100_000);
-    return operator
-      ? `${operator} ${i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals)}`
-      : i18nFormatCurrency(balance, isLargeBalance ? 0 : balance.decimals);
-  }
-
-  return formatMoneyWithoutSymbol(balance);
-}
 
 interface BalanceProps extends TextProps {
   balance?: Money;
@@ -45,7 +13,9 @@ interface BalanceProps extends TextProps {
   isLoading?: boolean;
   isQuoteCurrency?: boolean;
   formattingOptions?: FormatAmountOptions;
+  forceVisible?: boolean;
 }
+
 export function Balance({
   balance,
   operator,
@@ -53,26 +23,29 @@ export function Balance({
   color = 'ink.text-primary',
   isLoading,
   formattingOptions,
+  forceVisible = false,
   ...props
 }: BalanceProps) {
   if (isLoading) {
-    return <SkeletonLoader height={20} width={100} isLoading={true} />;
+    return <SkeletonLoader height={20} width={100} isLoading />;
   }
+
+  const DisplayText = forceVisible ? Text : PrivateText;
 
   if (!balance) {
     return (
-      <PrivateText color={color} variant={variant}>
+      <DisplayText color={color} variant={variant}>
         {EmptyBalanceDisplay}
-      </PrivateText>
+      </DisplayText>
     );
   }
 
   const formattedBalance = addOperator(formatCurrency(balance, formattingOptions), operator);
 
   return (
-    <PrivateText color={color} variant={variant} {...props}>
+    <DisplayText color={color} variant={variant} {...props}>
       {formattedBalance}
-    </PrivateText>
+    </DisplayText>
   );
 }
 

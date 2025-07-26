@@ -31,12 +31,12 @@ export function BaseFeeCard({ amount, onPress, marketData, icon, title, time }: 
         <Cell.Aside>
           <Box flexDirection="row" alignItems="center" gap="2">
             <Box alignItems="flex-end">
-              <Balance balance={amount} variant="label02" />
+              <Balance balance={amount} variant="label02" forceVisible />
               <Balance
                 balance={quoteAmount}
                 variant="label02"
                 color="ink.text-subdued"
-                isQuoteCurrency
+                forceVisible
               />
             </Box>
             <ChevronRightIcon variant="small" />

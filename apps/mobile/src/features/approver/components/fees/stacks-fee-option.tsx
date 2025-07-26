@@ -1,4 +1,4 @@
-import { formatBalance } from '@/components/balance/balance';
+import { formatCurrency } from '@/utils/currency-formatter';
 
 import { FeeTypes, Money } from '@leather.io/models';
 
@@ -30,8 +30,8 @@ export function StacksFeeOption({
       icon={getStacksFeeData(feeType).icon}
       title={getStacksFeeData(feeType).title}
       time={getStacksFeeData(feeType).time}
-      formattedFeeAmount={formatBalance({ balance: fee, isQuoteCurrency: false })}
-      formattedQuoteFeeAmount={formatBalance({ balance: quoteFee, isQuoteCurrency: true })}
+      formattedFeeAmount={formatCurrency(fee)}
+      formattedQuoteFeeAmount={formatCurrency(quoteFee)}
     />
   );
 }

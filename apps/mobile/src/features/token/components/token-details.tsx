@@ -42,7 +42,11 @@ export function TokenDetails({
         heading={icon}
         availableBalance={
           <Box flexDirection="row" alignItems="center" gap="1">
-            <Balance balance={availableBalance} variant="heading03" />
+            <Balance
+              balance={availableBalance}
+              formattingOptions={{ showCurrency: false }}
+              variant="heading03"
+            />
             <Text variant="heading03" color="ink.text-subdued">
               {asset.symbol}
             </Text>
