@@ -1,9 +1,14 @@
 import { PrivateText } from '@/components/private-text';
+import { formatCurrency } from '@/utils/currency-formatter';
 
 import { currencyDecimalsMap, currencyNameMap } from '@leather.io/constants';
 import { Money } from '@leather.io/models';
 import { SkeletonLoader, TextProps } from '@leather.io/ui/native';
-import { formatMoneyWithoutSymbol, i18nFormatCurrency } from '@leather.io/utils';
+import {
+  FormatAmountOptions,
+  formatMoneyWithoutSymbol,
+  i18nFormatCurrency,
+} from '@leather.io/utils';
 
 const EmptyBalanceDisplay = '-.--';
 
@@ -39,6 +44,7 @@ interface BalanceProps extends TextProps {
   operator?: string;
   isLoading?: boolean;
   isQuoteCurrency?: boolean;
+  formattingOptions?: FormatAmountOptions;
 }
 export function Balance({
   balance,
@@ -46,12 +52,13 @@ export function Balance({
   variant = 'label01',
   color = 'ink.text-primary',
   isLoading,
-  isQuoteCurrency = false,
+  formattingOptions,
   ...props
 }: BalanceProps) {
   if (isLoading) {
     return <SkeletonLoader height={20} width={100} isLoading={true} />;
   }
+
   if (!balance) {
     return (
       <PrivateText color={color} variant={variant}>
@@ -60,15 +67,15 @@ export function Balance({
     );
   }
 
-  const maskedCurrencySymbol = !isQuoteCurrency ? `*${balance.symbol}` : undefined;
+  const formattedBalance = addOperator(formatCurrency(balance, formattingOptions), operator);
 
   return (
-    <PrivateText mask={maskedCurrencySymbol} color={color} variant={variant} {...props}>
-      {formatBalance({
-        balance,
-        isQuoteCurrency: isQuoteCurrency,
-        operator,
-      })}
+    <PrivateText color={color} variant={variant} {...props}>
+      {formattedBalance}
     </PrivateText>
   );
+}
+
+function addOperator(balance: string, operator?: string) {
+  return operator ? `${operator} ${balance}` : balance;
 }
