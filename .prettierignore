@@ -11,3 +11,4 @@ CHANGELOG.md
 **/locales/**/messages.ts
 storybook-static/
 coverage/
+apps/mobile/index.js
