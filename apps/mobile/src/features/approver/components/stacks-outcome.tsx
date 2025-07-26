@@ -11,7 +11,12 @@ export function StacksOutcome({ amount }: { amount: Money }) {
   const quoteBalance = baseCurrencyAmountInQuoteWithFallback(amount, stxMarketData);
   return (
     <Box mx="-5">
-      <StacksTokenBalance availableBalance={amount} quoteBalance={quoteBalance} py="3" />
+      <StacksTokenBalance
+        availableBalance={amount}
+        quoteBalance={quoteBalance}
+        forceBalanceVisible
+        py="3"
+      />
     </Box>
   );
 }

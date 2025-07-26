@@ -1,37 +1,20 @@
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { BalanceViewProps } from '@/features/balances/balances';
-import { TokenBalance } from '@/features/token/components/token-balance';
+import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import {
   useRunesAccountBalance,
   useRunesTotalBalance,
 } from '@/queries/balance/runes-balance.query';
 import { ViewMode } from '@/shared/types';
 
-import { AccountId, Money } from '@leather.io/models';
+import { AccountId } from '@leather.io/models';
 import { RunesAccountBalance, RunesAggregateBalance } from '@leather.io/services';
-import { PressableProps, RunesAvatarIcon } from '@leather.io/ui/native';
+import { RunesAvatarIcon } from '@leather.io/ui/native';
 
-interface RunesTokenBalanceProps extends PressableProps {
-  availableBalance?: Money;
-  quoteBalance?: Money;
-  symbol: string;
-  name: string;
-}
-function RunesTokenBalance({
-  availableBalance,
-  quoteBalance,
-  name,
-  symbol,
-}: RunesTokenBalanceProps) {
-  return (
-    <TokenBalance
-      ticker={symbol}
-      icon={<RunesAvatarIcon />}
-      tokenName={name}
-      quoteBalance={quoteBalance}
-      availableBalance={availableBalance}
-    />
-  );
+type RunesTokenBalanceProps = Omit<TokenBalanceProps, 'icon'>;
+
+function RunesTokenBalance(props: RunesTokenBalanceProps) {
+  return <TokenBalance icon={<RunesAvatarIcon />} {...props} />;
 }
 
 function RunesTokenBalanceError() {
@@ -59,8 +42,8 @@ function RunesBalanceWrapper({ data, mode = 'full' }: RunesBalanceWrapperProps) 
           return (
             <RunesTokenBalance
               key={`${balance.asset.symbol}-${index}`}
-              symbol={balance.asset.symbol}
-              name={balance.asset.runeName}
+              ticker={balance.asset.symbol}
+              tokenName={balance.asset.runeName}
               availableBalance={balance.crypto.availableBalance}
               quoteBalance={balance.quote.availableBalance}
             />

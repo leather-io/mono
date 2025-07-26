@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { BalanceViewProps, OnOpenTokenProps } from '@/features/balances/balances';
-import { TokenBalance } from '@/features/token/components/token-balance';
+import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import {
   useSip10AccountBalance,
   useSip10TotalBalance,
@@ -10,45 +10,27 @@ import {
 import { ViewMode } from '@/shared/types';
 import { FlashList } from '@shopify/flash-list';
 
-import { Money } from '@leather.io/models';
 import { Sip10AddressBalance, Sip10AggregateBalance } from '@leather.io/services';
 import { Box, Sip10AvatarIcon } from '@leather.io/ui/native';
 
 import { SIP10_BALANCES_LIMIT, SIP10_BALANCES_WIDGET_LIMIT } from '../constants';
 import { sortSip10Balances } from '../utils/sort-sip10-balances';
 
-interface Sip10TokenBalanceProps {
-  availableBalance?: Money;
+interface Sip10TokenBalanceProps extends Omit<TokenBalanceProps, 'icon'> {
   contractId: string;
-  quoteBalance?: Money;
   imageCanonicalUri: string;
-  name: string;
-  symbol: string;
-  onPress?(): void;
 }
-function Sip10TokenBalance({
-  availableBalance,
-  contractId,
-  quoteBalance,
-  imageCanonicalUri,
-  name,
-  onPress,
-  symbol,
-}: Sip10TokenBalanceProps) {
+function Sip10TokenBalance({ contractId, imageCanonicalUri, ...rest }: Sip10TokenBalanceProps) {
   return (
     <TokenBalance
-      ticker={symbol}
       icon={
         <Sip10AvatarIcon
           contractId={contractId}
           imageCanonicalUri={imageCanonicalUri}
-          name={name}
+          name={rest.tokenName}
         />
       }
-      onPress={onPress}
-      tokenName={name}
-      quoteBalance={quoteBalance}
-      availableBalance={availableBalance}
+      {...rest}
     />
   );
 }
@@ -95,8 +77,8 @@ function Sip10BalanceWrapper({ data, mode = 'full', onPress }: Sip10BalanceWrapp
                     quoteBalance: item.quote.totalBalance,
                   });
                 }}
-                name={item.asset.name}
-                symbol={item.asset.symbol}
+                tokenName={item.asset.name}
+                ticker={item.asset.symbol}
               />
             )}
             estimatedItemSize={72}

@@ -1,26 +1,15 @@
-import { TokenBalance } from '@/features/token/components/token-balance';
+import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
 import { useBtcAccountBalance, useBtcTotalBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/macro';
 
 import { btcAsset } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
-import { BtcAvatarIcon, PressableProps } from '@leather.io/ui/native';
+import { BtcAvatarIcon } from '@leather.io/ui/native';
 
 import { OnOpenTokenProps } from '../balances';
 
-interface BitcoinTokenBalanceProps extends PressableProps {
-  availableBalance?: Money;
-  quoteBalance?: Money;
-  onPress?(): void;
-  isLoading?: boolean;
-}
-export function BitcoinTokenBalance({
-  availableBalance,
-  quoteBalance,
-  onPress,
-  isLoading,
-  ...rest
-}: BitcoinTokenBalanceProps) {
+type BitcoinTokenBalanceProps = Omit<TokenBalanceProps, 'ticker' | 'tokenName' | 'icon'>;
+
+export function BitcoinTokenBalance(props: BitcoinTokenBalanceProps) {
   return (
     <TokenBalance
       ticker="BTC"
@@ -29,11 +18,7 @@ export function BitcoinTokenBalance({
         id: 'asset_name.bitcoin',
         message: 'Bitcoin',
       })}
-      quoteBalance={quoteBalance}
-      availableBalance={availableBalance}
-      onPress={onPress}
-      isLoading={isLoading}
-      {...rest}
+      {...props}
     />
   );
 }

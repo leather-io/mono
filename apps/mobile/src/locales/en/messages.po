@@ -29,7 +29,7 @@ msgstr "{changePercent}%"
 msgid "display.conversion_unit.cell_caption"
 msgstr "{currency}"
 
-#: src/features/approver/components/fees/bitcoin-fee-option.tsx:40
+#: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
 msgid "fees-sheet.fee-rate-caption"
 msgstr "{feeRate} sats/vB · {quoteFee}"
 
@@ -184,7 +184,7 @@ msgstr "Account label"
 msgid "configure_account.account_name.empty_name_error"
 msgstr "Account name cannot be empty"
 
-#: src/features/token/account-list-item.tsx:24
+#: src/features/token/account-list-item.tsx:25
 msgid "token.details.accounts_title"
 msgstr "Accounts"
 
@@ -200,7 +200,7 @@ msgstr "Activity"
 msgid "tabs.button.activity.title"
 msgstr "Activity"
 
-#: src/features/token/components/token-details.tsx:71
+#: src/features/token/components/token-details.tsx:75
 msgid "token.activity.header_title"
 msgstr "Activity"
 
@@ -443,7 +443,7 @@ msgstr "BIP39 passphrase"
 msgid "recover_wallet.passphrase.header_title"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-balance.tsx:28
+#: src/features/balances/bitcoin/bitcoin-balance.tsx:17
 #: src/features/receive/get-assets.ts:22
 #: src/features/receive/get-assets.ts:39
 #: src/features/send/forms/btc/btc-form.tsx:63
@@ -1513,7 +1513,7 @@ msgstr "Stacking rewards"
 msgid "dapps.stackingdao"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-balance.tsx:26
+#: src/features/balances/stacks/stacks-balance.tsx:16
 #: src/features/receive/get-assets.ts:56
 #: src/features/send/forms/stx/stx-form.tsx:61
 msgid "asset_name.stacks"

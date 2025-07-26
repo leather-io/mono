@@ -7,13 +7,14 @@ import { TestId } from '@/shared/test-id';
 import { Money } from '@leather.io/models';
 import { Cell, type PressableProps, Text } from '@leather.io/ui/native';
 
-interface TokenBalanceProps extends PressableProps {
+export interface TokenBalanceProps extends PressableProps {
   ticker: string;
   icon: ReactNode;
   tokenName: string;
   availableBalance?: Money;
   quoteBalance?: Money;
   isLoading?: boolean;
+  forceBalanceVisible?: boolean;
 }
 export function TokenBalance({
   icon,
@@ -22,6 +23,7 @@ export function TokenBalance({
   quoteBalance,
   onPress,
   isLoading,
+  forceBalanceVisible = false,
   ...rest
 }: TokenBalanceProps) {
   if (isLoading) return <Loading />;
@@ -47,10 +49,20 @@ export function TokenBalance({
       </Cell.Content>
       <Cell.Aside>
         <Cell.Label variant="primary">
-          <Balance balance={quoteBalance} variant="label02" lineHeight={16} isQuoteCurrency />
+          <Balance
+            balance={quoteBalance}
+            variant="label02"
+            lineHeight={16}
+            forceVisible={forceBalanceVisible}
+          />
         </Cell.Label>
         <Cell.Label variant="secondary">
-          <Balance balance={availableBalance} variant="caption01" />
+          <Balance
+            balance={availableBalance}
+            variant="caption01"
+            formattingOptions={{ preset: 'shorthand-balance', showCurrency: false }}
+            forceVisible={forceBalanceVisible}
+          />
         </Cell.Label>
       </Cell.Aside>
     </Cell.Root>
