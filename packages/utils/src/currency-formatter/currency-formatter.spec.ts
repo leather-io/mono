@@ -285,6 +285,30 @@ describe('formatAmount', () => {
       expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('12.35M BTC'));
     });
   });
+
+  describe('preset:pad-decimals', () => {
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
+
+    it('shows exact decimals for fiat currency', () => {
+      const usd = createUsd(1234.5);
+      expect(formatAmount(usd, { preset: 'pad-decimals' })).toBe('$1,234.50');
+    });
+
+    it('shows exact decimals for crypto currency', () => {
+      const btc = createBtc(1.2);
+      expect(formatAmount(btc, { preset: 'pad-decimals' })).toBe(withNbsp('1.20000000 BTC'));
+    });
+
+    it("doesn't use  compact notation", () => {
+      const usd = createUsd(1_000_000);
+      expect(formatAmount(usd, { preset: 'pad-decimals' })).toBe('$1,000,000.00');
+    });
+
+    it('formats currencies without decimals as usual', () => {
+      const jpy = createJpy(1234);
+      expect(formatAmount(jpy, { preset: 'pad-decimals' })).toBe('¥1,234');
+    });
+  });
 });
 
 describe('formatPercentage', () => {
