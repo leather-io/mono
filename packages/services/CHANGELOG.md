@@ -349,6 +349,43 @@
   * dependencies
     * @leather.io/bitcoin bumped to 0.26.9
 
+## [1.25.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.24.0...@leather.io/services-v1.25.0) (2025-07-28)
+
+
+### Features
+
+* add leather api requests to queue ([c362860](https://github.com/leather-io/mono/commit/c362860bc49744ccc2af09a2cce74fc851abbf66))
+* add remaining token details data to services ([e35f89b](https://github.com/leather-io/mono/commit/e35f89b528fb9b26851767e2263093fc3b457b2d))
+* adds locale to token description service call ([ef239e8](https://github.com/leather-io/mono/commit/ef239e86f05ea734ad76f0847bb8600a4d86ca1b))
+* consolidate http cache config ([7226d99](https://github.com/leather-io/mono/commit/7226d998f8cfa83ce78c5055ea25f5a4165532a9))
+* enhance utxo model ([b23fdd5](https://github.com/leather-io/mono/commit/b23fdd5eef83c923ce36ef99a1164071e2b6f035))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* integrate consolidated token api endpoints ([5b096f3](https://github.com/leather-io/mono/commit/5b096f35a22bd048ddc3716529924c33da2f3151))
+* prevent missing metadata refetch ([955dcfc](https://github.com/leather-io/mono/commit/955dcfcf79a17a9fc956f150644d9f2e09430fba))
+* protect native segwit ordinals in utxo service ([efe5ef4](https://github.com/leather-io/mono/commit/efe5ef43903b15aa1b2bf56d34b674de13a881dd))
+* split btc balances by address type ([0dcf930](https://github.com/leather-io/mono/commit/0dcf930a4f4b4c45ff6aa16399babfe9d1afea22))
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Bug Fixes
+
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.0
+    * @leather.io/constants bumped to 0.25.0
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/utils bumped to 0.40.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/rpc bumped to 2.20.0
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.21.0...@leather.io/services-v1.22.0) (2025-07-22)
 
 

@@ -138,6 +138,32 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.7.0
 
+## [0.23.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.22.0...@leather.io/tokens-v0.23.0) (2025-07-28)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* **ui:** hover card component ([abd3d11](https://github.com/leather-io/mono/commit/abd3d1133561d8aa7fdf2180cc84f6e260372f23))
+
+
+### Bug Fixes
+
+* mobile builds ([66d31cb](https://github.com/leather-io/mono/commit/66d31cb3052e0254d16756cf38d20a2d71bf5903))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+* **web:** add none border type to tokens ([7b7d288](https://github.com/leather-io/mono/commit/7b7d28826850b91326cf7ba60bf32b670e581758))
+* **web:** analytics, type ligatures ([8616045](https://github.com/leather-io/mono/commit/861604571155c06fab78b7a4bce64fd3a75186b8))
+* **web:** remove border override ([d62f924](https://github.com/leather-io/mono/commit/d62f9244e540f1087b0e622649e2e38fb66137db))
+* **web:** update framer url ([b5cc636](https://github.com/leather-io/mono/commit/b5cc636ab9c6d3b665e0c31797d8512b7f2fe02b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [0.20.0](https://github.com/leather-io/mono/compare/@leather.io/tokens-v0.19.0...@leather.io/tokens-v0.20.0) (2025-07-15)
 
 

@@ -145,6 +145,23 @@
     * @leather.io/models bumped to 0.35.0
     * @leather.io/rpc bumped to 2.16.6
 
+## [1.5.1](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.0...@leather.io/sdk-v1.5.1) (2025-07-28)
+
+
+### Bug Fixes
+
+* **sdk:** return results when passing params ([c979efc](https://github.com/leather-io/mono/commit/c979efc7680a25598913b73ecf55ffc57c1af103))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+* **web:** stack independently copy ([7711abb](https://github.com/leather-io/mono/commit/7711abbb7b2fd734b0b77d1f4a17e9dced58a8f9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/rpc bumped to 2.20.0
+
 ## [1.3.0](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.2.15...@leather.io/sdk-v1.3.0) (2025-06-07)
 
 

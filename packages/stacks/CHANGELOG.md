@@ -482,6 +482,31 @@
     * @leather.io/models bumped to 0.35.0
     * @leather.io/utils bumped to 0.36.0
 
+## [1.14.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.13.0...@leather.io/stacks-v1.14.0) (2025-07-28)
+
+
+### Features
+
+* sip30 message signing ([52f4239](https://github.com/leather-io/mono/commit/52f42397ad47db11b2dc826fd63bb01d0ab4c545))
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+* stx_signTransaction (part 2) ([8315231](https://github.com/leather-io/mono/commit/8315231d1ef4f305398b0ccf4a546e0e25582ee3))
+
+
+### Bug Fixes
+
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.0
+    * @leather.io/crypto bumped to 1.11.0
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/utils bumped to 0.40.0
+
 ## [1.11.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.10.11...@leather.io/stacks-v1.11.0) (2025-06-07)
 
 

@@ -449,6 +449,93 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.12.9
 
+## [1.77.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.76.0...@leather.io/ui-v1.77.0) (2025-07-28)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* cms integration ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* **mobile:** add requester address and icon to approver header ([a7d5ae2](https://github.com/leather-io/mono/commit/a7d5ae299768b14e7b42b2ba650253920a715ce1))
+* **mobile:** add requester info to approval flows ([0d06c71](https://github.com/leather-io/mono/commit/0d06c71b21ff816836f4f2e0727c139dda968966))
+* **mobile:** implement token details, ref LEA-3015 ([7dc28af](https://github.com/leather-io/mono/commit/7dc28af0b0eaed78a9f63b0413d63de3ae000de6))
+* **mobile:** redesign approver ([fcafb18](https://github.com/leather-io/mono/commit/fcafb187e46c403421bafb3c1630d53719e50482))
+* **mobile:** update native icon button ([70ae491](https://github.com/leather-io/mono/commit/70ae491ff48ee47b302f033d62e1c95589c1769e))
+* **mobile:** update recipient suggestion item design ([0d4533e](https://github.com/leather-io/mono/commit/0d4533e842d0ea39191156d249f70eb467cbde26))
+* send receive buttons ([b98112f](https://github.com/leather-io/mono/commit/b98112faca0091f6ee1e1bcb562531f2923144a2))
+* **ui:** add bitcoin and stacks filled circle icons ([21b0af2](https://github.com/leather-io/mono/commit/21b0af2db7fdae7e91e7e47f72d02486e3a02e85))
+* **ui:** add mobile Favicon component, make the pixel ratio in the web version dynamic ([9b3cf42](https://github.com/leather-io/mono/commit/9b3cf429bb431c69e9c85348fdf33886d8efbc7d))
+* **ui:** add remaining space tokens to mobile theme ([37e19a4](https://github.com/leather-io/mono/commit/37e19a46646f953ccb7d178a1aaa76042d53723e))
+* **ui:** add top right arrow icon ([354c80f](https://github.com/leather-io/mono/commit/354c80f01335c3bac783f8b1333459e04eb3145c))
+* **ui:** hover card component ([abd3d11](https://github.com/leather-io/mono/commit/abd3d1133561d8aa7fdf2180cc84f6e260372f23))
+* **ui:** preselect account when opening Send from account screen ([5b50352](https://github.com/leather-io/mono/commit/5b503525bc09ff5d14334c691fd785655c3d4082))
+* **ui:** use backspace icon in numpad ([a22108d](https://github.com/leather-io/mono/commit/a22108d0e8a37c6423af916dc0825e666e08c770))
+* **web:** accordion component 🪗, closes LEA-2321 ([0eed207](https://github.com/leather-io/mono/commit/0eed207780343c3c3adcaf493213cf77851d12f3))
+* **web:** add user pos loader ([dad4a1e](https://github.com/leather-io/mono/commit/dad4a1e4a64922272644a043ca44ec3acb4c5862))
+* **web:** sBTC enroll functionality, closes LEA-2456 ([862f43f](https://github.com/leather-io/mono/commit/862f43f868e9e3c05687a883fed28080f4a0b3de))
+* **web:** sbtc rewards faq, closes LEA-2446 ([62ddc46](https://github.com/leather-io/mono/commit/62ddc46d26d3f88b95be3d19377eda71926ac6ca))
+
+
+### Bug Fixes
+
+* android navigation and blurview ([f516f32](https://github.com/leather-io/mono/commit/f516f323f98087f5bc8f9b7b4b8644f97ef3d660))
+* android sluggish sheet ([db6f7fe](https://github.com/leather-io/mono/commit/db6f7fe4dae974f4f37f570830dbca4865b889f0))
+* back handler for android ([59795ce](https://github.com/leather-io/mono/commit/59795ce21b485e46acbfafa02dfd844a4e6a5782))
+* browser input ([4ca8ef4](https://github.com/leather-io/mono/commit/4ca8ef4cf0cc15df6b450c1c1e0c7a9fb07d93ee))
+* dev builds ([9f9857e](https://github.com/leather-io/mono/commit/9f9857edc5514e60f70e3c7fcd49405a1606cd3a))
+* downgrade React from 19.1 to 19.0.0 ([051b6ae](https://github.com/leather-io/mono/commit/051b6aeb07464e8db2dc5179311a2c4767b4eabc))
+* drag-down-to-close and no back button in token details ([6acd2c1](https://github.com/leather-io/mono/commit/6acd2c196caa387c53910f0e65e23c71299e356a))
+* egg sheet ([96286ea](https://github.com/leather-io/mono/commit/96286eacf5a3fa1fd86df0ab8b52cbdd58ade4ea))
+* ensure we set proper border radius and use container on browser, closes LEA-2492 ([3c12795](https://github.com/leather-io/mono/commit/3c127952414f03871057b84d6b2dde471690b163))
+* gift icon web ([d5562a5](https://github.com/leather-io/mono/commit/d5562a568f9768b223709af4b455aefa7d42cb21))
+* image and icon colors ([fc9fc0a](https://github.com/leather-io/mono/commit/fc9fc0a02ce78cbd9acc0b058282f3b081baf417))
+* **mobile:** add FlashList to Activity to improve performance ([2f6d4fc](https://github.com/leather-io/mono/commit/2f6d4fc472cd6ef137f03e7dff9d9aa025968816))
+* **mobile:** add new collectible designs, ref ENG-33 ([c29a670](https://github.com/leather-io/mono/commit/c29a6707aeecf7f7ceb90c973819d0ee3c1cd7e0))
+* **mobile:** add new token balance designs, ref ENG-33 ([a002e98](https://github.com/leather-io/mono/commit/a002e988ba5e2ed11f1be7a6ab9734e40a0efdfb))
+* **mobile:** add sentry DSN ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* **mobile:** change approver BG and add border to some sections, ref LEA-2546 ([ad8e040](https://github.com/leather-io/mono/commit/ad8e040f79a93184b408ae754c23be59b46848e8))
+* **mobile:** change bg colour of approver header, ref LEA-2546 ([a40aef1](https://github.com/leather-io/mono/commit/a40aef17a3e20ea8887122becafa698f5511dcbb))
+* **mobile:** don't show avatar border for SIP-10 or runes, ref ENG-77 ([4f76078](https://github.com/leather-io/mono/commit/4f760786d02e8b7ab32c83cf24bda8d876315782))
+* **mobile:** loading states, balance error handling and expo route refactor, ref LEA-1726 ([7f2485d](https://github.com/leather-io/mono/commit/7f2485d048f3694482fbcc8a7add393cd947f3d9))
+* **mobile:** make sure approver container takes up full height ([79cb453](https://github.com/leather-io/mono/commit/79cb45378d4e0b5ef8fde5b7fde10ab5587b70f5))
+* **mobile:** remove header icon from sheets, ref LEA-1834 ([fca6ad8](https://github.com/leather-io/mono/commit/fca6ad82c2b84ea16e872aca5d150c05f01bdf2e))
+* **mobile:** replace activity status indicator icons, ref ENG-37 ([e3663ab](https://github.com/leather-io/mono/commit/e3663ab9d0b2964470d38363285b6eb3f2f9a0b1))
+* **mobile:** replace create wallet animations ([11a100e](https://github.com/leather-io/mono/commit/11a100ee76a4855912fb10d4a0f45a9a39c6eb51))
+* **mobile:** replace receive svg, LEA-2646 ([6359f6e](https://github.com/leather-io/mono/commit/6359f6e7addb8ef3f3ca275cfe33ef1e24c1bbaa))
+* **mobile:** revert change approver BG and add border to some sections, ref LEA-2546 ([7830ee4](https://github.com/leather-io/mono/commit/7830ee49041b22d989fd493aa5a5baf50f12c9ef))
+* **mobile:** use our own sBTC svg icon to ensure it always shows, ref LEA-2589 ([3f4ece9](https://github.com/leather-io/mono/commit/3f4ece9dfcc1c27bffeace5fb76bcaaa5eb52b66))
+* sheet children unmount issue ([68f886d](https://github.com/leather-io/mono/commit/68f886de82bed710652e58fd58d7ef90ae1526fa))
+* **ui:** decrease sheet header height ([fa50c03](https://github.com/leather-io/mono/commit/fa50c03d37e8b0221137ecf927f20c73bc46ef04))
+* **ui:** fix chevron size in approver-advanced.native.tsx ([c7a3fe1](https://github.com/leather-io/mono/commit/c7a3fe157da8be54b1209ea48a98d576a804392e))
+* **ui:** fix pulse and gear icon sizes ([35e922e](https://github.com/leather-io/mono/commit/35e922e25861296f62b40f27047131c24e06523a))
+* **ui:** support children as render prop in bottom sheet ([fa70b4d](https://github.com/leather-io/mono/commit/fa70b4dce414e06593981a9fe012ea014adfdeaf))
+* **ui:** use correct radio button border color ([10b68cc](https://github.com/leather-io/mono/commit/10b68ccee9e48e80aa63736b0206af685d5d61fe))
+* **ui:** use Flag width ([798e268](https://github.com/leather-io/mono/commit/798e2688cfa684de2eb176cf3078ab21857c9139))
+* update browser ui ([925f37f](https://github.com/leather-io/mono/commit/925f37f90b73eb22a0ac55247f099445823e9f26))
+* update button design ([f032ee7](https://github.com/leather-io/mono/commit/f032ee7322dce18de4f462cb65328c94b1735ce9))
+* update design for connections tab ([49d2ab5](https://github.com/leather-io/mono/commit/49d2ab5056a6a131643276a2b11edcf6eeb0efcd))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+* update tab bar nav buttons ([47dde10](https://github.com/leather-io/mono/commit/47dde10271334e49a4396454ca70a67f57b7eb04))
+* use of flag needs width 100 percent ([f22a51a](https://github.com/leather-io/mono/commit/f22a51af122937e157ae09503c331f2483c5bc28))
+* **web:** adjust nav like framer, closes ENG-62 ([ccbcf31](https://github.com/leather-io/mono/commit/ccbcf3117328e3096a25c82ce6ba072f99426f87))
+* **web:** adjust styles, upgrade packages, closes ENG-50 ENG-45 ([17bb885](https://github.com/leather-io/mono/commit/17bb8858a1d51f6df6b274142a1fc5a505a8b97c))
+* **web:** adjust urls, closes LEA-2372 ([281cd84](https://github.com/leather-io/mono/commit/281cd841b51d724ec4e5fef2138983e056ae280c))
+* **web:** handle edge case where no stacks keys are present, prevent sign in ([2e8a102](https://github.com/leather-io/mono/commit/2e8a10223328e97bfe5a14303d421c222228de01))
+* **web:** upgrade packages ([d1d68b6](https://github.com/leather-io/mono/commit/d1d68b61e6ddc11d3a70ccad4d6769d0f358dba0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/tokens bumped to 0.23.0
+    * @leather.io/utils bumped to 0.40.0
+  * devDependencies
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/panda-preset bumped to 0.14.1
+
 ## [1.74.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.74.0...@leather.io/ui-v1.74.1) (2025-07-22)
 
 

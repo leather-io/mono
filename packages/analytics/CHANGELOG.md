@@ -78,6 +78,33 @@
   * devDependencies
     * @leather.io/models bumped to 0.33.0
 
+## [3.11.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.10.0...@leather.io/analytics-v3.11.0) (2025-07-28)
+
+
+### Features
+
+* add new tracking events for pooled/liquid stacking ([178c833](https://github.com/leather-io/mono/commit/178c83368688d1f98135d765bc260830edf016e0))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* **mobile:** add analytics tracking to Receive flow ([91ca7a6](https://github.com/leather-io/mono/commit/91ca7a6c103adf2a4591e920e5df18d5fc8598d1))
+* **mobile:** add analytics tracking to Send flow ([ab31acf](https://github.com/leather-io/mono/commit/ab31acf47a9b590bf26abb956218ea4ec853ff27))
+
+
+### Bug Fixes
+
+* fix function signature ([59500e2](https://github.com/leather-io/mono/commit/59500e258a50a5b7f9efe8ee7712cf5e9588fe50))
+* **mobile:** add quote_currency to analytics, ref ENG-109 ([ea6a8e0](https://github.com/leather-io/mono/commit/ea6a8e0dbdc03ae37987526ced899310b17ed420))
+* **mobile:** rollback change to fiatCurrencyPreference in state, ref ENG-109 ([fb4c519](https://github.com/leather-io/mono/commit/fb4c5192d9c81f404ce9d500ffd75462abb1b2a0))
+* spreading was indexing on 0 ([aa6dc29](https://github.com/leather-io/mono/commit/aa6dc2946f679f9a35cdb37d7e4d912c16e5e6dd))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+* **web:** upgrade packages ([d1d68b6](https://github.com/leather-io/mono/commit/d1d68b61e6ddc11d3a70ccad4d6769d0f358dba0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.39.0
+
 ## [3.8.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.8.0...@leather.io/analytics-v3.8.1) (2025-07-10)
 
 
