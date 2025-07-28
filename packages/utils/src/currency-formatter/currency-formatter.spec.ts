@@ -279,6 +279,11 @@ describe('formatAmount', () => {
       const btc = createBtc(1234.5678);
       expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('1,234.5678 BTC'));
     });
+
+    it('shows up to 2 decimals for compacted crypto balances', () => {
+      const btc = createBtc(12_345_678);
+      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('12.35M BTC'));
+    });
   });
 });
 

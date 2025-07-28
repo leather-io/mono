@@ -30,19 +30,11 @@ export const currencyFormatterPresets: Record<
     return options;
   },
   'shorthand-balance': input => {
-    if (isFiatCurrencyCode(input.currencyCode)) {
-      return {
-        numberFormatOptions: {
-          maximumFractionDigits: 2,
-        },
-      };
-    } else {
-      return {
-        numberFormatOptions: {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 4,
-        },
-      };
-    }
+    return {
+      numberFormatOptions: {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: isFiatCurrencyCode(input.currencyCode) ? 2 : 4,
+      },
+    };
   },
 };
