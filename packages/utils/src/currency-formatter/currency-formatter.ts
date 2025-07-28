@@ -161,14 +161,14 @@ function deriveFractionOptions(
   numberFormatOptions: Intl.NumberFormatOptions
 ) {
   function getMaximumFractionDigits() {
+    if (compact && !numberFormatOptions.maximumFractionDigits) {
+      return 2;
+    }
+
     if (
       !presetNumberFormatOptions.maximumFractionDigits &&
       !numberFormatOptions.maximumFractionDigits
     ) {
-      if (compact) {
-        return 2;
-      }
-
       if (amount >= 1000 && amount <= 999999) {
         return Math.min(decimals, 2);
       }
