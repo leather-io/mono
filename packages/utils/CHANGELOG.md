@@ -325,6 +325,48 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.39.0...@leather.io/utils-v0.40.0) (2025-07-28)
+
+
+### Features
+
+* add min max fns to calc money ([62dc157](https://github.com/leather-io/mono/commit/62dc157ada4aaa76b4a054861264748de4f04d4a))
+* add new tracking events for pooled/liquid stacking ([178c833](https://github.com/leather-io/mono/commit/178c83368688d1f98135d765bc260830edf016e0))
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* cms integration ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* consolidate http cache config ([7226d99](https://github.com/leather-io/mono/commit/7226d998f8cfa83ce78c5055ea25f5a4165532a9))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+* **utils:** accept formatter preset callbacks ([8fb61e0](https://github.com/leather-io/mono/commit/8fb61e09786d439e389c6f031e95554bfc2cb4da))
+* **utils:** add formatter factory & amount formatter ([83d2c06](https://github.com/leather-io/mono/commit/83d2c066c8813362a51e136c75286d85f94d270c))
+* **utils:** add formatter readme ([37bc57b](https://github.com/leather-io/mono/commit/37bc57b72014f1f1a95c268a409e734e6089f840))
+* **utils:** add formatter tests for edge cases and presets ([77f9240](https://github.com/leather-io/mono/commit/77f92404e567568c2f9d18ac02da9c1f73b955ff))
+* **utils:** add percentage formatter ([38fa51e](https://github.com/leather-io/mono/commit/38fa51efd76fb39c25715684b58710a7ecaae3be))
+* **utils:** ensure resiliency in the formatter, add error callback ([1b24388](https://github.com/leather-io/mono/commit/1b24388c994b6c7084d2fc06fbdadc5d67bd6cf2))
+* **utils:** merge shorthand-balance presets into one ([57f337d](https://github.com/leather-io/mono/commit/57f337db3ee55835fb10e8859770e068a646bcae))
+* **utils:** rename formatter -&gt; currency-formatter ([bba7d77](https://github.com/leather-io/mono/commit/bba7d77cd2b74f47fae7710678e8e2cbd0f9f749))
+
+
+### Bug Fixes
+
+* **mobile:** add sentry DSN ([949b90e](https://github.com/leather-io/mono/commit/949b90e84de7b53ef36f585822214a8dcc476799))
+* **mobile:** make sure we can handle exponential values in formatMoney, ref LEA-2629 ([507dda1](https://github.com/leather-io/mono/commit/507dda19cc702301c38ddeb19469a76df9bcf9a1))
+* **mobile:** truncate long token names with ellipsis, ref ENG-33 ([319c95e](https://github.com/leather-io/mono/commit/319c95ea09a0c47975fdd1ab7c85730001453d92))
+* revert change to format money ([37d6044](https://github.com/leather-io/mono/commit/37d604476d51b949dffc1b7f0fef2698766404f2))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+* **utils:** ensure up to two decimals by default for compact notation ([1dbd6b1](https://github.com/leather-io/mono/commit/1dbd6b14ad99173afcd39ec057e752ce55ba240d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.0
+    * @leather.io/models bumped to 0.39.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [0.37.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.36.0...@leather.io/utils-v0.37.0) (2025-06-07)
 
 

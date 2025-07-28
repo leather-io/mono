@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/leather-io/mono/compare/@leather.io/prettier-config-v0.8.0...@leather.io/prettier-config-v0.8.1) (2025-07-28)
+
+
+### Bug Fixes
+
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
 ## [0.6.1](https://github.com/leather-io/mono/compare/@leather.io/prettier-config-v0.6.0...@leather.io/prettier-config-v0.6.1) (2025-02-21)
 
 

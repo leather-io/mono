@@ -177,6 +177,33 @@
   * dependencies
     * @leather.io/models bumped to 0.35.0
 
+## [0.25.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.24.0...@leather.io/constants-v0.25.0) (2025-07-28)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Bug Fixes
+
+* linking to browser instead of safari ([34e9ff2](https://github.com/leather-io/mono/commit/34e9ff22b0a0522d5b1dc2729a5eb34b868d58bc))
+* **mobile:** replace create wallet animations ([11a100e](https://github.com/leather-io/mono/commit/11a100ee76a4855912fb10d4a0f45a9a39c6eb51))
+* **mobile:** swap out stickers, LEA-2592 ([fe41b78](https://github.com/leather-io/mono/commit/fe41b786e64062871ecad447e74072e57bb299da))
+* update browser suggested tab ([7226bb0](https://github.com/leather-io/mono/commit/7226bb071c6bd3e7a4aa9858920e4d4b2955157a))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.39.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [0.22.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.21.1...@leather.io/constants-v0.22.0) (2025-06-07)
 
 

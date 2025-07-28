@@ -308,6 +308,32 @@
     * @leather.io/models bumped to 0.35.0
     * @leather.io/utils bumped to 0.36.0
 
+## [2.20.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.19.0...@leather.io/rpc-v2.20.0) (2025-07-28)
+
+
+### Features
+
+* add platform to getInfo response ([5576be5](https://github.com/leather-io/mono/commit/5576be517dc981842acad6a30088de43536d306b))
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* implement getInfo and supportedMethods sip30 ([305f084](https://github.com/leather-io/mono/commit/305f08405973944f1f0ed0caae62179f6093c827))
+* sip30 sendTransfer ([4fc910e](https://github.com/leather-io/mono/commit/4fc910e5b44e839669a2695a6ff0c720a9ccc145))
+* sip30 transfers ([502c825](https://github.com/leather-io/mono/commit/502c825e8d5e261dbe991315c0aaa2d6f78f00b2))
+* **web:** add segment, events, closes ENG-67 ([d5222cd](https://github.com/leather-io/mono/commit/d5222cd33f730da05c5ce31300daa9b9e2849e5b))
+
+
+### Bug Fixes
+
+* rpc network type errors ([42c8519](https://github.com/leather-io/mono/commit/42c8519b54d034f3adc3a20da27af4e4d7d4a8ff))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/utils bumped to 0.40.0
+
 ## [2.17.0](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.16.6...@leather.io/rpc-v2.17.0) (2025-06-07)
 
 

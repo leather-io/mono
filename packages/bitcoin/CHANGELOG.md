@@ -787,6 +787,35 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.16.6
 
+## [0.31.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.30.0...@leather.io/bitcoin-v0.31.0) (2025-07-28)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* **mobile:** add QR scanning to Send ([fb4c703](https://github.com/leather-io/mono/commit/fb4c703af9c8394e3fae45a5e04ef5716d240b1f))
+
+
+### Bug Fixes
+
+* **mobile:** disable external psbt fee editing, closes LEA-2679 ([eaf6a15](https://github.com/leather-io/mono/commit/eaf6a15669167244e5aab8a7d748266e6f4b72aa))
+* remove redundant checks from address validation ([7da51a1](https://github.com/leather-io/mono/commit/7da51a18a7136d26738fd9b43a5d3eb2d3a4a723))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.25.0
+    * @leather.io/crypto bumped to 1.11.0
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/utils bumped to 0.40.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/rpc bumped to 2.20.0
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [0.27.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.26.10...@leather.io/bitcoin-v0.27.0) (2025-06-07)
 
 

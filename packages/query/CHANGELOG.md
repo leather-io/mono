@@ -653,6 +653,35 @@
     * @leather.io/stacks bumped to 1.10.11
     * @leather.io/utils bumped to 0.36.0
 
+## [2.41.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.40.0...@leather.io/query-v2.41.0) (2025-07-28)
+
+
+### Features
+
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* **web:** add stacked in pool user positions data ([d1382a5](https://github.com/leather-io/mono/commit/d1382a5e54ef9ab46b1c08e83430aa6470a4912a))
+
+
+### Bug Fixes
+
+* remove coincap query ([e8314cd](https://github.com/leather-io/mono/commit/e8314cdc42216e6102b469b9fef1543f93d53d25))
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.0
+    * @leather.io/constants bumped to 0.25.0
+    * @leather.io/models bumped to 0.39.0
+    * @leather.io/rpc bumped to 2.20.0
+    * @leather.io/stacks bumped to 1.14.0
+    * @leather.io/utils bumped to 0.40.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [2.38.0](https://github.com/leather-io/mono/compare/@leather.io/query-v2.37.10...@leather.io/query-v2.38.0) (2025-06-07)
 
 

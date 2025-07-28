@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.13.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.12.0...@leather.io/eslint-config-v0.13.0) (2025-07-28)
+
+
+### Features
+
+* cms integration ([1f4ce37](https://github.com/leather-io/mono/commit/1f4ce379d7606dea540e24349a1de4122c7a0caf))
+* **web:** accordion component 🪗, closes LEA-2321 ([0eed207](https://github.com/leather-io/mono/commit/0eed207780343c3c3adcaf493213cf77851d12f3))
+* **web:** sbtc rewards faq, closes LEA-2446 ([62ddc46](https://github.com/leather-io/mono/commit/62ddc46d26d3f88b95be3d19377eda71926ac6ca))
+
+
+### Bug Fixes
+
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
 ## [0.10.0](https://github.com/leather-io/mono/compare/@leather.io/eslint-config-v0.9.0...@leather.io/eslint-config-v0.10.0) (2025-05-22)
 
 

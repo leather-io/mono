@@ -30,6 +30,29 @@
   * devDependencies
     * @leather.io/tsconfig-config bumped to 0.8.0
 
+## [0.39.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.38.0...@leather.io/models-v0.39.0) (2025-07-28)
+
+
+### Features
+
+* enhance utxo model ([b23fdd5](https://github.com/leather-io/mono/commit/b23fdd5eef83c923ce36ef99a1164071e2b6f035))
+* expo sdk 53 ([476c547](https://github.com/leather-io/mono/commit/476c5476b73b03d8e008d9ed04594aa53d7bd97e))
+* support all currencies as market data base ([90f26c6](https://github.com/leather-io/mono/commit/90f26c60bdb36851180d707ad52e14002d8a9942))
+* support btc in conversion unit ([3cf019a](https://github.com/leather-io/mono/commit/3cf019a17c4e6a9497cccbe646614fa2e8868c5e))
+
+
+### Bug Fixes
+
+* update release please manifest ([1fe588f](https://github.com/leather-io/mono/commit/1fe588faa6d18fdbd912030013e22a6264bfed19))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.8.1
+    * @leather.io/tsconfig-config bumped to 0.11.0
+
 ## [0.36.0](https://github.com/leather-io/mono/compare/@leather.io/models-v0.35.0...@leather.io/models-v0.36.0) (2025-06-07)
 
 
