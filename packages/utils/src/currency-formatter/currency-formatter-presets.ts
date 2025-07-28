@@ -37,4 +37,11 @@ export const currencyFormatterPresets: Record<
       },
     };
   },
+  'pad-decimals': input => ({
+    compactThreshold: Infinity,
+    numberFormatOptions: {
+      minimumFractionDigits: input.decimals,
+      maximumFractionDigits: input.decimals,
+    },
+  }),
 };
