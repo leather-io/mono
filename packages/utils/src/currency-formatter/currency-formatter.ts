@@ -160,9 +160,11 @@ function deriveFractionOptions(
   presetNumberFormatOptions: Intl.NumberFormatOptions,
   numberFormatOptions: Intl.NumberFormatOptions
 ) {
+  const defaultMinimumFractionDigits = 2;
+
   function getMaximumFractionDigits() {
     if (compact && !numberFormatOptions.maximumFractionDigits) {
-      return 2;
+      return defaultMinimumFractionDigits;
     }
 
     if (
@@ -170,7 +172,7 @@ function deriveFractionOptions(
       !numberFormatOptions.maximumFractionDigits
     ) {
       if (amount >= 1000 && amount <= 999999) {
-        return Math.min(decimals, 2);
+        return Math.min(decimals, defaultMinimumFractionDigits);
       }
     }
 
@@ -186,8 +188,8 @@ function deriveFractionOptions(
   const minimumFractionDigits = Math.min(
     numberFormatOptions.minimumFractionDigits ??
       presetNumberFormatOptions.minimumFractionDigits ??
-      maximumFractionDigits,
-    2
+      defaultMinimumFractionDigits,
+    maximumFractionDigits
   );
 
   return {
