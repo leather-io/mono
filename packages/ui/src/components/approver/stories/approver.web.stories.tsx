@@ -3,6 +3,7 @@ import { Box, Circle, Flex } from 'leather-styles/jsx';
 import { Tooltip } from 'radix-ui';
 import { BasicTooltip, QuestionCircleIcon } from 'src/exports.web';
 
+import { SentIcon } from '../../../icons/activity/sent-icon.web';
 import { ZapIcon } from '../../../icons/zap-icon.web';
 import { Button } from '../../button/button.web';
 import { Flag } from '../../flag/flag.web';
@@ -40,10 +41,9 @@ type Story = StoryObj<typeof Approver>;
 function DemoApproverContent() {
   return (
     <>
-      {' '}
       <Approver.Section>
-        <Approver.Subheader>
-          Subheader with icon <ZapIcon variant="small" />
+        <Approver.Subheader icon={<ZapIcon variant="small" />}>
+          Subheader with icon
         </Approver.Subheader>
         <Pressable>
           <ItemLayout

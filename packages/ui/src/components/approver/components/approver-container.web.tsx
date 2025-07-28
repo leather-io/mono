@@ -33,6 +33,7 @@ export function ApproverContainer({ children, ...props }: HTMLStyledProps<'main'
         ref={scope}
         flexDir="column"
         flex={1}
+        gap={1}
         background="ink.background-secondary"
         style={{ paddingBottom: `${actionBarHeight + 16}px` }}
       >
