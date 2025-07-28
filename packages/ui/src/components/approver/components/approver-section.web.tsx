@@ -8,10 +8,9 @@ export function ApproverSection(props: HasChildren & BoxProps) {
   return (
     <styled.section
       className="approver-section"
-      mt="space.03"
       px="space.05"
       py="space.03"
-      background="ink.background-primary"
+      bgColor="ink.background-primary"
       {...props}
     />
   );

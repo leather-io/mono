@@ -1,20 +1,26 @@
+import { ReactNode } from 'react';
+
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { useRegisterApproverChild } from '../approver-context.shared';
 
-type ApproverSubheaderProps = HTMLStyledProps<'h2'>;
+interface ApproverSubheaderProps extends HTMLStyledProps<'h2'> {
+  icon?: ReactNode;
+}
 
-export function ApproverSubheader(props: ApproverSubheaderProps) {
+export function ApproverSubheader({ children, icon, ...props }: ApproverSubheaderProps) {
   useRegisterApproverChild('subheader');
   return (
     <styled.h2
       display="flex"
-      textStyle="label.01"
+      textStyle="label.03"
       alignItems="center"
-      minH="40px"
-      mb="space.03"
+      py="space.03"
       gap="space.01"
       {...props}
-    />
+    >
+      {icon}
+      {children}
+    </styled.h2>
   );
 }

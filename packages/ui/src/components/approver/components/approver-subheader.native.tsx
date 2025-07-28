@@ -4,7 +4,6 @@ import { Box, type BoxProps } from '../../box/box.native';
 import { Text } from '../../text/text.native';
 
 interface ApproverSubheaderProps extends BoxProps {
-  children: ReactNode;
   icon?: ReactNode;
 }
 
