@@ -1,0 +1,59 @@
+name: Check Security Headers
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-headers:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        domain: ['leather.io', 'app.leather.io']
+    steps:
+      - name: Check for required security headers on ${{ matrix.domain }}
+        run: |
+          headers=$(curl -sI https://${{ matrix.domain }})
+          echo "Headers for ${{ matrix.domain }}:"
+          echo "$headers"
+
+          if ! echo "$headers" | grep -iq "Content-Security-Policy"; then
+            echo "Error: Content-Security-Policy header is missing."
+            exit 1
+          fi
+
+          if ! echo "$headers" | grep -iq "X-Frame-Options: DENY"; then
+            echo "Error: X-Frame-Options: DENY header is missing or incorrect."
+            exit 1
+          fi
+
+          if ! echo "$headers" | grep -iq "X-XSS-Protection: 1; mode=block"; then
+            echo "Error: X-XSS-Protection: 1; mode=block header is missing or incorrect."
+            exit 1
+          fi
+
+          if ! echo "$headers" | grep -iq "Referrer-Policy: no-referrer"; then
+            echo "Error: Referrer-Policy: no-referrer header is missing or incorrect."
+            exit 1
+          fi
+
+          if ! echo "$headers" | grep -iq "X-Content-Type-Options: nosniff"; then
+            echo "Error: X-Content-Type-Options: nosniff header is missing or incorrect."
+            exit 1
+          fi
+
+          echo "All required security headers are present for ${{ matrix.domain }}."
+
+      - name: Send Slack notification on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.LEATHER_SLACK_BOT }}
+          payload: |
+            channel: ${{ secrets.LEATHER_MAIN_SLACK_CHANNEL_ID }}
+            text: '<!channel> ⚠️ Security headers check failed on ${{ matrix.domain }}. Check Cloudflare configuration and ensure all required headers are present.'
