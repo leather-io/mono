@@ -15,14 +15,11 @@ import {
 import { useStxMarketDataQuery } from '~/queries/market-data/stx-market-data.query';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { formatCurrency } from '~/utils/currency-formatter';
 import { formatPoxAddressToNetwork } from '~/utils/stacking-pox';
 import { parseNumber, toHumanReadablePercent, toHumanReadableStx } from '~/utils/unit-convert';
 
-import {
-  baseCurrencyAmountInQuote,
-  createMoneyFromDecimal,
-  i18nFormatCurrency,
-} from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoneyFromDecimal } from '@leather.io/utils';
 
 export function usePoolInfo(poolSlug: PoolSlug | null) {
   const poxInfoQuery = useGetPoxInfoQuery();
@@ -77,7 +74,7 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
         ),
         stxMarketData
       );
-    const tvlUsd = tvlBaseCurrencyAmount && i18nFormatCurrency(tvlBaseCurrencyAmount);
+    const tvlUsd = tvlBaseCurrencyAmount && formatCurrency(tvlBaseCurrencyAmount);
 
     const title = stackingTrackerPool.data?.entity.name || pool.name;
     const url = stackingTrackerPool.data?.entity.website || pool.url;
@@ -95,7 +92,7 @@ export function usePoolInfo(poolSlug: PoolSlug | null) {
       createMoneyFromDecimal(minCommitment ?? 0, 'STX'),
       stxMarketData
     );
-    const minCommitmentUsd = i18nFormatCurrency(minCommitmentBaseCurrencyAmount);
+    const minCommitmentUsd = formatCurrency(minCommitmentBaseCurrencyAmount);
 
     const result: PoolRewardProtocolInfo = {
       id: poolSlug,
