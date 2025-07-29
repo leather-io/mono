@@ -20,12 +20,9 @@ import { useStxMarketDataQuery } from '~/queries/market-data/stx-market-data.que
 import { useProtocolBalance } from '~/queries/protocols/use-protocol-balance';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { formatCurrency } from '~/utils/currency-formatter';
 
-import {
-  baseCurrencyAmountInQuote,
-  createMoneyFromDecimal,
-  i18nFormatCurrency,
-} from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoneyFromDecimal } from '@leather.io/utils';
 
 export interface ProtocolInfo {
   logo: ReactNode;
@@ -85,14 +82,14 @@ export function useProtocolInfo(protocolSlug: ProtocolSlug) {
       createMoneyFromDecimal(stackingTracker.data.lastCycle?.token.stacked_amount ?? 0, 'STX'),
       stxMarket.data
     );
-    const tvlUsd = i18nFormatCurrency(tvlBaseCurrencyAmount);
+    const tvlUsd = formatCurrency(tvlBaseCurrencyAmount);
 
     const minimumCommitment = 1;
     const minimumCommitmentBaseCurrencyAmount = baseCurrencyAmountInQuote(
       createMoneyFromDecimal(minimumCommitment, 'STX'),
       stxMarket.data
     );
-    const minimumCommitmentUsd = i18nFormatCurrency(minimumCommitmentBaseCurrencyAmount);
+    const minimumCommitmentUsd = formatCurrency(minimumCommitmentBaseCurrencyAmount);
 
     return {
       nextCycleDays: poxInfoQuery.data.next_cycle.blocks_until_reward_phase / STACKS_BLOCKS_PER_DAY,
