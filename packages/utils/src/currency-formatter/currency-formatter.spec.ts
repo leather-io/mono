@@ -229,41 +229,41 @@ describe('formatAmount', () => {
     });
   });
 
-  describe('preset:token-price', () => {
+  describe('preset:price', () => {
     const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
     it('displays up to 6 decimals for small prices', () => {
       const usd = createUsd(0.000001);
-      expect(formatAmount(usd, { preset: 'token-price' })).toBe('$0.000001');
+      expect(formatAmount(usd, { preset: 'price' })).toBe('$0.000001');
     });
 
     it('rounds prices smaller than 6 decimals', () => {
       const usd = createUsd(0.0000005);
-      expect(formatAmount(usd, { preset: 'token-price' })).toBe('$0.000001');
+      expect(formatAmount(usd, { preset: 'price' })).toBe('$0.000001');
     });
 
     it('limits to 6 decimals for prices in 0-99 range', () => {
       const usd = createUsd(12.3456789);
-      expect(formatAmount(usd, { preset: 'token-price' })).toBe('$12.345679');
+      expect(formatAmount(usd, { preset: 'price' })).toBe('$12.345679');
     });
 
     it('limits to 2 decimals for prices above 100', () => {
       const usd = createUsd(123.456789);
-      expect(formatAmount(usd, { preset: 'token-price' })).toBe('$123.46');
+      expect(formatAmount(usd, { preset: 'price' })).toBe('$123.46');
     });
 
     it('shows two trailing 0-s for integers', () => {
       const usd = createUsd(50);
-      expect(formatAmount(usd, { preset: 'token-price' })).toBe('$50.00');
+      expect(formatAmount(usd, { preset: 'price' })).toBe('$50.00');
     });
 
     it('displays the currency', () => {
       const usd = createUsd(12.34);
-      expect(formatAmount(usd, { preset: 'token-price' })).toContain('$');
+      expect(formatAmount(usd, { preset: 'price' })).toContain('$');
     });
 
     it('allows overriding options to display small price as approximate', () => {
       const usd = createUsd(0.0000001);
-      expect(formatAmount(usd, { preset: 'token-price', approximateDust: true })).toBe('< $0.01');
+      expect(formatAmount(usd, { preset: 'price', approximateDust: true })).toBe('< $0.01');
     });
   });
 
