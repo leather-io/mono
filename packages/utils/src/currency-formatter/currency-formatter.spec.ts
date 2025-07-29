@@ -63,7 +63,7 @@ describe('formatAmount', () => {
       const { formatAmount } = createCurrencyFormatter({ locale });
 
       it.each(tests)('formats %d to "%s"', (amount, expected) => {
-        const result = formatAmount({ amount, currencyCode, decimals });
+        const { result } = formatAmount({ amount, currencyCode, decimals });
         expect(result).toBe(withNbsp(expected));
       });
     });
@@ -129,7 +129,7 @@ describe('formatAmount', () => {
       const { formatAmount } = createCurrencyFormatter({ locale });
 
       it.each(tests)('formats %d to "%s"', (amount, expected) => {
-        const result = formatAmount({ amount, currencyCode, decimals });
+        const { result } = formatAmount({ amount, currencyCode, decimals });
         expect(result).toBe(withNbsp(expected));
       });
     });
@@ -139,36 +139,36 @@ describe('formatAmount', () => {
     const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
     it('compacts with a custom threshold', () => {
       const usd = createUsd(1000);
-      expect(formatAmount(usd, { compactThreshold: 1000 })).toBe('$1.00K');
+      expect(formatAmount(usd, { compactThreshold: 1000 }).result).toBe('$1.00K');
     });
 
     it('allows disabling compact notation', () => {
       const usd = createUsd(1_000_000);
-      expect(formatAmount(usd, { compactThreshold: Infinity })).toBe('$1,000,000.00');
+      expect(formatAmount(usd, { compactThreshold: Infinity }).result).toBe('$1,000,000.00');
     });
 
     it('shows approximate fiat dust amount by default', () => {
-      const result = formatAmount(createUsd(0.00034));
+      const { result } = formatAmount(createUsd(0.00034));
       expect(result).toBe('< $0.01');
     });
 
     it('accounts for currency decimal places when showing dust', () => {
-      const result = formatAmount(createJpy(0.75));
+      const { result } = formatAmount(createJpy(0.75));
       expect(result).toBe('< ¥1');
     });
 
     it('allows disabling approximate fiat dust amount', () => {
-      const result = formatAmount(createUsd(0.005), { approximateDust: false });
+      const { result } = formatAmount(createUsd(0.005), { approximateDust: false });
       expect(result).toBe('$0.01');
     });
 
     it('allows disabling crypto currency display', () => {
-      const result = formatAmount(createBtc(12.34), { showCurrency: false });
+      const { result } = formatAmount(createBtc(12.34), { showCurrency: false });
       expect(result).toBe('12.34');
     });
 
     it('allows disabling fiat currency display', () => {
-      const result = formatAmount(createUsd(12.34), { showCurrency: false });
+      const { result } = formatAmount(createUsd(12.34), { showCurrency: false });
       expect(result).toBe('12.34');
     });
   });
@@ -179,23 +179,23 @@ describe('formatAmount', () => {
     it('gracefully falls back on invalid locale', () => {
       const { formatAmount } = createCurrencyFormatter({ locale: 'BAD_LOCALE' });
       expect(() => formatAmount(createUsd(12.34))).not.toThrow();
-      expect(formatAmount(createUsd(12.34))).toBe('');
+      expect(formatAmount(createUsd(12.34)).result).toBe('');
     });
 
     it('gracefully falls back on invalid locale', () => {
       const { formatAmount } = createCurrencyFormatter({ locale: 'BAD_LOCALE' });
       expect(() => formatAmount(createUsd(12.34))).not.toThrow();
-      expect(formatAmount(createUsd(12.34))).toBe('');
+      expect(formatAmount(createUsd(12.34)).result).toBe('');
     });
 
     it('uses two decimals when compacted', () => {
       const usd = createUsd(10_000_000);
-      expect(formatAmount(usd)).toBe('$10.00M');
+      expect(formatAmount(usd).result).toBe('$10.00M');
     });
 
     it('uses two decimals when in the 1,000-999,999 range', () => {
       const usd = createUsd(12345.6789);
-      expect(formatAmount(usd)).toBe('$12,345.68');
+      expect(formatAmount(usd).result).toBe('$12,345.68');
     });
 
     it('maximumFractionDigits overrides internal logic', () => {
@@ -204,18 +204,18 @@ describe('formatAmount', () => {
       const customOptions = {
         numberFormatOptions: { maximumFractionDigits: 4 },
       };
-      expect(formatAmount(usd1, customOptions)).toBe('$12,345.6789');
-      expect(formatAmount(usd2, customOptions)).toBe('$123.4568M');
+      expect(formatAmount(usd1, customOptions).result).toBe('$12,345.6789');
+      expect(formatAmount(usd2, customOptions).result).toBe('$123.4568M');
     });
 
     it('handles negative values', () => {
       const usd = createUsd(-12.34);
-      expect(formatAmount(usd)).toBe('-$12.34');
+      expect(formatAmount(usd).result).toBe('-$12.34');
     });
 
     it('handles negative dust', () => {
       const usd = createUsd(-0.00034);
-      expect(formatAmount(usd)).toBe('< -$0.01');
+      expect(formatAmount(usd).result).toBe('< -$0.01');
     });
 
     it("ensures minimumFractionDigits doesn't exceed maximumFractionDigits", () => {
@@ -225,7 +225,91 @@ describe('formatAmount', () => {
         showCurrency: false,
         numberFormatOptions: { minimumFractionDigits: 12, maximumFractionDigits: 2 },
       });
-      expect(result).toBe('12.35');
+      expect(result.result).toBe('12.35');
+    });
+  });
+
+  describe('parts', () => {
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
+
+    it('returns parts for crypto', () => {
+      const { parts } = formatAmount(createBtc(1234.56789));
+      expect(parts).toEqual([
+        { type: 'integer', value: '1' },
+        { type: 'group', value: ',' },
+        { type: 'integer', value: '234' },
+        { type: 'decimal', value: '.' },
+        { type: 'fraction', value: '57' },
+        { type: 'literal', value: '\u00A0' },
+        { type: 'currency', value: 'BTC' },
+      ]);
+    });
+
+    it('returns parts for fiat', () => {
+      const { parts } = formatAmount(createUsd(1234.56789));
+      expect(parts).toEqual([
+        { type: 'currency', value: '$' },
+        { type: 'integer', value: '1' },
+        { type: 'group', value: ',' },
+        { type: 'integer', value: '234' },
+        { type: 'decimal', value: '.' },
+        { type: 'fraction', value: '57' },
+      ]);
+    });
+
+    it('returns parts for fiat dust', () => {
+      const { parts } = formatAmount(createUsd(0.000005));
+      expect(parts).toEqual([
+        {
+          type: 'unknown',
+          value: '<',
+        },
+        {
+          type: 'literal',
+          value: ' ',
+        },
+        {
+          type: 'currency',
+          value: '$',
+        },
+        {
+          type: 'integer',
+          value: '0',
+        },
+        {
+          type: 'decimal',
+          value: '.',
+        },
+        {
+          type: 'fraction',
+          value: '01',
+        },
+      ]);
+    });
+  });
+
+  describe('resolved options', () => {
+    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
+    it('returns the resolved options', () => {
+      const { resolvedOptions } = formatAmount(createUsd(12.34));
+      expect(resolvedOptions).toEqual({
+        currency: 'USD',
+        currencyDisplay: 'symbol',
+        currencySign: 'standard',
+        locale: 'en-US',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        minimumIntegerDigits: 1,
+        notation: 'standard',
+        numberingSystem: 'latn',
+        roundingIncrement: 1,
+        roundingMode: 'halfExpand',
+        roundingPriority: 'auto',
+        signDisplay: 'auto',
+        style: 'currency',
+        trailingZeroDisplay: 'auto',
+        useGrouping: 'auto',
+      });
     });
   });
 
@@ -233,37 +317,37 @@ describe('formatAmount', () => {
     const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
     it('displays up to 6 decimals for small prices', () => {
       const usd = createUsd(0.000001);
-      expect(formatAmount(usd, { preset: 'price' })).toBe('$0.000001');
+      expect(formatAmount(usd, { preset: 'price' }).result).toBe('$0.000001');
     });
 
     it('rounds prices smaller than 6 decimals', () => {
       const usd = createUsd(0.0000005);
-      expect(formatAmount(usd, { preset: 'price' })).toBe('$0.000001');
+      expect(formatAmount(usd, { preset: 'price' }).result).toBe('$0.000001');
     });
 
     it('limits to 6 decimals for prices in 0-99 range', () => {
       const usd = createUsd(12.3456789);
-      expect(formatAmount(usd, { preset: 'price' })).toBe('$12.345679');
+      expect(formatAmount(usd, { preset: 'price' }).result).toBe('$12.345679');
     });
 
     it('limits to 2 decimals for prices above 100', () => {
       const usd = createUsd(123.456789);
-      expect(formatAmount(usd, { preset: 'price' })).toBe('$123.46');
+      expect(formatAmount(usd, { preset: 'price' }).result).toBe('$123.46');
     });
 
     it('shows two trailing 0-s for integers', () => {
       const usd = createUsd(50);
-      expect(formatAmount(usd, { preset: 'price' })).toBe('$50.00');
+      expect(formatAmount(usd, { preset: 'price' }).result).toBe('$50.00');
     });
 
     it('displays the currency', () => {
       const usd = createUsd(12.34);
-      expect(formatAmount(usd, { preset: 'price' })).toContain('$');
+      expect(formatAmount(usd, { preset: 'price' }).result).toContain('$');
     });
 
     it('allows overriding options to display small price as approximate', () => {
       const usd = createUsd(0.0000001);
-      expect(formatAmount(usd, { preset: 'price', approximateDust: true })).toBe('< $0.01');
+      expect(formatAmount(usd, { preset: 'price', approximateDust: true }).result).toBe('< $0.01');
     });
   });
 
@@ -272,17 +356,21 @@ describe('formatAmount', () => {
 
     it('shows up to 2 decimals for fiat balances', () => {
       const usd = createUsd(1234.5678);
-      expect(formatAmount(usd, { preset: 'shorthand-balance' })).toBe('$1,234.57');
+      expect(formatAmount(usd, { preset: 'shorthand-balance' }).result).toBe('$1,234.57');
     });
 
     it('shows up to 4 decimals for crypto balances', () => {
       const btc = createBtc(1234.5678);
-      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('1,234.5678 BTC'));
+      expect(formatAmount(btc, { preset: 'shorthand-balance' }).result).toBe(
+        withNbsp('1,234.5678 BTC')
+      );
     });
 
     it('shows up to 2 decimals for compacted crypto balances', () => {
       const btc = createBtc(12_345_678);
-      expect(formatAmount(btc, { preset: 'shorthand-balance' })).toBe(withNbsp('12.35M BTC'));
+      expect(formatAmount(btc, { preset: 'shorthand-balance' }).result).toBe(
+        withNbsp('12.35M BTC')
+      );
     });
   });
 
@@ -291,22 +379,22 @@ describe('formatAmount', () => {
 
     it('shows exact decimals for fiat currency', () => {
       const usd = createUsd(1234.5);
-      expect(formatAmount(usd, { preset: 'pad-decimals' })).toBe('$1,234.50');
+      expect(formatAmount(usd, { preset: 'pad-decimals' }).result).toBe('$1,234.50');
     });
 
     it('shows exact decimals for crypto currency', () => {
       const btc = createBtc(1.2);
-      expect(formatAmount(btc, { preset: 'pad-decimals' })).toBe(withNbsp('1.20000000 BTC'));
+      expect(formatAmount(btc, { preset: 'pad-decimals' }).result).toBe(withNbsp('1.20000000 BTC'));
     });
 
     it("doesn't use  compact notation", () => {
       const usd = createUsd(1_000_000);
-      expect(formatAmount(usd, { preset: 'pad-decimals' })).toBe('$1,000,000.00');
+      expect(formatAmount(usd, { preset: 'pad-decimals' }).result).toBe('$1,000,000.00');
     });
 
     it('formats currencies without decimals as usual', () => {
       const jpy = createJpy(1234);
-      expect(formatAmount(jpy, { preset: 'pad-decimals' })).toBe('¥1,234');
+      expect(formatAmount(jpy, { preset: 'pad-decimals' }).result).toBe('¥1,234');
     });
   });
 });

@@ -70,21 +70,43 @@ export function createCurrencyFormatter({ locale, onError }: CreateCurrencyForma
 
     const formatter = safeInitializeNumberFormat(locale, formatterOptions);
 
-    if (!formatter) return fallback;
+    if (!formatter)
+      return {
+        valid: false,
+        result: fallback,
+        parts: [],
+        resolvedOptions: {},
+      };
+
+    let result: string;
 
     if (isDust && approximateDust) {
       const smallestUnit = getSmallestUnit(decimals);
       const multiplier = amount < 0 ? -1 : 1;
-      return `<${thinSpace}${formatter.format(smallestUnit * multiplier)}`;
+      result = `<${thinSpace}${formatter.format(smallestUnit * multiplier)}`;
+    } else {
+      result = formatter.format(amount);
     }
-
-    const result = formatter.format(amount);
 
     if (!isFiatCurrency && showCurrency) {
-      return `${result}\u00A0${currencyCode}`;
+      result += `\u00A0${currencyCode}`;
     }
 
-    return result;
+    return {
+      valid: true,
+      result,
+      parts: buildParts({
+        formatter,
+        amount,
+        isDust,
+        approximateDust,
+        decimals,
+        currencyCode,
+        isFiatCurrency,
+        showCurrency,
+      }),
+      resolvedOptions: formatter.resolvedOptions(),
+    };
   }
 
   function formatPercentage(amount: number, decimals = 2) {
@@ -112,6 +134,44 @@ export { type FormatAmountOptions };
 // Helpers
 //
 // -----------------------------------------------------------------------------
+// Amend NumberFormat's formatToParts with crypto and approximate dust display
+function buildParts({
+  formatter,
+  amount,
+  isDust,
+  approximateDust,
+  decimals,
+  currencyCode,
+  isFiatCurrency,
+  showCurrency,
+}: {
+  formatter: Intl.NumberFormat;
+  amount: number;
+  isDust: boolean;
+  approximateDust: boolean;
+  decimals: number;
+  currencyCode: string;
+  isFiatCurrency: boolean;
+  showCurrency: boolean;
+}): Intl.NumberFormatPart[] {
+  if (typeof formatter.formatToParts !== 'function') return [];
+
+  const baseAmount =
+    isDust && approximateDust ? getSmallestUnit(decimals) * (amount < 0 ? -1 : 1) : amount;
+
+  const parts = formatter.formatToParts(baseAmount);
+
+  if (isDust && approximateDust) {
+    parts.unshift({ type: 'unknown', value: '<' }, { type: 'literal', value: thinSpace });
+  }
+
+  if (!isFiatCurrency && showCurrency) {
+    parts.push({ type: 'literal', value: '\u00A0' }, { type: 'currency', value: currencyCode });
+  }
+
+  return parts;
+}
+
 function getPresetResult(preset: CurrencyFormatterPreset | undefined, input: FormatAmountInput) {
   if (!preset) return {};
 
