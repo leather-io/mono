@@ -9,7 +9,7 @@ export const currencyFormatterPresets: Record<
   CurrencyFormatterPreset,
   CurrencyFormatterPresetValue
 > = {
-  'token-price': input => {
+  price: input => {
     const options: CurrencyFormatterPresetResult = {
       compactThreshold: Infinity,
       approximateDust: false,

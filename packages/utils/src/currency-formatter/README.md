@@ -60,12 +60,12 @@ purpose of enforcing consistency across different apps.
 
 ```ts
 // up to 6 decimals for small amounts 0-99
-formatAmount(smallPrice, { preset: 'token-price' }); // $0.000001
-formatAmount(mediumPrice, { preset: 'token-price' }); // $12.345679
+formatAmount(smallPrice, { preset: 'price' }); // $0.000001
+formatAmount(mediumPrice, { preset: 'price' }); // $12.345679
 
 // 2 decimals for amounts ≥100
-formatAmount(largePrice, { preset: 'token-price' }); // $3,587.02
-formatAmount(btcPrice, { preset: 'token-price' }); // $122,838.46
+formatAmount(largePrice, { preset: 'price' }); // $3,587.02
+formatAmount(btcPrice, { preset: 'price' }); // $122,838.46
 ```
 
 #### Shorthand balances
@@ -94,8 +94,8 @@ The following custom options are available when calling `formatAmount`:
 Custom options will override relevant preset options:
 
 ```ts
-// Override the 'token-price' preset to use only 2 decimals
-formatAmount(price, { preset: 'token-price', showCurrency: false }); // 123.54
+// Override the 'price' preset to use only 2 decimals
+formatAmount(price, { preset: 'price', showCurrency: false }); // 123.54
 ```
 
 `### Raw NumberFormat Options`
@@ -105,8 +105,8 @@ as an escape hatch when presets or custom options aren’t enough.
 These options override both presets and custom options.
 
 ```ts
-// Override the 'token-price' preset to use only 2 decimals
-formatAmount(price, { preset: 'token-price', numberFormatOptions: { maximumFractionDigits: 0 } });
+// Override the 'price' preset to use only 2 decimals
+formatAmount(price, { preset: 'price', numberFormatOptions: { maximumFractionDigits: 0 } });
 // $123
 ```
 
