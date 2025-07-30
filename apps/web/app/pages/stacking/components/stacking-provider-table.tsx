@@ -14,7 +14,7 @@ import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { ForceRowHeight, Table, rowPadding, theadBorderBottom } from '~/components/table';
-import { DASH } from '~/constants/constants';
+import { EM_DASH } from '~/constants/constants';
 import { content } from '~/data/content';
 import {
   LiquidStackingPool,
@@ -124,7 +124,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
             return <SkeletonLoader isLoading w={40} h={16} />;
           }
           if (isError || isUndefined(data?.lastCycle?.pool.stacked_amount)) {
-            return <styled.div>{(info.getValue() as string) || DASH}</styled.div>;
+            return <styled.div>{(info.getValue() as string) || EM_DASH}</styled.div>;
           }
           return (
             <styled.div>{toHumanReadableShortStx(data.lastCycle.pool.stacked_amount)}</styled.div>
@@ -157,7 +157,9 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
           }
 
           const value = info.getValue();
-          return <styled.div>{isNumber(value) ? toHumanReadableMicroStx(value) : DASH}</styled.div>;
+          return (
+            <styled.div>{isNumber(value) ? toHumanReadableMicroStx(value) : EM_DASH}</styled.div>
+          );
         },
         header: () => (
           <styled.div maxW="fit-content" whiteSpace="nowrap" textAlign="right">
@@ -184,7 +186,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
           }
 
           if (isError || !data?.entity.apr) {
-            return <styled.div>{DASH}</styled.div>;
+            return <styled.div>{EM_DASH}</styled.div>;
           }
 
           return <styled.div>{toHumanReadablePercent(data.entity.apr)}</styled.div>;
@@ -214,7 +216,7 @@ export function StackingProviderTable(props: HTMLStyledProps<'div'>): ReactEleme
           }
 
           if (isError || isUndefined(data?.entity.fee)) {
-            return <styled.div>{DASH}</styled.div>;
+            return <styled.div>{EM_DASH}</styled.div>;
           }
 
           return <styled.div>{toHumanReadablePercent(data.entity.fee * 100)}</styled.div>;

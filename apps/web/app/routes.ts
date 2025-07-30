@@ -1,16 +1,16 @@
 import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
 
 export default [
-  route('stacking', 'pages/stacking/stacking.page.tsx'),
+  route('stacking', 'pages/stacking/stacking.route.tsx'),
   ...prefix('stacking/pool/:slug', [
-    index('pages/stacking/pooled/pooled-stacking.page.tsx'),
-    route('active', 'pages/stacking/pooled/pooled-stacking-active.page.tsx'),
+    index('pages/stacking/pooled/pooled-stacking.route.tsx'),
+    route('active', 'pages/stacking/pooled/pooled-stacking-active.route.tsx'),
   ]),
   ...prefix('stacking/liquid/:slug', [
-    index('pages/stacking/liquid/liquid-stacking.page.tsx'),
-    route('active', 'pages/stacking/liquid/liquid-stacking-active.page.tsx'),
-    route('increase', 'pages/stacking/liquid/liquid-stacking-increase.page.tsx'),
+    index('pages/stacking/liquid/liquid-stacking.route.tsx'),
+    route('active', 'pages/stacking/liquid/liquid-stacking-active.route.tsx'),
+    route('increase', 'pages/stacking/liquid/liquid-stacking-increase.route.tsx'),
   ]),
-  route('sbtc', 'pages/sbtc-rewards/sbtc.page.tsx'),
-  route('*', 'pages/error/error-not-found.page.tsx'),
+  route('sbtc', 'pages/sbtc-rewards/sbtc.route.tsx'),
+  route('*', 'pages/error/error-not-found.route.tsx'),
 ] satisfies RouteConfig;
