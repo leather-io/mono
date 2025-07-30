@@ -325,6 +325,13 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.42.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.41.0...@leather.io/utils-v0.42.0) (2025-07-30)
+
+
+### Features
+
+* **utils:** return object from formatAmount ([7a898c9](https://github.com/leather-io/mono/commit/7a898c9c51444e652f5fe82f21bb5a08af59b8b5))
+
 ## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.40.0...@leather.io/utils-v0.41.0) (2025-07-30)
 
 
