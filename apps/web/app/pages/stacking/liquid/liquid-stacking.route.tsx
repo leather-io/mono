@@ -2,26 +2,26 @@ import { MetaDescriptor } from 'react-router';
 
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { protocolSlugSchema } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { LiquidStackingActive } from '~/pages/stacking/liquid/liquid-stacking-active';
+import { LiquidStacking } from '~/pages/stacking/liquid/liquid-stacking';
 
-import { Route } from './+types/liquid-stacking-active.page';
+import { Route } from './+types/liquid-stacking.route';
 
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: protocolSlug } = protocolSlugSchema.safeParse(params.slug);
 
-  if (!success) throw new Error(`Invalid protocol slug: ${protocolSlug}`);
+  if (!success) throw new Error(`Invalid protocol slug: ${params.slug}`);
 
   return { protocolSlug };
 }
 
 export function meta() {
-  return [{ title: 'Stacking – Leather' }] satisfies MetaDescriptor[];
+  return [{ title: 'Liquid Stacking – Leather' }] satisfies MetaDescriptor[];
 }
 
-export default function EarnLiquidStackingActiveRoute({ loaderData }: Route.ComponentProps) {
+export default function EarnLiquidStackingRoute({ loaderData }: Route.ComponentProps) {
   return (
     <StackingClientProvider>
-      <LiquidStackingActive protocolSlug={loaderData.protocolSlug} />
+      <LiquidStacking protocolSlug={loaderData.protocolSlug} />
     </StackingClientProvider>
   );
 }

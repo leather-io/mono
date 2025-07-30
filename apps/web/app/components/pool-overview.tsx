@@ -5,7 +5,7 @@ import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { DASH } from '~/constants/constants';
+import { EM_DASH } from '~/constants/constants';
 import { StackingPool, getPostSlugForProvider } from '~/data/data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { TextElementTag } from '~/utils/post-types';
@@ -116,7 +116,7 @@ function HistoricalAprCell({ historicalApr }: HistoricalAprCellProps): ReactElem
   return (
     <ValueDisplayer
       name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
-      value={<>{historicalApr || DASH}</>}
+      value={<>{historicalApr || EM_DASH}</>}
     />
   );
 }
@@ -137,7 +137,7 @@ function TotalValueLockedCell({
       name={<PostLabelHoverCard post={post} label={label} textStyle="label.03" />}
       value={
         <>
-          {totalValueLocked || DASH}{' '}
+          {totalValueLocked || EM_DASH}{' '}
           {totalValueLockedUsd && <Box textStyle="label.03">{totalValueLockedUsd}</Box>}
         </>
       }
@@ -182,7 +182,7 @@ export function PoolOverview({ pool, poolSlug }: PoolOverviewProps): ReactElemen
       : '';
 
   // Format TVL values without special cases
-  const formattedTvl = (pool as any).tvl || DASH;
+  const formattedTvl = (pool as any).tvl || EM_DASH;
   const formattedTvlUsd = (pool as any).tvlUsd;
 
   return (

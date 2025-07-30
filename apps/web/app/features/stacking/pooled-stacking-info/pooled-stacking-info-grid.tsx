@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { Box, GridProps } from 'leather-styles/jsx';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
-import { DASH } from '~/constants/constants';
+import { EM_DASH } from '~/constants/constants';
 import { CopyAddress } from '~/features/stacking/components/address';
 import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-info-grid.layout';
 import { PoolRewardProtocolInfo } from '~/features/stacking/start-pooled-stacking/components/preset-pools';
@@ -57,7 +57,7 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
       name="Total Value Locked (TVL)"
       value={
         <>
-          {rewardProtocol.tvl || DASH}
+          {rewardProtocol.tvl || EM_DASH}
           {rewardProtocol.tvl ? <Box textStyle="label.03">{rewardProtocol.tvlUsd}</Box> : null}
         </>
       }
@@ -67,7 +67,7 @@ function TotalValueLockedCell({ rewardProtocol }: RewardProtocolCellProps) {
 
 function HistoricalAprCell({ rewardProtocol }: RewardProtocolCellProps) {
   return (
-    <ValueDisplayer gap="space.04" name="Historical yield" value={rewardProtocol.apr || DASH} />
+    <ValueDisplayer gap="space.04" name="Historical yield" value={rewardProtocol.apr || EM_DASH} />
   );
 }
 
@@ -83,7 +83,7 @@ function PoolAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
 
 function RewardAddressCell({ rewardProtocol }: RewardProtocolCellProps) {
   if (!rewardProtocol.rewardAddress) {
-    return DASH;
+    return EM_DASH;
   }
 
   return (
