@@ -740,6 +740,30 @@
     * @leather.io/tokens bumped to 0.20.0
     * @leather.io/ui bumped to 1.73.3
 
+## [2.61.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.61.0...@leather.io/mobile-v2.61.1) (2025-07-30)
+
+
+### Bug Fixes
+
+* browser design qa ([a3a9d63](https://github.com/leather-io/mono/commit/a3a9d636b7765c7eea127703cdc3f5a7c0692518))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.1
+    * @leather.io/crypto bumped to 1.11.1
+    * @leather.io/provider bumped to 1.5.2
+    * @leather.io/query bumped to 2.41.1
+    * @leather.io/rpc bumped to 2.20.1
+    * @leather.io/services bumped to 1.25.1
+    * @leather.io/stacks bumped to 1.14.1
+    * @leather.io/ui bumped to 1.77.1
+    * @leather.io/utils bumped to 0.41.0
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.31.1
+
 ## [2.61.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.60.0...@leather.io/mobile-v2.61.0) (2025-07-28)
 
 
