@@ -1,15 +1,25 @@
 import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { content } from '~/data/content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
-import { mapConditionsWithIcons } from '~/shared/stacking-icon-map';
 import { getPosts } from '~/utils/post-utils';
+
+import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
+
+const iconMap = {
+  BoxedCatLockedIcon: <BoxedCatLockedIcon />,
+  MagnifyingGlassIcon: <MagnifyingGlassIcon />,
+  StacksIcon: <StacksIcon />,
+} as const;
 
 /**
  * Component for choosing liquid stacking conditions
- * Uses shared icon mapping to display condition icons
  */
 export function ChooseLiquidStackingConditions() {
-  const liquidStackingConditions = mapConditionsWithIcons(content.liquidStackingConditions);
+  const liquidStackingConditions = content.liquidStackingConditions.map(condition => ({
+    icon: iconMap[condition.iconKey as keyof typeof iconMap] || null,
+    title: condition.title,
+    description: condition.description,
+  }));
   const posts = getPosts();
   const post = posts.liquidStackingConditions;
 
