@@ -1,6 +1,8 @@
-import { RefObject } from 'react';
+import { ComponentProps, RefObject } from 'react';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 
+import { App } from '@/store/apps/utils';
+import { getDappMap } from '@/utils/dapps';
 import * as Application from 'expo-application';
 import * as FileSystem from 'expo-file-system';
 import { z } from 'zod';
@@ -13,6 +15,7 @@ import {
   getInfo,
   supportedMethods,
 } from '@leather.io/rpc';
+import { Favicon } from '@leather.io/ui/native';
 
 const bareUrlRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -111,4 +114,33 @@ export function createGetInfoResponse(
       supportedMethods: supportedMethodsLinks.map(method => method.name),
     },
   });
+}
+
+export function getParentHostname(url: string) {
+  const hostname = new URL(url).hostname;
+  const separatedHostname = hostname.split('.');
+  return [
+    separatedHostname[separatedHostname.length - 2],
+    separatedHostname[separatedHostname.length - 1],
+  ].join('.');
+}
+
+export function getAppDetails(
+  app: App,
+  { iconSize }: { iconSize: ComponentProps<typeof Favicon>['size'] }
+) {
+  const predefinedDappMap = getDappMap();
+  const matchedHostname = Object.values(predefinedDappMap).find(predefinedDapp => {
+    const predefinedDappHostname = getParentHostname(predefinedDapp.url);
+    const appHostname = getParentHostname(app.origin);
+    return predefinedDappHostname === appHostname;
+  });
+  const icon = matchedHostname ? (
+    <matchedHostname.icon variant={iconSize === 16 ? 'small' : 'medium'} />
+  ) : (
+    <Favicon origin={getParentHostname(app.origin)} size={iconSize} />
+  );
+  const name = matchedHostname ? matchedHostname.title : app.name;
+
+  return { name, icon };
 }

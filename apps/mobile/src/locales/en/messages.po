@@ -151,30 +151,6 @@ msgstr "6"
 msgid "earn.sbtc.yield-description-max"
 msgstr "8%"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:74
-msgid "browser-sheet.dapp.hermetica.caption"
-msgstr "A Bitcoin-backed synthetic dollar that generates up to 25% APY through delta-neutral strategies"
-
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:104
-msgid "browser-sheet.dapp.bitflow.caption"
-msgstr "A Bitcoin-native DEX aggregator and liquidity hub that sources the best prices across Stacks-based protocols."
-
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:89
-msgid "browser-sheet.dapp.zest.caption"
-msgstr "A Bitcoin-native protocol on Stacks for borrowing, lending, and yield generation through overcollateralized loans and BTC staking pools"
-
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:44
-msgid "browser-sheet.dapp.arkadiko.caption"
-msgstr "A Bitcoin-secured protocol for vault-based borrowing, USDA minting, and decentralized smart contract automation."
-
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:119
-msgid "browser-sheet.dapp.alex.caption"
-msgstr "A DeFi platform on Stacks offering swaps, staking, fixed-term lending, and cross-chain liquidity with Bitcoin security"
-
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:134
-msgid "browser-sheet.dapp.velar.caption"
-msgstr "A DeFi suite offering trading, liquidity, and launchpad access built on Bitcoin L2s like Stacks"
-
 #: src/features/wallet-manager/account-list.tsx:24
 #: src/store/accounts/accounts.write.ts:43
 msgid "account.default.name"
@@ -220,7 +196,7 @@ msgstr "Acquire Stacks (STX) on to Bitcoin’s leading L2 to earn yield from sta
 msgid "account.activity.header_title"
 msgstr "Activity"
 
-#: src/features/navigation/tab-layout.tsx:63
+#: src/features/navigation/tab-layout.tsx:66
 msgid "tabs.button.activity.title"
 msgstr "Activity"
 
@@ -336,8 +312,8 @@ msgstr "Advanced options"
 msgid "recover_wallet.accordion_label"
 msgstr "Advanced options"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:115
-msgid "browser-sheet.dapp.alex.title"
+#: src/utils/dapps.ts:25
+msgid "dapps.alex"
 msgstr "Alex"
 
 #: src/features/account/account-selector/account-selector-sheet-header.tsx:25
@@ -439,8 +415,8 @@ msgstr "Approve"
 msgid "approver.contract-arguments.arg-title"
 msgstr "Argument {0}"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:40
-msgid "browser-sheet.dapp.arkadiko.title"
+#: src/utils/dapps.ts:35
+msgid "dapps.arkadiko"
 msgstr "Arkadiko"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:134
@@ -486,8 +462,8 @@ msgstr "Bitcoin unit"
 msgid "bitcoin_unit.toast_title"
 msgstr "Bitcoin unit updated"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:100
-msgid "browser-sheet.dapp.bitflow.title"
+#: src/utils/dapps.ts:45
+msgid "dapps.bitflow"
 msgstr "Bitflow"
 
 #: src/shared/display-preference.ts:31
@@ -498,7 +474,7 @@ msgstr "BNS name"
 msgid "earn.sbtc.description"
 msgstr "Bridge your BTC to Bitcoin’s leading L2 to earn yield from holding or pooling"
 
-#: src/features/navigation/tab-layout.tsx:70
+#: src/features/navigation/tab-layout.tsx:74
 msgid "tabs.button.browser.title"
 msgstr "Browser"
 
@@ -529,6 +505,10 @@ msgstr "Change name"
 #: src/app/settings/networks/index.tsx:43
 msgid "settings.networks.toast_title"
 msgstr "Changed network"
+
+#: src/utils/dapps.ts:55
+msgid "dapps.charisma"
+msgstr "Charisma"
 
 #: src/features/settings/email-address-sheet.tsx:40
 msgid "email_address.toast_title_success"
@@ -740,7 +720,7 @@ msgstr "Disabled"
 msgid "recover_wallet.passphrase_disabled"
 msgstr "Disabled"
 
-#: src/features/browser/browser/link-card.tsx:22
+#: src/features/browser/browser/link-card.tsx:23
 msgid "general.disconnected"
 msgstr "Disconnected"
 
@@ -865,10 +845,6 @@ msgstr "Expand your Bitcoin knowledge"
 msgid "browser.toolbox.explore"
 msgstr "Explore"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:31
-msgid "browser-sheet.suggested-dapps.title"
-msgstr "Explore"
-
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:79
 msgid "configure_wallet.export_key.cell_title"
 msgstr "Export key"
@@ -911,6 +887,10 @@ msgstr "Failed to load latest nonce"
 msgid "approver.fee.type.high"
 msgstr "Fast"
 
+#: src/utils/dapps.ts:65
+msgid "dapps.fastpool"
+msgstr "FastPool"
+
 #: src/features/approver/stx/hooks.ts:33
 msgid "approver.send.stx.success.change-fee"
 msgstr "Fee updated"
@@ -943,8 +923,8 @@ msgstr "Get support or provide feedback"
 msgid "settings.help.cell_caption"
 msgstr "Get support or provide feedback"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:55
-msgid "browser-sheet.dapp.granite.title"
+#: src/utils/dapps.ts:75
+msgid "dapps.granite"
 msgstr "Granite"
 
 #: src/app/settings/help/index.tsx:34
@@ -959,8 +939,8 @@ msgstr "Haptics"
 msgid "settings.help.cell_title"
 msgstr "Help"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:70
-msgid "browser-sheet.dapp.hermetica.title"
+#: src/utils/dapps.ts:85
+msgid "dapps.hermetica"
 msgstr "Hermetica"
 
 #: src/app/settings/wallet/hidden-accounts.tsx:8
@@ -988,7 +968,7 @@ msgstr "Hide balances"
 msgid "earn.historical-yield"
 msgstr "Historical yield"
 
-#: src/features/navigation/tab-layout.tsx:56
+#: src/features/navigation/tab-layout.tsx:58
 msgid "tabs.button.home.title"
 msgstr "Home"
 
@@ -1067,6 +1047,14 @@ msgstr "Layer 2 • Stacks"
 #: src/app/settings/help/index.tsx:46
 msgid "help.learn.cell_title"
 msgstr "Learn"
+
+#: src/utils/dapps.ts:95
+msgid "dapps.leather"
+msgstr "Leather"
+
+#: src/utils/dapps.ts:30
+msgid "dapps.lisa"
+msgstr "Lisa"
 
 #: src/app/settings/index.tsx:223
 msgid "settings.lock_button"
@@ -1235,6 +1223,10 @@ msgstr "Paste"
 msgid "recover_wallet.subtitle"
 msgstr "Paste or type Secret Key to add wallet"
 
+#: src/utils/dapps.ts:40
+msgid "dapps.planbetter"
+msgstr "PlanBetter"
+
 #: src/features/token/components/token-details-table.tsx:21
 msgid "token.details.price"
 msgstr "Price"
@@ -1330,6 +1322,10 @@ msgstr "Request approval for transactions"
 #: src/features/settings/app-authentication-sheet.tsx:80
 msgid "app_auth.cell_caption"
 msgstr "Require biometrics or PIN"
+
+#: src/utils/dapps.ts:50
+msgid "dapps.restake"
+msgstr "Restake"
 
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:103
 msgid "add_wallet.restore_wallet.cell_title"
@@ -1512,6 +1508,10 @@ msgstr "Something went wrong"
 #: src/features/earn/stacking-card.tsx:14
 msgid "earn.stacking.title"
 msgstr "Stacking rewards"
+
+#: src/utils/dapps.ts:60
+msgid "dapps.stackingdao"
+msgstr "StackingDAO"
 
 #: src/features/balances/stacks/stacks-balance.tsx:26
 #: src/features/receive/get-assets.ts:56
@@ -1701,16 +1701,12 @@ msgstr "Unknown"
 msgid "unlock"
 msgstr "Unlock"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:59
-msgid "browser-sheet.dapp.granite.caption"
-msgstr "Use sBTC to borrow stablecoins non-custodially, without risk of forced liquidations"
-
 #: src/app/secure-your-wallet.tsx:30
 msgid "secure_your_wallet.caption"
 msgstr "Use your device PIN, Face ID or other biometrics to secure your wallets"
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:130
-msgid "browser-sheet.dapp.velar.title"
+#: src/utils/dapps.ts:70
+msgid "dapps.velar"
 msgstr "Velar"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:121
@@ -1766,19 +1762,23 @@ msgstr "Wallets"
 msgid "settings.wallets.cell_title"
 msgstr "Wallets and accounts"
 
-#: src/app/(tabs)/browser.tsx:61
+#: src/app/(tabs)/browser.tsx:65
 msgid "browser.search-bar.wrong-url"
 msgstr "Wrong URL"
+
+#: src/utils/dapps.ts:80
+msgid "dapps.xverse"
+msgstr "Xverse"
 
 #: src/features/send/components/recipient/use-recipient-evaluator.ts:125
 msgid "send-form.guard.new_recipient_description"
 msgstr "You haven’t sent to this address before. Double-check that it’s correct before proceeding."
 
-#: src/app/app-connections.tsx:26
+#: src/app/app-connections.tsx:22
 msgid "browser-sheet.connected.empty.caption"
 msgstr "You will find the apps you are connected to here"
 
-#: src/app/app-recently-viewed.tsx:29
+#: src/app/app-recently-viewed.tsx:24
 msgid "browser-sheet.recent.empty.caption"
 msgstr "You will find the apps you recently viewed here"
 
@@ -1804,6 +1804,6 @@ msgstr "Your Secret Key grants you access to your wallet and its assets. Store i
 msgid "view_secret_key.subtitle"
 msgstr "Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen."
 
-#: src/features/browser/browser/tabs/browser-suggested-tab.tsx:85
-msgid "browser-sheet.dapp.zest.title"
+#: src/utils/dapps.ts:90
+msgid "dapps.zest"
 msgstr "Zest"

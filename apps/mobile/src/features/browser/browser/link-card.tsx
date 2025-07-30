@@ -4,9 +4,10 @@ import { App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
 import { t } from '@lingui/macro';
 
-import { Box, CloseIcon, Favicon, Pressable, Text } from '@leather.io/ui/native';
+import { Box, CloseIcon, Pressable, Text } from '@leather.io/ui/native';
 
 import { useOpenURL } from './use-open-url';
+import { getAppDetails } from './utils';
 
 interface LinkCardProps {
   app: App;
@@ -23,6 +24,9 @@ export function LinkCard({ app }: LinkCardProps) {
       type: 'info',
     });
   }
+
+  const { name, icon } = getAppDetails(app, { iconSize: 24 });
+
   return (
     <Box
       flexDirection="row"
@@ -30,7 +34,6 @@ export function LinkCard({ app }: LinkCardProps) {
       justifyContent="space-between"
       alignItems="center"
       style={{ width: '100%' }}
-      gap="5"
     >
       <Pressable
         onPress={() => openURL(app.origin)}
@@ -39,10 +42,10 @@ export function LinkCard({ app }: LinkCardProps) {
         alignItems="center"
         gap="2"
       >
-        <Favicon origin={app.origin} size={40} />
+        {icon}
         <Box flexShrink={1} flexDirection="column">
           <Text variant="label02" numberOfLines={1}>
-            {app.name}
+            {name}
           </Text>
           <Text color="ink.text-subdued" variant="caption01">
             {app.origin}
@@ -50,7 +53,7 @@ export function LinkCard({ app }: LinkCardProps) {
         </Box>
       </Pressable>
       <Pressable onPress={onDeleteApp} p="2">
-        <CloseIcon />
+        <CloseIcon variant="small" />
       </Pressable>
     </Box>
   );

@@ -3,6 +3,11 @@ import { Keyboard, TextInput as RNTextInput } from 'react-native';
 import Animated from 'react-native-reanimated';
 import WebView, { WebViewNavigation } from 'react-native-webview';
 
+import {
+  BrowserLoading,
+  BrowserLoadingMethods,
+} from '@/features/account/components/browser-loading';
+import { BottomGradient } from '@/features/navigation/bottom-gradient';
 import { LEATHER_APPS_URL } from '@/shared/constants';
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
@@ -23,6 +28,7 @@ interface SearchBarProps {
   onSubmit(): void;
   navState: WebViewNavigation | null;
   setBrowserNavigationBarHeight(height: number): void;
+  browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
 }
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -35,6 +41,7 @@ export function SearchBar({
   navState,
   onSubmit,
   setBrowserNavigationBarHeight,
+  browserLoadingRef,
 }: SearchBarProps) {
   const theme = useTheme<Theme>();
   const textInputRef = useRef<RNTextInput>(null);
@@ -51,7 +58,7 @@ export function SearchBar({
     <>
       <AnimatedBox
         bottom={0}
-        position="absolute"
+        position="relative"
         right={0}
         left={0}
         shadowColor="ink.background-overlay"
@@ -66,6 +73,8 @@ export function SearchBar({
           setBrowserNavigationBarHeight(e.nativeEvent.layout.height);
         }}
       >
+        <BrowserLoading ref={browserLoadingRef} />
+        <BottomGradient />
         <BrowserNavigationBar
           searchUrl={searchUrl}
           onGoBack={goBack}

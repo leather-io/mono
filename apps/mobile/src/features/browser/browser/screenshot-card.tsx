@@ -5,14 +5,9 @@ import { App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
 import { Image } from 'expo-image';
 
-import {
-  Box,
-  CloseIcon,
-  Favicon,
-  Pressable,
-  Text,
-  legacyTouchablePressEffect,
-} from '@leather.io/ui/native';
+import { Box, CloseIcon, Pressable, Text, legacyTouchablePressEffect } from '@leather.io/ui/native';
+
+import { getAppDetails } from './utils';
 
 const { width } = Dimensions.get('window');
 
@@ -26,6 +21,8 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
     dispatch(userRemovesApp({ origin: app.origin }));
   }
 
+  const { name, icon } = getAppDetails(app, { iconSize: 16 });
+
   return (
     <Pressable onPress={onPress} pressEffects={legacyTouchablePressEffect} maxWidth={width * 0.4}>
       <Box py="3" flexDirection="row" alignItems="center" justifyContent="space-between">
@@ -37,9 +34,9 @@ export function ScreenshotCard({ app, onPress }: ScreenshotCardProps) {
           flexShrink={1}
           overflow="hidden"
         >
-          <Favicon origin={app.origin} size={16} />
+          {icon}
           <Text style={{ flexShrink: 1 }} numberOfLines={1}>
-            {app.name}
+            {name}
           </Text>
         </Box>
         <Pressable

@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { t } from '@lingui/macro';
 import { useTheme } from '@shopify/restyle';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useSegments } from 'expo-router';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 
 import {
@@ -16,29 +16,30 @@ import {
   Theme,
 } from '@leather.io/ui/native';
 
+import { BottomGradient } from './bottom-gradient';
 import { TabButton } from './tab-button';
 import { TabLayoutContext } from './tab-layout-context';
+
+function ConditionalGradient() {
+  const segments = useSegments();
+
+  // expo-router compiles types for the segments after running pnpm ios.
+  // Running pnpm build before that fails as it considers that segments should be a tuple with 1 string in it.
+  // Fixing that with an "any"
+  return segments[1 as any] === 'browser' ? null : <BottomGradient />;
+}
 
 export function TabLayout() {
   const { bottom } = useSafeAreaInsets();
   const { colors } = useTheme<Theme>();
   const [tabBarHeight, setTabBarHeight] = useState(0);
+
   return (
     <TabLayoutContext.Provider value={{ tabBarHeight }}>
       <Tabs>
         <TabSlot />
-        <LinearGradient
-          colors={[
-            colors['ink.background-primary'],
-            colors['ink.border-default'],
-            colors['ink.border-default'],
-            colors['ink.background-primary'],
-          ]}
-          locations={[0, 0.4, 0.6, 1]}
-          style={{ width: '100%', height: 1 }}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-        />
+        <ConditionalGradient />
+
         <TabList
           onLayout={e => {
             setTabBarHeight(e.nativeEvent.layout.height);
@@ -53,6 +54,7 @@ export function TabLayout() {
             <TabButton
               activeIcon={<HomeActiveIcon />}
               defaultIcon={<HomeDefaultIcon />}
+              name="(index)"
               title={t({ id: 'tabs.button.home.title', message: 'Home' })}
             />
           </TabTrigger>
@@ -60,6 +62,7 @@ export function TabLayout() {
             <TabButton
               activeIcon={<ActivityActiveIcon />}
               defaultIcon={<ActivityDefaultIcon />}
+              name="activity"
               title={t({ id: 'tabs.button.activity.title', message: 'Activity' })}
             />
           </TabTrigger>
@@ -67,6 +70,7 @@ export function TabLayout() {
             <TabButton
               activeIcon={<BrowseActiveIcon />}
               defaultIcon={<BrowseDefaultIcon />}
+              name="browser"
               title={t({ id: 'tabs.button.browser.title', message: 'Browser' })}
             />
           </TabTrigger>

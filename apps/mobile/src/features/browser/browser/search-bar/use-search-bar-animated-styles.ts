@@ -8,7 +8,7 @@ export function useSearchBarAnimatedStyles() {
   const { tabBarHeight } = useTabLayoutContext();
 
   const keyboardAvoidingStyle = useAnimatedStyle(() => ({
-    bottom: -keyboardHeight.value - tabBarHeight,
+    bottom: -keyboardHeight.value - tabBarHeight - 1,
   }));
   const searchBarStyle = useAnimatedStyle(() => {
     return {

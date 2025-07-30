@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro';
 
-import { ArrowRefreshIcon, Box, NoteEmptyIcon, SparkleIcon } from '@leather.io/ui/native';
+import { Box, ClockIcon, ConnectionIcon, GridIcon } from '@leather.io/ui/native';
 
 import { ToolbarButton } from './toolbar-button';
 
@@ -14,7 +14,7 @@ export function SearchBarToolbar({ onExplore, onConnections, onRecents }: Search
   return (
     <Box flexDirection="row" justifyContent="space-between">
       <ToolbarButton
-        icon={<SparkleIcon variant="small" />}
+        icon={<GridIcon variant="small" />}
         onPress={onExplore}
         label={t({
           id: 'browser.toolbox.explore',
@@ -22,7 +22,7 @@ export function SearchBarToolbar({ onExplore, onConnections, onRecents }: Search
         })}
       />
       <ToolbarButton
-        icon={<ArrowRefreshIcon variant="small" />}
+        icon={<ConnectionIcon variant="small" />}
         onPress={onConnections}
         label={t({
           id: 'browser.toolbox.connections',
@@ -30,7 +30,7 @@ export function SearchBarToolbar({ onExplore, onConnections, onRecents }: Search
         })}
       />
       <ToolbarButton
-        icon={<NoteEmptyIcon variant="small" />}
+        icon={<ClockIcon variant="small" />}
         onPress={onRecents}
         label={t({
           id: 'browser.toolbox.recents',
