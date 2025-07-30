@@ -1,5 +1,4 @@
-import { ChainId, StacksNetwork, StacksNetworkName } from '@stacks/network';
-import { DEFAULT_DEVNET_SERVER } from '~/constants/constants';
+import { StacksNetwork } from '@stacks/network';
 import {
   PoxContractName,
   StackingPool,
@@ -9,32 +8,19 @@ import {
   stackingPoolList,
   stackingProviderIdSchema,
 } from '~/data/data';
+import { getNetworkInstance } from '~/features/stacking/utils/stacking-network-utils';
 
 import { NetworkMode, PoolSlug, getStackingPoolById, poolSlugToIdMap } from './stacking-pool-types';
 
-export function getNetworkInstance(network: StacksNetwork): NetworkMode {
-  if (network.chainId === ChainId.Mainnet) {
-    return 'mainnet';
-  }
-
-  if (network.client.baseUrl === DEFAULT_DEVNET_SERVER) {
-    return 'devnet';
-  }
-
-  return 'testnet';
-}
-
-export function getNetworkInstanceByName(networkName: StacksNetworkName) {
-  if (networkName === 'mainnet' || networkName === 'devnet') {
-    return networkName;
-  }
-
-  return 'testnet';
-}
+// Re-export for backwards compatibility
+export {
+  getNetworkInstance,
+  getNetworkInstanceByName,
+} from '~/features/stacking/utils/stacking-network-utils';
 
 export function getPoxContractsByNetwork(network: StacksNetwork) {
   const mode = getNetworkInstance(network);
-  return stackingContractMap[mode];
+  return stackingContractMap[mode as keyof typeof stackingContractMap];
 }
 
 export function isPoxWrapperContract(pool: StackingPool) {
@@ -58,7 +44,7 @@ export function getPoxWrapperContract2(
   networkInstance: NetworkMode,
   poxContractName: PoxContractName
 ): string {
-  return stackingContractMap[networkInstance][poxContractName];
+  return stackingContractMap[networkInstance as keyof typeof stackingContractMap][poxContractName];
 }
 
 export function isSelfServicePool(poolAddress: string) {
@@ -74,7 +60,7 @@ export function isSelfServicePool(poolAddress: string) {
 }
 
 export function getPoxContract(networkInstance: NetworkMode, poxContract: PoxContractName) {
-  return stackingContractMap[networkInstance][poxContract];
+  return stackingContractMap[networkInstance as keyof typeof stackingContractMap][poxContract];
 }
 
 export function getPoxContractAddressAndName(

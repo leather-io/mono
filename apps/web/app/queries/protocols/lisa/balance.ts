@@ -2,7 +2,7 @@ import { cvToValue, hexToCV, serializeCV, uintCV } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { getLiquidContract } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
-import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
 import { fetchNftHoldings } from '~/queries/balance/nft-holdings';
 import { CreateProtocolBalanceQueryOptionsParams } from '~/queries/protocols/protocol-types';
 import { useStacksClient } from '~/queries/stacks/stacks-client';

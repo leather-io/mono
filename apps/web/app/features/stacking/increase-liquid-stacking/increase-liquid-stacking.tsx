@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { STACKING_CONTRACT_CALL_TX_BYTES } from '~/constants/constants';
+import { ChooseStackingAmount } from '~/features/stacking/components/choose-stacking-amount';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
@@ -37,7 +38,6 @@ import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 import { StackingFormItemTitle } from '../components/stacking-form-item-title';
 import { useCalculateFee } from '../hooks/use-calculate-fee';
 import { getProtocolBySlug } from '../start-liquid-stacking/utils/utils-preset-protocols';
-import { ChoosePoolingAmount } from '../start-pooled-stacking/components/choose-pooling-amount';
 import { createValidationSchema } from './utils/increase-liquid-schema';
 
 interface StartLiquidStackingProps {
@@ -192,7 +192,7 @@ function IncreaseLiquidStackingLayout({ protocolSlug, client }: StartLiquidStack
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Adding amount" />
-                  <ChoosePoolingAmount
+                  <ChooseStackingAmount
                     controlName="increaseBy"
                     availableAmount={availableBalanceUStx}
                     isLoading={getAccountExtendedBalancesQuery.isLoading}

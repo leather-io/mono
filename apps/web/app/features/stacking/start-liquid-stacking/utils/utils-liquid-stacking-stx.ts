@@ -13,7 +13,7 @@ import {
   getLiquidContract,
   getLiquidContractAddressAndName,
 } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
-import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
 import { analytics } from '~/utils/analytics/analytics';
 import { StxCallContractParams } from '~/utils/leather-sdk';
 

@@ -8,19 +8,19 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import { Button, Input, Spinner } from '@leather.io/ui';
 import { isDefined, microStxToStx } from '@leather.io/utils';
 
-export interface ChoosePoolingAmountProps {
+export interface ChooseStackingAmountProps {
   controlName?: string;
   isLoading: boolean;
   availableAmount: BigNumber | undefined;
   stackedAmount?: BigNumber;
 }
 
-export function ChoosePoolingAmount({
+export function ChooseStackingAmount({
   controlName = 'amount',
   isLoading,
   availableAmount,
   stackedAmount,
-}: ChoosePoolingAmountProps) {
+}: ChooseStackingAmountProps) {
   const { setValue, control } = useFormContext();
 
   return (
