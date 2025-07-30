@@ -5,15 +5,7 @@ import {
   FormatAmountCustomOptions,
   FormatAmountInput,
   FormatAmountOptions,
-  FormatAmountOptionsWithMeta,
-  FormatAmountOptionsWithoutMeta,
 } from './currency-formatter.types';
-
-interface ResultWithMeta {
-  result: string;
-  parts: Intl.NumberFormatPart[];
-  resolvedOptions?: Intl.ResolvedNumberFormatOptions;
-}
 
 interface CreateCurrencyFormatterParams {
   locale: string;
@@ -42,16 +34,11 @@ export function createCurrencyFormatter({ locale, onError }: CreateCurrencyForma
     }
   }
 
-  function formatAmount(input: FormatAmountInput): string;
-  function formatAmount(input: FormatAmountInput, options: FormatAmountOptionsWithoutMeta): string;
-  function formatAmount(
-    input: FormatAmountInput,
-    options: FormatAmountOptionsWithMeta
-  ): ResultWithMeta;
-  function formatAmount(
-    input: FormatAmountInput,
-    options: FormatAmountOptionsWithoutMeta | FormatAmountOptionsWithMeta = {}
-  ): string | ResultWithMeta {
+  function formatAmount(input: FormatAmountInput, options: FormatAmountOptions = {}) {
+    return formatAmountWithMeta(input, options).result;
+  }
+
+  function formatAmountWithMeta(input: FormatAmountInput, options: FormatAmountOptions = {}) {
     const { amount, currencyCode, decimals } = input;
     const { preset, numberFormatOptions = {}, ...customOptions } = options;
     const { numberFormatOptions: presetNumberFormatOptions = {}, ...presetCustomOptions } =
@@ -87,15 +74,13 @@ export function createCurrencyFormatter({ locale, onError }: CreateCurrencyForma
 
     const formatter = safeInitializeNumberFormat(locale, formatterOptions);
 
-    if (!formatter) {
-      if (options.meta) {
-        return {
-          result: fallback,
-          parts: [],
-        };
-      }
-      return fallback;
-    }
+    if (!formatter)
+      return {
+        valid: false,
+        result: fallback,
+        parts: [],
+        resolvedOptions: {},
+      };
 
     let result: string;
 
@@ -111,24 +96,21 @@ export function createCurrencyFormatter({ locale, onError }: CreateCurrencyForma
       result += `\u00A0${currencyCode}`;
     }
 
-    if (options.meta) {
-      return {
-        result,
-        parts: buildParts({
-          formatter,
-          amount,
-          isDust,
-          approximateDust,
-          decimals,
-          currencyCode,
-          isFiatCurrency,
-          showCurrency,
-        }),
-        resolvedOptions: formatter.resolvedOptions(),
-      };
-    }
-
-    return result;
+    return {
+      valid: true,
+      result,
+      parts: buildParts({
+        formatter,
+        amount,
+        isDust,
+        approximateDust,
+        decimals,
+        currencyCode,
+        isFiatCurrency,
+        showCurrency,
+      }),
+      resolvedOptions: formatter.resolvedOptions(),
+    };
   }
 
   function formatPercentage(amount: number, decimals = 2) {
@@ -145,6 +127,7 @@ export function createCurrencyFormatter({ locale, onError }: CreateCurrencyForma
 
   return {
     formatAmount,
+    formatAmountWithMeta,
     formatPercentage,
   };
 }
