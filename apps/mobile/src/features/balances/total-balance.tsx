@@ -9,14 +9,7 @@ export function TotalBalance({ ...props }: TextProps) {
   const { totalBalance } = useTotalBalance();
 
   const balance = totalBalance.state === 'success' ? totalBalance.value : undefined;
-  return (
-    <Balance
-      balance={balance}
-      isLoading={totalBalance.state === 'loading'}
-      {...props}
-      isQuoteCurrency
-    />
-  );
+  return <Balance balance={balance} isLoading={totalBalance.state === 'loading'} {...props} />;
 }
 
 interface AccountBalanceProps extends AccountLookup, TextProps {}
@@ -25,12 +18,5 @@ export function AccountBalance({ fingerprint, accountIndex, ...props }: AccountB
   const { totalBalance } = useAccountBalance({ fingerprint, accountIndex });
 
   const balance = totalBalance.state === 'success' ? totalBalance.value : undefined;
-  return (
-    <Balance
-      balance={balance}
-      isLoading={totalBalance.state === 'loading'}
-      {...props}
-      isQuoteCurrency
-    />
-  );
+  return <Balance balance={balance} isLoading={totalBalance.state === 'loading'} {...props} />;
 }

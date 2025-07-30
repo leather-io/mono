@@ -69,7 +69,6 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
           formattingOptions={{ preset: 'shorthand-balance' }}
           variant="caption01"
           color="ink.text-subdued"
-          isQuoteCurrency={tokenId === 'BTC'}
         />
       }
       balance={
@@ -79,7 +78,6 @@ export function AccountListItem({ account, wallet, tokenId, onPress }: AccountLi
           formattingOptions={{ preset: 'shorthand-balance' }}
           balance={availableBalance}
           variant="label02"
-          isQuoteCurrency={tokenId === 'BTC'}
         />
       }
       icon={<AccountAvatar icon={account.icon} />}
