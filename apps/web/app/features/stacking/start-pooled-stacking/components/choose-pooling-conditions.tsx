@@ -14,7 +14,7 @@ const iconMap = {
  */
 export function ChoosePoolingConditions() {
   const poolingConditions = content.stackingConditions.map(condition => ({
-    icon: iconMap[condition.iconKey as keyof typeof iconMap] || null,
+    icon: iconMap[condition.iconKey] || null,
     title: condition.title,
     description: condition.description,
   }));

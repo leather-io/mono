@@ -5,20 +5,17 @@ import { validateStacksAddress as isValidStacksAddress } from '@stacks/transacti
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
 
-import { fetchFn } from './fetch-fn';
+import { fetchFn } from '../../../utils/hiro-wrapped-fetch';
 
 interface StackingClientContext {
   client: null | StackingClient;
 }
-const StackingClientContext = createContext<StackingClientContext>({
-  client: null,
-});
+const StackingClientContext = createContext<StackingClientContext>({ client: null });
 
-interface Props {
+interface StackingClientProviderProps {
   children: ReactNode;
 }
-
-export function StackingClientProvider({ children }: Props) {
+export function StackingClientProvider({ children }: StackingClientProviderProps) {
   const { stacksAccount: stxAddress } = useLeatherConnect();
   const { network } = useStacksNetwork();
 

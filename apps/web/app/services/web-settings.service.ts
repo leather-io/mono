@@ -11,9 +11,7 @@ export class WebSettingsService implements SettingsService {
     const quoteCurrency = store.get(quoteCurrencyAtom);
     const network = store.get(networkNameAtom);
 
-    if (network === 'mocknet') {
-      throw Error('Mocknet is not supported.');
-    }
+    if (network === 'mocknet') throw Error('Mocknet is not supported.');
 
     return {
       quoteCurrency,

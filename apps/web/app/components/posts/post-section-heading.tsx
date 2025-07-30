@@ -1,8 +1,25 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Post } from '~/data/post-types';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { styleTokens } from '~/shared/style-tokens';
 import { sanitizeContent } from '~/utils/sanitize-content';
+
+export const styleTokens = {
+  whiteSpace: {
+    preLine: 'pre-line',
+    nowrap: 'nowrap',
+    normal: 'normal',
+  },
+  textDecoration: {
+    underline: 'underline',
+    none: 'none',
+  },
+  borderStyle: {
+    solid: 'solid',
+    dashed: 'dashed',
+    dotted: 'dotted',
+    none: 'none',
+  },
+} as const;
 
 interface PostSectionHeadingProps {
   post: Post;
