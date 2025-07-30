@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { BigNumber } from 'bignumber.js';
-import { analytics } from '~/features/analytics/analytics';
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { analytics } from '~/utils/analytics/analytics';
 
 import { createGetStxAddressBalanceQueryOptions } from '@leather.io/query';
 import { createMoney, createStxBalance } from '@leather.io/utils';

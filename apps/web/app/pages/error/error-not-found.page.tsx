@@ -1,6 +1,6 @@
 import { MetaDescriptor } from 'react-router';
 
-import { NotFound } from '~/pages/not-found/not-found';
+import { NotFound } from './not-found';
 
 export function meta() {
   return [

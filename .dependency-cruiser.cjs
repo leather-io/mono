@@ -82,6 +82,19 @@ module.exports = {
       },
     },
     {
+      name: 'web-no-sibling-imports-in-features',
+      severity: 'error',
+      comment: 'Features should not import from sibling features.',
+      from: {
+        path: '^apps/web/app/features/([^/]+)',
+      },
+      to: {
+        path: '^apps/web/app/features/([^/]+)',
+        pathNot: '^apps/web/app/features/$1',
+      },
+    },
+
+    {
       name: 'no-circular',
       severity: 'error',
       comment:

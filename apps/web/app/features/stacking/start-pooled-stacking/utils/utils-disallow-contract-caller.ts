@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction } from 'react';
 import { StacksNetworkName } from '@stacks/network';
 import { StackingClient } from '@stacks/stacking';
 import { principalCV } from '@stacks/transactions';
-import { analytics } from '~/features/analytics/analytics';
-import { StxCallContractParams, leather } from '~/helpers/leather-sdk';
+import { analytics } from '~/utils/analytics/analytics';
+import { StxCallContractParams, leather } from '~/utils/leather-sdk';
 
 function getOptions(
   poxWrapperContract: string,

@@ -4,7 +4,7 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import { DummyIcon } from '~/components/dummy';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import {
   ValueDisplayerWithCustomLoader,
   ValueDisplayerWithLoader,

@@ -1,5 +1,5 @@
 import { StackingConditionItem } from '~/features/stacking/components/stacking-conditions';
-import { IconMapType } from '~/shared/types';
+import { IconMapType } from '~/shared/post-types';
 
 import { BoxedCatLockedIcon, MagnifyingGlassIcon, StacksIcon } from '@leather.io/ui';
 
@@ -16,7 +16,7 @@ export const stackingIconMap: IconMapType = {
 /**
  * Type for raw condition data before icon mapping
  */
-export interface RawConditionItem {
+interface RawConditionItem {
   iconKey: string;
   title: string;
   description: string;

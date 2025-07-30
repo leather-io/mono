@@ -1,4 +1,4 @@
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { content } from '~/data/content';
 import { StackingConditions } from '~/features/stacking/components/stacking-conditions';
 import { mapConditionsWithIcons } from '~/shared/stacking-icon-map';

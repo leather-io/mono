@@ -1,4 +1,4 @@
-import { useIsTouchDevice } from '~/helpers/use-is-touch-device';
+import { useIsTouchDevice } from '~/utils/hooks/use-is-touch-device';
 
 import { Flag, FlagProps, InfoCircleIcon } from '@leather.io/ui';
 

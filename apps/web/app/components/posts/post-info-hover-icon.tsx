@@ -2,13 +2,13 @@ import { ReactNode } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 import type { Post } from '~/data/post-types';
-import { LearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/layouts/page/page';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { InfoCircleIcon } from '@leather.io/ui';
 
-import { BasicHoverCard } from './basic-hover-card';
+import { BasicHoverCard } from '../basic-hover-card';
 
 interface PostInfoHoverIconProps {
   post: Post | undefined;

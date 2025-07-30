@@ -1,6 +1,6 @@
 import { type HTMLStyledProps } from 'leather-styles/jsx';
 import { Explainer } from '~/components/explainer';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { content } from '~/data/content';
 import { getPostByKey } from '~/utils/post-utils';
 import { sanitizeContent } from '~/utils/sanitize-content';

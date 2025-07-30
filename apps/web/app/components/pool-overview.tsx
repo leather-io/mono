@@ -3,12 +3,12 @@ import { ReactElement } from 'react';
 import { css } from 'leather-styles/css';
 import { Box, VStack, styled } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { DASH } from '~/constants/constants';
 import { StackingPool, getPostSlugForProvider } from '~/data/data';
-import { LearnMoreLink } from '~/features/page/page';
-import { TextElementTag } from '~/shared/types';
+import { LearnMoreLink } from '~/layouts/page/page';
+import { TextElementTag } from '~/shared/post-types';
 import { getPosts, usePost } from '~/utils/post-utils';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 

@@ -12,7 +12,7 @@ import {
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
 import { ProviderIcon } from '~/components/icons/provider-icon';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { ForceRowHeight, Table, rowPadding, theadBorderBottom } from '~/components/table';
 import { DASH } from '~/constants/constants';
 import { content } from '~/data/content';
@@ -24,11 +24,11 @@ import {
 } from '~/data/data';
 import { getProtocolSlugByProviderId } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
 import { providerIdToSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
-import { useViewportMinWidth } from '~/helpers/use-media-query';
 import { StartEarningButton } from '~/pages/stacking/components/start-earning-button';
 import { useProtocolFee } from '~/queries/protocols/use-protocol-fee';
 import { useStackingTrackerPool } from '~/queries/stacking-tracker/pools';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';
+import { useViewportMinWidth } from '~/utils/hooks/use-media-query';
 import { getPosts } from '~/utils/post-utils';
 import {
   toHumanReadableMicroStx,

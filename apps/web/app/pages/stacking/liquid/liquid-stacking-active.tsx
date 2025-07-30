@@ -1,6 +1,6 @@
-import { Page } from '~/features/page/page';
 import { LiquidStackingActiveInfo } from '~/features/stacking/liquid-stacking-active-info';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { Page } from '~/layouts/page/page';
 
 interface LiquidStackingActiveProps {
   protocolSlug: ProtocolSlug;

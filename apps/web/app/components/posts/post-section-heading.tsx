@@ -1,6 +1,6 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Post } from '~/data/post-types';
-import { LearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/layouts/page/page';
 import { styleTokens } from '~/shared/style-tokens';
 import { sanitizeContent } from '~/utils/sanitize-content';
 

@@ -2,7 +2,7 @@ import { MetaDescriptor } from 'react-router';
 
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { protocolSlugSchema } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { LiquidStacking } from '~/pages/stacking/liquid-stacking';
+import { LiquidStacking } from '~/pages/stacking/liquid/liquid-stacking';
 
 import { Route } from './+types/liquid-stacking.page';
 

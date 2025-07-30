@@ -9,13 +9,13 @@ import type { LeatherProvider } from '@leather.io/rpc';
 import { Tooltip } from '@leather.io/ui';
 
 import { defaultMetaTags } from './constants/default-meta-tags';
-import { analytics } from './features/analytics/analytics';
-import { useOnRouteChange } from './features/analytics/use-on-route-change';
 import { InstallDialog } from './features/install-dialog/install-dialog';
 import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
 import { Footer } from './layouts/footer/footer';
 import { GlobalLoader } from './layouts/nav/global-loader';
 import { Nav } from './layouts/nav/nav';
+import { analytics } from './utils/analytics/analytics';
+import { useOnRouteChange } from './utils/analytics/use-on-route-change';
 
 declare global {
   interface Window {

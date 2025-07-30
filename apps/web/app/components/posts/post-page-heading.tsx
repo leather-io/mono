@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 import { Post } from '~/data/post-types';
-import { LearnMoreLink, Page } from '~/features/page/page';
+import { LearnMoreLink, Page } from '~/layouts/page/page';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 interface PostPageHeadingProps {

@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import { StacksNetworkName } from '@stacks/network';
 import { Cl, fetchCallReadOnlyFunction, serializeCV } from '@stacks/transactions';
 import { useQuery } from '@tanstack/react-query';
-import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
+import { leather } from '~/utils/leather-sdk';
 
-import { analytics } from '../analytics/analytics';
+import { analytics } from '../../utils/analytics/analytics';
 
 interface EnrollContractIdentifier {
   contractAddress: string;

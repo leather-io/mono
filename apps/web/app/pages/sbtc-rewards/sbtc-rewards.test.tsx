@@ -83,7 +83,7 @@ vi.mock('~/utils/post-utils', () => ({
   formatPostPrompt: (prompt: string) => prompt,
 }));
 
-vi.mock('~/features/page/page', () => ({
+vi.mock('~/layouts/page/page', () => ({
   Page: {
     Header: () => null,
     Inset: ({ children }: { children: React.ReactNode }) => children,
