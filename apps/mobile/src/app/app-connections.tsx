@@ -1,9 +1,9 @@
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
+import { Sticker } from '@/components/sticker';
 import { LinkCard } from '@/features/browser/browser/link-card';
 import { useApps } from '@/store/apps/apps.read';
 import { t } from '@lingui/macro';
-import { Image } from 'expo-image';
 
 import { Box, Text } from '@leather.io/ui/native';
 
@@ -17,11 +17,7 @@ export default function ConnectionsScreen() {
         <Screen.Header centerElement={<HeaderTitle title={title} />} />
       </Box>
       <Screen.Body width={270} alignSelf="center" justifyContent="center" alignItems="center">
-        <Image
-          style={{ height: 270, width: 270 }}
-          contentFit="cover"
-          source={require('@/assets/stickers/ufo.png')}
-        />
+        <Sticker source={require('@/assets/stickers/ufo.png')} />
         <Text textAlign="center" variant="label01">
           {t({
             id: 'browser-sheet.connected.empty.caption',
@@ -35,7 +31,7 @@ export default function ConnectionsScreen() {
     <>
       <Screen.Header centerElement={<HeaderTitle title={title} />} />
       <Screen.ScrollView>
-        <Box flexDirection="row" flexWrap="wrap" gap="5" px="5">
+        <Box flexDirection="row" flexWrap="wrap" gap="4" px="5">
           {appList.reverse().map(app => (
             <LinkCard app={app} key={app.origin} />
           ))}

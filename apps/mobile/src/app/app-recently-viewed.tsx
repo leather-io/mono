@@ -1,10 +1,10 @@
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
+import { Sticker } from '@/components/sticker';
 import { ScreenshotCard } from '@/features/browser/browser/screenshot-card';
 import { useOpenURL } from '@/features/browser/browser/use-open-url';
 import { useApps } from '@/store/apps/apps.read';
 import { t } from '@lingui/macro';
-import { Image } from 'expo-image';
 
 import { Box, Text } from '@leather.io/ui/native';
 
@@ -19,12 +19,7 @@ export default function RecentlyViewedScreen() {
         <Screen.Header centerElement={<HeaderTitle title={title} />} />
       </Box>
       <Screen.Body width={270} alignSelf="center" justifyContent="center" alignItems="center">
-        <Image
-          style={{ height: 270, width: 270 }}
-          contentFit="cover"
-          source={require('@/assets/stickers/flower.png')}
-        />
-
+        <Sticker source={require('@/assets/stickers/flower.png')} />
         <Text textAlign="center" variant="label01">
           {t({
             id: 'browser-sheet.recent.empty.caption',

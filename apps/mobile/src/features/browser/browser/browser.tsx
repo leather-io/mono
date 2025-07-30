@@ -4,10 +4,7 @@ import ViewShot from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import {
-  BrowserLoading,
-  BrowserLoadingMethods,
-} from '@/features/account/components/browser-loading';
+import { BrowserLoadingMethods } from '@/features/account/components/browser-loading';
 import { userAddsApp } from '@/store/apps/apps.write';
 import { useAppDispatch } from '@/store/utils';
 import { useTheme } from '@shopify/restyle';
@@ -29,6 +26,7 @@ interface BrowserProps {
   setNavState: (navState: WebViewNavigation | null) => void;
   goToUrl(url: string): void;
   browserNavigationBarHeight: number;
+  browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
 }
 
 export function Browser({
@@ -38,6 +36,7 @@ export function Browser({
   setNavState,
   goToUrl,
   browserNavigationBarHeight,
+  browserLoadingRef,
 }: BrowserProps) {
   const { top } = useSafeAreaInsets();
   const viewShotRef = useRef<ViewShot>(null);
@@ -46,7 +45,6 @@ export function Browser({
   const theme = useTheme<Theme>();
   const [message, setMessage] = useState<BrowserMessage>(null);
 
-  const browserLoadingRef = useRef<BrowserLoadingMethods>(null);
   const { browserSheetRef } = useGlobalSheets();
 
   useEffect(() => {
@@ -60,7 +58,7 @@ export function Browser({
     } else {
       setOrigin(null);
     }
-  }, [navState, setOrigin]);
+  }, [navState, navState?.loading, setOrigin, browserLoadingRef]);
 
   async function handleWebViewNavigationStateChange(newNavState: WebViewNavigation) {
     setNavState(newNavState);
@@ -108,7 +106,6 @@ export function Browser({
 
   return (
     <Box flex={1} bg="ink.background-primary" style={{ top }}>
-      <BrowserLoading ref={browserLoadingRef} />
       <ViewShot
         ref={viewShotRef}
         style={{ flex: 1, paddingBottom: browserNavigationBarHeight - theme.spacing['2'] }}
@@ -126,6 +123,7 @@ export function Browser({
           onMessage={onMessageHandler}
           allowsInlineMediaPlayback={true}
           injectedJavaScript={injectedProvider({
+            // TODO: dApps should receive relevant data
             branch: 'branch',
             version: 'version',
             commitSha: 'sha',
