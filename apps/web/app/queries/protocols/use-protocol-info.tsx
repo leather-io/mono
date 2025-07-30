@@ -15,7 +15,7 @@ import {
   getProtocolBySlug,
   getProtocolIdBySlug,
 } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
-import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
 import { useStxMarketDataQuery } from '~/queries/market-data/stx-market-data.query';
 import { useProtocolBalance } from '~/queries/protocols/use-protocol-balance';
 import { useStackingTrackerProtocol } from '~/queries/stacking-tracker/protocols';

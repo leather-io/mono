@@ -1,8 +1,8 @@
 import { StacksNetwork } from '@stacks/network';
 import { ProviderId } from '~/data/data';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
-import { NetworkMode } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
-import { getNetworkInstance } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { getNetworkInstance } from '~/features/stacking/utils/stacking-network-utils';
 
 import {
   LiquidContractName,

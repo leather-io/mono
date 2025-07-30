@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { ProviderId, StackingProviderId, stackingPoolData } from '~/data/data';
+import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
-export type NetworkMode = 'mainnet' | 'testnet' | 'devnet';
+export type { NetworkMode };
 
 export type PoolSlug = keyof typeof poolSlugToIdMap;
 

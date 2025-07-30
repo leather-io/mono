@@ -1,8 +1,7 @@
 import { ReactElement } from 'react';
 
 import { z } from 'zod';
-
-import { NetworkMode } from '../../start-pooled-stacking/utils/stacking-pool-types';
+import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
 
 export const ProtocolSlugToIdMap = {
   'stacking-dao': 'stackingDao',

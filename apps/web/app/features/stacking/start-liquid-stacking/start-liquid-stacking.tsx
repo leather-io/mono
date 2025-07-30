@@ -35,8 +35,8 @@ import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';
 
+import { ChooseStackingAmount } from '../components/choose-stacking-amount';
 import { StackingFormItemTitle } from '../components/stacking-form-item-title';
-import { ChoosePoolingAmount } from '../start-pooled-stacking/components/choose-pooling-amount';
 import { getProtocolBySlug } from './utils/utils-preset-protocols';
 
 interface StartLiquidStackingProps {
@@ -159,7 +159,7 @@ function StartLiquidStackingLayout({ protocolSlug }: StartLiquidStackingLayoutPr
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
-                  <ChoosePoolingAmount
+                  <ChooseStackingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
                   />

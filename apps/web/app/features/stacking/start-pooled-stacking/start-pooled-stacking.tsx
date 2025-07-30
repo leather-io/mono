@@ -10,13 +10,13 @@ import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { PoolOverview } from '~/components/pool-overview';
+import { ChooseStackingAmount } from '~/features/stacking/components/choose-stacking-amount';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
 import { usePoolInfo } from '~/features/stacking/hooks/use-pool-info';
 import { useDelegationStatusQuery } from '~/features/stacking/pooled-stacking-info/use-delegation-status-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import { ChoosePoolingAmount } from '~/features/stacking/start-pooled-stacking/components/choose-pooling-amount';
 import { PooledStackingConfirmationSteps } from '~/features/stacking/start-pooled-stacking/components/pooled-stacking-confirmation-steps';
 import {
   createAllowContractCallerSubmitMutationOptions,
@@ -326,7 +326,7 @@ function StartPooledStackingLayout({ poolSlug, client }: StartPooledStackingLayo
               <Stack gap={['space.05', 'space.05', 'space.05', 'space.07']}>
                 <Stack gap="space.02">
                   <StackingFormItemTitle title="Amount" post={stackingAmountPost} />
-                  <ChoosePoolingAmount
+                  <ChooseStackingAmount
                     availableAmount={totalAvailableBalance.amount}
                     isLoading={totalAvailableBalanceIsLoading}
                     stackedAmount={stackedAmount}

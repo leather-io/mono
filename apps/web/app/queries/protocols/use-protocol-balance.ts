@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useQueries } from '@tanstack/react-query';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { getNetworkInstanceByName } from '~/features/stacking/utils/stacking-network-utils';
 import { createGetDaoBalanceQueryOptions } from '~/queries/protocols/dao/balance';
 import { createGetLisaBalanceQueryOptions } from '~/queries/protocols/lisa/balance';
 import { CreateProtocolBalanceQueryOptionsParams } from '~/queries/protocols/protocol-types';
