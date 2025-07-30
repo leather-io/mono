@@ -1,6 +1,6 @@
-import { Page } from '~/layouts/page/page';
 import { IncreaseLiquidStacking } from '~/features/stacking/increase-liquid-stacking/increase-liquid-stacking';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { Page } from '~/layouts/page/page';
 
 interface StackInPoolProps {
   protocolSlug: ProtocolSlug;

@@ -1,8 +1,8 @@
 import { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
 import { useQuery } from '@tanstack/react-query';
-import { fetchFn } from '~/features/stacking/providers/fetch-fn';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { fetchFn } from '~/utils/hiro-wrapped-fetch';
 
 interface NftHoldingsResponse {
   total: number;

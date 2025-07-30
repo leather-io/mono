@@ -11,7 +11,6 @@ export function initAppServices() {
       environment: MODE ?? 'development',
       leatherApiUrl: LEATHER_API_URL,
     },
-
     cacheService: WebHttpCacheService,
     settingsService: WebSettingsService,
   });

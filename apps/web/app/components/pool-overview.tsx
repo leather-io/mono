@@ -8,7 +8,7 @@ import { ValueDisplayer } from '~/components/value-displayer/default-value-displ
 import { DASH } from '~/constants/constants';
 import { StackingPool, getPostSlugForProvider } from '~/data/data';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { TextElementTag } from '~/shared/post-types';
+import { TextElementTag } from '~/utils/post-types';
 import { getPosts, usePost } from '~/utils/post-utils';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 

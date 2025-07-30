@@ -6,9 +6,9 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { queryClient } from '~/constants/query-client';
 
 import type { LeatherProvider } from '@leather.io/rpc';
-import { Tooltip } from '@leather.io/ui';
+import { HasChildren, Tooltip } from '@leather.io/ui';
 
-import { defaultMetaTags } from './constants/default-meta-tags';
+import { defaultMetaTags } from './constants/meta-tags';
 import { InstallDialog } from './features/install-dialog/install-dialog';
 import { MockLeatherDialog } from './features/mock-dialog/mock-dialog';
 import { Footer } from './layouts/footer/footer';
@@ -23,7 +23,7 @@ declare global {
   }
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: HasChildren) {
   return (
     <html lang="en">
       <head>
@@ -60,12 +60,11 @@ export default function App() {
   );
 
   useEffect(() => {
+    // Required async import otherwise Buffer is undefined
     import('~/services/init-app-services')
       .then(({ initAppServices }) => initAppServices())
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      });
+      // eslint-disable-next-line no-console
+      .catch(console.error);
   }, []);
 
   return (

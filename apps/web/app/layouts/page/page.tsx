@@ -4,11 +4,10 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/client-only';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
+import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 import { getPostHref } from '~/utils/post-link';
 
 import { Link } from '@leather.io/ui';
-
-import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 
 export const insetPageMarginX = css({ mx: ['-space.04', '-space.05', '-space.07'] });
 

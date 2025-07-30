@@ -8,7 +8,6 @@ import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { ProtocolOverview } from '~/components/protocol-overview';
-import { Page } from '~/layouts/page/page';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
@@ -23,6 +22,7 @@ import {
 } from '~/features/stacking/start-liquid-stacking/utils/stacking-liquid-schema';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { createDepositStxMutationOptions } from '~/features/stacking/start-liquid-stacking/utils/utils-liquid-stacking-stx';
+import { Page } from '~/layouts/page/page';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,

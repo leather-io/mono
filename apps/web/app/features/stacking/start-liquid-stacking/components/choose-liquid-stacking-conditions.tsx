@@ -16,7 +16,7 @@ const iconMap = {
  */
 export function ChooseLiquidStackingConditions() {
   const liquidStackingConditions = content.liquidStackingConditions.map(condition => ({
-    icon: iconMap[condition.iconKey as keyof typeof iconMap] || null,
+    icon: iconMap[condition.iconKey] || null,
     title: condition.title,
     description: condition.description,
   }));

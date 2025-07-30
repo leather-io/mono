@@ -43,4 +43,4 @@ Dynamic HTML content is sanitized using a universal utility (`sanitizeContent`).
 
 ## Mocking
 
-Flows can be tested end-to-end with mocked API responses using [MSW](https://mswjs.io). 
+Flows can be tested end-to-end with mocked API responses using [MSW](https://mswjs.io).

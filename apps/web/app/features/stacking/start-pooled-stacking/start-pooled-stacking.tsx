@@ -10,7 +10,6 @@ import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { PoolOverview } from '~/components/pool-overview';
-import { Page } from '~/layouts/page/page';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
@@ -29,6 +28,7 @@ import {
   getPoxWrapperContract2,
   requiresAllowContractCaller,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
+import { Page } from '~/layouts/page/page';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
