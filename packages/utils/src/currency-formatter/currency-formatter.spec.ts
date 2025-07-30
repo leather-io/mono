@@ -229,12 +229,10 @@ describe('formatAmount', () => {
     });
   });
 
-  describe('meta:true', () => {
-    const { formatAmount } = createCurrencyFormatter({ locale: 'en-US' });
+  describe('formatAmountWithMeta', () => {
+    const { formatAmountWithMeta } = createCurrencyFormatter({ locale: 'en-US' });
     it('returns an object with meta information', () => {
-      const result = formatAmount(createBtc(12.34), {
-        meta: true,
-      });
+      const result = formatAmountWithMeta(createBtc(12.34));
 
       expect(result).toEqual(
         expect.objectContaining({
@@ -246,7 +244,7 @@ describe('formatAmount', () => {
     });
 
     it('returns parts for crypto', () => {
-      const { parts } = formatAmount(createBtc(1234.56789), { meta: true });
+      const { parts } = formatAmountWithMeta(createBtc(1234.56789));
       expect(parts).toEqual([
         { type: 'integer', value: '1' },
         { type: 'group', value: ',' },
@@ -259,7 +257,7 @@ describe('formatAmount', () => {
     });
 
     it('returns parts for fiat', () => {
-      const { parts } = formatAmount(createUsd(1234.56789), { meta: true });
+      const { parts } = formatAmountWithMeta(createUsd(1234.56789));
       expect(parts).toEqual([
         { type: 'currency', value: '$' },
         { type: 'integer', value: '1' },
@@ -271,7 +269,7 @@ describe('formatAmount', () => {
     });
 
     it('returns parts for fiat dust', () => {
-      const { parts } = formatAmount(createUsd(0.000005), { meta: true });
+      const { parts } = formatAmountWithMeta(createUsd(0.000005));
       expect(parts).toEqual([
         {
           type: 'unknown',
@@ -301,7 +299,7 @@ describe('formatAmount', () => {
     });
 
     it('returns the resolved options', () => {
-      const { resolvedOptions } = formatAmount(createUsd(12.34), { meta: true });
+      const { resolvedOptions } = formatAmountWithMeta(createUsd(12.34));
       expect(resolvedOptions).toEqual({
         currency: 'USD',
         currencyDisplay: 'symbol',

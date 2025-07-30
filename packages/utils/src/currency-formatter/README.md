@@ -15,7 +15,7 @@ import { FormatAmountOptions, createCurrencyFormatter } from '@leather.io/utils'
 
 const formatter = createCurrencyFormatter({ locale: 'en-US' });
 
-function formatCurrencyAmount(money: Money, options?: FormatAmountOptions) {
+function formatAmount(money: Money, options?: FormatAmountOptions) {
   return formatter.formatAmount(
     {
       amount: money.amount.shiftedBy(-money.decimals).toNumber(),
@@ -91,12 +91,6 @@ The following custom options are available when calling `formatAmount`:
   When enabled, very small fiat values below the currency’s minor unit (e.g., <$0.01 for USD)
   are formatted with an approximation like `"< $0.01"`.
 
-- `meta` (default: false)  
-   When enabled, returns an object instead of a string with additional metadata:
-  - `result`: the formatted string
-  - `parts`: output of [`formatToParts`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts)
-  - `resolvedOptions`: output of [`resolvedOptions`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/resolvedOptions)
-
 Custom options will override relevant preset options:
 
 ```ts
@@ -115,6 +109,15 @@ These options override both presets and custom options.
 formatAmount(price, { preset: 'price', numberFormatOptions: { maximumFractionDigits: 0 } });
 // $123
 ```
+
+### Metadata
+
+`formatAmountWithMeta` has identical signature to `formatAmount`, but returns richer metadata
+along with the formatted string:
+
+- `result`: the formatted string
+- `parts`: output of [`formatToParts`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts)
+- `resolvedOptions`: output of [`resolvedOptions`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/resolvedOptions)
 
 ### Handling errors
 
