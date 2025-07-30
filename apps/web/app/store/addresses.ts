@@ -4,9 +4,9 @@ import { StacksNetwork } from '@stacks/network';
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
-import { analytics } from '~/features/analytics/analytics';
-import { leather } from '~/helpers/leather-sdk';
-import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/helpers/utils';
+import { analytics } from '~/utils/analytics/analytics';
+import { leather } from '~/utils/leather-sdk';
+import { type ExtensionState, isLeatherInstalled, whenExtensionState } from '~/utils/utils';
 
 import { ChainId } from '@leather.io/models';
 import { delay } from '@leather.io/utils';

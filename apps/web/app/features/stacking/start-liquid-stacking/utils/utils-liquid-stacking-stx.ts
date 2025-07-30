@@ -8,14 +8,14 @@ import {
   serializePostConditionWire,
   uintCV,
 } from '@stacks/transactions';
-import { analytics } from '~/features/analytics/analytics';
 import { protocols } from '~/features/stacking/start-liquid-stacking/utils/preset-protocols';
 import {
   getLiquidContract,
   getLiquidContractAddressAndName,
 } from '~/features/stacking/start-liquid-stacking/utils/utils-preset-protocols';
 import { getNetworkInstanceByName } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
-import { StxCallContractParams } from '~/helpers/leather-sdk';
+import { analytics } from '~/utils/analytics/analytics';
+import { StxCallContractParams } from '~/utils/leather-sdk';
 
 import { LeatherSdk } from '@leather.io/sdk';
 import { scaleValue, stxToMicroStx } from '@leather.io/utils';

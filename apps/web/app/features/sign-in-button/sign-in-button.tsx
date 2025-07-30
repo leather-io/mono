@@ -1,8 +1,8 @@
 import { styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { openExternalLink } from '~/utils/external-links';
+import { leather } from '~/utils/leather-sdk';
 
 import { LEATHER_EXTENSION_CHROME_STORE_URL } from '@leather.io/constants';
 import { Link, Sheet } from '@leather.io/ui';

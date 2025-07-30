@@ -1,6 +1,6 @@
 import urljoin from 'url-join';
 import { isWebUri } from 'valid-url';
-import { analytics } from '~/features/analytics/analytics';
+import { analytics } from '~/utils/analytics/analytics';
 
 import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 

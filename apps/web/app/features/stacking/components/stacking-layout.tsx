@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 
 import { Box, Flex } from 'leather-styles/jsx';
-import { Page } from '~/features/page/page';
+import { Page } from '~/layouts/page/page';
 
 type Slots = 'stackingStepsPanel' | 'stackingForm';
 

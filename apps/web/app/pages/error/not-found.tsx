@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 
 import { Flex, VStack, styled } from 'leather-styles/jsx';
-import { Page } from '~/features/page/page';
+import { Page } from '~/layouts/page/page';
 
 import { Button } from '@leather.io/ui';
 

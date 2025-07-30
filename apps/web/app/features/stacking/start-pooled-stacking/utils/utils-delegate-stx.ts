@@ -11,9 +11,9 @@ import {
   uintCV,
 } from '@stacks/transactions';
 import { StackingProviderId } from '~/data/data';
-import { analytics } from '~/features/analytics/analytics';
-import { StxCallContractParams } from '~/helpers/leather-sdk';
+import { analytics } from '~/utils/analytics/analytics';
 import { cyclesToBurnChainHeight } from '~/utils/calculate-burn-height';
+import { StxCallContractParams } from '~/utils/leather-sdk';
 
 import { LeatherSdk } from '@leather.io/sdk';
 import { scaleValue, stxToMicroStx } from '@leather.io/utils';

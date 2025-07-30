@@ -27,9 +27,9 @@ import { useStackingClient } from '~/features/stacking/providers/stacking-client
 import { ChooseLiquidStackingConditions } from '~/features/stacking/start-liquid-stacking/components/choose-liquid-stacking-conditions';
 import { LiquidStackingConfirmationSteps } from '~/features/stacking/start-liquid-stacking/components/liquid-stacking-confirmation-steps';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
-import { leather } from '~/helpers/leather-sdk';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { leather } from '~/utils/leather-sdk';
 import { microStxToStxRounded } from '~/utils/unit-convert';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';

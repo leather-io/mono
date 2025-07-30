@@ -4,7 +4,7 @@ import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
-import { ErrorPage } from './features/page/error';
+import { ErrorPage } from './layouts/page/error';
 
 // Polyfill global Buffer
 // @ts-expect-error safe-buffer typings are too old

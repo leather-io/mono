@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import type { Post } from '~/data/post-types';
-import { TextElementTag, isValidTextElementTag } from '~/shared/types';
+import { TextElementTag, isValidTextElementTag } from '~/shared/post-types';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { PostInfoHoverIcon } from './post-info-hover-icon';

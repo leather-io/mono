@@ -1,5 +1,5 @@
 import { WhenClient } from '~/components/client-only';
-import { Page } from '~/features/page/page';
+import { Page } from '~/layouts/page/page';
 import { StartPooledStacking } from '~/features/stacking/start-pooled-stacking/start-pooled-stacking';
 import { PoolSlug } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
 

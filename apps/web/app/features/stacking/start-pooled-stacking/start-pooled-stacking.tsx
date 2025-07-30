@@ -10,7 +10,7 @@ import BigNumber from 'bignumber.js';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { PooledStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { PoolOverview } from '~/components/pool-overview';
-import { Page } from '~/features/page/page';
+import { Page } from '~/layouts/page/page';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
 import { StartStackingDrawer } from '~/features/stacking/components/start-stacking-drawer';
@@ -29,7 +29,6 @@ import {
   getPoxWrapperContract2,
   requiresAllowContractCaller,
 } from '~/features/stacking/start-pooled-stacking/utils/utils-stacking-pools';
-import { leather } from '~/helpers/leather-sdk';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
@@ -37,6 +36,7 @@ import {
 import { useStacksClient } from '~/queries/stacks/stacks-client';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { leather } from '~/utils/leather-sdk';
 import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';

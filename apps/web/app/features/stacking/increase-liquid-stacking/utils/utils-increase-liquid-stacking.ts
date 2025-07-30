@@ -2,7 +2,7 @@ import { StacksNetworkName } from '@stacks/network';
 import { ExtendedAccountBalances, StackingClient } from '@stacks/stacking';
 import { serializeCV } from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
-import { analytics } from '~/features/analytics/analytics';
+import { analytics } from '~/utils/analytics/analytics';
 import { stxToMicroStxBigint } from '~/utils/unit-convert';
 
 import { LeatherSdk } from '@leather.io/sdk';

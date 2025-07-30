@@ -2,10 +2,10 @@ import { ReactElement } from 'react';
 
 import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { RewardProtocolInfo } from '~/data/data';
-import { LearnMoreLink } from '~/features/page/page';
+import { LearnMoreLink } from '~/layouts/page/page';
 import { getPosts } from '~/utils/post-utils';
 
 import { Flag } from '@leather.io/ui';

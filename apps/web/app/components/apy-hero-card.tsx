@@ -1,7 +1,7 @@
 import { Flex } from 'leather-styles/jsx';
 import { HTMLStyledProps } from 'leather-styles/types';
-import { PostValueHoverCard } from '~/components/post-value-hover-card';
-import { Page } from '~/features/page/page';
+import { PostValueHoverCard } from '~/components/posts/post-value-hover-card';
+import { Page } from '~/layouts/page/page';
 import { getPosts } from '~/utils/post-utils';
 
 interface ApyRewardHeroCardProps extends HTMLStyledProps<'div'> {

@@ -8,7 +8,7 @@ import { getPostHref } from '~/utils/post-link';
 
 import { Link } from '@leather.io/ui';
 
-import { SignInButton } from '../sign-in-button/sign-in-button';
+import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 
 export const insetPageMarginX = css({ mx: ['-space.04', '-space.05', '-space.07'] });
 

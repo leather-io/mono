@@ -2,9 +2,9 @@ import { MetaDescriptor } from 'react-router';
 
 import { StackingClientProvider } from '~/features/stacking/providers/stacking-client-provider';
 import { poolSlugSchema } from '~/features/stacking/start-pooled-stacking/utils/stacking-pool-types';
-import { PooledStacking } from '~/pages/stacking/pooled-stacking';
+import { PooledStackingActive } from '~/pages/stacking/pooled/pooled-stacking-active';
 
-import { Route } from './+types/pooled-stacking.page';
+import { Route } from './+types/pooled-stacking-active.page';
 
 export function loader({ params }: Route.LoaderArgs) {
   const { success, data: poolSlug } = poolSlugSchema.safeParse(params.slug);
@@ -18,10 +18,10 @@ export function meta() {
   return [{ title: 'Stacking – Leather' }] satisfies MetaDescriptor[];
 }
 
-export default function EarnPooledStackingRoute({ loaderData }: Route.ComponentProps) {
+export default function EarnPooledStackingActiveRoute({ loaderData }: Route.ComponentProps) {
   return (
     <StackingClientProvider>
-      <PooledStacking poolSlug={loaderData.poolSlug} />
+      <PooledStackingActive poolSlug={loaderData.poolSlug} />
     </StackingClientProvider>
   );
 }

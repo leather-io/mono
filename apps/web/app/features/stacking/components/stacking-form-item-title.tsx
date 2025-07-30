@@ -1,5 +1,5 @@
 import { styled } from 'leather-styles/jsx';
-import { PostLabelHoverCard } from '~/components/post-label-hover-card';
+import { PostLabelHoverCard } from '~/components/posts/post-label-hover-card';
 import type { Post } from '~/data/post-types';
 
 interface StackingFormItemTitleProps {

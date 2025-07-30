@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack } from 'leather-styles/jsx';
 import { LiquidStackingConfirmationStepId } from '~/components/confirmations/confirmation-steps';
 import { ProtocolOverview } from '~/components/protocol-overview';
-import { Page } from '~/features/page/page';
+import { Page } from '~/layouts/page/page';
 import { StackingContractDetails } from '~/features/stacking/components/stacking-contract-details';
 import { StackingFormStepsPanel } from '~/features/stacking/components/stacking-form-steps-panel';
 import { StartStackingLayout } from '~/features/stacking/components/stacking-layout';
@@ -23,7 +23,6 @@ import {
 } from '~/features/stacking/start-liquid-stacking/utils/stacking-liquid-schema';
 import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 import { createDepositStxMutationOptions } from '~/features/stacking/start-liquid-stacking/utils/utils-liquid-stacking-stx';
-import { leather } from '~/helpers/leather-sdk';
 import {
   useStxAvailableUnlockedBalance,
   useStxBalance,
@@ -31,6 +30,7 @@ import {
 import { useProtocolInfo } from '~/queries/protocols/use-protocol-info';
 import { useLeatherConnect } from '~/store/addresses';
 import { useStacksNetwork } from '~/store/stacks-network';
+import { leather } from '~/utils/leather-sdk';
 import { getPosts } from '~/utils/post-utils';
 
 import { Button, Hr, LoadingSpinner } from '@leather.io/ui';

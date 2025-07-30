@@ -1,11 +1,11 @@
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
-import { PostPageHeading } from '~/components/post-page-heading';
-import { PostSectionHeading } from '~/components/post-section-heading';
+import { PostPageHeading } from '~/components/posts/post-page-heading';
+import { PostSectionHeading } from '~/components/posts/post-section-heading';
 import { StacksAccountLoader } from '~/components/stacks-account-loader';
 import { content } from '~/data/content';
-import { Page } from '~/features/page/page';
 import { UserPositions } from '~/features/stacking/user-positions/user-positions';
+import { Page } from '~/layouts/page/page';
 
 import { IndependentStackingLink } from './components/independent-stacking-link';
 import { LiquidStackingExplainer } from './components/liquid-stacking-explainer';
