@@ -325,6 +325,18 @@
     * @leather.io/constants bumped to 0.21.0
     * @leather.io/models bumped to 0.34.0
 
+## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.40.0...@leather.io/utils-v0.41.0) (2025-07-30)
+
+
+### Features
+
+* **utils:** add "pad-decimals" preset to currency formatter ([b5c708c](https://github.com/leather-io/mono/commit/b5c708c7c899217177dd769abc162bfb4b1ad9f1))
+
+
+### Bug Fixes
+
+* **utils:** fix incorrect minimumFractionDigitsCalculation ([0e3a8f1](https://github.com/leather-io/mono/commit/0e3a8f1e603f8efb2e4a1a8163931a5471c706cb))
+
 ## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.39.0...@leather.io/utils-v0.40.0) (2025-07-28)
 
 

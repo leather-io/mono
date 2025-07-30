@@ -449,6 +449,20 @@
   * devDependencies
     * @leather.io/panda-preset bumped to 0.12.9
 
+## [1.77.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.77.0...@leather.io/ui-v1.77.1) (2025-07-30)
+
+
+### Bug Fixes
+
+* browser design qa ([a3a9d63](https://github.com/leather-io/mono/commit/a3a9d636b7765c7eea127703cdc3f5a7c0692518))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.41.0
+
 ## [1.77.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.76.0...@leather.io/ui-v1.77.0) (2025-07-28)
 
 
