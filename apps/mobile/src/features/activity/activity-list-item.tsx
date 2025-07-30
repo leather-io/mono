@@ -60,7 +60,6 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
                 balance={value.quote}
                 color={getBalanceColor(activity)}
                 fontSize={15}
-                isQuoteCurrency
               />
             ) : undefined
           }

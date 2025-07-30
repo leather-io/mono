@@ -133,7 +133,6 @@ function AddressListItem({
   name,
   availableBalance,
   quoteBalance,
-  tokenId,
 }: AddressListItemProps) {
   const [sheetData, setSheetData] = useState<ReceiveSheetData | null>(null);
   const receiveSheetRef = useRef<SheetRef>(null);
@@ -170,19 +169,10 @@ function AddressListItem({
         </Cell.Content>
         <Cell.Aside>
           <Cell.Label variant="primary">
-            <Balance
-              balance={availableBalance}
-              variant="label02"
-              isQuoteCurrency={tokenId === 'BTC'}
-            />
+            <Balance balance={availableBalance} variant="label02" />
           </Cell.Label>
           <Cell.Label variant="secondary">
-            <Balance
-              balance={quoteBalance}
-              variant="caption01"
-              color="ink.text-subdued"
-              isQuoteCurrency
-            />
+            <Balance balance={quoteBalance} variant="caption01" color="ink.text-subdued" />
           </Cell.Label>
         </Cell.Aside>
       </Cell.Root>

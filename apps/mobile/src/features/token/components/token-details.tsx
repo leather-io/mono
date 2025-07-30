@@ -52,7 +52,7 @@ export function TokenDetails({
             </Text>
           </Box>
         }
-        quoteBalance={<Balance balance={quoteBalance} variant="label01" isQuoteCurrency />}
+        quoteBalance={<Balance balance={quoteBalance} variant="label01" />}
       />
       {assetDescription && <TokenDescription>{assetDescription}</TokenDescription>}
 
@@ -60,7 +60,7 @@ export function TokenDetails({
         name={`${capitalize(asset.chain)} (${asset.symbol})`}
         // for Layer design has 'Layer 1 (Bitcoin)' but no other examples. Only showing 'Layer 1' for now based on previous use of getChainLayerFromAssetProtocol
         layer={getChainLayerFromAssetProtocol(asset.protocol)}
-        price={<Balance balance={price} variant="label02" lineHeight={16} isQuoteCurrency />}
+        price={<Balance balance={price} variant="label02" lineHeight={16} />}
         priceChange={
           <TokenPriceChange
             // PETE this needs the same empty handling state as balances. Maybe pass <Balance in to assetPrice and have it wrapped with isLoading

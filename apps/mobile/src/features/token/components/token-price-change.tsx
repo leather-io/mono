@@ -52,7 +52,6 @@ export function TokenPriceChange({
           balance={priceChangeFiat}
           variant="label02"
           lineHeight={16}
-          isQuoteCurrency
           color={getPriceChangeColor(changePercent)}
         />
         )

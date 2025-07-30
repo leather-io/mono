@@ -11,7 +11,6 @@ interface BalanceProps extends TextProps {
   balance?: Money;
   operator?: string;
   isLoading?: boolean;
-  isQuoteCurrency?: boolean;
   formattingOptions?: FormatAmountOptions;
   forceVisible?: boolean;
 }
