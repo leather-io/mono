@@ -756,6 +756,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.31.2
 
+## [2.62.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.62.0...@leather.io/mobile-v2.62.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* small browser issues ([bc0eb7e](https://github.com/leather-io/mono/commit/bc0eb7e3b30abd37d957daeb4d6b3b4e074decdf))
+
 ## [2.62.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.61.2...@leather.io/mobile-v2.62.0) (2025-07-31)
 
 
