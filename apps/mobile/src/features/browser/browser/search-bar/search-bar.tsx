@@ -14,7 +14,6 @@ import { useRouter } from 'expo-router';
 
 import { Box, Theme } from '@leather.io/ui/native';
 
-import { useOpenURL } from '../use-open-url';
 import { BrowserNavigationBar } from './browser-navigation-bar';
 import { SearchBarToolbar } from './search-bar-toolbar';
 import { BrowserSearchInput } from './search-input/browser-search-input';
@@ -29,6 +28,7 @@ interface SearchBarProps {
   navState: WebViewNavigation | null;
   setBrowserNavigationBarHeight(height: number): void;
   browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
+  goToUrl(url: string): void;
 }
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -42,10 +42,10 @@ export function SearchBar({
   onSubmit,
   setBrowserNavigationBarHeight,
   browserLoadingRef,
+  goToUrl,
 }: SearchBarProps) {
   const theme = useTheme<Theme>();
   const textInputRef = useRef<RNTextInput>(null);
-  const { openURL } = useOpenURL();
 
   const router = useRouter();
   const { keyboardAvoidingStyle, searchBarStyle } = useSearchBarAnimatedStyles();
@@ -111,7 +111,7 @@ export function SearchBar({
         />
         <SearchBarToolbar
           onExplore={() => {
-            openURL(LEATHER_APPS_URL);
+            goToUrl(LEATHER_APPS_URL);
             Keyboard.dismiss();
           }}
           onRecents={() => {

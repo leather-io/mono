@@ -116,6 +116,7 @@ export function Browser({
               browserSheetRef.current?.close();
             }
           }}
+          pullToRefreshEnabled
           onOpenWindow={e => {
             goToUrl(e.nativeEvent.targetUrl);
           }}

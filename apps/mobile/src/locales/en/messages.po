@@ -1762,7 +1762,7 @@ msgstr "Wallets"
 msgid "settings.wallets.cell_title"
 msgstr "Wallets and accounts"
 
-#: src/app/(tabs)/browser.tsx:65
+#: src/app/(tabs)/browser.tsx:66
 msgid "browser.search-bar.wrong-url"
 msgstr "Wrong URL"
 
