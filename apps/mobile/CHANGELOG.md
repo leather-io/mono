@@ -756,6 +756,32 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.31.2
 
+## [2.62.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.61.2...@leather.io/mobile-v2.62.0) (2025-07-31)
+
+
+### Features
+
+* **mobile:** add formatting options to Balance component ([ddd754c](https://github.com/leather-io/mono/commit/ddd754c31e6b9f842f05dfdebb2822072676506d))
+* **mobile:** add required polyfills, set up the currency formatter ([4bfd1ae](https://github.com/leather-io/mono/commit/4bfd1ae7761fffabdf900d536fa8b2c1fb2d46d7))
+* **mobile:** update Balance formatting options in relevant places ([6f761af](https://github.com/leather-io/mono/commit/6f761afb9134377d92ccc5ad38860c6c60416e0d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.31.3
+    * @leather.io/crypto bumped to 1.11.3
+    * @leather.io/provider bumped to 1.5.4
+    * @leather.io/query bumped to 2.41.3
+    * @leather.io/rpc bumped to 2.20.3
+    * @leather.io/services bumped to 1.25.3
+    * @leather.io/stacks bumped to 1.14.3
+    * @leather.io/ui bumped to 1.77.3
+    * @leather.io/utils bumped to 0.42.1
+  * devDependencies
+    * @leather.io/bitcoin bumped to 0.31.3
+
 ## [2.61.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.61.0...@leather.io/mobile-v2.61.1) (2025-07-30)
 
 
