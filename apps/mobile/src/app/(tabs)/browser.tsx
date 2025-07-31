@@ -51,6 +51,7 @@ export default function BrowserScreen() {
         setTextUrl={setTextUrl}
         navState={navState}
         browserLoadingRef={browserLoadingRef}
+        goToUrl={goToUrl}
         onSubmit={() => {
           Keyboard.dismiss();
           // setting timeout s.t. keyboard has time to close before opening url
