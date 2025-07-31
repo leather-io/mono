@@ -94,7 +94,7 @@ The following custom options are available when calling `formatAmount`:
 Custom options will override relevant preset options:
 
 ```ts
-// Override the 'price' preset to use only 2 decimals
+// Override the 'price' preset to use hide the currency display
 formatAmount(price, { preset: 'price', showCurrency: false }); // 123.54
 ```
 
