@@ -7,6 +7,9 @@ jobs:
   check-mobile-fingerprint:
     name: Check Mobile Fingerprint
     runs-on: ubuntu-latest
+    # This job is currently too noisy as it triggers on any change, even if unrelated to mobile.
+    # Turning it off until we actually start using eas updates
+    if: false
     steps:
       - uses: actions/checkout@v4
       - name: Prepare the app
