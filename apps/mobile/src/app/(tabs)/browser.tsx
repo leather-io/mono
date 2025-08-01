@@ -16,7 +16,6 @@ import { Box } from '@leather.io/ui/native';
 
 export default function BrowserScreen() {
   const { browserSearchState, goToUrl, setTextUrl } = useBrowserSearchState();
-  const [browserNavigationBarHeight, setBrowserNavigationBarHeight] = useState(0);
   const { url: urlQuery } = useLocalSearchParams<{ url?: string }>();
   useEffect(() => {
     if (urlQuery) {
@@ -39,12 +38,10 @@ export default function BrowserScreen() {
         setNavState={setNavState}
         searchUrl={browserSearchState.searchUrl}
         goToUrl={goToUrl}
-        browserNavigationBarHeight={browserNavigationBarHeight}
         browserLoadingRef={browserLoadingRef}
       />
 
       <SearchBar
-        setBrowserNavigationBarHeight={setBrowserNavigationBarHeight}
         webViewRef={webViewRef}
         textUrl={browserSearchState.textUrl}
         searchUrl={browserSearchState.searchUrl}

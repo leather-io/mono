@@ -25,7 +25,6 @@ interface BrowserProps {
   navState: WebViewNavigation | null;
   setNavState: (navState: WebViewNavigation | null) => void;
   goToUrl(url: string): void;
-  browserNavigationBarHeight: number;
   browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
 }
 
@@ -35,7 +34,6 @@ export function Browser({
   navState,
   setNavState,
   goToUrl,
-  browserNavigationBarHeight,
   browserLoadingRef,
 }: BrowserProps) {
   const { top } = useSafeAreaInsets();
@@ -44,7 +42,6 @@ export function Browser({
   const dispatch = useAppDispatch();
   const theme = useTheme<Theme>();
   const [message, setMessage] = useState<BrowserMessage>(null);
-
   const { browserSheetRef } = useGlobalSheets();
 
   useEffect(() => {
@@ -105,11 +102,8 @@ export function Browser({
   }
 
   return (
-    <Box flex={1} bg="ink.background-primary" style={{ top }}>
-      <ViewShot
-        ref={viewShotRef}
-        style={{ flex: 1, paddingBottom: browserNavigationBarHeight - theme.spacing['2'] }}
-      >
+    <Box flex={1} bg="ink.background-primary">
+      <ViewShot ref={viewShotRef} style={{ flex: 1, paddingTop: top }}>
         <WebView
           onScroll={({ nativeEvent }) => {
             if (nativeEvent.contentOffset.y < -CONTENT_OFFSET_FOR_BROWSER_CLOSE) {
