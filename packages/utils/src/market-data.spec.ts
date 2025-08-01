@@ -5,7 +5,7 @@ import { createMarketData, createMarketPair } from '@leather.io/models';
 import { invertExchangeRate, rebaseMarketData } from './market-data';
 import { initBigNumber } from './math';
 import { convertAmountToBaseUnit } from './money/calculate-money';
-import { createMoneyFromDecimal } from './money/format-money';
+import { createMoneyFromDecimal } from './money/create-money';
 
 describe('rebaseMarketData', () => {
   it('rebases marketData base currency against target quote currency of exchange rate', () => {

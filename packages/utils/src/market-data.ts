@@ -4,7 +4,7 @@ import { currencyDecimalsMap, currencyNameMap } from '@leather.io/constants';
 import { type MarketData, createMarketData, createMarketPair } from '@leather.io/models';
 
 import { convertAmountToBaseUnit, convertAmountToFractionalUnit } from './money/calculate-money';
-import { createMoney } from './money/format-money';
+import { createMoney } from './money/create-money';
 
 /**
  * Rebases MarketData to a different quote currency using exchange rate.
