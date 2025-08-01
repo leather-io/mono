@@ -756,6 +756,13 @@
   * devDependencies
     * @leather.io/bitcoin bumped to 0.31.2
 
+## [2.62.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.62.1...@leather.io/mobile-v2.62.2) (2025-08-01)
+
+
+### Bug Fixes
+
+* navigation bar and padding ([802d636](https://github.com/leather-io/mono/commit/802d636b4d790d20288bf7607fa8fab899e35f67))
+
 ## [2.62.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.62.0...@leather.io/mobile-v2.62.1) (2025-07-31)
 
 
