@@ -11,7 +11,7 @@ import {
   subtractMoney,
   sumMoney,
 } from './calculate-money';
-import { createMoney, createMoneyFromDecimal, formatMoney } from './format-money';
+import { createMoney, createMoneyFromDecimal } from './create-money';
 
 const tenMicroStx = createMoney(10, 'STX');
 const tenStx = createMoneyFromDecimal(10, 'STX');
@@ -58,7 +58,11 @@ describe(convertAmountToFractionalUnit.name, () => {
 
 describe(convertToMoneyTypeWithDefaultOfZero.name, () => {
   test('it converts and formats a number to a money object', () =>
-    expect(formatMoney(convertToMoneyTypeWithDefaultOfZero('STX', 400))).toEqual('0.0004 STX'));
+    expect(convertToMoneyTypeWithDefaultOfZero('STX', 400)).toEqual({
+      amount: new BigNumber(400),
+      symbol: 'STX',
+      decimals: 6,
+    }));
 });
 
 describe(sumMoney.name, () => {
