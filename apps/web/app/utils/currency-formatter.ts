@@ -5,7 +5,7 @@ import { FormatAmountOptions, createCurrencyFormatter, isError } from '@leather.
 
 const currencyFormatter = createCurrencyFormatter({
   locale: 'en-US',
-  onError: (error, context) => {
+  onError(error, context) {
     const message =
       isError(error) && error.message
         ? `Currency formatter error: ${error.message}`
