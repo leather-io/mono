@@ -26,7 +26,6 @@ interface SearchBarProps {
   searchUrl: string;
   onSubmit(): void;
   navState: WebViewNavigation | null;
-  setBrowserNavigationBarHeight(height: number): void;
   browserLoadingRef: RefObject<BrowserLoadingMethods | null>;
   goToUrl(url: string): void;
 }
@@ -40,7 +39,6 @@ export function SearchBar({
   searchUrl,
   navState,
   onSubmit,
-  setBrowserNavigationBarHeight,
   browserLoadingRef,
   goToUrl,
 }: SearchBarProps) {
@@ -69,9 +67,6 @@ export function SearchBar({
         shadowRadius={24}
         shadowOpacity={0.08}
         elevation={1}
-        onLayout={e => {
-          setBrowserNavigationBarHeight(e.nativeEvent.layout.height);
-        }}
       >
         <BrowserLoading ref={browserLoadingRef} />
         <BottomGradient />
