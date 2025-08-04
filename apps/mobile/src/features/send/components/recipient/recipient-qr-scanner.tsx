@@ -1,5 +1,5 @@
 import { ParserResult, QrScanner } from '@/features/qr-scanner/qr-scanner';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { bip21, isValidBitcoinAddress } from '@leather.io/bitcoin';
 import { SupportedBlockchains } from '@leather.io/models';
@@ -30,10 +30,7 @@ function parse(data: string): ParserResult<{ address: string; chain: SupportedBl
 
   return {
     success: false,
-    error: t({
-      id: 'send-form.recipient.unsupported_qr',
-      message: 'Scan a Bitcoin or Stacks address',
-    }),
+    error: t`Scan a Bitcoin or Stacks address`,
   };
 }
 

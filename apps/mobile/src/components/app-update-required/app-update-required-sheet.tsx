@@ -1,6 +1,6 @@
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import { Box, ButtonV2, Sheet, Text } from '@leather.io/ui/native';
@@ -22,16 +22,10 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
         <Box pb="4" pt="6" px="5" flexDirection="row">
           <Box flex={1.4} gap="5">
             <Text color="ink.text-primary" variant="heading05">
-              {t({
-                id: 'version_guard.title',
-                message: 'Get the latest version of the Leather app',
-              })}
+              {t`Get the latest version of the Leather app`}
             </Text>
             <Text variant="body02" color="ink.text-primary" textAlign="left">
-              {t({
-                id: 'version_guard.update_available',
-                message: `Update the app to get access to the latest features.`,
-              })}
+              {t`Update the app to get access to the latest features.`}
             </Text>
           </Box>
           <Box flex={1} style={{ height: 160, width: 160 }}>
@@ -52,7 +46,7 @@ export function AppUpdateRequiredSheet({ onUpdatePress }: AppUpdateRequiredSheet
       <Box width="100%" px="5" maxWidth={400} alignSelf="center" gap="4">
         <UpdateButton onPress={onUpdatePress} />
         <ButtonV2
-          title={t({ id: 'version_guard.decline_version', message: `Maybe later` })}
+          title={t`Maybe later`}
           onPress={() => versionGuardSheetRef.current?.dismiss()}
           buttonState="ghost"
         />

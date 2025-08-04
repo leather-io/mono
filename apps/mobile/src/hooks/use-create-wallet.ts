@@ -3,7 +3,7 @@ import { keychainErrorHandlers, useKeyStore } from '@/store/key-store';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
 import { nextAnimationFrame } from '@/utils/next-animation-frame';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
 import { useHaptics } from '@leather.io/ui/native';
@@ -30,10 +30,7 @@ export function useCreateWallet() {
         void triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'success',
-          title: t({
-            id: 'create_wallet.toast_title_success',
-            message: 'Wallet added',
-          }),
+          title: t`Wallet added`,
         });
         router.dismissAll();
         router.replace('/');
@@ -43,10 +40,7 @@ export function useCreateWallet() {
         if (keychainErrorHandlers.isKeyExistsError(e)) {
           toastContext.displayToast({
             type: 'error',
-            title: t({
-              id: 'create_wallet.wallet_exists.toast_title_error',
-              message: 'Wallet added already',
-            }),
+            title: t`Wallet added already`,
           });
           router.back();
           return;
@@ -54,10 +48,7 @@ export function useCreateWallet() {
         void triggerHapticFeedback('success');
         toastContext.displayToast({
           type: 'error',
-          title: t({
-            id: 'create_wallet.toast_title_error',
-            message: 'An error occurred',
-          }),
+          title: t`An error occurred`,
         });
         router.back();
       }

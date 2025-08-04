@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 enum AssetType {
   NativeSegwit = 'native_segwit',
@@ -19,49 +19,25 @@ export function getAssets({
     {
       type: AssetType.NativeSegwit,
       address: nativeSegwitPayerAddress,
-      name: t({
-        id: 'asset_name.bitcoin',
-        message: 'Bitcoin',
-      }),
+      name: t`Bitcoin`,
       symbol: 'BTC',
-      addressType: t({
-        id: 'address_type.native_segwit',
-        message: 'Native Segwit',
-      }),
-      description: t({
-        id: 'asset_description.native_segwit',
-        message: 'This is your Native Segwit address for receiving tokens  on the Bitcoin network.',
-      }),
+      addressType: t`Native Segwit`,
+      description: t`This is your Native Segwit address for receiving tokens on the Bitcoin network.`,
     },
     {
       type: AssetType.Taproot,
       address: taprootPayerAddress,
-      name: t({
-        id: 'asset_name.bitcoin',
-        message: 'Bitcoin',
-      }),
+      name: t`Bitcoin`,
       symbol: 'BTC',
-      addressType: t({
-        id: 'address_type.taproot',
-        message: 'Taproot',
-      }),
-      description: t({
-        id: 'asset_description.taproot',
-        message: 'This is your Taproot address for receiving tokens on the Bitcoin network.',
-      }),
+      addressType: t`Taproot`,
+      description: t`This is your Taproot address for receiving tokens on the Bitcoin network.`,
     },
     {
       type: AssetType.Stacks,
       address: stxAddress,
-      name: t({
-        id: 'asset_name.stacks',
-        message: 'Stacks',
-      }),
+      name: t`Stacks`,
       symbol: 'STX',
-      description: t({
-        id: 'asset_description.stacks',
-        message: 'This is your address for receiving tokens on the Stacks network.',
-      }),
+      description: t`This is your address for receiving tokens on the Stacks network.`,
     },
   ];
 }

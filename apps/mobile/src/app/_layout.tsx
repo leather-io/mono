@@ -22,14 +22,14 @@ import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
 import { AddWalletSheet } from '@/features/wallet-manager/add-wallet/add-wallet-sheet';
 import { usePageViewTracking } from '@/hooks/use-page-view-tracking';
-import { initiateI18n } from '@/locales';
+import { initiateI18n } from '@/i18n';
 import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
 import { persistor, store } from '@/store';
 import { trackFirstAppOpen } from '@/utils/analytics';
 import { LDProvider } from '@launchdarkly/react-native-client-sdk';
 import { i18n } from '@lingui/core';
-import { I18nProvider, useLingui } from '@lingui/react';
+import { I18nProvider } from '@lingui/react';
 import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -66,7 +66,6 @@ ErrorUtils.setGlobalHandler(error => {
 function App() {
   useWatchNotificationAddresses();
   usePageViewTracking();
-  useLingui();
 
   useEffect(() => {
     void trackFirstAppOpen();

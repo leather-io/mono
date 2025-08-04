@@ -12,7 +12,7 @@ import { useStxForm } from '@/features/send/forms/stx/use-stx-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { Account } from '@/store/accounts/accounts';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
 import { MarketData, Money, QuoteCurrency } from '@leather.io/models';
@@ -58,10 +58,7 @@ export function StxForm({
   return (
     <SendFormContainer>
       <AssetDisplay
-        name={t({
-          id: 'asset_name.stacks',
-          message: 'Stacks',
-        })}
+        name={t`Stacks`}
         asset={asset}
         availableBalance={availableBalance}
         quoteBalance={quoteBalance}
@@ -142,14 +139,7 @@ export function StxForm({
           )}
         />
 
-        <Button
-          onPress={onSubmit}
-          disabled={!form.formState.isValid}
-          title={t({
-            id: 'send_form.review_button',
-            message: 'Review',
-          })}
-        />
+        <Button onPress={onSubmit} disabled={!form.formState.isValid} title={t`Review`} />
       </SendFormFooter>
     </SendFormContainer>
   );

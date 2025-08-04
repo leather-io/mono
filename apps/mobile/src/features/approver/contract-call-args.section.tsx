@@ -1,5 +1,5 @@
 import { useGetContractInterface } from '@/queries/stacks/contract-interface.query';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { cvToString, deserializeTransaction } from '@stacks/transactions';
 
 import { Approver, Box, Text } from '@leather.io/ui/native';
@@ -18,7 +18,7 @@ export function ContractCallArgsSection({ txHex }: { txHex: string }) {
   return (
     <Approver.Section>
       <Box>
-        <Text>{t({ id: 'approver.contract-arguments.title', message: 'Contract arguments' })}</Text>
+        <Text>{t`Contract arguments`}</Text>
       </Box>
       <Box>
         {functionArgs.map((fa, index) => {
@@ -27,11 +27,7 @@ export function ContractCallArgsSection({ txHex }: { txHex: string }) {
           return (
             <Box key={strValue}>
               <Text variant="caption01" color="ink.text-subdued">
-                {func?.args[index]?.name ??
-                  t({
-                    id: 'approver.contract-arguments.arg-title',
-                    message: `Argument ${index + 1}`,
-                  })}
+                {func?.args[index]?.name ?? t`Argument ${index + 1}`}
               </Text>
               <Text variant="label01">{strValue}</Text>
             </Box>

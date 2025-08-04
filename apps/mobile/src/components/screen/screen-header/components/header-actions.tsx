@@ -1,6 +1,6 @@
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
 import { Box, Eye1ClosedIcon, Eye1Icon, IconButton, SettingsGearIcon } from '@leather.io/ui/native';
@@ -23,10 +23,7 @@ export function HeaderActions() {
       />
 
       <IconButton
-        label={t({
-          id: 'header.settings_label',
-          message: 'Settings',
-        })}
+        label={t`Settings`}
         icon={<SettingsGearIcon />}
         onPress={() => router.navigate('/settings')}
         testID={TestId.homeSettingsButton}
@@ -37,13 +34,7 @@ export function HeaderActions() {
 
 function getPrivacyLabel(privacyModePreference: 'visible' | 'hidden') {
   return {
-    visible: t({
-      id: 'header.privacy_label_hide',
-      message: 'Hide balances',
-    }),
-    hidden: t({
-      id: 'header.privacy_label_show',
-      message: 'Show balances',
-    }),
+    visible: t`Hide balances`,
+    hidden: t`Show balances`,
   }[privacyModePreference];
 }

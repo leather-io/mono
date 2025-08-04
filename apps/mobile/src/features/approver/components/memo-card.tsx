@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Avatar, Box, Cell, ChevronRightIcon, NoteTextIcon } from '@leather.io/ui/native';
 
@@ -16,12 +16,7 @@ export function MemoCard({ memo, onPress, isEditable }: MemoCardProps) {
           <Avatar icon={<NoteTextIcon />} />
         </Cell.Icon>
         <Cell.Content style={{ flexGrow: 1, flexShrink: 0 }}>
-          <Cell.Label variant="primary">
-            {t({
-              id: 'approver.memo.title',
-              message: 'Memo',
-            })}
-          </Cell.Label>
+          <Cell.Label variant="primary">{t`Memo`}</Cell.Label>
         </Cell.Content>
         <Cell.Aside style={{ flexShrink: 1 }}>
           <Box flexDirection="row" alignItems="center" gap="2">

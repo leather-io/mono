@@ -1,7 +1,7 @@
 import { type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from 'react-native';
 
 import { TextInput } from '@/components/text-input';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import {
   Box,
@@ -44,10 +44,7 @@ export function RecipientInput({
           inputState="focused"
           value={value}
           onChangeText={onChange}
-          placeholder={t({
-            id: 'send-form.recipient.input.placeholder',
-            message: 'Search for BNS name or address',
-          })}
+          placeholder={t`Search for BNS name or address`}
           TextInputComponent={UIBottomSheetTextInput}
           textVariant="label02"
           returnKeyType="done"
@@ -56,10 +53,7 @@ export function RecipientInput({
       </Box>
       {value.length > 0 && (
         <IconButton
-          label={t({
-            id: 'send-form.recipient.input.clear',
-            message: 'Clear search',
-          })}
+          label={t`Clear search`}
           position="absolute"
           right={8}
           hitSlop={8}

@@ -1,5 +1,5 @@
 import { i18n } from '@lingui/core';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import dayjs from 'dayjs';
 
 import { BaseOnChainActivity, OnChainActivity } from '@leather.io/models';
@@ -62,10 +62,7 @@ export function formatActivityCaption({ type, status, timestamp }: FormatActivit
   const time = dayjs(timestampInSeconds).format('MMM D, YYYY');
 
   const timestampText = isRecent
-    ? `${dayjs().diff(dayjs(timestampInSeconds), 'minute')} ${t({
-        id: 'activity.time.minutes-ago',
-        message: 'minutes ago',
-      })}`
+    ? `${dayjs().diff(dayjs(timestampInSeconds), 'minute')} ${t`minutes ago`}`
     : time;
 
   const statusText = getActivityStatusLabel({ type, status });
@@ -81,35 +78,17 @@ export function getActivityTitle(activity: OnChainActivity) {
         // we can have type `sendAsset` / `receiveAsset` with an empty symbol/ unknown token
         // e.g. assetId 'SM1793C4R5PZ4NS4VQ4WMP7SKKYVH8JZEWSZ9HCCR.xyk-pool-sbtc-stx-v-1-1::pool-token'
         // could be an API issue / need to format as sBTC. extension says 'Token transfer'
-        return t({
-          id: 'activity.type.token-transfer',
-          message: 'Token Transfer',
-        });
+        return t`Token Transfer`;
       }
       return activity.value?.crypto?.symbol;
     case 'deploySmartContract':
     case 'executeSmartContract':
-      return (
-        activity.contractId.split('.').pop() ||
-        t({
-          id: 'activity.type.unknown',
-          message: 'Unknown',
-        })
-      );
+      return activity.contractId.split('.').pop() || t`Unknown`;
     case 'swapAssets':
-      return t({
-        id: 'activity.type.swapAssets',
-        message: 'Swap Assets',
-      });
+      return t`Swap Assets`;
     case 'lockAsset':
-      return t({
-        id: 'activity.type.lockAsset',
-        message: 'Lock Asset',
-      });
+      return t`Lock Asset`;
     default:
-      return t({
-        id: 'activity.type.unknown',
-        message: 'Unknown',
-      });
+      return t`Unknown`;
   }
 }

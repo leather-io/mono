@@ -3,7 +3,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { AccountList } from '@/features/account/account-list/account-list';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { Account } from '@/store/accounts/accounts';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { useReceiveNavigation } from '../navigation';
 
@@ -21,18 +21,7 @@ export function SelectAccount() {
 
   return (
     <FullHeightSheetLayout
-      header={
-        <FullHeightSheetHeader
-          title={t({
-            id: 'select_account.header_title',
-            message: 'Select account',
-          })}
-          subtitle={t({
-            id: 'select_account.receive.header_subtitle',
-            message: 'Receive',
-          })}
-        />
-      }
+      header={<FullHeightSheetHeader title={t`Select account`} subtitle={t`Receive`} />}
     >
       <AccountList accounts={accounts} onPress={onSelectAccount} showWalletInfo />
     </FullHeightSheetLayout>

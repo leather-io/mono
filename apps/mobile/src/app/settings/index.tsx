@@ -12,7 +12,7 @@ import { WaitlistIds } from '@/features/waitlist/ids';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useDeviceId } from '@/hooks/use-device-id';
 import { TestId } from '@/shared/test-id';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import * as Application from 'expo-application';
 import { useRouter } from 'expo-router';
 
@@ -48,66 +48,39 @@ export default function SettingsScreen() {
   function handleCopyDeviceIdToClipboard() {
     void onDeviceIdCopy();
     displayToast({
-      title: t({
-        id: 'settings.device_id.toast_title',
-        message: 'ID copied to clipboard',
-      }),
+      title: t`ID copied to clipboard`,
       type: 'success',
     });
   }
 
   return (
-    <SettingsLayout title={t({ id: 'settings.header_title', message: 'Settings' })}>
+    <SettingsLayout title={t`Settings`}>
       <SettingsList>
         <SettingsListItem
-          title={t({
-            id: 'settings.wallets.cell_title',
-            message: 'Wallets and accounts',
-          })}
-          caption={t({
-            id: 'settings.wallets.cell_caption',
-            message: 'Add, configure and remove',
-          })}
+          title={t`Wallets and accounts`}
+          caption={t`Add, configure and remove`}
           icon={<WalletIcon />}
           onPress={() => router.navigate('/settings/wallet')}
           testID={TestId.settingsWalletAndAccountsButton}
         />
         <Divider />
         <SettingsListItem
-          title={t({
-            id: 'settings.display.cell_title',
-            message: 'Display',
-          })}
-          caption={t({
-            id: 'settings.display.cell_caption',
-            message: 'Theme and account identifier',
-          })}
+          title={t`Display`}
+          caption={t`Theme and account identifier`}
           icon={<SquareLinesBottomIcon />}
           onPress={() => router.navigate('/settings/display')}
           testID={TestId.settingsDisplayButton}
         />
         <SettingsListItem
-          title={t({
-            id: 'settings.security.cell_title',
-            message: 'Security',
-          })}
-          caption={t({
-            id: 'settings.security.cell_caption',
-            message: 'Analytics and app authentication',
-          })}
+          title={t`Security`}
+          caption={t`Analytics and app authentication`}
           icon={<ShieldIcon />}
           onPress={() => router.navigate('/settings/security')}
           testID={TestId.settingsSecurityButton}
         />
         <SettingsListItem
-          title={t({
-            id: 'settings.networks.cell_title',
-            message: 'Networks',
-          })}
-          caption={t({
-            id: 'settings.networks.cell_caption',
-            message: 'Mainnet, testnet or signet',
-          })}
+          title={t`Networks`}
+          caption={t`Mainnet, testnet or signet`}
           icon={<GlobeTiltedIcon />}
           onPress={() => router.navigate('/settings/networks')}
           testID={TestId.settingsNetworkButton}
@@ -115,28 +88,16 @@ export default function SettingsScreen() {
         {releasePushNotifications && (
           <SettingsListItem
             py="3"
-            title={t({
-              id: 'settings.notifications.cell_title',
-              message: 'Notifications',
-            })}
-            caption={t({
-              id: 'settings.notifications.cell_caption',
-              message: 'Push and email notifications',
-            })}
+            title={t`Notifications`}
+            caption={t`Push and email notifications`}
             icon={<BellIcon />}
             onPress={() => router.navigate('/settings/notifications')}
             testID={TestId.settingsNotificationsButton}
           />
         )}
         <SettingsListItem
-          title={t({
-            id: 'settings.help.cell_title',
-            message: 'Help',
-          })}
-          caption={t({
-            id: 'settings.help.cell_caption',
-            message: 'Get support or provide feedback',
-          })}
+          title={t`Help`}
+          caption={t`Get support or provide feedback`}
           icon={<SupportIcon />}
           onPress={() => router.navigate('/settings/help')}
           testID={TestId.settingsHelpButton}
@@ -146,18 +107,12 @@ export default function SettingsScreen() {
       <Box px="5" gap="3" mt="5">
         {releaseWaitlistFeatures && (
           <Accordion
-            label={t({
-              id: 'settings.accordion_label',
-              message: 'More options',
-            })}
+            label={t`More options`}
             testID={TestId.settingsMoreOptionsButton}
             content={
               <SettingsList mx="-5">
                 <SettingsListItem
-                  title={t({
-                    id: 'settings.contacts.cell_title',
-                    message: 'Contacts',
-                  })}
+                  title={t`Contacts`}
                   icon={<UsersTwoIcon />}
                   onPress={() => {
                     contactsSheetRef.current?.present();
@@ -165,10 +120,7 @@ export default function SettingsScreen() {
                   testID={TestId.settingsContactsButton}
                 />
                 <SettingsListItem
-                  title={t({
-                    id: 'settings.fees.cell_title',
-                    message: 'Fees',
-                  })}
+                  title={t`Fees`}
                   icon={<SettingsGearIcon />}
                   onPress={() => {
                     feesSheetRef.current?.present();
@@ -181,12 +133,7 @@ export default function SettingsScreen() {
         )}
 
         <Box>
-          <Text variant="label02">
-            {t({
-              id: 'settings.version_label',
-              message: 'Version',
-            })}
-          </Text>
+          <Text variant="label02">{t`Version`}</Text>
           <Text variant="caption01" color="ink.text-subdued">
             {Application.nativeApplicationVersion} / {Application.nativeBuildVersion}
           </Text>
@@ -194,12 +141,7 @@ export default function SettingsScreen() {
 
         {deviceId && (
           <Box>
-            <Text variant="label02">
-              {t({
-                id: 'settings.device_id_label',
-                message: 'Device ID',
-              })}
-            </Text>
+            <Text variant="label02">{t`Device ID`}</Text>
             <Pressable
               flexDirection="row"
               alignItems="center"
@@ -220,30 +162,21 @@ export default function SettingsScreen() {
         <Button
           onPress={lockApp}
           buttonState="outline"
-          title={t({
-            id: 'settings.lock_button',
-            message: 'Lock app',
-          })}
+          title={t`Lock app`}
           testID={TestId.settingsLockAppButton}
         />
       </Box>
 
       <NotifyUserSheetLayout
         sheetData={{
-          title: t({
-            id: 'contacts.header_title',
-            message: 'Contacts',
-          }),
+          title: t`Contacts`,
           id: WaitlistIds.contacts,
         }}
         sheetRef={contactsSheetRef}
       />
       <NotifyUserSheetLayout
         sheetData={{
-          title: t({
-            id: 'fees.header_title',
-            message: 'Custom fees',
-          }),
+          title: t`Custom fees`,
           id: WaitlistIds.fees,
         }}
         sheetRef={feesSheetRef}

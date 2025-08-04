@@ -2,7 +2,7 @@ import { RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { Image } from 'expo-image';
 
@@ -52,20 +52,10 @@ export function NotifyUserSheetLayout({
             })}
           </Text>
           <Text variant="body01">
-            {t({
-              id: 'notify_user.subtitle',
-              message: 'This feature is not available yet, but we can notify you when ready.',
-            })}
+            {t`This feature is not available yet, but we can notify you when ready.`}
           </Text>
         </Box>
-        <Button
-          onPress={onNotify}
-          buttonState="default"
-          title={t({
-            id: 'notify_user.interested_button',
-            message: "I'm interested",
-          })}
-        />
+        <Button onPress={onNotify} buttonState="default" title={t`I'm interested`} />
       </Box>
     </Sheet>
   );

@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef, RefObject } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import {
   BaseTheme,
   LayoutProps,
@@ -63,12 +63,7 @@ export function TextInput({
   textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;
 }) {
-  const _errorMessage =
-    errorMessage ??
-    t({
-      id: 'input.default.error',
-      message: 'An error has occurred',
-    });
+  const _errorMessage = errorMessage ?? t`An error has occurred`;
   const theme = useTheme<Theme>();
   const props = useRestyle(composedRestyleFunction, rest);
 

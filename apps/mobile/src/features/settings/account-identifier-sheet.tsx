@@ -6,7 +6,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER } from '@/shared/constants';
 import { getAccountDisplayPreferencesKeyedByType } from '@/shared/display-preference';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { AccountDisplayPreference } from '@leather.io/models';
 import { SheetRef } from '@leather.io/ui/native';
@@ -18,16 +18,10 @@ import { SettingsSheetLayout } from './settings-sheet.layout';
 function getAccountDisplayPrefDescription(preference: AccountDisplayPreference) {
   const matchPreference = match<AccountDisplayPreference>();
   return matchPreference(preference, {
-    taproot: t({
-      id: 'account_display_preference.description.taproot',
-      message: 'Layer 1 • Bitcoin',
-    }),
-    'native-segwit': t({
-      id: 'account_display_preference.description.native_segwit',
-      message: 'Layer 1 • Bitcoin',
-    }),
-    bns: t({ id: 'account_display_preference.description.bns', message: 'Layer 2 • Stacks' }),
-    stacks: t({ id: 'account_display_preference.description.stacks', message: 'Layer 2 • Stacks' }),
+    taproot: t`Layer 1 • Bitcoin`,
+    'native-segwit': t`Layer 1 • Bitcoin`,
+    bns: t`Layer 2 • Stacks`,
+    stacks: t`Layer 2 • Stacks`,
   });
 }
 
@@ -42,10 +36,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
   function onUpdateAccountDisplayPreference(identifier: AccountDisplayPreference) {
     settings.changeAccountDisplayPreference(identifier);
     displayToast({
-      title: t({
-        id: 'account_identifier.toast_title',
-        message: 'Account identifier updated',
-      }),
+      title: t`Account identifier updated`,
       type: 'success',
     });
   }
@@ -53,10 +44,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
   return (
     <SettingsSheetLayout
       sheetRef={sheetRef}
-      title={t({
-        id: 'account_identifier.header_title',
-        message: 'Account identifier',
-      })}
+      title={t`Account identifier`}
       onPressSupport={() => {
         openURL(LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER);
       }}

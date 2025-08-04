@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import { StacksNetwork } from '@stacks/network';
 import {
@@ -38,26 +38,11 @@ function getBaseFeeData(feeType: FeeTypes) {
   }[feeType];
 
   const title = {
-    [FeeTypes.Low]: t({
-      id: 'approver.fee.type.low',
-      message: 'Slow',
-    }),
-    [FeeTypes.Middle]: t({
-      id: 'approver.fee.type.middle',
-      message: 'Standard',
-    }),
-    [FeeTypes.High]: t({
-      id: 'approver.fee.type.high',
-      message: 'Fast',
-    }),
-    [FeeTypes.Custom]: t({
-      id: 'approver.fee.type.custom',
-      message: 'Custom',
-    }),
-    [FeeTypes.Unknown]: t({
-      id: 'approver.fee.type.unknown',
-      message: 'Unknown',
-    }),
+    [FeeTypes.Low]: t`Slow`,
+    [FeeTypes.Middle]: t`Standard`,
+    [FeeTypes.High]: t`Fast`,
+    [FeeTypes.Custom]: t`Custom`,
+    [FeeTypes.Unknown]: t`Unknown`,
   }[feeType];
   return { icon, title };
 }
@@ -65,26 +50,11 @@ function getBaseFeeData(feeType: FeeTypes) {
 export function getBitcoinFeeData(feeType: FeeTypes) {
   const { icon, title } = getBaseFeeData(feeType);
   const time = {
-    [FeeTypes.Low]: t({
-      id: 'approver.bitcoin.fee.speed.low',
-      message: '~1 hour+',
-    }),
-    [FeeTypes.Middle]: t({
-      id: 'approver.bitcoin.fee.speed.middle',
-      message: '~30 min',
-    }),
-    [FeeTypes.High]: t({
-      id: 'approver.bitcoin.fee.speed.high',
-      message: '~10 – 20min',
-    }),
-    [FeeTypes.Custom]: t({
-      id: 'approver.fee.speed.custom',
-      message: 'Custom',
-    }),
-    [FeeTypes.Unknown]: t({
-      id: 'approver.fee.speed.unknown',
-      message: 'Unknown',
-    }),
+    [FeeTypes.Low]: t`~1 hour+`,
+    [FeeTypes.Middle]: t`~30 min`,
+    [FeeTypes.High]: t`~10 – 20min`,
+    [FeeTypes.Custom]: t`Custom`,
+    [FeeTypes.Unknown]: t`Unknown`,
   }[feeType];
   return { icon, title, time };
 }
@@ -93,26 +63,11 @@ export function getStacksFeeData(feeType: FeeTypes) {
   const feeMatcher = match<FeeTypes>();
   const { icon, title } = getBaseFeeData(feeType);
   const time = feeMatcher(feeType, {
-    [FeeTypes.Low]: t({
-      id: 'approver.stacks.fee.speed.low',
-      message: '1–2 minutes',
-    }),
-    [FeeTypes.Middle]: t({
-      id: 'approver.stacks.fee.speed.middle',
-      message: '20–30 seconds',
-    }),
-    [FeeTypes.High]: t({
-      id: 'approver.stacks.fee.speed.high',
-      message: '10 seconds',
-    }),
-    [FeeTypes.Custom]: t({
-      id: 'approver.fee.speed.custom',
-      message: 'Custom',
-    }),
-    [FeeTypes.Unknown]: t({
-      id: 'approver.fee.speed.unknown',
-      message: 'Unknown',
-    }),
+    [FeeTypes.Low]: t`1–2 minutes`,
+    [FeeTypes.Middle]: t`20–30 seconds`,
+    [FeeTypes.High]: t`10 seconds`,
+    [FeeTypes.Custom]: t`Custom`,
+    [FeeTypes.Unknown]: t`Unknown`,
   });
   return {
     icon,

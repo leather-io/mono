@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Avatar, Box, Cell, ChevronRightIcon, NumberedListIcon, Text } from '@leather.io/ui/native';
 
@@ -15,12 +15,7 @@ export function NonceCard({ nonce, onPress }: NonceCardProps) {
           <Avatar icon={<NumberedListIcon />} />
         </Cell.Icon>
         <Cell.Content style={{ flexGrow: 1, flexShrink: 0 }}>
-          <Cell.Label variant="primary">
-            {t({
-              id: 'approver.nonce.title',
-              message: 'Nonce',
-            })}
-          </Cell.Label>
+          <Cell.Label variant="primary">{t`Nonce`}</Cell.Label>
         </Cell.Content>
         <Cell.Aside style={{ flexShrink: 1 }}>
           <Box flexDirection="row" alignItems="center" gap="2">

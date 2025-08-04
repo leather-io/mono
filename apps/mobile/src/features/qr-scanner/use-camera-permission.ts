@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Alert, Linking } from 'react-native';
 
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { PermissionStatus, useCameraPermissions as useExpoCameraPermissions } from 'expo-camera';
 
 interface UseCameraPermissionProps {
@@ -33,22 +33,10 @@ export function useCameraPermission({ onDenied = showCameraAlert }: UseCameraPer
 
 function showCameraAlert() {
   const messages = {
-    title: t({
-      id: 'qr_scanner.camera_alert.title',
-      message: 'Allow Camera Access',
-    }),
-    message: t({
-      id: 'qr_scanner.camera_alert.message',
-      message: 'Turn on camera access in Settings to scan a QR.',
-    }),
-    actionLabel: t({
-      id: 'qr_scanner.camera_alert.action_label',
-      message: 'Settings',
-    }),
-    cancelLabel: t({
-      id: 'qr_scanner.camera_alert.cancel_label',
-      message: 'Cancel',
-    }),
+    title: t`Allow Camera Access`,
+    message: t`Turn on camera access in Settings to scan a QR.`,
+    actionLabel: t`Settings`,
+    cancelLabel: t`Cancel`,
   };
 
   Alert.alert(messages.title, messages.message, [

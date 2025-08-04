@@ -1,6 +1,6 @@
 import { Linking, Platform } from 'react-native';
 
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 const IOS_APP_ID = 'id6499127775';
 const ANDROID_PACKAGE_NAME = 'io.leather.mobilewallet';
@@ -28,11 +28,7 @@ export async function handleStoreRedirect(): Promise<void> {
   try {
     await openAppStore();
   } catch {
-    const userMessage = t({
-      id: 'version_guard.store_error_message',
-      message:
-        "Unable to open app store. Please update the app manually from your device's app store.",
-    });
+    const userMessage = t`Unable to open app store. Please update the app manually from your device's app store.`;
 
     throw new Error(userMessage);
   }
@@ -40,9 +36,9 @@ export async function handleStoreRedirect(): Promise<void> {
 
 export function getStoreName(): string {
   return Platform.select({
-    ios: t({ id: 'version_guard.app_store', message: 'App Store' }),
-    android: t({ id: 'version_guard.google_play', message: 'Google Play' }),
-    default: t({ id: 'version_guard.app_store', message: 'App Store' }),
+    ios: t`App Store`,
+    android: t`Google Play`,
+    default: t`App Store`,
   });
 }
 
@@ -51,5 +47,5 @@ export function getStoreName(): string {
  * @returns Button text for the current platform
  */
 export function getStoreButtonText(): string {
-  return t({ id: 'version_guard.update_from_store', message: `Update from ${getStoreName()}` });
+  return t`Update from ${getStoreName()}`;
 }

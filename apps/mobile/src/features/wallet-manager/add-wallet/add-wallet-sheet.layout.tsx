@@ -8,7 +8,7 @@ import Animated, {
 
 import { useWaitlistFlag } from '@/features/feature-flags';
 import { TestId } from '@/shared/test-id';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import {
@@ -77,47 +77,27 @@ export function AddWalletSheetLayout({
         </Box>
         <Box>
           <Box px="5" py="4">
-            <Text variant="heading03">
-              {t({
-                id: 'add_wallet.header_title',
-                message: 'Add wallet',
-              })}
-            </Text>
+            <Text variant="heading03">{t`Add wallet`}</Text>
           </Box>
           <Box gap="1" pb="5">
             <AddWalletCell
               onPress={createWallet}
-              title={t({
-                id: 'add_wallet.create_wallet.cell_title',
-                message: 'Create new wallet',
-              })}
-              caption={t({
-                id: 'add_wallet.create_wallet.cell_caption',
-                message: 'Generate new Secret Key for self-custody',
-              })}
+              title={t`Create new wallet`}
+              caption={t`Generate new Secret Key for self-custody`}
               testID={TestId.createNewWalletSheetButton}
               icon={<PlusIcon />}
             />
             <AddWalletCell
               onPress={restoreWallet}
-              title={t({
-                id: 'add_wallet.restore_wallet.cell_title',
-                message: 'Restore wallet',
-              })}
-              caption={t({
-                id: 'add_wallet.restore_wallet.cell_caption',
-                message: 'Import existing accounts from self-custody',
-              })}
+              title={t`Restore wallet`}
+              caption={t`Import existing accounts from self-custody`}
               testID={TestId.restoreWalletSheetButton}
               icon={<ArrowRotateClockwiseIcon />}
             />
             {releaseWaitlistFeatures && (
               <AddWalletCell
                 onPress={openOptions}
-                title={t({
-                  id: 'add_wallet.options.cell_title',
-                  message: 'More options',
-                })}
+                title={t`More options`}
                 icon={moreOptionsVisible ? undefined : <EllipsisVIcon />}
               />
             )}

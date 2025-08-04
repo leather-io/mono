@@ -7,7 +7,7 @@ import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { assertExistence } from '@leather.io/utils';
 
@@ -65,14 +65,8 @@ export function SelectAsset() {
       <FullHeightSheetLayout
         header={
           <FullHeightSheetHeader
-            title={t({
-              id: 'select_asset.header_title',
-              message: 'Select asset',
-            })}
-            subtitle={t({
-              id: 'receive.select_asset.header_subtitle',
-              message: 'Receive',
-            })}
+            title={t`Select asset`}
+            subtitle={t`Receive`}
             leftElement={
               canGoBack ? <HeaderBackButton onPress={goBack} testID={TestId.backButton} /> : null
             }

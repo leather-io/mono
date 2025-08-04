@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { TextInput, TextInputProps, Theme } from '@leather.io/ui/native';
@@ -17,10 +17,7 @@ export function GenericSearchTextInput(props: TextInputProps<Theme>) {
       borderRadius="sm"
       placeholderTextColor={theme.colors['ink.text-subdued']}
       color="ink.text-primary"
-      placeholder={t({
-        id: 'browser.input_placeholder',
-        message: 'Type URL or search',
-      })}
+      placeholder={t`Type URL or search`}
     />
   );
 }

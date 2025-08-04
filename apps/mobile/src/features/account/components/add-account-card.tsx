@@ -1,5 +1,5 @@
 import { AccountCard } from '@/features/account/components/account-card';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { PlusIcon } from '@leather.io/ui/native';
 
@@ -9,11 +9,6 @@ interface AddAccountCardProps {
 
 export function AddAccountCard({ onPress }: AddAccountCardProps) {
   return (
-    <AccountCard
-      onPress={onPress}
-      width={200}
-      icon={PlusIcon}
-      primaryTitle={t({ id: 'add_account_card.title', message: 'Add account' })}
-    />
+    <AccountCard onPress={onPress} width={200} icon={PlusIcon} primaryTitle={t`Add account`} />
   );
 }

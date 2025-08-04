@@ -14,7 +14,7 @@ import { userRenamesAccount, userTogglesHideAccount } from '@/store/accounts/acc
 import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
@@ -43,10 +43,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   function setName(name: string) {
     if (name === '') {
       displayToast({
-        title: t({
-          id: 'configure_account.account_name.empty_name_error',
-          message: 'Account name cannot be empty',
-        }),
+        title: t`Account name cannot be empty`,
         type: 'error',
       });
       return { success: false };
@@ -66,12 +63,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
 
   return (
     <>
-      <SettingsLayout
-        title={t({
-          id: 'configure_account.header_title',
-          message: 'Configure account',
-        })}
-      >
+      <SettingsLayout title={t`Configure account`}>
         <Box gap="4">
           <Box px="5">
             <WalletLoader fingerprint={account.fingerprint} key={account.id}>
@@ -101,10 +93,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           </Box>
           <SettingsList gap="1">
             <SettingsListItem
-              title={t({
-                id: 'configure_account.name.cell_title',
-                message: 'Name',
-              })}
+              title={t`Name`}
               caption={i18n._({
                 id: 'configure_account.name.cell_caption',
                 message: '{name}',
@@ -117,10 +106,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
               testID={TestId.walletSettingsAccountNameCell}
             />
             <SettingsListItem
-              title={t({
-                id: 'configure_account.avatar.cell_title',
-                message: 'Avatar',
-              })}
+              title={t`Avatar`}
               icon={<HeadIcon />}
               onPress={() => {
                 router.navigate({
@@ -131,19 +117,13 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
             />
             {account.status === 'active' ? (
               <SettingsListItem
-                title={t({
-                  id: 'configure_account.hide_account.cell_title',
-                  message: 'Hide account',
-                })}
+                title={t`Hide account`}
                 icon={<Eye1ClosedIcon />}
                 onPress={toggleHideAccount}
               />
             ) : (
               <SettingsListItem
-                title={t({
-                  id: 'configure_account.unhide_account.cell_title',
-                  message: 'Reveal account',
-                })}
+                title={t`Reveal account`}
                 icon={<Eye1Icon />}
                 onPress={toggleHideAccount}
               />

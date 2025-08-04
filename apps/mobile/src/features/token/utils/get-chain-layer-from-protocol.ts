@@ -1,17 +1,17 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { CryptoAssetProtocol } from '@leather.io/models';
 
 export function getChainLayerFromAssetProtocol(protocol: CryptoAssetProtocol) {
   switch (protocol) {
     case 'nativeBtc':
-      return t({ id: 'account_balance.caption_left.native', message: 'Layer 1' });
+      return t`Layer 1`;
     case 'nativeStx':
-      return t({ id: 'account_balance.caption_left.stacks', message: 'Layer 2' });
+      return t`Layer 2`;
     case 'sip10':
-      return t({ id: 'account_balance.caption_left.sip10', message: 'Layer 2 · Stacks' });
+      return t`Layer 2 · Stacks`;
     case 'rune':
-      return t({ id: 'account_balance.caption_left.rune', message: 'Runes' });
+      return t`Runes`;
     default:
       return '';
   }

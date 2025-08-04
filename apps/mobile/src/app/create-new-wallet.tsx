@@ -7,7 +7,7 @@ import { useCreateWallet } from '@/hooks/use-create-wallet';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { tempMnemonicStore } from '@/store/storage-persistors';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { ImageBackground } from 'expo-image';
 
 import { generateMnemonic } from '@leather.io/crypto';
@@ -76,10 +76,7 @@ export default function CreateNewWallet() {
     void tempMnemonicStore.setTemporaryMnemonic(tempMnemonic);
   }, []);
 
-  const pageTitle = t({
-    id: 'create_new_wallet.title',
-    message: 'Back up your Secret Key',
-  });
+  const pageTitle = t`Back up your Secret Key`;
 
   return (
     <Screen>
@@ -88,11 +85,7 @@ export default function CreateNewWallet() {
         <Screen.Title>{pageTitle}</Screen.Title>
         <Box px="5" gap="5">
           <Text variant="label01">
-            {t({
-              id: 'create_new_wallet.subtitle',
-              message:
-                'Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen.',
-            })}
+            {t`Your Secret Key grants you access to your wallet and its assets. Store it securely since it can never be recovered if lost or stolen.`}
           </Text>
 
           <Box borderWidth={1} borderColor="ink.border-default" borderRadius="xs" overflow="hidden">
@@ -110,17 +103,9 @@ export default function CreateNewWallet() {
                 >
                   <PointerHandIcon />
                   <Box>
-                    <Text variant="label02">
-                      {t({
-                        id: 'create_new_wallet.view_secret_key_label_a',
-                        message: 'Tap to view Secret Key',
-                      })}
-                    </Text>
+                    <Text variant="label02">{t`Tap to view Secret Key`}</Text>
                     <Text variant="label02" color="red.action-primary-default">
-                      {t({
-                        id: 'create_new_wallet.view_secret_key_label_b',
-                        message: 'For your eyes only',
-                      })}
+                      {t`For your eyes only`}
                     </Text>
                   </Box>
                 </Pressable>
@@ -136,10 +121,7 @@ export default function CreateNewWallet() {
           disabled={isHidden}
           onPress={() => void navigateAndCreateWallet()}
           buttonState="default"
-          title={t({
-            id: 'create_new_wallet.button',
-            message: `I've backed it up`,
-          })}
+          title={t`I've backed it up`}
           testID={TestId.walletCreationBackedUpButton}
         />
       </Screen.Footer>

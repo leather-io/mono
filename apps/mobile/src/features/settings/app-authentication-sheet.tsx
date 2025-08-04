@@ -6,7 +6,7 @@ import { useToastContext } from '@/components/toast/toast-context';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
@@ -35,28 +35,19 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
             settings.securityLevelPreference === 'secure' ? 'insecure' : 'secure'
           );
           displayToast({
-            title: t({
-              id: 'app_auth.toast_title_success',
-              message: 'App authorization updated',
-            }),
+            title: t`App authorization updated`,
             type: 'success',
           });
         } else {
           displayToast({
-            title: t({
-              id: 'app_auth.toast_title_error',
-              message: 'Failed to authenticate',
-            }),
+            title: t`Failed to authenticate`,
             type: 'error',
           });
         }
       })
       .catch(() =>
         displayToast({
-          title: t({
-            id: 'app_auth.toast_title_error',
-            message: 'Failed to authenticate',
-          }),
+          title: t`Failed to authenticate`,
           type: 'error',
         })
       );
@@ -65,22 +56,13 @@ export function AppAuthenticationSheet({ sheetRef }: AppAuthenticationSheetProps
   return (
     <SettingsSheetLayout
       sheetRef={sheetRef}
-      title={t({
-        id: 'app_auth.header_title',
-        message: 'App authentication',
-      })}
+      title={t`App authentication`}
       onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_APP_AUTHENTICATION)}
     >
       <SettingsList>
         <SettingsListItem
-          title={t({
-            id: 'app_auth.cell_title',
-            message: 'App authentication',
-          })}
-          caption={t({
-            id: 'app_auth.cell_caption',
-            message: 'Require biometrics or PIN',
-          })}
+          title={t`App authentication`}
+          caption={t`Require biometrics or PIN`}
           type="switch"
           switchValue={settings.securityLevelPreference === 'secure'}
           onSwitchValueChange={() => onUpdateAppAuth()}

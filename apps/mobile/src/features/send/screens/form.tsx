@@ -14,7 +14,7 @@ import { SendableAsset } from '@/features/send/types';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { i18n } from '@lingui/core';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
@@ -52,10 +52,7 @@ export function Form() {
       <FullHeightSheetLayout
         header={
           <FullHeightSheetHeader
-            title={t({
-              id: 'send_form.header_title',
-              message: 'Send',
-            })}
+            title={t`Send`}
             subtitle={i18n._({
               id: 'select_asset.header_subtitle',
               message: '{subtitle}',

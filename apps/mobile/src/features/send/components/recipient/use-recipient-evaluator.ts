@@ -4,7 +4,7 @@ import {
 } from '@/features/send/components/recipient/recipient.utils';
 import { useAccountHelpers } from '@/features/send/components/recipient/use-shameful-account-helpers';
 import { Account } from '@/store/accounts/accounts';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { ZodSchema } from 'zod';
 
 import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
@@ -52,29 +52,16 @@ export function createRecipientEvaluator({
           address,
           reason: 'recipientIsPayer',
           severity: 'warn',
-          title: t({
-            id: 'send-form.guard.same_address_warning_title',
-            message: 'Sending to the same address',
-          }),
-          description: t({
-            id: 'send-form.guard.same_address_warning_description',
-            message:
-              'This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent.',
-          }),
+          title: t`Sending to the same address`,
+          description: t`This merges your existing funds into a single output. It incurs a fee but helps reduce fees in future transactions. Only proceed if that’s your intent.`,
         };
       } else {
         return {
           address,
           reason: 'recipientIsPayer',
           severity: 'block',
-          title: t({
-            id: 'send-form.guard.same_address_error_title',
-            message: 'Can’t send to the same address',
-          }),
-          description: t({
-            id: 'send-form.guard.same_address_error_description',
-            message: 'Sending to your own address isn’t supported. Choose a different address.',
-          }),
+          title: t`Can’t send to the same address`,
+          description: t`Sending to your own address isn’t supported. Choose a different address.`,
         };
       }
     }
@@ -84,15 +71,8 @@ export function createRecipientEvaluator({
         address,
         reason: 'incorrectNetworkAddress',
         severity: 'block',
-        title: t({
-          id: 'send-form.guard.incorrect_network_address_title',
-          message: 'Address from another network',
-        }),
-        description: t({
-          id: 'send-form.guard.incorrect_network_address_description',
-          message:
-            'This address belongs to a different network. Use an address that matches the active network.',
-        }),
+        title: t`Address from another network`,
+        description: t`This address belongs to a different network. Use an address that matches the active network.`,
       };
     }
 
@@ -101,15 +81,8 @@ export function createRecipientEvaluator({
         address,
         reason: 'nonCompliantAddress',
         severity: 'block',
-        title: t({
-          id: 'send-form.guard.non_compliant_address_title',
-          message: 'Address blocked',
-        }),
-        description: t({
-          id: 'send-form.guard.non_compliant_address_description',
-          message:
-            'This address is linked to activity that violates compliance policies. You can’t send funds to it',
-        }),
+        title: t`Address blocked`,
+        description: t`This address is linked to activity that violates compliance policies. You can’t send funds to it`,
       };
     }
 
@@ -118,15 +91,8 @@ export function createRecipientEvaluator({
         address,
         reason: 'newRecipient',
         severity: 'warn',
-        title: t({
-          id: 'send-form.guard.new_recipient_title',
-          message: 'Verify full address',
-        }),
-        description: t({
-          id: 'send-form.guard.new_recipient_description',
-          message:
-            'You haven’t sent to this address before. Double-check that it’s correct before proceeding.',
-        }),
+        title: t`Verify full address`,
+        description: t`You haven’t sent to this address before. Double-check that it’s correct before proceeding.`,
       };
     }
 

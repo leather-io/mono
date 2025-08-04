@@ -14,7 +14,7 @@ import { useAccountBalance } from '@/queries/balance/account-balance.query';
 import { type Account } from '@/store/accounts/accounts';
 import { useWalletByFingerprint } from '@/store/wallets/wallets.read';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 export function SelectAccount() {
   const { navigate } = useSendNavigation();
@@ -42,14 +42,8 @@ export function SelectAccount() {
     <FullHeightSheetLayout
       header={
         <FullHeightSheetHeader
-          title={t({
-            id: 'select_account.header_title',
-            message: 'Select account',
-          })}
-          subtitle={t({
-            id: 'select_account.send.header_subtitle',
-            message: 'Send',
-          })}
+          title={t`Select account`}
+          subtitle={t`Send`}
           leftElement={canGoBack ? <HeaderBackButton onPress={handleBackButtonPress} /> : null}
         />
       }

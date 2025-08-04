@@ -17,7 +17,7 @@ import {
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
 
@@ -76,10 +76,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       .then((psbtHex: string) => navigate('approval', { hex: psbtHex, accountIndex, fingerprint }))
       .catch(() =>
         displayToast({
-          title: t({
-            id: 'send-form.unexpected-error',
-            message: 'Transaction failed due to an unexpected error',
-          }),
+          title: t`Transaction failed due to an unexpected error`,
           type: 'error',
         })
       );

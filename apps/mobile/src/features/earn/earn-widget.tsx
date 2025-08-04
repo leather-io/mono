@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { FetchState, FetchWrapper } from '@/components/loading';
 import { Widget } from '@/components/widget';
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useTheme } from '@shopify/restyle';
 
 import { QuotedStxBalance } from '@leather.io/services';
@@ -31,12 +31,7 @@ export function EarnWidget() {
     <Widget>
       <Box>
         <Widget.Header>
-          <Text variant="label01">
-            {t({
-              id: 'earn.title',
-              message: 'Earn',
-            })}
-          </Text>
+          <Text variant="label01">{t`Earn`}</Text>
         </Widget.Header>
       </Box>
       <Widget.Body>

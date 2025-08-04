@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Button, Sheet, SheetHeader, SheetRef, Text } from '@leather.io/ui/native';
 
@@ -40,18 +40,12 @@ export function WarningSheetLayout({
           <Button
             onPress={onSubmit}
             buttonState={variant === 'critical' ? 'critical' : 'default'}
-            title={t({
-              id: 'warning.submit_button',
-              message: 'Continue',
-            })}
+            title={t`Continue`}
           />
           <Button
             onPress={() => sheetRef.current?.dismiss()}
             buttonState="ghost"
-            title={t({
-              id: 'warning.cancel_button',
-              message: 'Cancel',
-            })}
+            title={t`Cancel`}
           />
         </Box>
       </Box>

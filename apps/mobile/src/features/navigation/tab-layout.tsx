@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useTheme } from '@shopify/restyle';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 
@@ -46,7 +46,7 @@ export function TabLayout() {
               activeIcon={<HomeActiveIcon />}
               defaultIcon={<HomeDefaultIcon />}
               name="(index)"
-              title={t({ id: 'tabs.button.home.title', message: 'Home' })}
+              title={t`Home`}
               toggleGradient={() => setIsGradientVisible(true)}
             />
           </TabTrigger>
@@ -55,7 +55,7 @@ export function TabLayout() {
               activeIcon={<ActivityActiveIcon />}
               defaultIcon={<ActivityDefaultIcon />}
               name="activity"
-              title={t({ id: 'tabs.button.activity.title', message: 'Activity' })}
+              title={t`Activity`}
               toggleGradient={() => setIsGradientVisible(true)}
             />
           </TabTrigger>
@@ -64,7 +64,7 @@ export function TabLayout() {
               activeIcon={<BrowseActiveIcon />}
               defaultIcon={<BrowseDefaultIcon />}
               name="browser"
-              title={t({ id: 'tabs.button.browser.title', message: 'Browser' })}
+              title={t`Browser`}
               toggleGradient={() => setIsGradientVisible(false)}
             />
           </TabTrigger>

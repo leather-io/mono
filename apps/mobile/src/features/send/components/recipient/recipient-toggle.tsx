@@ -1,7 +1,7 @@
 import Animated, { withDelay, withTiming } from 'react-native-reanimated';
 
 import { AccountAvatar } from '@/features/account/components/account-avatar';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import {
   AddressDisplayer,
@@ -54,17 +54,11 @@ export function RecipientToggle({ onPress, onQrButtonPress, value }: RecipientTo
         ) : (
           <>
             <Text variant="label02" color="ink.text-subdued">
-              {t({
-                id: 'send_form.recipient.toggle.label',
-                message: 'Enter recipient',
-              })}
+              {t`Enter recipient`}
             </Text>
             <IconButton
               hitSlop={8}
-              label={t({
-                id: 'send-form.recipient.qr_button',
-                message: 'Scan a QR code',
-              })}
+              label={t`Scan a QR code`}
               icon={<QrCodeIcon />}
               onPress={() => onQrButtonPress('toggle')}
             />

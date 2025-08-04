@@ -7,7 +7,7 @@ import { useSendNavigation } from '@/features/send/navigation';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { SendableAsset } from '@/features/send/types';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 export function SelectAsset() {
   const { navigate } = useSendNavigation();
@@ -36,18 +36,7 @@ export function SelectAsset() {
 
   return (
     <FullHeightSheetLayout
-      header={
-        <FullHeightSheetHeader
-          title={t({
-            id: 'select_asset.header_title',
-            message: 'Select asset',
-          })}
-          subtitle={t({
-            id: 'send.select_asset.header_subtitle',
-            message: 'Send',
-          })}
-        />
-      }
+      header={<FullHeightSheetHeader title={t`Select asset`} subtitle={t`Send`} />}
     >
       <AssetPicker account={selectedAccount} onSelectAsset={handleSelectAsset} />
     </FullHeightSheetLayout>

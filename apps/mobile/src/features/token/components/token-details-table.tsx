@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { SummaryTableItem, SummaryTableRoot } from '../../../components/summary-table';
 import { TokenDetailsCard } from './token-details-card';
@@ -14,21 +14,12 @@ interface TokenDetailsTableProps {
 
 export function TokenDetailsTable({ name, layer, price, priceChange }: TokenDetailsTableProps) {
   return (
-    <TokenDetailsCard title={t({ id: 'token.details.title', message: 'Token Details' })}>
+    <TokenDetailsCard title={t`Token Details`}>
       <SummaryTableRoot>
-        <SummaryTableItem label={t({ id: 'token.details.name', message: 'Name' })} value={name} />
-        <SummaryTableItem
-          label={t({ id: 'token.details.price', message: 'Price' })}
-          value={price}
-        />
-        <SummaryTableItem
-          label={t({ id: 'token.details.price_change', message: '24 Hour Change' })}
-          value={priceChange}
-        />
-        <SummaryTableItem
-          label={t({ id: 'token.details.layer', message: 'Layer' })}
-          value={layer}
-        />
+        <SummaryTableItem label={t`Name`} value={name} />
+        <SummaryTableItem label={t`Price`} value={price} />
+        <SummaryTableItem label={t`24 Hour Change`} value={priceChange} />
+        <SummaryTableItem label={t`Layer`} value={layer} />
       </SummaryTableRoot>
     </TokenDetailsCard>
   );

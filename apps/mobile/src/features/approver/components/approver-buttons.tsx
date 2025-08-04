@@ -1,5 +1,5 @@
 import { SpinnerIcon } from '@/components/spinner-icon';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Button, CheckmarkCircleIcon } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
@@ -17,24 +17,8 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
     case 'start':
       return (
         <>
-          <Button
-            buttonState="outline"
-            title={t({
-              id: 'approver.button.edit',
-              message: 'Edit',
-            })}
-            flex={1}
-            onPress={onBack}
-          />
-          <Button
-            buttonState="default"
-            title={t({
-              id: 'approver.button.approve',
-              message: 'Approve',
-            })}
-            flex={1}
-            onPress={onApprove}
-          />
+          <Button buttonState="outline" title={t`Edit`} flex={1} onPress={onBack} />
+          <Button buttonState="default" title={t`Approve`} flex={1} onPress={onApprove} />
         </>
       );
     case 'submitting':
@@ -42,10 +26,7 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
         <Button
           flex={1}
           buttonState="default"
-          title={t({
-            id: 'approver.button.submitting',
-            message: 'Submitting...',
-          })}
+          title={t`Submitting...`}
           icon={<SpinnerIcon invertColors />}
         />
       );
@@ -55,10 +36,7 @@ export function ApproverButtons({ approverState, onBack, onApprove }: ApproverBu
         <Button
           flex={1}
           buttonState="success"
-          title={t({
-            id: 'approver.button.submitted',
-            message: 'Submitted',
-          })}
+          title={t`Submitted`}
           icon={<CheckmarkCircleIcon color="ink.background-primary" />}
         />
       );

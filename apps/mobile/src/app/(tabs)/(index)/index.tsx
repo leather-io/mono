@@ -17,14 +17,12 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { useTotalActivity } from '@/queries/activity/account-activity.query';
 import { useTotalCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { useWallets } from '@/store/wallets/wallets.read';
-import { t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
+import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
 import { Box, LeatherLogomarkIcon, SheetRef } from '@leather.io/ui/native';
 
 export default function HomeScreen() {
-  useLingui();
   const { hasWallets } = useWallets();
   const notificationSheetRef = useRef<SheetRef>(null);
   const activity = useTotalActivity();
@@ -51,20 +49,20 @@ export default function HomeScreen() {
               <BalancesWidget
                 onPressHeader={() => router.navigate('/balances')}
                 balance={<TotalBalance color="ink.text-subdued" />}
-                title={t({ id: 'balances.header_title', message: 'All tokens' })}
+                title={t`All tokens`}
               >
                 <AllAccountBalances mode="widget" />
               </BalancesWidget>
               <ActivityWidget
                 activity={activity}
                 onPressHeader={() => router.navigate('/activity')}
-                title={t({ id: 'activity.header_title', message: 'All Activity' })}
+                title={t`All Activity`}
               />
               <EarnWidget />
               {releaseCollectibles && hasCollectibles(collectibles) && (
                 <CollectiblesWidget
                   onPressHeader={() => router.navigate('/collectibles')}
-                  title={t({ id: 'collectibles.header_title', message: 'All collectibles' })}
+                  title={t`All collectibles`}
                 >
                   <Collectibles collectibles={collectibles} mode="widget" />
                 </CollectiblesWidget>

@@ -8,7 +8,7 @@ import { QrCard } from '@/features/receive/components/qr-card';
 import { useCopyAddress } from '@/hooks/use-copy-address';
 import { TestId } from '@/shared/test-id';
 import { analytics } from '@/utils/analytics';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 
 import {
@@ -47,10 +47,7 @@ export function AssetDetails() {
     <FullHeightSheetLayout
       header={
         <FullHeightSheetHeader
-          title={t({
-            id: 'receive_asset.header_title',
-            message: 'Receive',
-          })}
+          title={t`Receive`}
           subtitle={i18n._({
             id: 'select_asset.header_subtitle',
             message: '{subtitle}',
@@ -96,7 +93,7 @@ export function AssetDetails() {
         </Pressable>
 
         <Button
-          title={t({ id: 'receive_asset.share_button', message: 'Share' })}
+          title={t`Share`}
           buttonState="outline"
           icon={<ArrowOutOfBoxIcon />}
           style={{ marginTop: 'auto' }}

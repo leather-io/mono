@@ -4,7 +4,7 @@ import { Screen } from '@/components/screen/screen';
 import { SkipSecureWalletSheet } from '@/features/wallet-manager/secure-your-wallet/skip-secure-wallet-sheet';
 import { useAuthentication } from '@/hooks/use-authentication';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
 import { Box, Button, SheetRef, Text } from '@leather.io/ui/native';
@@ -14,10 +14,7 @@ export default function SecureYourWalletScreen() {
   const { createWallet } = useCreateWallet();
   const { callIfEnrolled } = useAuthentication();
 
-  const pageTitle = t({
-    id: 'secure_your_wallet.title',
-    message: 'Secure your wallet',
-  });
+  const pageTitle = t`Secure your wallet`;
 
   return (
     <Screen>
@@ -27,10 +24,7 @@ export default function SecureYourWalletScreen() {
         <Box px="5">
           <Box gap="3">
             <Text variant="label01">
-              {t({
-                id: 'secure_your_wallet.caption',
-                message: 'Use your device PIN, Face ID or other biometrics to secure your wallets',
-              })}
+              {t`Use your device PIN, Face ID or other biometrics to secure your wallets`}
             </Text>
           </Box>
           <Box justifyContent="center" alignItems="center" aspectRatio={1}>
@@ -50,20 +44,14 @@ export default function SecureYourWalletScreen() {
           }}
           pb="4"
           buttonState="ghost"
-          title={t({
-            id: 'secure_your_wallet.skip_button',
-            message: `Skip for now`,
-          })}
+          title={t`Skip for now`}
         />
         <Button
           onPress={() => {
             void callIfEnrolled(() => createWallet({ biometrics: true }));
           }}
           buttonState="default"
-          title={t({
-            id: 'secure_your_wallet.security_button',
-            message: `Enable device security`,
-          })}
+          title={t`Enable device security`}
         />
       </Screen.Footer>
       <SkipSecureWalletSheet

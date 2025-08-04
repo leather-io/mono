@@ -15,7 +15,7 @@ import { useAccountUtxos } from '@/queries/utxos/utxos.query';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { formatCurrency } from '@/utils/currency-formatter';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 
@@ -189,10 +189,7 @@ function BasePsbtSigner({
       setSelectedFeeType(feeType);
       setPsbtHex(psbtHex);
       displayToast({
-        title: t({
-          id: 'approver.send.btc.success.change-fee',
-          message: 'Fee updated',
-        }),
+        title: t`Fee updated`,
         type: 'success',
       });
     }
@@ -225,10 +222,7 @@ function BasePsbtSigner({
         },
         onError() {
           displayToast({
-            title: t({
-              id: 'approver.send.btc.error.broadcast',
-              message: 'Failed to broadcast transaction',
-            }),
+            title: t`Failed to broadcast transaction`,
             type: 'error',
           });
           setApproverState('start');
@@ -236,10 +230,7 @@ function BasePsbtSigner({
       });
     } catch {
       displayToast({
-        title: t({
-          id: 'approver.send.btc.error.broadcast',
-          message: 'Failed to broadcast transaction',
-        }),
+        title: t`Failed to broadcast transaction`,
         type: 'error',
       });
       setApproverState('start');
@@ -250,25 +241,18 @@ function BasePsbtSigner({
     <>
       <Approver requester={origin}>
         <Approver.Container>
-          <Approver.Header
-            title={t({
-              id: 'approver.send.title',
-              message: 'Send token',
-            })}
-          />
+          <Approver.Header title={t`Send token`} />
 
           <Approver.Overview>
             <Approver.Section mb="-3">
               <Approver.Subheader icon={<SentIcon variant="small" />}>
-                {t({ id: 'approver.outcomes.title1', message: 'You’ll send' })}
+                {t`You’ll send`}
               </Approver.Subheader>
               <BitcoinOutcome amount={principalSpend} />
             </Approver.Section>
 
             <Approver.Section>
-              <Approver.Subheader>
-                {t({ id: 'approver.outcomes.title2', message: 'To address' })}
-              </Approver.Subheader>
+              <Approver.Subheader>{t`To address`}</Approver.Subheader>
               <OutcomeAddressesCard addresses={recipients.map(r => r.address)} />
             </Approver.Section>
           </Approver.Overview>
@@ -287,14 +271,8 @@ function BasePsbtSigner({
             </Approver.Section>
           )}
           <Approver.Advanced
-            titleClosed={t({
-              id: 'approver.advanced.show',
-              message: 'Show advanced options',
-            })}
-            titleOpened={t({
-              id: 'approver.advanced.hide',
-              message: 'Hide advanced options',
-            })}
+            titleClosed={t`Show advanced options`}
+            titleOpened={t`Hide advanced options`}
           >
             <Approver.Section>
               <InputsAndOutputsCard
@@ -306,9 +284,7 @@ function BasePsbtSigner({
         </Approver.Container>
         <Approver.Footer>
           <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Text variant="label02">
-              {t({ id: 'approver.total_spend', message: 'Total spend' })}
-            </Text>
+            <Text variant="label02">{t`Total spend`}</Text>
             <Text variant="label02">{formatCurrency(totalSpendQuote)}</Text>
           </Box>
           <Approver.Actions>

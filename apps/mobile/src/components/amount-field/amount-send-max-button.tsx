@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Pressable, Text } from '@leather.io/ui/native';
 
@@ -10,10 +10,7 @@ export function AmountSendMaxButton({ onPress }: AmountSendMaxButtonProps) {
   return (
     <Pressable hitSlop={16} onPress={onPress}>
       <Text variant="label02" textTransform="uppercase">
-        {t({
-          id: 'send_form.max_label',
-          message: 'Max',
-        })}
+        {t`Max`}
       </Text>
     </Pressable>
   );

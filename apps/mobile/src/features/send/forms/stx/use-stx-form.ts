@@ -14,7 +14,7 @@ import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings.read';
 import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Money } from '@leather.io/models';
 
@@ -71,10 +71,7 @@ export function useStxForm({ account, availableBalance, nonce }: UseStxFormProps
       )
       .catch(() =>
         displayToast({
-          title: t({
-            id: 'send-form.unexpected-error',
-            message: 'Transaction failed due to an unexpected error',
-          }),
+          title: t`Transaction failed due to an unexpected error`,
           type: 'error',
         })
       );

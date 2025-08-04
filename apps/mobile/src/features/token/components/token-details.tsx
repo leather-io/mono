@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { FungibleCryptoAsset, Money } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
@@ -72,7 +72,7 @@ export function TokenDetails({
 
       {accountDetails}
 
-      <TokenDetailsCard title={t({ id: 'token.activity.header_title', message: 'Activity' })} />
+      <TokenDetailsCard title={t`Activity`} />
     </TokenDetailsWrapper>
   );
 }

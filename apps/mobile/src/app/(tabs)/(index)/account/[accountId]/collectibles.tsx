@@ -3,7 +3,7 @@ import { Collectibles } from '@/features/collectibles';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
 import { deserializeAccountId } from '@/store/accounts/accounts';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLocalSearchParams } from 'expo-router';
 
 import { configureAccountParamsSchema } from './index';
@@ -14,10 +14,7 @@ export default function CollectiblesScreen() {
   const { fingerprint, accountIndex } = deserializeAccountId(accountId);
   const collectibles = useAccountCollectibles(fingerprint, accountIndex);
 
-  const pageTitle = t({
-    id: 'account.collectibles.header_title',
-    message: 'Collectibles',
-  });
+  const pageTitle = t`Collectibles`;
   return (
     <Screen>
       <Screen.Header />

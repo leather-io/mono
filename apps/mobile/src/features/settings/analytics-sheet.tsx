@@ -5,7 +5,7 @@ import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { LEATHER_GUIDES_MOBILE_ANALYTICS } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { SheetRef } from '@leather.io/ui/native';
 
@@ -25,10 +25,7 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
       settings.analyticsPreference === 'consent-given' ? 'rejects-tracking' : 'consent-given'
     );
     displayToast({
-      title: t({
-        id: 'analytics.toast_title',
-        message: 'Analytics updated',
-      }),
+      title: t`Analytics updated`,
       type: 'success',
     });
   }
@@ -36,22 +33,13 @@ export function AnalyticsSheet({ sheetRef }: AnalyticsSheetProps) {
   return (
     <SettingsSheetLayout
       sheetRef={sheetRef}
-      title={t({
-        id: 'analytics.header_title',
-        message: 'Analytics',
-      })}
+      title={t`Analytics`}
       onPressSupport={() => openURL(LEATHER_GUIDES_MOBILE_ANALYTICS)}
     >
       <SettingsList>
         <SettingsListItem
-          title={t({
-            id: 'analytics.cell_title',
-            message: 'Allow collection of data',
-          })}
-          caption={t({
-            id: 'analytics.cell_caption',
-            message: 'Share anonymous usage details',
-          })}
+          title={t`Allow collection of data`}
+          caption={t`Share anonymous usage details`}
           type="switch"
           onSwitchValueChange={() => onUpdateAnalytics()}
           switchValue={settings.analyticsPreference === 'consent-given'}

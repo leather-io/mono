@@ -1,5 +1,5 @@
 import { Balance } from '@/components/balance/balance';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Money } from '@leather.io/models';
 import { Box, ItemLayout, Text } from '@leather.io/ui/native';
@@ -31,10 +31,7 @@ export function LockedBalanceCard({
           titleLeft={
             <Box alignItems="flex-start">
               <Text variant="label03" mb="5" textAlign="left">
-                {t({
-                  id: 'earn.total_locked',
-                  message: 'Total locked',
-                })}
+                {t`Total locked`}
               </Text>
             </Box>
           }

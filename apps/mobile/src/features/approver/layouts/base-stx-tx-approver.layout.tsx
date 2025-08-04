@@ -19,7 +19,7 @@ import {
 } from '@/features/approver/utils';
 import { Account } from '@/store/accounts/accounts';
 import { makeAccountIdentifer } from '@/store/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
@@ -83,12 +83,7 @@ export function BaseStxTxApproverLayout({
   return (
     <Approver requester={origin}>
       <Approver.Container>
-        <Approver.Header
-          title={t({
-            id: 'approver.signTransaction.title',
-            message: 'Sign Transaction',
-          })}
-        />
+        <Approver.Header title={t`Sign Transaction`} />
         <Approver.Section>
           <ApproverAccountCard
             accounts={accounts.filter(
@@ -102,7 +97,7 @@ export function BaseStxTxApproverLayout({
           <Approver.Overview>
             <Approver.Section mb="-3">
               <Approver.Subheader icon={<SentIcon variant="small" />}>
-                {t({ id: 'approver.outcomes.title1', message: 'You’ll send' })}
+                {t`You’ll send`}
               </Approver.Subheader>
 
               <StacksOutcome
@@ -111,9 +106,7 @@ export function BaseStxTxApproverLayout({
             </Approver.Section>
 
             <Approver.Section>
-              <Approver.Subheader>
-                {t({ id: 'approver.outcomes.title2', message: 'To address' })}
-              </Approver.Subheader>
+              <Approver.Subheader>{t`To address`}</Approver.Subheader>
 
               <OutcomeAddressesCard addresses={[getTxRecipient(tx.payload)]} />
             </Approver.Section>
@@ -128,14 +121,8 @@ export function BaseStxTxApproverLayout({
           />
         )}
         <Approver.Advanced
-          titleClosed={t({
-            id: 'approver.advanced.show',
-            message: 'Show advanced options',
-          })}
-          titleOpened={t({
-            id: 'approver.advanced.hide',
-            message: 'Hide advanced options',
-          })}
+          titleClosed={t`Show advanced options`}
+          titleOpened={t`Hide advanced options`}
         >
           {isContractCall(tx.payload) && <ContractCallArgsSection txHex={txHex} />}
           {isContractDeploy(tx.payload) && <ContractDeployCodeSection txHex={txHex} />}
@@ -147,24 +134,8 @@ export function BaseStxTxApproverLayout({
       </Approver.Container>
       <Approver.Footer>
         <Approver.Actions>
-          <Button
-            buttonState="outline"
-            title={t({
-              id: 'approver.button.deny',
-              message: 'Deny',
-            })}
-            flex={1}
-            onPress={onCloseApprover}
-          />
-          <Button
-            buttonState="default"
-            title={t({
-              id: 'approver.button.approve',
-              message: 'Approve',
-            })}
-            flex={1}
-            onPress={onApprove}
-          />
+          <Button buttonState="outline" title={t`Deny`} flex={1} onPress={onCloseApprover} />
+          <Button buttonState="default" title={t`Approve`} flex={1} onPress={onApprove} />
         </Approver.Actions>
       </Approver.Footer>
     </Approver>

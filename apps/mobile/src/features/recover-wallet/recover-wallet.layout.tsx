@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Screen } from '@/components/screen/screen';
 import { RecoverWalletSheet } from '@/features/wallet-manager/recover-wallet/recover-wallet-sheet';
 import { TestId } from '@/shared/test-id';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import {
   Accordion,
@@ -37,25 +37,15 @@ export function RecoverWalletLayout({
     <Screen>
       <Screen.Header />
       <Screen.ScrollView>
-        <Screen.Title>
-          {t({ id: 'recover_wallet.title', message: 'Enter your Secret Key' })}
-        </Screen.Title>
+        <Screen.Title>{t`Enter your Secret Key`}</Screen.Title>
         <Box px="5">
           <Box gap="3">
-            <Text variant="label01">
-              {t({
-                id: 'recover_wallet.subtitle',
-                message: 'Paste or type Secret Key to add wallet',
-              })}
-            </Text>
+            <Text variant="label01">{t`Paste or type Secret Key to add wallet`}</Text>
           </Box>
           {children}
 
           <Accordion
-            label={t({
-              id: 'recover_wallet.accordion_label',
-              message: 'Advanced options',
-            })}
+            label={t`Advanced options`}
             content={
               <Box mx="-5">
                 <Cell.Root
@@ -75,22 +65,9 @@ export function RecoverWalletLayout({
                     </Box>
                   </Cell.Icon>
                   <Cell.Content>
+                    <Cell.Label variant="primary">{t`BIP39 passphrase`}</Cell.Label>
                     <Cell.Label variant="primary">
-                      {t({
-                        id: 'recover_wallet.passphrase_label',
-                        message: 'BIP39 passphrase',
-                      })}
-                    </Cell.Label>
-                    <Cell.Label variant="primary">
-                      {passphrase
-                        ? t({
-                            id: 'recover_wallet.passphrase_enabled',
-                            message: 'Enabled',
-                          })
-                        : t({
-                            id: 'recover_wallet.passphrase_disabled',
-                            message: 'Disabled',
-                          })}
+                      {passphrase ? t`Enabled` : t`Disabled`}
                     </Cell.Label>
                   </Cell.Content>
                   <Cell.Aside>
@@ -107,10 +84,7 @@ export function RecoverWalletLayout({
           onPress={onSubmit}
           disabled={isButtonDisabled}
           buttonState={isButtonDisabled ? 'disabled' : 'default'}
-          title={t({
-            id: 'recover_wallet.button',
-            message: 'Continue',
-          })}
+          title={t`Continue`}
           testID={TestId.restoreWalletContinue}
         />
       </Screen.Footer>

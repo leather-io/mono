@@ -2,7 +2,7 @@ import { RefObject, useState } from 'react';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Button, SheetRef, UIBottomSheetTextInput } from '@leather.io/ui/native';
 
@@ -15,13 +15,7 @@ export function MemoSheet({ sheetRef, memo: _memo, onChangeMemo }: MemoSheetProp
   const [memo, setMemo] = useState(_memo);
 
   return (
-    <SheetLayout
-      sheetRef={sheetRef}
-      title={t({
-        id: 'approver.add_memo.header_title',
-        message: 'Add memo',
-      })}
-    >
+    <SheetLayout sheetRef={sheetRef} title={t`Add memo`}>
       <TextInput
         autoCapitalize="none"
         autoComplete="off"
@@ -29,10 +23,7 @@ export function MemoSheet({ sheetRef, memo: _memo, onChangeMemo }: MemoSheetProp
         autoFocus
         inputState="focused"
         onChangeText={setMemo}
-        placeholder={t({
-          id: 'approver.add_memo.input_placeholder',
-          message: 'Memo',
-        })}
+        placeholder={t`Memo`}
         TextInputComponent={UIBottomSheetTextInput}
         value={memo}
       />
@@ -43,10 +34,7 @@ export function MemoSheet({ sheetRef, memo: _memo, onChangeMemo }: MemoSheetProp
           sheetRef.current?.close();
           onChangeMemo(memo);
         }}
-        title={t({
-          id: 'approver.add_memo.confirm_button',
-          message: 'Confirm',
-        })}
+        title={t`Confirm`}
       />
     </SheetLayout>
   );

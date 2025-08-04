@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { TestId } from '@/shared/test-id';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { router } from 'expo-router';
 
 import {
@@ -21,12 +21,7 @@ export function AccountSelectorHeader({ sheetRef }: AccountSelectorHeaderProps) 
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="5">
       <Box alignItems="center" justifyContent="center" left={0} position="absolute" right={0}>
-        <Text variant="heading05">
-          {t({
-            id: 'account_selector.header_title',
-            message: 'All accounts',
-          })}
-        </Text>
+        <Text variant="heading05">{t`All accounts`}</Text>
       </Box>
       <Box alignItems="flex-end" flexGrow={1} justifyContent="center" zIndex="20">
         <Pressable

@@ -1,5 +1,5 @@
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { PsbtInput, PsbtOutput } from '@leather.io/bitcoin';
 import { Box, Text } from '@leather.io/ui/native';
@@ -30,19 +30,9 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
 
   return (
     <Box gap="5">
-      <Text variant="label02">
-        {t({
-          id: 'approver.inputs-outputs.title',
-          message: 'Inputs and outputs',
-        })}
-      </Text>
+      <Text variant="label02">{t`Inputs and outputs`}</Text>
       <Box gap="1">
-        <Text variant="label02">
-          {t({
-            id: 'approver.inputs-outputs.input.title',
-            message: 'Input',
-          })}
-        </Text>
+        <Text variant="label02">{t`Input`}</Text>
         <Box mx="-5">
           {inputsWithMoney.map(annotateWithMoney).map(input => (
             <UtxoRow
@@ -57,12 +47,7 @@ export function InputsAndOutputsCard({ inputs, outputs }: InputsAndOutputsCardPr
         </Box>
       </Box>
       <Box gap="1">
-        <Text variant="label02">
-          {t({
-            id: 'approver.inputs-outputs.output.title',
-            message: 'Output',
-          })}
-        </Text>
+        <Text variant="label02">{t`Output`}</Text>
         <Box mx="-5">
           {outputsWithMoney.map(output => (
             <UtxoRow

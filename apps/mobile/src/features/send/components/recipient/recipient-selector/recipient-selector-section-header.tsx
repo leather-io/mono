@@ -1,5 +1,5 @@
 import { RecipientSectionId } from '@/features/send/components/recipient/recipient.types';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
 
@@ -19,17 +19,8 @@ export function RecipientSelectorSectionHeader({ id }: RecipientSectionHeaderPro
 
 function getSectionTitle(id: RecipientSectionId) {
   return {
-    recents: t({
-      id: 'send-form.recipient.recents',
-      message: 'Recents',
-    }),
-    accounts: t({
-      id: 'send-form.recipient.accounts',
-      message: 'Your accounts',
-    }),
-    matching: t({
-      id: 'send-form.recipient.matching',
-      message: 'Matching',
-    }),
+    recents: t`Recents`,
+    accounts: t`Your accounts`,
+    matching: t`Matching`,
   }[id];
 }

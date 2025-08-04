@@ -9,7 +9,7 @@ import { useAccountByIndex } from '@/store/accounts/accounts.read';
 import { userUpdatesAccountIcon } from '@/store/accounts/accounts.write';
 import { AccountIcon } from '@/store/accounts/utils';
 import { useAppDispatch } from '@/store/utils';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 
 import { AccountId } from '@leather.io/models';
@@ -64,12 +64,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
           </SquircleBox>
 
           <Box px="5">
-            <Text variant="label01">
-              {t({
-                id: 'choose_avatar.images.subtitle',
-                message: 'Icons',
-              })}
-            </Text>
+            <Text variant="label01">{t`Icons`}</Text>
           </Box>
           <Avatars currentIcon={newIcon ?? account.icon} setNewIcon={setNewIcon} />
         </Box>
@@ -79,10 +74,7 @@ function ChooseAvatar({ fingerprint, accountIndex, account }: ChooseAvatarProps)
           disabled={isSubmitDisabled}
           onPress={onSubmit}
           buttonState={isSubmitDisabled ? 'disabled' : 'default'}
-          title={t({
-            id: 'choose_avatar.button',
-            message: 'Save',
-          })}
+          title={t`Save`}
         />
       </Screen.Footer>
     </>

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { t } from '@lingui/macro';
+import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 
 export function useCopyAddress() {
@@ -11,10 +11,7 @@ export function useCopyAddress() {
       await Clipboard.setStringAsync(address);
       return displayToast({
         type: 'success',
-        title: t({
-          id: 'receive.select_asset.toast_title',
-          message: 'Address copied',
-        }),
+        title: t`Address copied`,
       });
     },
     [displayToast]
