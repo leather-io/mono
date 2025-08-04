@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2025-07-22 15:18+0400\n"
+"POT-Creation-Date: 2025-08-05 11:57+0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,11 +14,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: src/components/app-update-required/update-button.tsx:27
-msgid "version_guard.store_error_message"
-msgstr "version_guard.store_error_message"
-
-#. js-lingui-explicit-id
 #: src/app/(tabs)/(index)/account/[accountId]/activity.tsx:26
 msgid "activity.account.header_title"
 msgstr "{accountName}"
@@ -29,28 +24,17 @@ msgid "activity.account.header_content_title"
 msgstr "{accountName} Activity"
 
 #. js-lingui-explicit-id
-#: src/features/token/components/token-price-change.tsx:42
-msgid "token.details.price_change_percentage"
-msgstr "{changePercent}%"
-
-#. js-lingui-explicit-id
 #: src/app/settings/display/index.tsx:80
 msgid "display.conversion_unit.cell_caption"
 msgstr "{currency}"
 
-#. js-lingui-explicit-id
 #: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
-msgid "fees-sheet.fee-rate-caption"
-msgstr "{feeRate} sats/vB · {quoteFee}"
+msgid "{feeRate} sats/vB · {formattedQuoteFee}"
+msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 
 #: src/app/settings/wallet/index.tsx:33
 msgid "{hiddenAccountsLength} hidden accounts"
 msgstr "{hiddenAccountsLength} hidden accounts"
-
-#. js-lingui-explicit-id
-#: src/features/settings/bitcoin-unit-sheet.tsx:50
-msgid "bitcoin_unit.cell_caption"
-msgstr "{name}"
 
 #. js-lingui-explicit-id
 #: src/features/settings/conversion-unit-sheet.tsx:38
@@ -58,13 +42,8 @@ msgid "conversion_unit.cell_title"
 msgstr "{name}"
 
 #. js-lingui-explicit-id
-#: src/features/account/accounts-widget.tsx:102
-msgid "accounts.account.cell_caption"
-msgstr "{name}"
-
-#. js-lingui-explicit-id
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:97
-msgid "configure_account.name.cell_caption"
+#: src/features/settings/bitcoin-unit-sheet.tsx:50
+msgid "bitcoin_unit.cell_caption"
 msgstr "{name}"
 
 #. js-lingui-explicit-id
@@ -83,20 +62,19 @@ msgid "networks.cell_title"
 msgstr "{network}"
 
 #. js-lingui-explicit-id
-#: src/features/receive/screens/asset-details.tsx:51
 #: src/features/send/screens/form.tsx:56
 #: src/features/token/token-receive-sheet.tsx:75
 msgid "select_asset.header_subtitle"
 msgstr "{subtitle}"
 
 #. js-lingui-explicit-id
-#: src/features/settings/bitcoin-unit-sheet.tsx:45
-msgid "bitcoin_unit.cell_title"
+#: src/features/settings/conversion-unit-sheet.tsx:43
+msgid "conversion_unit.cell_caption"
 msgstr "{symbol}"
 
 #. js-lingui-explicit-id
-#: src/features/settings/conversion-unit-sheet.tsx:43
-msgid "conversion_unit.cell_caption"
+#: src/features/settings/bitcoin-unit-sheet.tsx:45
+msgid "bitcoin_unit.cell_title"
 msgstr "{symbol}"
 
 #. js-lingui-explicit-id
@@ -113,16 +91,6 @@ msgstr "{theme}"
 #: src/app/settings/display/index.tsx:50
 msgid "display.theme.cell_caption"
 msgstr "{theme}"
-
-#. js-lingui-explicit-id
-#: src/components/sheets/notify-user-sheet.layout.tsx:48
-msgid "notify_user.title"
-msgstr "{title}"
-
-#. js-lingui-explicit-id
-#: src/components/address-type-badge.tsx:20
-msgid "address_type_badge.label"
-msgstr "{type}"
 
 #: src/features/approver/utils.tsx:53
 msgid "~1 hour+"
@@ -191,7 +159,7 @@ msgstr "Account identifier updated"
 msgid "Account label"
 msgstr "Account label"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:46
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:44
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
@@ -268,14 +236,12 @@ msgstr "Address copied"
 msgid "Address from another network"
 msgstr "Address from another network"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:34
-msgid "send.validation.invalid_network"
+#: src/features/send/error-messages.ts:16
+msgid "Address is for incorrect network"
 msgstr "Address is for incorrect network"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:30
-msgid "send.validation.invalid_address"
+#: src/features/send/error-messages.ts:15
+msgid "Address is not valid"
 msgstr "Address is not valid"
 
 #: src/app/settings/wallet/configure/[wallet]/index.tsx:47
@@ -300,7 +266,7 @@ msgid "Alex"
 msgstr "Alex"
 
 #: src/features/account/account-selector/account-selector-sheet-header.tsx:24
-#: src/features/account/accounts-widget.tsx:48
+#: src/features/account/accounts-widget.tsx:46
 msgid "All accounts"
 msgstr "All accounts"
 
@@ -333,9 +299,8 @@ msgstr "Allow Camera Access"
 msgid "Allow collection of data"
 msgstr "Allow collection of data"
 
-#. js-lingui-explicit-id
 #: src/features/send/error-messages.ts:11
-msgid "send.validation.greater_than_zero"
+msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
 
 #: src/components/text-input.tsx:66
@@ -398,7 +363,7 @@ msgstr "Arkadiko"
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:109
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:103
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -454,9 +419,8 @@ msgstr "Can’t send to the same address"
 msgid "Cancel"
 msgstr "Cancel"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:42
-msgid "send.validation.cannot_send_to_yourself"
+#: src/features/send/error-messages.ts:18
+msgid "Cannot send to yourself"
 msgstr "Cannot send to yourself"
 
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:19
@@ -502,12 +466,11 @@ msgstr "Code"
 msgid "Collectibles"
 msgstr "Collectibles"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:38
-msgid "send.validation.non_compliant_address"
+#: src/features/send/error-messages.ts:17
+msgid "Compliance check failed"
 msgstr "Compliance check failed"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:66
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:64
 msgid "Configure account"
 msgstr "Configure account"
 
@@ -588,24 +551,20 @@ msgstr "Creation date"
 msgid "Current app version format is invalid"
 msgstr "Current app version format is invalid"
 
-#. js-lingui-explicit-id
-#: src/features/send/components/fee-badge.tsx:36
-msgid "approval-ux.fees.extremely-high"
+#: src/features/send/components/fee-badge.tsx:26
+msgid "Currently extremely high"
 msgstr "Currently extremely high"
 
-#. js-lingui-explicit-id
-#: src/features/send/components/fee-badge.tsx:32
-msgid "approval-ux.fees.high"
+#: src/features/send/components/fee-badge.tsx:25
+msgid "Currently high"
 msgstr "Currently high"
 
-#. js-lingui-explicit-id
-#: src/features/send/components/fee-badge.tsx:24
-msgid "approval-ux.fees.low"
+#: src/features/send/components/fee-badge.tsx:23
+msgid "Currently low"
 msgstr "Currently low"
 
-#. js-lingui-explicit-id
-#: src/features/send/components/fee-badge.tsx:28
-msgid "approval-ux.fees.normal"
+#: src/features/send/components/fee-badge.tsx:24
+msgid "Currently normal"
 msgstr "Currently normal"
 
 #: src/features/approver/utils.tsx:44
@@ -861,7 +820,7 @@ msgstr "Hermetica"
 msgid "Hidden accounts"
 msgstr "Hidden accounts"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:120
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:114
 msgid "Hide account"
 msgstr "Hide account"
 
@@ -882,7 +841,7 @@ msgstr "Historical yield"
 msgid "Home"
 msgstr "Home"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:58
+#: src/components/sheets/notify-user-sheet.layout.tsx:50
 msgid "I'm interested"
 msgstr "I'm interested"
 
@@ -910,9 +869,8 @@ msgstr "Input"
 msgid "Inputs and outputs"
 msgstr "Inputs and outputs"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:26
-msgid "send.validation.insufficient_funds"
+#: src/features/send/error-messages.ts:14
+msgid "Insufficient funds"
 msgstr "Insufficient funds"
 
 #: src/features/settings/email-address-sheet.tsx:27
@@ -1010,9 +968,8 @@ msgstr "Maybe later"
 msgid "Memo"
 msgstr "Memo"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:46
-msgid "send.validation.memo_exceeds_limit"
+#: src/features/send/error-messages.ts:19
+msgid "Memo must be less than 34-bytes"
 msgstr "Memo must be less than 34-bytes"
 
 #: src/features/approver/stx/hooks.ts:11
@@ -1025,10 +982,9 @@ msgstr "Memo updated"
 msgid "Message"
 msgstr "Message"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:21
-msgid "send.validation.minimum_amount"
-msgstr "Minimum is {minSpendAmountInSats}"
+#: src/features/send/error-messages.ts:13
+msgid "Minimum is {minimumBtcSpendAmount}"
+msgstr "Minimum is {minimumBtcSpendAmount}"
 
 #: src/hooks/use-version-check.ts:68
 msgid "Minimum version format is invalid"
@@ -1043,7 +999,7 @@ msgstr "minutes ago"
 msgid "More options"
 msgstr "More options"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:96
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:94
 #: src/features/settings/wallet-and-accounts/account-name-sheet.tsx:20
 #: src/features/settings/wallet-and-accounts/wallet-name-sheet.tsx:20
 #: src/features/token/components/token-details-table.tsx:19
@@ -1078,9 +1034,8 @@ msgstr "Nonce"
 msgid "Nonce updated"
 msgstr "Nonce updated"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:7
-msgid "send.validation.not_a_number"
+#: src/features/send/error-messages.ts:10
+msgid "Not a number"
 msgstr "Not a number"
 
 #: src/app/settings/index.tsx:91
@@ -1092,7 +1047,7 @@ msgstr "Notifications"
 msgid "Notify me"
 msgstr "Notify me"
 
-#: src/components/app-update-required/update-button.tsx:28
+#: src/components/app-update-required/update-button.tsx:26
 msgid "OK"
 msgstr "OK"
 
@@ -1151,8 +1106,8 @@ msgid "Push and email notifications"
 msgstr "Push and email notifications"
 
 #: src/features/account/account.tsx:110
-#: src/features/account/accounts-widget.tsx:77
-#: src/features/receive/screens/asset-details.tsx:50
+#: src/features/account/accounts-widget.tsx:75
+#: src/features/receive/screens/asset-details.tsx:48
 #: src/features/receive/screens/select-account.tsx:24
 #: src/features/receive/screens/select-asset.tsx:69
 #: src/features/token/token-receive-sheet.tsx:74
@@ -1211,7 +1166,7 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:126
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:120
 msgid "Reveal account"
 msgstr "Reveal account"
 
@@ -1273,7 +1228,7 @@ msgid "Select asset"
 msgstr "Select asset"
 
 #: src/features/account/account.tsx:101
-#: src/features/account/accounts-widget.tsx:68
+#: src/features/account/accounts-widget.tsx:66
 #: src/features/send/screens/form.tsx:55
 #: src/features/send/screens/select-account.tsx:46
 #: src/features/send/screens/select-asset.tsx:39
@@ -1314,7 +1269,7 @@ msgstr "Sent"
 msgid "Settings"
 msgstr "Settings"
 
-#: src/features/receive/screens/asset-details.tsx:96
+#: src/features/receive/screens/asset-details.tsx:90
 #: src/features/token/token-receive-sheet.tsx:119
 msgid "Share"
 msgstr "Share"
@@ -1453,7 +1408,7 @@ msgstr "This address is linked to activity that violates compliance policies. Yo
 msgid "This app would like to"
 msgstr "This app would like to"
 
-#: src/components/sheets/notify-user-sheet.layout.tsx:55
+#: src/components/sheets/notify-user-sheet.layout.tsx:47
 msgid "This feature is not available yet, but we can notify you when ready."
 msgstr "This feature is not available yet, but we can notify you when ready."
 
@@ -1462,8 +1417,8 @@ msgid "This is your address for receiving tokens on the Stacks network."
 msgstr "This is your address for receiving tokens on the Stacks network."
 
 #: src/features/receive/get-assets.ts:25
-msgid "This is your Native Segwit address for receiving tokens  on the Bitcoin network."
-msgstr "This is your Native Segwit address for receiving tokens  on the Bitcoin network."
+msgid "This is your Native Segwit address for receiving tokens on the Bitcoin network."
+msgstr "This is your Native Segwit address for receiving tokens on the Bitcoin network."
 
 #: src/features/receive/get-assets.ts:33
 msgid "This is your Taproot address for receiving tokens on the Bitcoin network."
@@ -1487,10 +1442,9 @@ msgstr "To address"
 msgid "Toggle tactile feedback for interactions"
 msgstr "Toggle tactile feedback for interactions"
 
-#. js-lingui-explicit-id
-#: src/features/send/error-messages.ts:16
-msgid "send.validation.invalid_precision"
-msgstr "Token can only have {precision} decimals"
+#: src/features/send/error-messages.ts:12
+msgid "Token can only have {decimals} decimals"
+msgstr "Token can only have {decimals} decimals"
 
 #: src/features/token/components/token-details-table.tsx:17
 msgid "Token Details"
@@ -1542,7 +1496,7 @@ msgstr "Unable to determine current app version"
 msgid "Unable to open app store. Please update the app manually from your device's app store."
 msgstr "Unable to open app store. Please update the app manually from your device's app store."
 
-#: src/components/app-update-required/update-button.tsx:26
+#: src/components/app-update-required/update-button.tsx:25
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 

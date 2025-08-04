@@ -1,13 +1,9 @@
-import { useLingui } from '@lingui/react';
-
 import { Box, Text } from '@leather.io/ui/native';
 
 interface AddressTypeBadgeProps {
   type: string;
 }
 export function AddressTypeBadge({ type }: AddressTypeBadgeProps) {
-  const { i18n } = useLingui();
-
   return (
     <Box
       bg="ink.background-secondary"
@@ -17,11 +13,7 @@ export function AddressTypeBadge({ type }: AddressTypeBadgeProps) {
       px="1"
     >
       <Text color="ink.text-subdued" fontSize={11} fontWeight={600} lineHeight={14}>
-        {i18n._({
-          id: 'address_type_badge.label',
-          message: '{type}',
-          values: { type },
-        })}
+        {type}
       </Text>
     </Box>
   );

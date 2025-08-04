@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { errorMessages } from '@/features/send/error-messages';
+import { getErrorMessages } from '@/features/send/error-messages';
 import { CalculateStxMaxSpend } from '@/features/send/hooks/use-calculate-stx-max-spend';
 import { addressComplianceValidator } from '@/features/send/utils';
 import { ChainId } from '@stacks/network';
@@ -37,6 +37,8 @@ function createStxSendFormSchema({
   payerAddress,
   chainId,
 }: SchemaCreationParams) {
+  const errorMessages = getErrorMessages();
+
   return z.object({
     amount: z
       .string()
@@ -79,6 +81,7 @@ function stxAmountValidator(
 ) {
   const numericAmount = parseFloat(amount);
   const maxSpend = calculateStxMaxSpend();
+  const errorMessages = getErrorMessages();
 
   if (isNaN(numericAmount)) {
     context.addIssue({

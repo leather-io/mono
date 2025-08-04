@@ -3,7 +3,6 @@ import { RefObject } from 'react';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
 import { Image } from 'expo-image';
 
 import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
@@ -24,7 +23,6 @@ export function NotifyUserSheetLayout({
   sheetRef,
 }: NotifyUserSheetLayoutProps) {
   const { themeDerivedFromThemePreference } = useSettings();
-  const { i18n } = useLingui();
 
   function onNotify() {
     if (sheetData) {
@@ -44,13 +42,7 @@ export function NotifyUserSheetLayout({
       />
       <Box p="5" justifyContent="space-between" gap="5">
         <Box gap="4">
-          <Text variant="heading05">
-            {i18n._({
-              id: 'notify_user.title',
-              message: '{title}',
-              values: { title: sheetData?.title },
-            })}
-          </Text>
+          <Text variant="heading05">{sheetData?.title}</Text>
           <Text variant="body01">
             {t`This feature is not available yet, but we can notify you when ready.`}
           </Text>

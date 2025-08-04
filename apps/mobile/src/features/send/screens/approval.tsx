@@ -27,7 +27,7 @@ export function Approval() {
       <ScrollBuffer />
       {selectedAsset === 'btc' && (
         <PsbtSigner
-          feeEditorEnabled={false}
+          feeEditorEnabled
           accountIndex={selectedAccount.accountIndex}
           fingerprint={selectedAccount.fingerprint}
           broadcast

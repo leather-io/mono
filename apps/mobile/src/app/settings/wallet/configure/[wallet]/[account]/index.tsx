@@ -15,7 +15,6 @@ import { makeAccountIdentifer, useAppDispatch } from '@/store/utils';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 import { t } from '@lingui/core/macro';
-import { useLingui } from '@lingui/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { z } from 'zod';
 
@@ -36,7 +35,6 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
   const accountNameSheetRef = useRef<SheetRef>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { i18n } = useLingui();
 
   const { displayToast } = useToastContext();
 
@@ -94,11 +92,7 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
           <SettingsList gap="1">
             <SettingsListItem
               title={t`Name`}
-              caption={i18n._({
-                id: 'configure_account.name.cell_caption',
-                message: '{name}',
-                values: { name: account.name },
-              })}
+              caption={account.name}
               icon={<PassportIcon />}
               onPress={() => {
                 accountNameSheetRef.current?.present();
