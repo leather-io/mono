@@ -54,12 +54,12 @@ export function useLeatherConnect() {
   const stacksAccount = useStacksAccount();
 
   const btcAddressP2tr = useMemo(
-    () => addresses.find(address => address.type === 'p2tr'),
+    () => addresses.find(address => 'type' in address && address.type === 'p2tr'),
     [addresses]
   );
 
   const btcAddressP2wpkh = useMemo(
-    () => addresses.find(address => address.type === 'p2wpkh'),
+    () => addresses.find(address => 'type' in address && address.type === 'p2wpkh'),
     [addresses]
   );
 

@@ -10,7 +10,7 @@ export type PaymentTypes = BitcoinPaymentTypes;
 
 //
 // Bitcoin
-export const btcAddressBaseSchema = z.object({
+export const btcAddressBaseSchema = z.looseObject({
   symbol: z.literal('BTC'),
   type: bitcoinPaymentTypesSchema,
   address: z.string(),
@@ -20,20 +20,16 @@ export const btcAddressBaseSchema = z.object({
 
 export type BtcAddressBase = z.infer<typeof btcAddressBaseSchema>;
 
-const nativeSegwitAddressSchema = btcAddressBaseSchema
-  .extend({
-    type: z.literal('p2wpkh'),
-  })
-  .passthrough();
+const nativeSegwitAddressSchema = btcAddressBaseSchema.extend({
+  type: z.literal('p2wpkh'),
+});
 
 export type NativeSegwitAddress = z.infer<typeof nativeSegwitAddressSchema>;
 
-const taprootAddressSchema = btcAddressBaseSchema
-  .extend({
-    type: z.literal('p2tr'),
-    tweakedPublicKey: z.string(),
-  })
-  .passthrough();
+const taprootAddressSchema = btcAddressBaseSchema.extend({
+  type: z.literal('p2tr'),
+  tweakedPublicKey: z.string(),
+});
 
 export type TaprootAddress = z.infer<typeof taprootAddressSchema>;
 
@@ -46,13 +42,11 @@ export type BtcAddress = z.infer<typeof btcAddressSchema>;
 
 //
 // Stacks
-export const stxAddressSchema = z
-  .object({
-    symbol: z.literal('STX'),
-    address: z.string(),
-    publicKey: z.string(),
-  })
-  .passthrough();
+export const stxAddressSchema = z.looseObject({
+  symbol: z.literal('STX'),
+  address: z.string(),
+  publicKey: z.string(),
+});
 
 export type StxAddress = z.infer<typeof stxAddressSchema>;
 
@@ -62,9 +56,7 @@ export type Address = z.infer<typeof addressSchema>;
 
 //
 // Combined addresses response
-export const addressResponseBodySchema = z
-  .object({ addresses: z.array(addressSchema) })
-  .passthrough();
+export const addressResponseBodySchema = z.looseObject({ addresses: z.array(addressSchema) });
 
 export const getAddresses = defineRpcEndpoint({
   method: 'getAddresses',

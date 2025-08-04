@@ -1,6 +1,6 @@
 # Screen
 
-`Screen` defines the top-level layout for every screen in the app. 
+`Screen` defines the top-level layout for every screen in the app.
 It handles safe area insets, Action Bar offsetting, scroll behavior, and optional animated headers.
 
 ### Basic non-scrolling example
@@ -8,9 +8,7 @@ It handles safe area insets, Action Bar offsetting, scroll behavior, and optiona
 ```tsx
 <Screen>
   <Screen.Header />
-  <Screen.Body>
-    ...content
-  </Screen.Body>
+  <Screen.Body>...content</Screen.Body>
 </Screen>
 ```
 
@@ -19,9 +17,7 @@ It handles safe area insets, Action Bar offsetting, scroll behavior, and optiona
 ```tsx
 <Screen>
   <Screen.Header />
-  <Screen.ScrollView>
-    ...content
-  </Screen.ScrollView>
+  <Screen.ScrollView>...content</Screen.ScrollView>
 </Screen>
 ```
 
@@ -30,10 +26,7 @@ It handles safe area insets, Action Bar offsetting, scroll behavior, and optiona
 ```tsx
 <Screen>
   <Screen.Header />
-  <Screen.List     
-    data={data}
-    renderItem={renderItem}
-  >
+  <Screen.List data={data} renderItem={renderItem}>
     ...content
   </Screen.List>
 </Screen>
@@ -45,7 +38,6 @@ Screen.List is a thin wrapper around [FlatList](https://reactnative.dev/docs/fla
 
 The following combination is set to automatically fade in `centerElement` when `Screen.
 Title` leaves the viewport:
-
 
 ```tsx
 <Screen>
@@ -73,7 +65,7 @@ Use `Screen.HeaderAnimationTarget` to trigger header animations from any element
 
 ### Scroll tracking
 
-`Screen` has built-in scroll tracking that can be used for implementing scroll-aware 
+`Screen` has built-in scroll tracking that can be used for implementing scroll-aware
 animations/behavior in nested components
 
 ```tsx
@@ -85,15 +77,14 @@ animations/behavior in nested components
 </Screen>
 ```
 
-
 ```tsx
 // custom-component.tsx
 function CustomComponent() {
-  const { scrollY } = useScreenScrollContext()
+  const { scrollY } = useScreenScrollContext();
   const fadeInThreshold = 24;
-  
+
   const animatedStyle = useAnimatedStyle(() => {
-    opacity: withSpring(scrollY.value > fadeInThreshold ? 1 : 0)
-  }) 
+    opacity: withSpring(scrollY.value > fadeInThreshold ? 1 : 0);
+  });
 }
 ```

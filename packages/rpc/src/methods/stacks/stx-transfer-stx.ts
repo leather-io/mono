@@ -9,13 +9,11 @@ import {
 export const stxTransferStx = defineRpcEndpoint({
   method: 'stx_transferStx',
   params: z.intersection(
-    z
-      .object({
-        recipient: z.string(),
-        amount: z.coerce.number().int('Amount must be an integer describing µSTX'),
-        memo: z.string().optional(),
-      })
-      .passthrough(),
+    z.object({
+      recipient: z.string(),
+      amount: z.coerce.number().int('Amount must be an integer describing µSTX'),
+      memo: z.string().optional(),
+    }),
     baseStacksTransactionConfigSchema
   ),
   result: stacksTransactionDetailsSchema,

@@ -19,7 +19,7 @@ export function decodeBase64Json(encodedPayload: string): unknown {
 
 export function createRequestEncoder<T extends z.ZodTypeAny>(schema: T) {
   function encode(request: z.infer<T>) {
-    return encodeBase64Json(schema.parse(request));
+    return encodeBase64Json(schema.parse(request) as Record<any, unknown>);
   }
 
   function decode(encodedRequest: string): z.infer<T> {

@@ -11,5 +11,5 @@ export interface AccountDisplayPreferenceInfo {
 
 export type AnalyticsPreference = 'consent-given' | 'rejects-tracking';
 
-export const emailAddressSchema = z.string().email({ message: 'Invalid email address' });
+export const emailAddressSchema = z.email({ error: 'Invalid email address' });
 export type EmailAddress = z.infer<typeof emailAddressSchema>;

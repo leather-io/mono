@@ -12,7 +12,7 @@ export const stxSignMessageRequestBaseSchema = z.object({
 });
 export type StxSignMessageRequestParamsBase = z.infer<typeof stxSignMessageRequestBaseSchema>;
 
-export const stxSignMessageRequestUtf8Schema = stxSignMessageRequestBaseSchema.merge(
+export const stxSignMessageRequestUtf8Schema = stxSignMessageRequestBaseSchema.and(
   z.object({
     messageType: z.literal('utf8').default('utf8'),
     message: z.string(),
@@ -20,7 +20,7 @@ export const stxSignMessageRequestUtf8Schema = stxSignMessageRequestBaseSchema.m
 );
 export type StxSignMessageRequestParamsUtf8 = z.infer<typeof stxSignMessageRequestUtf8Schema>;
 
-export const stxSignMessageRequestStructuredSchema = stxSignMessageRequestBaseSchema.merge(
+export const stxSignMessageRequestStructuredSchema = stxSignMessageRequestBaseSchema.and(
   z.object({
     messageType: z.literal('structured'),
     domain: z.string(),

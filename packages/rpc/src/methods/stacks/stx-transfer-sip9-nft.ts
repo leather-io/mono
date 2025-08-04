@@ -9,13 +9,11 @@ import {
 export const stxTransferSip9Nft = defineRpcEndpoint({
   method: 'stx_transferSip9Nft',
   params: z.intersection(
-    z
-      .object({
-        recipient: z.string(),
-        asset: z.string(),
-        assetId: z.string(),
-      })
-      .passthrough(),
+    z.looseObject({
+      recipient: z.string(),
+      asset: z.string(),
+      assetId: z.string(),
+    }),
     baseStacksTransactionConfigSchema
   ),
   result: stacksTransactionDetailsSchema,

@@ -12,7 +12,7 @@ type EnvMode = z.infer<typeof envModeSchema>;
 
 export const MODE = envModeSchema.parse(import.meta.env.MODE);
 
-const leatherApiUrlSchema = z.string().url().optional();
+const leatherApiUrlSchema = z.url().optional();
 export const LEATHER_API_URL = leatherApiUrlSchema.parse(import.meta.env.LEATHER_API_URL);
 
 type WhenEnvModeMap<T> = Record<EnvMode, T>;

@@ -95,7 +95,7 @@ export function BtcForm({
             asset={asset}
             value={value}
             onChange={onChange}
-            recipientSchema={schema.sourceType().shape.recipient}
+            recipientSchema={schema.shape.recipient}
           />
         )}
       />

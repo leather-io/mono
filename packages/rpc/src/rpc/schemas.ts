@@ -33,18 +33,11 @@ export type RpcBaseProps = z.infer<typeof rpcBasePropsSchema>;
 // }
 export function createRpcRequestSchema<TMethod extends string>(
   method: TMethod
-): z.ZodObject<
-  z.objectUtil.extendShape<BaseRpcRequestSchema['shape'], { method: z.ZodLiteral<TMethod> }>
->;
+): z.ZodObject<BaseRpcRequestSchema['shape'] & { method: z.ZodLiteral<TMethod> }>;
 export function createRpcRequestSchema<TMethod extends string, TParam extends z.ZodTypeAny>(
   method: TMethod,
   paramsSchema: TParam
-): z.ZodObject<
-  z.objectUtil.extendShape<
-    BaseRpcRequestSchema['shape'],
-    { method: z.ZodLiteral<TMethod>; params: TParam }
-  >
->;
+): z.ZodObject<BaseRpcRequestSchema['shape'] & { method: z.ZodLiteral<TMethod>; params: TParam }>;
 export function createRpcRequestSchema<TMethod extends string, TParam extends z.ZodTypeAny>(
   method: TMethod,
   paramsSchema?: TParam
@@ -121,7 +114,7 @@ export type RpcErrorResponse<TError extends RpcErrorBody = RpcErrorBody> = z.inf
 //   "id": "123",
 //   "result": { "signature": "dead…beef" }
 // }
-export function createRpcSuccessResponseSchema<TResult extends z.ZodType<object>>(
+export function createRpcSuccessResponseSchema<TResult extends z.ZodTypeAny>(
   resultSchema: TResult
 ) {
   return rpcBasePropsSchema.extend({ result: resultSchema });
@@ -134,7 +127,7 @@ export type RpcSuccessResponseSchema<TResult extends object> = ReturnType<
 export type RpcSuccessResponse<TResult extends object> = z.infer<RpcSuccessResponseSchema<TResult>>;
 
 export function createRpcResponseSchema<
-  TResult extends z.ZodType<object>,
+  TResult extends z.ZodTypeAny,
   TError extends z.ZodType<RpcErrorBody>,
 >(resultSchema: TResult, errorSchema: TError) {
   return z.union([
